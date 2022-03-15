@@ -1,0 +1,98 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 2 VC_ThrottleBrake: 3 Vector__XXX
+ SG_ Brake_pressed : 16|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Throttle : 0|16@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1 VC_Status: 3 Vector__XXX
+ SG_ State : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Fault_occured : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Fault_now : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 161 M2_Status: 3 Vector__XXX
+ SG_ Fault_occured : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Fault_now : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ State : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 17 M2_BusVoltage: 2 Vector__XXX
+ SG_ Vbus : 0|16@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 65 M2_Temperature: 6 Vector__XXX
+ SG_ Temperature_motor : 32|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Temperature_v : 16|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Temperature_u : 0|16@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 49 M2_Speed: 8 Vector__XXX
+ SG_ Speed_meas : 32|32@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Speed_ref : 0|32@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 33 M2_Current: 8 Vector__XXX
+ SG_ Id_meas : 32|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Id_ref : 16|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Iq_meas : 48|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Iq_ref : 0|16@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 160 M1_Status: 3 Vector__XXX
+ SG_ Fault_occured : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ Fault_now : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ State : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 16 M1_BusVoltage: 2 Vector__XXX
+ SG_ Vbus : 0|16@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 64 M1_Temperature: 6 Vector__XXX
+ SG_ Temperature_motor : 32|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Temperature_v : 16|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Temperature_u : 0|16@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 48 M1_Speed: 8 Vector__XXX
+ SG_ Speed_meas : 32|32@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Speed_ref : 0|32@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 32 M1_Current: 8 Vector__XXX
+ SG_ Id_meas : 48|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Id_ref : 16|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Iq_meas : 32|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Iq_ref : 0|16@1- (1,0) [0|0] "" Vector__XXX
+
+
+
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "BusType" "CAN";
+
