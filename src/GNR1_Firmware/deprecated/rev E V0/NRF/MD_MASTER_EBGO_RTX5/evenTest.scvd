@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance "xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+
+	<component name="TestEventR" version="0.0.1"/>    <!-- name and version of the component  -->
+		<events>
+			<group name="My Event">
+				<component name="Iq measured" brief="Acquisition of Iq" no="0x0A" prefix="EvrPrime_" info="Network - System - Dynamic Memory Management"/>
+			</group>
+			<event id="0x0A01" level="API" property="Iq measure obtained" value="%d[val1] is the torque measure" info="Event on fast loop task" />
+		</events>
+		
+</component_viewer>
