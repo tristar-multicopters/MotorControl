@@ -50,3 +50,23 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+
+*.cod
+*.htm
+*.i
+*.lst
+*.map
+*.m51
+*.m66
+
+# Keil user project files
+*.uvoptx
+
+# Keil uvision object and other files
+*.crf
+*.axfgit d
+*.dep
+*.axf
+*.build_log.htm
+*.lnp
