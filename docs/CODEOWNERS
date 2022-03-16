@@ -1,0 +1,3 @@
+# file that specifies which github team owns the branches of this repo
+# it's used to tell github which team to automatically pull in for PRs
+* @tristar-multicopters/ganrunner-firmware-team
