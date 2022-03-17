@@ -18,6 +18,7 @@
 #include "motor_selection.h"
 #include "vc_defines.h"
 #include "foldback.h"
+#include "power_enable.h"
 
 typedef enum
 {
@@ -56,6 +57,7 @@ typedef struct
 	PAS_Handle_t * pPAS;					/* Pointer to PAS handle */
 	BRK_Handle_t * pBrake;				/* Pointer to brake handle */
 	MS_Handle_t * pMS;						/* Pointer to motor selector handle */
+	PWREN_Handle_t * pPWREN;			/* Pointer to power enable pin handle */
 	
 	FLDBK_Handle_t sHeatsinkTempFoldback1;		/* Foldback handle using M1 heatsink temperature */
 	FLDBK_Handle_t sHeatsinkTempFoldback2;		/* Foldback handle using M2 heatsink temperature */

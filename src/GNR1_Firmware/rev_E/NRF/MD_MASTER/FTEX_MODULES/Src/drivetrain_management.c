@@ -424,6 +424,11 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 			bCheckStop = false;
 		}
 	}
+	if ( PWREN_IsPowerEnabled(pHandle->pPWREN) )
+	{
+		bCheckStop = false;
+	}	
+	
 	return bCheckStop;
 }
 
@@ -436,7 +441,7 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 {
 	bool bCheckStart = false;
 	
-	if ( THRO_GetAvValue(pHandle->pThrottle) > pHandle->hStartingThrottle)
+	if ( THRO_GetAvValue(pHandle->pThrottle) > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) )
 	{
 		bCheckStart = true;
 	}

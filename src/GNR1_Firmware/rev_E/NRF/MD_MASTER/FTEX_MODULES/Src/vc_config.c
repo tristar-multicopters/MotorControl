@@ -123,6 +123,11 @@ PAS_Handle_t PedalAssistHandle = {
 	0
 };
 
+PWREN_Handle_t PowerEnableHandle = {
+	.wPinNumber = PWREN_GPIO_PIN,
+	.bIsInvertedLogic = false,
+};
+
 DRVT_Handle_t DrivetrainHandle = 
 {	
 	.bUseMotorM1 = true,
