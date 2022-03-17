@@ -17,7 +17,8 @@
 #include "lcd_bafang_comm.h"
 
 
-#define CANBUS_ENABLE											0
+#define CANBUS_ENABLE	0
+
 
 extern VCI_Handle_t VCInterfaceHandle;
 

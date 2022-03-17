@@ -94,12 +94,13 @@ __NO_RETURN void TSK_MDcomm (void * pvParameter);
 
 uint8_t md_startMotor(uint8_t motorSelection);
 uint8_t md_stopMotor(uint8_t motorSelection);
-uint8_t md_getMDReg(uint8_t motorSelection, MC_Protocol_REG_t reg);
-uint8_t md_setMDReg(uint8_t motorSelection, MC_Protocol_REG_t reg, int32_t value);
 uint8_t md_setTorqueRamp(uint8_t motorSelection, int16_t torque, int16_t duration);
 uint8_t md_setCurrentRef(uint8_t motorSelection, int16_t iq, int16_t id);
 uint8_t md_setSpeedRamp(uint8_t motorSelection, int32_t speed, int16_t duration);
 uint8_t md_faultAcknowledged(uint8_t motorSelection);
+
+uint8_t md_getMDReg(uint8_t motorSelection, MC_Protocol_REG_t reg);
+uint8_t md_setMDReg(uint8_t motorSelection, MC_Protocol_REG_t reg, int32_t value);
 
 void md_clearError(void);
 bool md_isErrorOccured(void);
