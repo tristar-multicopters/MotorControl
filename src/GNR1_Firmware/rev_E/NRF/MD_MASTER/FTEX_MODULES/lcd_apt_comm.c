@@ -51,7 +51,9 @@ void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 			 {
 				 if(ByteReceived == APT_START) //Read or write cmd
 				 {
+					 m_APT_handle.rx_frame.Buffer[ByteCount] = ByteReceived;
 					 m_APT_handle.rx_frame.ByteCnt ++;
+					 
 				 }
 				 else //If not, its a bad cmd
 				 {
@@ -63,16 +65,18 @@ void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 		 
 			case 8:
 				
-			  m_APT_handle.rx_frame.ByteCnt = 0;
+			  
 			
 				if(ByteReceived == APT_END) //Read or write cmd
 				 {
+					 m_APT_handle.rx_frame.Buffer[ByteCount] = ByteReceived;
 					 osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify client a frame has been received
 				 }
 				 else 
 				 {
 					 eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
 				 }
+				 m_APT_handle.rx_frame.ByteCnt = 0;
 			break;
 		  case 1:
 			case 2:
@@ -81,7 +85,7 @@ void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
       case 5:
       case 6:
       case 7:	
-				 m_APT_handle.rx_frame.Buffer[ByteCount-1] = ByteReceived;
+				 m_APT_handle.rx_frame.Buffer[ByteCount] = ByteReceived;
 				 m_APT_handle.rx_frame.ByteCnt ++;
 			
 			   eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
@@ -130,17 +134,21 @@ void LCD_APT_frame_Process(void)
 {
 	APT_frame_t replyFrame = {0};
 	int32_t  toSend    = 0;
-	uint16_t Check     = 0x55;
+	uint32_t Check     = 0;
+	uint16_t Merge     = 0;
 	uint8_t  PassLvl   = 0;
 	uint8_t  WheelSize = 0;
 	uint8_t  Sensor    = 0;
 	
 	//Verification of the checksum
-	for(int i = 0; i < 5; i++)
-	{
-	  Check += m_APT_handle.rx_frame.Buffer[i];
+	for(int i = 0; i < 6; i += 2) //Checksum is the sum of double bytes into a 16 bits
+	{                             //Single bytes need to be paired into a single 16 bits before being summed    
+		Merge = (m_APT_handle.rx_frame.Buffer[i] << 8) + m_APT_handle.rx_frame.Buffer[i+1];
+	  Check += Merge;
 	}
 	 
+	Check = (Check & 0x0000FFFF);
+	
   if(Check == m_APT_handle.rx_frame.Buffer[CHECK + 1] + (m_APT_handle.rx_frame.Buffer[CHECK] << 8))
 	{
 		//Reading the Pass
@@ -148,12 +156,34 @@ void LCD_APT_frame_Process(void)
 		
     if(PassLvl < 0xA)
 		{
-  	 	PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_0);
+			
+			switch(PassLvl)
+			{
+				case 0:
+					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_0);
+       break;							
+				case 1:
+					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_1);
+       break;	
+				case 2:
+					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_2);
+       break;	
+				case 3:
+					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_3);
+       break;	
+				case 4:
+					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_4);
+       break;								
+				case 5:
+					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_5);
+       break;	
+				default:
+					while(1); //Pass level not supported ? check screen settings
+       break;					
+			}
+  	 	
 		}			
-    else
-		{
-		
-		}
+
 		
 	  //Reading the Speed   limit TBA
 		//Reading the Current limit TBA
@@ -184,14 +214,27 @@ void LCD_APT_frame_Process(void)
 	
     replyFrame.Buffer[ 0] = APT_START; //Start
 	
-    replyFrame.Buffer[ 1] = 0xFA; // Power 0.1 A / unit 
 	
-	  replyFrame.Buffer[ 2] = 0x42; // Motor speed Low half 0x142 should be aprox 25 km/h
-	  replyFrame.Buffer[ 3] = 0x01; // Motor speed High half
+	 // toSend = m_APT_handle.pVController->pThrottle->hInstThrottle; //Showing the throttle instead could be a replacement
+	
+	 /* if(toSend > 0xFF)
+		{
+		  toSend = 0xFF;
+		}*/	
+		toSend = 0x64;
+    replyFrame.Buffer[ 1] = (toSend & 0x000000FF); // Power 0.1 A / unit 
+	
+	
+	  toSend = VC_getMotorSpeedMeas(m_APT_handle.pVController,M1);
+	
+	  toSend = 1000/(toSend/60); //Converion from RPM to period in ms 
+	
+	  replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Motor speed Low half 
+	  replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; // Motor speed High half
 	  
 	  replyFrame.Buffer[ 4] = 0x00; // Error Code
 	  
-	  replyFrame.Buffer[ 5] = 0x02; // Brake Code b0000 0010 means the motor is working
+	  replyFrame.Buffer[ 5] = 0x04; // Brake Code bXXXX 0100 means the motor is working
    
     replyFrame.Buffer[ 6] = 0x00; // Reserved
     replyFrame.Buffer[ 7] = 0x00; // Reserved 
@@ -199,14 +242,17 @@ void LCD_APT_frame_Process(void)
     replyFrame.Buffer[ 9] = 0x00; // Reserved
 	
 	  //Calculate checksum
-	  for(int i = 0; i < 6;	i++)
+		Merge = 0;
+		Check = 0;
+	  for(int i = 0; i < 10;	i += 2)
 	  {
-	    Check += replyFrame.Buffer[i];
+			Merge = (replyFrame.Buffer[i+1] << 8) + replyFrame.Buffer[i];
+	    Check += Merge;
 	  }
-	  	
-	  replyFrame.Buffer[10] = (0x0F & Check); // Checksum Low  Half
-	  replyFrame.Buffer[11] = (Check >> 8);   // Checksum High Half
-	
+		
+		replyFrame.Buffer[10] =  (0x000000FF & Check);       // Checksum Low  Half
+	  replyFrame.Buffer[11] = ((0x0000FF00 & Check) >> 8); // Checksum High Half	
+	  	  
 	  replyFrame.Buffer[12] = APT_END; //End
 			
 		replyFrame.ByteCnt = 0;   

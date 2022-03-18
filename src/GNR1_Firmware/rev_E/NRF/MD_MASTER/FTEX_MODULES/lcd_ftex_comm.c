@@ -152,12 +152,12 @@ void LCD_FTEX_frame_Process(void)
 	{
 	  switch(m_FTEX_handle.rx_frame.Code)
 	  {
-	  	case FTEX_CMD_READ:
+	  	case FTEX_FRAME_READ: //To be fixed after negociations with eggrider are finished
          
-		    if(m_FTEX_handle.rx_frame.Buffer[0] == FTEX_STANDARD_READ)
+		    if(m_FTEX_handle.rx_frame.Buffer[0] == FTEX_FRAME_READ)
 				{
-				  replyFrame.Code = FTEX_CMD_READ;
-					replyFrame.Buffer [0] = FTEX_STANDARD_READ;
+				  replyFrame.Code = FTEX_FRAME_READ;
+					replyFrame.Buffer [0] = FTEX_FRAME_READ;
 					
 					toSend = VC_getBattVoltage(m_FTEX_handle.pVController);
 					
@@ -219,7 +219,7 @@ void LCD_FTEX_frame_Process(void)
 					
 	  	break; //end case FTEX_CMD_READ
 		
-	  	case FTEX_CMD_WRITE:
+	  	case FTEX_FRAME_WRITE:
   	
   		break;//end case FTEX_CMD_WRITE
 		
