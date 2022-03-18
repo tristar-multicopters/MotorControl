@@ -20,7 +20,7 @@ extern osThreadId_t TSK_MDcomm_handle;
 extern osThreadId_t TSK_FastLoopMD_handle;
 extern osThreadId_t TSK_SlowLoopMD_handle;
 extern osThreadId_t TSK_VehicleStateMachine_handle;
-extern osThreadId_t TSK_LCD_Bafcomm_handle;
+extern osThreadId_t TSK_eUART0_handle;
 extern osThreadId_t TSK_CANmsgTX_handle_t;
 
 //****************** THREAD ATTRIBUTES ******************//
@@ -49,10 +49,10 @@ static const osThreadAttr_t ThAtt_MDComm = {
 	.priority = osPriorityNormal2
 };
 
-static const osThreadAttr_t ThAtt_LCDComm = {
-	.name = "TSK_LCDComm",
+static const osThreadAttr_t ThAtt_eUARTComm = {
+	.name = "TSK_eUART",
 	.stack_size = 512,
-	.priority = osPriorityNormal3
+	.priority = osPriorityNormal
 };
 
 
@@ -95,9 +95,9 @@ int main(void)
 																			&ThAtt_MDComm);
 	
 	// Task to manage communication between nRF and LCD display (Bafang 750C)
-	TSK_LCD_Bafcomm_handle  = osThreadNew(TSK_LCD_Baf_comm, 
-																			NULL,
-																			&ThAtt_LCDComm);
+	TSK_eUART0_handle  = osThreadNew(TSK_eUART, 
+																	 NULL,
+																	 &ThAtt_eUARTComm);
 	
 	
 	#if CANBUS_ENABLE

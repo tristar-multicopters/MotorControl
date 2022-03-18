@@ -32,5 +32,8 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter);
 	/**@brief Task function to manage fault conditions*/
 __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter);
 
+	/**@brief Task function to manage eUART frames process*/
+__NO_RETURN void TSK_eUART (void * pvParameter);
+
 #endif /* __MD_TASKS_H */
 

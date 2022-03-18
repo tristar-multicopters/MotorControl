@@ -210,10 +210,11 @@ VCI_Handle_t VCInterfaceHandle =
 {
 	.pStateMachine = &VCStateMachineHandle,
 	.pDrivetrain = &DrivetrainHandle,
+	.euart_type = EUART_EVIONICS // Has to been initialise by EVionics first
 };
 
-LCD_handle_t BafangScreenHandle = 
-{
-	.pVCInterface = &VCInterfaceHandle,
-};
+//LCD_handle_t BafangScreenHandle = 
+//{
+//	.pVCInterface = &VCInterfaceHandle,
+//};
 	

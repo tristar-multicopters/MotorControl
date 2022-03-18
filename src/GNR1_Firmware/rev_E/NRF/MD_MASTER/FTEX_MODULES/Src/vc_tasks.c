@@ -41,7 +41,7 @@ static void CLK_Init(void)
 void VC_BootUp(void)
 {	
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
-	LCD_handle_t * pLCD = &BafangScreenHandle;
+	//LCD_handle_t * pLCD = &BafangScreenHandle;
 	
 	/* Initialize clock */
 	CLK_Init();
@@ -55,15 +55,14 @@ void VC_BootUp(void)
 	MCP25625_Init(&CANController);
 	#endif
 	
-	/* Initialize Bafang screen module */
-	LCD_Baf_Init(pLCD);
-	
 	/* Initialize vehicle controller components */
 	VCSTM_Init(pVCI->pStateMachine);
 	DRVT_Init(pVCI->pDrivetrain);
 	
 	/* Initialize ADC module */
 	RCM_Init(&RegularConvertionManager);
+	
+	//EVionics_init(&VCInterfaceHandle);
 }
 
 __NO_RETURN void TSK_FastLoopMD (void * pvParameter)
@@ -248,6 +247,53 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	
 		xLastWakeTime += TASK_VCSTM_SAMPLE_TIME_TICK;
 		osDelayUntil(xLastWakeTime);
+	}
+}
+
+__NO_RETURN void TSK_eUART (void * pvParameter)
+{
+	UNUSED_PARAMETER(pvParameter);
+	osDelay(250);
+	
+	eUART_protocol_t dev_type = VCInterfaceHandle.euart_type;
+	switch(dev_type)
+	{
+		case EUART_EVIONICS:
+			EVionics_init(&VCInterfaceHandle);
+			break;
+		
+		case EUART_BAFANG:
+			//LCD_BAF_init(&VCInterfaceHandle);
+			break;
+		
+		case EUART_EGG:
+			//LCD_EGG_init(&VCInterfaceHandle);
+			break;
+		
+		default:
+			break;
+	}
+	
+	while(true)
+	{
+		osThreadFlagsWait(EUART_FLAG, osFlagsWaitAny, osWaitForever);
+		switch(dev_type)
+		{
+			case EUART_EVIONICS:
+				EVionics_frame_process();
+				break;
+			
+			case EUART_BAFANG:
+				//LCD_BAF_frame_Process();
+				break;
+			
+			case EUART_EGG:
+				//LCD_EGG_frame_Process();
+				break;
+			
+			default:
+				break;
+		}
 	}
 }
 

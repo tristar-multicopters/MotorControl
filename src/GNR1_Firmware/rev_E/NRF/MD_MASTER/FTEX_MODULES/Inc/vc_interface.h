@@ -12,11 +12,11 @@
 #include "stdlib.h"
 #include "drivetrain_management.h"
 #include "vc_state_machine.h"
-
+#include "euart_manager.h"
 typedef struct {
 	DRVT_Handle_t * pDrivetrain;
 	VCSTM_Handle_t * pStateMachine;
-	
+	eUART_protocol_t euart_type;
 } VCI_Handle_t;
 
 // Register tables

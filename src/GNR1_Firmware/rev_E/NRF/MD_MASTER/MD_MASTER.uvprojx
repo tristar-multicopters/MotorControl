@@ -598,11 +598,6 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX_MODULES\Src\evionics.c</FilePath>
             </File>
-            <File>
-              <FileName>evionics.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX_MODULES\Inc\evionics.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -664,6 +659,11 @@
           <GroupName>UART</GroupName>
           <Files>
             <File>
+              <FileName>euart_manager.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX_MODULES\Src\euart_manager.c</FilePath>
+            </File>
+            <File>
               <FileName>uart_frame_communication_protocol.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX_MODULES\Src\uart_frame_communication_protocol.c</FilePath>
@@ -688,11 +688,6 @@
         <Group>
           <GroupName>Screen</GroupName>
           <Files>
-            <File>
-              <FileName>display_management.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX_MODULES\Src\display_management.c</FilePath>
-            </File>
             <File>
               <FileName>lcd_bafang_comm.c</FileName>
               <FileType>1</FileType>

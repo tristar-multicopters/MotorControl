@@ -15,6 +15,7 @@
 #include "vc_interface.h"
 #include "canbus_management.h"
 #include "lcd_bafang_comm.h"
+#include "evionics.h"
 
 
 /* VEHICLE SELECTION
