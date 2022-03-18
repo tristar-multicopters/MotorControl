@@ -8,6 +8,9 @@
 	*/
 
 #include "nrf_delay.h"
+
+#include "md_comm.h"
+#include "throttle.h"
 #include "vc_tasks.h"
 
 #include "RTE_Components.h"
@@ -20,7 +23,8 @@ extern osThreadId_t TSK_MDcomm_handle;
 extern osThreadId_t TSK_FastLoopMD_handle;
 extern osThreadId_t TSK_SlowLoopMD_handle;
 extern osThreadId_t TSK_VehicleStateMachine_handle;
-extern osThreadId_t TSK_LCD_Bafcomm_handle;
+extern osThreadId_t TSK_HOSTcomm_handle;
+extern osThreadId_t TSK_eUART0_handle;
 extern osThreadId_t TSK_CANmsgTX_handle_t;
 
 //****************** THREAD ATTRIBUTES ******************//
@@ -48,6 +52,20 @@ static const osThreadAttr_t ThAtt_MDComm = {
 	.stack_size = 512,
 	.priority = osPriorityNormal2
 };
+
+static const osThreadAttr_t ThAtt_eUART = {
+	.name = "TSK_eUART",
+	.stack_size = 512,
+	.priority = osPriorityNormal3
+};
+
+#if HOSTCOMM_ENABLE
+static const osThreadAttr_t ThAtt_HOSTComm = {
+	.name = "TSK_HOSTComm",
+	.stack_size = 512,
+	.priority = osPriorityNormal3
+};
+#endif
 
 static const osThreadAttr_t ThAtt_LCDComm = {
 	.name = "TSK_LCDComm",
@@ -77,6 +95,10 @@ int main(void)
 	osKernelInitialize();  // Initialise the kernel
 	EventRecorderInitialize(EventRecordAll,1U); // Initialise the events
 	
+	// Create task to manage communication between nRF and STM 
+	TSK_MDcomm_handle      = osThreadNew(TSK_MDcomm, 
+																			NULL,
+																			&ThAtt_MDComm);
 	// Create task to manage vehicle state and throttle input 
 	TSK_FastLoopMD_handle  = osThreadNew(TSK_FastLoopMD,
 																			NULL, 
@@ -87,17 +109,18 @@ int main(void)
 																			 &ThAtt_SlowLoopMD);
 	TSK_VehicleStateMachine_handle = osThreadNew(TSK_VehicleStateMachine,
 																			 NULL,
-																			 &ThAtt_VehicleStateMachine);
-	
-	// Create task to manage communication between nRF and STM 
-	TSK_MDcomm_handle      = osThreadNew(TSK_MDcomm, 
+																			 &ThAtt_VehicleStateMachine);																			 
+		// Create task to manage UART0 communication 																		 
+	TSK_eUART0_handle = osThreadNew(TSK_eUART,
+																			 NULL,
+																			 &ThAtt_eUART);					 
+
+	#if HOSTCOMM_ENABLE
+	/* Create task to manage communication between nRF and host (PC, mobile, ...) */
+	TSK_HOSTcomm_handle      = osThreadNew(TSK_HOSTcomm, 
 																			NULL,
-																			&ThAtt_MDComm);
-	
-	// Task to manage communication between nRF and LCD display (Bafang 750C)
-	TSK_LCD_Bafcomm_handle  = osThreadNew(TSK_LCD_Baf_comm, 
-																			NULL,
-																			&ThAtt_LCDComm);
+																			&ThAtt_HOSTComm);
+	#endif
 	
 	
 	#if CANBUS_ENABLE
