@@ -62,5 +62,7 @@ uint8_t MDI_SetCurrentRef(MDI_Handle_t* pHandle, uint8_t motorSelection, int16_t
 uint8_t MDI_SetSpeedRamp(MDI_Handle_t* pHandle, uint8_t motorSelection, int32_t speed, int16_t duration)
 {}	
 	
-uint8_t MDI_FaultAcknowledged(MDI_Handle_t* pHandle, uint8_t motorSelection)
-{}
+bool MDI_FaultAcknowledged(MDI_Handle_t* pHandle, uint8_t motorSelection)
+{
+  return md_faultAcknowledged(motorSelection);
+}

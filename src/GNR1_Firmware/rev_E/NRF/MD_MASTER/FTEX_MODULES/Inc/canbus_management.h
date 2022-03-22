@@ -59,8 +59,8 @@ void CAN_SendTemperature(MCP25625_Handle_t * pCANHandle, VCI_Handle_t* pVCHandle
 void CAN_SendThrottleBrake(MCP25625_Handle_t * pCANHandle, VCI_Handle_t* pVCHandle);
 
 /* Function for knowing if CAN message queue is full */
-bool CAN_IsQueueFull( MCP25625_Handle_t * pCANHandle );
+bool CAN_IsQueueFull( MCP25625_Handle_t * pCANHandle);
 	
 /******************* Dummy Function for testing ******************************/
-void CAN_SendDummyMsg( MCP25625_Handle_t * pCANHandle );
+void CAN_SendDummyMsg( MCP25625_Handle_t * pCANHandle);
 #endif
