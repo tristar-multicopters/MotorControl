@@ -17,32 +17,65 @@
 					So the curve formula is : f(x) = hDefaultMaxTorque*(hEndValue - hValue)/(hEndValue - hStartValue)
 	 @p hValue : Input value (voltage, temperature, ...)
 */
-int16_t FLDBK_CalcTorqueMax(FLDBK_Handle_t * pHandle, uint16_t hValue)
+int16_t FLDBK_CalcTorqueMax(FLDBK_Handle_t * pHandle, int16_t hValue)
 {
 	int16_t hTorqueMax;
 	
-	// If hValue is in the foldback range
-	if(hValue >= pHandle->hStartValue && hValue <= pHandle->hEndValue)
-	{ 
-		// Find the max torque value according to the foldback settings
-		uint32_t wAux = pHandle->hDefaultMaxTorque * (pHandle->hEndValue - hValue);
-		wAux /= (uint16_t)(pHandle->hEndValue - pHandle->hStartValue);
-		hTorqueMax = (int16_t)wAux;
-	}
-	else if (hValue < pHandle->hStartValue)
+	if (pHandle->hStartValue > pHandle->hEndValue)
 	{
-		hTorqueMax = pHandle->hDefaultMaxTorque;
+		pHandle->bIsInverted = true;
 	}
 	else
 	{
-		hTorqueMax = 0;
+		pHandle->bIsInverted = false;
 	}
+	
+	if (!pHandle->bIsInverted)
+	{
+		// If hValue is in the foldback range
+		if(hValue > pHandle->hStartValue && hValue < pHandle->hEndValue)
+		{ 
+			// Find the max torque value according to the foldback settings
+			uint32_t wAux = pHandle->hDefaultMaxTorque * (pHandle->hEndValue - hValue);
+			wAux /= (int16_t)(pHandle->hEndValue - pHandle->hStartValue);
+			hTorqueMax = (int16_t)wAux;
+		}
+		else if (hValue <= pHandle->hStartValue)
+		{
+			hTorqueMax = pHandle->hDefaultMaxTorque;
+		}
+		else
+		{
+			hTorqueMax = 0;
+		}
+	}
+	else
+	{
+		// If hValue is in the foldback range
+		if(hValue < pHandle->hStartValue && hValue > pHandle->hEndValue)
+		{ 
+			// Find the max torque value according to the foldback settings
+			uint32_t wAux = pHandle->hDefaultMaxTorque * (pHandle->hEndValue - hValue);
+			wAux /= (int16_t)(pHandle->hStartValue - pHandle->hEndValue);
+			hTorqueMax = (int16_t)wAux;
+		}
+		else if (hValue >= pHandle->hStartValue)
+		{
+			hTorqueMax = pHandle->hDefaultMaxTorque;
+		}
+		else
+		{
+			hTorqueMax = 0;
+		}
+	}
+	
+
 	
 	return hTorqueMax;
 }
 
 
-int16_t FLDBK_ApplyTorqueLimitation(FLDBK_Handle_t * pHandle, int16_t hInitialTorque, uint16_t hValue)
+int16_t FLDBK_ApplyTorqueLimitation(FLDBK_Handle_t * pHandle, int16_t hInitialTorque, int16_t hValue)
 {
 	int16_t hTorqueOut;
 	int16_t hTorqueMax = FLDBK_CalcTorqueMax(pHandle, hValue);
@@ -59,4 +92,6 @@ int16_t FLDBK_ApplyTorqueLimitation(FLDBK_Handle_t * pHandle, int16_t hInitialTo
 	{
 		hTorqueOut = hInitialTorque;
 	}
+	
+	return hTorqueOut;
 }

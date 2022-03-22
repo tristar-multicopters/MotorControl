@@ -92,30 +92,42 @@ THRO_Handle_t ThrottleHandle =
 	{
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
-		.hMax = UINT16_MAX,
-		.m = -16,
-		.F = 35,
+		
+		.hOffset1 = 12000,
+		.bSlope1 = -16,
+		.bDivisor1 = 35,
+		
+		.hOffset2 = 12000,
+		.bSlope2 = -16,
+		.bDivisor2 = 35,
 	}
 	#elif VEHICLE_SELECTION == 2
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
-		.hMax = UINT16_MAX,
-		.m = -11,
-		.F = 36,
+	
+		.hOffset1 = 12000,
+		.bSlope1 = -16,
+		.bDivisor1 = 35,
+		
+		.hOffset2 = 12000,
+		.bSlope2 = -16,
+		.bDivisor2 = 35,
 	}
 	#else
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
-		.hMax = UINT16_MAX,
-		.m = -16,
-		.F = 35,
+	
+		.hOffset1 = 12000,
+		.bSlope1 = -16,
+		.bDivisor1 = 35,
+		
+		.hOffset2 = 12000,
+		.bSlope2 = -16,
+		.bDivisor2 = 35,
 	}
 	#endif
 };
