@@ -121,6 +121,8 @@ ret_code_t SPI_Init(SPI_Handle_t *p_Handle)
 	p_Handle->current_id = 0;
 
 	ret_code_t res = nrf_drv_spi_init(p_Handle->p_spi_inst, &p_Handle->spi_config, spi_event_handler, NULL);
+	
+	//todo: handle returned result
 
 	#ifdef SPI_COMM_DEBUG
 	bsp_board_init(BSP_INIT_LEDS);

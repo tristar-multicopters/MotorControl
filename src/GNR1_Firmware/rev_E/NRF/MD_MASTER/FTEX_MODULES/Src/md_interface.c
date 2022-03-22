@@ -8,7 +8,6 @@
 
 #include "md_interface.h"
 
-
 void MDI_Init(MDI_Handle_t * pHandle)
 {}
 
