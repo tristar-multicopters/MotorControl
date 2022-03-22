@@ -86,5 +86,9 @@ extern nrf_drv_timer_t timer2_inst;
 #define PAS_COS_GPIO_PIN						NRF_GPIO_PIN_MAP(0,17)
 #define PAS_TORQUE_PIN							NRF_SAADC_INPUT_AIN0
 
+/* Power enable -------------------------------------*/
+
+#define PWREN_GPIO_PIN							NRF_GPIO_PIN_MAP(0,13)
+
 
 #endif /*__BOARD_HARDWARE_H*/

@@ -17,7 +17,16 @@
 #include "lcd_bafang_comm.h"
 
 
-#define CANBUS_ENABLE											0
+/* VEHICLE SELECTION
+0: DEFAULT
+1: ECELL
+2: EBGO
+*/
+#define VEHICLE_SELECTION 1
+
+
+#define CANBUS_ENABLE	0
+
 
 extern VCI_Handle_t VCInterfaceHandle;
 

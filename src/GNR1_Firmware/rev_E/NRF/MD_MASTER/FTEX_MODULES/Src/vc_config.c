@@ -14,11 +14,19 @@
 //	Motor 1
 //*******************************************************************************
 
+MD_Handle_t MotorDrive1 = 
+{
+	0
+};
 
 //*******************************************************************************
 //	Motor 2
 //*******************************************************************************
 
+MD_Handle_t MotorDrive2 = 
+{
+	0
+};
 
 //*******************************************************************************
 //	Vehicle
@@ -79,6 +87,7 @@ THRO_Handle_t ThrottleHandle =
 		.pin_p = THROTTLE_ANALOG_PIN,
 		.pin_n = NRF_SAADC_INPUT_DISABLED,
 	},
+	#if VEHICLE_SELECTION == 1
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 16,
@@ -88,13 +97,44 @@ THRO_Handle_t ThrottleHandle =
 		.m = -16,
 		.F = 35,
 	}
+	#elif VEHICLE_SELECTION == 2
+	.hParam =
+	{
+		.hLowPassFilterBW1 = 8,
+		.hLowPassFilterBW2 = 2,
+		.hOffset = 12000,
+		.hMax = UINT16_MAX,
+		.m = -11,
+		.F = 36,
+	}
+	#else
+	.hParam =
+	{
+		.hLowPassFilterBW1 = 16,
+		.hLowPassFilterBW2 = 2,
+		.hOffset = 12000,
+		.hMax = UINT16_MAX,
+		.m = -16,
+		.F = 35,
+	}
+	#endif
 };
 
 MS_Handle_t MotorSelectorHandle = 
 {
 	.wM1SelectPinNumber = M1SELECT_GPIO_PIN,
 	.wM2SelectPinNumber = M2SELECT_GPIO_PIN,
+	
+	#if VEHICLE_SELECTION == 1
 	.bIsInvertedLogic = false,
+	.bMSEnable = true,
+	#elif VEHICLE_SELECTION == 2
+	.bIsInvertedLogic = false,
+	.bMSEnable = false,
+	#else
+	.bIsInvertedLogic = false,
+	.bMSEnable = true,
+	#endif
 };
 
 VCSTM_Handle_t VCStateMachineHandle = 
@@ -106,6 +146,8 @@ VCSTM_Handle_t VCStateMachineHandle =
 
 MD_Comm_Handle_t MDCommunicationHandle = 
 { 
+	.pMD = {&MotorDrive1, &MotorDrive2},
+	
 	.UARTconfig = 
 	{
 		.ufcp_handle = 
@@ -126,20 +168,45 @@ PAS_Handle_t PedalAssistHandle = {
 	0
 };
 
+PWREN_Handle_t PowerEnableHandle = {
+	.wPinNumber = PWREN_GPIO_PIN,
+	.bIsInvertedLogic = false,
+};
+
 DRVT_Handle_t DrivetrainHandle = 
 {	
+	#if VEHICLE_SELECTION == 1
+	.bUseMotorM1 = true,
+	.bUseMotorM2 = true,
+	.bDefaultMainMotor = M1,
+	.bCtrlType = TORQUE_CTRL,
+	.hTorqueRampTime = 200,
+	.hSpeedRampTime = 200,
+	.hStartingThrottle = 12000,
+	#elif VEHICLE_SELECTION == 2
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
 	.bDefaultMainMotor = M1,
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTime = 200,
 	.hSpeedRampTime = 200,
+	.hStartingThrottle = 12000,
+	#else
+	.bUseMotorM1 = true,
+	.bUseMotorM2 = true,
+	.bDefaultMainMotor = M1,
+	.bCtrlType = TORQUE_CTRL,
+	.hTorqueRampTime = 200,
+	.hSpeedRampTime = 200,
+	.hStartingThrottle = 12000,
+	#endif
 	
 	.pMDI = &MDInterfaceHandle,
 	.pThrottle = &ThrottleHandle,
 	.pPAS = &PedalAssistHandle,
 	.pBrake = &BrakeHandle,
 	.pMS = &MotorSelectorHandle,
+	.pPWREN = &PowerEnableHandle,
 };
 
 VCI_Handle_t VCInterfaceHandle = 

@@ -28,6 +28,7 @@ typedef struct
 	nrfx_gpiote_pin_t wM1SelectPinNumber;
 	nrfx_gpiote_pin_t wM2SelectPinNumber;
 	bool bIsInvertedLogic;
+	bool bMSEnable;
 	
 	MotorSelection_t bMotorSelection;
 	
