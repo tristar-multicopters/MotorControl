@@ -11,3 +11,19 @@
 
 
 /* Functions ---------------------------------------------------- */
+
+
+void WSS_Init(WAS_Handle_t* pHandle)
+{
+	 SPWR_Init(pHandle->wSpulse);
+}
+
+int32_t WSS_GetSpeed(WAS_Handle_t* pHandle)
+{
+	return Wspeed_CalcAvValue( pHandle->wSpulse);
+}
+
+int16_t WSS_GetDirection(WAS_Handle_t* pHandle)
+{
+	return Get_Drvie_Direction(pHandle->wSpulse) ;
+}

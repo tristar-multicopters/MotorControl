@@ -120,6 +120,63 @@ THRO_Handle_t ThrottleHandle =
 	#endif
 };
 
+
+/**@brief Torque Pin initializing Parameters.
+ */
+Torque_Handle_t TorqueSensor =
+{
+	.pRegularConversionManager = &RegularConvertionManager,
+	.hChannelConfig =
+	{
+		.resistor_p = NRF_SAADC_RESISTOR_DISABLED,
+		.resistor_n = NRF_SAADC_RESISTOR_DISABLED,
+		.gain = NRF_SAADC_GAIN1_6,
+		.reference = NRF_SAADC_REFERENCE_INTERNAL,
+		.acq_time = NRF_SAADC_ACQTIME_10US,
+		.mode = NRF_SAADC_MODE_SINGLE_ENDED,
+		.burst = NRF_SAADC_BURST_DISABLED,
+		.pin_p = PAS_TORQUE_PIN,
+		.pin_n = NRF_SAADC_INPUT_DISABLED,
+	},
+	.hParam =
+	{
+		.hLowPassFilterBW1 = 16,
+		.hLowPassFilterBW2 = 2,
+		.hOffset = 12000,
+		.hMax = UINT16_MAX,
+		.m = -16,
+		.F = 35,
+	}
+};
+/**@brief Speed pulse Pin initializing Parameters.
+ */
+SPR_Handle_t SpeedPulse =
+{
+	.bCaptureChannel = 6,
+	.bRestartChannel = 5,
+	
+	.WCaptureChannel = 4,
+	.WRestartChannel = 3,
+	
+	.bTimer_Prescaler = NRF_TIMER_FREQ_1MHz,
+	.bTimer_Width = NRF_TIMER_BIT_WIDTH_32,
+
+	.pTimerInstance = PAS_TIMER_INSTANCE_ADDR,
+	.wTimerInstance = WH_TIMER_INSTANCE_ADDR,
+	
+	.pSinSpeed_Pulse_pin = PAS_SIN_GPIO_PIN,
+	.pCosSpeed_Pulse_pin = PAS_COS_GPIO_PIN,
+	.pWheelSpeed_Pulse_pin = WH_PUL_GPIO_PIN,
+	.sParam =
+	{
+		.sLowPassFilterBW1 = 16,
+		.sOffset = 12000,
+		.sMax = UINT16_MAX,
+	}
+	
+};
+
+
 MS_Handle_t MotorSelectorHandle = 
 {
 	.wM1SelectPinNumber = M1SELECT_GPIO_PIN,
@@ -161,8 +218,11 @@ MDI_Handle_t MDInterfaceHandle =
 	.pMDC = &MDCommunicationHandle,
 };
 
+/**@brief Pedal assist initializing Parameters.
+ */
 PAS_Handle_t PedalAssistHandle = {
-	0
+	.pTorque = &TorqueSensor,
+	.pSpulse = &SpeedPulse,
 };
 
 PWREN_Handle_t PowerEnableHandle = {
