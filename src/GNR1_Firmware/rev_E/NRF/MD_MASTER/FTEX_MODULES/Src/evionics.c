@@ -54,12 +54,16 @@ static void EVionics_RX_IRQ_Handler(uint8_t rx_data)
 	if(!byte_counter)
 	{ // Get the command and request for code bytes
 		m_EV_handler.rx_frame.cmd = rx_data;
-//		if(m_EV_handler.rx_frame.cmd == EV_FLASH_MEMORY)
-//		{// Notify task for save in the flash memory
-//			osThreadFlagsSet(TSK_STRG_handle, STRG_FLAG); // Notify Storage task
-//		}
-//		else
-		m_EV_handler.rx_frame.ByteCnt++; // Increase byte counter
+		if(m_EV_handler.rx_frame.cmd == EV_FLASH_MEMORY)
+		{// Notify task for save in the flash memory
+			osThreadFlagsSet(TSK_STRG_handle, STRG_FLAG); // Notify Storage task
+			// Hold on until the memory is busy
+			while(STRG_isBusy());
+			
+		}
+		else
+			m_EV_handler.rx_frame.ByteCnt++; // Increase byte counter
+		
 		eUART_Receive(&m_EV_handler.euart_handler, m_EV_handler.euart_handler.rx_byte);
 	}
 	else
@@ -216,7 +220,7 @@ void EVionics_frame_process( void )
 		if(m_EV_handler.rx_frame.cmd == EV_LOAD_PARAMS)
 		{
 			/* Build of data transmission buffer */
-			m_EV_handler.tx_frame.tx_code = (uint8_t)ACK_NOERROR;  // Header of frame
+			m_EV_handler.tx_frame.tx_code = (uint8_t)ACK_NOERROR;  	 // Header of frame
 			m_EV_handler.tx_frame.size = 2;
 			m_EV_handler.tx_frame.buffer[0] = (code >> 8) & 0xFF;		 // MSB of Section code
 			m_EV_handler.tx_frame.buffer[1] = code & 0xFF;		 			 // LSB of Section code
