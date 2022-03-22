@@ -22,6 +22,7 @@ extern osThreadId_t TSK_SlowLoopMD_handle;
 extern osThreadId_t TSK_VehicleStateMachine_handle;
 extern osThreadId_t TSK_eUART0_handle;
 extern osThreadId_t TSK_CANmsgTX_handle_t;
+extern osThreadId_t TSK_STRG_handle;
 
 //****************** THREAD ATTRIBUTES ******************//
 
@@ -52,9 +53,14 @@ static const osThreadAttr_t ThAtt_MDComm = {
 static const osThreadAttr_t ThAtt_eUARTComm = {
 	.name = "TSK_eUART",
 	.stack_size = 512,
-	.priority = osPriorityNormal
+	.priority = osPriorityAboveNormal3
 };
 
+static const osThreadAttr_t ThAtt_STRGmanage = {
+	.name = "TSK_STRGManager",
+	.stack_size = 512,
+	.priority = osPriorityHigh
+};
 
 #if CANBUS_ENABLE
 static const osThreadAttr_t ThAtt_CANmsgTX = {
@@ -99,6 +105,10 @@ int main(void)
 																	 NULL,
 																	 &ThAtt_eUARTComm);
 	
+	// Task to manage the flash memory module
+	TSK_STRG_handle 	 = osThreadNew(TSK_StorageManagement, 
+																	 NULL,
+																	 &ThAtt_STRGmanage);
 	
 	#if CANBUS_ENABLE
 	/* Create task to manage CAN Protocol */																		 

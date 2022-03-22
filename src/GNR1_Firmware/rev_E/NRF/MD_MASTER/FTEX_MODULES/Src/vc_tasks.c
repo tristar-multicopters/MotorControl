@@ -62,6 +62,7 @@ void VC_BootUp(void)
 	/* Initialize ADC module */
 	RCM_Init(&RegularConvertionManager);
 	
+	STRG_Init();
 	//EVionics_init(&VCInterfaceHandle);
 }
 
