@@ -111,7 +111,7 @@ uint8_t SPI_AddDevice(SPI_Handle_t *p_Handle, SPIdevice_t* pDevice)
 	return device_id;
 }
 
-ret_code_t SPI_Init(SPI_Handle_t *p_Handle)
+void SPI_Init(SPI_Handle_t *p_Handle)
 {		
 	m_pSPI_handle = p_Handle;
 	p_Handle->hError = SPI_NO_ERROR;
@@ -127,6 +127,4 @@ ret_code_t SPI_Init(SPI_Handle_t *p_Handle)
 	#ifdef SPI_COMM_DEBUG
 	bsp_board_init(BSP_INIT_LEDS);
 	#endif
-	
-	return res;
 }

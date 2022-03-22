@@ -98,7 +98,9 @@ bool MDI_SetSpeedRamp(MDI_Handle_t* pHandle, uint8_t motorSelection, int32_t spe
 	return md_setSpeedRamp(motorSelection, speed, duration);
 }	
 	
-bool MDI_FaultAcknowledged(MDI_Handle_t* pHandle, uint8_t motorSelection)
+void MDI_FaultAcknowledged(MDI_Handle_t* pHandle, uint8_t motorSelection)
 {
-	return md_faultAcknowledged(motorSelection);
+	bool result = md_faultAcknowledged(motorSelection);
+	
+	//todo: handle result
 }

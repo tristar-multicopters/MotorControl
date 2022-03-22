@@ -37,7 +37,7 @@ bool MDI_StopMotor(MDI_Handle_t* pHandle, uint8_t MotorSelection);
 bool MDI_SetTorqueRamp(MDI_Handle_t* pHandle, uint8_t motorSelection, int16_t torque, int16_t duration);
 bool MDI_SetCurrentRef(MDI_Handle_t* pHandle, uint8_t motorSelection, int16_t iq, int16_t id);
 bool MDI_SetSpeedRamp(MDI_Handle_t* pHandle, uint8_t motorSelection, int32_t speed, int16_t duration);
-bool MDI_FaultAcknowledged(MDI_Handle_t* pHandle, uint8_t motorSelection);
+void MDI_FaultAcknowledged(MDI_Handle_t* pHandle, uint8_t motorSelection);
 
 
 #endif
