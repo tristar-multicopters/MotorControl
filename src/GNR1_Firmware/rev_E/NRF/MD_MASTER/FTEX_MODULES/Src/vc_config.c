@@ -123,7 +123,7 @@ THRO_Handle_t ThrottleHandle =
 
 /**@brief Torque Pin initializing Parameters.
  */
-Torque_Handle_t TorqueSensor =
+TS_Handle_t TorqueSensor =
 {
 	.pRegularConversionManager = &RegularConvertionManager,
 	.hChannelConfig =
@@ -170,7 +170,6 @@ SPR_Handle_t SpeedPulse =
 	.sParam =
 	{
 		.sLowPassFilterBW1 = 16,
-		.sOffset = 12000,
 		.sMax = UINT16_MAX,
 	}
 	

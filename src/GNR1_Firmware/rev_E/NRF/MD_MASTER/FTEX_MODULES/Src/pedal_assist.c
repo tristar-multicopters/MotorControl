@@ -20,15 +20,15 @@
 	*/
 void PAS_Init(PAS_Handle_t* pHandle)
 {
-	 Torque_Init(pHandle->pTorque);
-	 SPR_Init(pHandle->pSpulse);
+	TS_Init(pHandle->pTorque);
+	SPR_Init(pHandle->pSpulse);
 	SPWR_Init(pHandle->pSpulse);
 }
 
 /**
 	* @brief  Pedal Assist capture pulse length
 	* @param  PAS_Handle_t handle
-	* @retval Pedal frequency speed
+	* @retval Pedal Period in us
 	*/
 int32_t PAS_GetSpeed(PAS_Handle_t* pHandle)
 {	
@@ -38,7 +38,7 @@ int32_t PAS_GetSpeed(PAS_Handle_t* pHandle)
 /**
 	* @brief  Pedal Assist capture pulse length
 	* @param  PAS_Handle_t handle
-	* @retval Pedal frequency speed
+	* @retval Pedal frequency in hz
 	*/
 int32_t PAS_GetSpeedFreq(PAS_Handle_t* pHandle)
 {	
@@ -50,7 +50,7 @@ int32_t PAS_GetSpeedFreq(PAS_Handle_t* pHandle)
 /**
 	* @brief  Pedal Assist capture pulse length
 	* @param  PAS_Handle_t handle
-	* @retval Pedal frequency speed
+	* @retval Pedal RPM speed
 	*/
 int32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle)
 {	
@@ -59,11 +59,6 @@ int32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle)
 	return PAS_RPM;
 }
 
-	SPR_Handle_t * pSpulse;				/* Pointer to speed handle */
-	SPR_Handle_t * pSpulseRPM;		/* Pointer to speed handle */
-	SPR_Handle_t * pSpulseFreq;		/* Pointer to speed handle */
-
-
 /**
 	* @brief  Pedal Assist capture deirection
 	* @param  Forward or back direction
@@ -71,7 +66,7 @@ int32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle)
 	*/
 int16_t PAS_GetDirection(PAS_Handle_t* pHandle)
 {
-	return Get_Drvie_Direction(pHandle->pSpulse) ;
+	return Get_Drive_Direction(pHandle->pSpulse) ;
 }
 
 /**
@@ -81,5 +76,5 @@ int16_t PAS_GetDirection(PAS_Handle_t* pHandle)
 	*/
 int16_t PAS_GetTorque(PAS_Handle_t* pHandle)
 {
-	return Torque_CalcAvValue(pHandle->pTorque );
+	return TS_CalcAvValue(pHandle->pTorque );
 }

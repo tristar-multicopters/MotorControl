@@ -20,7 +20,7 @@
 #include "regular_conversion_manager.h"
 
 #include "speed_pulse_read.h"
-#include "torque.h"
+#include "torque_sensor.h"
 
 
 
@@ -29,7 +29,7 @@
 
 typedef struct {
 	
-	Torque_Handle_t * pTorque;		/* Pointer to torque handle */
+	TS_Handle_t * pTorque;		/* Pointer to torque handle */
 	
 	SPR_Handle_t * pSpulse;				/* Pointer to speed handle */
 	

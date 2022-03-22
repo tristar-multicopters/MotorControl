@@ -24,14 +24,14 @@
 
 typedef struct {
 	
-	SPR_Handle_t * wSpulse;				/* Pointer to torque handle */
+	SPR_Handle_t * wSpulse;				/* Pointer to wheel pulse handle */
 	
-} WAS_Handle_t;
+} WSS_Handle_t;
 
 
-void WSS_Init(WAS_Handle_t* pHandle);
-int32_t WSS_GetSpeed(WAS_Handle_t* pHandle);
-int16_t WSS_GetDirection(WAS_Handle_t* pHandle);
+void WSS_Init(WSS_Handle_t* pHandle);
+int32_t WSS_GetSpeed(WSS_Handle_t* pHandle);
+int16_t WSS_GetDirection(WSS_Handle_t* pHandle);
 
 #endif /*__WHEEL_SPEED_SENSOR_H*/
 

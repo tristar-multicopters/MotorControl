@@ -1,8 +1,7 @@
 /**
   ******************************************************************************
-  * @file           : torque.h
-  * @brief          : Header for torque.c file.
-  *                   This file contains the functions and methods to use "torque", 
+  * @file           : speed_pulse_read.h
+  * @brief          : Header for speed_pulse_read.c file. 
 	* @author  				: Jabrane Chakroun
   ******************************************************************************
   * Hardware used:
@@ -17,7 +16,7 @@
   *  0.0.1
   * ------------------------------
   * Last modified:
-  *  07.03.2022 
+  *  22.03.2022 
   * by 
   *  Jabrane Chakroun
   * ------------------------------
@@ -44,10 +43,17 @@ extern "C" {
 
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+
 #include "nrf_drv_ppi.h"
 #include "nrf_drv_timer.h"
 #include "nrf_drv_gpiote.h"
 #include "board_hardware.h"
+#include "nrf.h"
+#include "nrf_delay.h"
+#include "app_error.h"
 /* Exported types ------------------------------------------------------------*/
 
 typedef enum
@@ -59,11 +65,8 @@ typedef enum
 
 typedef struct
 {
-
-	uint16_t 	sLowPassFilterBW1;   /* used to configure the first order software filter bandwidth */
-	uint16_t 	sOffset;          	 /* Offset of the torque signal when at lowest position */
-	uint16_t 	sMax;             	 /* frequency signal when at maximum position */	
-	
+	uint16_t 	sLowPassFilterBW1;   /* used to configure the first order software low pass filter */
+	uint16_t 	sMax;             	 /* Pulse reading signal at maximum position */	
 } SPR_Param_t;
 
 typedef struct
@@ -90,30 +93,17 @@ typedef struct
 	
 	nrfx_gpiote_pin_t pSinSpeed_Pulse_pin;
 	nrfx_gpiote_pin_t pCosSpeed_Pulse_pin;
-
 	
 	uint16_t 			wPread; 
 	uint16_t 			sPread;     
 	uint8_t 			Direction_result;	
 	
 	uint16_t 			sPAvSpeed;       /* It contains latest available pedal average speed in u16 */
-	uint16_t 			sWAvSpeed;       /* It contains latest available pedal average speed in u16 */
-
+	uint16_t 			sWAvSpeed;       /* It contains latest available wheel average speed in u16 */
 
 	SPR_Param_t		sParam;
-	
 } SPR_Handle_t;
 
-
-
-/* Private includes ----------------------------------------------------------*/
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-
-#include "nrf.h"
-#include "nrf_delay.h"
-#include "app_error.h"
 /* Exported constants --------------------------------------------------------*/
 
 /* Exported macro ------------------------------------------------------------*/
@@ -123,19 +113,19 @@ typedef struct
 void SPR_Init(SPR_Handle_t * pHandle);
 void SPWR_Init(SPR_Handle_t * pHandle);
 
-void GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle);
 
 void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);	
 void GPIO_Init(SPR_Handle_t* sHandle);
-void GPIOTE_Capture_Init(SPR_Handle_t* sHandle);
-void GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle);
+uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle);
+uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle);
 
-uint32_t Pedal_capture_get_vlaue(SPR_Handle_t* sHandle);
+uint32_t Pedal_capture_get_value(SPR_Handle_t* sHandle);
 uint32_t Wheel_capture_get_vlaue(SPR_Handle_t* sHandle);
-uint8_t Get_Drvie_Direction (SPR_Handle_t* sHandle);
 
 uint16_t Pspeed_CalcAvValue( SPR_Handle_t * sHandle );
 uint16_t Wspeed_CalcAvValue( SPR_Handle_t * sHandle );
+
+uint8_t Get_Drive_Direction (SPR_Handle_t* sHandle);
 /* Private defines -----------------------------------------------------------*/
 
 // #define all HW dependent functions here

@@ -37,7 +37,7 @@
 	
 /******************************************************************************* Includes ********************************************************************************/
 
-#include "torque.h"
+#include "torque_sensor.h"
 
 /**************************************************************************** Private definitions ************************************************************************/
 uint16_t htorque;
@@ -48,11 +48,11 @@ uint16_t htorque;
 	* @param  pHandle used for Torque monitoring
 	* @retval None
 	*/
-void Torque_Init( Torque_Handle_t * pHandle )
+void TS_Init( TS_Handle_t * pHandle )
 {
 	/* Need to be register with RegularConvManager */
 	pHandle->convHandle = RCM_AddConv(pHandle->pRegularConversionManager, pHandle->hChannelConfig);
-	Torque_Clear( pHandle );
+	TS_Clear( pHandle );
 }
 
 /**
@@ -60,7 +60,7 @@ void Torque_Init( Torque_Handle_t * pHandle )
 	* @param  pHandle used for Torque monitoring
 	* @retval None
 	*/
-void Torque_Clear( Torque_Handle_t * pHandle )
+void TS_Clear( TS_Handle_t * pHandle )
 {
   pHandle->hAvTorque = 0u;
 	pHandle->hIqref = 0;
@@ -71,7 +71,7 @@ void Torque_Clear( Torque_Handle_t * pHandle )
 	* @param  pHandle used for Torque monitoring
 	* @retval None
 	*/
-uint16_t Torque_CalcAvValue( Torque_Handle_t * pHandle )
+uint16_t TS_CalcAvValue( TS_Handle_t * pHandle )
 {
   uint32_t ttemp;
   
@@ -102,7 +102,7 @@ uint16_t Torque_CalcAvValue( Torque_Handle_t * pHandle )
 	* @param  pHandle used for Torque monitoring
 	* @retval hAvTorque torque value
 	*/
-uint16_t Torque_GetAvValue( Torque_Handle_t * pHandle )
+uint16_t TS_GetAvValue( TS_Handle_t * pHandle )
 {
   return ( pHandle->hAvTorque );
 }

@@ -19,7 +19,7 @@
 #include "vc_defines.h"
 #include "foldback.h"
 #include "power_enable.h"
-#include "torque.h"
+#include "torque_sensor.h"
 #include "speed_pulse_read.h"
 #include "wheel_speed_sensor.h"
 
@@ -61,7 +61,7 @@ typedef struct
 	BRK_Handle_t * pBrake;				/* Pointer to brake handle */
 	MS_Handle_t * pMS;						/* Pointer to motor selector handle */
 	PWREN_Handle_t * pPWREN;			/* Pointer to power enable pin handle */
-	WAS_Handle_t * pWAS;				/* Pointer to Wheel speed handle */
+	WSS_Handle_t 	* pWSS;				/* Pointer to Wheel speed handle */
 	
 	FLDBK_Handle_t sHeatsinkTempFoldback1;		/* Foldback handle using M1 heatsink temperature */
 	FLDBK_Handle_t sHeatsinkTempFoldback2;		/* Foldback handle using M2 heatsink temperature */
