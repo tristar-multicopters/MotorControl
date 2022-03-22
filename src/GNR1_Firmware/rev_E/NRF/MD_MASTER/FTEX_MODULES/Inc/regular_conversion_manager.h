@@ -47,7 +47,7 @@ void RCM_RemoveConv(RCM_Handle_t* pHandle, uint8_t conv_handle);
 
 int16_t RCM_ReadConv(RCM_Handle_t* pHandle, uint8_t conv_handle);
 
-void RCM_Init(RCM_Handle_t* pHandle);
+ret_code_t RCM_Init(RCM_Handle_t* pHandle);
 
 
 

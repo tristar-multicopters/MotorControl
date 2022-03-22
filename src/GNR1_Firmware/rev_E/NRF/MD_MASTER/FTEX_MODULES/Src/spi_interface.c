@@ -111,10 +111,8 @@ uint8_t SPI_AddDevice(SPI_Handle_t *p_Handle, SPIdevice_t* pDevice)
 	return device_id;
 }
 
-void SPI_Init(SPI_Handle_t *p_Handle)
-{	
-	ret_code_t res;
-	
+ret_code_t SPI_Init(SPI_Handle_t *p_Handle)
+{		
 	m_pSPI_handle = p_Handle;
 	p_Handle->hError = SPI_NO_ERROR;
 	
@@ -122,9 +120,11 @@ void SPI_Init(SPI_Handle_t *p_Handle)
 	p_Handle->bIsTransferOngoing = false;
 	p_Handle->current_id = 0;
 
-	res = nrf_drv_spi_init(p_Handle->p_spi_inst, &p_Handle->spi_config, spi_event_handler, NULL);
+	ret_code_t res = nrf_drv_spi_init(p_Handle->p_spi_inst, &p_Handle->spi_config, spi_event_handler, NULL);
 
 	#ifdef SPI_COMM_DEBUG
 	bsp_board_init(BSP_INIT_LEDS);
 	#endif
+	
+	return res;
 }

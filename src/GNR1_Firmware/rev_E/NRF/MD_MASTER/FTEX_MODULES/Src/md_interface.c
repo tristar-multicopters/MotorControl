@@ -8,6 +8,7 @@
 
 #include "md_interface.h"
 
+
 void MDI_Init(MDI_Handle_t * pHandle)
 {}
 
@@ -63,5 +64,4 @@ uint8_t MDI_SetSpeedRamp(MDI_Handle_t* pHandle, uint8_t motorSelection, int32_t 
 {}	
 	
 uint8_t MDI_FaultAcknowledged(MDI_Handle_t* pHandle, uint8_t motorSelection)
-{}	
-	
+{}

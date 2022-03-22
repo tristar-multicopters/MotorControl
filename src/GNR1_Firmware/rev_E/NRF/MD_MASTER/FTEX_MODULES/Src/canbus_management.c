@@ -197,12 +197,17 @@ void CAN_SendThrottleBrake(MCP25625_Handle_t * pCANHandle, VCI_Handle_t* pVCHand
 /** @brief  Function for getting MCP error flag state.
 		@return MCP_QUEUE_FULL if CAN queue is full
 */
-bool CAN_queueIsFull( MCP25625_Handle_t * pCANHandle )
+bool CAN_IsQueueFull( MCP25625_Handle_t * pCANHandle )
 {
+	//todo: implementation
+	
 //	if(pCANHandle->hError)
 //		return true;
 //	else
 //		return false;
+	
+	// return dummy value otherwise the compiler is complaining
+	return false;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// FOR TESTING PURPOSES /////////////////////////////////////

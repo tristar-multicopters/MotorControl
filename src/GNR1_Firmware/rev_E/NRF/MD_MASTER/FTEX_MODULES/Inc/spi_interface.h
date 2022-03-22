@@ -78,7 +78,7 @@ typedef struct {
 void SPI_Transfer_IT(SPI_Handle_t *p_Handle, SPI_Transfer_t* transfer);
 void SPI_Transfer_Wait(SPI_Handle_t *p_Handle, SPI_Transfer_t* transfer);
 	
-void SPI_Init(SPI_Handle_t *spi_handle);
+ret_code_t SPI_Init(SPI_Handle_t *spi_handle);
 
 uint8_t SPI_AddDevice(SPI_Handle_t *p_Handle, SPIdevice_t* pDevice);
 

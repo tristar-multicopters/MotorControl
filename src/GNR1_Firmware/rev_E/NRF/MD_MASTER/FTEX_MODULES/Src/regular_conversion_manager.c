@@ -76,7 +76,7 @@ int16_t RCM_ReadConv(RCM_Handle_t* pHandle, uint8_t conv_handle)
 	return (int16_t)pHandle->rcm_buffer[m_pRCM_Handle->bActiveBuffer][conv_handle] << 4;
 }
 
-void RCM_Init(RCM_Handle_t* pHandle)
+ret_code_t RCM_Init(RCM_Handle_t* pHandle)
 {
 	ret_code_t err_code;
 	
@@ -129,6 +129,8 @@ void RCM_Init(RCM_Handle_t* pHandle)
 	
 	err_code = nrf_drv_saadc_buffer_convert(m_pRCM_Handle->rcm_buffer[0], m_pRCM_Handle->rcm_nb_of_conversion);
 	err_code = nrf_drv_saadc_buffer_convert(m_pRCM_Handle->rcm_buffer[1], m_pRCM_Handle->rcm_nb_of_conversion);
+	
+	return err_code;
 }
 
 
