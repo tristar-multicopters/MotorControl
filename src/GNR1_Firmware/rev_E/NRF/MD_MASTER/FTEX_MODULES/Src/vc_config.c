@@ -210,9 +210,9 @@ VCI_Handle_t VCInterfaceHandle =
 {
 	.pStateMachine = &VCStateMachineHandle,
 	.pDrivetrain = &DrivetrainHandle,
-	.euart_type = EUART_EVIONICS // Has to been initialise by EVionics first
 };
 
+eUART_protocol_t EUART_handle_t = EUART_EVIONICS; // Has to been initialise by Evionics first
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,

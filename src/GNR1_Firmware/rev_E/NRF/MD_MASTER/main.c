@@ -53,13 +53,13 @@ static const osThreadAttr_t ThAtt_MDComm = {
 static const osThreadAttr_t ThAtt_eUARTComm = {
 	.name = "TSK_eUART",
 	.stack_size = 512,
-	.priority = osPriorityAboveNormal3
+	.priority = osPriorityBelowNormal
 };
 
 static const osThreadAttr_t ThAtt_STRGmanage = {
 	.name = "TSK_STRGManager",
 	.stack_size = 512,
-	.priority = osPriorityHigh
+	.priority = osPriorityLow
 };
 
 #if CANBUS_ENABLE
@@ -101,7 +101,7 @@ int main(void)
 																			&ThAtt_MDComm);
 	
 	// Task to manage communication between nRF and LCD display (Bafang 750C)
-	TSK_eUART0_handle  = osThreadNew(TSK_eUART, 
+	TSK_eUART0_handle  = osThreadNew(TSK_ProcessEUartFrames , 
 																	 NULL,
 																	 &ThAtt_eUARTComm);
 	

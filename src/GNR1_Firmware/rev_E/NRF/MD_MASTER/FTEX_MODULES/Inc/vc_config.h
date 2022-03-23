@@ -15,7 +15,7 @@
 #include "vc_interface.h"
 #include "canbus_management.h"
 #include "lcd_bafang_comm.h"
-#include "evionics.h"
+#include "ev_config_tool.h"
 
 
 /* VEHICLE SELECTION
@@ -35,7 +35,7 @@ extern LCD_handle_t BafangScreenHandle;
 extern SPI_Handle_t SPI0Manager;
 extern MCP25625_Handle_t CANController;
 extern RCM_Handle_t RegularConvertionManager;
-
+extern eUART_protocol_t EUART_handle_t;
 
 #endif /* __VC_CONFIG_H */
 

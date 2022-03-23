@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    evionics.h
+  * @file    ev_config_tool.h
 	* @author  Jorge Andres Polo, FTEX
   * @brief   Header of evionics.c module that controls communication between host  				 
   *					 (Evionics interface) and the GNR	
@@ -19,11 +19,11 @@
 #define DATA_SIZE	0x100 										 // 256 bytes (64 int32_t parameters)
 #define	CRC_SIZE	2													 // CRC size
 #define EV_RXBUFF_SIZE  DATA_SIZE + CRC_SIZE // Total of max bytes expected to receive in the buffer
-/* State machine stages for receiving data from EVionics*/
+/* State machine stages for receiving data from EVNC*/
 typedef enum
 {
-	EV_FRAME_ID,  /* Recieving Frame ID */
-	EV_SIZE,			/* Recieving Size ID  */
+	EV_FRAME_ID,  /* Receiving Frame ID */
+	EV_SIZE,			/* Receiving Size ID  */
 	EV_DATA_CRC	  /* Receiving Data ID and CRC */
 } EV_rx_stage_t;
 
@@ -78,7 +78,7 @@ typedef struct
   uint8_t buffer[EV_RXBUFF_SIZE];    	 // buffer containing the received data.
 	uint16_t ByteCnt;									   // Counter of bytes
 	EV_rx_stage_t currentStage;
-}EVionics_frame_rx;
+}EVNC_frame_rx;
 
 typedef struct
 {
@@ -86,21 +86,21 @@ typedef struct
   uint8_t size;                        // Size of the Payload of the frame in bytes.
   uint8_t buffer[8];    	 					   // buffer containing the data to answer.
 	uint16_t ByteCnt;									   // Counter of bytes to send
-}EVionics_frame_tx;
+}EVNC_frame_tx;
 
 typedef struct
 {
-	EVionics_frame_rx rx_frame; 			// Frame for data reception
-	EVionics_frame_tx tx_frame;				// Frame for data transmission
+	EVNC_frame_rx rx_frame; 			// Frame for data reception
+	EVNC_frame_tx tx_frame;				// Frame for data transmission
 	eUART_handler_t euart_handler; 		// Contains the callback that will be assigned
-																		// to the event_handler of EVionics
+																		// to the event_handler of EVNC
 	VCI_Handle_t *p_VController;      // Pointer to the vehicle
-}EVionics_handle_t;
+}EVNC_handle_t;
 
 /************************* FUNCTIONS **************************/
-/* Function for initialise the eUart module with EVionics configuration */
-void EVionics_init(VCI_Handle_t* pHandle);
+/* Function for initialise the eUart module with EVNC configuration */
+void EVNC_init(VCI_Handle_t* pHandle);
 
 /* Function for decoding the received data frame */
-void EVionics_frame_process( void );
+void EVNC_frame_process( void );
 #endif

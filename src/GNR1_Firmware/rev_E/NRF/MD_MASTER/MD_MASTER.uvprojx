@@ -594,9 +594,9 @@
               <FilePath>.\FTEX_MODULES\Inc\mc_defines.h</FilePath>
             </File>
             <File>
-              <FileName>evionics.c</FileName>
+              <FileName>ev_config_tool.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX_MODULES\Src\evionics.c</FilePath>
+              <FilePath>.\FTEX_MODULES\Src\ev_config_tool.c</FilePath>
             </File>
           </Files>
         </Group>

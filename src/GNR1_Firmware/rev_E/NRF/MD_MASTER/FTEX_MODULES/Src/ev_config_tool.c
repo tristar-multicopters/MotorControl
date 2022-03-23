@@ -1,23 +1,23 @@
 /**
   ******************************************************************************
-  * @file    evionics.c
+  * @file    ev_config_tool.c
   * @author  Jorge Andres Polo, FTEX
   * @brief   High level module that controls communication between host (Evionics interface) 				 
   *					 and the GNR	
 	******************************************************************************
 	*/
 	
-#include "evionics.h"
+#include "ev_config_tool.h"
 
 /****************** PRIVATE PROTOTYPES AND MEMBERS *******************/
-static EVionics_handle_t m_EV_handler = {0};	// EVionics handler
+static EVNC_handle_t m_EV_handler = {0};	// EVNC handler
 /* Prototypes of private functions */
-static void EVionics_TX_IRQ_Handler(void);
-static void EVionics_RX_IRQ_Handler(uint8_t rx_data);
+static void EVNC_TX_IRQ_Handler(void);
+static void EVNC_RX_IRQ_Handler(uint8_t rx_data);
 static int32_t EV_recoverInt32(uint16_t index);
 //static uint16_t test_CRC = 10;
 static uint16_t EV_CRC16( uint8_t * buffer, uint16_t size );
-static void EV_init_handler(EVionics_handle_t * pHandle);
+static void EV_init_handler(EVNC_handle_t * pHandle);
 /*********************************************************************/
 
 extern osThreadId_t TSK_eUART0_handle; // eUART task identifier
@@ -26,16 +26,16 @@ extern osThreadId_t TSK_STRG_handle;   // Storage management task identifier
  *
  * @param[in] p_lcd_event: Structure that contains the received byte (or byte to send) and the type of event
  */
-static void EVionics_event_handler(eUART_evt_t * p_EVionics_event)
+static void EVNC_event_handler(eUART_evt_t * p_EVNC_event)
 {
-	switch(p_EVionics_event->evt_type)
+	switch(p_EVNC_event->evt_type)
 	{
 		case EUART_BYTE_RECEIVED:
-			EVionics_RX_IRQ_Handler(p_EVionics_event->byte_to_send[0]);
+			EVNC_RX_IRQ_Handler(p_EVNC_event->byte_to_send[0]);
 			break;
 		
 		case EUART_BYTE_SENT:
-			EVionics_TX_IRQ_Handler();
+			EVNC_TX_IRQ_Handler();
 			break;
 		
 		default:
@@ -43,10 +43,10 @@ static void EVionics_event_handler(eUART_evt_t * p_EVionics_event)
 	}
 }
 
-/**@brief Function for build a frame according to the EVionics protocol.
+/**@brief Function for build a frame according to the EVNC protocol.
  * @param[in] rx_data: Byte to process into the EV handle
  */
-static void EVionics_RX_IRQ_Handler(uint8_t rx_data)
+static void EVNC_RX_IRQ_Handler(uint8_t rx_data)
 {
 	//EV_rx_stage_t current_stage = m_EV_handler.rx_frame.currentStage;
 	uint16_t byte_counter = m_EV_handler.rx_frame.ByteCnt;
@@ -147,10 +147,10 @@ static void EVionics_RX_IRQ_Handler(uint8_t rx_data)
 	}
 }
 
-/**@brief Function for build a frame for replying to the host (EVionics tool)
+/**@brief Function for build a frame for replying to the host (EVNC tool)
  *
  */
-static void EVionics_TX_IRQ_Handler(void)
+static void EVNC_TX_IRQ_Handler(void)
 {
 	uint16_t rx_cmd 		= m_EV_handler.rx_frame.cmd;
 	uint16_t tx_counter = m_EV_handler.tx_frame.ByteCnt;
@@ -182,10 +182,10 @@ static void EVionics_TX_IRQ_Handler(void)
 
 /**@brief Function for process a received frame. This methode has several functions:
 	* 			- Configure the motor drive (update the flash memory registers),
-	* 			- Monitoring the controller activity (send requested parameters values to EVionics)
+	* 			- Monitoring the controller activity (send requested parameters values to EVNC)
 	*				- Set local parameters.
 */
-void EVionics_frame_process( void )
+void EVNC_frame_process( void )
 {
 	uint8_t cmd 	= m_EV_handler.rx_frame.cmd;
 	uint8_t size 	= m_EV_handler.rx_frame.size;
@@ -239,16 +239,16 @@ void EVionics_frame_process( void )
 //	}
 }
 
-/**@brief Function for initialise the Uart_0 instance according to EVionics communication
+/**@brief Function for initialise the Uart_0 instance according to EVNC communication
  *				and get the local vehicle instance
  * @param[in] pHandle  : Vehicle handle
  */
-void EVionics_init(VCI_Handle_t* pHandle)
+void EVNC_init(VCI_Handle_t* pHandle)
 {
 	/* Initialisation of EV_handler*/
 	EV_init_handler(&m_EV_handler);
 	m_EV_handler.p_VController = pHandle; // Keep a pointer towards the vehicle object
-	nrf_drv_uart_config_t uart_EVionics_config =
+	nrf_drv_uart_config_t uart_EVNC_config =
 	{                                                     
     .pseltxd            = UART0_TX_PIN,               
     .pselrxd            = UART0_RX_PIN,              	
@@ -263,14 +263,14 @@ void EVionics_init(VCI_Handle_t* pHandle)
     NRF_DRV_UART_DEFAULT_CONFIG_USE_EASY_DMA
 	};
 	
-	eUART_Init(&m_EV_handler.euart_handler,uart_EVionics_config);
+	eUART_Init(&m_EV_handler.euart_handler,uart_EVNC_config);
 	eUART_Receive(&m_EV_handler.euart_handler, m_EV_handler.euart_handler.rx_byte);	
 }
 
-static void EV_init_handler(EVionics_handle_t *pHandle)
+static void EV_init_handler(EVNC_handle_t *pHandle)
 {
-	pHandle->euart_handler.dev_type = EUART_EVIONICS; 						  // Attribution of EVionics as dev type
-	pHandle->euart_handler.p_evt_handler = EVionics_event_handler; 	// Attribution of event handler
+	pHandle->euart_handler.dev_type = EUART_EVIONICS; 						  // Attribution of EVNC as dev type
+	pHandle->euart_handler.p_evt_handler = EVNC_event_handler; 	// Attribution of event handler
 	pHandle->euart_handler.p_uart_inst = UART0_INSTANCE_ADDR; 			// Attribution of UART0 instance
 	pHandle->rx_frame.currentStage = EV_FRAME_ID;										// Init at start parameters section
 }
