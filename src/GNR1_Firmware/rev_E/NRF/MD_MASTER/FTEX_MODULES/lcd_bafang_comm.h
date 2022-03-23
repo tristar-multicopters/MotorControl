@@ -65,12 +65,10 @@ typedef struct
 	VC_Handle_t *pVController;   	 // Pointer to vehicle
   uint8_t TrashCnt;              // Used to skip wave of trash on screen boot up
 }BAF_Handle_t;
-/***************************************************************************/
 
 /********************************* FUNCTIONS *******************************/
 /* Initialisation of Bafang protocol */
 void LCD_BAF_init(VC_Handle_t * pHandle);
-
 /*Function for building the frame */
 void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data);
 /*Function for sending a response */

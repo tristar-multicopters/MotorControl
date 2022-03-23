@@ -669,11 +669,6 @@
               <FilePath>.\FTEX_MODULES\lcd_ftex_comm.c</FilePath>
             </File>
             <File>
-              <FileName>lcd_comm_manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX_MODULES\lcd_comm_manager.c</FilePath>
-            </File>
-            <File>
               <FileName>battery_management.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX_MODULES\battery_management.c</FilePath>

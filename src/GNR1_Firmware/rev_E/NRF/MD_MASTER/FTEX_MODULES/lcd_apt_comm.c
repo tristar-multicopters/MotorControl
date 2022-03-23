@@ -154,60 +154,57 @@ void LCD_APT_frame_Process(void)
 		//Reading the Pass
 		PassLvl = (m_APT_handle.rx_frame.Buffer[PASS] & 0x0F); // Only the 4 LSB contain the pass level
 		
-    if(PassLvl < 0xA)
-		{
-			
-			switch(PassLvl)
-			{
-				case 0:
-					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_0);
-       break;							
-				case 1:
-					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_1);
-       break;	
-				case 2:
-					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_2);
-       break;	
-				case 3:
-					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_3);
-       break;	
-				case 4:
-					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_4);
-       break;								
-				case 5:
-					PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_5);
-       break;	
-				default:
-					while(1); //Pass level not supported ? check screen settings
-       break;					
-			}
-  	 	
-		}			
-
+     if(PassLvl < 0xA)
+		 {			
+			 switch(PassLvl)
+			  {
+				 case 0:
+					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_0);
+          break;							
+				 case 1:
+					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_1);
+          break;	
+				 case 2:
+					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_2);
+          break;	
+				 case 3:
+					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_3);
+          break;	
+				 case 4:
+					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_4);
+          break;								
+				 case 5:
+					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_5);
+          break;	
+			   default:
+				  	while(1); //Pass level not supported ? check screen settings
+          break;					
+		  	}
+ 		 }			
 		
-	  //Reading the Speed   limit TBA
-		//Reading the Current limit TBA
+	    //Reading the Speed   limit TBA
+	  	//Reading the Current limit TBA
 		
-		//Reading the Wheel diameter
-	  WheelSize = m_APT_handle.rx_frame.Buffer[WHEELD];
+		  //Reading the Wheel diameter
+	    WheelSize = m_APT_handle.rx_frame.Buffer[WHEELD];
 		
-		if(WheelSize < 35) //Wheel diameters size is in inches
-		{
+		  if(WheelSize < 35) //Wheel diameters size is in inches
+		  {
 			 
-		}
-		else if(WheelSize > 50) //Wheel perimiter size is in centimeters
-		{
+		  }
+		  else if(WheelSize > 50) //Wheel perimiter size is in centimeters
+		  {
 		 
-		}
-		else //Wheel size is unexpect
-		{
-		 while(1);
-		} 	   
-	}
-  else
-	{
-	  while(1); //Checksum isnt valid		
-	}	
+		  }
+		  else //Wheel size is unexpected
+		  {
+		    while(1);
+	  	} 	   
+	  }
+    else
+	  {
+	    while(1); //Checksum isnt valid		
+	  }	
 	
 	  // For APT protocol, LSB is sent first for multi-byte values
 		replyFrame.Size = 13;
@@ -215,12 +212,6 @@ void LCD_APT_frame_Process(void)
     replyFrame.Buffer[ 0] = APT_START; //Start
 	
 	
-	 // toSend = m_APT_handle.pVController->pThrottle->hInstThrottle; //Showing the throttle instead could be a replacement
-	
-	 /* if(toSend > 0xFF)
-		{
-		  toSend = 0xFF;
-		}*/	
 		toSend = 0x64;
     replyFrame.Buffer[ 1] = (toSend & 0x000000FF); // Power 0.1 A / unit 
 	
@@ -242,6 +233,7 @@ void LCD_APT_frame_Process(void)
     replyFrame.Buffer[ 9] = 0x00; // Reserved
 	
 	  //Calculate checksum
+		//Sum of paired bytes
 		Merge = 0;
 		Check = 0;
 	  for(int i = 0; i < 10;	i += 2)

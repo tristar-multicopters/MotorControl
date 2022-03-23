@@ -43,7 +43,7 @@ static void LCD_Baf_event_handler(eUART_evt_t * p_lcd_event)
 void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 {
 	
-	if(m_Baf_handle.TrashCnt >= 123)
+	if(m_Baf_handle.TrashCnt >= 123) //Skip the bundle of 123trash bytes when the screen is powerd on
 	{
 	
 	 uint8_t ByteCount = m_Baf_handle.rx_frame.ByteCnt;     
@@ -76,16 +76,16 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 				 if(m_Baf_handle.rx_frame.Code == BAF_CMD_READ) //Read cmd
 				 {	
 						m_Baf_handle.rx_frame.ByteCnt = 0;
-						osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify client a frame has been received
+						osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify task a frame has been received
 				 }
 				 else if(m_Baf_handle.rx_frame.Code == BAF_CMD_WRITE)//Write cmd
 				 {
-						if(m_Baf_handle.rx_frame.Buffer[0] == 0x0B)
+						if(m_Baf_handle.rx_frame.Buffer[0] == W_ASSIST) 
 						{
 							if(ByteCount == 3)
 							{								
 								m_Baf_handle.rx_frame.ByteCnt = 0;
-								osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify client a frame has been received
+								osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify task a frame has been received
 							}
 						}
 						else
@@ -125,7 +125,7 @@ void LCD_BAF_TX_IRQ_Handler(void)
 {
     uint8_t tx_data;
 
-    if(m_Baf_handle.tx_frame.ByteCnt < m_Baf_handle.tx_frame.Size)
+    if(m_Baf_handle.tx_frame.ByteCnt < m_Baf_handle.tx_frame.Size) //Check if the entire frame has been sent
     {
 			tx_data = m_Baf_handle.tx_frame.Buffer[m_Baf_handle.tx_frame.ByteCnt];
 			m_Baf_handle.tx_frame.ByteCnt ++;
@@ -157,39 +157,38 @@ void LCD_BAF_frame_Process(void)
 		{
 			switch(m_Baf_handle.rx_frame.Buffer[0])
 			{
-				case R_VERSION:
-					  //answer with 0x90 0x40 0x0D
+				case R_VERSION:          //Answer is fixed
 				    replyFrame.Size = 3;
 				    replyFrame.Buffer[0] = 0x90;
 				    replyFrame.Buffer[1] = 0x40;
 				    replyFrame.Buffer[2] = 0x0D;
 				  break;
-				
-			  case R_STATUS:
-				    //answer with 0x01 twice
-					  replyFrame.Size = 2;
+				 
+			  case R_STATUS:           //0x01 means there are no errors
+					  replyFrame.Size = 2; //To change if we want to send errors to the screen
 					  replyFrame.Buffer[0] = 0x01;
 					  replyFrame.Buffer[1] = 0x01;							   
 					break;				
 			 
-			  case R_WORKSTATUS:
-				    //answer with 0x31 0x31
-				    replyFrame.Size = 2;
+			  case R_WORKSTATUS:       //0x31 -> controller is working
+				    replyFrame.Size = 2; 
 				    replyFrame.Buffer[0] = 0x31;
 				    replyFrame.Buffer[1] = 0x31;
 					break;
 			 
 			  case R_CURRENT:
 				    //answer with 0-250 value twice (each unit = 0.5 A)
-				    //toSend = m_Baf_handle.pVController->pThrottle->hInstThrottle; //Showing the throttle instead could be a replacement
-			      toSend = 0;
+				
+				    //Aprox calculation 
+				    toSend = abs( VC_getMotorIqIdMeas(m_Baf_handle.pVController, M1).q );
+					  toSend = (uint8_t)(toSend >> 8)*4/5;
+				
 			      replyFrame.Size = 2;
 				    replyFrame.Buffer[0] = toSend;
 				    replyFrame.Buffer[1] = toSend;
 					break;
 			 
 			  case R_BATCAP:
-				    //answer with 0-99 value twice
 				    toSend = VC_getBattVoltage(m_Baf_handle.pVController);
 			      toSend = ((toSend - 30) * 5)-1; //Aprox calculation of bat %
 			    
@@ -204,11 +203,9 @@ void LCD_BAF_frame_Process(void)
 					break;
 			 
 			  case R_RSPEED:
-				   //answer with rpm + checksum (speed + 0x20)
-			     //Jorge: speed is coded in 4 bytes, mesure is in RPM.
 				   toSend = VC_getMotorSpeedMeas(m_Baf_handle.pVController,M1);
 			  
-			     toSend = (toSend * 10) / 37;
+			     toSend = (toSend * 10) / 37; //Recheck calculation for various bikes
 			 
            if(toSend < 0)
 				   {
@@ -220,15 +217,13 @@ void LCD_BAF_frame_Process(void)
 				   replyFrame.Buffer[2] = replyFrame.Buffer[0] + replyFrame.Buffer[1] + 0x20; 
 				 break;
 			 
-			  case R_LIGHTSTATUS:
-				   //answer with 0x00 0x00 (light off)
+			  case R_LIGHTSTATUS: //Not supported so we answer with ligghts closed
 				   replyFrame.Size = 2;
 				   replyFrame.Buffer[0] = 0x00;
 				   replyFrame.Buffer[1] = 0x00;
 			   break;
 			 
-			  case R_PHOTTHRESH:
-				   //answer with threshhold 0xFF 0xFF
+			  case R_PHOTTHRESH: //Not supported so we answer with a regular value
 				   replyFrame.Size = 2;
 				   replyFrame.Buffer[0] = 0xFF;
 				   replyFrame.Buffer[1] = 0xFF;

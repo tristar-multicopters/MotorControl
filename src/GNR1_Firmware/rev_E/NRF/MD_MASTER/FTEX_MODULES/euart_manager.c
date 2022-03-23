@@ -46,7 +46,7 @@ static void euart_event_handler(nrf_drv_uart_event_t * p_event, void* p_context)
 
 /**@brief Fucntion for initialise the uart driver according to the type of display
  *
- * @param[in] pHandle  : Lcd handle containing the type of screen and uart instance
+ * @param[in] pHandle    : Lcd handle containing the type of screen and uart instance
  * @param[in] uart_config: Uart configuration
  */
 void eUART_Init(eUART_handler_t * pHandle, nrf_drv_uart_config_t uart_config)
