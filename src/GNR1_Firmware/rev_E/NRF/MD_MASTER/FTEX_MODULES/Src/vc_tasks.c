@@ -53,7 +53,7 @@ void VC_BootUp(void)
 
 	#if CANBUS_ENABLE
 	/* Initialize SPI bus and CAN */
-	ret_code_t result = SPI_Init(&SPI0Manager);
+	SPI_Init(&SPI0Manager);
 	
 	// todo: handle returned result
 	
@@ -68,9 +68,7 @@ void VC_BootUp(void)
 	DRVT_Init(pVCI->pDrivetrain);
 	
 	/* Initialize ADC module */
-  ret_code_t error = RCM_Init(&RegularConvertionManager);
-	
-	//todo: handle error if initialization fails
+    RCM_Init(&RegularConvertionManager);
 }
 
 __NO_RETURN void TSK_FastLoopMD (void * pvParameter)
