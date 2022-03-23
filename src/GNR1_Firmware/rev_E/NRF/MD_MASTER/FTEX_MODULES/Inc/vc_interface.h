@@ -210,7 +210,7 @@ typedef enum
 
 int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID);
 
-void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, uint8_t value);
+void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value);
 
 
 
