@@ -74,6 +74,8 @@ typedef struct
 	uint16_t hSpeedRampTime;			/* Speed ramp time in millisecond */
 	uint16_t hTorqueRampTime;			/* Torque ramp time in millisecond */
 	uint16_t hStartingThrottle;		/* Minimum torque to start drivetrain */
+	uint16_t hStoppingThrottle;		/* Minimum torque to stop drivetrain */
+	uint16_t hStoppingSpeed;			/* Minimum speed to stop drivetrain */
 	
 } DRVT_Handle_t;
 

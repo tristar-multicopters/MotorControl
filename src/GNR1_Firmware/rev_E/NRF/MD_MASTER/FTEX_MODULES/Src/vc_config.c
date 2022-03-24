@@ -92,30 +92,42 @@ THRO_Handle_t ThrottleHandle =
 	{
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
-		.hMax = UINT16_MAX,
-		.m = -16,
-		.F = 35,
+		
+		.hOffsetThrottle = 4800,
+		.bSlopeThrottle = 5,
+		.bDivisorThrottle = 3,
+		
+		.hOffsetTorque = 4000,
+		.bSlopeTorque = -13,
+		.bDivisorTorque = 22,
 	}
 	#elif VEHICLE_SELECTION == 2
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
-		.hMax = UINT16_MAX,
-		.m = -11,
-		.F = 36,
+	
+		.hOffset1 = 4800,
+		.bSlope1 = 0,
+		.bDivisor1 = 0,
+		
+		.hOffset2 = 0,
+		.bSlope2 = 0,
+		.bDivisor2 = 0,
 	}
 	#else
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
-		.hMax = UINT16_MAX,
-		.m = -16,
-		.F = 35,
+	
+		.hOffset1 = 4800,
+		.bSlope1 = 0,
+		.bDivisor1 = 0,
+		
+		.hOffset2 = 0,
+		.bSlope2 = 0,
+		.bDivisor2 = 0,
 	}
 	#endif
 };
@@ -241,7 +253,9 @@ DRVT_Handle_t DrivetrainHandle =
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTime = 200,
 	.hSpeedRampTime = 200,
-	.hStartingThrottle = 12000,
+	.hStartingThrottle = 1000,
+	.hStoppingThrottle = 500,
+	.hStoppingSpeed = 0,
 	#elif VEHICLE_SELECTION == 2
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
@@ -249,7 +263,9 @@ DRVT_Handle_t DrivetrainHandle =
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTime = 200,
 	.hSpeedRampTime = 200,
-	.hStartingThrottle = 12000,
+	.hStartingThrottle = 1000,
+	.hStoppingThrottle = 500,
+	.hStoppingSpeed = 0,
 	#else
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = true,
@@ -257,7 +273,9 @@ DRVT_Handle_t DrivetrainHandle =
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTime = 200,
 	.hSpeedRampTime = 200,
-	.hStartingThrottle = 12000,
+	.hStartingThrottle = 1000,
+	.hStoppingThrottle = 500,
+	.hStoppingSpeed = 0,
 	#endif
 	
 	.pMDI = &MDInterfaceHandle,
