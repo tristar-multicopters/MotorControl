@@ -77,8 +77,8 @@ int16_t FLDBK_CalcTorqueMax(FLDBK_Handle_t * pHandle, int16_t hValue)
 
 int16_t FLDBK_ApplyTorqueLimitation(FLDBK_Handle_t * pHandle, int16_t hInitialTorque, int16_t hValue)
 {
-	int16_t hTorqueOut;
 	int16_t hTorqueMax = FLDBK_CalcTorqueMax(pHandle, hValue);
+	int16_t hTorqueOut;
 	
 	if (hInitialTorque > hTorqueMax)
 	{

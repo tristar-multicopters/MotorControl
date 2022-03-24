@@ -132,5 +132,9 @@ int16_t THRO_ThrottleToTorque(THRO_Handle_t * pHandle)
 
 int16_t THRO_ThrottleToSpeed(THRO_Handle_t * pHandle)
 {
+	// todo: implementation
+	
+	// return dummy value so compiler doesn't complain
+	return -1;
 }
 

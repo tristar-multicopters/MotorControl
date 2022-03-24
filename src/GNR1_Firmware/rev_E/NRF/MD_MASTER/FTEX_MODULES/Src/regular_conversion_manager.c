@@ -118,10 +118,10 @@ void RCM_Init(RCM_Handle_t* pHandle)
 	
 	uint32_t timer_compare_event_addr = nrf_drv_timer_compare_event_address_get(pHandle->pTimerInstance,
                                                                                 NRF_TIMER_CC_CHANNEL0);
-  uint32_t saadc_sample_task_addr   = nrf_drv_saadc_sample_task_get();
+    uint32_t saadc_sample_task_addr   = nrf_drv_saadc_sample_task_get();
 	
 	err_code = nrf_drv_ppi_channel_alloc(&pHandle->ppi_channel);
-  err_code = nrf_drv_ppi_channel_assign(pHandle->ppi_channel,
+    err_code = nrf_drv_ppi_channel_assign(pHandle->ppi_channel,
                                           timer_compare_event_addr,
                                           saadc_sample_task_addr);
 																					
@@ -129,6 +129,8 @@ void RCM_Init(RCM_Handle_t* pHandle)
 	
 	err_code = nrf_drv_saadc_buffer_convert(m_pRCM_Handle->rcm_buffer[0], m_pRCM_Handle->rcm_nb_of_conversion);
 	err_code = nrf_drv_saadc_buffer_convert(m_pRCM_Handle->rcm_buffer[1], m_pRCM_Handle->rcm_nb_of_conversion);
+	
+	//todo: handle errors
 }
 
 

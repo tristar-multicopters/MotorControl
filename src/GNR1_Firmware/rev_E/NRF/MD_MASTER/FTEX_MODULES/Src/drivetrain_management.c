@@ -540,6 +540,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	
 	if (!bFaultOccured)
 	{
+        //todo: handle result from MDI_FaultAcknowledged below
 		MDI_FaultAcknowledged(pHandle->pMDI, M1);
 		MDI_FaultAcknowledged(pHandle->pMDI, M2);
 	}
