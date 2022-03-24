@@ -64,6 +64,9 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 	
 	THRO_CalcAvThrottleValue(pHandle->pThrottle);
 	
+	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
+	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
+	
 	if (pHandle->bCtrlType == TORQUE_CTRL)
 	{
 		hTorqueRef = THRO_ThrottleToTorque(pHandle->pThrottle);
@@ -412,17 +415,18 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStop = true;
 	int32_t wSpeedM1 = MDI_getSpeed(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_getSpeed(pHandle->pMDI, M2);
+	uint16_t hTorqueValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
-		if ( THRO_GetAvThrottleValue(pHandle->pThrottle) != 0 && wSpeedM1 != 0)
+		if ( hTorqueValue < pHandle->hStoppingThrottle && abs(wSpeedM1) < pHandle->hStoppingSpeed )
 		{
 			bCheckStop = false;
 		}
 	}
 	if ( DRVT_IsMotor2Used(pHandle) )
 	{
-		if ( THRO_GetAvThrottleValue(pHandle->pThrottle) != 0 && wSpeedM2 != 0)
+		if ( hTorqueValue < pHandle->hStoppingThrottle && abs(wSpeedM2) < pHandle->hStoppingSpeed )
 		{
 			bCheckStop = false;
 		}
@@ -444,8 +448,9 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 {
 	bool bCheckStart = false;
+	uint16_t hTorqueValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( THRO_GetAvThrottleValue(pHandle->pThrottle) > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) )
+	if ( hTorqueValue > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) )
 	{
 		bCheckStart = true;
 	}
