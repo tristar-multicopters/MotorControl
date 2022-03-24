@@ -45,7 +45,7 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		case REG_TORQUESENSOR_FILTER:
 			break;
 		case REG_MAXSPEED_THROTTLE:
-			value = pHandle->pDrivetrain->pThrottle->hParam.hMax;
+//			value = pHandle->pDrivetrain->pThrottle->;
 			break;
 		case REG_MAXSPEED_PAS:
 //			value = pHandle->pDrivetrain->pPAS
@@ -63,13 +63,13 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		
 	// Peripheral parameters (256-511)//
 		case REG_THROTTLE_SLOPE:
-			value = pHandle->pDrivetrain->pThrottle->hParam.m;
+			value = pHandle->pDrivetrain->pThrottle->hParam.bSlopeThrottle;
 			break;
 		case REG_THROTTLE_DIVISOR:
-			value = pHandle->pDrivetrain->pThrottle->hParam.F;
+			value = pHandle->pDrivetrain->pThrottle->hParam.bDivisorThrottle;
 			break;
 		case REG_THROTTLE_OFFSET:
-			value = pHandle->pDrivetrain->pThrottle->hParam.hOffset;
+			value = pHandle->pDrivetrain->pThrottle->hParam.hOffsetThrottle;
 			break;
 		case REG_PAS_ENABLE:
 //			value = pHandle->pDrivetrain->pPAS // To complete...			
@@ -584,7 +584,7 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		case REG_TORQUESENSOR_FILTER:
 			break;
 		case REG_MAXSPEED_THROTTLE:
-			pHandle->pDrivetrain->pThrottle->hParam.hMax = value;
+//			pHandle->pDrivetrain->pThrottle->hParam.hMax = value;
 			break;
 		case REG_MAXSPEED_PAS:
 //			value = pHandle->pDrivetrain->pPAS
@@ -602,13 +602,13 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		
 	// Peripheral parameters (256-511)//
 		case REG_THROTTLE_SLOPE:
-			pHandle->pDrivetrain->pThrottle->hParam.m = value;
+			pHandle->pDrivetrain->pThrottle->hParam.bSlopeThrottle = value;
 			break;
 		case REG_THROTTLE_DIVISOR:
-			pHandle->pDrivetrain->pThrottle->hParam.F = value;
+			pHandle->pDrivetrain->pThrottle->hParam.bDivisorThrottle = value;
 			break;
 		case REG_THROTTLE_OFFSET:
-			pHandle->pDrivetrain->pThrottle->hParam.hOffset = value;
+			pHandle->pDrivetrain->pThrottle->hParam.hOffsetThrottle = value;
 			break;
 		case REG_PAS_ENABLE:
 //		pHandle->pDrivetrain->pPAS // To complete...			
