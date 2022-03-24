@@ -36,7 +36,7 @@ typedef enum
 typedef struct
 {
     eUART_evt_type_t evt_type;   // Type of event
-		uint8_t byte_to_send[1];   // Byte to send over the uart event
+		uint8_t byte_to_send[1];     // Byte to send over the uart event
 } eUART_evt_t;
 
 typedef void (* eUART_event_handler_t) (eUART_evt_t * p_euart_event); // callback for LCD protocols

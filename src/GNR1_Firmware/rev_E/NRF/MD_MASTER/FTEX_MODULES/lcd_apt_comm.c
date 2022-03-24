@@ -13,7 +13,7 @@
 APT_Handle_t m_APT_handle;
 extern osThreadId_t TSK_eUART0_handle; // Task Id for external uart (UART0 instance)
 
-/**@brief Callback used for managing bytes received or sent from the low level layer (lcd_comm_manager)
+/**@brief Callback used for managing bytes received or sent from the low level layer (euart_manager)
  *
  * @param[in] p_lcd_event: Structure that contains the received byte (or byte to send) and the type of event
  */
@@ -28,18 +28,13 @@ static void LCD_APT_event_handler(eUART_evt_t * p_lcd_event)
 		case EUART_BYTE_SENT:
 			LCD_APT_TX_IRQ_Handler();
 			break;
-		
-		default:
-			while(1);
-			break;
 	}
 }
 
-/**@brief Function for building a frame specific this the bafang protocol
+/**@brief Function for building a frame specific to the APT protocol
  * 
  * @param[in] rx_frame: Frame that needs to be decoded. 
  */
-
 void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 {		
 	 uint8_t ByteCount = m_APT_handle.rx_frame.ByteCnt;     
@@ -48,7 +43,6 @@ void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 	 switch(ByteCount)					 
 	 {
 		 case 0:
-			 {
 				 if(ByteReceived == APT_START) //Read or write cmd
 				 {
 					 m_APT_handle.rx_frame.Buffer[ByteCount] = ByteReceived;
@@ -61,23 +55,7 @@ void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 				 }
 				 // Ask for another byte
 				 eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
-			 }break;
-		 
-			case 8:
-				
-			  
-			
-				if(ByteReceived == APT_END) //Read or write cmd
-				 {
-					 m_APT_handle.rx_frame.Buffer[ByteCount] = ByteReceived;
-					 osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify client a frame has been received
-				 }
-				 else 
-				 {
-					 eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
-				 }
-				 m_APT_handle.rx_frame.ByteCnt = 0;
-			break;
+			 break;
 		  case 1:
 			case 2:
 			case 3:
@@ -89,9 +67,22 @@ void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 				 m_APT_handle.rx_frame.ByteCnt ++;
 			
 			   eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
-		  break;
-		 
+		   break;
+		 	case 8: //Every frame has a lenght of 9 bytes (0-8)
+							
+				if(ByteReceived == APT_END) //Read or write cmd
+				 {
+					 m_APT_handle.rx_frame.Buffer[ByteCount] = ByteReceived;
+					 osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify client a frame has been received
+				 }
+				 else //If the last byte isnt the end byte, trash the frame
+				 {
+					 eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
+				 }
+				 m_APT_handle.rx_frame.ByteCnt = 0;
+			break;
 		 default:
+			 
 			   m_APT_handle.rx_frame.ByteCnt = 0;
 			   // Ask for another byte
 			   eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
@@ -102,7 +93,7 @@ void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 
 /**@brief Function for sending a response byte by byte
  * 
- * @param[in] the data should be place in m_baf_handle.tx_fram
+ * @param[in] the data should be place in m_APT_handle.tx_fram
  *            before calling this function
  */
 void LCD_APT_TX_IRQ_Handler(void)
@@ -129,7 +120,6 @@ void LCD_APT_TX_IRQ_Handler(void)
  * 
  * @param[in] rx_frame: Frame that needs to be decoded. 
  */
-
 void LCD_APT_frame_Process(void)
 {
 	APT_frame_t replyFrame = {0};
@@ -147,14 +137,15 @@ void LCD_APT_frame_Process(void)
 	  Check += Merge;
 	}
 	 
-	Check = (Check & 0x0000FFFF);
+	Check = (Check & 0x0000FFFF); //Protection in case of overflow
 	
+	//Check if the CRC is good
   if(Check == m_APT_handle.rx_frame.Buffer[CHECK + 1] + (m_APT_handle.rx_frame.Buffer[CHECK] << 8))
 	{
 		//Reading the Pass
 		PassLvl = (m_APT_handle.rx_frame.Buffer[PASS] & 0x0F); // Only the 4 LSB contain the pass level
 		
-     if(PassLvl < 0xA)
+     if(PassLvl < 0x6) //We currently only support 5 levels of pass
 		 {			
 			 switch(PassLvl)
 			  {
@@ -175,10 +166,7 @@ void LCD_APT_frame_Process(void)
           break;								
 				 case 5:
 					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_5);
-          break;	
-			   default:
-				  	while(1); //Pass level not supported ? check screen settings
-          break;					
+          break;				
 		  	}
  		 }			
 		
@@ -206,7 +194,7 @@ void LCD_APT_frame_Process(void)
 	    while(1); //Checksum isnt valid		
 	  }	
 	
-	  // For APT protocol, LSB is sent first for multi-byte values
+	  // For APT protocol, LSB is sent first for multi-bytes values
 		replyFrame.Size = 13;
 	
     replyFrame.Buffer[ 0] = APT_START; //Start
@@ -254,7 +242,7 @@ void LCD_APT_frame_Process(void)
 		LCD_APT_TX_IRQ_Handler();
 }
 
-/**@brief Function for initializing the LCD module with the Bafang protocol
+/**@brief Function for initializing the LCD module with the APT protocol
  * 
  * @param[in] pHandle: Handle for vehicle controller 
  */
@@ -275,7 +263,7 @@ void LCD_APT_init(VC_Handle_t * pHandle)
       .hwfc               = NRF_UART_HWFC_DISABLED,       
       .parity             = NRF_UART_PARITY_EXCLUDED,     
       .baudrate           = NRF_UART_BAUDRATE_9600, 		
-      .interrupt_priority = 2,                  					
+      .interrupt_priority = 2,                  				 //TODO lower interrupt priority	for all screens	
       NRF_DRV_UART_DEFAULT_CONFIG_USE_EASY_DMA
 	  };
 	

@@ -14,7 +14,7 @@
 BAF_Handle_t m_Baf_handle;
 extern osThreadId_t TSK_eUART0_handle; // Task Id for external uart (UART0 instance)
 
-/**@brief Callback used for managing bytes received or sent from the low level layer (lcd_comm_manager)
+/**@brief Callback used for managing bytes received or sent from the low level layer (euart_manager)
  *
  * @param[in] p_lcd_event: Structure that contains the received byte (or byte to send) and the type of event
  */
@@ -29,9 +29,7 @@ static void LCD_Baf_event_handler(eUART_evt_t * p_lcd_event)
 		case EUART_BYTE_SENT:
 			LCD_BAF_TX_IRQ_Handler();
 			break;
-		
-		default:
-			break;
+
 	}
 }
 
@@ -43,15 +41,15 @@ static void LCD_Baf_event_handler(eUART_evt_t * p_lcd_event)
 void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 {
 	
-	if(m_Baf_handle.TrashCnt >= 123) //Skip the bundle of 123trash bytes when the screen is powerd on
+	if(m_Baf_handle.TrashCnt >= 123) //Skip the bundle of 123 trash bytes when the screen is powerd on
 	{
 	
-	 uint8_t ByteCount = m_Baf_handle.rx_frame.ByteCnt;     
+	 uint8_t ByteCount    = m_Baf_handle.rx_frame.ByteCnt;     
    uint8_t ByteReceived = rx_data;
 				 
 	 switch(ByteCount)					 
 	 {
-		 case 0:
+		  case 0:
 			 {
 				 if(ByteReceived == BAF_CMD_READ || ByteReceived == BAF_CMD_WRITE) //Read or write cmd
 				 {
@@ -65,7 +63,7 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 				 // Ask for another byte
 				 eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 			 }break;
-		 
+		  
 			case 1:
 			case 2:
 			case 3:
@@ -82,20 +80,20 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 				 {
 						if(m_Baf_handle.rx_frame.Buffer[0] == W_ASSIST) 
 						{
-							if(ByteCount == 3)
+							if(ByteCount == 3) //Assit cmd needs 4 bytes (0-3)
 							{								
 								m_Baf_handle.rx_frame.ByteCnt = 0;
 								osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify task a frame has been received
 							}
 						}
-						else
+						else //Wrong frame, trash it.
 						{
 							m_Baf_handle.rx_frame.ByteCnt = 0;
 							// Ask for another byte
 							eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 						}
 					}	
-				 else
+				 else //Wrong frame, trash it.
 				 {
 						m_Baf_handle.rx_frame.ByteCnt = 0;
 						// Ask for another byte
@@ -104,6 +102,7 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 			}break;
 		 
 		 default:
+			 //Unknown frame, trash it.
 			 m_Baf_handle.rx_frame.ByteCnt = 0;
 			 // Ask for another byte
 			 eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
@@ -118,7 +117,7 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 }
 /**@brief Function for sending a response byte by byte
  * 
- * @param[in] the data should be place in m_baf_handle.tx_fram
+ * @param[in] the data should be place in m_baf_handle.tx_frame
  *            before calling this function
  */
 void LCD_BAF_TX_IRQ_Handler(void)
@@ -141,14 +140,17 @@ void LCD_BAF_TX_IRQ_Handler(void)
 
 }
 /**@brief Function for decoding a received frame (previously built on the callback function)
- * 
- * @param[in] rx_frame: Frame that needs to be decoded. 
+ *
+ * @param[in] the data should be place in m_baf_handle.rx_frame
+ *            before calling this function
+ *
+ *  Answers to the screen when needed, applies the changes to the controller that are relevant. 
  */
 
 void LCD_BAF_frame_Process(void)
 {
 	BAF_frame_t replyFrame = {0};
-	int32_t toSend = 0;
+	int32_t toSend    = 0;
 	uint8_t AssistLvl = 0;
 	
 	switch(m_Baf_handle.rx_frame.Code)
@@ -244,7 +246,7 @@ void LCD_BAF_frame_Process(void)
 				case W_ASSIST:
 					 AssistLvl = m_Baf_handle.rx_frame.Buffer[1];
 				
-				   switch(AssistLvl)
+				   switch(AssistLvl) //Set the pas level according to what the user selected
 					 {
 							case A_0:
 								PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_0);								
@@ -289,13 +291,13 @@ void LCD_BAF_frame_Process(void)
 			}
 		}break;//end case BAF_CMD_WRITE
 		
-		default: // TODO: Rise an error
+		default: 
 			replyFrame.Size = 0;
 		  eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 			break;
 	}
 	
-	if(replyFrame.Size > 0)
+	if(replyFrame.Size > 0) //If size is bigger than one we have to send a response
 	{
 		replyFrame.ByteCnt = 0;   
 		
@@ -303,14 +305,12 @@ void LCD_BAF_frame_Process(void)
      		
 		LCD_BAF_TX_IRQ_Handler();
 	}	
-	else 
+	else //If not just get ready for the next frame
 	{
 		replyFrame.Size = 0;
 		eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 	}
 }
-
-
 
 /**@brief Function for initializing the LCD module with the Bafang protocol
  * 
@@ -334,7 +334,7 @@ void LCD_BAF_init(VC_Handle_t * pHandle)
       .hwfc               = NRF_UART_HWFC_DISABLED,       
       .parity             = NRF_UART_PARITY_EXCLUDED,     
       .baudrate           = NRF_UART_BAUDRATE_1200, 		
-      .interrupt_priority = 2,                  					
+      .interrupt_priority = 2,                  				//TODO lower interrupt priority	for all screens
       NRF_DRV_UART_DEFAULT_CONFIG_USE_EASY_DMA
 	  };
 	

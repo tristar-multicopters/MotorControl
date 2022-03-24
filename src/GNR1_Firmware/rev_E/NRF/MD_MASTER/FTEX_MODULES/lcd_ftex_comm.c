@@ -14,7 +14,7 @@
 FTEX_Handle_t m_FTEX_handle;
 extern osThreadId_t TSK_eUART0_handle; // Task Id for external uart (UART0 instance)
 
-/**@brief Callback used for managing bytes received or sent from the low level layer (lcd_comm_manager)
+/**@brief Callback used for managing bytes received or sent from the low level layer (euart_manager)
  *
  * @param[in] p_lcd_event: Structure that contains the received byte (or byte to send) and the type of event
  */
@@ -35,9 +35,9 @@ static void LCD_FTEX_event_handler(eUART_evt_t * p_lcd_event)
 	}
 }
 
-/**@brief Function for building a frame specific this the bafang protocol
+/**@brief Function for building a frame specific to the FTEX protocol
  * 
- * @param[in] rx_frame: Frame that needs to be decoded. 
+ * @param[in] rx_dara: latest byte that has been received 
  */
 
 void * LCD_FTEX_RX_IRQ_Handler(unsigned short rx_data)
@@ -266,7 +266,7 @@ void LCD_FTEX_init(VC_Handle_t * pHandle)
       .hwfc               = NRF_UART_HWFC_DISABLED,       
       .parity             = NRF_UART_PARITY_EXCLUDED,     
       .baudrate           = NRF_UART_BAUDRATE_9600, 		
-      .interrupt_priority = 2,                  					
+      .interrupt_priority = 2,                  		      //TODO lower interrupt priority	for all screens			
       NRF_DRV_UART_DEFAULT_CONFIG_USE_EASY_DMA
 	  };
 	
@@ -274,9 +274,12 @@ void LCD_FTEX_init(VC_Handle_t * pHandle)
 	eUART_Receive(&m_FTEX_handle.euart_handler, m_FTEX_handle.euart_handler.rx_byte);	
 }
 
-/* Checksum calculation function
-   Used to make the 16 bits chesum when sending a frame or
-   to verify a received frame to see if it is valid.
+/** @brief Checksum calculation function
+*
+*   @param[in] frame used to calculate the checksum
+*
+*   Used to make the 16 bits chesum when sending a frame or
+*   to verify a received frame to see if it is valid.
 */
 uint16_t LCD_FTEX_CRC16(FTEX_frame_t frame)
 {
