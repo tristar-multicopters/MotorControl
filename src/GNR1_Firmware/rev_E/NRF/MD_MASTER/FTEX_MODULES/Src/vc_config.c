@@ -274,8 +274,9 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-LCD_handle_t BafangScreenHandle = 
-{
-	.pVCInterface = &VCInterfaceHandle,
-};
+eUART_protocol_t EUART_handle_t = EUART_EVIONICS; // Has to been initialise by Evionics first
+//LCD_handle_t BafangScreenHandle = 
+//{
+//	.pVCInterface = &VCInterfaceHandle,
+//};
 	

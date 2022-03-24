@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -593,6 +593,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX_MODULES\Inc\mc_defines.h</FilePath>
             </File>
+            <File>
+              <FileName>ev_config_tool.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX_MODULES\Src\ev_config_tool.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -674,6 +679,11 @@
           <GroupName>UART</GroupName>
           <Files>
             <File>
+              <FileName>euart_manager.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX_MODULES\Src\euart_manager.c</FilePath>
+            </File>
+            <File>
               <FileName>uart_frame_communication_protocol.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX_MODULES\Src\uart_frame_communication_protocol.c</FilePath>
@@ -698,11 +708,6 @@
         <Group>
           <GroupName>Screen</GroupName>
           <Files>
-            <File>
-              <FileName>display_management.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX_MODULES\Src\display_management.c</FilePath>
-            </File>
             <File>
               <FileName>lcd_bafang_comm.c</FileName>
               <FileType>1</FileType>

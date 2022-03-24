@@ -34,6 +34,7 @@ typedef struct
 {
 	int32_t params_table[PAGE_SIZE/2]; // Contains two memory pages (0 to 1023 and 1024 to 2047)
 	uint8_t error_code;
+	bool isBusy;
 } STRG_handle_t;
 /************************************ FUNCTIONS *************************************/
 
@@ -62,7 +63,10 @@ __NO_RETURN void TSK_StorageManagement(void * pvParameter);
 /* Function for get a parameter from the table of storage registers*/
 int32_t STRG_getParam(uint16_t id);
 
-/* Function for load a storage parameter from EVionics (or an external device) in the local buffer of parameters*/
+/* Function for load a storage parameter from EVNC (or an external device) in the local buffer of parameters*/
 void STRG_setParam(uint16_t id, int32_t value);
+
+/* Function for knowing if the flash memory is busy been written */
+bool STRG_isBusy( void );
 
 #endif
