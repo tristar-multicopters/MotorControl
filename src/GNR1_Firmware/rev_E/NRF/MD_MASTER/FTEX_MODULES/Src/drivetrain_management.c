@@ -2,6 +2,7 @@
   ******************************************************************************
   * @file    drivetrain_management.c
   * @author  Sami Bouzid, FTEX
+	* @author  Jorge Polo, FTEX
   * @brief   This module handles management of the vehicle drivetrain
   *
 	******************************************************************************
@@ -29,6 +30,9 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 	
 	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
 	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
+	pHandle->hOCcounter[M1] = 0; pHandle->hOCcounter[M2] = 0;
+	pHandle->hSUcounter[M1] = 0; pHandle->hSUcounter[M2] = 0;
+	pHandle->hSFcounter[M1] = 0; pHandle->hSFcounter[M2] = 0;
 }
 
 /**
@@ -469,74 +473,168 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	uint16_t hM2FaultNowCode = MDI_getCurrentFaults(pHandle->pMDI, M2);
 	uint16_t hM2FaultOccurredCode = MDI_getOccurredFaults(pHandle->pMDI, M2);
 	
-	bool bFaultNow = hM1FaultNowCode & hM2FaultNowCode;
+	bool bFaultNow = hM1FaultNowCode | hM2FaultNowCode;
 			
 	if (!bFaultNow)
 	{
 		if ( DRVT_IsMotor1Used(pHandle) )
-		{
-			if ( hM1FaultOccurredCode & MC_BREAK_IN )
+		{// If there's an over current (OC) that has occurred but has already been cleared on the STM side
+			if ( hM1FaultOccurredCode & MC_BREAK_IN ) 
 			{
-				/* In case of motor overcurrent... */
+				if(pHandle->hOCcounter[M1] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the OC fault
+					hM1FaultOccurredCode &= ~MC_BREAK_IN;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hOCcounter[M1]++;
+				}
 			}
+			
 			if ( hM1FaultOccurredCode & MC_SPEED_FDBK )
-			{
-				/* In case of speed sensor failure... */
+			{// If there's a speed feedback (SF) that has occurred but has already been cleared on the STM side
+				if(pHandle->hSFcounter[M1] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the SF fault
+					hM1FaultOccurredCode &= ~MC_SPEED_FDBK;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hSFcounter[M1]++;
+				}
 			}
+			
 			if ( hM1FaultOccurredCode & MC_START_UP )
 			{
 				/* In case of motor startup failure... */
+				if(pHandle->hSUcounter[M1] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the SF fault
+					hM1FaultOccurredCode &= ~MC_START_UP;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hSUcounter[M1]++;
+				}
 			}
+			
 			if ( hM1FaultOccurredCode & MC_OVER_TEMP )
 			{
-				/* In case of overtemperature... */
+				// In case of overtemperature, clear the OT fault
 				hM1FaultOccurredCode &= ~MC_OVER_TEMP;
 			}
+			
 			if ( hM1FaultOccurredCode & MC_OVER_VOLT )
 			{
-				/* In case of DCbus overvoltage... */
+				// In case of DCbus overvoltage, clear the OV fault
 				hM1FaultOccurredCode &= ~MC_OVER_VOLT;
 			}
+			
 			if ( hM1FaultOccurredCode & MC_UNDER_VOLT )
 			{
-				/* In case of DCbus undervoltage... */
+				// In case of DCbus undervoltage, clear the UV fault
 				hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
 			}
 		}
 		
 		if ( DRVT_IsMotor2Used(pHandle) )
 		{
-			if ( hM2FaultOccurredCode & MC_BREAK_IN )
+			if ( hM2FaultOccurredCode & MC_BREAK_IN ) 
 			{
-				/* In case of motor overcurrent... */
+				if(pHandle->hOCcounter[M2] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the OC fault
+					hM2FaultOccurredCode &= ~MC_BREAK_IN;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hOCcounter[M2]++;
+				}
 			}
+			
 			if ( hM2FaultOccurredCode & MC_SPEED_FDBK )
-			{
-				/* In case of speed sensor failure... */
+			{// If there's a speed feedback (SF) that has occurred but has already been cleared on the STM side
+				if(pHandle->hSFcounter[M2] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the SF fault
+					hM2FaultOccurredCode &= ~MC_SPEED_FDBK;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hSFcounter[M2]++;
+				}
 			}
+			
 			if ( hM2FaultOccurredCode & MC_START_UP )
-			{
-				/* In case of motor startup failure... */
+			{// If there's a start-up (SU) that has occurred but has already been cleared on the STM side
+				if(pHandle->hSUcounter[M2] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the SF fault
+					hM2FaultOccurredCode &= ~MC_START_UP;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hSUcounter[M2]++;
+				}
 			}
+			
 			if ( hM2FaultOccurredCode & MC_OVER_TEMP )
 			{
 				/* In case of overtemperature... */
 				hM2FaultOccurredCode &= ~MC_OVER_TEMP;
 			}
+			
 			if ( hM2FaultOccurredCode & MC_OVER_VOLT )
 			{
 				/* In case of DCbus overvoltage... */
 				hM2FaultOccurredCode &= ~MC_OVER_VOLT;
 			}
+			
 			if ( hM2FaultOccurredCode & MC_UNDER_VOLT )
 			{
 				/* In case of DCbus undervoltage... */
 				hM2FaultOccurredCode &= ~MC_UNDER_VOLT;
 			}
 		}
+	} // End of if (!bFaultNow)
+	
+	else // There is an error on one of the two motors or both
+	{
+		if ( DRVT_IsMotor1Used(pHandle) )
+		{
+			if(hM1FaultNowCode & MC_BREAK_IN)
+			{	
+				/* In case of motor overcurrent... */
+				pHandle->hOCcounter[M1]++; // Start Over current counter timer
+			}
+			if(hM1FaultNowCode & MC_SPEED_FDBK)
+			{
+				/* In case of speed sensor failure... */
+				pHandle->hSFcounter[M1]++; // Start speed feedback counter timer
+			}
+			if(hM1FaultNowCode & MC_START_UP)
+			{
+				/* In case of motor startup failure... */
+				pHandle->hSUcounter[M1]++; // Start start-up counter timer
+			}
+		}
+		
+		if ( DRVT_IsMotor2Used(pHandle) )
+		{
+			if(hM2FaultNowCode & MC_BREAK_IN)
+			{	
+				/* In case of motor overcurrent... */
+				pHandle->hOCcounter[M2]++; // Start Over current counter timer
+			}
+			if(hM2FaultNowCode & MC_SPEED_FDBK)
+			{
+				/* In case of speed sensor failure... */
+				pHandle->hSFcounter[M2]++; // Start speed feedback counter timer
+			}
+			if(hM2FaultNowCode & MC_START_UP)
+			{
+				/* In case of motor startup failure... */
+				pHandle->hSUcounter[M2]++; // Start start-up counter timer
+			}
+		}
 	}
 	
-	bool bFaultOccured = (hM1FaultOccurredCode & hM2FaultOccurredCode);
+	bool bFaultOccured = (hM1FaultOccurredCode | hM2FaultOccurredCode);
 	
 	if (!bFaultOccured)
 	{

@@ -23,6 +23,8 @@
 #include "speed_pulse_read.h"
 #include "wheel_speed_sensor.h"
 
+#define DRVT_FAULT_TIMEOUT	25 // Number of times the VC state machine should be stayed on fault
+														 // before clear a Over current, start-up or Speed back fault
 typedef enum
 {
 	HUB_SINGLE,
@@ -77,6 +79,10 @@ typedef struct
 	uint16_t hStoppingThrottle;		/* Minimum torque to stop drivetrain */
 	uint16_t hStoppingSpeed;			/* Minimum speed to stop drivetrain */
 	
+	// Fault handlers //
+	uint16_t hOCcounter[2];   			  /* Over current counters. First element would	be for M1, second for M2 */
+	uint16_t hSUcounter[2];   			  /* Start-up counters. First element would	be for M1, second for M2     */
+	uint16_t hSFcounter[2];   			  /* Speed feedback current counters. First element would	be for M1, second for M2*/
 } DRVT_Handle_t;
 
 /**
