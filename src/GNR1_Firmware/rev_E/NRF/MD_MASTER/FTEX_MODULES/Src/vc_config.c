@@ -138,7 +138,10 @@ MS_Handle_t MotorSelectorHandle =
 };
 
 VCSTM_Handle_t VCStateMachineHandle = 
-{	0
+{	
+	.bVState = V_IDLE,
+	.hVFaultNow = 0,
+	.hVFaultOccurred = 0
 };
 
 MD_Comm_Handle_t MDCommunicationHandle = 

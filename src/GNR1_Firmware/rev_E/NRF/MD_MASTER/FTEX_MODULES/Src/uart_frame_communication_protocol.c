@@ -89,7 +89,7 @@ void UFCP_Init( UFCP_Handle_t * pHandle, nrf_drv_uart_config_t uart_config, ufcp
 /*
  *
  */
-void * UFCP_RX_IRQ_Handler( UFCP_Handle_t * pHandle, unsigned short rx_data )
+void * UFCP_RX_IRQ_Handler( UFCP_Handle_t * pHandle, unsigned short rx_data)
 {
   void * ret_val = (void *) & UFCP_Usart_Timeout_none;
   FCP_Handle_t * pBaseHandle = & pHandle->_Super;
@@ -173,7 +173,7 @@ void * UFCP_RX_IRQ_Handler( UFCP_Handle_t * pHandle, unsigned short rx_data )
 /*
  This function takes care of decoding requests received from a bafang display 
 */
-void * UFCP_Baf_RX_IRQ_Handler(UFCP_Handle_t * pHandle, unsigned short rx_data )
+void UFCP_Baf_RX_IRQ_Handler(UFCP_Handle_t * pHandle, unsigned short rx_data)
 {
   FCP_Handle_t * pBaseHandle = & pHandle->_Super;
   uint8_t rx_byte = (uint8_t) rx_data;

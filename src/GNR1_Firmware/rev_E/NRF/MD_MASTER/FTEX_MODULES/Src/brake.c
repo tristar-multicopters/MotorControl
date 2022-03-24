@@ -9,8 +9,6 @@
 
 #include "brake.h"
 
-static BRK_Handle_t * m_pBrake;
-
 /* Functions ---------------------------------------------------- */
 
 static void brake_callback(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
@@ -20,10 +18,8 @@ static void brake_callback(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 /**
  * @brief Initializes brake sensor module
  */
-void BRK_Init( BRK_Handle_t * pHandle )
-{
-	m_pBrake = pHandle;
-	
+void BRK_Init(BRK_Handle_t * pHandle)
+{	
 	nrfx_gpiote_in_config_t in_config = 
 	{
 		.sense = NRF_GPIOTE_POLARITY_TOGGLE,
