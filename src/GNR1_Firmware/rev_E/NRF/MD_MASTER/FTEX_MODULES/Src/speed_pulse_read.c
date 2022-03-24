@@ -82,11 +82,10 @@ void SPWR_Init(SPR_Handle_t * pHandle)
 	* @param  Handle pointer
 	* @retval None
 	*/
-void GPIO_Init(SPR_Handle_t* sHandle)
+void GPIO_Init(SPR_Handle_t* pHandle)
 {
 	
-	p_SPR_Handle = sHandle;
-	uint8_t err_code; 
+	p_SPR_Handle = pHandle;
 
 	/* Already Declared in the start of the General Initialization */
 	//err_code = nrf_drv_gpiote_init();
@@ -94,12 +93,12 @@ void GPIO_Init(SPR_Handle_t* sHandle)
 	nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_LOTOHI(true);
 	//in_config.pull = NRF_GPIO_PIN_PULLDOWN;
 
-	err_code = nrf_drv_gpiote_in_init(sHandle->pSinSpeed_Pulse_pin, &in_config, GPIO_Pin_handler);
+	nrf_drv_gpiote_in_init(pHandle->pSinSpeed_Pulse_pin, &in_config, GPIO_Pin_handler);
 
-	err_code = nrf_drv_gpiote_in_init(sHandle->pCosSpeed_Pulse_pin, &in_config, GPIO_Pin_handler);
+	nrf_drv_gpiote_in_init(pHandle->pCosSpeed_Pulse_pin, &in_config, GPIO_Pin_handler);
 
-	nrf_drv_gpiote_in_event_enable(sHandle->pSinSpeed_Pulse_pin, true);
-	nrf_drv_gpiote_in_event_enable(sHandle->pCosSpeed_Pulse_pin, true);
+	nrf_drv_gpiote_in_event_enable(pHandle->pSinSpeed_Pulse_pin, true);
+	nrf_drv_gpiote_in_event_enable(pHandle->pCosSpeed_Pulse_pin, true);
 }
 
 /**
@@ -107,10 +106,10 @@ void GPIO_Init(SPR_Handle_t* sHandle)
 	* @param  Handle pointer
 	* @retval None
 	*/
-uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle)  
+uint8_t GPIOTE_Capture_Init(SPR_Handle_t* pHandle)  
 {
 	
-	p_SPR_Handle = sHandle;
+	p_SPR_Handle = pHandle;
 	uint8_t err_code;
 	
 	/* definition of ppi channel for the first conversion */
@@ -118,7 +117,7 @@ uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle)
 	static nrf_ppi_channel_t ppi_ch_gpiote_restart;
 	
 	/* Optionally, enable pullup or pulldown on the input pin */
-	nrf_gpio_cfg_input(sHandle->pSinSpeed_Pulse_pin, NRF_GPIO_PIN_PULLDOWN);
+	nrf_gpio_cfg_input(pHandle->pSinSpeed_Pulse_pin, NRF_GPIO_PIN_PULLDOWN);
 
 	/* Allocate two PPI channels to the GPIOTE */
 	nrfx_ppi_channel_alloc(&ppi_ch_gpiote_capture);
@@ -126,45 +125,45 @@ uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle)
 
 	/* Capture Timer Configuration */
 	nrf_drv_timer_config_t timer_cfg = NRF_DRV_TIMER_DEFAULT_CONFIG;
-	timer_cfg.frequency = sHandle->bTimer_Prescaler;
-	timer_cfg.bit_width = sHandle->bTimer_Width;
+	timer_cfg.frequency = pHandle->bTimer_Prescaler;
+	timer_cfg.bit_width = pHandle->bTimer_Width;
 	
 	/* Initialize Capture timer */ 
-	err_code = nrf_drv_timer_init(sHandle->pTimerInstance, &timer_cfg, 0);
-	err_code = nrf_drv_timer_init(sHandle->wTimerInstance, &timer_cfg, 0);
+	err_code = nrf_drv_timer_init(pHandle->pTimerInstance, &timer_cfg, 0);
+	err_code = nrf_drv_timer_init(pHandle->wTimerInstance, &timer_cfg, 0);
 
 	//APP_ERROR_CHECK(err_code);
 
 	// The GPIOTE driver doesn't support two GPIOTE channels on the same pin, so direct register access is necessary
-	NRF_GPIOTE->CONFIG[sHandle->bCaptureChannel] = GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos |
+	NRF_GPIOTE->CONFIG[pHandle->bCaptureChannel] = GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos |
 																					GPIOTE_CONFIG_POLARITY_HiToLo << GPIOTE_CONFIG_POLARITY_Pos |
-																					sHandle->pSinSpeed_Pulse_pin << GPIOTE_CONFIG_PSEL_Pos;
-	NRF_GPIOTE->CONFIG[sHandle->bRestartChannel] = GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos |
+																					pHandle->pSinSpeed_Pulse_pin << GPIOTE_CONFIG_PSEL_Pos;
+	NRF_GPIOTE->CONFIG[pHandle->bRestartChannel] = GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos |
 																					GPIOTE_CONFIG_POLARITY_HiToLo << GPIOTE_CONFIG_POLARITY_Pos |
-																					sHandle->pSinSpeed_Pulse_pin << GPIOTE_CONFIG_PSEL_Pos;
+																					pHandle->pSinSpeed_Pulse_pin << GPIOTE_CONFIG_PSEL_Pos;
 
 
 	// Assign a PPI channel to capture the current timer state and store it in CC register 0
 	nrfx_ppi_channel_assign(ppi_ch_gpiote_capture, 
-													(uint32_t)&NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel], 
-													nrf_drv_timer_capture_task_address_get(sHandle->pTimerInstance, 0));
+													(uint32_t)&NRF_GPIOTE->EVENTS_IN[pHandle->bCaptureChannel], 
+													nrf_drv_timer_capture_task_address_get(pHandle->pTimerInstance, 0));
 													
 											
 	
 	// Assign a second PPI channel to restart the timer when a new pulse is detected
 	nrfx_ppi_channel_assign(ppi_ch_gpiote_restart, 
-													(uint32_t)&NRF_GPIOTE->EVENTS_IN[sHandle->bRestartChannel], 
-													nrf_drv_timer_task_address_get(sHandle->pTimerInstance, NRF_TIMER_TASK_CLEAR));
+													(uint32_t)&NRF_GPIOTE->EVENTS_IN[pHandle->bRestartChannel], 
+													nrf_drv_timer_task_address_get(pHandle->pTimerInstance, NRF_TIMER_TASK_CLEAR));
 	
 	// Enable both PPI channels                
 	nrfx_ppi_channel_enable(ppi_ch_gpiote_capture);
 	nrfx_ppi_channel_enable(ppi_ch_gpiote_restart);
 
 	// Make sure the GPIOTE capture in event is cleared. This will be  used to detect if a capture has occured. 
-	NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] = 0;
+	NRF_GPIOTE->EVENTS_IN[pHandle->bCaptureChannel] = 0;
 
 	// Start the timer
-	nrfx_timer_resume(sHandle->pTimerInstance);		
+	nrfx_timer_resume(pHandle->pTimerInstance);		
 	
 	return err_code;
 }
@@ -175,10 +174,10 @@ uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle)
 	* @param  Handle pointer
 	* @retval None
 	*/
-uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle)  
+uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* pHandle)  
 {
 	
-	p_SPR_Handle = sHandle;
+	p_SPR_Handle = pHandle;
 	uint8_t err_code;
 	
 	/* definition of ppi channel for the first conversion */
@@ -186,7 +185,7 @@ uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle)
 	static nrf_ppi_channel_t ppi_ch_gpiote_restart_2;
 	
 	/* Optionally, enable pullup or pulldown on the input pin */
-	nrf_gpio_cfg_input(sHandle->pWheelSpeed_Pulse_pin, NRF_GPIO_PIN_PULLDOWN);
+	nrf_gpio_cfg_input(pHandle->pWheelSpeed_Pulse_pin, NRF_GPIO_PIN_PULLDOWN);
 
 	/* Allocate two PPI channels to the GPIOTE */
 	nrfx_ppi_channel_alloc(&ppi_ch_gpiote_capture_2);
@@ -194,43 +193,43 @@ uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle)
 
 	/* Capture Timer Configuration */
 	nrf_drv_timer_config_t timer_cfg = NRF_DRV_TIMER_DEFAULT_CONFIG;
-	timer_cfg.frequency = sHandle->bTimer_Prescaler;
-	timer_cfg.bit_width = sHandle->bTimer_Width;
+	timer_cfg.frequency = pHandle->bTimer_Prescaler;
+	timer_cfg.bit_width = pHandle->bTimer_Width;
 	
 	/* Initialize Capture timer */ 
-	err_code = nrf_drv_timer_init(sHandle->wTimerInstance, &timer_cfg, 0);
+	err_code = nrf_drv_timer_init(pHandle->wTimerInstance, &timer_cfg, 0);
 	//APP_ERROR_CHECK(err_code);
 
 	// The GPIOTE driver doesn't support two GPIOTE channels on the same pin, so direct register access is necessary
-	NRF_GPIOTE->CONFIG[sHandle->WCaptureChannel] = GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos |
+	NRF_GPIOTE->CONFIG[pHandle->WCaptureChannel] = GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos |
 																					GPIOTE_CONFIG_POLARITY_HiToLo << GPIOTE_CONFIG_POLARITY_Pos |
-																					sHandle->pWheelSpeed_Pulse_pin << GPIOTE_CONFIG_PSEL_Pos;
-	NRF_GPIOTE->CONFIG[sHandle->WRestartChannel] = GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos |
+																					pHandle->pWheelSpeed_Pulse_pin << GPIOTE_CONFIG_PSEL_Pos;
+	NRF_GPIOTE->CONFIG[pHandle->WRestartChannel] = GPIOTE_CONFIG_MODE_Event << GPIOTE_CONFIG_MODE_Pos |
 																					GPIOTE_CONFIG_POLARITY_HiToLo << GPIOTE_CONFIG_POLARITY_Pos |
-																					sHandle->pWheelSpeed_Pulse_pin << GPIOTE_CONFIG_PSEL_Pos;
+																					pHandle->pWheelSpeed_Pulse_pin << GPIOTE_CONFIG_PSEL_Pos;
 
 
 	// Assign a PPI channel to capture the current timer state and store it in CC register 0
 	nrfx_ppi_channel_assign(ppi_ch_gpiote_capture_2, 
-													(uint32_t)&NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel], 
-													nrf_drv_timer_capture_task_address_get(sHandle->wTimerInstance, 0));
+													(uint32_t)&NRF_GPIOTE->EVENTS_IN[pHandle->WCaptureChannel], 
+													nrf_drv_timer_capture_task_address_get(pHandle->wTimerInstance, 0));
 													
 											
 	
 	// Assign a second PPI channel to restart the timer when a new pulse is detected
 	nrfx_ppi_channel_assign(ppi_ch_gpiote_restart_2, 
-													(uint32_t)&NRF_GPIOTE->EVENTS_IN[sHandle->WRestartChannel], 
-													nrf_drv_timer_task_address_get(sHandle->pTimerInstance, NRF_TIMER_TASK_CLEAR));
+													(uint32_t)&NRF_GPIOTE->EVENTS_IN[pHandle->WRestartChannel], 
+													nrf_drv_timer_task_address_get(pHandle->pTimerInstance, NRF_TIMER_TASK_CLEAR));
 	
 	// Enable both PPI channels                
 	nrfx_ppi_channel_enable(ppi_ch_gpiote_capture_2);
 	nrfx_ppi_channel_enable(ppi_ch_gpiote_restart_2);
 
 	// Make sure the GPIOTE capture in event is cleared. This will be  used to detect if a capture has occured. 
-	NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel] = 0;
+	NRF_GPIOTE->EVENTS_IN[pHandle->WCaptureChannel] = 0;
 
 	// Start the timer
-	nrfx_timer_resume(sHandle->wTimerInstance);
+	nrfx_timer_resume(pHandle->wTimerInstance);
 		
 	return err_code;
 }
@@ -240,22 +239,22 @@ uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle)
 	* @param  Handle pointer
 	* @retval uint32_t periode value in us
 	*/
-uint32_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
+uint32_t Pedal_capture_get_value(SPR_Handle_t* pHandle)
 {
 	
-	p_SPR_Handle = sHandle;
+	p_SPR_Handle = pHandle;
 	// Make sure the capture event occured before checking the capture register
-	if(NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] != 0)
+	if(NRF_GPIOTE->EVENTS_IN[pHandle->bCaptureChannel] != 0)
 	{		// Clear the capture event
-			NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] = 0;
+			NRF_GPIOTE->EVENTS_IN[pHandle->bCaptureChannel] = 0;
 			// Return the stored capture value in the timer
-			sHandle->sPread =  nrf_drv_timer_capture_get(sHandle->pTimerInstance, 0);
-			return (sHandle->sPread);
+			pHandle->sPread =  (uint32_t)nrf_drv_timer_capture_get(pHandle->pTimerInstance, 0);
+			return (pHandle->sPread);
 	}
 	else
 	{		// In case no capture occured, return 0
-			sHandle->sPread = 0;
-			return (sHandle->sPread);
+			pHandle->sPread = 0;
+			return (pHandle->sPread);
 	}
 }
 
@@ -264,22 +263,21 @@ uint32_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 	* @param  Handle pointer
 	* @retval uint32_t periode value in us
 	*/
-uint32_t Wheel_capture_get_value(SPR_Handle_t* sHandle)
+uint32_t Wheel_capture_get_value(SPR_Handle_t* pHandle)
 {
-	
-	p_SPR_Handle = sHandle;
+	p_SPR_Handle = pHandle;
 	// Make sure the capture event occured before checking the capture register
-	if(NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel] != 0)
+	if(NRF_GPIOTE->EVENTS_IN[pHandle->WCaptureChannel] != 0)
 	{		// Clear the capture event
-			NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel] = 0;	
+			NRF_GPIOTE->EVENTS_IN[pHandle->WCaptureChannel] = 0;	
 			// Return the stored capture value in the timer
-			sHandle->wPread =  nrf_drv_timer_capture_get(sHandle->wTimerInstance, 0);
-			return (sHandle->wPread);
+			pHandle->wPread =  (uint32_t)nrf_drv_timer_capture_get(pHandle->wTimerInstance, 0);
+			return (pHandle->wPread);
 	}
 	else
 	{		// In case no capture occured, return 0
-			sHandle->wPread = 0;
-			return (sHandle->wPread);
+			pHandle->wPread = 0;
+			return (pHandle->wPread);
 	}
 }
 
@@ -309,7 +307,7 @@ void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 	* @param  Handle pointer
 	* @retval direction decision 
 	*/
-uint8_t Get_Drive_Direction (SPR_Handle_t* sHandle)
+uint8_t Get_Drive_Direction (SPR_Handle_t* pHandle)
 {
 	 return ( p_SPR_Handle->Direction_result );
 }
@@ -319,24 +317,24 @@ uint8_t Get_Drive_Direction (SPR_Handle_t* sHandle)
 	* @param  Handle pointer
 	* @retval None
 	*/
-uint16_t Pspeed_CalcAvValue( SPR_Handle_t * sHandle )
+uint16_t Pspeed_CalcAvValue( SPR_Handle_t * pHandle )
 {  
 	uint32_t sPtemp;
 	uint16_t sBandwidth;
 
-	sBandwidth = sHandle->sParam.sLowPassFilterBW1;
-	pSpeed = Pedal_capture_get_value(sHandle);
+	sBandwidth = pHandle->sParam.sLowPassFilterBW1;
+	pSpeed = Pedal_capture_get_value(pHandle);
 
 	if ( pSpeed != 0xFFFFu )
 	{
 		sPtemp =  ( uint32_t )( sBandwidth - 1u );
-		sPtemp *= ( uint32_t ) ( sHandle->sPAvSpeed );
+		sPtemp *= ( uint32_t ) ( pHandle->sPAvSpeed );
 		sPtemp += pSpeed;
 		sPtemp /= ( uint32_t )( sBandwidth );
 
-		sHandle->sPAvSpeed = ( uint16_t ) sPtemp;
+		pHandle->sPAvSpeed = ( uint16_t ) sPtemp;
 	}
-	return sHandle->sPAvSpeed;
+	return pHandle->sPAvSpeed;
 }
 
 
@@ -345,24 +343,25 @@ uint16_t Pspeed_CalcAvValue( SPR_Handle_t * sHandle )
 	* @param  Handle pointer
 	* @retval None
 	*/
-uint16_t Wspeed_CalcAvValue( SPR_Handle_t * sHandle )
+uint16_t Wspeed_CalcAvValue( SPR_Handle_t * pHandle )
 {
   uint32_t sWtemp;
 	uint16_t sBandwidth;
 
-	sBandwidth = sHandle->sParam.sLowPassFilterBW1;
-	wSpeed = Wheel_capture_get_value(sHandle);
+	sBandwidth = pHandle->sParam.sLowPassFilterBW1;
+	wSpeed = Wheel_capture_get_value(pHandle);
 
 	if ( wSpeed != 0xFFFFu )
 	{
 		sWtemp =  ( uint32_t )( sBandwidth - 1u );
-		sWtemp *= ( uint32_t ) ( sHandle->sWAvSpeed );
+		sWtemp *= ( uint32_t ) ( pHandle->sWAvSpeed );
 		sWtemp += wSpeed;
 		sWtemp /= ( uint32_t )( sBandwidth );
 
-		sHandle->sWAvSpeed = ( uint16_t ) sWtemp;
+		pHandle->sWAvSpeed = ( uint16_t ) sWtemp;
 	}  
-	return sHandle->sWAvSpeed;
+	return pHandle->sWAvSpeed;
 }
 
 /****************************************************** (C) COPYRIGHT FTEX Inc. *****END OF FILE**** ************************************************/
+
