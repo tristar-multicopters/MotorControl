@@ -81,7 +81,7 @@ __NO_RETURN void TSK_FastLoopMD (void * pvParameter)
 	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
 	while (true)
-	{		
+	{
 		DRVT_CalcTorqueSpeed(pVCI->pDrivetrain);
 		
 		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain) )

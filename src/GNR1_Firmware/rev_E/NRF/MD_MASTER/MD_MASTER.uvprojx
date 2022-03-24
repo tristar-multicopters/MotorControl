@@ -633,6 +633,26 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX_MODULES\Src\power_enable.c</FilePath>
             </File>
+            <File>
+              <FileName>torque_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX_MODULES\Src\torque_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>torque_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX_MODULES\Inc\torque_sensor.h</FilePath>
+            </File>
+            <File>
+              <FileName>speed_pulse_read.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX_MODULES\Src\speed_pulse_read.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_pulse_read.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX_MODULES\Inc\speed_pulse_read.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

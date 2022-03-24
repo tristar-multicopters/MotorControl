@@ -1,0 +1,142 @@
+/**
+  ******************************************************************************
+  * @file           : speed_pulse_read.h
+  * @brief          : Header for speed_pulse_read.c file. 
+	* @author  				: Jabrane Chakroun
+  ******************************************************************************
+  * Hardware used:
+  *  
+  * 
+  * ------------------------------
+  * Based on software:
+  *  
+  *  
+  * ------------------------------
+  * Version number:
+  *  0.0.1
+  * ------------------------------
+  * Last modified:
+  *  22.03.2022 
+  * by 
+  *  Jabrane Chakroun
+  * ------------------------------
+  *
+  *
+  * This software is the sole property of FTEX Inc.
+  *
+  * COPYRIGHT (c) 2022 BY FTEX Inc. ALL RIGHTS RESERVED. NO PART OF
+  * THIS PROGRAM OR PUBLICATION MAY BE REPRODUCED, TRANSMITTED, TRANSCRIBED, 
+  * STORED IN A RETRIEVAL SYSTEM, OR TRANSLATED INTO ANY LANGUAGE OR COMPUTER 
+  * LANGUAGE IN ANY FORM OR BY ANY MEANS, ELECTRONIC, MECHANICAL, MAGNETIC, 
+  * OPTICAL, CHEMICAL, MANUAL, OR OTHERWISE, WITHOUT THE PRIOR WRITTEN 
+  * PERMISSION OF FTEX Inc.
+  ******************************************************************************
+  */
+  
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __SPEED_PULSE_READ_H
+#define __SPEED_PULSE_READ_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+/* Includes ------------------------------------------------------------------*/
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+
+#include "nrf_drv_ppi.h"
+#include "nrf_drv_timer.h"
+#include "nrf_drv_gpiote.h"
+#include "board_hardware.h"
+#include "nrf.h"
+#include "nrf_delay.h"
+#include "app_error.h"
+/* Exported types ------------------------------------------------------------*/
+
+typedef enum
+{
+	Forward,
+	Reverse,
+	Error_Direction
+} SPR_direction_t;
+
+typedef struct
+{
+	uint16_t 	sLowPassFilterBW1;   /* used to configure the first order software low pass filter */
+	uint16_t 	sMax;             	 /* Pulse reading signal at maximum position */	
+} SPR_Param_t;
+
+typedef struct
+{
+	/* Wheel ppi Capture Channel*/
+	uint8_t WCaptureChannel;
+	uint8_t WRestartChannel;
+	
+	
+	/* Pedal ppi Capture Channel*/	
+	uint8_t bCaptureChannel;
+	uint8_t bRestartChannel;
+	
+	uint16_t bTimer_Prescaler;
+	uint32_t bTimer_Width;
+	
+	/* Pedal Timer */
+	nrf_drv_timer_t* 	pTimerInstance;
+	/* Wheel Timer */
+	nrf_drv_timer_t* 	wTimerInstance;
+	
+	/* Wheel pulse pin*/
+	nrfx_gpiote_pin_t pWheelSpeed_Pulse_pin;
+	
+	nrfx_gpiote_pin_t pSinSpeed_Pulse_pin;
+	nrfx_gpiote_pin_t pCosSpeed_Pulse_pin;
+	
+	uint16_t 			wPread; 
+	uint16_t 			sPread;     
+	uint8_t 			Direction_result;	
+	
+	uint16_t 			sPAvSpeed;       /* It contains latest available pedal average speed in u16 */
+	uint16_t 			sWAvSpeed;       /* It contains latest available wheel average speed in u16 */
+
+	SPR_Param_t		sParam;
+} SPR_Handle_t;
+
+/* Exported constants --------------------------------------------------------*/
+
+/* Exported macro ------------------------------------------------------------*/
+
+/* Exported functions prototypes ---------------------------------------------*/
+
+void SPR_Init(SPR_Handle_t * pHandle);
+void SPWR_Init(SPR_Handle_t * pHandle);
+
+
+void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);	
+void GPIO_Init(SPR_Handle_t* sHandle);
+uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle);
+uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle);
+
+uint32_t Pedal_capture_get_value(SPR_Handle_t* sHandle);
+uint32_t Wheel_capture_get_vlaue(SPR_Handle_t* sHandle);
+
+uint16_t Pspeed_CalcAvValue( SPR_Handle_t * sHandle );
+uint16_t Wspeed_CalcAvValue( SPR_Handle_t * sHandle );
+
+uint8_t Get_Drive_Direction (SPR_Handle_t* sHandle);
+/* Private defines -----------------------------------------------------------*/
+
+// #define all HW dependent functions here
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __EXAMPLE_HW_H */
+
+
+
+/****************************************************** (C) COPYRIGHT FTEX Inc *****END OF FILE**** ************************************************/
