@@ -29,7 +29,6 @@ static void LCD_Baf_event_handler(eUART_evt_t * p_lcd_event)
 		case EUART_BYTE_SENT:
 			LCD_BAF_TX_IRQ_Handler();
 			break;
-
 	}
 }
 
@@ -37,7 +36,6 @@ static void LCD_Baf_event_handler(eUART_evt_t * p_lcd_event)
  * 
  * @param[in] rx_frame: Frame that needs to be decoded. 
  */
-
 void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 {
 	
@@ -50,7 +48,6 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 	 switch(ByteCount)					 
 	 {
 		  case 0:
-			 {
 				 if(ByteReceived == BAF_CMD_READ || ByteReceived == BAF_CMD_WRITE) //Read or write cmd
 				 {
 					 m_Baf_handle.rx_frame.ByteCnt ++;
@@ -62,12 +59,11 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 				 }
 				 // Ask for another byte
 				 eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
-			 }break;
+			 break;
 		  
 			case 1:
 			case 2:
 			case 3:
-			 {
 				 m_Baf_handle.rx_frame.ByteCnt ++;
 				 m_Baf_handle.rx_frame.Buffer[ByteCount-1] = ByteReceived;	 
 				
@@ -99,8 +95,7 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 						// Ask for another byte
 						eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 				 }
-			}break;
-		 
+		   break;		 
 		 default:
 			 //Unknown frame, trash it.
 			 m_Baf_handle.rx_frame.ByteCnt = 0;
@@ -115,6 +110,7 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 	  eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
   }	
 }
+
 /**@brief Function for sending a response byte by byte
  * 
  * @param[in] the data should be place in m_baf_handle.tx_frame
@@ -137,8 +133,8 @@ void LCD_BAF_TX_IRQ_Handler(void)
 			m_Baf_handle.tx_frame.ByteCnt = 0;
 			eUART_Receive(&m_Baf_handle.euart_handler,m_Baf_handle.euart_handler.rx_byte); //Restart reception
 	  }
-
 }
+
 /**@brief Function for decoding a received frame (previously built on the callback function)
  *
  * @param[in] the data should be place in m_baf_handle.rx_frame
@@ -146,7 +142,6 @@ void LCD_BAF_TX_IRQ_Handler(void)
  *
  *  Answers to the screen when needed, applies the changes to the controller that are relevant. 
  */
-
 void LCD_BAF_frame_Process(void)
 {
 	BAF_frame_t replyFrame = {0};

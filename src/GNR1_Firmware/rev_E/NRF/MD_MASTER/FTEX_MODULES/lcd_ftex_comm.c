@@ -39,7 +39,6 @@ static void LCD_FTEX_event_handler(eUART_evt_t * p_lcd_event)
  * 
  * @param[in] rx_dara: latest byte that has been received 
  */
-
 void * LCD_FTEX_RX_IRQ_Handler(unsigned short rx_data)
 {
 
@@ -107,19 +106,23 @@ void * LCD_FTEX_RX_IRQ_Handler(unsigned short rx_data)
 				 }			
 }
 
+/**@brief Function for sending a frame specific to the FTEX protocol
+ * 
+ * @param[in] m_FTEX_handle.tx_frame: Frame to send
+ */
 void LCD_FTEX_TX_IRQ_Handler(void)
 {
     uint8_t tx_data;
 
-    if(m_FTEX_handle.tx_frame.ByteCnt < m_FTEX_handle.tx_frame.Size)
+    if(m_FTEX_handle.tx_frame.ByteCnt < m_FTEX_handle.tx_frame.Size) //Have we sent every byte in the frame
     {
-			if(m_FTEX_handle.tx_frame.ByteCnt == 0)
+			if(m_FTEX_handle.tx_frame.ByteCnt == 0) //The first byte to send is the code
 			{
-			 tx_data = m_FTEX_handle.tx_frame.Code;
+			  tx_data = m_FTEX_handle.tx_frame.Code;
 			}
 			else
 			{
-			 tx_data = m_FTEX_handle.tx_frame.Buffer[m_FTEX_handle.tx_frame.ByteCnt - 1];
+			  tx_data = m_FTEX_handle.tx_frame.Buffer[m_FTEX_handle.tx_frame.ByteCnt - 1];
 			}
 			
 			m_FTEX_handle.tx_frame.ByteCnt++;
@@ -138,7 +141,6 @@ void LCD_FTEX_TX_IRQ_Handler(void)
  * 
  * @param[in] rx_frame: Frame that needs to be decoded. 
  */
-
 void LCD_FTEX_frame_Process(void)
 {
 	FTEX_frame_t replyFrame = {0};
@@ -215,8 +217,7 @@ void LCD_FTEX_frame_Process(void)
 				  
 					
 					replyFrame.Size = replyFrame.Size + 2; //Add the two CRC bytes to the frame size
-				}
-					
+				}					
 	  	break; //end case FTEX_CMD_READ
 		
 	  	case FTEX_FRAME_WRITE:

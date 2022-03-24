@@ -87,8 +87,7 @@ void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 			   // Ask for another byte
 			   eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
 			 break;						
-	 }
-  	
+	 }  	
 }
 
 /**@brief Function for sending a response byte by byte
@@ -113,7 +112,6 @@ void LCD_APT_TX_IRQ_Handler(void)
 			m_APT_handle.tx_frame.ByteCnt = 0;
 			eUART_Receive(&m_APT_handle.euart_handler,m_APT_handle.euart_handler.rx_byte); //Restart reception
 	  }
-
 }
 
 /**@brief Function for decoding a received frame (previously built on the callback function)
@@ -170,24 +168,24 @@ void LCD_APT_frame_Process(void)
 		  	}
  		 }			
 		
-	    //Reading the Speed   limit TBA
-	  	//Reading the Current limit TBA
+	     //Reading the Speed   limit TBA
+	  	 //Reading the Current limit TBA
 		
-		  //Reading the Wheel diameter
-	    WheelSize = m_APT_handle.rx_frame.Buffer[WHEELD];
+		   //Reading the Wheel diameter
+	     WheelSize = m_APT_handle.rx_frame.Buffer[WHEELD];
 		
-		  if(WheelSize < 35) //Wheel diameters size is in inches
-		  {
+		   if(WheelSize < 35) //Wheel diameters size is in inches
+		   {
 			 
-		  }
-		  else if(WheelSize > 50) //Wheel perimiter size is in centimeters
-		  {
+		   }
+		   else if(WheelSize > 50) //Wheel perimiter size is in centimeters
+		   {
 		 
-		  }
-		  else //Wheel size is unexpected
-		  {
-		    while(1);
-	  	} 	   
+		   }
+		   else //Wheel size is unexpected
+		   {
+		     while(1);
+	  	 } 	   
 	  }
     else
 	  {
