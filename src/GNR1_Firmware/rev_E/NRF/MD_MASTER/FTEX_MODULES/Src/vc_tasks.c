@@ -69,7 +69,7 @@ void VC_BootUp(void)
 	RCM_Init(&RegularConvertionManager);
 	
 	STRG_Init();
-	//EVNC_init(&VCInterfaceHandle);
+	//EVCT_init(&VCInterfaceHandle);
 
 }
 
@@ -154,107 +154,107 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	uint32_t xLastWakeTime = osKernelGetTickCount();
 	while (true)
 	{		
-//		StateVC = VCSTM_GetState( pVCI->pStateMachine );
-//		switch ( StateVC )
-//		{
-//			case V_IDLE:
-//					osDelay(1000);
-//					VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
-//					break;
-//			
-//			case V_STANDBY:
-//					hVehicleFault = DRVT_StandbyStateCheck(pVCI->pDrivetrain);
-//					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
-//					if ( DRVT_CheckStartConditions(pVCI->pDrivetrain) )
-//					{
-//						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY_START );
-//					}
-//					break;
-//			
-//			case V_STANDBY_START:
-//					wCounter = 0;
-//					VCSTM_NextState( pVCI->pStateMachine, V_START );
-//					break;
-//			
-//			case V_START:
-//					DRVT_StartMotors(pVCI->pDrivetrain);
-//					hVehicleFault = DRVT_StartStateCheck(pVCI->pDrivetrain);
-//					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
-//					if ( DRVT_IsDrivetrainActive(pVCI->pDrivetrain) )
-//					{
-//						wCounter = 0;
-//						VCSTM_NextState( pVCI->pStateMachine, V_RUN );
-//					}
-//					wCounter++;
-//					if ( wCounter > 100 )
-//					{
-//						wCounter = 0;
-//						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_START_TIMEOUT, 0 );
-//					}
-//					break;
-//					
-//			case V_RUN:
-//					hVehicleFault = DRVT_RunStateCheck(pVCI->pDrivetrain);
-//					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
-//					DRVT_UpdateMotorRamps(pVCI->pDrivetrain);
-//					if ( DRVT_CheckStopConditions(pVCI->pDrivetrain) )
-//					{
-//						wCounter++;
-//					}
-//					else
-//					{
-//						wCounter = 0;
-//					}
+		StateVC = VCSTM_GetState( pVCI->pStateMachine );
+		switch ( StateVC )
+		{
+			case V_IDLE:
+					osDelay(1000);
+					VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
+					break;
+			
+			case V_STANDBY:
+					hVehicleFault = DRVT_StandbyStateCheck(pVCI->pDrivetrain);
+					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
+					if ( DRVT_CheckStartConditions(pVCI->pDrivetrain) )
+					{
+						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY_START );
+					}
+					break;
+			
+			case V_STANDBY_START:
+					wCounter = 0;
+					VCSTM_NextState( pVCI->pStateMachine, V_START );
+					break;
+			
+			case V_START:
+					DRVT_StartMotors(pVCI->pDrivetrain);
+					hVehicleFault = DRVT_StartStateCheck(pVCI->pDrivetrain);
+					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
+					if ( DRVT_IsDrivetrainActive(pVCI->pDrivetrain) )
+					{
+						wCounter = 0;
+						VCSTM_NextState( pVCI->pStateMachine, V_RUN );
+					}
+					wCounter++;
+					if ( wCounter > 100 )
+					{
+						wCounter = 0;
+						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_START_TIMEOUT, 0 );
+					}
+					break;
+					
+			case V_RUN:
+					hVehicleFault = DRVT_RunStateCheck(pVCI->pDrivetrain);
+					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
+					DRVT_UpdateMotorRamps(pVCI->pDrivetrain);
+					if ( DRVT_CheckStopConditions(pVCI->pDrivetrain) )
+					{
+						wCounter++;
+					}
+					else
+					{
+						wCounter = 0;
+					}
 
-//					if (wCounter > RETURN_TO_STANDBY_LOOPTICKS)
-//					{
-//						wCounter = 0;
-//						VCSTM_NextState( pVCI->pStateMachine, V_ANY_STOP );
-//					}
-//					break;
-//					
-//			case V_ANY_STOP:
-//					wCounter = 0;
-//					VCSTM_NextState( pVCI->pStateMachine, V_STOP );					
-//					break;
-//					
-//			case V_STOP:
-//					DRVT_StopMotors(pVCI->pDrivetrain);
-//					hVehicleFault = DRVT_StopStateCheck(pVCI->pDrivetrain);
-//					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
-//					if ( DRVT_IsDrivetrainStopped(pVCI->pDrivetrain) )
-//					{
-//						wCounter = 0;
-//						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
-//					}
-//					wCounter++;
-//					if ( wCounter > 100 )
-//					{
-//						wCounter = 0;
-//						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_STOP_TIMEOUT, 0 );
-//					}
-//					break;
-//					
-//			case V_FAULT_NOW:
-//					DRVT_StopMotors(pVCI->pDrivetrain);
-//					if ( DRVT_IsDrivetrainStopped(pVCI->pDrivetrain) )
-//					{
-//						if ( !DRVT_MotorFaultManagement(pVCI->pDrivetrain) )
-//						{
-//							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove fault on M1
-//							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove fault on M2
-//						}
-//					}
-//					break;
-//					
-//			case V_FAULT_OVER:
-//					VCSTM_FaultAcknowledged( pVCI->pStateMachine );
-//					break;
-//			
-//			default:
-//				break;
-//		}
-//	
+					if (wCounter > RETURN_TO_STANDBY_LOOPTICKS)
+					{
+						wCounter = 0;
+						VCSTM_NextState( pVCI->pStateMachine, V_ANY_STOP );
+					}
+					break;
+					
+			case V_ANY_STOP:
+					wCounter = 0;
+					VCSTM_NextState( pVCI->pStateMachine, V_STOP );					
+					break;
+					
+			case V_STOP:
+					DRVT_StopMotors(pVCI->pDrivetrain);
+					hVehicleFault = DRVT_StopStateCheck(pVCI->pDrivetrain);
+					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
+					if ( DRVT_IsDrivetrainStopped(pVCI->pDrivetrain) )
+					{
+						wCounter = 0;
+						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
+					}
+					wCounter++;
+					if ( wCounter > 100 )
+					{
+						wCounter = 0;
+						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_STOP_TIMEOUT, 0 );
+					}
+					break;
+					
+			case V_FAULT_NOW:
+					DRVT_StopMotors(pVCI->pDrivetrain);
+					if ( DRVT_IsDrivetrainStopped(pVCI->pDrivetrain) )
+					{
+						if ( !DRVT_MotorFaultManagement(pVCI->pDrivetrain) )
+						{
+							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove VC_M1_FAULTS flag
+							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove VC_M2_FAULTS flag
+						}
+					}
+					break;
+					
+			case V_FAULT_OVER:
+					VCSTM_FaultAcknowledged( pVCI->pStateMachine );
+					break;
+			
+			default:
+				break;
+		}
+	
 		xLastWakeTime += TASK_VCSTM_SAMPLE_TIME_TICK;
 		osDelayUntil(xLastWakeTime);
 	}
@@ -267,7 +267,7 @@ __NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
 	switch(EUART_handle_t)
 	{
 		case EUART_EVIONICS:
-			EVNC_init(&VCInterfaceHandle);
+			EVCT_init(&VCInterfaceHandle);
 			break;
 		
 		case EUART_BAFANG:
@@ -288,7 +288,7 @@ __NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
 		switch(EUART_handle_t)
 		{
 			case EUART_EVIONICS:
-				EVNC_frame_process();
+				EVCT_frame_process();
 				break;
 			
 			case EUART_BAFANG:

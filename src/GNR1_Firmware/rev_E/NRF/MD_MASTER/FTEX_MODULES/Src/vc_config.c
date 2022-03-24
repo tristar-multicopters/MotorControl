@@ -187,7 +187,6 @@ SPR_Handle_t SpeedPulse =
 	
 };
 
-
 MS_Handle_t MotorSelectorHandle = 
 {
 	.wM1SelectPinNumber = M1SELECT_GPIO_PIN,

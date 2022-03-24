@@ -107,3 +107,4 @@ uint16_t TS_GetAvValue( TS_Handle_t * pHandle )
   return ( pHandle->hAvTorque );
 }
 /****************************************************** (C) COPYRIGHT FTEX Inc. *****END OF FILE**** ************************************************/
+

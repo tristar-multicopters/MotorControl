@@ -27,3 +27,4 @@ int16_t WSS_GetDirection(WSS_Handle_t* pHandle)
 {
 	return Get_Drive_Direction(pHandle->wSpulse) ;
 }
+
