@@ -869,7 +869,7 @@
   <LayerInfo>
     <Layers>
       <Layer>
-        <LayName>MD_MASTER</LayName>
+        <LayName>&lt;Project Info&gt;</LayName>
         <LayTarg>0</LayTarg>
         <LayPrjMark>1</LayPrjMark>
       </Layer>

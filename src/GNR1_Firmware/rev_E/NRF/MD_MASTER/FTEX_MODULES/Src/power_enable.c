@@ -12,7 +12,6 @@
 
 extern uint32_t BafTrashCounter; 
 
-static PWREN_Handle_t * m_pPwrEn;
 extern MD_Comm_Handle_t MDComm;
 
 /* Functions ---------------------------------------------------- */
@@ -26,9 +25,7 @@ static void pwren_callback(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
  * @brief Initializes brake sensor module
  */
 void PWREN_Init( PWREN_Handle_t * pHandle )
-{
-	m_pPwrEn = pHandle;
-	
+{	
 	nrfx_gpiote_in_config_t in_config = 
 	{
 		.sense = NRF_GPIOTE_POLARITY_TOGGLE,

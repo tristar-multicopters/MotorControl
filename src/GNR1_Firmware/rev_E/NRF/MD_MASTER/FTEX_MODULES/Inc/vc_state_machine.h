@@ -43,11 +43,11 @@ typedef enum
   */
 typedef struct
 {
-  VC_State_t   bVState;          /*!< Variable containing state machine current
+  VC_State_t bVState;          /*!< Variable containing state machine current
                                     state of vehicle */
-  uint16_t  hVFaultNow;       /*!< Bit fields variable containing vehicle faults
+  uint16_t hVFaultNow;       /*!< Bit fields variable containing vehicle faults
                                     currently present */
-  uint16_t  hVFaultOccurred;  /*!< Bit fields variable containing vehicle faults
+  uint16_t hVFaultOccurred;  /*!< Bit fields variable containing vehicle faults
                                     historically occurred since the state
                                     machine has been moved to FAULT_NOW state */
 } VCSTM_Handle_t;
