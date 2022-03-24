@@ -16,9 +16,11 @@ osThreadId_t TSK_VehicleStateMachine_handle;
 
 static void getMonitoringReg_Fast(uint8_t motorSelection);
 static void getMonitoringReg_Slow(uint8_t motorSelection);
+
+#if CANBUS_ENABLE
 static void sendVehicleMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle);
 static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle, uint8_t motorSelection);
-
+#endif
 
 /************* DEFINES ****************/
 
@@ -52,6 +54,9 @@ void VC_BootUp(void)
 	#if CANBUS_ENABLE
 	/* Initialize SPI bus and CAN */
 	SPI_Init(&SPI0Manager);
+	
+	// todo: handle returned result
+	
 	MCP25625_Init(&CANController);
 	#endif
 	
@@ -60,10 +65,12 @@ void VC_BootUp(void)
 	DRVT_Init(pVCI->pDrivetrain);
 	
 	/* Initialize ADC module */
+
 	RCM_Init(&RegularConvertionManager);
 	
 	STRG_Init();
 	//EVNC_init(&VCInterfaceHandle);
+
 }
 
 __NO_RETURN void TSK_FastLoopMD (void * pvParameter)
@@ -100,7 +107,10 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 	//*******************************************//
 	
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
+	
+	#if CANBUS_ENABLE
 	MCP25625_Handle_t * pCANController = &CANController;
+	#endif
 	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
 																				
@@ -139,7 +149,6 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
 	
 	uint32_t wCounter;
-	uint32_t wReturn2StandbyCounter;
 	uint16_t hVehicleFault;
 	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
@@ -296,13 +305,16 @@ __NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
 	}
 }
 
+#if CANBUS_ENABLE
 static void sendVehicleMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle)
 {
 	CAN_SendStatus(pCANHandle, pVCHandle, M_NONE);
 	CAN_SendThrottleBrake(pCANHandle, pVCHandle);
 	CAN_SendVbus(pCANHandle, pVCHandle);
 }
+#endif
 
+#if CANBUS_ENABLE
 static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle, uint8_t motorSelection)
 {	
 	CAN_SendSpeed(pCANHandle, pVCHandle, motorSelection);
@@ -310,6 +322,7 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 	CAN_SendCurrent(pCANHandle, pVCHandle, motorSelection);
 	CAN_SendTemperature(pCANHandle, pVCHandle, motorSelection);
 }
+#endif
 
 static void getMonitoringReg_Slow(uint8_t motorSelection)
 {
