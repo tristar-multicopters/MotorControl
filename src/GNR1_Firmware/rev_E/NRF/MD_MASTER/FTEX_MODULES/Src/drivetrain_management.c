@@ -454,7 +454,7 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStart = false;
 	uint16_t hTorqueValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( hTorqueValue > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) )
+	if ( hTorqueValue > pHandle->hStartingThrottle) //&& PWREN_IsPowerEnabled(pHandle->pPWREN) )
 	{
 		bCheckStart = true;
 	}
@@ -475,6 +475,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	
 	bool bFaultNow = hM1FaultNowCode | hM2FaultNowCode;
 	
+	//If there's no current motor errors
 	if (!bFaultNow)
 	{
 		if ( DRVT_IsMotor1Used(pHandle) )
@@ -484,6 +485,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 				if(pHandle->hOCcounter[M1] >= DRVT_FAULT_TIMEOUT)
 				{// If the timer has timeout (500ms), clear the OC fault
 					hM1FaultOccurredCode &= ~MC_BREAK_IN;
+					pHandle->hOCcounter[M1] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
@@ -496,6 +498,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 				if(pHandle->hSFcounter[M1] >= DRVT_FAULT_TIMEOUT)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM1FaultOccurredCode &= ~MC_SPEED_FDBK;
+					pHandle->hSFcounter[M1] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
@@ -509,6 +512,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 				if(pHandle->hSUcounter[M1] >= DRVT_FAULT_TIMEOUT)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM1FaultOccurredCode &= ~MC_START_UP;
+					pHandle->hSUcounter[M1] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
@@ -542,6 +546,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 				if(pHandle->hOCcounter[M2] >= DRVT_FAULT_TIMEOUT)
 				{// If the timer has timeout (500ms), clear the OC fault
 					hM2FaultOccurredCode &= ~MC_BREAK_IN;
+					pHandle->hOCcounter[M2] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
@@ -554,6 +559,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 				if(pHandle->hSFcounter[M2] >= DRVT_FAULT_TIMEOUT)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM2FaultOccurredCode &= ~MC_SPEED_FDBK;
+					pHandle->hSFcounter[M2] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
@@ -566,6 +572,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 				if(pHandle->hSUcounter[M2] >= DRVT_FAULT_TIMEOUT)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM2FaultOccurredCode &= ~MC_START_UP;
+					pHandle->hSUcounter[M2] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
@@ -592,47 +599,6 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 			}
 		}
 	} // End of if (!bFaultNow)
-	
-	else // There is an error on one of the two motors or both
-	{
-		if ( DRVT_IsMotor1Used(pHandle) )
-		{
-			if(hM1FaultNowCode & MC_BREAK_IN)
-			{	
-				/* In case of motor overcurrent... */
-				pHandle->hOCcounter[M1]++; // Start Over current counter timer
-			}
-			if(hM1FaultNowCode & MC_SPEED_FDBK)
-			{
-				/* In case of speed sensor failure... */
-				pHandle->hSFcounter[M1]++; // Start speed feedback counter timer
-			}
-			if(hM1FaultNowCode & MC_START_UP)
-			{
-				/* In case of motor startup failure... */
-				pHandle->hSUcounter[M1]++; // Start start-up counter timer
-			}
-		}
-		
-		if ( DRVT_IsMotor2Used(pHandle) )
-		{
-			if(hM2FaultNowCode & MC_BREAK_IN)
-			{	
-				/* In case of motor overcurrent... */
-				pHandle->hOCcounter[M2]++; // Start Over current counter timer
-			}
-			if(hM2FaultNowCode & MC_SPEED_FDBK)
-			{
-				/* In case of speed sensor failure... */
-				pHandle->hSFcounter[M2]++; // Start speed feedback counter timer
-			}
-			if(hM2FaultNowCode & MC_START_UP)
-			{
-				/* In case of motor startup failure... */
-				pHandle->hSUcounter[M2]++; // Start start-up counter timer
-			}
-		}
-	}
 	
 	// Verify if all fault occured have been cleared
 	bool bFaultOccured = (hM1FaultOccurredCode | hM2FaultOccurredCode);
