@@ -43,7 +43,6 @@ static void CLK_Init(void)
 void VC_BootUp(void)
 {	
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
-	//LCD_handle_t * pLCD = &BafangScreenHandle;
 	
 	/* Initialize clock */
 	CLK_Init();
