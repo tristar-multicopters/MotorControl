@@ -148,22 +148,22 @@ void LCD_APT_frame_Process(void)
 			 switch(PassLvl)
 			  {
 				 case 0:
-					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_0);
+					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_0);
           break;							
 				 case 1:
-					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_1);
+					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_1);
           break;	
 				 case 2:
-					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_2);
+					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_2);
           break;	
 				 case 3:
-					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_3);
+					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_3);
           break;	
 				 case 4:
-					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_4);
+					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_4);
           break;								
 				 case 5:
-					  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_5);
+					//  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_5);
           break;				
 		  	}
  		 }			
@@ -202,7 +202,7 @@ void LCD_APT_frame_Process(void)
     replyFrame.Buffer[ 1] = (toSend & 0x000000FF); // Power 0.1 A / unit 
 	
 	
-	  toSend = VC_getMotorSpeedMeas(m_APT_handle.pVController,M1);
+	  //toSend = VC_getMotorSpeedMeas(m_APT_handle.pVController,M1);
 	
 	  toSend = 1000/(toSend/60); //Converion from RPM to period in ms 
 	
@@ -244,7 +244,7 @@ void LCD_APT_frame_Process(void)
  * 
  * @param[in] pHandle: Handle for vehicle controller 
  */
-void LCD_APT_init(VC_Handle_t * pHandle)
+void LCD_APT_init(VCI_Handle_t * pHandle)
 {
 		m_APT_handle.pVController = pHandle;  					 								  // Pointer to VController
 		m_APT_handle.euart_handler.dev_type = EUART_APT;							    // Assignation of LCD type

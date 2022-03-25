@@ -102,7 +102,7 @@ int main(void)
 																			 NULL,
 																			 &ThAtt_VehicleStateMachine);																			 
 		// Create task to manage UART0 communication 																		 
-	TSK_eUART0_handle = osThreadNew(TSK_eUART,
+	TSK_eUART0_handle = osThreadNew(TSK_ProcessEUartFrames,
 																			 NULL,
 																			 &ThAtt_eUART);					 
 	

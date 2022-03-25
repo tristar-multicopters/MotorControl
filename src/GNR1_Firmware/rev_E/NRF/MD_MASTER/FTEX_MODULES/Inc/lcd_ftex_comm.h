@@ -42,13 +42,13 @@ typedef struct
 	FTEX_frame_t tx_frame; 		   	 // Frame for send response
 	eUART_handler_t euart_handler; // Contains the callback that will be assigned 
 																 // to the event_handler and the type of LCD
-	VC_Handle_t *pVController;   	 // Pointer to vehicle
+	VCI_Handle_t *pVController;   	 // Pointer to vehicle
 }FTEX_Handle_t;
 /***************************************************************************/
 
 /********************************* FUNCTIONS *******************************/
 /* Initialisation of EggRider protocol */
-void LCD_FTEX_init(VC_Handle_t * pHandle);
+void LCD_FTEX_init(VCI_Handle_t * pHandle);
 
 void LCD_FTEX_TX_IRQ_Handler(void);
 

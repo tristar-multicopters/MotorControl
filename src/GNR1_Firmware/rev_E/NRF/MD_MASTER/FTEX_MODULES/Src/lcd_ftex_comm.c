@@ -156,14 +156,14 @@ void LCD_FTEX_frame_Process(void)
 				  replyFrame.Code = FTEX_FRAME_READ;
 					replyFrame.Buffer [0] = FTEX_FRAME_READ;
 					
-					toSend = VC_getBattVoltage(m_FTEX_handle.pVController);
+				//	toSend = VC_getBattVoltage(m_FTEX_handle.pVController);
 					
 					toSend = toSend * 100;        //Conversion to 0.01 V / unit from 1 V/ unit
 					
 					replyFrame.Buffer [1] = 0x13; //toSend & 0xFF; //Write voltage value, every uinit is worth 0.01 V
 					replyFrame.Buffer [2] = 0x88; //(toSend >> 8) & 0xFF;
 					
-					toSend = VC_getMotorSpeedMeas(m_FTEX_handle.pVController,M1);
+				//	toSend = VC_getMotorSpeedMeas(m_FTEX_handle.pVController,M1);
 			  
 			    toSend = (toSend * 10) / 37;
 					
@@ -179,13 +179,13 @@ void LCD_FTEX_frame_Process(void)
 					
 					replyFrame.Buffer [9] = 0xFF; //Write Human torque      (N/A)
 					
-					toSend = VC_getMotorTemp(m_FTEX_handle.pVController,M1);
+					//toSend = VC_getMotorTemp(m_FTEX_handle.pVController,M1);
 				
   				toSend += 50;
 					
 					replyFrame.Buffer[10] = 0xFF; //toSend; //Write motor temp with 0 = -50 celcius
 					
-					toSend = VC_getInverterHeatsinkTemp(m_FTEX_handle.pVController,M1);
+					//toSend = VC_getInverterHeatsinkTemp(m_FTEX_handle.pVController,M1);
 					
 					toSend += 50;
 					
@@ -245,7 +245,7 @@ void LCD_FTEX_frame_Process(void)
  * 
  * @param[in] pHandle: Handle for vehicle controller 
  */
-void LCD_FTEX_init(VC_Handle_t * pHandle)
+void LCD_FTEX_init(VCI_Handle_t * pHandle)
 {
 		m_FTEX_handle.pVController = pHandle;  					 								    // Pointer to VController
 		m_FTEX_handle.euart_handler.dev_type = EUART_FTEX;							    // Attribution of LCD type
