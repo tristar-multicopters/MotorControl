@@ -19,6 +19,7 @@
 #include "lcd_apt_comm.h"
 #include "ev_config_tool.h"
 
+
 /* VEHICLE SELECTION
 0: DEFAULT
 1: ECELL

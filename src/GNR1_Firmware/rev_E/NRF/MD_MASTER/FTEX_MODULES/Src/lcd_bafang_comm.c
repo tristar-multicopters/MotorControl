@@ -146,6 +146,7 @@ void LCD_BAF_frame_Process(void)
 {
 	BAF_frame_t replyFrame = {0};
 	int32_t toSend    = 0;
+
 	uint8_t AssistLvl = 0;
 	
 	switch(m_Baf_handle.rx_frame.Code)

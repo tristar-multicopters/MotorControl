@@ -56,7 +56,7 @@ static const osThreadAttr_t ThAtt_MDComm = {
 static const osThreadAttr_t ThAtt_eUART = {
 	.name = "TSK_eUART",
 	.stack_size = 512,
-	.priority = osPriorityNormal3
+	.priority = osPriorityBelowNormal
 };
 
 static const osThreadAttr_t ThAtt_STRGmanage = {
@@ -100,6 +100,7 @@ int main(void)
 																			 &ThAtt_SlowLoopMD);
 	TSK_VehicleStateMachine_handle = osThreadNew(TSK_VehicleStateMachine,
 																			 NULL,
+
 																			 &ThAtt_VehicleStateMachine);																			 
 		// Create task to manage UART0 communication 																		 
 	TSK_eUART0_handle = osThreadNew(TSK_ProcessEUartFrames,

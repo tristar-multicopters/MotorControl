@@ -43,6 +43,7 @@ static void CLK_Init(void)
 void VC_BootUp(void)
 {	
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
+
 	
 	/* Initialize clock */
 	CLK_Init();
@@ -270,6 +271,7 @@ __NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
 			break;
 		
 		case EUART_BAFANG:
+
 			LCD_BAF_init(&VCInterfaceHandle);
 			break;
 		

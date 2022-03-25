@@ -67,6 +67,7 @@ void eUART_Init(eUART_handler_t * pHandle, nrf_drv_uart_config_t uart_config)
 	}
 }
 
+
 /**@brief Fucntion for sending bytes. Normally, it should be used to send a response (acknowledge)
  *        once a received frame has been decoded.
  *
@@ -78,6 +79,7 @@ void eUART_Send(eUART_handler_t * pHandle, uint8_t * tx_buffer, uint8_t size)
 {
 	nrf_drv_uart_tx(pHandle->p_uart_inst, tx_buffer, size);
 }	
+
 
 /**@brief Fucntion to initialise the reception of bytes. Must be used once the uart instance is initialized
  *        and after a received frame has been decoded

@@ -25,6 +25,7 @@ typedef enum
 	EUART_BAFANG,
 	EUART_FTEX,
 	EUART_APT
+
 }eUART_protocol_t;
 
 typedef enum
