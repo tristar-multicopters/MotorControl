@@ -117,6 +117,7 @@ static void STRG_UpdateMemoryPage( void )
 	/*Erase page for memory flash. Necessary for writting in memory */
 	STRG_ResetAllVehicleParams();
 	STRG_SaveAllVehicleParams();
+	STRG_handle_m.isBusy = false;
 }
 
 /****************************************************************************/
@@ -128,7 +129,7 @@ void STRG_Init( void )
 {
 	nrf_fstorage_api_t * pFS_api;
 	STRG_handle_m.error_code = STRG_NO_ERROR;
-	
+	STRG_handle_m.isBusy = false;
 	/* Initialize an fstorage instance using the nrf_fstorage_nvmc backend.
    * nrf_fstorage_nvmc uses the NVMC peripheral.*/
 	pFS_api = &nrf_fstorage_nvmc;
@@ -149,6 +150,7 @@ __NO_RETURN void TSK_StorageManagement(void * pvParameter)
 	while(true)
 	{/*Wait for a write to flash request*/
 		osThreadFlagsWait(STRG_FLAG, osFlagsWaitAny, osWaitForever);
+			STRG_handle_m.isBusy = true;
 			STRG_UpdateMemoryPage();
 	}
 }
@@ -171,3 +173,13 @@ void STRG_setParam(uint16_t id, int32_t value)
 {
 	STRG_handle_m.params_table[id] = value;
 }
+
+/**@brief Function for knowing if the flash memory is busy been written
+	 @pout: Flag that indicates if the flash memory is being written
+*/
+bool STRG_isBusy( void )
+{
+	return STRG_handle_m.isBusy;
+}
+
+

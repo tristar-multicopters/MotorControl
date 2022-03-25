@@ -55,7 +55,6 @@ static void LCD_Baf_event_handler(ufcp_evt_t * p_ufcp_event)
 static void LCD_BAF_frame_received(LCD_handle_t * pHandle, FCP_Frame_t * rx_frame)
 {
 	FCP_Frame_t replyFrame = {0};
-	int32_t toSet  = 0;
 	int32_t toSend = 0;
 	uint8_t AssistLvl = 0;
 	
