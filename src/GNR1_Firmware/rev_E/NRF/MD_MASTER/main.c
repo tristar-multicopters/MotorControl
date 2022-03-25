@@ -53,7 +53,7 @@ static const osThreadAttr_t ThAtt_MDComm = {
 	.priority = osPriorityNormal2
 };
 
-static const osThreadAttr_t ThAtt_eUART = {
+static const osThreadAttr_t ThAtt_eUARTComm = {
 	.name = "TSK_eUART",
 	.stack_size = 512,
 	.priority = osPriorityBelowNormal
@@ -106,10 +106,10 @@ int main(void)
 																			 NULL,
 																			 &ThAtt_eUART);					 
 	
-	/*// Task to manage the flash memory module
+	// Task to manage the flash memory module
 	TSK_STRG_handle 	 = osThreadNew(TSK_StorageManagement, 
 																	 NULL,
-																	 &ThAtt_STRGmanage);*/
+																	 &ThAtt_STRGmanage);
 	
 	#if CANBUS_ENABLE
 	/* Create task to manage CAN Protocol */																		 
