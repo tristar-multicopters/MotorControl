@@ -40,7 +40,7 @@ typedef struct
 {
 	EGG_frame_t rx_frame; 		   	 // Frame for data reception
 	EGG_frame_t tx_frame; 		   	 // Frame for send response
-	eUART_handler_t euart_handler; // Contains the callback that will be assigned 
+	eUART_handler_t euart_handler; 	 // Contains the callback that will be assigned 
 																 // to the event_handler and the type of LCD
 	VC_Handle_t *pVController;   	 // Pointer to vehicle
 }EGG_Handle_t;

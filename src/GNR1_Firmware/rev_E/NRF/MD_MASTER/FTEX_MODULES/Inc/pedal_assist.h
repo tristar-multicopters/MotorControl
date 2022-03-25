@@ -19,24 +19,19 @@
 #include "nrf_drv_ppi.h"
 #include "regular_conversion_manager.h"
 
+#include "speed_pulse_read.h"
+#include "torque_sensor.h"
+
+
+
+#define Coeff_RPM 	60
+#define Coeff_FREQ	1000000
 
 typedef struct {
 	
-	nrf_drv_timer_t* 	pTimerInstance;
+	TS_Handle_t * pTorque;		/* Pointer to torque handle */
 	
-	nrf_saadc_channel_config_t hChannelConfig;		/**< It contains analog channel configuration used for torque sensing. */
-  uint8_t convHandle;            								/*!< handle to the regular conversion */ 
-	RCM_Handle_t* pRegularConversionManager;
-	
-	nrfx_gpiote_pin_t wSinPinNumber;
-	nrfx_gpiote_pin_t wCosPinNumber;
-	
-} PAS_Config_t;
-
-
-typedef struct {
-	
-	PAS_Config_t sConfig;
+	SPR_Handle_t * pSpulse;				/* Pointer to speed handle */
 	
 	uint8_t bLevel;
 	uint8_t bMaxLevel;

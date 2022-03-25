@@ -16,9 +16,11 @@ osThreadId_t TSK_VehicleStateMachine_handle;
 
 static void getMonitoringReg_Fast(uint8_t motorSelection);
 static void getMonitoringReg_Slow(uint8_t motorSelection);
+
+#if CANBUS_ENABLE
 static void sendVehicleMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle);
 static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle, uint8_t motorSelection);
-
+#endif
 
 /************* DEFINES ****************/
 
@@ -41,7 +43,7 @@ static void CLK_Init(void)
 void VC_BootUp(void)
 {	
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
-	LCD_handle_t * pLCD = &BafangScreenHandle;
+	//LCD_handle_t * pLCD = &BafangScreenHandle;
 	
 	/* Initialize clock */
 	CLK_Init();
@@ -52,18 +54,23 @@ void VC_BootUp(void)
 	#if CANBUS_ENABLE
 	/* Initialize SPI bus and CAN */
 	SPI_Init(&SPI0Manager);
+	
+	// todo: handle returned result
+	
 	MCP25625_Init(&CANController);
 	#endif
-	
-	/* Initialize Bafang screen module */
-	LCD_Baf_Init(pLCD);
 	
 	/* Initialize vehicle controller components */
 	VCSTM_Init(pVCI->pStateMachine);
 	DRVT_Init(pVCI->pDrivetrain);
 	
 	/* Initialize ADC module */
+
 	RCM_Init(&RegularConvertionManager);
+	
+	STRG_Init();
+	//EVCT_init(&VCInterfaceHandle);
+
 }
 
 __NO_RETURN void TSK_FastLoopMD (void * pvParameter)
@@ -76,7 +83,7 @@ __NO_RETURN void TSK_FastLoopMD (void * pvParameter)
 	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
 	while (true)
-	{		
+	{
 		DRVT_CalcTorqueSpeed(pVCI->pDrivetrain);
 		
 		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain) )
@@ -100,7 +107,10 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 	//*******************************************//
 	
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
+	
+	#if CANBUS_ENABLE
 	MCP25625_Handle_t * pCANController = &CANController;
+	#endif
 	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
 																				
@@ -139,7 +149,6 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
 	
 	uint32_t wCounter;
-	uint32_t wReturn2StandbyCounter;
 	uint16_t hVehicleFault;
 	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
@@ -232,8 +241,8 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					{
 						if ( !DRVT_MotorFaultManagement(pVCI->pDrivetrain) )
 						{
-							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove fault on M1
-							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove fault on M2
+							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove VC_M1_FAULTS flag
+							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove VC_M2_FAULTS flag
 						}
 					}
 					break;
@@ -251,13 +260,61 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	}
 }
 
+__NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
+{
+	UNUSED_PARAMETER(pvParameter);
+	
+	switch(EUART_handle_t)
+	{
+		case EUART_EVIONICS:
+			EVCT_init(&VCInterfaceHandle);
+			break;
+		
+		case EUART_BAFANG:
+			//LCD_BAF_init(&VCInterfaceHandle);
+			break;
+		
+		case EUART_EGG:
+			//LCD_EGG_init(&VCInterfaceHandle);
+			break;
+		
+		default:
+			break;
+	}
+	
+	while(true)
+	{
+		osThreadFlagsWait(EUART_FLAG, osFlagsWaitAny, osWaitForever);
+		switch(EUART_handle_t)
+		{
+			case EUART_EVIONICS:
+				EVCT_frame_process();
+				break;
+			
+			case EUART_BAFANG:
+				//LCD_BAF_frame_Process();
+				break;
+			
+			case EUART_EGG:
+				//LCD_EGG_frame_Process();
+				break;
+			
+			default:
+				break;
+		}
+	}
+}
+
+#if CANBUS_ENABLE
 static void sendVehicleMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle)
 {
 	CAN_SendStatus(pCANHandle, pVCHandle, M_NONE);
 	CAN_SendThrottleBrake(pCANHandle, pVCHandle);
 	CAN_SendVbus(pCANHandle, pVCHandle);
 }
+#endif
 
+#if CANBUS_ENABLE
 static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle, uint8_t motorSelection)
 {	
 	CAN_SendSpeed(pCANHandle, pVCHandle, motorSelection);
@@ -265,6 +322,7 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 	CAN_SendCurrent(pCANHandle, pVCHandle, motorSelection);
 	CAN_SendTemperature(pCANHandle, pVCHandle, motorSelection);
 }
+#endif
 
 static void getMonitoringReg_Slow(uint8_t motorSelection)
 {
