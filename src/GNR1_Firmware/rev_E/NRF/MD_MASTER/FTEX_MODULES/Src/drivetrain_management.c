@@ -474,7 +474,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	uint16_t hM2FaultOccurredCode = MDI_getOccurredFaults(pHandle->pMDI, M2);
 	
 	bool bFaultNow = hM1FaultNowCode | hM2FaultNowCode;
-			
+	
 	if (!bFaultNow)
 	{
 		if ( DRVT_IsMotor1Used(pHandle) )
@@ -634,15 +634,16 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 		}
 	}
 	
+	// Verify if all fault occured have been cleared
 	bool bFaultOccured = (hM1FaultOccurredCode | hM2FaultOccurredCode);
-	
+
 	if (!bFaultOccured)
 	{
-        //todo: handle result from MDI_FaultAcknowledged below
+				//todo: handle result from MDI_FaultAcknowledged below
 		MDI_FaultAcknowledged(pHandle->pMDI, M1);
 		MDI_FaultAcknowledged(pHandle->pMDI, M2);
 	}
-	
+		
 	return bFaultOccured;
 }
 

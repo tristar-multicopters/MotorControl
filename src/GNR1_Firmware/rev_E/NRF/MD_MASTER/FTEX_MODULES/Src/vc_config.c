@@ -93,7 +93,7 @@ THRO_Handle_t ThrottleHandle =
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
 		
-		.hOffsetThrottle = 4800,
+		.hOffsetThrottle = 200,//4800,
 		.bSlopeThrottle = 5,
 		.bDivisorThrottle = 3,
 		
