@@ -92,64 +92,22 @@ THRO_Handle_t ThrottleHandle =
 	{
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
-		
-		.hOffsetThrottle = 4800,
-		.bSlopeThrottle = 5,
-		.bDivisorThrottle = 3,
-		
-		.hOffsetTorque = 4000,
-		.bSlopeTorque = -13,
-		.bDivisorTorque = 22,
+		.hOffset = 12000,
+		.hMax = UINT16_MAX,
+		.m = -16,
+		.F = 35,
 	}
 	#elif VEHICLE_SELECTION == 2
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
-	
-		.hOffset1 = 4800,
-		.bSlope1 = 0,
-		.bDivisor1 = 0,
-		
-		.hOffset2 = 0,
-		.bSlope2 = 0,
-		.bDivisor2 = 0,
+		.hOffset = 12000,
+		.hMax = UINT16_MAX,
+		.m = -11,
+		.F = 36,
 	}
 	#else
-	.hParam =
-	{
-		.hLowPassFilterBW1 = 16,
-		.hLowPassFilterBW2 = 2,
-	
-		.hOffset1 = 4800,
-		.bSlope1 = 0,
-		.bDivisor1 = 0,
-		
-		.hOffset2 = 0,
-		.bSlope2 = 0,
-		.bDivisor2 = 0,
-	}
-	#endif
-};
-
-
-/**@brief Torque Pin initializing Parameters.
- */
-TS_Handle_t TorqueSensor =
-{
-	.pRegularConversionManager = &RegularConvertionManager,
-	.hChannelConfig =
-	{
-		.resistor_p = NRF_SAADC_RESISTOR_DISABLED,
-		.resistor_n = NRF_SAADC_RESISTOR_DISABLED,
-		.gain = NRF_SAADC_GAIN1_6,
-		.reference = NRF_SAADC_REFERENCE_INTERNAL,
-		.acq_time = NRF_SAADC_ACQTIME_10US,
-		.mode = NRF_SAADC_MODE_SINGLE_ENDED,
-		.burst = NRF_SAADC_BURST_DISABLED,
-		.pin_p = PAS_TORQUE_PIN,
-		.pin_n = NRF_SAADC_INPUT_DISABLED,
-	},
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 16,
@@ -159,32 +117,7 @@ TS_Handle_t TorqueSensor =
 		.m = -16,
 		.F = 35,
 	}
-};
-/**@brief Speed pulse Pin initializing Parameters.
- */
-SPR_Handle_t SpeedPulse =
-{
-	.bCaptureChannel = 6,
-	.bRestartChannel = 5,
-	
-	.WCaptureChannel = 4,
-	.WRestartChannel = 3,
-	
-	.bTimer_Prescaler = NRF_TIMER_FREQ_1MHz,
-	.bTimer_Width = NRF_TIMER_BIT_WIDTH_32,
-
-	.pTimerInstance = PAS_TIMER_INSTANCE_ADDR,
-	.wTimerInstance = WH_TIMER_INSTANCE_ADDR,
-	
-	.pSinSpeed_Pulse_pin = PAS_SIN_GPIO_PIN,
-	.pCosSpeed_Pulse_pin = PAS_COS_GPIO_PIN,
-	.pWheelSpeed_Pulse_pin = WH_PUL_GPIO_PIN,
-	.sParam =
-	{
-		.sLowPassFilterBW1 = 16,
-		.sMax = UINT16_MAX,
-	}
-	
+	#endif
 };
 
 MS_Handle_t MotorSelectorHandle = 
@@ -205,10 +138,7 @@ MS_Handle_t MotorSelectorHandle =
 };
 
 VCSTM_Handle_t VCStateMachineHandle = 
-{	
-	.bVState = V_IDLE,
-	.hVFaultNow = 0,
-	.hVFaultOccurred = 0
+{	0
 };
 
 MD_Comm_Handle_t MDCommunicationHandle = 
@@ -231,11 +161,8 @@ MDI_Handle_t MDInterfaceHandle =
 	.pMDC = &MDCommunicationHandle,
 };
 
-/**@brief Pedal assist initializing Parameters.
- */
 PAS_Handle_t PedalAssistHandle = {
-	.pTorque = &TorqueSensor,
-	.pSpulse = &SpeedPulse,
+	0
 };
 
 PWREN_Handle_t PowerEnableHandle = {
@@ -252,9 +179,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTime = 200,
 	.hSpeedRampTime = 200,
-	.hStartingThrottle = 1000,
-	.hStoppingThrottle = 500,
-	.hStoppingSpeed = 0,
+	.hStartingThrottle = 12000,
 	#elif VEHICLE_SELECTION == 2
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
@@ -262,9 +187,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTime = 200,
 	.hSpeedRampTime = 200,
-	.hStartingThrottle = 1000,
-	.hStoppingThrottle = 500,
-	.hStoppingSpeed = 0,
+	.hStartingThrottle = 12000,
 	#else
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = true,
@@ -272,9 +195,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTime = 200,
 	.hSpeedRampTime = 200,
-	.hStartingThrottle = 1000,
-	.hStoppingThrottle = 500,
-	.hStoppingSpeed = 0,
+	.hStartingThrottle = 12000,
 	#endif
 	
 	.pMDI = &MDInterfaceHandle,
@@ -291,9 +212,8 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-eUART_protocol_t EUART_handle_t = EUART_EVIONICS; // Has to been initialise by Evionics first
-//LCD_handle_t BafangScreenHandle = 
-//{
-//	.pVCInterface = &VCInterfaceHandle,
-//};
+LCD_handle_t BafangScreenHandle = 
+{
+	.pVCInterface = &VCInterfaceHandle,
+};
 	

@@ -28,8 +28,8 @@ typedef struct
 } BRK_Handle_t;
 
 
-void BRK_Init( BRK_Handle_t * pHandle);
-bool BRK_IsPressed( BRK_Handle_t * pHandle);
+void BRK_Init( BRK_Handle_t * pHandle );
+bool BRK_IsPressed( BRK_Handle_t * pHandle );
 
 
 #endif /*__BRAKE_H*/

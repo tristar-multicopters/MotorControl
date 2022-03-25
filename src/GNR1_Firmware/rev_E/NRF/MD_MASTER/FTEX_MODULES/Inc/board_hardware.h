@@ -23,7 +23,7 @@ extern nrf_drv_uart_t uart1_inst;
 extern nrf_drv_uart_t uart0_inst;
 extern nrf_drv_timer_t timer1_inst;
 extern nrf_drv_timer_t timer2_inst;
-extern nrf_drv_timer_t timer4_inst;
+
 
 /* Communication with motor drive (STM32) -------------------------------------*/
 
@@ -90,9 +90,5 @@ extern nrf_drv_timer_t timer4_inst;
 
 #define PWREN_GPIO_PIN							NRF_GPIO_PIN_MAP(0,13)
 
-/* Wheel speed  -------------------------------------*/
-
-#define WH_TIMER_INSTANCE_ADDR		&timer4_inst
-#define WH_PUL_GPIO_PIN						NRF_GPIO_PIN_MAP(1,15)
 
 #endif /*__BOARD_HARDWARE_H*/

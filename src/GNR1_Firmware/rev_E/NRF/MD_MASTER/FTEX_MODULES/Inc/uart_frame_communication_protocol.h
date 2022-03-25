@@ -70,9 +70,9 @@ uint8_t UFCP_Send(UFCP_Handle_t * pHandle, uint8_t code, uint8_t *buffer, uint8_
 
 void UFCP_AbortReceive(UFCP_Handle_t * pHandle);
 
-void * UFCP_RX_IRQ_Handler(UFCP_Handle_t * pHandle, unsigned short rx_data);
+void * UFCP_RX_IRQ_Handler(UFCP_Handle_t * pHandle, unsigned short rx_data );
 
-void UFCP_Baf_RX_IRQ_Handler(UFCP_Handle_t * pHandle, unsigned short rx_data);
+void * UFCP_Baf_RX_IRQ_Handler(UFCP_Handle_t * pHandle, unsigned short rx_data );
 
 void UFCP_TX_IRQ_Handler(UFCP_Handle_t * pHandle);
 

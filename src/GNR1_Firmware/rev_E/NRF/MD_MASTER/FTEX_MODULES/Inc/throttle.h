@@ -25,17 +25,11 @@ typedef struct
                                     call rate [Hz]/ FilterBandwidth[Hz] */
 	uint16_t hLowPassFilterBW2;
 	
-	int16_t hOffsetThrottle;          	 /*< Offset of ADC value vs throttle */
-	int8_t bSlopeThrottle;									 /*< Gain factor of ADC value vs throttle   */
-	uint8_t bDivisorThrottle;								   /*< Scaling factor of ADC value vs throttle   */
+	uint16_t hOffset;          	 /*< Offset of the throttle signal when at lowest position */
+	uint16_t hMax;             	 /*< Throttle signal when at maximum position */	
 	
-	int16_t hOffsetTorque;          	 /*< Offset of throttle vs torque */
-	int8_t bSlopeTorque;									 /*< Gain factor of throttle vs torque   */
-	uint8_t bDivisorTorque;								   /*< Scaling factor of throttle vs torque   */
-	
-	int16_t hOffsetSpeed;          	 /*< Offset of throttle vs speed */
-	int8_t bSlopeSpeed;									 /*< Gain factor of throttle vs speed   */
-	uint8_t bDivisorSpeed;								   /*< Scaling factor of throttle vs speed   */
+	int8_t m;									 /*< Gain factor of torque vs throttle   */
+	uint8_t F;								   /*< Scaling factor of torque vs throttle   */
 	
 } THRO_Param_t;
 
@@ -49,9 +43,11 @@ typedef struct
   uint8_t convHandle;            /*!< handle to the regular conversion */ 
 	RCM_Handle_t* pRegularConversionManager;
   
-	uint16_t hInstADCValue;          /**< It contains latest available instantaneous ADC value.*/
-	uint16_t hAvADCValue;          /**< It contains latest available average ADC value.*/
-	uint16_t hAvThrottleValue;          /**< It contains latest available throttle value.*/
+	uint16_t hInstThrottle;          /**< It contains latest available insteateonous throttle.
+                                    This parameter is expressed in u16 */
+	
+	uint16_t hAvThrottle;          /**< It contains latest available average throttle.
+                                    This parameter is expressed in u16 */
 	
 	THRO_Param_t hParam;
 	
@@ -65,23 +61,21 @@ typedef struct
  *
  *  @p pPWMnCurrentSensor : Handle on the PWMC component to be used for regular conversions
  */
-void THRO_Init(THRO_Handle_t * pHandle);
+void THRO_Init( THRO_Handle_t * pHandle );
 
 /**
  * @brief Initializes internal average throttle computed value
  *
  *  @p pHandle : Pointer on Handle structure of ThrottleSensor component
  */
-void THRO_Clear(THRO_Handle_t * pHandle);
+void THRO_Clear( THRO_Handle_t * pHandle );
 
 /**
-  * @brief Performs the throttle sensing average computation after an ADC conversion.
-					 Compute torque value in u16 (0 at minimum throttle and 65535 when max throttle).
-					 Need to be called periodically.
+  * @brief Performs the throttle sensing average computation after an ADC conversion
   *
   *  @p pHandle : Pointer on Handle structure of ThrottleSensor component
   */
-void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle);
+uint16_t THRO_CalcAvValue( THRO_Handle_t * pHandle );
 
 /**
   * @brief  Returns latest averaged throttle measured expressed in u16
@@ -90,12 +84,12 @@ void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle);
   *
   * @r AverageThrottle : Current averaged throttle measured (in u16)
   */
-uint16_t THRO_GetAvThrottleValue(THRO_Handle_t * pHandle);
+uint16_t THRO_GetAvValue( THRO_Handle_t * pHandle );
 
 
-int16_t THRO_ThrottleToTorque(THRO_Handle_t * pHandle);
+int16_t THRO_ThrottleToTorque( THRO_Handle_t * pHandle );
 
-int16_t THRO_ThrottleToSpeed(THRO_Handle_t * pHandle);
+int16_t THRO_ThrottleToSpeed( THRO_Handle_t * pHandle );
 
 
 #endif /*__THROTTLE_H*/

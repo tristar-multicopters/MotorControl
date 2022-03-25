@@ -101,4 +101,5 @@ bool MDI_SetSpeedRamp(MDI_Handle_t* pHandle, uint8_t motorSelection, int32_t spe
 bool MDI_FaultAcknowledged(MDI_Handle_t* pHandle, uint8_t motorSelection)
 {
 	return md_faultAcknowledged(motorSelection);
-}
+}	
+	

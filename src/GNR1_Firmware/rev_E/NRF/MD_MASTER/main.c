@@ -23,9 +23,9 @@ extern osThreadId_t TSK_MDcomm_handle;
 extern osThreadId_t TSK_FastLoopMD_handle;
 extern osThreadId_t TSK_SlowLoopMD_handle;
 extern osThreadId_t TSK_VehicleStateMachine_handle;
+extern osThreadId_t TSK_HOSTcomm_handle;
 extern osThreadId_t TSK_eUART0_handle;
 extern osThreadId_t TSK_CANmsgTX_handle_t;
-extern osThreadId_t TSK_STRG_handle;
 
 //****************** THREAD ATTRIBUTES ******************//
 
@@ -53,17 +53,26 @@ static const osThreadAttr_t ThAtt_MDComm = {
 	.priority = osPriorityNormal2
 };
 
-static const osThreadAttr_t ThAtt_eUARTComm = {
+static const osThreadAttr_t ThAtt_eUART = {
 	.name = "TSK_eUART",
 	.stack_size = 512,
-	.priority = osPriorityBelowNormal
+	.priority = osPriorityNormal3
 };
 
-static const osThreadAttr_t ThAtt_STRGmanage = {
-	.name = "TSK_STRGManager",
+#if HOSTCOMM_ENABLE
+static const osThreadAttr_t ThAtt_HOSTComm = {
+	.name = "TSK_HOSTComm",
 	.stack_size = 512,
-	.priority = osPriorityLow
+	.priority = osPriorityNormal3
 };
+#endif
+
+static const osThreadAttr_t ThAtt_LCDComm = {
+	.name = "TSK_LCDComm",
+	.stack_size = 512,
+	.priority = osPriorityNormal3
+};
+
 
 #if CANBUS_ENABLE
 static const osThreadAttr_t ThAtt_CANmsgTX = {
@@ -105,11 +114,14 @@ int main(void)
 	TSK_eUART0_handle = osThreadNew(TSK_eUART,
 																			 NULL,
 																			 &ThAtt_eUART);					 
+
+	#if HOSTCOMM_ENABLE
+	/* Create task to manage communication between nRF and host (PC, mobile, ...) */
+	TSK_HOSTcomm_handle      = osThreadNew(TSK_HOSTcomm, 
+																			NULL,
+																			&ThAtt_HOSTComm);
+	#endif
 	
-	// Task to manage the flash memory module
-	TSK_STRG_handle 	 = osThreadNew(TSK_StorageManagement, 
-																	 NULL,
-																	 &ThAtt_STRGmanage);
 	
 	#if CANBUS_ENABLE
 	/* Create task to manage CAN Protocol */																		 

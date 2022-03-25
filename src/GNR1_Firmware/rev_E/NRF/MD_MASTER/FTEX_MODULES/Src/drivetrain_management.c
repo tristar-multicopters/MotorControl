@@ -25,7 +25,6 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 	BRK_Init(pHandle->pBrake);
 	PAS_Init(pHandle->pPAS);
 	MS_Init(pHandle->pMS);
-	PWREN_Init(pHandle->pPWREN);
 	
 	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
 	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
@@ -39,10 +38,8 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 {
 	bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
-	bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);
-	
 	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS);
-	int16_t hTorqueRef = 0; int32_t hSpeedRef = 0;
+	int16_t hTorqueRef; int32_t hSpeedRef;
 	
 	switch (bMotorSelection)
 	{
@@ -62,10 +59,7 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 			break;
 	}
 	
-	THRO_CalcAvThrottleValue(pHandle->pThrottle);
-	
-	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
-	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
+	THRO_CalcAvValue(pHandle->pThrottle);
 	
 	if (pHandle->bCtrlType == TORQUE_CTRL)
 	{
@@ -180,7 +174,7 @@ void DRVT_StopMotors(DRVT_Handle_t * pHandle)
 	*/
 uint16_t DRVT_StandbyStateCheck(DRVT_Handle_t * pHandle)
 {
-	uint16_t hVehicleFault = 0;
+	uint16_t hVehicleFault;
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
@@ -223,7 +217,7 @@ uint16_t DRVT_StandbyStateCheck(DRVT_Handle_t * pHandle)
 	*/
 uint16_t DRVT_StartStateCheck(DRVT_Handle_t * pHandle)
 {
-	uint16_t hVehicleFault = 0;
+	uint16_t hVehicleFault;
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
@@ -264,7 +258,7 @@ uint16_t DRVT_StartStateCheck(DRVT_Handle_t * pHandle)
 	*/
 uint16_t DRVT_RunStateCheck(DRVT_Handle_t * pHandle)
 {
-	uint16_t hVehicleFault = 0;
+	uint16_t hVehicleFault;
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
@@ -307,7 +301,7 @@ uint16_t DRVT_RunStateCheck(DRVT_Handle_t * pHandle)
 	*/
 uint16_t DRVT_StopStateCheck(DRVT_Handle_t * pHandle)
 {
-	uint16_t hVehicleFault = 0;
+	uint16_t hVehicleFault;
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
@@ -415,23 +409,21 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStop = true;
 	int32_t wSpeedM1 = MDI_getSpeed(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_getSpeed(pHandle->pMDI, M2);
-	uint16_t hTorqueValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
-		if ( hTorqueValue < pHandle->hStoppingThrottle && abs(wSpeedM1) < pHandle->hStoppingSpeed )
+		if ( THRO_GetAvValue(pHandle->pThrottle) != 0 && wSpeedM1 != 0)
 		{
 			bCheckStop = false;
 		}
 	}
 	if ( DRVT_IsMotor2Used(pHandle) )
 	{
-		if ( hTorqueValue < pHandle->hStoppingThrottle && abs(wSpeedM2) < pHandle->hStoppingSpeed )
+		if ( THRO_GetAvValue(pHandle->pThrottle) != 0 && wSpeedM2 != 0)
 		{
 			bCheckStop = false;
 		}
 	}
-	
 	if ( PWREN_IsPowerEnabled(pHandle->pPWREN) )
 	{
 		bCheckStop = false;
@@ -448,9 +440,8 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 {
 	bool bCheckStart = false;
-	uint16_t hTorqueValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( hTorqueValue > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) )
+	if ( THRO_GetAvValue(pHandle->pThrottle) > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) )
 	{
 		bCheckStart = true;
 	}
@@ -540,7 +531,6 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	
 	if (!bFaultOccured)
 	{
-        //todo: handle result from MDI_FaultAcknowledged below
 		MDI_FaultAcknowledged(pHandle->pMDI, M1);
 		MDI_FaultAcknowledged(pHandle->pMDI, M2);
 	}
@@ -565,7 +555,6 @@ void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, uint8_t level)
 	*/
 int16_t DRVT_GetTorqueRefMainMotor(DRVT_Handle_t * pHandle)
 {
-	return pHandle->aTorque[pHandle->bMainMotor];
 }
 
 /**
@@ -575,7 +564,6 @@ int16_t DRVT_GetTorqueRefMainMotor(DRVT_Handle_t * pHandle)
 	*/
 int16_t DRVT_GetTorqueRefM1(DRVT_Handle_t * pHandle)
 {
-	return pHandle->aTorque[M1];
 }
 
 /**
@@ -585,7 +573,6 @@ int16_t DRVT_GetTorqueRefM1(DRVT_Handle_t * pHandle)
 	*/
 int16_t DRVT_GetTorqueRefM2(DRVT_Handle_t * pHandle)
 {
-	return pHandle->aTorque[M2];
 }
 
 /**
@@ -595,7 +582,6 @@ int16_t DRVT_GetTorqueRefM2(DRVT_Handle_t * pHandle)
 	*/
 int32_t DRVT_GetSpeedRefMainMotor(DRVT_Handle_t * pHandle)
 {
-	return pHandle->aSpeed[pHandle->bMainMotor];
 }
 
 /**
@@ -605,7 +591,6 @@ int32_t DRVT_GetSpeedRefMainMotor(DRVT_Handle_t * pHandle)
 	*/
 int32_t DRVT_GetSpeedRefM1(DRVT_Handle_t * pHandle)
 {
-	return pHandle->aSpeed[M1];
 }
 
 /**
@@ -615,7 +600,6 @@ int32_t DRVT_GetSpeedRefM1(DRVT_Handle_t * pHandle)
 	*/
 int32_t DRVT_GetSpeedRefM2(DRVT_Handle_t * pHandle)
 {
-	return pHandle->aSpeed[M2];
 }
 
 /**
@@ -625,7 +609,6 @@ int32_t DRVT_GetSpeedRefM2(DRVT_Handle_t * pHandle)
 	*/
 bool DRVT_IsMotor1Used(DRVT_Handle_t * pHandle)
 {
-	return pHandle->bUseMotorM1;
 }
 
 /**
@@ -635,7 +618,6 @@ bool DRVT_IsMotor1Used(DRVT_Handle_t * pHandle)
 	*/
 bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle)
 {
-	return pHandle->bUseMotorM2;
 }
 
 

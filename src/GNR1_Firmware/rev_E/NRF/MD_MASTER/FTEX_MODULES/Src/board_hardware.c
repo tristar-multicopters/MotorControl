@@ -18,7 +18,5 @@ nrf_drv_timer_t timer1_inst = NRF_DRV_TIMER_INSTANCE(1);
 
 nrf_drv_timer_t timer2_inst = NRF_DRV_TIMER_INSTANCE(2);
 
-nrf_drv_timer_t timer4_inst = NRF_DRV_TIMER_INSTANCE(4);
-
 nrf_drv_spi_t spi0_inst = NRF_DRV_SPI_INSTANCE(0);
 
