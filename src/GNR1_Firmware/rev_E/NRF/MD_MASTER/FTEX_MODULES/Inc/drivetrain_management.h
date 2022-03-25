@@ -71,8 +71,10 @@ typedef struct
 	FLDBK_Handle_t sSpeedFoldback2;						/* Foldback handle using M2 speed */
 	FLDBK_Handle_t sDCVoltageFoldback;				/* Foldback handle using DCbus voltage */
 	
-	uint16_t hSpeedRampTime;			/* Speed ramp time in millisecond */
-	uint16_t hTorqueRampTime;			/* Torque ramp time in millisecond */
+	uint16_t hSpeedRampTimeU;			/* Speed ramp time in millisecond when controller is ramping UP */
+	uint16_t hSpeedRampTimeD;			/* Speed ramp time in millisecond when controller is ramping DOWN */
+	uint16_t hTorqueRampTimeU;		/* Torque ramp time in millisecond when controller is ramping UP */
+	uint16_t hTorqueRampTimeD;		/* Torque ramp time in millisecond when controller is ramping DOWN */
 	uint16_t hStartingThrottle;		/* Minimum torque to start drivetrain */
 	uint16_t hStoppingThrottle;		/* Minimum torque to stop drivetrain */
 	uint16_t hStoppingSpeed;			/* Minimum speed to stop drivetrain */

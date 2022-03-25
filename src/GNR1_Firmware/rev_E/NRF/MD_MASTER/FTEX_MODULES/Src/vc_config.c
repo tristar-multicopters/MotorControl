@@ -90,16 +90,16 @@ THRO_Handle_t ThrottleHandle =
 	#if VEHICLE_SELECTION == 1
 	.hParam =
 	{
-		.hLowPassFilterBW1 = 16,
+		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
 		
-		.hOffsetThrottle = 4800,
+		.hOffsetThrottle = 9600,
 		.bSlopeThrottle = 5,
 		.bDivisorThrottle = 3,
 		
 		.hOffsetTorque = 4000,
-		.bSlopeTorque = -13,
-		.bDivisorTorque = 22,
+		.bSlopeTorque = -7,
+		.bDivisorTorque = 25,
 	}
 	#elif VEHICLE_SELECTION == 2
 	.hParam =
@@ -250,8 +250,10 @@ DRVT_Handle_t DrivetrainHandle =
 	.bUseMotorM2 = true,
 	.bDefaultMainMotor = M1,
 	.bCtrlType = TORQUE_CTRL,
-	.hTorqueRampTime = 200,
-	.hSpeedRampTime = 200,
+	.hTorqueRampTimeU = 200,
+	.hTorqueRampTimeD = 50,
+	.hSpeedRampTimeU = 200,
+	.hSpeedRampTimeD = 50,
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,

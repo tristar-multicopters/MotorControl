@@ -117,11 +117,18 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 	{
 		if (pHandle->bCtrlType == TORQUE_CTRL)
 		{
-			MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTime);
+			if ( abs(pHandle->aTorque[M1]) > abs(MDI_getIq(pHandle->pMDI, M1)) )
+			{
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeU);
+			}
+			else
+			{
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeD);
+			}
 		}
 		else if (pHandle->bCtrlType == SPEED_CTRL)
 		{
-			MDI_SetSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1], pHandle->hSpeedRampTime);
+			MDI_SetSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1], pHandle->hSpeedRampTimeU);
 		}
 		else {}
 	}
@@ -129,11 +136,18 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 	{
 		if (pHandle->bCtrlType == TORQUE_CTRL)
 		{
-			MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTime);
+			if ( abs(pHandle->aTorque[M2]) > abs(MDI_getIq(pHandle->pMDI, M2)) )
+			{
+				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeU);
+			}
+			else
+			{
+				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeD);
+			}
 		}
 		else if (pHandle->bCtrlType == SPEED_CTRL)
 		{
-			MDI_SetSpeedRamp(pHandle->pMDI, M2, pHandle->aSpeed[M2], pHandle->hSpeedRampTime);
+			MDI_SetSpeedRamp(pHandle->pMDI, M2, pHandle->aSpeed[M2], pHandle->hSpeedRampTimeU);
 		}
 		else {}
 	}
@@ -408,36 +422,42 @@ bool DRVT_IsDrivetrainStopped(DRVT_Handle_t * pHandle)
 /**
 	* @brief  Check if conditions to stop drivetrain are met
 	* @param  Drivetrain handle
-	* @retval Returns true if drivetrain can be stopped
+	* @retval Returns true if drivetrain conditions to stop are met, false otherwise
 	*/
 bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 {
-	bool bCheckStop = true;
+	bool bCheckStop1 = false;
+	bool bCheckStop2 = false;
+	bool bCheckStop3 = false;
+	bool bCheckStop4 = false;
 	int32_t wSpeedM1 = MDI_getSpeed(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_getSpeed(pHandle->pMDI, M2);
-	uint16_t hTorqueValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
+	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
-		if ( hTorqueValue < pHandle->hStoppingThrottle && abs(wSpeedM1) < pHandle->hStoppingSpeed )
+		if ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed )
 		{
-			bCheckStop = false;
+			bCheckStop1 = true;
 		}
 	}
 	if ( DRVT_IsMotor2Used(pHandle) )
 	{
-		if ( hTorqueValue < pHandle->hStoppingThrottle && abs(wSpeedM2) < pHandle->hStoppingSpeed )
+		if ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM2) <= pHandle->hStoppingSpeed )
 		{
-			bCheckStop = false;
+			bCheckStop2 = true;
 		}
 	}
-	
-	if ( PWREN_IsPowerEnabled(pHandle->pPWREN) )
+	if ( !PWREN_IsPowerEnabled(pHandle->pPWREN) )
 	{
-		bCheckStop = false;
+		bCheckStop3 = true;
 	}	
+	if ( BRK_IsPressed(pHandle->pBrake) )
+	{
+		bCheckStop4 = true;
+	}
 	
-	return bCheckStop;
+	return (bCheckStop1 & bCheckStop2) | bCheckStop3 | bCheckStop4;
 }
 
 /**
@@ -448,9 +468,9 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 {
 	bool bCheckStart = false;
-	uint16_t hTorqueValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
+	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( hTorqueValue > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) )
+	if ( hThrottleValue > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
 	{
 		bCheckStart = true;
 	}
@@ -545,7 +565,8 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 		MDI_FaultAcknowledged(pHandle->pMDI, M2);
 	}
 	
-	return bFaultOccured;
+	//return bFaultOccured;
+	return true; //debug
 }
 
 /**
