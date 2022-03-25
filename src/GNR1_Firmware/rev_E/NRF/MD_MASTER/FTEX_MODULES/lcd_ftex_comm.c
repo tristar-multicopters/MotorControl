@@ -29,9 +29,6 @@ static void LCD_FTEX_event_handler(eUART_evt_t * p_lcd_event)
 		case EUART_BYTE_SENT:
       LCD_FTEX_TX_IRQ_Handler();
 			break;
-		
-		default:
-			break;
 	}
 }
 
@@ -44,66 +41,64 @@ void * LCD_FTEX_RX_IRQ_Handler(unsigned short rx_data)
 
 	 uint8_t ByteCount = m_FTEX_handle.rx_frame.ByteCnt;     
    uint8_t ByteReceived = rx_data;
-				 
-			
-		     switch(ByteCount)					 
-				 {
-					 case 0: 
+				 			
+	 switch(ByteCount)					 
+	 {
+	  case 0: //Check if first byte is a valid frame type
 						 
-				     if(ByteReceived == FTEX_FRAME_READ || ByteReceived == FTEX_FRAME_WRITE || ByteReceived == FTEX_FRAME_CUSTOM) //Read or write cmd
-					   {
-					     m_FTEX_handle.rx_frame.ByteCnt ++;
-					     m_FTEX_handle.rx_frame.Code = ByteReceived;
-					   }
-             else
-					   {
-					     m_FTEX_handle.rx_frame.ByteCnt = 0;
-							 
-					   }
-						 eUART_Receive(&m_FTEX_handle.euart_handler, m_FTEX_handle.euart_handler.rx_byte);
-             break;
-					 case 1:
-						  m_FTEX_handle.rx_frame.Buffer[0] = ByteReceived;
-					    m_FTEX_handle.rx_frame.ByteCnt ++; 
+		  if(ByteReceived == FTEX_FRAME_READ || ByteReceived == FTEX_FRAME_WRITE || ByteReceived == FTEX_FRAME_CUSTOM) //Read or write cmd
+		  {
+		    m_FTEX_handle.rx_frame.ByteCnt ++;
+		    m_FTEX_handle.rx_frame.Code = ByteReceived;
+		  }
+      else
+		  {
+		    m_FTEX_handle.rx_frame.ByteCnt = 0;							 
+		  }
+		  eUART_Receive(&m_FTEX_handle.euart_handler, m_FTEX_handle.euart_handler.rx_byte);
+      break;
+		case 1: //Check if second byte is a valid frame subtype
+		  m_FTEX_handle.rx_frame.Buffer[0] = ByteReceived;
+		  m_FTEX_handle.rx_frame.ByteCnt ++; 
 						    
-					    if(m_FTEX_handle.rx_frame.Buffer[0] == FTEX_F_SUBTYPE_01)
-							{
-							  if(m_FTEX_handle.rx_frame.Code == FTEX_FRAME_READ)
-								{
-								   m_FTEX_handle.rx_frame.Size = 4;
-								}
-								else if(m_FTEX_handle.rx_frame.Code == FTEX_FRAME_WRITE)
-								{
+		  if(m_FTEX_handle.rx_frame.Buffer[0] == FTEX_F_SUBTYPE_01)
+			{
+			  if(m_FTEX_handle.rx_frame.Code == FTEX_FRAME_READ)
+				{
+				   m_FTEX_handle.rx_frame.Size = 4;
+				}
+				else if(m_FTEX_handle.rx_frame.Code == FTEX_FRAME_WRITE)
+				{
+							
+				}
+				else if(m_FTEX_handle.rx_frame.Code == FTEX_FRAME_CUSTOM)
+		  	{
 								
-								}
-								else if(m_FTEX_handle.rx_frame.Code == FTEX_FRAME_CUSTOM)
-								{
-								
-								}	
-							}
-							else
-							{
-						   	m_FTEX_handle.rx_frame.ByteCnt = 0;
-							}
-               eUART_Receive(&m_FTEX_handle.euart_handler, m_FTEX_handle.euart_handler.rx_byte);							
-             break;						 
-					 default:
-						  m_FTEX_handle.rx_frame.Buffer[m_FTEX_handle.rx_frame.ByteCnt - 1] = ByteReceived;
-					    m_FTEX_handle.rx_frame.ByteCnt ++;  
+				}	
+			}
+			else
+			{
+			 	m_FTEX_handle.rx_frame.ByteCnt = 0;
+			}
+      eUART_Receive(&m_FTEX_handle.euart_handler, m_FTEX_handle.euart_handler.rx_byte);							
+      break;						 
+		default:
+		  m_FTEX_handle.rx_frame.Buffer[m_FTEX_handle.rx_frame.ByteCnt - 1] = ByteReceived;
+		  m_FTEX_handle.rx_frame.ByteCnt ++;  
 					 
-								if(m_FTEX_handle.rx_frame.Size == m_FTEX_handle.rx_frame.ByteCnt)
-								{
-								  //We have received the complete frame
-									m_FTEX_handle.rx_frame.ByteCnt = 0;		
-                  osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify client a frame has been received									
-								}
-                else
-								{
-								  eUART_Receive(&m_FTEX_handle.euart_handler, m_FTEX_handle.euart_handler.rx_byte);
-								}									
+			if(m_FTEX_handle.rx_frame.Size == m_FTEX_handle.rx_frame.ByteCnt)
+		  {
+		    //We have received the complete frame
+			  m_FTEX_handle.rx_frame.ByteCnt = 0;		
+        osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify client a frame has been received									
+			}
+      else
+			{
+			  eUART_Receive(&m_FTEX_handle.euart_handler, m_FTEX_handle.euart_handler.rx_byte);
+			}									
 						     
-            break;						
-				 }			
+      break;						
+	 }			
 }
 
 /**@brief Function for sending a frame specific to the FTEX protocol
@@ -163,7 +158,7 @@ void LCD_FTEX_frame_Process(void)
 					
 					toSend = VC_getBattVoltage(m_FTEX_handle.pVController);
 					
-					toSend = toSend * 100;  //Conversion to 0.01 V / unit from 1 V/ unit
+					toSend = toSend * 100;        //Conversion to 0.01 V / unit from 1 V/ unit
 					
 					replyFrame.Buffer [1] = 0x13; //toSend & 0xFF; //Write voltage value, every uinit is worth 0.01 V
 					replyFrame.Buffer [2] = 0x88; //(toSend >> 8) & 0xFF;
@@ -194,17 +189,17 @@ void LCD_FTEX_frame_Process(void)
 					
 					toSend += 50;
 					
-					replyFrame.Buffer[11] = 0x32;   //toSend; //Write controller temp with 0 = -50 celcius
+					replyFrame.Buffer[11] = 0x32; //toSend; //Write controller temp with 0 = -50 celcius
 					
-					replyFrame.Buffer[12] = 0x5A;   //Write Battery temp with 0 = -50 celcius  (N/A)
+					replyFrame.Buffer[12] = 0x5A; //Write Battery temp with 0 = -50 celcius  (N/A)
 					
-					replyFrame.Buffer[13] = 0x00;   //Write error code 
+					replyFrame.Buffer[13] = 0x00; //Write error code 
 					
-				  replyFrame.Buffer[14] = 0xFF;   //Write misc flags (front light, rear light ,etc) (N/A)
+				  replyFrame.Buffer[14] = 0xFF; //Write misc flags (front light, rear light ,etc) (N/A)
 
-          replyFrame.Buffer[15] = 0xFF;   //Spare byte
+          replyFrame.Buffer[15] = 0xFF; //Spare byte
           
-					replyFrame.Buffer[16] = 0xFF;   //Spare byte
+					replyFrame.Buffer[16] = 0xFF; //Spare byte
 					
 					replyFrame.Size = 18; //Set the frame size for the CRC calculation
 					
@@ -232,7 +227,7 @@ void LCD_FTEX_frame_Process(void)
  
 	}//checksum check
 	
-	if(replyFrame.Size > 0)
+	if(replyFrame.Size > 0) //Check if we need to send a response
 	{
 		replyFrame.ByteCnt = 0;
 		
@@ -275,13 +270,13 @@ void LCD_FTEX_init(VC_Handle_t * pHandle)
 	eUART_Receive(&m_FTEX_handle.euart_handler, m_FTEX_handle.euart_handler.rx_byte);	
 }
 
-/** @brief Checksum calculation function
-*
-*   @param[in] frame used to calculate the checksum
-*
-*   Used to make the 16 bits chesum when sending a frame or
-*   to verify a received frame to see if it is valid.
-*/
+/**@brief Checksum calculation function
+ *
+ * @param[in] frame used to calculate the checksum
+ *
+ * Used to make the 16 bits chesum when sending a frame or
+ * to verify a received frame to see if it is valid.
+ */
 uint16_t LCD_FTEX_CRC16(FTEX_frame_t frame)
 {
   uint16_t crc = 0xFFFF;
@@ -289,19 +284,19 @@ uint16_t LCD_FTEX_CRC16(FTEX_frame_t frame)
   uint8_t data = 0; 
 	
    for(int i = 0; i < frame.Size; i ++)   
-      {
-				 if(i == 0) //first byte received is the code
-				 {
-				   data = frame.Code;
-				 }
-				else //the buffer contains the rest
-				 {
-				   data = frame.Buffer[i-1];
-				 }
-         x = ((crc >> 8) ^ data) & 0xFF;
-         x ^= (x >> 4);
-         crc = (crc << 8) ^ (x << 12) ^ (x << 5) ^ x;				
-      }		
+   {
+		 if(i == 0) //first byte received is the code
+		 {
+		   data = frame.Code;
+		 }
+		 else //the buffer contains the rest
+		 {
+		   data = frame.Buffer[i-1];
+		 }
+				 
+     x = ((crc >> 8) ^ data) & 0xFF;
+     x ^= (x >> 4);
+     crc = (crc << 8) ^ (x << 12) ^ (x << 5) ^ x;				
+   }		
   return(crc);
-
 }
