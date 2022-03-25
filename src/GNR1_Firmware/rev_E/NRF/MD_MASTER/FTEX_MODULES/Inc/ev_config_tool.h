@@ -19,7 +19,7 @@
 #define DATA_SIZE	0x100 										 // 256 bytes (64 int32_t parameters)
 #define	CRC_SIZE	2													 // CRC size
 #define EV_RXBUFF_SIZE  DATA_SIZE + CRC_SIZE // Total of max bytes expected to receive in the buffer
-/* State machine stages for receiving data from EVNC*/
+/* State machine stages for receiving data from EVCT*/
 typedef enum
 {
 	EV_FRAME_ID,  /* Receiving Frame ID */
@@ -78,7 +78,7 @@ typedef struct
   uint8_t buffer[EV_RXBUFF_SIZE];    	 // buffer containing the received data.
 	uint16_t ByteCnt;									   // Counter of bytes
 	EV_rx_stage_t currentStage;
-}EVNC_frame_rx;
+}EVCT_frame_rx;
 
 typedef struct
 {
@@ -86,21 +86,21 @@ typedef struct
   uint8_t size;                        // Size of the Payload of the frame in bytes.
   uint8_t buffer[8];    	 					   // buffer containing the data to answer.
 	uint16_t ByteCnt;									   // Counter of bytes to send
-}EVNC_frame_tx;
+}EVCT_frame_tx;
 
 typedef struct
 {
-	EVNC_frame_rx rx_frame; 			// Frame for data reception
-	EVNC_frame_tx tx_frame;				// Frame for data transmission
+	EVCT_frame_rx rx_frame; 			// Frame for data reception
+	EVCT_frame_tx tx_frame;				// Frame for data transmission
 	eUART_handler_t euart_handler; 		// Contains the callback that will be assigned
-																		// to the event_handler of EVNC
+																		// to the event_handler of EVCT
 	VCI_Handle_t *p_VController;      // Pointer to the vehicle
-}EVNC_handle_t;
+}EVCT_handle_t;
 
 /************************* FUNCTIONS **************************/
-/* Function for initialise the eUart module with EVNC configuration */
-void EVNC_init(VCI_Handle_t* pHandle);
+/* Function for initialise the eUart module with EVCT configuration */
+void EVCT_init(VCI_Handle_t* pHandle);
 
 /* Function for decoding the received data frame */
-void EVNC_frame_process( void );
+void EVCT_frame_process( void );
 #endif

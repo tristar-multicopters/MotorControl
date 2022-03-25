@@ -409,6 +409,11 @@
               <FilePath>.\FTEX_MODULES\Src\board_hardware.c</FilePath>
             </File>
             <File>
+              <FileName>ev_config_tool.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX_MODULES\Src\ev_config_tool.c</FilePath>
+            </File>
+            <File>
               <FileName>vc_defines.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX_MODULES\Inc\vc_defines.h</FilePath>
@@ -593,11 +598,6 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX_MODULES\Inc\mc_defines.h</FilePath>
             </File>
-            <File>
-              <FileName>ev_config_tool.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX_MODULES\Src\ev_config_tool.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -644,19 +644,9 @@
               <FilePath>.\FTEX_MODULES\Src\torque_sensor.c</FilePath>
             </File>
             <File>
-              <FileName>torque_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX_MODULES\Inc\torque_sensor.h</FilePath>
-            </File>
-            <File>
               <FileName>speed_pulse_read.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX_MODULES\Src\speed_pulse_read.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_pulse_read.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX_MODULES\Inc\speed_pulse_read.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -712,6 +702,16 @@
               <FileName>lcd_bafang_comm.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX_MODULES\Src\lcd_bafang_comm.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_apt_comm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX_MODULES\Src\lcd_apt_comm.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_ftex_comm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX_MODULES\Src\lcd_ftex_comm.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -45,7 +45,6 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		case REG_TORQUESENSOR_FILTER:
 			break;
 		case REG_MAXSPEED_THROTTLE:
-//			value = pHandle->pDrivetrain->pThrottle->;
 			break;
 		case REG_MAXSPEED_PAS:
 //			value = pHandle->pDrivetrain->pPAS
@@ -575,7 +574,7 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		case REG_SPEED_LIMIT_RAMP:
 			break;
 		case REG_SPEED_CTRL_MODE:
-			pHandle->pDrivetrain->bCtrlType = value;
+			pHandle->pDrivetrain->bCtrlType = (CTRL_Type_h)value;
 			break;
 		case REG_TORQUESENSOR_FAULTTIME:
 			break;
@@ -584,10 +583,8 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		case REG_TORQUESENSOR_FILTER:
 			break;
 		case REG_MAXSPEED_THROTTLE:
-//			pHandle->pDrivetrain->pThrottle->hParam.hMax = value;
 			break;
 		case REG_MAXSPEED_PAS:
-//			value = pHandle->pDrivetrain->pPAS
 			break;
 		case REG_FLDB_END_VOLTAGE:
 			pHandle->pDrivetrain->sDCVoltageFoldback.hEndValue = value;

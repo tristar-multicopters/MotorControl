@@ -8,6 +8,9 @@
 	*/
 
 #include "nrf_delay.h"
+
+#include "md_comm.h"
+#include "throttle.h"
 #include "vc_tasks.h"
 
 #include "RTE_Components.h"
@@ -50,7 +53,7 @@ static const osThreadAttr_t ThAtt_MDComm = {
 	.priority = osPriorityNormal2
 };
 
-static const osThreadAttr_t ThAtt_eUARTComm = {
+static const osThreadAttr_t ThAtt_eUART = {
 	.name = "TSK_eUART",
 	.stack_size = 512,
 	.priority = osPriorityBelowNormal
@@ -83,6 +86,10 @@ int main(void)
 	osKernelInitialize();  // Initialise the kernel
 	EventRecorderInitialize(EventRecordAll,1U); // Initialise the events
 	
+	// Create task to manage communication between nRF and STM 
+	TSK_MDcomm_handle      = osThreadNew(TSK_MDcomm, 
+																			NULL,
+																			&ThAtt_MDComm);
 	// Create task to manage vehicle state and throttle input 
 	TSK_FastLoopMD_handle  = osThreadNew(TSK_FastLoopMD,
 																			NULL, 
@@ -93,17 +100,12 @@ int main(void)
 																			 &ThAtt_SlowLoopMD);
 	TSK_VehicleStateMachine_handle = osThreadNew(TSK_VehicleStateMachine,
 																			 NULL,
-																			 &ThAtt_VehicleStateMachine);
-	
-	// Create task to manage communication between nRF and STM 
-	TSK_MDcomm_handle      = osThreadNew(TSK_MDcomm, 
-																			NULL,
-																			&ThAtt_MDComm);
-	
-	// Task to manage communication between nRF and LCD display (Bafang 750C)
-	TSK_eUART0_handle  = osThreadNew(TSK_ProcessEUartFrames , 
-																	 NULL,
-																	 &ThAtt_eUARTComm);
+
+																			 &ThAtt_VehicleStateMachine);																			 
+		// Create task to manage UART0 communication 																		 
+	TSK_eUART0_handle = osThreadNew(TSK_ProcessEUartFrames,
+																			 NULL,
+																			 &ThAtt_eUART);					 
 	
 	// Task to manage the flash memory module
 	TSK_STRG_handle 	 = osThreadNew(TSK_StorageManagement, 
