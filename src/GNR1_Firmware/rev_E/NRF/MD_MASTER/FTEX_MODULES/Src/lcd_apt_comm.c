@@ -148,22 +148,22 @@ void LCD_APT_frame_Process(void)
 			 switch(PassLvl)
 			  {
 				 case 0:
-					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_0);
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,0); //Set pass to 0
           break;							
 				 case 1:
-					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_1);
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,1); //Set pass to 1
           break;	
 				 case 2:
-					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_2);
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,2); //Set pass to 2
           break;	
 				 case 3:
-					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_3);
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,3); //Set pass to 3
           break;	
 				 case 4:
-					 // PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_4);
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,4); //Set pass to 4
           break;								
 				 case 5:
-					//  PAS_SetLevel(m_APT_handle.pVController->pPedalAssist,PAS_LEVEL_5);
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,5); //Set pass to 5
           break;				
 		  	}
  		 }			
@@ -192,18 +192,31 @@ void LCD_APT_frame_Process(void)
 	    while(1); //Checksum isnt valid		
 	  }	
 	
-	  // For APT protocol, LSB is sent first for multi-bytes values
+	  //For APT protocol, LSB is sent first for multi-bytes values
 		replyFrame.Size = 13;
 	
     replyFrame.Buffer[ 0] = APT_START; //Start
+	  
+		//Add up power from both
+		toSend = abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)) + abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2));
+
+    toSend = toSend * 10; //Covert from amps to 0.1 amps; 
+		
+    replyFrame.Buffer[ 1] = (toSend & 0x000000FF); // Power 0.1 A/unit 
 	
-	
-		toSend = 0x64;
-    replyFrame.Buffer[ 1] = (toSend & 0x000000FF); // Power 0.1 A / unit 
-	
-	
-	  //toSend = VC_getMotorSpeedMeas(m_APT_handle.pVController,M1);
-	
+		
+		//If there is a motor at the rear use it for its speed
+	  if(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1) > 0)
+		{
+		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1);		
+		}
+		else //If we are using the other motor use it as the speed reference
+		{
+		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M2); 
+		}	
+    		
+		//TODO add consideration for the gear ratio between mototr and wheel, for now will assume 1
+		
 	  toSend = 1000/(toSend/60); //Converion from RPM to period in ms 
 	
 	  replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Motor speed Low half 

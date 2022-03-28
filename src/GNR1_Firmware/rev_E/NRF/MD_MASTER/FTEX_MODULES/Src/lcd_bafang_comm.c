@@ -178,8 +178,10 @@ void LCD_BAF_frame_Process(void)
 				    //answer with 0-250 value twice (each unit = 0.5 A)
 				
 				    //Aprox calculation 
-				   // toSend = abs( VC_getMotorIqIdMeas(m_Baf_handle.pVController, M1).q );
-					  toSend = (uint8_t)(toSend >> 8)*4/5;
+		 		    toSend = abs(MDI_getIq(m_Baf_handle.pVController->pDrivetrain->pMDI,M1)) + 
+				             abs(MDI_getIq(m_Baf_handle.pVController->pDrivetrain->pMDI,M2));
+					  
+				    toSend = (uint8_t)(toSend >> 8)*4/5;
 				
 			      replyFrame.Size = 2;
 				    replyFrame.Buffer[0] = toSend;
@@ -187,12 +189,13 @@ void LCD_BAF_frame_Process(void)
 					break;
 			 
 			  case R_BATCAP:
-				  //  toSend = VC_getBattVoltage(m_Baf_handle.pVController);
-			      toSend = ((toSend - 30) * 5)-1; //Aprox calculation of bat %
+				    //  toSend = VC_getBattVoltage(m_Baf_handle.pVController);
+			     
+    				toSend = ((toSend - 30) * 5)-1; //Aprox calculation of bat %
 			    
 			      if(toSend > 100)
 				  	{
-					   toSend = 99;
+					    toSend = 99;
 					  }
 					
 				    replyFrame.Size = 2;
@@ -201,14 +204,20 @@ void LCD_BAF_frame_Process(void)
 					break;
 			 
 			  case R_RSPEED:
-				 //  toSend = VC_getMotorSpeedMeas(m_Baf_handle.pVController,M1);
-			  
-			     toSend = (toSend * 10) / 37; //Recheck calculation for various bikes
-			 
-           if(toSend < 0)
-				   {
-				    toSend = 0;
-				   }					 
+			     
+    				//If there is a motor at the rear use it for its speed
+				
+	          if(MDI_getSpeed(m_Baf_handle.pVController->pDrivetrain->pMDI,M1) > 0)
+		        {
+		          toSend = MDI_getSpeed(m_Baf_handle.pVController->pDrivetrain->pMDI,M1);		
+		        }
+		        else //If we are using the other motor use it as the speed reference
+		        {
+		          toSend = MDI_getSpeed(m_Baf_handle.pVController->pDrivetrain->pMDI,M2); 
+		        }	
+								
+			      //TODO add consideration for the gear ratio between mototr and wheel, for now will assume 1
+					 
 				   replyFrame.Size = 3;
 				   replyFrame.Buffer[0] = (toSend  >> 8) & 0xFF;
 				   replyFrame.Buffer[1] = toSend & 0xFF;
@@ -245,37 +254,37 @@ void LCD_BAF_frame_Process(void)
 				   switch(AssistLvl) //Set the pas level according to what the user selected
 					 {
 							case A_0:
-							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_0);								
+							  	DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,0);	//Set pass to 0							
 								break;
-							case A_1:
+							case A_1: //A_1, A_3, A_5, A_7, arent used until we support 9 pass levels
 								break;
 							case A_2:
-							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_1);
+						  		DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,1); //Set pass to 1		
 								break;
 							case A_3:
 								break;
 							case A_4:
-							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_2);
+						  		DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,2); //Set pass to 2	
 								break;
 							case A_5:
 								break;
 							case A_6:
-							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_3);
+								  DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,3); //Set pass to 3		
 								break;
 							case A_7:
 								break;
 							case A_8:
-							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_4);
+								  DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,4); //Set pass to 4		
 								break;
 							case A_9:
-							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_5);
+							  	DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,5); //Set pass to 5		
 								break;
 							case A_PUSH:
 								break;												
 							case A_LSPEED: 
 								break;
 							default:
-							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_0);
+							  	DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,0); //In case of unexpected value, set pas to 0
 								break;
 						}				
 					break;
