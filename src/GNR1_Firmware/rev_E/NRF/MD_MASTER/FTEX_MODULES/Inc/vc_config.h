@@ -19,13 +19,17 @@
 #include "lcd_apt_comm.h"
 #include "ev_config_tool.h"
 
-
-/* VEHICLE SELECTION
-0: DEFAULT
-1: ECELL
-2: EBGO
+#define VEHICLE_DEFAULT			0
+#define VEHICLE_ECELL 			1
+#define VEHICLE_EBGO 				2
+/*
+VEHICLE SELECTION
+------------------------------------
+Change this define based on vehicle application
+------------------------------------
 */
-#define VEHICLE_SELECTION 1
+#define VEHICLE_SELECTION 	VEHICLE_ECELL
+/*------------------------------------*/
 
 
 #define CANBUS_ENABLE	0

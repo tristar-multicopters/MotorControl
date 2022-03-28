@@ -44,52 +44,44 @@ void THRO_Clear(THRO_Handle_t * pHandle)
   */
 void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle)
 {
-	uint32_t wtemp;
-	int32_t wAux;
-  uint16_t hAux1;
-	int16_t hAux2;
+	uint32_t wAux;
+  uint16_t hAux;
 	uint16_t hBandwidth;
 	
 	/*
 		Compute averaged raw ADC value (between 0 and 65535)
 	*/
-	hAux1 = RCM_ReadConv(pHandle->pRegularConversionManager, pHandle->convHandle);
-	pHandle->hInstADCValue = hAux1;
+	hAux = RCM_ReadConv(pHandle->pRegularConversionManager, pHandle->convHandle);
+	pHandle->hInstADCValue = hAux;
 	
 	if (pHandle->hInstADCValue > pHandle->hAvADCValue)
 		hBandwidth = pHandle->hParam.hLowPassFilterBW1;
 	else
 		hBandwidth = pHandle->hParam.hLowPassFilterBW2;
 
-	if ( hAux1 != 0xFFFFu )
+	if ( hAux != UINT16_MAX )
 	{
-		wtemp =  ( uint32_t )( hBandwidth - 1u );
-		wtemp *= ( uint32_t ) ( pHandle->hAvADCValue );
-		wtemp += hAux1;
-		wtemp /= ( uint32_t )( hBandwidth );
+		wAux =  ( uint32_t )( hBandwidth - 1u );
+		wAux *= ( uint32_t ) ( pHandle->hAvADCValue );
+		wAux += hAux;
+		wAux /= ( uint32_t )( hBandwidth );
 
-		pHandle->hAvADCValue = ( uint16_t ) wtemp;
+		pHandle->hAvADCValue = ( uint16_t ) wAux;
 	}
 	
 	/*
 		Compute throttle value (between 0 and 65535)
 	*/
-	wAux = (int32_t)( (pHandle->hAvADCValue) - pHandle->hParam.hOffsetThrottle );
+	hAux = (pHandle->hAvADCValue > pHandle->hParam.hOffsetThrottle) ? 
+					(pHandle->hAvADCValue - pHandle->hParam.hOffsetThrottle) : 0; //Substraction without overflow
+	
+	wAux = (uint32_t)(pHandle->hParam.bSlopeThrottle * hAux);
+	wAux /= pHandle->hParam.bDivisorThrottle;
 	if (wAux > UINT16_MAX)
 		wAux = UINT16_MAX;
-	else if (wAux < 0)
-		wAux = 0;
+	hAux = (uint16_t)wAux;
 	
-	hAux2 = (int16_t) wAux;
-	
-	wAux = (int32_t)(pHandle->hParam.bSlopeThrottle * hAux2);
-	wAux /= pHandle->hParam.bDivisorThrottle;
-	if (wAux > INT16_MAX)
-		wAux = INT16_MAX;
-	else if (wAux < INT16_MIN)
-		wAux = INT16_MIN;
-			
-	pHandle->hAvThrottleValue = (uint16_t) wAux;
+	pHandle->hAvThrottleValue = hAux;
 }
 
 /**
@@ -108,19 +100,15 @@ uint16_t THRO_GetAvThrottleValue(THRO_Handle_t * pHandle)
 int16_t THRO_ThrottleToTorque(THRO_Handle_t * pHandle)
 {
 	int32_t wAux;
-	int16_t hAux;
 	
 	/*
 		Compute torque value (between -32768 and 32767)
 	*/
-	wAux = (int32_t)(pHandle->hAvThrottleValue - pHandle->hParam.hOffsetTorque);
-	if (wAux > INT16_MAX)
-		wAux = INT16_MAX;
-	else if (wAux < 0)
+	wAux = pHandle->hAvThrottleValue - pHandle->hParam.hOffsetTorque;
+	if (wAux < 0)
 		wAux = 0;
 	
-	hAux = (int16_t)wAux;
-	wAux = (int32_t)(pHandle->hParam.bSlopeTorque * hAux);
+	wAux = (int32_t)(pHandle->hParam.bSlopeTorque * wAux);
 	wAux /= pHandle->hParam.bDivisorTorque;
 	if (wAux > INT16_MAX)
 		wAux = INT16_MAX;
