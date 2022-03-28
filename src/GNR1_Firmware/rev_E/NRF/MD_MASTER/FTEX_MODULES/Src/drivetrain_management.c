@@ -9,7 +9,6 @@
 
 #include "drivetrain_management.h"
 
-
 /* Functions ---------------------------------------------------- */
 
 
@@ -59,11 +58,9 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 			break;
 	}
 	
-	THRO_CalcAvValue(pHandle->pThrottle);
-	
 	if (pHandle->bCtrlType == TORQUE_CTRL)
 	{
-		hTorqueRef = THRO_ThrottleToTorque(pHandle->pThrottle);
+		hTorqueRef = DRVT_ControlSelect(pHandle);
 		if ( bIsBrakePressed )
 		{
 			hTorqueRef = 0;
@@ -536,7 +533,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 		MDI_FaultAcknowledged(pHandle->pMDI, M2);
 	}
 	
-	return bFaultOccured;
+	return bFaultOccured; 
 }
 
 /**
@@ -545,8 +542,10 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	* @param  PAS level
 	* @retval None
 	*/
-void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, uint8_t level)
+void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level)
 {
+	pHandle->pPAS->pLevel = PAS_LEVEL_2;
+	level = pHandle->pPAS->pLevel;
 }
 
 /**
@@ -621,4 +620,89 @@ bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle)
 {
 }
 
+/* PAS Basic Implementation ----------------------------------------------------- */ 
+/**
+	* @brief  Set Pedal Assist Level based on the screen information
+	* @param  Drivetrain handle
+	* @retval pRefTorque in int16
+	*/
+int16_t DRVT_PasSetLevel(DRVT_Handle_t * pHandle)
+{
+	
+	PAS_sLevel Set_Level;
+	DRVT_SetPASLevel(pHandle, Set_Level);
+	
+	switch(Set_Level)
+	{
+		case PAS_LEVEL_0:
+			pHandle->pRefTorque = No_Torque_Level;
+			break;
 
+		case PAS_LEVEL_1:
+			pHandle->pRefTorque = Torque_Level1;
+			break;
+
+		case PAS_LEVEL_2:
+			pHandle->pRefTorque = Torque_Level2;
+			break;
+		case PAS_LEVEL_3:
+			pHandle->pRefTorque = Torque_Level3;
+			break;
+		case PAS_LEVEL_4:
+			pHandle->pRefTorque = Torque_Level4;
+			break;
+		
+		case PAS_LEVEL_5:
+			pHandle->pRefTorque = Torque_Level4;
+			break;		
+		default:                               
+		break;
+	}
+
+	return pHandle->pRefTorque;
+}
+/**
+	* @brief  Select Control assistance based on Throttle or PAS
+	* @param  Drivetrain handle
+	* @retval pHandle->pTorqueSelect in int16                                                                                    
+	*/
+int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
+{
+	volatile bool PAS_Pres;
+	
+	/* Check Pulse presence */
+	PAS_Pres = DRVT_PASpresence (pHandle); 		
+	
+	/* PAS and Throttle mangement */
+	if (PAS_Pres)
+	{
+		/* PAS set torque level */
+		pHandle->pTorqueSelect = DRVT_PasSetLevel(pHandle);
+	}
+	else
+	{	
+		/* Throttle calculate Value and covert to Torque */
+		THRO_CalcAvValue(pHandle->pThrottle);
+		pHandle->pTorqueSelect = THRO_ThrottleToTorque(pHandle->pThrottle);
+	}
+	return pHandle->pTorqueSelect;
+}
+
+/**
+	* @brief  Set Pedal Assist Level based on the screen information
+	* @param  Drivetrain handle
+	* @retval pHandle->bUsePAS in Boolean
+	*/
+bool DRVT_PASpresence (DRVT_Handle_t * pHandle) 
+{
+	int32_t	TempSpeed;
+	
+	TempSpeed = PAS_GetSpeed(pHandle->pPAS);
+	
+	if (TempSpeed > 0)
+		pHandle->bUsePAS = true;
+	else 
+		pHandle->bUsePAS = false;
+	
+	return pHandle->bUsePAS;
+} 

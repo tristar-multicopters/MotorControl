@@ -23,6 +23,7 @@
 #include "speed_pulse_read.h"
 #include "wheel_speed_sensor.h"
 
+
 typedef enum
 {
 	HUB_SINGLE,
@@ -61,8 +62,12 @@ typedef struct
 	BRK_Handle_t * pBrake;				/* Pointer to brake handle */
 	MS_Handle_t * pMS;						/* Pointer to motor selector handle */
 	PWREN_Handle_t * pPWREN;			/* Pointer to power enable pin handle */
-	WSS_Handle_t 	* pWSS;				/* Pointer to Wheel speed handle */
+	WSS_Handle_t 	* pWSS;					/* Pointer to Wheel speed handle */
 	
+	int16_t			 	pRefTorque;			/* Torque reference, first element is for M1, second is for M2 */
+	int16_t			 	pTorqueSelect;	/* Torque reference, first element is for M1, second is for M2 */
+	bool					bUsePAS;
+		
 	FLDBK_Handle_t sHeatsinkTempFoldback1;		/* Foldback handle using M1 heatsink temperature */
 	FLDBK_Handle_t sHeatsinkTempFoldback2;		/* Foldback handle using M2 heatsink temperature */
 	FLDBK_Handle_t sMotorTempFoldback1;				/* Foldback handle using M1 motor temperature */
@@ -181,8 +186,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle);
 	* @param  PAS level
 	* @retval None
 	*/
-void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, uint8_t level);
-
+void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level);
 /**
 	* @brief  Get main motor reference torque
 	* @param  Drivetrain handle
@@ -239,6 +243,24 @@ bool DRVT_IsMotor1Used(DRVT_Handle_t * pHandle);
 	*/
 bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle);
 
+/**
+	* @brief  Set Pedal Assist Level based on the screen information
+	* @param  Drivetrain handle
+	* @retval pRefTorque in int16
+	*/
+int16_t DRVT_PasSetLevel(DRVT_Handle_t * pHandle);
+/**
+	* @brief  Select Control assistance based on Throttle or PAS
+	* @param  Drivetrain handle
+	* @retval RefTorque in int16                                                                                    
+	*/
+int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle);
+/**
+	* @brief  Set Pedal Assist Level based on the screen information
+	* @param  Drivetrain handle
+	* @retval pRefTorque in int16
+	*/
+bool DRVT_PASpresence (DRVT_Handle_t * pHandle);
 
 #endif /*__DRIVETRAIN_MANAGEMENT_H*/
 

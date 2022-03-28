@@ -102,6 +102,7 @@ typedef struct
 	uint16_t 			sWAvSpeed;       /* It contains latest available wheel average speed in u16 */
 
 	SPR_Param_t		sParam;
+	
 } SPR_Handle_t;
 
 /* Exported constants --------------------------------------------------------*/
