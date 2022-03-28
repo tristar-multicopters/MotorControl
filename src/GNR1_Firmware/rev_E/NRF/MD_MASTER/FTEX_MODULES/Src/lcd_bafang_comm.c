@@ -10,262 +10,330 @@
 	
 #include "lcd_bafang_comm.h"
 
-/*
-	IMPORTANT NOTE:
-	Volatile variables might be needed to compile with 
-	opmitization level 3
-*/
+// Private handler
+BAF_Handle_t m_Baf_handle;
+extern osThreadId_t TSK_eUART0_handle; // Task Id for external uart (UART0 instance)
 
-/****************** PARAMETERS ***********************/
-static LCD_handle_t * p_Baf_handle;				// private instance for managing Bafang display communication
-
-osThreadId_t TSK_LCD_Bafcomm_handle;    // Bafang ID task
-
-// Queue declarations
-static osMessageQueueId_t Baf_frame_queue;
-
-static const osMessageQueueAttr_t queueAtr_Baf_frame = {
-		.name = "Baffang_frame_Q",
-};
-
-/***********************************************************/
-
-static void LCD_Baf_event_handler(ufcp_evt_t * p_ufcp_event)
-{	
-	FCP_Frame_t rx_frame = p_ufcp_event->frame;
-	
-	switch (p_ufcp_event->evt_type)
+/**@brief Callback used for managing bytes received or sent from the low level layer (euart_manager)
+ *
+ * @param[in] p_lcd_event: Structure that contains the received byte (or byte to send) and the type of event
+ */
+static void LCD_Baf_event_handler(eUART_evt_t * p_lcd_event)
+{
+	switch(p_lcd_event->evt_type)
 	{
-			case UFCP_FRAME_RECEIVED:
-					osMessageQueuePut(Baf_frame_queue, &rx_frame, NULL, 0);
-					osThreadFlagsSet(TSK_LCD_Bafcomm_handle, LCD_BAFFANG_FLAG);
-					break;
-			
-			case UFCP_FRAME_SENT:
-					break;
-			
-			case UFCP_CRC_ERROR:
-					break;
-			
-			default:
-					break;
+		case EUART_BYTE_RECEIVED:
+		  LCD_BAF_RX_IRQ_Handler(p_lcd_event->byte_to_send[0]);
+		  break;
+		
+		case EUART_BYTE_SENT:
+			LCD_BAF_TX_IRQ_Handler();
+			break;
 	}
 }
 
-static void LCD_BAF_frame_received(LCD_handle_t * pHandle, FCP_Frame_t * rx_frame)
+/**@brief Function for building a frame specific this the bafang protocol
+ * 
+ * @param[in] rx_frame: Frame that needs to be decoded. 
+ */
+void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 {
-	FCP_Frame_t replyFrame = {0};
-	int32_t toSend = 0;
+	
+	if(m_Baf_handle.TrashCnt >= 123) //Skip the bundle of 123 trash bytes when the screen is powerd on
+	{
+	
+	 uint8_t ByteCount    = m_Baf_handle.rx_frame.ByteCnt;     
+   uint8_t ByteReceived = rx_data;
+				 
+	 switch(ByteCount)					 
+	 {
+		  case 0:
+				 if(ByteReceived == BAF_CMD_READ || ByteReceived == BAF_CMD_WRITE) //Read or write cmd
+				 {
+					 m_Baf_handle.rx_frame.ByteCnt ++;
+					 m_Baf_handle.rx_frame.Code = ByteReceived;
+				 }
+				 else //If not its a bad cmd
+				 {
+					 m_Baf_handle.rx_frame.ByteCnt = 0;
+				 }
+				 // Ask for another byte
+				 eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
+			 break;
+		  
+			case 1:
+			case 2:
+			case 3:
+				 m_Baf_handle.rx_frame.ByteCnt ++;
+				 m_Baf_handle.rx_frame.Buffer[ByteCount-1] = ByteReceived;	 
+				
+				 if(m_Baf_handle.rx_frame.Code == BAF_CMD_READ) //Read cmd
+				 {	
+						m_Baf_handle.rx_frame.ByteCnt = 0;
+						osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify task a frame has been received
+				 }
+				 else if(m_Baf_handle.rx_frame.Code == BAF_CMD_WRITE)//Write cmd
+				 {
+						if(m_Baf_handle.rx_frame.Buffer[0] == W_ASSIST) 
+						{
+							if(ByteCount == 3) //Assit cmd needs 4 bytes (0-3)
+							{								
+								m_Baf_handle.rx_frame.ByteCnt = 0;
+								osThreadFlagsSet(TSK_eUART0_handle, EUART_FLAG); // Notify task a frame has been received
+							}
+						}
+						else //Wrong frame, trash it.
+						{
+							m_Baf_handle.rx_frame.ByteCnt = 0;
+							// Ask for another byte
+							eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
+						}
+					}	
+				 else //Wrong frame, trash it.
+				 {
+						m_Baf_handle.rx_frame.ByteCnt = 0;
+						// Ask for another byte
+						eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
+				 }
+		   break;		 
+		 default:
+			 //Unknown frame, trash it.
+			 m_Baf_handle.rx_frame.ByteCnt = 0;
+			 // Ask for another byte
+			 eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
+			 break;						
+	 }
+  }
+  else
+  {
+    m_Baf_handle.TrashCnt ++;
+	  eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
+  }	
+}
+
+/**@brief Function for sending a response byte by byte
+ * 
+ * @param[in] the data should be place in m_baf_handle.tx_frame
+ *            before calling this function
+ */
+void LCD_BAF_TX_IRQ_Handler(void)
+{
+    uint8_t tx_data;
+
+    if(m_Baf_handle.tx_frame.ByteCnt < m_Baf_handle.tx_frame.Size) //Check if the entire frame has been sent
+    {
+			tx_data = m_Baf_handle.tx_frame.Buffer[m_Baf_handle.tx_frame.ByteCnt];
+			m_Baf_handle.tx_frame.ByteCnt ++;
+			// Send the data byte 
+			eUART_Send(&m_Baf_handle.euart_handler,&tx_data, 1); 
+    }
+    else
+    {	
+			//Resume reception of frames			
+			m_Baf_handle.tx_frame.ByteCnt = 0;
+			eUART_Receive(&m_Baf_handle.euart_handler,m_Baf_handle.euart_handler.rx_byte); //Restart reception
+	  }
+}
+
+/**@brief Function for decoding a received frame (previously built on the callback function)
+ *
+ * @param[in] the data should be place in m_baf_handle.rx_frame
+ *            before calling this function
+ *
+ *  Answers to the screen when needed, applies the changes to the controller that are relevant. 
+ */
+void LCD_BAF_frame_Process(void)
+{
+	BAF_frame_t replyFrame = {0};
+	int32_t toSend    = 0;
+
 	uint8_t AssistLvl = 0;
 	
-	switch(rx_frame->Code)
+	switch(m_Baf_handle.rx_frame.Code)
 	{
 		case BAF_CMD_READ:
 		{
-			switch(rx_frame->Buffer[0])
+			switch(m_Baf_handle.rx_frame.Buffer[0])
 			{
-				case R_VERSION:
-					//answer with 0x90 0x40 0x0D
-				  replyFrame.Size = 3;
-				  replyFrame.Buffer[0] = 0x90;
-				  replyFrame.Buffer[1] = 0x40;
-				  replyFrame.Buffer[2] = 0x0D;
+				case R_VERSION:          //Answer is fixed
+				    replyFrame.Size = 3;
+				    replyFrame.Buffer[0] = 0x90;
+				    replyFrame.Buffer[1] = 0x40;
+				    replyFrame.Buffer[2] = 0x0D;
 				  break;
-				
-			 case R_STATUS:
-				 //answer with 0x01 twice
-					replyFrame.Size = 2;
-					replyFrame.Buffer[0] = 0x01;
-					replyFrame.Buffer[1] = 0x01;							   
+				 
+			  case R_STATUS:           //0x01 means there are no errors
+					  replyFrame.Size = 2; //To change if we want to send errors to the screen
+					  replyFrame.Buffer[0] = 0x01;
+					  replyFrame.Buffer[1] = 0x01;							   
 					break;				
 			 
-			 case R_WORKSTATUS:
-				  //answer with 0x31 0x31
-				  replyFrame.Size = 2;
-				  replyFrame.Buffer[0] = 0x31;
-				  replyFrame.Buffer[1] = 0x31;
+			  case R_WORKSTATUS:       //0x31 -> controller is working
+				    replyFrame.Size = 2; 
+				    replyFrame.Buffer[0] = 0x31;
+				    replyFrame.Buffer[1] = 0x31;
 					break;
 			 
-			 case R_CURRENT:
-				 // answer with 0-250 value twice 
-				 // Jorge: current is a int16_t value. Has to ask to Sami what kind of value we have to send to the screen then...
-			   //toSend = VC_getMotorIqIdMeas(m_Baf_handle.pVCInterface,M1).q; //Andy: This is the wrong value, the value that we need doesn't exist
-			 
-					toSend = abs( MDI_getIq(pHandle->pVCInterface->pDrivetrain->pMDI, M1) );
-					toSend = (uint8_t)(toSend >> 8)*4/5;
-			    replyFrame.Size = 2;
-				  replyFrame.Buffer[0] = toSend;
-				  replyFrame.Buffer[1] = toSend;
+			  case R_CURRENT:
+				    //answer with 0-250 value twice (each unit = 0.5 A)
+				
+				    //Aprox calculation 
+				   // toSend = abs( VC_getMotorIqIdMeas(m_Baf_handle.pVController, M1).q );
+					  toSend = (uint8_t)(toSend >> 8)*4/5;
+				
+			      replyFrame.Size = 2;
+				    replyFrame.Buffer[0] = toSend;
+				    replyFrame.Buffer[1] = toSend;
 					break;
 			 
-			 case R_BATCAP:
-				 //answer with 0-99 value twice
-				  toSend = MDI_getBusVoltage(pHandle->pVCInterface->pDrivetrain->pMDI, M1);
-			    toSend = ((toSend - 30) * 5)-1; //Aprox calculation of bat %
+			  case R_BATCAP:
+				  //  toSend = VC_getBattVoltage(m_Baf_handle.pVController);
+			      toSend = ((toSend - 30) * 5)-1; //Aprox calculation of bat %
 			    
-			    if(toSend > 100)
-					{
-					 toSend = 99;
-					}
+			      if(toSend > 100)
+				  	{
+					   toSend = 99;
+					  }
 					
-				  replyFrame.Size = 2;
-				  replyFrame.Buffer[0] = toSend;
-				  replyFrame.Buffer[1] = toSend;
+				    replyFrame.Size = 2;
+				    replyFrame.Buffer[0] = toSend;
+				    replyFrame.Buffer[1] = toSend;
 					break;
 			 
-			 case R_RSPEED:
-				 //answer with rpm + checksum (speed + 0x20)
-			   //Jorge: speed is coded in 4 bytes, mesure is in RPM.
-				 toSend = abs( MDI_getSpeed(pHandle->pVCInterface->pDrivetrain->pMDI, M1) );
+			  case R_RSPEED:
+				 //  toSend = VC_getMotorSpeedMeas(m_Baf_handle.pVController,M1);
+			  
+			     toSend = (toSend * 10) / 37; //Recheck calculation for various bikes
 			 
-			   toSend = (toSend * 10) / 37; 
-				 if (toSend >= UINT8_MAX)
-					 toSend = UINT8_MAX-1;
-				 replyFrame.Size = 3;
-				 replyFrame.Buffer[0] = 0;
-				 replyFrame.Buffer[1] = toSend;
-				 replyFrame.Buffer[2] = replyFrame.Buffer[0] + replyFrame.Buffer[1] + 0x20; 
+           if(toSend < 0)
+				   {
+				    toSend = 0;
+				   }					 
+				   replyFrame.Size = 3;
+				   replyFrame.Buffer[0] = (toSend  >> 8) & 0xFF;
+				   replyFrame.Buffer[1] = toSend & 0xFF;
+				   replyFrame.Buffer[2] = replyFrame.Buffer[0] + replyFrame.Buffer[1] + 0x20; 
 				 break;
 			 
-			 case R_LIGHTSTATUS:
-				 //answer with 0x00 0x00 (light off)
-				 replyFrame.Size = 2;
-				 replyFrame.Buffer[0] = 0x00;
-				 replyFrame.Buffer[1] = 0x00;
+			  case R_LIGHTSTATUS: //Not supported so we answer with ligghts closed
+				   replyFrame.Size = 2;
+				   replyFrame.Buffer[0] = 0x00;
+				   replyFrame.Buffer[1] = 0x00;
 			   break;
 			 
-			 case R_PHOTTHRESH:
-				 //answer with threshhold 0xFF 0xFF
-				 replyFrame.Size = 2;
-				 replyFrame.Buffer[0] = 0xFF;
-				 replyFrame.Buffer[1] = 0xFF;
+			  case R_PHOTTHRESH: //Not supported so we answer with a regular value
+				   replyFrame.Size = 2;
+				   replyFrame.Buffer[0] = 0xFF;
+				   replyFrame.Buffer[1] = 0xFF;
 				 break;
 			 
-			 case SKIP:
-			 default:
-				 replyFrame.Size = 0;
-				 UFCP_Receive(&pHandle->lcd_ufcp_handle);  // TO VERIFY
-				break;
+			  case SKIP:
+			  default:
+				   replyFrame.Size = 0;
+				   eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
+				 break;
 			}
-		}break; // end case BAF_CMD_READ
+		}break; //end case BAF_CMD_READ
 		
 		case BAF_CMD_WRITE:
 		{
-			switch(rx_frame->Buffer[0])
+			switch(m_Baf_handle.rx_frame.Buffer[0])
 			{
 				case W_ASSIST:
-					 AssistLvl = rx_frame->Buffer[1];
+					 AssistLvl = m_Baf_handle.rx_frame.Buffer[1];
 				
-				   switch(AssistLvl)
-											{
-											  case A_0:
-													//Speed = 0;   // 0 km/h
-												  DRVT_SetPASLevel(pHandle->pVCInterface->pDrivetrain,0);
-                          break;
-											  case A_1:
-													//Speed = 16;  // 2 km/h
-                          break;
-											  case A_2:
-													//Speed = 31;  // 4 km/h
-												  DRVT_SetPASLevel(pHandle->pVCInterface->pDrivetrain,1);
-                          break;
-											  case A_3:
-													//Speed = 47;  // 6 km/h
-                          break;
-											  case A_4:
-													//Speed = 62;  // 8 km/h
-												  DRVT_SetPASLevel(pHandle->pVCInterface->pDrivetrain,2);
-                          break;
-											  case A_5:
-													//Speed = 78;  //10 km/h
-                          break;
-											  case A_6:
-													//Speed = 93;  //12 km/h
-												  DRVT_SetPASLevel(pHandle->pVCInterface->pDrivetrain,3);
-                          break;
-											  case A_7:
-													//Speed = 109; //14 km/h
-                          break;
-											  case A_8:
-													//Speed = 124; //16 km/h
-												  DRVT_SetPASLevel(pHandle->pVCInterface->pDrivetrain,4);
-                          break;
-											  case A_9:
-													//Speed = 140; //18 km/h
-											  	DRVT_SetPASLevel(pHandle->pVCInterface->pDrivetrain,5);
-                          break;
-											  case A_PUSH:
-													//Speed = 202; //26 km/h
-                          break;												
-											  case A_LSPEED: // 1 km/h
-													//Speed = 8;
-                          break;
-												default:
-													DRVT_SetPASLevel(pHandle->pVCInterface->pDrivetrain,0);
-													//Speed = 247; //32 km/h
-													break;
-											}				
+				   switch(AssistLvl) //Set the pas level according to what the user selected
+					 {
+							case A_0:
+							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_0);								
+								break;
+							case A_1:
+								break;
+							case A_2:
+							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_1);
+								break;
+							case A_3:
+								break;
+							case A_4:
+							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_2);
+								break;
+							case A_5:
+								break;
+							case A_6:
+							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_3);
+								break;
+							case A_7:
+								break;
+							case A_8:
+							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_4);
+								break;
+							case A_9:
+							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_5);
+								break;
+							case A_PUSH:
+								break;												
+							case A_LSPEED: 
+								break;
+							default:
+							//	PAS_SetLevel(m_Baf_handle.pVController->pPedalAssist,PAS_LEVEL_0);
+								break;
+						}				
 					break;
 				
 				default:
-					    UFCP_Receive(&pHandle->lcd_ufcp_handle);
+					    replyFrame.Size = 0;
+					    eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 					break;
 			}
-		}break; // end case BAF_CMD_WRITE
+		}break;//end case BAF_CMD_WRITE
 		
-		default: // TODO: Rise an error
-			UFCP_Receive(&pHandle->lcd_ufcp_handle);
+		default: 
+			replyFrame.Size = 0;
+		  eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 			break;
 	}
 	
-	if(replyFrame.Size > 0)
+	if(replyFrame.Size > 0) //If size is bigger than one we have to send a response
 	{
-		UFCP_Send(&pHandle->lcd_ufcp_handle,replyFrame.Code,replyFrame.Buffer,replyFrame.Size);
-	}
-	
-	else // TO VERIFY...
-	{
-		UFCP_Receive(&pHandle->lcd_ufcp_handle);
-	}
-}
-
-void LCD_Baf_Init(LCD_handle_t * pHandle)
-{
-		p_Baf_handle = pHandle;
-		nrf_drv_uart_config_t uart_drive_config =
-	{                                                     
-    .pseltxd            = UART0_TX_PIN,               
-    .pselrxd            = UART0_RX_PIN,              	
-    .pselcts            = NRF_UART_PSEL_DISCONNECTED,   
-    .pselrts            = NRF_UART_PSEL_DISCONNECTED,   
-    .p_context          = pHandle,                         
-    .hwfc               = NRF_UART_HWFC_DISABLED,       
-    .parity             = NRF_UART_PARITY_EXCLUDED,     
-    .baudrate           = NRF_UART_BAUDRATE_1200, 		
-    .interrupt_priority = 2,                  					
-    NRF_DRV_UART_DEFAULT_CONFIG_USE_EASY_DMA
-	};
-	
-	pHandle->lcd_ufcp_handle.p_uart_inst = UART0_INSTANCE_ADDR;
-	
-	UFCP_Init(&pHandle->lcd_ufcp_handle,uart_drive_config,LCD_Baf_event_handler);
-}
-
-__NO_RETURN void TSK_LCD_Baf_comm (void * pvParameter)
-{
-	UNUSED_PARAMETER(pvParameter);
-	
-	Baf_frame_queue = osMessageQueueNew(LCD_PENDING_BUFFER_SIZE, sizeof(FCP_Frame_t),&queueAtr_Baf_frame);
-	FCP_Frame_t rx_frame;
-	
-	UFCP_Receive(&p_Baf_handle->lcd_ufcp_handle);
-	while (true)
-	{
-		osThreadFlagsWait(LCD_BAFFANG_FLAG, osFlagsWaitAny, osWaitForever);
+		replyFrame.ByteCnt = 0;   
 		
-		if ( osMessageQueueGet(Baf_frame_queue, &rx_frame, NULL, 0) == osOK )
-		{
-			LCD_BAF_frame_received(p_Baf_handle, &rx_frame);
-		}
+    m_Baf_handle.tx_frame = replyFrame; 
+     		
+		LCD_BAF_TX_IRQ_Handler();
+	}	
+	else //If not just get ready for the next frame
+	{
+		replyFrame.Size = 0;
+		eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 	}
+}
+
+/**@brief Function for initializing the LCD module with the Bafang protocol
+ * 
+ * @param[in] pHandle: Handle for vehicle controller 
+ */
+void LCD_BAF_init(VCI_Handle_t * pHandle)
+{
+		m_Baf_handle.pVController = pHandle;  					 								  // Pointer to VController
+		m_Baf_handle.euart_handler.dev_type = EUART_BAFANG;							  // Assignation of LCD type
+	  m_Baf_handle.euart_handler.p_evt_handler = LCD_Baf_event_handler; // Assignation of callback function
+		m_Baf_handle.euart_handler.p_uart_inst = UART0_INSTANCE_ADDR;			// Assignation of UART0 adresse
+	  m_Baf_handle.TrashCnt = 0;
+	
+		nrf_drv_uart_config_t uart_drive_config =
+	  {                                                     
+      .pseltxd            = UART0_TX_PIN,               
+      .pselrxd            = UART0_RX_PIN,              	
+      .pselcts            = NRF_UART_PSEL_DISCONNECTED,   
+      .pselrts            = NRF_UART_PSEL_DISCONNECTED,   
+      .p_context          = &m_Baf_handle.euart_handler, // To be able to recover on the uart event handler on the low level  	                  
+      .hwfc               = NRF_UART_HWFC_DISABLED,       
+      .parity             = NRF_UART_PARITY_EXCLUDED,     
+      .baudrate           = NRF_UART_BAUDRATE_1200, 		
+      .interrupt_priority = 2,                  				//TODO lower interrupt priority	for all screens
+      NRF_DRV_UART_DEFAULT_CONFIG_USE_EASY_DMA
+	  };
+	
+	eUART_Init(&m_Baf_handle.euart_handler,uart_drive_config);
+	eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 }

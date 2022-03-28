@@ -45,7 +45,7 @@ static void CLK_Init(void)
 void VC_BootUp(void)
 {	
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
-	//LCD_handle_t * pLCD = &BafangScreenHandle;
+
 	
 	/* Initialize clock */
 	CLK_Init();
@@ -274,11 +274,16 @@ __NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
 			break;
 		
 		case EUART_BAFANG:
-			//LCD_BAF_init(&VCInterfaceHandle);
+
+			LCD_BAF_init(&VCInterfaceHandle);
 			break;
 		
-		case EUART_EGG:
-			//LCD_EGG_init(&VCInterfaceHandle);
+		case EUART_FTEX:
+			LCD_FTEX_init(&VCInterfaceHandle);
+			break;
+		
+		case EUART_APT:
+			LCD_APT_init(&VCInterfaceHandle);
 			break;
 		
 		default:
@@ -295,13 +300,16 @@ __NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
 				break;
 			
 			case EUART_BAFANG:
-				//LCD_BAF_frame_Process();
+				LCD_BAF_frame_Process();
 				break;
 			
-			case EUART_EGG:
-				//LCD_EGG_frame_Process();
+			case EUART_APT:
+				LCD_APT_frame_Process();
 				break;
-			
+						
+			case EUART_FTEX:
+				LCD_FTEX_frame_Process();
+				break;
 			default:
 				break;
 		}

@@ -62,10 +62,13 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		
 	// Peripheral parameters (256-511)//
 		case REG_THROTTLE_SLOPE:
+			value = pHandle->pDrivetrain->pThrottle->hParam.bSlopeThrottle;
 			break;
 		case REG_THROTTLE_DIVISOR:
+			value = pHandle->pDrivetrain->pThrottle->hParam.bDivisorThrottle;
 			break;
 		case REG_THROTTLE_OFFSET:
+			value = pHandle->pDrivetrain->pThrottle->hParam.hOffsetThrottle;
 			break;
 		case REG_PAS_ENABLE:
 //			value = pHandle->pDrivetrain->pPAS // To complete...			
@@ -596,10 +599,13 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		
 	// Peripheral parameters (256-511)//
 		case REG_THROTTLE_SLOPE:
+			pHandle->pDrivetrain->pThrottle->hParam.bSlopeThrottle = value;
 			break;
 		case REG_THROTTLE_DIVISOR:
+			pHandle->pDrivetrain->pThrottle->hParam.bDivisorThrottle = value;
 			break;
 		case REG_THROTTLE_OFFSET:
+			pHandle->pDrivetrain->pThrottle->hParam.hOffsetThrottle = value;
 			break;
 		case REG_PAS_ENABLE:
 //		pHandle->pDrivetrain->pPAS // To complete...			

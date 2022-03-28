@@ -15,6 +15,8 @@
 #include "vc_interface.h"
 #include "canbus_management.h"
 #include "lcd_bafang_comm.h"
+#include "lcd_ftex_comm.h"
+#include "lcd_apt_comm.h"
 #include "ev_config_tool.h"
 
 #define VEHICLE_DEFAULT			0
@@ -34,8 +36,6 @@ Change this define based on vehicle application
 
 
 extern VCI_Handle_t VCInterfaceHandle;
-
-extern LCD_handle_t BafangScreenHandle;
 extern SPI_Handle_t SPI0Manager;
 extern MCP25625_Handle_t CANController;
 extern RCM_Handle_t RegularConvertionManager;

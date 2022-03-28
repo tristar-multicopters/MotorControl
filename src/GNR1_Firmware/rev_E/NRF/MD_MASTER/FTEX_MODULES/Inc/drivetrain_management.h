@@ -23,6 +23,8 @@
 #include "speed_pulse_read.h"
 #include "wheel_speed_sensor.h"
 
+#define DRVT_FAULT_TIMEOUT	25 // Number of times the VC state machine should be stayed on fault
+														 // before clear a Over current, start-up or Speed back fault
 typedef enum
 {
 	HUB_SINGLE,
@@ -61,7 +63,8 @@ typedef struct
 	BRK_Handle_t * pBrake;				/* Pointer to brake handle */
 	MS_Handle_t * pMS;						/* Pointer to motor selector handle */
 	PWREN_Handle_t * pPWREN;			/* Pointer to power enable pin handle */
-	WSS_Handle_t 	* pWSS;				/* Pointer to Wheel speed handle */
+	WSS_Handle_t 	* pWSS;				  /* Pointer to Wheel speed handle */
+
 	
 	FLDBK_Handle_t sHeatsinkTempFoldback1;		/* Foldback handle using M1 heatsink temperature */
 	FLDBK_Handle_t sHeatsinkTempFoldback2;		/* Foldback handle using M2 heatsink temperature */
@@ -79,6 +82,10 @@ typedef struct
 	uint16_t hStoppingThrottle;		/* Minimum torque to stop drivetrain */
 	uint16_t hStoppingSpeed;			/* Minimum speed to stop drivetrain */
 	
+	// Fault handlers //
+	uint16_t hOCcounter[2];   			  /* Over current counters. First element would	be for M1, second for M2 */
+	uint16_t hSUcounter[2];   			  /* Start-up counters. First element would	be for M1, second for M2     */
+	uint16_t hSFcounter[2];   			  /* Speed feedback current counters. First element would	be for M1, second for M2*/
 } DRVT_Handle_t;
 
 /**
