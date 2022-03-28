@@ -87,7 +87,7 @@ THRO_Handle_t ThrottleHandle =
 		.pin_p = THROTTLE_ANALOG_PIN,
 		.pin_n = NRF_SAADC_INPUT_DISABLED,
 	},
-	#if VEHICLE_SELECTION == 1
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 8,
@@ -101,19 +101,19 @@ THRO_Handle_t ThrottleHandle =
 		.bSlopeTorque = -7,
 		.bDivisorTorque = 25,
 	}
-	#elif VEHICLE_SELECTION == 2
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
 	
-		.hOffset1 = 4800,
-		.bSlope1 = 0,
-		.bDivisor1 = 0,
+		.hOffsetThrottle = 9600,
+		.bSlopeThrottle = 5,
+		.bDivisorThrottle = 3,
 		
-		.hOffset2 = 0,
-		.bSlope2 = 0,
-		.bDivisor2 = 0,
+		.hOffsetTorque = 4000,
+		.bSlopeTorque = -7,
+		.bDivisorTorque = 25,
 	}
 	#else
 	.hParam =
@@ -121,13 +121,13 @@ THRO_Handle_t ThrottleHandle =
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
 	
-		.hOffset1 = 4800,
-		.bSlope1 = 0,
-		.bDivisor1 = 0,
+		.hOffsetThrottle = 9600,
+		.bSlopeThrottle = 5,
+		.bDivisorThrottle = 3,
 		
-		.hOffset2 = 0,
-		.bSlope2 = 0,
-		.bDivisor2 = 0,
+		.hOffsetTorque = 4000,
+		.bSlopeTorque = -7,
+		.bDivisorTorque = 25,
 	}
 	#endif
 };
@@ -192,10 +192,10 @@ MS_Handle_t MotorSelectorHandle =
 	.wM1SelectPinNumber = M1SELECT_GPIO_PIN,
 	.wM2SelectPinNumber = M2SELECT_GPIO_PIN,
 	
-	#if VEHICLE_SELECTION == 1
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.bIsInvertedLogic = false,
 	.bMSEnable = true,
-	#elif VEHICLE_SELECTION == 2
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bIsInvertedLogic = false,
 	.bMSEnable = false,
 	#else
@@ -245,35 +245,39 @@ PWREN_Handle_t PowerEnableHandle = {
 
 DRVT_Handle_t DrivetrainHandle = 
 {	
-	#if VEHICLE_SELECTION == 1
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = true,
 	.bDefaultMainMotor = M1,
 	.bCtrlType = TORQUE_CTRL,
-	.hTorqueRampTimeU = 200,
-	.hTorqueRampTimeD = 50,
-	.hSpeedRampTimeU = 200,
-	.hSpeedRampTimeD = 50,
+	.hTorqueRampTimeUp = 200,
+	.hTorqueRampTimeDown = 50,
+	.hSpeedRampTimeUp = 200,
+	.hSpeedRampTimeDown = 50,
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,
-	#elif VEHICLE_SELECTION == 2
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
 	.bDefaultMainMotor = M1,
 	.bCtrlType = TORQUE_CTRL,
-	.hTorqueRampTime = 200,
-	.hSpeedRampTime = 200,
+	.hTorqueRampTimeUp = 200,
+	.hTorqueRampTimeDown = 50,
+	.hSpeedRampTimeUp = 200,
+	.hSpeedRampTimeDown = 50,
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,
 	#else
 	.bUseMotorM1 = true,
-	.bUseMotorM2 = true,
+	.bUseMotorM2 = false,
 	.bDefaultMainMotor = M1,
 	.bCtrlType = TORQUE_CTRL,
-	.hTorqueRampTime = 200,
-	.hSpeedRampTime = 200,
+	.hTorqueRampTimeUp = 200,
+	.hTorqueRampTimeDown = 50,
+	.hSpeedRampTimeUp = 200,
+	.hSpeedRampTimeDown = 50,
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,

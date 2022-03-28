@@ -59,7 +59,7 @@ void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle)
 	else
 		hBandwidth = pHandle->hParam.hLowPassFilterBW2;
 
-	if ( hAux != 0xFFFFu )
+	if ( hAux != UINT16_MAX )
 	{
 		wAux =  ( uint32_t )( hBandwidth - 1u );
 		wAux *= ( uint32_t ) ( pHandle->hAvADCValue );

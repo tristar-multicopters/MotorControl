@@ -119,16 +119,16 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 		{
 			if ( abs(pHandle->aTorque[M1]) > abs(MDI_getIq(pHandle->pMDI, M1)) )
 			{
-				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeU);
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeUp);
 			}
 			else
 			{
-				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeD);
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeDown);
 			}
 		}
 		else if (pHandle->bCtrlType == SPEED_CTRL)
 		{
-			MDI_SetSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1], pHandle->hSpeedRampTimeU);
+			MDI_SetSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1], pHandle->hSpeedRampTimeUp);
 		}
 		else {}
 	}
@@ -138,16 +138,16 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 		{
 			if ( abs(pHandle->aTorque[M2]) > abs(MDI_getIq(pHandle->pMDI, M2)) )
 			{
-				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeU);
+				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeUp);
 			}
 			else
 			{
-				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeD);
+				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeDown);
 			}
 		}
 		else if (pHandle->bCtrlType == SPEED_CTRL)
 		{
-			MDI_SetSpeedRamp(pHandle->pMDI, M2, pHandle->aSpeed[M2], pHandle->hSpeedRampTimeU);
+			MDI_SetSpeedRamp(pHandle->pMDI, M2, pHandle->aSpeed[M2], pHandle->hSpeedRampTimeUp);
 		}
 		else {}
 	}
