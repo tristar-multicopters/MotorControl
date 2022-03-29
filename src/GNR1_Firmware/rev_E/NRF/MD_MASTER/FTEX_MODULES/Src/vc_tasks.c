@@ -24,7 +24,9 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 
 /************* DEFINES ****************/
 
-#define RETURN_TO_STANDBY_LOOPTICKS 10
+#define RETURN_TO_STANDBY_LOOPTICKS 3		// Max number of ticks to stay in run while stop conditions are met
+#define START_LOOPTICKS							100 // Max number of ticks to stay in start state
+#define STOP_LOOPTICKS							100 // Max number of ticks to stay in stop state
 
 
 /************* TASKS ****************/
@@ -177,6 +179,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					break;
 			
 			case V_START:
+					DRVT_UpdateMotorRamps(pVCI->pDrivetrain);
 					DRVT_StartMotors(pVCI->pDrivetrain);
 					hVehicleFault = DRVT_StartStateCheck(pVCI->pDrivetrain);
 					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
@@ -186,7 +189,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 						VCSTM_NextState( pVCI->pStateMachine, V_RUN );
 					}
 					wCounter++;
-					if ( wCounter > 100 )
+					if ( wCounter > START_LOOPTICKS )
 					{
 						wCounter = 0;
 						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_START_TIMEOUT, 0 );
@@ -228,7 +231,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
 					}
 					wCounter++;
-					if ( wCounter > 100 )
+					if ( wCounter > STOP_LOOPTICKS )
 					{
 						wCounter = 0;
 						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_STOP_TIMEOUT, 0 );
@@ -239,11 +242,11 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					DRVT_StopMotors(pVCI->pDrivetrain);
 					if ( DRVT_IsDrivetrainStopped(pVCI->pDrivetrain) )
 					{
-						if ( !DRVT_MotorFaultManagement(pVCI->pDrivetrain) )
-						{
-							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove VC_M1_FAULTS flag
-							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove VC_M2_FAULTS flag
-						}
+//						if ( !DRVT_MotorFaultManagement(pVCI->pDrivetrain) )
+//						{
+//							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove VC_M1_FAULTS flag
+//							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove VC_M2_FAULTS flag
+//						}
 					}
 					break;
 					

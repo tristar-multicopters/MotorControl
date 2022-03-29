@@ -213,7 +213,7 @@ void LCD_APT_frame_Process(void)
 		}
 		
     replyFrame.Buffer[ 1] = (toSend & 0x000000FF); // Power 0.1 A/unit 
-	
+
 		
 		//If there is a motor at the rear use it for its speed
 	  if(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1) > 0)
@@ -229,6 +229,7 @@ void LCD_APT_frame_Process(void)
 		
 	  toSend = 1000/(toSend/60); //Converion from RPM to period in ms 
 	
+		toSend = 0x0000;
 	  replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Motor speed Low half 
 	  replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; // Motor speed High half
 	  
