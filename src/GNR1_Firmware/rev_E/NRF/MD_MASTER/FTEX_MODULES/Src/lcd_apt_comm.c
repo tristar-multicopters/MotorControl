@@ -198,14 +198,17 @@ void LCD_APT_frame_Process(void)
     replyFrame.Buffer[ 0] = APT_START; //Start
 	
 	
-		toSend = 0x64;
+		toSend = 0xC8;
     replyFrame.Buffer[ 1] = (toSend & 0x000000FF); // Power 0.1 A / unit 
 	
 	
 	  //toSend = VC_getMotorSpeedMeas(m_APT_handle.pVController,M1);
 	
+		toSend = 0x70;
+		
 	  toSend = 1000/(toSend/60); //Converion from RPM to period in ms 
 	
+		toSend = 0x0000;
 	  replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Motor speed Low half 
 	  replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; // Motor speed High half
 	  
