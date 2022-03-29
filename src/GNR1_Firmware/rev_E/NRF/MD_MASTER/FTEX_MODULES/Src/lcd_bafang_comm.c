@@ -339,7 +339,7 @@ void LCD_BAF_init(VCI_Handle_t * pHandle)
       .hwfc               = NRF_UART_HWFC_DISABLED,       
       .parity             = NRF_UART_PARITY_EXCLUDED,     
       .baudrate           = NRF_UART_BAUDRATE_1200, 		
-      .interrupt_priority = 2,                  				//TODO lower interrupt priority	for all screens
+      .interrupt_priority = 5,                  				
       NRF_DRV_UART_DEFAULT_CONFIG_USE_EASY_DMA
 	  };
 	

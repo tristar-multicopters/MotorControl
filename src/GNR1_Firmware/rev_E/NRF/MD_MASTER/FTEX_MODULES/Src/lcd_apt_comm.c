@@ -9,6 +9,8 @@
 	
 #include "lcd_apt_comm.h"
 
+#define APTMAXCURRENT 60
+
 // Private handler
 APT_Handle_t m_APT_handle;
 extern osThreadId_t TSK_eUART0_handle; // Task Id for external uart (UART0 instance)
@@ -198,9 +200,17 @@ void LCD_APT_frame_Process(void)
     replyFrame.Buffer[ 0] = APT_START; //Start
 	  
 		//Add up power from both
-		toSend = abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)) + abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2));
+		toSend = abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)) + 
+	           abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2));
+		
+		toSend = toSend/(0xFFFF/APTMAXCURRENT); //Converiosn from relative current to actual amps
 
     toSend = toSend * 10; //Covert from amps to 0.1 amps; 
+		
+		if(toSend > 0xFF) //If ve have more than 25 amps
+		{
+		 toSend = 0xFF;
+		}
 		
     replyFrame.Buffer[ 1] = (toSend & 0x000000FF); // Power 0.1 A/unit 
 	
@@ -274,7 +284,7 @@ void LCD_APT_init(VCI_Handle_t * pHandle)
       .hwfc               = NRF_UART_HWFC_DISABLED,       
       .parity             = NRF_UART_PARITY_EXCLUDED,     
       .baudrate           = NRF_UART_BAUDRATE_9600, 		
-      .interrupt_priority = 2,                  				 //TODO lower interrupt priority	for all screens	
+      .interrupt_priority = 5,                  				 
       NRF_DRV_UART_DEFAULT_CONFIG_USE_EASY_DMA
 	  };
 	
