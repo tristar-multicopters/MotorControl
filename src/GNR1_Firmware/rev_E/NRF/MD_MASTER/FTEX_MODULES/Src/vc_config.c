@@ -129,6 +129,21 @@ THRO_Handle_t ThrottleHandle =
 		.bSlopeTorque = 8,
 		.bDivisorTorque = 48,
 	}
+	
+	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+	.hParam =
+	{
+		.hLowPassFilterBW1 = 8,
+		.hLowPassFilterBW2 = 2,
+	
+		.hOffsetThrottle = 9900,
+		.bSlopeThrottle = 5,
+		.bDivisorThrottle = 3,
+		
+		.hOffsetTorque = 4000,
+		.bSlopeTorque = 8,
+		.bDivisorTorque = 48,
+	}
 	#else
 	.hParam =
 	{
@@ -215,6 +230,9 @@ MS_Handle_t MotorSelectorHandle =
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bIsInvertedLogic = false,
 	.bMSEnable = false,
+		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+	.bIsInvertedLogic = false,
+	.bMSEnable = false,
 	#else
 	.bIsInvertedLogic = false,
 	.bMSEnable = true,
@@ -258,6 +276,17 @@ PAS_Handle_t PedalAssistHandle = {
 PWREN_Handle_t PowerEnableHandle = {
 	.wPinNumber = PWREN_GPIO_PIN,
 	.bIsInvertedLogic = false,
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
+	.bUsePowerLock = true,
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
+	.bUsePowerLock = true,
+	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
+	.bUsePowerLock = true,
+	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+	.bUsePowerLock = false,
+	#else
+	.bUsePowerLock = true;
+	#endif
 };
 
 DRVT_Handle_t DrivetrainHandle = 
@@ -266,6 +295,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = true,
 	.bDefaultMainMotor = M1,
+	.bMode = DUAL_MOTOR,
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTimeUp = 200,
 	.hTorqueRampTimeDown = 50,
@@ -278,6 +308,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
 	.bDefaultMainMotor = M1,
+	.bMode = SINGLE_MOTOR,
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTimeUp = 200,
 	.hTorqueRampTimeDown = 50,
@@ -290,6 +321,20 @@ DRVT_Handle_t DrivetrainHandle =
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
 	.bDefaultMainMotor = M1,
+	.bMode = SINGLE_MOTOR,
+	.bCtrlType = TORQUE_CTRL,
+	.hTorqueRampTimeUp = 200,
+	.hTorqueRampTimeDown = 50,
+	.hSpeedRampTimeUp = 200,
+	.hSpeedRampTimeDown = 50,
+	.hStartingThrottle = 1000,
+	.hStoppingThrottle = 500,
+	.hStoppingSpeed = 0,
+		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+	.bUseMotorM1 = true,
+	.bUseMotorM2 = true,
+	.bDefaultMainMotor = M1,
+	.bMode = DUAL_MOTOR,
 	.bCtrlType = TORQUE_CTRL,
 	.hTorqueRampTimeUp = 200,
 	.hTorqueRampTimeDown = 50,
@@ -326,7 +371,7 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-eUART_protocol_t EUART_handle_t = EUART_APT; // Has to been initialise by Evionics first
+eUART_protocol_t EUART_handle_t = EUART_DISABLE; // Has to been initialise by Evionics first
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,

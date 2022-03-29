@@ -21,6 +21,7 @@
 // Protocol types
 typedef enum
 {
+	EUART_DISABLE,
 	EUART_EVIONICS,
 	EUART_BAFANG,
 	EUART_FTEX,

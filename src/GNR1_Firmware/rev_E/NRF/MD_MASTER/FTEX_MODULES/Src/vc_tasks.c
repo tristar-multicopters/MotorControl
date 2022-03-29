@@ -274,7 +274,6 @@ __NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
 			break;
 		
 		case EUART_BAFANG:
-
 			LCD_BAF_init(&VCInterfaceHandle);
 			break;
 		
@@ -285,7 +284,9 @@ __NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
 		case EUART_APT:
 			LCD_APT_init(&VCInterfaceHandle);
 			break;
-		
+		case EUART_DISABLE:
+			//Dont initialise the euart
+			break;
 		default:
 			break;
 	}
