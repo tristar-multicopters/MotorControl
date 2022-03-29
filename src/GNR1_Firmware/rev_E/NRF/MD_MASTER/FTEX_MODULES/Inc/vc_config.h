@@ -22,13 +22,14 @@
 #define VEHICLE_DEFAULT			0
 #define VEHICLE_ECELL 			1
 #define VEHICLE_EBGO 				2
+#define VEHICLE_GRIZZLY    3
 /*
 VEHICLE SELECTION
 ------------------------------------
 Change this define based on vehicle application
 ------------------------------------
 */
-#define VEHICLE_SELECTION 	VEHICLE_ECELL
+#define VEHICLE_SELECTION 	VEHICLE_GRIZZLY
 /*------------------------------------*/
 
 
