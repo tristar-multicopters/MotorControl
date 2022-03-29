@@ -48,23 +48,26 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS);
 	int16_t hTorqueRef = 0; int32_t hSpeedRef = 0;
 	
-	switch (bMotorSelection)
+	if (pHandle->pMS->bMSEnable)
 	{
-		case M1_SELECTED:
-			pHandle->bMode = SINGLE_MOTOR;
-			pHandle->bMainMotor = M1;
-			break;
-		case M2_SELECTED:
-			pHandle->bMode = SINGLE_MOTOR;
-			pHandle->bMainMotor = M2;
-			break;
-		case ALL_MOTOR_SELECTED:
-			pHandle->bMode = DUAL_MOTOR;
-			pHandle->bMainMotor = pHandle->bDefaultMainMotor;
-			break;
-		default:
-			break;
-	}
+		switch (bMotorSelection)
+		{
+			case M1_SELECTED:
+				pHandle->bMode = SINGLE_MOTOR;
+				pHandle->bMainMotor = M1;
+				break;
+			case M2_SELECTED:
+				pHandle->bMode = SINGLE_MOTOR;
+				pHandle->bMainMotor = M2;
+				break;
+			case ALL_MOTOR_SELECTED:
+				pHandle->bMode = DUAL_MOTOR;
+				pHandle->bMainMotor = pHandle->bDefaultMainMotor;
+				break;
+			default:
+				break;
+		}
+}
 	
 	THRO_CalcAvThrottleValue(pHandle->pThrottle);
 	
@@ -445,6 +448,11 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 			bCheckStop1 = true;
 		}
 	}
+	else
+	{
+		bCheckStop1 = true;
+	}
+	
 	if ( DRVT_IsMotor2Used(pHandle) )
 	{
 		if ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM2) <= pHandle->hStoppingSpeed )
@@ -452,10 +460,16 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 			bCheckStop2 = true;
 		}
 	}
+	else
+	{
+		bCheckStop2 = true;
+	}
+	
 	if ( !PWREN_IsPowerEnabled(pHandle->pPWREN) )
 	{
 		bCheckStop3 = true;
 	}	
+	
 	if ( BRK_IsPressed(pHandle->pBrake) )
 	{
 		bCheckStop4 = true;

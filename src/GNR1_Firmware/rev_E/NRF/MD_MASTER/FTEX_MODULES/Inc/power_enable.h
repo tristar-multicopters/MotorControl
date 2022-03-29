@@ -17,10 +17,10 @@
 
 typedef struct
 {          
+	bool bUsePowerLock;
 	bool bIsPowerEnabled;
 	nrfx_gpiote_pin_t wPinNumber;
 	bool bIsInvertedLogic;
-	bool bIsPowerEnabledPrevious;
 	
 } PWREN_Handle_t;
 
