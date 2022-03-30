@@ -229,7 +229,6 @@ void LCD_APT_frame_Process(void)
 		
 	  toSend = 1000/(toSend/60); //Converion from RPM to period in ms 
 	
-		toSend = 0x0000;
 	  replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Motor speed Low half 
 	  replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; // Motor speed High half
 	  
