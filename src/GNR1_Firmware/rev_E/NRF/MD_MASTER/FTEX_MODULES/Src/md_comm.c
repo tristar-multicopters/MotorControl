@@ -129,8 +129,7 @@ static void md_frame_received_protocol(FCP_Frame_t * tx_frame, FCP_Frame_t * rx_
 					  break;
 						
 				case MC_PROTOCOL_CODE_GET_REG:
-						toSet = rx_frame->Buffer[0] + (rx_frame->Buffer[1] << 8)
-								 + (rx_frame->Buffer[2] << 16) +(rx_frame->Buffer[1] << 24);
+						toSet = rx_frame->Buffer[0] | (rx_frame->Buffer[1] << 8);
 						switch (tx_frame->Buffer[0])
 						{							
 							case MC_PROTOCOL_REG_BUS_VOLTAGE:
@@ -161,6 +160,7 @@ static void md_frame_received_protocol(FCP_Frame_t * tx_frame, FCP_Frame_t * rx_
 								break;
 							
 							case MC_PROTOCOL_REG_FLAGS:
+								toSet = toSet | ((rx_frame->Buffer[2] )<< 16 | (rx_frame->Buffer[3] << 24));
 								m_pMDcomm->pMD[bMotorSelection]->MDStateMachine.hMFaultOccurred = (toSet & 0xFF) | ((toSet >> 8) & 0xFF);
 								m_pMDcomm->pMD[bMotorSelection]->MDStateMachine.hMFaultNow = ((toSet >> 16) & 0xFF) | ((toSet >> 24) & 0xFF);
 								break;

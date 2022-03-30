@@ -281,7 +281,7 @@ PWREN_Handle_t PowerEnableHandle = {
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
-	.bUsePowerLock = true,
+	.bUsePowerLock = false,//true,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bUsePowerLock = false,
 	#else
@@ -363,6 +363,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.pBrake = &BrakeHandle,
 	.pMS = &MotorSelectorHandle,
 	.pPWREN = &PowerEnableHandle,
+	.fault_timeout = 25 // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 };
 
 VCI_Handle_t VCInterfaceHandle = 
