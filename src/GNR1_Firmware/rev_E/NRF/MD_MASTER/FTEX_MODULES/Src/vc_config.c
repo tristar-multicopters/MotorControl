@@ -363,6 +363,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.pBrake = &BrakeHandle,
 	.pMS = &MotorSelectorHandle,
 	.pPWREN = &PowerEnableHandle,
+	.fault_timeout = 25 // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 };
 
 VCI_Handle_t VCInterfaceHandle = 
@@ -371,7 +372,7 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-eUART_protocol_t EUART_handle_t = EUART_APT; // Has to been initialise by Evionics first
+eUART_protocol_t EUART_handle_t = EUART_DISABLE; // Has to been initialise by Evionics first
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,

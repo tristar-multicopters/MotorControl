@@ -242,11 +242,11 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					DRVT_StopMotors(pVCI->pDrivetrain);
 					if ( DRVT_IsDrivetrainStopped(pVCI->pDrivetrain) )
 					{
-//						if ( !DRVT_MotorFaultManagement(pVCI->pDrivetrain) )
-//						{
-//							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove VC_M1_FAULTS flag
-//							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove VC_M2_FAULTS flag
-//						}
+						if ( !DRVT_MotorFaultManagement(pVCI->pDrivetrain) )
+						{
+							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove VC_M1_FAULTS flag
+							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove VC_M2_FAULTS flag
+						}
 					}
 					break;
 					

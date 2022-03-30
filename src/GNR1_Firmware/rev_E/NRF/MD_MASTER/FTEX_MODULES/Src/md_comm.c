@@ -130,8 +130,8 @@ static void md_frame_received_protocol(FCP_Frame_t * tx_frame, FCP_Frame_t * rx_
 						
 				case MC_PROTOCOL_CODE_GET_REG:
 						toSet = rx_frame->Buffer[0] + (rx_frame->Buffer[1] << 8);
-	
-						switch (tx_frame->Buffer[0])
+						
+            switch (tx_frame->Buffer[0])
 						{							
 							case MC_PROTOCOL_REG_BUS_VOLTAGE:
 								m_pMDcomm->pMD[bMotorSelection]->MDMeas.bus_voltage_mes = toSet;
