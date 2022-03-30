@@ -115,13 +115,13 @@ void SPR_Init(SPR_Handle_t * pHandle);
 void SPWR_Init(SPR_Handle_t * pHandle);
 
 
-void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);	
+void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action, SPR_Handle_t * sHandle);	
 void GPIO_Init(SPR_Handle_t* sHandle);
 uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle);
 uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle);
 
-uint32_t Pedal_capture_get_value(SPR_Handle_t* sHandle);
-uint32_t Wheel_capture_get_vlaue(SPR_Handle_t* sHandle);
+uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle);
+uint16_t Wheel_capture_get_vlaue(SPR_Handle_t* sHandle);
 
 uint16_t Pspeed_CalcAvValue( SPR_Handle_t * sHandle );
 uint16_t Wspeed_CalcAvValue( SPR_Handle_t * sHandle );

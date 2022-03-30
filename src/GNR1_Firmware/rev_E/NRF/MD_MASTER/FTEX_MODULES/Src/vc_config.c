@@ -159,7 +159,7 @@ SPR_Handle_t SpeedPulse =
 	.WRestartChannel = 3,
 	
 	.bTimer_Prescaler = NRF_TIMER_FREQ_1MHz,
-	.bTimer_Width = NRF_TIMER_BIT_WIDTH_32,
+	.bTimer_Width = NRF_TIMER_BIT_WIDTH_16,
 
 	.pTimerInstance = PAS_TIMER_INSTANCE_ADDR,
 	.wTimerInstance = WH_TIMER_INSTANCE_ADDR,

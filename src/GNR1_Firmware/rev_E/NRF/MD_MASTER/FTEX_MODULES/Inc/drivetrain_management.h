@@ -186,7 +186,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle);
 	* @param  PAS level
 	* @retval None
 	*/
-void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level);
+PAS_sLevel DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level);
 /**
 	* @brief  Get main motor reference torque
 	* @param  Drivetrain handle

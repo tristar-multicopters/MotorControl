@@ -33,7 +33,6 @@ void PAS_Init(PAS_Handle_t* pHandle)
 int32_t PAS_GetSpeed(PAS_Handle_t* pHandle)
 {	
 	return Pedal_capture_get_value( pHandle->pSpulse );
-	// Pspeed_CalcAvValue filtred
 }
 
 /**

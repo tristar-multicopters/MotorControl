@@ -26,7 +26,7 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 
 #define RETURN_TO_STANDBY_LOOPTICKS 10
 
-
+bool Pulse_Flag;
 /************* TASKS ****************/
 
 static void CLK_Init(void)
@@ -114,6 +114,9 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 																				
 	while (true)
 	{
+		// Pulse read presence in slow loop test 
+		Pulse_Flag = DRVT_PASpresence (pVCI->pDrivetrain);
+		// ------------------------------------------
 		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain) )
 		{
 			getMonitoringReg_Slow(M1);

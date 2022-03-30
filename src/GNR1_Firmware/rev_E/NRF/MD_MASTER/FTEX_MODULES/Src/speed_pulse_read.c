@@ -51,7 +51,7 @@ bool cos_flag;
 // Speed general variables
 uint16_t pSpeed;
 uint16_t wSpeed;
-
+uint16_t atlas;
 /****************************************************************** Public Hardware dependent functions ******************************************************************/
 
 /**
@@ -240,7 +240,7 @@ uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle)
 	* @param  Handle pointer
 	* @retval uint32_t periode value in us
 	*/
-uint32_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
+uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 {
 	
 	p_SPR_Handle = sHandle;
@@ -250,13 +250,12 @@ uint32_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 			NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] = 0;
 			// Return the stored capture value in the timer
 			sHandle->sPread =  nrf_drv_timer_capture_get(sHandle->pTimerInstance, 0);
-			return (sHandle->sPread);
 	}
 	else
 	{		// In case no capture occured, return 0
 			sHandle->sPread = 0;
-			return (sHandle->sPread);
 	}
+	return (sHandle->sPread);
 }
 
 /**
@@ -264,7 +263,7 @@ uint32_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 	* @param  Handle pointer
 	* @retval uint32_t periode value in us
 	*/
-uint32_t Wheel_capture_get_value(SPR_Handle_t* sHandle)
+uint16_t Wheel_capture_get_value(SPR_Handle_t* sHandle)
 {
 	
 	p_SPR_Handle = sHandle;
@@ -274,13 +273,12 @@ uint32_t Wheel_capture_get_value(SPR_Handle_t* sHandle)
 			NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel] = 0;	
 			// Return the stored capture value in the timer
 			sHandle->wPread =  nrf_drv_timer_capture_get(sHandle->wTimerInstance, 0);
-			return (sHandle->wPread);
 	}
 	else
 	{		// In case no capture occured, return 0
 			sHandle->wPread = 0;
-			return (sHandle->wPread);
 	}
+		return (sHandle->wPread);
 }
 
 /**
@@ -288,7 +286,7 @@ uint32_t Wheel_capture_get_value(SPR_Handle_t* sHandle)
 	* @param  Handle pointer
 	* @retval direction decision 
 	*/
-void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
+void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action, SPR_Handle_t * sHandle)
 {
 	if(pin == p_SPR_Handle->pSinSpeed_Pulse_pin)
 	{

@@ -9,6 +9,9 @@
 
 #include "drivetrain_management.h"
 
+
+
+extern bool Pulse_Flag;
 /* Functions ---------------------------------------------------- */
 
 
@@ -542,10 +545,12 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	* @param  PAS level
 	* @retval None
 	*/
-void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level)
+PAS_sLevel DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level)
 {
-	pHandle->pPAS->pLevel = PAS_LEVEL_2;
+	pHandle->pPAS->pLevel = PAS_LEVEL_3;
 	level = pHandle->pPAS->pLevel;
+	
+	return level;
 }
 
 /**
@@ -630,7 +635,7 @@ int16_t DRVT_PasSetLevel(DRVT_Handle_t * pHandle)
 {
 	
 	PAS_sLevel Set_Level;
-	DRVT_SetPASLevel(pHandle, Set_Level);
+	Set_Level = DRVT_SetPASLevel(pHandle, Set_Level);
 	
 	switch(Set_Level)
 	{
@@ -654,9 +659,7 @@ int16_t DRVT_PasSetLevel(DRVT_Handle_t * pHandle)
 		
 		case PAS_LEVEL_5:
 			pHandle->pRefTorque = Torque_Level4;
-			break;		
-		default:                               
-		break;
+			break;
 	}
 
 	return pHandle->pRefTorque;
@@ -668,10 +671,10 @@ int16_t DRVT_PasSetLevel(DRVT_Handle_t * pHandle)
 	*/
 int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 {
-	volatile bool PAS_Pres;
+  bool PAS_Pres;
 	
 	/* Check Pulse presence */
-	PAS_Pres = DRVT_PASpresence (pHandle); 		
+	PAS_Pres = Pulse_Flag; 		
 	
 	/* PAS and Throttle mangement */
 	if (PAS_Pres)
@@ -696,7 +699,6 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 bool DRVT_PASpresence (DRVT_Handle_t * pHandle) 
 {
 	int32_t	TempSpeed;
-	
 	TempSpeed = PAS_GetSpeed(pHandle->pPAS);
 	
 	if (TempSpeed > 0)
