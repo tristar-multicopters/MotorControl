@@ -22,7 +22,7 @@
 #define VEHICLE_DEFAULT			0
 #define VEHICLE_ECELL 			1
 #define VEHICLE_EBGO 				2
-#define VEHICLE_GRIZZLY    3
+#define VEHICLE_GRIZZLY     3
 #define VEHICLE_GEEBEECARGO 4
 
 /*
