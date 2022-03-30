@@ -45,6 +45,9 @@
  *
  * @{
  */
+ 
+//int16_t stateBuffer[200] = {0};
+//uint8_t iter = 0;
 
 /* Private defines -----------------------------------------------------------*/
 
@@ -55,6 +58,7 @@
 
 #define S16_120_PHASE_SHIFT (int16_t)(65536/3)
 #define S16_60_PHASE_SHIFT  (int16_t)(65536/6)
+#define S16_30_PHASE_SHIFT  (int16_t)(65536/12)
 
 #define STATE_0 (uint8_t)0
 #define STATE_1 (uint8_t)1
@@ -170,6 +174,30 @@ __weak void HALL_Init( HALL_Handle_t * pHandle )
   {
     pHandle->SensorPeriod[bIndex]  = pHandle->MaxPeriod;
   }
+	
+	pHandle->Sector_Start_Angle[0] = 0;  
+	pHandle->Sector_Start_Angle[1] = ( int16_t ) (pHandle->PhaseShift + S16_60_PHASE_SHIFT);
+	pHandle->Sector_Start_Angle[2] = ( int16_t ) (pHandle->PhaseShift + S16_60_PHASE_SHIFT + S16_120_PHASE_SHIFT);
+	pHandle->Sector_Start_Angle[3] = ( int16_t ) ( pHandle->PhaseShift + S16_120_PHASE_SHIFT);
+	pHandle->Sector_Start_Angle[4] = ( int16_t ) (pHandle->PhaseShift - S16_60_PHASE_SHIFT);
+	pHandle->Sector_Start_Angle[5] = ( int16_t ) (pHandle->PhaseShift);
+	pHandle->Sector_Start_Angle[6] = ( int16_t ) (pHandle->PhaseShift - S16_120_PHASE_SHIFT);
+
+	pHandle->Sector_Destination_Angle[0] = 0;  
+	pHandle->Sector_Destination_Angle[1] = ( int16_t ) (pHandle->PhaseShift  + S16_120_PHASE_SHIFT) ;
+  pHandle->Sector_Destination_Angle[2] = ( int16_t ) (pHandle->PhaseShift - S16_120_PHASE_SHIFT );
+	pHandle->Sector_Destination_Angle[3] = ( int16_t ) (pHandle->PhaseShift + S16_60_PHASE_SHIFT + S16_120_PHASE_SHIFT) ;
+  pHandle->Sector_Destination_Angle[4] =  (int16_t ) (pHandle->PhaseShift );
+	pHandle->Sector_Destination_Angle[5] = ( int16_t ) (pHandle->PhaseShift  + S16_60_PHASE_SHIFT);
+  pHandle->Sector_Destination_Angle[6] = ( int16_t ) (pHandle->PhaseShift - S16_60_PHASE_SHIFT);
+	
+	pHandle->Sector_Middle_Angle[0] = 0;  
+	pHandle->Sector_Middle_Angle[1] = ( int16_t ) ( pHandle->Sector_Start_Angle[1]  +  S16_30_PHASE_SHIFT );
+  pHandle->Sector_Middle_Angle[2] = ( int16_t ) ( pHandle->Sector_Start_Angle[2]  +  S16_30_PHASE_SHIFT);
+	pHandle->Sector_Middle_Angle[3] = ( int16_t )  ( pHandle->Sector_Start_Angle[3]  +  S16_30_PHASE_SHIFT);
+  pHandle->Sector_Middle_Angle[4] = ( int16_t ) ( pHandle->Sector_Start_Angle[4]  +  S16_30_PHASE_SHIFT);
+	pHandle->Sector_Middle_Angle[5] =( int16_t ) ( pHandle->Sector_Start_Angle[5]  +  S16_30_PHASE_SHIFT);
+  pHandle->Sector_Middle_Angle[6] = ( int16_t ) ( pHandle->Sector_Start_Angle[6]  +  S16_30_PHASE_SHIFT);
 }
 
 /**
@@ -238,16 +266,30 @@ __attribute__( ( section ( ".ccmram" ) ) )
 __weak int16_t HALL_CalcElAngle( HALL_Handle_t * pHandle )
 {
 
-  if ( pHandle->_Super.hElSpeedDpp != HALL_MAX_PSEUDO_SPEED )
-  {
-    pHandle->MeasuredElAngle += pHandle->_Super.hElSpeedDpp;
-    pHandle->_Super.hElAngle += pHandle->_Super.hElSpeedDpp + pHandle->CompSpeed;
-    pHandle->PrevRotorFreq = pHandle->_Super.hElSpeedDpp;
-  }
-  else
-  {
-    pHandle->_Super.hElAngle += pHandle->PrevRotorFreq;
-  }
+	if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+	{
+	}
+	else
+	{
+		if ( pHandle->_Super.hElSpeedDpp != HALL_MAX_PSEUDO_SPEED )
+		{
+			pHandle->MeasuredElAngle += pHandle->_Super.hElSpeedDpp;
+			pHandle->_Super.hElAngle += pHandle->_Super.hElSpeedDpp + pHandle->CompSpeed;
+			pHandle->PrevRotorFreq = pHandle->_Super.hElSpeedDpp;
+		}
+		else
+		{
+			pHandle->_Super.hElAngle += pHandle->PrevRotorFreq;
+		}
+		
+		if ( abs(pHandle->_Super.hElAngle - pHandle->Sector_Middle_Angle[pHandle->HallState]) > S16_30_PHASE_SHIFT)
+		{
+			if(pHandle->Direction == POSITIVE)
+					{pHandle->_Super.hElAngle = pHandle->Sector_Destination_Angle[pHandle->HallState];}
+			else
+					{pHandle->_Super.hElAngle = pHandle->Sector_Start_Angle[pHandle->HallState];}
+		}
+	}
 
   return pHandle->_Super.hElAngle;
 }
@@ -324,7 +366,8 @@ __weak bool HALL_CalcAvrgMecSpeedUnit( HALL_Handle_t * pHandle, int16_t * hMecSp
         }
       }
     }
-    bReliability = SPD_IsMecSpeedReliable( &pHandle->_Super, hMecSpeedUnit );
+		bReliability = true;
+    //bReliability = SPD_IsMecSpeedReliable( &pHandle->_Super, hMecSpeedUnit );
   }
   else
   {
@@ -362,6 +405,8 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
   uint32_t wCaptBuf;
   uint16_t hPrscBuf;
   uint16_t hHighSpeedCapture;
+	bool bUnexpectedBehavior = false;
+	bool bReliableDirectionChange = false;
 
   if ( pHandle->SensorIsReliable )
   {
@@ -397,6 +442,8 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
         }
         else
         {
+					bUnexpectedBehavior = true;
+					HALL_Init_Electrical_Angle( pHandle );
         }
         break;
 
@@ -413,6 +460,8 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
         }
         else
         {
+					bUnexpectedBehavior = true;
+					HALL_Init_Electrical_Angle( pHandle );
         }
         break;
 
@@ -430,6 +479,8 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
         }
         else
         {
+					bUnexpectedBehavior = true;
+					HALL_Init_Electrical_Angle( pHandle );
         }
 
         break;
@@ -448,6 +499,8 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
         }
         else
         {
+					bUnexpectedBehavior = true;
+					HALL_Init_Electrical_Angle( pHandle );
         }
         break;
 
@@ -464,6 +517,8 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
         }
         else
         {
+					bUnexpectedBehavior = true;
+					HALL_Init_Electrical_Angle( pHandle );
         }
         break;
 
@@ -480,155 +535,195 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
         }
         else
         {
+					bUnexpectedBehavior = true;
+					HALL_Init_Electrical_Angle( pHandle );
         }
         break;
 
       default:
+				pHandle->HallState = bPrevHallState;
         /* Bad hall sensor configutarion so update the speed reliability */
         pHandle->SensorIsReliable = false;
+				bUnexpectedBehavior = true;
 
         break;
     }
-    /* We need to check that the direction has not changed.
-       If it is the case, the sign of the current speed can be the opposite of the
-       average speed, and the average time can be close to 0 which lead to a 
-       computed speed close to the infinite, and bring instability. */
-    if (pHandle->Direction != PrevDirection)
-    {
-      /* Setting BufferFilled to 0 will prevent to compute the average speed based
-       on the SpeedPeriod buffer values */
-      pHandle->BufferFilled = 0 ;
-      pHandle->SpeedFIFOIdx = 0;
-    }
+		
+		
+		if (pHandle->Direction != PrevDirection)
+		{
+			pHandle->DirectionChangeCounter++;
+		}
+		else
+		{
+			if (pHandle->DirectionChangeCounter != 0)
+			{
+				bReliableDirectionChange = true;
+			}
+			pHandle->DirectionChangeCounter = 0;
+		}
+		
+		/* We need to check that the direction has not changed.
+			 If it is the case, the sign of the current speed can be the opposite of the
+			 average speed, and the average time can be close to 0 which lead to a 
+			 computed speed close to the infinite, and bring instability. */
+		if (bReliableDirectionChange)
+		{
+			/* Setting BufferFilled to 0 will prevent to compute the average speed based
+			 on the SpeedPeriod buffer values */
+			pHandle->BufferFilled = 0 ;
+			pHandle->SpeedFIFOIdx = 0;
+		}
+		
+		if ( !bUnexpectedBehavior && (pHandle->DirectionChangeCounter == 0 || pHandle->DirectionChangeCounter == 2) )
+		{
+//			/* We need to check that the direction has not changed.
+//				 If it is the case, the sign of the current speed can be the opposite of the
+//				 average speed, and the average time can be close to 0 which lead to a 
+//				 computed speed close to the infinite, and bring instability. */
+//			if (pHandle->Direction != PrevDirection)
+//			{
+//				/* Setting BufferFilled to 0 will prevent to compute the average speed based
+//				 on the SpeedPeriod buffer values */
+//				pHandle->BufferFilled = 0 ;
+//				pHandle->SpeedFIFOIdx = 0;
+//			}
 
-    if (pHandle->HallMtpa == true)
-    {
-      pHandle->_Super.hElAngle = pHandle->MeasuredElAngle;
-    }
-    else
-    {
-      /* Nothing to do */
-    }
+			if (pHandle->HallMtpa == true)
+			{
+				pHandle->_Super.hElAngle = pHandle->MeasuredElAngle;
+			}
+			else
+			{
+				/* Nothing to do */
+			}
 
-    /* Discard first capture */
-    if ( pHandle->FirstCapt == 0u )
-    {
-      pHandle->FirstCapt++;
-      LL_TIM_IC_GetCaptureCH1( TIMx );
-    }
-    else
-    {
-      /* used to validate the average speed measurement */
-      if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
-      {
-        pHandle->BufferFilled++;
-      }
+			/* Discard first capture */
+			if ( pHandle->FirstCapt == 0u )
+			{
+				pHandle->FirstCapt++;
+				LL_TIM_IC_GetCaptureCH1( TIMx );
+			}
+			else
+			{
+				/* used to validate the average speed measurement */
+				if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+				{
+					pHandle->BufferFilled++;
+				}
 
-      /* Store the latest speed acquisition */
-      hHighSpeedCapture = LL_TIM_IC_GetCaptureCH1( TIMx );
-      wCaptBuf = ( uint32_t )hHighSpeedCapture;
-      hPrscBuf =  LL_TIM_GetPrescaler ( TIMx );
+				/* Store the latest speed acquisition */
+				hHighSpeedCapture = LL_TIM_IC_GetCaptureCH1( TIMx );
+				wCaptBuf = ( uint32_t )hHighSpeedCapture;
+				hPrscBuf =  LL_TIM_GetPrescaler ( TIMx );
 
-      /* Add the numbers of overflow to the counter */
-      wCaptBuf += ( uint32_t )pHandle->OVFCounter * 0x10000uL;
+				/* Add the numbers of overflow to the counter */
+				wCaptBuf += ( uint32_t )pHandle->OVFCounter * 0x10000uL;
 
-      if ( pHandle->OVFCounter != 0u )
-      {
-        /* Adjust the capture using prescaler */
-        uint16_t hAux;
-        hAux = hPrscBuf + 1u;
-        wCaptBuf *= hAux;
+				if ( pHandle->OVFCounter != 0u )
+				{
+					/* Adjust the capture using prescaler */
+					uint16_t hAux;
+					hAux = hPrscBuf + 1u;
+					wCaptBuf *= hAux;
 
-        if ( pHandle->RatioInc )
-        {
-          pHandle->RatioInc = false;  /* Previous capture caused overflow */
-          /* Don't change prescaler (delay due to preload/update mechanism) */
-        }
-        else
-        {
-          if ( LL_TIM_GetPrescaler ( TIMx ) < pHandle->HALLMaxRatio ) /* Avoid OVF w/ very low freq */
-          {
-            LL_TIM_SetPrescaler ( TIMx, LL_TIM_GetPrescaler ( TIMx ) + 1 ); /* To avoid OVF during speed decrease */
-            pHandle->RatioInc = true;   /* new prsc value updated at next capture only */
-          }
-        }
-      }
-      else
-      {
-        /* If prsc preload reduced in last capture, store current register + 1 */
-        if ( pHandle->RatioDec ) /* and don't decrease it again */
-        {
-          /* Adjust the capture using prescaler */
-          uint16_t hAux;
-          hAux = hPrscBuf + 2u;
-          wCaptBuf *= hAux;
+					if ( pHandle->RatioInc )
+					{
+						pHandle->RatioInc = false;  /* Previous capture caused overflow */
+						/* Don't change prescaler (delay due to preload/update mechanism) */
+					}
+					else
+					{
+						if ( LL_TIM_GetPrescaler ( TIMx ) < pHandle->HALLMaxRatio ) /* Avoid OVF w/ very low freq */
+						{
+							LL_TIM_SetPrescaler ( TIMx, LL_TIM_GetPrescaler ( TIMx ) + 1 ); /* To avoid OVF during speed decrease */
+							pHandle->RatioInc = true;   /* new prsc value updated at next capture only */
+						}
+					}
+				}
+				else
+				{
+					/* If prsc preload reduced in last capture, store current register + 1 */
+					if ( pHandle->RatioDec ) /* and don't decrease it again */
+					{
+						/* Adjust the capture using prescaler */
+						uint16_t hAux;
+						hAux = hPrscBuf + 2u;
+						wCaptBuf *= hAux;
 
-          pHandle->RatioDec = false;
-        }
-        else  /* If prescaler was not modified on previous capture */
-        {
-          /* Adjust the capture using prescaler */
-          uint16_t hAux = hPrscBuf + 1u;
-          wCaptBuf *= hAux;
+						pHandle->RatioDec = false;
+					}
+					else  /* If prescaler was not modified on previous capture */
+					{
+						/* Adjust the capture using prescaler */
+						uint16_t hAux = hPrscBuf + 1u;
+						wCaptBuf *= hAux;
 
-          if ( hHighSpeedCapture < LOW_RES_THRESHOLD ) /* If capture range correct */
-          {
-            if ( LL_TIM_GetPrescaler ( TIMx ) > 0u ) /* or prescaler cannot be further reduced */
-            {
-              LL_TIM_SetPrescaler ( TIMx, LL_TIM_GetPrescaler ( TIMx ) - 1 ); /* Increase accuracy by decreasing prsc */
-              /* Avoid decrementing again in next capt.(register preload delay) */
-              pHandle->RatioDec = true;
-            }
-          }
-        }
-      }
+						if ( hHighSpeedCapture < LOW_RES_THRESHOLD ) /* If capture range correct */
+						{
+							if ( LL_TIM_GetPrescaler ( TIMx ) > 0u ) /* or prescaler cannot be further reduced */
+							{
+								LL_TIM_SetPrescaler ( TIMx, LL_TIM_GetPrescaler ( TIMx ) - 1 ); /* Increase accuracy by decreasing prsc */
+								/* Avoid decrementing again in next capt.(register preload delay) */
+								pHandle->RatioDec = true;
+							}
+						}
+					}
+				}
 
-      /* Filtering to fast speed... could be a glitch  ? */
-      /* the HALL_MAX_PSEUDO_SPEED is temporary in the buffer, and never included in average computation*/
-        if ( wCaptBuf < pHandle->MinPeriod )
-        {
-           /* pHandle->AvrElSpeedDpp = HALL_MAX_PSEUDO_SPEED; */
-        }
-        else
-        {
-          pHandle->ElPeriodSum -= pHandle->SensorPeriod[pHandle->SpeedFIFOIdx]; /* value we gonna removed from the accumulator */
-          if ( wCaptBuf >= pHandle->MaxPeriod )
-          {
-            pHandle->SensorPeriod[pHandle->SpeedFIFOIdx] = pHandle->MaxPeriod*pHandle->Direction; 
-          }
-          else
-          {
-            pHandle->SensorPeriod[pHandle->SpeedFIFOIdx] = wCaptBuf ;
-            pHandle->SensorPeriod[pHandle->SpeedFIFOIdx] *= pHandle->Direction;
-            pHandle->ElPeriodSum += pHandle->SensorPeriod[pHandle->SpeedFIFOIdx];
-          }
-          /* Update pointers to speed buffer */
-          pHandle->SpeedFIFOIdx++;
-          if ( pHandle->SpeedFIFOIdx == pHandle->SpeedBufferSize )
-          {
-            pHandle->SpeedFIFOIdx = 0u;
-          }
-          if ( pHandle->SensorIsReliable) 
-          {
-            if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
-            {
-              pHandle->AvrElSpeedDpp = ( int16_t ) (( pHandle->PseudoFreqConv / wCaptBuf )*pHandle->Direction);
-            }
-            else 
-            { /* Average speed allow to smooth the mechanical sensors misalignement */
-              pHandle->AvrElSpeedDpp = ( int16_t )((int32_t) pHandle->PseudoFreqConv / ( pHandle->ElPeriodSum / pHandle->SpeedBufferSize )); /* Average value */
+				/* Filtering to fast speed... could be a glitch  ? */
+				/* the HALL_MAX_PSEUDO_SPEED is temporary in the buffer, and never included in average computation*/
+					if ( wCaptBuf < pHandle->MinPeriod )
+					{
+						 /* pHandle->AvrElSpeedDpp = HALL_MAX_PSEUDO_SPEED; */
+					}
+					else
+					{
+						pHandle->ElPeriodSum -= pHandle->SensorPeriod[pHandle->SpeedFIFOIdx]; /* value we gonna removed from the accumulator */
+						if ( wCaptBuf >= pHandle->MaxPeriod )
+						{
+							pHandle->SensorPeriod[pHandle->SpeedFIFOIdx] = pHandle->MaxPeriod*pHandle->Direction; 
+						}
+						else
+						{
+							pHandle->SensorPeriod[pHandle->SpeedFIFOIdx] = wCaptBuf ;
+							pHandle->SensorPeriod[pHandle->SpeedFIFOIdx] *= pHandle->Direction;
+							pHandle->ElPeriodSum += pHandle->SensorPeriod[pHandle->SpeedFIFOIdx];
+						}
+						/* Update pointers to speed buffer */
+						pHandle->SpeedFIFOIdx++;
+						if ( pHandle->SpeedFIFOIdx == pHandle->SpeedBufferSize )
+						{
+							pHandle->SpeedFIFOIdx = 0u;
+						}
+						if ( pHandle->SensorIsReliable) 
+						{
+							if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+							{
+								pHandle->AvrElSpeedDpp = ( int16_t ) (( pHandle->PseudoFreqConv / wCaptBuf )*pHandle->Direction);
+							}
+							else 
+							{ /* Average speed allow to smooth the mechanical sensors misalignement */
+								pHandle->AvrElSpeedDpp = ( int16_t )((int32_t) pHandle->PseudoFreqConv / ( pHandle->ElPeriodSum / pHandle->SpeedBufferSize )); /* Average value */
 
-            }
-          }
-          else /* Sensor is not reliable */
-          {
-            pHandle->AvrElSpeedDpp = 0;
-          }
-        }
-      /* Reset the number of overflow occurred */
-      pHandle->OVFCounter = 0u;
-    }
+							}
+						}
+						else /* Sensor is not reliable */
+						{
+							pHandle->AvrElSpeedDpp = 0;
+						}
+					}
+				/* Reset the number of overflow occurred */
+				pHandle->OVFCounter = 0u;
+			}
+		}
   }
+	
+	if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+	{
+		HALL_Init_Electrical_Angle(pHandle);
+	}	
+	
   return MC_NULL;
 }
 
@@ -742,7 +837,8 @@ static void HALL_Init_Electrical_Angle( HALL_Handle_t * pHandle )
 
   /* Initialize the measured angle */
   pHandle->MeasuredElAngle = pHandle->_Super.hElAngle;
-
+	
+	pHandle->DirectionChangeCounter = 0;
 }
 
 /**

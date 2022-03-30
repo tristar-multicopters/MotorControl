@@ -36,7 +36,9 @@
 #include "parameters_conversion.h"
 
 /* USER CODE BEGIN Includes */
-
+uint32_t RXTimoutCounter = 0;
+bool WaitingforBytes = false;
+extern MCP_Handle_t * pMCP;
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private define */
@@ -254,7 +256,7 @@ __weak void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList
   pMCTList[M1] = &MCT[M1];
 
   /* USER CODE BEGIN MCboot 2 */
-
+	AO_Init( &AngleObserverM1 );
   /* USER CODE END MCboot 2 */
 
   bMCBootCompleted = 1;
@@ -293,7 +295,23 @@ __weak void MC_RunMotorControlTasks(void)
 __weak void MC_Scheduler(void)
 {
 /* USER CODE BEGIN MC_Scheduler 0 */
-
+	int32_t wSpeedM1 = AO_GetElSpeed(&AngleObserverM1);
+	//Atempt to fix deadlock
+	//Rx Timeout timer
+	if(WaitingforBytes)
+	{
+	 RXTimoutCounter ++;	
+		
+	  if(RXTimoutCounter > 60)
+	  { 
+	    //Send NOACKError
+			MCP_SendTimeoutMessage(pMCP);
+	    //Reset Frame level
+			MCP_WaitNextFrame(pMCP);
+	  }	 
+	}
+	
+	
 /* USER CODE END MC_Scheduler 0 */
 
   if (bMCBootCompleted == 1)
@@ -380,8 +398,8 @@ __weak void TSK_MediumFrequencyTaskM1(void)
 
   case CLEAR:
     HALL_Clear( &HALL_M1 );
-    STO_PLL_Clear( &STO_PLL_M1 );
-
+    //STO_PLL_Clear( &STO_PLL_M1 );
+		AO_Clear( &AngleObserverM1 );
     if ( STM_NextState( &STM[M1], START ) == true )
     {
       FOC_Clear( M1 );
@@ -420,7 +438,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
 
     if( !IsSpeedReliable )
     {
-      //STM_FaultProcessing( &STM[M1], MC_SPEED_FDBK, 0 );
+      STM_FaultProcessing( &STM[M1], MC_SPEED_FDBK, 0 );
     }
 
     /* USER CODE BEGIN MediumFrequencyTask M1 3 */
@@ -649,7 +667,7 @@ __weak uint8_t TSK_HighFrequencyTask(void)
   HALL_CalcElAngle (&HALL_M1);
 
   /* USER CODE BEGIN HighFrequencyTask SINGLEDRIVE_1 */
-
+	AO_CalcElAngle(&AngleObserverM1, 0);
   /* USER CODE END HighFrequencyTask SINGLEDRIVE_1 */
   hFOCreturn = FOC_CurrControllerM1();
   /* USER CODE BEGIN HighFrequencyTask SINGLEDRIVE_2 */
@@ -703,11 +721,11 @@ inline uint16_t FOC_CurrControllerM1(void)
   SpeednPosFdbk_Handle_t *speedHandle;
 
   speedHandle = STC_GetSpeedSensor(pSTC[M1]);
-  hElAngle = SPD_GetElAngle(speedHandle);
-	
+  //hElAngle = SPD_GetElAngle(speedHandle);
+	hElAngle = AO_GetElAngle(&AngleObserverM1);
 	// OPEN LOOP THETA ////////////////////////
-	hOpenLoopTheta += OPEN_LOOP_SPEED;
-	hElAngle = hOpenLoopTheta;
+	//hOpenLoopTheta += OPEN_LOOP_SPEED;
+	//hElAngle = hOpenLoopTheta;
 	///////////////////////////////////////////
 	
   PWMC_GetPhaseCurrents(pwmcHandle[M1], &Iab);

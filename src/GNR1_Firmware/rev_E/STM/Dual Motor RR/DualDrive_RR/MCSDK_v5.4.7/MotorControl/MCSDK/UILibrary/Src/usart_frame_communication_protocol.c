@@ -55,10 +55,12 @@
 
 
 /* Private variables ---------------------------------------------------------*/
-static const uint16_t UFCP_Usart_Timeout_none = 0;
+static const uint16_t UFCP_Usart_Timeout_none  = 0;
 static const uint16_t UFCP_Usart_Timeout_start = 1;
-static const uint16_t UFCP_Usart_Timeout_stop = 2;
+static const uint16_t UFCP_Usart_Timeout_stop  = 2;
 
+
+ bool ResetRXFramelevel = false;
 /* Functions ---------------------------------------------------------*/
 
 __weak void UFCP_Init( UFCP_Handle_t * pHandle )
@@ -66,6 +68,7 @@ __weak void UFCP_Init( UFCP_Handle_t * pHandle )
 
   /* Initialize generic component part */
   FCP_Init( & pHandle->_Super );
+	
 }
 
 /*
@@ -77,6 +80,13 @@ __weak void * UFCP_RX_IRQ_Handler( UFCP_Handle_t * pHandle, unsigned short rx_da
   FCP_Handle_t * pBaseHandle = & pHandle->_Super;
   uint8_t error_code;
 
+	if( ResetRXFramelevel)
+	{
+	  ResetRXFramelevel = false;
+	  pBaseHandle->RxFrameLevel = 0;	
+	}
+	
+	
   if ( FCP_TRANSFER_IDLE != pBaseHandle->RxFrameState )
   {
     uint8_t rx_byte = (uint8_t) rx_data;
@@ -86,10 +96,13 @@ __weak void * UFCP_RX_IRQ_Handler( UFCP_Handle_t * pHandle, unsigned short rx_da
       case 0: // First Byte received --> The Code
         pBaseHandle->RxFrame.Code = rx_byte;
         /* Need to ask the caller to start our timeout... TODO: Is this really useful? */
-        ret_val = (void *) & UFCP_Usart_Timeout_start;
-
-        /* Start Rx Timeout */
-        pBaseHandle->RxTimeoutCountdown = pBaseHandle->RxTimeout;
+			
+        /*ret_val = (void *) & UFCP_Usart_Timeout_start;		   
+         Start Rx Timeout 
+        pBaseHandle->RxTimeoutCountdown = pBaseHandle->RxTimeout;*/
+			
+			
+			
         pBaseHandle->RxFrameLevel++;
         break;
 
@@ -119,6 +132,9 @@ __weak void * UFCP_RX_IRQ_Handler( UFCP_Handle_t * pHandle, unsigned short rx_da
 
           /* Stop Rx Timeout */
           pBaseHandle->RxTimeoutCountdown = 0;
+					
+
+					
           /* Disable the reception IRQ */
           LL_USART_DisableIT_RXNE(pHandle->USARTx);
           /* Indicate the reception is complete. */

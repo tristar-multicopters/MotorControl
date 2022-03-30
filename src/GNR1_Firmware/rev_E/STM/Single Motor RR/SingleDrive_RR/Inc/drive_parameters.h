@@ -152,10 +152,10 @@
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
 #define OV_VOLTAGE_PROT_ENABLING        ENABLE
 #define UV_VOLTAGE_PROT_ENABLING        ENABLE
-#define OV_VOLTAGE_THRESHOLD_V          75 /*!< Over-voltage
-                                                         threshold */
-#define UD_VOLTAGE_THRESHOLD_V          24 /*!< Under-voltage
-                                                          threshold */
+#define OV_VOLTAGE_THRESHOLD_V          50//75 /*!< Over-voltage
+                                               //          threshold */
+#define UD_VOLTAGE_THRESHOLD_V          40//24 /*!< Under-voltage
+                                               //           threshold */
 #if 0
 #define ON_OVER_VOLTAGE                 TURN_OFF_PWM /*!< TURN_OFF_PWM,
                                                          TURN_ON_R_BRAKE or
@@ -163,8 +163,8 @@
 #endif /* 0 */
 #define R_BRAKE_SWITCH_OFF_THRES_V      60
 
-#define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Celsius degrees */
-#define OV_TEMPERATURE_HYSTERESIS_C     10 /*!< Celsius degrees */
+#define OV_TEMPERATURE_THRESHOLD_C      50 //70 /*!< Celsius degrees */
+#define OV_TEMPERATURE_HYSTERESIS_C      1 //10 /*!< Celsius degrees */
 
 #define HW_OV_CURRENT_PROT_BYPASS       DISABLE /*!< In case ON_OVER_VOLTAGE
                                                           is set to TURN_ON_LOW_SIDES
@@ -233,6 +233,21 @@
  **************************/
 
 /* ##@@_USER_CODE_START_##@@ */
+
+#define AO_KP         									1250 // High speed: 1000, All speed: 150
+#define AO_KI         									0
+#define AO_KD         									1000 // High speed: 1000, All speed: 300
+
+#define AO_KPDIV         								256
+#define AO_KIDIV         								256
+#define AO_KDDIV         								1
+#define AO_KPDIV_LOG                  	LOG2(AO_KPDIV)
+#define AO_KIDIV_LOG                  	LOG2(AO_KIDIV)
+#define AO_KDDIV_LOG                  	LOG2(AO_KDDIV)
+
+#define AO_SPEEDFACTORGAIN							0
+#define	AO_SPEEDFACTORDIV								0	
+
 /* ##@@_USER_CODE_END_##@@ */
 
 #endif /*__DRIVE_PARAMETERS_H*/
