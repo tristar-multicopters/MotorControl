@@ -2,6 +2,7 @@
   ******************************************************************************
   * @file    drivetrain_management.c
   * @author  Sami Bouzid, FTEX
+	* @author  Jorge Polo, FTEX
   * @brief   This module handles management of the vehicle drivetrain
   *
 	******************************************************************************
@@ -27,9 +28,13 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 	BRK_Init(pHandle->pBrake);
 	PAS_Init(pHandle->pPAS);
 	MS_Init(pHandle->pMS);
+	PWREN_Init(pHandle->pPWREN);
 	
 	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
 	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
+	pHandle->hOCcounter[M1] = 0; pHandle->hOCcounter[M2] = 0;
+	pHandle->hSUcounter[M1] = 0; pHandle->hSUcounter[M2] = 0;
+	pHandle->hSFcounter[M1] = 0; pHandle->hSFcounter[M2] = 0;
 }
 
 /**
@@ -40,27 +45,31 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 {
 	bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
+	bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);
+	
 	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS);
-	int16_t hTorqueRef; int32_t hSpeedRef;
+	int16_t hTorqueRef = 0; int32_t hSpeedRef = 0;
 	
-	switch (bMotorSelection)
+	if (pHandle->pMS->bMSEnable)
 	{
-		case M1_SELECTED:
-			pHandle->bMode = SINGLE_MOTOR;
-			pHandle->bMainMotor = M1;
-			break;
-		case M2_SELECTED:
-			pHandle->bMode = SINGLE_MOTOR;
-			pHandle->bMainMotor = M2;
-			break;
-		case ALL_MOTOR_SELECTED:
-			pHandle->bMode = DUAL_MOTOR;
-			pHandle->bMainMotor = pHandle->bDefaultMainMotor;
-			break;
-		default:
-			break;
-	}
-	
+		switch (bMotorSelection)
+		{
+			case M1_SELECTED:
+				pHandle->bMode = SINGLE_MOTOR;
+				pHandle->bMainMotor = M1;
+				break;
+			case M2_SELECTED:
+				pHandle->bMode = SINGLE_MOTOR;
+				pHandle->bMainMotor = M2;
+				break;
+			case ALL_MOTOR_SELECTED:
+				pHandle->bMode = DUAL_MOTOR;
+				pHandle->bMainMotor = pHandle->bDefaultMainMotor;
+				break;
+			default:
+				break;
+		}
+}
 	if (pHandle->bCtrlType == TORQUE_CTRL)
 	{
 		hTorqueRef = DRVT_ControlSelect(pHandle);
@@ -111,11 +120,18 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 	{
 		if (pHandle->bCtrlType == TORQUE_CTRL)
 		{
-			MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTime);
+			if ( abs(pHandle->aTorque[M1]) > abs(MDI_getIq(pHandle->pMDI, M1)) )
+			{
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeUp);
+			}
+			else
+			{
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeDown);
+			}
 		}
 		else if (pHandle->bCtrlType == SPEED_CTRL)
 		{
-			MDI_SetSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1], pHandle->hSpeedRampTime);
+			MDI_SetSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1], pHandle->hSpeedRampTimeUp);
 		}
 		else {}
 	}
@@ -123,11 +139,18 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 	{
 		if (pHandle->bCtrlType == TORQUE_CTRL)
 		{
-			MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTime);
+			if ( abs(pHandle->aTorque[M2]) > abs(MDI_getIq(pHandle->pMDI, M2)) )
+			{
+				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeUp);
+			}
+			else
+			{
+				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeDown);
+			}
 		}
 		else if (pHandle->bCtrlType == SPEED_CTRL)
 		{
-			MDI_SetSpeedRamp(pHandle->pMDI, M2, pHandle->aSpeed[M2], pHandle->hSpeedRampTime);
+			MDI_SetSpeedRamp(pHandle->pMDI, M2, pHandle->aSpeed[M2], pHandle->hSpeedRampTimeUp);
 		}
 		else {}
 	}
@@ -174,7 +197,7 @@ void DRVT_StopMotors(DRVT_Handle_t * pHandle)
 	*/
 uint16_t DRVT_StandbyStateCheck(DRVT_Handle_t * pHandle)
 {
-	uint16_t hVehicleFault;
+	uint16_t hVehicleFault = 0;
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
@@ -217,7 +240,7 @@ uint16_t DRVT_StandbyStateCheck(DRVT_Handle_t * pHandle)
 	*/
 uint16_t DRVT_StartStateCheck(DRVT_Handle_t * pHandle)
 {
-	uint16_t hVehicleFault;
+	uint16_t hVehicleFault = 0;
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
@@ -258,7 +281,7 @@ uint16_t DRVT_StartStateCheck(DRVT_Handle_t * pHandle)
 	*/
 uint16_t DRVT_RunStateCheck(DRVT_Handle_t * pHandle)
 {
-	uint16_t hVehicleFault;
+	uint16_t hVehicleFault = 0;
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
@@ -301,7 +324,7 @@ uint16_t DRVT_RunStateCheck(DRVT_Handle_t * pHandle)
 	*/
 uint16_t DRVT_StopStateCheck(DRVT_Handle_t * pHandle)
 {
-	uint16_t hVehicleFault;
+	uint16_t hVehicleFault = 0;
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
@@ -402,34 +425,53 @@ bool DRVT_IsDrivetrainStopped(DRVT_Handle_t * pHandle)
 /**
 	* @brief  Check if conditions to stop drivetrain are met
 	* @param  Drivetrain handle
-	* @retval Returns true if drivetrain can be stopped
+	* @retval Returns true if drivetrain conditions to stop are met, false otherwise
 	*/
 bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 {
-	bool bCheckStop = true;
+	bool bCheckStop1 = false;
+	bool bCheckStop2 = false;
+	bool bCheckStop3 = false;
+	bool bCheckStop4 = false;
 	int32_t wSpeedM1 = MDI_getSpeed(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_getSpeed(pHandle->pMDI, M2);
+	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
-		if ( THRO_GetAvValue(pHandle->pThrottle) != 0 && wSpeedM1 != 0)
+		if ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed )
 		{
-			bCheckStop = false;
+			bCheckStop1 = true;
 		}
 	}
+	else
+	{
+		bCheckStop1 = true;
+	}
+	
 	if ( DRVT_IsMotor2Used(pHandle) )
 	{
-		if ( THRO_GetAvValue(pHandle->pThrottle) != 0 && wSpeedM2 != 0)
+		if ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM2) <= pHandle->hStoppingSpeed )
 		{
-			bCheckStop = false;
+			bCheckStop2 = true;
 		}
 	}
-	if ( PWREN_IsPowerEnabled(pHandle->pPWREN) )
+	else
 	{
-		bCheckStop = false;
+		bCheckStop2 = true;
+	}
+	
+	if ( !PWREN_IsPowerEnabled(pHandle->pPWREN) )
+	{
+		bCheckStop3 = true;
 	}	
 	
-	return bCheckStop;
+	if ( BRK_IsPressed(pHandle->pBrake) )
+	{
+		bCheckStop4 = true;
+	}
+	
+	return (bCheckStop1 & bCheckStop2) | bCheckStop3 | bCheckStop4;
 }
 
 /**
@@ -440,8 +482,9 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 {
 	bool bCheckStart = false;
+	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( THRO_GetAvValue(pHandle->pThrottle) > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) )
+	if ( hThrottleValue > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
 	{
 		bCheckStart = true;
 	}
@@ -460,82 +503,142 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	uint16_t hM2FaultNowCode = MDI_getCurrentFaults(pHandle->pMDI, M2);
 	uint16_t hM2FaultOccurredCode = MDI_getOccurredFaults(pHandle->pMDI, M2);
 	
-	bool bFaultNow = hM1FaultNowCode & hM2FaultNowCode;
-			
+	bool bFaultNow = hM1FaultNowCode | hM2FaultNowCode;
+	
+	//If there's no current motor errors
 	if (!bFaultNow)
 	{
 		if ( DRVT_IsMotor1Used(pHandle) )
-		{
-			if ( hM1FaultOccurredCode & MC_BREAK_IN )
+		{// If there's an over current (OC) that has occurred but has already been cleared on the STM side
+			if ( hM1FaultOccurredCode & MC_BREAK_IN ) 
 			{
-				/* In case of motor overcurrent... */
+				if(pHandle->hOCcounter[M1] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the OC fault
+					hM1FaultOccurredCode &= ~MC_BREAK_IN;
+					pHandle->hOCcounter[M1] = 0;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hOCcounter[M1]++;
+				}
 			}
+			
 			if ( hM1FaultOccurredCode & MC_SPEED_FDBK )
-			{
-				/* In case of speed sensor failure... */
+			{// If there's a speed feedback (SF) that has occurred but has already been cleared on the STM side
+				if(pHandle->hSFcounter[M1] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the SF fault
+					hM1FaultOccurredCode &= ~MC_SPEED_FDBK;
+					pHandle->hSFcounter[M1] = 0;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hSFcounter[M1]++;
+				}
 			}
+			
 			if ( hM1FaultOccurredCode & MC_START_UP )
 			{
 				/* In case of motor startup failure... */
+				if(pHandle->hSUcounter[M1] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the SF fault
+					hM1FaultOccurredCode &= ~MC_START_UP;
+					pHandle->hSUcounter[M1] = 0;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hSUcounter[M1]++;
+				}
 			}
+			
 			if ( hM1FaultOccurredCode & MC_OVER_TEMP )
 			{
-				/* In case of overtemperature... */
+				// In case of overtemperature, clear the OT fault
 				hM1FaultOccurredCode &= ~MC_OVER_TEMP;
 			}
+			
 			if ( hM1FaultOccurredCode & MC_OVER_VOLT )
 			{
-				/* In case of DCbus overvoltage... */
+				// In case of DCbus overvoltage, clear the OV fault
 				hM1FaultOccurredCode &= ~MC_OVER_VOLT;
 			}
+			
 			if ( hM1FaultOccurredCode & MC_UNDER_VOLT )
 			{
-				/* In case of DCbus undervoltage... */
+				// In case of DCbus undervoltage, clear the UV fault
 				hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
 			}
 		}
 		
 		if ( DRVT_IsMotor2Used(pHandle) )
 		{
-			if ( hM2FaultOccurredCode & MC_BREAK_IN )
+			if ( hM2FaultOccurredCode & MC_BREAK_IN ) 
 			{
-				/* In case of motor overcurrent... */
+				if(pHandle->hOCcounter[M2] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the OC fault
+					hM2FaultOccurredCode &= ~MC_BREAK_IN;
+					pHandle->hOCcounter[M2] = 0;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hOCcounter[M2]++;
+				}
 			}
+			
 			if ( hM2FaultOccurredCode & MC_SPEED_FDBK )
-			{
-				/* In case of speed sensor failure... */
+			{// If there's a speed feedback (SF) that has occurred but has already been cleared on the STM side
+				if(pHandle->hSFcounter[M2] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the SF fault
+					hM2FaultOccurredCode &= ~MC_SPEED_FDBK;
+					pHandle->hSFcounter[M2] = 0;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hSFcounter[M2]++;
+				}
 			}
+			
 			if ( hM2FaultOccurredCode & MC_START_UP )
-			{
-				/* In case of motor startup failure... */
+			{// If there's a start-up (SU) that has occurred but has already been cleared on the STM side
+				if(pHandle->hSUcounter[M2] >= DRVT_FAULT_TIMEOUT)
+				{// If the timer has timeout (500ms), clear the SF fault
+					hM2FaultOccurredCode &= ~MC_START_UP;
+					pHandle->hSUcounter[M2] = 0;
+				}
+				else
+				{//Increase the counter to count 20ms
+					pHandle->hSUcounter[M2]++;
+				}
 			}
+			
 			if ( hM2FaultOccurredCode & MC_OVER_TEMP )
 			{
 				/* In case of overtemperature... */
 				hM2FaultOccurredCode &= ~MC_OVER_TEMP;
 			}
+			
 			if ( hM2FaultOccurredCode & MC_OVER_VOLT )
 			{
 				/* In case of DCbus overvoltage... */
 				hM2FaultOccurredCode &= ~MC_OVER_VOLT;
 			}
+			
 			if ( hM2FaultOccurredCode & MC_UNDER_VOLT )
 			{
 				/* In case of DCbus undervoltage... */
 				hM2FaultOccurredCode &= ~MC_UNDER_VOLT;
 			}
 		}
-	}
+	} // End of if (!bFaultNow)
 	
-	bool bFaultOccured = (hM1FaultOccurredCode & hM2FaultOccurredCode);
-	
+	// Verify if all fault occured have been cleared
+	bool bFaultOccured = (hM1FaultOccurredCode | hM2FaultOccurredCode);
+
 	if (!bFaultOccured)
 	{
-        //todo: handle result from MDI_FaultAcknowledged below
+				//todo: handle result from MDI_FaultAcknowledged below
 		MDI_FaultAcknowledged(pHandle->pMDI, M1);
 		MDI_FaultAcknowledged(pHandle->pMDI, M2);
-	}
-	
+	}	
 	return bFaultOccured; 
 }
 
@@ -560,6 +663,7 @@ PAS_sLevel DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level)
 	*/
 int16_t DRVT_GetTorqueRefMainMotor(DRVT_Handle_t * pHandle)
 {
+	return pHandle->aTorque[pHandle->bMainMotor];
 }
 
 /**
@@ -569,6 +673,7 @@ int16_t DRVT_GetTorqueRefMainMotor(DRVT_Handle_t * pHandle)
 	*/
 int16_t DRVT_GetTorqueRefM1(DRVT_Handle_t * pHandle)
 {
+	return pHandle->aTorque[M1];
 }
 
 /**
@@ -578,6 +683,7 @@ int16_t DRVT_GetTorqueRefM1(DRVT_Handle_t * pHandle)
 	*/
 int16_t DRVT_GetTorqueRefM2(DRVT_Handle_t * pHandle)
 {
+	return pHandle->aTorque[M2];
 }
 
 /**
@@ -587,6 +693,7 @@ int16_t DRVT_GetTorqueRefM2(DRVT_Handle_t * pHandle)
 	*/
 int32_t DRVT_GetSpeedRefMainMotor(DRVT_Handle_t * pHandle)
 {
+	return pHandle->aSpeed[pHandle->bMainMotor];
 }
 
 /**
@@ -596,6 +703,7 @@ int32_t DRVT_GetSpeedRefMainMotor(DRVT_Handle_t * pHandle)
 	*/
 int32_t DRVT_GetSpeedRefM1(DRVT_Handle_t * pHandle)
 {
+	return pHandle->aSpeed[M1];
 }
 
 /**
@@ -605,6 +713,7 @@ int32_t DRVT_GetSpeedRefM1(DRVT_Handle_t * pHandle)
 	*/
 int32_t DRVT_GetSpeedRefM2(DRVT_Handle_t * pHandle)
 {
+	return pHandle->aSpeed[M2];
 }
 
 /**
@@ -614,6 +723,7 @@ int32_t DRVT_GetSpeedRefM2(DRVT_Handle_t * pHandle)
 	*/
 bool DRVT_IsMotor1Used(DRVT_Handle_t * pHandle)
 {
+	return pHandle->bUseMotorM1;
 }
 
 /**
@@ -623,6 +733,7 @@ bool DRVT_IsMotor1Used(DRVT_Handle_t * pHandle)
 	*/
 bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle)
 {
+	return pHandle->bUseMotorM2;
 }
 
 /* PAS Basic Implementation ----------------------------------------------------- */ 

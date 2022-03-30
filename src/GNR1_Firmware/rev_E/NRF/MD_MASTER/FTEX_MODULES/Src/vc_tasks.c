@@ -24,7 +24,9 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 
 /************* DEFINES ****************/
 
-#define RETURN_TO_STANDBY_LOOPTICKS 10
+#define RETURN_TO_STANDBY_LOOPTICKS 3		// Max number of ticks to stay in run while stop conditions are met
+#define START_LOOPTICKS							100 // Max number of ticks to stay in start state
+#define STOP_LOOPTICKS							100 // Max number of ticks to stay in stop state
 
 bool Pulse_Flag;
 /************* TASKS ****************/
@@ -43,7 +45,7 @@ static void CLK_Init(void)
 void VC_BootUp(void)
 {	
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
-	LCD_handle_t * pLCD = &BafangScreenHandle;
+
 	
 	/* Initialize clock */
 	CLK_Init();
@@ -60,15 +62,17 @@ void VC_BootUp(void)
 	MCP25625_Init(&CANController);
 	#endif
 	
-	/* Initialize Bafang screen module */
-	LCD_Baf_Init(pLCD);
-	
 	/* Initialize vehicle controller components */
 	VCSTM_Init(pVCI->pStateMachine);
 	DRVT_Init(pVCI->pDrivetrain);
 	
 	/* Initialize ADC module */
-    RCM_Init(&RegularConvertionManager);
+
+	RCM_Init(&RegularConvertionManager);
+	
+	STRG_Init();
+	//EVCT_init(&VCInterfaceHandle);
+
 }
 
 __NO_RETURN void TSK_FastLoopMD (void * pvParameter)
@@ -178,6 +182,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					break;
 			
 			case V_START:
+					DRVT_UpdateMotorRamps(pVCI->pDrivetrain);
 					DRVT_StartMotors(pVCI->pDrivetrain);
 					hVehicleFault = DRVT_StartStateCheck(pVCI->pDrivetrain);
 					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
@@ -187,7 +192,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 						VCSTM_NextState( pVCI->pStateMachine, V_RUN );
 					}
 					wCounter++;
-					if ( wCounter > 100 )
+					if ( wCounter > START_LOOPTICKS )
 					{
 						wCounter = 0;
 						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_START_TIMEOUT, 0 );
@@ -229,7 +234,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
 					}
 					wCounter++;
-					if ( wCounter > 100 )
+					if ( wCounter > STOP_LOOPTICKS )
 					{
 						wCounter = 0;
 						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_STOP_TIMEOUT, 0 );
@@ -240,11 +245,11 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					DRVT_StopMotors(pVCI->pDrivetrain);
 					if ( DRVT_IsDrivetrainStopped(pVCI->pDrivetrain) )
 					{
-						if ( !DRVT_MotorFaultManagement(pVCI->pDrivetrain) )
-						{
-							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove fault on M1
-							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove fault on M2
-						}
+//						if ( !DRVT_MotorFaultManagement(pVCI->pDrivetrain) )
+//						{
+//							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove VC_M1_FAULTS flag
+//							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove VC_M2_FAULTS flag
+//						}
 					}
 					break;
 					
@@ -258,6 +263,60 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	
 		xLastWakeTime += TASK_VCSTM_SAMPLE_TIME_TICK;
 		osDelayUntil(xLastWakeTime);
+	}
+}
+
+__NO_RETURN void TSK_ProcessEUartFrames (void * pvParameter)
+{
+	UNUSED_PARAMETER(pvParameter);
+	
+	switch(EUART_handle_t)
+	{
+		case EUART_EVIONICS:
+			EVCT_init(&VCInterfaceHandle);
+			break;
+		
+		case EUART_BAFANG:
+			LCD_BAF_init(&VCInterfaceHandle);
+			break;
+		
+		case EUART_FTEX:
+			LCD_FTEX_init(&VCInterfaceHandle);
+			break;
+		
+		case EUART_APT:
+			LCD_APT_init(&VCInterfaceHandle);
+			break;
+		case EUART_DISABLE:
+			//Dont initialise the euart
+			break;
+		default:
+			break;
+	}
+	
+	while(true)
+	{
+		osThreadFlagsWait(EUART_FLAG, osFlagsWaitAny, osWaitForever);
+		switch(EUART_handle_t)
+		{
+			case EUART_EVIONICS:
+				EVCT_frame_process();
+				break;
+			
+			case EUART_BAFANG:
+				LCD_BAF_frame_Process();
+				break;
+			
+			case EUART_APT:
+				LCD_APT_frame_Process();
+				break;
+						
+			case EUART_FTEX:
+				LCD_FTEX_frame_Process();
+				break;
+			default:
+				break;
+		}
 	}
 }
 

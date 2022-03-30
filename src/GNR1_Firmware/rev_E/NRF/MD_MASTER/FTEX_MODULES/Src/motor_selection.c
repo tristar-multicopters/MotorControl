@@ -42,23 +42,31 @@ void MS_Init( MS_Handle_t * pHandle )
 
 MotorSelection_t MS_CheckSelection(MS_Handle_t* pHandle)
 {
-	bool bM1Select = nrfx_gpiote_in_is_set(pHandle->wM1SelectPinNumber);
-	bool bM2Select = nrfx_gpiote_in_is_set(pHandle->wM2SelectPinNumber);
-	bool bBothSelect = bM1Select && bM2Select;
 	
-	if (bBothSelect)
+	if (pHandle->bMSEnable)
 	{
-		pHandle->bMotorSelection = ALL_MOTOR_SELECTED;
-	}
-	else if (bM2Select)
-	{
-		pHandle->bMotorSelection = M2_SELECTED;
+		bool bM1Select = nrfx_gpiote_in_is_set(pHandle->wM1SelectPinNumber);
+		bool bM2Select = nrfx_gpiote_in_is_set(pHandle->wM2SelectPinNumber);
+		bool bBothSelect = bM1Select && bM2Select;
+		
+		if (bBothSelect)
+		{
+			pHandle->bMotorSelection = ALL_MOTOR_SELECTED;
+		}
+		else if (bM2Select)
+		{
+			pHandle->bMotorSelection = M2_SELECTED;
+		}
+		else
+		{
+			pHandle->bMotorSelection = M1_SELECTED;
+		}
+		
 	}
 	else
 	{
 		pHandle->bMotorSelection = M1_SELECTED;
 	}
-	
 	return pHandle->bMotorSelection;
 }
 

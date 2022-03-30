@@ -15,26 +15,34 @@
 #include "vc_interface.h"
 #include "canbus_management.h"
 #include "lcd_bafang_comm.h"
+#include "lcd_ftex_comm.h"
+#include "lcd_apt_comm.h"
+#include "ev_config_tool.h"
 
+#define VEHICLE_DEFAULT			0
+#define VEHICLE_ECELL 			1
+#define VEHICLE_EBGO 				2
+#define VEHICLE_GRIZZLY    3
+#define VEHICLE_GEEBEECARGO 4
 
-/* VEHICLE SELECTION
-0: DEFAULT
-1: ECELL
-2: EBGO
+/*
+VEHICLE SELECTION
+------------------------------------
+Change this define based on vehicle application
+------------------------------------
 */
-#define VEHICLE_SELECTION 1
+#define VEHICLE_SELECTION 	VEHICLE_GEEBEECARGO
+/*------------------------------------*/
 
 
 #define CANBUS_ENABLE	0
 
 
 extern VCI_Handle_t VCInterfaceHandle;
-
-extern LCD_handle_t BafangScreenHandle;
 extern SPI_Handle_t SPI0Manager;
 extern MCP25625_Handle_t CANController;
 extern RCM_Handle_t RegularConvertionManager;
-
+extern eUART_protocol_t EUART_handle_t;
 
 #endif /* __VC_CONFIG_H */
 

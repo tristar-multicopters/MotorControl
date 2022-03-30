@@ -87,35 +87,76 @@ THRO_Handle_t ThrottleHandle =
 		.pin_p = THROTTLE_ANALOG_PIN,
 		.pin_n = NRF_SAADC_INPUT_DISABLED,
 	},
-	#if VEHICLE_SELECTION == 1
-	.hParam =
-	{
-		.hLowPassFilterBW1 = 16,
-		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
-		.hMax = UINT16_MAX,
-		.m = -16,
-		.F = 35,
-	}
-	#elif VEHICLE_SELECTION == 2
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
-		.hMax = UINT16_MAX,
-		.m = -11,
-		.F = 36,
+		
+		.hOffsetThrottle = 9600,
+		.bSlopeThrottle = 5,
+		.bDivisorThrottle = 3,
+		
+		.hOffsetTorque = 4000,
+		.bSlopeTorque = -7,
+		.bDivisorTorque = 25,
+	}
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
+	.hParam =
+	{
+		.hLowPassFilterBW1 = 8,
+		.hLowPassFilterBW2 = 2,
+	
+		.hOffsetThrottle = 9600,
+		.bSlopeThrottle = 5,
+		.bDivisorThrottle = 3,
+		
+		.hOffsetTorque = 4000,
+		.bSlopeTorque = -7,
+		.bDivisorTorque = 25,
+	}
+		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
+	.hParam =
+	{
+		.hLowPassFilterBW1 = 8,
+		.hLowPassFilterBW2 = 2,
+	
+		.hOffsetThrottle = 9900,
+		.bSlopeThrottle = 5,
+		.bDivisorThrottle = 3,
+		
+		.hOffsetTorque = 4000,
+		.bSlopeTorque = 8,
+		.bDivisorTorque = 48,
+	}
+	
+	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+	.hParam =
+	{
+		.hLowPassFilterBW1 = 8,
+		.hLowPassFilterBW2 = 2,
+	
+		.hOffsetThrottle = 9900,
+		.bSlopeThrottle = 5,
+		.bDivisorThrottle = 3,
+		
+		.hOffsetTorque = 4000,
+		.bSlopeTorque = 8,
+		.bDivisorTorque = 48,
 	}
 	#else
 	.hParam =
 	{
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
-		.hMax = UINT16_MAX,
-		.m = -16,
-		.F = 35,
+	
+		.hOffsetThrottle = 9600,
+		.bSlopeThrottle = 5,
+		.bDivisorThrottle = 3,
+		
+		.hOffsetTorque = 4000,
+		.bSlopeTorque = -7,
+		.bDivisorTorque = 25,
 	}
 	#endif
 };
@@ -175,16 +216,21 @@ SPR_Handle_t SpeedPulse =
 	
 };
 
-
 MS_Handle_t MotorSelectorHandle = 
 {
 	.wM1SelectPinNumber = M1SELECT_GPIO_PIN,
 	.wM2SelectPinNumber = M2SELECT_GPIO_PIN,
 	
-	#if VEHICLE_SELECTION == 1
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.bIsInvertedLogic = false,
 	.bMSEnable = true,
-	#elif VEHICLE_SELECTION == 2
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
+	.bIsInvertedLogic = false,
+	.bMSEnable = false,
+		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
+	.bIsInvertedLogic = false,
+	.bMSEnable = false,
+		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bIsInvertedLogic = false,
 	.bMSEnable = false,
 	#else
@@ -230,34 +276,85 @@ PAS_Handle_t PedalAssistHandle = {
 PWREN_Handle_t PowerEnableHandle = {
 	.wPinNumber = PWREN_GPIO_PIN,
 	.bIsInvertedLogic = false,
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
+	.bUsePowerLock = true,
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
+	.bUsePowerLock = true,
+	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
+	.bUsePowerLock = true,
+	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+	.bUsePowerLock = false,
+	#else
+	.bUsePowerLock = true;
+	#endif
 };
 
 DRVT_Handle_t DrivetrainHandle = 
 {	
-	#if VEHICLE_SELECTION == 1
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = true,
 	.bDefaultMainMotor = M1,
+	.bMode = DUAL_MOTOR,
 	.bCtrlType = TORQUE_CTRL,
-	.hTorqueRampTime = 200,
-	.hSpeedRampTime = 200,
-	.hStartingThrottle = 12000,
-	#elif VEHICLE_SELECTION == 2
+	.hTorqueRampTimeUp = 200,
+	.hTorqueRampTimeDown = 50,
+	.hSpeedRampTimeUp = 200,
+	.hSpeedRampTimeDown = 50,
+	.hStartingThrottle = 1000,
+	.hStoppingThrottle = 500,
+	.hStoppingSpeed = 0,
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
+	.bUseMotorM1 = true,
+	.bUseMotorM2 = false,
+	.bDefaultMainMotor = M1,
+	.bMode = SINGLE_MOTOR,
+	.bCtrlType = TORQUE_CTRL,
+	.hTorqueRampTimeUp = 200,
+	.hTorqueRampTimeDown = 50,
+	.hSpeedRampTimeUp = 200,
+	.hSpeedRampTimeDown = 50,
+	.hStartingThrottle = 1000,
+	.hStoppingThrottle = 500,
+	.hStoppingSpeed = 0,
+		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
+	.bUseMotorM1 = true,
+	.bUseMotorM2 = false,
+	.bDefaultMainMotor = M1,
+	.bMode = SINGLE_MOTOR,
+	.bCtrlType = TORQUE_CTRL,
+	.hTorqueRampTimeUp = 200,
+	.hTorqueRampTimeDown = 50,
+	.hSpeedRampTimeUp = 200,
+	.hSpeedRampTimeDown = 50,
+	.hStartingThrottle = 1000,
+	.hStoppingThrottle = 500,
+	.hStoppingSpeed = 0,
+		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+	.bUseMotorM1 = true,
+	.bUseMotorM2 = true,
+	.bDefaultMainMotor = M1,
+	.bMode = DUAL_MOTOR,
+	.bCtrlType = TORQUE_CTRL,
+	.hTorqueRampTimeUp = 200,
+	.hTorqueRampTimeDown = 50,
+	.hSpeedRampTimeUp = 200,
+	.hSpeedRampTimeDown = 50,
+	.hStartingThrottle = 1000,
+	.hStoppingThrottle = 500,
+	.hStoppingSpeed = 0,
+	#else
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
 	.bDefaultMainMotor = M1,
 	.bCtrlType = TORQUE_CTRL,
-	.hTorqueRampTime = 200,
-	.hSpeedRampTime = 200,
-	.hStartingThrottle = 12000,
-	#else
-	.bUseMotorM1 = true,
-	.bUseMotorM2 = true,
-	.bDefaultMainMotor = M1,
-	.bCtrlType = TORQUE_CTRL,
-	.hTorqueRampTime = 200,
-	.hSpeedRampTime = 200,
-	.hStartingThrottle = 12000,
+	.hTorqueRampTimeUp = 200,
+	.hTorqueRampTimeDown = 50,
+	.hSpeedRampTimeUp = 200,
+	.hSpeedRampTimeDown = 50,
+	.hStartingThrottle = 1000,
+	.hStoppingThrottle = 500,
+	.hStoppingSpeed = 0,
 	#endif
 	
 	.pMDI = &MDInterfaceHandle,
@@ -274,8 +371,9 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-LCD_handle_t BafangScreenHandle = 
-{
-	.pVCInterface = &VCInterfaceHandle,
-};
+eUART_protocol_t EUART_handle_t = EUART_DISABLE; // Has to been initialise by Evionics first
+//LCD_handle_t BafangScreenHandle = 
+//{
+//	.pVCInterface = &VCInterfaceHandle,
+//};
 	

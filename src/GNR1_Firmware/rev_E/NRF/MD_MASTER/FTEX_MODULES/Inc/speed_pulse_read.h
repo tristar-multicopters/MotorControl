@@ -80,8 +80,8 @@ typedef struct
 	uint8_t bCaptureChannel;
 	uint8_t bRestartChannel;
 	
-	uint16_t bTimer_Prescaler;
-	uint32_t bTimer_Width;
+	nrf_timer_frequency_t bTimer_Prescaler;
+	nrf_timer_bit_width_t bTimer_Width;
 	
 	/* Pedal Timer */
 	nrf_drv_timer_t* 	pTimerInstance;
@@ -94,8 +94,8 @@ typedef struct
 	nrfx_gpiote_pin_t pSinSpeed_Pulse_pin;
 	nrfx_gpiote_pin_t pCosSpeed_Pulse_pin;
 	
-	uint16_t 			wPread; 
-	uint16_t 			sPread;     
+	uint32_t 			wPread; 
+	uint32_t 			sPread;     
 	uint8_t 			Direction_result;	
 	
 	uint16_t 			sPAvSpeed;       /* It contains latest available pedal average speed in u16 */
@@ -114,7 +114,6 @@ typedef struct
 void SPR_Init(SPR_Handle_t * pHandle);
 void SPWR_Init(SPR_Handle_t * pHandle);
 
-
 void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action, SPR_Handle_t * sHandle);	
 void GPIO_Init(SPR_Handle_t* sHandle);
 uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle);
@@ -123,10 +122,11 @@ uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle);
 uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle);
 uint16_t Wheel_capture_get_vlaue(SPR_Handle_t* sHandle);
 
-uint16_t Pspeed_CalcAvValue( SPR_Handle_t * sHandle );
-uint16_t Wspeed_CalcAvValue( SPR_Handle_t * sHandle );
 
-uint8_t Get_Drive_Direction (SPR_Handle_t* sHandle);
+uint16_t Pspeed_CalcAvValue( SPR_Handle_t * pHandle );
+uint16_t Wspeed_CalcAvValue( SPR_Handle_t * pHandle );
+
+uint8_t Get_Drive_Direction (SPR_Handle_t* pHandle);
 /* Private defines -----------------------------------------------------------*/
 
 // #define all HW dependent functions here
