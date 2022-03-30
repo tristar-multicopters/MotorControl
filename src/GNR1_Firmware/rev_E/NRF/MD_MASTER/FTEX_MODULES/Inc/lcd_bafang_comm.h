@@ -12,7 +12,6 @@
 #define __LCD_BAFANG_COMM_H
 
 #include "vc_interface.h"
-#include "drivetrain_management.h"
 
 /**************************** DEFINITIONS AND STRUCTS ****************************/
 // Commands
