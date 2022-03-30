@@ -24,7 +24,7 @@
 #include "wheel_speed_sensor.h"
 
 #define DRVT_FAULT_TIMEOUT	25 // Number of times the VC state machine should be stayed on fault
-														 // before clear a Over current, start-up or Speed back fault
+															 // before clear a Over current, start-up or Speed back fault
 typedef enum
 {
 	HUB_SINGLE,
