@@ -666,7 +666,6 @@ PAS_sLevel DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level)
 {
 	//pHandle->pPAS->pLevel = PAS_LEVEL_1;
 	level = pHandle->pPAS->pLevel;
-	
 	return level;
 }
 
