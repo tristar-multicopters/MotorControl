@@ -202,7 +202,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 			case V_RUN:
 					hVehicleFault = DRVT_RunStateCheck(pVCI->pDrivetrain);
 					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
-					DRVT_UpdateMotorRamps(pVCI->pDrivetrain);
+					DRVT_UpdateMotorRamps(pVCI->pDrivetrain); 			
 					if ( DRVT_CheckStopConditions(pVCI->pDrivetrain) )
 					{
 						wCounter++;

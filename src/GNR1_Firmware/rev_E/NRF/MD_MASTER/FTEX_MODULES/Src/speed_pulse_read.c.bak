@@ -97,14 +97,6 @@ void GPIO_Init(SPR_Handle_t* pHandle)
 
 	nrf_drv_gpiote_in_init(pHandle->pCosSpeed_Pulse_pin, &in_config, GPIO_Pin_handler);
 
-	
-	nrfx_err_t nrfx_gpiote_in_init(nrfx_gpiote_pin_t               pin,
-                               nrfx_gpiote_in_config_t const * p_config,
-                               nrfx_gpiote_evt_handler_t       evt_handler);
-	
-	
-	
-	
 	nrf_drv_gpiote_in_event_enable(pHandle->pSinSpeed_Pulse_pin, true);
 	nrf_drv_gpiote_in_event_enable(pHandle->pCosSpeed_Pulse_pin, true);
 }
@@ -251,11 +243,11 @@ uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* pHandle)
 uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 {
 	
-	p_SPR_Handle = sHandle;
+	p_SPR_Handle = pHandle;
 	// Make sure the capture event occured before checking the capture register
-	if(NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] != 0)
+	if(NRF_GPIOTE->EVENTS_IN[pHandle->bCaptureChannel] != 0)
 	{		// Clear the capture event
-			NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] = 0;
+			NRF_GPIOTE->EVENTS_IN[pHandle->bCaptureChannel] = 0;
 			// Return the stored capture value in the timer
 			sHandle->sPread =  nrf_drv_timer_capture_get(sHandle->pTimerInstance, 0);
 	}
@@ -273,17 +265,27 @@ uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 	*/
 uint16_t Wheel_capture_get_value(SPR_Handle_t* sHandle)
 {
-	p_SPR_Handle = sHandle;
+	p_SPR_Handle = pHandle;
 	// Make sure the capture event occured before checking the capture register
-	if(NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel] != 0)
+	if(NRF_GPIOTE->EVENTS_IN[pHandle->WCaptureChannel] != 0)
 	{		// Clear the capture event
-			NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel] = 0;	
+			NRF_GPIOTE->EVENTS_IN[pHandle->WCaptureChannel] = 0;	
 			// Return the stored capture value in the timer
+<<<<<<< HEAD
 			sHandle->wPread =  nrf_drv_timer_capture_get(sHandle->wTimerInstance, 0);
 	}
 	else
 	{		// In case no capture occured, return 0
 			sHandle->wPread = 0;
+=======
+			pHandle->wPread =  (uint32_t)nrf_drv_timer_capture_get(pHandle->wTimerInstance, 0);
+			return (pHandle->wPread);
+	}
+	else
+	{		// In case no capture occured, return 0
+			pHandle->wPread = 0;
+			return (pHandle->wPread);
+>>>>>>> main
 	}
 		return (sHandle->wPread);
 }
@@ -293,7 +295,7 @@ uint16_t Wheel_capture_get_value(SPR_Handle_t* sHandle)
 	* @param  Handle pointer
 	* @retval direction decision 
 	*/
-void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)//, SPR_Handle_t * sHandle)
+void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action, SPR_Handle_t * sHandle)
 {
 	if(pin == p_SPR_Handle->pSinSpeed_Pulse_pin)
 	{

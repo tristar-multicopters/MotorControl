@@ -41,7 +41,7 @@ typedef enum
 
 
 #define No_Torque_Level	0
-#define Torque_Level1		-5000
+#define Torque_Level1		-1000
 #define Torque_Level2		-10000
 #define Torque_Level3		-15000
 #define Torque_Level4		-20000

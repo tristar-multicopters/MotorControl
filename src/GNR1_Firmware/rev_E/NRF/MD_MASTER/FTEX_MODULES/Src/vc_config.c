@@ -113,7 +113,7 @@ THRO_Handle_t ThrottleHandle =
 		
 		.hOffsetTorque = 4000,
 		.bSlopeTorque = -7,
-		.bDivisorTorque = 25,
+		.bDivisorTorque = 45,
 	}
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.hParam =
@@ -279,7 +279,7 @@ PWREN_Handle_t PowerEnableHandle = {
 	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
-	.bUsePowerLock = true,
+	.bUsePowerLock = false,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO

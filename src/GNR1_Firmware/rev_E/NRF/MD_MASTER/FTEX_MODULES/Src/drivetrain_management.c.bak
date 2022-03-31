@@ -433,7 +433,6 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStop2 = false;
 	bool bCheckStop3 = false;
 	bool bCheckStop4 = false;
-	bool bCheckStop5 = false;
 	int32_t wSpeedM1 = MDI_getSpeed(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_getSpeed(pHandle->pMDI, M2);
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
@@ -472,12 +471,7 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 		bCheckStop4 = true;
 	}
 	
-	if (!Pulse_Flag && ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed))
-	{
-		bCheckStop5 = true;
-	}
-	
-	return (bCheckStop1 & bCheckStop2) | bCheckStop3 | bCheckStop4 | bCheckStop5;
+	return (bCheckStop1 & bCheckStop2) | bCheckStop3 | bCheckStop4;
 }
 
 /**
@@ -490,7 +484,7 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStart = false;
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( (hThrottleValue > pHandle->hStartingThrottle || Pulse_Flag) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
+	if ( hThrottleValue > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
 	{
 		bCheckStart = true;
 	}
@@ -644,8 +638,13 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 				//todo: handle result from MDI_FaultAcknowledged below
 		MDI_FaultAcknowledged(pHandle->pMDI, M1);
 		MDI_FaultAcknowledged(pHandle->pMDI, M2);
-	}	
+	}
+<<<<<<< HEAD
+	
 	return bFaultOccured; 
+=======
+	return bFaultOccured;
+>>>>>>> main
 }
 
 /**
@@ -656,7 +655,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	*/
 PAS_sLevel DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level)
 {
-	//pHandle->pPAS->pLevel = PAS_LEVEL_1;
+	pHandle->pPAS->pLevel = PAS_LEVEL_3;
 	level = pHandle->pPAS->pLevel;
 	
 	return level;
@@ -802,7 +801,7 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 	else
 	{	
 		/* Throttle calculate Value and covert to Torque */
-		THRO_CalcAvThrottleValue(pHandle->pThrottle);
+		THRO_CalcAvValue(pHandle->pThrottle);
 		pHandle->pTorqueSelect = THRO_ThrottleToTorque(pHandle->pThrottle);
 	}
 	return pHandle->pTorqueSelect;

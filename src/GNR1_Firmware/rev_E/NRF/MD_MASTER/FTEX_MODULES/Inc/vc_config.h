@@ -31,7 +31,7 @@ VEHICLE SELECTION
 Change this define based on vehicle application
 ------------------------------------
 */
-#define VEHICLE_SELECTION 	VEHICLE_GEEBEECARGO
+#define VEHICLE_SELECTION 	VEHICLE_EBGO
 /*------------------------------------*/
 
 
