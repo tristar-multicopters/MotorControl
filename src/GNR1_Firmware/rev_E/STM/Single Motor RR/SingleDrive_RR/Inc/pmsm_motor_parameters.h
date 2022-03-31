@@ -23,6 +23,14 @@
 #ifndef __PMSM_MOTOR_PARAMETERS_H
 #define __PMSM_MOTOR_PARAMETERS_H
 
+#define VEHICLE_EBGO 1
+#define VEHICLE_GRIZZLY 2
+
+#define VEHICLE_SELECTION VEHICLE_GRIZZLY
+
+
+#if VEHICLE_SELECTION == VEHICLE_GRIZZLY
+
 /************************
  *** Motor Parameters ***
  ************************/
@@ -57,7 +65,7 @@
                                                  It can be either DEGREES_120 or
                                                  DEGREES_60 */
 
-#define HALL_PHASE_SHIFT        260 /*!< Define here in degrees
+#define HALL_PHASE_SHIFT        60 /*!< Define here in degrees
                                                  the electrical phase shift between
                                                  the low to high transition of
                                                  signal H1 and the maximum of
@@ -65,6 +73,12 @@
 /*** Quadrature encoder ***/
 #define M1_ENCODER_PPR             400  /*!< Number of pulses per
                                             revolution */
+
+#elif VEHICLE_SELECTION == VEHICLE_EBGO
+
+#else
+
+#endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/
 /******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/
