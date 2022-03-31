@@ -212,6 +212,8 @@ SPR_Handle_t SpeedPulse =
 	{
 		.sLowPassFilterBW1 = 16,
 		.sMax = UINT16_MAX,
+		.sWheel_Lap_Count = 0,
+		.sFirst_Wheel_Lap = false,
 	}
 	
 };

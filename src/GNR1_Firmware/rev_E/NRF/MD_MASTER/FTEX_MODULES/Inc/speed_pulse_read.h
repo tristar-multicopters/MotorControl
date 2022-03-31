@@ -67,6 +67,8 @@ typedef struct
 {
 	uint16_t 	sLowPassFilterBW1;   /* used to configure the first order software low pass filter */
 	uint16_t 	sMax;             	 /* Pulse reading signal at maximum position */	
+	int				sWheel_Lap_Count;
+	bool 			sFirst_Wheel_Lap;
 } SPR_Param_t;
 
 typedef struct
@@ -103,7 +105,7 @@ typedef struct
 
 	SPR_Param_t		sParam;
 	
-} SPR_Handle_t;
+} SPR_Handle_t; 
 
 /* Exported constants --------------------------------------------------------*/
 

@@ -40,18 +40,14 @@
 /******************************************************************************* Includes ********************************************************************************/
 #include "speed_pulse_read.h"
 
-
 /**************************************************************************** Private definitions ************************************************************************/
-
 static SPR_Handle_t* p_SPR_Handle;	
-
-// Direction flags
+/* Direction flags */
 bool sin_flag;
 bool cos_flag;
-// Speed general variables
+/* Speed general variables */
 uint16_t pSpeed;
 uint16_t wSpeed;
-uint16_t atlas;
 /****************************************************************** Public Hardware dependent functions ******************************************************************/
 
 /**
@@ -299,7 +295,13 @@ void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)//, SP
 	{
 			sin_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pSinSpeed_Pulse_pin);
 			cos_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pCosSpeed_Pulse_pin);
-	
+		
+		/* Check the First Wheel Lap count*/
+		if (sin_flag & p_SPR_Handle->sParam.sFirst_Wheel_Lap)
+		{
+			p_SPR_Handle->sParam.sWheel_Lap_Count ++;
+		}
+		/* Check direction */
 		if (sin_flag && (!cos_flag))
 			p_SPR_Handle->Direction_result = Forward;
 		else if (cos_flag && (!sin_flag))

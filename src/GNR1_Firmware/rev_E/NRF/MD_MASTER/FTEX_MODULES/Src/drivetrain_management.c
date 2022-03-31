@@ -10,9 +10,6 @@
 
 #include "drivetrain_management.h"
 
-
-
-extern bool Pulse_Flag;
 /* Functions ---------------------------------------------------- */
 
 
@@ -72,6 +69,9 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 }
 	if (pHandle->bCtrlType == TORQUE_CTRL)
 	{
+#ifdef VEHICLE_ECELL
+		PAS_GetTorque(pHandle->pPAS);
+#endif
 		hTorqueRef = DRVT_ControlSelect(pHandle);
 		if ( bIsBrakePressed )
 		{
@@ -474,7 +474,7 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 		bCheckStop4 = true;
 	}
 	
-	if (!Pulse_Flag && ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed))
+	if ((!pHandle->bUsePAS) && ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed))
 	{
 		bCheckStop5 = true;
 	}
@@ -492,7 +492,7 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStart = false;
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( (hThrottleValue > pHandle->hStartingThrottle || Pulse_Flag) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
+	if ( (hThrottleValue > pHandle->hStartingThrottle || (pHandle->bUsePAS)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
 	{
 		bCheckStart = true;
 	}
@@ -664,7 +664,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	*/
 PAS_sLevel DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level)
 {
-	//pHandle->pPAS->pLevel = PAS_LEVEL_1;
+	pHandle->pPAS->pLevel = PAS_LEVEL_1;
 	level = pHandle->pPAS->pLevel;
 	return level;
 }
@@ -798,7 +798,7 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
   bool PAS_Pres;
 	
 	/* Check Pulse presence */
-	PAS_Pres = Pulse_Flag; 		
+	PAS_Pres = pHandle->bUsePAS; 		
 	
 	/* PAS and Throttle mangement */
 	if (PAS_Pres)
