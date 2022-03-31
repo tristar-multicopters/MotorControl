@@ -204,6 +204,7 @@ uint16_t DRVT_StandbyStateCheck(DRVT_Handle_t * pHandle)
 		switch ( MDI_getState(pHandle->pMDI, M1) )
 		{
 			case M_IDLE:
+			case M_STOP:
 				break;
 			case M_FAULT_NOW:
 			case M_FAULT_OVER:
@@ -219,6 +220,7 @@ uint16_t DRVT_StandbyStateCheck(DRVT_Handle_t * pHandle)
 		switch ( MDI_getState(pHandle->pMDI, M2) )
 		{
 			case M_IDLE:
+			case M_STOP:
 				break;
 			case M_FAULT_NOW:
 			case M_FAULT_OVER:
@@ -501,6 +503,12 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 	* @brief  Manage motor faults. Check if faults are still present and send motor fault acknowledge when faults are gone.
 	* @param  Drivetrain handle
 	* @retval Returns true if a motor fault is still active, false if no more fault is present.
+	* 			  OV: Works
+	*					OT: Works
+  *					OC: Works
+	*					SF: Works 
+	*					UV: Needs to be checked on STM side
+	*					SU: No tested yet
 	*/
 bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 {
@@ -518,7 +526,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 		{// If there's an over current (OC) that has occurred but has already been cleared on the STM side
 			if ( hM1FaultOccurredCode & MC_BREAK_IN ) 
 			{
-				if(pHandle->hOCcounter[M1] >= DRVT_FAULT_TIMEOUT)
+				if(pHandle->hOCcounter[M1] >= pHandle->fault_timeout)
 				{// If the timer has timeout (500ms), clear the OC fault
 					hM1FaultOccurredCode &= ~MC_BREAK_IN;
 					pHandle->hOCcounter[M1] = 0;
@@ -531,7 +539,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 			
 			if ( hM1FaultOccurredCode & MC_SPEED_FDBK )
 			{// If there's a speed feedback (SF) that has occurred but has already been cleared on the STM side
-				if(pHandle->hSFcounter[M1] >= DRVT_FAULT_TIMEOUT)
+				if(pHandle->hSFcounter[M1] >= pHandle->fault_timeout)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM1FaultOccurredCode &= ~MC_SPEED_FDBK;
 					pHandle->hSFcounter[M1] = 0;
@@ -545,7 +553,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 			if ( hM1FaultOccurredCode & MC_START_UP )
 			{
 				/* In case of motor startup failure... */
-				if(pHandle->hSUcounter[M1] >= DRVT_FAULT_TIMEOUT)
+				if(pHandle->hSUcounter[M1] >= pHandle->fault_timeout)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM1FaultOccurredCode &= ~MC_START_UP;
 					pHandle->hSUcounter[M1] = 0;
@@ -579,7 +587,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 		{
 			if ( hM2FaultOccurredCode & MC_BREAK_IN ) 
 			{
-				if(pHandle->hOCcounter[M2] >= DRVT_FAULT_TIMEOUT)
+				if(pHandle->hOCcounter[M2] >= pHandle->fault_timeout)
 				{// If the timer has timeout (500ms), clear the OC fault
 					hM2FaultOccurredCode &= ~MC_BREAK_IN;
 					pHandle->hOCcounter[M2] = 0;
@@ -592,7 +600,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 			
 			if ( hM2FaultOccurredCode & MC_SPEED_FDBK )
 			{// If there's a speed feedback (SF) that has occurred but has already been cleared on the STM side
-				if(pHandle->hSFcounter[M2] >= DRVT_FAULT_TIMEOUT)
+				if(pHandle->hSFcounter[M2] >= pHandle->fault_timeout)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM2FaultOccurredCode &= ~MC_SPEED_FDBK;
 					pHandle->hSFcounter[M2] = 0;
@@ -605,7 +613,7 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 			
 			if ( hM2FaultOccurredCode & MC_START_UP )
 			{// If there's a start-up (SU) that has occurred but has already been cleared on the STM side
-				if(pHandle->hSUcounter[M2] >= DRVT_FAULT_TIMEOUT)
+				if(pHandle->hSUcounter[M2] >= pHandle->fault_timeout)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM2FaultOccurredCode &= ~MC_START_UP;
 					pHandle->hSUcounter[M2] = 0;

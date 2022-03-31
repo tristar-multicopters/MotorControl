@@ -23,6 +23,17 @@
 #include "user_interface.h"
 #include "motor_control_protocol.h"
 
+extern uint32_t RXTimoutCounter;
+extern bool WaitingforBytes;
+
+//#include "FreeRTOS.h"
+//#include "timers.h"
+
+// void vTimerRxTimeoutExpired(xTimerHandle pxTimer);
+// xTimerHandle RxTimeout; 
+
+// extern MCP_Handle_t * pMCP;
+
 /**
  * @addtogroup MCSDK
  * @{
@@ -86,6 +97,14 @@ typedef enum ERROR_CODE_e
 
 MPInfo_t MPInfo = {0, 0};
 
+
+/*void vTimerRxTimeoutExpired(xTimerHandle pxTimer)
+{
+		
+	MCP_SendTimeoutMessage(pMCP);
+	
+}*/
+
 /**
 * @brief  Initializes  MCP component parameters
 *
@@ -116,6 +135,16 @@ __weak void MCP_Init( MCP_Handle_t *pHandle,
   pHandle->fFcpReceive = fFcpReceive;
   pHandle->fFcpAbortReceive = fFcpAbortReceive;
 
+ /* RxTimeout = xTimerCreate(
+    "RxTimeout",                // name 
+    pdMS_TO_TICKS(30),          // period/time 
+    pdFALSE,                    // NO auto reload 
+    (void*)0,                   // timer ID 
+    vTimerRxTimeoutExpired);    // callback 
+    if (RxTimeout==NULL) {
+    for(;;);                    // failure! 
+  }*/
+	
   MCP_WaitNextFrame(pHandle);
 }
 
@@ -139,6 +168,9 @@ __weak void MCP_WaitNextFrame(MCP_Handle_t *pHandle)
   pHandle->fFcpAbortReceive(pHandle->pFCP);
   pHandle->BufferSize = FCP_MAX_PAYLOAD_SIZE;
   pHandle->fFcpReceive(pHandle->pFCP);
+		
+	RXTimoutCounter = 0;
+  WaitingforBytes = true;
 }
 
 /**
@@ -167,6 +199,10 @@ __weak void MCP_ReceivedFrame(MCP_Handle_t *pHandle, uint8_t Code, uint8_t *buff
   bool RequireAck = true;
   bool bNoError = false; // Default is error
   uint8_t bErrorCode;
+	
+			WaitingforBytes = false;
+  	
+
 
   /* Protocol version >3.3 motor selection inside Frame ID */
   uint8_t bMotorSelection = (Code & 0xE0) >> 5; /* Mask: 1110|0000 */

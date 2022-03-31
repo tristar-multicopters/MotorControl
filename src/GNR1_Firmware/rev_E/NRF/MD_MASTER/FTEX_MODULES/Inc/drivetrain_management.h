@@ -23,8 +23,6 @@
 #include "speed_pulse_read.h"
 #include "wheel_speed_sensor.h"
 
-#define DRVT_FAULT_TIMEOUT	25 // Number of times the VC state machine should be stayed on fault
-														 // before clear a Over current, start-up or Speed back fault
 typedef enum
 {
 	HUB_SINGLE,
@@ -46,24 +44,24 @@ typedef enum
 
 typedef struct
 {
-	DRVT_Type_h bDrivetrainType;	/* Vehicle drivetrain type (i.e. hub, middrive, ...) */
-	Motor_Mode_t bMode;						/* Single or dual motor. It is updated by user using motor selector switch */
-	uint8_t bMainMotor;						/* Main motor selection. It is updated by user using motor selector switch */
-	uint8_t bDefaultMainMotor;		/* Default main motor selection */
-	CTRL_Type_h bCtrlType;				/* Torque or speed control */
-	bool bUseMotorM1;							/* To set once, true if motor 1 is used */
-	bool bUseMotorM2;							/* To set once, true if motor 2 is used */
+	DRVT_Type_h bDrivetrainType;	  /* Vehicle drivetrain type (i.e. hub, middrive, ...) */
+	Motor_Mode_t bMode;						  /* Single or dual motor. It is updated by user using motor selector switch */
+	uint8_t bMainMotor;						  /* Main motor selection. It is updated by user using motor selector switch */
+	uint8_t bDefaultMainMotor;		  /* Default main motor selection */
+	CTRL_Type_h bCtrlType;				  /* Torque or speed control */
+	bool bUseMotorM1;							  /* To set once, true if motor 1 is used */
+	bool bUseMotorM2;							  /* To set once, true if motor 2 is used */
 	
-	int16_t aTorque[2];						/* Array of torque reference, first element is for M1, second is for M2 */
-	int16_t aSpeed[2];						/* Array of speed reference, first element is for M1, second is for M2 */
+	int16_t aTorque[2];						  /* Array of torque reference, first element is for M1, second is for M2 */
+	int16_t aSpeed[2];						  /* Array of speed reference, first element is for M1, second is for M2 */
 	
-	MDI_Handle_t * pMDI;					/* Pointer to MDI handle */
-	THRO_Handle_t * pThrottle;		/* Pointer to throttle handle */
-	PAS_Handle_t * pPAS;					/* Pointer to PAS handle */
-	BRK_Handle_t * pBrake;				/* Pointer to brake handle */
-	MS_Handle_t * pMS;						/* Pointer to motor selector handle */
-	PWREN_Handle_t * pPWREN;			/* Pointer to power enable pin handle */
-	WSS_Handle_t 	* pWSS;				  /* Pointer to Wheel speed handle */
+	MDI_Handle_t * pMDI;					  /* Pointer to MDI handle */
+	THRO_Handle_t * pThrottle;		  /* Pointer to throttle handle */
+	PAS_Handle_t * pPAS;					  /* Pointer to PAS handle */
+	BRK_Handle_t * pBrake;				  /* Pointer to brake handle */
+	MS_Handle_t * pMS;						  /* Pointer to motor selector handle */
+	PWREN_Handle_t * pPWREN;			  /* Pointer to power enable pin handle */
+	WSS_Handle_t 	* pWSS;				    /* Pointer to Wheel speed handle */
 
 	int16_t			 	pRefTorque;			/* Torque reference, first element is for M1, second is for M2 */
 	int16_t			 	pTorqueSelect;	/* Torque reference, first element is for M1, second is for M2 */
@@ -78,17 +76,19 @@ typedef struct
 	FLDBK_Handle_t sDCVoltageFoldback;				/* Foldback handle using DCbus voltage */
 	
 	uint16_t hSpeedRampTimeUp;			/* Speed ramp time in millisecond when controller is ramping UP */
-	uint16_t hSpeedRampTimeDown;			/* Speed ramp time in millisecond when controller is ramping DOWN */
-	uint16_t hTorqueRampTimeUp;		/* Torque ramp time in millisecond when controller is ramping UP */
+	uint16_t hSpeedRampTimeDown;		/* Speed ramp time in millisecond when controller is ramping DOWN */
+	uint16_t hTorqueRampTimeUp;		  /* Torque ramp time in millisecond when controller is ramping UP */
 	uint16_t hTorqueRampTimeDown;		/* Torque ramp time in millisecond when controller is ramping DOWN */
-	uint16_t hStartingThrottle;		/* Minimum torque to start drivetrain */
-	uint16_t hStoppingThrottle;		/* Minimum torque to stop drivetrain */
-	uint16_t hStoppingSpeed;			/* Minimum speed to stop drivetrain */
+	uint16_t hStartingThrottle;		  /* Minimum torque to start drivetrain */
+	uint16_t hStoppingThrottle;		  /* Minimum torque to stop drivetrain */
+	uint16_t hStoppingSpeed;			  /* Minimum speed to stop drivetrain */
 	
 	// Fault handlers //
-	uint16_t hOCcounter[2];   			  /* Over current counters. First element would	be for M1, second for M2 */
-	uint16_t hSUcounter[2];   			  /* Start-up counters. First element would	be for M1, second for M2     */
-	uint16_t hSFcounter[2];   			  /* Speed feedback current counters. First element would	be for M1, second for M2*/
+	uint16_t hOCcounter[2];   			/* Over current counters. First element would	be for M1, second for M2 */
+	uint16_t hSUcounter[2];   			/* Start-up counters. First element would	be for M1, second for M2     */
+	uint16_t hSFcounter[2];   			/* Speed feedback current counters. First element would	be for M1, second for M2*/
+	uint8_t fault_timeout; 					/* Number of times the VC state machine should be stayed on fault
+																		 before clear a Over current, start-up or Speed back fault */
 } DRVT_Handle_t;
 
 /**

@@ -36,7 +36,10 @@
 #include "parameters_conversion.h"
 
 /* USER CODE BEGIN Includes */
+uint32_t RXTimoutCounter = 0;
+bool WaitingforBytes = false;
 
+extern MCP_Handle_t * pMCP;
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private define */
@@ -103,9 +106,9 @@ int16_t hOpenLoopTheta = 0;
 #define OPEN_LOOP_SPEED 					20
 
 #define TUNING_KP_VS_SPEED_GAIN		0.2
-#define TUNING_KI_VS_SPEED_GAIN		0.02
+#define TUNING_KI_VS_SPEED_GAIN		0.01
 #define MAX_KP										300
-#define MAX_KI										30
+#define MAX_KI										15
 
 int16_t kpM1, kiM1;
 int16_t kpM2, kiM2;
@@ -428,6 +431,23 @@ __weak void MC_Scheduler(void)
 	int32_t wSpeedM2 = AO_GetElSpeed(&AngleObserverM2);
 	//int16_t kpM2, kiM2;
 
+	//Atempt to fix deadlock
+	//Rx Timeout timer
+	if(WaitingforBytes)
+	{
+	 RXTimoutCounter ++;	
+		
+	  if(RXTimoutCounter > 60)
+	  { 
+	    //Send NOACKError
+			MCP_SendTimeoutMessage(pMCP);
+	    //Reset Frame level
+			MCP_WaitNextFrame(pMCP);
+	  }	 
+	}
+	
+	
+	
 /* USER CODE END MC_Scheduler 0 */
 
   if (bMCBootCompleted == 1)
@@ -1195,7 +1215,7 @@ inline uint16_t FOC_CurrControllerM2(void)
   SpeednPosFdbk_Handle_t *speedHandle;
 
   speedHandle = STC_GetSpeedSensor(pSTC[M2]);
-  hElAngle = SPD_GetElAngle(speedHandle);
+ // hElAngle = SPD_GetElAngle(speedHandle);
 	hElAngle = AO_GetElAngle(&AngleObserverM2);
 	
 //	// OPEN LOOP THETA ////////////////////////
