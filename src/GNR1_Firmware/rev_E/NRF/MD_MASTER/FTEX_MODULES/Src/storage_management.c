@@ -181,5 +181,3 @@ bool STRG_isBusy( void )
 {
 	return STRG_handle_m.isBusy;
 }
-
-

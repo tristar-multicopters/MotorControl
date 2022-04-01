@@ -373,6 +373,7 @@ VCI_Handle_t VCInterfaceHandle =
 };
 
 eUART_protocol_t EUART_handle_t = EUART_BAFANG; // Has to been initialise by Evionics first
+
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,
