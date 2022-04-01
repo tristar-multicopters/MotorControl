@@ -206,7 +206,7 @@ extern "C" {
 	#define configUSE_MUTEXES 0
 #endif
 
-#ifndef configUSE_TIMERS
+#ifndef configUSE_TIMERS	
 	#define configUSE_TIMERS 0
 #endif
 

@@ -24,7 +24,7 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 
 /************* DEFINES ****************/
 
-#define RETURN_TO_STANDBY_LOOPTICKS 3		// Max number of ticks to stay in run while stop conditions are met
+#define RETURN_TO_STANDBY_LOOPTICKS 0		// Max number of ticks to stay in run while stop conditions are met
 #define START_LOOPTICKS							100 // Max number of ticks to stay in start state
 #define STOP_LOOPTICKS							100 // Max number of ticks to stay in stop state
 

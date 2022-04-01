@@ -48,6 +48,7 @@
 
 #include "sto_speed_pos_fdbk.h"
 #include "sto_pll_speed_pos_fdbk.h"
+#include "ao_spd_pos_fdbk.h"
 /* USER CODE BEGIN Additional include */
 
 /* USER CODE END Additional include */
@@ -74,6 +75,7 @@ extern DAC_UI_Handle_t DAC_UI_Params;
 extern UFCP_Handle_t pUSART;
 
 /* USER CODE BEGIN Additional extern */
+extern AO_Handle_t AngleObserverM1;
 
 /* USER CODE END Additional extern */
 #define NBR_OF_MOTORS 1

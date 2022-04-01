@@ -395,6 +395,26 @@ UFCP_Handle_t pUSART =
 
 /* USER CODE BEGIN Additional configuration */
 
+AO_Handle_t AngleObserverM1 =
+{
+  .pHallFdbk = &HALL_M1,
+	
+	.hKpGainDef = AO_KP,
+	.hKpDivisor = AO_KPDIV,
+	.hKpDivisorPOW2 = AO_KPDIV_LOG,
+	
+	.hKiGainDef = AO_KI,
+	.hKiDivisor = AO_KIDIV,
+	.hKiDivisorPOW2 = AO_KIDIV_LOG,
+	
+	.hKdGainDef = AO_KD,
+	.hKdDivisor = AO_KDDIV,
+	.hKdDivisorPOW2 = AO_KDDIV_LOG,
+	
+	.hSpeedFactorGain = AO_SPEEDFACTORGAIN,
+	.hSpeedFactorDiv = AO_SPEEDFACTORDIV,
+};
+
 /* USER CODE END Additional configuration */
 
 /******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/

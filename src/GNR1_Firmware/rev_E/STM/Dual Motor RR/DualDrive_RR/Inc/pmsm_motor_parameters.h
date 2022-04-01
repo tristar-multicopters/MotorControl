@@ -23,6 +23,14 @@
 #ifndef __PMSM_MOTOR_PARAMETERS_H
 #define __PMSM_MOTOR_PARAMETERS_H
 
+
+#define VEHICLE_ECELL 1
+#define VEHICLE_GEEBEECARGO 2
+
+#define VEHICLE_SELECTION VEHICLE_ECELL
+
+
+#if VEHICLE_SELECTION == VEHICLE_ECELL
 /**************************
  *** Motor 1 Parameters ***
  **************************/
@@ -32,7 +40,7 @@
 #define RS                     0.20 /* Stator resistance , ohm*/
 #define LS                     0.000500 /* Stator inductance, H
                                                  For I-PMSM it is equal to Lq */
-
+																								 
 /* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
    PID for speed regulation (i.e. reference torque).
    Transformation of real currents (A) into int16_t format must be done accordingly with
@@ -57,7 +65,7 @@
                                                  It can be either DEGREES_120 or
                                                  DEGREES_60 */
 
-#define HALL_PHASE_SHIFT        50 /*!< Define here in degrees
+#define HALL_PHASE_SHIFT        60 /*!< Define here in degrees
                                                  the electrical phase shift between
                                                  the low to high transition of
                                                  signal H1 and the maximum of
@@ -96,7 +104,7 @@
                                                  It can be either DEGREES_120 or
                                                  DEGREES_60 */
 
-#define HALL_PHASE_SHIFT2        50 /*!< Define here in degrees
+#define HALL_PHASE_SHIFT2        60 /*!< Define here in degrees
                                                  the electrical phase shift between
                                                  the low to high transition of
                                                  signal H1 and the maximum of
@@ -104,6 +112,12 @@
 /*** Quadrature encoder ***/
 #define M2_ENCODER_PPR             400  /*!< Number of pulses per
                                             revolution */
+																						
+#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+
+#else
+
+#endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/
 /******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/

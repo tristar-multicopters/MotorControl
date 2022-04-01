@@ -69,7 +69,7 @@ const ICS_Params_t ICS_ParamsM2 =
   .DAC_Channel_OCPB      = LL_DAC_CHANNEL_2,
 
 /* DAC settings --------------------------------------------------------------*/
-  .DAC_OCP_Threshold =  55000,
+  .DAC_OCP_Threshold =  60620,
 
 };
 
@@ -112,7 +112,7 @@ const ICS_Params_t ICS_ParamsM2 =
   .DAC_Channel_OCPB      = LL_DAC_CHANNEL_2,
 
 /* DAC settings --------------------------------------------------------------*/
-  .DAC_OCP_Threshold =  55000,
+  .DAC_OCP_Threshold =  60620,
 
 };
 

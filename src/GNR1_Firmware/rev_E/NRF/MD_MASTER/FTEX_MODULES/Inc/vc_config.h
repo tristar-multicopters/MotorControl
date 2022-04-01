@@ -22,7 +22,7 @@
 #define VEHICLE_DEFAULT			0
 #define VEHICLE_ECELL 			1
 #define VEHICLE_EBGO 				2
-#define VEHICLE_GRIZZLY    3
+#define VEHICLE_GRIZZLY     3
 #define VEHICLE_GEEBEECARGO 4
 
 /*
@@ -31,7 +31,7 @@ VEHICLE SELECTION
 Change this define based on vehicle application
 ------------------------------------
 */
-#define VEHICLE_SELECTION 	VEHICLE_GRIZZLY//VEHICLE_GEEBEECARGO
+#define VEHICLE_SELECTION 	VEHICLE_ECELL //VEHICLE_GEEBEECARGO    
 /*------------------------------------*/
 
 

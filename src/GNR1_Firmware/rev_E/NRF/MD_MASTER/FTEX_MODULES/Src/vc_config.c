@@ -281,7 +281,7 @@ PWREN_Handle_t PowerEnableHandle = {
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
-	.bUsePowerLock = false,//true,
+	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bUsePowerLock = false,
 	#else
@@ -372,7 +372,8 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-eUART_protocol_t EUART_handle_t = EUART_EVIONICS; // Has to been initialise by Evionics first
+eUART_protocol_t EUART_handle_t = EUART_BAFANG; // Has to been initialise by Evionics first
+
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,

@@ -11,6 +11,7 @@
 
 
 #include "md_comm.h"
+#define MDCOMM_DEBUG_FLAGS   //Used to enable or disable md_comm debugging flags   
 
 static MD_Comm_Handle_t * m_pMDcomm;
 static UFCP_Handle_t * m_pMDcomm_ufcp;
@@ -76,8 +77,11 @@ static void md_frame_event_handler(ufcp_evt_t * p_ufcp_event)
 			
 			case UFCP_CRC_ERROR:
 					m_pMDcomm->hStatus &= ~MDCOMM_TRANSFER_ONGOING;
-					m_pMDcomm->hError |= MDCOMM_BAD_CRC;
-					break;
+					
+			 #ifdef MDCOMM_DEBUG_FLAGS
+			    m_pMDcomm->hError |= MDCOMM_BAD_CRC;
+				#endif	
+			    break;
 			
 			default:
 					break;
@@ -129,8 +133,9 @@ static void md_frame_received_protocol(FCP_Frame_t * tx_frame, FCP_Frame_t * rx_
 					  break;
 						
 				case MC_PROTOCOL_CODE_GET_REG:
-						toSet = rx_frame->Buffer[0] | (rx_frame->Buffer[1] << 8);
-						switch (tx_frame->Buffer[0])
+						toSet = rx_frame->Buffer[0] + (rx_frame->Buffer[1] << 8);
+						
+            switch (tx_frame->Buffer[0])
 						{							
 							case MC_PROTOCOL_REG_BUS_VOLTAGE:
 								m_pMDcomm->pMD[bMotorSelection]->MDMeas.bus_voltage_mes = toSet;
@@ -180,10 +185,14 @@ static void md_frame_received_protocol(FCP_Frame_t * tx_frame, FCP_Frame_t * rx_
 				}
 				break;
 		case ACK_ERROR:
+			#ifdef MDCOMM_DEBUG_FLAGS
 				m_pMDcomm->hError |= MDCOMM_ACK_ERROR;
+		  #endif
 				break;
 		default:
+			#ifdef MDCOMM_DEBUG_FLAGS  
 				m_pMDcomm->hError |= MDCOMM_UNEXPECTED;
+		  #endif
 				break;
 	}
 }
