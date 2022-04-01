@@ -103,7 +103,7 @@
 /* USER CODE END PID_SPEED_INTEGRAL_INIT_DIV */
 
 #define SPD_DIFFERENTIAL_TERM_ENABLING DISABLE
-#define IQMAX                          17000
+#define IQMAX                          32000
 
 /* Default settings */
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< STC_TORQUE_MODE or
@@ -259,7 +259,7 @@
 /* USER CODE END PID_SPEED_INTEGRAL_INIT_DIV2 */
 
 #define SPD_DIFFERENTIAL_TERM_ENABLING2 DISABLE
-#define IQMAX2                          17000
+#define IQMAX2                          32000
 
 /* Default settings */
 #define DEFAULT_CONTROL_MODE2           STC_TORQUE_MODE /*!< STC_TORQUE_MODE or
