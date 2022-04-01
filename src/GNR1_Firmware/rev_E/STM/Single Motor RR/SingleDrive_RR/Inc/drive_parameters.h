@@ -139,7 +139,7 @@
 /* USER CODE END PID_SPEED_INTEGRAL_INIT_DIV */
 
 #define SPD_DIFFERENTIAL_TERM_ENABLING DISABLE
-#define IQMAX                          17000
+#define IQMAX                          32000
 
 /* Default settings */
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< STC_TORQUE_MODE or
@@ -152,9 +152,9 @@
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
 #define OV_VOLTAGE_PROT_ENABLING        ENABLE
 #define UV_VOLTAGE_PROT_ENABLING        ENABLE
-#define OV_VOLTAGE_THRESHOLD_V          50//75 /*!< Over-voltage
+#define OV_VOLTAGE_THRESHOLD_V          75 /*!< Over-voltage
                                                //          threshold */
-#define UD_VOLTAGE_THRESHOLD_V          40//24 /*!< Under-voltage
+#define UD_VOLTAGE_THRESHOLD_V          24 /*!< Under-voltage
                                                //           threshold */
 #if 0
 #define ON_OVER_VOLTAGE                 TURN_OFF_PWM /*!< TURN_OFF_PWM,
