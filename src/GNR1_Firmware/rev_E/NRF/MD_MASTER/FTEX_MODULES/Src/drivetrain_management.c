@@ -767,7 +767,7 @@ int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
 			break;
 
 		case PAS_LEVEL_1:
-			pHandle->pRefTorque = pHandle->hMaxTorque / pHandle->hMaxLevel;
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_1;
 			break;
 
 		case PAS_LEVEL_2:
@@ -782,6 +782,22 @@ int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
 		
 		case PAS_LEVEL_5:
 			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_5;
+			break;
+		
+		case PAS_LEVEL_6:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_6;
+			break;
+				
+		case PAS_LEVEL_7:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_7;
+			break;
+						
+		case PAS_LEVEL_8:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_8;
+			break;
+								
+		case PAS_LEVEL_9:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_9;
 			break;
 	}
 

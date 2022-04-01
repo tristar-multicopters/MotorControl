@@ -37,6 +37,10 @@ typedef enum
 	PAS_LEVEL_3,
 	PAS_LEVEL_4,
 	PAS_LEVEL_5,
+	PAS_LEVEL_6,
+	PAS_LEVEL_7,
+	PAS_LEVEL_8,
+	PAS_LEVEL_9,
 } PAS_sLevel;
 
 typedef struct {
