@@ -295,7 +295,6 @@ void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)//, SP
 	{
 			sin_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pSinSpeed_Pulse_pin);
 			cos_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pCosSpeed_Pulse_pin);
-		
 		/* Check the First Wheel Lap count*/
 		if (sin_flag & p_SPR_Handle->sParam.sFirst_Wheel_Lap)
 		{

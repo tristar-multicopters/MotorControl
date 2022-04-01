@@ -9,7 +9,6 @@
 */
 
 #include "drivetrain_management.h"
-
 /* Functions ---------------------------------------------------- */
 
 
@@ -67,11 +66,10 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 				break;
 		}
 }
+			THRO_CalcAvThrottleValue(pHandle->pThrottle);
 	if (pHandle->bCtrlType == TORQUE_CTRL)
 	{
-#ifdef VEHICLE_ECELL
 		PAS_GetTorque(pHandle->pPAS);
-#endif
 		hTorqueRef = DRVT_ControlSelect(pHandle);
 		if ( bIsBrakePressed )
 		{
@@ -474,10 +472,10 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 		bCheckStop4 = true;
 	}
 	
-	if ((!pHandle->bUsePAS) && ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed))
+	if ((!pHandle->bUsePAS) && ((hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed)|( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM2) <= pHandle->hStoppingSpeed)))
 	{
 		bCheckStop5 = true;
-	}
+	}                                                                                                                                                                                                                                                                                                                                                      
 	
 	return (bCheckStop1 & bCheckStop2) | bCheckStop3 | bCheckStop4 | bCheckStop5;
 }
@@ -662,13 +660,15 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	* @param  PAS level
 	* @retval None
 	*/
-PAS_sLevel DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level)
+void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel Level)
 {
-	pHandle->pPAS->pLevel = PAS_LEVEL_1;
-	level = pHandle->pPAS->pLevel;
-	return level;
+	 pHandle->pPAS->pLevel = Level;
 }
 
+PAS_sLevel DRVT_GetPASLevel (DRVT_Handle_t * pHandle)
+{
+	return pHandle->pPAS->pLevel;
+}
 /**
 	* @brief  Get main motor reference torque
 	* @param  Drivetrain handle
@@ -749,40 +749,39 @@ bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle)
 	return pHandle->bUseMotorM2;
 }
 
-/* PAS Basic Implementation ----------------------------------------------------- */ 
 /**
-	* @brief  Set Pedal Assist Level based on the screen information
+	* @brief  Set Pedal Assist torque based on screen informations
 	* @param  Drivetrain handle
 	* @retval pRefTorque in int16
 	*/
-int16_t DRVT_PasSetLevel(DRVT_Handle_t * pHandle)
+int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
 {
 	
-	PAS_sLevel Set_Level;
-	Set_Level = DRVT_SetPASLevel(pHandle, Set_Level);
+	PAS_sLevel Got_Level;
+	Got_Level = DRVT_GetPASLevel(pHandle);
 	
-	switch(Set_Level)
+	switch(Got_Level)
 	{
 		case PAS_LEVEL_0:
-			pHandle->pRefTorque = No_Torque_Level;
+			pHandle->pRefTorque = 0;
 			break;
 
 		case PAS_LEVEL_1:
-			pHandle->pRefTorque = Torque_Level1;
+			pHandle->pRefTorque = pHandle->hMaxTorque / pHandle->hMaxLevel;
 			break;
 
 		case PAS_LEVEL_2:
-			pHandle->pRefTorque = Torque_Level2;
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_2;
 			break;
 		case PAS_LEVEL_3:
-			pHandle->pRefTorque = Torque_Level3;
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_3;
 			break;
 		case PAS_LEVEL_4:
-			pHandle->pRefTorque = Torque_Level4;
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_4;
 			break;
 		
 		case PAS_LEVEL_5:
-			pHandle->pRefTorque = Torque_Level4;
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_5;
 			break;
 	}
 
@@ -803,28 +802,27 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 	/* PAS and Throttle mangement */
 	if (PAS_Pres)
 	{
-		/* PAS set torque level */
-		pHandle->pTorqueSelect = DRVT_PasSetLevel(pHandle);
+		/* PAS Ramp */
+		pHandle->pTorqueSelect= DRVT_PASSetRamp(pHandle);
 	}
 	else
 	{	
-		/* Throttle calculate Value and covert to Torque */
-		THRO_CalcAvThrottleValue(pHandle->pThrottle);
+		/* Throttle Value convert to Torque */
 		pHandle->pTorqueSelect = THRO_ThrottleToTorque(pHandle->pThrottle);
 	}
 	return pHandle->pTorqueSelect;
 }
 
 /**
-	* @brief  Set Pedal Assist Level based on the screen information
+	* @brief  Return the PAs Presence Flag
 	* @param  Drivetrain handle
-	* @retval pHandle->bUsePAS in Boolean
+	* @retval pHandle->bUsePAS in boolean
 	*/
 bool DRVT_PASpresence (DRVT_Handle_t * pHandle) 
 {
 	int32_t	TempSpeed;
-	TempSpeed = PAS_GetSpeed(pHandle->pPAS);
-	
+	PAS_CalculateSpeed(pHandle->pPAS);
+	TempSpeed = PAS_GetSpeedValue(pHandle->pPAS);
 	if (TempSpeed > 0)
 		pHandle->bUsePAS = true;
 	else 
@@ -832,3 +830,26 @@ bool DRVT_PASpresence (DRVT_Handle_t * pHandle)
 	
 	return pHandle->bUsePAS;
 } 
+
+/**
+	* @brief  PAS torque Acceleration Ramp 
+	* @param  Drivetrain handle
+	* @retval int16_t 
+	*/
+int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle) 
+{
+	int16_t pPASTorque, pDiv, pRes, pAvtorque;
+	/* Call PAS set torque function */
+	pPASTorque = DRVT_PasSetTorque(pHandle);
+	/* Divde the PAS torque by pRamcoeff */
+	pDiv = pPASTorque / pHandle->pPAS->pRampCoeff;
+	/* Divde the pas torque by pRamcoeff */
+	pRes = pDiv * pHandle->pPAS->pRampCoeff;
+	
+	if (pRes < pAvtorque )
+			pAvtorque+=pDiv;
+	else
+			pAvtorque = pPASTorque;
+	return pAvtorque;
+} 
+

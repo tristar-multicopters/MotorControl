@@ -273,6 +273,7 @@ MDI_Handle_t MDInterfaceHandle =
 PAS_Handle_t PedalAssistHandle = {
 	.pTorque = &TorqueSensor,
 	.pSpulse = &SpeedPulse,
+	.pRampCoeff = 100,
 };
 
 PWREN_Handle_t PowerEnableHandle = {
@@ -332,6 +333,8 @@ DRVT_Handle_t DrivetrainHandle =
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,
+	.hMaxTorque = -10000,
+	.hMaxLevel	=	5,
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = true,
@@ -374,7 +377,7 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-eUART_protocol_t EUART_handle_t = EUART_DISABLE; // Has to been initialise by Evionics first
+eUART_protocol_t EUART_handle_t = EUART_APT; // Has to been initialise by Evionics first
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,

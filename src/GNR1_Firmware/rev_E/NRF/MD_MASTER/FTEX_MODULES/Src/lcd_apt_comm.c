@@ -145,7 +145,7 @@ void LCD_APT_frame_Process(void)
 		//Reading the Pass
 		PassLvl = (m_APT_handle.rx_frame.Buffer[PASS] & 0x0F); // Only the 4 LSB contain the pass level
 		
-     if(PassLvl < 0x6) //We currently only support 5 levels of pass
+     if(PassLvl < 0x10) //We currently only support 5 levels of pass
 		 {			
 			 switch(PassLvl)
 			  {
@@ -155,16 +155,16 @@ void LCD_APT_frame_Process(void)
 				 case 1:
 					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,1); //Set pass to 1
           break;	
-				 case 2:
+				 case 3:
 					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,2); //Set pass to 2
           break;	
-				 case 3:
+				 case 5:
 					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,3); //Set pass to 3
           break;	
-				 case 4:
+				 case 7:
 					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,4); //Set pass to 4
           break;								
-				 case 5:
+				 case 9:
 					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,5); //Set pass to 5
           break;				
 		  	}

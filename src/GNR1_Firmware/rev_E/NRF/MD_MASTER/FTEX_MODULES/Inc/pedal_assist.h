@@ -39,15 +39,6 @@ typedef enum
 	PAS_LEVEL_5,
 } PAS_sLevel;
 
-
-#define No_Torque_Level	0
-#define Torque_Level1		-1000
-#define Torque_Level2		-10000
-#define Torque_Level3		-15000
-#define Torque_Level4		-20000
-#define Torque_Level5		-25000
-
-
 typedef struct {
 	
 	TS_Handle_t * pTorque;		/* Pointer to torque handle */
@@ -57,18 +48,18 @@ typedef struct {
 	PAS_sLevel	 	pLevel;					/* Pointer to PAS level enumaration */
 	
 	uint8_t bMaxLevel;
+	uint8_t pRampCoeff;
 	
 } PAS_Handle_t;
 
 
 void PAS_Init(PAS_Handle_t* pHandle);
 
-int32_t PAS_GetSpeed(PAS_Handle_t* pHandle);
+void PAS_CalculateSpeed(PAS_Handle_t* pHandle);
 
 int16_t PAS_GetDirection(PAS_Handle_t* pHandle);
-
 int16_t PAS_GetTorque(PAS_Handle_t* pHandle);
-
+int32_t PAS_GetSpeedValue(PAS_Handle_t* pHandle);
 
 
 #endif

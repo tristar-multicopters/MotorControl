@@ -83,6 +83,9 @@ typedef struct
 	uint16_t hStoppingThrottle;		  /* Minimum torque to stop drivetrain */
 	uint16_t hStoppingSpeed;			  /* Minimum speed to stop drivetrain */
 	
+	int16_t hMaxTorque;
+	int16_t hMaxLevel;
+	
 	// Fault handlers //
 	uint16_t hOCcounter[2];   			/* Over current counters. First element would	be for M1, second for M2 */
 	uint16_t hSUcounter[2];   			/* Start-up counters. First element would	be for M1, second for M2     */
@@ -195,7 +198,8 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle);
 	* @param  PAS level
 	* @retval None
 	*/
-PAS_sLevel DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel level);
+void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel Level);
+PAS_sLevel DRVT_GetPASLevel (DRVT_Handle_t * pHandle);
 /**
 	* @brief  Get main motor reference torque
 	* @param  Drivetrain handle
@@ -257,7 +261,7 @@ bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle);
 	* @param  Drivetrain handle
 	* @retval pRefTorque in int16
 	*/
-int16_t DRVT_PasSetLevel(DRVT_Handle_t * pHandle);
+int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle);
 /**
 	* @brief  Select Control assistance based on Throttle or PAS
 	* @param  Drivetrain handle
@@ -265,11 +269,17 @@ int16_t DRVT_PasSetLevel(DRVT_Handle_t * pHandle);
 	*/
 int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle);
 /**
-	* @brief  Set Pedal Assist Level based on the screen information
+	* @brief  PAS presence information
 	* @param  Drivetrain handle
-	* @retval pRefTorque in int16
+	* @retval pHandle->bUsePAS in Boolean
 	*/
 bool DRVT_PASpresence (DRVT_Handle_t * pHandle);
+/**
+	* @brief  PAS torque Acceleration Ramp 
+	* @param  Drivetrain handle
+	* @retval int16_t 
+	*/
+int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle);
 
 #endif /*__DRIVETRAIN_MANAGEMENT_H*/
 
