@@ -11,7 +11,6 @@
 
 #define APTMAXCURRENT 60
 
-
 // Private handler
 APT_Handle_t m_APT_handle;
 extern osThreadId_t TSK_eUART0_handle; // Task Id for external uart (UART0 instance)
@@ -126,10 +125,11 @@ void LCD_APT_frame_Process(void)
 	APT_frame_t replyFrame = {0};
 	int32_t  toSend    = 0;
 	uint32_t Check     = 0;
+	uint32_t GearRatio = 0;
 	uint16_t Merge     = 0;
 	uint8_t  PassLvl   = 0;
 	uint8_t  WheelSize = 0;
-	uint8_t  Sensor    = 0;
+
 	
 	//Verification of the checksum
 	for(int i = 0; i < 6; i += 2) //Checksum is the sum of double bytes into a 16 bits
@@ -219,19 +219,39 @@ void LCD_APT_frame_Process(void)
 
 		
 		//If there is a motor at the rear use it for its speed
-	  if(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1) > 0)
+	  if(VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_ENABLE))
 		{
 		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1);		
 			
+			GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_GEARRATIO); //gear ratio (motor compared to wheel) is split. 
+			                                                                           //msb 16 bits is the numerator, 
+			                                                                           //lsb 16 bits is denominator
+			                                                                           //ex: 3/2 ratio would be 0x00030002 
+			                                                                           //default should be 0x00010001 
 			
+			if(GearRatio < 0x00010001 || GearRatio > 0x00F000F0) //possible values as gear ratio
+			{
+			   GearRatio = 0x00010001;
+			}				
+			
+			toSend = ((GearRatio & 0xFFFF0000) >> 16) * toSend / (GearRatio & 0x0000FFFF);
 		}
 		else //If we are using the other motor use it as the speed reference
 		{
 		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M2); 
-		}	
-    		
-		//TODO add consideration for the gear ratio between mototr and wheel, for now will assume 1
-		
+			
+						
+			GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M2_GEARRATIO); //gear ratio (motor compared to wheel) is split.
+			                                                                           //msb 16 bits is the numerator, 
+			                                                                           //lsb 16 bits is denominator
+			                                                                           //ex: 3/2 ratio would be 0x00030002 
+			                                                                           //default should be 0x00010001 
+			
+			if(GearRatio < 0x00010001 || GearRatio > 0x00F000F0) //possible values as gear ratio
+			{
+			   GearRatio = 0x00010001;
+			}	
+		}			
 		
 		toSend = toSend * 500;       //Converion from RPM to period in ms 
 		                             //
