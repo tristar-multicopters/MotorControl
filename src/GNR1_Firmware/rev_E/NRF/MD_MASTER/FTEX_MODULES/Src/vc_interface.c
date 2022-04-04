@@ -25,6 +25,12 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		case REG_MAINMOTOR:
 			value = pHandle->pDrivetrain->bMainMotor;
 			break;
+		case REG_MOTORSELECT_ENABLE:
+			value = pHandle->pDrivetrain->pMS->bMSEnable;
+ 			break;
+		case REG_POWERLOCK_ENABLE:
+			value = pHandle->pDrivetrain->pPWREN->bUsePowerLock;
+			break;
 		case REG_FLDB_START_TEMP:
 			value = pHandle->pDrivetrain->sHeatsinkTempFoldback1.hStartValue; // To verify
 			break;
@@ -35,7 +41,7 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 			break;
 		case REG_SPEED_LIMIT_RAMP:
 			break;
-		case REG_SPEED_CTRL_MODE:
+		case REG_CTRL_MODE:
 			value = pHandle->pDrivetrain->bCtrlType;
 			break;
 		case REG_TORQUESENSOR_FAULTTIME:
@@ -70,6 +76,60 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		case REG_THROTTLE_OFFSET:
 			value = pHandle->pDrivetrain->pThrottle->hParam.hOffsetThrottle;
 			break;
+		case REG_TORQE_RAMP_UP:
+			value = pHandle->pDrivetrain->hTorqueRampTimeUp;
+			break;
+		case REG_TORQE_RAMP_DOWN:
+			value = pHandle->pDrivetrain->hTorqueRampTimeDown;
+			break;
+		case REG_START_THROTTLE:
+			value = pHandle->pDrivetrain->hStartingThrottle;
+			break;
+		case REG_STOP_THROTTLE:
+			value = pHandle->pDrivetrain->hStoppingThrottle;
+			break;
+		case REG_THROTTLE_BW1:
+			value = pHandle->pDrivetrain->pThrottle->hParam.hLowPassFilterBW1;
+			break;
+		case REG_THROTTLE_BW2:
+			value = pHandle->pDrivetrain->pThrottle->hParam.hLowPassFilterBW2;
+			break;
+		case REG_THROTTLE_DEADBAND_THR:
+			break;
+		case REG_THROTTLE_FAULTRANGE:
+			break;
+		case REG_TORQUE_SLOPE:
+			value = pHandle->pDrivetrain->pThrottle->hParam.bSlopeTorque;
+			break;
+		case REG_TORQUE_DIVISOR:
+			value = pHandle->pDrivetrain->pThrottle->hParam.bDivisorTorque;
+			break;
+		case REG_TORQUE_OFFSET:
+			value = pHandle->pDrivetrain->pThrottle->hParam.hOffsetTorque;
+			break;
+		case REG_TORQUESENSOR_HIGH_THR:
+			break;
+		case REG_TORQUESENSOR_LOW_THR:
+			break;
+		case REG_STOP_SPEED:
+			value = pHandle->pDrivetrain->hStoppingSpeed;
+			break;
+		case REG_SPEED_OFFSET:
+			value = pHandle->pDrivetrain->pThrottle->hParam.hOffsetSpeed;
+			break;
+		case REG_SPEED_SLOPE:
+			value = pHandle->pDrivetrain->pThrottle->hParam.bSlopeSpeed;
+			break;
+		case REG_SPEED_DIVISOR:
+			value = pHandle->pDrivetrain->pThrottle->hParam.bDivisorSpeed;
+			break;
+		case REG_SPEED_RAMP_UP:
+			value = pHandle->pDrivetrain->hSpeedRampTimeUp;
+			break;
+		case REG_SPEED_RAMP_DOWN:
+			value = pHandle->pDrivetrain->hSpeedRampTimeDown;
+			break;
+		
 		case REG_PAS_ENABLE:
 //			value = pHandle->pDrivetrain->pPAS // To complete...			
 			break;
@@ -93,14 +153,8 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		case REG_PAS_MAXLEVEL:
 			value = pHandle->pDrivetrain->pPAS->bMaxLevel;
 			break;
-		case REG_TORQUESENSOR_HIGH_THR:
-			break;
-		case REG_TORQUESENSOR_LOW_THR:
-			break;
-		case REG_THROTTLE_DEADBAND_THR:
-			break;
-		case REG_THROTTLE_FAULTRANGE:
-			break;
+
+		
 	// Battery parameters (512-767)//
 		case REG_FAST_OVERVOLT_THR:
 			break;
@@ -112,7 +166,11 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 			break;
 		case REG_SLOW_UNDERVOLT_THR:
 			break;
+		
 	// Motor parameters (768-1023)//
+		case REG_M1_ENABLE:
+			value = pHandle->pDrivetrain->bUseMotorM1;
+			break;
 		case REG_M1_TORQUE_KP:
 //			value = pHandle->pDrivetrain->pMDI->pMDC->pMD[M1]->
 			break;
@@ -304,6 +362,9 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 			break;
 		case REG_M1_FWRATIO_MAX:
 //			value = pHandle->pDrivetrain->
+			break;
+		case REG_M2_ENABLE:
+			value = pHandle->pDrivetrain->bUseMotorM2;
 			break;
 		case REG_M2_TORQUE_KP:
 //			value = pHandle->pDrivetrain->pMDI->pMDC->pMD[M2]
@@ -506,7 +567,8 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		case REG_M2_FWRATIO_MAX:
 //			value = pHandle->pDrivetrain->pMDI->pMDC->pMD[M2]
 			break;
-	// Communication parameters (1024-1279)//
+		
+// Communication parameters (1024-1279)//
 		case REG_UART_BAUDRATE:
 //			value = pHandle->pDrivetrain->
 			break;
@@ -563,6 +625,12 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		case REG_MAINMOTOR:
 			pHandle->pDrivetrain->bMainMotor = value;
 			break;
+		case REG_MOTORSELECT_ENABLE:
+			pHandle->pDrivetrain->pMS->bMSEnable = value;
+			break;
+		case REG_POWERLOCK_ENABLE:
+			pHandle->pDrivetrain->pPWREN->bUsePowerLock = value;
+			break;
 		case REG_FLDB_START_TEMP:
 			pHandle->pDrivetrain->sHeatsinkTempFoldback1.hStartValue = value; // To verify
 			break;
@@ -573,7 +641,7 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 			break;
 		case REG_SPEED_LIMIT_RAMP:
 			break;
-		case REG_SPEED_CTRL_MODE:
+		case REG_CTRL_MODE:
 			pHandle->pDrivetrain->bCtrlType = (CTRL_Type_h)value;
 			break;
 		case REG_TORQUESENSOR_FAULTTIME:
@@ -607,6 +675,22 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		case REG_THROTTLE_OFFSET:
 			pHandle->pDrivetrain->pThrottle->hParam.hOffsetThrottle = value;
 			break;
+		case REG_START_THROTTLE:
+			pHandle->pDrivetrain->hStartingThrottle = value;
+			break;
+		case REG_STOP_THROTTLE:
+			pHandle->pDrivetrain->hStoppingThrottle = value;
+			break;
+		case REG_THROTTLE_BW1:
+			pHandle->pDrivetrain->pThrottle->hParam.hLowPassFilterBW1 = value;
+			break;
+		case REG_THROTTLE_BW2:
+			pHandle->pDrivetrain->pThrottle->hParam.hLowPassFilterBW2 = value;
+			break;
+		case REG_THROTTLE_DEADBAND_THR:
+			break;
+		case REG_THROTTLE_FAULTRANGE:
+			break;
 		case REG_PAS_ENABLE:
 //		pHandle->pDrivetrain->pPAS // To complete...			
 			break;
@@ -628,16 +712,46 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		case REG_PAS_TORQUESENSOR_OFFSET:
 			break;
 		case REG_PAS_MAXLEVEL:
-			value = pHandle->pDrivetrain->pPAS->bMaxLevel;
+			pHandle->pDrivetrain->pPAS->bMaxLevel = value;
+			break;
+		case REG_TORQUE_SLOPE:
+			pHandle->pDrivetrain->pThrottle->hParam.bSlopeTorque = value;
+			break;
+		case REG_TORQUE_DIVISOR:
+			pHandle->pDrivetrain->pThrottle->hParam.bDivisorTorque = value;
+			break;
+		case REG_TORQUE_OFFSET:
+			pHandle->pDrivetrain->pThrottle->hParam.hOffsetTorque = value;
+			break;
+		case REG_TORQE_RAMP_DOWN:
+			pHandle->pDrivetrain->hTorqueRampTimeDown = value;
+			break;
+		case REG_TORQE_RAMP_UP:
+			value = pHandle->pDrivetrain->hTorqueRampTimeUp;
 			break;
 		case REG_TORQUESENSOR_HIGH_THR:
 			break;
 		case REG_TORQUESENSOR_LOW_THR:
 			break;
-		case REG_THROTTLE_DEADBAND_THR:
+		case REG_STOP_SPEED:
+			pHandle->pDrivetrain->hStoppingSpeed = value;
 			break;
-		case REG_THROTTLE_FAULTRANGE:
+		case REG_SPEED_OFFSET:
+			pHandle->pDrivetrain->pThrottle->hParam.hOffsetSpeed = value;
 			break;
+		case REG_SPEED_SLOPE:
+			pHandle->pDrivetrain->pThrottle->hParam.bSlopeSpeed = value;
+			break;
+		case REG_SPEED_DIVISOR:
+			pHandle->pDrivetrain->pThrottle->hParam.bDivisorSpeed = value;
+			break;
+		case REG_SPEED_RAMP_UP:
+			pHandle->pDrivetrain->hSpeedRampTimeUp = value;
+			break;
+		case REG_SPEED_RAMP_DOWN:
+			pHandle->pDrivetrain->hSpeedRampTimeDown = value;
+			break;
+
 	// Battery parameters (512-767)//
 		case REG_FAST_OVERVOLT_THR:
 			break;
@@ -650,6 +764,9 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		case REG_SLOW_UNDERVOLT_THR:
 			break;
 	// Motor parameters (768-1023)//
+		case REG_M1_ENABLE:
+			pHandle->pDrivetrain->bUseMotorM1 = value;
+			break;
 		case REG_M1_TORQUE_KP:
 //		pHandle->pDrivetrain->pMDI->pMDC->pMD[M1]->
 			break;
@@ -735,7 +852,7 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 //			pHandle->pDrivetrain->pMDI->pMDC->pMD[M1]->
 			break;
 		case REG_M1_MOTOR_TEMP_RAW:
-			value = pHandle->pDrivetrain->pMDI->pMDC->pMD[M1]->MDMeas.temp_motor; // To verify
+			pHandle->pDrivetrain->pMDI->pMDC->pMD[M1]->MDMeas.temp_motor = value; // To verify
 			break;
 		case REG_M1_AUTOTUNE_HALL_OFFSET:
 //			pHandle->pDrivetrain->pMDI->pMDC->pMD[M1]->
@@ -841,6 +958,9 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 			break;
 		case REG_M1_FWRATIO_MAX:
 //		pHandle->pDrivetrain->
+			break;
+		case REG_M2_ENABLE:
+			value = pHandle->pDrivetrain->bUseMotorM2;
 			break;
 		case REG_M2_TORQUE_KP:
 //		pHandle->pDrivetrain->pMDI->pMDC->pMD[M2]
@@ -1074,4 +1194,3 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 			break;
 		}
 }
-

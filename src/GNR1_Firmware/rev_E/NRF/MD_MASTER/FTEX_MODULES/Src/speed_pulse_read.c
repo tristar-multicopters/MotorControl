@@ -246,7 +246,6 @@ uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* pHandle)
 
 uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 {
-	
 	p_SPR_Handle = sHandle;
 	// Make sure the capture event occured before checking the capture register
 	if(NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] != 0)
@@ -293,20 +292,21 @@ void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)//, SP
 {
 	if(pin == p_SPR_Handle->pSinSpeed_Pulse_pin)
 	{
-			sin_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pSinSpeed_Pulse_pin);
-			cos_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pCosSpeed_Pulse_pin);
-		/* Check the First Wheel Lap count*/
-		if (sin_flag & p_SPR_Handle->sParam.sFirst_Wheel_Lap)
-		{
-			p_SPR_Handle->sParam.sWheel_Lap_Count ++;
-		}
-		/* Check direction */
+       sin_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pSinSpeed_Pulse_pin);
+       cos_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pCosSpeed_Pulse_pin);
+
 		if (sin_flag && (!cos_flag))
+        {
 			p_SPR_Handle->Direction_result = Forward;
+        }
 		else if (cos_flag && (!sin_flag))
+        {
 			p_SPR_Handle->Direction_result = Error_Direction;
+        }
 		else 
-			p_SPR_Handle->Direction_result = Reverse ;
+        {
+			p_SPR_Handle->Direction_result = Reverse;
+        }
 	}
 }
 

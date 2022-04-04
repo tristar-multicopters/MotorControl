@@ -45,7 +45,6 @@ void VC_BootUp(void)
 {	
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
 
-	
 	/* Initialize clock */
 	CLK_Init();
 	
@@ -70,8 +69,6 @@ void VC_BootUp(void)
 	RCM_Init(&RegularConvertionManager);
 	
 	STRG_Init();
-	//EVCT_init(&VCInterfaceHandle);
-
 }
 
 __NO_RETURN void TSK_FastLoopMD (void * pvParameter)

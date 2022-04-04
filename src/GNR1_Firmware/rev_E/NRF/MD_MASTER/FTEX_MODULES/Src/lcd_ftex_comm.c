@@ -36,7 +36,7 @@ static void LCD_FTEX_event_handler(eUART_evt_t * p_lcd_event)
  * 
  * @param[in] rx_dara: latest byte that has been received 
  */
-void * LCD_FTEX_RX_IRQ_Handler(unsigned short rx_data)
+void LCD_FTEX_RX_IRQ_Handler(unsigned short rx_data)
 {
 
 	 uint8_t ByteCount = m_FTEX_handle.rx_frame.ByteCnt;     
@@ -139,7 +139,6 @@ void LCD_FTEX_TX_IRQ_Handler(void)
 void LCD_FTEX_frame_Process(void)
 {
 	FTEX_frame_t replyFrame = {0};
-	uint8_t  AssistLvl = 0;
 	uint32_t toSend;
 	uint16_t CheckSum = 0;
 	

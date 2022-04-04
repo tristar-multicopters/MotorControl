@@ -37,23 +37,23 @@ static void LCD_APT_event_handler(eUART_evt_t * p_lcd_event)
  * 
  * @param[in] rx_frame: Frame that needs to be decoded. 
  */
-void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
+void LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 {		
-	 uint8_t ByteCount = m_APT_handle.rx_frame.ByteCnt;     
-   uint8_t ByteReceived = rx_data;
-				 
-	 switch(ByteCount)					 
-	 {
-		 case 0:
-				 if(ByteReceived == APT_START) //Read or write cmd
-				 {
-					 m_APT_handle.rx_frame.Buffer[ByteCount] = ByteReceived;
-					 m_APT_handle.rx_frame.ByteCnt ++;
-					 
-				 }
-				 else //If not, its a bad cmd
-				 {
-					 m_APT_handle.rx_frame.ByteCnt = 0;
+    uint8_t ByteCount = m_APT_handle.rx_frame.ByteCnt;     
+    uint8_t ByteReceived = rx_data;
+                 
+     switch(ByteCount)					 
+     {
+         case 0:
+                 if(ByteReceived == APT_START) //Read or write cmd
+                 {
+                     m_APT_handle.rx_frame.Buffer[ByteCount] = ByteReceived;
+                     m_APT_handle.rx_frame.ByteCnt ++;
+                     
+                 }
+                 else //If not, its a bad cmd
+                 {
+                     m_APT_handle.rx_frame.ByteCnt = 0;
 				 }
 				 // Ask for another byte
 				 eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
@@ -128,7 +128,6 @@ void LCD_APT_frame_Process(void)
 	uint16_t Merge     = 0;
 	uint8_t  PassLvl   = 0;
 	uint8_t  WheelSize = 0;
-	uint8_t  Sensor    = 0;
 	
 	//Verification of the checksum
 	for(int i = 0; i < 6; i += 2) //Checksum is the sum of double bytes into a 16 bits
