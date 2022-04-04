@@ -23,87 +23,269 @@
 #ifndef __PMSM_MOTOR_PARAMETERS_H
 #define __PMSM_MOTOR_PARAMETERS_H
 
-/**************************
- *** Motor 1 Parameters ***
- **************************/
 
-/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
-#define POLE_PAIR_NUM          20 /* Number of motor pole pairs */
-#define RS                     0.20 /* Stator resistance , ohm*/
-#define LS                     0.000500 /* Stator inductance, H
-                                                 For I-PMSM it is equal to Lq */
+#define VEHICLE_ECELL 				1
+#define VEHICLE_GEEBEECARGO 	2
 
-/* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
-   PID for speed regulation (i.e. reference torque).
-   Transformation of real currents (A) into int16_t format must be done accordingly with
-   formula:
-   Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
-                                   *Amplifying network gain)/(MCU supply voltage/2)
-*/
+/*______________________________________________________*/
+/* Change parameter below to quickly configure firmware */
+#define VEHICLE_SELECTION 		VEHICLE_ECELL
+#define VOLTAGE_OPENLOOP			0
+#define POSITION_OPENLOOP			0
+/*______________________________________________________*/
 
-#define NOMINAL_CURRENT         17000
-#define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
-#define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */
-#define ID_DEMAG                -5000 /*!< Demagnetization current */
+#if VEHICLE_SELECTION == VEHICLE_ECELL
+		/**************************
+		 *** Motor 1 Parameters ***
+		 **************************/
 
-/***************** MOTOR SENSORS PARAMETERS  ******************************/
-/* Motor sensors parameters are always generated but really meaningful only
-   if the corresponding sensor is actually present in the motor         */
+		/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
+		#define POLE_PAIR_NUM          20 /* Number of motor pole pairs */
+		#define RS                     0.20 /* Stator resistance , ohm*/
+		#define LS                     0.000500 /* Stator inductance, H
+																										 For I-PMSM it is equal to Lq */
+																										 
+		/* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
+			 PID for speed regulation (i.e. reference torque).
+			 Transformation of real currents (A) into int16_t format must be done accordingly with
+			 formula:
+			 Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
+																			 *Amplifying network gain)/(MCU supply voltage/2)
+		*/
 
-/*** Hall sensors ***/
-#define HALL_SENSORS_PLACEMENT  DEGREES_120 /*!<Define here the
-                                                 mechanical position of the sensors
-                                                 withreference to an electrical cycle.
-                                                 It can be either DEGREES_120 or
-                                                 DEGREES_60 */
+		#define NOMINAL_CURRENT         17000
+		#define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
+		#define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */
+		#define ID_DEMAG                -5000 /*!< Demagnetization current */
 
-#define HALL_PHASE_SHIFT        60 /*!< Define here in degrees
-                                                 the electrical phase shift between
-                                                 the low to high transition of
-                                                 signal H1 and the maximum of
-                                                 the Bemf induced on phase A */
-/*** Quadrature encoder ***/
-#define M1_ENCODER_PPR             400  /*!< Number of pulses per
-                                            revolution */
+		/***************** MOTOR SENSORS PARAMETERS  ******************************/
+		/* Motor sensors parameters are always generated but really meaningful only
+			 if the corresponding sensor is actually present in the motor         */
 
-/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
-#define POLE_PAIR_NUM2          20 /* Number of motor pole pairs */
-#define RS2                     0.20 /* Stator resistance , ohm*/
-#define LS2                     0.000500 /* Stator inductance, H
-                                                 For I-PMSM it is equal to Lq */
+		/*** Hall sensors ***/
+		#define HALL_SENSORS_PLACEMENT  DEGREES_120 /*!<Define here the
+																										 mechanical position of the sensors
+																										 withreference to an electrical cycle.
+																										 It can be either DEGREES_120 or
+																										 DEGREES_60 */
 
-/* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
-   PID for speed regulation (i.e. reference torque).
-   Transformation of real currents (A) into int16_t format must be done accordingly with
-   formula:
-   Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
-                                   *Amplifying network gain)/(MCU supply voltage/2)
-*/
+		#define HALL_PHASE_SHIFT        60 /*!< Define here in degrees
+																										 the electrical phase shift between
+																										 the low to high transition of
+																										 signal H1 and the maximum of
+																										 the Bemf induced on phase A */
+		/*** Quadrature encoder ***/
+		#define M1_ENCODER_PPR             400  /*!< Number of pulses per
+																								revolution */
 
-#define NOMINAL_CURRENT2         17000
-#define MOTOR_MAX_SPEED_RPM2     1500 /*!< Maximum rated speed  */
-#define MOTOR_VOLTAGE_CONSTANT2  15.0 /*!< Volts RMS ph-ph /kRPM */
-#define ID_DEMAG2                -5000 /*!< Demagnetization current */
+		/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
+		#define POLE_PAIR_NUM2          20 /* Number of motor pole pairs */
+		#define RS2                     0.20 /* Stator resistance , ohm*/
+		#define LS2                     0.000500 /* Stator inductance, H
+																										 For I-PMSM it is equal to Lq */
 
-/***************** MOTOR SENSORS PARAMETERS  ******************************/
-/* Motor sensors parameters are always generated but really meaningful only
-   if the corresponding sensor is actually present in the motor         */
+		/* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
+			 PID for speed regulation (i.e. reference torque).
+			 Transformation of real currents (A) into int16_t format must be done accordingly with
+			 formula:
+			 Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
+																			 *Amplifying network gain)/(MCU supply voltage/2)
+		*/
 
-/*** Hall sensors ***/
-#define HALL_SENSORS_PLACEMENT2  DEGREES_120 /*!<Define here the
-                                                 mechanical position of the sensors
-                                                 withreference to an electrical cycle.
-                                                 It can be either DEGREES_120 or
-                                                 DEGREES_60 */
+		#define NOMINAL_CURRENT2         17000
+		#define MOTOR_MAX_SPEED_RPM2     1500 /*!< Maximum rated speed  */
+		#define MOTOR_VOLTAGE_CONSTANT2  15.0 /*!< Volts RMS ph-ph /kRPM */
+		#define ID_DEMAG2                -5000 /*!< Demagnetization current */
 
-#define HALL_PHASE_SHIFT2        60 /*!< Define here in degrees
-                                                 the electrical phase shift between
-                                                 the low to high transition of
-                                                 signal H1 and the maximum of
-                                                 the Bemf induced on phase A */
-/*** Quadrature encoder ***/
-#define M2_ENCODER_PPR             400  /*!< Number of pulses per
-                                            revolution */
+		/***************** MOTOR SENSORS PARAMETERS  ******************************/
+		/* Motor sensors parameters are always generated but really meaningful only
+			 if the corresponding sensor is actually present in the motor         */
+
+		/*** Hall sensors ***/
+		#define HALL_SENSORS_PLACEMENT2  DEGREES_120 /*!<Define here the
+																										 mechanical position of the sensors
+																										 withreference to an electrical cycle.
+																										 It can be either DEGREES_120 or
+																										 DEGREES_60 */
+
+		#define HALL_PHASE_SHIFT2        60 /*!< Define here in degrees
+																										 the electrical phase shift between
+																										 the low to high transition of
+																										 signal H1 and the maximum of
+																										 the Bemf induced on phase A */
+		/*** Quadrature encoder ***/
+		#define M2_ENCODER_PPR             400  /*!< Number of pulses per
+																								revolution */
+																						
+#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+
+		/**************************
+		 *** Motor 1 Parameters ***
+		 **************************/
+
+		/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
+		#define POLE_PAIR_NUM          20 /* Number of motor pole pairs */
+		#define RS                     0.20 /* Stator resistance , ohm*/
+		#define LS                     0.000500 /* Stator inductance, H
+																										 For I-PMSM it is equal to Lq */
+																										 
+		/* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
+			 PID for speed regulation (i.e. reference torque).
+			 Transformation of real currents (A) into int16_t format must be done accordingly with
+			 formula:
+			 Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
+																			 *Amplifying network gain)/(MCU supply voltage/2)
+		*/
+
+		#define NOMINAL_CURRENT         17000
+		#define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
+		#define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */
+		#define ID_DEMAG                -5000 /*!< Demagnetization current */
+
+		/***************** MOTOR SENSORS PARAMETERS  ******************************/
+		/* Motor sensors parameters are always generated but really meaningful only
+			 if the corresponding sensor is actually present in the motor         */
+
+		/*** Hall sensors ***/
+		#define HALL_SENSORS_PLACEMENT  DEGREES_120 /*!<Define here the
+																										 mechanical position of the sensors
+																										 withreference to an electrical cycle.
+																										 It can be either DEGREES_120 or
+																										 DEGREES_60 */
+
+		#define HALL_PHASE_SHIFT        60 /*!< Define here in degrees
+																										 the electrical phase shift between
+																										 the low to high transition of
+																										 signal H1 and the maximum of
+																										 the Bemf induced on phase A */
+		/*** Quadrature encoder ***/
+		#define M1_ENCODER_PPR             400  /*!< Number of pulses per
+																								revolution */
+
+		/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
+		#define POLE_PAIR_NUM2          20 /* Number of motor pole pairs */
+		#define RS2                     0.20 /* Stator resistance , ohm*/
+		#define LS2                     0.000500 /* Stator inductance, H
+																										 For I-PMSM it is equal to Lq */
+
+		/* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
+			 PID for speed regulation (i.e. reference torque).
+			 Transformation of real currents (A) into int16_t format must be done accordingly with
+			 formula:
+			 Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
+																			 *Amplifying network gain)/(MCU supply voltage/2)
+		*/
+
+		#define NOMINAL_CURRENT2         17000
+		#define MOTOR_MAX_SPEED_RPM2     1500 /*!< Maximum rated speed  */
+		#define MOTOR_VOLTAGE_CONSTANT2  15.0 /*!< Volts RMS ph-ph /kRPM */
+		#define ID_DEMAG2                -5000 /*!< Demagnetization current */
+
+		/***************** MOTOR SENSORS PARAMETERS  ******************************/
+		/* Motor sensors parameters are always generated but really meaningful only
+			 if the corresponding sensor is actually present in the motor         */
+
+		/*** Hall sensors ***/
+		#define HALL_SENSORS_PLACEMENT2  DEGREES_120 /*!<Define here the
+																										 mechanical position of the sensors
+																										 withreference to an electrical cycle.
+																										 It can be either DEGREES_120 or
+																										 DEGREES_60 */
+
+		#define HALL_PHASE_SHIFT2        60 /*!< Define here in degrees
+																										 the electrical phase shift between
+																										 the low to high transition of
+																										 signal H1 and the maximum of
+																										 the Bemf induced on phase A */
+		/*** Quadrature encoder ***/
+		#define M2_ENCODER_PPR             400  /*!< Number of pulses per
+																								revolution */
+
+#else
+
+		/**************************
+		 *** Motor 1 Parameters ***
+		 **************************/
+
+		/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
+		#define POLE_PAIR_NUM          20 /* Number of motor pole pairs */
+		#define RS                     0.20 /* Stator resistance , ohm*/
+		#define LS                     0.000500 /* Stator inductance, H
+																										 For I-PMSM it is equal to Lq */
+																										 
+		/* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
+			 PID for speed regulation (i.e. reference torque).
+			 Transformation of real currents (A) into int16_t format must be done accordingly with
+			 formula:
+			 Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
+																			 *Amplifying network gain)/(MCU supply voltage/2)
+		*/
+
+		#define NOMINAL_CURRENT         17000
+		#define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
+		#define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */
+		#define ID_DEMAG                -5000 /*!< Demagnetization current */
+
+		/***************** MOTOR SENSORS PARAMETERS  ******************************/
+		/* Motor sensors parameters are always generated but really meaningful only
+			 if the corresponding sensor is actually present in the motor         */
+
+		/*** Hall sensors ***/
+		#define HALL_SENSORS_PLACEMENT  DEGREES_120 /*!<Define here the
+																										 mechanical position of the sensors
+																										 withreference to an electrical cycle.
+																										 It can be either DEGREES_120 or
+																										 DEGREES_60 */
+
+		#define HALL_PHASE_SHIFT        60 /*!< Define here in degrees
+																										 the electrical phase shift between
+																										 the low to high transition of
+																										 signal H1 and the maximum of
+																										 the Bemf induced on phase A */
+		/*** Quadrature encoder ***/
+		#define M1_ENCODER_PPR             400  /*!< Number of pulses per
+																								revolution */
+
+		/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
+		#define POLE_PAIR_NUM2          20 /* Number of motor pole pairs */
+		#define RS2                     0.20 /* Stator resistance , ohm*/
+		#define LS2                     0.000500 /* Stator inductance, H
+																										 For I-PMSM it is equal to Lq */
+
+		/* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
+			 PID for speed regulation (i.e. reference torque).
+			 Transformation of real currents (A) into int16_t format must be done accordingly with
+			 formula:
+			 Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
+																			 *Amplifying network gain)/(MCU supply voltage/2)
+		*/
+
+		#define NOMINAL_CURRENT2         17000
+		#define MOTOR_MAX_SPEED_RPM2     1500 /*!< Maximum rated speed  */
+		#define MOTOR_VOLTAGE_CONSTANT2  15.0 /*!< Volts RMS ph-ph /kRPM */
+		#define ID_DEMAG2                -5000 /*!< Demagnetization current */
+
+		/***************** MOTOR SENSORS PARAMETERS  ******************************/
+		/* Motor sensors parameters are always generated but really meaningful only
+			 if the corresponding sensor is actually present in the motor         */
+
+		/*** Hall sensors ***/
+		#define HALL_SENSORS_PLACEMENT2  DEGREES_120 /*!<Define here the
+																										 mechanical position of the sensors
+																										 withreference to an electrical cycle.
+																										 It can be either DEGREES_120 or
+																										 DEGREES_60 */
+
+		#define HALL_PHASE_SHIFT2        60 /*!< Define here in degrees
+																										 the electrical phase shift between
+																										 the low to high transition of
+																										 signal H1 and the maximum of
+																										 the Bemf induced on phase A */
+		/*** Quadrature encoder ***/
+		#define M2_ENCODER_PPR             400  /*!< Number of pulses per
+																								revolution */
+
+#endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/
 /******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/
