@@ -862,7 +862,7 @@ int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle)
 	/* Divde the pas torque by pRamcoeff */
 	pRes = pDiv * pHandle->pPAS->pRampCoeff;
 	
-	if (pRes < pAvtorque )
+	if (pAvtorque < pRes)
 			pAvtorque+=pDiv;
 	else
 			pAvtorque = pPASTorque;
