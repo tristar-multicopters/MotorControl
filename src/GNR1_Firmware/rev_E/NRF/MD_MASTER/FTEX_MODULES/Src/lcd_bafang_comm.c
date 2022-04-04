@@ -36,17 +36,16 @@ static void LCD_Baf_event_handler(eUART_evt_t * p_lcd_event)
  * 
  * @param[in] rx_frame: Frame that needs to be decoded. 
  */
-void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
+void LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 {
 	
 	if(m_Baf_handle.TrashCnt >= 123) //Skip the bundle of 123 trash bytes when the screen is powerd on
 	{
-	
-	 uint8_t ByteCount    = m_Baf_handle.rx_frame.ByteCnt;     
-   uint8_t ByteReceived = rx_data;
+        uint8_t ByteCount    = m_Baf_handle.rx_frame.ByteCnt;     
+        uint8_t ByteReceived = rx_data;
 				 
-	 switch(ByteCount)					 
-	 {
+        switch(ByteCount)					 
+        {
 		  case 0:
 				 if(ByteReceived == BAF_CMD_READ || ByteReceived == BAF_CMD_WRITE) //Read or write cmd
 				 {
@@ -102,13 +101,13 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 			 // Ask for another byte
 			 eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 			 break;						
-	 }
-  }
-  else
-  {
-    m_Baf_handle.TrashCnt ++;
-	  eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
-  }	
+        }
+    }
+    else
+    {
+        m_Baf_handle.TrashCnt ++;
+        eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
+    }	
 }
 
 /**@brief Function for sending a response byte by byte

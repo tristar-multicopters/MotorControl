@@ -53,7 +53,7 @@ void LCD_FTEX_init(VCI_Handle_t * pHandle);
 void LCD_FTEX_TX_IRQ_Handler(void);
 
 /*Function for building the frame */
-void * LCD_FTEX_RX_IRQ_Handler(unsigned short rx_data);
+void LCD_FTEX_RX_IRQ_Handler(unsigned short rx_data);
 
 /* Function for decoding the received frame */
 void LCD_FTEX_frame_Process( void );

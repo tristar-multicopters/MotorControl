@@ -11,7 +11,9 @@
 
 
 #include "md_comm.h"
-#define MDCOMM_DEBUG_FLAGS   //Used to enable or disable md_comm debugging flags   
+
+// Used to enable or disable md_comm debugging flags   
+#define MDCOMM_DEBUG_FLAGS   
 
 static MD_Comm_Handle_t * m_pMDcomm;
 static UFCP_Handle_t * m_pMDcomm_ufcp;
