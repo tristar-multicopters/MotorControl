@@ -11,6 +11,7 @@
 
 #define APTMAXCURRENT 60
 
+
 // Private handler
 APT_Handle_t m_APT_handle;
 extern osThreadId_t TSK_eUART0_handle; // Task Id for external uart (UART0 instance)
@@ -203,9 +204,11 @@ void LCD_APT_frame_Process(void)
 		toSend = abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)) + 
 	           abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2));
 		
-		toSend = toSend/(0xFFFF/APTMAXCURRENT); //Converiosn from relative current to actual amps
+		
+		
+		toSend = toSend/(0x7FFF/APTMAXCURRENT); //Converiosn from relative current to actual amps
 
-    toSend = toSend * 10; //Covert from amps to 0.1 amps; 
+    toSend = toSend * 2; //Covert from amps to 0.1 amps; 
 		
 		if(toSend > 0xFF) //If ve have more than 25 amps
 		{
@@ -219,6 +222,8 @@ void LCD_APT_frame_Process(void)
 	  if(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1) > 0)
 		{
 		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1);		
+			
+			
 		}
 		else //If we are using the other motor use it as the speed reference
 		{
@@ -227,7 +232,10 @@ void LCD_APT_frame_Process(void)
     		
 		//TODO add consideration for the gear ratio between mototr and wheel, for now will assume 1
 		
-	  toSend = 1000/(toSend/60); //Converion from RPM to period in ms 
+		
+		toSend = toSend * 500;       //Converion from RPM to period in ms 
+		                             //
+	  toSend = 500000/(toSend/60); //
 	
 	  replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Motor speed Low half 
 	  replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; // Motor speed High half
