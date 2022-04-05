@@ -144,7 +144,7 @@ void LCD_APT_frame_Process(void)
 		//Reading the Pass
 		PassLvl = (m_APT_handle.rx_frame.Buffer[PASS] & 0x0F); // Only the 4 LSB contain the pass level
 		
-     if(PassLvl < 0x6) //We currently only support 5 levels of pass
+     if(PassLvl < 0x10) //We currently only support 5 levels of pass
 		 {			
 			 switch(PassLvl)
 			  {

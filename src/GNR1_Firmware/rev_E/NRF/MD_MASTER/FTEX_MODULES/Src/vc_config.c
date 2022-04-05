@@ -113,7 +113,7 @@ THRO_Handle_t ThrottleHandle =
 		
 		.hOffsetTorque = 4000,
 		.bSlopeTorque = -7,
-		.bDivisorTorque = 25,
+		.bDivisorTorque = 45,
 	}
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.hParam =
@@ -200,7 +200,7 @@ SPR_Handle_t SpeedPulse =
 	.WRestartChannel = 3,
 	
 	.bTimer_Prescaler = NRF_TIMER_FREQ_1MHz,
-	.bTimer_Width = NRF_TIMER_BIT_WIDTH_32,
+	.bTimer_Width = NRF_TIMER_BIT_WIDTH_16,
 
 	.pTimerInstance = PAS_TIMER_INSTANCE_ADDR,
 	.wTimerInstance = WH_TIMER_INSTANCE_ADDR,
@@ -212,6 +212,8 @@ SPR_Handle_t SpeedPulse =
 	{
 		.sLowPassFilterBW1 = 16,
 		.sMax = UINT16_MAX,
+		.sWheel_Lap_Count = 0,
+		.sFirst_Wheel_Lap = false,
 	}
 	
 };
@@ -271,6 +273,7 @@ MDI_Handle_t MDInterfaceHandle =
 PAS_Handle_t PedalAssistHandle = {
 	.pTorque = &TorqueSensor,
 	.pSpulse = &SpeedPulse,
+	.pRampCoeff = 100,
 };
 
 PWREN_Handle_t PowerEnableHandle = {
@@ -279,7 +282,7 @@ PWREN_Handle_t PowerEnableHandle = {
 	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
-	.bUsePowerLock = true,
+	.bUsePowerLock = false,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
@@ -304,6 +307,9 @@ DRVT_Handle_t DrivetrainHandle =
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,
+	.hMaxTorque = -17000,
+	.hMaxLevel	=	5,
+	.pAvtorque	= 0,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
@@ -317,6 +323,9 @@ DRVT_Handle_t DrivetrainHandle =
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,
+	.hMaxTorque = -7000,
+	.hMaxLevel	=	5,
+	.pAvtorque	= 0,
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
@@ -330,6 +339,9 @@ DRVT_Handle_t DrivetrainHandle =
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,
+	.hMaxTorque = -10000,
+	.hMaxLevel	=	5,
+	.pAvtorque	= 0,
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = true,
@@ -373,7 +385,6 @@ VCI_Handle_t VCInterfaceHandle =
 };
 
 eUART_protocol_t EUART_handle_t = EUART_APT; // Has to been initialise by Evionics first
-
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,

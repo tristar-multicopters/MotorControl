@@ -50,7 +50,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-
 *.cod
 *.htm
 *.i
@@ -62,6 +61,8 @@ dkms.conf
 # Keil user project files
 *.uvoptx
 *.uvguix
+*.uvguix.FTEX_POLO
+*.jabra
 *.FTEX_POLO
 *.Franc
 *.ronak

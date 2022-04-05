@@ -26,13 +26,23 @@ void PAS_Init(PAS_Handle_t* pHandle)
 }
 
 /**
-	* @brief  Pedal Assist capture pulse length
+	* @brief  Pedal Assist capture pulse calculation
 	* @param  PAS_Handle_t handle
-	* @retval Pedal Period in us
+	* @retval 
 	*/
-int32_t PAS_GetSpeed(PAS_Handle_t* pHandle)
+void PAS_CalculateSpeed(PAS_Handle_t* pHandle)
 {	
-	return Pspeed_CalcAvValue( pHandle->pSpulse );
+	Pedal_capture_get_value( pHandle->pSpulse );
+}
+
+/**
+	* @brief  Pedal Assist speed value
+	* @param  PAS_Handle_t handle
+	* @retval Pedal sPAvSpeed in us
+	*/
+int32_t PAS_GetSpeedValue(PAS_Handle_t* pHandle)
+{	
+	return pHandle->pSpulse->sPAvSpeed;
 }
 
 /**

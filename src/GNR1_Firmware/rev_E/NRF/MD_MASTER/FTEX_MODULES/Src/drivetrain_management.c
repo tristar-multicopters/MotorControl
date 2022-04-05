@@ -9,8 +9,6 @@
 */
 
 #include "drivetrain_management.h"
-
-
 /* Functions ---------------------------------------------------- */
 
 
@@ -68,15 +66,15 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 				break;
 		}
 }
-	
-	THRO_CalcAvThrottleValue(pHandle->pThrottle);
-	
-	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
-	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
-	
+			THRO_CalcAvThrottleValue(pHandle->pThrottle);
+
+			pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
+			pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
+
 	if (pHandle->bCtrlType == TORQUE_CTRL)
 	{
-		hTorqueRef = THRO_ThrottleToTorque(pHandle->pThrottle);
+		PAS_GetTorque(pHandle->pPAS);
+		hTorqueRef = DRVT_ControlSelect(pHandle);
 		if ( bIsBrakePressed )
 		{
 			hTorqueRef = 0;
@@ -439,6 +437,7 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStop2 = false;
 	bool bCheckStop3 = false;
 	bool bCheckStop4 = false;
+	bool bCheckStop5 = false;
 	int32_t wSpeedM1 = MDI_getSpeed(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_getSpeed(pHandle->pMDI, M2);
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
@@ -477,7 +476,12 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 		bCheckStop4 = true;
 	}
 	
-	return (bCheckStop1 & bCheckStop2) | bCheckStop3 | bCheckStop4;
+	if ((!pHandle->bUsePAS) && ((hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed)|( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM2) <= pHandle->hStoppingSpeed)))
+	{
+		bCheckStop5 = true;
+	}                                                                                                                                                                                                                                                                                                                                                      
+	
+	return (bCheckStop1 & bCheckStop2) | bCheckStop3 | bCheckStop4 | bCheckStop5;
 }
 
 /**
@@ -490,7 +494,7 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStart = false;
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( hThrottleValue > pHandle->hStartingThrottle && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
+	if ( (hThrottleValue > pHandle->hStartingThrottle || (pHandle->bUsePAS)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
 	{
 		bCheckStart = true;
 	}
@@ -650,8 +654,8 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 				//todo: handle result from MDI_FaultAcknowledged below
 		MDI_FaultAcknowledged(pHandle->pMDI, M1);
 		MDI_FaultAcknowledged(pHandle->pMDI, M2);
-	}
-	return bFaultOccured;
+	}	
+	return bFaultOccured; 
 }
 
 /**
@@ -660,10 +664,15 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	* @param  PAS level
 	* @retval None
 	*/
-void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, uint8_t level)
+void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel Level)
 {
+	 pHandle->pPAS->pLevel = Level;
 }
 
+PAS_sLevel DRVT_GetPASLevel (DRVT_Handle_t * pHandle)
+{
+	return pHandle->pPAS->pLevel;
+}
 /**
 	* @brief  Get main motor reference torque
 	* @param  Drivetrain handle
@@ -744,4 +753,123 @@ bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle)
 	return pHandle->bUseMotorM2;
 }
 
+/**
+	* @brief  Set Pedal Assist torque based on screen informations
+	* @param  Drivetrain handle
+	* @retval pRefTorque in int16
+	*/
+int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
+{
+	
+	PAS_sLevel Got_Level;
+	Got_Level = DRVT_GetPASLevel(pHandle);
+	
+	switch(Got_Level)
+	{
+		case PAS_LEVEL_0:
+			pHandle->pRefTorque = 0;
+			break;
+
+		case PAS_LEVEL_1:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_1;
+			break;
+
+		case PAS_LEVEL_2:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_2;
+			break;
+		case PAS_LEVEL_3:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_3;
+			break;
+		case PAS_LEVEL_4:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_4;
+			break;
+		
+		case PAS_LEVEL_5:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_5;
+			break;
+		
+		case PAS_LEVEL_6:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_6;
+			break;
+				
+		case PAS_LEVEL_7:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_7;
+			break;
+						
+		case PAS_LEVEL_8:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_8;
+			break;
+								
+		case PAS_LEVEL_9:
+			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_9;
+			break;
+	}
+
+	return pHandle->pRefTorque;
+}
+/**
+	* @brief  Select Control assistance based on Throttle or PAS
+	* @param  Drivetrain handle
+	* @retval pHandle->pTorqueSelect in int16                                                                                    
+	*/
+int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
+{
+  bool PAS_Pres;
+	
+	/* Check Pulse presence */
+	PAS_Pres = pHandle->bUsePAS; 		
+	
+	/* PAS and Throttle mangement */
+	if (PAS_Pres)
+	{
+		/* PAS Ramp */
+		pHandle->pTorqueSelect= DRVT_PASSetRamp(pHandle);
+	}
+	else
+	{	
+		/* Throttle Value convert to Torque */
+		pHandle->pTorqueSelect = THRO_ThrottleToTorque(pHandle->pThrottle);
+	}
+	return pHandle->pTorqueSelect;
+}
+
+/**
+	* @brief  Return the PAs Presence Flag
+	* @param  Drivetrain handle
+	* @retval pHandle->bUsePAS in boolean
+	*/
+bool DRVT_PASpresence (DRVT_Handle_t * pHandle) 
+{
+	int32_t	TempSpeed;
+	PAS_CalculateSpeed(pHandle->pPAS);
+	TempSpeed = PAS_GetSpeedValue(pHandle->pPAS);
+	if (TempSpeed > 0)
+		pHandle->bUsePAS = true;
+	else 
+		pHandle->bUsePAS = false;
+	
+	return pHandle->bUsePAS;
+} 
+
+/**
+	* @brief  PAS torque Acceleration Ramp 
+	* @param  Drivetrain handle
+	* @retval int16_t 
+	*/
+int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle) 
+{
+	int16_t pPASTorque, pDiv, pRes;
+	/* Call PAS set torque function */
+	pPASTorque = DRVT_PasSetTorque(pHandle);
+	/* Divde the PAS torque by pRamcoeff */
+	pDiv = pPASTorque / pHandle->pPAS->pRampCoeff;
+	/* Divde the pas torque by pRamcoeff */
+	pRes = pDiv * pHandle->pPAS->pRampCoeff;
+	
+	if (pHandle->pAvtorque < pRes)
+			pHandle->pAvtorque+=pDiv;
+	else
+			pHandle->pAvtorque = pPASTorque;
+	return pHandle->pAvtorque;
+} 
 

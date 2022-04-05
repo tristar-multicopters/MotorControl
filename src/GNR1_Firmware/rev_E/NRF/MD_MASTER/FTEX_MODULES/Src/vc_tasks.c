@@ -28,7 +28,6 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 #define START_LOOPTICKS							100 // Max number of ticks to stay in start state
 #define STOP_LOOPTICKS							100 // Max number of ticks to stay in stop state
 
-
 /************* TASKS ****************/
 
 static void CLK_Init(void)
@@ -115,6 +114,9 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 																				
 	while (true)
 	{
+		/* Pulse read presence in slow loop test */ 
+		DRVT_PASpresence (pVCI->pDrivetrain);
+
 		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain) )
 		{
 			getMonitoringReg_Slow(M1);
@@ -196,7 +198,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 			case V_RUN:
 					hVehicleFault = DRVT_RunStateCheck(pVCI->pDrivetrain);
 					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
-					DRVT_UpdateMotorRamps(pVCI->pDrivetrain);
+					DRVT_UpdateMotorRamps(pVCI->pDrivetrain); 			
 					if ( DRVT_CheckStopConditions(pVCI->pDrivetrain) )
 					{
 						wCounter++;
