@@ -309,6 +309,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.hStoppingSpeed = 0,
 	.hMaxTorque = -17000,
 	.hMaxLevel	=	5,
+	.pAvtorque	= 0,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
@@ -324,6 +325,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.hStoppingSpeed = 0,
 	.hMaxTorque = -7000,
 	.hMaxLevel	=	5,
+	.pAvtorque	= 0,
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = false,
@@ -339,6 +341,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.hStoppingSpeed = 0,
 	.hMaxTorque = -10000,
 	.hMaxLevel	=	5,
+	.pAvtorque	= 0,
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bUseMotorM1 = true,
 	.bUseMotorM2 = true,

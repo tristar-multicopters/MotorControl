@@ -66,6 +66,7 @@ typedef struct
 	int16_t			 	pRefTorque;			/* Torque reference, first element is for M1, second is for M2 */
 	int16_t			 	pTorqueSelect;	/* Torque reference, first element is for M1, second is for M2 */
 	bool					bUsePAS;
+	int16_t 			pAvtorque;
 		
 	FLDBK_Handle_t sHeatsinkTempFoldback1;		/* Foldback handle using M1 heatsink temperature */
 	FLDBK_Handle_t sHeatsinkTempFoldback2;		/* Foldback handle using M2 heatsink temperature */

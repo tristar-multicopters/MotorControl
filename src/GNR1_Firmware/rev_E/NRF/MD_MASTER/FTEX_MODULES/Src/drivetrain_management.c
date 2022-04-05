@@ -67,6 +67,10 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		}
 }
 			THRO_CalcAvThrottleValue(pHandle->pThrottle);
+
+			pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
+			pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
+
 	if (pHandle->bCtrlType == TORQUE_CTRL)
 	{
 		PAS_GetTorque(pHandle->pPAS);
@@ -854,7 +858,7 @@ bool DRVT_PASpresence (DRVT_Handle_t * pHandle)
 	*/
 int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle) 
 {
-	int16_t pPASTorque, pDiv, pRes, pAvtorque;
+	int16_t pPASTorque, pDiv, pRes;
 	/* Call PAS set torque function */
 	pPASTorque = DRVT_PasSetTorque(pHandle);
 	/* Divde the PAS torque by pRamcoeff */
@@ -862,10 +866,10 @@ int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle)
 	/* Divde the pas torque by pRamcoeff */
 	pRes = pDiv * pHandle->pPAS->pRampCoeff;
 	
-	if (pAvtorque < pRes)
-			pAvtorque+=pDiv;
+	if (pHandle->pAvtorque < pRes)
+			pHandle->pAvtorque+=pDiv;
 	else
-			pAvtorque = pPASTorque;
-	return pAvtorque;
+			pHandle->pAvtorque = pPASTorque;
+	return pHandle->pAvtorque;
 } 
 
