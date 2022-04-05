@@ -438,13 +438,14 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStop3 = false;
 	bool bCheckStop4 = false;
 	bool bCheckStop5 = false;
+	bool bCheckStop6 = false;
 	int32_t wSpeedM1 = MDI_getSpeed(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_getSpeed(pHandle->pMDI, M2);
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
-		if ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed )
+		if ( abs(wSpeedM1) <= pHandle->hStoppingSpeed )
 		{
 			bCheckStop1 = true;
 		}
@@ -456,7 +457,7 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 	
 	if ( DRVT_IsMotor2Used(pHandle) )
 	{
-		if ( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM2) <= pHandle->hStoppingSpeed )
+		if ( abs(wSpeedM2) <= pHandle->hStoppingSpeed )
 		{
 			bCheckStop2 = true;
 		}
@@ -476,12 +477,17 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 		bCheckStop4 = true;
 	}
 	
-	if ((!pHandle->bUsePAS) && ((hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM1) <= pHandle->hStoppingSpeed)|( hThrottleValue < pHandle->hStoppingThrottle && abs(wSpeedM2) <= pHandle->hStoppingSpeed)))
+	if (!pHandle->bUsePAS)
 	{
 		bCheckStop5 = true;
-	}                                                                                                                                                                                                                                                                                                                                                      
-	
-	return (bCheckStop1 & bCheckStop2) | bCheckStop3 | bCheckStop4 | bCheckStop5;
+	}     
+
+	if (hThrottleValue < pHandle->hStoppingThrottle)
+	{
+		bCheckStop6 = true;
+	}    
+
+	return (bCheckStop1 & bCheckStop2 & bCheckStop5 & bCheckStop6) | bCheckStop3 | bCheckStop4;
 }
 
 /**
@@ -843,7 +849,7 @@ bool DRVT_PASpresence (DRVT_Handle_t * pHandle)
 	int32_t	TempSpeed;
 	PAS_CalculateSpeed(pHandle->pPAS);
 	TempSpeed = PAS_GetSpeedValue(pHandle->pPAS);
-	if (TempSpeed > 0)
+	if (TempSpeed > 0 && PAS_GetDirection(pHandle->pPAS) == 0)
 		pHandle->bUsePAS = true;
 	else 
 		pHandle->bUsePAS = false;

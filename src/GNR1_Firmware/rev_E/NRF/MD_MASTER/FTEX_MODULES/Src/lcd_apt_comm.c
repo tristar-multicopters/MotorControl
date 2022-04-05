@@ -149,22 +149,22 @@ void LCD_APT_frame_Process(void)
 			 switch(PassLvl)
 			  {
 				 case 0:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,0); //Set pass to 0
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_0); //Set pass to 0
           break;							
 				 case 1:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,1); //Set pass to 1
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_1); //Set pass to 1
           break;	
 				 case 3:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,2); //Set pass to 2
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_2); //Set pass to 2
           break;	
 				 case 5:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,3); //Set pass to 3
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_3); //Set pass to 3
           break;	
 				 case 7:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,4); //Set pass to 4
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_4); //Set pass to 4
           break;								
 				 case 9:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,5); //Set pass to 5
+					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_5); //Set pass to 5
           break;				
 		  	}
  		 }			

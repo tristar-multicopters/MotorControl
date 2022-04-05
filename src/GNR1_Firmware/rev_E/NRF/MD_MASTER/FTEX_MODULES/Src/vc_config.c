@@ -93,7 +93,7 @@ THRO_Handle_t ThrottleHandle =
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
 		
-		.hOffsetThrottle = 9600,
+		.hOffsetThrottle = 9800,
 		.bSlopeThrottle = 5,
 		.bDivisorThrottle = 3,
 		
@@ -273,7 +273,7 @@ MDI_Handle_t MDInterfaceHandle =
 PAS_Handle_t PedalAssistHandle = {
 	.pTorque = &TorqueSensor,
 	.pSpulse = &SpeedPulse,
-	.pRampCoeff = 100,
+	.pRampCoeff = 50,
 };
 
 PWREN_Handle_t PowerEnableHandle = {
@@ -307,7 +307,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,
-	.hMaxTorque = -17000,
+	.hMaxTorque = -10000,
 	.hMaxLevel	=	5,
 	.pAvtorque	= 0,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO

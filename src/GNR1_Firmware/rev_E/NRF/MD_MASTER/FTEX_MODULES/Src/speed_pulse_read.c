@@ -252,7 +252,7 @@ uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 	{		// Clear the capture event
 			NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] = 0;
 			// Return the stored capture value in the timer
-			sHandle->sPread =  nrf_drv_timer_capture_get(sHandle->pTimerInstance, 0);
+			sHandle->sPread =  nrf_drv_timer_capture_get(sHandle->pTimerInstance, (nrf_timer_cc_channel_t)0);
 	}
 	else
 	{		// In case no capture occured, return 0
@@ -274,7 +274,7 @@ uint16_t Wheel_capture_get_value(SPR_Handle_t* sHandle)
 	{		// Clear the capture event
 			NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel] = 0;	
 			// Return the stored capture value in the timer
-			sHandle->wPread =  nrf_drv_timer_capture_get(sHandle->wTimerInstance, 0);
+			sHandle->wPread =  nrf_drv_timer_capture_get(sHandle->wTimerInstance, (nrf_timer_cc_channel_t)0);		
 	}
 	else
 	{		// In case no capture occured, return 0

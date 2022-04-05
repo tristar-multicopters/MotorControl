@@ -42,7 +42,7 @@ void PAS_CalculateSpeed(PAS_Handle_t* pHandle)
 	*/
 int32_t PAS_GetSpeedValue(PAS_Handle_t* pHandle)
 {	
-	return pHandle->pSpulse->sPAvSpeed;
+	return pHandle->pSpulse->sPread;
 }
 
 /**
@@ -74,7 +74,7 @@ int32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle)
 	* @param  Forward or back direction
 	* @retval Pedal direction
 	*/
-int16_t PAS_GetDirection(PAS_Handle_t* pHandle)
+uint8_t PAS_GetDirection(PAS_Handle_t* pHandle)
 {
 	return Get_Drive_Direction(pHandle->pSpulse) ;
 }

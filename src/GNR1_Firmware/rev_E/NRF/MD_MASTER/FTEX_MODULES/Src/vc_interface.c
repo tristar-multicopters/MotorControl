@@ -701,7 +701,7 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 //		pHandle->pDrivetrain->pPAS // To complete...			
 			break;
 		case REG_PAS_LEVEL:
-			pHandle->pDrivetrain->pPAS->pLevel = value;
+			pHandle->pDrivetrain->pPAS->pLevel = (PAS_sLevel)value;
 			break;
 		case REG_PAS_SENSE_DELAY:
 //		pHandle->pDrivetrain->pPAS // To complete...

@@ -25,6 +25,7 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 /************* DEFINES ****************/
 
 #define RETURN_TO_STANDBY_LOOPTICKS 0		// Max number of ticks to stay in run while stop conditions are met
+#define START_MOTORS_LOOPTICKS 			2		// Max number of ticks to stay in run while stop conditions are met
 #define START_LOOPTICKS							100 // Max number of ticks to stay in start state
 #define STOP_LOOPTICKS							100 // Max number of ticks to stay in stop state
 
@@ -160,6 +161,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 		{
 			case V_IDLE:
 					osDelay(100);
+					wCounter = 0;
 					VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
 					break;
 			
@@ -168,6 +170,15 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
 					if ( DRVT_CheckStartConditions(pVCI->pDrivetrain) )
 					{
+						wCounter++;
+					}
+					else
+					{
+						wCounter = 0;
+					}
+					if (wCounter > START_MOTORS_LOOPTICKS)
+					{
+						wCounter = 0;
 						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY_START );
 					}
 					break;

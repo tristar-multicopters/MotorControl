@@ -61,7 +61,7 @@ void PAS_Init(PAS_Handle_t* pHandle);
 
 void PAS_CalculateSpeed(PAS_Handle_t* pHandle);
 
-int16_t PAS_GetDirection(PAS_Handle_t* pHandle);
+uint8_t PAS_GetDirection(PAS_Handle_t* pHandle);
 int16_t PAS_GetTorque(PAS_Handle_t* pHandle);
 int32_t PAS_GetSpeedValue(PAS_Handle_t* pHandle);
 
