@@ -159,7 +159,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 		switch ( StateVC )
 		{
 			case V_IDLE:
-					osDelay(1000);
+					osDelay(100);
 					VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
 					break;
 			
@@ -227,7 +227,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					if ( DRVT_IsDrivetrainStopped(pVCI->pDrivetrain) )
 					{
 						wCounter = 0;
-						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
+						VCSTM_NextState( pVCI->pStateMachine, V_IDLE );
 					}
 					wCounter++;
 					if ( wCounter > STOP_LOOPTICKS )

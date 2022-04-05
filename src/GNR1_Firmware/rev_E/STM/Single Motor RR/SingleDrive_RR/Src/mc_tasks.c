@@ -436,10 +436,12 @@ __weak void TSK_MediumFrequencyTaskM1(void)
     MCI_ExecBufferedCommands( oMCInterface[M1] );
     FOC_CalcCurrRef( M1 );
 
+		#if !(POSITION_OPENLOOP || VOLTAGE_OPENLOOP)
     if( !IsSpeedReliable )
     {
       STM_FaultProcessing( &STM[M1], MC_SPEED_FDBK, 0 );
     }
+		#endif
 
     /* USER CODE BEGIN MediumFrequencyTask M1 3 */
 
@@ -721,12 +723,12 @@ inline uint16_t FOC_CurrControllerM1(void)
   SpeednPosFdbk_Handle_t *speedHandle;
 
   speedHandle = STC_GetSpeedSensor(pSTC[M1]);
-  //hElAngle = SPD_GetElAngle(speedHandle);
-	hElAngle = AO_GetElAngle(&AngleObserverM1);
-	// OPEN LOOP THETA ////////////////////////
-	//hOpenLoopTheta += OPEN_LOOP_SPEED;
-	//hElAngle = hOpenLoopTheta;
-	///////////////////////////////////////////
+  hElAngle = SPD_GetElAngle(speedHandle);
+	//hElAngle = AO_GetElAngle(&AngleObserverM1);
+	#if (POSITION_OPENLOOP)
+	hOpenLoopTheta += OPEN_LOOP_SPEED;
+	hElAngle = hOpenLoopTheta;
+	#endif
 	
   PWMC_GetPhaseCurrents(pwmcHandle[M1], &Iab);
   RCM_ReadOngoingConv();
@@ -739,6 +741,11 @@ inline uint16_t FOC_CurrControllerM1(void)
   Vqd.d = PI_Controller(pPIDId[M1],
             (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
   Vqd = FF_VqdConditioning(pFF[M1],Vqd);
+	
+	#if (VOLTAGE_OPENLOOP)
+	Vqd.q = 1500;
+	Vqd.d = 0;
+	#endif
 
   Vqd = Circle_Limitation(pCLM[M1], Vqd);
   hElAngle += SPD_GetInstElSpeedDpp(speedHandle)*REV_PARK_ANGLE_COMPENSATION_FACTOR;

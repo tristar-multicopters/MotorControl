@@ -473,10 +473,12 @@ __weak void MC_Scheduler(void)
 				kiM1 = MAX_KI;
 			}
 			
+			#if VEHICLE_SELECTION == VEHICLE_ECELL
 			PID_SetKP(&PIDIqHandle_M1, kpM1);
 			PID_SetKI(&PIDIqHandle_M1, kiM1);
 			PID_SetKP(&PIDIdHandle_M1, kpM1);
 			PID_SetKI(&PIDIdHandle_M1, kiM1);
+			#endif
 
       /* USER CODE END MC_Scheduler 1 */
       hMFTaskCounterM1 = MF_TASK_OCCURENCE_TICKS;
@@ -502,10 +504,12 @@ __weak void MC_Scheduler(void)
 				kiM2 = MAX_KI;
 			}
 			
+			#if VEHICLE_SELECTION == VEHICLE_ECELL
 			PID_SetKP(&PIDIqHandle_M2, kpM2);
 			PID_SetKI(&PIDIqHandle_M2, kiM2);
 			PID_SetKP(&PIDIdHandle_M2, kpM2);
 			PID_SetKI(&PIDIdHandle_M2, kiM2);
+			#endif
 
       /* USER CODE END MC_Scheduler MediumFrequencyTask M2 */
       hMFTaskCounterM2 = MF_TASK_OCCURENCE_TICKS2;
@@ -625,7 +629,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
     MCI_ExecBufferedCommands( oMCInterface[M1] );
     FOC_CalcCurrRef( M1 );
 
-		#if (POSITION_OPENLOOP || VOLTAGE_OPENLOOP)
+		#if !(POSITION_OPENLOOP || VOLTAGE_OPENLOOP)
     if( !IsSpeedReliable )
     {
       STM_FaultProcessing( &STM[M1], MC_SPEED_FDBK, 0 );
@@ -925,7 +929,7 @@ __weak void TSK_MediumFrequencyTaskM2(void)
     MCI_ExecBufferedCommands( oMCInterface[M2] );
     FOC_CalcCurrRef( M2 );
 
-		#if (POSITION_OPENLOOP || VOLTAGE_OPENLOOP)
+		#if !(POSITION_OPENLOOP || VOLTAGE_OPENLOOP)
     if ( !IsSpeedReliable )
     {
       STM_FaultProcessing( &STM[M2], MC_SPEED_FDBK, 0 );

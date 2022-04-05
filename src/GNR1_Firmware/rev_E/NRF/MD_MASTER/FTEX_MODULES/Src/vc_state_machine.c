@@ -94,7 +94,7 @@ bool VCSTM_NextState( VCSTM_Handle_t * pHandle, VC_State_t bState )
       break;
 			
     case V_STOP:
-      if ( bState == V_STANDBY )
+      if ( bState == V_IDLE )
       {
         bNewState = bState;
         bChangeState = true;

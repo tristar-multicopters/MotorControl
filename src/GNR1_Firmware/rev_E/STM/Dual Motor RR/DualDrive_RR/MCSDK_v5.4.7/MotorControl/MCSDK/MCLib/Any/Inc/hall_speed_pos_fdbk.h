@@ -206,9 +206,9 @@ typedef struct
   
   bool HallMtpa; /* if true at each sensor toggling, the true angle is set without ramp*/
 
-	int16_t Sector_Start_Angle[7];
-	int16_t Sector_Destination_Angle[7];
-	int16_t Sector_Middle_Angle[7];
+	int16_t Sector_Start_Angle[8];
+	int16_t Sector_Destination_Angle[8];
+	int16_t Sector_Middle_Angle[8];
 	
 	int8_t DirectionChangeCounter;
 

@@ -284,7 +284,7 @@ PWREN_Handle_t PowerEnableHandle = {
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bUsePowerLock = false,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
-	.bUsePowerLock = true,
+	.bUsePowerLock = false,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bUsePowerLock = false,
 	#else
