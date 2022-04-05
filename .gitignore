@@ -71,6 +71,7 @@ dkms.conf
 RTE_Components.h
 
 # Keil uvision object and other files
+*.bak
 *.crf
 *._ia
 *.__i
