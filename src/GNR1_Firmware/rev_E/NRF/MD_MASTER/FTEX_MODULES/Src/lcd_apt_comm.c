@@ -199,9 +199,9 @@ void LCD_APT_frame_Process(void)
 
 		
 		  //If there is a motor at the rear use it for its speed
-	    if(VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_ENABLE))
+	    if(true)
 		  {
-		    toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1);		
+		    toSend = abs(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1));		
 			
 			  GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_GEARRATIO);//Gear ratio (motor compared to wheel) is split. 
 			                                                                            //msb 16 bits is the numerator, 

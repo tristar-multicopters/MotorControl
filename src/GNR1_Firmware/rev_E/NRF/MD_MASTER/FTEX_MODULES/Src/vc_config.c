@@ -284,7 +284,7 @@ PWREN_Handle_t PowerEnableHandle = {
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bUsePowerLock = false,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
-	.bUsePowerLock = false,
+	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bUsePowerLock = false,
 	#else
@@ -339,7 +339,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.hStartingThrottle = 1000,
 	.hStoppingThrottle = 500,
 	.hStoppingSpeed = 0,
-	.hMaxTorque = -10000,
+	.hMaxTorque = -6000,
 	.hMaxLevel	=	5,
 	.pAvtorque	= 0,
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
