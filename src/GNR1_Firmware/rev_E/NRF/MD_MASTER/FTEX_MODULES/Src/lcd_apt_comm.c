@@ -10,6 +10,8 @@
 #include "lcd_apt_comm.h"
 
 #define APTMAXCURRENT 60
+#define LOWEST_GEAR_RATIO 0x00010001
+#define HIGEST_GEAR_RATIO 0x00F000F0
 
 // Private handler
 APT_Handle_t m_APT_handle;
@@ -37,7 +39,7 @@ static void LCD_APT_event_handler(eUART_evt_t * p_lcd_event)
  * 
  * @param[in] rx_frame: Frame that needs to be decoded. 
  */
-void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
+void LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 {		
 	 uint8_t ByteCount = m_APT_handle.rx_frame.ByteCnt;     
    uint8_t ByteReceived = rx_data;
@@ -58,19 +60,19 @@ void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
 				 // Ask for another byte
 				 eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
 			 break;
-		  case 1:
-			case 2:
-			case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:	
+		 case 1:
+	   case 2:
+		 case 3:
+     case 4:
+     case 5:
+     case 6:
+     case 7:	
 				 m_APT_handle.rx_frame.Buffer[ByteCount] = ByteReceived;
 				 m_APT_handle.rx_frame.ByteCnt ++;
 			
 			   eUART_Receive(&m_APT_handle.euart_handler, m_APT_handle.euart_handler.rx_byte);
 		   break;
-		 	case 8: //Every frame has a lenght of 9 bytes (0-8)
+		 case 8: //Every frame has a lenght of 9 bytes (0-8)
 							
 				if(ByteReceived == APT_END) //Read or write cmd
 				 {
@@ -128,7 +130,6 @@ void LCD_APT_frame_Process(void)
 	uint32_t GearRatio = 0;
 	uint16_t Merge     = 0;
 	uint8_t  PassLvl   = 0;
-	uint8_t  WheelSize = 0;
 
 	
 	//Verification of the checksum
@@ -140,155 +141,136 @@ void LCD_APT_frame_Process(void)
 	 
 	Check = (Check & 0x0000FFFF); //Protection in case of overflow
 	
-	//Check if the CRC is good
-  if(Check == m_APT_handle.rx_frame.Buffer[CHECK + 1] + (m_APT_handle.rx_frame.Buffer[CHECK] << 8))
-	{
-		//Reading the Pass
-		PassLvl = (m_APT_handle.rx_frame.Buffer[PASS] & 0x0F); // Only the 4 LSB contain the pass level
+	 //Check if the CRC is good
+   if(Check == m_APT_handle.rx_frame.Buffer[CHECK + 1] + (m_APT_handle.rx_frame.Buffer[CHECK] << 8))
+	 {
+		   //Reading the Pass
+		   PassLvl = (m_APT_handle.rx_frame.Buffer[PASS] & 0x0F); //Only the 4 LSB contain the pass level
 		
-     if(PassLvl < 0x6) //We currently only support 5 levels of pass
-		 {			
-			 switch(PassLvl)
-			  {
-				 case 0:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,0); //Set pass to 0
-          break;							
-				 case 1:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,1); //Set pass to 1
-          break;	
-				 case 3:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,2); //Set pass to 2
-          break;	
-				 case 5:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,3); //Set pass to 3
-          break;	
-				 case 7:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,4); //Set pass to 4
-          break;								
-				 case 9:
-					  DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,5); //Set pass to 5
-          break;				
-		  	}
- 		 }			
+       if(PassLvl < 0xA) //We currently only support 5 levels of pass
+		   {			
+			   switch(PassLvl)
+			    {
+				   case 0:
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,0); //Set pass to 0
+            break;							
+				   case 1:
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,1); //Set pass to 1
+            break;	
+				   case 3:
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,2); //Set pass to 2
+            break;	
+				   case 5:
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,3); //Set pass to 3
+            break;	
+				   case 7:
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,4); //Set pass to 4
+            break;								
+				   case 9:
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,5); //Set pass to 5
+            break;				
+		  	  }
+ 		   }			
 		
-	     //Reading the Speed   limit TBA
-	  	 //Reading the Current limit TBA
-		
-		   //Reading the Wheel diameter
-	     WheelSize = m_APT_handle.rx_frame.Buffer[WHEELD];
-		
-		   if(WheelSize < 35) //Wheel diameters size is in inches
-		   {
-			 
-		   }
-		   else if(WheelSize > 50) //Wheel perimiter size is in centimeters
-		   {
-		 
-		   }
-		   else //Wheel size is unexpected
-		   {
-		     while(1);
-	  	 } 	   
-	  }
-    else
-	  {
-	    while(1); //Checksum isnt valid		
-	  }	
+	     //Reading the Speed   limit  TBA
+	  	 //Reading the Current limit  TBA		
+		   //Reading the Wheel diameter TBA	   
+	 
 	
-	  //For APT protocol, LSB is sent first for multi-bytes values
-		replyFrame.Size = 13;
+	    //For APT protocol, LSB is sent first for multi-bytes values
+		  replyFrame.Size = 13;
 	
-    replyFrame.Buffer[ 0] = APT_START; //Start
+      replyFrame.Buffer[ 0] = APT_START; //Start
 	  
-		//Add up power from both
-		toSend = abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)) + 
+	  	//Add up power from both
+	  	toSend = abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)) + 
 	           abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2));
 		
+				
+		  toSend = toSend/(0x7FFF/APTMAXCURRENT); //Conversion from relative current to actual amps
+      toSend = toSend * 2;                    //Covert from amps to 0.1 amps; 
 		
+		  if(toSend > 0xFF) //If ve have more than 25 amps
+		  {
+		    toSend = 0xFF;
+		  }
 		
-		toSend = toSend/(0x7FFF/APTMAXCURRENT); //Converiosn from relative current to actual amps
-
-    toSend = toSend * 2; //Covert from amps to 0.1 amps; 
-		
-		if(toSend > 0xFF) //If ve have more than 25 amps
-		{
-		 toSend = 0xFF;
-		}
-		
-    replyFrame.Buffer[ 1] = (toSend & 0x000000FF); // Power 0.1 A/unit 
+      replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.1 A/unit 
 
 		
-		//If there is a motor at the rear use it for its speed
-	  if(VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_ENABLE))
-		{
-		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1);		
+		  //If there is a motor at the rear use it for its speed
+	    if(VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_ENABLE))
+		  {
+		    toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1);		
 			
-			GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_GEARRATIO); //gear ratio (motor compared to wheel) is split. 
-			                                                                           //msb 16 bits is the numerator, 
-			                                                                           //lsb 16 bits is denominator
-			                                                                           //ex: 3/2 ratio would be 0x00030002 
-			                                                                           //default should be 0x00010001 
+			  GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_GEARRATIO);//Gear ratio (motor compared to wheel) is split. 
+			                                                                            //msb 16 bits is the numerator, 
+			                                                                            //lsb 16 bits is denominator
+			                                                                            //ex: 3/2 ratio would be 0x00030002 
+			                                                                            //default should be 0x00010001 
 			
-			if(GearRatio < 0x00010001 || GearRatio > 0x00F000F0) //possible values as gear ratio
-			{
-			   GearRatio = 0x00010001;
-			}				
+			  if(GearRatio < LOWEST_GEAR_RATIO || GearRatio > HIGEST_GEAR_RATIO) //valid values as gear ratio
+			  {
+			    GearRatio = LOWEST_GEAR_RATIO;
+		    }				
 			
-			toSend = ((GearRatio & 0xFFFF0000) >> 16) * toSend / (GearRatio & 0x0000FFFF);
-		}
-		else //If we are using the other motor use it as the speed reference
-		{
-		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M2); 
+			  toSend = ((GearRatio & 0xFFFF0000) >> 16) * toSend / (GearRatio & 0x0000FFFF);
+		  }
+		  else //If we are using the other motor use it as the speed reference
+		  {
+		    toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M2); 
 			
 						
-			GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M2_GEARRATIO); //gear ratio (motor compared to wheel) is split.
-			                                                                           //msb 16 bits is the numerator, 
-			                                                                           //lsb 16 bits is denominator
-			                                                                           //ex: 3/2 ratio would be 0x00030002 
-			                                                                           //default should be 0x00010001 
+			  GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M2_GEARRATIO); //Gear ratio (motor compared to wheel) is split.
+			                                                                             //msb 16 bits is the numerator, 
+			                                                                             //lsb 16 bits is denominator
+			                                                                             //ex: 3/2 ratio would be 0x00030002 
+			                                                                             //default should be 0x00010001 
 			
-			if(GearRatio < 0x00010001 || GearRatio > 0x00F000F0) //possible values as gear ratio
-			{
-			   GearRatio = 0x00010001;
-			}	
-		}			
+			  if(GearRatio < LOWEST_GEAR_RATIO || GearRatio > HIGEST_GEAR_RATIO) //valid values as gear ratio
+			  {
+			    GearRatio = LOWEST_GEAR_RATIO;
+			  }	
+		  }			
 		
-		toSend = toSend * 500;       //Converion from RPM to period in ms 
+		  toSend = toSend * 500;       //Converion from RPM to period in ms 
 		                             //
-	  toSend = 500000/(toSend/60); //
+	    toSend = 500000/(toSend/60); //
 	
-	  replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Motor speed Low half 
-	  replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; // Motor speed High half
+	    replyFrame.Buffer[ 2] = (toSend & 0x00FF);      //Motor speed Low half 
+	    replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; //Motor speed High half
 	  
-	  replyFrame.Buffer[ 4] = 0x00; // Error Code
+	    replyFrame.Buffer[ 4] = 0x00; //Error Code
 	  
-	  replyFrame.Buffer[ 5] = 0x04; // Brake Code bXXXX 0100 means the motor is working
+	    replyFrame.Buffer[ 5] = 0x04; //Brake Code bXXXX 0100 means the motor is working
    
-    replyFrame.Buffer[ 6] = 0x00; // Reserved
-    replyFrame.Buffer[ 7] = 0x00; // Reserved 
-    replyFrame.Buffer[ 8] = 0x00; // Reserved
-    replyFrame.Buffer[ 9] = 0x00; // Reserved
+      replyFrame.Buffer[ 6] = 0x00; //Reserved
+      replyFrame.Buffer[ 7] = 0x00; //Reserved 
+      replyFrame.Buffer[ 8] = 0x00; //Reserved
+      replyFrame.Buffer[ 9] = 0x00; //Reserved
 	
-	  //Calculate checksum
-		//Sum of paired bytes
-		Merge = 0;
-		Check = 0;
-	  for(int i = 0; i < 10;	i += 2)
-	  {
-			Merge = (replyFrame.Buffer[i+1] << 8) + replyFrame.Buffer[i];
-	    Check += Merge;
-	  }
+	    //Calculate checksum
+		  //Sum of paired bytes
+		  Merge = 0;
+		  Check = 0;
+	    for(int i = 0; i < 10;	i += 2)
+	    {
+			  Merge = (replyFrame.Buffer[i+1] << 8) + replyFrame.Buffer[i];
+	      Check += Merge;
+	    }
 		
-		replyFrame.Buffer[10] =  (0x000000FF & Check);       // Checksum Low  Half
-	  replyFrame.Buffer[11] = ((0x0000FF00 & Check) >> 8); // Checksum High Half	
+		  replyFrame.Buffer[10] =  (0x000000FF & Check);       //Checksum Low  Half
+	    replyFrame.Buffer[11] = ((0x0000FF00 & Check) >> 8); //Checksum High Half	
 	  	  
-	  replyFrame.Buffer[12] = APT_END; //End
+	    replyFrame.Buffer[12] = APT_END; //End
 			
-		replyFrame.ByteCnt = 0;   
+		  replyFrame.ByteCnt = 0;   
 		
-    m_APT_handle.tx_frame = replyFrame; 
+      m_APT_handle.tx_frame = replyFrame; 
      		
-		LCD_APT_TX_IRQ_Handler();
+		  LCD_APT_TX_IRQ_Handler(); 
+			
+   }//End of CRC check
 }
 
 /**@brief Function for initializing the LCD module with the APT protocol

@@ -50,7 +50,7 @@ typedef struct
 /* Initialisation of APT protocol */
 void LCD_APT_init(VCI_Handle_t * pHandle);
 /*Function for building the frame */
-void * LCD_APT_RX_IRQ_Handler(unsigned short rx_data);
+void LCD_APT_RX_IRQ_Handler(unsigned short rx_data);
 /*Function for sending a response */
 void LCD_APT_TX_IRQ_Handler(void);
 /* Function for decoding the received frame */
