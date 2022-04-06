@@ -29,7 +29,7 @@
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
-#define VEHICLE_SELECTION 		VEHICLE_ECELL
+#define VEHICLE_SELECTION 		VEHICLE_GEEBEECARGO
 #define VOLTAGE_OPENLOOP			0
 #define POSITION_OPENLOOP			0
 /*______________________________________________________*/
@@ -137,7 +137,7 @@
 																			 *Amplifying network gain)/(MCU supply voltage/2)
 		*/
 
-		#define NOMINAL_CURRENT         17000
+		#define NOMINAL_CURRENT         10000
 		#define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
 		#define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */
 		#define ID_DEMAG                -5000 /*!< Demagnetization current */
@@ -153,7 +153,7 @@
 																										 It can be either DEGREES_120 or
 																										 DEGREES_60 */
 
-		#define HALL_PHASE_SHIFT        60 /*!< Define here in degrees
+		#define HALL_PHASE_SHIFT        90 /*!< Define here in degrees
 																										 the electrical phase shift between
 																										 the low to high transition of
 																										 signal H1 and the maximum of
@@ -176,7 +176,7 @@
 																			 *Amplifying network gain)/(MCU supply voltage/2)
 		*/
 
-		#define NOMINAL_CURRENT2         17000
+		#define NOMINAL_CURRENT2         10000
 		#define MOTOR_MAX_SPEED_RPM2     1500 /*!< Maximum rated speed  */
 		#define MOTOR_VOLTAGE_CONSTANT2  15.0 /*!< Volts RMS ph-ph /kRPM */
 		#define ID_DEMAG2                -5000 /*!< Demagnetization current */
@@ -192,7 +192,7 @@
 																										 It can be either DEGREES_120 or
 																										 DEGREES_60 */
 
-		#define HALL_PHASE_SHIFT2        60 /*!< Define here in degrees
+		#define HALL_PHASE_SHIFT2        90 /*!< Define here in degrees
 																										 the electrical phase shift between
 																										 the low to high transition of
 																										 signal H1 and the maximum of

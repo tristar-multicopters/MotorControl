@@ -40,18 +40,14 @@
 /******************************************************************************* Includes ********************************************************************************/
 #include "speed_pulse_read.h"
 
-
 /**************************************************************************** Private definitions ************************************************************************/
-
 static SPR_Handle_t* p_SPR_Handle;	
-
-// Direction flags
+/* Direction flags */
 bool sin_flag;
 bool cos_flag;
-// Speed general variables
+/* Speed general variables */
 uint16_t pSpeed;
 uint16_t wSpeed;
-
 /****************************************************************** Public Hardware dependent functions ******************************************************************/
 
 /**
@@ -97,6 +93,14 @@ void GPIO_Init(SPR_Handle_t* pHandle)
 
 	nrf_drv_gpiote_in_init(pHandle->pCosSpeed_Pulse_pin, &in_config, GPIO_Pin_handler);
 
+	
+	nrfx_err_t nrfx_gpiote_in_init(nrfx_gpiote_pin_t               pin,
+                               nrfx_gpiote_in_config_t const * p_config,
+                               nrfx_gpiote_evt_handler_t       evt_handler);
+	
+	
+	
+	
 	nrf_drv_gpiote_in_event_enable(pHandle->pSinSpeed_Pulse_pin, true);
 	nrf_drv_gpiote_in_event_enable(pHandle->pCosSpeed_Pulse_pin, true);
 }
@@ -239,23 +243,22 @@ uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* pHandle)
 	* @param  Handle pointer
 	* @retval uint32_t periode value in us
 	*/
-uint32_t Pedal_capture_get_value(SPR_Handle_t* pHandle)
+
+uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 {
-	
-	p_SPR_Handle = pHandle;
+	p_SPR_Handle = sHandle;
 	// Make sure the capture event occured before checking the capture register
-	if(NRF_GPIOTE->EVENTS_IN[pHandle->bCaptureChannel] != 0)
+	if(NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] != 0)
 	{		// Clear the capture event
-			NRF_GPIOTE->EVENTS_IN[pHandle->bCaptureChannel] = 0;
+			NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] = 0;
 			// Return the stored capture value in the timer
-			pHandle->sPread =  (uint32_t)nrf_drv_timer_capture_get(pHandle->pTimerInstance, 0);
-			return (pHandle->sPread);
+			sHandle->sPread =  nrf_drv_timer_capture_get(sHandle->pTimerInstance, (nrf_timer_cc_channel_t)0);
 	}
 	else
 	{		// In case no capture occured, return 0
-			pHandle->sPread = 0;
-			return (pHandle->sPread);
+			sHandle->sPread = 0;
 	}
+	return (sHandle->sPread);
 }
 
 /**
@@ -263,22 +266,21 @@ uint32_t Pedal_capture_get_value(SPR_Handle_t* pHandle)
 	* @param  Handle pointer
 	* @retval uint32_t periode value in us
 	*/
-uint32_t Wheel_capture_get_value(SPR_Handle_t* pHandle)
+uint16_t Wheel_capture_get_value(SPR_Handle_t* sHandle)
 {
-	p_SPR_Handle = pHandle;
+	p_SPR_Handle = sHandle;
 	// Make sure the capture event occured before checking the capture register
-	if(NRF_GPIOTE->EVENTS_IN[pHandle->WCaptureChannel] != 0)
+	if(NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel] != 0)
 	{		// Clear the capture event
-			NRF_GPIOTE->EVENTS_IN[pHandle->WCaptureChannel] = 0;	
+			NRF_GPIOTE->EVENTS_IN[sHandle->WCaptureChannel] = 0;	
 			// Return the stored capture value in the timer
-			pHandle->wPread =  (uint32_t)nrf_drv_timer_capture_get(pHandle->wTimerInstance, 0);
-			return (pHandle->wPread);
+			sHandle->wPread =  nrf_drv_timer_capture_get(sHandle->wTimerInstance, (nrf_timer_cc_channel_t)0);		
 	}
 	else
 	{		// In case no capture occured, return 0
-			pHandle->wPread = 0;
-			return (pHandle->wPread);
+			sHandle->wPread = 0;
 	}
+		return (sHandle->wPread);
 }
 
 /**
@@ -286,19 +288,25 @@ uint32_t Wheel_capture_get_value(SPR_Handle_t* pHandle)
 	* @param  Handle pointer
 	* @retval direction decision 
 	*/
-void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
+void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)//, SPR_Handle_t * sHandle)
 {
 	if(pin == p_SPR_Handle->pSinSpeed_Pulse_pin)
 	{
-			sin_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pSinSpeed_Pulse_pin);
-			cos_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pCosSpeed_Pulse_pin);
-	
+       sin_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pSinSpeed_Pulse_pin);
+       cos_flag = nrfx_gpiote_in_is_set(p_SPR_Handle->pCosSpeed_Pulse_pin);
+
 		if (sin_flag && (!cos_flag))
+        {
 			p_SPR_Handle->Direction_result = Forward;
+        }
 		else if (cos_flag && (!sin_flag))
+        {
 			p_SPR_Handle->Direction_result = Error_Direction;
+        }
 		else 
-			p_SPR_Handle->Direction_result = Reverse ;
+        {
+			p_SPR_Handle->Direction_result = Reverse;
+        }
 	}
 }
 

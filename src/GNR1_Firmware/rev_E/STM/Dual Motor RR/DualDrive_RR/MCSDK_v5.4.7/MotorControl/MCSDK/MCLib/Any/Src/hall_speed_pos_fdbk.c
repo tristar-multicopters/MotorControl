@@ -182,6 +182,8 @@ __weak void HALL_Init( HALL_Handle_t * pHandle )
 	pHandle->Sector_Start_Angle[4] = ( int16_t ) (pHandle->PhaseShift - S16_60_PHASE_SHIFT);
 	pHandle->Sector_Start_Angle[5] = ( int16_t ) (pHandle->PhaseShift);
 	pHandle->Sector_Start_Angle[6] = ( int16_t ) (pHandle->PhaseShift - S16_120_PHASE_SHIFT);
+	pHandle->Sector_Start_Angle[7] = 0;
+	
 
 	pHandle->Sector_Destination_Angle[0] = 0;  
 	pHandle->Sector_Destination_Angle[1] = ( int16_t ) (pHandle->PhaseShift  + S16_120_PHASE_SHIFT) ;
@@ -190,6 +192,7 @@ __weak void HALL_Init( HALL_Handle_t * pHandle )
   pHandle->Sector_Destination_Angle[4] =  (int16_t ) (pHandle->PhaseShift );
 	pHandle->Sector_Destination_Angle[5] = ( int16_t ) (pHandle->PhaseShift  + S16_60_PHASE_SHIFT);
   pHandle->Sector_Destination_Angle[6] = ( int16_t ) (pHandle->PhaseShift - S16_60_PHASE_SHIFT);
+	pHandle->Sector_Destination_Angle[7] = 0;  
 	
 	pHandle->Sector_Middle_Angle[0] = 0;  
 	pHandle->Sector_Middle_Angle[1] = ( int16_t ) ( pHandle->Sector_Start_Angle[1]  +  S16_30_PHASE_SHIFT );
@@ -198,6 +201,7 @@ __weak void HALL_Init( HALL_Handle_t * pHandle )
   pHandle->Sector_Middle_Angle[4] = ( int16_t ) ( pHandle->Sector_Start_Angle[4]  +  S16_30_PHASE_SHIFT);
 	pHandle->Sector_Middle_Angle[5] =( int16_t ) ( pHandle->Sector_Start_Angle[5]  +  S16_30_PHASE_SHIFT);
   pHandle->Sector_Middle_Angle[6] = ( int16_t ) ( pHandle->Sector_Start_Angle[6]  +  S16_30_PHASE_SHIFT);
+	pHandle->Sector_Middle_Angle[7] = 0;  
 }
 
 /**

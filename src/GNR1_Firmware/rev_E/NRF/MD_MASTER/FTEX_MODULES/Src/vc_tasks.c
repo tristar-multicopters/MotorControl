@@ -25,9 +25,9 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 /************* DEFINES ****************/
 
 #define RETURN_TO_STANDBY_LOOPTICKS 0		// Max number of ticks to stay in run while stop conditions are met
+#define START_MOTORS_LOOPTICKS 			2		// Max number of ticks to stay in run while stop conditions are met
 #define START_LOOPTICKS							100 // Max number of ticks to stay in start state
 #define STOP_LOOPTICKS							100 // Max number of ticks to stay in stop state
-
 
 /************* TASKS ****************/
 
@@ -115,6 +115,9 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 																				
 	while (true)
 	{
+		/* Pulse read presence in slow loop test */ 
+		DRVT_PASpresence (pVCI->pDrivetrain);
+
 		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain) )
 		{
 			getMonitoringReg_Slow(M1);
@@ -157,7 +160,8 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 		switch ( StateVC )
 		{
 			case V_IDLE:
-					osDelay(1000);
+					osDelay(100);
+					wCounter = 0;
 					VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
 					break;
 			
@@ -166,6 +170,15 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
 					if ( DRVT_CheckStartConditions(pVCI->pDrivetrain) )
 					{
+						wCounter++;
+					}
+					else
+					{
+						wCounter = 0;
+					}
+					if (wCounter > START_MOTORS_LOOPTICKS)
+					{
+						wCounter = 0;
 						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY_START );
 					}
 					break;
@@ -196,7 +209,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 			case V_RUN:
 					hVehicleFault = DRVT_RunStateCheck(pVCI->pDrivetrain);
 					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
-					DRVT_UpdateMotorRamps(pVCI->pDrivetrain);
+					DRVT_UpdateMotorRamps(pVCI->pDrivetrain); 			
 					if ( DRVT_CheckStopConditions(pVCI->pDrivetrain) )
 					{
 						wCounter++;
@@ -225,7 +238,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					if ( DRVT_IsDrivetrainStopped(pVCI->pDrivetrain) )
 					{
 						wCounter = 0;
-						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
+						VCSTM_NextState( pVCI->pStateMachine, V_IDLE );
 					}
 					wCounter++;
 					if ( wCounter > STOP_LOOPTICKS )

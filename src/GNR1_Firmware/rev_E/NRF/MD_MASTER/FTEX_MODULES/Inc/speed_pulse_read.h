@@ -67,6 +67,8 @@ typedef struct
 {
 	uint16_t 	sLowPassFilterBW1;   /* used to configure the first order software low pass filter */
 	uint16_t 	sMax;             	 /* Pulse reading signal at maximum position */	
+	int32_t				sWheel_Lap_Count;
+	bool 			sFirst_Wheel_Lap;
 } SPR_Param_t;
 
 typedef struct
@@ -102,7 +104,8 @@ typedef struct
 	uint16_t 			sWAvSpeed;       /* It contains latest available wheel average speed in u16 */
 
 	SPR_Param_t		sParam;
-} SPR_Handle_t;
+	
+} SPR_Handle_t; 
 
 /* Exported constants --------------------------------------------------------*/
 
@@ -113,14 +116,13 @@ typedef struct
 void SPR_Init(SPR_Handle_t * pHandle);
 void SPWR_Init(SPR_Handle_t * pHandle);
 
+void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);
+void GPIO_Init(SPR_Handle_t* sHandle);
+uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle);
+uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle);
 
-void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);	
-void GPIO_Init(SPR_Handle_t* pHandle);
-uint8_t GPIOTE_Capture_Init(SPR_Handle_t* pHandle);
-uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* pHandle);
-
-uint32_t Pedal_capture_get_value(SPR_Handle_t* pHandle);
-uint32_t Wheel_capture_get_value(SPR_Handle_t* pHandle);
+uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle);
+uint16_t Wheel_capture_get_vlaue(SPR_Handle_t* sHandle);
 
 uint16_t Pspeed_CalcAvValue( SPR_Handle_t * pHandle );
 uint16_t Wspeed_CalcAvValue( SPR_Handle_t * pHandle );

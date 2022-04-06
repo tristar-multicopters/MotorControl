@@ -36,17 +36,16 @@ static void LCD_Baf_event_handler(eUART_evt_t * p_lcd_event)
  * 
  * @param[in] rx_frame: Frame that needs to be decoded. 
  */
-void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
+void LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 {
 	
 	if(m_Baf_handle.TrashCnt >= 123) //Skip the bundle of 123 trash bytes when the screen is powerd on
 	{
-	
-	 uint8_t ByteCount    = m_Baf_handle.rx_frame.ByteCnt;     
-   uint8_t ByteReceived = rx_data;
+        uint8_t ByteCount    = m_Baf_handle.rx_frame.ByteCnt;     
+        uint8_t ByteReceived = rx_data;
 				 
-	 switch(ByteCount)					 
-	 {
+        switch(ByteCount)					 
+        {
 		  case 0:
 				 if(ByteReceived == BAF_CMD_READ || ByteReceived == BAF_CMD_WRITE) //Read or write cmd
 				 {
@@ -102,13 +101,13 @@ void * LCD_BAF_RX_IRQ_Handler(unsigned short rx_data)
 			 // Ask for another byte
 			 eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
 			 break;						
-	 }
-  }
-  else
-  {
-    m_Baf_handle.TrashCnt ++;
-	  eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
-  }	
+        }
+    }
+    else
+    {
+        m_Baf_handle.TrashCnt ++;
+        eUART_Receive(&m_Baf_handle.euart_handler, m_Baf_handle.euart_handler.rx_byte);
+    }	
 }
 
 /**@brief Function for sending a response byte by byte
@@ -254,37 +253,37 @@ void LCD_BAF_frame_Process(void)
 				   switch(AssistLvl) //Set the pas level according to what the user selected
 					 {
 							case A_0:
-							  	DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,0);	//Set pass to 0							
+							  	DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,PAS_LEVEL_0);	//Set pass to 0							
 								break;
 							case A_1: //A_1, A_3, A_5, A_7, arent used until we support 9 pass levels
 								break;
 							case A_2:
-						  		DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,1); //Set pass to 1		
+						  		DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,PAS_LEVEL_1); //Set pass to 1		
 								break;
 							case A_3:
 								break;
 							case A_4:
-						  		DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,2); //Set pass to 2	
+						  		DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,PAS_LEVEL_2); //Set pass to 2	
 								break;
 							case A_5:
 								break;
 							case A_6:
-								  DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,3); //Set pass to 3		
+								  DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,PAS_LEVEL_3); //Set pass to 3		
 								break;
 							case A_7:
 								break;
 							case A_8:
-								  DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,4); //Set pass to 4		
+								  DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,PAS_LEVEL_4); //Set pass to 4		
 								break;
 							case A_9:
-							  	DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,5); //Set pass to 5		
+							  	DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,PAS_LEVEL_5); //Set pass to 5		
 								break;
 							case A_PUSH:
 								break;												
 							case A_LSPEED: 
 								break;
 							default:
-							  	DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,0); //In case of unexpected value, set pas to 0
+							  	DRVT_SetPASLevel(m_Baf_handle.pVController->pDrivetrain,PAS_LEVEL_0); //In case of unexpected value, set pas to 0
 								break;
 						}				
 					break;
