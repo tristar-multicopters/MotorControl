@@ -192,15 +192,9 @@ void LCD_APT_frame_Process(void)
 		
       replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.1 A/unit 		
 
-<<<<<<< Updated upstream
-		
-		  //If there is a motor at the rear use it for its speed
-	    if(true)
-		  {
-		    toSend = abs(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1));		
-=======
+
 		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1);		
->>>>>>> Stashed changes
+
 			
 			GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_GEARRATIO);  //Gear ratio (motor compared to wheel) is split. 
 			                                                                            //msb 16 bits is the numerator, 
