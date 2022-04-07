@@ -101,21 +101,21 @@ void LCD_APT_RX_IRQ_Handler(unsigned short rx_data)
  */
 void LCD_APT_TX_IRQ_Handler(void)
 {
-    uint8_t tx_data;
+   uint8_t tx_data;
 
-    if(m_APT_handle.tx_frame.ByteCnt < m_APT_handle.tx_frame.Size)
-    {
-			tx_data = m_APT_handle.tx_frame.Buffer[m_APT_handle.tx_frame.ByteCnt];
+   if(m_APT_handle.tx_frame.ByteCnt < m_APT_handle.tx_frame.Size)
+   {
+		  tx_data = m_APT_handle.tx_frame.Buffer[m_APT_handle.tx_frame.ByteCnt];
 			m_APT_handle.tx_frame.ByteCnt ++;
 			// Send the data byte 
 			eUART_Send(&m_APT_handle.euart_handler,&tx_data, 1); 
-    }
-    else
-    {	
+   }
+   else
+   {	
 			//Resume reception of frames			
 			m_APT_handle.tx_frame.ByteCnt = 0;
 			eUART_Receive(&m_APT_handle.euart_handler,m_APT_handle.euart_handler.rx_byte); //Restart reception
-	  }
+	 }
 }
 
 /**@brief Function for decoding a received frame (previously built on the callback function)
@@ -124,22 +124,22 @@ void LCD_APT_TX_IRQ_Handler(void)
  */
 void LCD_APT_frame_Process(void)
 {
-	APT_frame_t replyFrame = {0};
-	int32_t  toSend    = 0;
-	uint32_t Check     = 0;
-	uint32_t GearRatio = 0;
-	uint16_t Merge     = 0;
-	uint8_t  PassLvl   = 0;
+	 APT_frame_t replyFrame = {0};
+	 int32_t  toSend    = 0;
+	 uint32_t Check     = 0;
+	 uint32_t GearRatio = 0;
+	 uint16_t Merge     = 0;
+	 uint8_t  PassLvl   = 0;
 
 	
-	//Verification of the checksum
-	for(int i = 0; i < 6; i += 2) //Checksum is the sum of double bytes into a 16 bits
-	{                             //Single bytes need to be paired into a single 16 bits before being summed    
-		Merge = (m_APT_handle.rx_frame.Buffer[i] << 8) + m_APT_handle.rx_frame.Buffer[i+1];
-	  Check += Merge;
-	}
+	 //Verification of the checksum
+	 for(int i = 0; i < 6; i += 2) //Checksum is the sum of double bytes into a 16 bits
+	 {                             //Single bytes need to be paired into a single 16 bits before being summed    
+	 	 Merge = (m_APT_handle.rx_frame.Buffer[i] << 8) + m_APT_handle.rx_frame.Buffer[i+1];
+	   Check += Merge;
+	 }
 	 
-	Check = (Check & 0x0000FFFF); //Protection in case of overflow
+	 Check = (Check & 0x0000FFFF); //Protection in case of overflow
 	
 	 //Check if the CRC is good
    if(Check == m_APT_handle.rx_frame.Buffer[CHECK + 1] + (m_APT_handle.rx_frame.Buffer[CHECK] << 8))
@@ -152,22 +152,22 @@ void LCD_APT_frame_Process(void)
 			   switch(PassLvl)
 			    {
 				   case 0:
-					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,0); //Set pass to 0
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_0); //Set pass to 0
             break;							
 				   case 1:
-					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,1); //Set pass to 1
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_1); //Set pass to 1
             break;	
 				   case 3:
-					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,2); //Set pass to 2
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_2); //Set pass to 2
             break;	
 				   case 5:
-					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,3); //Set pass to 3
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_3); //Set pass to 3
             break;	
 				   case 7:
-					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,4); //Set pass to 4
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_4); //Set pass to 4
             break;								
 				   case 9:
-					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,5); //Set pass to 5
+					    DRVT_SetPASLevel(m_APT_handle.pVController->pDrivetrain,PAS_LEVEL_5); //Set pass to 5
             break;				
 		  	  }
  		   }			
@@ -184,57 +184,40 @@ void LCD_APT_frame_Process(void)
 	  
 	  	//Add up power from both
 	  	toSend = abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)) + 
-	           abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2));
+	             abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2));
 		
 				
 		  toSend = toSend/(0x7FFF/APTMAXCURRENT); //Conversion from relative current to actual amps
       toSend = toSend * 2;                    //Covert from amps to 0.1 amps; 
 		
-		  if(toSend > 0xFF) //If ve have more than 25 amps
-		  {
-		    toSend = 0xFF;
-		  }
-		
-      replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.1 A/unit 
+      replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.1 A/unit 		
 
+<<<<<<< Updated upstream
 		
 		  //If there is a motor at the rear use it for its speed
 	    if(true)
 		  {
 		    toSend = abs(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1));		
+=======
+		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1);		
+>>>>>>> Stashed changes
 			
-			  GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_GEARRATIO);//Gear ratio (motor compared to wheel) is split. 
+			GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_GEARRATIO);  //Gear ratio (motor compared to wheel) is split. 
 			                                                                            //msb 16 bits is the numerator, 
 			                                                                            //lsb 16 bits is denominator
 			                                                                            //ex: 3/2 ratio would be 0x00030002 
 			                                                                            //default should be 0x00010001 
 			
-			  if(GearRatio < LOWEST_GEAR_RATIO || GearRatio > HIGEST_GEAR_RATIO) //valid values as gear ratio
-			  {
-			    GearRatio = LOWEST_GEAR_RATIO;
-		    }				
+			if(GearRatio < LOWEST_GEAR_RATIO || GearRatio > HIGEST_GEAR_RATIO) //valid values as gear ratio
+			{
+			   GearRatio = LOWEST_GEAR_RATIO;
+		  }				
 			
-			  toSend = ((GearRatio & 0xFFFF0000) >> 16) * toSend / (GearRatio & 0x0000FFFF);
-		  }
-		  else //If we are using the other motor use it as the speed reference
-		  {
-		    toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M2); 
-			
-						
-			  GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M2_GEARRATIO); //Gear ratio (motor compared to wheel) is split.
-			                                                                             //msb 16 bits is the numerator, 
-			                                                                             //lsb 16 bits is denominator
-			                                                                             //ex: 3/2 ratio would be 0x00030002 
-			                                                                             //default should be 0x00010001 
-			
-			  if(GearRatio < LOWEST_GEAR_RATIO || GearRatio > HIGEST_GEAR_RATIO) //valid values as gear ratio
-			  {
-			    GearRatio = LOWEST_GEAR_RATIO;
-			  }	
-		  }			
+			toSend = ((GearRatio & 0xFFFF0000) >> 16) * toSend / (GearRatio & 0x0000FFFF);
+		
 		
 		  toSend = toSend * 500;       //Converion from RPM to period in ms 
-		                             //
+		                               //
 	    toSend = 500000/(toSend/60); //
 	
 	    replyFrame.Buffer[ 2] = (toSend & 0x00FF);      //Motor speed Low half 
