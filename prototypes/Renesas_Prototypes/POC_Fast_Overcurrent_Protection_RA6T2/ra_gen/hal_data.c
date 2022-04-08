@@ -7,11 +7,11 @@ poeg_instance_ctrl_t g_poeg0_ctrl;
 const poeg_cfg_t g_poeg0_cfg =
 {
     .trigger             = (poeg_trigger_t) (POEG_TRIGGER_PIN |  POEG_TRIGGER_SOFTWARE),
-    .polarity            = POEG_GTETRG_POLARITY_ACTIVE_HIGH,
+    .polarity            = POEG_GTETRG_POLARITY_ACTIVE_LOW,
     .noise_filter        = POEG_GTETRG_NOISE_FILTER_PCLKB_DIV_32,
     .channel             = 3,
-    .ipl                 = (BSP_IRQ_DISABLED),
-    .p_callback          = NULL,
+    .ipl                 = (0),
+    .p_callback          = g_poe_overcurrent,
     .p_context           = NULL,
 #if defined(VECTOR_NUMBER_POEG3_EVENT)
     .irq       = VECTOR_NUMBER_POEG3_EVENT,
