@@ -138,7 +138,6 @@ __weak void MCP_Init( MCP_Handle_t *pHandle,
   pHandle->fFcpAbortReceive = fFcpAbortReceive;
 	
 	
-	
  /* RxTimeout = xTimerCreate(
     "RxTimeout",                // name 
     pdMS_TO_TICKS(30),          // period/time 
