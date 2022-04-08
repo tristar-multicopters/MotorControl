@@ -44,27 +44,28 @@ typedef enum
 
 typedef struct
 {
-	DRVT_Type_h bDrivetrainType;	  /* Vehicle drivetrain type (i.e. hub, middrive, ...) */
-	Motor_Mode_t bMode;						  /* Single or dual motor. It is updated by user using motor selector switch */
-	uint8_t bMainMotor;						  /* Main motor selection. It is updated by user using motor selector switch */
-	uint8_t bDefaultMainMotor;		  /* Default main motor selection */
-	CTRL_Type_h bCtrlType;				  /* Torque or speed control */
-	bool bUseMotorM1;							  /* To set once, true if motor 1 is used */
-	bool bUseMotorM2;							  /* To set once, true if motor 2 is used */
+	DRVT_Type_h bDrivetrainType;	  	/* Vehicle drivetrain type (i.e. hub, middrive, ...) */
+	Motor_Mode_t bMode;						  	/* Single or dual motor. It is updated by user using motor selector switch */
+	uint8_t bMainMotor;						  	/* Main motor selection. It is updated by user using motor selector switch */
+	uint8_t bDefaultMainMotor;		  	/* Default main motor selection */
+	CTRL_Type_h bCtrlType;				  	/* Torque or speed control */
+	bool bUseMotorM1;							  	/* To set once, true if motor 1 is used */
+	bool bUseMotorM2;							  	/* To set once, true if motor 2 is used */
+	bool bM2TorqueInversion;					/* Set true if M2 torque sign is different than M1  */
 	
-	int16_t aTorque[2];						  /* Array of torque reference, first element is for M1, second is for M2 */
-	int16_t aSpeed[2];						  /* Array of speed reference, first element is for M1, second is for M2 */
+	int16_t aTorque[2];						  	/* Array of torque reference, first element is for M1, second is for M2 */
+	int16_t aSpeed[2];						  	/* Array of speed reference, first element is for M1, second is for M2 */
 	
-	MDI_Handle_t * pMDI;					  /* Pointer to MDI handle */
-	THRO_Handle_t * pThrottle;		  /* Pointer to throttle handle */
-	PAS_Handle_t * pPAS;					  /* Pointer to PAS handle */
-	BRK_Handle_t * pBrake;				  /* Pointer to brake handle */
-	MS_Handle_t * pMS;						  /* Pointer to motor selector handle */
-	PWREN_Handle_t * pPWREN;			  /* Pointer to power enable pin handle */
-	WSS_Handle_t 	* pWSS;				    /* Pointer to Wheel speed handle */
+	MDI_Handle_t * pMDI;					  	/* Pointer to MDI handle */
+	THRO_Handle_t * pThrottle;		  	/* Pointer to throttle handle */
+	PAS_Handle_t * pPAS;					  	/* Pointer to PAS handle */
+	BRK_Handle_t * pBrake;				  	/* Pointer to brake handle */
+	MS_Handle_t * pMS;						  	/* Pointer to motor selector handle */
+	PWREN_Handle_t * pPWREN;			  	/* Pointer to power enable pin handle */
+	WSS_Handle_t 	* pWSS;				    	/* Pointer to Wheel speed handle */
 
-	int16_t			 	pRefTorque;			/* Torque reference, first element is for M1, second is for M2 */
-	int16_t			 	pTorqueSelect;	/* Torque reference, first element is for M1, second is for M2 */
+	int16_t			 	pRefTorque;					/* Torque reference, first element is for M1, second is for M2 */
+	int16_t			 	pTorqueSelect;			/* Torque reference, first element is for M1, second is for M2 */
 	bool					bUsePAS;
 	int16_t 			pAvtorque;
 		

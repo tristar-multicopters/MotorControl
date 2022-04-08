@@ -87,7 +87,10 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		if(pHandle->bMode == DUAL_MOTOR)
 		{
 			pHandle->aTorque[M1] = hTorqueRef;
-			pHandle->aTorque[M2] = hTorqueRef;
+			if (pHandle->bM2TorqueInversion)
+				pHandle->aTorque[M2] = -hTorqueRef;
+			else
+				pHandle->aTorque[M2] = hTorqueRef;
 		}
 	}
 	else if (pHandle->bCtrlType == SPEED_CTRL)
