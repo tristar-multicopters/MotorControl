@@ -680,6 +680,12 @@ void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel Level)
 	 pHandle->pPAS->pLevel = Level;
 }
 
+/**
+	* @brief  Get PAS level
+	* @param  Drivetrain handle
+	* @param  PAS level
+	* @retval None
+	*/
 PAS_sLevel DRVT_GetPASLevel (DRVT_Handle_t * pHandle)
 {
 	return pHandle->pPAS->pLevel;
@@ -851,51 +857,13 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 	*/
 bool DRVT_PASpresence (DRVT_Handle_t * pHandle) 
 {
-	int32_t	TempSpeed;
+	uint32_t	pSpeedt;
 	PAS_CalculateSpeed(pHandle->pPAS);
-	TempSpeed = PAS_GetSpeedValue(pHandle->pPAS);
-	if (TempSpeed > 0)
+	pSpeedt = PAS_GetSpeedValue(pHandle->pPAS);
+	if (pSpeedt > 0)
 		pHandle->bUsePAS = true;
 	else 
 		pHandle->bUsePAS = false;
-	
+
 	return pHandle->bUsePAS;
 } 
-
-/**
-	* @brief  Torque ADC value calculation and filtering
-	* @param  pHandle used for Torque monitoring
-	* @retval None
-	*/
-int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle) 
-{
-  int16_t ttemp;
-	uint8_t pBandwidth;
-	int16_t pPASTorque;
-	
-	/* Call PAS set torque function */
-	pPASTorque = DRVT_PasSetTorque(pHandle);
-		
-	if (pPASTorque >= pHandle->pAvTorque)
-		pBandwidth = pHandle->pLowPassFilterBW1;
-	else
-		pBandwidth = pHandle->pLowPassFilterBW2;
-
-	if ( pPASTorque != 0x0u )
-	{
-		ttemp =  ( int16_t )( pBandwidth - 1u );
-		ttemp *= ( int16_t ) ( pHandle->pAvTorque );
-		ttemp += pPASTorque;
-		ttemp /= ( uint16_t )( pBandwidth );
-		pHandle->pAvTorque = (int16_t) ttemp;
-	}
-	return pHandle->pAvTorque;
-}
-
-
-
-
-
-
-
-

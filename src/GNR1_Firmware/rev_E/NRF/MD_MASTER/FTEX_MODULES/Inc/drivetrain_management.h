@@ -206,6 +206,12 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle);
 	* @retval None
 	*/
 void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel Level);
+/**
+	* @brief  Get PAS level
+	* @param  Drivetrain handle
+	* @param  PAS level
+	* @retval None
+	*/
 PAS_sLevel DRVT_GetPASLevel (DRVT_Handle_t * pHandle);
 /**
 	* @brief  Get main motor reference torque
@@ -213,7 +219,6 @@ PAS_sLevel DRVT_GetPASLevel (DRVT_Handle_t * pHandle);
 	* @retval Returns main motor reference torque
 	*/
 int16_t DRVT_GetTorqueRefMainMotor(DRVT_Handle_t * pHandle);
-
 /**
 	* @brief  Get motor 1 reference torque
 	* @param  Drivetrain handle
@@ -281,12 +286,7 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle);
 	* @retval pHandle->bUsePAS in Boolean
 	*/
 bool DRVT_PASpresence (DRVT_Handle_t * pHandle);
-/**
-	* @brief  PAS torque Acceleration Ramp 
-	* @param  Drivetrain handle
-	* @retval int16_t 
-	*/
-int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle);
+
 
 #endif /*__DRIVETRAIN_MANAGEMENT_H*/
 
