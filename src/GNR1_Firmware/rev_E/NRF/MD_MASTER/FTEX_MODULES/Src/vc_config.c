@@ -142,7 +142,7 @@ THRO_Handle_t ThrottleHandle =
 		
 		.hOffsetTorque = 4000,
 		.bSlopeTorque = 8,
-		.bDivisorTorque = 48,
+		.bDivisorTorque = 32,
 	}
 	#else
 	.hParam =
@@ -300,6 +300,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bDefaultMainMotor = M1,
 	.bMode = DUAL_MOTOR,
 	.bCtrlType = TORQUE_CTRL,
+	.bM2TorqueInversion = false,
 	.hTorqueRampTimeUp = 200,
 	.hTorqueRampTimeDown = 50,
 	.hSpeedRampTimeUp = 200,
@@ -315,6 +316,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bDefaultMainMotor = M1,
 	.bMode = SINGLE_MOTOR,
 	.bCtrlType = TORQUE_CTRL,
+	.bM2TorqueInversion = false,
 	.hTorqueRampTimeUp = 200,
 	.hTorqueRampTimeDown = 50,
 	.hSpeedRampTimeUp = 200,
@@ -330,6 +332,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bDefaultMainMotor = M1,
 	.bMode = SINGLE_MOTOR,
 	.bCtrlType = TORQUE_CTRL,
+	.bM2TorqueInversion = false,
 	.hTorqueRampTimeUp = 200,
 	.hTorqueRampTimeDown = 50,
 	.hSpeedRampTimeUp = 200,
@@ -349,6 +352,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bDefaultMainMotor = M1,
 	.bMode = DUAL_MOTOR,
 	.bCtrlType = TORQUE_CTRL,
+	.bM2TorqueInversion = true,
 	.hTorqueRampTimeUp = 200,
 	.hTorqueRampTimeDown = 50,
 	.hSpeedRampTimeUp = 200,
@@ -361,6 +365,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bUseMotorM2 = false,
 	.bDefaultMainMotor = M1,
 	.bCtrlType = TORQUE_CTRL,
+	.bM2TorqueInversion = false,
 	.hTorqueRampTimeUp = 200,
 	.hTorqueRampTimeDown = 50,
 	.hSpeedRampTimeUp = 200,
@@ -385,7 +390,7 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-eUART_protocol_t EUART_handle_t = EUART_APT; // Has to been initialise by Evionics first
+eUART_protocol_t EUART_handle_t = EUART_DISABLE;
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,
