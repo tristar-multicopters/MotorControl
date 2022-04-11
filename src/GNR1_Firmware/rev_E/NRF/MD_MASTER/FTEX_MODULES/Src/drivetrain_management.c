@@ -11,7 +11,6 @@
 #include "drivetrain_management.h"
 /* Functions ---------------------------------------------------- */
 
-
 /**
 	* @brief  Module initialization, to be called once before using it
 	* @param  Drivetrain handle
@@ -127,6 +126,9 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 		{
 			if ( abs(pHandle->aTorque[M1]) > abs(MDI_getIq(pHandle->pMDI, M1)) )
 			{
+				if (pHandle->bUsePAS)
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorquePASRampTimeUp);	
+				else
 				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeUp);
 			}
 			else
@@ -829,10 +831,10 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 	PAS_Pres = pHandle->bUsePAS; 		
 	tThrottle = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	/* PAS and Throttle mangement */
-	if (PAS_Pres && (tThrottle == 0))
+	if (PAS_Pres && (tThrottle <= 100))
 	{
 		/* PAS Ramp */
-		pHandle->pTorqueSelect= DRVT_PASSetRamp(pHandle);
+		pHandle->pTorqueSelect= DRVT_PasSetTorque(pHandle);
 	}
 	else
 	{	
@@ -852,35 +854,13 @@ bool DRVT_PASpresence (DRVT_Handle_t * pHandle)
 	int32_t	TempSpeed;
 	PAS_CalculateSpeed(pHandle->pPAS);
 	TempSpeed = PAS_GetSpeedValue(pHandle->pPAS);
-	if (TempSpeed > 0 && PAS_GetDirection(pHandle->pPAS) == 0)
+	if (TempSpeed > 0)
 		pHandle->bUsePAS = true;
 	else 
 		pHandle->bUsePAS = false;
 	
 	return pHandle->bUsePAS;
 } 
-
-///**
-//	* @brief  PAS torque Acceleration Ramp 
-//	* @param  Drivetrain handle
-//	* @retval int16_t 
-//	*/
-//int16_t DRVT_PASSetRamp1 (DRVT_Handle_t * pHandle) 
-//{
-//	int16_t pPASTorque, pDiv, pRes;
-//	/* Call PAS set torque function */
-//	pPASTorque = DRVT_PasSetTorque(pHandle);
-//	/* Divde the PAS torque by pRamcoeff */
-//	pDiv = pPASTorque / pHandle->pPAS->pRampCoeff;
-//	/* Divde the pas torque by pRamcoeff */
-//	pRes = pDiv * pHandle->pPAS->pRampCoeff;
-//	
-//	if (pHandle->pAvtorque < pRes)
-//			pHandle->pAvtorque+=pDiv;
-//	else
-//			pHandle->pAvtorque = pPASTorque;
-//	return pHandle->pAvtorque;
-//} 
 
 /**
 	* @brief  Torque ADC value calculation and filtering
@@ -895,19 +875,18 @@ int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle)
 	
 	/* Call PAS set torque function */
 	pPASTorque = DRVT_PasSetTorque(pHandle);
-	
-	if (pPASTorque > pHandle->pAvTorque)
+		
+	if (pPASTorque >= pHandle->pAvTorque)
 		pBandwidth = pHandle->pLowPassFilterBW1;
 	else
 		pBandwidth = pHandle->pLowPassFilterBW2;
 
 	if ( pPASTorque != 0x0u )
 	{
-		ttemp =  ( uint32_t )( pBandwidth - 1u );
-		ttemp *= ( uint32_t ) ( pHandle->pAvTorque );
+		ttemp =  ( int16_t )( pBandwidth - 1u );
+		ttemp *= ( int16_t ) ( pHandle->pAvTorque );
 		ttemp += pPASTorque;
-		ttemp /= ( uint32_t )( pBandwidth );
-		ttemp /= ( uint32_t )( pBandwidth );
+		ttemp /= ( uint16_t )( pBandwidth );
 		pHandle->pAvTorque = (int16_t) ttemp;
 	}
 	return pHandle->pAvTorque;

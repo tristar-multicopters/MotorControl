@@ -334,6 +334,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.bCtrlType = TORQUE_CTRL,
 	.bM2TorqueInversion = false,
 	.hTorqueRampTimeUp = 200,
+	.hTorquePASRampTimeUp = 1000,
 	.hTorqueRampTimeDown = 50,
 	.hSpeedRampTimeUp = 200,
 	.hSpeedRampTimeDown = 50,
@@ -343,7 +344,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.hMaxTorque = -10000,
 	.hMaxLevel	=	5,
 	.pAvTorque =0,			
-	.pLowPassFilterBW1 = 50,	
+	.pLowPassFilterBW1 = 6,	
 	.pLowPassFilterBW2 = 1,		
 
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
@@ -390,7 +391,7 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-eUART_protocol_t EUART_handle_t = EUART_DISABLE;
+eUART_protocol_t EUART_handle_t = EUART_APT;
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,

@@ -84,6 +84,7 @@ typedef struct
 	uint16_t hSpeedRampTimeUp;			/* Speed ramp time in millisecond when controller is ramping UP */
 	uint16_t hSpeedRampTimeDown;		/* Speed ramp time in millisecond when controller is ramping DOWN */
 	uint16_t hTorqueRampTimeUp;		  /* Torque ramp time in millisecond when controller is ramping UP */
+	uint16_t hTorquePASRampTimeUp;
 	uint16_t hTorqueRampTimeDown;		/* Torque ramp time in millisecond when controller is ramping DOWN */
 	uint16_t hStartingThrottle;		  /* Minimum torque to start drivetrain */
 	uint16_t hStoppingThrottle;		  /* Minimum torque to stop drivetrain */

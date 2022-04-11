@@ -248,10 +248,9 @@ uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 {
 	p_SPR_Handle = sHandle;
 	// Make sure the capture event occured before checking the capture register
-	if((NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] != 0)||(NRF_GPIOTE->EVENTS_IN[sHandle->bRestartChannel] != 0))
+	if(NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] != 0)
 	{		// Clear the capture event
 			NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] = 0;
-			NRF_GPIOTE->EVENTS_IN[sHandle->bRestartChannel] = 0;
 			// Return the stored capture value in the timer
 			sHandle->sPread =  nrf_drv_timer_capture_get(sHandle->pTimerInstance, (nrf_timer_cc_channel_t)0);
 	}
