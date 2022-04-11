@@ -22,6 +22,20 @@ static void sendVehicleMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Hand
 static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle, uint8_t motorSelection);
 #endif
 
+/************* DEBUG ****************/
+
+#define DEBUG_ENABLE		1
+
+#if DEBUG_ENABLE
+struct {
+	int16_t hIqref;
+	int16_t hIdref;
+	int32_t hSpeedRef;
+	bool bStartM1;
+	bool bStartM2;
+} sDebugVariables;
+#endif
+
 /************* DEFINES ****************/
 
 #define RETURN_TO_STANDBY_LOOPTICKS 0		// Max number of ticks to stay in run while stop conditions are met
@@ -153,6 +167,14 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	uint32_t wCounter;
 	uint16_t hVehicleFault;
 	
+	#if DEBUG_ENABLE
+	sDebugVariables.bStartM1 = false;
+	sDebugVariables.bStartM2 = false;
+	sDebugVariables.hIqref = 0;
+	sDebugVariables.hIdref = 0;
+	sDebugVariables.hSpeedRef = 0;
+	#endif
+	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
 	while (true)
 	{	
@@ -168,6 +190,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 		sDebugVariables.bStartM1 ? MDI_StartMotor(pVCI->pDrivetrain->pMDI, M1) : MDI_StopMotor(pVCI->pDrivetrain->pMDI, M1);
 		sDebugVariables.bStartM2 ? MDI_StartMotor(pVCI->pDrivetrain->pMDI, M2) : MDI_StopMotor(pVCI->pDrivetrain->pMDI, M2);
 		#else
+			
 		StateVC = VCSTM_GetState( pVCI->pStateMachine );
 		switch ( StateVC )
 		{
@@ -279,6 +302,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 			default:
 				break;
 		}
+		#endif
 	
 		xLastWakeTime += TASK_VCSTM_SAMPLE_TIME_TICK;
 		osDelayUntil(xLastWakeTime);
