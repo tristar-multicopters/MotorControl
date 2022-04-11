@@ -394,6 +394,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Application</GroupName>
+          <Files>
+            <File>
+              <FileName>application_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\Application\application_main.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::Flex Software</GroupName>
         </Group>
       </Groups>

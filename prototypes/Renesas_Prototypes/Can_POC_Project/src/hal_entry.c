@@ -1,5 +1,4 @@
 #include "hal_data.h"
-#include "r_can.h"
 
 FSP_CPP_HEADER
 void R_BSP_WarmStart(bsp_warm_start_event_t event);
@@ -19,7 +18,7 @@ FSP_CPP_FOOTER
  * Private global variables
  **********************************************************************************************************************/
 /* Flags, set from Callback function */
-static volatile bool b_can_tx  = false;     //CAN transmission status
+static volatile bool b_can_tx  = false;    //CAN transmission status
 static volatile bool b_can_rx  = false;    //CAN receive status
 static volatile bool b_can_err = false;    //CAN error status
 /* CAN frames for tx and rx */
@@ -38,7 +37,7 @@ void hal_entry(void)
     fsp_pack_version_t version = {RESET_VALUE};
     uint8_t can_tx_msg[CAN_FRAME_TRANSMIT_DATA_BYTES] = "TX__MESG";  //data to be load in tx_frame while transmitting
     uint8_t can_rx_msg[CAN_FRAME_TRANSMIT_DATA_BYTES] = "RX__MESG";  //data to be load in rx_frame while acknowledging
-   // char rtt_input_buf[BUFFER_SIZE_DOWN] = {NULL_CHAR,};
+    //char rtt_input_buf[BUFFER_SIZE_DOWN] = {NULL_CHAR,};
 
     /* version get API for FLEX pack information */
     R_FSP_VersionGet(&version);
@@ -48,6 +47,7 @@ void hal_entry(void)
     /* Error trap */
     if(FSP_SUCCESS != err)
     {
+			while(1);
     }
 
     g_can_tx_frame.id = CAN_DESTINATION_MAILBOX_3;
@@ -101,11 +101,13 @@ void hal_entry(void)
                 /* Error trap */
                 if (FSP_SUCCESS != err)
                 {
+									while(1);
                 }
                 /* wait for transmit flag bit to set */
                 while ((true != b_can_tx) && (--time_out));
                 if (RESET_VALUE == time_out)
                 {
+									while(1);
                 }
                 /* Reset flag bit */
                 b_can_tx = false;

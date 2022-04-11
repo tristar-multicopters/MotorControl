@@ -32,8 +32,6 @@
             <slot name="P115" secure="false"/>
         </peripheral>
         <peripheral name="PORT2" group="PORT">
-            <slot name="P202" secure="false"/>
-            <slot name="P203" secure="false"/>
             <slot name="P212" secure="false"/>
             <slot name="P213" secure="false"/>
         </peripheral>
@@ -57,8 +55,6 @@
             <slot name="P402" secure="false"/>
             <slot name="P403" secure="false"/>
             <slot name="P404" secure="false"/>
-            <slot name="P405" secure="false"/>
-            <slot name="P406" secure="false"/>
             <slot name="P407" secure="false"/>
             <slot name="P408" secure="false"/>
             <slot name="P409" secure="false"/>
@@ -88,12 +84,6 @@
             <slot name="P614" secure="false"/>
         </peripheral>
         <peripheral name="PORT7" group="PORT">
-            <slot name="P700" secure="false"/>
-            <slot name="P701" secure="false"/>
-            <slot name="P702" secure="false"/>
-            <slot name="P703" secure="false"/>
-            <slot name="P704" secure="false"/>
-            <slot name="P705" secure="false"/>
             <slot name="P708" secure="false"/>
             <slot name="P709" secure="false"/>
             <slot name="P710" secure="false"/>

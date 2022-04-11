@@ -269,7 +269,8 @@ fsp_err_t R_CAN_Open (can_ctrl_t * const p_api_ctrl, can_cfg_t const * const p_c
     can_extended_cfg_t * p_extend = (can_extended_cfg_t *) p_cfg->p_extend;
 #endif
 
-    R_CAN0_Type * p_reg =
+    
+		R_CAN0_Type * p_reg =
         (R_CAN0_Type *) ((uint32_t) R_CAN0 + (p_cfg->channel * ((uint32_t) R_CAN1 - (uint32_t) R_CAN0)));
     p_ctrl->p_reg = p_reg;
 
@@ -869,7 +870,8 @@ static void r_can_call_callback (can_instance_ctrl_t * p_ctrl, can_callback_args
     p_ctrl->p_callback(p_args_memory);
 #endif
 
-    if (NULL != p_ctrl->p_callback_memory)
+    
+		if (NULL != p_ctrl->p_callback_memory)
     {
         /* Restore callback memory in case this is a nested interrupt. */
         *p_ctrl->p_callback_memory = args;
