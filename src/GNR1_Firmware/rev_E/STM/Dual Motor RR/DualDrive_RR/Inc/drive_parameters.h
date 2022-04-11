@@ -409,10 +409,10 @@
 #define REGULATION_EXECUTION_RATE     1    /*!< FOC execution rate in
                                                            number of PWM cycles */
 /* Gains values for torque and flux control loops */
-#define PID_TORQUE_KP_DEFAULT         300
+#define PID_TORQUE_KP_DEFAULT         500
 #define PID_TORQUE_KI_DEFAULT        	50
 #define PID_TORQUE_KD_DEFAULT         100
-#define PID_FLUX_KP_DEFAULT           300
+#define PID_FLUX_KP_DEFAULT           500
 #define PID_FLUX_KI_DEFAULT           50
 #define PID_FLUX_KD_DEFAULT           100
 
@@ -565,10 +565,10 @@
 #define REGULATION_EXECUTION_RATE2     1    /*!< FOC execution rate in
                                                            number of PWM cycles */
 /* Gains values for torque and flux control loops */
-#define PID_TORQUE_KP_DEFAULT2         300
+#define PID_TORQUE_KP_DEFAULT2         500
 #define PID_TORQUE_KI_DEFAULT2         50
 #define PID_TORQUE_KD_DEFAULT2         100
-#define PID_FLUX_KP_DEFAULT2           300
+#define PID_FLUX_KP_DEFAULT2           500
 #define PID_FLUX_KI_DEFAULT2           50
 #define PID_FLUX_KD_DEFAULT2           100
 

@@ -28,7 +28,7 @@
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
-#define VEHICLE_SELECTION 		VEHICLE_GRIZZLY
+#define VEHICLE_SELECTION 		VEHICLE_EBGO
 #define VOLTAGE_OPENLOOP			0
 #define POSITION_OPENLOOP			0
 /*______________________________________________________*/

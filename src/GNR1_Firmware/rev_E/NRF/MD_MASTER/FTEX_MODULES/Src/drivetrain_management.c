@@ -9,6 +9,12 @@
 */
 
 #include "drivetrain_management.h"
+
+#define OVERCURRENT_COUNTER 		0
+#define STARTUP_COUNTER 				1
+#define SPEEDFEEDBACK_COUNTER 	2
+
+
 /* Functions ---------------------------------------------------- */
 
 
@@ -28,9 +34,11 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 	
 	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
 	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
-	pHandle->hOCcounter[M1] = 0; pHandle->hOCcounter[M2] = 0;
-	pHandle->hSUcounter[M1] = 0; pHandle->hSUcounter[M2] = 0;
-	pHandle->hSFcounter[M1] = 0; pHandle->hSFcounter[M2] = 0;
+	pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
+	pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
+	pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
+	
+	pHandle->hPASTorque	= 0;
 }
 
 /**
@@ -51,16 +59,16 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		switch (bMotorSelection)
 		{
 			case M1_SELECTED:
-				pHandle->bMode = SINGLE_MOTOR;
+				pHandle->sParameters.bMode = SINGLE_MOTOR;
 				pHandle->bMainMotor = M1;
 				break;
 			case M2_SELECTED:
-				pHandle->bMode = SINGLE_MOTOR;
+				pHandle->sParameters.bMode = SINGLE_MOTOR;
 				pHandle->bMainMotor = M2;
 				break;
 			case ALL_MOTOR_SELECTED:
-				pHandle->bMode = DUAL_MOTOR;
-				pHandle->bMainMotor = pHandle->bDefaultMainMotor;
+				pHandle->sParameters.bMode = DUAL_MOTOR;
+				pHandle->bMainMotor = pHandle->sParameters.bDefaultMainMotor;
 				break;
 			default:
 				break;
@@ -71,7 +79,7 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 			pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
 			pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
 
-	if (pHandle->bCtrlType == TORQUE_CTRL)
+	if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 	{
 		PAS_GetTorque(pHandle->pPAS);
 		hTorqueRef = DRVT_ControlSelect(pHandle);
@@ -80,17 +88,20 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 			hTorqueRef = 0;
 		}
 		
-		if(pHandle->bMode == SINGLE_MOTOR)
+		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
 			pHandle->aTorque[pHandle->bMainMotor] = hTorqueRef;
 		}
-		if(pHandle->bMode == DUAL_MOTOR)
+		if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
 			pHandle->aTorque[M1] = hTorqueRef;
-			pHandle->aTorque[M2] = hTorqueRef;
+			if (pHandle->sParameters.bM2TorqueInversion)
+				pHandle->aTorque[M2] = -hTorqueRef;
+			else
+				pHandle->aTorque[M2] = hTorqueRef;
 		}
 	}
-	else if (pHandle->bCtrlType == SPEED_CTRL)
+	else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
 	{
 		hSpeedRef = THRO_ThrottleToSpeed(pHandle->pThrottle);
 		if ( bIsBrakePressed )
@@ -98,11 +109,11 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 			hSpeedRef = 0;
 		}
 		
-		if(pHandle->bMode == SINGLE_MOTOR)
+		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
 			pHandle->aSpeed[pHandle->bMainMotor] = hSpeedRef;
 		}
-		if(pHandle->bMode == DUAL_MOTOR)
+		if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
 			pHandle->aSpeed[M1] = hSpeedRef;
 			pHandle->aSpeed[M2] = hSpeedRef;
@@ -120,39 +131,39 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 {
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
-		if (pHandle->bCtrlType == TORQUE_CTRL)
+		if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 		{
 			if ( abs(pHandle->aTorque[M1]) > abs(MDI_getIq(pHandle->pMDI, M1)) )
 			{
-				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeUp);
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorqueRampTimeUp);
 			}
 			else
 			{
-				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeDown);
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorqueRampTimeDown);
 			}
 		}
-		else if (pHandle->bCtrlType == SPEED_CTRL)
+		else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
 		{
-			MDI_SetSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1], pHandle->hSpeedRampTimeUp);
+			MDI_SetSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1], pHandle->sParameters.hSpeedRampTimeUp);
 		}
 		else {}
 	}
 	if ( DRVT_IsMotor2Used(pHandle) )
 	{
-		if (pHandle->bCtrlType == TORQUE_CTRL)
+		if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 		{
 			if ( abs(pHandle->aTorque[M2]) > abs(MDI_getIq(pHandle->pMDI, M2)) )
 			{
-				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeUp);
+				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->sParameters.hTorqueRampTimeUp);
 			}
 			else
 			{
-				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->hTorqueRampTimeDown);
+				MDI_SetTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->sParameters.hTorqueRampTimeDown);
 			}
 		}
-		else if (pHandle->bCtrlType == SPEED_CTRL)
+		else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
 		{
-			MDI_SetSpeedRamp(pHandle->pMDI, M2, pHandle->aSpeed[M2], pHandle->hSpeedRampTimeUp);
+			MDI_SetSpeedRamp(pHandle->pMDI, M2, pHandle->aSpeed[M2], pHandle->sParameters.hSpeedRampTimeUp);
 		}
 		else {}
 	}
@@ -445,7 +456,7 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 	
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
-		if ( abs(wSpeedM1) <= pHandle->hStoppingSpeed )
+		if ( abs(wSpeedM1) <= pHandle->sParameters.hStoppingSpeed )
 		{
 			bCheckStop1 = true;
 		}
@@ -457,7 +468,7 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 	
 	if ( DRVT_IsMotor2Used(pHandle) )
 	{
-		if ( abs(wSpeedM2) <= pHandle->hStoppingSpeed )
+		if ( abs(wSpeedM2) <= pHandle->sParameters.hStoppingSpeed )
 		{
 			bCheckStop2 = true;
 		}
@@ -482,7 +493,7 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 		bCheckStop5 = true;
 	}     
 
-	if (hThrottleValue < pHandle->hStoppingThrottle)
+	if (hThrottleValue < pHandle->sParameters.hStoppingThrottle)
 	{
 		bCheckStop6 = true;
 	}    
@@ -500,7 +511,7 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStart = false;
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( (hThrottleValue > pHandle->hStartingThrottle || (pHandle->bUsePAS)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
+	if ( (hThrottleValue > pHandle->sParameters.hStartingThrottle || (pHandle->bUsePAS)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
 	{
 		bCheckStart = true;
 	}
@@ -534,41 +545,41 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 		{// If there's an over current (OC) that has occurred but has already been cleared on the STM side
 			if ( hM1FaultOccurredCode & MC_BREAK_IN ) 
 			{
-				if(pHandle->hOCcounter[M1] >= pHandle->fault_timeout)
+				if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the OC fault
 					hM1FaultOccurredCode &= ~MC_BREAK_IN;
-					pHandle->hOCcounter[M1] = 0;
+					pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
-					pHandle->hOCcounter[M1]++;
+					pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
 				}
 			}
 			
 			if ( hM1FaultOccurredCode & MC_SPEED_FDBK )
 			{// If there's a speed feedback (SF) that has occurred but has already been cleared on the STM side
-				if(pHandle->hSFcounter[M1] >= pHandle->fault_timeout)
+				if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM1FaultOccurredCode &= ~MC_SPEED_FDBK;
-					pHandle->hSFcounter[M1] = 0;
+					pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
-					pHandle->hSFcounter[M1]++;
+					pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1]++;
 				}
 			}
 			
 			if ( hM1FaultOccurredCode & MC_START_UP )
 			{
 				/* In case of motor startup failure... */
-				if(pHandle->hSUcounter[M1] >= pHandle->fault_timeout)
+				if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM1FaultOccurredCode &= ~MC_START_UP;
-					pHandle->hSUcounter[M1] = 0;
+					pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
-					pHandle->hSUcounter[M1]++;
+					pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1]++;
 				}
 			}
 			
@@ -595,40 +606,40 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 		{
 			if ( hM2FaultOccurredCode & MC_BREAK_IN ) 
 			{
-				if(pHandle->hOCcounter[M2] >= pHandle->fault_timeout)
+				if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the OC fault
 					hM2FaultOccurredCode &= ~MC_BREAK_IN;
-					pHandle->hOCcounter[M2] = 0;
+					pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
-					pHandle->hOCcounter[M2]++;
+					pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2]++;
 				}
 			}
 			
 			if ( hM2FaultOccurredCode & MC_SPEED_FDBK )
 			{// If there's a speed feedback (SF) that has occurred but has already been cleared on the STM side
-				if(pHandle->hSFcounter[M2] >= pHandle->fault_timeout)
+				if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM2FaultOccurredCode &= ~MC_SPEED_FDBK;
-					pHandle->hSFcounter[M2] = 0;
+					pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
-					pHandle->hSFcounter[M2]++;
+					pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2]++;
 				}
 			}
 			
 			if ( hM2FaultOccurredCode & MC_START_UP )
 			{// If there's a start-up (SU) that has occurred but has already been cleared on the STM side
-				if(pHandle->hSUcounter[M2] >= pHandle->fault_timeout)
+				if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the SF fault
 					hM2FaultOccurredCode &= ~MC_START_UP;
-					pHandle->hSUcounter[M2] = 0;
+					pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
 				}
 				else
 				{//Increase the counter to count 20ms
-					pHandle->hSUcounter[M2]++;
+					pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2]++;
 				}
 			}
 			
@@ -746,7 +757,7 @@ int32_t DRVT_GetSpeedRefM2(DRVT_Handle_t * pHandle)
 	*/
 bool DRVT_IsMotor1Used(DRVT_Handle_t * pHandle)
 {
-	return pHandle->bUseMotorM1;
+	return pHandle->sParameters.bUseMotorM1;
 }
 
 /**
@@ -756,7 +767,7 @@ bool DRVT_IsMotor1Used(DRVT_Handle_t * pHandle)
 	*/
 bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle)
 {
-	return pHandle->bUseMotorM2;
+	return pHandle->sParameters.bUseMotorM2;
 }
 
 /**
@@ -766,52 +777,55 @@ bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle)
 	*/
 int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
 {
-	
+	int16_t hRefTorque;
 	PAS_sLevel Got_Level;
 	Got_Level = DRVT_GetPASLevel(pHandle);
 	
 	switch(Got_Level)
 	{
 		case PAS_LEVEL_0:
-			pHandle->pRefTorque = 0;
+			hRefTorque = 0;
 			break;
 
 		case PAS_LEVEL_1:
-			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_1;
+			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_1;
 			break;
 
 		case PAS_LEVEL_2:
-			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_2;
+			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_2;
 			break;
 		case PAS_LEVEL_3:
-			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_3;
+			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_3;
 			break;
 		case PAS_LEVEL_4:
-			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_4;
+			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_4;
 			break;
 		
 		case PAS_LEVEL_5:
-			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_5;
+			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_5;
 			break;
 		
 		case PAS_LEVEL_6:
-			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_6;
+			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_6;
 			break;
 				
 		case PAS_LEVEL_7:
-			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_7;
+			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_7;
 			break;
 						
 		case PAS_LEVEL_8:
-			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_8;
+			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_8;
 			break;
 								
 		case PAS_LEVEL_9:
-			pHandle->pRefTorque = (pHandle->hMaxTorque / pHandle->hMaxLevel) * PAS_LEVEL_9;
+			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_9;
 			break;
+		
+		default:
+			hRefTorque = 0;
 	}
 
-	return pHandle->pRefTorque;
+	return hRefTorque;
 }
 /**
 	* @brief  Select Control assistance based on Throttle or PAS
@@ -829,14 +843,14 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 	if (PAS_Pres)
 	{
 		/* PAS Ramp */
-		pHandle->pTorqueSelect= DRVT_PASSetRamp(pHandle);
+		pHandle->hTorqueSelect= DRVT_PASSetRamp(pHandle);
 	}
 	else
 	{	
 		/* Throttle Value convert to Torque */
-		pHandle->pTorqueSelect = THRO_ThrottleToTorque(pHandle->pThrottle);
+		pHandle->hTorqueSelect = THRO_ThrottleToTorque(pHandle->pThrottle);
 	}
-	return pHandle->pTorqueSelect;
+	return pHandle->hTorqueSelect;
 }
 
 /**
@@ -872,10 +886,10 @@ int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle)
 	/* Divde the pas torque by pRamcoeff */
 	pRes = pDiv * pHandle->pPAS->pRampCoeff;
 	
-	if (pHandle->pAvtorque < pRes)
-			pHandle->pAvtorque+=pDiv;
+	if (pHandle->hPASTorque < pRes)
+			pHandle->hPASTorque+=pDiv;
 	else
-			pHandle->pAvtorque = pPASTorque;
-	return pHandle->pAvtorque;
+			pHandle->hPASTorque = pPASTorque;
+	return pHandle->hPASTorque;
 } 
 
