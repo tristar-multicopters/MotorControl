@@ -193,7 +193,7 @@ void LCD_APT_frame_Process(void)
       replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.1 A/unit 		
 
 
-		  toSend = MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1);		
+		  toSend = abs(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1));		
 
 			
 			GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_GEARRATIO);  //Gear ratio (motor compared to wheel) is split. 
