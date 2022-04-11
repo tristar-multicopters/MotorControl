@@ -907,7 +907,7 @@ int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle)
 		ttemp *= ( uint32_t ) ( pHandle->pAvTorque );
 		ttemp += pPASTorque;
 		ttemp /= ( uint32_t )( pBandwidth );
-
+		ttemp /= ( uint32_t )( pBandwidth );
 		pHandle->pAvTorque = (int16_t) ttemp;
 	}
 	return pHandle->pAvTorque;
