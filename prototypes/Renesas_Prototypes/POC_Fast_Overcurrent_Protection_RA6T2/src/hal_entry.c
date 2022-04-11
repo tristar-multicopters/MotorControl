@@ -35,7 +35,11 @@ void hal_entry(void)
 	{
 			
 		R_GPT_THREE_PHASE_DutyCycleSet(g_three_phase0.p_ctrl,&duty_abc);
+		//(void) R_POEG_StatusGet(&g_poeg0_ctrl, &status);
 		//R_GPT_THREE_PHASE_Stop(g_three_phase0.p_ctrl);
+		
+
+		
 		
 	}
 	

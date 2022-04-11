@@ -358,10 +358,10 @@
       <property id="module.driver.poeg.name" value="g_poeg0"/>
       <property id="module.driver.poeg.channel" value="3"/>
       <property id="module.driver.poeg.trigger" value="module.driver.poeg.trigger.trigger_pin"/>
-      <property id="module.driver.poeg.polarity" value="module.driver.poeg.polarity.gtetrg_polarity_active_high"/>
+      <property id="module.driver.poeg.polarity" value="module.driver.poeg.polarity.gtetrg_polarity_active_low"/>
       <property id="module.driver.poeg.noise_filter" value="module.driver.poeg.noise_filter.gtetrg_noise_filter_pclkb_div_32"/>
-      <property id="module.driver.poeg.p_callback" value="NULL"/>
-      <property id="module.driver.poeg.ipl" value="_disabled"/>
+      <property id="module.driver.poeg.p_callback" value="g_poe_overcurrent"/>
+      <property id="module.driver.poeg.ipl" value="board.icu.common.irq.priority0"/>
     </module>
     <context id="_hal.0">
       <stack module="module.driver.ioport_on_ioport.0"/>

@@ -18,8 +18,8 @@ extern const poeg_instance_t g_poeg0;
 extern poeg_instance_ctrl_t g_poeg0_ctrl;
 extern const poeg_cfg_t g_poeg0_cfg;
 
-#ifndef NULL
-void NULL(poeg_callback_args_t * p_args);
+#ifndef g_poe_overcurrent
+void g_poe_overcurrent(poeg_callback_args_t * p_args);
 #endif
 /** Timer on GPT Instance. */
 extern const timer_instance_t g_timer2;
