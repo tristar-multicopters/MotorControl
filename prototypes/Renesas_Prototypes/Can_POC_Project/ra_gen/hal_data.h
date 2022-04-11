@@ -20,7 +20,7 @@ extern const can_extended_cfg_t g_can0_cfg_extend;
 #ifndef can_callback
 void can_callback(can_callback_args_t * p_args);
 #endif
-#define CAN_NO_OF_MAILBOXES_g_can0 (24)
+#define CAN_NO_OF_MAILBOXES_g_can0 (32)
 void hal_entry(void);
 void g_hal_init(void);
 FSP_FOOTER

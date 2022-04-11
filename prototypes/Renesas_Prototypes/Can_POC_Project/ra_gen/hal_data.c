@@ -14,7 +14,7 @@ can_bit_timing_cfg_t g_can0_bit_timing_cfg =
 #else
 can_bit_timing_cfg_t g_can0_bit_timing_cfg =
 {
-    /* Actual bitrate: 500000 Hz. Actual Bit Time Ratio: 75 %. */  .baud_rate_prescaler = 1 +2 /* Division value of baud rate prescaler */, .time_segment_1 = 11, .time_segment_2 = 4, .synchronization_jump_width = 4,
+    /* Actual bitrate: 500000 Hz. Actual Bit Time Ratio: 75 %. */  .baud_rate_prescaler = 1 +4 /* Division value of baud rate prescaler */, .time_segment_1 = 14, .time_segment_2 = 5, .synchronization_jump_width = 4,
 };
 #endif
 
@@ -276,7 +276,7 @@ can_rx_fifo_cfg_t g_can0_rx_fifo_cfg =
 
 const can_extended_cfg_t g_can0_extended_cfg =
 {
-    .clock_source           = CAN_CLOCK_SOURCE_CANMCLK,
+    .clock_source           = CAN_CLOCK_SOURCE_PCLKB,
     .p_mailbox_mask         = g_can0_mailbox_mask,
     .p_mailbox              = g_can0_mailbox,
     .global_id_mode         = CAN_GLOBAL_ID_MODE_STANDARD,
@@ -299,7 +299,7 @@ const can_cfg_t g_can0_cfg =
     .p_callback         = can_callback,
     .p_extend           = &g_can0_extended_cfg,
     .p_context          = NULL,
-    .ipl                = (12),
+    .ipl                = (2),
 #if defined(VECTOR_NUMBER_CAN0_MAILBOX_TX)
     .tx_irq             = VECTOR_NUMBER_CAN0_MAILBOX_TX,
 #else
