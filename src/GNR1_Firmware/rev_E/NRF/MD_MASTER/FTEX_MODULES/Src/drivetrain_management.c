@@ -821,12 +821,12 @@ int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
 int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 {
   bool PAS_Pres;
-	
+	uint16_t tThrottle;
 	/* Check Pulse presence */
 	PAS_Pres = pHandle->bUsePAS; 		
-	
+	tThrottle = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	/* PAS and Throttle mangement */
-	if (PAS_Pres)
+	if (PAS_Pres && (tThrottle == 0))
 	{
 		/* PAS Ramp */
 		pHandle->pTorqueSelect= DRVT_PASSetRamp(pHandle);
@@ -857,25 +857,63 @@ bool DRVT_PASpresence (DRVT_Handle_t * pHandle)
 	return pHandle->bUsePAS;
 } 
 
+///**
+//	* @brief  PAS torque Acceleration Ramp 
+//	* @param  Drivetrain handle
+//	* @retval int16_t 
+//	*/
+//int16_t DRVT_PASSetRamp1 (DRVT_Handle_t * pHandle) 
+//{
+//	int16_t pPASTorque, pDiv, pRes;
+//	/* Call PAS set torque function */
+//	pPASTorque = DRVT_PasSetTorque(pHandle);
+//	/* Divde the PAS torque by pRamcoeff */
+//	pDiv = pPASTorque / pHandle->pPAS->pRampCoeff;
+//	/* Divde the pas torque by pRamcoeff */
+//	pRes = pDiv * pHandle->pPAS->pRampCoeff;
+//	
+//	if (pHandle->pAvtorque < pRes)
+//			pHandle->pAvtorque+=pDiv;
+//	else
+//			pHandle->pAvtorque = pPASTorque;
+//	return pHandle->pAvtorque;
+//} 
+
 /**
-	* @brief  PAS torque Acceleration Ramp 
-	* @param  Drivetrain handle
-	* @retval int16_t 
+	* @brief  Torque ADC value calculation and filtering
+	* @param  pHandle used for Torque monitoring
+	* @retval None
 	*/
 int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle) 
 {
-	int16_t pPASTorque, pDiv, pRes;
+  int16_t ttemp;
+	uint8_t pBandwidth;
+	int16_t pPASTorque;
+	
 	/* Call PAS set torque function */
 	pPASTorque = DRVT_PasSetTorque(pHandle);
-	/* Divde the PAS torque by pRamcoeff */
-	pDiv = pPASTorque / pHandle->pPAS->pRampCoeff;
-	/* Divde the pas torque by pRamcoeff */
-	pRes = pDiv * pHandle->pPAS->pRampCoeff;
 	
-	if (pHandle->pAvtorque < pRes)
-			pHandle->pAvtorque+=pDiv;
+	if (pPASTorque > pHandle->pAvTorque)
+		pBandwidth = pHandle->pLowPassFilterBW1;
 	else
-			pHandle->pAvtorque = pPASTorque;
-	return pHandle->pAvtorque;
-} 
+		pBandwidth = pHandle->pLowPassFilterBW2;
+
+	if ( pPASTorque != 0x0u )
+	{
+		ttemp =  ( uint32_t )( pBandwidth - 1u );
+		ttemp *= ( uint32_t ) ( pHandle->pAvTorque );
+		ttemp += pPASTorque;
+		ttemp /= ( uint32_t )( pBandwidth );
+
+		pHandle->pAvTorque = (int16_t) ttemp;
+	}
+	return pHandle->pAvTorque;
+}
+
+
+
+
+
+
+
 

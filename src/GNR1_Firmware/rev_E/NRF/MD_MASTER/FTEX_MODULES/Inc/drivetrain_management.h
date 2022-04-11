@@ -64,9 +64,15 @@ typedef struct
 	WSS_Handle_t 	* pWSS;				    /* Pointer to Wheel speed handle */
 
 	int16_t			 	pRefTorque;			/* Torque reference, first element is for M1, second is for M2 */
-	int16_t			 	pTorqueSelect;	/* Torque reference, first element is for M1, second is for M2 */
-	bool					bUsePAS;
-	int16_t 			pAvtorque;
+	int16_t			 	pTorqueSelect;	/* Torque Select */
+	bool					bUsePAS;				/* Flag for PAS existance and use */
+
+	int16_t				pAvTorque;			/* PAS average Torque select*/
+	uint8_t pLowPassFilterBW1;		/* Up ramp devider for a LowPassFilterBW1*/
+	uint8_t pLowPassFilterBW2;		/* Down ramp devider for a LowPassFilterBW2*/
+	
+	
+	
 		
 	FLDBK_Handle_t sHeatsinkTempFoldback1;		/* Foldback handle using M1 heatsink temperature */
 	FLDBK_Handle_t sHeatsinkTempFoldback2;		/* Foldback handle using M2 heatsink temperature */
