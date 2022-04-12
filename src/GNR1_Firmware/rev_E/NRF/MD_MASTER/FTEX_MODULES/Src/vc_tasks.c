@@ -190,7 +190,6 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 		sDebugVariables.bStartM1 ? MDI_StartMotor(pVCI->pDrivetrain->pMDI, M1) : MDI_StopMotor(pVCI->pDrivetrain->pMDI, M1);
 		sDebugVariables.bStartM2 ? MDI_StartMotor(pVCI->pDrivetrain->pMDI, M2) : MDI_StopMotor(pVCI->pDrivetrain->pMDI, M2);
 		#else
-		
 		StateVC = VCSTM_GetState( pVCI->pStateMachine );
 		switch ( StateVC )
 		{

@@ -51,6 +51,7 @@ typedef struct
 	uint8_t bDefaultMainMotor;		  	/* Default main motor selection */
 	CTRL_Type_h bCtrlType;				  	/* Torque or speed control */
 	
+	uint16_t hTorquePASRampTimeUp;	/* Speed ramp time in millisecond when controller is ramping UP for PAS*/
 	uint16_t hSpeedRampTimeUp;			/* Speed ramp time in millisecond when controller is ramping UP */
 	uint16_t hSpeedRampTimeDown;		/* Speed ramp time in millisecond when controller is ramping DOWN */
 	uint16_t hTorqueRampTimeUp;		  /* Torque ramp time in millisecond when controller is ramping UP */
@@ -59,10 +60,10 @@ typedef struct
 	uint16_t hStoppingThrottle;		  /* Minimum torque to stop drivetrain */
 	uint16_t hStoppingSpeed;			  /* Minimum speed to stop drivetrain */
 	
-	int16_t hPASMaxTorque;
+	int16_t hPASMaxTorque;					/* PAS Maximum Given Torque*/
 	
-	uint32_t GearRatio;             //Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002
-	
+  uint32_t GearRatio;             //Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002
+  
 	uint16_t hFaultManagementTimeout; 	/* Number of ticks the VC state machine should be stayed on fault
 																			before clear an over-current, start-up or speed feedback fault */
 } DRVT_Parameters_t;
@@ -82,7 +83,6 @@ typedef struct
 	int16_t aSpeed[2];						  	/* Array of speed reference, first element is for M1, second is for M2 */
 
 	bool					bUsePAS;
-	int16_t 			hPASTorque;
 	int16_t			 	hTorqueSelect;
 
 	FLDBK_Handle_t sHeatsinkTempFoldback1;		/* Foldback handle using M1 heatsink temperature */
@@ -94,7 +94,7 @@ typedef struct
 	uint16_t aFaultManagementCounters[3][2];  /* Array of counter before acknowledging motor faults. First dimension is
 																							fault type in this order:	Over current, startup, and speed feedback. 
 																							Second dimension is for motor number in this order:	M1 and M2 */
-	
+
 	DRVT_Parameters_t sParameters;
 	
 } DRVT_Handle_t;
@@ -204,6 +204,12 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle);
 	* @retval None
 	*/
 void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel Level);
+/**
+	* @brief  Get PAS level
+	* @param  Drivetrain handle
+	* @param  PAS level
+	* @retval None
+	*/
 PAS_sLevel DRVT_GetPASLevel (DRVT_Handle_t * pHandle);
 /**
 	* @brief  Get main motor reference torque
@@ -211,7 +217,6 @@ PAS_sLevel DRVT_GetPASLevel (DRVT_Handle_t * pHandle);
 	* @retval Returns main motor reference torque
 	*/
 int16_t DRVT_GetTorqueRefMainMotor(DRVT_Handle_t * pHandle);
-
 /**
 	* @brief  Get motor 1 reference torque
 	* @param  Drivetrain handle
@@ -279,12 +284,7 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle);
 	* @retval pHandle->bUsePAS in Boolean
 	*/
 bool DRVT_PASpresence (DRVT_Handle_t * pHandle);
-/**
-	* @brief  PAS torque Acceleration Ramp 
-	* @param  Drivetrain handle
-	* @retval int16_t 
-	*/
-int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle);
+
 
 #endif /*__DRIVETRAIN_MANAGEMENT_H*/
 

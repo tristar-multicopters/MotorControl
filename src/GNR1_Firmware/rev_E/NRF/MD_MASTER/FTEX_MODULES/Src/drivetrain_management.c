@@ -17,7 +17,6 @@
 
 /* Functions ---------------------------------------------------- */
 
-
 /**
 	* @brief  Module initialization, to be called once before using it
 	* @param  Drivetrain handle
@@ -37,8 +36,7 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 	pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
 	pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
 	pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
-	
-	pHandle->hPASTorque	= 0;
+
 }
 
 /**
@@ -135,6 +133,10 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 		{
 			if ( abs(pHandle->aTorque[M1]) > abs(MDI_getIq(pHandle->pMDI, M1)) )
 			{
+				if (pHandle->bUsePAS)
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorquePASRampTimeUp);	
+				else
+
 				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorqueRampTimeUp);
 			}
 			else
@@ -686,6 +688,12 @@ void DRVT_SetPASLevel(DRVT_Handle_t * pHandle, PAS_sLevel Level)
 	 pHandle->pPAS->pLevel = Level;
 }
 
+/**
+	* @brief  Get PAS level
+	* @param  Drivetrain handle
+	* @param  PAS level
+	* @retval None
+	*/
 PAS_sLevel DRVT_GetPASLevel (DRVT_Handle_t * pHandle)
 {
 	return pHandle->pPAS->pLevel;
@@ -835,15 +843,15 @@ int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
 int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 {
   bool PAS_Pres;
-	
+	uint16_t tThrottle;
 	/* Check Pulse presence */
 	PAS_Pres = pHandle->bUsePAS; 		
-	
+	tThrottle = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	/* PAS and Throttle mangement */
-	if (PAS_Pres)
+	if (PAS_Pres && (tThrottle <= pHandle->sParameters.hStartingThrottle))
 	{
-		/* PAS Ramp */
-		pHandle->hTorqueSelect= DRVT_PASSetRamp(pHandle);
+		/* PAS Time Ramp Call */
+		pHandle->hTorqueSelect= DRVT_PasSetTorque(pHandle);
 	}
 	else
 	{	
@@ -860,36 +868,14 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 	*/
 bool DRVT_PASpresence (DRVT_Handle_t * pHandle) 
 {
-	int32_t	TempSpeed;
+	uint32_t	pSpeedt;
 	PAS_CalculateSpeed(pHandle->pPAS);
-	TempSpeed = PAS_GetSpeedValue(pHandle->pPAS);
-	if (TempSpeed > 0 && PAS_GetDirection(pHandle->pPAS) == 0)
+	pSpeedt = PAS_GetSpeedValue(pHandle->pPAS);
+	if (pSpeedt > 0)
 		pHandle->bUsePAS = true;
 	else 
 		pHandle->bUsePAS = false;
 	
 	return pHandle->bUsePAS;
-} 
-
-/**
-	* @brief  PAS torque Acceleration Ramp 
-	* @param  Drivetrain handle
-	* @retval int16_t 
-	*/
-int16_t DRVT_PASSetRamp (DRVT_Handle_t * pHandle) 
-{
-	int16_t pPASTorque, pDiv, pRes;
-	/* Call PAS set torque function */
-	pPASTorque = DRVT_PasSetTorque(pHandle);
-	/* Divde the PAS torque by pRamcoeff */
-	pDiv = pPASTorque / pHandle->pPAS->pRampCoeff;
-	/* Divde the pas torque by pRamcoeff */
-	pRes = pDiv * pHandle->pPAS->pRampCoeff;
-	
-	if (pHandle->hPASTorque < pRes)
-			pHandle->hPASTorque+=pDiv;
-	else
-			pHandle->hPASTorque = pPASTorque;
-	return pHandle->hPASTorque;
 } 
 
