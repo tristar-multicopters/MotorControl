@@ -60,13 +60,12 @@ dkms.conf
 
 # Keil user project files
 *.uvoptx
-*.uvprojx
-*.uvguix.Andy B
+*.uvguix.Andy_B
 *.uvguix
 *.samib
 *.ronak
 *.FTEX_POLO
-*.Andy B
+*.Andy_B
 *.ELE-COM-5
 *.Franc
 *.jabra
