@@ -285,7 +285,6 @@ PAS_Handle_t PedalAssistHandle = {
 	#else
 	.bMaxLevel	=	5,
 	#endif
-	
 };
 
 PWREN_Handle_t PowerEnableHandle = {
@@ -343,6 +342,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.bMode = SINGLE_MOTOR,
 	.sParameters.bCtrlType = TORQUE_CTRL,
 	.sParameters.bM2TorqueInversion = false,
+	.sParameters.hTorquePASRampTimeUp = 1000,	
 	.sParameters.hTorqueRampTimeUp = 200,
 	.sParameters.hTorqueRampTimeDown = 50,
 	.sParameters.hSpeedRampTimeUp = 200,
@@ -398,7 +398,7 @@ VCI_Handle_t VCInterfaceHandle =
 	.pDrivetrain = &DrivetrainHandle,
 };
 
-eUART_protocol_t EUART_handle_t = EUART_DISABLE;
+eUART_protocol_t EUART_handle_t = EUART_APT;
 //LCD_handle_t BafangScreenHandle = 
 //{
 //	.pVCInterface = &VCInterfaceHandle,

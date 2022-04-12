@@ -248,9 +248,10 @@ uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle)
 {
 	p_SPR_Handle = sHandle;
 	// Make sure the capture event occured before checking the capture register
-	if(NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] != 0)
+	if((NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] != 0)|| (NRF_GPIOTE->EVENTS_IN[sHandle->bRestartChannel] != 0))
 	{		// Clear the capture event
 			NRF_GPIOTE->EVENTS_IN[sHandle->bCaptureChannel] = 0;
+			NRF_GPIOTE->EVENTS_IN[sHandle->bRestartChannel] = 0;
 			// Return the stored capture value in the timer
 			sHandle->sPread =  nrf_drv_timer_capture_get(sHandle->pTimerInstance, (nrf_timer_cc_channel_t)0);
 	}
@@ -297,15 +298,15 @@ void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)//, SP
 
 		if (sin_flag && (!cos_flag))
         {
-			p_SPR_Handle->Direction_result = Forward;
+					p_SPR_Handle->Direction_result = Forward;
         }
 		else if (cos_flag && (!sin_flag))
         {
-			p_SPR_Handle->Direction_result = Error_Direction;
+					p_SPR_Handle->Direction_result = Error_Direction;
         }
 		else 
         {
-			p_SPR_Handle->Direction_result = Reverse;
+					p_SPR_Handle->Direction_result = Reverse;
         }
 	}
 }
