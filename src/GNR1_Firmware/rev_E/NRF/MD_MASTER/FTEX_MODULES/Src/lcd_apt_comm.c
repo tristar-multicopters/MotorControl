@@ -10,8 +10,6 @@
 #include "lcd_apt_comm.h"
 
 #define APTMAXCURRENT 60
-#define LOWEST_GEAR_RATIO 0x00010001
-#define HIGEST_GEAR_RATIO 0x00F000F0
 
 // Private handler
 APT_Handle_t m_APT_handle;
@@ -201,13 +199,9 @@ void LCD_APT_frame_Process(void)
 			                                                                            //lsb 16 bits is denominator
 			                                                                            //ex: 3/2 ratio would be 0x00030002 
 			                                                                            //default should be 0x00010001 
+						
 			
-			if(GearRatio < LOWEST_GEAR_RATIO || GearRatio > HIGEST_GEAR_RATIO) //valid values of gear ratio
-			{
-			   GearRatio = LOWEST_GEAR_RATIO;
-		  }				
-			
-			toSend = ((GearRatio & 0xFFFF0000) >> 16) * toSend / (GearRatio & 0x0000FFFF);
+			toSend = (((GearRatio & 0x0000FFFF) * toSend) / ((GearRatio & 0xFFFF0000) >> 16));
 		
 		
 		  toSend = toSend * 500;       //Converion from RPM to period in ms 

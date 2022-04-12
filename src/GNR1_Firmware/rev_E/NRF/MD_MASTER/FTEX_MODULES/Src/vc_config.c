@@ -353,7 +353,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -10000,
-	.sParameters.GearRatio = 0x000D0006, //Ratio is 13/6
+	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = true,
