@@ -60,6 +60,8 @@ dkms.conf
 
 # Keil user project files
 *.uvoptx
+*.uvprojx
+*.uvguix.Andy B
 *.uvguix
 *.samib
 *.ronak
