@@ -36,6 +36,7 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 	pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
 	pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
 	pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
+
 }
 
 /**
@@ -135,6 +136,7 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 				if (pHandle->bUsePAS)
 				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorquePASRampTimeUp);	
 				else
+
 				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorqueRampTimeUp);
 			}
 			else
@@ -876,3 +878,4 @@ bool DRVT_PASpresence (DRVT_Handle_t * pHandle)
 	
 	return pHandle->bUsePAS;
 } 
+
