@@ -274,7 +274,17 @@ PAS_Handle_t PedalAssistHandle = {
 	.pTorque = &TorqueSensor,
 	.pSpulse = &SpeedPulse,
 	.pRampCoeff = 50,
-	.bMaxLevel = 5,
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
+	.bMaxLevel	=	5,
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
+	.bMaxLevel	=	5,
+	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
+	.bMaxLevel	=	5,
+	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+	.bMaxLevel	=	5,
+	#else
+	.bMaxLevel	=	5,
+	#endif
 };
 
 PWREN_Handle_t PowerEnableHandle = {
@@ -309,8 +319,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hMaxTorque = -10000,
-	.sParameters.hMaxLevel	=	5,
+	.sParameters.hPASMaxTorque = -10000,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = false,
@@ -325,8 +334,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hMaxTorque = -7000,
-	.sParameters.hMaxLevel	=	5,
+	.sParameters.hPASMaxTorque = -7000,
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = false,
@@ -357,6 +365,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
+	.sParameters.hPASMaxTorque = -7000,
 	#else
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = false,
@@ -371,8 +380,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hFaultManagementTimeout = 25 // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
-	.sParameters.hMaxTorque = -10000,
-	.sParameters.hMaxLevel	=	5,
+	.sParameters.hPASMaxTorque = -10000,
 	#endif
 	
 	.pMDI = &MDInterfaceHandle,

@@ -155,7 +155,19 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
 	while (true)
-	{		
+	{	
+		#if DEBUG_ENABLE
+		MDI_SetCurrentRef(pVCI->pDrivetrain->pMDI, M1, sDebugVariables.hIqref, sDebugVariables.hIdref);
+		//MDI_SetTorqueRamp(pVCI->pDrivetrain->pMDI, M1, sDebugVariables.hIqref, 0);
+		//MDI_SetSpeedRamp(pVCI->pDrivetrain->pMDI, M1, sDebugVariables.hSpeedRef, 0);
+		
+		MDI_SetCurrentRef(pVCI->pDrivetrain->pMDI, M2, sDebugVariables.hIqref, sDebugVariables.hIdref);
+		//MDI_SetTorqueRamp(pVCI->pDrivetrain->pMDI, M2, sDebugVariables.hIqref, 0);
+		//MDI_SetSpeedRamp(pVCI->pDrivetrain->pMDI, M2, sDebugVariables.hSpeedRef, 0);
+		
+		sDebugVariables.bStartM1 ? MDI_StartMotor(pVCI->pDrivetrain->pMDI, M1) : MDI_StopMotor(pVCI->pDrivetrain->pMDI, M1);
+		sDebugVariables.bStartM2 ? MDI_StartMotor(pVCI->pDrivetrain->pMDI, M2) : MDI_StopMotor(pVCI->pDrivetrain->pMDI, M2);
+		#else
 		StateVC = VCSTM_GetState( pVCI->pStateMachine );
 		switch ( StateVC )
 		{
