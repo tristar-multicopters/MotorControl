@@ -196,13 +196,13 @@ void LCD_APT_frame_Process(void)
 		  toSend = abs(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1));		
 
 			
-			GearRatio = VCI_ReadRegister(m_APT_handle.pVController ,REG_M1_GEARRATIO);  //Gear ratio (motor compared to wheel) is split. 
+			GearRatio = m_APT_handle.pVController->pDrivetrain->sParameters.GearRatio;  //Gear ratio (motor compared to wheel) is split. 
 			                                                                            //msb 16 bits is the numerator, 
 			                                                                            //lsb 16 bits is denominator
 			                                                                            //ex: 3/2 ratio would be 0x00030002 
 			                                                                            //default should be 0x00010001 
 			
-			if(GearRatio < LOWEST_GEAR_RATIO || GearRatio > HIGEST_GEAR_RATIO) //valid values as gear ratio
+			if(GearRatio < LOWEST_GEAR_RATIO || GearRatio > HIGEST_GEAR_RATIO) //valid values of gear ratio
 			{
 			   GearRatio = LOWEST_GEAR_RATIO;
 		  }				

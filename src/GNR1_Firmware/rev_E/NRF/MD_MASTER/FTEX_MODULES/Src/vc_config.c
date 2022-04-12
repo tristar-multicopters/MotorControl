@@ -321,6 +321,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -10000,
+  .sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = false,
@@ -336,6 +337,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -7000,
+	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = false,
@@ -351,6 +353,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -10000,
+	.sParameters.GearRatio = 0x000D0006, //Ratio is 13/6
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = true,
@@ -366,6 +369,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -7000,
+	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
 	#else
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = false,
@@ -381,6 +385,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hFaultManagementTimeout = 25 // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 	.sParameters.hPASMaxTorque = -10000,
+	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed	
 	#endif
 	
 	.pMDI = &MDInterfaceHandle,
