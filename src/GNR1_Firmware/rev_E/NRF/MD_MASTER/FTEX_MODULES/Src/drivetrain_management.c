@@ -36,8 +36,6 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 	pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
 	pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
 	pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
-	
-	pHandle->hPASTorque	= 0;
 }
 
 /**
@@ -135,9 +133,9 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 			if ( abs(pHandle->aTorque[M1]) > abs(MDI_getIq(pHandle->pMDI, M1)) )
 			{
 				if (pHandle->bUsePAS)
-				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorquePASRampTimeUp);	
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorquePASRampTimeUp);	
 				else
-				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->hTorqueRampTimeUp);
+				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorqueRampTimeUp);
 			}
 			else
 			{
@@ -850,8 +848,8 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 	/* PAS and Throttle mangement */
 	if (PAS_Pres && (tThrottle <= 100))
 	{
-		/* PAS Ramp */
-		pHandle->pTorqueSelect= DRVT_PasSetTorque(pHandle);
+		/* PAS Time Ramp Call */
+		pHandle->hTorqueSelect= DRVT_PasSetTorque(pHandle);
 	}
 	else
 	{	

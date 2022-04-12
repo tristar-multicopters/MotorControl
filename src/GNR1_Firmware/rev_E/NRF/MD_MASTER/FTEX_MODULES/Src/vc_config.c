@@ -274,6 +274,7 @@ PAS_Handle_t PedalAssistHandle = {
 	.pTorque = &TorqueSensor,
 	.pSpulse = &SpeedPulse,
 	.pRampCoeff = 50,
+	.bMaxLevel = 5,
 };
 
 PWREN_Handle_t PowerEnableHandle = {
@@ -333,6 +334,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.bMode = SINGLE_MOTOR,
 	.sParameters.bCtrlType = TORQUE_CTRL,
 	.sParameters.bM2TorqueInversion = false,
+	.sParameters.hTorquePASRampTimeUp = 1000,	
 	.sParameters.hTorqueRampTimeUp = 200,
 	.sParameters.hTorqueRampTimeDown = 50,
 	.sParameters.hSpeedRampTimeUp = 200,
@@ -340,8 +342,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hMaxTorque = -10000,
-	.sParameters.hMaxLevel	=	5,
+	.sParameters.hPASMaxTorque = -10000,
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = true,
