@@ -846,7 +846,7 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
 	PAS_Pres = pHandle->bUsePAS; 		
 	tThrottle = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	/* PAS and Throttle mangement */
-	if (PAS_Pres && (tThrottle <= 100))
+	if (PAS_Pres && (tThrottle <= pHandle->sParameters.hStartingThrottle))
 	{
 		/* PAS Time Ramp Call */
 		pHandle->hTorqueSelect= DRVT_PasSetTorque(pHandle);
