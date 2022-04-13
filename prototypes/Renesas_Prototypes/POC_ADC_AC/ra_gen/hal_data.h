@@ -71,7 +71,7 @@ fsp_err_t adc_read_data(void);
 /* close the open adc module  */
 static void deinit_adc_module(void);
 static void LEDs_Blink(void);
-fsp_err_t read_process_input_from_RTT(void);
+fsp_err_t read_process_start(void);
 
 #define BIT_SHIFT_8  (8u)
 #define SIZE_64      (64u)

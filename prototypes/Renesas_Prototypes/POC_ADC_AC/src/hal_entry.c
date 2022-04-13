@@ -20,10 +20,12 @@ void hal_entry(void)
 {
 
 	fsp_err_t err;
-	
+	/* Timer init */
 	err = init_gpt_timer(&g_timer0_ctrl, &g_timer0_cfg);
+	/* Timer Start */
 	err = start_gpt_timer (&g_timer0_ctrl);   
-	read_process_input_from_RTT();
+	/* Start ADC port */
+	read_process_start();
 	
 	
 #if BSP_TZ_SECURE_BUILD
@@ -69,6 +71,7 @@ void AC_ADC(adc_callback_args_t * p_args)
 	fsp_err_t err;
 	if (true == b_ready_to_read)
 	{
+		/* Read ADC each timer trigger */
 		err = adc_read_data();
 	}
 }
@@ -97,9 +100,9 @@ static void LEDs_Blink(void)
 	R_BSP_SoftwareDelay(100,BSP_DELAY_UNITS_MILLISECONDS);
 }
 /*****************************************************************************************************************
-			ADC Call general function
+			ADC Call start
  ****************************************************************************************************************/
-fsp_err_t read_process_input_from_RTT(void)
+fsp_err_t read_process_start(void)
 {
 	  fsp_err_t err = FSP_SUCCESS;     // Error status
     err = adc_scan_start();
