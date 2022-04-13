@@ -11,8 +11,6 @@
 #include "pedal_assist.h"
 
 
-
-
 /**
 	* @brief  Pedal Assist initialization
 	* @param  PAS_Handle_t handle
@@ -28,19 +26,18 @@ void PAS_Init(PAS_Handle_t* pHandle)
 /**
 	* @brief  Pedal Assist capture pulse calculation
 	* @param  PAS_Handle_t handle
-	* @retval 
+	* @retval None
 	*/
 void PAS_CalculateSpeed(PAS_Handle_t* pHandle)
 {	
 	Pedal_capture_get_value( pHandle->pSpulse );
 }
-
 /**
-	* @brief  Pedal Assist speed value
+	* @brief  Pedal Assist speed Get value
 	* @param  PAS_Handle_t handle
-	* @retval Pedal sPAvSpeed in us
+	* @retval Pedal sPread value in useconds
 	*/
-int32_t PAS_GetSpeedValue(PAS_Handle_t* pHandle)
+uint32_t PAS_GetSpeedValue(PAS_Handle_t* pHandle)
 {	
 	return pHandle->pSpulse->sPread;
 }
@@ -48,31 +45,44 @@ int32_t PAS_GetSpeedValue(PAS_Handle_t* pHandle)
 /**
 	* @brief  Pedal Assist capture pulse length
 	* @param  PAS_Handle_t handle
-	* @retval Pedal frequency in hz
+	* @retval None
 	*/
-int32_t PAS_GetSpeedFreq(PAS_Handle_t* pHandle)
+void PAS_CalculateFreq(PAS_Handle_t* pHandle)
 {	
-	uint32_t PAS_Freq;
-	PAS_Freq = Coeff_FREQ / Pspeed_CalcAvValue(pHandle->pSpulse);
-	return PAS_Freq;
+	pHandle->pPASFreq = pCoeffFReq / PAS_GetSpeedValue(pHandle);
+}
+/**
+	* @brief  Pedal Assist speed Get Frequency
+	* @param  PAS_Handle_t handle
+	* @retval Frequency value in Hz
+	*/
+uint32_t PAS_GetSpeedFreq(PAS_Handle_t* pHandle)
+{	
+	return pHandle->pPASFreq;
+}
+/**
+	* @brief  Pedal Assist Calculate RPM
+	* @param  PAS_Handle_t handle
+	* @retval None
+	*/
+void PAS_CalculateRPM(PAS_Handle_t* pHandle)
+{	
+	pHandle->pPASRpm = (PAS_GetSpeedFreq(pHandle) / pHandle->pPulseNb)* pRpmCoeff;
 }
 
 /**
-	* @brief  Pedal Assist capture pulse length
+	* @brief  Pedal Assist speed Get RPM
 	* @param  PAS_Handle_t handle
-	* @retval Pedal RPM speed
+	* @retval Pedal sPAvSpeed value in r/min
 	*/
-int32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle)
+uint32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle)
 {	
-	uint32_t PAS_RPM;
-	PAS_RPM = (Coeff_FREQ / Pspeed_CalcAvValue(pHandle->pSpulse))* Coeff_RPM;
-	return PAS_RPM;
+	return pHandle->pPASRpm;
 }
-
 /**
 	* @brief  Pedal Assist capture deirection
 	* @param  Forward or back direction
-	* @retval Pedal direction
+	* @retval Pedal direction in uint8_t
 	*/
 uint8_t PAS_GetDirection(PAS_Handle_t* pHandle)
 {

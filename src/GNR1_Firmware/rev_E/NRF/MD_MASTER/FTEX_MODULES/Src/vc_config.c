@@ -193,10 +193,10 @@ TS_Handle_t TorqueSensor =
  */
 SPR_Handle_t SpeedPulse =
 {
-	.bCaptureChannel = 6,
-	.bRestartChannel = 5,
+	.bCaptureChannel = 0,
+	.bRestartChannel = 1,
 	
-	.WCaptureChannel = 4,
+	.WCaptureChannel = 2,
 	.WRestartChannel = 3,
 	
 	.bTimer_Prescaler = NRF_TIMER_FREQ_1MHz,
@@ -278,6 +278,7 @@ PAS_Handle_t PedalAssistHandle = {
 	.bMaxLevel	=	5,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bMaxLevel	=	5,
+	.pPulseNb	= 30,	// NUMBER_OF_PINS of pulse / rotation
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bMaxLevel	=	5,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
