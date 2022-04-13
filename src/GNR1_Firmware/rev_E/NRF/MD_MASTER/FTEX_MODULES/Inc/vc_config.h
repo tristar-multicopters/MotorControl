@@ -32,7 +32,7 @@ Change this define based on vehicle application
 ------------------------------------
 */
 
-#define VEHICLE_SELECTION 	VEHICLE_GRIZZLY 
+#define VEHICLE_SELECTION 	VEHICLE_EBGO 
 
 /*------------------------------------*/
 

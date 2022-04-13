@@ -395,6 +395,20 @@ DRVT_Handle_t DrivetrainHandle =
 	.pMS = &MotorSelectorHandle,
 	.pPWREN = &PowerEnableHandle,
 	
+	.sSpeedFoldback[M1] = 
+	{
+		.bEnableFoldback = false,
+		.hStartValue = 200,
+		.hEndValue = 400,
+		.hDefaultMaxTorque = 10000,
+	},
+	.sSpeedFoldback[M2] = 
+	{
+		.bEnableFoldback = false,
+		.hStartValue = 200,
+		.hEndValue = 400,
+		.hDefaultMaxTorque = 10000,
+	},
 };
 
 VCI_Handle_t VCInterfaceHandle = 

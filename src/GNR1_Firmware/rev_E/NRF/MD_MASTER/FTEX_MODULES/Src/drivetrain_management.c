@@ -48,9 +48,13 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 {
 	bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
 	bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);
+	int32_t wSpeedM1 = MDI_getSpeed(pHandle->pMDI, M1);
+	int32_t wSpeedM2 = MDI_getSpeed(pHandle->pMDI, M2);
+	int32_t wSpeedMainMotor = MDI_getSpeed(pHandle->pMDI, pHandle->bMainMotor);
 	
 	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS);
 	int16_t hTorqueRef = 0; int32_t hSpeedRef = 0;
+	int16_t hAux = 0;
 	
 	if (pHandle->pMS->bMSEnable)
 	{
@@ -71,11 +75,11 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 			default:
 				break;
 		}
-}
-			THRO_CalcAvThrottleValue(pHandle->pThrottle);
+	}
+	THRO_CalcAvThrottleValue(pHandle->pThrottle);
 
-			pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
-			pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
+	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
+	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
 
 	if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 	{
@@ -88,15 +92,18 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
-			pHandle->aTorque[pHandle->bMainMotor] = hTorqueRef;
+			hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], hTorqueRef, abs(wSpeedMainMotor) );
+			pHandle->aTorque[pHandle->bMainMotor] = hAux;
 		}
 		if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
-			pHandle->aTorque[M1] = hTorqueRef;
+			hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[M1], hTorqueRef, abs(wSpeedM1) );
+			pHandle->aTorque[M1] = hAux;
+			hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[M2], hTorqueRef, abs(wSpeedM2) );
 			if (pHandle->sParameters.bM2TorqueInversion)
-				pHandle->aTorque[M2] = -hTorqueRef;
+				pHandle->aTorque[M2] = -hAux;
 			else
-				pHandle->aTorque[M2] = hTorqueRef;
+				pHandle->aTorque[M2] = hAux;
 		}
 	}
 	else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)

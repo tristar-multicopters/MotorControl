@@ -85,10 +85,8 @@ typedef struct
 	bool					bUsePAS;
 	int16_t			 	hTorqueSelect;
 
-	FLDBK_Handle_t sHeatsinkTempFoldback1;		/* Foldback handle using M1 heatsink temperature */
-	FLDBK_Handle_t sHeatsinkTempFoldback2;		/* Foldback handle using M2 heatsink temperature */
-	FLDBK_Handle_t sSpeedFoldback1;						/* Foldback handle using M1 speed */
-	FLDBK_Handle_t sSpeedFoldback2;						/* Foldback handle using M2 speed */
+	FLDBK_Handle_t sHeatsinkTempFoldback[2];		/* Foldback handle using M1 and M2 heatsink temperature */
+	FLDBK_Handle_t sSpeedFoldback[2];						/* Foldback handle using M1 and M2 speed */
 	FLDBK_Handle_t sDCVoltageFoldback;				/* Foldback handle using DCbus voltage */
 	
 	uint16_t aFaultManagementCounters[3][2];  /* Array of counter before acknowledging motor faults. First dimension is

@@ -32,10 +32,8 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 			value = pHandle->pDrivetrain->pPWREN->bUsePowerLock;
 			break;
 		case REG_FLDB_START_TEMP:
-			value = pHandle->pDrivetrain->sHeatsinkTempFoldback1.hStartValue; // To verify
 			break;
 		case REG_FLDB_END_TEMP:
-			value = pHandle->pDrivetrain->sHeatsinkTempFoldback1.hEndValue;	  // To verify
 			break;
 		case REG_REGEN_SPEED_THR:
 			break;
@@ -628,10 +626,8 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 			pHandle->pDrivetrain->pPWREN->bUsePowerLock = value;
 			break;
 		case REG_FLDB_START_TEMP:
-			pHandle->pDrivetrain->sHeatsinkTempFoldback1.hStartValue = value; // To verify
 			break;
 		case REG_FLDB_END_TEMP:
-			pHandle->pDrivetrain->sHeatsinkTempFoldback1.hEndValue = value;	  // To verify
 			break;
 		case REG_REGEN_SPEED_THR:
 			break;

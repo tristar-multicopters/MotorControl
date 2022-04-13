@@ -20,6 +20,7 @@ typedef struct
 	int16_t hEndValue;
 	int16_t hDefaultMaxTorque;
 	
+	bool bEnableFoldback;
 	bool bIsInverted;
 	
 } FLDBK_Handle_t;
