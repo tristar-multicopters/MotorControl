@@ -93,7 +93,7 @@ THRO_Handle_t ThrottleHandle =
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
 		
-		.hOffsetThrottle = 9800,
+		.hOffsetThrottle = 10000,
 		.bSlopeThrottle = 5,
 		.bDivisorThrottle = 3,
 		
@@ -107,7 +107,7 @@ THRO_Handle_t ThrottleHandle =
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
 	
-		.hOffsetThrottle = 9800,
+		.hOffsetThrottle = 10000,
 		.bSlopeThrottle = 5,
 		.bDivisorThrottle = 3,
 		
@@ -121,7 +121,7 @@ THRO_Handle_t ThrottleHandle =
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
 	
-		.hOffsetThrottle = 9900,
+		.hOffsetThrottle = 10000,
 		.bSlopeThrottle = 5,
 		.bDivisorThrottle = 3,
 		
@@ -136,7 +136,7 @@ THRO_Handle_t ThrottleHandle =
 		.hLowPassFilterBW1 = 8,
 		.hLowPassFilterBW2 = 2,
 	
-		.hOffsetThrottle = 9900,
+		.hOffsetThrottle = 10000,
 		.bSlopeThrottle = 5,
 		.bDivisorThrottle = 3,
 		
@@ -150,7 +150,7 @@ THRO_Handle_t ThrottleHandle =
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
 	
-		.hOffsetThrottle = 9600,
+		.hOffsetThrottle = 10000,
 		.bSlopeThrottle = 5,
 		.bDivisorThrottle = 3,
 		
