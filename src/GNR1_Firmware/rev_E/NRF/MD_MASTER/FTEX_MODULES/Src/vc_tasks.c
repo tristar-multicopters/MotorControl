@@ -160,12 +160,8 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	UNUSED_PARAMETER(pvParameter);
 	osDelay(500);
 	//*******************************************//
-
-	VC_State_t StateVC;
-	VCI_Handle_t * pVCI = &VCInterfaceHandle;
 	
-	uint32_t wCounter;
-	uint16_t hVehicleFault;
+	VCI_Handle_t * pVCI = &VCInterfaceHandle;
 	
 	#if DEBUG_ENABLE
 	sDebugVariables.bStartM1 = false;
@@ -173,6 +169,10 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	sDebugVariables.hIqref = 0;
 	sDebugVariables.hIdref = 0;
 	sDebugVariables.hSpeedRef = 0;
+	#else
+	uint32_t wCounter;
+	uint16_t hVehicleFault;
+	VC_State_t StateVC;
 	#endif
 	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
