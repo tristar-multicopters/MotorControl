@@ -62,39 +62,54 @@ void TS_Init( TS_Handle_t * pHandle )
 	*/
 void TS_Clear( TS_Handle_t * pHandle )
 {
-  pHandle->hAvTorque = 0u;
-	pHandle->hIqref = 0;
+  pHandle->hAvTorqueValue = 0u;
+	pHandle->hAvADCtorque = 0u;
 }
 
 /**
 	* @brief  Torque ADC value calculation and filtering
 	* @param  pHandle used for Torque monitoring
-	* @retval None
+	* @retval hAvTorqueValue un uint16_t
 	*/
 uint16_t TS_CalcAvValue( TS_Handle_t * pHandle )
 {
-  uint32_t ttemp;
-  
+  uint32_t tTorqaux;
+  uint16_t hTorqux;
+	
+	
 	uint16_t hBandwidth;
 
 	htorque = RCM_ReadConv(pHandle->pRegularConversionManager, pHandle->convHandle);
 	pHandle->hInstTorque = htorque;
 	
-	if (pHandle->hInstTorque > pHandle->hAvTorque)
+	if (pHandle->hInstTorque > pHandle->hAvADCtorque)
 		hBandwidth = pHandle->hParam.hLowPassFilterBW1;
 	else
 		hBandwidth = pHandle->hParam.hLowPassFilterBW2;
 
 	if ( htorque != 0xFFFFu )
 	{
-		ttemp =  ( uint32_t )( hBandwidth - 1u );
-		ttemp *= ( uint32_t ) ( pHandle->hAvTorque );
-		ttemp += htorque;
-		ttemp /= ( uint32_t )( hBandwidth );
+		tTorqaux =  ( uint32_t )( hBandwidth - 1u );
+		tTorqaux *= ( uint32_t ) ( pHandle->hAvADCtorque );
+		tTorqaux += htorque;
+		tTorqaux /= ( uint32_t )( hBandwidth );
 
-		pHandle->hAvTorque = ( uint16_t ) ttemp;
+		pHandle->hAvADCtorque = ( uint16_t ) tTorqaux;
 	}
-	return pHandle->hAvTorque;
+
+	/* Compute torque sesnor value (between 0 and 65535) */
+	hTorqux = (pHandle->hAvADCtorque > pHandle->hParam.hOffsetTorqueSensor) ? 
+					(pHandle->hAvADCtorque - pHandle->hParam.hOffsetTorqueSensor) : 0; //Substraction without overflow
+	
+	tTorqaux = (uint32_t)(pHandle->hParam.bSlopeTorques * hTorqux);
+	tTorqaux /= pHandle->hParam.bDivisorTorques;
+	if (tTorqaux > UINT16_MAX)
+		tTorqaux = UINT16_MAX;
+	hTorqux = (uint16_t)tTorqaux;
+	
+	pHandle->hAvTorqueValue = hTorqux;	
+
+	return pHandle->hAvTorqueValue;
 }
 
 /**
@@ -104,7 +119,33 @@ uint16_t TS_CalcAvValue( TS_Handle_t * pHandle )
 	*/
 uint16_t TS_GetAvValue( TS_Handle_t * pHandle )
 {
-  return ( pHandle->hAvTorque );
+  return ( pHandle->hAvTorqueValue );
+}
+
+/**
+	* @brief  Convert Torque sensor data to motor torque
+	* @param  pHandle used for Torque monitoring
+	* @retval hAvTorque torque value
+	*/
+int16_t TS_ToMotorTorque(TS_Handle_t * pHandle)
+{
+	int32_t tAux;
+	
+	/* Compute torque value (between -32768 and 32767) */
+	tAux = (int32_t)(pHandle->hAvTorqueValue - pHandle->hParam.hOffsetTS);
+	if (tAux < 0)
+		tAux = 0;
+	/* Use slope factor */
+	tAux = ((pHandle->hParam.bSlopeTS)*tAux);
+	tAux /= pHandle->hParam.bDivisorTS;
+	
+	/* Data limitation secure */
+	if (tAux > INT16_MAX)
+		tAux = INT16_MAX;
+	else if (tAux < INT16_MIN)
+		tAux = INT16_MIN;
+	
+	return (int16_t)tAux;
 }
 /****************************************************** (C) COPYRIGHT FTEX Inc. *****END OF FILE**** ************************************************/
 

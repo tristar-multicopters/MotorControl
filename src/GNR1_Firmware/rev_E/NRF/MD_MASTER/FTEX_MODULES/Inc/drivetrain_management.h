@@ -61,11 +61,14 @@ typedef struct
 	uint16_t hStoppingSpeed;			  /* Minimum speed to stop drivetrain */
 	
 	int16_t hPASMaxTorque;					/* PAS Maximum Given Torque*/
+	uint16_t hPASMaxSpeed;					/* PAS Maximum Given Speed */
 	
   uint32_t GearRatio;             //Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002
   
 	uint16_t hFaultManagementTimeout; 	/* Number of ticks the VC state machine should be stayed on fault
 																			before clear an over-current, start-up or speed feedback fault */
+	bool bTorqueSensorUse;						 /* Torque sensor use flag */												
+					
 } DRVT_Parameters_t;
 
 typedef struct
@@ -82,7 +85,8 @@ typedef struct
 	int16_t aTorque[2];						  	/* Array of torque reference, first element is for M1, second is for M2 */
 	int16_t aSpeed[2];						  	/* Array of speed reference, first element is for M1, second is for M2 */
 
-	bool					bUsePAS;
+	bool 					bUseThrottle;				/* USE Throttle flag  */
+	bool					bUsePAS;						/* USE PAS flag  */
 	int16_t			 	hTorqueSelect;
 
 	FLDBK_Handle_t sHeatsinkTempFoldback[2];		/* Foldback handle using M1 and M2 heatsink temperature */
@@ -271,6 +275,19 @@ bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle);
 	*/
 int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle);
 /**
+	* @brief  Set Pedal Assist speed based on screen informations
+	* @param  Drivetrain handle
+	* @retval pRefTorque in int16
+	*/
+void DRVT_PasSetSpeed(DRVT_Handle_t * pHandle);
+/**
+	* @brief  Set Pedal Assist torque based on the Torque Sensor
+	* @param  Drivetrain handle
+	* @retval pRefTorqueS in int16
+	*/
+int16_t DRVT_TSSetTorque(DRVT_Handle_t * pHandle);
+
+/**
 	* @brief  Select Control assistance based on Throttle or PAS
 	* @param  Drivetrain handle
 	* @retval RefTorque in int16                                                                                    
@@ -281,8 +298,13 @@ int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle);
 	* @param  Drivetrain handle
 	* @retval pHandle->bUsePAS in Boolean
 	*/
-bool DRVT_PASpresence (DRVT_Handle_t * pHandle);
-
+void DRVT_PASpresence (DRVT_Handle_t * pHandle);
+/**
+	* @brief  Return the Throttle use Flag
+	* @param  Drivetrain handle
+	* @retval pHandle->bUseThrottle in boolean
+	*/
+void DRVT_Throttlepresence (DRVT_Handle_t * pHandle);
 
 #endif /*__DRIVETRAIN_MANAGEMENT_H*/
 

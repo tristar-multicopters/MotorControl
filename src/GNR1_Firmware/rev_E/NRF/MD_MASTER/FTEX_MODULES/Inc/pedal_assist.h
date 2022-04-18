@@ -52,8 +52,9 @@ typedef struct {
 	uint32_t pPASFreq;
 	uint32_t pPASRpm;
 	
+	int16_t bMaxTorque;
 	uint8_t bMaxLevel;
-	uint8_t pRampCoeff;	
+		
 	uint8_t	pPulseNb;		/* NUMBER_OF_PINS of pulse per rotation */
 	
 } PAS_Handle_t;

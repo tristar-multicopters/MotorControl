@@ -75,7 +75,9 @@ int16_t FLDBK_CalcTorqueMax(FLDBK_Handle_t * pHandle, int16_t hValue)
 	return hTorqueMax;
 }
 
-
+// hvalue speed
+// torque reference
+//  
 int16_t FLDBK_ApplyTorqueLimitation(FLDBK_Handle_t * pHandle, int16_t hInitialTorque, int16_t hValue)
 {
 		int16_t hTorqueMax = FLDBK_CalcTorqueMax(pHandle, hValue);
@@ -103,3 +105,21 @@ int16_t FLDBK_ApplyTorqueLimitation(FLDBK_Handle_t * pHandle, int16_t hInitialTo
 	
 	return hTorqueOut;
 }
+
+
+void FLDBK_SetSpeedStartValue (FLDBK_Handle_t * pHandle, uint16_t hRefSpeed)
+{
+		pHandle->hStartValue = hRefSpeed;
+}
+
+void FLDBK_SetSpeedEndValue (FLDBK_Handle_t * pHandle, uint16_t hRefSpeed)
+{
+	int16_t hInterval, hEndval;
+	/* Add the Interval Value to the Start Value */
+	hInterval = pHandle->hIntervalValue;
+	hEndval = hInterval + hRefSpeed;
+	pHandle->hEndValue = hEndval;
+}
+
+
+
