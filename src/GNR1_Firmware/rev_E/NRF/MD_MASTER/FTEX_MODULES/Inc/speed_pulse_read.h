@@ -58,9 +58,9 @@ extern "C" {
 
 typedef enum
 {
-	Forward,
-	Reverse,
-	Error_Direction
+	Forward = 1,
+	Reverse = -1,
+	Error_Direction = 0
 } SPR_direction_t;
 
 typedef struct
@@ -98,7 +98,7 @@ typedef struct
 	
 	uint32_t 			wPread; 
 	uint32_t 			sPread;     
-	uint8_t 			Direction_result;	
+	int8_t 			bDirection;	
 	
 	uint16_t 			sPAvSpeed;       /* It contains latest available pedal average speed in u16 */
 	uint16_t 			sWAvSpeed;       /* It contains latest available wheel average speed in u16 */

@@ -60,7 +60,9 @@ uint32_t PAS_GetSpeedFreq(PAS_Handle_t* pHandle)
 	*/
 int32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle)
 {	
-	pHandle->wPASRpm = (PAS_GetSpeedFreq(pHandle) / pHandle->bPulseNb)* RPMCOEFF;
+	int8_t 	bdirec = Get_Drive_Direction (pHandle->pSpulse);
+	
+	pHandle->wPASRpm = ((PAS_GetSpeedFreq(pHandle) / pHandle->bPulseNb)* RPMCOEFF) * bdirec;
 	return pHandle->wPASRpm;
 }
 /**
