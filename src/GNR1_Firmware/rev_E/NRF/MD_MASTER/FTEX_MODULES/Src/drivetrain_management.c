@@ -83,10 +83,10 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 	if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 	{
 		/* Check the Presence of the Throttle*/
-		DRVT_Throttlepresence (pHandle);
+		DRVT_IsThrottleDetected (pHandle);
 		/* Get Torque sensor data*/
 		PAS_GetTorque(pHandle->pPAS);
-		hTorqueRef = DRVT_ControlSelect(pHandle);
+		hTorqueRef = DRVT_CalcSelectedTorque(pHandle);
 		
 		if ( bIsBrakePressed )
 		{
@@ -95,7 +95,7 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
 			/* Using PAS without enabling the Throttle Flag */
-			if ((pHandle->bUsePAS) && (!pHandle->bUseThrottle))
+			if ((pHandle->bPASDetected) && (!pHandle->bThrottleDetected))
 			{
 				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], hTorqueRef, abs(wSpeedMainMotor) );
 				pHandle->aTorque[pHandle->bMainMotor] = hAux;
@@ -108,7 +108,7 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		}
 		if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
-			if ((pHandle->bUsePAS) && (!pHandle->bUseThrottle))
+			if ((pHandle->bPASDetected) && (!pHandle->bThrottleDetected))
 			{
 				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[M1], hTorqueRef, abs(wSpeedM1) );
 				pHandle->aTorque[M1] = hAux;
@@ -162,7 +162,7 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 		{
 			if ( abs(pHandle->aTorque[M1]) > abs(MDI_getIq(pHandle->pMDI, M1)) )
 			{
-				if (pHandle->bUsePAS)
+				if (pHandle->bPASDetected && !pHandle->bThrottleDetected)
 				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorquePASRampTimeUp);	
 				else
 
@@ -519,7 +519,7 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 		bCheckStop4 = true;
 	}
 	
-	if (!pHandle->bUsePAS)
+	if (!pHandle->bPASDetected)
 	{
 		bCheckStop5 = true;
 	}     
@@ -542,7 +542,7 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStart = false;
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( (hThrottleValue > pHandle->sParameters.hStartingThrottle || (pHandle->bUsePAS)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
+	if ( (hThrottleValue > pHandle->sParameters.hStartingThrottle || (pHandle->bPASDetected)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
 	{
 		bCheckStart = true;
 	}
@@ -818,50 +818,8 @@ int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
 	PAS_sLevel Got_Level;
 	Got_Level = DRVT_GetPASLevel(pHandle);
 	
-	switch(Got_Level)
-	{
-		case PAS_LEVEL_0:
-			hRefTorque = 0;
-			break;
-
-		case PAS_LEVEL_1:
-			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_1;
-			break;
-
-		case PAS_LEVEL_2:
-			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_2;
-			break;
-		case PAS_LEVEL_3:
-			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_3;
-			break;
-		case PAS_LEVEL_4:
-			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_4;
-			break;
-		
-		case PAS_LEVEL_5:
-			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_5;
-			break;
-		
-		case PAS_LEVEL_6:
-			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_6;
-			break;
-				
-		case PAS_LEVEL_7:
-			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_7;
-			break;
-						
-		case PAS_LEVEL_8:
-			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_8;
-			break;
-								
-		case PAS_LEVEL_9:
-			hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_9;
-			break;
-		
-		default:
-			hRefTorque = 0;
-	}
-
+	hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * Got_Level;
+	
 	return hRefTorque;
 }
 
@@ -870,100 +828,16 @@ int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
 	* @param  Drivetrain handle
 	* @retval pRefTorque in int16
 	*/
-void DRVT_PasSetSpeed(DRVT_Handle_t * pHandle)
+void DRVT_PASSetMaxSpeed(DRVT_Handle_t * pHandle)
 {
 	PAS_sLevel Got_Level;
 	Got_Level = DRVT_GetPASLevel(pHandle);
 	
-	switch(Got_Level)
-	{
-		case PAS_LEVEL_0:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], 0);  
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1], 0);
+	FLDBK_SetStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
+	FLDBK_SetEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
 
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], 0);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], 0);
-			break;
-
-		case PAS_LEVEL_1:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_1);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_1);
-
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_1);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_1);
-			break;
-
-		case PAS_LEVEL_2:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_2);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_2);
-
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_2);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_2);
-			break;
-		
-		case PAS_LEVEL_3:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_3);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_3);
-
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_3);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_3);
-			break;
-		
-		case PAS_LEVEL_4:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_4);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_4);
-		
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_4);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_4);
-			break;
-		
-		case PAS_LEVEL_5:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_5);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_5);
-
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_5);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_5);
-			break;
-		
-		case PAS_LEVEL_6:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_6);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_6);
-
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_6);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_6);
-			break;
-				
-		case PAS_LEVEL_7:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_7);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1],(pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_7);
-
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_7);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_7);
-			break;
-						
-		case PAS_LEVEL_8:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_8);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_8);
-
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_8);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_8);
-			break;
-								
-		case PAS_LEVEL_9:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_9);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_9);
-
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_9);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_9);
-			break;
-		
-		default:
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[pHandle->bMainMotor], 0);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[pHandle->bMainMotor], 0);
-
-			FLDBK_SetSpeedStartValue (&pHandle->sSpeedFoldback[M2], 0);
-			FLDBK_SetSpeedEndValue (&pHandle->sSpeedFoldback[M2], 0);
-	}
+	FLDBK_SetStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
+	FLDBK_SetEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
 }
 
 /**
@@ -971,56 +845,14 @@ void DRVT_PasSetSpeed(DRVT_Handle_t * pHandle)
 	* @param  Drivetrain handle
 	* @retval pRefTorqueS in int16
 	*/
-int16_t DRVT_TSSetTorque(DRVT_Handle_t * pHandle)
+int16_t DRVT_GetTorqueFromTS(DRVT_Handle_t * pHandle)
 {
 	int16_t hRefTorqueS, hReadTS;
 	PAS_sLevel Got_Level;
 	hReadTS = TS_ToMotorTorque(pHandle->pPAS->pTorque);
 	Got_Level = DRVT_GetPASLevel(pHandle);
 	
-	switch(Got_Level)
-	{
-		case PAS_LEVEL_0:
-			hRefTorqueS = 0;
-			break;
-
-		case PAS_LEVEL_1:
-			hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_1;
-			break;
-
-		case PAS_LEVEL_2:
-			hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_2;
-			break;
-		case PAS_LEVEL_3:
-			hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_3;
-			break;
-		case PAS_LEVEL_4:
-			hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_4;
-			break;
-		
-		case PAS_LEVEL_5:
-			hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_5;
-			break;
-		
-		case PAS_LEVEL_6:
-			hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_6;
-			break;
-				
-		case PAS_LEVEL_7:
-			hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_7;
-			break;
-						
-		case PAS_LEVEL_8:
-			hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_8;
-			break;
-								
-		case PAS_LEVEL_9:
-			hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * PAS_LEVEL_9;
-			break;
-		
-		default:
-			hRefTorqueS = 0;
-	}
+	hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * Got_Level;
 	
 	if (hRefTorqueS < pHandle->pPAS->bMaxTorque)
 	{
@@ -1033,21 +865,21 @@ int16_t DRVT_TSSetTorque(DRVT_Handle_t * pHandle)
 	* @param  Drivetrain handle
 	* @retval pHandle->pTorqueSelect in int16                                                                                    
 	*/
-int16_t DRVT_ControlSelect(DRVT_Handle_t * pHandle)
+int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 {	
 	/* PAS and Throttle management */
-	if (pHandle->bUsePAS && !pHandle->bUseThrottle)
+	if (pHandle->bPASDetected && !pHandle->bThrottleDetected)
 	{
 		/* Torque sensor enabled */
 		if (pHandle->sParameters.bTorqueSensorUse)
 		{
-				pHandle->hTorqueSelect = DRVT_TSSetTorque(pHandle);
-				DRVT_PasSetSpeed(pHandle);
+				pHandle->hTorqueSelect = DRVT_GetTorqueFromTS(pHandle);
+				DRVT_PASSetMaxSpeed(pHandle);
 		}
 		else
 		{
 				pHandle->hTorqueSelect= DRVT_PasSetTorque(pHandle);
-				DRVT_PasSetSpeed(pHandle);
+				DRVT_PASSetMaxSpeed(pHandle);
 		}
 	}
 	else
@@ -1067,23 +899,23 @@ void DRVT_PASpresence (DRVT_Handle_t * pHandle)
 {
 	uint32_t	pSpeedt;
 	PAS_CalculateSpeed(pHandle->pPAS);
-	pSpeedt = PAS_GetSpeedValue(pHandle->pPAS);
+	pSpeedt = PAS_GetPeriodValue(pHandle->pPAS);
 	if (pSpeedt > 0)
-		pHandle->bUsePAS = true;
+		pHandle->bPASDetected = true;
 	else 
-		pHandle->bUsePAS = false;
+		pHandle->bPASDetected = false;
 } 
 /**
 	* @brief  Return the Throttle use Flag
 	* @param  Drivetrain handle
 	* @retval pHandle->bUseThrottle in boolean
 	*/
-void DRVT_Throttlepresence (DRVT_Handle_t * pHandle) 
+void DRVT_IsThrottleDetected (DRVT_Handle_t * pHandle) 
 {
 	uint16_t tThrottle;
 	tThrottle = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	if (tThrottle <= pHandle->sParameters.hStartingThrottle)
-		pHandle->bUseThrottle = false;
+		pHandle->bThrottleDetected = false;
 	else 
-		pHandle->bUseThrottle = true;	
+		pHandle->bThrottleDetected = true;	
 }

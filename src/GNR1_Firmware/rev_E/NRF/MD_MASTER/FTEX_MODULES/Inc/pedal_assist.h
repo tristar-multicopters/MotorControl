@@ -23,8 +23,8 @@
 
 
 /* Defines -------------------------------------------------------------- */
-#define pRpmCoeff 	60			// RPM multiplication for r/min
-#define pCoeffFReq	1000000	// Period coeff for usecond division
+#define RPMCOEFF 	60			// RPM multiplication for r/min
+#define COEFFREQ	1000000	// Period coeff for usecond division
 
 /* PAS Level enumeration ------------------------------------------------ */
 typedef enum
@@ -49,13 +49,13 @@ typedef struct {
 	
 	PAS_sLevel	 	pLevel;					/* Pointer to PAS level enumaration */
 	
-	uint32_t pPASFreq;
-	uint32_t pPASRpm;
+	uint32_t wPASFreq;
+	int32_t wPASRpm;
 	
 	int16_t bMaxTorque;
 	uint8_t bMaxLevel;
 		
-	uint8_t	pPulseNb;		/* NUMBER_OF_PINS of pulse per rotation */
+	uint8_t	bPulseNb;		/* NUMBER_OF_PINS of pulse per rotation */
 	
 } PAS_Handle_t;
 
@@ -78,14 +78,7 @@ void PAS_CalculateSpeed(PAS_Handle_t* pHandle);
 	* @param  PAS_Handle_t handle
 	* @retval Pedal sPread value in useconds
 	*/
-uint32_t PAS_GetSpeedValue(PAS_Handle_t* pHandle);
-
-/**
-	* @brief  Pedal Assist capture pulse length
-	* @param  PAS_Handle_t handle
-	* @retval None
-	*/
-void PAS_CalculateFreq(PAS_Handle_t* pHandle);
+uint32_t PAS_GetPeriodValue(PAS_Handle_t* pHandle);
 
 /**
 	* @brief  Pedal Assist speed Get Frequency
@@ -95,18 +88,11 @@ void PAS_CalculateFreq(PAS_Handle_t* pHandle);
 uint32_t PAS_GetSpeedFreq(PAS_Handle_t* pHandle);
 
 /**
-	* @brief  Pedal Assist Calculate RPM
-	* @param  PAS_Handle_t handle
-	* @retval None
-	*/
-void PAS_CalculateRPM(PAS_Handle_t* pHandle);
-
-/**
 	* @brief  Pedal Assist speed Get RPM
 	* @param  PAS_Handle_t handle
 	* @retval Pedal sPAvSpeed value in r/min
 	*/
-uint32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle);
+int32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle);
 
 /**
 	* @brief  Pedal Assist capture deirection

@@ -57,13 +57,14 @@ typedef struct
 	
 	uint16_t 	hMax;             	 /* torque signal when at maximum position */	
 	
-	uint16_t 	hOffsetTorqueSensor;          	 /* Offset of the torque signal when at lowest position */
-	uint8_t bSlopeTorques;				/*< Gain factor of ADC value vs torque sensor   */
-	uint8_t bDivisorTorques;		 /*< Scaling factor of ADC value vs torque sensor   */
+	uint16_t 	hOffsetTS;	/* Offset of the torque signal when at lowest position */
+	uint8_t 	bSlopeTS;				/*< Gain factor of ADC value vs torque sensor   */
+	uint8_t 	bDivisorTS;			/*< Scaling factor of ADC value vs torque sensor   */
 	
-	uint16_t hOffsetTS;    		 /*< Offset of torque sensor vs torque */
-	int8_t  bSlopeTS;				 /*< Gain factor of torque sensor vs torque   */
-	uint8_t  bDivisorTS;			 /*< Scaling factor of torque sensor vs torque   */
+	
+	uint16_t hOffsetMT;    		 /*< Offset of torque sensor vs torque */
+	int8_t   bSlopeMT;				 /*< Gain factor of torque sensor vs torque   */
+	uint8_t  bDivisorMT;			 /*< Scaling factor of torque sensor vs torque   */
 	
 							
 } TS_Param_t;
@@ -77,7 +78,7 @@ typedef struct
   
 	uint16_t 										hInstTorque;         		/* It contains latest available insteateonous torque.
 																												 This parameter is expressed in u16 */
-	uint16_t 										hAvADCtorque;          /**< It contains latest available average ADC value.*/
+	uint16_t 										hAvADCValue;          /**< It contains latest available average ADC value.*/
 	uint16_t 										hAvTorqueValue;          		/* It contains latest available average torque.
 																													This parameter is expressed in u16 */
 	int16_t 										hIqref;            		  /* Current Iqref value */

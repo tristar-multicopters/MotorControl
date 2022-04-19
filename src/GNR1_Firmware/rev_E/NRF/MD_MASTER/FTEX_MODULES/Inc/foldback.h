@@ -32,10 +32,10 @@ int16_t FLDBK_CalcTorqueMax(FLDBK_Handle_t * pHandle, int16_t hValue);
 /* Function for applying torque limitation based on input value */
 int16_t FLDBK_ApplyTorqueLimitation(FLDBK_Handle_t * pHandle, int16_t hInitialTorque, int16_t hValue);
 
-/* Function for setting the start speed limitation speed value */
-void FLDBK_SetSpeedStartValue (FLDBK_Handle_t * pHandle, uint16_t hRefSpeed);
+/* Function for setting the start limitation speed value */
+void FLDBK_SetStartValue (FLDBK_Handle_t * pHandle, uint16_t hRefSpeed);
 
-/* Function for setting the end speed limitation speed value */
-void FLDBK_SetSpeedEndValue (FLDBK_Handle_t * pHandle, uint16_t hIntervalSpeed);
+/* Function for setting the end limitation speed value */
+void FLDBK_SetEndValue (FLDBK_Handle_t * pHandle, uint16_t hIntervalSpeed);
 
 #endif

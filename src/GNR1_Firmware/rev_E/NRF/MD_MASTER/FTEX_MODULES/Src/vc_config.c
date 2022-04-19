@@ -185,13 +185,13 @@ TS_Handle_t TorqueSensor =
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
 		
-		.hOffsetTorqueSensor = 12500,
-		.bSlopeTorques = 5,			
-		.bDivisorTorques = 4,
+		.hOffsetTS = 12500,
+		.bSlopeTS = 5,			
+		.bDivisorTS = 4,
 		
-		.hOffsetTS = 2000,
-		.bSlopeTS = -15,
-		.bDivisorTS = 20,
+		.hOffsetMT = 2000,
+		.bSlopeMT = -15,
+		.bDivisorMT = 20,
 			
 		.hMax = UINT16_MAX,
 	}
@@ -285,7 +285,7 @@ PAS_Handle_t PedalAssistHandle = {
 	.bMaxLevel	=	5,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bMaxLevel	=	5,
-	.pPulseNb	= 30,	// NUMBER_OF_PINS of pulse / rotation
+	.bPulseNb	= 30,	// NUMBER_OF_PINS of pulse / rotation
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bMaxLevel	=	5,
 	.bMaxTorque = -8000,

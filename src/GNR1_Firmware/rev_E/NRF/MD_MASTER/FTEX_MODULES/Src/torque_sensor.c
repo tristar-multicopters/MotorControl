@@ -63,7 +63,7 @@ void TS_Init( TS_Handle_t * pHandle )
 void TS_Clear( TS_Handle_t * pHandle )
 {
   pHandle->hAvTorqueValue = 0u;
-	pHandle->hAvADCtorque = 0u;
+	pHandle->hAvADCValue = 0u;
 }
 
 /**
@@ -82,7 +82,7 @@ uint16_t TS_CalcAvValue( TS_Handle_t * pHandle )
 	htorque = RCM_ReadConv(pHandle->pRegularConversionManager, pHandle->convHandle);
 	pHandle->hInstTorque = htorque;
 	
-	if (pHandle->hInstTorque > pHandle->hAvADCtorque)
+	if (pHandle->hInstTorque > pHandle->hAvADCValue)
 		hBandwidth = pHandle->hParam.hLowPassFilterBW1;
 	else
 		hBandwidth = pHandle->hParam.hLowPassFilterBW2;
@@ -90,19 +90,19 @@ uint16_t TS_CalcAvValue( TS_Handle_t * pHandle )
 	if ( htorque != 0xFFFFu )
 	{
 		tTorqaux =  ( uint32_t )( hBandwidth - 1u );
-		tTorqaux *= ( uint32_t ) ( pHandle->hAvADCtorque );
+		tTorqaux *= ( uint32_t ) ( pHandle->hAvADCValue );
 		tTorqaux += htorque;
 		tTorqaux /= ( uint32_t )( hBandwidth );
 
-		pHandle->hAvADCtorque = ( uint16_t ) tTorqaux;
+		pHandle->hAvADCValue = ( uint16_t ) tTorqaux;
 	}
 
 	/* Compute torque sesnor value (between 0 and 65535) */
-	hTorqux = (pHandle->hAvADCtorque > pHandle->hParam.hOffsetTorqueSensor) ? 
-					(pHandle->hAvADCtorque - pHandle->hParam.hOffsetTorqueSensor) : 0; //Substraction without overflow
+	hTorqux = (pHandle->hAvADCValue > pHandle->hParam.hOffsetTS) ? 
+					(pHandle->hAvADCValue - pHandle->hParam.hOffsetTS) : 0; //Substraction without overflow
 	
-	tTorqaux = (uint32_t)(pHandle->hParam.bSlopeTorques * hTorqux);
-	tTorqaux /= pHandle->hParam.bDivisorTorques;
+	tTorqaux = (uint32_t)(pHandle->hParam.bSlopeTS * hTorqux);
+	tTorqaux /= pHandle->hParam.bDivisorTS;
 	if (tTorqaux > UINT16_MAX)
 		tTorqaux = UINT16_MAX;
 	hTorqux = (uint16_t)tTorqaux;
@@ -132,12 +132,12 @@ int16_t TS_ToMotorTorque(TS_Handle_t * pHandle)
 	int32_t tAux;
 	
 	/* Compute torque value (between -32768 and 32767) */
-	tAux = (int32_t)(pHandle->hAvTorqueValue - pHandle->hParam.hOffsetTS);
+	tAux = (int32_t)(pHandle->hAvTorqueValue - pHandle->hParam.hOffsetMT);
 	if (tAux < 0)
 		tAux = 0;
 	/* Use slope factor */
-	tAux = ((pHandle->hParam.bSlopeTS)*tAux);
-	tAux /= pHandle->hParam.bDivisorTS;
+	tAux = ((pHandle->hParam.bSlopeMT)*tAux);
+	tAux /= pHandle->hParam.bDivisorMT;
 	
 	/* Data limitation secure */
 	if (tAux > INT16_MAX)

@@ -37,20 +37,11 @@ void PAS_CalculateSpeed(PAS_Handle_t* pHandle)
 	* @param  PAS_Handle_t handle
 	* @retval Pedal sPread value in useconds
 	*/
-uint32_t PAS_GetSpeedValue(PAS_Handle_t* pHandle)
+uint32_t PAS_GetPeriodValue(PAS_Handle_t* pHandle)
 {	
 	return pHandle->pSpulse->sPread;
 }
 
-/**
-	* @brief  Pedal Assist capture pulse length
-	* @param  PAS_Handle_t handle
-	* @retval None
-	*/
-void PAS_CalculateFreq(PAS_Handle_t* pHandle)
-{	
-	pHandle->pPASFreq = pCoeffFReq / PAS_GetSpeedValue(pHandle);
-}
 /**
 	* @brief  Pedal Assist speed Get Frequency
 	* @param  PAS_Handle_t handle
@@ -58,16 +49,8 @@ void PAS_CalculateFreq(PAS_Handle_t* pHandle)
 	*/
 uint32_t PAS_GetSpeedFreq(PAS_Handle_t* pHandle)
 {	
-	return pHandle->pPASFreq;
-}
-/**
-	* @brief  Pedal Assist Calculate RPM
-	* @param  PAS_Handle_t handle
-	* @retval None
-	*/
-void PAS_CalculateRPM(PAS_Handle_t* pHandle)
-{	
-	pHandle->pPASRpm = (PAS_GetSpeedFreq(pHandle) / pHandle->pPulseNb)* pRpmCoeff;
+	pHandle->wPASFreq = COEFFREQ / PAS_GetPeriodValue(pHandle);
+	return pHandle->wPASFreq;
 }
 
 /**
@@ -75,9 +58,10 @@ void PAS_CalculateRPM(PAS_Handle_t* pHandle)
 	* @param  PAS_Handle_t handle
 	* @retval Pedal sPAvSpeed value in r/min
 	*/
-uint32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle)
+int32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle)
 {	
-	return pHandle->pPASRpm;
+	pHandle->wPASRpm = (PAS_GetSpeedFreq(pHandle) / pHandle->bPulseNb)* RPMCOEFF;
+	return pHandle->wPASRpm;
 }
 /**
 	* @brief  Pedal Assist capture deirection
