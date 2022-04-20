@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    pedal_assist.c
-  * @author  Ronak Nemade, FTEX
+  * @author  Jabrane Chakroun, FTEX
   * @brief   This file defines the functions used in higher level modules for pedal assist
   *
 	******************************************************************************
@@ -76,13 +76,13 @@ uint8_t PAS_GetDirection(PAS_Handle_t* pHandle)
 }
 
 /**
-	* @brief  Pedal Assist get torque value
+	* @brief  Pedal assist torque sensor update
 	* @param  PAS_Handle_t handle
-	* @retval Torque value
+	* @retval void
 	*/
-int16_t PAS_GetTorque(PAS_Handle_t* pHandle)
+void PAS_CalcTSAvValue(PAS_Handle_t* pHandle)
 {
-	return TS_CalcAvValue(pHandle->pTorque );
+	TS_CalcAvValue(pHandle->pTorque);
 }
 
 /**

@@ -104,11 +104,12 @@ int32_t PAS_GetSpeedRPM(PAS_Handle_t* pHandle);
 uint8_t PAS_GetDirection(PAS_Handle_t* pHandle);
 
 /**
-	* @brief  Pedal Assist get torque value
+	* @brief  Pedal assist torque sensor update
 	* @param  PAS_Handle_t handle
-	* @retval Torque value
+	* @retval void
 	*/
-int16_t PAS_GetTorque(PAS_Handle_t* pHandle);
+void PAS_CalcTSAvValue(PAS_Handle_t* pHandle);
+	
 /**
 	* @brief  Update PAS detection information
 	* @param  Drivetrain handle

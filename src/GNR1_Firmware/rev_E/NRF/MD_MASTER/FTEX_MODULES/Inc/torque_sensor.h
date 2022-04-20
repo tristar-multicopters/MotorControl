@@ -104,7 +104,7 @@ typedef struct
 void TS_Init( TS_Handle_t * pHandle );
 void TS_Clear( TS_Handle_t * pHandle );
 
-uint16_t TS_CalcAvValue( TS_Handle_t * pHandle );
+void TS_CalcAvValue( TS_Handle_t * pHandle );
 uint16_t TS_GetAvValue( TS_Handle_t * pHandle );
 int16_t TS_ToMotorTorque(TS_Handle_t * pHandle);
 

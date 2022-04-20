@@ -71,7 +71,7 @@ void TS_Clear( TS_Handle_t * pHandle )
 	* @param  pHandle used for Torque monitoring
 	* @retval hAvTorqueValue un uint16_t
 	*/
-uint16_t TS_CalcAvValue( TS_Handle_t * pHandle )
+void TS_CalcAvValue( TS_Handle_t * pHandle )
 {
   uint32_t tTorqaux;
   uint16_t hTorqux;
@@ -108,8 +108,6 @@ uint16_t TS_CalcAvValue( TS_Handle_t * pHandle )
 	hTorqux = (uint16_t)tTorqaux;
 	
 	pHandle->hAvTorqueValue = hTorqux;	
-
-	return pHandle->hAvTorqueValue;
 }
 
 /**

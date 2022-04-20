@@ -79,6 +79,7 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		}
 	}
 	THRO_CalcAvThrottleValue(pHandle->pThrottle);
+	PAS_CalcTSAvValue(pHandle->pPAS);
 
 	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
 	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
