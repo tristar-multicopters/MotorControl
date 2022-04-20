@@ -810,7 +810,7 @@ bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle)
 	* @param  Drivetrain handle
 	* @retval pRefTorque in int16
 	*/
-int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle)
+int16_t DRVT_GetPASTorque(DRVT_Handle_t * pHandle)
 {
 	int16_t hRefTorque;
 	PAS_sLevel Got_Level;
@@ -876,7 +876,7 @@ int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 		}
 		else
 		{
-				pHandle->hTorqueSelect= DRVT_PasSetTorque(pHandle);
+				pHandle->hTorqueSelect= DRVT_GetPASTorque(pHandle);
 				DRVT_PASSetMaxSpeed(pHandle);
 		}
 	}

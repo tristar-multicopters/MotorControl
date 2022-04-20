@@ -272,7 +272,7 @@ bool DRVT_IsMotor2Used(DRVT_Handle_t * pHandle);
 	* @param  Drivetrain handle
 	* @retval pRefTorque in int16
 	*/
-int16_t DRVT_PasSetTorque(DRVT_Handle_t * pHandle);
+int16_t DRVT_GetPASTorque(DRVT_Handle_t * pHandle);
 /**
 	* @brief  Set Pedal Assist speed based on screen informations
 	* @param  Drivetrain handle
