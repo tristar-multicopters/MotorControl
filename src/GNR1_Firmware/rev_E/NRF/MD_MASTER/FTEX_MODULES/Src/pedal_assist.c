@@ -84,3 +84,19 @@ int16_t PAS_GetTorque(PAS_Handle_t* pHandle)
 {
 	return TS_CalcAvValue(pHandle->pTorque );
 }
+
+/**
+	* @brief  Return the PAS Presence Flag
+	* @param  Drivetrain handle
+	* @retval pHandle->bUsePAS in boolean
+	*/
+void PAS_UpdatePASDetection (PAS_Handle_t * pHandle) 
+{
+	uint32_t	pSpeedt;
+	PAS_CalculateSpeed(pHandle);
+	pSpeedt = PAS_GetPeriodValue(pHandle);
+	if (pSpeedt > 0)
+		pHandle->bPASDetected = true;
+	else 
+		pHandle->bPASDetected = false;
+} 

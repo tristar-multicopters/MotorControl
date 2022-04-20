@@ -57,6 +57,8 @@ typedef struct {
 		
 	uint8_t	bPulseNb;		/* NUMBER_OF_PINS of pulse per rotation */
 	
+	bool	bPASDetected;						/* USE PAS flag  for detection */
+	
 } PAS_Handle_t;
 
 /**
@@ -107,7 +109,12 @@ uint8_t PAS_GetDirection(PAS_Handle_t* pHandle);
 	* @retval Torque value
 	*/
 int16_t PAS_GetTorque(PAS_Handle_t* pHandle);
-
+/**
+	* @brief  PAS presence information
+	* @param  Drivetrain handle
+	* @retval pHandle->bUsePAS in Boolean
+	*/
+void PAS_UpdatePASDetection (PAS_Handle_t * pHandle);
 
 
 #endif

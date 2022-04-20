@@ -105,18 +105,18 @@ int16_t FLDBK_ApplyTorqueLimitation(FLDBK_Handle_t * pHandle, int16_t hInitialTo
 }
 
 /* Function for setting the start speed limitation value */
-void FLDBK_SetStartValue (FLDBK_Handle_t * pHandle, uint16_t hRefSpeed)
+void FLDBK_SetStartValue (FLDBK_Handle_t * pHandle, uint16_t hStartValue)
 {
-		pHandle->hStartValue = hRefSpeed;
+		pHandle->hStartValue = hStartValue;
 }
 
 /* Function for setting the end limitation speed value */
-void FLDBK_SetEndValue (FLDBK_Handle_t * pHandle, uint16_t hRefSpeed)
+void FLDBK_SetEndValue (FLDBK_Handle_t * pHandle, uint16_t hStartValue)
 {
 	int16_t hInterval, hEndval;
 	/* Add the Interval Value to the Start Value */
 	hInterval = pHandle->hIntervalValue;
-	hEndval = hInterval + hRefSpeed;
+	hEndval = hInterval + hStartValue;
 	pHandle->hEndValue = hEndval;
 }
 

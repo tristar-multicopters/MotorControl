@@ -83,9 +83,7 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 	if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 	{
 		/* Check the Presence of the Throttle*/
-		DRVT_IsThrottleDetected (pHandle);
-		/* Get Torque sensor data*/
-		PAS_GetTorque(pHandle->pPAS);
+		THRO_UpdateThrottleDetection (pHandle);
 		hTorqueRef = DRVT_CalcSelectedTorque(pHandle);
 		
 		if ( bIsBrakePressed )
@@ -95,7 +93,7 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
 			/* Using PAS without enabling the Throttle Flag */
-			if ((pHandle->bPASDetected) && (!pHandle->bThrottleDetected))
+			if ((pHandle->pPAS->bPASDetected) && (!pHandle->bThrottleDetected))
 			{
 				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], hTorqueRef, abs(wSpeedMainMotor) );
 				pHandle->aTorque[pHandle->bMainMotor] = hAux;
@@ -108,7 +106,7 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		}
 		if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
-			if ((pHandle->bPASDetected) && (!pHandle->bThrottleDetected))
+			if ((pHandle->pPAS->bPASDetected) && (!pHandle->bThrottleDetected))
 			{
 				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[M1], hTorqueRef, abs(wSpeedM1) );
 				pHandle->aTorque[M1] = hAux;
@@ -162,7 +160,7 @@ void DRVT_UpdateMotorRamps(DRVT_Handle_t * pHandle)
 		{
 			if ( abs(pHandle->aTorque[M1]) > abs(MDI_getIq(pHandle->pMDI, M1)) )
 			{
-				if (pHandle->bPASDetected && !pHandle->bThrottleDetected)
+				if (pHandle->pPAS->bPASDetected && !pHandle->bThrottleDetected)
 				MDI_SetTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorquePASRampTimeUp);	
 				else
 
@@ -519,7 +517,7 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 		bCheckStop4 = true;
 	}
 	
-	if (!pHandle->bPASDetected)
+	if (!pHandle->pPAS->bPASDetected)
 	{
 		bCheckStop5 = true;
 	}     
@@ -542,7 +540,7 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStart = false;
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( (hThrottleValue > pHandle->sParameters.hStartingThrottle || (pHandle->bPASDetected)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
+	if ( (hThrottleValue > pHandle->sParameters.hStartingThrottle || (pHandle->pPAS->bPASDetected)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
 	{
 		bCheckStart = true;
 	}
@@ -868,7 +866,7 @@ int16_t DRVT_GetTorqueFromTS(DRVT_Handle_t * pHandle)
 int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 {	
 	/* PAS and Throttle management */
-	if (pHandle->bPASDetected && !pHandle->bThrottleDetected)
+	if (pHandle->pPAS->bPASDetected && !pHandle->bThrottleDetected)
 	{
 		/* Torque sensor enabled */
 		if (pHandle->sParameters.bTorqueSensorUse)
@@ -891,26 +889,11 @@ int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 }
 
 /**
-	* @brief  Return the PAS Presence Flag
-	* @param  Drivetrain handle
-	* @retval pHandle->bUsePAS in boolean
-	*/
-void DRVT_PASpresence (DRVT_Handle_t * pHandle) 
-{
-	uint32_t	pSpeedt;
-	PAS_CalculateSpeed(pHandle->pPAS);
-	pSpeedt = PAS_GetPeriodValue(pHandle->pPAS);
-	if (pSpeedt > 0)
-		pHandle->bPASDetected = true;
-	else 
-		pHandle->bPASDetected = false;
-} 
-/**
 	* @brief  Return the Throttle use Flag
 	* @param  Drivetrain handle
 	* @retval pHandle->bUseThrottle in boolean
 	*/
-void DRVT_IsThrottleDetected (DRVT_Handle_t * pHandle) 
+void THRO_UpdateThrottleDetection (DRVT_Handle_t * pHandle) 
 {
 	uint16_t tThrottle;
 	tThrottle = THRO_GetAvThrottleValue(pHandle->pThrottle);
