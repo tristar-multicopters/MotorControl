@@ -130,7 +130,7 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 	while (true)
 	{
 		/* Pulse read presence in slow loop test */ 
-		DRVT_PASpresence (pVCI->pDrivetrain);
+		PAS_UpdatePASDetection (pVCI->pDrivetrain->pPAS);
 
 		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain) )
 		{

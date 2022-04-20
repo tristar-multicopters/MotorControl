@@ -298,15 +298,15 @@ void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)//, SP
 
 		if (sin_flag && (!cos_flag))
         {
-					p_SPR_Handle->Direction_result = Forward;
+					p_SPR_Handle->bDirection = Forward;
         }
 		else if (cos_flag && (!sin_flag))
         {
-					p_SPR_Handle->Direction_result = Error_Direction;
+					p_SPR_Handle->bDirection = Error_Direction;
         }
 		else 
         {
-					p_SPR_Handle->Direction_result = Reverse;
+					p_SPR_Handle->bDirection = Reverse;
         }
 	}
 }
@@ -318,7 +318,7 @@ void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)//, SP
 	*/
 uint8_t Get_Drive_Direction (SPR_Handle_t* pHandle)
 {
-	 return ( p_SPR_Handle->Direction_result );
+	 return ( p_SPR_Handle->bDirection );
 }
 
 /**

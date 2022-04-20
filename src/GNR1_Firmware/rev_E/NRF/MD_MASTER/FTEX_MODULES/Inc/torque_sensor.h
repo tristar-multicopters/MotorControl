@@ -55,11 +55,18 @@ typedef struct
   uint16_t 	hLowPassFilterBW1;   /* used to configure the first order software filter bandwidth */
 	uint16_t 	hLowPassFilterBW2;	
 	
-	uint16_t 	hOffset;          	 /* Offset of the torque signal when at lowest position */
 	uint16_t 	hMax;             	 /* torque signal when at maximum position */	
 	
-	int8_t 		m;									 /* Gain factor of torque   */
-	uint8_t 	F;								   /* Scaling factor of torque  */
+	uint16_t 	hOffsetTS;	/* Offset of the torque signal when at lowest position */
+	uint8_t 	bSlopeTS;				/*< Gain factor of ADC value vs torque sensor   */
+	uint8_t 	bDivisorTS;			/*< Scaling factor of ADC value vs torque sensor   */
+	
+	
+	uint16_t hOffsetMT;    		 /*< Offset of torque sensor vs torque */
+	int8_t   bSlopeMT;				 /*< Gain factor of torque sensor vs torque   */
+	uint8_t  bDivisorMT;			 /*< Scaling factor of torque sensor vs torque   */
+	
+							
 } TS_Param_t;
 
 /* Torque_Handle_t structure used for Torque monitoring */
@@ -71,8 +78,9 @@ typedef struct
   
 	uint16_t 										hInstTorque;         		/* It contains latest available insteateonous torque.
 																												 This parameter is expressed in u16 */
-	uint16_t 										hAvTorque;          		/* It contains latest available average torque.
-																										 This parameter is expressed in u16 */
+	uint16_t 										hAvADCValue;          /**< It contains latest available average ADC value.*/
+	uint16_t 										hAvTorqueValue;          		/* It contains latest available average torque.
+																													This parameter is expressed in u16 */
 	int16_t 										hIqref;            		  /* Current Iqref value */
 	TS_Param_t 									hParam;
 } TS_Handle_t;
@@ -98,6 +106,7 @@ void TS_Clear( TS_Handle_t * pHandle );
 
 uint16_t TS_CalcAvValue( TS_Handle_t * pHandle );
 uint16_t TS_GetAvValue( TS_Handle_t * pHandle );
+int16_t TS_ToMotorTorque(TS_Handle_t * pHandle);
 
 #ifdef __cplusplus
 }

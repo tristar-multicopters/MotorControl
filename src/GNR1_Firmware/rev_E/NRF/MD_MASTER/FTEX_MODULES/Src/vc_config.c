@@ -126,7 +126,7 @@ THRO_Handle_t ThrottleHandle =
 		.bDivisorThrottle = 3,
 		
 		.hOffsetTorque = 4000,
-		.bSlopeTorque = -8,
+		.bSlopeTorque = -11,
 		.bDivisorTorque = 48,
 	}
 	
@@ -179,24 +179,32 @@ TS_Handle_t TorqueSensor =
 		.pin_p = PAS_TORQUE_PIN,
 		.pin_n = NRF_SAADC_INPUT_DISABLED,
 	},
+#if VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.hParam =
-	{
+	{	
 		.hLowPassFilterBW1 = 16,
 		.hLowPassFilterBW2 = 2,
-		.hOffset = 12000,
+		
+		.hOffsetTS = 12500,
+		.bSlopeTS = 5,			
+		.bDivisorTS = 4,
+		
+		.hOffsetMT = 2000,
+		.bSlopeMT = -15,
+		.bDivisorMT = 20,
+			
 		.hMax = UINT16_MAX,
-		.m = -16,
-		.F = 35,
 	}
+#endif
 };
 /**@brief Speed pulse Pin initializing Parameters.
  */
 SPR_Handle_t SpeedPulse =
 {
-	.bCaptureChannel = 6,
-	.bRestartChannel = 5,
+	.bCaptureChannel = 0,
+	.bRestartChannel = 1,
 	
-	.WCaptureChannel = 4,
+	.WCaptureChannel = 2,
 	.WRestartChannel = 3,
 	
 	.bTimer_Prescaler = NRF_TIMER_FREQ_1MHz,
@@ -273,13 +281,14 @@ MDI_Handle_t MDInterfaceHandle =
 PAS_Handle_t PedalAssistHandle = {
 	.pTorque = &TorqueSensor,
 	.pSpulse = &SpeedPulse,
-	.pRampCoeff = 50,
 	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.bMaxLevel	=	5,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bMaxLevel	=	5,
+	.bPulseNb	= 30,	// NUMBER_OF_PINS of pulse / rotation
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bMaxLevel	=	5,
+	.bMaxTorque = -8000,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bMaxLevel	=	5,
 	#else
@@ -320,6 +329,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -10000,
+	.sParameters.hPASMaxSpeed = 500,
   .sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.sParameters.bUseMotorM1 = true,
@@ -336,6 +346,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -7000,
+	.sParameters.hPASMaxSpeed = 500,
 	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.sParameters.bUseMotorM1 = true,
@@ -344,7 +355,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.bMode = SINGLE_MOTOR,
 	.sParameters.bCtrlType = TORQUE_CTRL,
 	.sParameters.bM2TorqueInversion = false,
-	.sParameters.hTorquePASRampTimeUp = 1000,	
+	.sParameters.hTorquePASRampTimeUp = 1500,	
 	.sParameters.hTorqueRampTimeUp = 200,
 	.sParameters.hTorqueRampTimeDown = 50,
 	.sParameters.hSpeedRampTimeUp = 200,
@@ -352,8 +363,10 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -10000,
+	.sParameters.hPASMaxTorque = -5000,
+	.sParameters.hPASMaxSpeed = 250,
 	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
+	.sParameters.bTorqueSensorUse = false,
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = true,
@@ -369,6 +382,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -7000,
+	.sParameters.hPASMaxSpeed = 500,
 	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
 	#else
 	.sParameters.bUseMotorM1 = true,
@@ -385,6 +399,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hFaultManagementTimeout = 25 // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 	.sParameters.hPASMaxTorque = -10000,
+	.sParameters.hPASMaxSpeed = 500,
 	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed	
 	#endif
 	
@@ -397,15 +412,17 @@ DRVT_Handle_t DrivetrainHandle =
 	
 	.sSpeedFoldback[M1] = 
 	{
-		.bEnableFoldback = false,
+		.bEnableFoldback = true,
 		.hStartValue = 200,
+		.hIntervalValue = 200,
 		.hEndValue = 400,
 		.hDefaultMaxTorque = 10000,
 	},
 	.sSpeedFoldback[M2] = 
 	{
-		.bEnableFoldback = false,
+		.bEnableFoldback = true,
 		.hStartValue = 200,
+		.hIntervalValue = 200,
 		.hEndValue = 400,
 		.hDefaultMaxTorque = 10000,
 	},
