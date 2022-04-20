@@ -100,6 +100,8 @@ THRO_Handle_t ThrottleHandle =
 		.hOffsetTorque = 4000,
 		.bSlopeTorque = -7,
 		.bDivisorTorque = 25,
+	
+		.hDetectionThreshold = 1000,
 	}
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.hParam =
@@ -114,6 +116,8 @@ THRO_Handle_t ThrottleHandle =
 		.hOffsetTorque = 4000,
 		.bSlopeTorque = -7,
 		.bDivisorTorque = 45,
+		
+		.hDetectionThreshold = 1000,
 	}
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.hParam =
@@ -128,6 +132,8 @@ THRO_Handle_t ThrottleHandle =
 		.hOffsetTorque = 4000,
 		.bSlopeTorque = -11,
 		.bDivisorTorque = 48,
+		
+		.hDetectionThreshold = 1000,
 	}
 	
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
@@ -143,6 +149,8 @@ THRO_Handle_t ThrottleHandle =
 		.hOffsetTorque = 4000,
 		.bSlopeTorque = 8,
 		.bDivisorTorque = 32,
+	
+		.hDetectionThreshold = 1000,
 	}
 	#else
 	.hParam =
@@ -157,6 +165,8 @@ THRO_Handle_t ThrottleHandle =
 		.hOffsetTorque = 4000,
 		.bSlopeTorque = -7,
 		.bDivisorTorque = 25,
+		
+		.hDetectionThreshold = 1000,
 	}
 	#endif
 };
@@ -331,6 +341,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hPASMaxTorque = -10000,
 	.sParameters.hPASMaxSpeed = 500,
   .sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
+	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = false,
@@ -348,6 +359,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hPASMaxTorque = -7000,
 	.sParameters.hPASMaxSpeed = 500,
 	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
+	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = false,
@@ -366,6 +378,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hPASMaxTorque = -5000,
 	.sParameters.hPASMaxSpeed = 250,
 	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
+	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 	.sParameters.bTorqueSensorUse = false,
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.sParameters.bUseMotorM1 = true,
@@ -384,6 +397,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hPASMaxTorque = -7000,
 	.sParameters.hPASMaxSpeed = 500,
 	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
+	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 	#else
 	.sParameters.bUseMotorM1 = true,
 	.sParameters.bUseMotorM2 = false,
@@ -397,10 +411,10 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hFaultManagementTimeout = 25 // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 	.sParameters.hPASMaxTorque = -10000,
 	.sParameters.hPASMaxSpeed = 500,
 	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed	
+	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 	#endif
 	
 	.pMDI = &MDInterfaceHandle,
@@ -425,6 +439,20 @@ DRVT_Handle_t DrivetrainHandle =
 		.hIntervalValue = 200,
 		.hEndValue = 400,
 		.hDefaultMaxTorque = 10000,
+	},
+	.sHeatsinkTempFoldback[M1] = 
+	{
+		.bEnableFoldback = true,
+		.hStartValue = 50,
+		.hEndValue = 70,
+		.hDefaultMaxTorque = 16000,
+	},
+	.sHeatsinkTempFoldback[M2] = 
+	{
+		.bEnableFoldback = true,
+		.hStartValue = 50,
+		.hEndValue = 70,
+		.hDefaultMaxTorque = 16000,
 	},
 };
 

@@ -37,6 +37,8 @@ typedef struct
 	int8_t bSlopeSpeed;									 /*< Gain factor of throttle vs speed   */
 	uint8_t bDivisorSpeed;								   /*< Scaling factor of throttle vs speed   */
 	
+	uint16_t hDetectionThreshold;				/* Minimum throttle at which throttle is detected */
+	
 } THRO_Param_t;
 
 /**
@@ -96,6 +98,13 @@ uint16_t THRO_GetAvThrottleValue(THRO_Handle_t * pHandle);
 int16_t THRO_ThrottleToTorque(THRO_Handle_t * pHandle);
 
 int16_t THRO_ThrottleToSpeed(THRO_Handle_t * pHandle);
+
+/**
+	* @brief  Return if there is a throttle or not
+	* @param  Drivetrain handle
+	* @retval True if throttle is detected, false otherwise
+	*/
+bool THRO_IsThrottleDetected (THRO_Handle_t * pHandle);
 
 
 #endif /*__THROTTLE_H*/

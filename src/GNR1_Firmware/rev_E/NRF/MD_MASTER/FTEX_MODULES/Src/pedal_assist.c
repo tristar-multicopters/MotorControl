@@ -100,3 +100,13 @@ void PAS_UpdatePASDetection (PAS_Handle_t * pHandle)
 	else 
 		pHandle->bPASDetected = false;
 } 
+
+/**
+	* @brief  Return if pedals are moving or not
+	* @param  Drivetrain handle
+	* @retval True if pedal movement is detected, false otherwise
+	*/
+bool PAS_IsPASDetected(PAS_Handle_t * pHandle) 
+{
+	return pHandle->bPASDetected;
+}

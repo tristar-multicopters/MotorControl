@@ -85,7 +85,6 @@ typedef struct
 	int16_t aTorque[2];						  	/* Array of torque reference, first element is for M1, second is for M2 */
 	int16_t aSpeed[2];						  	/* Array of speed reference, first element is for M1, second is for M2 */
 
-	bool 					bThrottleDetected;				/* USE Throttle flag for detection */
 	int16_t			 	hTorqueSelect;
 
 	FLDBK_Handle_t sHeatsinkTempFoldback[2];		/* Foldback handle using M1 and M2 heatsink temperature */
@@ -292,12 +291,7 @@ int16_t DRVT_GetTorqueFromTS(DRVT_Handle_t * pHandle);
 	* @retval RefTorque in int16                                                                                    
 	*/
 int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle);
-/**
-	* @brief  Return the Throttle use Flag
-	* @param  Drivetrain handle
-	* @retval pHandle->bUseThrottle in boolean
-	*/
-void THRO_UpdateThrottleDetection (DRVT_Handle_t * pHandle);
+
 
 #endif /*__DRIVETRAIN_MANAGEMENT_H*/
 

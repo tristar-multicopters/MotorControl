@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    pedal_assist.h
-  * @author  Ronak Nemade, FTEX
+  * @author  Jabrane Chakroun, FTEX
   * @brief   This file defines the handles, constantas and function prototypes used in higher level modules for pedal assist
   *
 	******************************************************************************
@@ -110,11 +110,18 @@ uint8_t PAS_GetDirection(PAS_Handle_t* pHandle);
 	*/
 int16_t PAS_GetTorque(PAS_Handle_t* pHandle);
 /**
-	* @brief  PAS presence information
+	* @brief  Update PAS detection information
 	* @param  Drivetrain handle
-	* @retval pHandle->bUsePAS in Boolean
+	* @retval void
 	*/
 void PAS_UpdatePASDetection (PAS_Handle_t * pHandle);
+
+/**
+	* @brief  Return if pedals are moving or not
+	* @param  PAS handle
+	* @retval True if pedal movement is detected, false otherwise
+	*/
+bool PAS_IsPASDetected(PAS_Handle_t * pHandle);
 
 
 #endif

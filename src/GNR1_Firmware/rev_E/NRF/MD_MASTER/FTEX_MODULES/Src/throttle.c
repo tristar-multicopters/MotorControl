@@ -126,3 +126,19 @@ int16_t THRO_ThrottleToSpeed(THRO_Handle_t * pHandle)
 	return -1;
 }
 
+/**
+	* @brief  Return if there is a throttle or not
+	* @param  Throttle handle
+	* @retval True if throttle is detected, false otherwise
+	*/
+bool THRO_IsThrottleDetected (THRO_Handle_t * pHandle) 
+{
+	uint16_t hThrottle;
+	hThrottle = THRO_GetAvThrottleValue(pHandle);
+	if (hThrottle <= pHandle->hParam.hDetectionThreshold)
+		return false;
+	else 
+		return true;	
+}
+
+
