@@ -445,14 +445,14 @@ DRVT_Handle_t DrivetrainHandle =
 		.bEnableFoldback = true,
 		.hStartValue = 50,
 		.hEndValue = 70,
-		.hDefaultMaxTorque = 16000,
+		.hDefaultMaxTorque = 15000,
 	},
 	.sHeatsinkTempFoldback[M2] = 
 	{
 		.bEnableFoldback = true,
 		.hStartValue = 50,
 		.hEndValue = 70,
-		.hDefaultMaxTorque = 16000,
+		.hDefaultMaxTorque = 15000,
 	},
 };
 

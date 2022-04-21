@@ -131,7 +131,7 @@
 #endif /* 0 */
 #define R_BRAKE_SWITCH_OFF_THRES_V      60
 
-#define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Celsius degrees */
+#define OV_TEMPERATURE_THRESHOLD_C      65 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     10 /*!< Celsius degrees */
 
 #define HW_OV_CURRENT_PROT_BYPASS       DISABLE /*!< In case ON_OVER_VOLTAGE
@@ -288,7 +288,7 @@
 
 #define R_BRAKE_SWITCH_OFF_THRES_V2      60
 
-#define OV_TEMPERATURE_THRESHOLD_C2      70 /*!< Celsius degrees */
+#define OV_TEMPERATURE_THRESHOLD_C2      65 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C2     10 /*!< Celsius degrees */
 
 #define HW_OV_CURRENT_PROT_BYPASS2       DISABLE /*!< In case ON_OVER_VOLTAGE
@@ -469,7 +469,7 @@
 #endif /* 0 */
 #define R_BRAKE_SWITCH_OFF_THRES_V      60
 
-#define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Celsius degrees */
+#define OV_TEMPERATURE_THRESHOLD_C      65 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     10 /*!< Celsius degrees */
 
 #define HW_OV_CURRENT_PROT_BYPASS       DISABLE /*!< In case ON_OVER_VOLTAGE
@@ -626,7 +626,7 @@
 
 #define R_BRAKE_SWITCH_OFF_THRES_V2      60
 
-#define OV_TEMPERATURE_THRESHOLD_C2      70 /*!< Celsius degrees */
+#define OV_TEMPERATURE_THRESHOLD_C2      65 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C2     10 /*!< Celsius degrees */
 
 #define HW_OV_CURRENT_PROT_BYPASS2       DISABLE /*!< In case ON_OVER_VOLTAGE
@@ -807,7 +807,7 @@
 #endif /* 0 */
 #define R_BRAKE_SWITCH_OFF_THRES_V      60
 
-#define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Celsius degrees */
+#define OV_TEMPERATURE_THRESHOLD_C      65 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     10 /*!< Celsius degrees */
 
 #define HW_OV_CURRENT_PROT_BYPASS       DISABLE /*!< In case ON_OVER_VOLTAGE
@@ -964,7 +964,7 @@
 
 #define R_BRAKE_SWITCH_OFF_THRES_V2      60
 
-#define OV_TEMPERATURE_THRESHOLD_C2      70 /*!< Celsius degrees */
+#define OV_TEMPERATURE_THRESHOLD_C2      65 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C2     10 /*!< Celsius degrees */
 
 #define HW_OV_CURRENT_PROT_BYPASS2       DISABLE /*!< In case ON_OVER_VOLTAGE

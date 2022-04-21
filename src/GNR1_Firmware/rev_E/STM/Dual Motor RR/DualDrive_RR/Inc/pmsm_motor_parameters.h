@@ -53,7 +53,7 @@
 																			 *Amplifying network gain)/(MCU supply voltage/2)
 		*/
 
-		#define NOMINAL_CURRENT         17000
+		#define NOMINAL_CURRENT         15000
 		#define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
 		#define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */
 		#define ID_DEMAG                -5000 /*!< Demagnetization current */
@@ -92,7 +92,7 @@
 																			 *Amplifying network gain)/(MCU supply voltage/2)
 		*/
 
-		#define NOMINAL_CURRENT2         17000
+		#define NOMINAL_CURRENT2         15000
 		#define MOTOR_MAX_SPEED_RPM2     1500 /*!< Maximum rated speed  */
 		#define MOTOR_VOLTAGE_CONSTANT2  15.0 /*!< Volts RMS ph-ph /kRPM */
 		#define ID_DEMAG2                -5000 /*!< Demagnetization current */
@@ -221,7 +221,7 @@
 																			 *Amplifying network gain)/(MCU supply voltage/2)
 		*/
 
-		#define NOMINAL_CURRENT         17000
+		#define NOMINAL_CURRENT         15000
 		#define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
 		#define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */
 		#define ID_DEMAG                -5000 /*!< Demagnetization current */
@@ -260,7 +260,7 @@
 																			 *Amplifying network gain)/(MCU supply voltage/2)
 		*/
 
-		#define NOMINAL_CURRENT2         17000
+		#define NOMINAL_CURRENT2         15000
 		#define MOTOR_MAX_SPEED_RPM2     1500 /*!< Maximum rated speed  */
 		#define MOTOR_VOLTAGE_CONSTANT2  15.0 /*!< Volts RMS ph-ph /kRPM */
 		#define ID_DEMAG2                -5000 /*!< Demagnetization current */
