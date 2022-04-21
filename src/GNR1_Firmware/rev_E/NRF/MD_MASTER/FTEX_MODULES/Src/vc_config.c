@@ -443,14 +443,14 @@ DRVT_Handle_t DrivetrainHandle =
 	.sHeatsinkTempFoldback[M1] = 
 	{
 		.bEnableFoldback = true,
-		.hStartValue = 50,
+		.hStartValue = 45,
 		.hEndValue = 70,
 		.hDefaultMaxTorque = 15000,
 	},
 	.sHeatsinkTempFoldback[M2] = 
 	{
 		.bEnableFoldback = true,
-		.hStartValue = 50,
+		.hStartValue = 45,
 		.hEndValue = 70,
 		.hDefaultMaxTorque = 15000,
 	},
