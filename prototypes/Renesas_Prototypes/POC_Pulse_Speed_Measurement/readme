@@ -4,27 +4,28 @@
         The example project demonstrates the the functionality of GPT Input capture module .
         GPT7 is used to generate PWM signal of 100msec for 50% ratio and provided as input to GPT Input capture(GPT1).
 	  GPT1 counts the event pulse received at its input. Based on the period and capture event, 
-	  the time period of pulse is calculated and displayed on RTTViewer. An ICU interrupt module was added to the main
+	  the time period of pulse is calculated. An ICU interrupt module was added to the main
 	  code for an input read interruption
 
 3. Project 2 Overview:
-        The example project demonstrates the the functionality of GPT Input capture module .
-        GPT7 is used to generate PWM signal of 100msec for 50% ratio and provided as input to GPT low power 
-	  Input capture(GPT0). GPT0 counts the event pulse received at its input. 
-        Based on the period and capture event, the time period of pulse is calculated and displayed on RTTViewer.
+        The example project demonstrates the functionality of AGT Input capture module .
+        GPT7 is used to generate PWM signal of 100msec for 50% ratio and provided as input to AGT low power 
+	  Input capture(AGT0). AGT0 counts the event pulse received at its input. 
+        Based on the period and capture event, the time period of pulse is calculated.
 
 4. Hardware settings for the project:
         Hardware connections:
-		2. PWM Output	= PE10
-		   Capture Input	= PE12
-		   ICU Input	= PA10
+		P1. PWM Output	= PE10
+		    Capture Input	= PE12
+		    ICU Input	= PA10
 
-		1. PWM Output 	= PC08
-		   Capture Input 	= PA08
+		P2. PWM Output 	= PC08
+		    Capture Input = PA08
 
 5. Conclusion
-The Low power Timer demande the use of two pins compared to the normal one
-The use of the low power Timer is easier in the configuration
+The Low Power Timer AGT demand the use of two pins compared to the normal one or it will return you an error in 
+the configuaration pins setup. The use of the low power Timer AGT is easier in the configuration. Both timer have 
+the same behaviour and functions for pulse reading.
 
 		
 
