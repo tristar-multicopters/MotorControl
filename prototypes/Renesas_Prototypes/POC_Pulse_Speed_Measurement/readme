@@ -1,0 +1,32 @@
+1. Overview: We are making the POC of reading a Pulse signal periode using 2 reference projects
+
+2. Project 1 Overview:
+        The example project demonstrates the the functionality of GPT Input capture module .
+        GPT7 is used to generate PWM signal of 100msec for 50% ratio and provided as input to GPT Input capture(GPT1).
+	  GPT1 counts the event pulse received at its input. Based on the period and capture event, 
+	  the time period of pulse is calculated and displayed on RTTViewer. An ICU interrupt module was added to the main
+	  code for an input read interruption
+
+3. Project 2 Overview:
+        The example project demonstrates the the functionality of GPT Input capture module .
+        GPT7 is used to generate PWM signal of 100msec for 50% ratio and provided as input to GPT low power 
+	  Input capture(GPT0). GPT0 counts the event pulse received at its input. 
+        Based on the period and capture event, the time period of pulse is calculated and displayed on RTTViewer.
+
+4. Hardware settings for the project:
+        Hardware connections:
+		2. PWM Output	= PE10
+		   Capture Input	= PE12
+		   ICU Input	= PA10
+
+		1. PWM Output 	= PC08
+		   Capture Input 	= PA08
+
+5. Conclusion
+The Low power Timer demande the use of two pins compared to the normal one
+The use of the low power Timer is easier in the configuration
+
+		
+
+
+﻿
