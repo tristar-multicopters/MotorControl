@@ -25,7 +25,11 @@ extern nrf_drv_timer_t timer1_inst;
 extern nrf_drv_timer_t timer2_inst;
 extern nrf_drv_timer_t timer4_inst;
 
-/* Communication with motor drive (STM32) -------------------------------------*/
+/* Board specific functions ---------------------------------*/
+
+uint32_t GetChipID(uint8_t ID_Half);
+
+/* Communication with motor drive (STM32) -------------------*/
 
 #define MD_UART_INSTANCE_ADDR				&uart1_inst
 #define MD_UART_TX_PIN							NRF_GPIO_PIN_MAP(0,12)
@@ -39,7 +43,7 @@ extern nrf_drv_timer_t timer4_inst;
 #define MCP_RST_PIN									NRF_GPIO_PIN_MAP(1,13)
 #define CAN_STBY_PIN								NRF_GPIO_PIN_MAP(0,1)
 	
-/* SPI1 Bus -------------------------------------*/
+/* SPI1 Bus -------------------------------------------------*/
 
 #define SPI0_INSTANCE_ADDR					&spi0_inst
 #define SPI0_MISO_PIN								NRF_GPIO_PIN_MAP(0,6)
@@ -47,50 +51,50 @@ extern nrf_drv_timer_t timer4_inst;
 #define SPI0_SCK_PIN								NRF_GPIO_PIN_MAP(0,20)
 
 
-/* Regular conversion manager (analog input scheduler) -------------------------------------*/
+/* Regular conversion manager (analog input scheduler)-------*/
 
 #define RCM_TIMER_INSTANCE_ADDR			&timer1_inst
 
 
-/* Throttle input -------------------------------------*/
+/* Throttle input -------------------------------------------*/
 
 #define THROTTLE_ANALOG_PIN 				NRF_SAADC_INPUT_AIN7
 
 
-/* Brake input -------------------------------------*/
+/* Brake input ----------------------------------------------*/
 
 #define BRAKE_GPIO_PIN							NRF_GPIO_PIN_MAP(1,11)
 
 
-/* Reverse input -------------------------------------*/
+/* Reverse input --------------------------------------------*/
 
 #define REVERSE_GPIO_PIN						NRF_GPIO_PIN_MAP(1,15)
 
 
-/* Motor selection input -------------------------------------*/
+/* Motor selection input ------------------------------------*/
 
 #define M1SELECT_GPIO_PIN						NRF_GPIO_PIN_MAP(0,25)
 #define M2SELECT_GPIO_PIN						NRF_GPIO_PIN_MAP(0,21)
 
 
-/* Communication with external device using UART -------------------------------------*/
+/* Communication with external device using UART ------------*/
 
 #define UART0_INSTANCE_ADDR					&uart0_inst
 #define UART0_TX_PIN								NRF_GPIO_PIN_MAP(0,3)
 #define UART0_RX_PIN								NRF_GPIO_PIN_MAP(0,30)
 
-/* Pedal assist -------------------------------------*/
+/* Pedal assist ---------------------------------------------*/
 
 #define PAS_TIMER_INSTANCE_ADDR			&timer2_inst
 #define PAS_SIN_GPIO_PIN						NRF_GPIO_PIN_MAP(0,14)
 #define PAS_COS_GPIO_PIN						NRF_GPIO_PIN_MAP(0,17)
 #define PAS_TORQUE_PIN							NRF_SAADC_INPUT_AIN0
 
-/* Power enable -------------------------------------*/
+/* Power enable ---------------------------------------------*/
 
 #define PWREN_GPIO_PIN							NRF_GPIO_PIN_MAP(0,13)
 
-/* Wheel speed  -------------------------------------*/
+/* Wheel speed  ---------------------------------------------*/
 
 #define WH_TIMER_INSTANCE_ADDR		&timer4_inst
 #define WH_PUL_GPIO_PIN						NRF_GPIO_PIN_MAP(1,15)

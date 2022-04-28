@@ -588,7 +588,13 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		break;
 	case REG_BOOTCOUNTER:
 //		value = pHandle->pDrivetrain->
-		break;		
+		break;
+  case REG_DEVICE_ID_LOW:
+	    value = GetChipID(0);
+    break;	
+  case REG_DEVICE_ID_HIGH:
+		  value = GetChipID(1);
+    break;		
 	default:
 		break;
 	}

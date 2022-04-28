@@ -233,7 +233,9 @@ typedef enum
     /* Manufacturing parameters (1280-1535)*/
     REG_TEST_MODE = 1280,
     REG_FIRMVER,
-    REG_BOOTCOUNTER
+    REG_BOOTCOUNTER,
+		REG_DEVICE_ID_LOW,
+		REG_DEVICE_ID_HIGH
 } VCI_RegID_t;
 
 /* Function for reading the value of a register for the drive train */

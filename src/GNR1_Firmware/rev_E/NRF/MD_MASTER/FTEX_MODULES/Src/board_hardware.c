@@ -22,3 +22,21 @@ nrf_drv_timer_t timer4_inst = NRF_DRV_TIMER_INSTANCE(4);
 
 nrf_drv_spi_t spi0_inst = NRF_DRV_SPI_INSTANCE(0);
 
+// Function used to get the chip ID
+// ID_half decides which half of the ID is return
+// 0 for lower half and 1 for upper half
+uint32_t GetChipID(uint8_t ID_Half)
+{
+   uint32_t value;
+
+   if(ID_Half > 1)
+      ID_Half = 1;	 
+	
+   value = NRF_FICR->DEVICEID[ID_Half];
+
+   return(value);
+
+}
+
+
+
