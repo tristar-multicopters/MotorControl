@@ -7,4 +7,6 @@ HALL_TIMx_CC_IRQHandler identifies state, uses measurement to calculate average 
 HALL_TIMx_UP_IRQHandler counts the number of timer overflows that happened between two sucessive state change.
 HALL_Init initializes the timer configuration using renesas API.
    
-Angle calculation for PWM is calculated in end of ADC conversion ISR. This calculated angle is scaled to physically visualize it through DAC connected to pin PA06. 
+Angle for PWM is calculated in end of ADC conversion ISR. ADC conversion is triggered by event coming from timer_0 when compare match ADC_A event on down count(set to raw count of 1) occurs. timer_0 is configured for 20Khz frequency. This calculated angle is scaled to physically visualize it through DAC connected to pin PA06. 
+
+To turn on PWM after entering the debug mode, set "enable_PWM" expression to true through watch window.
