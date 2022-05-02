@@ -1,0 +1,8 @@
+This project verefies use of Digital to Analog conversion (DAC).
+
+DAC can be verefied physically using pin PA06 and PA07.
+Controller executes function "application_main" every 50 micro seconds.
+Here a dummy hall angle is calculated, using angle and "g_volt_q_d" (constant) g_volt_alpha_beta are calculated. While calculating, PWMC_park_clarke function is called. 
+In PWMC_park_clarke function,  sin/cos is calculated using "sincosf(x,&sin,&cos)". This is a function provided by Renesas BSP module. It uses TAU.
+
+To view utility of TAU/DAC, after entering the debug mode, set g_volt_q_d.q to non zero value. Check sinus wave on DAC pins PA00 and PA01. 
