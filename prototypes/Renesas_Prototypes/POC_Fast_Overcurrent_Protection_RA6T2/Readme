@@ -1,0 +1,6 @@
+This project verefies PWM turn-off condition when there is an external interrupt signal (over current signal from current sensor).
+
+Three-phase PWMs operating at 20khz frequency ,high side/low side with 250 ms dead band, using timer_0,timer_1,timer_2 are generated.
+PWMS can be physically verefied on pins U-phase: PB04,PB05 V-phase: PB06,PB07 W-phase: PB08,PB09.
+External interrupt signal is connected through pin PC13 over channel 3. External signal (Active low) causes invoking of over current isr "g_poe_overcurrent". It also causes PWMs to turn off immediately.
+Once in poeg isr, we wait for 10 seconds and then reset the interrupt (poeg) to turn on the PWMs back again. 
