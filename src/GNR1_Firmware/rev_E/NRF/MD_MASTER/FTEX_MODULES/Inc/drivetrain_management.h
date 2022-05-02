@@ -66,8 +66,7 @@ typedef struct
   uint32_t GearRatio;             //Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002
   
 	uint16_t hFaultManagementTimeout; 	/* Number of ticks the VC state machine should be stayed on fault
-																			before clear an over-current, start-up or speed feedback fault */
-	bool bTorqueSensorUse;						 /* Torque sensor use flag */												
+																			before clear an over-current, start-up or speed feedback fault */										
 					
 } DRVT_Parameters_t;
 

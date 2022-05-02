@@ -92,10 +92,16 @@ void PAS_CalcTSAvValue(PAS_Handle_t* pHandle)
 	*/
 void PAS_UpdatePASDetection (PAS_Handle_t * pHandle) 
 {
-	uint32_t	pSpeedt;
+	uint32_t	wSpeedt;
+	uint16_t	hTorqueSens;
+	
 	PAS_CalculateSpeed(pHandle);
-	pSpeedt = PAS_GetPeriodValue(pHandle);
-	if (pSpeedt > 0)
+	wSpeedt = PAS_GetPeriodValue(pHandle);
+	hTorqueSens = TS_GetAvValue(pHandle->pTorque);
+
+	if ((pHandle->bTorqueSensorUse) && (hTorqueSens > pHandle->pTorque->hParam.hOffsetMT) )
+		pHandle->bPASDetected = true;
+	else if ((wSpeedt > 0) && (!pHandle->bTorqueSensorUse) )
 		pHandle->bPASDetected = true;
 	else 
 		pHandle->bPASDetected = false;

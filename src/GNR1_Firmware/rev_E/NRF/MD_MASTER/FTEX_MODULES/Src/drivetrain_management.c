@@ -854,7 +854,7 @@ int16_t DRVT_GetTorqueFromTS(DRVT_Handle_t * pHandle)
 	hReadTS = TS_ToMotorTorque(pHandle->pPAS->pTorque);
 	Got_Level = DRVT_GetPASLevel(pHandle);
 	
-	hRefTorqueS = (hReadTS / pHandle->pPAS->bMaxLevel) * Got_Level;
+	hRefTorqueS = (hReadTS  * Got_Level) / pHandle->pPAS->bMaxLevel;
 	
 	if (hRefTorqueS < pHandle->pPAS->bMaxTorque)
 	{
@@ -873,7 +873,7 @@ int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 	if ( PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle) )
 	{
 		/* Torque sensor enabled */
-		if (pHandle->sParameters.bTorqueSensorUse)
+		if (pHandle->pPAS->bTorqueSensorUse)
 		{
 				pHandle->hTorqueSelect = DRVT_GetTorqueFromTS(pHandle);
 				DRVT_PASSetMaxSpeed(pHandle);
@@ -891,4 +891,3 @@ int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 	}
 	return pHandle->hTorqueSelect;
 }
-

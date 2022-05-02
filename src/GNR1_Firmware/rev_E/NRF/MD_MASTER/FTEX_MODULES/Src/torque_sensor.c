@@ -103,8 +103,8 @@ void TS_CalcAvValue( TS_Handle_t * pHandle )
 	
 	tTorqaux = (uint32_t)(pHandle->hParam.bSlopeTS * hTorqux);
 	tTorqaux /= pHandle->hParam.bDivisorTS;
-	if (tTorqaux > UINT16_MAX)
-		tTorqaux = UINT16_MAX;
+	if (tTorqaux > pHandle->hParam.hMax) 
+		tTorqaux = pHandle->hParam.hMax;
 	hTorqux = (uint16_t)tTorqaux;
 	
 	pHandle->hAvTorqueValue = hTorqux;	

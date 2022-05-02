@@ -57,7 +57,8 @@ typedef struct {
 		
 	uint8_t	bPulseNb;		/* NUMBER_OF_PINS of pulse per rotation */
 	
-	bool	bPASDetected;						/* USE PAS flag  for detection */
+	bool bPASDetected;						/* USE PAS flag  for detection */
+	bool bTorqueSensorUse;						 /* Torque sensor use flag */		
 	
 } PAS_Handle_t;
 
