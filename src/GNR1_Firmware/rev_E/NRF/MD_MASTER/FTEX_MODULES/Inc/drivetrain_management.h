@@ -46,6 +46,7 @@ typedef struct
 	bool bUseMotorM1;							  	/* To set once, true if motor 1 is used */
 	bool bUseMotorM2;							  	/* To set once, true if motor 2 is used */
 	bool bM2TorqueInversion;					/* Set true if M2 torque sign is different than M1  */
+	bool bUseWheelSpeedSensor;
 	DRVT_Type_h bDrivetrainType;	  	/* Vehicle drivetrain type (i.e. hub, middrive, ...) */
 	Motor_Mode_t bMode;						  	/* Single or dual motor. It is updated by user using motor selector switch */
 	uint8_t bDefaultMainMotor;		  	/* Default main motor selection */
@@ -64,7 +65,7 @@ typedef struct
 	uint16_t hPASMaxSpeed;					/* PAS Maximum Given Speed */
 	
   uint32_t GearRatio;             //Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002
-  
+  uint8_t	 bWheelSpreedRatio;
 	uint16_t hFaultManagementTimeout; 	/* Number of ticks the VC state machine should be stayed on fault
 																			before clear an over-current, start-up or speed feedback fault */										
 					

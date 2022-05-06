@@ -27,6 +27,7 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 	THRO_Init(pHandle->pThrottle);
 	BRK_Init(pHandle->pBrake);
 	PAS_Init(pHandle->pPAS);
+	WSS_Init(pHandle->pWSS);
 	MS_Init(pHandle->pMS);
 	PWREN_Init(pHandle->pPWREN);
 	

@@ -54,7 +54,7 @@
                                    *Amplifying network gain)/(MCU supply voltage/2)
 */
 
-#define NOMINAL_CURRENT         14000
+#define NOMINAL_CURRENT         17000
 #define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
 #define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */
 #define ID_DEMAG                -5000 /*!< Demagnetization current */

@@ -209,32 +209,50 @@ TS_Handle_t TorqueSensor =
 };
 /**@brief Speed pulse Pin initializing Parameters.
  */
-SPR_Handle_t SpeedPulse =
+SPR_Handle_t PedalSpeedPulse =
 {
-	.bCaptureChannel = 0,
-	.bRestartChannel = 1,
-	
-	.WCaptureChannel = 2,
-	.WRestartChannel = 3,
+	.bCaptureChannel = 7,
+	.bRestartChannel = 6,
 	
 	.bTimer_Prescaler = NRF_TIMER_FREQ_1MHz,
-	.bTimer_Width = NRF_TIMER_BIT_WIDTH_16,
+	.bTimer_Width = NRF_TIMER_BIT_WIDTH_32,
 
 	.pTimerInstance = PAS_TIMER_INSTANCE_ADDR,
-	.wTimerInstance = WH_TIMER_INSTANCE_ADDR,
 	
 	.pSinSpeed_Pulse_pin = PAS_SIN_GPIO_PIN,
 	.pCosSpeed_Pulse_pin = PAS_COS_GPIO_PIN,
-	.pWheelSpeed_Pulse_pin = WH_PUL_GPIO_PIN,
 	.sParam =
 	{
-		.sLowPassFilterBW1 = 16,
-		.sMax = UINT16_MAX,
-		.sWheel_Lap_Count = 0,
+		.sLowPassFilterBW1 = 4,
+		.sLowPassFilterBW2 = 1,
 		.sFirst_Wheel_Lap = false,
 	}
 	
 };
+
+
+WPR_Handle_t WheelSpeedPulse =
+{
+
+	.WCaptureChannel = 0,
+	.WRestartChannel = 1,
+	
+	.wTimer_Prescaler = NRF_TIMER_FREQ_1MHz,
+	.wTimer_Width = NRF_TIMER_BIT_WIDTH_32,
+
+	.wTimerInstance = WH_TIMER_INSTANCE_ADDR,
+	
+	.pWheelSpeed_Pulse_pin = WH_PUL_GPIO_PIN,
+	.wParam =
+	{
+		.hWLowPassFilterBW1 = 4,
+		.hWLowPassFilterBW2 = 1,
+		.wWheel_Lap_Count = 0,
+	}
+	
+};
+
+
 
 MS_Handle_t MotorSelectorHandle = 
 {
@@ -286,11 +304,35 @@ MDI_Handle_t MDInterfaceHandle =
 	.pMDC = &MDCommunicationHandle,
 };
 
+/**@brief Wheel Speed Sensor initializing Parameters.
+ */
+WSS_Handle_t WheelSpeedSensorHandle = {
+
+	.wSpulse = &WheelSpeedPulse,
+	#if VEHICLE_SELECTION == VEHICLE_ECELL
+	.bWSPulseNb = 0,
+
+	#elif VEHICLE_SELECTION == VEHICLE_EBGO
+	.bWSPulseNb = 0,
+	
+	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
+	.bWSPulseNb = 3,
+	
+	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
+	.bWSPulseNb = 0,
+	#else
+	.bWSPulseNb = 0,
+	
+	#endif
+	
+	
+	
+};
 /**@brief Pedal assist initializing Parameters.
  */
 PAS_Handle_t PedalAssistHandle = {
 	.pTorque = &TorqueSensor,
-	.pSpulse = &SpeedPulse,
+	.pSpulse = &PedalSpeedPulse,
 
 	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.bMaxLevel	=	5,
@@ -384,6 +426,8 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hPASMaxTorque = -10000,
 	.sParameters.hPASMaxSpeed = 250,
 	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
+	.sParameters.bUseWheelSpeedSensor = true,
+	.sParameters.bWheelSpreedRatio = 2,
 	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.sParameters.bUseMotorM1 = true,
@@ -425,6 +469,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.pMDI = &MDInterfaceHandle,
 	.pThrottle = &ThrottleHandle,
 	.pPAS = &PedalAssistHandle,
+	.pWSS = &WheelSpeedSensorHandle,
 	.pBrake = &BrakeHandle,
 	.pMS = &MotorSelectorHandle,
 	.pPWREN = &PowerEnableHandle,

@@ -190,23 +190,32 @@ void LCD_APT_frame_Process(void)
 		
       replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.1 A/unit 		
 
+			/* Condition use for wheel speed sensor rpm to send */
+			if (  m_APT_handle.pVController->pDrivetrain->sParameters.bUseWheelSpeedSensor)
+			{
+				toSend = WSS_GetSpeedRPM(m_APT_handle.pVController->pDrivetrain->pWSS);
 
-		  toSend = abs(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1));		
+			}
+			else
+			{
+				toSend = abs(MDI_getSpeed(m_APT_handle.pVController->pDrivetrain->pMDI,M1));		
+	
+				GearRatio = m_APT_handle.pVController->pDrivetrain->sParameters.GearRatio;  //Gear ratio (motor compared to wheel) is split. 
+																																										//msb 16 bits is the numerator, 
+																																										//lsb 16 bits is denominator
+																																										//ex: 3/2 ratio would be 0x00030002 
+																																										//default should be 0x00010001 
 
+				toSend = (((GearRatio & 0x0000FFFF) * toSend) / ((GearRatio & 0xFFFF0000) >> 16));
+			}
 			
-			GearRatio = m_APT_handle.pVController->pDrivetrain->sParameters.GearRatio;  //Gear ratio (motor compared to wheel) is split. 
-			                                                                            //msb 16 bits is the numerator, 
-			                                                                            //lsb 16 bits is denominator
-			                                                                            //ex: 3/2 ratio would be 0x00030002 
-			                                                                            //default should be 0x00010001 
-						
-			
-			toSend = (((GearRatio & 0x0000FFFF) * toSend) / ((GearRatio & 0xFFFF0000) >> 16));
-		
-		
 		  toSend = toSend * 500;       //Converion from RPM to period in ms 
-		                               //
-	    toSend = 500000/(toSend/60); //
+		                          
+			/* Condition use for wheel speed sensor conversion call*/
+			if (m_APT_handle.pVController->pDrivetrain->sParameters.bUseWheelSpeedSensor)
+	    toSend = (500000/(toSend/60)) * m_APT_handle.pVController->pDrivetrain->sParameters.bWheelSpreedRatio; //
+			else
+			toSend = 500000/(toSend/60);
 	
 	    replyFrame.Buffer[ 2] = (toSend & 0x00FF);      //Motor speed Low half 
 	    replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; //Motor speed High half

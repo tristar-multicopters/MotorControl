@@ -23,8 +23,9 @@
 
 
 /* Defines -------------------------------------------------------------- */
-#define RPMCOEFF 	60			// RPM multiplication for r/min
-#define COEFFREQ	1000000	// Period coeff for usecond division
+#define RPMCOEFF 				60			// RPM multiplication for r/min
+#define PRECISIONCOEFF	1000	// ms coefficient precision
+#define COEFFREQ				1000000000	// Period coeff for usecond division
 
 /* PAS Level enumeration ------------------------------------------------ */
 typedef enum
@@ -48,6 +49,7 @@ typedef struct {
 	SPR_Handle_t * pSpulse;		/* Pointer to speed handle */
 	
 	PAS_sLevel	 	pLevel;					/* Pointer to PAS level enumaration */
+	
 	
 	uint32_t wPASFreq;
 	int32_t wPASRpm;

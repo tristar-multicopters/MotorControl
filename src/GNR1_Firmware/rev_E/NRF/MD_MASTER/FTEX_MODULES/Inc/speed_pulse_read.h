@@ -65,19 +65,21 @@ typedef enum
 
 typedef struct
 {
+	uint16_t 	hWLowPassFilterBW1;   /* used to configure the first order software low pass filter */
+	uint16_t 	hWLowPassFilterBW2;   /* used to configure the first order software low pass filter */
+	int32_t		wWheel_Lap_Count;
+} WPR_Param_t;
+
+
+typedef struct
+{
 	uint16_t 	sLowPassFilterBW1;   /* used to configure the first order software low pass filter */
-	uint16_t 	sMax;             	 /* Pulse reading signal at maximum position */	
-	int32_t				sWheel_Lap_Count;
+	uint16_t 	sLowPassFilterBW2;   /* used to configure the first order software low pass filter */
 	bool 			sFirst_Wheel_Lap;
 } SPR_Param_t;
 
 typedef struct
 {
-	/* Wheel ppi Capture Channel*/
-	uint8_t WCaptureChannel;
-	uint8_t WRestartChannel;
-	
-	
 	/* Pedal ppi Capture Channel*/	
 	uint8_t bCaptureChannel;
 	uint8_t bRestartChannel;
@@ -87,25 +89,42 @@ typedef struct
 	
 	/* Pedal Timer */
 	nrf_drv_timer_t* 	pTimerInstance;
+
+	nrfx_gpiote_pin_t pSinSpeed_Pulse_pin;
+	nrfx_gpiote_pin_t pCosSpeed_Pulse_pin;
+	
+	uint32_t 			sPread;     
+	int8_t 			bDirection;	
+	
+	uint32_t 			sPAvSpeed;       /* It contains latest available pedal average speed in u16 */
+
+	SPR_Param_t		sParam;
+	
+} SPR_Handle_t; 
+
+
+typedef struct
+{
+	/* Wheel ppi Capture Channel*/
+	uint8_t WCaptureChannel;
+	uint8_t WRestartChannel;
+	
+	nrf_timer_frequency_t wTimer_Prescaler;
+	nrf_timer_bit_width_t wTimer_Width;
+	
 	/* Wheel Timer */
 	nrf_drv_timer_t* 	wTimerInstance;
 	
 	/* Wheel pulse pin*/
 	nrfx_gpiote_pin_t pWheelSpeed_Pulse_pin;
 	
-	nrfx_gpiote_pin_t pSinSpeed_Pulse_pin;
-	nrfx_gpiote_pin_t pCosSpeed_Pulse_pin;
+	uint32_t 			wPread; 	
 	
-	uint32_t 			wPread; 
-	uint32_t 			sPread;     
-	int8_t 			bDirection;	
-	
-	uint16_t 			sPAvSpeed;       /* It contains latest available pedal average speed in u16 */
-	uint16_t 			sWAvSpeed;       /* It contains latest available wheel average speed in u16 */
+	uint32_t 			sWAvSpeed;       /* It contains latest available wheel average speed in u16 */
 
-	SPR_Param_t		sParam;
+	WPR_Param_t		wParam;
 	
-} SPR_Handle_t; 
+} WPR_Handle_t; 
 
 /* Exported constants --------------------------------------------------------*/
 
@@ -114,18 +133,18 @@ typedef struct
 /* Exported functions prototypes ---------------------------------------------*/
 
 void SPR_Init(SPR_Handle_t * pHandle);
-void SPWR_Init(SPR_Handle_t * pHandle);
+void SPWR_Init(WPR_Handle_t * pHandle);
 
 void GPIO_Pin_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action);
 void GPIO_Init(SPR_Handle_t* sHandle);
 uint8_t GPIOTE_Capture_Init(SPR_Handle_t* sHandle);
-uint8_t GPIOTE_Wheel_Capture_Init(SPR_Handle_t* sHandle);
+uint8_t GPIOTE_Wheel_Capture_Init(WPR_Handle_t* sHandle);
 
 uint16_t Pedal_capture_get_value(SPR_Handle_t* sHandle);
-uint16_t Wheel_capture_get_vlaue(SPR_Handle_t* sHandle);
+uint16_t Wheel_capture_get_value(WPR_Handle_t* sHandle);
 
-uint16_t Pspeed_CalcAvValue( SPR_Handle_t * pHandle );
-uint16_t Wspeed_CalcAvValue( SPR_Handle_t * pHandle );
+void Pspeed_CalcAvValue( SPR_Handle_t * pHandle );
+void Wspeed_CalcAvValue( WPR_Handle_t * pHandle );
 
 uint8_t Get_Drive_Direction (SPR_Handle_t* pHandle);
 /* Private defines -----------------------------------------------------------*/

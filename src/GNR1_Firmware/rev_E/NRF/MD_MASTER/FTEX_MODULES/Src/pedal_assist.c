@@ -10,7 +10,7 @@
 
 #include "pedal_assist.h"
 
-
+/*------------------------------------ Main Functions ---------------------- */
 /**
 	* @brief  Pedal Assist initialization
 	* @param  PAS_Handle_t handle
@@ -20,7 +20,6 @@ void PAS_Init(PAS_Handle_t* pHandle)
 {
 	TS_Init(pHandle->pTorque);
 	SPR_Init(pHandle->pSpulse);
-	SPWR_Init(pHandle->pSpulse);
 }
 
 /**
@@ -32,6 +31,7 @@ void PAS_CalculateSpeed(PAS_Handle_t* pHandle)
 {	
 	Pedal_capture_get_value( pHandle->pSpulse );
 }
+
 /**
 	* @brief  Pedal Assist speed Get value
 	* @param  PAS_Handle_t handle
@@ -45,7 +45,7 @@ uint32_t PAS_GetPeriodValue(PAS_Handle_t* pHandle)
 /**
 	* @brief  Pedal Assist speed Get Frequency
 	* @param  PAS_Handle_t handle
-	* @retval Frequency value in Hz
+	* @retval Frequency value in mHz
 	*/
 uint32_t PAS_GetSpeedFreq(PAS_Handle_t* pHandle)
 {	
@@ -96,12 +96,14 @@ void PAS_UpdatePASDetection (PAS_Handle_t * pHandle)
 	uint16_t	hTorqueSens;
 	
 	PAS_CalculateSpeed(pHandle);
+
 	wSpeedt = PAS_GetPeriodValue(pHandle);
 	hTorqueSens = TS_GetAvValue(pHandle->pTorque);
 
 	if ((pHandle->bTorqueSensorUse) && (hTorqueSens > pHandle->pTorque->hParam.hOffsetMT) )
 		pHandle->bPASDetected = true;
 	else if ((wSpeedt > 0) && (!pHandle->bTorqueSensorUse) )
+
 		pHandle->bPASDetected = true;
 	else 
 		pHandle->bPASDetected = false;
@@ -116,3 +118,4 @@ bool PAS_IsPASDetected(PAS_Handle_t * pHandle)
 {
 	return pHandle->bPASDetected;
 }
+

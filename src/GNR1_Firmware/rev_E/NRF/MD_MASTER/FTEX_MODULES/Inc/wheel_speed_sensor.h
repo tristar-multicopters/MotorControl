@@ -11,6 +11,7 @@
 #ifndef __WHEEL_SPEED_SENSOR_H
 #define __WHEEL_SPEED_SENSOR_H
 
+/* Includes ----------------------------------------------------------------------*/
 #include "stdlib.h"
 #include "stdint.h"
 
@@ -20,18 +21,66 @@
 #include "regular_conversion_manager.h"
 #include "speed_pulse_read.h"
 
+/* Defines ----------------------------------------------------------------------*/
+#define WRPMCOEFF 				60			// RPM multiplication for r/min
+#define WPRECISIONCOEFF	1000	// ms coefficient precision
+#define WCOEFFREQ				1000000000	// Period coeff for usecond division
 
-
+/* Structures ----------------------------------------------------------------------*/
 typedef struct {
 	
-	SPR_Handle_t * wSpulse;				/* Pointer to wheel pulse handle */
+	WPR_Handle_t * wSpulse;				/* Pointer to wheel pulse handle */
+	
+	uint32_t wWSFreq;
+	int64_t wWSRpm;
+	
+	uint8_t	bWSPulseNb;		/* NUMBER of pulse per wheel rotation */
 	
 } WSS_Handle_t;
 
 
+/* Public Functions ----------------------------------------------------------------------*/
+/**
+	* @brief  Wheel Speed Sensor initialization
+	* @param  WSS_Handle_t handle
+	* @retval None
+	*/
 void WSS_Init(WSS_Handle_t* pHandle);
-int32_t WSS_GetSpeed(WSS_Handle_t* pHandle);
-int16_t WSS_GetDirection(WSS_Handle_t* pHandle);
+
+/**
+	* @brief  Wheel Speed Sensor calculation
+	* @param  WSS_Handle_t handle
+	* @retval None
+	*/
+void WSS_CalculateSpeed(WSS_Handle_t* pHandle);
+
+/**
+	* @brief  Wheel Speed Sensor Get value
+	* @param  WSS_Handle_t handle
+	* @retval Wheel Pulse wPread value in useconds
+	*/
+int32_t WSS_GetPeriodValue(WSS_Handle_t* pHandle);
+
+/**
+	* @brief  Wheel speed sensor Get Frequency
+	* @param  WSS_Handle_t handle
+	* @retval Frequency value in mHz
+	*/
+uint32_t WSS_GetSpeedFreq(WSS_Handle_t* pHandle);
+
+/**
+	* @brief  Wheel speed senor Calculate RPM
+	* @param  WSS_Handle_t handle
+	* @retval None
+	*/ 
+void WSS_CalculateSpeedRPM(WSS_Handle_t* pHandle);
+
+/**
+	* @brief  Wheel speed senor Get RPM
+	* @param  WSS_Handle_t handle
+	* @retval Wheel Speed wWSRpm value in r/min
+	*/
+int32_t WSS_GetSpeedRPM(WSS_Handle_t* pHandle);
 
 #endif /*__WHEEL_SPEED_SENSOR_H*/
 
