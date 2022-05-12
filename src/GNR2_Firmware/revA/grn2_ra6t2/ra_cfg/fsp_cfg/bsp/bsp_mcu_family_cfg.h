@@ -1,11 +1,7 @@
 /* generated configuration header file - do not edit */
 #ifndef BSP_MCU_FAMILY_CFG_H_
 #define BSP_MCU_FAMILY_CFG_H_
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-            #include "bsp_mcu_device_pn_cfg.h"
+#include "bsp_mcu_device_pn_cfg.h"
             #include "bsp_mcu_device_cfg.h"
             #include "../../../ra/fsp/src/bsp/mcu/ra6t2/bsp_override.h"
             #include "../../../ra/fsp/src/bsp/mcu/ra6t2/bsp_mcu_info.h"
@@ -106,7 +102,7 @@ extern "C" {
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 11) /* POEG3 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 12) /* POEG2 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 13) /* POEG1 */ | \
-            (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 14) /* POEG0 */ | \
+            (((1 > 0) ? 0U : 1U) << 14) /* POEG0 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 16) /* ADC120 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 19) /* DAC121 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 20) /* DAC120 */ | \
@@ -126,7 +122,7 @@ extern "C" {
 #endif
 #ifndef BSP_TZ_CFG_MSSAR
 #define BSP_TZ_CFG_MSSAR (\
-            (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 0) /* ELC */ | \
+            (((1 > 0) ? 0U : 1U) << 0) /* ELC */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 1) /* DTC_DMAC */ | \
             0xfffffffc) /* Unused */
 #endif
@@ -179,7 +175,7 @@ extern "C" {
             /* Security attribution for registers for IRQ channels. */
 #ifndef BSP_TZ_CFG_ICUSARA
 #define BSP_TZ_CFG_ICUSARA (\
-            (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 0U) /* External IRQ0 */ | \
+            (((1 > 0) ? 0U : 1U) << 0U) /* External IRQ0 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 1U) /* External IRQ1 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 2U) /* External IRQ2 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 3U) /* External IRQ3 */ | \
@@ -342,9 +338,5 @@ extern "C" {
 #endif
 #ifndef BSP_CLOCK_CFG_MAIN_OSC_WAIT
             #define BSP_CLOCK_CFG_MAIN_OSC_WAIT (9)
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 #endif /* BSP_MCU_FAMILY_CFG_H_ */

@@ -1,0 +1,4 @@
+This project is first ra6t2 project that has all pin configurations aligning to GNR2 hardware design.
+It uses RTX5 as RTOS. Make sure Run Time Environment Component: "Device" is disabled by unchecking "include in target build" by navigating through options.
+Adding EventRecorder causes compilation errors. To overcome this copy " #define CMSIS_device_header "RTE_Patch.h" " and paste it in RTE_Components.h file. This needs to be done every time you open project. (12_05_2022) 
+RA smart configurator uses 10Mhz external crystal source (dev-board),change when pushing code over actual hardware.

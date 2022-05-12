@@ -1,4 +1,7 @@
 #include "hal_data.h"
+#include "application_main.h"
+
+
 
 FSP_CPP_HEADER
 void R_BSP_WarmStart(bsp_warm_start_event_t event);
@@ -12,6 +15,13 @@ void hal_entry(void)
 {
     /* TODO: add your own code here */
 
+	application_main();
+	
+	while(1)
+	{
+	 }
+	
+	
 #if BSP_TZ_SECURE_BUILD
     /* Enter non-secure code */
     R_BSP_NonSecureEnter();
