@@ -1,11 +1,7 @@
 /* generated configuration header file - do not edit */
 #ifndef BSP_CFG_H_
 #define BSP_CFG_H_
-#ifdef __cplusplus
-            extern "C" {
-            #endif
-
-            #include "bsp_clock_cfg.h"
+#include "bsp_clock_cfg.h"
             #include "bsp_mcu_family_cfg.h"
             #include "board_cfg.h"
             #define RA_NOT_DEFINED 0
@@ -52,9 +48,5 @@
             #endif
             #ifndef BSP_CLOCK_CFG_SUBCLOCK_STABILIZATION_MS
             #define BSP_CLOCK_CFG_SUBCLOCK_STABILIZATION_MS 1000
-            #endif
-
-            #ifdef __cplusplus
-            }
             #endif
 #endif /* BSP_CFG_H_ */

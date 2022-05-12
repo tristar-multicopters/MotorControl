@@ -26,11 +26,11 @@
     <node id="board.clock.pll2.mul" option="board.clock.pll2.mul.100"/>
     <node id="board.clock.pll2.display" option="board.clock.pll2.display.value"/>
     <node id="board.clock.clock.source" option="board.clock.clock.source.pll"/>
-    <node id="board.clock.clkout.source" option="board.clock.clkout.source.disabled"/>
-    <node id="board.clock.scispiclk.source" option="board.clock.scispiclk.source.disabled"/>
-    <node id="board.clock.canfdclk.source" option="board.clock.canfdclk.source.disabled"/>
-    <node id="board.clock.gptclk.source" option="board.clock.gptclk.source.disabled"/>
-    <node id="board.clock.iicclk.source" option="board.clock.iicclk.source.disabled"/>
+    <node id="board.clock.clkout.source" option="board.clock.clkout.source.xtal"/>
+    <node id="board.clock.scispiclk.source" option="board.clock.scispiclk.source.pll"/>
+    <node id="board.clock.canfdclk.source" option="board.clock.canfdclk.source.pll"/>
+    <node id="board.clock.gptclk.source" option="board.clock.gptclk.source.pll"/>
+    <node id="board.clock.iicclk.source" option="board.clock.iicclk.source.pll"/>
     <node id="board.clock.iclk.div" option="board.clock.iclk.div.1"/>
     <node id="board.clock.pclka.div" option="board.clock.pclka.div.2"/>
     <node id="board.clock.pclkb.div" option="board.clock.pclkb.div.4"/>
@@ -41,7 +41,7 @@
     <node id="board.clock.scispiclk.div" option="board.clock.scispiclk.div.2"/>
     <node id="board.clock.canfdclk.div" option="board.clock.canfdclk.div.6"/>
     <node id="board.clock.gptclk.div" option="board.clock.gptclk.div.2"/>
-    <node id="board.clock.iicclk.div" option="board.clock.iicclk.div.1"/>
+    <node id="board.clock.iicclk.div" option="board.clock.iicclk.div.2"/>
     <node id="board.clock.iclk.display" option="board.clock.iclk.display.value"/>
     <node id="board.clock.pclka.display" option="board.clock.pclka.display.value"/>
     <node id="board.clock.pclkb.display" option="board.clock.pclkb.display.value"/>
@@ -57,10 +57,78 @@
   <raModuleConfiguration/>
   <raPinConfiguration>
     <pincfg active="true" name="" symbol="">
+      <configSetting altId="adc12.an000.pa00" configurationId="adc12.an000"/>
+      <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
+      <configSetting altId="adc12.an006.pa06" configurationId="adc12.an006"/>
+      <configSetting altId="adc12.an008.pb00" configurationId="adc12.an008"/>
+      <configSetting altId="adc12.an009.pb01" configurationId="adc12.an009"/>
+      <configSetting altId="adc12.an015.pc03" configurationId="adc12.an015"/>
+      <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
+      <configSetting altId="agt0.agtio0.pa08" configurationId="agt0.agtio0"/>
+      <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0"/>
+      <configSetting altId="canfd0.crx0.pb12" configurationId="canfd0.crx0"/>
+      <configSetting altId="canfd0.ctx0.pb13" configurationId="canfd0.ctx0"/>
+      <configSetting altId="cgc.extal.p212" configurationId="cgc.extal"/>
+      <configSetting altId="cgc.xtal.p213" configurationId="cgc.xtal"/>
+      <configSetting altId="dac122.da2.pc04" configurationId="dac122.da2"/>
+      <configSetting altId="dac123.da3.pc05" configurationId="dac123.da3"/>
+      <configSetting altId="gpt1.gtioc1a.pb14" configurationId="gpt1.gtioc1a"/>
+      <configSetting altId="gpt1.gtioc1b.pb15" configurationId="gpt1.gtioc1b"/>
+      <configSetting altId="gpt2.gtioc2a.pd08" configurationId="gpt2.gtioc2a"/>
+      <configSetting altId="gpt2.gtioc2b.pd09" configurationId="gpt2.gtioc2b"/>
+      <configSetting altId="gpt3.gtioc3a.pa10" configurationId="gpt3.gtioc3a"/>
+      <configSetting altId="gpt3.gtioc3b.pd11" configurationId="gpt3.gtioc3b"/>
+      <configSetting altId="gpt4.gtioc4a.pe10" configurationId="gpt4.gtioc4a"/>
+      <configSetting altId="gpt4.gtioc4b.pe13" configurationId="gpt4.gtioc4b"/>
+      <configSetting altId="gpt5.gtioc5a.pe11" configurationId="gpt5.gtioc5a"/>
+      <configSetting altId="gpt5.gtioc5b.pe14" configurationId="gpt5.gtioc5b"/>
+      <configSetting altId="gpt6.gtioc6a.pe12" configurationId="gpt6.gtioc6a"/>
+      <configSetting altId="gpt6.gtioc6b.pe15" configurationId="gpt6.gtioc6b"/>
+      <configSetting altId="gpt7.gtioc7b.pc09" configurationId="gpt7.gtioc7b"/>
+      <configSetting altId="gpt9.gtioc9b.pa11" configurationId="gpt9.gtioc9b"/>
+      <configSetting altId="gpt_poega.gtetrga.pc14" configurationId="gpt_poega.gtetrga"/>
+      <configSetting altId="gpt_poegb.gtetrgb.pc15" configurationId="gpt_poegb.gtetrgb"/>
+      <configSetting altId="gpt_poegc.gtetrgc.pd10" configurationId="gpt_poegc.gtetrgc"/>
+      <configSetting altId="gpt_poegd.gtetrgd.pc13" configurationId="gpt_poegd.gtetrgd"/>
+      <configSetting altId="icu0.irq0.p000" configurationId="icu0.irq0"/>
+      <configSetting altId="icu1.irq1_dash_ds.pb08" configurationId="icu1.irq1_dash_ds"/>
+      <configSetting altId="icu10.irq10_dash_ds.pb10" configurationId="icu10.irq10_dash_ds"/>
+      <configSetting altId="icu11.irq11_dash_ds.pc00" configurationId="icu11.irq11_dash_ds"/>
+      <configSetting altId="icu12.irq12.pd12" configurationId="icu12.irq12"/>
+      <configSetting altId="icu13.irq13.pd13" configurationId="icu13.irq13"/>
+      <configSetting altId="icu14.irq14.pd14" configurationId="icu14.irq14"/>
+      <configSetting altId="icu15.irq15.pd15" configurationId="icu15.irq15"/>
+      <configSetting altId="icu2.irq2_dash_ds.pb09" configurationId="icu2.irq2_dash_ds"/>
+      <configSetting altId="icu3.irq3_dash_ds.pb05" configurationId="icu3.irq3_dash_ds"/>
+      <configSetting altId="icu4.irq4_dash_ds.pb06" configurationId="icu4.irq4_dash_ds"/>
+      <configSetting altId="icu5.irq5_dash_ds.pb07" configurationId="icu5.irq5_dash_ds"/>
+      <configSetting altId="icu7.irq7.pa07" configurationId="icu7.irq7"/>
+      <configSetting altId="icu8.irq8.pc08" configurationId="icu8.irq8"/>
+      <configSetting altId="icu9.irq9.pa09" configurationId="icu9.irq9"/>
       <configSetting altId="jtag_fslash_swd.tck.pa14" configurationId="jtag_fslash_swd.tck"/>
       <configSetting altId="jtag_fslash_swd.tdi.pa15" configurationId="jtag_fslash_swd.tdi"/>
       <configSetting altId="jtag_fslash_swd.tdo.pb03" configurationId="jtag_fslash_swd.tdo"/>
       <configSetting altId="jtag_fslash_swd.tms.pa13" configurationId="jtag_fslash_swd.tms"/>
+      <configSetting altId="pb04.output.low" configurationId="pb04"/>
+      <configSetting altId="pc07.output.low" configurationId="pc07"/>
+      <configSetting altId="pd07.output.low" configurationId="pd07"/>
+      <configSetting altId="pe00.output.low" configurationId="pe00"/>
+      <configSetting altId="pe01.output.low" configurationId="pe01"/>
+      <configSetting altId="pe09.output.low" configurationId="pe09"/>
+      <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9"/>
+      <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9"/>
+      <configSetting altId="spi1.miso1.pc11" configurationId="spi1.miso1"/>
+      <configSetting altId="spi1.mosi1.pc12" configurationId="spi1.mosi1"/>
+      <configSetting altId="spi1.rspck1.pc10" configurationId="spi1.rspck1"/>
+      <configSetting altId="spi1.sslb0.pd00" configurationId="spi1.sslb0"/>
+      <configSetting altId="spi1.sslb1.pd01" configurationId="spi1.sslb1"/>
+      <configSetting altId="spi1.sslb2.pd03" configurationId="spi1.sslb2"/>
+      <configSetting altId="system.md.p201" configurationId="system.md"/>
+      <configSetting altId="trace.tclk.pe02" configurationId="trace.tclk"/>
+      <configSetting altId="trace.tdata0.pe03" configurationId="trace.tdata0"/>
+      <configSetting altId="trace.tdata1.pe04" configurationId="trace.tdata1"/>
+      <configSetting altId="trace.tdata2.pe05" configurationId="trace.tdata2"/>
+      <configSetting altId="trace.tdata3.pe06" configurationId="trace.tdata3"/>
     </pincfg>
   </raPinConfiguration>
 </raConfiguration>
