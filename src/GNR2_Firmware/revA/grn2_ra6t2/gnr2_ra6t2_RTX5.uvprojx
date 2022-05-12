@@ -137,7 +137,7 @@
             <DriverSelection>-1</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2></Flash2>
+          <Flash2>BIN\UL2V8M.DLL</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -339,7 +339,7 @@
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath></IncludePath>
+              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\peripherals_abtraction</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -381,7 +381,35 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Source Group 1</GroupName>
+          <GroupName>Application</GroupName>
+          <Files>
+            <File>
+              <FileName>app_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application\app_main.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/Communications</GroupName>
+        </Group>
+        <Group>
+          <GroupName>Application/Vehicle</GroupName>
+        </Group>
+        <Group>
+          <GroupName>Application/Motor</GroupName>
+        </Group>
+        <Group>
+          <GroupName>Middleware/Communications</GroupName>
+        </Group>
+        <Group>
+          <GroupName>Middleware/Vehicle</GroupName>
+        </Group>
+        <Group>
+          <GroupName>Middleware/Motor</GroupName>
+        </Group>
+        <Group>
+          <GroupName>Peripherals/Abstraction</GroupName>
         </Group>
         <Group>
           <GroupName>:Renesas RA Smart Configurator:Common Sources</GroupName>
@@ -391,23 +419,10 @@
               <FileType>1</FileType>
               <FilePath>.\src\hal_entry.c</FilePath>
             </File>
-            <File>
-              <FileName>application_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\application_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>application_main.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\src\application_main.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>
-        </Group>
-        <Group>
-          <GroupName>::Compiler</GroupName>
         </Group>
         <Group>
           <GroupName>::Device</GroupName>
@@ -549,12 +564,6 @@
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="Keil" Cversion="1.5.1" condition="Cortex-M Device">
-        <package name="ARM_Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="Keil" version="1.7.2"/>
-        <targetInfos>
-          <targetInfo name="Target 1"/>
-        </targetInfos>
-      </component>
       <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device" isTargetSpecific="1">
         <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
         <targetInfos>
@@ -586,12 +595,10 @@
         </targetInfos>
       </file>
       <file attr="config" category="header" name="Config\EventRecorderConf.h" version="1.1.0">
-        <instance index="0">RTE\Compiler\EventRecorderConf.h</instance>
+        <instance index="0" removed="1">RTE\Compiler\EventRecorderConf.h</instance>
         <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="Keil" Cversion="1.5.1" condition="Cortex-M Device"/>
         <package name="ARM_Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="Keil" version="1.7.2"/>
-        <targetInfos>
-          <targetInfo name="Target 1"/>
-        </targetInfos>
+        <targetInfos/>
       </file>
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BB\startup_RA.c</instance>

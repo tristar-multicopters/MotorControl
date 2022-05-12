@@ -3,12 +3,13 @@
   <generalSettings>
     <option key="#Board#" value="board.custom"/>
     <option key="CPU" value="RA6T2"/>
+    <option key="Core" value="CM33"/>
     <option key="#TargetName#" value="R7FA6T2BB3CFP"/>
     <option key="#TargetARCHITECTURE#" value="cortex-m33"/>
     <option key="#DeviceCommand#" value="R7FA6T2BB"/>
     <option key="#RTOS#" value="_none"/>
     <option key="#pinconfiguration#" value="R7FA6T2BB3CFP.pincfg"/>
-    <option key="#FSPVersion#" value="3.5.0"/>
+    <option key="#FSPVersion#" value="3.6.0"/>
     <option key="#SELECTED_TOOLCHAIN#" value="com.arm.toolchain"/>
   </generalSettings>
   <raBspConfiguration>
@@ -20,6 +21,7 @@
       <property id="config.bsp.data_flash_size_bytes" value="config.bsp.data_flash_size_bytes.value"/>
       <property id="config.bsp.package_style" value="config.bsp.package_style.value"/>
       <property id="config.bsp.package_pins" value="config.bsp.package_pins.value"/>
+      <property id="config.bsp.irq_count_hidden" value="96"/>
     </config>
     <config id="config.bsp.ra6t2">
       <property id="config.bsp.series" value="config.bsp.series.value"/>
@@ -138,49 +140,49 @@
     <node id="board.clock.iicclk.display" option="board.clock.iicclk.display.value"/>
   </raClockConfiguration>
   <raComponentSelection>
-    <component apiversion="" class="Common" condition="" group="all" subgroup="fsp_common" variant="" vendor="Renesas" version="3.5.0">
-      <description>Board Support Package Common Files</description>
-      <originalPack>Renesas.RA.3.5.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_ioport" variant="" vendor="Renesas" version="3.5.0">
-      <description>I/O Port</description>
-      <originalPack>Renesas.RA.3.5.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="CMSIS" condition="" group="CMSIS5" subgroup="CoreM" variant="" vendor="Arm" version="5.8.0+renesas.0.fsp.3.5.0">
-      <description>Arm CMSIS Version 5 - Core (M)</description>
-      <originalPack>Arm.CMSIS5.5.8.0+renesas.0.fsp.3.5.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="BSP" condition="" group="Board" subgroup="custom" variant="" vendor="Renesas" version="3.5.0">
-      <description>Custom Board Support Files</description>
-      <originalPack>Renesas.RA_board_custom.3.5.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="R7FA6T2BB3CFP" vendor="Renesas" version="3.5.0">
+    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="R7FA6T2BB3CFP" vendor="Renesas" version="3.6.0">
       <description>Board support package for R7FA6T2BB3CFP</description>
-      <originalPack>Renesas.RA_mcu_ra6t2.3.5.0.pack</originalPack>
+      <originalPack>Renesas.RA_mcu_ra6t2.3.6.0.pack</originalPack>
     </component>
-    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="" vendor="Renesas" version="3.5.0">
+    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="" vendor="Renesas" version="3.6.0">
       <description>Board support package for RA6T2</description>
-      <originalPack>Renesas.RA_mcu_ra6t2.3.5.0.pack</originalPack>
+      <originalPack>Renesas.RA_mcu_ra6t2.3.6.0.pack</originalPack>
     </component>
-    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="fsp" variant="" vendor="Renesas" version="3.5.0">
+    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="fsp" variant="" vendor="Renesas" version="3.6.0">
       <description>Board support package for RA6T2 - FSP Data</description>
-      <originalPack>Renesas.RA_mcu_ra6t2.3.5.0.pack</originalPack>
+      <originalPack>Renesas.RA_mcu_ra6t2.3.6.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_dac" variant="" vendor="Renesas" version="3.5.0">
+    <component apiversion="" class="BSP" condition="" group="Board" subgroup="custom" variant="" vendor="Renesas" version="3.6.0">
+      <description>Custom Board Support Files</description>
+      <originalPack>Renesas.RA_board_custom.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="CMSIS" condition="" group="CMSIS5" subgroup="CoreM" variant="" vendor="Arm" version="5.8.0+renesas.0.fsp.3.6.0">
+      <description>Arm CMSIS Version 5 - Core (M)</description>
+      <originalPack>Arm.CMSIS5.5.8.0+renesas.0.fsp.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="Common" condition="" group="all" subgroup="fsp_common" variant="" vendor="Renesas" version="3.6.0">
+      <description>Board Support Package Common Files</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_dac" variant="" vendor="Renesas" version="3.6.0">
       <description>12-bit D/A Converter</description>
-      <originalPack>Renesas.RA.3.5.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_elc" variant="" vendor="Renesas" version="3.5.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_elc" variant="" vendor="Renesas" version="3.6.0">
       <description>Event Link Controller</description>
-      <originalPack>Renesas.RA.3.5.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_icu" variant="" vendor="Renesas" version="3.5.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_icu" variant="" vendor="Renesas" version="3.6.0">
       <description>External Interrupt</description>
-      <originalPack>Renesas.RA.3.5.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_poeg" variant="" vendor="Renesas" version="3.5.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_ioport" variant="" vendor="Renesas" version="3.6.0">
+      <description>I/O Port</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_poeg" variant="" vendor="Renesas" version="3.6.0">
       <description>Port Output Enable for GPT</description>
-      <originalPack>Renesas.RA.3.5.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
     </component>
   </raComponentSelection>
   <raElcConfiguration/>
@@ -363,9 +365,6 @@
       <configSetting altId="agt0.agtio0.pa08" configurationId="agt0.agtio0"/>
       <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0"/>
       <configSetting altId="agt0.mode.pulseperiodmeasurement.free" configurationId="agt0.mode"/>
-      <configSetting altId="can_dash_fd0.crx0.pb12" configurationId="can_dash_fd0.crx0"/>
-      <configSetting altId="can_dash_fd0.ctx0.pb13" configurationId="can_dash_fd0.ctx0"/>
-      <configSetting altId="can_dash_fd0.mode.enabled.free" configurationId="can_dash_fd0.mode"/>
       <configSetting altId="cgc.mode.custom.free" configurationId="cgc.mode"/>
       <configSetting altId="dac122.da2.pc04" configurationId="dac122.da2"/>
       <configSetting altId="dac122.mode.enabled.free" configurationId="dac122.mode"/>
@@ -401,53 +400,13 @@
       <configSetting altId="gpt_poegc.mode.enabled.free" configurationId="gpt_poegc.mode"/>
       <configSetting altId="gpt_poegd.gtetrgd.pc13" configurationId="gpt_poegd.gtetrgd"/>
       <configSetting altId="gpt_poegd.mode.enabled.free" configurationId="gpt_poegd.mode"/>
-      <configSetting altId="irq0.irq0.p000" configurationId="irq0.irq0"/>
-      <configSetting altId="irq0.mode.enabled.free" configurationId="irq0.mode"/>
-      <configSetting altId="irq1.irq1_dash_ds.pb08" configurationId="irq1.irq1_dash_ds"/>
-      <configSetting altId="irq1.mode.enabled.free" configurationId="irq1.mode"/>
-      <configSetting altId="irq10.irq10_dash_ds.pb10" configurationId="irq10.irq10_dash_ds"/>
-      <configSetting altId="irq10.mode.enabled.free" configurationId="irq10.mode"/>
-      <configSetting altId="irq11.irq11_dash_ds.pc00" configurationId="irq11.irq11_dash_ds"/>
-      <configSetting altId="irq11.mode.enabled.free" configurationId="irq11.mode"/>
-      <configSetting altId="irq12.irq12.pd12" configurationId="irq12.irq12"/>
-      <configSetting altId="irq12.mode.enabled.free" configurationId="irq12.mode"/>
-      <configSetting altId="irq13.irq13.pd13" configurationId="irq13.irq13"/>
-      <configSetting altId="irq13.mode.enabled.free" configurationId="irq13.mode"/>
-      <configSetting altId="irq14.irq14.pd14" configurationId="irq14.irq14"/>
-      <configSetting altId="irq14.mode.enabled.free" configurationId="irq14.mode"/>
-      <configSetting altId="irq15.irq15.pd15" configurationId="irq15.irq15"/>
-      <configSetting altId="irq15.mode.enabled.free" configurationId="irq15.mode"/>
-      <configSetting altId="irq2.irq2.p001" configurationId="irq2.irq2"/>
-      <configSetting altId="irq2.irq2_dash_ds.pb09" configurationId="irq2.irq2_dash_ds"/>
-      <configSetting altId="irq2.mode.enabled.free" configurationId="irq2.mode"/>
-      <configSetting altId="irq3.irq3_dash_ds.pb05" configurationId="irq3.irq3_dash_ds"/>
-      <configSetting altId="irq3.mode.enabled.free" configurationId="irq3.mode"/>
-      <configSetting altId="irq4.irq4_dash_ds.pb06" configurationId="irq4.irq4_dash_ds"/>
-      <configSetting altId="irq4.mode.enabled.free" configurationId="irq4.mode"/>
-      <configSetting altId="irq5.irq5_dash_ds.pb07" configurationId="irq5.irq5_dash_ds"/>
-      <configSetting altId="irq5.mode.enabled.free" configurationId="irq5.mode"/>
-      <configSetting altId="irq7.mode.enabled.free" configurationId="irq7.mode"/>
-      <configSetting altId="irq8.irq8.pc08" configurationId="irq8.irq8"/>
-      <configSetting altId="irq8.mode.enabled.free" configurationId="irq8.mode"/>
-      <configSetting altId="irq9.irq9.pa09" configurationId="irq9.irq9"/>
-      <configSetting altId="irq9.mode.enabled.free" configurationId="irq9.mode"/>
       <configSetting altId="jtag_fslash_swd.mode.jtag.free" configurationId="jtag_fslash_swd.mode"/>
       <configSetting altId="jtag_fslash_swd.tck.pa14" configurationId="jtag_fslash_swd.tck"/>
       <configSetting altId="jtag_fslash_swd.tdi.pa15" configurationId="jtag_fslash_swd.tdi"/>
       <configSetting altId="jtag_fslash_swd.tdo.pb03" configurationId="jtag_fslash_swd.tdo"/>
       <configSetting altId="jtag_fslash_swd.tms.pa13" configurationId="jtag_fslash_swd.tms"/>
-      <configSetting altId="p000.irq0.irq0" configurationId="p000"/>
-      <configSetting altId="p000.gpio_irq.gpio_irq_enabled" configurationId="p000.gpio_irq"/>
-      <configSetting altId="p000.gpio_mode.gpio_mode_irq" configurationId="p000.gpio_mode"/>
-      <configSetting altId="p001.irq2.irq2" configurationId="p001"/>
-      <configSetting altId="p001.gpio_irq.gpio_irq_enabled" configurationId="p001.gpio_irq"/>
-      <configSetting altId="p001.gpio_mode.gpio_mode_irq" configurationId="p001.gpio_mode"/>
       <configSetting altId="p201.system.md" configurationId="p201"/>
       <configSetting altId="p201.gpio_mode.gpio_mode_peripheral" configurationId="p201.gpio_mode"/>
-      <configSetting altId="p212.system.extal" configurationId="p212"/>
-      <configSetting altId="p212.gpio_mode.gpio_mode_peripheral" configurationId="p212.gpio_mode"/>
-      <configSetting altId="p213.system.xtal" configurationId="p213"/>
-      <configSetting altId="p213.gpio_mode.gpio_mode_peripheral" configurationId="p213.gpio_mode"/>
       <configSetting altId="pa00.adc12.an000" configurationId="pa00"/>
       <configSetting altId="pa00.gpio_mode.gpio_mode_an" configurationId="pa00.gpio_mode"/>
       <configSetting altId="pa02.adc12.an002" configurationId="pa02"/>
@@ -461,9 +420,6 @@
       <configSetting altId="pa08.agt0.agtio0" configurationId="pa08"/>
       <configSetting altId="pa08.gpio_irq.gpio_irq_enabled" configurationId="pa08.gpio_irq"/>
       <configSetting altId="pa08.gpio_mode.gpio_mode_peripheral" configurationId="pa08.gpio_mode"/>
-      <configSetting altId="pa09.irq9.irq9" configurationId="pa09"/>
-      <configSetting altId="pa09.gpio_irq.gpio_irq_enabled" configurationId="pa09.gpio_irq"/>
-      <configSetting altId="pa09.gpio_mode.gpio_mode_irq" configurationId="pa09.gpio_mode"/>
       <configSetting altId="pa10.gpt3.gtioc3a" configurationId="pa10"/>
       <configSetting altId="pa10.gpio_mode.gpio_mode_peripheral" configurationId="pa10.gpio_mode"/>
       <configSetting altId="pa11.gpt9.gtioc9b" configurationId="pa11"/>
@@ -485,35 +441,10 @@
       <configSetting altId="pb03.gpio_mode.gpio_mode_peripheral" configurationId="pb03.gpio_mode"/>
       <configSetting altId="pb04.output.low" configurationId="pb04"/>
       <configSetting altId="pb04.gpio_mode.gpio_mode_out.low" configurationId="pb04.gpio_mode"/>
-      <configSetting altId="pb05.irq3.irq3_dash_ds" configurationId="pb05"/>
-      <configSetting altId="pb05.gpio_irq.gpio_irq_enabled" configurationId="pb05.gpio_irq"/>
-      <configSetting altId="pb05.gpio_mode.gpio_mode_irq" configurationId="pb05.gpio_mode"/>
-      <configSetting altId="pb06.irq4.irq4_dash_ds" configurationId="pb06"/>
-      <configSetting altId="pb06.gpio_irq.gpio_irq_enabled" configurationId="pb06.gpio_irq"/>
-      <configSetting altId="pb06.gpio_mode.gpio_mode_irq" configurationId="pb06.gpio_mode"/>
-      <configSetting altId="pb07.irq5.irq5_dash_ds" configurationId="pb07"/>
-      <configSetting altId="pb07.gpio_irq.gpio_irq_enabled" configurationId="pb07.gpio_irq"/>
-      <configSetting altId="pb07.gpio_mode.gpio_mode_irq" configurationId="pb07.gpio_mode"/>
-      <configSetting altId="pb08.irq1.irq1_dash_ds" configurationId="pb08"/>
-      <configSetting altId="pb08.gpio_irq.gpio_irq_enabled" configurationId="pb08.gpio_irq"/>
-      <configSetting altId="pb08.gpio_mode.gpio_mode_irq" configurationId="pb08.gpio_mode"/>
-      <configSetting altId="pb09.irq2.irq2_dash_ds" configurationId="pb09"/>
-      <configSetting altId="pb09.gpio_irq.gpio_irq_enabled" configurationId="pb09.gpio_irq"/>
-      <configSetting altId="pb09.gpio_mode.gpio_mode_irq" configurationId="pb09.gpio_mode"/>
-      <configSetting altId="pb10.irq10.irq10_dash_ds" configurationId="pb10"/>
-      <configSetting altId="pb10.gpio_irq.gpio_irq_enabled" configurationId="pb10.gpio_irq"/>
-      <configSetting altId="pb10.gpio_mode.gpio_mode_irq" configurationId="pb10.gpio_mode"/>
-      <configSetting altId="pb12.can_dash_fd0.crx0" configurationId="pb12"/>
-      <configSetting altId="pb12.gpio_mode.gpio_mode_peripheral" configurationId="pb12.gpio_mode"/>
-      <configSetting altId="pb13.can_dash_fd0.ctx0" configurationId="pb13"/>
-      <configSetting altId="pb13.gpio_mode.gpio_mode_peripheral" configurationId="pb13.gpio_mode"/>
       <configSetting altId="pb14.gpt1.gtioc1a" configurationId="pb14"/>
       <configSetting altId="pb14.gpio_mode.gpio_mode_peripheral" configurationId="pb14.gpio_mode"/>
       <configSetting altId="pb15.gpt1.gtioc1b" configurationId="pb15"/>
       <configSetting altId="pb15.gpio_mode.gpio_mode_peripheral" configurationId="pb15.gpio_mode"/>
-      <configSetting altId="pc00.irq11.irq11_dash_ds" configurationId="pc00"/>
-      <configSetting altId="pc00.gpio_irq.gpio_irq_enabled" configurationId="pc00.gpio_irq"/>
-      <configSetting altId="pc00.gpio_mode.gpio_mode_irq" configurationId="pc00.gpio_mode"/>
       <configSetting altId="pc03.adc12.an015" configurationId="pc03"/>
       <configSetting altId="pc03.gpio_mode.gpio_mode_an" configurationId="pc03.gpio_mode"/>
       <configSetting altId="pc04.dac122.da2" configurationId="pc04"/>
@@ -524,9 +455,6 @@
       <configSetting altId="pc06.gpio_mode.gpio_mode_peripheral" configurationId="pc06.gpio_mode"/>
       <configSetting altId="pc07.output.low" configurationId="pc07"/>
       <configSetting altId="pc07.gpio_mode.gpio_mode_out.low" configurationId="pc07.gpio_mode"/>
-      <configSetting altId="pc08.irq8.irq8" configurationId="pc08"/>
-      <configSetting altId="pc08.gpio_irq.gpio_irq_enabled" configurationId="pc08.gpio_irq"/>
-      <configSetting altId="pc08.gpio_mode.gpio_mode_irq" configurationId="pc08.gpio_mode"/>
       <configSetting altId="pc09.gpt7.gtioc7b" configurationId="pc09"/>
       <configSetting altId="pc09.gpio_mode.gpio_mode_peripheral" configurationId="pc09.gpio_mode"/>
       <configSetting altId="pc10.spi1.rspck1" configurationId="pc10"/>
@@ -564,18 +492,6 @@
       <configSetting altId="pd10.gpio_mode.gpio_mode_peripheral" configurationId="pd10.gpio_mode"/>
       <configSetting altId="pd11.gpt3.gtioc3b" configurationId="pd11"/>
       <configSetting altId="pd11.gpio_mode.gpio_mode_peripheral" configurationId="pd11.gpio_mode"/>
-      <configSetting altId="pd12.irq12.irq12" configurationId="pd12"/>
-      <configSetting altId="pd12.gpio_irq.gpio_irq_enabled" configurationId="pd12.gpio_irq"/>
-      <configSetting altId="pd12.gpio_mode.gpio_mode_irq" configurationId="pd12.gpio_mode"/>
-      <configSetting altId="pd13.irq13.irq13" configurationId="pd13"/>
-      <configSetting altId="pd13.gpio_irq.gpio_irq_enabled" configurationId="pd13.gpio_irq"/>
-      <configSetting altId="pd13.gpio_mode.gpio_mode_irq" configurationId="pd13.gpio_mode"/>
-      <configSetting altId="pd14.irq14.irq14" configurationId="pd14"/>
-      <configSetting altId="pd14.gpio_irq.gpio_irq_enabled" configurationId="pd14.gpio_irq"/>
-      <configSetting altId="pd14.gpio_mode.gpio_mode_irq" configurationId="pd14.gpio_mode"/>
-      <configSetting altId="pd15.irq15.irq15" configurationId="pd15"/>
-      <configSetting altId="pd15.gpio_irq.gpio_irq_enabled" configurationId="pd15.gpio_irq"/>
-      <configSetting altId="pd15.gpio_mode.gpio_mode_irq" configurationId="pd15.gpio_mode"/>
       <configSetting altId="pe00.output.low" configurationId="pe00"/>
       <configSetting altId="pe00.gpio_mode.gpio_mode_out.low" configurationId="pe00.gpio_mode"/>
       <configSetting altId="pe01.output.low" configurationId="pe01"/>
@@ -617,10 +533,8 @@
       <configSetting altId="spi1.sslb0.pd00" configurationId="spi1.sslb0"/>
       <configSetting altId="spi1.sslb1.pd01" configurationId="spi1.sslb1"/>
       <configSetting altId="spi1.sslb2.pd03" configurationId="spi1.sslb2"/>
-      <configSetting altId="system.extal.p212" configurationId="system.extal"/>
       <configSetting altId="system.md.p201" configurationId="system.md"/>
       <configSetting altId="system.mode.custom.free" configurationId="system.mode"/>
-      <configSetting altId="system.xtal.p213" configurationId="system.xtal"/>
       <configSetting altId="trace.mode.custom.free" configurationId="trace.mode"/>
       <configSetting altId="trace.tclk.pe02" configurationId="trace.tclk"/>
       <configSetting altId="trace.tdata0.pe03" configurationId="trace.tdata0"/>

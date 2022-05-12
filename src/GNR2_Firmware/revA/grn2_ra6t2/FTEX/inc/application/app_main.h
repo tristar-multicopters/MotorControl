@@ -10,7 +10,7 @@
 #include "RTE_Components.h"
 #include <cmsis_os2.h>
 #include <rtx_os.h>
-#include "EventRecorder.h"
+//#include "EventRecorder.h"
 
 
 /* Defines --------------------------------------------------------------------*/

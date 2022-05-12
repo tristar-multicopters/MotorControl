@@ -1,5 +1,5 @@
 
-#include "application_main.h"
+#include "app_main.h"
 
 #define TASK_0_TICK 	20
 #define TASK_1_TICK 	40
@@ -60,7 +60,7 @@ void application_main(void)
 	BootUp();
 	
 	osKernelInitialize();  // Initialise the kernel
-	EventRecorderInitialize(EventRecordAll,1U); // Initialise the events
+	//EventRecorderInitialize(EventRecordAll,1U); // Initialise the events
 	
 	// Create task 0 
 	TSK_0_handle      = osThreadNew(TSK_0, 
