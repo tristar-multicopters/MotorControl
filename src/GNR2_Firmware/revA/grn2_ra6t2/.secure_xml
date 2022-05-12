@@ -13,13 +13,13 @@
     <option key="#SELECTED_TOOLCHAIN#" value="com.arm.toolchain"/>
   </generalSettings>
   <raClockConfiguration>
-    <node id="board.clock.xtal.freq" mul="20000000" option="_edit"/>
+    <node id="board.clock.xtal.freq" mul="10000000" option="_edit"/>
     <node id="board.clock.hoco.freq" option="board.clock.hoco.freq.20m"/>
     <node id="board.clock.loco.freq" option="board.clock.loco.freq.32768"/>
     <node id="board.clock.moco.freq" option="board.clock.moco.freq.8m"/>
     <node id="board.clock.pll.source" option="board.clock.pll.source.xtal"/>
     <node id="board.clock.pll.div" option="board.clock.pll.div.1"/>
-    <node id="board.clock.pll.mul" option="board.clock.pll.mul.120"/>
+    <node id="board.clock.pll.mul" option="board.clock.pll.mul.240"/>
     <node id="board.clock.pll.display" option="board.clock.pll.display.value"/>
     <node id="board.clock.pll2.source" option="board.clock.pll2.source.disabled"/>
     <node id="board.clock.pll2.div" option="board.clock.pll2.div.1"/>
@@ -59,17 +59,16 @@
     <pincfg active="true" name="" symbol="">
       <configSetting altId="adc12.an000.pa00" configurationId="adc12.an000"/>
       <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
+      <configSetting altId="adc12.an004.pa04" configurationId="adc12.an004"/>
       <configSetting altId="adc12.an006.pa06" configurationId="adc12.an006"/>
+      <configSetting altId="adc12.an007.pa07" configurationId="adc12.an007"/>
       <configSetting altId="adc12.an008.pb00" configurationId="adc12.an008"/>
       <configSetting altId="adc12.an009.pb01" configurationId="adc12.an009"/>
       <configSetting altId="adc12.an015.pc03" configurationId="adc12.an015"/>
+      <configSetting altId="adc12.an018.pb02" configurationId="adc12.an018"/>
       <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
       <configSetting altId="agt0.agtio0.pa08" configurationId="agt0.agtio0"/>
       <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0"/>
-      <configSetting altId="canfd0.crx0.pb12" configurationId="canfd0.crx0"/>
-      <configSetting altId="canfd0.ctx0.pb13" configurationId="canfd0.ctx0"/>
-      <configSetting altId="cgc.extal.p212" configurationId="cgc.extal"/>
-      <configSetting altId="cgc.xtal.p213" configurationId="cgc.xtal"/>
       <configSetting altId="dac122.da2.pc04" configurationId="dac122.da2"/>
       <configSetting altId="dac123.da3.pc05" configurationId="dac123.da3"/>
       <configSetting altId="gpt1.gtioc1a.pb14" configurationId="gpt1.gtioc1a"/>
@@ -90,21 +89,6 @@
       <configSetting altId="gpt_poegb.gtetrgb.pc15" configurationId="gpt_poegb.gtetrgb"/>
       <configSetting altId="gpt_poegc.gtetrgc.pd10" configurationId="gpt_poegc.gtetrgc"/>
       <configSetting altId="gpt_poegd.gtetrgd.pc13" configurationId="gpt_poegd.gtetrgd"/>
-      <configSetting altId="icu0.irq0.p000" configurationId="icu0.irq0"/>
-      <configSetting altId="icu1.irq1_dash_ds.pb08" configurationId="icu1.irq1_dash_ds"/>
-      <configSetting altId="icu10.irq10_dash_ds.pb10" configurationId="icu10.irq10_dash_ds"/>
-      <configSetting altId="icu11.irq11_dash_ds.pc00" configurationId="icu11.irq11_dash_ds"/>
-      <configSetting altId="icu12.irq12.pd12" configurationId="icu12.irq12"/>
-      <configSetting altId="icu13.irq13.pd13" configurationId="icu13.irq13"/>
-      <configSetting altId="icu14.irq14.pd14" configurationId="icu14.irq14"/>
-      <configSetting altId="icu15.irq15.pd15" configurationId="icu15.irq15"/>
-      <configSetting altId="icu2.irq2_dash_ds.pb09" configurationId="icu2.irq2_dash_ds"/>
-      <configSetting altId="icu3.irq3_dash_ds.pb05" configurationId="icu3.irq3_dash_ds"/>
-      <configSetting altId="icu4.irq4_dash_ds.pb06" configurationId="icu4.irq4_dash_ds"/>
-      <configSetting altId="icu5.irq5_dash_ds.pb07" configurationId="icu5.irq5_dash_ds"/>
-      <configSetting altId="icu7.irq7.pa07" configurationId="icu7.irq7"/>
-      <configSetting altId="icu8.irq8.pc08" configurationId="icu8.irq8"/>
-      <configSetting altId="icu9.irq9.pa09" configurationId="icu9.irq9"/>
       <configSetting altId="jtag_fslash_swd.tck.pa14" configurationId="jtag_fslash_swd.tck"/>
       <configSetting altId="jtag_fslash_swd.tdi.pa15" configurationId="jtag_fslash_swd.tdi"/>
       <configSetting altId="jtag_fslash_swd.tdo.pb03" configurationId="jtag_fslash_swd.tdo"/>

@@ -11,8 +11,6 @@
     <generator id="Renesas RA Smart Configurator">
       <project_files>
         <file category="include" name="src/"/>
-        <file category="source" name="src/application_main.c"/>
-        <file category="header" name="src/application_main.h" path=""/>
         <file category="source" name="src/hal_entry.c"/>
       </project_files>
     </generator>
