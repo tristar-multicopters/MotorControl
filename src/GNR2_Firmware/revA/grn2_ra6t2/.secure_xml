@@ -57,62 +57,21 @@
   <raModuleConfiguration/>
   <raPinConfiguration>
     <pincfg active="true" name="" symbol="">
-      <configSetting altId="adc12.an000.pa00" configurationId="adc12.an000"/>
       <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
       <configSetting altId="adc12.an004.pa04" configurationId="adc12.an004"/>
-      <configSetting altId="adc12.an006.pa06" configurationId="adc12.an006"/>
-      <configSetting altId="adc12.an007.pa07" configurationId="adc12.an007"/>
-      <configSetting altId="adc12.an008.pb00" configurationId="adc12.an008"/>
-      <configSetting altId="adc12.an009.pb01" configurationId="adc12.an009"/>
-      <configSetting altId="adc12.an015.pc03" configurationId="adc12.an015"/>
-      <configSetting altId="adc12.an018.pb02" configurationId="adc12.an018"/>
-      <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
-      <configSetting altId="agt0.agtio0.pa08" configurationId="agt0.agtio0"/>
-      <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0"/>
-      <configSetting altId="dac122.da2.pc04" configurationId="dac122.da2"/>
-      <configSetting altId="dac123.da3.pc05" configurationId="dac123.da3"/>
-      <configSetting altId="gpt1.gtioc1a.pb14" configurationId="gpt1.gtioc1a"/>
-      <configSetting altId="gpt1.gtioc1b.pb15" configurationId="gpt1.gtioc1b"/>
-      <configSetting altId="gpt2.gtioc2a.pd08" configurationId="gpt2.gtioc2a"/>
-      <configSetting altId="gpt2.gtioc2b.pd09" configurationId="gpt2.gtioc2b"/>
-      <configSetting altId="gpt3.gtioc3a.pa10" configurationId="gpt3.gtioc3a"/>
-      <configSetting altId="gpt3.gtioc3b.pd11" configurationId="gpt3.gtioc3b"/>
-      <configSetting altId="gpt4.gtioc4a.pe10" configurationId="gpt4.gtioc4a"/>
-      <configSetting altId="gpt4.gtioc4b.pe13" configurationId="gpt4.gtioc4b"/>
-      <configSetting altId="gpt5.gtioc5a.pe11" configurationId="gpt5.gtioc5a"/>
-      <configSetting altId="gpt5.gtioc5b.pe14" configurationId="gpt5.gtioc5b"/>
-      <configSetting altId="gpt6.gtioc6a.pe12" configurationId="gpt6.gtioc6a"/>
-      <configSetting altId="gpt6.gtioc6b.pe15" configurationId="gpt6.gtioc6b"/>
-      <configSetting altId="gpt7.gtioc7b.pc09" configurationId="gpt7.gtioc7b"/>
-      <configSetting altId="gpt9.gtioc9b.pa11" configurationId="gpt9.gtioc9b"/>
-      <configSetting altId="gpt_poega.gtetrga.pc14" configurationId="gpt_poega.gtetrga"/>
-      <configSetting altId="gpt_poegb.gtetrgb.pc15" configurationId="gpt_poegb.gtetrgb"/>
-      <configSetting altId="gpt_poegc.gtetrgc.pd10" configurationId="gpt_poegc.gtetrgc"/>
-      <configSetting altId="gpt_poegd.gtetrgd.pc13" configurationId="gpt_poegd.gtetrgd"/>
-      <configSetting altId="jtag_fslash_swd.tck.pa14" configurationId="jtag_fslash_swd.tck"/>
-      <configSetting altId="jtag_fslash_swd.tdi.pa15" configurationId="jtag_fslash_swd.tdi"/>
-      <configSetting altId="jtag_fslash_swd.tdo.pb03" configurationId="jtag_fslash_swd.tdo"/>
-      <configSetting altId="jtag_fslash_swd.tms.pa13" configurationId="jtag_fslash_swd.tms"/>
-      <configSetting altId="pb04.output.low" configurationId="pb04"/>
-      <configSetting altId="pc07.output.low" configurationId="pc07"/>
-      <configSetting altId="pd07.output.low" configurationId="pd07"/>
-      <configSetting altId="pe00.output.low" configurationId="pe00"/>
-      <configSetting altId="pe01.output.low" configurationId="pe01"/>
-      <configSetting altId="pe09.output.low" configurationId="pe09"/>
-      <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9"/>
-      <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9"/>
+      <configSetting altId="gpt4.gtioc4a.pb04" configurationId="gpt4.gtioc4a" isUsedByDriver="true"/>
+      <configSetting altId="gpt4.gtioc4b.pb05" configurationId="gpt4.gtioc4b" isUsedByDriver="true"/>
+      <configSetting altId="gpt5.gtioc5a.pb06" configurationId="gpt5.gtioc5a" isUsedByDriver="true"/>
+      <configSetting altId="gpt5.gtioc5b.pb07" configurationId="gpt5.gtioc5b" isUsedByDriver="true"/>
+      <configSetting altId="gpt6.gtioc6a.pb08" configurationId="gpt6.gtioc6a" isUsedByDriver="true"/>
+      <configSetting altId="gpt6.gtioc6b.pb09" configurationId="gpt6.gtioc6b" isUsedByDriver="true"/>
+      <configSetting altId="jtag_fslash_swd.swclk.pa14" configurationId="jtag_fslash_swd.swclk"/>
+      <configSetting altId="jtag_fslash_swd.swdio.pa13" configurationId="jtag_fslash_swd.swdio"/>
+      <configSetting altId="jtag_fslash_swd.swo.pb03" configurationId="jtag_fslash_swd.swo"/>
       <configSetting altId="spi1.miso1.pc11" configurationId="spi1.miso1"/>
       <configSetting altId="spi1.mosi1.pc12" configurationId="spi1.mosi1"/>
       <configSetting altId="spi1.rspck1.pc10" configurationId="spi1.rspck1"/>
-      <configSetting altId="spi1.sslb0.pd00" configurationId="spi1.sslb0"/>
-      <configSetting altId="spi1.sslb1.pd01" configurationId="spi1.sslb1"/>
-      <configSetting altId="spi1.sslb2.pd03" configurationId="spi1.sslb2"/>
       <configSetting altId="system.md.p201" configurationId="system.md"/>
-      <configSetting altId="trace.tclk.pe02" configurationId="trace.tclk"/>
-      <configSetting altId="trace.tdata0.pe03" configurationId="trace.tdata0"/>
-      <configSetting altId="trace.tdata1.pe04" configurationId="trace.tdata1"/>
-      <configSetting altId="trace.tdata2.pe05" configurationId="trace.tdata2"/>
-      <configSetting altId="trace.tdata3.pe06" configurationId="trace.tdata3"/>
     </pincfg>
   </raPinConfiguration>
 </raConfiguration>

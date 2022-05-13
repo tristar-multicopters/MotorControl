@@ -339,7 +339,7 @@
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\peripherals_abtraction</IncludePath>
+              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\peripherals_abstraction</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -384,9 +384,14 @@
           <GroupName>Application</GroupName>
           <Files>
             <File>
-              <FileName>app_main.c</FileName>
+              <FileName>gnr_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\app_main.c</FilePath>
+              <FilePath>.\FTEX\src\application\gnr_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>gnr_ra6t2_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\gnr_ra6t2_it.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -398,6 +403,63 @@
         </Group>
         <Group>
           <GroupName>Application/Motor</GroupName>
+          <Files>
+            <File>
+              <FileName>mc_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\mc_config.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\mc_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_parameters.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\mc_parameters.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\mc_tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\mc_math.c</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion_g4xx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\parameters_conversion_g4xx.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>power_stage_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>mc_tuning.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\mc_tuning.h</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>Middleware/Communications</GroupName>
@@ -407,9 +469,128 @@
         </Group>
         <Group>
           <GroupName>Middleware/Motor</GroupName>
+          <Files>
+            <File>
+              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>circle_limitation.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
+            </File>
+            <File>
+              <FileName>hall_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>ntc_temperature_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid_regulator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\pid_regulator.c</FilePath>
+            </File>
+            <File>
+              <FileName>pqd_motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\pwm_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>r_divider_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramp_ext_mngr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\ramp_ext_mngr.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_torq_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\speed_torq_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>state_machine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\state_machine.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_speed_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ao_spd_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\ao_spd_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>feed_forward_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\feed_forward_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>flux_weakening_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_type.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>Peripherals/Abstraction</GroupName>
+          <Files>
+            <File>
+              <FileName>regular_conversion_manager.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\regular_conversion_manager.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>:Renesas RA Smart Configurator:Common Sources</GroupName>
