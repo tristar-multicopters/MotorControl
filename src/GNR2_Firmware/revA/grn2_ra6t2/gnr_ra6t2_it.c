@@ -8,9 +8,15 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gnr_main.h"
+#include "mc_config.h"
+#include "mc_tasks.h"
 
 void CS_ADC_IRQHandler(adc_callback_args_t * p_args)
 {
+	if (p_args->event == ADC_EVENT_SCAN_COMPLETE)
+	{
+		TSK_HighFrequencyTask();
+	}
 	
 }
 

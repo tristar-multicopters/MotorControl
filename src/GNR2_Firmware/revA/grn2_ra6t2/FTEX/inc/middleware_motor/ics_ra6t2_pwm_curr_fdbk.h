@@ -34,14 +34,12 @@ extern "C" {
 typedef const struct
 {
   /* HW IP involved -----------------------------*/
-  adc_instance_t * pADCHandle;            				/*!< ADC peripheral to be used.*/
-  three_phase_instance_t * pThreePhaseHandle;      /*!< three phase instance used for PWM generation.*/
+	const adc_instance_t * pADCHandle;
+	const adc_channel_t ADCChannelIa;
+	const adc_channel_t ADCChannelIb;
+  const three_phase_instance_t * pThreePhaseHandle;      /*!< three phase instance used for PWM generation.*/
   
   /* PWM Driving signals initialization ----------------------------------------*/
-  LowSideOutputsFunction_t LowSideOutputs; /*!< Low side or enabling signals
-                                                generation method are defined
-                                                here.*/
-
   uint8_t  RepetitionCounter;         /*!< It expresses the number of PWM
                                             periods to be elapsed before compare
                                             registers are updated again. In
@@ -67,6 +65,10 @@ typedef const struct
 typedef struct
 {
   PWMC_Handle_t _Super;     /*!<   */
+	
+	uint16_t IaRaw;
+	uint16_t IbRaw;
+	
   uint32_t PhaseAOffset;   /*!< Offset of Phase A current sensing network  */
   uint32_t PhaseBOffset;   /*!< Offset of Phase B current sensing network  */
   uint16_t Half_PWMPeriod;  /*!< Half PWM Period in timer clock counts */
@@ -87,7 +89,7 @@ typedef struct
   * It initializes TIMx, ADC, GPIO, DMA1 and NVIC for current reading
   * in three shunt topology using STM32F30X and shared ADC
   */
-void ICS_Init( PWMC_ICS_Handle_t * pHandle );
+bool ICS_Init( PWMC_ICS_Handle_t * pHandle );
 
 /**
   * It stores into the handle the voltage present on Ia and

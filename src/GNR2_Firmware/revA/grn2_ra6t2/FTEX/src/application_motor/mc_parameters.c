@@ -21,54 +21,25 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-//#include "main.h"
-//#include "parameters_conversion.h"
+#include "gnr_main.h"
+#include "parameters_conversion.h"
 
-//#include "ics_g4xx_pwm_curr_fdbk.h"
+#include "ics_ra6t2_pwm_curr_fdbk.h"
 
-//#define FREQ_RATIO 1                /* Dummy value for single drive */
-//#define FREQ_RELATION HIGHEST_FREQ  /* Dummy value for single drive */
+const ICS_Params_t ICS_ParamsM1 =
+{
+/* Current reading A/D Conversions initialization -----------------------------*/
+	.pADCHandle = &g_adc,
+  .ADCChannelIa = ADC_CHANNEL_4,
+	.ADCChannelIb = ADC_CHANNEL_2,
 
-//  const ICS_Params_t ICS_ParamsM1 =
-//{
-///* Dual MC parameters --------------------------------------------------------*/
-//  .FreqRatio =				FREQ_RATIO,
-//  .IsHigherFreqTim =		FREQ_RELATION,
+/* PWM generation parameters --------------------------------------------------*/
+	.pThreePhaseHandle  =	&g_three_phase0,
+  .RepetitionCounter 	=	REP_COUNTER,
 
-///* Current reading A/D Conversions initialization -----------------------------*/
-//  .ADCx_1 = ADC1,
-//  .ADCx_2 = ADC2,
-//  .ADCConfig1 =   (MC_ADC_CHANNEL_4 << ADC_JSQR_JSQ1_Pos) | LL_ADC_INJ_TRIG_EXT_RISING | LL_ADC_INJ_TRIG_EXT_TIM1_TRGO,
-//  .ADCConfig2 =   (MC_ADC_CHANNEL_1 << ADC_JSQR_JSQ1_Pos) | LL_ADC_INJ_TRIG_EXT_RISING | LL_ADC_INJ_TRIG_EXT_TIM1_TRGO,
 
-///* PWM generation parameters --------------------------------------------------*/
-//  .RepetitionCounter =	REP_COUNTER,
-//  .TIMx               =	TIM1,
+/* Emergengy signal initialization ----------------------------------------*/
+  .BKIN2Mode           = INT_MODE,
 
-///* PWM Driving signals initialization ----------------------------------------*/
-//  .LowSideOutputs =	(LowSideOutputsFunction_t)LOW_SIDE_SIGNALS_ENABLING,
-//  .pwm_en_u_port      = MC_NULL,
-//  .pwm_en_u_pin       = (uint16_t) 0,
-//  .pwm_en_v_port      = MC_NULL,
-//  .pwm_en_v_pin       = (uint16_t) 0,
-//  .pwm_en_w_port      = MC_NULL,
-//  .pwm_en_w_pin       = (uint16_t) 0,
-
-///* Emergengy signal initialization ----------------------------------------*/
-//  .BKIN2Mode           = INT_MODE,
-//	
-///* Internal COMP settings ----------------------------------------------------*/
-//  .CompOCPASelection     = COMP2,
-//  .CompOCPAInvInput_MODE = INT_MODE,
-//  .CompOCPBSelection     = COMP3,
-//  .CompOCPBInvInput_MODE = INT_MODE,
-//  .DAC_OCP_ASelection    = DAC3,
-//  .DAC_OCP_BSelection    = DAC3,
-//  .DAC_Channel_OCPA      = LL_DAC_CHANNEL_1,
-//  .DAC_Channel_OCPB      = LL_DAC_CHANNEL_2,
-
-///* DAC settings --------------------------------------------------------------*/
-//  .DAC_OCP_Threshold =  55000,
-
-//};
+};
 

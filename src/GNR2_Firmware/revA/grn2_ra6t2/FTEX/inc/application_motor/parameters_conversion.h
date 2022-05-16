@@ -24,7 +24,7 @@
 #define __PARAMETERS_CONVERSION_H
 
 #include "mc_math.h"
-#include "parameters_conversion_g4xx.h"
+#include "parameters_conversion_ra6t2.h"
 #include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"
 #include "power_stage_parameters.h"

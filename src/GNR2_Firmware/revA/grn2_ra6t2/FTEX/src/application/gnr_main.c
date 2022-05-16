@@ -9,36 +9,24 @@
 
 #include "gnr_main.h"
 
-#define TASK_0_TICK 	20
-#define TASK_1_TICK 	40
-#define TASK_2_TICK		80
-#define TASK_3_TICK		160
+extern void startMCSafetyTask(void * pvParameter);
+extern void startMCMediumFrequencyTask(void * pvParameter);
 
-osThreadId_t TSK_0_handle;
-osThreadId_t TSK_1_handle;
-osThreadId_t TSK_2_handle;
-osThreadId_t TSK_3_handle;
+static bool ADCInit(void);
+static bool GPTInit(void);
 
-static const osThreadAttr_t ThAtt_TSK_0 = {
-	.name = "TSK_0",
-	.stack_size = 512,
-	.priority = osPriorityAboveNormal2
-};
+osThreadId_t MC_MediumFrequencyTask_handle;
+osThreadId_t MC_SafetyTask_handle;
 
-static const osThreadAttr_t ThAtt_TSK_1 = {
-	.name = "TSK_1",
-	.stack_size = 512,
-	.priority = osPriorityAboveNormal1
-};
 
-static const osThreadAttr_t ThAtt_TSK_2 = {
-	.name = "TSK_2",
+static const osThreadAttr_t ThAtt_MC_SafetyTask = {
+	.name = "MC_SafetyTask",
 	.stack_size = 512,
 	.priority = osPriorityAboveNormal3,
 };
 
-static const osThreadAttr_t ThAtt_TSK_3 = {
-	.name = "TSK_3",
+static const osThreadAttr_t ThAtt_MC_MediumFrequencyTask = {
+	.name = "MC_MediumFrequencyTask",
 	.stack_size = 512,
 	.priority = osPriorityNormal2
 };
@@ -46,30 +34,21 @@ static const osThreadAttr_t ThAtt_TSK_3 = {
 
 void gnr_main(void)
 {
+	ADCInit();
+	GPTInit();
+	
 	SystemCoreClockUpdate();
 	
 	osKernelInitialize();  // Initialise the kernel
 	//EventRecorderInitialize(EventRecordAll,1U); // Initialise the events
 	
-	// Create task 0 
-	TSK_0_handle      = osThreadNew(TSK_0, 
-																	NULL,
-																	&ThAtt_TSK_0);
-	
-	// Create task 1 
-	TSK_1_handle      = osThreadNew(TSK_1, 
-																	NULL,
-																	&ThAtt_TSK_1);
-	
-	// Create task 2 
-	TSK_0_handle      = osThreadNew(TSK_2, 
-																	NULL,
-																	&ThAtt_TSK_2);
-	
-	// Create task 3 
-	TSK_1_handle      = osThreadNew(TSK_3, 
-																	NULL,
-																	&ThAtt_TSK_3);	
+	MC_MediumFrequencyTask_handle   = osThreadNew(startMCMediumFrequencyTask, 
+																								NULL,
+																								&ThAtt_MC_MediumFrequencyTask);
+	 
+	MC_SafetyTask_handle   					= osThreadNew(startMCSafetyTask, 
+																								NULL,
+																								&ThAtt_MC_SafetyTask);
 	
 	// Start thread execution
 	if (osKernelGetState() == osKernelReady)
@@ -79,54 +58,36 @@ void gnr_main(void)
 
 }
 
-
-__NO_RETURN void TSK_0 (void * pvParameter)
+static bool ADCInit(void)
 {
-	UNUSED_PARAMETER(pvParameter);
-	osDelay(250);
-	uint32_t xLastWakeTime = osKernelGetTickCount();
-	while(1)
+	bool err = false;
+	
+	err |= (bool)R_ADC_B_Open(g_adc.p_ctrl, g_adc.p_cfg);
+	
+	err |= (bool)R_ADC_B_Calibrate(g_adc.p_ctrl, NULL);
+
+	/* Wait for calibration to complete */
+	adc_status_t status = {.state = ADC_STATE_SCAN_IN_PROGRESS};
+	while ((ADC_STATE_SCAN_IN_PROGRESS == status.state) &&
+				 (FSP_SUCCESS == err))
 	{
-		xLastWakeTime += TASK_0_TICK;
-		osDelayUntil(xLastWakeTime);	
+			err |= (bool)R_ADC_B_StatusGet(g_adc.p_ctrl, &status);
 	}
+	
+	err |= R_ADC_B_ScanCfg(g_adc.p_ctrl, &g_adc_scan_cfg);
+	
+	return err;
 }
-	
-__NO_RETURN void TSK_1 (void * pvParameter)
+
+static bool GPTInit(void)
 {
-	UNUSED_PARAMETER(pvParameter);
-	osDelay(250);
-	uint32_t xLastWakeTime = osKernelGetTickCount();
-	while(1)
-	{	
-		xLastWakeTime += TASK_1_TICK;
-		osDelayUntil(xLastWakeTime);	
-	}
-}	
+	bool err = false;
 	
-__NO_RETURN void TSK_2 (void * pvParameter)
-{
-	UNUSED_PARAMETER(pvParameter);
-	osDelay(250);
-	uint32_t xLastWakeTime = osKernelGetTickCount();
-	while(1)
-	{		
-		xLastWakeTime += TASK_2_TICK;
-		osDelayUntil(xLastWakeTime);	
-	}
+	err |= R_GPT_THREE_PHASE_Open(g_three_phase0.p_ctrl, g_three_phase0.p_cfg);
+
+	/* Start the timer. */
+	err |= (bool)R_GPT_THREE_PHASE_Start(g_three_phase0.p_ctrl);
+	
+	return err;
 }	
 
-__NO_RETURN void TSK_3 (void * pvParameter)
-{
-	UNUSED_PARAMETER(pvParameter);
-	osDelay(250);
-	uint32_t xLastWakeTime = osKernelGetTickCount();
-	while(1)
-	{			
-		xLastWakeTime += TASK_3_TICK;
-		osDelayUntil(xLastWakeTime);	
-	}
-}	
-
-
-	

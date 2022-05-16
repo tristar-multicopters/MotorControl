@@ -101,31 +101,28 @@ void UI_Scheduler(void);
   *         number of motor drives.
   * @retval None
   */
-void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList[NBR_OF_MOTORS] )
+void MCboot(void)
 {
-//  /**************************************/
-//  /*    State machine initialization    */
-//  /**************************************/
+  /**************************************/
+  /*    State machine initialization    */
+  /**************************************/
 //  STM_Init(&STM[M1]);
 
-//  bMCBootCompleted = 0;
+  bMCBootCompleted = 0;
 //  pCLM[M1] = &CircleLimitationM1;
 //  pFW[M1] = &FW_M1; /* only if M1 has FW */
 //  pFF[M1] = &FF_M1; /* only if M1 has FF */
 
-//  /**********************************************************/
-//  /*    PWM and current sensing component initialization    */
-//  /**********************************************************/
-//  pwmcHandle[M1] = &PWM_Handle_M1._Super;
-//  ICS_Init(&PWM_Handle_M1);
-//  /* USER CODE BEGIN MCboot 1 */
+  /**********************************************************/
+  /*    PWM and current sensing component initialization    */
+  /**********************************************************/
+  pwmcHandle[M1] = &PWM_Handle_M1._Super;
+  ICS_Init(&PWM_Handle_M1);
 
-//  /* USER CODE END MCboot 1 */
-
-//  /**************************************/
-//  /*    Start timers synchronously      */
-//  /**************************************/
-//  startTimers();
+  /**************************************/
+  /*    Start timers synchronously      */
+  /**************************************/
+  //startTimers();
 
 //  /******************************************************/
 //  /*   PID component initialization: speed regulation   */
@@ -198,13 +195,11 @@ void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList[NBR_OF
 //  MCI_Init(oMCInterface[M1], &STM[M1], pSTC[M1], &FOCVars[M1] );
 //  MCI_ExecSpeedRamp(oMCInterface[M1],
 //  STC_GetMecSpeedRefUnitDefault(pSTC[M1]),0); /*First command to STC*/
-//  pMCIList[M1] = oMCInterface[M1];
 //  MCT[M1].pPIDSpeed = pPIDSpeed[M1];
 //  MCT[M1].pPIDIq = pPIDIq[M1];
 //  MCT[M1].pPIDId = pPIDId[M1];
 //  MCT[M1].pPIDFluxWeakening = &PIDFluxWeakeningHandle_M1; /* only if M1 has FW */
 //  MCT[M1].pPWMnCurrFdbk = pwmcHandle[M1];
-//  MCT[M1].pRevupCtrl = MC_NULL;              /* only if M1 is not sensorless*/
 //  MCT[M1].pSpeedSensorMain = (SpeednPosFdbk_Handle_t *) &HALL_M1;
 //  MCT[M1].pSpeedSensorAux = (SpeednPosFdbk_Handle_t *) &STO_PLL_M1;
 //  MCT[M1].pSpeedSensorVirtual = MC_NULL;
@@ -212,17 +207,9 @@ void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList[NBR_OF
 //  MCT[M1].pStateMachine = &STM[M1];
 //  MCT[M1].pTemperatureSensor = (NTC_Handle_t *) pTemperatureSensor[M1];
 //  MCT[M1].pBusVoltageSensor = &(pBusSensorM1->_Super);
-//  MCT[M1].pBrakeDigitalOutput = MC_NULL;   /* brake is defined, oBrakeM1*/
-//  MCT[M1].pNTCRelay = MC_NULL;             /* relay is defined, oRelayM1*/
 //  MCT[M1].pMPM =  (MotorPowMeas_Handle_t*)pMPM[M1];
 //  MCT[M1].pFW = pFW[M1];
 //  MCT[M1].pFF = pFF[M1];
-
-//  MCT[M1].pPosCtrl = MC_NULL;
-
-//  MCT[M1].pSCC = MC_NULL;
-//  MCT[M1].pOTT = MC_NULL;
-//  pMCTList[M1] = &MCT[M1];
 
 //	AO_Init( &AngleObserverM1 );
 
@@ -544,17 +531,16 @@ bool TSK_StopPermanencyTimeHasElapsedM1(void)
   */
 uint8_t TSK_HighFrequencyTask(void)
 {
-
-//  uint8_t bMotorNbr = 0;
-//  uint16_t hFOCreturn;
+  uint8_t bMotorNbr = 0;
+  uint16_t hFOCreturn;
 
 //  Observer_Inputs_t STO_aux_Inputs; /*  only if sensorless aux*/
 //  STO_aux_Inputs.Valfa_beta = FOCVars[M1].Valphabeta;  /* only if sensorless*/
 
-//  HALL_CalcElAngle (&HALL_M1);
-//	AO_CalcElAngle(&AngleObserverM1, 0);
-//	
-//  hFOCreturn = FOC_CurrControllerM1();
+  //HALL_CalcElAngle (&HALL_M1);
+	//AO_CalcElAngle(&AngleObserverM1, 0);
+	
+  hFOCreturn = FOC_CurrControllerM1();
 //  if(hFOCreturn == MC_FOC_DURATION)
 //  {
 //    STM_FaultProcessing(&STM[M1], MC_FOC_DURATION, 0);
@@ -564,10 +550,10 @@ uint8_t TSK_HighFrequencyTask(void)
 //    STO_aux_Inputs.Ialfa_beta = FOCVars[M1].Ialphabeta; /*  only if sensorless*/
 //    STO_aux_Inputs.Vbus = VBS_GetAvBusVoltage_d(&(pBusSensorM1->_Super)); /*  only for sensorless*/
 //    STO_PLL_CalcElAngle (&STO_PLL_M1, &STO_aux_Inputs);
-//	STO_PLL_CalcAvrgElSpeedDpp (&STO_PLL_M1);
+//		STO_PLL_CalcAvrgElSpeedDpp (&STO_PLL_M1);
 //  }
 
-//  return bMotorNbr;
+  return bMotorNbr;
 }
 
 /**
@@ -581,12 +567,12 @@ uint8_t TSK_HighFrequencyTask(void)
   */
 inline uint16_t FOC_CurrControllerM1(void)
 {
-//  qd_t Iqd, Vqd;
-//  ab_t Iab;
-//  alphabeta_t Ialphabeta, Valphabeta;
+  qd_t Iqd, Vqd;
+  ab_t Iab;
+  alphabeta_t Ialphabeta, Valphabeta;
 
-//  int16_t hElAngle;
-//  uint16_t hCodeError;
+  int16_t hElAngle;
+  uint16_t hCodeError = 0;
 //  SpeednPosFdbk_Handle_t *speedHandle;
 
 //  speedHandle = STC_GetSpeedSensor(pSTC[M1]);
@@ -596,8 +582,8 @@ inline uint16_t FOC_CurrControllerM1(void)
 //	hOpenLoopTheta += OPEN_LOOP_SPEED;
 //	hElAngle = hOpenLoopTheta;
 //	#endif
-//	
-//  PWMC_GetPhaseCurrents(pwmcHandle[M1], &Iab);
+	
+  PWMC_GetPhaseCurrents(pwmcHandle[M1], &Iab);
 //  RCM_ReadOngoingConv();
 //  RCM_ExecNextConv();
 //  Ialphabeta = MCM_Clarke(Iab);
@@ -626,7 +612,7 @@ inline uint16_t FOC_CurrControllerM1(void)
 //  FOCVars[M1].hElAngle = hElAngle;
 //  FW_DataProcess(pFW[M1], Vqd);
 //  FF_DataProcess(pFF[M1]);
-//  return(hCodeError);
+  return(hCodeError);
 }
 
 /**
@@ -729,27 +715,30 @@ void TSK_HardwareFaultTask(void)
 //  STM_FaultProcessing(&STM[M1], MC_SW_ERROR, 0);
 }
 
-/* startMediumFrequencyTask function */
-__NO_RETURN void startMediumFrequencyTask(void * pvParameter)
+/* startMCMediumFrequencyTask function */
+__NO_RETURN void startMCMediumFrequencyTask(void * pvParameter)
 {
+	MCboot();
+	
   /* Infinite loop */
   for(;;)
   {
     /* delay of 500us */
     osDelay(1);
-    MC_RunMotorControlTasks();
   }
 }
 
-/* startSafetyTask function */
-__NO_RETURN void StartSafetyTask(void * pvParameter)
+/* startMCSafetyTask function */
+__NO_RETURN void startMCSafetyTask(void * pvParameter)
 {
+	osDelay(100);
+	
   /* Infinite loop */
   for(;;)
   {
     /* delay of 500us */
     osDelay(1);
-    TSK_SafetyTask();
+    //TSK_SafetyTask();
   }
 }
 

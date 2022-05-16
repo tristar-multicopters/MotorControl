@@ -27,7 +27,7 @@
                                    .channel_control_b_bits.compare_match_enable = false,
 
                                    .channel_control_c_bits.limiter_clip_table_id = ADC_B_LIMIT_CLIP_TABLE_SELECTION_NONE,
-                                   .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_12_BIT),
+                                   .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_16_BIT),
                                    .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_4) != ADC_CHANNEL_SELF_DIAGNOSIS),
                                };
                                #endif
@@ -50,7 +50,7 @@
                                    .channel_control_b_bits.compare_match_enable = false,
 
                                    .channel_control_c_bits.limiter_clip_table_id = ADC_B_LIMIT_CLIP_TABLE_SELECTION_NONE,
-                                   .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_12_BIT),
+                                   .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_16_BIT),
                                    .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_2) != ADC_CHANNEL_SELF_DIAGNOSIS),
                                };
                                #endif
@@ -2228,7 +2228,7 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .scan_end_interrupt_enable       = (1),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
-                         .gpt_trigger_enable_mask         = (0x10 |  ADC_B_GPT_TRIGGER_NONE),
+                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2483,7 +2483,7 @@ const adc_b_group_cfg_t * const adc_b_scan_cfg_groups[] = {
                            };
                            #endif
 
-                       const adc_b_scan_cfg_t g_adc0_scan_cfg =
+                       const adc_b_scan_cfg_t g_adc_scan_cfg =
                        {
                        .group_count = ( 0 +
                        (0 != (1)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0))),
@@ -2494,7 +2494,7 @@ const adc_b_group_cfg_t * const adc_b_scan_cfg_groups[] = {
                        #endif
                        };
 
-     const adc_b_isr_cfg_t g_adc0_isr_cfg =
+     const adc_b_isr_cfg_t g_adc_isr_cfg =
 {
     .calibration_end_ipl_adc_0 =  (12),
     .calibration_end_ipl_adc_1 =  (12),
@@ -2619,7 +2619,7 @@ const adc_b_group_cfg_t * const adc_b_scan_cfg_groups[] = {
 #endif
 };
 
-const adc_b_extended_cfg_t g_adc0_cfg_extend =
+const adc_b_extended_cfg_t g_adc_cfg_extend =
 {
     .clock_control_data     = ((ADC_B_CLOCK_SOURCE_PCLKC << R_ADC_B0_ADCLKCR_CLKSEL_Pos) |
                                (ADC_B_CLOCK_DIV_1 << R_ADC_B0_ADCLKCR_DIVR_Pos)),
@@ -2678,7 +2678,7 @@ const adc_b_extended_cfg_t g_adc0_cfg_extend =
                               (5 << R_ADC_B0_ADCALSTCR_CALADCST_Pos)),
     .calibration_sample_and_hold = ((95 << R_ADC_B0_ADCALSHCR_CALSHSST_Pos) |
                                     (5 << R_ADC_B0_ADCALSHCR_CALSHHST_Pos)),
-   .p_isr_cfg = &g_adc0_isr_cfg,
+   .p_isr_cfg = &g_adc_isr_cfg,
    .sampling_state_tables = {
                             ((95  << R_ADC_B0_ADSSTR0_SST0_Pos)  | (95  << R_ADC_B0_ADSSTR0_SST1_Pos)),
                             ((95  << R_ADC_B0_ADSSTR1_SST2_Pos)  | (95  << R_ADC_B0_ADSSTR1_SST3_Pos)),
@@ -2768,7 +2768,7 @@ const adc_b_extended_cfg_t g_adc0_cfg_extend =
 };
 
 
-const adc_cfg_t g_adc0_cfg =
+const adc_cfg_t g_adc_cfg =
 {
     .unit                = 0xFFFC,
     .mode                = (adc_mode_t) 0, // Unused
@@ -2781,7 +2781,7 @@ const adc_cfg_t g_adc0_cfg =
 #else
     .p_context           = &NULL,
 #endif
-    .p_extend            = &g_adc0_cfg_extend,
+    .p_extend            = &g_adc_cfg_extend,
 
     .scan_end_irq        = FSP_INVALID_VECTOR,
     .scan_end_ipl        = BSP_IRQ_DISABLED,
@@ -2790,14 +2790,14 @@ const adc_cfg_t g_adc0_cfg =
 };
 
 
-adc_b_instance_ctrl_t g_adc0_ctrl;
+adc_b_instance_ctrl_t g_adc_ctrl;
 
 
-const adc_instance_t g_adc0 =
+const adc_instance_t g_adc =
 {
-    .p_ctrl    = &g_adc0_ctrl,
-    .p_cfg = &g_adc0_cfg,
-    .p_channel_cfg = &g_adc0_scan_cfg,
+    .p_ctrl    = &g_adc_ctrl,
+    .p_cfg = &g_adc_cfg,
+    .p_channel_cfg = &g_adc_scan_cfg,
     .p_api     = &g_adc_on_adc_b,
 };
 

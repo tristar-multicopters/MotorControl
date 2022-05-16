@@ -15,7 +15,7 @@
 #include "mc_interface.h"
 
 /* Initializes the Motor subsystem core according to user defined parameters. */
-void MCboot( MCI_Handle_t* pMCIList[], MCT_Handle_t* pMCTList[] );
+void MCboot(void);
 
 /* Runs all the Tasks of the Motor Control cockpit */
 void MC_RunMotorControlTasks(void);

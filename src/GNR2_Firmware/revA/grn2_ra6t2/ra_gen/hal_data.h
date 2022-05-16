@@ -12,12 +12,12 @@
             #include "r_three_phase_api.h"
 FSP_HEADER
 /** ADC on ADC_B instance. */
-                    extern const adc_instance_t g_adc0;
+                    extern const adc_instance_t g_adc;
 
                     /** Access the ADC_B instance using these structures when calling API functions directly (::p_api is not used). */
-                    extern adc_b_instance_ctrl_t g_adc0_ctrl;
-                    extern const adc_cfg_t g_adc0_cfg;
-                    extern const adc_b_scan_cfg_t g_adc0_scan_cfg;
+                    extern adc_b_instance_ctrl_t g_adc_ctrl;
+                    extern const adc_cfg_t g_adc_cfg;
+                    extern const adc_b_scan_cfg_t g_adc_scan_cfg;
 
                     #ifndef CS_ADC_IRQHandler
                     void CS_ADC_IRQHandler(adc_callback_args_t * p_args);

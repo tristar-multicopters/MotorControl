@@ -435,9 +435,9 @@
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
             </File>
             <File>
-              <FileName>parameters_conversion_g4xx.h</FileName>
+              <FileName>parameters_conversion_ra6t2.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion_g4xx.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
             <File>
               <FileName>pmsm_motor_parameters.h</FileName>

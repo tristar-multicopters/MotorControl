@@ -356,7 +356,7 @@
       <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_prohibited"/>
     </module>
     <module id="module.driver.adc_on_adc_b.850742548">
-      <property id="module.driver.adc.name" value="g_adc0"/>
+      <property id="module.driver.adc.name" value="g_adc"/>
       <property id="module.driver.adc.adc_0_mode" value="module.driver.adc.adc_0_mode.single_scan"/>
       <property id="module.driver.adc.adc_1_mode" value="module.driver.adc.adc_1_mode.single_scan"/>
       <property id="module.driver.adc.adc_0_conversion_state" value="5"/>
@@ -465,7 +465,7 @@
       <property id="module.driver.adc.virtual_channel_0_add_average_mode" value="module.driver.adc.virtual_channel_0_add_average_mode.disabled"/>
       <property id="module.driver.adc.virtual_channel_0_add_average_count" value="module.driver.adc.virtual_channel_0_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_0_limit_clip_table_id" value="module.driver.adc.virtual_channel_0_limit_clip_table_id.disabled"/>
-      <property id="module.driver.adc.virtual_channel_0_resolution_format" value="module.driver.adc.virtual_channel_0_resolution_format.12_bit_data_format"/>
+      <property id="module.driver.adc.virtual_channel_0_resolution_format" value="module.driver.adc.virtual_channel_0_resolution_format.16_bit_data_format"/>
       <property id="module.driver.adc.virtual_channel_1_scan_group" value="module.driver.adc.virtual_channel_1_scan_group.scan_group_0"/>
       <property id="module.driver.adc.virtual_channel_1_channel_select" value="module.driver.adc.virtual_channel_1_channel_select.an002"/>
       <property id="module.driver.adc.virtual_channel_1_sampling_table_id" value="module.driver.adc.virtual_channel_1_sampling_table_id.sampling_state_entry_0"/>
@@ -474,7 +474,7 @@
       <property id="module.driver.adc.virtual_channel_1_add_average_mode" value="module.driver.adc.virtual_channel_1_add_average_mode.disabled"/>
       <property id="module.driver.adc.virtual_channel_1_add_average_count" value="module.driver.adc.virtual_channel_1_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_1_limit_clip_table_id" value="module.driver.adc.virtual_channel_1_limit_clip_table_id.disabled"/>
-      <property id="module.driver.adc.virtual_channel_1_resolution_format" value="module.driver.adc.virtual_channel_1_resolution_format.12_bit_data_format"/>
+      <property id="module.driver.adc.virtual_channel_1_resolution_format" value="module.driver.adc.virtual_channel_1_resolution_format.16_bit_data_format"/>
       <property id="module.driver.adc.virtual_channel_2_scan_group" value="module.driver.adc.virtual_channel_2_scan_group.none"/>
       <property id="module.driver.adc.virtual_channel_2_channel_select" value="module.driver.adc.virtual_channel_2_channel_select.an000"/>
       <property id="module.driver.adc.virtual_channel_2_sampling_table_id" value="module.driver.adc.virtual_channel_2_sampling_table_id.sampling_state_entry_0"/>
@@ -797,7 +797,7 @@
       <property id="module.driver.adc.scan_group_0_scan_end_isr_enable" value="module.driver.adc.scan_group_0_scan_end_isr_enable.enable"/>
       <property id="module.driver.adc.scan_group_0_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_0_elc_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_0_gpt_trigger_enable_mask" value="module.driver.adc.scan_group_0_gpt_trigger_enable_mask.gpt_channel_4_request_a"/>
+      <property id="module.driver.adc.scan_group_0_gpt_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_0_limit_clip_isr_enable" value="module.driver.adc.scan_group_0_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_0_fifo_enable" value="module.driver.adc.scan_group_0_fifo_enable.enable"/>
       <property id="module.driver.adc.scan_group_0_fifo_isr_enable" value="module.driver.adc.scan_group_0_fifo_isr_enable.disable"/>

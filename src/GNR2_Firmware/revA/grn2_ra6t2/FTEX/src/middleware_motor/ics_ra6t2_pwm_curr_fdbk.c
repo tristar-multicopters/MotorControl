@@ -21,8 +21,8 @@
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-static void ICS_TIMxInit( three_phase_instance_t * TIMx, PWMC_Handle_t * pHdl );
-static void ICS_ADCxInit( adc_instance_t * ADCx );
+static bool ICS_TIMxInit( const three_phase_instance_t * TIMx, PWMC_Handle_t * pHdl );
+static bool ICS_ADCxInit( const adc_instance_t * ADCx );
 static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl,ab_t * Iab );
 
 /**
@@ -31,14 +31,21 @@ static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl,ab_t * Iab );
   * @param  pHandle: handler of the current instance of the PWM component
   * @retval none
   */
-void ICS_Init( PWMC_ICS_Handle_t * pHandle )
+bool ICS_Init( PWMC_ICS_Handle_t * pHandle )
 {
-
+	bool err = false;
+	
+	ICS_ADCxInit(pHandle->pParams_str->pADCHandle);
+	ICS_TIMxInit(pHandle->pParams_str->pThreePhaseHandle, &pHandle->_Super);
+	
+	return err;
 }
 
-static void ICS_ADCxInit( adc_instance_t * ADCx )
+static bool ICS_ADCxInit( const adc_instance_t * ADCx )
 {
+	bool err = false;
 	
+	return err;
 }
 
 /**
@@ -47,9 +54,11 @@ static void ICS_ADCxInit( adc_instance_t * ADCx )
   * @param pHandle: handler of the current instance of the PWM component
   * @retval none
   */
-static void ICS_TIMxInit( three_phase_instance_t * TIMx, PWMC_Handle_t * pHdl )
+static bool ICS_TIMxInit( const three_phase_instance_t * TIMx, PWMC_Handle_t * pHdl )
 {
+	bool err = false;
 
+	return err;
 }
 
 /**
@@ -72,7 +81,56 @@ void ICS_CurrentReadingPolarization( PWMC_Handle_t * pHdl )
   */ 
 void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
 {
+	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	
+	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIa, &pHandle->IaRaw);
+	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIb, &pHandle->IbRaw);
+	
+  int32_t aux;
+  uint16_t reg;
+  
+  /* disable ADC trigger source */
+  //LL_TIM_SetTriggerOutput(TIMx, LL_TIM_TRGO_RESET);
+  
+  /* Ia = (hPhaseAOffset)-(PHASE_A_ADC_CHANNEL value)  */
+  reg = ( uint16_t )( pHandle->IaRaw );
+  aux = ( int32_t )( reg ) - ( int32_t )( pHandle->PhaseAOffset );
 
+  /* Saturation of Ia */
+  if ( aux < -INT16_MAX )
+  {
+	  Iab->a = -INT16_MAX;
+  }
+  else  if ( aux > INT16_MAX )
+  {
+	  Iab->a = INT16_MAX;
+  }
+  else
+  {
+	  Iab->a = ( int16_t )aux;
+  }
+
+  /* Ib = (hPhaseBOffset)-(PHASE_B_ADC_CHANNEL value) */
+  reg = ( uint16_t )( pHandle->IbRaw );
+  aux = ( int32_t )( reg ) - ( int32_t )( pHandle->PhaseBOffset );
+
+  /* Saturation of Ib */
+  if ( aux < -INT16_MAX )
+  {
+	  Iab->b = -INT16_MAX;
+  }
+  else  if ( aux > INT16_MAX )
+  {
+	  Iab->b = INT16_MAX;
+  }
+  else
+  {
+	  Iab->b = ( int16_t )aux;
+  }
+
+  pHandle->_Super.Ia = Iab->a;
+  pHandle->_Super.Ib = Iab->b;
+  pHandle->_Super.Ic = -Iab->a - Iab->b;
 }
 
 /**
