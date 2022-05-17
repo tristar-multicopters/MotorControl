@@ -60,34 +60,44 @@ void gnr_main(void)
 
 static bool ADCInit(void)
 {
-	bool err = false;
+	bool bIsError = false;
 	
-	err |= (bool)R_ADC_B_Open(g_adc.p_ctrl, g_adc.p_cfg);
+	bIsError |= (bool)R_ADC_B_Open(g_adc.p_ctrl, g_adc.p_cfg);
 	
-	err |= (bool)R_ADC_B_Calibrate(g_adc.p_ctrl, NULL);
+	bIsError |= (bool)R_ADC_B_Calibrate(g_adc.p_ctrl, NULL);
 
 	/* Wait for calibration to complete */
 	adc_status_t status = {.state = ADC_STATE_SCAN_IN_PROGRESS};
 	while ((ADC_STATE_SCAN_IN_PROGRESS == status.state) &&
-				 (FSP_SUCCESS == err))
+				 (FSP_SUCCESS == bIsError))
 	{
-			err |= (bool)R_ADC_B_StatusGet(g_adc.p_ctrl, &status);
+			bIsError |= (bool)R_ADC_B_StatusGet(g_adc.p_ctrl, &status);
 	}
 	
-	err |= R_ADC_B_ScanCfg(g_adc.p_ctrl, &g_adc_scan_cfg);
+	bIsError |= R_ADC_B_ScanCfg(g_adc.p_ctrl, &g_adc_scan_cfg);
 	
-	return err;
+	return bIsError;
 }
 
 static bool GPTInit(void)
 {
-	bool err = false;
+	bool bIsError = false;
 	
-	err |= R_GPT_THREE_PHASE_Open(g_three_phase0.p_ctrl, g_three_phase0.p_cfg);
-
-	/* Start the timer. */
-	err |= (bool)R_GPT_THREE_PHASE_Start(g_three_phase0.p_ctrl);
+	bIsError |= R_GPT_THREE_PHASE_Open(g_three_phase0.p_ctrl, g_three_phase0.p_cfg);
 	
-	return err;
+	/* Frequency setup */
+	bIsError |= R_GPT_PeriodSet(g_three_phase0.p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_U]->p_ctrl, PWM_PERIOD_CYCLES/2);
+	bIsError |= R_GPT_PeriodSet(g_three_phase0.p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_V]->p_ctrl, PWM_PERIOD_CYCLES/2);
+	bIsError |= R_GPT_PeriodSet(g_three_phase0.p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_W]->p_ctrl, PWM_PERIOD_CYCLES/2);
+	
+	/* Deatime setup */
+	g_timer4_ctrl.p_reg->GTDVU = DEAD_TIME_COUNTS;
+	g_timer4_ctrl.p_reg->GTDVD = DEAD_TIME_COUNTS;
+	g_timer5_ctrl.p_reg->GTDVU = DEAD_TIME_COUNTS;
+	g_timer5_ctrl.p_reg->GTDVD = DEAD_TIME_COUNTS;
+	g_timer6_ctrl.p_reg->GTDVU = DEAD_TIME_COUNTS;
+	g_timer6_ctrl.p_reg->GTDVD = DEAD_TIME_COUNTS;
+	
+	return bIsError;
 }	
 

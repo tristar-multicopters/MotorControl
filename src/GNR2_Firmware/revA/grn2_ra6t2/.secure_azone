@@ -25,6 +25,11 @@
             <slot name="PC11" secure="false"/>
             <slot name="PC12" secure="false"/>
         </peripheral>
+        <peripheral name="PORTD" group="PORT">
+            <slot name="PD01" secure="false"/>
+            <slot name="PD02" secure="false"/>
+            <slot name="PD03" secure="false"/>
+        </peripheral>
         <peripheral name="GPT4" group="GPT" security=""/>
         <peripheral name="GPT5" group="GPT" security=""/>
         <peripheral name="GPT6" group="GPT" security=""/>
@@ -50,6 +55,7 @@
             <slot name="IRQ18" secure="false"/>
             <slot name="IRQ19" secure="false"/>
             <slot name="IRQ20" secure="false"/>
+            <slot name="IRQ21" secure="false"/>
         </peripheral>
     </partition>
 </azone>

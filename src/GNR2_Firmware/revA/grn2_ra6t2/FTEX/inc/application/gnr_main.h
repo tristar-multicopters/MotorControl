@@ -12,6 +12,8 @@
 #include <rtx_os.h>
 //#include "EventRecorder.h"
 
+#include "parameters_conversion.h"
+
 
 
 /* Defines --------------------------------------------------------------------*/
@@ -33,14 +35,6 @@
 /* Function Prototypes ------------------------------------------------------------*/
 
 void gnr_main(void);
-
-__NO_RETURN void TSK_0 (void * pvParameter);
-
-__NO_RETURN void TSK_1 (void * pvParameter);
-
-__NO_RETURN void TSK_2 (void * pvParameter);
-
-__NO_RETURN void TSK_3 (void * pvParameter);
 
 
 

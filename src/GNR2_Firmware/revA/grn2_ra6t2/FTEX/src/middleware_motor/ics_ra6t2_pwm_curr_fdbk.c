@@ -33,19 +33,19 @@ static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl,ab_t * Iab );
   */
 bool ICS_Init( PWMC_ICS_Handle_t * pHandle )
 {
-	bool err = false;
+	bool bIsError = false;
 	
 	ICS_ADCxInit(pHandle->pParams_str->pADCHandle);
 	ICS_TIMxInit(pHandle->pParams_str->pThreePhaseHandle, &pHandle->_Super);
 	
-	return err;
+	return bIsError;
 }
 
 static bool ICS_ADCxInit( const adc_instance_t * ADCx )
 {
-	bool err = false;
+	bool bIsError = false;
 	
-	return err;
+	return bIsError;
 }
 
 /**
@@ -56,9 +56,9 @@ static bool ICS_ADCxInit( const adc_instance_t * ADCx )
   */
 static bool ICS_TIMxInit( const three_phase_instance_t * TIMx, PWMC_Handle_t * pHdl )
 {
-	bool err = false;
+	bool bIsError = false;
 
-	return err;
+	return bIsError;
 }
 
 /**
@@ -83,8 +83,8 @@ void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
 {
 	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
 	
-	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIa, &pHandle->IaRaw);
-	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIb, &pHandle->IbRaw);
+	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIa, &pHandle->hIaRaw);
+	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIb, &pHandle->hIbRaw);
 	
   int32_t aux;
   uint16_t reg;
@@ -93,7 +93,7 @@ void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
   //LL_TIM_SetTriggerOutput(TIMx, LL_TIM_TRGO_RESET);
   
   /* Ia = (hPhaseAOffset)-(PHASE_A_ADC_CHANNEL value)  */
-  reg = ( uint16_t )( pHandle->IaRaw );
+  reg = ( uint16_t )( pHandle->hIaRaw );
   aux = ( int32_t )( reg ) - ( int32_t )( pHandle->PhaseAOffset );
 
   /* Saturation of Ia */
@@ -111,7 +111,7 @@ void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
   }
 
   /* Ib = (hPhaseBOffset)-(PHASE_B_ADC_CHANNEL value) */
-  reg = ( uint16_t )( pHandle->IbRaw );
+  reg = ( uint16_t )( pHandle->hIbRaw );
   aux = ( int32_t )( reg ) - ( int32_t )( pHandle->PhaseBOffset );
 
   /* Saturation of Ib */
@@ -142,7 +142,17 @@ void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
   */
 uint16_t ICS_WriteTIMRegisters( PWMC_Handle_t * pHdl )
 {
-
+	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	
+	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->_Super.CntPhA;
+	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->_Super.CntPhB;
+	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->_Super.CntPhC;
+	
+	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &pHandle->sDutyCycle);
+	
+	// TODO: Check for FOC overrun
+	
+	return 0;
 }
 /**
   * @brief  Implementation of PWMC_GetPhaseCurrents to be performed during
@@ -167,7 +177,17 @@ static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl, ab_t * Iab )
   */
 void ICS_TurnOnLowSides( PWMC_Handle_t * pHdl )
 {
-
+	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	
+	pHandle->_Super.TurnOnLowSidesAction = true;
+	
+	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = 0;
+	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = 0;
+	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = 0;
+	
+	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &pHandle->sDutyCycle);
+	
+	R_GPT_THREE_PHASE_Start(pHandle->pParams_str->pThreePhaseHandle->p_ctrl);
 }
 
 
@@ -179,7 +199,18 @@ void ICS_TurnOnLowSides( PWMC_Handle_t * pHdl )
   */
 void ICS_SwitchOnPWM( PWMC_Handle_t * pHdl )
 {
-
+	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	
+	pHandle->_Super.TurnOnLowSidesAction = false;
+	
+  /* Set all duty to 50% */
+  pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->Half_PWMPeriod / 2;
+  pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->Half_PWMPeriod / 2;
+  pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->Half_PWMPeriod / 2;
+	
+	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &pHandle->sDutyCycle);
+	
+	R_GPT_THREE_PHASE_Start(pHandle->pParams_str->pThreePhaseHandle->p_ctrl);
 }
 
 
@@ -191,7 +222,11 @@ void ICS_SwitchOnPWM( PWMC_Handle_t * pHdl )
   */
 void ICS_SwitchOffPWM( PWMC_Handle_t * pHdl )
 {
-
+	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	
+	pHandle->_Super.TurnOnLowSidesAction = false;
+	
+	R_GPT_THREE_PHASE_Stop(pHandle->pParams_str->pThreePhaseHandle->p_ctrl);
 }
 
 /**
@@ -201,7 +236,7 @@ void ICS_SwitchOffPWM( PWMC_Handle_t * pHdl )
   */
 void * ICS_TIMx_UP_IRQHandler( PWMC_ICS_Handle_t * pHandle )
 {
-
+	return &( pHandle->_Super.Motor );
 }
 
 /**

@@ -4,18 +4,8 @@
   * @author  FTEX inc
   * @brief   Motor Control Subsystem components configuration and handler structures.
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+*/
+
 #include "gnr_main.h"
 #include "mc_type.h"
 #include "parameters_conversion.h"
@@ -191,8 +181,11 @@ PWMC_ICS_Handle_t PWM_Handle_M1 = {
     .Toff                = TOFF
 
   },
-	.IaRaw = 0,
-	.IbRaw = 0,
+	.hIaRaw = 0,
+	.hIbRaw = 0,
+	.sDutyCycle = {
+		.duty = {500, 1000, 2000},
+	},
   .PhaseAOffset = 0,
   .PhaseBOffset = 0,
   .Half_PWMPeriod = PWM_PERIOD_CYCLES/2u,

@@ -199,8 +199,8 @@
     <module id="module.driver.three_phase_on_gpt_three_phase.769777526">
       <property id="module.driver.three_phase.name" value="g_three_phase0"/>
       <property id="module.driver.three_phase.mode" value="module.driver.three_phase.mode.mode_symmetric_pwm"/>
-      <property id="module.driver.three_phase.period" value="20"/>
-      <property id="module.driver.three_phase.unit" value="module.driver.three_phase.unit.unit_frequency_khz"/>
+      <property id="module.driver.three_phase.period" value="10000"/>
+      <property id="module.driver.three_phase.unit" value="module.driver.three_phase.unit.unit_period_raw_counts"/>
       <property id="module.driver.three_phase.channel_u" value="4"/>
       <property id="module.driver.three_phase.channel_v" value="5"/>
       <property id="module.driver.three_phase.channel_w" value="6"/>
@@ -208,8 +208,8 @@
       <property id="module.driver.three_phase.buffer_mode" value="module.driver.three_phase.buffer_mode.single"/>
       <property id="module.driver.three_phase.gtioca_stop_level" value="module.driver.three_phase.gtioca_stop_level.pin_level_low"/>
       <property id="module.driver.three_phase.gtiocb_stop_level" value="module.driver.three_phase.gtiocb_stop_level.pin_level_low"/>
-      <property id="module.driver.three_phase.dead_time_count_up" value="10"/>
-      <property id="module.driver.three_phase.dead_time_count_down" value="5"/>
+      <property id="module.driver.three_phase.dead_time_count_up" value="50"/>
+      <property id="module.driver.three_phase.dead_time_count_down" value="50"/>
     </module>
     <module id="module.driver.timer_on_gpt.2126444337">
       <property id="module.driver.timer.name" value="g_timer4"/>
@@ -218,14 +218,14 @@
       <property id="module.driver.timer.period" value="0x100000000"/>
       <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_raw_counts"/>
       <property id="module.driver.timer.gtior.gtioa.initial_output_level" value="module.driver.timer.gtior.gtioa.initial_output_level.low"/>
-      <property id="module.driver.timer.gtior.gtioa.cycle_end_output_level" value="module.driver.timer.gtior.gtioa.cycle_end_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtioa.compare_match_output_level" value="module.driver.timer.gtior.gtioa.compare_match_output_level.retain"/>
+      <property id="module.driver.timer.gtior.gtioa.cycle_end_output_level" value="module.driver.timer.gtior.gtioa.cycle_end_output_level.low"/>
+      <property id="module.driver.timer.gtior.gtioa.compare_match_output_level" value="module.driver.timer.gtior.gtioa.compare_match_output_level.toggle"/>
       <property id="module.driver.timer.gtior.gtioa.count_stop_retain" value="module.driver.timer.gtior.gtioa.count_stop_retain.disabled"/>
-      <property id="module.driver.timer.gtior.gtiob.initial_output_level" value="module.driver.timer.gtior.gtiob.initial_output_level.low"/>
-      <property id="module.driver.timer.gtior.gtiob.cycle_end_output_level" value="module.driver.timer.gtior.gtiob.cycle_end_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtiob.compare_match_output_level" value="module.driver.timer.gtior.gtiob.compare_match_output_level.retain"/>
+      <property id="module.driver.timer.gtior.gtiob.initial_output_level" value="module.driver.timer.gtior.gtiob.initial_output_level.high"/>
+      <property id="module.driver.timer.gtior.gtiob.cycle_end_output_level" value="module.driver.timer.gtior.gtiob.cycle_end_output_level.high"/>
+      <property id="module.driver.timer.gtior.gtiob.compare_match_output_level" value="module.driver.timer.gtior.gtiob.compare_match_output_level.toggle"/>
       <property id="module.driver.timer.gtior.gtiob.count_stop_retain" value="module.driver.timer.gtior.gtiob.count_stop_retain.disabled"/>
-      <property id="module.driver.timer.gtior.custom_waveform_enable" value="module.driver.timer.gtior.custom_waveform_enable.disabled"/>
+      <property id="module.driver.timer.gtior.custom_waveform_enable" value="module.driver.timer.gtior.custom_waveform_enable.enabled"/>
       <property id="module.driver.timer.duty_cycle" value="50"/>
       <property id="module.driver.timer.gtioca_output_enabled" value="module.driver.timer.gtioca_output_enabled.false"/>
       <property id="module.driver.timer.gtioca_stop_level" value="module.driver.timer.gtioca_stop_level.pin_level_low"/>
@@ -244,11 +244,11 @@
       <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority3"/>
       <property id="module.driver.timer.capture_a_ipl" value="_disabled"/>
       <property id="module.driver.timer.capture_b_ipl" value="_disabled"/>
-      <property id="module.driver.timer.trough_ipl" value="_disabled"/>
+      <property id="module.driver.timer.trough_ipl" value="board.icu.common.irq.priority3"/>
       <property id="module.driver.timer.extra" value="module.driver.timer.extra.disabled"/>
       <property id="module.driver.timer.poeg_link" value="module.driver.timer.poeg_link.poeg_link_poeg0"/>
       <property id="module.driver.timer.output_disable" value=""/>
-      <property id="module.driver.timer.adc_trigger" value="module.driver.timer.adc_trigger.adc_trigger_down_count_start_adc_a"/>
+      <property id="module.driver.timer.adc_trigger" value="module.driver.timer.adc_trigger.adc_trigger_up_count_start_adc_a"/>
       <property id="module.driver.timer.dead_time_count_up" value="0"/>
       <property id="module.driver.timer.dead_time_count_down" value="0"/>
       <property id="module.driver.timer.adc_a_compare_match" value="0"/>
@@ -266,14 +266,14 @@
       <property id="module.driver.timer.period" value="0x100000000"/>
       <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_raw_counts"/>
       <property id="module.driver.timer.gtior.gtioa.initial_output_level" value="module.driver.timer.gtior.gtioa.initial_output_level.low"/>
-      <property id="module.driver.timer.gtior.gtioa.cycle_end_output_level" value="module.driver.timer.gtior.gtioa.cycle_end_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtioa.compare_match_output_level" value="module.driver.timer.gtior.gtioa.compare_match_output_level.retain"/>
+      <property id="module.driver.timer.gtior.gtioa.cycle_end_output_level" value="module.driver.timer.gtior.gtioa.cycle_end_output_level.low"/>
+      <property id="module.driver.timer.gtior.gtioa.compare_match_output_level" value="module.driver.timer.gtior.gtioa.compare_match_output_level.toggle"/>
       <property id="module.driver.timer.gtior.gtioa.count_stop_retain" value="module.driver.timer.gtior.gtioa.count_stop_retain.disabled"/>
-      <property id="module.driver.timer.gtior.gtiob.initial_output_level" value="module.driver.timer.gtior.gtiob.initial_output_level.low"/>
-      <property id="module.driver.timer.gtior.gtiob.cycle_end_output_level" value="module.driver.timer.gtior.gtiob.cycle_end_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtiob.compare_match_output_level" value="module.driver.timer.gtior.gtiob.compare_match_output_level.retain"/>
+      <property id="module.driver.timer.gtior.gtiob.initial_output_level" value="module.driver.timer.gtior.gtiob.initial_output_level.high"/>
+      <property id="module.driver.timer.gtior.gtiob.cycle_end_output_level" value="module.driver.timer.gtior.gtiob.cycle_end_output_level.high"/>
+      <property id="module.driver.timer.gtior.gtiob.compare_match_output_level" value="module.driver.timer.gtior.gtiob.compare_match_output_level.toggle"/>
       <property id="module.driver.timer.gtior.gtiob.count_stop_retain" value="module.driver.timer.gtior.gtiob.count_stop_retain.disabled"/>
-      <property id="module.driver.timer.gtior.custom_waveform_enable" value="module.driver.timer.gtior.custom_waveform_enable.disabled"/>
+      <property id="module.driver.timer.gtior.custom_waveform_enable" value="module.driver.timer.gtior.custom_waveform_enable.enabled"/>
       <property id="module.driver.timer.duty_cycle" value="50"/>
       <property id="module.driver.timer.gtioca_output_enabled" value="module.driver.timer.gtioca_output_enabled.false"/>
       <property id="module.driver.timer.gtioca_stop_level" value="module.driver.timer.gtioca_stop_level.pin_level_low"/>
@@ -314,14 +314,14 @@
       <property id="module.driver.timer.period" value="0x100000000"/>
       <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_raw_counts"/>
       <property id="module.driver.timer.gtior.gtioa.initial_output_level" value="module.driver.timer.gtior.gtioa.initial_output_level.low"/>
-      <property id="module.driver.timer.gtior.gtioa.cycle_end_output_level" value="module.driver.timer.gtior.gtioa.cycle_end_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtioa.compare_match_output_level" value="module.driver.timer.gtior.gtioa.compare_match_output_level.retain"/>
+      <property id="module.driver.timer.gtior.gtioa.cycle_end_output_level" value="module.driver.timer.gtior.gtioa.cycle_end_output_level.low"/>
+      <property id="module.driver.timer.gtior.gtioa.compare_match_output_level" value="module.driver.timer.gtior.gtioa.compare_match_output_level.toggle"/>
       <property id="module.driver.timer.gtior.gtioa.count_stop_retain" value="module.driver.timer.gtior.gtioa.count_stop_retain.disabled"/>
-      <property id="module.driver.timer.gtior.gtiob.initial_output_level" value="module.driver.timer.gtior.gtiob.initial_output_level.low"/>
-      <property id="module.driver.timer.gtior.gtiob.cycle_end_output_level" value="module.driver.timer.gtior.gtiob.cycle_end_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtiob.compare_match_output_level" value="module.driver.timer.gtior.gtiob.compare_match_output_level.retain"/>
+      <property id="module.driver.timer.gtior.gtiob.initial_output_level" value="module.driver.timer.gtior.gtiob.initial_output_level.high"/>
+      <property id="module.driver.timer.gtior.gtiob.cycle_end_output_level" value="module.driver.timer.gtior.gtiob.cycle_end_output_level.high"/>
+      <property id="module.driver.timer.gtior.gtiob.compare_match_output_level" value="module.driver.timer.gtior.gtiob.compare_match_output_level.toggle"/>
       <property id="module.driver.timer.gtior.gtiob.count_stop_retain" value="module.driver.timer.gtior.gtiob.count_stop_retain.disabled"/>
-      <property id="module.driver.timer.gtior.custom_waveform_enable" value="module.driver.timer.gtior.custom_waveform_enable.disabled"/>
+      <property id="module.driver.timer.gtior.custom_waveform_enable" value="module.driver.timer.gtior.custom_waveform_enable.enabled"/>
       <property id="module.driver.timer.duty_cycle" value="50"/>
       <property id="module.driver.timer.gtioca_output_enabled" value="module.driver.timer.gtioca_output_enabled.false"/>
       <property id="module.driver.timer.gtioca_stop_level" value="module.driver.timer.gtioca_stop_level.pin_level_low"/>
@@ -797,7 +797,7 @@
       <property id="module.driver.adc.scan_group_0_scan_end_isr_enable" value="module.driver.adc.scan_group_0_scan_end_isr_enable.enable"/>
       <property id="module.driver.adc.scan_group_0_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_0_elc_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_0_gpt_trigger_enable_mask" value=""/>
+      <property id="module.driver.adc.scan_group_0_gpt_trigger_enable_mask" value="module.driver.adc.scan_group_0_gpt_trigger_enable_mask.gpt_channel_4_request_a"/>
       <property id="module.driver.adc.scan_group_0_limit_clip_isr_enable" value="module.driver.adc.scan_group_0_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_0_fifo_enable" value="module.driver.adc.scan_group_0_fifo_enable.enable"/>
       <property id="module.driver.adc.scan_group_0_fifo_isr_enable" value="module.driver.adc.scan_group_0_fifo_isr_enable.disable"/>
@@ -968,9 +968,9 @@
     <symbolicName propertyId="pc14.symbolic_name" value="M1_GTE_TRG_OCD2_U"/>
     <symbolicName propertyId="pc15.symbolic_name" value="M1_GTE_TRG_OCD2_V"/>
     <symbolicName propertyId="pd00.symbolic_name" value="SPI_MEM_CSN"/>
-    <symbolicName propertyId="pd01.symbolic_name" value="SPI_MEM_HOLDN"/>
-    <symbolicName propertyId="pd02.symbolic_name" value="NC_8"/>
-    <symbolicName propertyId="pd03.symbolic_name" value="SPI_MEM_WPN"/>
+    <symbolicName propertyId="pd01.symbolic_name" value="LED1"/>
+    <symbolicName propertyId="pd02.symbolic_name" value="LED2"/>
+    <symbolicName propertyId="pd03.symbolic_name" value="LED3"/>
     <symbolicName propertyId="pd04.symbolic_name" value="NC_9"/>
     <symbolicName propertyId="pd05.symbolic_name" value="USART_TX9"/>
     <symbolicName propertyId="pd06.symbolic_name" value="USART_RX9"/>
@@ -1050,6 +1050,12 @@
       <configSetting altId="pc12.spi1.mosi1" configurationId="pc12"/>
       <configSetting altId="pc12.gpio_speed.gpio_speed_m" configurationId="pc12.gpio_drivecapacity"/>
       <configSetting altId="pc12.gpio_mode.gpio_mode_peripheral" configurationId="pc12.gpio_mode"/>
+      <configSetting altId="pd01.output.low" configurationId="pd01"/>
+      <configSetting altId="pd01.gpio_mode.gpio_mode_out.low" configurationId="pd01.gpio_mode"/>
+      <configSetting altId="pd02.output.low" configurationId="pd02"/>
+      <configSetting altId="pd02.gpio_mode.gpio_mode_out.low" configurationId="pd02.gpio_mode"/>
+      <configSetting altId="pd03.output.low" configurationId="pd03"/>
+      <configSetting altId="pd03.gpio_mode.gpio_mode_out.low" configurationId="pd03.gpio_mode"/>
       <configSetting altId="spi1.miso1.pc11" configurationId="spi1.miso1"/>
       <configSetting altId="spi1.mode.enabled.b" configurationId="spi1.mode"/>
       <configSetting altId="spi1.mosi1.pc12" configurationId="spi1.mosi1"/>

@@ -720,9 +720,13 @@ __NO_RETURN void startMCMediumFrequencyTask(void * pvParameter)
 {
 	MCboot();
 	
+	ICS_SwitchOnPWM( &PWM_Handle_M1._Super );
+	
   /* Infinite loop */
   for(;;)
   {
+		R_GPT_THREE_PHASE_DutyCycleSet(g_three_phase0.p_ctrl, &PWM_Handle_M1.sDutyCycle);
+		
     /* delay of 500us */
     osDelay(1);
   }

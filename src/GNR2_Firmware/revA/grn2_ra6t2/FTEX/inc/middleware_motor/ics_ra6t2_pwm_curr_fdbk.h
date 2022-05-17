@@ -66,8 +66,10 @@ typedef struct
 {
   PWMC_Handle_t _Super;     /*!<   */
 	
-	uint16_t IaRaw;
-	uint16_t IbRaw;
+	uint16_t hIaRaw;
+	uint16_t hIbRaw;
+	
+	three_phase_duty_cycle_t sDutyCycle;
 	
   uint32_t PhaseAOffset;   /*!< Offset of Phase A current sensing network  */
   uint32_t PhaseBOffset;   /*!< Offset of Phase B current sensing network  */

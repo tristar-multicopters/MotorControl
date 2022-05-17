@@ -68,6 +68,9 @@
       <configSetting altId="jtag_fslash_swd.swclk.pa14" configurationId="jtag_fslash_swd.swclk"/>
       <configSetting altId="jtag_fslash_swd.swdio.pa13" configurationId="jtag_fslash_swd.swdio"/>
       <configSetting altId="jtag_fslash_swd.swo.pb03" configurationId="jtag_fslash_swd.swo"/>
+      <configSetting altId="pd01.output.low" configurationId="pd01"/>
+      <configSetting altId="pd02.output.low" configurationId="pd02"/>
+      <configSetting altId="pd03.output.low" configurationId="pd03"/>
       <configSetting altId="spi1.miso1.pc11" configurationId="spi1.miso1"/>
       <configSetting altId="spi1.mosi1.pc12" configurationId="spi1.mosi1"/>
       <configSetting altId="spi1.rspck1.pc10" configurationId="spi1.rspck1"/>

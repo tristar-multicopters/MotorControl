@@ -2228,7 +2228,7 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .scan_end_interrupt_enable       = (1),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
-                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
+                         .gpt_trigger_enable_mask         = (0x10 |  ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2816,8 +2816,8 @@ const gpt_extended_pwm_cfg_t g_timer6_pwm_extend =
     .poeg_link           = GPT_POEG_LINK_POEG0,
     .output_disable      =  GPT_OUTPUT_DISABLE_NONE,
     .adc_trigger         =  GPT_ADC_TRIGGER_NONE,
-    .dead_time_count_up  = 10,
-    .dead_time_count_down = 5,
+    .dead_time_count_up  = 50,
+    .dead_time_count_down = 50,
     .adc_a_compare_match = 0,
     .adc_b_compare_match = 0,
     .interrupt_skip_source = GPT_INTERRUPT_SKIP_SOURCE_NONE,
@@ -2861,15 +2861,15 @@ const gpt_extended_cfg_t g_timer6_extend =
 #else
     .p_pwm_cfg                   = NULL,
 #endif
-#if 0
-    .gtior_setting.gtior_b.gtioa  = (0U << 4U) | (0U << 2U) | (0U << 0U),
+#if 1
+    .gtior_setting.gtior_b.gtioa  = (0U << 4U) | (1U << 2U) | (3U << 0U),
     .gtior_setting.gtior_b.oadflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.oahld  = 0U,
     .gtior_setting.gtior_b.oae    = (uint32_t) true,
     .gtior_setting.gtior_b.oadf   = (uint32_t) GPT_GTIOC_DISABLE_PROHIBITED,
     .gtior_setting.gtior_b.nfaen  = ((uint32_t) GPT_CAPTURE_FILTER_NONE & 1U),
     .gtior_setting.gtior_b.nfcsa  = ((uint32_t) GPT_CAPTURE_FILTER_NONE >> 1U),
-    .gtior_setting.gtior_b.gtiob  = (0U << 4U) | (0U << 2U) | (0U << 0U),
+    .gtior_setting.gtior_b.gtiob  = (1U << 4U) | (2U << 2U) | (3U << 0U),
     .gtior_setting.gtior_b.obdflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.obhld  = 0U,
     .gtior_setting.gtior_b.obe    = (uint32_t) true,
@@ -2883,7 +2883,7 @@ const gpt_extended_cfg_t g_timer6_extend =
 const timer_cfg_t g_timer6_cfg =
 {
     .mode                = TIMER_MODE_TRIANGLE_WAVE_SYMMETRIC_PWM,
-    /* Actual period: 0.00005 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0xbb8, .duty_cycle_counts = 0x5dc, .source_div = (timer_source_div_t)0,
+    /* Actual period: 0.00016666666666666666 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0x2710, .duty_cycle_counts = 0x1388, .source_div = (timer_source_div_t)0,
     .channel             = 6,
     .p_callback          = NULL,
     /** If NULL then do not add & */
@@ -2920,8 +2920,8 @@ const gpt_extended_pwm_cfg_t g_timer5_pwm_extend =
     .poeg_link           = GPT_POEG_LINK_POEG0,
     .output_disable      =  GPT_OUTPUT_DISABLE_NONE,
     .adc_trigger         =  GPT_ADC_TRIGGER_NONE,
-    .dead_time_count_up  = 10,
-    .dead_time_count_down = 5,
+    .dead_time_count_up  = 50,
+    .dead_time_count_down = 50,
     .adc_a_compare_match = 0,
     .adc_b_compare_match = 0,
     .interrupt_skip_source = GPT_INTERRUPT_SKIP_SOURCE_NONE,
@@ -2965,15 +2965,15 @@ const gpt_extended_cfg_t g_timer5_extend =
 #else
     .p_pwm_cfg                   = NULL,
 #endif
-#if 0
-    .gtior_setting.gtior_b.gtioa  = (0U << 4U) | (0U << 2U) | (0U << 0U),
+#if 1
+    .gtior_setting.gtior_b.gtioa  = (0U << 4U) | (1U << 2U) | (3U << 0U),
     .gtior_setting.gtior_b.oadflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.oahld  = 0U,
     .gtior_setting.gtior_b.oae    = (uint32_t) true,
     .gtior_setting.gtior_b.oadf   = (uint32_t) GPT_GTIOC_DISABLE_PROHIBITED,
     .gtior_setting.gtior_b.nfaen  = ((uint32_t) GPT_CAPTURE_FILTER_NONE & 1U),
     .gtior_setting.gtior_b.nfcsa  = ((uint32_t) GPT_CAPTURE_FILTER_NONE >> 1U),
-    .gtior_setting.gtior_b.gtiob  = (0U << 4U) | (0U << 2U) | (0U << 0U),
+    .gtior_setting.gtior_b.gtiob  = (1U << 4U) | (2U << 2U) | (3U << 0U),
     .gtior_setting.gtior_b.obdflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.obhld  = 0U,
     .gtior_setting.gtior_b.obe    = (uint32_t) true,
@@ -2987,7 +2987,7 @@ const gpt_extended_cfg_t g_timer5_extend =
 const timer_cfg_t g_timer5_cfg =
 {
     .mode                = TIMER_MODE_TRIANGLE_WAVE_SYMMETRIC_PWM,
-    /* Actual period: 0.00005 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0xbb8, .duty_cycle_counts = 0x5dc, .source_div = (timer_source_div_t)0,
+    /* Actual period: 0.00016666666666666666 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0x2710, .duty_cycle_counts = 0x1388, .source_div = (timer_source_div_t)0,
     .channel             = 5,
     .p_callback          = NULL,
     /** If NULL then do not add & */
@@ -3015,7 +3015,7 @@ gpt_instance_ctrl_t g_timer4_ctrl;
 #if 1
 const gpt_extended_pwm_cfg_t g_timer4_pwm_extend =
 {
-    .trough_ipl          = (BSP_IRQ_DISABLED),
+    .trough_ipl          = (3),
 #if defined(VECTOR_NUMBER_GPT4_COUNTER_UNDERFLOW)
     .trough_irq          = VECTOR_NUMBER_GPT4_COUNTER_UNDERFLOW,
 #else
@@ -3023,9 +3023,9 @@ const gpt_extended_pwm_cfg_t g_timer4_pwm_extend =
 #endif
     .poeg_link           = GPT_POEG_LINK_POEG0,
     .output_disable      =  GPT_OUTPUT_DISABLE_NONE,
-    .adc_trigger         = GPT_ADC_TRIGGER_DOWN_COUNT_START_ADC_A |  GPT_ADC_TRIGGER_NONE,
-    .dead_time_count_up  = 10,
-    .dead_time_count_down = 5,
+    .adc_trigger         = GPT_ADC_TRIGGER_UP_COUNT_START_ADC_A |  GPT_ADC_TRIGGER_NONE,
+    .dead_time_count_up  = 50,
+    .dead_time_count_down = 50,
     .adc_a_compare_match = 0,
     .adc_b_compare_match = 0,
     .interrupt_skip_source = GPT_INTERRUPT_SKIP_SOURCE_NONE,
@@ -3069,15 +3069,15 @@ const gpt_extended_cfg_t g_timer4_extend =
 #else
     .p_pwm_cfg                   = NULL,
 #endif
-#if 0
-    .gtior_setting.gtior_b.gtioa  = (0U << 4U) | (0U << 2U) | (0U << 0U),
+#if 1
+    .gtior_setting.gtior_b.gtioa  = (0U << 4U) | (1U << 2U) | (3U << 0U),
     .gtior_setting.gtior_b.oadflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.oahld  = 0U,
     .gtior_setting.gtior_b.oae    = (uint32_t) true,
     .gtior_setting.gtior_b.oadf   = (uint32_t) GPT_GTIOC_DISABLE_PROHIBITED,
     .gtior_setting.gtior_b.nfaen  = ((uint32_t) GPT_CAPTURE_FILTER_NONE & 1U),
     .gtior_setting.gtior_b.nfcsa  = ((uint32_t) GPT_CAPTURE_FILTER_NONE >> 1U),
-    .gtior_setting.gtior_b.gtiob  = (0U << 4U) | (0U << 2U) | (0U << 0U),
+    .gtior_setting.gtior_b.gtiob  = (1U << 4U) | (2U << 2U) | (3U << 0U),
     .gtior_setting.gtior_b.obdflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.obhld  = 0U,
     .gtior_setting.gtior_b.obe    = (uint32_t) true,
@@ -3091,7 +3091,7 @@ const gpt_extended_cfg_t g_timer4_extend =
 const timer_cfg_t g_timer4_cfg =
 {
     .mode                = TIMER_MODE_TRIANGLE_WAVE_SYMMETRIC_PWM,
-    /* Actual period: 0.00005 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0xbb8, .duty_cycle_counts = 0x5dc, .source_div = (timer_source_div_t)0,
+    /* Actual period: 0.00016666666666666666 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0x2710, .duty_cycle_counts = 0x1388, .source_div = (timer_source_div_t)0,
     .channel             = 4,
     .p_callback          = PWM_TIM_UP_IRQHandler,
     /** If NULL then do not add & */
