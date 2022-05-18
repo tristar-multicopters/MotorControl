@@ -14,7 +14,7 @@
 #include "regular_conversion_manager.h"
 #include "mc_interface.h"
 #include "mc_tuning.h"
-#include "state_machine.h"
+#include "mc_state_machine.h"
 #include "pwm_common.h"
 #include "mc_config.h"
 

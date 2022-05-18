@@ -55,7 +55,6 @@
             <slot name="IRQ18" secure="false"/>
             <slot name="IRQ19" secure="false"/>
             <slot name="IRQ20" secure="false"/>
-            <slot name="IRQ21" secure="false"/>
         </peripheral>
     </partition>
 </azone>

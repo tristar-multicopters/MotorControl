@@ -3015,7 +3015,7 @@ gpt_instance_ctrl_t g_timer4_ctrl;
 #if 1
 const gpt_extended_pwm_cfg_t g_timer4_pwm_extend =
 {
-    .trough_ipl          = (3),
+    .trough_ipl          = (BSP_IRQ_DISABLED),
 #if defined(VECTOR_NUMBER_GPT4_COUNTER_UNDERFLOW)
     .trough_irq          = VECTOR_NUMBER_GPT4_COUNTER_UNDERFLOW,
 #else

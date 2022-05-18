@@ -37,6 +37,7 @@ typedef const struct
 	const adc_instance_t * pADCHandle;
 	const adc_channel_t ADCChannelIa;
 	const adc_channel_t ADCChannelIb;
+	const adc_group_mask_t ADCGroupMask;
   const three_phase_instance_t * pThreePhaseHandle;      /*!< three phase instance used for PWM generation.*/
   
   /* PWM Driving signals initialization ----------------------------------------*/

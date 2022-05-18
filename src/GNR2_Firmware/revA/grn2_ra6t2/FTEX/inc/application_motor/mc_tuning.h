@@ -41,7 +41,7 @@ extern "C" {
 #include "bus_voltage_sensor.h"
 #include "feed_forward_ctrl.h"
 #include "flux_weakening_ctrl.h"
-#include "state_machine.h"
+#include "mc_state_machine.h"
 
 
 /**

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    state_machine.c
+  * @file    mc_state_machine.c
   * @author  FTEX inc
   * @brief   This file provides firmware functions that implement the features
   *          of the Motor Control State Machine component of the Motor Control SDK:
@@ -14,7 +14,7 @@
 	*/
 
 /* Includes ------------------------------------------------------------------*/
-#include "state_machine.h"
+#include "mc_state_machine.h"
 
 /**
   * @brief  Initializes all the object variables, usually it has to be called

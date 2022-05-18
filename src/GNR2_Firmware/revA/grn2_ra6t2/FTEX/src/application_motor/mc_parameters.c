@@ -32,6 +32,7 @@ const ICS_Params_t ICS_ParamsM1 =
 	.pADCHandle = &g_adc,
   .ADCChannelIa = ADC_CHANNEL_4,
 	.ADCChannelIb = ADC_CHANNEL_2,
+	.ADCGroupMask = ADC_GROUP_MASK_0,
 
 /* PWM generation parameters --------------------------------------------------*/
 	.pThreePhaseHandle  =	&g_three_phase0,

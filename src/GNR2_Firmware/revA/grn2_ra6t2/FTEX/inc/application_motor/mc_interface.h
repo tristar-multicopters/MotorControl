@@ -17,7 +17,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
-#include "state_machine.h"
+#include "mc_state_machine.h"
 #include "speed_torq_ctrl.h"
 
 

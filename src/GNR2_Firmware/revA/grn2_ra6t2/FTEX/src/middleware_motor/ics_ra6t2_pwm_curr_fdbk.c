@@ -236,6 +236,8 @@ void ICS_SwitchOffPWM( PWMC_Handle_t * pHdl )
   */
 void * ICS_TIMx_UP_IRQHandler( PWMC_ICS_Handle_t * pHandle )
 {
+	R_ADC_B_ScanGroupStart(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCGroupMask);
+	
 	return &( pHandle->_Super.Motor );
 }
 

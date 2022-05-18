@@ -425,11 +425,6 @@
               <FilePath>.\FTEX\src\application_motor\mc_tasks.c</FilePath>
             </File>
             <File>
-              <FileName>mc_math.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_math.c</FilePath>
-            </File>
-            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -470,6 +465,11 @@
         <Group>
           <GroupName>Middleware/Motor</GroupName>
           <Files>
+            <File>
+              <FileName>mc_math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\mc_math.c</FilePath>
+            </File>
             <File>
               <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
               <FileType>1</FileType>
@@ -541,9 +541,9 @@
               <FilePath>.\FTEX\src\middleware_motor\speed_torq_ctrl.c</FilePath>
             </File>
             <File>
-              <FileName>state_machine.c</FileName>
+              <FileName>mc_state_machine.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\state_machine.c</FilePath>
+              <FilePath>.\FTEX\src\middleware_motor\mc_state_machine.c</FilePath>
             </File>
             <File>
               <FileName>virtual_bus_voltage_sensor.c</FileName>

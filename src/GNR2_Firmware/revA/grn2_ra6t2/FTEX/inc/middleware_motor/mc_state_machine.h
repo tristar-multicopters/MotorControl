@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    state_machine.h
+  * @file    mc_state_machine.h
   * @author  FTEX inc
   * @brief   This file contains all definitions and functions prototypes for the
   *          Motor Control State Machine component of the Motor Control SDK.
@@ -8,8 +8,8 @@
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STATEMACHINE_H
-#define __STATEMACHINE_H
+#ifndef __MC_STATEMACHINE_H
+#define __MC_STATEMACHINE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -160,4 +160,4 @@ uint32_t STM_GetFaultState( STM_Handle_t * pHandle );
 }
 #endif /* __cpluplus */
 
-#endif /* __STATEMACHINE_H */
+#endif /* __MC_STATEMACHINE_H */

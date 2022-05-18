@@ -244,7 +244,7 @@
       <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority3"/>
       <property id="module.driver.timer.capture_a_ipl" value="_disabled"/>
       <property id="module.driver.timer.capture_b_ipl" value="_disabled"/>
-      <property id="module.driver.timer.trough_ipl" value="board.icu.common.irq.priority3"/>
+      <property id="module.driver.timer.trough_ipl" value="_disabled"/>
       <property id="module.driver.timer.extra" value="module.driver.timer.extra.disabled"/>
       <property id="module.driver.timer.poeg_link" value="module.driver.timer.poeg_link.poeg_link_poeg0"/>
       <property id="module.driver.timer.output_disable" value=""/>
