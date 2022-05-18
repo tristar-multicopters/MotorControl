@@ -6,7 +6,7 @@
         #endif
                 /* Number of interrupts allocated */
         #ifndef VECTOR_DATA_IRQ_COUNT
-        #define VECTOR_DATA_IRQ_COUNT    (21)
+        #define VECTOR_DATA_IRQ_COUNT    (26)
         #endif
         /* ISR prototypes */
         void gpt_counter_overflow_isr(void);
@@ -30,6 +30,8 @@
         void adc_b_fiforeq3_isr(void);
         void adc_b_fiforeq4_isr(void);
         void adc_b_fiforeq5678_isr(void);
+        void r_icu_isr(void);
+        void gpt_capture_a_isr(void);
 
         /* Vector table allocations */
         #define VECTOR_NUMBER_GPT4_COUNTER_OVERFLOW ((IRQn_Type) 0) /* GPT4 COUNTER OVERFLOW (Overflow) */
@@ -74,6 +76,16 @@
         #define ADC12_FIFOREQ4_IRQn          ((IRQn_Type) 19) /* ADC0 FIFOREQ4 (FIFO data read request interrupt(Gr.4)) */
         #define VECTOR_NUMBER_ADC12_FIFOREQ5678 ((IRQn_Type) 20) /* ADC0 FIFOREQ5678 (FIFO data read request interrupt(Gr.5 to 8)) */
         #define ADC12_FIFOREQ5678_IRQn          ((IRQn_Type) 20) /* ADC0 FIFOREQ5678 (FIFO data read request interrupt(Gr.5 to 8)) */
+        #define VECTOR_NUMBER_ICU_IRQ1 ((IRQn_Type) 21) /* ICU IRQ1 (External pin interrupt 1) */
+        #define ICU_IRQ1_IRQn          ((IRQn_Type) 21) /* ICU IRQ1 (External pin interrupt 1) */
+        #define VECTOR_NUMBER_ICU_IRQ10 ((IRQn_Type) 22) /* ICU IRQ10 (External pin interrupt 10) */
+        #define ICU_IRQ10_IRQn          ((IRQn_Type) 22) /* ICU IRQ10 (External pin interrupt 10) */
+        #define VECTOR_NUMBER_ICU_IRQ11 ((IRQn_Type) 23) /* ICU IRQ11 (External pin interrupt 11) */
+        #define ICU_IRQ11_IRQn          ((IRQn_Type) 23) /* ICU IRQ11 (External pin interrupt 11) */
+        #define VECTOR_NUMBER_GPT0_COUNTER_OVERFLOW ((IRQn_Type) 24) /* GPT0 COUNTER OVERFLOW (Overflow) */
+        #define GPT0_COUNTER_OVERFLOW_IRQn          ((IRQn_Type) 24) /* GPT0 COUNTER OVERFLOW (Overflow) */
+        #define VECTOR_NUMBER_GPT0_CAPTURE_COMPARE_A ((IRQn_Type) 25) /* GPT0 CAPTURE COMPARE A (Compare match A) */
+        #define GPT0_CAPTURE_COMPARE_A_IRQn          ((IRQn_Type) 25) /* GPT0 CAPTURE COMPARE A (Compare match A) */
         #ifdef __cplusplus
         }
         #endif

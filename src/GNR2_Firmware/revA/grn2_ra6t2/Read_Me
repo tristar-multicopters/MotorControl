@@ -2,3 +2,50 @@ This project is first ra6t2 project that has all pin configurations aligning to 
 It uses RTX5 as RTOS. Make sure Run Time Environment Component: "Device" is disabled by unchecking "include in target build" by navigating through options.
 Adding EventRecorder causes compilation errors. To overcome this copy " #define CMSIS_device_header "RTE_Patch.h" " and paste it in RTE_Components.h file. This needs to be done every time you open project. (12_05_2022) 
 RA smart configurator uses 10Mhz external crystal source (dev-board),change when pushing code over actual hardware.
+
+
+
+
+Names for hardware peripherals
+
+Utility						Hardware Peripheral		Software Nomenclature			Notes
+
+HALL:
+M1 HALL Capture timer 		Timer0					g_timer0
+M1 Ph-U HALL Capture pin    IRQ10					g_external_irq0					Note1
+M1 Ph-V HALL Capture pin	IRQ11					g_external_irq1
+M1 Ph-W HALL Capture pin    IRQ01					g_external_irq2
+
+Three Phase PWM:									r_gpt_three_phase0
+M1 Phase U PWM timer  		Timer4					g_timer4
+M1 Phase V PWM timer  	 	Timer5	 				g_timer5
+M1 Phase W PWM timer  		Timer6					g_timer6
+
+
+Interrupt Priorities
+
+Priority 					Interrupts
+0 (highest)					
+1		 
+2	
+3							g_timer0: Overflow/Crest Interrupt Priority,Capture A Interrupt Priority
+4							
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15(lowest)					
+
+
+Notes
+
+Note1:
+We do not need a callback for external interrupt pins used for hall speed measurement. What we need is an external interrupt event that is coupled to timer capture compare which then triggers a capture compare callback. 
+
+Note2:

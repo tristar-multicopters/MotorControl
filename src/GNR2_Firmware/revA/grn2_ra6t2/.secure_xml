@@ -65,6 +65,9 @@
       <configSetting altId="gpt5.gtioc5b.pb07" configurationId="gpt5.gtioc5b" isUsedByDriver="true"/>
       <configSetting altId="gpt6.gtioc6a.pb08" configurationId="gpt6.gtioc6a" isUsedByDriver="true"/>
       <configSetting altId="gpt6.gtioc6b.pb09" configurationId="gpt6.gtioc6b" isUsedByDriver="true"/>
+      <configSetting altId="icu1.irq1.pb01" configurationId="icu1.irq1"/>
+      <configSetting altId="icu10.irq10.pc04" configurationId="icu10.irq10"/>
+      <configSetting altId="icu11.irq11.pc05" configurationId="icu11.irq11"/>
       <configSetting altId="jtag_fslash_swd.swclk.pa14" configurationId="jtag_fslash_swd.swclk"/>
       <configSetting altId="jtag_fslash_swd.swdio.pa13" configurationId="jtag_fslash_swd.swdio"/>
       <configSetting altId="jtag_fslash_swd.swo.pb03" configurationId="jtag_fslash_swd.swo"/>

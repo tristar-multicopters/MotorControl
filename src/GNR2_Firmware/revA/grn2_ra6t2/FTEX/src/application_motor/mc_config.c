@@ -126,23 +126,23 @@
 //  .hVqdLowPassFilterBWLOG = M1_VQD_SW_FILTER_BW_FACTOR_LOG
 //};
 
-///**
-//  * @brief  SpeednTorque Controller parameters Motor 1
-//  */
-//SpeednTorqCtrl_Handle_t SpeednTorqCtrlM1 =
-//{
-//  .STCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,
-//  .MaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
-//  .MinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-//  .MaxAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
-//  .MinAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
-//  .MaxPositiveTorque =				(int16_t)NOMINAL_CURRENT,
-//  .MinNegativeTorque =				-(int16_t)NOMINAL_CURRENT,
-//  .ModeDefault =					DEFAULT_CONTROL_MODE,
-//  .MecSpeedRefUnitDefault =		(int16_t)(DEFAULT_TARGET_SPEED_UNIT),
-//  .TorqueRefDefault =				(int16_t)DEFAULT_TORQUE_COMPONENT,
-//  .IdrefDefault =					(int16_t)DEFAULT_FLUX_COMPONENT,
-//};
+/**
+  * @brief  SpeednTorque Controller parameters Motor 1
+  */
+SpeednTorqCtrl_Handle_t SpeednTorqCtrlM1 =
+{
+  .STCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,
+  .MaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
+  .MinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+  .MaxAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
+  .MinAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
+  .MaxPositiveTorque =				(int16_t)NOMINAL_CURRENT,
+  .MinNegativeTorque =				-(int16_t)NOMINAL_CURRENT,
+  .ModeDefault =					DEFAULT_CONTROL_MODE,
+  .MecSpeedRefUnitDefault =		(int16_t)(DEFAULT_TARGET_SPEED_UNIT),
+  .TorqueRefDefault =				(int16_t)DEFAULT_TORQUE_COMPONENT,
+  .IdrefDefault =					(int16_t)DEFAULT_FLUX_COMPONENT,
+};
 
 /**
   * @brief  Current sensor parameters Dual Drive Motor 1 - ICS, STM32G4xx
@@ -256,36 +256,28 @@ PWMC_ICS_Handle_t PWM_Handle_M1 = {
 //  * @brief  SpeedNPosition sensor parameters Motor 1 - HALL
 //  */
 
-//HALL_Handle_t HALL_M1 =
-//{
-//  ._Super = {
-//    .bElToMecRatio                     =	POLE_PAIR_NUM,
-//    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.15*MAX_APPLICATION_SPEED_UNIT),
-//    .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-//    .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
-//    .hMaxReliableMecAccelUnitP         =	65535,
-//    .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
-//    .DPPConvFactor                     =  DPP_CONV_FACTOR,
-//  },
-//  .SensorPlacement     = HALL_SENSORS_PLACEMENT,
-//  .PhaseShift          = (int16_t)(HALL_PHASE_SHIFT * 65536/360),
-//  .SpeedSamplingFreqHz = MEDIUM_FREQUENCY_TASK_RATE,
-//  .SpeedBufferSize     = HALL_AVERAGING_FIFO_DEPTH,
-// .TIMClockFreq       = HALL_TIM_CLK,
-// .TIMx                = TIM2,
-
-// .ICx_Filter          = M1_HALL_IC_FILTER,
-
-// .PWMFreqScaling      = PWM_FREQ_SCALING,
-// .HallMtpa            = HALL_MTPA,
-
-// .H1Port             =  M1_HALL_H1_GPIO_Port,
-// .H1Pin              =  M1_HALL_H1_Pin,
-// .H2Port             =  M1_HALL_H2_GPIO_Port,
-// .H2Pin              =  M1_HALL_H2_Pin,
-// .H3Port             =  M1_HALL_H3_GPIO_Port,
-// .H3Pin              =  M1_HALL_H3_Pin,
-//};
+HALL_Handle_t HALL_M1 =
+{
+  ._Super = {
+    .bElToMecRatio                     =	POLE_PAIR_NUM,
+    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.15*MAX_APPLICATION_SPEED_UNIT),
+    .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+    .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
+    .hMaxReliableMecAccelUnitP         =	65535,
+    .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
+    .DPPConvFactor                     =  DPP_CONV_FACTOR,
+  },
+  .SensorPlacement     = HALL_SENSORS_PLACEMENT,
+  .PhaseShift          = (int16_t)(HALL_PHASE_SHIFT * 65536/360),
+  .SpeedSamplingFreqHz = MEDIUM_FREQUENCY_TASK_RATE,
+  .SpeedBufferSize     = HALL_AVERAGING_FIFO_DEPTH,
+  .TIMClockFreq       = HALL_TIM_CLK,
+  .PWMFreqScaling      = PWM_FREQ_SCALING,
+  .HallMtpa            = HALL_MTPA,
+  .H1PortPin = M1_ENC_U,
+  .H2PortPin = M1_ENC_V,
+  .H3PortPin = M1_ENC_W,
+};
 
 ///**
 //  * temperature sensor parameters Motor 1
