@@ -14,6 +14,7 @@ extern void startMCMediumFrequencyTask(void * pvParameter);
 
 static bool ADCInit(void);
 static bool GPTInit(void);
+static bool GPT0Init(void);
 
 osThreadId_t MC_MediumFrequencyTask_handle;
 osThreadId_t MC_SafetyTask_handle;
@@ -36,6 +37,7 @@ void gnr_main(void)
 {
 	ADCInit();
 	GPTInit();
+    GPT0Init();
 	
 	SystemCoreClockUpdate();
 	
@@ -100,4 +102,21 @@ static bool GPTInit(void)
 	
 	return bIsError;
 }	
+
+static bool GPT0Init(void)
+{
+    bool bIsError = false;
+    /* Turn on timer0 to be used for hall capture compare */
+    /* Capture Timer settings for HALL      */
+    bIsError |=R_GPT_Open(g_timer0.p_ctrl, g_timer0.p_cfg);
+    bIsError |=R_GPT_Enable(g_timer0.p_ctrl);
+    bIsError |=R_GPT_PeriodSet(g_timer0.p_ctrl, 524287uL);
+    bIsError |=R_GPT_Start(g_timer0.p_ctrl);
+    /* Congigure external interrupts for HALL SENSING   */
+    bIsError |=R_ICU_ExternalIrqOpen(g_external_irq0.p_ctrl,g_external_irq0.p_cfg);
+    bIsError |=R_ICU_ExternalIrqOpen(g_external_irq1.p_ctrl,g_external_irq1.p_cfg);
+    bIsError |=R_ICU_ExternalIrqOpen(g_external_irq2.p_ctrl,g_external_irq2.p_cfg);
+
+    return bIsError;
+}
 

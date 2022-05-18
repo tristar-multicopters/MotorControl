@@ -133,8 +133,8 @@ void MCboot(void)
 //  /******************************************************/
 //  /*   Main speed sensor component initialization       */
 //  /******************************************************/
-//  pSTC[M1] = &SpeednTorqCtrlM1;
-//  HALL_Init (&HALL_M1);
+  pSTC[M1] = &SpeednTorqCtrlM1;
+  HALL_Init (&HALL_M1);
 
 //  /******************************************************/
 //  /*   Speed & torque component initialization          */
@@ -290,7 +290,7 @@ void TSK_MediumFrequencyTaskM1(void)
   int16_t wAux = 0;
 
 //  (void) STO_PLL_CalcAvrgMecSpeedUnit( &STO_PLL_M1, &wAux );
-//  bool IsSpeedReliable = HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
+  bool IsSpeedReliable = HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
 //  PQD_CalcElMotorPower( pMPM[M1] );
 
   StateM1 = STM_GetState( &STM[M1] );
@@ -320,7 +320,7 @@ void TSK_MediumFrequencyTaskM1(void)
     break;
 
   case CLEAR:
-//    HALL_Clear( &HALL_M1 );
+    HALL_Clear( &HALL_M1 );
 //    STO_PLL_Clear( &STO_PLL_M1 );
 //		AO_Clear( &AngleObserverM1 );
 //    if ( STM_NextState( &STM[M1], START ) == true )
@@ -407,7 +407,7 @@ void FOC_Clear(uint8_t bMotor)
 //  PID_SetIntegralTerm(pPIDIq[bMotor], (int32_t)0);
 //  PID_SetIntegralTerm(pPIDId[bMotor], (int32_t)0);
 
-//  STC_Clear(pSTC[bMotor]);
+  STC_Clear(pSTC[bMotor]);
 
 //  PWMC_SwitchOffPWM(pwmcHandle[bMotor]);
 
@@ -537,7 +537,7 @@ uint8_t TSK_HighFrequencyTask(void)
 //  Observer_Inputs_t STO_aux_Inputs; /*  only if sensorless aux*/
 //  STO_aux_Inputs.Valfa_beta = FOCVars[M1].Valphabeta;  /* only if sensorless*/
 
-  //HALL_CalcElAngle (&HALL_M1);
+  HALL_CalcElAngle (&HALL_M1);
 	//AO_CalcElAngle(&AngleObserverM1, 0);
 	
   hFOCreturn = FOC_CurrControllerM1();
@@ -573,10 +573,10 @@ inline uint16_t FOC_CurrControllerM1(void)
 
   int16_t hElAngle;
   uint16_t hCodeError = 0;
-//  SpeednPosFdbk_Handle_t *speedHandle;
+  SpeednPosFdbk_Handle_t *speedHandle;
 
-//  speedHandle = STC_GetSpeedSensor(pSTC[M1]);
-//  hElAngle = SPD_GetElAngle(speedHandle);
+  speedHandle = STC_GetSpeedSensor(pSTC[M1]);
+  hElAngle = SPD_GetElAngle(speedHandle);
 //	//hElAngle = AO_GetElAngle(&AngleObserverM1);
 //	#if (POSITION_OPENLOOP)
 //	hOpenLoopTheta += OPEN_LOOP_SPEED;

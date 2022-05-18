@@ -25,6 +25,11 @@
             [18] = adc_b_fiforeq3_isr, /* ADC0 FIFOREQ3 (FIFO data read request interrupt(Gr.3)) */
             [19] = adc_b_fiforeq4_isr, /* ADC0 FIFOREQ4 (FIFO data read request interrupt(Gr.4)) */
             [20] = adc_b_fiforeq5678_isr, /* ADC0 FIFOREQ5678 (FIFO data read request interrupt(Gr.5 to 8)) */
+            [21] = r_icu_isr, /* ICU IRQ1 (External pin interrupt 1) */
+            [22] = r_icu_isr, /* ICU IRQ10 (External pin interrupt 10) */
+            [23] = r_icu_isr, /* ICU IRQ11 (External pin interrupt 11) */
+            [24] = gpt_counter_overflow_isr, /* GPT0 COUNTER OVERFLOW (Overflow) */
+            [25] = gpt_capture_a_isr, /* GPT0 CAPTURE COMPARE A (Compare match A) */
         };
         const bsp_interrupt_event_t g_interrupt_event_link_select[BSP_ICU_VECTOR_MAX_ENTRIES] =
         {
@@ -49,5 +54,10 @@
             [18] = BSP_PRV_IELS_ENUM(EVENT_ADC12_FIFOREQ3), /* ADC0 FIFOREQ3 (FIFO data read request interrupt(Gr.3)) */
             [19] = BSP_PRV_IELS_ENUM(EVENT_ADC12_FIFOREQ4), /* ADC0 FIFOREQ4 (FIFO data read request interrupt(Gr.4)) */
             [20] = BSP_PRV_IELS_ENUM(EVENT_ADC12_FIFOREQ5678), /* ADC0 FIFOREQ5678 (FIFO data read request interrupt(Gr.5 to 8)) */
+            [21] = BSP_PRV_IELS_ENUM(EVENT_ICU_IRQ1), /* ICU IRQ1 (External pin interrupt 1) */
+            [22] = BSP_PRV_IELS_ENUM(EVENT_ICU_IRQ10), /* ICU IRQ10 (External pin interrupt 10) */
+            [23] = BSP_PRV_IELS_ENUM(EVENT_ICU_IRQ11), /* ICU IRQ11 (External pin interrupt 11) */
+            [24] = BSP_PRV_IELS_ENUM(EVENT_GPT0_COUNTER_OVERFLOW), /* GPT0 COUNTER OVERFLOW (Overflow) */
+            [25] = BSP_PRV_IELS_ENUM(EVENT_GPT0_CAPTURE_COMPARE_A), /* GPT0 CAPTURE COMPARE A (Compare match A) */
         };
         #endif

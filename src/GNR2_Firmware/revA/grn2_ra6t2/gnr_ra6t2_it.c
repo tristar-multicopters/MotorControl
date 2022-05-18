@@ -35,3 +35,23 @@ void PWM_TIM_UP_IRQHandler(timer_callback_args_t * p_args)
 		ICS_TIMx_UP_IRQHandler(&PWM_Handle_M1);
 	}
 }
+
+void HALL_TIM_UP_CC_IRQHandler(timer_callback_args_t * p_args)
+{
+    if (NULL != p_args)
+    {
+        switch (p_args->event)
+        {
+            case TIMER_EVENT_CYCLE_END:
+                 HALL_TIMx_UP_IRQHandler(&HALL_M1);
+                break;
+            case TIMER_EVENT_CAPTURE_A:
+                HALL_TIMx_CC_IRQHandler(&HALL_M1,&p_args->capture);
+                break;
+            case TIMER_EVENT_CAPTURE_B:
+                break;
+            case TIMER_EVENT_TROUGH:
+                break;
+        }
+    }
+}   /* End of function adc_eoc0_isr */
