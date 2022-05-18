@@ -1,7 +1,10 @@
-/**
+ /**
   ******************************************************************************
   * @file    hall_speed_pos_fdbk.c
-	******************************************************************************
+  * @author  FTEX inc
+  * @brief   This file provides firmware functions that implement the features of
+  *          the Hall Speed & Position Feedback component of the Motor Control SDK.
+  ******************************************************************************
 */
 
 /* Includes ------------------------------------------------------------------*/
@@ -111,26 +114,16 @@ void HALL_Init( HALL_Handle_t * pHandle )
     pHandle->Sector_Middle_Angle[4] = ( int16_t ) ( pHandle->Sector_Start_Angle[4]  +  S16_30_PHASE_SHIFT);
     pHandle->Sector_Middle_Angle[5] =( int16_t ) ( pHandle->Sector_Start_Angle[5]  +  S16_30_PHASE_SHIFT);
     pHandle->Sector_Middle_Angle[6] = ( int16_t ) ( pHandle->Sector_Start_Angle[6]  +  S16_30_PHASE_SHIFT);
-    /* Turn on timer0 to be used for hall capture compare */
-    /* Capture Timer settings for HALL      */
-    R_GPT_Open(g_timer0.p_ctrl, g_timer0.p_cfg);
-    R_GPT_Enable(g_timer0.p_ctrl);
-    R_GPT_PeriodSet(g_timer0.p_ctrl, 524287uL);
-    R_GPT_Start(g_timer0.p_ctrl);
-    /* Congigure external interrupts for HALL SENSING   */
-    R_ICU_ExternalIrqOpen(g_external_irq0.p_ctrl,g_external_irq0.p_cfg);
-    R_ICU_ExternalIrqOpen(g_external_irq1.p_ctrl,g_external_irq1.p_cfg);
-    R_ICU_ExternalIrqOpen(g_external_irq2.p_ctrl,g_external_irq2.p_cfg);
     
 }
 
 void HALL_Clear( HALL_Handle_t * pHandle )
 {
     /* Disable timer0 interrupts and counter */
-    R_GPT_Disable(g_timer0.p_ctrl);
-    R_GPT_Stop(g_timer0.p_ctrl);
+    R_GPT_Disable(pHandle->TIMx->p_ctrl);
+    R_GPT_Stop(pHandle->TIMx->p_ctrl);
     /*   Clear the timer for reinitialization  */
-    R_GPT_CounterSet(g_timer0.p_ctrl,HALL_COUNTER_RESET);
+    R_GPT_CounterSet(pHandle->TIMx->p_ctrl,HALL_COUNTER_RESET);
     /* Reinitialize variables in HALL handle */
     /* Reset speed reliability */
     pHandle->SensorIsReliable = true;
@@ -147,8 +140,8 @@ void HALL_Clear( HALL_Handle_t * pHandle )
     pHandle->_Super.bSpeedErrorNumber = 0;
     HALL_Init_Electrical_Angle( pHandle );
     /*  Enable timer0 interrupts and counter */
-    R_GPT_Start(g_timer0.p_ctrl);
-    R_GPT_Enable(g_timer0.p_ctrl);
+    R_GPT_Start(pHandle->TIMx->p_ctrl);
+    R_GPT_Enable(pHandle->TIMx->p_ctrl);
 }
 
 /**

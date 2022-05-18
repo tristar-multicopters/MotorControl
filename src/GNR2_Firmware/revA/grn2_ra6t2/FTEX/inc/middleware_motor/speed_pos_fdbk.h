@@ -1,7 +1,6 @@
 /**
  ******************************************************************************
  * @file    speed_pos_fdbk.h
- * @file    speed_pos_fdbk.h
  * @author  FTEX inc
  * @brief   This file provides all definitions and functions prototypes
  *          of the Speed & Position Feedback component of the Motor Control SDK.
@@ -20,7 +19,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stdint.h"
 #include "mc_type.h"
-#include "hal_data.h"
+
 
 /** @addtogroup MCSDK
   * @{

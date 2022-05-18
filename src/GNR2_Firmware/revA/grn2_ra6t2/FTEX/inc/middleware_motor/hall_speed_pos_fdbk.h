@@ -17,6 +17,9 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "speed_pos_fdbk.h"
+#include "r_gpt.h"
+#include "r_timer_api.h"
+
 
 /** @addtogroup MCSDK
   * @{
@@ -75,7 +78,7 @@ typedef struct
     /* HW Settings */
     uint32_t TIMClockFreq; /*!< Timer clock frequency express in Hz.*/
 
-    timer_instance_t  * p_instance;   /*!< Timer used for HALL sensor management.*/
+    const timer_instance_t  * TIMx;   /*!< Timer used for HALL sensor management.*/
 
     bsp_io_port_pin_t H1PortPin;
 

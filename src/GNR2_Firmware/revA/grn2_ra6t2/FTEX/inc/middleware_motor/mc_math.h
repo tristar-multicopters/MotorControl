@@ -154,4 +154,5 @@ uint32_t MCM_floatToIntBit( float x );
   * @}
   */
 #endif /* MC_MATH_H*/
-/******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/
+
+
