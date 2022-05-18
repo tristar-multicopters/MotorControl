@@ -1,5 +1,6 @@
+
 #include "hal_data.h"
-#include "app_main.h"
+#include "gnr_main.h"
 
 
 
@@ -15,7 +16,7 @@ void hal_entry(void)
 {
     /* TODO: add your own code here */
 
-	application_main();
+	gnr_main();
 	
 	while(1)
 	{
