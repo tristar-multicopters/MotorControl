@@ -130,7 +130,7 @@ THRO_Handle_t ThrottleHandle =
 		.bDivisorThrottle = 3,
 		
 		.hOffsetTorque = 4000,
-		.bSlopeTorque = -14,
+		.bSlopeTorque = -14,///15
 		.bDivisorTorque = 48,
 		
 		.hDetectionThreshold = 1000,
@@ -192,15 +192,15 @@ TS_Handle_t TorqueSensor =
 #if VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.hParam =
 	{	
-		.hLowPassFilterBW1 = 16,
-		.hLowPassFilterBW2 = 2,
+		.hLowPassFilterBW1 = 8,
+		.hLowPassFilterBW2 = 14,
 		
 		.hOffsetTS = 12500,
 		.bSlopeTS = 5,			
 		.bDivisorTS = 4,
 		
-		.hOffsetMT = 5000,
-		.bSlopeMT = -5,
+		.hOffsetMT = 20000, /* Offset to launch the torque sensing */
+		.bSlopeMT = -7,
 		.bDivisorMT = 2,
 			
 		.hMax = UINT16_MAX,
@@ -344,7 +344,7 @@ PAS_Handle_t PedalAssistHandle = {
 	.bTorqueSensorUse = false,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bMaxLevel	=	5,
-	.bMaxTorque = -11000,
+	.bMaxTorque = -17000,
 	.bPulseNb	= 0,	
 	.bTorqueSensorUse = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
@@ -424,7 +424,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -10000,
-	.sParameters.hPASMaxSpeed = 250,
+	.sParameters.hPASMaxSpeed = 500,
 	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
 	.sParameters.bUseWheelSpeedSensor = true,
 	.sParameters.bWheelSpreedRatio = 2,

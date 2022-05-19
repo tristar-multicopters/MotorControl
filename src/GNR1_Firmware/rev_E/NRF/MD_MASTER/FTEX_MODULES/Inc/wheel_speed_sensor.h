@@ -22,7 +22,7 @@
 #include "speed_pulse_read.h"
 
 /* Defines ----------------------------------------------------------------------*/
-#define WRPMCOEFF 				60			// RPM multiplication for r/min
+#define WRPMCOEFF 			60			// RPM multiplication for r/min
 #define WPRECISIONCOEFF	1000	// ms coefficient precision
 #define WCOEFFREQ				1000000000	// Period coeff for usecond division
 
@@ -35,6 +35,8 @@ typedef struct {
 	int64_t wWSRpm;
 	
 	uint8_t	bWSPulseNb;		/* NUMBER of pulse per wheel rotation */
+	
+	bool bWSSDetected;		/* USE WSS flag  for detection */
 	
 } WSS_Handle_t;
 
@@ -81,6 +83,20 @@ void WSS_CalculateSpeedRPM(WSS_Handle_t* pHandle);
 	* @retval Wheel Speed wWSRpm value in r/min
 	*/
 int32_t WSS_GetSpeedRPM(WSS_Handle_t* pHandle);
+
+/**
+	* @brief  Check the WSS Presence Flag
+	* @param  WSS_Handle_t handle
+	* @retval 
+	*/
+void WSS_UpdateWSSDetection (WSS_Handle_t * pHandle);
+
+/**
+	* @brief  Return if the wheel speed sensor is moving or not
+	* @param  WSS_Handle_t handle
+	* @retval True if wheel movement is detected, false otherwise
+	*/
+bool WSS_IsWSSDetected(WSS_Handle_t * pHandle) ;
 
 #endif /*__WHEEL_SPEED_SENSOR_H*/
 

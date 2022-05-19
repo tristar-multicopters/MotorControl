@@ -86,24 +86,21 @@ void PAS_CalcTSAvValue(PAS_Handle_t* pHandle)
 }
 
 /**
-	* @brief  Return the PAS Presence Flag
+	* @brief  Check the PAS Presence Flag
 	* @param  Drivetrain handle
-	* @retval pHandle->bUsePAS in boolean
+	* @retval 
 	*/
 void PAS_UpdatePASDetection (PAS_Handle_t * pHandle) 
 {
 	uint32_t	wSpeedt;
 	uint16_t	hTorqueSens;
 	
-	PAS_CalculateSpeed(pHandle);
-
 	wSpeedt = PAS_GetPeriodValue(pHandle);
 	hTorqueSens = TS_GetAvValue(pHandle->pTorque);
 
 	if ((pHandle->bTorqueSensorUse) && (hTorqueSens > pHandle->pTorque->hParam.hOffsetMT) )
 		pHandle->bPASDetected = true;
-	else if ((wSpeedt > 0) && (!pHandle->bTorqueSensorUse) )
-
+	else if (wSpeedt > 0)
 		pHandle->bPASDetected = true;
 	else 
 		pHandle->bPASDetected = false;

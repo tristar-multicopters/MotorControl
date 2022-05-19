@@ -98,8 +98,11 @@ __NO_RETURN void TSK_FastLoopMD (void * pvParameter)
 	while (true)
 	{
 		DRVT_CalcTorqueSpeed(pVCI->pDrivetrain);
-		/* Call GetSpeedRPM from wheel speed temporarily*/
+		/* Call GetSpeedRPM from wheel speed sensor */
 		WSS_CalculateSpeedRPM(pVCI->pDrivetrain->pWSS);
+
+		/* Pedal Assist presence detection */
+		PAS_UpdatePASDetection (pVCI->pDrivetrain->pPAS);
 		
 		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain) )
 		{
@@ -131,8 +134,8 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 																				
 	while (true)
 	{
-		/* Pulse read presence in slow loop test */ 
-		PAS_UpdatePASDetection (pVCI->pDrivetrain->pPAS);
+		/* Pulse calcualte period in slow loop test */ 
+		PAS_CalculateSpeed(pVCI->pDrivetrain->pPAS);
 		/* Wheel Speed read in slow loop test */ 
 		WSS_CalculateSpeed(pVCI->pDrivetrain->pWSS);
 

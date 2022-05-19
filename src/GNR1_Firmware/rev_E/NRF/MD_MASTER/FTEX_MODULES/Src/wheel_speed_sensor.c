@@ -71,3 +71,30 @@ int32_t WSS_GetSpeedRPM(WSS_Handle_t* pHandle)
 {
 	return pHandle->wWSRpm;
 }
+
+/**
+	* @brief  Check the WSS Presence Flag
+	* @param  WSS_Handle_t handle
+	* @retval 
+	*/
+void WSS_UpdateWSSDetection (WSS_Handle_t * pHandle) 
+{
+	uint32_t	wWheelSpeed;
+	
+	wWheelSpeed = WSS_GetSpeedRPM (pHandle);
+
+	if (wWheelSpeed > 0)
+		pHandle->bWSSDetected = true;
+	else 
+		pHandle->bWSSDetected = false;
+} 
+
+/**
+	* @brief  Return if the wheel speed sensor is moving or not
+	* @param  WSS_Handle_t handle
+	* @retval True if wheel movement is detected, false otherwise
+	*/
+bool WSS_IsWSSDetected(WSS_Handle_t * pHandle) 
+{
+	return pHandle->bWSSDetected;
+}
