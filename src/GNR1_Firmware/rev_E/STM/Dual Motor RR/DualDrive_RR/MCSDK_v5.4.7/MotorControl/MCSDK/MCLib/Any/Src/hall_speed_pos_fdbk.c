@@ -22,9 +22,6 @@
 #include "speed_pos_fdbk.h"
 #include "hall_speed_pos_fdbk.h"
 #include "mc_type.h"
-#include "stdlib.h"
-
-
 
 /** @addtogroup MCSDK
   * @{
@@ -289,18 +286,12 @@ __weak int16_t HALL_CalcElAngle( HALL_Handle_t * pHandle )
 			pHandle->_Super.hElAngle += pHandle->PrevRotorFreq;
 		}
 		
-		int16_t hAngle_Diff = abs(pHandle->_Super.hElAngle - pHandle->Sector_Middle_Angle[pHandle->HallState] ); 
-		if ( ( hAngle_Diff> S16_30_PHASE_SHIFT ) )
+		if ( abs(pHandle->_Super.hElAngle - pHandle->Sector_Middle_Angle[pHandle->HallState]) > S16_30_PHASE_SHIFT)
 		{
-			uint16_t hAngle_Diffu = ((uint16_t) pHandle->_Super.hElAngle) - ((uint16_t) pHandle->Sector_Middle_Angle[pHandle->HallState]);
-			
-			if ( abs((int16_t)hAngle_Diffu) > S16_30_PHASE_SHIFT)
-				{
-					if(pHandle->Direction == POSITIVE)
-							{pHandle->_Super.hElAngle = pHandle->Sector_Destination_Angle[pHandle->HallState];}
-					else
-							{pHandle->_Super.hElAngle = pHandle->Sector_Start_Angle[pHandle->HallState];}
-				}
+			if(pHandle->Direction == POSITIVE)
+					{pHandle->_Super.hElAngle = pHandle->Sector_Destination_Angle[pHandle->HallState];}
+			else
+					{pHandle->_Super.hElAngle = pHandle->Sector_Start_Angle[pHandle->HallState];}
 		}
 	}
 
