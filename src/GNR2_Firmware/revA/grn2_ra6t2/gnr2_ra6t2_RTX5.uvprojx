@@ -595,6 +595,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\regular_conversion_manager.c</FilePath>
             </File>
+            <File>
+              <FileName>uCAL_GPIO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_GPIO.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
