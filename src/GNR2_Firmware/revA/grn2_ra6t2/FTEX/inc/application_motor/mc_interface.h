@@ -3,7 +3,7 @@
   * @file    mc_interface.h
   * @author  FTEX inc
   * @brief   This file contains all definitions and functions prototypes for the
-  *          MC Interface component of the Motor Control SDK.
+  *          MC Interface component. It allow controlling a motor and get measurements using a simple api.
   ******************************************************************************
 */
 

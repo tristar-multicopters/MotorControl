@@ -140,7 +140,7 @@ void MCboot(void)
   /******************************************************/
   /*   Auxiliary speed sensor component initialization  */
   /******************************************************/
-//  STO_PLL_Init (&STO_PLL_M1);
+  STO_PLL_Init (&STO_PLL_M1);
 
   /********************************************************/
   /*   PID component initialization: current regulation   */
@@ -192,7 +192,7 @@ void MCboot(void)
 //  MCT[M1].pPIDFluxWeakening = &PIDFluxWeakeningHandle_M1; /* only if M1 has FW */
   MCT[M1].pPWMnCurrFdbk = pwmcHandle[M1];
   MCT[M1].pSpeedSensorMain = (SpeednPosFdbk_Handle_t *) &HALL_M1;
-//  MCT[M1].pSpeedSensorAux = (SpeednPosFdbk_Handle_t *) &STO_PLL_M1;
+  MCT[M1].pSpeedSensorAux = (SpeednPosFdbk_Handle_t *) &STO_PLL_M1;
 //  MCT[M1].pSpeedSensorVirtual = MC_NULL;
   MCT[M1].pSpeednTorqueCtrl = pSTC[M1];
   MCT[M1].pStateMachine = &STM[M1];
@@ -310,7 +310,7 @@ void TSK_MediumFrequencyTaskM1(void)
 
     case CLEAR:
     HALL_Clear( &HALL_M1 );
-//    STO_PLL_Clear( &STO_PLL_M1 );
+    STO_PLL_Clear( &STO_PLL_M1 );
 		AO_Clear( &AngleObserverM1 );
     if ( STM_NextState( &STM[M1], START ) == true )
     {
@@ -337,7 +337,9 @@ void TSK_MediumFrequencyTaskM1(void)
 		{
 			STM_NextState( &STM[M1], ANY_STOP );
 		}
-//    MCI_ExecBufferedCommands( oMCInterface[M1] );
+		
+		MCI_ExecTorqueRamp(oMCInterface[M1], hTest, 100);
+    MCI_ExecBufferedCommands( oMCInterface[M1] );
     FOC_CalcCurrRef( M1 );
 
 		#if !(CURRENT_OPENLOOP || VOLTAGE_OPENLOOP)
@@ -526,8 +528,8 @@ uint8_t TSK_HighFrequencyTask(void)
   uint8_t bMotorNbr = 0;
   uint16_t hFOCreturn;
 
-//  Observer_Inputs_t STO_aux_Inputs; /*  only if sensorless aux*/
-//  STO_aux_Inputs.Valfa_beta = FOCVars[M1].Valphabeta;  /* only if sensorless*/
+  Observer_Inputs_t STO_aux_Inputs;
+  STO_aux_Inputs.Valfa_beta = FOCVars[M1].Valphabeta;
 
   HALL_CalcElAngle (&HALL_M1);
 	AO_CalcElAngle(&AngleObserverM1, 0);
@@ -539,8 +541,8 @@ uint8_t TSK_HighFrequencyTask(void)
   }
   else
   {
-//    STO_aux_Inputs.Ialfa_beta = FOCVars[M1].Ialphabeta; /*  only if sensorless*/
-//    STO_aux_Inputs.Vbus = VBS_GetAvBusVoltage_d(&(pBusSensorM1->_Super)); /*  only for sensorless*/
+//    STO_aux_Inputs.Ialfa_beta = FOCVars[M1].Ialphabeta;
+//    STO_aux_Inputs.Vbus = VBS_GetAvBusVoltage_d(&(pBusSensorM1->_Super));
 //    STO_PLL_CalcElAngle (&STO_PLL_M1, &STO_aux_Inputs);
 //		STO_PLL_CalcAvrgElSpeedDpp (&STO_PLL_M1);
   }
