@@ -29,7 +29,7 @@ typedef enum  // Used to select ADC scan group which needs to start scan
     GROUP_7,
     GROUP_8,
     GROUP_9
-} ScanGroup;
+} ScanGroup_t;
 
 // ====== Structure used to configure regular conversion manager ========== //
 
@@ -56,7 +56,7 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv);
   @param Receives information on which sequential group needs to start converting its registries.      
   @return void  
 */
-void RCM_ExecuteGroupRegularConv(ScanGroup group);
+void RCM_ExecuteGroupRegularConv(ScanGroup_t group);
 
 /**
   @brief Function used to flag start of sequential ADC conversion registered by regular conversion manager. All ADC conversions specified in scan group 1 will executed with this function. CM_ExecRegularConvGroup1 function call is expected to occur anywhere in the RTOS tasks.   

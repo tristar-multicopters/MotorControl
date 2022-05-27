@@ -498,14 +498,14 @@
               <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
             </File>
             <File>
-              <FileName>hall_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
               <FileName>motor_power_measurement.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>hall_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
             </File>
             <File>
               <FileName>ntc_temperature_sensor.c</FileName>
@@ -601,6 +601,11 @@
               <FileName>regular_conversion_manager.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\regular_conversion_manager.c</FilePath>
+            </File>
+            <File>
+              <FileName>uCAL_GPIO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_GPIO.c</FilePath>
             </File>
           </Files>
         </Group>

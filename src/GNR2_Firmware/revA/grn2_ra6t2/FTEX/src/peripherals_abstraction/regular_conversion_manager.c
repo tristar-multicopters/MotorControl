@@ -13,20 +13,22 @@
 
 typedef enum    // Used to define state of regular conversion manager
 {
-    Stopped,
-    Start,
-    Ongoing,
-    DataAvailable
+    STOPPED,
+    START,
+    ONGOING,
+    DATA_AVAILABLE
 } RCM_status_t;
 
 // ========================== Private defines ============================== //
 
-#define RCM_MAX_CONV  4 
+#define RCM_MAX_CONV  4
+#define ADC_EOC_STATUS_FLAGS 0x02u 
+#define ADC_EOC_CLEAR_FLAGS 0x1FEU
 
 // ========================== Private variables ============================ //
 
 RegConv_t * RCM_handle_array [RCM_MAX_CONV];
-RCM_status_t ConversionStatus = Stopped;
+RCM_status_t ConversionStatus = STOPPED;
 uint16_t RCM_ReadValue = 0;
 
 // ========================================================================= //
@@ -67,7 +69,7 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
     }    
     if (handle < RCM_MAX_CONV )
     {
-        RCM_handle_array[handle] = regConv;
+        RCM_handle_array[handle] = regConv;  // Register a regular conversion in array.
     }
     else
     {
@@ -87,17 +89,17 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
  *
  * NOTE: This function is not completely defined. RegConv_t.group will be used to register scan group in which the adc conversion will be placed. 
  */
-void RCM_ExecuteGroupRegularConv(ScanGroup group)
+void RCM_ExecuteGroupRegularConv(ScanGroup_t group)
 {
-    if(ConversionStatus == Ongoing && R_ADC_B->ADSCANENDSR >= 0x2)
+    if(ConversionStatus == ONGOING && R_ADC_B->ADSCANENDSR >= ADC_EOC_STATUS_FLAGS)  // Check if Previous status was ongoing and any of end of conversion flags form any group is active
     {
-        R_ADC_B->ADSCANENDSCR = 0x1FEU;
-        ConversionStatus = DataAvailable;
+        R_ADC_B->ADSCANENDSCR = ADC_EOC_CLEAR_FLAGS;  // Clear end of conversion flags from group 1 to group 9
+        ConversionStatus = DATA_AVAILABLE;
     }
-    else if(ConversionStatus == Start | ConversionStatus == DataAvailable)
+    else if(ConversionStatus == START | ConversionStatus == DATA_AVAILABLE)  // Check if conversion is enabled or if data is available from previous conversion
     {
-        R_ADC_B->ADSTR[group] |= 1UL << 0;
-        ConversionStatus = Ongoing;
+        R_ADC_B->ADSTR[group] |= 1UL << 0;  // Set ADC start of conversion bit using software
+        ConversionStatus = ONGOING;  // update status
     }   
 }
 
@@ -112,15 +114,15 @@ void RCM_ExecuteGroupRegularConv(ScanGroup group)
  */
 void RCM_ExecuteRegularConv(void)
 {
-    if(ConversionStatus == Ongoing && R_ADC_B->ADSCANENDSR >= 0x2)
+    if(ConversionStatus == ONGOING && R_ADC_B->ADSCANENDSR >= ADC_EOC_STATUS_FLAGS) // Check if Previous status was ongoing and any of end of conversion flags form any group is active
     {
-        R_ADC_B->ADSCANENDSCR = 0x1FEU;
-        ConversionStatus = DataAvailable;
+        R_ADC_B->ADSCANENDSCR = ADC_EOC_CLEAR_FLAGS;  // Clear end of conversion flags from group 1 to group 9
+        ConversionStatus = DATA_AVAILABLE;
     }
-    else if(ConversionStatus == Start | ConversionStatus == DataAvailable)
+    else if(ConversionStatus == START | ConversionStatus == DATA_AVAILABLE)  // Check if conversion is enabled or if data is available from previous conversion
     {
-        R_ADC_B->ADSTR[1] |= 1UL << 0;  // setting last bit in element 1 of array ADSSTR flags start of conversion in scan group 1. 
-        ConversionStatus = Ongoing;
+        R_ADC_B->ADSTR[GROUP_1] |= 1UL << 0;  // setting last bit in element 1 of array ADSSTR flags start of conversion in scan group 1. 
+        ConversionStatus = ONGOING;
     }
 }
 
@@ -129,7 +131,7 @@ void RCM_ExecuteRegularConv(void)
  */
 uint16_t RCM_ReadConv(uint8_t handle)
 {
-    if (ConversionStatus == DataAvailable)
+    if (ConversionStatus == DATA_AVAILABLE)
     {
         RCM_ReadValue = (uint16_t) R_ADC_B->ADDR[RCM_handle_array[handle]->channel];
     }
@@ -141,9 +143,9 @@ uint16_t RCM_ReadConv(uint8_t handle)
  */
 void RCM_EnableConv(void)
 {
-    if(ConversionStatus == Stopped)
+    if(ConversionStatus == STOPPED)
     {
-        ConversionStatus = Start;
+        ConversionStatus = START;
     }    
 }
 
@@ -152,8 +154,8 @@ void RCM_EnableConv(void)
  */
 void RCM_DisableConv(void)
 {
-    if(ConversionStatus == DataAvailable || ConversionStatus == Ongoing )
+    if(ConversionStatus == DATA_AVAILABLE || ConversionStatus == ONGOING )
     {
-        ConversionStatus = Stopped;
+        ConversionStatus = STOPPED;
     }
 }

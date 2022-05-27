@@ -12,7 +12,7 @@
 */
 uint16_t VBS_GetBusVoltage_d( BusVoltageSensor_Handle_t * pHandle )
 {
-    return ( pHandle->LatestConv );
+    return pHandle->LatestConv;
 }
 
 /**
@@ -20,7 +20,7 @@ uint16_t VBS_GetBusVoltage_d( BusVoltageSensor_Handle_t * pHandle )
 */
 uint16_t VBS_GetAvBusVoltage_d( BusVoltageSensor_Handle_t * pHandle )
 {
-    return ( pHandle->AvBusVoltage_d );
+    return pHandle->AvBusVoltage_d;
 }
 
 /**
@@ -29,10 +29,10 @@ uint16_t VBS_GetAvBusVoltage_d( BusVoltageSensor_Handle_t * pHandle )
 uint16_t VBS_GetAvBusVoltage_V( BusVoltageSensor_Handle_t * pHandle )
 {
     uint32_t temp;
-    temp = ( uint32_t )( pHandle->AvBusVoltage_d );
-    temp *= pHandle->ConversionFactor;
+    temp = (uint32_t) pHandle->AvBusVoltage_d;
+    temp *= pHandle->ConversionFactor;  // To convert average voltage from digital to volts scale, AvBusVoltage_V = ( AvBusVoltage/ 65526 ) * (ADC_REF_VOLTAGE / V_BUS_SCALING_FACTOR)
     temp /= 65536u;
-    return ( ( uint16_t )temp );
+    return (uint16_t) temp;
 }
 
 /**
@@ -40,6 +40,6 @@ uint16_t VBS_GetAvBusVoltage_V( BusVoltageSensor_Handle_t * pHandle )
 */
 uint16_t VBS_CheckVbus( BusVoltageSensor_Handle_t * pHandle )
 {
-    return ( pHandle->FaultState );
+    return pHandle->FaultState;
 }
 

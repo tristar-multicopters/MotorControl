@@ -14,16 +14,16 @@ uint16_t NTC_SetFaultState( NTC_Handle_t * pHandle );
 // ========================================================================= //
 
 /**
-* @brief Returns fault when temperature exceeds the over voltage protection threshold
+* Returns fault when temperature exceeds the over temp protection threshold. This fault is cleared only when measured temperatures goes below over temp deactivation threshold. 
 */
 uint16_t NTC_SetFaultState( NTC_Handle_t * pHandle )
 {
     uint16_t hFault;
-    if ( pHandle->hAvTemp_d > pHandle->hOverTempThreshold )
+    if ( pHandle->hAvTemp_d > pHandle->hOverTempThreshold )  // Checks if measured temperature is over hOverTempThreshold
     {
         hFault = MC_OVER_TEMP;
     }
-    else if ( pHandle->hAvTemp_d < pHandle->hOverTempDeactThreshold )
+    else if ( pHandle->hAvTemp_d < pHandle->hOverTempDeactThreshold ) // Clears the fault only when measured temperature is below deactivation threshold.
     {
         hFault = MC_NO_ERROR;
     }
@@ -52,7 +52,7 @@ void NTC_Init( NTC_Handle_t * pHandle )
 }
 
 /**
-* @brief Clears internal average temperature computed value
+* Clears internal average temperature computed value
 */
 void NTC_Clear( NTC_Handle_t * pHandle )
 {
@@ -60,49 +60,50 @@ void NTC_Clear( NTC_Handle_t * pHandle )
 }
 
 /**
-* @brief Performs the temperature sensing average computation after reading an ADC conversion
+* Performs the temperature sensing average computation after reading an ADC conversion
 */
 uint16_t NTC_CalcAvTemp( NTC_Handle_t * pHandle )
 {
-    uint32_t wtemp;
-    uint16_t hAux;
-    if ( pHandle->bSensorType == REAL_SENSOR )
+    uint32_t wtemp;  // temporary 32 bit variable for calculation 
+    uint16_t hAux;   // temporary 16 bit variable for calculation
+    if ( pHandle->bSensorType == REAL_SENSOR )  // Checks if the sensor is real or virtual
     {
-        hAux = RCM_ReadConv(pHandle->convHandle);
-        if ( hAux != 0xFFFFu )
-        {
+        hAux = RCM_ReadConv(pHandle->convHandle);   // Reads raw value of converted ADC value.
+        if ( hAux != 0xFFFFu )  // Checks for max reading, if yes, no point of averaging
+            {   // Performs first order averaging:
+                // new_average = (instantenous_measurment + (previous_average * number_of_smaples - 1 )) / number_of_smaples
             wtemp =  ( uint32_t )( pHandle->hLowPassFilterBW ) - 1u;
             wtemp *= ( uint32_t ) ( pHandle->hAvTemp_d );
             wtemp += hAux;
             wtemp /= ( uint32_t )( pHandle->hLowPassFilterBW );
             pHandle->hAvTemp_d = ( uint16_t ) wtemp;
         }
-        pHandle->hFaultState = NTC_SetFaultState( pHandle );
+        pHandle->hFaultState = NTC_SetFaultState( pHandle );  // Retain state
     }
     else  // VIRTUAL_SENSOR 
     {
         pHandle->hFaultState = MC_NO_ERROR;
     }
-
-    return ( pHandle->hFaultState );
+    return pHandle->hFaultState;
 }
 
 /**
-* @brief  Returns latest averaged temperature measured expressed in u16Celsius
+* Returns latest averaged temperature measured expressed in u16Celsius
 */
 uint16_t NTC_GetAvTemp_d( NTC_Handle_t * pHandle )
 {
-    return ( pHandle->hAvTemp_d );
+    return pHandle->hAvTemp_d;
 }
 
 /**
-* @brief  Returns latest averaged temperature expressed in Celsius degrees
+* Returns latest averaged temperature expressed in Celsius degrees
 */
 int16_t NTC_GetAvTemp_C( NTC_Handle_t * pHandle )
 {
-    int32_t wTemp;
-    if ( pHandle->bSensorType == REAL_SENSOR )
-    {
+    int32_t wTemp;  // temporary 32 bit variable for calculation 
+    if ( pHandle->bSensorType == REAL_SENSOR )  // Checks for sensor type
+        {  // Converts averaged temperature measurement from digital to celsius by formula: 
+           // AvTCelsius = (( (AvTDigital-DigitalOffset)*Sensitivity )/MaxDigitalValue)+ CelsiusOffset 
         wTemp = ( int32_t )( pHandle->hAvTemp_d );
         wTemp -= ( int32_t )( pHandle->wV0 );
         wTemp *= pHandle->hSensitivity;
@@ -112,13 +113,13 @@ int16_t NTC_GetAvTemp_C( NTC_Handle_t * pHandle )
     {
         wTemp = pHandle->hExpectedTemp_C;
     }
-    return ( ( int16_t )wTemp );
+    return (int16_t) wTemp;
 }
 
 /**
-* @brief  Returns Temperature measurement fault status Fault status can be either MC_OVER_TEMP when measure exceeds the protection threshold values or MC_NO_ERROR if it is inside authorized range.
+* Returns Temperature measurement fault status Fault status can be either MC_OVER_TEMP when measure exceeds the protection threshold values or MC_NO_ERROR if it is inside authorized range.
 */
 uint16_t NTC_CheckTemp( NTC_Handle_t * pHandle )
 {
-    return ( pHandle->hFaultState );
+    return pHandle->hFaultState;
 }
