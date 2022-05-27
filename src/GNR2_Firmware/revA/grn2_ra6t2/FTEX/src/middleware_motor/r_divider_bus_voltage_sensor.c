@@ -58,7 +58,7 @@ static uint16_t RVBS_ConvertVbusFiltrered( RDivider_Handle_t * pHandle )
 
   for ( vindex = 0; vindex < pHandle->LowPassFilterBW; )
   {
-    hAux = RCM_ExecRegularConv(pHandle->convHandle);
+    hAux = RCM_ReadConv(pHandle->convHandle);
 
     if ( hAux != 0xFFFFu )
     {
@@ -142,7 +142,7 @@ uint16_t RVBS_CalcAvVbus( RDivider_Handle_t * pHandle )
   uint16_t hAux;
   uint8_t i;
 
-  hAux = RCM_ExecRegularConv(pHandle->convHandle);
+  hAux = RCM_ReadConv(pHandle->convHandle);
 
   if ( hAux != 0xFFFF )
   {

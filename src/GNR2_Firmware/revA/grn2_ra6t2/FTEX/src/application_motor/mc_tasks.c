@@ -73,6 +73,9 @@ uint8_t bMCBootCompleted = 0;
 int16_t hOpenLoopTheta = 0;
 #define OPEN_LOOP_SPEED  20
 
+uint16_t RCM_debug[5];
+bool RCM_enable = false;
+bool RCM_DebugFlag = true;
 
 /* Private functions ---------------------------------------------------------*/
 void TSK_MediumFrequencyTaskM1(void);
@@ -133,8 +136,8 @@ void MCboot(void)
 //  /******************************************************/
 //  /*   Main speed sensor component initialization       */
 //  /******************************************************/
-  pSTC[M1] = &SpeednTorqCtrlM1;
-  HALL_Init (&HALL_M1);
+    pSTC[M1] = &SpeednTorqCtrlM1;
+    HALL_Init (&HALL_M1);
 
 //  /******************************************************/
 //  /*   Speed & torque component initialization          */
@@ -157,8 +160,8 @@ void MCboot(void)
 //  /********************************************************/
 //  /*   Bus voltage sensor component initialization        */
 //  /********************************************************/
-//  pBusSensorM1 = &RealBusVoltageSensorParamsM1;
-//  RVBS_Init(pBusSensorM1);
+    pBusSensorM1 = &RealBusVoltageSensorParamsM1;
+    RVBS_Init(pBusSensorM1);
 
 //  /*************************************************/
 //  /*   Power measurement component initialization  */
@@ -170,8 +173,8 @@ void MCboot(void)
 //  /*******************************************************/
 //  /*   Temperature measurement component initialization  */
 //  /*******************************************************/
-//  NTC_Init(&TempSensorParamsM1);
-//  pTemperatureSensor[M1] = &TempSensorParamsM1;
+    NTC_Init(&TempSensorParamsM1);
+    pTemperatureSensor[M1] = &TempSensorParamsM1;
 
 //  /*******************************************************/
 //  /*   Flux weakening component initialization           */
@@ -290,8 +293,20 @@ void TSK_MediumFrequencyTaskM1(void)
   int16_t wAux = 0;
 
 //  (void) STO_PLL_CalcAvrgMecSpeedUnit( &STO_PLL_M1, &wAux );
-  bool IsSpeedReliable = HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
+    bool IsSpeedReliable = HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
 //  PQD_CalcElMotorPower( pMPM[M1] );
+    if(RCM_enable)
+    {
+    RCM_EnableConv();
+    }
+    else 
+    {
+    RCM_DisableConv();
+    }
+    RCM_ExecuteRegularConv(GROUP_2);
+    RCM_debug[0] = RCM_ReadConv(pTemperatureSensor[M1]->convHandle);
+    RCM_debug[1] = RCM_ReadConv(pBusSensorM1->convHandle);
+    
 
   StateM1 = STM_GetState( &STM[M1] );
 
@@ -725,7 +740,7 @@ __NO_RETURN void startMCMediumFrequencyTask(void * pvParameter)
   /* Infinite loop */
   for(;;)
   {
-		R_GPT_THREE_PHASE_DutyCycleSet(g_three_phase0.p_ctrl, &PWM_Handle_M1.sDutyCycle);
+    MC_RunMotorControlTasks();
 		
     /* delay of 500us */
     osDelay(1);

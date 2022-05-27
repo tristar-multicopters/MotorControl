@@ -48,25 +48,6 @@
             <slot name="IRQ4" secure="false"/>
             <slot name="IRQ5" secure="false"/>
             <slot name="IRQ6" secure="false"/>
-            <slot name="IRQ7" secure="false"/>
-            <slot name="IRQ8" secure="false"/>
-            <slot name="IRQ9" secure="false"/>
-            <slot name="IRQ10" secure="false"/>
-            <slot name="IRQ11" secure="false"/>
-            <slot name="IRQ12" secure="false"/>
-            <slot name="IRQ13" secure="false"/>
-            <slot name="IRQ14" secure="false"/>
-            <slot name="IRQ15" secure="false"/>
-            <slot name="IRQ16" secure="false"/>
-            <slot name="IRQ17" secure="false"/>
-            <slot name="IRQ18" secure="false"/>
-            <slot name="IRQ19" secure="false"/>
-            <slot name="IRQ20" secure="false"/>
-            <slot name="IRQ21" secure="false"/>
-            <slot name="IRQ22" secure="false"/>
-            <slot name="IRQ23" secure="false"/>
-            <slot name="IRQ24" secure="false"/>
-            <slot name="IRQ25" secure="false"/>
         </peripheral>
     </partition>
 </azone>

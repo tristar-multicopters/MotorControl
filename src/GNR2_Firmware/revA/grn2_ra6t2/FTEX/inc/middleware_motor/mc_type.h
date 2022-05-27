@@ -312,6 +312,16 @@ typedef struct
 #define MC_ADC_CHANNEL_16    16
 #define MC_ADC_CHANNEL_17    17
 #define MC_ADC_CHANNEL_18    18
+#define MC_ADC_CHANNEL_19    19
+#define MC_ADC_CHANNEL_20    20
+#define MC_ADC_CHANNEL_21    21
+#define MC_ADC_CHANNEL_22    22
+#define MC_ADC_CHANNEL_23    23
+#define MC_ADC_CHANNEL_24    24
+#define MC_ADC_CHANNEL_25    25
+#define MC_ADC_CHANNEL_26    26
+#define MC_ADC_CHANNEL_27    27
+#define MC_ADC_CHANNEL_28    28
 /** @} */
 
 /** @name Utility macros definitions */

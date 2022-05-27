@@ -218,7 +218,7 @@ const external_irq_instance_t g_external_irq0 =
                                    .channel_control_b_bits.compare_match_enable = false,
 
                                    .channel_control_c_bits.limiter_clip_table_id = ADC_B_LIMIT_CLIP_TABLE_SELECTION_NONE,
-                                   .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_16_BIT),
+                                   .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_12_BIT),
                                    .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_4) != ADC_CHANNEL_SELF_DIAGNOSIS),
                                };
                                #endif
@@ -241,19 +241,19 @@ const external_irq_instance_t g_external_irq0 =
                                    .channel_control_b_bits.compare_match_enable = false,
 
                                    .channel_control_c_bits.limiter_clip_table_id = ADC_B_LIMIT_CLIP_TABLE_SELECTION_NONE,
-                                   .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_16_BIT),
+                                   .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_12_BIT),
                                    .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_2) != ADC_CHANNEL_SELF_DIAGNOSIS),
                                };
                                #endif
 
-                               #if (0) // Define Virtual Channel 2 if it's assigned to a scan group.
+                               #if (2) // Define Virtual Channel 2 if it's assigned to a scan group.
                                const adc_b_virtual_channel_cfg_t virtual_channel_2_cfg =
                                {
                                    .channel_id             = ADC_B_VIRTUAL_CHANNEL_2,
 
-                                   .channel_cfg_bits.group             = (0),
-                                   .channel_cfg_bits.channel           = (ADC_CHANNEL_0),
-                                   .channel_cfg_bits.self_diag_enabled = ((ADC_CHANNEL_0) == ADC_CHANNEL_SELF_DIAGNOSIS),
+                                   .channel_cfg_bits.group             = (2),
+                                   .channel_cfg_bits.channel           = (ADC_CHANNEL_6),
+                                   .channel_cfg_bits.self_diag_enabled = ((ADC_CHANNEL_6) == ADC_CHANNEL_SELF_DIAGNOSIS),
                                    .channel_cfg_bits.sample_table_id   = ADC_B_SAMPLING_STATE_TABLE_0,
 
                                    .channel_control_a_bits.offset_table_id = ADC_B_USER_OFFSET_TABLE_SELECTION_DISABLED,
@@ -265,18 +265,18 @@ const external_irq_instance_t g_external_irq0 =
 
                                    .channel_control_c_bits.limiter_clip_table_id = ADC_B_LIMIT_CLIP_TABLE_SELECTION_NONE,
                                    .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_12_BIT),
-                                   .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_0) != ADC_CHANNEL_SELF_DIAGNOSIS),
+                                   .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_6) != ADC_CHANNEL_SELF_DIAGNOSIS),
                                };
                                #endif
 
-                               #if (0) // Define Virtual Channel 3 if it's assigned to a scan group.
+                               #if (2) // Define Virtual Channel 3 if it's assigned to a scan group.
                                const adc_b_virtual_channel_cfg_t virtual_channel_3_cfg =
                                {
                                    .channel_id             = ADC_B_VIRTUAL_CHANNEL_3,
 
-                                   .channel_cfg_bits.group             = (0),
-                                   .channel_cfg_bits.channel           = (ADC_CHANNEL_0),
-                                   .channel_cfg_bits.self_diag_enabled = ((ADC_CHANNEL_0) == ADC_CHANNEL_SELF_DIAGNOSIS),
+                                   .channel_cfg_bits.group             = (2),
+                                   .channel_cfg_bits.channel           = (ADC_CHANNEL_7),
+                                   .channel_cfg_bits.self_diag_enabled = ((ADC_CHANNEL_7) == ADC_CHANNEL_SELF_DIAGNOSIS),
                                    .channel_cfg_bits.sample_table_id   = ADC_B_SAMPLING_STATE_TABLE_0,
 
                                    .channel_control_a_bits.offset_table_id = ADC_B_USER_OFFSET_TABLE_SELECTION_DISABLED,
@@ -288,18 +288,18 @@ const external_irq_instance_t g_external_irq0 =
 
                                    .channel_control_c_bits.limiter_clip_table_id = ADC_B_LIMIT_CLIP_TABLE_SELECTION_NONE,
                                    .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_12_BIT),
-                                   .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_0) != ADC_CHANNEL_SELF_DIAGNOSIS),
+                                   .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_7) != ADC_CHANNEL_SELF_DIAGNOSIS),
                                };
                                #endif
 
-                               #if (0) // Define Virtual Channel 4 if it's assigned to a scan group.
+                               #if (3) // Define Virtual Channel 4 if it's assigned to a scan group.
                                const adc_b_virtual_channel_cfg_t virtual_channel_4_cfg =
                                {
                                    .channel_id             = ADC_B_VIRTUAL_CHANNEL_4,
 
-                                   .channel_cfg_bits.group             = (0),
-                                   .channel_cfg_bits.channel           = (ADC_CHANNEL_0),
-                                   .channel_cfg_bits.self_diag_enabled = ((ADC_CHANNEL_0) == ADC_CHANNEL_SELF_DIAGNOSIS),
+                                   .channel_cfg_bits.group             = (3),
+                                   .channel_cfg_bits.channel           = (ADC_CHANNEL_17),
+                                   .channel_cfg_bits.self_diag_enabled = ((ADC_CHANNEL_17) == ADC_CHANNEL_SELF_DIAGNOSIS),
                                    .channel_cfg_bits.sample_table_id   = ADC_B_SAMPLING_STATE_TABLE_0,
 
                                    .channel_control_a_bits.offset_table_id = ADC_B_USER_OFFSET_TABLE_SELECTION_DISABLED,
@@ -311,7 +311,7 @@ const external_irq_instance_t g_external_irq0 =
 
                                    .channel_control_c_bits.limiter_clip_table_id = ADC_B_LIMIT_CLIP_TABLE_SELECTION_NONE,
                                    .channel_control_c_bits.channel_resolution = (ADC_B_RESOLUTION_12_BIT),
-                                   .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_0) != ADC_CHANNEL_SELF_DIAGNOSIS),
+                                   .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_17) != ADC_CHANNEL_SELF_DIAGNOSIS),
                                };
                                #endif
 
@@ -1050,7 +1050,7 @@ const external_irq_instance_t g_external_irq0 =
                                    .channel_control_c_bits.data_sign_selection = ((ADC_CHANNEL_0) != ADC_CHANNEL_SELF_DIAGNOSIS),
                                };
                                #endif
-#if (((1) == 1)||((1) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1))
+#if (((1) == 1)||((1) == 1)||((2) == 1)||((2) == 1)||((3) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1))
 const adc_b_virtual_channel_cfg_t *const group_0_virtual_channels[] = {
                                   #if ((1) == 1)
                                       &virtual_channel_0_cfg,
@@ -1060,15 +1060,15 @@ const adc_b_virtual_channel_cfg_t *const group_0_virtual_channels[] = {
                                       &virtual_channel_1_cfg,
                                   #endif
 
-                                  #if ((0) == 1)
+                                  #if ((2) == 1)
                                       &virtual_channel_2_cfg,
                                   #endif
 
-                                  #if ((0) == 1)
+                                  #if ((2) == 1)
                                       &virtual_channel_3_cfg,
                                   #endif
 
-                                  #if ((0) == 1)
+                                  #if ((3) == 1)
                                       &virtual_channel_4_cfg,
                                   #endif
 
@@ -1201,7 +1201,7 @@ const adc_b_virtual_channel_cfg_t *const group_0_virtual_channels[] = {
                                   #endif
                                   };
                                   #endif
-#if (((1) == 2)||((1) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2))
+#if (((1) == 2)||((1) == 2)||((2) == 2)||((2) == 2)||((3) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2))
 const adc_b_virtual_channel_cfg_t *const group_1_virtual_channels[] = {
                                   #if ((1) == 2)
                                       &virtual_channel_0_cfg,
@@ -1211,15 +1211,15 @@ const adc_b_virtual_channel_cfg_t *const group_1_virtual_channels[] = {
                                       &virtual_channel_1_cfg,
                                   #endif
 
-                                  #if ((0) == 2)
+                                  #if ((2) == 2)
                                       &virtual_channel_2_cfg,
                                   #endif
 
-                                  #if ((0) == 2)
+                                  #if ((2) == 2)
                                       &virtual_channel_3_cfg,
                                   #endif
 
-                                  #if ((0) == 2)
+                                  #if ((3) == 2)
                                       &virtual_channel_4_cfg,
                                   #endif
 
@@ -1352,7 +1352,7 @@ const adc_b_virtual_channel_cfg_t *const group_1_virtual_channels[] = {
                                   #endif
                                   };
                                   #endif
-#if (((1) == 3)||((1) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3))
+#if (((1) == 3)||((1) == 3)||((2) == 3)||((2) == 3)||((3) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3))
 const adc_b_virtual_channel_cfg_t *const group_2_virtual_channels[] = {
                                   #if ((1) == 3)
                                       &virtual_channel_0_cfg,
@@ -1362,15 +1362,15 @@ const adc_b_virtual_channel_cfg_t *const group_2_virtual_channels[] = {
                                       &virtual_channel_1_cfg,
                                   #endif
 
-                                  #if ((0) == 3)
+                                  #if ((2) == 3)
                                       &virtual_channel_2_cfg,
                                   #endif
 
-                                  #if ((0) == 3)
+                                  #if ((2) == 3)
                                       &virtual_channel_3_cfg,
                                   #endif
 
-                                  #if ((0) == 3)
+                                  #if ((3) == 3)
                                       &virtual_channel_4_cfg,
                                   #endif
 
@@ -1503,7 +1503,7 @@ const adc_b_virtual_channel_cfg_t *const group_2_virtual_channels[] = {
                                   #endif
                                   };
                                   #endif
-#if (((1) == 4)||((1) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4))
+#if (((1) == 4)||((1) == 4)||((2) == 4)||((2) == 4)||((3) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4))
 const adc_b_virtual_channel_cfg_t *const group_3_virtual_channels[] = {
                                   #if ((1) == 4)
                                       &virtual_channel_0_cfg,
@@ -1513,15 +1513,15 @@ const adc_b_virtual_channel_cfg_t *const group_3_virtual_channels[] = {
                                       &virtual_channel_1_cfg,
                                   #endif
 
-                                  #if ((0) == 4)
+                                  #if ((2) == 4)
                                       &virtual_channel_2_cfg,
                                   #endif
 
-                                  #if ((0) == 4)
+                                  #if ((2) == 4)
                                       &virtual_channel_3_cfg,
                                   #endif
 
-                                  #if ((0) == 4)
+                                  #if ((3) == 4)
                                       &virtual_channel_4_cfg,
                                   #endif
 
@@ -1654,7 +1654,7 @@ const adc_b_virtual_channel_cfg_t *const group_3_virtual_channels[] = {
                                   #endif
                                   };
                                   #endif
-#if (((1) == 5)||((1) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5))
+#if (((1) == 5)||((1) == 5)||((2) == 5)||((2) == 5)||((3) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5))
 const adc_b_virtual_channel_cfg_t *const group_4_virtual_channels[] = {
                                   #if ((1) == 5)
                                       &virtual_channel_0_cfg,
@@ -1664,15 +1664,15 @@ const adc_b_virtual_channel_cfg_t *const group_4_virtual_channels[] = {
                                       &virtual_channel_1_cfg,
                                   #endif
 
-                                  #if ((0) == 5)
+                                  #if ((2) == 5)
                                       &virtual_channel_2_cfg,
                                   #endif
 
-                                  #if ((0) == 5)
+                                  #if ((2) == 5)
                                       &virtual_channel_3_cfg,
                                   #endif
 
-                                  #if ((0) == 5)
+                                  #if ((3) == 5)
                                       &virtual_channel_4_cfg,
                                   #endif
 
@@ -1805,7 +1805,7 @@ const adc_b_virtual_channel_cfg_t *const group_4_virtual_channels[] = {
                                   #endif
                                   };
                                   #endif
-#if (((1) == 6)||((1) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6))
+#if (((1) == 6)||((1) == 6)||((2) == 6)||((2) == 6)||((3) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6))
 const adc_b_virtual_channel_cfg_t *const group_5_virtual_channels[] = {
                                   #if ((1) == 6)
                                       &virtual_channel_0_cfg,
@@ -1815,15 +1815,15 @@ const adc_b_virtual_channel_cfg_t *const group_5_virtual_channels[] = {
                                       &virtual_channel_1_cfg,
                                   #endif
 
-                                  #if ((0) == 6)
+                                  #if ((2) == 6)
                                       &virtual_channel_2_cfg,
                                   #endif
 
-                                  #if ((0) == 6)
+                                  #if ((2) == 6)
                                       &virtual_channel_3_cfg,
                                   #endif
 
-                                  #if ((0) == 6)
+                                  #if ((3) == 6)
                                       &virtual_channel_4_cfg,
                                   #endif
 
@@ -1956,7 +1956,7 @@ const adc_b_virtual_channel_cfg_t *const group_5_virtual_channels[] = {
                                   #endif
                                   };
                                   #endif
-#if (((1) == 7)||((1) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7))
+#if (((1) == 7)||((1) == 7)||((2) == 7)||((2) == 7)||((3) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7))
 const adc_b_virtual_channel_cfg_t *const group_6_virtual_channels[] = {
                                   #if ((1) == 7)
                                       &virtual_channel_0_cfg,
@@ -1966,15 +1966,15 @@ const adc_b_virtual_channel_cfg_t *const group_6_virtual_channels[] = {
                                       &virtual_channel_1_cfg,
                                   #endif
 
-                                  #if ((0) == 7)
+                                  #if ((2) == 7)
                                       &virtual_channel_2_cfg,
                                   #endif
 
-                                  #if ((0) == 7)
+                                  #if ((2) == 7)
                                       &virtual_channel_3_cfg,
                                   #endif
 
-                                  #if ((0) == 7)
+                                  #if ((3) == 7)
                                       &virtual_channel_4_cfg,
                                   #endif
 
@@ -2107,7 +2107,7 @@ const adc_b_virtual_channel_cfg_t *const group_6_virtual_channels[] = {
                                   #endif
                                   };
                                   #endif
-#if (((1) == 8)||((1) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8))
+#if (((1) == 8)||((1) == 8)||((2) == 8)||((2) == 8)||((3) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8))
 const adc_b_virtual_channel_cfg_t *const group_7_virtual_channels[] = {
                                   #if ((1) == 8)
                                       &virtual_channel_0_cfg,
@@ -2117,15 +2117,15 @@ const adc_b_virtual_channel_cfg_t *const group_7_virtual_channels[] = {
                                       &virtual_channel_1_cfg,
                                   #endif
 
-                                  #if ((0) == 8)
+                                  #if ((2) == 8)
                                       &virtual_channel_2_cfg,
                                   #endif
 
-                                  #if ((0) == 8)
+                                  #if ((2) == 8)
                                       &virtual_channel_3_cfg,
                                   #endif
 
-                                  #if ((0) == 8)
+                                  #if ((3) == 8)
                                       &virtual_channel_4_cfg,
                                   #endif
 
@@ -2258,7 +2258,7 @@ const adc_b_virtual_channel_cfg_t *const group_7_virtual_channels[] = {
                                   #endif
                                   };
                                   #endif
-#if (((1) == 9)||((1) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9))
+#if (((1) == 9)||((1) == 9)||((2) == 9)||((2) == 9)||((3) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9))
 const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                                   #if ((1) == 9)
                                       &virtual_channel_0_cfg,
@@ -2268,15 +2268,15 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                                       &virtual_channel_1_cfg,
                                   #endif
 
-                                  #if ((0) == 9)
+                                  #if ((2) == 9)
                                       &virtual_channel_2_cfg,
                                   #endif
 
-                                  #if ((0) == 9)
+                                  #if ((2) == 9)
                                       &virtual_channel_3_cfg,
                                   #endif
 
-                                  #if ((0) == 9)
+                                  #if ((3) == 9)
                                       &virtual_channel_4_cfg,
                                   #endif
 
@@ -2425,8 +2425,8 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
 
                          .limit_clip_interrupt_enable     = (0),
                          .virtual_channel_count           = 0 + (
-                         ((1) == 1)+((1) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)),
-#if (((1) == 1)||((1) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1))
+                         ((1) == 1)+((1) == 1)+((2) == 1)+((2) == 1)+((3) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)+((0) == 1)),
+#if (((1) == 1)||((1) == 1)||((2) == 1)||((2) == 1)||((3) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1)||((0) == 1))
 
                          .p_virtual_channels = (adc_b_virtual_channel_cfg_t**)group_0_virtual_channels,
                          #else
@@ -2435,23 +2435,23 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                      };
                      #endif
 
-                     #if (0) // Define Scan Group 1 if it's enabled
+                     #if (1) // Define Scan Group 1 if it's enabled
                      const adc_b_group_cfg_t adc_b_group_1_cfg =
                      {
                          .scan_group_id                   = ADC_GROUP_ID_1,
-                         .converter_selection             = (0),
-                         .scan_group_enable               = (0),
-                         .scan_end_interrupt_enable       = (1),
+                         .converter_selection             = (1),
+                         .scan_group_enable               = (1),
+                         .scan_end_interrupt_enable       = (0),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
                          .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
-                         .limit_clip_interrupt_enable     = (1),
+                         .limit_clip_interrupt_enable     = (0),
                          .virtual_channel_count           = 0 + (
-                         ((1) == 2)+((1) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)),
-#if (((1) == 2)||((1) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2))
+                         ((1) == 2)+((1) == 2)+((2) == 2)+((2) == 2)+((3) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)+((0) == 2)),
+#if (((1) == 2)||((1) == 2)||((2) == 2)||((2) == 2)||((3) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2)||((0) == 2))
 
                          .p_virtual_channels = (adc_b_virtual_channel_cfg_t**)group_1_virtual_channels,
                          #else
@@ -2460,23 +2460,23 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                      };
                      #endif
 
-                     #if (0) // Define Scan Group 2 if it's enabled
+                     #if (1) // Define Scan Group 2 if it's enabled
                      const adc_b_group_cfg_t adc_b_group_2_cfg =
                      {
                          .scan_group_id                   = ADC_GROUP_ID_2,
-                         .converter_selection             = (0),
-                         .scan_group_enable               = (0),
-                         .scan_end_interrupt_enable       = (1),
+                         .converter_selection             = (1),
+                         .scan_group_enable               = (1),
+                         .scan_end_interrupt_enable       = (0),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
                          .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
-                         .limit_clip_interrupt_enable     = (1),
+                         .limit_clip_interrupt_enable     = (0),
                          .virtual_channel_count           = 0 + (
-                         ((1) == 3)+((1) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)),
-#if (((1) == 3)||((1) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3))
+                         ((1) == 3)+((1) == 3)+((2) == 3)+((2) == 3)+((3) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)+((0) == 3)),
+#if (((1) == 3)||((1) == 3)||((2) == 3)||((2) == 3)||((3) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3)||((0) == 3))
 
                          .p_virtual_channels = (adc_b_virtual_channel_cfg_t**)group_2_virtual_channels,
                          #else
@@ -2489,19 +2489,19 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                      const adc_b_group_cfg_t adc_b_group_3_cfg =
                      {
                          .scan_group_id                   = ADC_GROUP_ID_3,
-                         .converter_selection             = (0),
+                         .converter_selection             = (1),
                          .scan_group_enable               = (0),
-                         .scan_end_interrupt_enable       = (1),
+                         .scan_end_interrupt_enable       = (0),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
                          .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
-                         .limit_clip_interrupt_enable     = (1),
+                         .limit_clip_interrupt_enable     = (0),
                          .virtual_channel_count           = 0 + (
-                         ((1) == 4)+((1) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)),
-#if (((1) == 4)||((1) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4))
+                         ((1) == 4)+((1) == 4)+((2) == 4)+((2) == 4)+((3) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)+((0) == 4)),
+#if (((1) == 4)||((1) == 4)||((2) == 4)||((2) == 4)||((3) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4)||((0) == 4))
 
                          .p_virtual_channels = (adc_b_virtual_channel_cfg_t**)group_3_virtual_channels,
                          #else
@@ -2514,19 +2514,19 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                      const adc_b_group_cfg_t adc_b_group_4_cfg =
                      {
                          .scan_group_id                   = ADC_GROUP_ID_4,
-                         .converter_selection             = (0),
+                         .converter_selection             = (1),
                          .scan_group_enable               = (0),
-                         .scan_end_interrupt_enable       = (1),
+                         .scan_end_interrupt_enable       = (0),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
                          .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
-                         .limit_clip_interrupt_enable     = (1),
+                         .limit_clip_interrupt_enable     = (0),
                          .virtual_channel_count           = 0 + (
-                         ((1) == 5)+((1) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)),
-#if (((1) == 5)||((1) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5))
+                         ((1) == 5)+((1) == 5)+((2) == 5)+((2) == 5)+((3) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)+((0) == 5)),
+#if (((1) == 5)||((1) == 5)||((2) == 5)||((2) == 5)||((3) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5)||((0) == 5))
 
                          .p_virtual_channels = (adc_b_virtual_channel_cfg_t**)group_4_virtual_channels,
                          #else
@@ -2539,19 +2539,19 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                      const adc_b_group_cfg_t adc_b_group_5_cfg =
                      {
                          .scan_group_id                   = ADC_GROUP_ID_5,
-                         .converter_selection             = (0),
+                         .converter_selection             = (1),
                          .scan_group_enable               = (0),
-                         .scan_end_interrupt_enable       = (1),
+                         .scan_end_interrupt_enable       = (0),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
                          .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
-                         .limit_clip_interrupt_enable     = (1),
+                         .limit_clip_interrupt_enable     = (0),
                          .virtual_channel_count           = 0 + (
-                         ((1) == 6)+((1) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)),
-#if (((1) == 6)||((1) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6))
+                         ((1) == 6)+((1) == 6)+((2) == 6)+((2) == 6)+((3) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)+((0) == 6)),
+#if (((1) == 6)||((1) == 6)||((2) == 6)||((2) == 6)||((3) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6)||((0) == 6))
 
                          .p_virtual_channels = (adc_b_virtual_channel_cfg_t**)group_5_virtual_channels,
                          #else
@@ -2564,19 +2564,19 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                      const adc_b_group_cfg_t adc_b_group_6_cfg =
                      {
                          .scan_group_id                   = ADC_GROUP_ID_6,
-                         .converter_selection             = (0),
+                         .converter_selection             = (1),
                          .scan_group_enable               = (0),
-                         .scan_end_interrupt_enable       = (1),
+                         .scan_end_interrupt_enable       = (0),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
                          .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
-                         .limit_clip_interrupt_enable     = (1),
+                         .limit_clip_interrupt_enable     = (0),
                          .virtual_channel_count           = 0 + (
-                         ((1) == 7)+((1) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)),
-#if (((1) == 7)||((1) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7))
+                         ((1) == 7)+((1) == 7)+((2) == 7)+((2) == 7)+((3) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)+((0) == 7)),
+#if (((1) == 7)||((1) == 7)||((2) == 7)||((2) == 7)||((3) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7)||((0) == 7))
 
                          .p_virtual_channels = (adc_b_virtual_channel_cfg_t**)group_6_virtual_channels,
                          #else
@@ -2589,19 +2589,19 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                      const adc_b_group_cfg_t adc_b_group_7_cfg =
                      {
                          .scan_group_id                   = ADC_GROUP_ID_7,
-                         .converter_selection             = (0),
+                         .converter_selection             = (1),
                          .scan_group_enable               = (0),
-                         .scan_end_interrupt_enable       = (1),
+                         .scan_end_interrupt_enable       = (0),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
                          .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
-                         .limit_clip_interrupt_enable     = (1),
+                         .limit_clip_interrupt_enable     = (0),
                          .virtual_channel_count           = 0 + (
-                         ((1) == 8)+((1) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)),
-#if (((1) == 8)||((1) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8))
+                         ((1) == 8)+((1) == 8)+((2) == 8)+((2) == 8)+((3) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)+((0) == 8)),
+#if (((1) == 8)||((1) == 8)||((2) == 8)||((2) == 8)||((3) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8)||((0) == 8))
 
                          .p_virtual_channels = (adc_b_virtual_channel_cfg_t**)group_7_virtual_channels,
                          #else
@@ -2614,19 +2614,19 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                      const adc_b_group_cfg_t adc_b_group_8_cfg =
                      {
                          .scan_group_id                   = ADC_GROUP_ID_8,
-                         .converter_selection             = (0),
+                         .converter_selection             = (1),
                          .scan_group_enable               = (0),
-                         .scan_end_interrupt_enable       = (1),
+                         .scan_end_interrupt_enable       = (0),
                          .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
                          .elc_trigger_enable_mask         = ( 0x00),
                          .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
-                         .limit_clip_interrupt_enable     = (1),
+                         .limit_clip_interrupt_enable     = (0),
                          .virtual_channel_count           = 0 + (
-                         ((1) == 9)+((1) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)),
-#if (((1) == 9)||((1) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9))
+                         ((1) == 9)+((1) == 9)+((2) == 9)+((2) == 9)+((3) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)+((0) == 9)),
+#if (((1) == 9)||((1) == 9)||((2) == 9)||((2) == 9)||((3) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9)||((0) == 9))
 
                          .p_virtual_channels = (adc_b_virtual_channel_cfg_t**)group_8_virtual_channels,
                          #else
@@ -2634,17 +2634,17 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          #endif
                      };
                      #endif
-#if ((1)||(0)||(0)||(0)||(0)||(0)||(0)||(0)||(0))
+#if ((1)||(1)||(1)||(0)||(0)||(0)||(0)||(0)||(0))
 const adc_b_group_cfg_t * const adc_b_scan_cfg_groups[] = {
                            #if (0 != (1))
                            &adc_b_group_0_cfg,
                            #endif
 
-                           #if (0 != (0))
+                           #if (0 != (1))
                            &adc_b_group_1_cfg,
                            #endif
 
-                           #if (0 != (0))
+                           #if (0 != (1))
                            &adc_b_group_2_cfg,
                            #endif
 
@@ -2677,8 +2677,8 @@ const adc_b_group_cfg_t * const adc_b_scan_cfg_groups[] = {
                        const adc_b_scan_cfg_t g_adc_scan_cfg =
                        {
                        .group_count = ( 0 +
-                       (0 != (1)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0))),
-#if ((0 != (1))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0)))
+                       (0 != (1)) + (0 != (1)) + (0 != (1)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0))),
+#if ((0 != (1))||(0 != (1))||(0 != (1))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0)))
                        .p_adc_groups = (adc_b_group_cfg_t**)adc_b_scan_cfg_groups,
                        #else
                        .p_adc_groups = NULL,
@@ -2687,27 +2687,27 @@ const adc_b_group_cfg_t * const adc_b_scan_cfg_groups[] = {
 
      const adc_b_isr_cfg_t g_adc_isr_cfg =
 {
-    .calibration_end_ipl_adc_0 =  (12),
-    .calibration_end_ipl_adc_1 =  (12),
-    .limit_clip_ipl           =  (12),
-    .conversion_error_ipl_adc_0 = (12),
-    .conversion_error_ipl_adc_1 = (12),
-    .overflow_error_ipl_adc_0 =   (12),
-    .overflow_error_ipl_adc_1 =   (12),
+    .calibration_end_ipl_adc_0 =  (BSP_IRQ_DISABLED),
+    .calibration_end_ipl_adc_1 =  (BSP_IRQ_DISABLED),
+    .limit_clip_ipl           =  (BSP_IRQ_DISABLED),
+    .conversion_error_ipl_adc_0 = (BSP_IRQ_DISABLED),
+    .conversion_error_ipl_adc_1 = (BSP_IRQ_DISABLED),
+    .overflow_error_ipl_adc_0 =   (BSP_IRQ_DISABLED),
+    .overflow_error_ipl_adc_1 =   (BSP_IRQ_DISABLED),
 
     .scan_end_ipl_group_0 = (12),
-    .scan_end_ipl_group_1 = (12),
-    .scan_end_ipl_group_2 = (12),
-    .scan_end_ipl_group_3 = (12),
-    .scan_end_ipl_group_4 = (12),
-    .scan_end_ipl_group_5678 = (12),
-    .fifo_overflow_ipl = (12),
-    .fifo_read_ipl_group_0 = (12),
-    .fifo_read_ipl_group_1 = (12),
-    .fifo_read_ipl_group_2 = (12),
-    .fifo_read_ipl_group_3 = (12),
-    .fifo_read_ipl_group_4 = (12),
-    .fifo_read_ipl_group_5678 = (12),
+    .scan_end_ipl_group_1 = (BSP_IRQ_DISABLED),
+    .scan_end_ipl_group_2 = (BSP_IRQ_DISABLED),
+    .scan_end_ipl_group_3 = (BSP_IRQ_DISABLED),
+    .scan_end_ipl_group_4 = (BSP_IRQ_DISABLED),
+    .scan_end_ipl_group_5678 = (BSP_IRQ_DISABLED),
+    .fifo_overflow_ipl = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_0 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_1 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_2 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_3 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_4 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_5678 = (BSP_IRQ_DISABLED),
 #if defined(VECTOR_NUMBER_ADC12_CALEND0)
     .calibration_end_irq_adc_0 = VECTOR_NUMBER_ADC12_CALEND0,
 #else
@@ -2819,16 +2819,16 @@ const adc_b_extended_cfg_t g_adc_cfg_extend =
                                (100 << R_ADC_B0_ADSYCR_ADSYCYC_Pos)),
     .adc_b_mode =  (((0) << R_ADC_B0_ADMDR_ADMD0_Pos) | ((0) << R_ADC_B0_ADMDR_ADMD1_Pos)),
     .converter_selection_0 = (((0) << R_ADC_B0_ADSGCR0_SGADS0_Pos) |
-                              ((0) << R_ADC_B0_ADSGCR0_SGADS1_Pos) |
-                              ((0) << R_ADC_B0_ADSGCR0_SGADS2_Pos) |
-                              ((0) << R_ADC_B0_ADSGCR0_SGADS3_Pos)),
-    .converter_selection_1 = (((0) << R_ADC_B0_ADSGCR1_SGADS4_Pos) |
-                              ((0) << R_ADC_B0_ADSGCR1_SGADS5_Pos) |
-                              ((0) << R_ADC_B0_ADSGCR1_SGADS6_Pos) |
-                              ((0) << R_ADC_B0_ADSGCR1_SGADS7_Pos)),
-    .converter_selection_2 =  ((0) << R_ADC_B0_ADSGCR2_SGADS8_Pos),
+                              ((1) << R_ADC_B0_ADSGCR0_SGADS1_Pos) |
+                              ((1) << R_ADC_B0_ADSGCR0_SGADS2_Pos) |
+                              ((1) << R_ADC_B0_ADSGCR0_SGADS3_Pos)),
+    .converter_selection_1 = (((1) << R_ADC_B0_ADSGCR1_SGADS4_Pos) |
+                              ((1) << R_ADC_B0_ADSGCR1_SGADS5_Pos) |
+                              ((1) << R_ADC_B0_ADSGCR1_SGADS6_Pos) |
+                              ((1) << R_ADC_B0_ADSGCR1_SGADS7_Pos)),
+    .converter_selection_2 =  ((1) << R_ADC_B0_ADSGCR2_SGADS8_Pos),
 
-    .fifo_enable_mask     = (((1) << R_ADC_B0_ADFIFOCR_FIFOEN0_Pos) |
+    .fifo_enable_mask     = (((0) << R_ADC_B0_ADFIFOCR_FIFOEN0_Pos) |
                              ((0) << R_ADC_B0_ADFIFOCR_FIFOEN1_Pos) |
                              ((0) << R_ADC_B0_ADFIFOCR_FIFOEN2_Pos) |
                              ((0) << R_ADC_B0_ADFIFOCR_FIFOEN3_Pos) |
@@ -2966,7 +2966,7 @@ const adc_cfg_t g_adc_cfg =
     .resolution          = (adc_resolution_t) 0, // Unused
     .alignment           = ADC_ALIGNMENT_RIGHT,
     .trigger             = (adc_trigger_t) 0, // Unused
-    .p_callback          = CS_ADC_IRQHandler,
+    .p_callback          = NULL,
 #if defined(NULL)
     .p_context           = NULL,
 #else
@@ -3217,7 +3217,7 @@ const gpt_extended_pwm_cfg_t g_timer4_pwm_extend =
     .adc_trigger         = GPT_ADC_TRIGGER_UP_COUNT_START_ADC_A |  GPT_ADC_TRIGGER_NONE,
     .dead_time_count_up  = 50,
     .dead_time_count_down = 50,
-    .adc_a_compare_match = 0,
+    .adc_a_compare_match = 1,
     .adc_b_compare_match = 0,
     .interrupt_skip_source = GPT_INTERRUPT_SKIP_SOURCE_NONE,
     .interrupt_skip_count  = GPT_INTERRUPT_SKIP_COUNT_0,

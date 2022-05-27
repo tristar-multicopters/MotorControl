@@ -280,51 +280,49 @@ HALL_Handle_t HALL_M1 =
   .H3PortPin = M1_ENC_W,
 };
 
-///**
-//  * temperature sensor parameters Motor 1
-//  */
-//NTC_Handle_t TempSensorParamsM1 =
-//{
-//  .bSensorType = REAL_SENSOR,
-//  .TempRegConv =
-//  {
-//    .regADC = ADC2,
-//    .channel = MC_ADC_CHANNEL_12,
-//    .samplingTime = M1_TEMP_SAMPLING_TIME,
-//  },
-//  .hLowPassFilterBW        = M1_TEMP_SW_FILTER_BW_FACTOR,
-//  .hOverTempThreshold      = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d),
-//  .hOverTempDeactThreshold = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d - OV_TEMPERATURE_HYSTERESIS_d),
-//  .hSensitivity            = (uint16_t)(ADC_REFERENCE_VOLTAGE/dV_dT),
-//  .wV0                     = (uint16_t)(V0_V *65536/ ADC_REFERENCE_VOLTAGE),
-//  .hT0                     = T0_C,
-//};
+/**
+  * temperature sensor parameters Motor 1
+  */
+NTC_Handle_t TempSensorParamsM1 =
+{
+  .bSensorType = REAL_SENSOR,
+  .TempRegConv =
+  {
+    .regADC = &g_adc,
+    .channel = MC_ADC_CHANNEL_6,
+  },
+  .hLowPassFilterBW        = M1_TEMP_SW_FILTER_BW_FACTOR,
+  .hOverTempThreshold      = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d),
+  .hOverTempDeactThreshold = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d - OV_TEMPERATURE_HYSTERESIS_d),
+  .hSensitivity            = (uint16_t)(ADC_REFERENCE_VOLTAGE/dV_dT),
+  .wV0                     = (uint16_t)(V0_V *65536/ ADC_REFERENCE_VOLTAGE),
+  .hT0                     = T0_C,
+};
 
 ///* Bus voltage sensor value filter buffer */
-//uint16_t RealBusVoltageSensorFilterBufferM1[M1_VBUS_SW_FILTER_BW_FACTOR];
+uint16_t RealBusVoltageSensorFilterBufferM1[M1_VBUS_SW_FILTER_BW_FACTOR];
 
-///**
-//  * Bus voltage sensor parameters Motor 1
-//  */
-//RDivider_Handle_t RealBusVoltageSensorParamsM1 =
-//{
-//  ._Super                =
-//  {
-//    .SensorType          = REAL_SENSOR,
-//    .ConversionFactor    = (uint16_t)(ADC_REFERENCE_VOLTAGE / VBUS_PARTITIONING_FACTOR),
-//  },
+/**
+  * Bus voltage sensor parameters Motor 1
+  */
+RDivider_Handle_t RealBusVoltageSensorParamsM1 =
+{
+  ._Super                =
+  {
+    .SensorType          = REAL_SENSOR,
+    .ConversionFactor    = (uint16_t)(ADC_REFERENCE_VOLTAGE / VBUS_PARTITIONING_FACTOR),
+  },
 
-//  .VbusRegConv =
-//  {
-//    .regADC = ADC1,
-//    .channel = MC_ADC_CHANNEL_14,
-//    .samplingTime = M1_VBUS_SAMPLING_TIME,
-//  },
-//  .LowPassFilterBW       =  M1_VBUS_SW_FILTER_BW_FACTOR,
-//  .OverVoltageThreshold  = OVERVOLTAGE_THRESHOLD_d,
-//  .UnderVoltageThreshold =  UNDERVOLTAGE_THRESHOLD_d,
-//  .aBuffer = RealBusVoltageSensorFilterBufferM1,
-//};
+  .VbusRegConv =
+  {
+    .regADC = &g_adc,
+    .channel = MC_ADC_CHANNEL_7,
+  },
+  .LowPassFilterBW       =  M1_VBUS_SW_FILTER_BW_FACTOR,
+  .OverVoltageThreshold  = OVERVOLTAGE_THRESHOLD_d,
+  .UnderVoltageThreshold =  UNDERVOLTAGE_THRESHOLD_d,
+  .aBuffer = RealBusVoltageSensorFilterBufferM1,
+};
 
 //UI_Handle_t UI_Params =
 //{

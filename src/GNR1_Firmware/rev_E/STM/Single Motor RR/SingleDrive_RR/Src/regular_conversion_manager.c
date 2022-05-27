@@ -113,9 +113,9 @@ typedef struct
   * Bus voltage and temperature reading for each motor. This leaves 2 handles
   * available for user conversion.
   *
-  * Defined to 4 here.
+  * Defined to 8 here.
   */
-#define RCM_MAX_CONV  4
+#define RCM_MAX_CONV  8
 
 /* Global variables ----------------------------------------------------------*/
 

@@ -39,7 +39,7 @@
 //#define ADC_TRIG_CONV_LATENCY_CYCLES 3.5
 //#define ADC_SAR_CYCLES 12.5
 
-//#define M1_VBUS_SW_FILTER_BW_FACTOR     6u
+#define M1_VBUS_SW_FILTER_BW_FACTOR     6u
 
 
 

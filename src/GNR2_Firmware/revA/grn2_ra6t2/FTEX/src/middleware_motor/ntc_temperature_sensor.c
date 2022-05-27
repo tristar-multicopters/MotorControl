@@ -53,17 +53,17 @@ uint16_t NTC_SetFaultState( NTC_Handle_t * pHandle )
 void NTC_Init( NTC_Handle_t * pHandle )
 {
 
-//  if ( pHandle->bSensorType == REAL_SENSOR )
-//  {
-//    /* Need to be register with RegularConvManager */
-//    pHandle->convHandle = RCM_RegisterRegConv(&pHandle->TempRegConv);
-//    NTC_Clear( pHandle );
-//  }
-//  else  /* case VIRTUAL_SENSOR */
-//  {
-//    pHandle->hFaultState = MC_NO_ERROR;
-//    pHandle->hAvTemp_d = pHandle->hExpectedTemp_d;
-//  }
+  if ( pHandle->bSensorType == REAL_SENSOR )
+  {
+    /* Need to be register with RegularConvManager */
+    pHandle->convHandle = RCM_RegisterRegConv(&pHandle->TempRegConv);
+    NTC_Clear( pHandle );
+  }
+  else  /* case VIRTUAL_SENSOR */
+  {
+    pHandle->hFaultState = MC_NO_ERROR;
+    pHandle->hAvTemp_d = pHandle->hExpectedTemp_d;
+  }
 
 }
 
@@ -91,7 +91,7 @@ uint16_t NTC_CalcAvTemp( NTC_Handle_t * pHandle )
 
 //  if ( pHandle->bSensorType == REAL_SENSOR )
 //  {
-//    hAux = RCM_ExecRegularConv(pHandle->convHandle);
+//    hAux = RCM_ReadConv(pHandle->convHandle);
 
 //    if ( hAux != 0xFFFFu )
 //    {
