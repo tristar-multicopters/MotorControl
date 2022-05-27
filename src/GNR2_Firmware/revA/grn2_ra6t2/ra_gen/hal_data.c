@@ -1,12 +1,100 @@
 /* generated HAL source file - do not edit */
 #include "hal_data.h"
 
+
 /* Macros to tie dynamic ELC links to adc_b_trigger_sync_elc option in adc_b_trigger_t. */
                      #define ADC_B_TRIGGER_ADC_B0        ADC_B_TRIGGER_SYNC_ELC
                      #define ADC_B_TRIGGER_ADC_B0_B      ADC_B_TRIGGER_SYNC_ELC
                      #define ADC_B_TRIGGER_ADC_B1        ADC_B_TRIGGER_SYNC_ELC
                      #define ADC_B_TRIGGER_ADC_B1_B      ADC_B_TRIGGER_SYNC_ELC
 
+icu_instance_ctrl_t g_external_irq2_ctrl;
+const external_irq_cfg_t g_external_irq2_cfg =
+{
+    .channel             = 1,
+    .trigger             = EXTERNAL_IRQ_TRIG_BOTH_EDGE,
+    .filter_enable       = true,
+    .pclk_div            = EXTERNAL_IRQ_PCLK_DIV_BY_64,
+    .p_callback          = NULL,
+    /** If NULL then do not add & */
+#if defined(NULL)
+    .p_context           = NULL,
+#else
+    .p_context           = &NULL,
+#endif
+    .p_extend            = NULL,
+    .ipl                 = (15),
+#if defined(VECTOR_NUMBER_ICU_IRQ1)
+    .irq                 = VECTOR_NUMBER_ICU_IRQ1,
+#else
+    .irq                 = FSP_INVALID_VECTOR,
+#endif
+};
+/* Instance structure to use this module. */
+const external_irq_instance_t g_external_irq2 =
+{
+    .p_ctrl        = &g_external_irq2_ctrl,
+    .p_cfg         = &g_external_irq2_cfg,
+    .p_api         = &g_external_irq_on_icu
+};
+icu_instance_ctrl_t g_external_irq1_ctrl;
+const external_irq_cfg_t g_external_irq1_cfg =
+{
+    .channel             = 11,
+    .trigger             = EXTERNAL_IRQ_TRIG_BOTH_EDGE,
+    .filter_enable       = true,
+    .pclk_div            = EXTERNAL_IRQ_PCLK_DIV_BY_64,
+    .p_callback          = NULL,
+    /** If NULL then do not add & */
+#if defined(NULL)
+    .p_context           = NULL,
+#else
+    .p_context           = &NULL,
+#endif
+    .p_extend            = NULL,
+    .ipl                 = (15),
+#if defined(VECTOR_NUMBER_ICU_IRQ11)
+    .irq                 = VECTOR_NUMBER_ICU_IRQ11,
+#else
+    .irq                 = FSP_INVALID_VECTOR,
+#endif
+};
+/* Instance structure to use this module. */
+const external_irq_instance_t g_external_irq1 =
+{
+    .p_ctrl        = &g_external_irq1_ctrl,
+    .p_cfg         = &g_external_irq1_cfg,
+    .p_api         = &g_external_irq_on_icu
+};
+icu_instance_ctrl_t g_external_irq0_ctrl;
+const external_irq_cfg_t g_external_irq0_cfg =
+{
+    .channel             = 10,
+    .trigger             = EXTERNAL_IRQ_TRIG_BOTH_EDGE,
+    .filter_enable       = true,
+    .pclk_div            = EXTERNAL_IRQ_PCLK_DIV_BY_64,
+    .p_callback          = NULL,
+    /** If NULL then do not add & */
+#if defined(NULL)
+    .p_context           = NULL,
+#else
+    .p_context           = &NULL,
+#endif
+    .p_extend            = NULL,
+    .ipl                 = (15),
+#if defined(VECTOR_NUMBER_ICU_IRQ10)
+    .irq                 = VECTOR_NUMBER_ICU_IRQ10,
+#else
+    .irq                 = FSP_INVALID_VECTOR,
+#endif
+};
+/* Instance structure to use this module. */
+const external_irq_instance_t g_external_irq0 =
+{
+    .p_ctrl        = &g_external_irq0_ctrl,
+    .p_cfg         = &g_external_irq0_cfg,
+    .p_api         = &g_external_irq_on_icu
+};
 gpt_instance_ctrl_t g_timer0_ctrl;
 #if 0
 const gpt_extended_pwm_cfg_t g_timer0_pwm_extend =
@@ -46,7 +134,7 @@ const gpt_extended_cfg_t g_timer0_extend =
     .count_down_source   = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_source    = (gpt_source_t) (GPT_SOURCE_GPT_H | GPT_SOURCE_GPT_G | GPT_SOURCE_GPT_F |  GPT_SOURCE_NONE),
     .capture_b_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
-    .capture_a_ipl       = (3),
+    .capture_a_ipl       = (5),
     .capture_b_ipl       = (BSP_IRQ_DISABLED),
 #if defined(VECTOR_NUMBER_GPT0_CAPTURE_COMPARE_A)
     .capture_a_irq       = VECTOR_NUMBER_GPT0_CAPTURE_COMPARE_A,
@@ -97,7 +185,7 @@ const timer_cfg_t g_timer0_cfg =
     .p_context           = &NULL,
 #endif
     .p_extend            = &g_timer0_extend,
-    .cycle_end_ipl       = (3),
+    .cycle_end_ipl       = (5),
 #if defined(VECTOR_NUMBER_GPT0_COUNTER_OVERFLOW)
     .cycle_end_irq       = VECTOR_NUMBER_GPT0_COUNTER_OVERFLOW,
 #else
@@ -111,92 +199,70 @@ const timer_instance_t g_timer0 =
     .p_cfg         = &g_timer0_cfg,
     .p_api         = &g_timer_on_gpt
 };
-icu_instance_ctrl_t g_external_irq2_ctrl;
-const external_irq_cfg_t g_external_irq2_cfg =
+dac_instance_ctrl_t g_dac0_ctrl;
+const dac_extended_cfg_t g_dac0_ext_cfg =
 {
-    .channel             = 11,
-    .trigger             = EXTERNAL_IRQ_TRIG_BOTH_EDGE,
-    .filter_enable       = true,
-    .pclk_div            = EXTERNAL_IRQ_PCLK_DIV_BY_64,
-    .p_callback          = NULL,
-    /** If NULL then do not add & */
-#if defined(NULL)
-    .p_context           = NULL,
-#else
-    .p_context           = &NULL,
-#endif
-    .p_extend            = NULL,
-    .ipl                 = (15),
-#if defined(VECTOR_NUMBER_ICU_IRQ11)
-    .irq                 = VECTOR_NUMBER_ICU_IRQ11,
-#else
-    .irq                 = FSP_INVALID_VECTOR,
-#endif
+    .enable_charge_pump   = 0,
+    .data_format         = DAC_DATA_FORMAT_FLUSH_LEFT,
+    .output_amplifier_enabled = 0,
+    .internal_output_enabled = false,
+};
+const dac_cfg_t g_dac0_cfg =
+{
+    .channel             = 0,
+    .ad_da_synchronized  = false,
+    .p_extend            = &g_dac0_ext_cfg
 };
 /* Instance structure to use this module. */
-const external_irq_instance_t g_external_irq2 =
+const dac_instance_t g_dac0 =
 {
-    .p_ctrl        = &g_external_irq2_ctrl,
-    .p_cfg         = &g_external_irq2_cfg,
-    .p_api         = &g_external_irq_on_icu
+    .p_ctrl    = &g_dac0_ctrl,
+    .p_cfg     = &g_dac0_cfg,
+    .p_api     = &g_dac_on_dac
 };
-icu_instance_ctrl_t g_external_irq1_ctrl;
-const external_irq_cfg_t g_external_irq1_cfg =
+dac_instance_ctrl_t g_dac1_ctrl;
+const dac_extended_cfg_t g_dac1_ext_cfg =
 {
-    .channel             = 10,
-    .trigger             = EXTERNAL_IRQ_TRIG_BOTH_EDGE,
-    .filter_enable       = true,
-    .pclk_div            = EXTERNAL_IRQ_PCLK_DIV_BY_64,
-    .p_callback          = NULL,
-    /** If NULL then do not add & */
-#if defined(NULL)
-    .p_context           = NULL,
-#else
-    .p_context           = &NULL,
-#endif
-    .p_extend            = NULL,
-    .ipl                 = (15),
-#if defined(VECTOR_NUMBER_ICU_IRQ10)
-    .irq                 = VECTOR_NUMBER_ICU_IRQ10,
-#else
-    .irq                 = FSP_INVALID_VECTOR,
-#endif
+    .enable_charge_pump   = 0,
+    .data_format         = DAC_DATA_FORMAT_FLUSH_LEFT,
+    .output_amplifier_enabled = 0,
+    .internal_output_enabled = false,
 };
-/* Instance structure to use this module. */
-const external_irq_instance_t g_external_irq1 =
-{
-    .p_ctrl        = &g_external_irq1_ctrl,
-    .p_cfg         = &g_external_irq1_cfg,
-    .p_api         = &g_external_irq_on_icu
-};
-icu_instance_ctrl_t g_external_irq0_ctrl;
-const external_irq_cfg_t g_external_irq0_cfg =
+const dac_cfg_t g_dac1_cfg =
 {
     .channel             = 1,
-    .trigger             = EXTERNAL_IRQ_TRIG_BOTH_EDGE,
-    .filter_enable       = true,
-    .pclk_div            = EXTERNAL_IRQ_PCLK_DIV_BY_64,
-    .p_callback          = NULL,
-    /** If NULL then do not add & */
-#if defined(NULL)
+    .ad_da_synchronized  = false,
+    .p_extend            = &g_dac1_ext_cfg
+};
+/* Instance structure to use this module. */
+const dac_instance_t g_dac1 =
+{
+    .p_ctrl    = &g_dac1_ctrl,
+    .p_cfg     = &g_dac1_cfg,
+    .p_api     = &g_dac_on_dac
+};
+poeg_instance_ctrl_t g_poeg1_ctrl;
+const poeg_cfg_t g_poeg1_cfg =
+{
+    .trigger             = (poeg_trigger_t) (POEG_TRIGGER_PIN |  POEG_TRIGGER_SOFTWARE),
+    .polarity            = POEG_GTETRG_POLARITY_ACTIVE_LOW,
+    .noise_filter        = POEG_GTETRG_NOISE_FILTER_PCLKB_DIV_32,
+    .channel             = 1,
+    .ipl                 = (0),
+    .p_callback          = PWM_TIM_BRK_IRQHandler,
     .p_context           = NULL,
+#if defined(VECTOR_NUMBER_POEG1_EVENT)
+    .irq       = VECTOR_NUMBER_POEG1_EVENT,
 #else
-    .p_context           = &NULL,
-#endif
-    .p_extend            = NULL,
-    .ipl                 = (15),
-#if defined(VECTOR_NUMBER_ICU_IRQ1)
-    .irq                 = VECTOR_NUMBER_ICU_IRQ1,
-#else
-    .irq                 = FSP_INVALID_VECTOR,
+    .irq       = FSP_INVALID_VECTOR,
 #endif
 };
 /* Instance structure to use this module. */
-const external_irq_instance_t g_external_irq0 =
+const poeg_instance_t g_poeg1 =
 {
-    .p_ctrl        = &g_external_irq0_ctrl,
-    .p_cfg         = &g_external_irq0_cfg,
-    .p_api         = &g_external_irq_on_icu
+    .p_ctrl        = &g_poeg1_ctrl,
+    .p_cfg         = &g_poeg1_cfg,
+    .p_api         = &g_poeg_on_poeg
 };
 #define RA_NOT_DEFINED (0) // TODO: Remove this after implementing all channels and groups.
 
@@ -2687,27 +2753,27 @@ const adc_b_group_cfg_t * const adc_b_scan_cfg_groups[] = {
 
      const adc_b_isr_cfg_t g_adc_isr_cfg =
 {
-    .calibration_end_ipl_adc_0 =  (12),
-    .calibration_end_ipl_adc_1 =  (12),
-    .limit_clip_ipl           =  (12),
-    .conversion_error_ipl_adc_0 = (12),
-    .conversion_error_ipl_adc_1 = (12),
-    .overflow_error_ipl_adc_0 =   (12),
-    .overflow_error_ipl_adc_1 =   (12),
+    .calibration_end_ipl_adc_0 =  (BSP_IRQ_DISABLED),
+    .calibration_end_ipl_adc_1 =  (BSP_IRQ_DISABLED),
+    .limit_clip_ipl           =  (BSP_IRQ_DISABLED),
+    .conversion_error_ipl_adc_0 = (BSP_IRQ_DISABLED),
+    .conversion_error_ipl_adc_1 = (BSP_IRQ_DISABLED),
+    .overflow_error_ipl_adc_0 =   (BSP_IRQ_DISABLED),
+    .overflow_error_ipl_adc_1 =   (BSP_IRQ_DISABLED),
 
-    .scan_end_ipl_group_0 = (12),
-    .scan_end_ipl_group_1 = (12),
-    .scan_end_ipl_group_2 = (12),
-    .scan_end_ipl_group_3 = (12),
-    .scan_end_ipl_group_4 = (12),
-    .scan_end_ipl_group_5678 = (12),
-    .fifo_overflow_ipl = (12),
-    .fifo_read_ipl_group_0 = (12),
-    .fifo_read_ipl_group_1 = (12),
-    .fifo_read_ipl_group_2 = (12),
-    .fifo_read_ipl_group_3 = (12),
-    .fifo_read_ipl_group_4 = (12),
-    .fifo_read_ipl_group_5678 = (12),
+    .scan_end_ipl_group_0 = (2),
+    .scan_end_ipl_group_1 = (BSP_IRQ_DISABLED),
+    .scan_end_ipl_group_2 = (BSP_IRQ_DISABLED),
+    .scan_end_ipl_group_3 = (BSP_IRQ_DISABLED),
+    .scan_end_ipl_group_4 = (BSP_IRQ_DISABLED),
+    .scan_end_ipl_group_5678 = (BSP_IRQ_DISABLED),
+    .fifo_overflow_ipl = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_0 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_1 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_2 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_3 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_4 = (BSP_IRQ_DISABLED),
+    .fifo_read_ipl_group_5678 = (BSP_IRQ_DISABLED),
 #if defined(VECTOR_NUMBER_ADC12_CALEND0)
     .calibration_end_irq_adc_0 = VECTOR_NUMBER_ADC12_CALEND0,
 #else
@@ -3004,7 +3070,7 @@ const gpt_extended_pwm_cfg_t g_timer6_pwm_extend =
 #else
     .trough_irq          = FSP_INVALID_VECTOR,
 #endif
-    .poeg_link           = GPT_POEG_LINK_POEG0,
+    .poeg_link           = GPT_POEG_LINK_POEG1,
     .output_disable      =  GPT_OUTPUT_DISABLE_NONE,
     .adc_trigger         =  GPT_ADC_TRIGGER_NONE,
     .dead_time_count_up  = 50,
@@ -3014,8 +3080,8 @@ const gpt_extended_pwm_cfg_t g_timer6_pwm_extend =
     .interrupt_skip_source = GPT_INTERRUPT_SKIP_SOURCE_NONE,
     .interrupt_skip_count  = GPT_INTERRUPT_SKIP_COUNT_0,
     .interrupt_skip_adc    = GPT_INTERRUPT_SKIP_ADC_NONE,
-    .gtioca_disable_setting = GPT_GTIOC_DISABLE_PROHIBITED,
-    .gtiocb_disable_setting = GPT_GTIOC_DISABLE_PROHIBITED,
+    .gtioca_disable_setting = GPT_GTIOC_DISABLE_SET_HI_Z,
+    .gtiocb_disable_setting = GPT_GTIOC_DISABLE_SET_HI_Z,
 };
 #endif
 const gpt_extended_cfg_t g_timer6_extend =
@@ -3057,14 +3123,14 @@ const gpt_extended_cfg_t g_timer6_extend =
     .gtior_setting.gtior_b.oadflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.oahld  = 0U,
     .gtior_setting.gtior_b.oae    = (uint32_t) true,
-    .gtior_setting.gtior_b.oadf   = (uint32_t) GPT_GTIOC_DISABLE_PROHIBITED,
+    .gtior_setting.gtior_b.oadf   = (uint32_t) GPT_GTIOC_DISABLE_SET_HI_Z,
     .gtior_setting.gtior_b.nfaen  = ((uint32_t) GPT_CAPTURE_FILTER_NONE & 1U),
     .gtior_setting.gtior_b.nfcsa  = ((uint32_t) GPT_CAPTURE_FILTER_NONE >> 1U),
     .gtior_setting.gtior_b.gtiob  = (1U << 4U) | (2U << 2U) | (3U << 0U),
     .gtior_setting.gtior_b.obdflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.obhld  = 0U,
     .gtior_setting.gtior_b.obe    = (uint32_t) true,
-    .gtior_setting.gtior_b.obdf   = (uint32_t) GPT_GTIOC_DISABLE_PROHIBITED,
+    .gtior_setting.gtior_b.obdf   = (uint32_t) GPT_GTIOC_DISABLE_SET_HI_Z,
     .gtior_setting.gtior_b.nfben  = ((uint32_t) GPT_CAPTURE_FILTER_NONE & 1U),
     .gtior_setting.gtior_b.nfcsb  = ((uint32_t) GPT_CAPTURE_FILTER_NONE >> 1U),
 #else
@@ -3108,7 +3174,7 @@ const gpt_extended_pwm_cfg_t g_timer5_pwm_extend =
 #else
     .trough_irq          = FSP_INVALID_VECTOR,
 #endif
-    .poeg_link           = GPT_POEG_LINK_POEG0,
+    .poeg_link           = GPT_POEG_LINK_POEG1,
     .output_disable      =  GPT_OUTPUT_DISABLE_NONE,
     .adc_trigger         =  GPT_ADC_TRIGGER_NONE,
     .dead_time_count_up  = 50,
@@ -3118,8 +3184,8 @@ const gpt_extended_pwm_cfg_t g_timer5_pwm_extend =
     .interrupt_skip_source = GPT_INTERRUPT_SKIP_SOURCE_NONE,
     .interrupt_skip_count  = GPT_INTERRUPT_SKIP_COUNT_0,
     .interrupt_skip_adc    = GPT_INTERRUPT_SKIP_ADC_NONE,
-    .gtioca_disable_setting = GPT_GTIOC_DISABLE_PROHIBITED,
-    .gtiocb_disable_setting = GPT_GTIOC_DISABLE_PROHIBITED,
+    .gtioca_disable_setting = GPT_GTIOC_DISABLE_SET_HI_Z,
+    .gtiocb_disable_setting = GPT_GTIOC_DISABLE_SET_HI_Z,
 };
 #endif
 const gpt_extended_cfg_t g_timer5_extend =
@@ -3161,14 +3227,14 @@ const gpt_extended_cfg_t g_timer5_extend =
     .gtior_setting.gtior_b.oadflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.oahld  = 0U,
     .gtior_setting.gtior_b.oae    = (uint32_t) true,
-    .gtior_setting.gtior_b.oadf   = (uint32_t) GPT_GTIOC_DISABLE_PROHIBITED,
+    .gtior_setting.gtior_b.oadf   = (uint32_t) GPT_GTIOC_DISABLE_SET_HI_Z,
     .gtior_setting.gtior_b.nfaen  = ((uint32_t) GPT_CAPTURE_FILTER_NONE & 1U),
     .gtior_setting.gtior_b.nfcsa  = ((uint32_t) GPT_CAPTURE_FILTER_NONE >> 1U),
     .gtior_setting.gtior_b.gtiob  = (1U << 4U) | (2U << 2U) | (3U << 0U),
     .gtior_setting.gtior_b.obdflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.obhld  = 0U,
     .gtior_setting.gtior_b.obe    = (uint32_t) true,
-    .gtior_setting.gtior_b.obdf   = (uint32_t) GPT_GTIOC_DISABLE_PROHIBITED,
+    .gtior_setting.gtior_b.obdf   = (uint32_t) GPT_GTIOC_DISABLE_SET_HI_Z,
     .gtior_setting.gtior_b.nfben  = ((uint32_t) GPT_CAPTURE_FILTER_NONE & 1U),
     .gtior_setting.gtior_b.nfcsb  = ((uint32_t) GPT_CAPTURE_FILTER_NONE >> 1U),
 #else
@@ -3212,9 +3278,9 @@ const gpt_extended_pwm_cfg_t g_timer4_pwm_extend =
 #else
     .trough_irq          = FSP_INVALID_VECTOR,
 #endif
-    .poeg_link           = GPT_POEG_LINK_POEG0,
+    .poeg_link           = GPT_POEG_LINK_POEG1,
     .output_disable      =  GPT_OUTPUT_DISABLE_NONE,
-    .adc_trigger         = GPT_ADC_TRIGGER_UP_COUNT_START_ADC_A |  GPT_ADC_TRIGGER_NONE,
+    .adc_trigger         = GPT_ADC_TRIGGER_DOWN_COUNT_START_ADC_A |  GPT_ADC_TRIGGER_NONE,
     .dead_time_count_up  = 50,
     .dead_time_count_down = 50,
     .adc_a_compare_match = 0,
@@ -3222,8 +3288,8 @@ const gpt_extended_pwm_cfg_t g_timer4_pwm_extend =
     .interrupt_skip_source = GPT_INTERRUPT_SKIP_SOURCE_NONE,
     .interrupt_skip_count  = GPT_INTERRUPT_SKIP_COUNT_0,
     .interrupt_skip_adc    = GPT_INTERRUPT_SKIP_ADC_NONE,
-    .gtioca_disable_setting = GPT_GTIOC_DISABLE_PROHIBITED,
-    .gtiocb_disable_setting = GPT_GTIOC_DISABLE_PROHIBITED,
+    .gtioca_disable_setting = GPT_GTIOC_DISABLE_SET_HI_Z,
+    .gtiocb_disable_setting = GPT_GTIOC_DISABLE_SET_HI_Z,
 };
 #endif
 const gpt_extended_cfg_t g_timer4_extend =
@@ -3265,14 +3331,14 @@ const gpt_extended_cfg_t g_timer4_extend =
     .gtior_setting.gtior_b.oadflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.oahld  = 0U,
     .gtior_setting.gtior_b.oae    = (uint32_t) true,
-    .gtior_setting.gtior_b.oadf   = (uint32_t) GPT_GTIOC_DISABLE_PROHIBITED,
+    .gtior_setting.gtior_b.oadf   = (uint32_t) GPT_GTIOC_DISABLE_SET_HI_Z,
     .gtior_setting.gtior_b.nfaen  = ((uint32_t) GPT_CAPTURE_FILTER_NONE & 1U),
     .gtior_setting.gtior_b.nfcsa  = ((uint32_t) GPT_CAPTURE_FILTER_NONE >> 1U),
     .gtior_setting.gtior_b.gtiob  = (1U << 4U) | (2U << 2U) | (3U << 0U),
     .gtior_setting.gtior_b.obdflt = (uint32_t) GPT_PIN_LEVEL_LOW,
     .gtior_setting.gtior_b.obhld  = 0U,
     .gtior_setting.gtior_b.obe    = (uint32_t) true,
-    .gtior_setting.gtior_b.obdf   = (uint32_t) GPT_GTIOC_DISABLE_PROHIBITED,
+    .gtior_setting.gtior_b.obdf   = (uint32_t) GPT_GTIOC_DISABLE_SET_HI_Z,
     .gtior_setting.gtior_b.nfben  = ((uint32_t) GPT_CAPTURE_FILTER_NONE & 1U),
     .gtior_setting.gtior_b.nfcsb  = ((uint32_t) GPT_CAPTURE_FILTER_NONE >> 1U),
 #else
@@ -3292,7 +3358,7 @@ const timer_cfg_t g_timer4_cfg =
     .p_context           = &NULL,
 #endif
     .p_extend            = &g_timer4_extend,
-    .cycle_end_ipl       = (3),
+    .cycle_end_ipl       = (1),
 #if defined(VECTOR_NUMBER_GPT4_COUNTER_OVERFLOW)
     .cycle_end_irq       = VECTOR_NUMBER_GPT4_COUNTER_OVERFLOW,
 #else

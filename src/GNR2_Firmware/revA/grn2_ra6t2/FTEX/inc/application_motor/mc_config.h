@@ -46,7 +46,6 @@ extern STO_PLL_Handle_t STO_PLL_M1;
 extern HALL_Handle_t HALL_M1;
 extern RDivider_Handle_t RealBusVoltageSensorParamsM1;
 extern CircleLimitation_Handle_t CircleLimitationM1;
-extern RampExtMngr_Handle_t RampExtMngrHFParamsM1;
 extern FF_Handle_t FF_M1;
 
 extern AO_Handle_t AngleObserverM1;

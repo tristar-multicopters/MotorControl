@@ -52,9 +52,11 @@
         <file category="other" name="ra/arm/CMSIS_5/LICENSE.txt"/>
         <file category="header" name="ra/fsp/inc/api/bsp_api.h" path=""/>
         <file category="header" name="ra/fsp/inc/api/r_adc_api.h" path=""/>
+        <file category="header" name="ra/fsp/inc/api/r_dac_api.h" path=""/>
         <file category="header" name="ra/fsp/inc/api/r_elc_api.h" path=""/>
         <file category="header" name="ra/fsp/inc/api/r_external_irq_api.h" path=""/>
         <file category="header" name="ra/fsp/inc/api/r_ioport_api.h" path=""/>
+        <file category="header" name="ra/fsp/inc/api/r_poeg_api.h" path=""/>
         <file category="header" name="ra/fsp/inc/api/r_three_phase_api.h" path=""/>
         <file category="header" name="ra/fsp/inc/api/r_timer_api.h" path=""/>
         <file category="header" name="ra/fsp/inc/api/r_transfer_api.h" path=""/>
@@ -62,11 +64,13 @@
         <file category="header" name="ra/fsp/inc/fsp_features.h" path=""/>
         <file category="header" name="ra/fsp/inc/fsp_version.h" path=""/>
         <file category="header" name="ra/fsp/inc/instances/r_adc_b.h" path=""/>
+        <file category="header" name="ra/fsp/inc/instances/r_dac.h" path=""/>
         <file category="header" name="ra/fsp/inc/instances/r_elc.h" path=""/>
         <file category="header" name="ra/fsp/inc/instances/r_gpt.h" path=""/>
         <file category="header" name="ra/fsp/inc/instances/r_gpt_three_phase.h" path=""/>
         <file category="header" name="ra/fsp/inc/instances/r_icu.h" path=""/>
         <file category="header" name="ra/fsp/inc/instances/r_ioport.h" path=""/>
+        <file category="header" name="ra/fsp/inc/instances/r_poeg.h" path=""/>
         <file category="header" name="ra/fsp/src/bsp/cmsis/Device/RENESAS/Include/base_addresses.h" path=""/>
         <file category="header" name="ra/fsp/src/bsp/cmsis/Device/RENESAS/Include/renesas.h" path=""/>
         <file category="header" name="ra/fsp/src/bsp/cmsis/Device/RENESAS/Include/system.h" path=""/>
@@ -103,11 +107,13 @@
         <file category="header" name="ra/fsp/src/bsp/mcu/ra6t2/bsp_override.h" path=""/>
         <file category="header" name="ra/fsp/src/bsp/mcu/ra6t2/bsp_override_reg.h" path=""/>
         <file category="source" name="ra/fsp/src/r_adc_b/r_adc_b.c"/>
+        <file category="source" name="ra/fsp/src/r_dac/r_dac.c"/>
         <file category="source" name="ra/fsp/src/r_elc/r_elc.c"/>
         <file category="source" name="ra/fsp/src/r_gpt/r_gpt.c"/>
         <file category="source" name="ra/fsp/src/r_gpt_three_phase/r_gpt_three_phase.c"/>
         <file category="source" name="ra/fsp/src/r_icu/r_icu.c"/>
         <file category="source" name="ra/fsp/src/r_ioport/r_ioport.c"/>
+        <file category="source" name="ra/fsp/src/r_poeg/r_poeg.c"/>
       </files>
     </component>
     <component Cclass="Flex Software" Cgroup="Build Configuration">
@@ -121,11 +127,13 @@
         <file category="header" name="ra_cfg/fsp_cfg/bsp/bsp_mcu_family_cfg.h" path=""/>
         <file category="header" name="ra_cfg/fsp_cfg/bsp/bsp_pin_cfg.h" path=""/>
         <file category="header" name="ra_cfg/fsp_cfg/r_adc_b_cfg.h" path=""/>
+        <file category="header" name="ra_cfg/fsp_cfg/r_dac_cfg.h" path=""/>
         <file category="header" name="ra_cfg/fsp_cfg/r_elc_cfg.h" path=""/>
         <file category="header" name="ra_cfg/fsp_cfg/r_gpt_cfg.h" path=""/>
         <file category="header" name="ra_cfg/fsp_cfg/r_gpt_three_phase_cfg.h" path=""/>
         <file category="header" name="ra_cfg/fsp_cfg/r_icu_cfg.h" path=""/>
         <file category="header" name="ra_cfg/fsp_cfg/r_ioport_cfg.h" path=""/>
+        <file category="header" name="ra_cfg/fsp_cfg/r_poeg_cfg.h" path=""/>
       </files>
     </component>
     <component Cclass="Flex Software" Cgroup="Generated Data">

@@ -393,6 +393,11 @@
               <FileType>1</FileType>
               <FilePath>.\gnr_ra6t2_it.c</FilePath>
             </File>
+            <File>
+              <FileName>gnr_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\gnr_parameters.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

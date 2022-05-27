@@ -4,25 +4,19 @@
 #include <stdint.h>
 #include "bsp_api.h"
 #include "common_data.h"
-#include "r_gpt.h"
-#include "r_timer_api.h"
 #include "r_icu.h"
 #include "r_external_irq_api.h"
+#include "r_gpt.h"
+#include "r_timer_api.h"
+#include "r_dac.h"
+#include "r_dac_api.h"
+#include "r_poeg.h"
+#include "r_poeg_api.h"
 #include "r_adc_b.h"
                       #include "r_adc_api.h"
 #include "r_gpt_three_phase.h"
             #include "r_three_phase_api.h"
 FSP_HEADER
-/** Timer on GPT Instance. */
-extern const timer_instance_t g_timer0;
-
-/** Access the GPT instance using these structures when calling API functions directly (::p_api is not used). */
-extern gpt_instance_ctrl_t g_timer0_ctrl;
-extern const timer_cfg_t g_timer0_cfg;
-
-#ifndef HALL_TIM_UP_CC_IRQHandler
-void HALL_TIM_UP_CC_IRQHandler(timer_callback_args_t * p_args);
-#endif
 /** External IRQ on ICU Instance. */
 extern const external_irq_instance_t g_external_irq2;
 
@@ -52,6 +46,38 @@ extern const external_irq_cfg_t g_external_irq0_cfg;
 
 #ifndef NULL
 void NULL(external_irq_callback_args_t * p_args);
+#endif
+/** Timer on GPT Instance. */
+extern const timer_instance_t g_timer0;
+
+/** Access the GPT instance using these structures when calling API functions directly (::p_api is not used). */
+extern gpt_instance_ctrl_t g_timer0_ctrl;
+extern const timer_cfg_t g_timer0_cfg;
+
+#ifndef HALL_TIM_UP_CC_IRQHandler
+void HALL_TIM_UP_CC_IRQHandler(timer_callback_args_t * p_args);
+#endif
+/** DAC on DAC Instance. */
+extern const dac_instance_t g_dac0;
+
+/** Access the DAC instance using these structures when calling API functions directly (::p_api is not used). */
+extern dac_instance_ctrl_t g_dac0_ctrl;
+extern const dac_cfg_t g_dac0_cfg;
+/** DAC on DAC Instance. */
+extern const dac_instance_t g_dac1;
+
+/** Access the DAC instance using these structures when calling API functions directly (::p_api is not used). */
+extern dac_instance_ctrl_t g_dac1_ctrl;
+extern const dac_cfg_t g_dac1_cfg;
+/** POEG Instance. */
+extern const poeg_instance_t g_poeg1;
+
+/** Access the POEG instance using these structures when calling API functions directly (::p_api is not used). */
+extern poeg_instance_ctrl_t g_poeg1_ctrl;
+extern const poeg_cfg_t g_poeg1_cfg;
+
+#ifndef PWM_TIM_BRK_IRQHandler
+void PWM_TIM_BRK_IRQHandler(poeg_callback_args_t * p_args);
 #endif
 /** ADC on ADC_B instance. */
                     extern const adc_instance_t g_adc;

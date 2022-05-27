@@ -7,18 +7,7 @@
   *          in order to configure a motor drive.
   *
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+*/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __DRIVE_PARAMETERS_H
@@ -228,11 +217,7 @@
 
 /*** On the fly start-up ***/
 
-/**************************
- *** Control Parameters ***
- **************************/
-
-/* ##@@_USER_CODE_START_##@@ */
+/******************************   Angle observer Motor 1   **********************/
 
 #define AO_KP         									1250 // High speed: 1000, All speed: 150
 #define AO_KI         									0
@@ -248,7 +233,6 @@
 #define AO_SPEEDFACTORGAIN							0
 #define	AO_SPEEDFACTORDIV								0	
 
-/* ##@@_USER_CODE_END_##@@ */
 
 #endif /*__DRIVE_PARAMETERS_H*/
-/******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/
+

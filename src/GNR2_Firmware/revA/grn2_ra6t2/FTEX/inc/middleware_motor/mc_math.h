@@ -1,25 +1,12 @@
-
 /**
   ******************************************************************************
   * @file    mc_math.h
-  * @author  FTEX inc
+  * @author  Sami Bouzid, FTEX inc
   * @brief   This file provides mathematics functions useful for and specific to
   *          Motor Control.
   *
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  * @ingroup MC_Math
-  */
+*/
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef MC_MATH_H
 #define MC_MATH_H
@@ -27,32 +14,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
 
-/** @addtogroup MCSDK
-  * @{
-  */
 
-/** @addtogroup MC_Math
-  * @{
-  */
 #define SQRT_2  1.4142
 #define SQRT_3  1.732
-
-/* CORDIC coprocessor configuration register settings */
-
-/* CORDIC FUNCTION: PHASE q1.31 (Electrical Angle computation) */
-#define CORDIC_CONFIG_PHASE     (LL_CORDIC_FUNCTION_PHASE | LL_CORDIC_PRECISION_2CYCLES | LL_CORDIC_SCALE_0 |\
-				 LL_CORDIC_NBWRITE_2 | LL_CORDIC_NBREAD_1 |\
-				 LL_CORDIC_INSIZE_32BITS | LL_CORDIC_OUTSIZE_32BITS)
-
-/* CORDIC FUNCTION: SQUAREROOT q1.31 */
-#define CORDIC_CONFIG_SQRT      (LL_CORDIC_FUNCTION_SQUAREROOT | LL_CORDIC_PRECISION_2CYCLES | LL_CORDIC_SCALE_1 |\
-				 LL_CORDIC_NBWRITE_1 | LL_CORDIC_NBREAD_1 |\
-				 LL_CORDIC_INSIZE_32BITS | LL_CORDIC_OUTSIZE_32BITS)
-
-/* CORDIC FUNCTION: COSINE q1.15 */
-#define CORDIC_CONFIG_COSINE    (LL_CORDIC_FUNCTION_COSINE | LL_CORDIC_PRECISION_4CYCLES | LL_CORDIC_SCALE_0 |\
-				 LL_CORDIC_NBWRITE_1 | LL_CORDIC_NBREAD_1 |\
-				 LL_CORDIC_INSIZE_16BITS | LL_CORDIC_OUTSIZE_16BITS)
 
 /**
   * @brief  Macro to compute logarithm of two
@@ -136,6 +100,13 @@ Trig_Components MCM_Trig_Functions( int16_t hAngle );
   */
 int32_t MCM_Sqrt( int32_t wInput );
 
+/**
+  * @brief  It executes CORDIC algorithm for rotor position extraction from B-emf
+  *         alpha and beta
+  * @param  wBemf_alfa_est estimated Bemf alpha on the stator reference frame
+  *         wBemf_beta_est estimated Bemf beta on the stator reference frame
+  * @retval int16_t rotor electrical angle (s16degrees)
+  */
 int16_t MCM_PhaseComputation( int32_t wBemf_alfa_est, int32_t wBemf_beta_est );
 
 /**
@@ -146,13 +117,6 @@ int16_t MCM_PhaseComputation( int32_t wBemf_alfa_est, int32_t wBemf_beta_est );
   */
 uint32_t MCM_floatToIntBit( float x );
 
-/**
-  * @}
-  */
 
-/**
-  * @}
-  */
 #endif /* MC_MATH_H*/
-
 

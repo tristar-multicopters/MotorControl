@@ -6,32 +6,14 @@
   *          in order to configure the motor to drive.
   *
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+*/
 
-/* Define to prevent recursive inclusion -------------------------------------*/
+/* Define to prevent recursive inclusion --- 
+----------------------------------*/
 #ifndef __PMSM_MOTOR_PARAMETERS_H
 #define __PMSM_MOTOR_PARAMETERS_H
 
-#define VEHICLE_EBGO 					1
-#define VEHICLE_GRIZZLY 			2
-
-/*______________________________________________________*/
-/* Change parameter below to quickly configure firmware */
-#define VEHICLE_SELECTION 		VEHICLE_GRIZZLY
-#define VOLTAGE_OPENLOOP			0
-#define POSITION_OPENLOOP			0
-/*______________________________________________________*/
+#include "gnr_parameters.h"
 
 
 #if VEHICLE_SELECTION == VEHICLE_GRIZZLY
@@ -172,4 +154,4 @@
 #endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/
-/******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/
+

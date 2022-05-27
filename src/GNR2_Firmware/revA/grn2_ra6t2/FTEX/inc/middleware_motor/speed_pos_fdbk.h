@@ -3,7 +3,7 @@
  * @file    speed_pos_fdbk.h
  * @author  FTEX inc
  * @brief   This file provides all definitions and functions prototypes
- *          of the Speed & Position Feedback component of the Motor Control SDK.
+ *          of the Speed & Position Feedback component.
  *
  ******************************************************************************
 */
@@ -20,14 +20,6 @@ extern "C" {
 #include "stdint.h"
 #include "mc_type.h"
 
-
-/** @addtogroup MCSDK
-  * @{
-  */
-
-/** @addtogroup SpeednPosFdbk
-  * @{
-  */
 
 /* Exported types ------------------------------------------------------------*/
 /**
@@ -107,13 +99,6 @@ uint8_t SPD_GetElToMecRatio( SpeednPosFdbk_Handle_t * pHandle );
 
 void SPD_SetElToMecRatio( SpeednPosFdbk_Handle_t * pHandle, uint8_t bPP );
 
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
 
 #ifdef __cplusplus
 }
@@ -121,4 +106,3 @@ void SPD_SetElToMecRatio( SpeednPosFdbk_Handle_t * pHandle, uint8_t bPP );
 
 #endif /* __SPEEDNPOSFDBK_H */
 
-/************************ (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/

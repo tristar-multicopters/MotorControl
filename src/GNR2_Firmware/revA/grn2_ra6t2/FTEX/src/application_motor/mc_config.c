@@ -14,6 +14,7 @@
 #include "mc_config.h"
 
 #define OFFCALIBRWAIT_MS     0
+#define MAX_DUTY     				 30000 /* INT16_MAX is 100% duty cycle */
 
 //PQD_MotorPowMeas_Handle_t PQD_MotorPowMeasM1 =
 //{
@@ -21,65 +22,65 @@
 //};
 //PQD_MotorPowMeas_Handle_t *pPQD_MotorPowMeasM1 = &PQD_MotorPowMeasM1;
 
-///**
-//  * @brief  PI / PID Speed loop parameters Motor 1
-//  */
-//PID_Handle_t PIDSpeedHandle_M1 =
-//{
-//  .hDefKpGain          = (int16_t)PID_SPEED_KP_DEFAULT,
-//  .hDefKiGain          = (int16_t)PID_SPEED_KI_DEFAULT,
-//  .wUpperIntegralLimit = (int32_t)IQMAX * (int32_t)SP_KIDIV,
-//  .wLowerIntegralLimit = -(int32_t)IQMAX * (int32_t)SP_KIDIV,
-//  .hUpperOutputLimit       = (int16_t)IQMAX,
-//  .hLowerOutputLimit       = -(int16_t)IQMAX,
-//  .hKpDivisor          = (uint16_t)SP_KPDIV,
-//  .hKiDivisor          = (uint16_t)SP_KIDIV,
-//  .hKpDivisorPOW2      = (uint16_t)SP_KPDIV_LOG,
-//  .hKiDivisorPOW2      = (uint16_t)SP_KIDIV_LOG,
-//  .hDefKdGain           = 0x0000U,
-//  .hKdDivisor           = 0x0000U,
-//  .hKdDivisorPOW2       = 0x0000U,
-//};
+/**
+  * @brief  PI / PID Speed loop parameters Motor 1
+  */
+PID_Handle_t PIDSpeedHandle_M1 =
+{
+  .hDefKpGain          = (int16_t)PID_SPEED_KP_DEFAULT,
+  .hDefKiGain          = (int16_t)PID_SPEED_KI_DEFAULT,
+  .wUpperIntegralLimit = (int32_t)IQMAX * (int32_t)SP_KIDIV,
+  .wLowerIntegralLimit = -(int32_t)IQMAX * (int32_t)SP_KIDIV,
+  .hUpperOutputLimit       = (int16_t)IQMAX,
+  .hLowerOutputLimit       = -(int16_t)IQMAX,
+  .hKpDivisor          = (uint16_t)SP_KPDIV,
+  .hKiDivisor          = (uint16_t)SP_KIDIV,
+  .hKpDivisorPOW2      = (uint16_t)SP_KPDIV_LOG,
+  .hKiDivisorPOW2      = (uint16_t)SP_KIDIV_LOG,
+  .hDefKdGain           = 0x0000U,
+  .hKdDivisor           = 0x0000U,
+  .hKdDivisorPOW2       = 0x0000U,
+};
 
-///**
-//  * @brief  PI / PID Iq loop parameters Motor 1
-//  */
-//PID_Handle_t PIDIqHandle_M1 =
-//{
-//  .hDefKpGain          = (int16_t)PID_TORQUE_KP_DEFAULT,
-//  .hDefKiGain          = (int16_t)PID_TORQUE_KI_DEFAULT,
-//  .wUpperIntegralLimit = (int32_t)INT16_MAX * TF_KIDIV,
-//  .wLowerIntegralLimit = (int32_t)-INT16_MAX * TF_KIDIV,
-//  .hUpperOutputLimit       = INT16_MAX,
-//  .hLowerOutputLimit       = -INT16_MAX,
-//  .hKpDivisor          = (uint16_t)TF_KPDIV,
-//  .hKiDivisor          = (uint16_t)TF_KIDIV,
-//  .hKpDivisorPOW2      = (uint16_t)TF_KPDIV_LOG,
-//  .hKiDivisorPOW2      = (uint16_t)TF_KIDIV_LOG,
-//  .hDefKdGain           = 0x0000U,
-//  .hKdDivisor           = 0x0000U,
-//  .hKdDivisorPOW2       = 0x0000U,
-//};
+/**
+  * @brief  PI / PID Iq loop parameters Motor 1
+  */
+PID_Handle_t PIDIqHandle_M1 =
+{
+  .hDefKpGain          = (int16_t)PID_TORQUE_KP_DEFAULT,
+  .hDefKiGain          = (int16_t)PID_TORQUE_KI_DEFAULT,
+  .wUpperIntegralLimit = (int32_t)MAX_DUTY * TF_KIDIV,
+  .wLowerIntegralLimit = (int32_t)-MAX_DUTY * TF_KIDIV,
+  .hUpperOutputLimit       = MAX_DUTY,
+  .hLowerOutputLimit       = -MAX_DUTY,
+  .hKpDivisor          = (uint16_t)TF_KPDIV,
+  .hKiDivisor          = (uint16_t)TF_KIDIV,
+  .hKpDivisorPOW2      = (uint16_t)TF_KPDIV_LOG,
+  .hKiDivisorPOW2      = (uint16_t)TF_KIDIV_LOG,
+  .hDefKdGain           = 0x0000U,
+  .hKdDivisor           = 0x0000U,
+  .hKdDivisorPOW2       = 0x0000U,
+};
 
-///**
-//  * @brief  PI / PID Id loop parameters Motor 1
-//  */
-//PID_Handle_t PIDIdHandle_M1 =
-//{
-//  .hDefKpGain          = (int16_t)PID_FLUX_KP_DEFAULT,
-//  .hDefKiGain          = (int16_t)PID_FLUX_KI_DEFAULT,
-//  .wUpperIntegralLimit = (int32_t)INT16_MAX * TF_KIDIV,
-//  .wLowerIntegralLimit = (int32_t)-INT16_MAX * TF_KIDIV,
-//  .hUpperOutputLimit       = INT16_MAX,
-//  .hLowerOutputLimit       = -INT16_MAX,
-//  .hKpDivisor          = (uint16_t)TF_KPDIV,
-//  .hKiDivisor          = (uint16_t)TF_KIDIV,
-//  .hKpDivisorPOW2      = (uint16_t)TF_KPDIV_LOG,
-//  .hKiDivisorPOW2      = (uint16_t)TF_KIDIV_LOG,
-//  .hDefKdGain           = 0x0000U,
-//  .hKdDivisor           = 0x0000U,
-//  .hKdDivisorPOW2       = 0x0000U,
-//};
+/**
+  * @brief  PI / PID Id loop parameters Motor 1
+  */
+PID_Handle_t PIDIdHandle_M1 =
+{
+  .hDefKpGain          = (int16_t)PID_FLUX_KP_DEFAULT,
+  .hDefKiGain          = (int16_t)PID_FLUX_KI_DEFAULT,
+  .wUpperIntegralLimit = (int32_t)MAX_DUTY * TF_KIDIV,
+  .wLowerIntegralLimit = (int32_t)-MAX_DUTY * TF_KIDIV,
+  .hUpperOutputLimit       = MAX_DUTY,
+  .hLowerOutputLimit       = -MAX_DUTY,
+  .hKpDivisor          = (uint16_t)TF_KPDIV,
+  .hKiDivisor          = (uint16_t)TF_KIDIV,
+  .hKpDivisorPOW2      = (uint16_t)TF_KPDIV_LOG,
+  .hKiDivisorPOW2      = (uint16_t)TF_KIDIV_LOG,
+  .hDefKdGain           = 0x0000U,
+  .hKdDivisor           = 0x0000U,
+  .hKdDivisorPOW2       = 0x0000U,
+};
 
 ///**
 //  * @brief  FluxWeakeningCtrl component parameters Motor 1
@@ -156,7 +157,6 @@ PWMC_ICS_Handle_t PWM_Handle_M1 = {
     .pFctTurnOnLowSides                = &ICS_TurnOnLowSides,
     .pFctSetADCSampPointSectX          = &ICS_WriteTIMRegisters,
     .pFctIsOverCurrentOccurred         = &ICS_IsOverCurrentOccurred,
-    .pFctOCPSetReferenceVoltage        = MC_NULL,
     .pFctRLDetectionModeEnable         = MC_NULL,
     .pFctRLDetectionModeDisable        = MC_NULL,
     .pFctRLDetectionModeSetDuty        = MC_NULL,
@@ -167,32 +167,24 @@ PWMC_ICS_Handle_t PWM_Handle_M1 = {
     .CntPhC = 0,
     .SWerror = 0,
     .TurnOnLowSidesAction = false,
-    .OffCalibrWaitTimeCounter = 0,
     .Motor = M1,
     .RLDetectionMode = false,
     .Ia = 0,
     .Ib = 0,
     .Ic = 0,
-    .DTTest = 0,
-    .DTCompCnt = DTCOMPCNT,
     .PWMperiod          = PWM_PERIOD_CYCLES,
-    .OffCalibrWaitTicks = (uint16_t)((SYS_TICK_FREQUENCY * OFFCALIBRWAIT_MS)/ 1000),
-    .Ton                 = TON,
-    .Toff                = TOFF
 
   },
 	.hIaRaw = 0,
 	.hIbRaw = 0,
-	.sDutyCycle = {
-		.duty = {500, 1000, 2000},
-	},
+	
+	.bOverrunFlag = false,
+	
   .PhaseAOffset = 0,
   .PhaseBOffset = 0,
   .Half_PWMPeriod = PWM_PERIOD_CYCLES/2u,
   .PolarizationCounter = 0,
-  .OverCurrentFlag = false,
-  .OverVoltageFlag = false,
-  .BrakeActionLock = false,
+  .bOverCurrentFlag = false,
 
   .pParams_str = &ICS_ParamsM1
 };
@@ -326,68 +318,35 @@ HALL_Handle_t HALL_M1 =
 //  .aBuffer = RealBusVoltageSensorFilterBufferM1,
 //};
 
-//UI_Handle_t UI_Params =
-//{
-//  .bDriveNum = 0,
-//  .pFct_DACInit = &DAC_Init,
-//  .pFct_DACExec = &DAC_Exec,
-//  .pFctDACSetChannelConfig    = &DAC_SetChannelConfig,
-//  .pFctDACGetChannelConfig    = &DAC_GetChannelConfig,
-//  .pFctDACSetUserChannelValue = &DAC_SetUserChannelValue,
-//  .pFctDACGetUserChannelValue = &DAC_GetUserChannelValue,
+/**
+  * @brief  CircleLimitation Component parameters Motor 1 - Base Component
+  */
+CircleLimitation_Handle_t CircleLimitationM1 =
+{
+  .MaxModule          = MAX_MODULE,
+  .MaxVd          	  = (uint16_t)(MAX_MODULE * FW_VOLTAGE_REF / 1000),
+  .Circle_limit_table = MMITABLE,
+  .Start_index        = START_INDEX,
+};
 
-//};
-
-//DAC_UI_Handle_t DAC_UI_Params =
-//{
-//  .hDAC_CH1_ENABLED = ENABLE,
-//  .hDAC_CH2_ENABLED = ENABLE
-//};
-
-///** RAMP for Motor1.
-//  *
-//  */
-//RampExtMngr_Handle_t RampExtMngrHFParamsM1 =
-//{
-//  .FrequencyHz = TF_REGULATION_RATE
-//};
-
-///**
-//  * @brief  CircleLimitation Component parameters Motor 1 - Base Component
-//  */
-//CircleLimitation_Handle_t CircleLimitationM1 =
-//{
-//  .MaxModule          = MAX_MODULE,
-//  .MaxVd          	  = (uint16_t)(MAX_MODULE * FW_VOLTAGE_REF / 1000),
-//  .Circle_limit_table = MMITABLE,
-//  .Start_index        = START_INDEX,
-//};
-
-//UFCP_Handle_t pUSART =
-//{
-//  ._Super.RxTimeout = 0,
-//  .USARTx = USART1,
-
-//};
-
-//AO_Handle_t AngleObserverM1 =
-//{
-//  .pHallFdbk = &HALL_M1,
-//	
-//	.hKpGainDef = AO_KP,
-//	.hKpDivisor = AO_KPDIV,
-//	.hKpDivisorPOW2 = AO_KPDIV_LOG,
-//	
-//	.hKiGainDef = AO_KI,
-//	.hKiDivisor = AO_KIDIV,
-//	.hKiDivisorPOW2 = AO_KIDIV_LOG,
-//	
-//	.hKdGainDef = AO_KD,
-//	.hKdDivisor = AO_KDDIV,
-//	.hKdDivisorPOW2 = AO_KDDIV_LOG,
-//	
-//	.hSpeedFactorGain = AO_SPEEDFACTORGAIN,
-//	.hSpeedFactorDiv = AO_SPEEDFACTORDIV,
-//};
+AO_Handle_t AngleObserverM1 =
+{
+  .pHallFdbk = &HALL_M1,
+	
+	.hKpGainDef = AO_KP,
+	.hKpDivisor = AO_KPDIV,
+	.hKpDivisorPOW2 = AO_KPDIV_LOG,
+	
+	.hKiGainDef = AO_KI,
+	.hKiDivisor = AO_KIDIV,
+	.hKiDivisorPOW2 = AO_KIDIV_LOG,
+	
+	.hKdGainDef = AO_KD,
+	.hKdDivisor = AO_KDDIV,
+	.hKdDivisorPOW2 = AO_KDDIV_LOG,
+	
+	.hSpeedFactorGain = AO_SPEEDFACTORGAIN,
+	.hSpeedFactorDiv = AO_SPEEDFACTORDIV,
+};
 
 
