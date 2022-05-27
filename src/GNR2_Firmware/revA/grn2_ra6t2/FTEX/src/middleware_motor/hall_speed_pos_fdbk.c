@@ -3,7 +3,7 @@
   * @file    hall_speed_pos_fdbk.c
   * @author  FTEX inc
   * @brief   This file provides firmware functions that implement the features of
-  *          the Hall Speed & Position Feedback component of the Motor Control SDK.
+  *          the Hall Speed & Position Feedback component.
   ******************************************************************************
 */
 
@@ -104,7 +104,7 @@ void HALL_Init( HALL_Handle_t * pHandle )
     pHandle->Sector_Destination_Angle[1] = ( int16_t ) (pHandle->PhaseShift  + S16_120_PHASE_SHIFT) ;
     pHandle->Sector_Destination_Angle[2] = ( int16_t ) (pHandle->PhaseShift - S16_120_PHASE_SHIFT );
     pHandle->Sector_Destination_Angle[3] = ( int16_t ) (pHandle->PhaseShift + S16_60_PHASE_SHIFT + S16_120_PHASE_SHIFT) ;
-    pHandle->Sector_Destination_Angle[4] =  (int16_t ) (pHandle->PhaseShift );
+    pHandle->Sector_Destination_Angle[4] = ( int16_t ) (pHandle->PhaseShift );
     pHandle->Sector_Destination_Angle[5] = ( int16_t ) (pHandle->PhaseShift  + S16_60_PHASE_SHIFT);
     pHandle->Sector_Destination_Angle[6] = ( int16_t ) (pHandle->PhaseShift - S16_60_PHASE_SHIFT);
     pHandle->Sector_Middle_Angle[0] = 0;  
@@ -112,9 +112,12 @@ void HALL_Init( HALL_Handle_t * pHandle )
     pHandle->Sector_Middle_Angle[2] = ( int16_t ) ( pHandle->Sector_Start_Angle[2]  +  S16_30_PHASE_SHIFT);
     pHandle->Sector_Middle_Angle[3] = ( int16_t )  ( pHandle->Sector_Start_Angle[3]  +  S16_30_PHASE_SHIFT);
     pHandle->Sector_Middle_Angle[4] = ( int16_t ) ( pHandle->Sector_Start_Angle[4]  +  S16_30_PHASE_SHIFT);
-    pHandle->Sector_Middle_Angle[5] =( int16_t ) ( pHandle->Sector_Start_Angle[5]  +  S16_30_PHASE_SHIFT);
+    pHandle->Sector_Middle_Angle[5] = ( int16_t ) ( pHandle->Sector_Start_Angle[5]  +  S16_30_PHASE_SHIFT);
     pHandle->Sector_Middle_Angle[6] = ( int16_t ) ( pHandle->Sector_Start_Angle[6]  +  S16_30_PHASE_SHIFT);
-    
+		
+		/*  Enable timer0 interrupts and counter */
+    R_GPT_Start(pHandle->TIMx->p_ctrl);
+    R_GPT_Enable(pHandle->TIMx->p_ctrl);
 }
 
 void HALL_Clear( HALL_Handle_t * pHandle )

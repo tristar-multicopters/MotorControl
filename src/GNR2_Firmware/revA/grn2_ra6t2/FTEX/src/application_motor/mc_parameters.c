@@ -37,10 +37,9 @@ const ICS_Params_t ICS_ParamsM1 =
 /* PWM generation parameters --------------------------------------------------*/
 	.pThreePhaseHandle  =	&g_three_phase0,
   .RepetitionCounter 	=	REP_COUNTER,
-
-
-/* Emergengy signal initialization ----------------------------------------*/
-  .BKIN2Mode           = INT_MODE,
-
+	
+/* PWM break input parameters --------------------------------------------------*/
+	.pPOEGHandle = &g_poeg1,
+	
 };
 

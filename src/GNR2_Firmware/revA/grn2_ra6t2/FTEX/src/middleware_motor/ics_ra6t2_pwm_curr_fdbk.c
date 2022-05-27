@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    ics_ra6t2_pwm_curr_fdbk.c
-  * @author  Sami Bouzid
+  * @author  Sami Bouzid, FTEX inc
   * @brief   This file provides firmware functions that implement current measurement
   *          functionality with 2 isolated sensors on A and B phase. It is specifically designed for RA6T2
   *          microcontrollers.
@@ -16,83 +16,74 @@
 #include "pwm_common.h"
 #include "mc_type.h"
 
-/* Private defines -----------------------------------------------------------*/
-
-/* Private typedef -----------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
-static bool ICS_TIMxInit( const three_phase_instance_t * TIMx, PWMC_Handle_t * pHdl );
-static bool ICS_ADCxInit( const adc_instance_t * ADCx );
 static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl,ab_t * Iab );
 
-/**
-  * @brief  It initializes TIMx, ADC, GPIO, DMA1 and NVIC for current reading
-  *         in ICS topology using STM32G4X and shared ADC
-  * @param  pHandle: handler of the current instance of the PWM component
-  * @retval none
-  */
+
 bool ICS_Init( PWMC_ICS_Handle_t * pHandle )
 {
-	bool bIsError = false;
+	/* Nothing to initialize for now */
 	
-	ICS_ADCxInit(pHandle->pParams_str->pADCHandle);
-	ICS_TIMxInit(pHandle->pParams_str->pThreePhaseHandle, &pHandle->_Super);
-	
-	return bIsError;
-}
-
-static bool ICS_ADCxInit( const adc_instance_t * ADCx )
-{
 	bool bIsError = false;
 	
 	return bIsError;
 }
 
-/**
-  * @brief  It initializes TIMx peripheral for PWM generation
-  * @param TIMx: Timer to be initialized
-  * @param pHandle: handler of the current instance of the PWM component
-  * @retval none
-  */
-static bool ICS_TIMxInit( const three_phase_instance_t * TIMx, PWMC_Handle_t * pHdl )
-{
-	bool bIsError = false;
-
-	return bIsError;
-}
-
-/**
-  * @brief  It stores into the component the voltage present on Ia and
-  *         Ib current feedback analog channels when no current is flowing into the
-  *         motor
-  * @param  pHdl: handler of the current instance of the PWM component
-  * @retval none
-  */
 void ICS_CurrentReadingPolarization( PWMC_Handle_t * pHdl )
 {
+	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
 
+  /* Reset offset and counter */
+  pHandle->PhaseAOffset = 0u;
+  pHandle->PhaseBOffset = 0u;
+  pHandle->PolarizationCounter = 0u;
+	
+	/* Disable PWM output */
+	R_GPT_OutputDisable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_U]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputDisable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_V]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputDisable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_W]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	
+  /* Change function to be executed in ADC interrupt routine */
+  pHandle->_Super.pFctGetPhaseCurrents = &ICS_HFCurrentsPolarization;
+	
+	/* Start PWM, but output is disabled */
+  ICS_SwitchOnPWM( &pHandle->_Super );
+	
+  /* Wait for NB_CONVERSIONS to be executed */
+  waitForPolarizationEnd(&pHandle->PolarizationCounter);
+
+	/* Stop PWM */
+  ICS_SwitchOffPWM( &pHandle->_Super );
+	
+	/* Compute sensor offsets */
+  pHandle->PhaseAOffset /= NB_CONVERSIONS;
+  pHandle->PhaseBOffset /= NB_CONVERSIONS;
+
+  /* Change back function to be executed in ADC interrupt routine */
+  pHandle->_Super.pFctGetPhaseCurrents = &ICS_GetPhaseCurrents;
+  pHandle->_Super.pFctSetADCSampPointSectX = &ICS_WriteTIMRegisters;
+
+	/* Enable PWM output */
+	R_GPT_OutputEnable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_U]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputEnable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_V]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputEnable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_W]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
 }
 
-
-/**
-  * @brief  It computes and return latest converted motor phase currents motor
-  * @param  pHdl: handler of the current instance of the PWM component
-  * @retval Ia and Ib current in Curr_Components format
-  */ 
 void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
 {
 	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
 	
-	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIa, &pHandle->hIaRaw);
-	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIb, &pHandle->hIbRaw);
+	pHandle->bOverrunFlag = false;
 	
   int32_t aux;
   uint16_t reg;
+	
+	/* Read ADC converted value and store it into handle  */
+	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIa, &pHandle->hIaRaw);
+	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIb, &pHandle->hIbRaw);
   
-  /* disable ADC trigger source */
-  //LL_TIM_SetTriggerOutput(TIMx, LL_TIM_TRGO_RESET);
-  
-  /* Ia = (hPhaseAOffset)-(PHASE_A_ADC_CHANNEL value)  */
+  /* Ia = (PHASE_A_ADC_CHANNEL value) - (hPhaseAOffset)  */
   reg = ( uint16_t )( pHandle->hIaRaw );
   aux = ( int32_t )( reg ) - ( int32_t )( pHandle->PhaseAOffset );
 
@@ -110,7 +101,7 @@ void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
 	  Iab->a = ( int16_t )aux;
   }
 
-  /* Ib = (hPhaseBOffset)-(PHASE_B_ADC_CHANNEL value) */
+  /* Ib = (PHASE_B_ADC_CHANNEL value) - (hPhaseBOffset) */
   reg = ( uint16_t )( pHandle->hIbRaw );
   aux = ( int32_t )( reg ) - ( int32_t )( pHandle->PhaseBOffset );
 
@@ -127,149 +118,149 @@ void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
   {
 	  Iab->b = ( int16_t )aux;
   }
+	
+	/* Inversion of Ia and Ib. Temporary fix. */
+	Iab->a = -Iab->a;
+	Iab->b = -Iab->b;
 
+	/* Compute Ic from Ia and Ib. Store them into base handle. */
   pHandle->_Super.Ia = Iab->a;
   pHandle->_Super.Ib = Iab->b;
   pHandle->_Super.Ic = -Iab->a - Iab->b;
 }
 
-/**
-  * @brief  Stores into the component's handle the voltage present on Ia and
-  *         Ib current feedback analog channels when no current is flowing into the
-  *         motor
-  * @param  pHandle handler of the current instance of the PWM component
-  * @retval none
-  */
 uint16_t ICS_WriteTIMRegisters( PWMC_Handle_t * pHdl )
 {
 	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	uint16_t hAux = MC_NO_ERROR;
+	three_phase_duty_cycle_t sDutyCycle;
 	
-	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->_Super.CntPhA;
-	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->_Super.CntPhB;
-	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->_Super.CntPhC;
+	/* Set duty cycles according to values in base handle */
+	sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->_Super.CntPhA;
+	sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->_Super.CntPhB;
+	sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->_Super.CntPhC;
 	
-	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &pHandle->sDutyCycle);
+	/* Update duty cycle registers */
+	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &sDutyCycle);
 	
-	// TODO: Check for FOC overrun
-	
-	return 0;
+	/* Check for overrun condition */
+	if (pHandle->bOverrunFlag)
+	{
+		hAux = MC_FOC_DURATION;
+	}
+
+  return hAux;
 }
+
 /**
   * @brief  Implementation of PWMC_GetPhaseCurrents to be performed during
   *         calibration. It sum up injected conversion data into PhaseAOffset and
   *         PhaseBOffset to compute the offset introduced in the current feedback
   *         network. It is required to proper configure ADC inputs before to enable
   *         the offset computation.
-  * @param  pHdl Pointer on the target component instance
-  * @retval It always returns {0,0} in Curr_Components format
+	* @param  pHdl: handler of the current instance of the PWMC_ICS_Handle_t component
+  * @retval It always returns {0,0} in ab_t format
   */
 static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl, ab_t * Iab )
 {
+	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	
+	pHandle->bOverrunFlag = false;
+	
+	/* Read ADC converted value and store it into handle  */
+	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIa, &pHandle->hIaRaw);
+	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIb, &pHandle->hIbRaw);
+	
+	/* Accumulate ADC converted value into handle until NB_CONVERTIONS is reached. */
+  if ( pHandle->PolarizationCounter < NB_CONVERSIONS )
+  {
+    pHandle->PhaseAOffset += pHandle->hIaRaw;
+    pHandle->PhaseBOffset += pHandle->hIbRaw;
+    pHandle->PolarizationCounter++;
+  }
 
+  /* During offset calibration no current is flowing in the phases */
+  Iab->a = 0;
+  Iab->b = 0;
 }
 
-/**
-  * @brief  It turns on low sides switches. This function is intended to be
-  *         used for charging boot capacitors of driving section. It has to be
-  *         called each motor start-up when using high voltage drivers
-  * @param  pHdl: handler of the current instance of the PWM component
-  * @retval none
-  */
 void ICS_TurnOnLowSides( PWMC_Handle_t * pHdl )
 {
 	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	three_phase_duty_cycle_t sDutyCycle;
 	
 	pHandle->_Super.TurnOnLowSidesAction = true;
 	
-	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = 0;
-	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = 0;
-	pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = 0;
+	/* Set duty cycles to zero, thus making low side switches always close and high sides always open */
+	sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = 0;
+	sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = 0;
+	sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = 0;
 	
-	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &pHandle->sDutyCycle);
+	/* Update duty cycle registers */
+	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &sDutyCycle);
 	
+	/* Start timer */
 	R_GPT_THREE_PHASE_Start(pHandle->pParams_str->pThreePhaseHandle->p_ctrl);
 }
 
-
-/**
-  * @brief  It enables PWM generation on the proper Timer peripheral acting on MOE
-  *         bit
-  * @param  pHdl: handler of the current instance of the PWM component
-  * @retval none
-  */
 void ICS_SwitchOnPWM( PWMC_Handle_t * pHdl )
 {
 	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	three_phase_duty_cycle_t sDutyCycle;
 	
 	pHandle->_Super.TurnOnLowSidesAction = false;
 	
-  /* Set all duty to 50% */
-  pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->Half_PWMPeriod / 2;
-  pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->Half_PWMPeriod / 2;
-  pHandle->sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->Half_PWMPeriod / 2;
+  /* Set all duty cycles to 50% */
+  sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->Half_PWMPeriod / 2;
+  sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->Half_PWMPeriod / 2;
+  sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->Half_PWMPeriod / 2;
 	
-	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &pHandle->sDutyCycle);
+	/* Update duty cycle registers */
+	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &sDutyCycle);
 	
+	/* Start timer */
 	R_GPT_THREE_PHASE_Start(pHandle->pParams_str->pThreePhaseHandle->p_ctrl);
 }
 
-
-/**
-  * @brief  It disables PWM generation on the proper Timer peripheral acting on
-  *         MOE bit
-  * @param  pHdl: handler of the current instance of the PWM component
-  * @retval none
-  */
 void ICS_SwitchOffPWM( PWMC_Handle_t * pHdl )
 {
 	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
 	
 	pHandle->_Super.TurnOnLowSidesAction = false;
 	
+	/* Stop timer and reset PWM output */
 	R_GPT_THREE_PHASE_Stop(pHandle->pParams_str->pThreePhaseHandle->p_ctrl);
 }
 
-/**
-  * @brief  It contains the TIMx Update event interrupt
-  * @param  pHandle: handler of the current instance of the PWM component
-  * @retval none
-  */
-void * ICS_TIMx_UP_IRQHandler( PWMC_ICS_Handle_t * pHandle )
+void * ICS_TIMx_UP_IRQHandler( PWMC_ICS_Handle_t * pHdl )
 {
-	R_ADC_B_ScanGroupStart(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCGroupMask);
+	/* Make ADC ready for next conversion, will be triggered by timer */
+	R_ADC_B_ScanGroupStart(pHdl->pParams_str->pADCHandle->p_ctrl, pHdl->pParams_str->ADCGroupMask);
 	
-	return &( pHandle->_Super.Motor );
+	pHdl->bOverrunFlag = true;
+	
+	return &( pHdl->_Super.Motor );
 }
 
-/**
-  * @brief  It contains the TIMx Break2 event interrupt
-  * @param  pHandle: handler of the current instance of the PWM component
-  * @retval none
-  */
-void * ICS_BRK2_IRQHandler( PWMC_ICS_Handle_t * pHandle )
+void * ICS_BRK2_IRQHandler( PWMC_ICS_Handle_t * pHdl )
 {
+  pHdl->bOverCurrentFlag = true;
 
+  return &( pHdl->_Super.Motor );
 }
 
-/**
-  * @brief  It contains the TIMx Break1 event interrupt
-  * @param  pHandle: handler of the current instance of the PWM component
-  * @retval none
-  */
-void * ICS_BRK_IRQHandler( PWMC_ICS_Handle_t * pHandle )
-{
-
-}
-
-
-/**
-  * @brief  It is used to check if an overcurrent occurred since last call.
-  * @param  pHdl Pointer on the target component instance
-  * @retval uint16_t It returns MC_BREAK_IN whether an overcurrent has been
-  *                  detected since last method call, MC_NO_FAULTS otherwise.
-  */
 uint16_t ICS_IsOverCurrentOccurred( PWMC_Handle_t * pHdl )
 {
+	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	
+  uint16_t retVal = MC_NO_FAULTS;
 
+  if ( pHandle->bOverCurrentFlag == true )
+  {
+    retVal |= MC_BREAK_IN;
+    pHandle->bOverCurrentFlag = false;
+  }
+
+  return retVal;
 }
 

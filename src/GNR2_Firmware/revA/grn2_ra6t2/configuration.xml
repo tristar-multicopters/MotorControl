@@ -180,6 +180,14 @@
       <description>General PWM Timer Three-Phase Motor Control Driver</description>
       <originalPack>Renesas.RA.3.6.0.pack</originalPack>
     </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_poeg" variant="" vendor="Renesas" version="3.6.0">
+      <description>Port Output Enable for GPT</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_dac" variant="" vendor="Renesas" version="3.6.0">
+      <description>12-bit D/A Converter</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
     <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_elc" variant="" vendor="Renesas" version="3.6.0">
       <description>Event Link Controller</description>
       <originalPack>Renesas.RA.3.6.0.pack</originalPack>
@@ -256,14 +264,14 @@
       <property id="module.driver.timer.gtioca_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_none"/>
       <property id="module.driver.timer.gtiocb_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_none"/>
       <property id="module.driver.timer.p_callback" value="PWM_TIM_UP_IRQHandler"/>
-      <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority3"/>
+      <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority1"/>
       <property id="module.driver.timer.capture_a_ipl" value="_disabled"/>
       <property id="module.driver.timer.capture_b_ipl" value="_disabled"/>
       <property id="module.driver.timer.trough_ipl" value="_disabled"/>
       <property id="module.driver.timer.extra" value="module.driver.timer.extra.disabled"/>
-      <property id="module.driver.timer.poeg_link" value="module.driver.timer.poeg_link.poeg_link_poeg0"/>
+      <property id="module.driver.timer.poeg_link" value="module.driver.timer.poeg_link.poeg_link_poeg1"/>
       <property id="module.driver.timer.output_disable" value=""/>
-      <property id="module.driver.timer.adc_trigger" value="module.driver.timer.adc_trigger.adc_trigger_up_count_start_adc_a"/>
+      <property id="module.driver.timer.adc_trigger" value="module.driver.timer.adc_trigger.adc_trigger_down_count_start_adc_a"/>
       <property id="module.driver.timer.dead_time_count_up" value="0"/>
       <property id="module.driver.timer.dead_time_count_down" value="0"/>
       <property id="module.driver.timer.adc_a_compare_match" value="1"/>
@@ -271,8 +279,8 @@
       <property id="module.driver.timer.interrupt_skip.source" value="module.driver.timer.interrupt_skip.source.none"/>
       <property id="module.driver.timer.interrupt_skip.count" value="module.driver.timer.interrupt_skip.count.count_0"/>
       <property id="module.driver.timer.interrupt_skip.adc" value="module.driver.timer.interrupt_skip.adc.none"/>
-      <property id="module.driver.timer.gtioca_disable_setting" value="module.driver.timer.gtioca_disable_setting.gtioc_disable_prohibited"/>
-      <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_prohibited"/>
+      <property id="module.driver.timer.gtioca_disable_setting" value="module.driver.timer.gtioca_disable_setting.gtioc_disable_set_hi_z"/>
+      <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_set_hi_z"/>
     </module>
     <module id="module.driver.timer_on_gpt.882287038">
       <property id="module.driver.timer.name" value="g_timer5"/>
@@ -309,7 +317,7 @@
       <property id="module.driver.timer.capture_b_ipl" value="_disabled"/>
       <property id="module.driver.timer.trough_ipl" value="_disabled"/>
       <property id="module.driver.timer.extra" value="module.driver.timer.extra.disabled"/>
-      <property id="module.driver.timer.poeg_link" value="module.driver.timer.poeg_link.poeg_link_poeg0"/>
+      <property id="module.driver.timer.poeg_link" value="module.driver.timer.poeg_link.poeg_link_poeg1"/>
       <property id="module.driver.timer.output_disable" value=""/>
       <property id="module.driver.timer.adc_trigger" value=""/>
       <property id="module.driver.timer.dead_time_count_up" value="0"/>
@@ -319,8 +327,8 @@
       <property id="module.driver.timer.interrupt_skip.source" value="module.driver.timer.interrupt_skip.source.none"/>
       <property id="module.driver.timer.interrupt_skip.count" value="module.driver.timer.interrupt_skip.count.count_0"/>
       <property id="module.driver.timer.interrupt_skip.adc" value="module.driver.timer.interrupt_skip.adc.none"/>
-      <property id="module.driver.timer.gtioca_disable_setting" value="module.driver.timer.gtioca_disable_setting.gtioc_disable_prohibited"/>
-      <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_prohibited"/>
+      <property id="module.driver.timer.gtioca_disable_setting" value="module.driver.timer.gtioca_disable_setting.gtioc_disable_set_hi_z"/>
+      <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_set_hi_z"/>
     </module>
     <module id="module.driver.timer_on_gpt.1906397871">
       <property id="module.driver.timer.name" value="g_timer6"/>
@@ -357,7 +365,7 @@
       <property id="module.driver.timer.capture_b_ipl" value="_disabled"/>
       <property id="module.driver.timer.trough_ipl" value="_disabled"/>
       <property id="module.driver.timer.extra" value="module.driver.timer.extra.disabled"/>
-      <property id="module.driver.timer.poeg_link" value="module.driver.timer.poeg_link.poeg_link_poeg0"/>
+      <property id="module.driver.timer.poeg_link" value="module.driver.timer.poeg_link.poeg_link_poeg1"/>
       <property id="module.driver.timer.output_disable" value=""/>
       <property id="module.driver.timer.adc_trigger" value=""/>
       <property id="module.driver.timer.dead_time_count_up" value="0"/>
@@ -367,8 +375,8 @@
       <property id="module.driver.timer.interrupt_skip.source" value="module.driver.timer.interrupt_skip.source.none"/>
       <property id="module.driver.timer.interrupt_skip.count" value="module.driver.timer.interrupt_skip.count.count_0"/>
       <property id="module.driver.timer.interrupt_skip.adc" value="module.driver.timer.interrupt_skip.adc.none"/>
-      <property id="module.driver.timer.gtioca_disable_setting" value="module.driver.timer.gtioca_disable_setting.gtioc_disable_prohibited"/>
-      <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_prohibited"/>
+      <property id="module.driver.timer.gtioca_disable_setting" value="module.driver.timer.gtioca_disable_setting.gtioc_disable_set_hi_z"/>
+      <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_set_hi_z"/>
     </module>
     <module id="module.driver.adc_on_adc_b.850742548">
       <property id="module.driver.adc.name" value="g_adc"/>
@@ -385,7 +393,7 @@
       <property id="module.driver.adc.sample_and_hold_cal_hold_time" value="5"/>
       <property id="module.driver.adc.adc_clock_divider" value="module.driver.adc.adc_clock_divider.div_1"/>
       <property id="module.driver.adc.adc_clock_source" value="module.driver.adc.adc_clock_source.pclkc"/>
-      <property id="module.driver.adc.p_callback" value="NULL"/>
+      <property id="module.driver.adc.p_callback" value="CS_ADC_IRQHandler"/>
       <property id="module.driver.adc.limit_clip_ipl" value="_disabled"/>
       <property id="module.driver.adc.conversion_error_ipl_adc_0" value="_disabled"/>
       <property id="module.driver.adc.conversion_error_ipl_adc_1" value="_disabled"/>
@@ -393,7 +401,7 @@
       <property id="module.driver.adc.overflow_error_ipl_adc_1" value="_disabled"/>
       <property id="module.driver.adc.calibration_end_ipl_adc_0" value="_disabled"/>
       <property id="module.driver.adc.calibration_end_ipl_adc_1" value="_disabled"/>
-      <property id="module.driver.adc.scan_end_ipl_group_0" value="board.icu.common.irq.priority12"/>
+      <property id="module.driver.adc.scan_end_ipl_group_0" value="board.icu.common.irq.priority2"/>
       <property id="module.driver.adc.scan_end_ipl_group_1" value="_disabled"/>
       <property id="module.driver.adc.scan_end_ipl_group_2" value="_disabled"/>
       <property id="module.driver.adc.scan_end_ipl_group_3" value="_disabled"/>
@@ -914,34 +922,36 @@
       <property id="module.driver.adc.scan_group_8_fifo_isr_enable" value="module.driver.adc.scan_group_8_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_8_fifo_isr_generation_level" value="0"/>
     </module>
-    <module id="module.driver.external_irq_on_icu.1031092748">
-      <property id="module.driver.external_irq.name" value="g_external_irq0"/>
-      <property id="module.driver.external_irq.channel" value="1"/>
-      <property id="module.driver.external_irq.trigger" value="module.driver.external_irq.trigger.trig_both_edge"/>
-      <property id="module.driver.external_irq.filter_enable" value="module.driver.external_irq.filter_enable.true"/>
-      <property id="module.driver.external_irq.pclk_div" value="module.driver.external_irq.pclk_div.pclk_div_by_64"/>
-      <property id="module.driver.external_irq.p_callback" value="NULL"/>
-      <property id="module.driver.external_irq.ipl" value="board.icu.common.irq.priority15"/>
+    <module id="module.driver.poeg_on_poeg.2021048778">
+      <property id="module.driver.poeg.name" value="g_poeg1"/>
+      <property id="module.driver.poeg.channel" value="1"/>
+      <property id="module.driver.poeg.trigger" value="module.driver.poeg.trigger.trigger_pin"/>
+      <property id="module.driver.poeg.polarity" value="module.driver.poeg.polarity.gtetrg_polarity_active_low"/>
+      <property id="module.driver.poeg.noise_filter" value="module.driver.poeg.noise_filter.gtetrg_noise_filter_pclkb_div_32"/>
+      <property id="module.driver.poeg.p_callback" value="PWM_TIM_BRK_IRQHandler"/>
+      <property id="module.driver.poeg.ipl" value="board.icu.common.irq.priority0"/>
     </module>
-    <module id="module.driver.external_irq_on_icu.1865586232">
-      <property id="module.driver.external_irq.name" value="g_external_irq1"/>
-      <property id="module.driver.external_irq.channel" value="10"/>
-      <property id="module.driver.external_irq.trigger" value="module.driver.external_irq.trigger.trig_both_edge"/>
-      <property id="module.driver.external_irq.filter_enable" value="module.driver.external_irq.filter_enable.true"/>
-      <property id="module.driver.external_irq.pclk_div" value="module.driver.external_irq.pclk_div.pclk_div_by_64"/>
-      <property id="module.driver.external_irq.p_callback" value="NULL"/>
-      <property id="module.driver.external_irq.ipl" value="board.icu.common.irq.priority15"/>
+    <module id="module.driver.dac_on_dac.5192312">
+      <property id="module.driver.dac.name" value="g_dac1"/>
+      <property id="module.driver.dac.channel_id" value="1"/>
+      <property id="module.driver.dac.ad_da_synchronized" value="module.driver.dac.ad_da_synchronized.disabled"/>
+      <property id="module.driver.dac.data_format" value="module.driver.dac.data_format.data_format_flush_left"/>
+      <property id="module.driver.dac.output_amplifier_enabled" value="module.driver.dac.output_amplifier.disabled"/>
+      <property id="module.driver.dac.charge_pump_enabled" value="enum.mcu.dac.charge_pump.disabled"/>
+      <property id="module.driver.dac.internal_output" value="enum.mcu.dac.internal_output.disabled"/>
+      <property id="module.driver.dac.elc_trigger" value="_disabled"/>
     </module>
-    <module id="module.driver.external_irq_on_icu.282393162">
-      <property id="module.driver.external_irq.name" value="g_external_irq2"/>
-      <property id="module.driver.external_irq.channel" value="11"/>
-      <property id="module.driver.external_irq.trigger" value="module.driver.external_irq.trigger.trig_both_edge"/>
-      <property id="module.driver.external_irq.filter_enable" value="module.driver.external_irq.filter_enable.true"/>
-      <property id="module.driver.external_irq.pclk_div" value="module.driver.external_irq.pclk_div.pclk_div_by_64"/>
-      <property id="module.driver.external_irq.p_callback" value="NULL"/>
-      <property id="module.driver.external_irq.ipl" value="board.icu.common.irq.priority15"/>
+    <module id="module.driver.dac_on_dac.967252373">
+      <property id="module.driver.dac.name" value="g_dac0"/>
+      <property id="module.driver.dac.channel_id" value="0"/>
+      <property id="module.driver.dac.ad_da_synchronized" value="module.driver.dac.ad_da_synchronized.disabled"/>
+      <property id="module.driver.dac.data_format" value="module.driver.dac.data_format.data_format_flush_left"/>
+      <property id="module.driver.dac.output_amplifier_enabled" value="module.driver.dac.output_amplifier.disabled"/>
+      <property id="module.driver.dac.charge_pump_enabled" value="enum.mcu.dac.charge_pump.disabled"/>
+      <property id="module.driver.dac.internal_output" value="enum.mcu.dac.internal_output.disabled"/>
+      <property id="module.driver.dac.elc_trigger" value="_disabled"/>
     </module>
-    <module id="module.driver.timer_on_gpt.1027205282">
+    <module id="module.driver.timer_on_gpt.2078947774">
       <property id="module.driver.timer.name" value="g_timer0"/>
       <property id="module.driver.timer.channel" value="0"/>
       <property id="module.driver.timer.mode" value="module.driver.timer.mode.mode_periodic"/>
@@ -971,8 +981,8 @@
       <property id="module.driver.timer.gtioca_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_none"/>
       <property id="module.driver.timer.gtiocb_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_none"/>
       <property id="module.driver.timer.p_callback" value="HALL_TIM_UP_CC_IRQHandler"/>
-      <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority3"/>
-      <property id="module.driver.timer.capture_a_ipl" value="board.icu.common.irq.priority3"/>
+      <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority5"/>
+      <property id="module.driver.timer.capture_a_ipl" value="board.icu.common.irq.priority5"/>
       <property id="module.driver.timer.capture_b_ipl" value="_disabled"/>
       <property id="module.driver.timer.trough_ipl" value="_disabled"/>
       <property id="module.driver.timer.extra" value="module.driver.timer.extra.disabled"/>
@@ -989,8 +999,35 @@
       <property id="module.driver.timer.gtioca_disable_setting" value="module.driver.timer.gtioca_disable_setting.gtioc_disable_prohibited"/>
       <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_prohibited"/>
     </module>
-    <module id="module.driver.elc_on_elc.1306649319">
+    <module id="module.driver.elc_on_elc.988196796">
       <property id="module.driver.elc.name" value="g_elc"/>
+    </module>
+    <module id="module.driver.external_irq_on_icu.1755895928">
+      <property id="module.driver.external_irq.name" value="g_external_irq0"/>
+      <property id="module.driver.external_irq.channel" value="10"/>
+      <property id="module.driver.external_irq.trigger" value="module.driver.external_irq.trigger.trig_both_edge"/>
+      <property id="module.driver.external_irq.filter_enable" value="module.driver.external_irq.filter_enable.true"/>
+      <property id="module.driver.external_irq.pclk_div" value="module.driver.external_irq.pclk_div.pclk_div_by_64"/>
+      <property id="module.driver.external_irq.p_callback" value="NULL"/>
+      <property id="module.driver.external_irq.ipl" value="board.icu.common.irq.priority15"/>
+    </module>
+    <module id="module.driver.external_irq_on_icu.493903112">
+      <property id="module.driver.external_irq.name" value="g_external_irq1"/>
+      <property id="module.driver.external_irq.channel" value="11"/>
+      <property id="module.driver.external_irq.trigger" value="module.driver.external_irq.trigger.trig_both_edge"/>
+      <property id="module.driver.external_irq.filter_enable" value="module.driver.external_irq.filter_enable.true"/>
+      <property id="module.driver.external_irq.pclk_div" value="module.driver.external_irq.pclk_div.pclk_div_by_64"/>
+      <property id="module.driver.external_irq.p_callback" value="NULL"/>
+      <property id="module.driver.external_irq.ipl" value="board.icu.common.irq.priority15"/>
+    </module>
+    <module id="module.driver.external_irq_on_icu.1871929853">
+      <property id="module.driver.external_irq.name" value="g_external_irq2"/>
+      <property id="module.driver.external_irq.channel" value="1"/>
+      <property id="module.driver.external_irq.trigger" value="module.driver.external_irq.trigger.trig_both_edge"/>
+      <property id="module.driver.external_irq.filter_enable" value="module.driver.external_irq.filter_enable.true"/>
+      <property id="module.driver.external_irq.pclk_div" value="module.driver.external_irq.pclk_div.pclk_div_by_64"/>
+      <property id="module.driver.external_irq.p_callback" value="NULL"/>
+      <property id="module.driver.external_irq.ipl" value="board.icu.common.irq.priority15"/>
     </module>
     <context id="_hal.0">
       <stack module="module.driver.ioport_on_ioport.0"/>
@@ -1000,14 +1037,20 @@
         <stack module="module.driver.timer_on_gpt.1906397871" requires="module.driver.three_phase.requires.gpt_w"/>
       </stack>
       <stack module="module.driver.adc_on_adc_b.850742548"/>
-      <stack module="module.driver.external_irq_on_icu.1031092748"/>
-      <stack module="module.driver.external_irq_on_icu.1865586232"/>
-      <stack module="module.driver.external_irq_on_icu.282393162"/>
-      <stack module="module.driver.timer_on_gpt.1027205282"/>
-      <stack module="module.driver.elc_on_elc.1306649319"/>
+      <stack module="module.driver.poeg_on_poeg.2021048778"/>
+      <stack module="module.driver.dac_on_dac.5192312"/>
+      <stack module="module.driver.dac_on_dac.967252373"/>
+      <stack module="module.driver.timer_on_gpt.2078947774"/>
+      <stack module="module.driver.elc_on_elc.988196796"/>
+      <stack module="module.driver.external_irq_on_icu.1755895928"/>
+      <stack module="module.driver.external_irq_on_icu.493903112"/>
+      <stack module="module.driver.external_irq_on_icu.1871929853"/>
     </context>
     <config id="config.driver.ioport">
       <property id="config.driver.ioport.checking" value="config.driver.ioport.checking.system"/>
+    </config>
+    <config id="config.driver.poeg">
+      <property id="config.driver.poeg.param_checking_enable" value="config.driver.poeg.param_checking_enable.bsp"/>
     </config>
     <config id="config.driver.icu">
       <property id="config.driver.icu.param_checking_enable" value="config.driver.icu.param_checking_enable.bsp"/>
@@ -1017,6 +1060,9 @@
     </config>
     <config id="config.driver.gpt_three_phase">
       <property id="config.driver.gpt_three_phase.param_checking_enable" value="config.driver.gpt_three_phase.param_checking_enable.bsp"/>
+    </config>
+    <config id="config.driver.dac">
+      <property id="config.driver.dac.param_checking_enable" value="config.driver.dac.param_checking_enable.bsp"/>
     </config>
     <config id="config.driver.gpt">
       <property id="config.driver.gpt.param_checking_enable" value="config.driver.gpt.param_checking_enable.bsp"/>
@@ -1107,6 +1153,10 @@
       <configSetting altId="adc12.an004.pa04" configurationId="adc12.an004"/>
       <configSetting altId="adc12.mode.custom.free" configurationId="adc12.mode"/>
       <configSetting altId="cgc.mode.custom.free" configurationId="cgc.mode"/>
+      <configSetting altId="dac120.da0.pa06" configurationId="dac120.da0"/>
+      <configSetting altId="dac120.mode.enabled.free" configurationId="dac120.mode"/>
+      <configSetting altId="dac121.da1.pa07" configurationId="dac121.da1"/>
+      <configSetting altId="dac121.mode.enabled.free" configurationId="dac121.mode"/>
       <configSetting altId="gpt4.gtioc4a.pb04" configurationId="gpt4.gtioc4a"/>
       <configSetting altId="gpt4.gtioc4b.pb05" configurationId="gpt4.gtioc4b"/>
       <configSetting altId="gpt4.mode.gtiocaandgtiocb.free" configurationId="gpt4.mode"/>
@@ -1118,6 +1168,8 @@
       <configSetting altId="gpt6.mode.gtiocaandgtiocb.free" configurationId="gpt6.mode"/>
       <configSetting altId="gpt7.mode.gtiocaorgtiocb.free" configurationId="gpt7.mode"/>
       <configSetting altId="gpt9.mode.gtiocaorgtiocb.free" configurationId="gpt9.mode"/>
+      <configSetting altId="gpt_poegb.gtetrgb.pa12" configurationId="gpt_poegb.gtetrgb"/>
+      <configSetting altId="gpt_poegb.mode.enabled.free" configurationId="gpt_poegb.mode"/>
       <configSetting altId="icu1.irq1.pb01" configurationId="icu1.irq1"/>
       <configSetting altId="icu1.mode.enabled.free" configurationId="icu1.mode"/>
       <configSetting altId="icu10.irq10.pc04" configurationId="icu10.irq10"/>
@@ -1134,6 +1186,12 @@
       <configSetting altId="pa02.gpio_mode.gpio_mode_an" configurationId="pa02.gpio_mode"/>
       <configSetting altId="pa04.adc12.an004" configurationId="pa04"/>
       <configSetting altId="pa04.gpio_mode.gpio_mode_an" configurationId="pa04.gpio_mode"/>
+      <configSetting altId="pa06.dac120.da0" configurationId="pa06"/>
+      <configSetting altId="pa06.gpio_mode.gpio_mode_an" configurationId="pa06.gpio_mode"/>
+      <configSetting altId="pa07.dac121.da1" configurationId="pa07"/>
+      <configSetting altId="pa07.gpio_mode.gpio_mode_an" configurationId="pa07.gpio_mode"/>
+      <configSetting altId="pa12.gpt_poegb.gtetrgb" configurationId="pa12"/>
+      <configSetting altId="pa12.gpio_mode.gpio_mode_peripheral" configurationId="pa12.gpio_mode"/>
       <configSetting altId="pa13.jtag_fslash_swd.swdio" configurationId="pa13"/>
       <configSetting altId="pa13.gpio_mode.gpio_mode_peripheral" configurationId="pa13.gpio_mode"/>
       <configSetting altId="pa14.jtag_fslash_swd.swclk" configurationId="pa14"/>
@@ -1161,25 +1219,13 @@
       <configSetting altId="pc05.icu11.irq11" configurationId="pc05"/>
       <configSetting altId="pc05.gpio_irq.gpio_irq_enabled" configurationId="pc05.gpio_irq"/>
       <configSetting altId="pc05.gpio_mode.gpio_mode_irq" configurationId="pc05.gpio_mode"/>
-      <configSetting altId="pc10.spi1.rspck1" configurationId="pc10"/>
-      <configSetting altId="pc10.gpio_mode.gpio_mode_peripheral" configurationId="pc10.gpio_mode"/>
-      <configSetting altId="pc11.spi1.miso1" configurationId="pc11"/>
-      <configSetting altId="pc11.gpio_speed.gpio_speed_m" configurationId="pc11.gpio_drivecapacity"/>
-      <configSetting altId="pc11.gpio_mode.gpio_mode_peripheral" configurationId="pc11.gpio_mode"/>
-      <configSetting altId="pc12.spi1.mosi1" configurationId="pc12"/>
-      <configSetting altId="pc12.gpio_speed.gpio_speed_m" configurationId="pc12.gpio_drivecapacity"/>
-      <configSetting altId="pc12.gpio_mode.gpio_mode_peripheral" configurationId="pc12.gpio_mode"/>
       <configSetting altId="pd01.output.low" configurationId="pd01"/>
       <configSetting altId="pd01.gpio_mode.gpio_mode_out.low" configurationId="pd01.gpio_mode"/>
       <configSetting altId="pd02.output.low" configurationId="pd02"/>
       <configSetting altId="pd02.gpio_mode.gpio_mode_out.low" configurationId="pd02.gpio_mode"/>
       <configSetting altId="pd03.output.low" configurationId="pd03"/>
       <configSetting altId="pd03.gpio_mode.gpio_mode_out.low" configurationId="pd03.gpio_mode"/>
-      <configSetting altId="spi1.miso1.pc11" configurationId="spi1.miso1"/>
-      <configSetting altId="spi1.mode.enabled.b" configurationId="spi1.mode"/>
-      <configSetting altId="spi1.mosi1.pc12" configurationId="spi1.mosi1"/>
       <configSetting altId="spi1.pairing.b" configurationId="spi1.pairing"/>
-      <configSetting altId="spi1.rspck1.pc10" configurationId="spi1.rspck1"/>
       <configSetting altId="system.md.p201" configurationId="system.md"/>
       <configSetting altId="system.mode.custom.free" configurationId="system.mode"/>
       <configSetting altId="trace.mode.custom.free" configurationId="trace.mode"/>
