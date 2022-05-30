@@ -1,39 +1,26 @@
 /**
 * @file   regular_conversion_manager.h
-* @brief  This file contains all definitions and functions prototypes for the regular_conversion_manager component of the Motor Control SDK.
+* @brief  Regular conversion manager module for non-injected ADC conversions.
 *
-* This module is the interface that is used by the entire firmware
-* to interact with the GPIOs. It is the bridge between the Renesas BSP reference
-* for pins (ports and pins)and a FTEX standard pin numbering system 
-* (first pin is pin 0 second pin is pin 1, etc). 
-* If a change would be made to the hardware only 
-* this file needs to be changed so that the GPIO are still usable.
+* This file contains all definitions and functions prototypes for the regular_conversion_manager component of the Motor Control SDK.
+* Register conversion without callback
+* Execute regular conv directly from Temperature and VBus sensors
+* Manage conversion state machine
 *
 */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __regular_conversion_manager_h
 #define __regular_conversion_manager_h
 
-#ifdef __cplusplus
- extern "C" {
-#endif /* __cplusplus */
-
-/* Includes ------------------------------------------------------------------*/
 #include "stdint.h"
 #include "stdbool.h"
 #include "r_adc_b.h"
 
-/* Exported types ------------------------------------------------------------*/
-/**
-  * @brief RegConv_t contains all the parameters required to execute a regular conversion
-  *
-  * it is used by all regular_conversion_manager's client
-  *
-  */
-typedef enum
+// =================== Regular conversion manager enums =================== //
+
+typedef enum  // Used to select ADC scan group which needs to start scan 
 {
-    GROUP_1 = 1,       // GROUP_0 reserved for PWM based Injected conversion
+    GROUP_1=1,  // GROUP_0 reserved for PWM based Injected conversion
     GROUP_2,
     GROUP_3,
     GROUP_4,
@@ -44,15 +31,17 @@ typedef enum
     GROUP_9
 } ScanGroup;
 
-typedef struct
+// ====== Structure used to configure regular conversion manager ========== //
+
+typedef struct  // Parameters to configure an ADC conversion element in array.
 {
     const adc_instance_t * regADC;
     uint8_t channel;
+    uint8_t group;  // Group selection to be used in future
 } RegConv_t;
 
-typedef void (*RCM_exec_cb_t)(uint8_t handle, uint16_t data, void *UserData);
+// ==================== Public function prototypes ========================= //
 
-/* Exported functions ------------------------------------------------------- */
 /**
   @brief Function used to register ADC convesion as a part of sequence which will be executed by RCM_ExecRegularConv function call.    
  
@@ -62,12 +51,20 @@ typedef void (*RCM_exec_cb_t)(uint8_t handle, uint16_t data, void *UserData);
 uint8_t RCM_RegisterRegConv(RegConv_t * regConv);
 
 /**
-  @brief Function used to flag start of sequential ADC conversion registered by regular conversion manager. RCM_ExecRegularConv function call is expected to occur anywhere in the RTOS tasks.   
+  @brief Function used to flag start of sequential ADC conversion registered by regular conversion manager. RCM_ExecRegularConv function call is expected to occur anywhere in the RTOS tasks. % Function for future use. %   
  
   @param Receives information on which sequential group needs to start converting its registries.      
   @return void  
 */
-void RCM_ExecuteRegularConv(ScanGroup group);
+void RCM_ExecuteGroupRegularConv(ScanGroup group);
+
+/**
+  @brief Function used to flag start of sequential ADC conversion registered by regular conversion manager. All ADC conversions specified in scan group 1 will executed with this function. CM_ExecRegularConvGroup1 function call is expected to occur anywhere in the RTOS tasks.   
+ 
+  @param void.      
+  @return void.  
+*/
+void RCM_ExecuteRegularConv(void);
 
 /**
   @brief Function used to flag start of sequential ADC conversion registered by regular conversion manager. RCM_ExecRegularConv function call is expected to occur anywhere in the RTOS tasks.   
@@ -93,8 +90,4 @@ void RCM_EnableConv(void);
 */
 void RCM_DisableConv(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cpluplus */
-
-#endif /* __regular_conversion_manager_h */
+#endif

@@ -282,6 +282,7 @@ NTC_Handle_t TempSensorParamsM1 =
   {
     .regADC = &g_adc,
     .channel = MC_ADC_CHANNEL_6,
+    .group = GROUP_1,
   },
   .hLowPassFilterBW        = M1_TEMP_SW_FILTER_BW_FACTOR,
   .hOverTempThreshold      = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d),
@@ -309,6 +310,7 @@ RDivider_Handle_t RealBusVoltageSensorParamsM1 =
   {
     .regADC = &g_adc,
     .channel = MC_ADC_CHANNEL_7,
+    .group = GROUP_1,
   },
   .LowPassFilterBW       =  M1_VBUS_SW_FILTER_BW_FACTOR,
   .OverVoltageThreshold  = OVERVOLTAGE_THRESHOLD_d,

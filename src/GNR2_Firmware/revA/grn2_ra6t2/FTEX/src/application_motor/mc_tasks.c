@@ -75,9 +75,6 @@ int16_t hTest = 0;
 int16_t hOpenLoopTheta = 0;
 #define OPENLOOP_SPEED  10
 
-uint16_t RCM_debug[5];
-bool RCM_enable = false;
-bool RCM_DebugFlag = true;
 
 /* Private functions ---------------------------------------------------------*/
 void TSK_MediumFrequencyTaskM1(void);
@@ -133,7 +130,7 @@ void MCboot(void)
   /******************************************************/
   pSTC[M1] = &SpeednTorqCtrlM1;
   HALL_Init (&HALL_M1);
-	AO_Init( &AngleObserverM1 );
+  AO_Init( &AngleObserverM1 );
 
   /******************************************************/
   /*   Speed & torque component initialization          */
@@ -278,24 +275,12 @@ void TSK_MediumFrequencyTaskM1(void)
 //  (void) STO_PLL_CalcAvrgMecSpeedUnit( &STO_PLL_M1, &wAux );
     bool IsSpeedReliable = HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
 //  PQD_CalcElMotorPower( pMPM[M1] );
-    if(RCM_enable)
-    {
-    RCM_EnableConv();
-    }
-    else 
-    {
-    RCM_DisableConv();
-    }
-    RCM_ExecuteRegularConv(GROUP_2);
-    RCM_debug[0] = RCM_ReadConv(pTemperatureSensor[M1]->convHandle);
-    RCM_debug[1] = RCM_ReadConv(pBusSensorM1->convHandle);
-    
-
-  StateM1 = STM_GetState( &STM[M1] );
+    RCM_ExecuteRegularConv();
+    StateM1 = STM_GetState( &STM[M1] );
 
   switch ( StateM1 )
   {
-	case IDLE:
+    case IDLE:
 		if (bStartMotor)
 		{
 			STC_ExecRamp(pSTC[M1], 1000, 5000);
@@ -303,27 +288,27 @@ void TSK_MediumFrequencyTaskM1(void)
 		}
 		break;
 
-  case IDLE_START:
+    case IDLE_START:
     ICS_TurnOnLowSides( pwmcHandle[M1] );
     TSK_SetChargeBootCapDelayM1( CHARGE_BOOT_CAP_TICKS );
     STM_NextState( &STM[M1], CHARGE_BOOT_CAP );
     break;
 
-  case CHARGE_BOOT_CAP:
+    case CHARGE_BOOT_CAP:
     if ( TSK_ChargeBootCapDelayHasElapsedM1() )
     {
       STM_NextState(&STM[M1],OFFSET_CALIB);
     }
     break;
 
-  case OFFSET_CALIB:
-    if ( PWMC_CurrentReadingCalibr(pwmcHandle[M1]) )
+    case OFFSET_CALIB:
+    if (PWMC_CurrentReadingCalibr(pwmcHandle[M1]) )
     {
       STM_NextState( &STM[M1], CLEAR );
     }
     break;
 
-  case CLEAR:
+    case CLEAR:
     HALL_Clear( &HALL_M1 );
 //    STO_PLL_Clear( &STO_PLL_M1 );
 		AO_Clear( &AngleObserverM1 );
@@ -340,7 +325,7 @@ void TSK_MediumFrequencyTaskM1(void)
     break;
 
   case START_RUN:
-	  FOC_InitAdditionalMethods(M1);
+	FOC_InitAdditionalMethods(M1);
     FOC_CalcCurrRef( M1 );
     STM_NextState( &STM[M1], RUN );
     STC_ForceSpeedReferenceToCurrentSpeed( pSTC[M1] ); /* Init the reference speed to current speed */

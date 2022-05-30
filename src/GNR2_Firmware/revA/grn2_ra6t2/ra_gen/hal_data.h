@@ -87,8 +87,8 @@ void PWM_TIM_BRK_IRQHandler(poeg_callback_args_t * p_args);
                     extern const adc_cfg_t g_adc_cfg;
                     extern const adc_b_scan_cfg_t g_adc_scan_cfg;
 
-                    #ifndef NULL
-                    void NULL(adc_callback_args_t * p_args);
+                    #ifndef CS_ADC_IRQHandler
+                    void CS_ADC_IRQHandler(adc_callback_args_t * p_args);
                     #endif
 /** Timer on GPT Instance. */
 extern const timer_instance_t g_timer6;

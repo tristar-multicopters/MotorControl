@@ -24,9 +24,10 @@ static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl,ab_t * Iab );
 bool ICS_Init( PWMC_ICS_Handle_t * pHandle )
 {
 	/* Nothing to initialize for now */
-	
+	if(pHandle != NULL)
+    {
+    }
 	bool bIsError = false;
-	
 	return bIsError;
 }
 

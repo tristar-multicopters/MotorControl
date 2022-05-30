@@ -1,29 +1,17 @@
 /**
-  ******************************************************************************
-  * @file    regular_conversion_manager.c
-  * @author  FTEX inc
-  * @brief   This file provides firmware functions that implement the following features
-  *          of the regular_conversion_manager component of the Motor Control SDK:
-  *          Register conversion without callback
-  *          Execute regular conv directly from Temperature and VBus sensors
-  *          Manage conversion state machine
-  *          +
-  *          +
-  *
-  ******************************************************************************
-*/
+*  regular_conversion_manager.c
+*  This file provides firmware functions that implement the following features of the regular_conversion_manager component of the Motor Control SDK:
+*  Register conversion without callback
+*  Execute regular conv directly from Temperature and VBus sensors
+*  Manage conversion state machine
+*/ 
 
-/* Includes ------------------------------------------------------------------*/
 #include "regular_conversion_manager.h"
 #include "mc_config.h"
 
-/* Private typedef -----------------------------------------------------------*/
-/**
-  * @brief Defining state machine of regular conversion manager
-  *
-  * ...
-  */
-typedef enum 
+// ========================== Private typedef ============================== //
+
+typedef enum    // Used to define state of regular conversion manager
 {
     stop,
     start,
@@ -31,27 +19,17 @@ typedef enum
     dataavailable
 } RCM_status_t;
 
-/* Private defines -----------------------------------------------------------*/
-/**
-  * @brief Number of regular conversion allowed By default.
-  *
-  * In single drive configuration, 2 of them are consumed by
-  * Bus voltage and temperature reading.
-  *
-  * In dual drives configuration, 4 of them are consumed by
-  * Bus voltage and temperature reading for each motor.
-  *
-  * Defined to 8 here.
-  */
+// ========================== Private defines ============================== //
+
 #define RCM_MAX_CONV  8 
 
-/* Global variables ----------------------------------------------------------*/
+// ========================== Private variables ============================ //
 
 RegConv_t * RCM_handle_array [RCM_MAX_CONV];
 RCM_status_t ConversionStatus = stop;
 uint16_t RCM_ReadValue = 0;
 
-/* Private functions ---------------------------------------------------------*/
+// ========================================================================= //
 
 /**
   * @brief  Registers a regular conversion.
@@ -66,11 +44,8 @@ uint16_t RCM_ReadValue = 0;
   * The registration may fail if there is no space left for additional conversions. The
   * maximum number of regular conversion that can be registered is defined by #RCM_MAX_CONV.
   *
-  * @note   Users who do not want a callback to be executed at the end of the conversion,
-  *         should use RCM_RegisterRegConv() instead.
-  *
   * @param  regConv Pointer to the regular conversion parameters.
-  *         Contains ADC, Channel and sampling time to be used.
+  *         Contains ADC, Channel and scan group to be used.
   *
   *  @retval the handle of the registered conversion or 255 if the registration failed
   */
@@ -96,7 +71,7 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
             }
         }
         i++;
-    }
+    }    
     if (handle < RCM_MAX_CONV )
     {
         RCM_handle_array[handle] = regConv;
@@ -109,18 +84,17 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
 }
 
 /*
- * This function is used to read the result of a regular conversion.
- * Depending of the MC state machine, this function can poll on the ADC end of conversion or not.
+ * This function is used to flag start of scan group passed as input.
+ * Depending of the state of RCM manager for previous conversion, this function can change state of RCM manager and flag availability of scanned channel data. 
  * If the ADC is already in use for currents sensing, the regular conversion can not
- * be executed instantaneously but have to be scheduled in order to be executed after currents sensing
+ * be executed instantaneously but have to be scheduled in order to be executed.
  * inside HF task.
- * This function takes care of inserting the handle into the scheduler.
- * If it is possible to execute the conversion instantaneously, it will be executed, and result returned.
+ * If it is possible to execute the conversion instantaneously, it will be executed.
  * Otherwise, the latest stored conversion result will be returned.
  *
- * NOTE: This function is not part of the public API and users should not call it.
+ * NOTE: This function is not completely defined. RegConv_t.group will be used to register scan group in which the adc conversion will be placed. 
  */
-void RCM_ExecuteRegularConv(ScanGroup group)
+void RCM_ExecuteGroupRegularConv(ScanGroup group)
 {
     if(ConversionStatus == ongoing && R_ADC_B->ADSCANENDSR >= 0x2)
     {
@@ -131,22 +105,40 @@ void RCM_ExecuteRegularConv(ScanGroup group)
     {
         R_ADC_B->ADSTR[group] |= 1UL << 0;
         ConversionStatus = ongoing;
+    }   
+}
+
+/*
+ * This function is used to flag start of scan group 1.
+ * Depending of the state of RCM manager for previous conversion, this function can change state of RCM manager and flag availability of scanned channel data. 
+ * If the ADC is already in use for currents sensing, the regular conversion can not
+ * be executed instantaneously but have to be scheduled in order to be executed after currents sensing
+ * inside HF task.
+ * If it is possible to execute the conversion instantaneously, it will be executed.
+ * Otherwise, the latest stored conversion result will be returned.
+ */
+void RCM_ExecuteRegularConv(void)
+{
+    if(ConversionStatus == ongoing && R_ADC_B->ADSCANENDSR >= 0x2)
+    {
+        R_ADC_B->ADSCANENDSCR = 0x1FEU;
+        ConversionStatus = dataavailable;
     }
-        
+    else if(ConversionStatus == start | ConversionStatus == dataavailable)
+    {
+        R_ADC_B->ADSTR[1] |= 1UL << 0;  // setting last bit in element 1 of array ADSSTR flags start of conversion in scan group 1. 
+        ConversionStatus = ongoing;
+    }
 }
 
 /**
- * @brief Schedules a regular conversion for execution.
+ * @brief Reads scanned ADC data using regular conversionmanager.
  *
- * This function requests the execution of the user-defined regular conversion identified
- * by @p handle. All user defined conversion requests must be performed inside routines with the
- * same priority level. If a previous regular conversion request is pending this function has no
- * effect, for this reason is better to call RCM_GetUserConvState() and check if the state is
- * #RCM_USERCONV_IDLE before calling RCM_RequestUserConv().
+ * This function reads data available in ADC result register if end of conversion flag is received ands state of manager is changed to "dataavailable"
  *
- * @param  handle used for the user conversion.
+ * @param  handle used to identify which unique registered conversion data needs to be accessed.
  *
- * @return true if the regular conversion could be scheduled and false otherwise.
+ * @return Returns ADC read data.
  */
 uint16_t RCM_ReadConv(uint8_t handle)
 {
@@ -158,17 +150,13 @@ uint16_t RCM_ReadConv(uint8_t handle)
 }
 
 /**
- * @brief Schedules a regular conversion for execution.
+ * @brief Enables regular conversion manager for execution.
  *
- * This function requests the execution of the user-defined regular conversion identified
- * by @p handle. All user defined conversion requests must be performed inside routines with the
- * same priority level. If a previous regular conversion request is pending this function has no
- * effect, for this reason is better to call RCM_GetUserConvState() and check if the state is
- * #RCM_USERCONV_IDLE before calling RCM_RequestUserConv().
+ * This function changes regular conversion manager state to start so that manager can receive execution commands.
  *
- * @param  handle used for the user conversion.
+ * @param  void.
  *
- * @return true if the regular conversion could be scheduled and false otherwise.
+ * @return void.
  */
 void RCM_EnableConv(void)
 {
@@ -179,17 +167,13 @@ void RCM_EnableConv(void)
 }
 
 /**
- * @brief Schedules a regular conversion for execution.
+ * @brief Enables regular conversion manager for execution.
  *
- * This function requests the execution of the user-defined regular conversion identified
- * by @p handle. All user defined conversion requests must be performed inside routines with the
- * same priority level. If a previous regular conversion request is pending this function has no
- * effect, for this reason is better to call RCM_GetUserConvState() and check if the state is
- * #RCM_USERCONV_IDLE before calling RCM_RequestUserConv().
+ * This function changes regular conversion manager state to stop so that manager can not receive execution commands.
  *
- * @param  handle used for the user conversion.
+ * @param  void.
  *
- * @return true if the regular conversion could be scheduled and false otherwise.
+ * @return void.
  */
 void RCM_DisableConv(void)
 {

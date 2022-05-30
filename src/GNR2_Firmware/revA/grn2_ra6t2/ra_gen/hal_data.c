@@ -3032,7 +3032,7 @@ const adc_cfg_t g_adc_cfg =
     .resolution          = (adc_resolution_t) 0, // Unused
     .alignment           = ADC_ALIGNMENT_RIGHT,
     .trigger             = (adc_trigger_t) 0, // Unused
-    .p_callback          = NULL,
+    .p_callback          = CS_ADC_IRQHandler,
 #if defined(NULL)
     .p_context           = NULL,
 #else
