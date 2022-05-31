@@ -196,11 +196,13 @@ void MCboot(void)
 //  MCT[M1].pSpeedSensorVirtual = MC_NULL;
   MCT[M1].pSpeednTorqueCtrl = pSTC[M1];
   MCT[M1].pStateMachine = &STM[M1];
-//  MCT[M1].pTemperatureSensor = (NTC_Handle_t *) pTemperatureSensor[M1];
-//  MCT[M1].pBusVoltageSensor = &(pBusSensorM1->_Super);
+  MCT[M1].pTemperatureSensor = (NTC_Handle_t *) pTemperatureSensor[M1];
+  MCT[M1].pBusVoltageSensor = &(pBusSensorM1->_Super);
 //  MCT[M1].pMPM =  (MotorPowMeas_Handle_t*)pMPM[M1];
 //  MCT[M1].pFW = pFW[M1];
 //  MCT[M1].pFF = pFF[M1];
+
+  RCM_EnableConv();
 
   bMCBootCompleted = 1;
 }
@@ -649,15 +651,15 @@ void TSK_SafetyTask(void)
 void TSK_SafetyTask_PWMOFF(uint8_t bMotor)
 {
   uint16_t CodeReturn = MC_NO_ERROR;
-//  uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
+  uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
-  //CodeReturn |= errMask[bMotor] & NTC_CalcAvTemp(pTemperatureSensor[bMotor]); /* check for fault if FW protection is activated. It returns MC_OVER_TEMP or MC_NO_ERROR */
+  CodeReturn |= errMask[bMotor] & NTC_CalcAvTemp(pTemperatureSensor[bMotor]); /* check for fault if FW protection is activated. It returns MC_OVER_TEMP or MC_NO_ERROR */
   CodeReturn |= PWMC_CheckOverCurrent(pwmcHandle[bMotor]);                    /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
                                                                                  (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
-//  if(bMotor == M1)
-//  {
-//    CodeReturn |=  errMask[bMotor] &RVBS_CalcAvVbus(pBusSensorM1);
-//  }
+  if(bMotor == M1)
+  {
+    CodeReturn |=  errMask[bMotor] &RVBS_CalcAvVbus(pBusSensorM1);
+  }
 
   STM_FaultProcessing(&STM[bMotor], CodeReturn, ~CodeReturn); /* Update the STM according error code */
   switch (STM_GetState(&STM[bMotor])) /* Acts on PWM outputs in case of faults */

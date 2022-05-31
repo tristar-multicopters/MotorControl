@@ -57,7 +57,10 @@
   <raModuleConfiguration/>
   <raPinConfiguration>
     <pincfg active="true" name="" symbol="">
+      <configSetting altId="adc12.an000.pa00" configurationId="adc12.an000"/>
+      <configSetting altId="adc12.an001.pa01" configurationId="adc12.an001"/>
       <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
+      <configSetting altId="adc12.an003.pa03" configurationId="adc12.an003"/>
       <configSetting altId="adc12.an004.pa04" configurationId="adc12.an004"/>
       <configSetting altId="dac120.da0.pa06" configurationId="dac120.da0"/>
       <configSetting altId="dac121.da1.pa07" configurationId="dac121.da1"/>

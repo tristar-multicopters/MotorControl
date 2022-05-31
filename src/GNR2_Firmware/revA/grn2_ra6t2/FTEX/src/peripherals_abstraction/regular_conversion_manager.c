@@ -13,27 +13,25 @@
 
 typedef enum    // Used to define state of regular conversion manager
 {
-    stop,
-    start,
-    ongoing,
-    dataavailable
+    Stopped,
+    Start,
+    Ongoing,
+    DataAvailable
 } RCM_status_t;
 
 // ========================== Private defines ============================== //
 
-#define RCM_MAX_CONV  8 
+#define RCM_MAX_CONV  4 
 
 // ========================== Private variables ============================ //
 
 RegConv_t * RCM_handle_array [RCM_MAX_CONV];
-RCM_status_t ConversionStatus = stop;
+RCM_status_t ConversionStatus = Stopped;
 uint16_t RCM_ReadValue = 0;
 
 // ========================================================================= //
 
 /**
-  * @brief  Registers a regular conversion.
-  *
   * This function registers a regular ADC conversion that can be later scheduled for execution. It
   * returns a handle that uniquely identifies the conversion. This handle is used in the other API
   * of the Regular Converion Manager to reference the registered conversion.
@@ -43,11 +41,6 @@ uint16_t RCM_ReadValue = 0;
   *
   * The registration may fail if there is no space left for additional conversions. The
   * maximum number of regular conversion that can be registered is defined by #RCM_MAX_CONV.
-  *
-  * @param  regConv Pointer to the regular conversion parameters.
-  *         Contains ADC, Channel and scan group to be used.
-  *
-  *  @retval the handle of the registered conversion or 255 if the registration failed
   */
 uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
 {
@@ -96,15 +89,15 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
  */
 void RCM_ExecuteGroupRegularConv(ScanGroup group)
 {
-    if(ConversionStatus == ongoing && R_ADC_B->ADSCANENDSR >= 0x2)
+    if(ConversionStatus == Ongoing && R_ADC_B->ADSCANENDSR >= 0x2)
     {
         R_ADC_B->ADSCANENDSCR = 0x1FEU;
-        ConversionStatus = dataavailable;
+        ConversionStatus = DataAvailable;
     }
-    else if(ConversionStatus == start | ConversionStatus == dataavailable)
+    else if(ConversionStatus == Start | ConversionStatus == DataAvailable)
     {
         R_ADC_B->ADSTR[group] |= 1UL << 0;
-        ConversionStatus = ongoing;
+        ConversionStatus = Ongoing;
     }   
 }
 
@@ -119,30 +112,24 @@ void RCM_ExecuteGroupRegularConv(ScanGroup group)
  */
 void RCM_ExecuteRegularConv(void)
 {
-    if(ConversionStatus == ongoing && R_ADC_B->ADSCANENDSR >= 0x2)
+    if(ConversionStatus == Ongoing && R_ADC_B->ADSCANENDSR >= 0x2)
     {
         R_ADC_B->ADSCANENDSCR = 0x1FEU;
-        ConversionStatus = dataavailable;
+        ConversionStatus = DataAvailable;
     }
-    else if(ConversionStatus == start | ConversionStatus == dataavailable)
+    else if(ConversionStatus == Start | ConversionStatus == DataAvailable)
     {
         R_ADC_B->ADSTR[1] |= 1UL << 0;  // setting last bit in element 1 of array ADSSTR flags start of conversion in scan group 1. 
-        ConversionStatus = ongoing;
+        ConversionStatus = Ongoing;
     }
 }
 
 /**
- * @brief Reads scanned ADC data using regular conversionmanager.
- *
  * This function reads data available in ADC result register if end of conversion flag is received ands state of manager is changed to "dataavailable"
- *
- * @param  handle used to identify which unique registered conversion data needs to be accessed.
- *
- * @return Returns ADC read data.
  */
 uint16_t RCM_ReadConv(uint8_t handle)
 {
-    if (ConversionStatus == dataavailable)
+    if (ConversionStatus == DataAvailable)
     {
         RCM_ReadValue = (uint16_t) R_ADC_B->ADDR[RCM_handle_array[handle]->channel];
     }
@@ -150,35 +137,23 @@ uint16_t RCM_ReadConv(uint8_t handle)
 }
 
 /**
- * @brief Enables regular conversion manager for execution.
- *
  * This function changes regular conversion manager state to start so that manager can receive execution commands.
- *
- * @param  void.
- *
- * @return void.
  */
 void RCM_EnableConv(void)
 {
-    if(ConversionStatus == stop)
+    if(ConversionStatus == Stopped)
     {
-        ConversionStatus = start;
+        ConversionStatus = Start;
     }    
 }
 
 /**
- * @brief Enables regular conversion manager for execution.
- *
  * This function changes regular conversion manager state to stop so that manager can not receive execution commands.
- *
- * @param  void.
- *
- * @return void.
  */
 void RCM_DisableConv(void)
 {
-    if(ConversionStatus == dataavailable || ConversionStatus == ongoing )
+    if(ConversionStatus == DataAvailable || ConversionStatus == Ongoing )
     {
-        ConversionStatus = stop;
+        ConversionStatus = Stopped;
     }
 }

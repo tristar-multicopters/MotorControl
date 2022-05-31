@@ -196,7 +196,7 @@ STO_PLL_Handle_t STO_PLL_M1 =
 {
   ._Super = {
 	.bElToMecRatio                     =	POLE_PAIR_NUM,
-    .SpeedUnit                         = SPEED_UNIT,
+    .SpeedUnit                         =    SPEED_UNIT,
     .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.15*MAX_APPLICATION_SPEED_UNIT),
     .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
     .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
@@ -281,7 +281,7 @@ NTC_Handle_t TempSensorParamsM1 =
   .TempRegConv =
   {
     .regADC = &g_adc,
-    .channel = MC_ADC_CHANNEL_6,
+    .channel = ADC_CHANNEL_0,
     .group = GROUP_1,
   },
   .hLowPassFilterBW        = M1_TEMP_SW_FILTER_BW_FACTOR,
@@ -309,7 +309,7 @@ RDivider_Handle_t RealBusVoltageSensorParamsM1 =
   .VbusRegConv =
   {
     .regADC = &g_adc,
-    .channel = MC_ADC_CHANNEL_7,
+    .channel = ADC_CHANNEL_1,
     .group = GROUP_1,
   },
   .LowPassFilterBW       =  M1_VBUS_SW_FILTER_BW_FACTOR,
