@@ -1234,10 +1234,6 @@
       <configSetting altId="pd02.gpio_mode.gpio_mode_out.low" configurationId="pd02.gpio_mode"/>
       <configSetting altId="pd03.output.low" configurationId="pd03"/>
       <configSetting altId="pd03.gpio_mode.gpio_mode_out.low" configurationId="pd03.gpio_mode"/>
-      <configSetting altId="pd04.output.high" configurationId="pd04"/>
-      <configSetting altId="pd04.gpio_mode.gpio_mode_out.high" configurationId="pd04.gpio_mode"/>
-      <configSetting altId="pe01.output.low" configurationId="pe01"/>
-      <configSetting altId="pe01.gpio_mode.gpio_mode_out.low" configurationId="pe01.gpio_mode"/>
       <configSetting altId="spi1.pairing.b" configurationId="spi1.pairing"/>
       <configSetting altId="system.md.p201" configurationId="system.md"/>
       <configSetting altId="system.mode.custom.free" configurationId="system.mode"/>

@@ -282,7 +282,7 @@ void TSK_MediumFrequencyTaskM1(void)
 
   switch ( StateM1 )
   {
-    case IDLE:
+	case IDLE:
 		if (bStartMotor)
 		{
 			STC_ExecRamp(pSTC[M1], 1000, 5000);
@@ -290,7 +290,7 @@ void TSK_MediumFrequencyTaskM1(void)
 		}
 		break;
 
-    case IDLE_START:
+  case IDLE_START:
     ICS_TurnOnLowSides( pwmcHandle[M1] );
     TSK_SetChargeBootCapDelayM1( CHARGE_BOOT_CAP_TICKS );
     STM_NextState( &STM[M1], CHARGE_BOOT_CAP );
@@ -543,8 +543,8 @@ uint8_t TSK_HighFrequencyTask(void)
   }
   else
   {
-//    STO_aux_Inputs.Ialfa_beta = FOCVars[M1].Ialphabeta;
-//    STO_aux_Inputs.Vbus = VBS_GetAvBusVoltage_d(&(pBusSensorM1->_Super));
+//    STO_aux_Inputs.Ialfa_beta = FOCVars[M1].Ialphabeta; /*  only if sensorless*/
+//    STO_aux_Inputs.Vbus = VBS_GetAvBusVoltage_d(&(pBusSensorM1->_Super)); /*  only for sensorless*/
 //    STO_PLL_CalcElAngle (&STO_PLL_M1, &STO_aux_Inputs);
 //		STO_PLL_CalcAvrgElSpeedDpp (&STO_PLL_M1);
   }

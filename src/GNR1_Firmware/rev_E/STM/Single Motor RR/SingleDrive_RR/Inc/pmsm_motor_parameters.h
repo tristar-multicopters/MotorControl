@@ -55,7 +55,7 @@
 */
 
 
-#define NOMINAL_CURRENT         17000 /*!< Maximum torque value */
+#define NOMINAL_CURRENT         17001 /*!< Maximum torque value */
 
 #define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
 #define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */

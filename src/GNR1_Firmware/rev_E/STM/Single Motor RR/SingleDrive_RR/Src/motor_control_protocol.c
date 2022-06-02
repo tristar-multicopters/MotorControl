@@ -23,6 +23,7 @@
 #include "user_interface.h"
 #include "motor_control_protocol.h"
 
+
 extern uint32_t RXTimoutCounter;
 extern bool WaitingforBytes;
 

@@ -162,6 +162,10 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 	}
 }
 
+
+// Flowchart describing how this state machine works avaialble on the FTEX drive
+// https://drive.google.com/file/d/1PoqcsODmJ9KeqMJPuf6NUA2KDo6AWH9R/view?usp=sharing
+
 __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 {
 	UNUSED_PARAMETER(pvParameter);
