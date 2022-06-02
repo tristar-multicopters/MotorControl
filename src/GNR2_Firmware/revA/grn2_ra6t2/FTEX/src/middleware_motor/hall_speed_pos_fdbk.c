@@ -1,22 +1,14 @@
- /**
-  ******************************************************************************
-  * @file    hall_speed_pos_fdbk.c
-  * @author  FTEX inc
-  * @brief   This file provides firmware functions that implement the features of
-  *          the Hall Speed & Position Feedback component.
-  ******************************************************************************
-*/
+/*
+*  hall_speed_pos_fdbk.c
+*  This file provides firmware functions that implement the features of the Hall Speed & Position Feedback component.
+*/ 
 
-/* Includes ------------------------------------------------------------------*/
 #include "speed_pos_fdbk.h"
 #include "hall_speed_pos_fdbk.h"
 #include "mc_type.h"
 #include "stdlib.h"
 
-/* Private defines -----------------------------------------------------------*/
-
-/* Lower threshold to reques a decrease of clock prescaler */
-#define LOW_RES_THRESHOLD   ((uint32_t)0x5500u)
+// ========================== Private defines ============================== //
 
 #define HALL_COUNTER_RESET  ((uint16_t) 0u)
 
@@ -37,19 +29,24 @@
 #define NEGATIVE          (int8_t)-1
 #define POSITIVE          (int8_t)1
 
-/* With digit-per-PWM unit (here 2*PI rad = 0xFFFF): */
-#define HALL_MAX_PSEUDO_SPEED        ((int16_t)0x7FFF)
+#define HALL_MAX_PSEUDO_SPEED        ((int16_t)0x7FFF)  // With digit-per-PWM unit (here 2*PI rad = 0xFFFF)
 
-static void HALL_Init_Electrical_Angle( HALL_Handle_t * pHandle );
+// ==================== Private function prototypes ======================== //
 
 /**
-  * @brief  It initializes the hardware peripherals (Timer, GPIO and NVIC)
-            required for the speed position sensor management using HALL
-            sensors.
-  * @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
-  * @retval none
-  */
-	
+* @brief  Read the logic level of the three Hall sensor and individuates in this
+*         way the position of the rotor (+/- 30???). Electrical angle is then
+*         initialized.
+* @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
+* @retval none
+*/
+static void HALL_Init_Electrical_Angle( HALL_Handle_t * pHandle );
+
+// ========================================================================= //
+
+/**
+* It initializes the hardware peripherals (Timer, GPIO and NVIC) required for the speed position sensor management using HALL sensors.
+*/
 void HALL_Init( HALL_Handle_t * pHandle )
 {
     // Calculate loacl variables and HALL handle variables
@@ -120,6 +117,9 @@ void HALL_Init( HALL_Handle_t * pHandle )
     R_GPT_Enable(pHandle->TIMx->p_ctrl);
 }
 
+/*
+* Clear instantenous components in hall_speed_pos_fdbk
+*/
 void HALL_Clear( HALL_Handle_t * pHandle )
 {
     /* Disable timer0 interrupts and counter */
@@ -148,10 +148,7 @@ void HALL_Clear( HALL_Handle_t * pHandle )
 }
 
 /**
-* @brief  Update the rotor electrical angle integrating the last measured
-*         instantaneous electrical speed express in dpp.
-* @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
-* @retval int16_t Measured electrical angle in s16degree format.
+* Update the rotor electrical angle integrating the last measured instantaneous electrical speed express in dpp.
 */
 int16_t HALL_CalcElAngle( HALL_Handle_t * pHandle )
 {
@@ -193,25 +190,12 @@ int16_t HALL_CalcElAngle( HALL_Handle_t * pHandle )
 }
 
 /**
-  * @brief  This method must be called - at least - with the same periodicity
-  *         on which speed control is executed.
-  *         This method compute and store rotor istantaneous el speed (express
-  *         in dpp considering the measurement frequency) in order to provide it
-  *         to HALL_CalcElAngle function and SPD_GetElAngle.
-  *         Then compute rotor average el speed (express in dpp considering the
-  *         measurement frequency) based on the buffer filled by IRQ, then - as
-  *         a consequence - compute, store and return - through parameter
-  *         hMecSpeedUnit - the rotor average mech speed, expressed in Unit.
-  *         Then check, store and return the reliability state of
-  *         the sensor; in this function the reliability is measured with
-  *         reference to specific parameters of the derived
-  *         sensor (HALL) through internal variables managed by IRQ.
-  * @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
-  * @param  hMecSpeedUnit pointer to int16_t, used to return the rotor average
-  *         mechanical speed (expressed in the unit defined by #SPEED_UNIT)
-  * @retval true = sensor information is reliable
-  *         false = sensor information is not reliable
-  */
+* This method must be called - at least - with the same periodicity on which speed control is executed.
+* This method compute and store rotor istantaneous el speed (express in dpp considering the measurement frequency) in order to provide it to HALL_CalcElAngle function and SPD_GetElAngle.
+* Then compute rotor average el speed (express in dpp considering the measurement frequency) based on the buffer filled by IRQ, then - as a consequence - compute, store and return - through parameter
+* hMecSpeedUnit - the rotor average mech speed, expressed in Unit. Then check, store and return the reliability state of the sensor; in this function the reliability is measured with
+* reference to specific parameters of the derived sensor (HALL) through internal variables managed by IRQ.
+*/
 bool HALL_CalcAvrgMecSpeedUnit( HALL_Handle_t * pHandle, int16_t * hMecSpeedUnit )
 {
     bool bReliability;
@@ -271,6 +255,9 @@ bool HALL_CalcAvrgMecSpeedUnit( HALL_Handle_t * pHandle, int16_t * hMecSpeedUnit
     return (bReliability);
 }
 
+/*
+* Interrupt service routine which needs to execute when there is a capture compare event. Capture compare event occurs at every edge detection on any three hall speed sensor pins.
+*/
 void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
 {
     HALL_Handle_t * pHandle = ( HALL_Handle_t * ) pHandleVoid;
@@ -530,10 +517,7 @@ void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
 }
 
 /**
-* @brief  Example of private method of the class HALL to implement an MC IRQ function
-*         to be called when TIMx update event occurs
-* @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
-* @retval none
+*  Interrupt service routine which needs to execute when there is timer over run. Here, overflow counter is incremented to add up total overruns when calculating capture value. 
 */
 void * HALL_TIMx_UP_IRQHandler( void * pHandleVoid )
 {
@@ -568,11 +552,7 @@ void * HALL_TIMx_UP_IRQHandler( void * pHandleVoid )
 }
 
 /**
-* @brief  Read the logic level of the three Hall sensor and individuates in this
-*         way the position of the rotor (+/- 30???). Electrical angle is then
-*         initialized.
-* @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
-* @retval none
+* Read the logic level of the three Hall sensor and individuates in this way the position of the rotor (+/- 30???). Electrical angle is then initialized.
 */
 static void HALL_Init_Electrical_Angle( HALL_Handle_t * pHandle )
 {
@@ -616,14 +596,8 @@ static void HALL_Init_Electrical_Angle( HALL_Handle_t * pHandle )
 }
 
 /**
-  * @brief  It could be used to set istantaneous information on rotor mechanical
-  *         angle.
-  *         Note: Mechanical angle management is not implemented in this
-  *         version of Hall sensor class.
-  * @param  pHandle pointer on related component instance
-  * @param  hMecAngle istantaneous measure of rotor mechanical angle
-  * @retval none
-  */
+* It could be used to set istantaneous information on rotor mechanical angle.
+*/
 void HALL_SetMecAngle( HALL_Handle_t * pHandle, int16_t hMecAngle )
 {
 	if(pHandle!= NULL)

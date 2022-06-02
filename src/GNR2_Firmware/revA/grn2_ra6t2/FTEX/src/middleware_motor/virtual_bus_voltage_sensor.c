@@ -30,6 +30,9 @@ void VVBS_Init( VirtualBusVoltageSensor_Handle_t * pHandle )
   */
 void VVBS_Clear( VirtualBusVoltageSensor_Handle_t * pHandle )
 {
+    if(pHandle)
+    {
+    }
   return;
 }
 
@@ -40,7 +43,10 @@ void VVBS_Clear( VirtualBusVoltageSensor_Handle_t * pHandle )
   */
 uint16_t VVBS_NoErrors( VirtualBusVoltageSensor_Handle_t * pHandle )
 {
-  return ( MC_NO_ERROR );
+    if(pHandle)
+    {
+    }
+    return ( MC_NO_ERROR );
 }
 
 

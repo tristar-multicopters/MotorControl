@@ -274,7 +274,7 @@
       <property id="module.driver.timer.adc_trigger" value="module.driver.timer.adc_trigger.adc_trigger_down_count_start_adc_a"/>
       <property id="module.driver.timer.dead_time_count_up" value="0"/>
       <property id="module.driver.timer.dead_time_count_down" value="0"/>
-      <property id="module.driver.timer.adc_a_compare_match" value="0"/>
+      <property id="module.driver.timer.adc_a_compare_match" value="1"/>
       <property id="module.driver.timer.adc_b_compare_match" value="0"/>
       <property id="module.driver.timer.interrupt_skip.source" value="module.driver.timer.interrupt_skip.source.none"/>
       <property id="module.driver.timer.interrupt_skip.count" value="module.driver.timer.interrupt_skip.count.count_0"/>
@@ -498,7 +498,7 @@
       <property id="module.driver.adc.virtual_channel_1_add_average_count" value="module.driver.adc.virtual_channel_1_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_1_limit_clip_table_id" value="module.driver.adc.virtual_channel_1_limit_clip_table_id.disabled"/>
       <property id="module.driver.adc.virtual_channel_1_resolution_format" value="module.driver.adc.virtual_channel_1_resolution_format.16_bit_data_format"/>
-      <property id="module.driver.adc.virtual_channel_2_scan_group" value="module.driver.adc.virtual_channel_2_scan_group.none"/>
+      <property id="module.driver.adc.virtual_channel_2_scan_group" value="module.driver.adc.virtual_channel_2_scan_group.scan_group_1"/>
       <property id="module.driver.adc.virtual_channel_2_channel_select" value="module.driver.adc.virtual_channel_2_channel_select.an000"/>
       <property id="module.driver.adc.virtual_channel_2_sampling_table_id" value="module.driver.adc.virtual_channel_2_sampling_table_id.sampling_state_entry_0"/>
       <property id="module.driver.adc.virtual_channel_2_gain_table" value="module.driver.adc.virtual_channel_2_gain_table.disabled"/>
@@ -506,25 +506,25 @@
       <property id="module.driver.adc.virtual_channel_2_add_average_mode" value="module.driver.adc.virtual_channel_2_add_average_mode.disabled"/>
       <property id="module.driver.adc.virtual_channel_2_add_average_count" value="module.driver.adc.virtual_channel_2_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_2_limit_clip_table_id" value="module.driver.adc.virtual_channel_2_limit_clip_table_id.disabled"/>
-      <property id="module.driver.adc.virtual_channel_2_resolution_format" value="module.driver.adc.virtual_channel_2_resolution_format.12_bit_data_format"/>
-      <property id="module.driver.adc.virtual_channel_3_scan_group" value="module.driver.adc.virtual_channel_3_scan_group.none"/>
-      <property id="module.driver.adc.virtual_channel_3_channel_select" value="module.driver.adc.virtual_channel_3_channel_select.an000"/>
+      <property id="module.driver.adc.virtual_channel_2_resolution_format" value="module.driver.adc.virtual_channel_2_resolution_format.16_bit_data_format"/>
+      <property id="module.driver.adc.virtual_channel_3_scan_group" value="module.driver.adc.virtual_channel_3_scan_group.scan_group_1"/>
+      <property id="module.driver.adc.virtual_channel_3_channel_select" value="module.driver.adc.virtual_channel_3_channel_select.an001"/>
       <property id="module.driver.adc.virtual_channel_3_sampling_table_id" value="module.driver.adc.virtual_channel_3_sampling_table_id.sampling_state_entry_0"/>
       <property id="module.driver.adc.virtual_channel_3_gain_table" value="module.driver.adc.virtual_channel_3_gain_table.disabled"/>
       <property id="module.driver.adc.virtual_channel_3_offset_table" value="module.driver.adc.virtual_channel_3_offset_table.disabled"/>
       <property id="module.driver.adc.virtual_channel_3_add_average_mode" value="module.driver.adc.virtual_channel_3_add_average_mode.disabled"/>
       <property id="module.driver.adc.virtual_channel_3_add_average_count" value="module.driver.adc.virtual_channel_3_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_3_limit_clip_table_id" value="module.driver.adc.virtual_channel_3_limit_clip_table_id.disabled"/>
-      <property id="module.driver.adc.virtual_channel_3_resolution_format" value="module.driver.adc.virtual_channel_3_resolution_format.12_bit_data_format"/>
-      <property id="module.driver.adc.virtual_channel_4_scan_group" value="module.driver.adc.virtual_channel_4_scan_group.none"/>
-      <property id="module.driver.adc.virtual_channel_4_channel_select" value="module.driver.adc.virtual_channel_4_channel_select.an000"/>
+      <property id="module.driver.adc.virtual_channel_3_resolution_format" value="module.driver.adc.virtual_channel_3_resolution_format.16_bit_data_format"/>
+      <property id="module.driver.adc.virtual_channel_4_scan_group" value="module.driver.adc.virtual_channel_4_scan_group.scan_group_1"/>
+      <property id="module.driver.adc.virtual_channel_4_channel_select" value="module.driver.adc.virtual_channel_4_channel_select.an003"/>
       <property id="module.driver.adc.virtual_channel_4_sampling_table_id" value="module.driver.adc.virtual_channel_4_sampling_table_id.sampling_state_entry_0"/>
       <property id="module.driver.adc.virtual_channel_4_gain_table" value="module.driver.adc.virtual_channel_4_gain_table.disabled"/>
       <property id="module.driver.adc.virtual_channel_4_offset_table" value="module.driver.adc.virtual_channel_4_offset_table.disabled"/>
       <property id="module.driver.adc.virtual_channel_4_add_average_mode" value="module.driver.adc.virtual_channel_4_add_average_mode.disabled"/>
       <property id="module.driver.adc.virtual_channel_4_add_average_count" value="module.driver.adc.virtual_channel_4_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_4_limit_clip_table_id" value="module.driver.adc.virtual_channel_4_limit_clip_table_id.disabled"/>
-      <property id="module.driver.adc.virtual_channel_4_resolution_format" value="module.driver.adc.virtual_channel_4_resolution_format.12_bit_data_format"/>
+      <property id="module.driver.adc.virtual_channel_4_resolution_format" value="module.driver.adc.virtual_channel_4_resolution_format.16_bit_data_format"/>
       <property id="module.driver.adc.virtual_channel_5_scan_group" value="module.driver.adc.virtual_channel_5_scan_group.none"/>
       <property id="module.driver.adc.virtual_channel_5_channel_select" value="module.driver.adc.virtual_channel_5_channel_select.an000"/>
       <property id="module.driver.adc.virtual_channel_5_sampling_table_id" value="module.driver.adc.virtual_channel_5_sampling_table_id.sampling_state_entry_0"/>
@@ -822,102 +822,102 @@
       <property id="module.driver.adc.scan_group_0_elc_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_0_gpt_trigger_enable_mask" value="module.driver.adc.scan_group_0_gpt_trigger_enable_mask.gpt_channel_4_request_a"/>
       <property id="module.driver.adc.scan_group_0_limit_clip_isr_enable" value="module.driver.adc.scan_group_0_limit_clip_isr_enable.disable"/>
-      <property id="module.driver.adc.scan_group_0_fifo_enable" value="module.driver.adc.scan_group_0_fifo_enable.enable"/>
+      <property id="module.driver.adc.scan_group_0_fifo_enable" value="module.driver.adc.scan_group_0_fifo_enable.disable"/>
       <property id="module.driver.adc.scan_group_0_fifo_isr_enable" value="module.driver.adc.scan_group_0_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_0_fifo_isr_generation_level" value="0"/>
-      <property id="module.driver.adc.scan_group_1_enable" value="module.driver.adc.scan_group_1_enable.disable"/>
+      <property id="module.driver.adc.scan_group_1_enable" value="module.driver.adc.scan_group_1_enable.enable"/>
       <property id="module.driver.adc.scan_group_1_converter_selection" value="module.driver.adc.scan_group_1_converter_selection.adc_0"/>
       <property id="module.driver.adc.scan_group_1_start_trigger_delay" value="0"/>
       <property id="module.driver.adc.scan_group_1_self_diag_voltage" value="Disabled"/>
-      <property id="module.driver.adc.scan_group_1_scan_end_isr_enable" value="module.driver.adc.scan_group_1_scan_end_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_1_scan_end_isr_enable" value="module.driver.adc.scan_group_1_scan_end_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_1_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_1_elc_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_1_gpt_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_1_limit_clip_isr_enable" value="module.driver.adc.scan_group_1_limit_clip_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_1_limit_clip_isr_enable" value="module.driver.adc.scan_group_1_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_1_fifo_enable" value="module.driver.adc.scan_group_1_fifo_enable.disable"/>
       <property id="module.driver.adc.scan_group_1_fifo_isr_enable" value="module.driver.adc.scan_group_1_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_1_fifo_isr_generation_level" value="0"/>
-      <property id="module.driver.adc.scan_group_2_enable" value="module.driver.adc.scan_group_2_enable.disable"/>
-      <property id="module.driver.adc.scan_group_2_converter_selection" value="module.driver.adc.scan_group_2_converter_selection.adc_0"/>
+      <property id="module.driver.adc.scan_group_2_enable" value="module.driver.adc.scan_group_2_enable.enable"/>
+      <property id="module.driver.adc.scan_group_2_converter_selection" value="module.driver.adc.scan_group_2_converter_selection.adc_1"/>
       <property id="module.driver.adc.scan_group_2_start_trigger_delay" value="0"/>
       <property id="module.driver.adc.scan_group_2_self_diag_voltage" value="Disabled"/>
-      <property id="module.driver.adc.scan_group_2_scan_end_isr_enable" value="module.driver.adc.scan_group_2_scan_end_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_2_scan_end_isr_enable" value="module.driver.adc.scan_group_2_scan_end_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_2_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_2_elc_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_2_gpt_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_2_limit_clip_isr_enable" value="module.driver.adc.scan_group_2_limit_clip_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_2_limit_clip_isr_enable" value="module.driver.adc.scan_group_2_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_2_fifo_enable" value="module.driver.adc.scan_group_2_fifo_enable.disable"/>
       <property id="module.driver.adc.scan_group_2_fifo_isr_enable" value="module.driver.adc.scan_group_2_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_2_fifo_isr_generation_level" value="0"/>
       <property id="module.driver.adc.scan_group_3_enable" value="module.driver.adc.scan_group_3_enable.disable"/>
-      <property id="module.driver.adc.scan_group_3_converter_selection" value="module.driver.adc.scan_group_3_converter_selection.adc_0"/>
+      <property id="module.driver.adc.scan_group_3_converter_selection" value="module.driver.adc.scan_group_3_converter_selection.adc_1"/>
       <property id="module.driver.adc.scan_group_3_start_trigger_delay" value="0"/>
       <property id="module.driver.adc.scan_group_3_self_diag_voltage" value="Disabled"/>
-      <property id="module.driver.adc.scan_group_3_scan_end_isr_enable" value="module.driver.adc.scan_group_3_scan_end_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_3_scan_end_isr_enable" value="module.driver.adc.scan_group_3_scan_end_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_3_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_3_elc_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_3_gpt_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_3_limit_clip_isr_enable" value="module.driver.adc.scan_group_3_limit_clip_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_3_limit_clip_isr_enable" value="module.driver.adc.scan_group_3_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_3_fifo_enable" value="module.driver.adc.scan_group_3_fifo_enable.disable"/>
       <property id="module.driver.adc.scan_group_3_fifo_isr_enable" value="module.driver.adc.scan_group_3_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_3_fifo_isr_generation_level" value="0"/>
       <property id="module.driver.adc.scan_group_4_enable" value="module.driver.adc.scan_group_4_enable.disable"/>
-      <property id="module.driver.adc.scan_group_4_converter_selection" value="module.driver.adc.scan_group_4_converter_selection.adc_0"/>
+      <property id="module.driver.adc.scan_group_4_converter_selection" value="module.driver.adc.scan_group_4_converter_selection.adc_1"/>
       <property id="module.driver.adc.scan_group_4_start_trigger_delay" value="0"/>
       <property id="module.driver.adc.scan_group_4_self_diag_voltage" value="Disabled"/>
-      <property id="module.driver.adc.scan_group_4_scan_end_isr_enable" value="module.driver.adc.scan_group_4_scan_end_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_4_scan_end_isr_enable" value="module.driver.adc.scan_group_4_scan_end_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_4_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_4_elc_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_4_gpt_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_4_limit_clip_isr_enable" value="module.driver.adc.scan_group_4_limit_clip_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_4_limit_clip_isr_enable" value="module.driver.adc.scan_group_4_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_4_fifo_enable" value="module.driver.adc.scan_group_4_fifo_enable.disable"/>
       <property id="module.driver.adc.scan_group_4_fifo_isr_enable" value="module.driver.adc.scan_group_4_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_4_fifo_isr_generation_level" value="0"/>
       <property id="module.driver.adc.scan_group_5_enable" value="module.driver.adc.scan_group_5_enable.disable"/>
-      <property id="module.driver.adc.scan_group_5_converter_selection" value="module.driver.adc.scan_group_5_converter_selection.adc_0"/>
+      <property id="module.driver.adc.scan_group_5_converter_selection" value="module.driver.adc.scan_group_5_converter_selection.adc_1"/>
       <property id="module.driver.adc.scan_group_5_start_trigger_delay" value="0"/>
       <property id="module.driver.adc.scan_group_5_self_diag_voltage" value="Disabled"/>
-      <property id="module.driver.adc.scan_group_5_scan_end_isr_enable" value="module.driver.adc.scan_group_5_scan_end_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_5_scan_end_isr_enable" value="module.driver.adc.scan_group_5_scan_end_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_5_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_5_elc_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_5_gpt_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_5_limit_clip_isr_enable" value="module.driver.adc.scan_group_5_limit_clip_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_5_limit_clip_isr_enable" value="module.driver.adc.scan_group_5_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_5_fifo_enable" value="module.driver.adc.scan_group_5_fifo_enable.disable"/>
       <property id="module.driver.adc.scan_group_5_fifo_isr_enable" value="module.driver.adc.scan_group_5_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_5_fifo_isr_generation_level" value="0"/>
       <property id="module.driver.adc.scan_group_6_enable" value="module.driver.adc.scan_group_6_enable.disable"/>
-      <property id="module.driver.adc.scan_group_6_converter_selection" value="module.driver.adc.scan_group_6_converter_selection.adc_0"/>
+      <property id="module.driver.adc.scan_group_6_converter_selection" value="module.driver.adc.scan_group_6_converter_selection.adc_1"/>
       <property id="module.driver.adc.scan_group_6_start_trigger_delay" value="0"/>
       <property id="module.driver.adc.scan_group_6_self_diag_voltage" value="Disabled"/>
-      <property id="module.driver.adc.scan_group_6_scan_end_isr_enable" value="module.driver.adc.scan_group_6_scan_end_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_6_scan_end_isr_enable" value="module.driver.adc.scan_group_6_scan_end_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_6_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_6_elc_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_6_gpt_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_6_limit_clip_isr_enable" value="module.driver.adc.scan_group_6_limit_clip_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_6_limit_clip_isr_enable" value="module.driver.adc.scan_group_6_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_6_fifo_enable" value="module.driver.adc.scan_group_6_fifo_enable.disable"/>
       <property id="module.driver.adc.scan_group_6_fifo_isr_enable" value="module.driver.adc.scan_group_6_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_6_fifo_isr_generation_level" value="0"/>
       <property id="module.driver.adc.scan_group_7_enable" value="module.driver.adc.scan_group_7_enable.disable"/>
-      <property id="module.driver.adc.scan_group_7_converter_selection" value="module.driver.adc.scan_group_7_converter_selection.adc_0"/>
+      <property id="module.driver.adc.scan_group_7_converter_selection" value="module.driver.adc.scan_group_7_converter_selection.adc_1"/>
       <property id="module.driver.adc.scan_group_7_start_trigger_delay" value="0"/>
       <property id="module.driver.adc.scan_group_7_self_diag_voltage" value="Disabled"/>
-      <property id="module.driver.adc.scan_group_7_scan_end_isr_enable" value="module.driver.adc.scan_group_7_scan_end_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_7_scan_end_isr_enable" value="module.driver.adc.scan_group_7_scan_end_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_7_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_7_elc_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_7_gpt_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_7_limit_clip_isr_enable" value="module.driver.adc.scan_group_7_limit_clip_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_7_limit_clip_isr_enable" value="module.driver.adc.scan_group_7_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_7_fifo_enable" value="module.driver.adc.scan_group_7_fifo_enable.disable"/>
       <property id="module.driver.adc.scan_group_7_fifo_isr_enable" value="module.driver.adc.scan_group_7_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_7_fifo_isr_generation_level" value="0"/>
       <property id="module.driver.adc.scan_group_8_enable" value="module.driver.adc.scan_group_8_enable.disable"/>
-      <property id="module.driver.adc.scan_group_8_converter_selection" value="module.driver.adc.scan_group_8_converter_selection.adc_0"/>
+      <property id="module.driver.adc.scan_group_8_converter_selection" value="module.driver.adc.scan_group_8_converter_selection.adc_1"/>
       <property id="module.driver.adc.scan_group_8_start_trigger_delay" value="0"/>
       <property id="module.driver.adc.scan_group_8_self_diag_voltage" value="Disabled"/>
-      <property id="module.driver.adc.scan_group_8_scan_end_isr_enable" value="module.driver.adc.scan_group_8_scan_end_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_8_scan_end_isr_enable" value="module.driver.adc.scan_group_8_scan_end_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_8_external_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_8_elc_trigger_enable_mask" value=""/>
       <property id="module.driver.adc.scan_group_8_gpt_trigger_enable_mask" value=""/>
-      <property id="module.driver.adc.scan_group_8_limit_clip_isr_enable" value="module.driver.adc.scan_group_8_limit_clip_isr_enable.enable"/>
+      <property id="module.driver.adc.scan_group_8_limit_clip_isr_enable" value="module.driver.adc.scan_group_8_limit_clip_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_8_fifo_enable" value="module.driver.adc.scan_group_8_fifo_enable.disable"/>
       <property id="module.driver.adc.scan_group_8_fifo_isr_enable" value="module.driver.adc.scan_group_8_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_8_fifo_isr_generation_level" value="0"/>
@@ -1149,7 +1149,10 @@
     <symbolicName propertyId="pe14.symbolic_name" value="M1_PWM_W_P"/>
     <symbolicName propertyId="pe15.symbolic_name" value="M1_PWM_W_N"/>
     <pincfg active="true" name="R7FA6T2BB3CFP.pincfg" selected="true" symbol="g_bsp_pin_cfg">
+      <configSetting altId="adc12.an000.pa00" configurationId="adc12.an000"/>
+      <configSetting altId="adc12.an001.pa01" configurationId="adc12.an001"/>
       <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
+      <configSetting altId="adc12.an003.pa03" configurationId="adc12.an003"/>
       <configSetting altId="adc12.an004.pa04" configurationId="adc12.an004"/>
       <configSetting altId="adc12.mode.custom.free" configurationId="adc12.mode"/>
       <configSetting altId="cgc.mode.custom.free" configurationId="cgc.mode"/>
@@ -1182,8 +1185,14 @@
       <configSetting altId="jtag_fslash_swd.swo.pb03" configurationId="jtag_fslash_swd.swo"/>
       <configSetting altId="p201.system.md" configurationId="p201"/>
       <configSetting altId="p201.gpio_mode.gpio_mode_peripheral" configurationId="p201.gpio_mode"/>
+      <configSetting altId="pa00.adc12.an000" configurationId="pa00"/>
+      <configSetting altId="pa00.gpio_mode.gpio_mode_an" configurationId="pa00.gpio_mode"/>
+      <configSetting altId="pa01.adc12.an001" configurationId="pa01"/>
+      <configSetting altId="pa01.gpio_mode.gpio_mode_an" configurationId="pa01.gpio_mode"/>
       <configSetting altId="pa02.adc12.an002" configurationId="pa02"/>
       <configSetting altId="pa02.gpio_mode.gpio_mode_an" configurationId="pa02.gpio_mode"/>
+      <configSetting altId="pa03.adc12.an003" configurationId="pa03"/>
+      <configSetting altId="pa03.gpio_mode.gpio_mode_an" configurationId="pa03.gpio_mode"/>
       <configSetting altId="pa04.adc12.an004" configurationId="pa04"/>
       <configSetting altId="pa04.gpio_mode.gpio_mode_an" configurationId="pa04.gpio_mode"/>
       <configSetting altId="pa06.dac120.da0" configurationId="pa06"/>

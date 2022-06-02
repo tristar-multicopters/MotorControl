@@ -6,7 +6,10 @@
             <slot name="P201" secure="false"/>
         </peripheral>
         <peripheral name="PORTA" group="PORT">
+            <slot name="PA00" secure="false"/>
+            <slot name="PA01" secure="false"/>
             <slot name="PA02" secure="false"/>
+            <slot name="PA03" secure="false"/>
             <slot name="PA04" secure="false"/>
             <slot name="PA06" secure="false"/>
             <slot name="PA07" secure="false"/>
@@ -32,6 +35,10 @@
             <slot name="PD01" secure="false"/>
             <slot name="PD02" secure="false"/>
             <slot name="PD03" secure="false"/>
+            <slot name="PD04" secure="false"/>
+        </peripheral>
+        <peripheral name="PORTE" group="PORT">
+            <slot name="PE01" secure="false"/>
         </peripheral>
         <peripheral name="ICU_EXT_IRQ">
             <slot name="ICU_EXT_IRQ10" secure="false"/>

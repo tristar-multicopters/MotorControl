@@ -466,6 +466,13 @@
         </Group>
         <Group>
           <GroupName>Middleware/Vehicle</GroupName>
+          <Files>
+            <File>
+              <FileName>md_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\md_interface.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>Middleware/Motor</GroupName>
@@ -491,14 +498,14 @@
               <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
             </File>
             <File>
-              <FileName>hall_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
               <FileName>motor_power_measurement.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>hall_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
             </File>
             <File>
               <FileName>ntc_temperature_sensor.c</FileName>

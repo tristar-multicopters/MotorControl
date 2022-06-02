@@ -130,7 +130,7 @@ void MCboot(void)
   /******************************************************/
   pSTC[M1] = &SpeednTorqCtrlM1;
   HALL_Init (&HALL_M1);
-	AO_Init( &AngleObserverM1 );
+  AO_Init( &AngleObserverM1 );
 
   /******************************************************/
   /*   Speed & torque component initialization          */
@@ -140,7 +140,7 @@ void MCboot(void)
   /******************************************************/
   /*   Auxiliary speed sensor component initialization  */
   /******************************************************/
-//  STO_PLL_Init (&STO_PLL_M1);
+  STO_PLL_Init (&STO_PLL_M1);
 
   /********************************************************/
   /*   PID component initialization: current regulation   */
@@ -150,11 +150,11 @@ void MCboot(void)
   pPIDIq[M1] = &PIDIqHandle_M1;
   pPIDId[M1] = &PIDIdHandle_M1;
 
-  /********************************************************/
-  /*   Bus voltage sensor component initialization        */
-  /********************************************************/
-//  pBusSensorM1 = &RealBusVoltageSensorParamsM1;
-//  RVBS_Init(pBusSensorM1);
+//  /********************************************************/
+//  /*   Bus voltage sensor component initialization        */
+//  /********************************************************/
+    pBusSensorM1 = &RealBusVoltageSensorParamsM1;
+    RVBS_Init(pBusSensorM1);
 
   /*************************************************/
   /*   Power measurement component initialization  */
@@ -163,12 +163,11 @@ void MCboot(void)
 //  pMPM[M1]->pVBS = &(pBusSensorM1->_Super);
 //  pMPM[M1]->pFOCVars = &FOCVars[M1];
 
-  /*******************************************************/
-  /*   Temperature measurement component initialization  */
-  /*******************************************************/
-//  NTC_Init(&TempSensorParamsM1);
-//  pTemperatureSensor[M1] = &TempSensorParamsM1;
-
+//  /*******************************************************/
+//  /*   Temperature measurement component initialization  */
+//  /*******************************************************/
+    NTC_Init(&TempSensorParamsM1);
+    pTemperatureSensor[M1] = &TempSensorParamsM1;
   /*******************************************************/
   /*   Flux weakening component initialization           */
   /*******************************************************/
@@ -193,15 +192,17 @@ void MCboot(void)
 //  MCT[M1].pPIDFluxWeakening = &PIDFluxWeakeningHandle_M1; /* only if M1 has FW */
   MCT[M1].pPWMnCurrFdbk = pwmcHandle[M1];
   MCT[M1].pSpeedSensorMain = (SpeednPosFdbk_Handle_t *) &HALL_M1;
-//  MCT[M1].pSpeedSensorAux = (SpeednPosFdbk_Handle_t *) &STO_PLL_M1;
+  MCT[M1].pSpeedSensorAux = (SpeednPosFdbk_Handle_t *) &STO_PLL_M1;
 //  MCT[M1].pSpeedSensorVirtual = MC_NULL;
   MCT[M1].pSpeednTorqueCtrl = pSTC[M1];
   MCT[M1].pStateMachine = &STM[M1];
-//  MCT[M1].pTemperatureSensor = (NTC_Handle_t *) pTemperatureSensor[M1];
-//  MCT[M1].pBusVoltageSensor = &(pBusSensorM1->_Super);
+  MCT[M1].pTemperatureSensor = (NTC_Handle_t *) pTemperatureSensor[M1];
+  MCT[M1].pBusVoltageSensor = &(pBusSensorM1->_Super);
 //  MCT[M1].pMPM =  (MotorPowMeas_Handle_t*)pMPM[M1];
 //  MCT[M1].pFW = pFW[M1];
 //  MCT[M1].pFF = pFF[M1];
+
+  RCM_EnableConv();
 
   bMCBootCompleted = 1;
 }
@@ -274,10 +275,10 @@ void TSK_MediumFrequencyTaskM1(void)
   int16_t wAux = 0;
 
 //  (void) STO_PLL_CalcAvrgMecSpeedUnit( &STO_PLL_M1, &wAux );
-  bool IsSpeedReliable = HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
+    bool IsSpeedReliable = HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
 //  PQD_CalcElMotorPower( pMPM[M1] );
-
-  StateM1 = STM_GetState( &STM[M1] );
+    RCM_ExecuteRegularConv();
+    StateM1 = STM_GetState( &STM[M1] );
 
   switch ( StateM1 )
   {
@@ -295,23 +296,23 @@ void TSK_MediumFrequencyTaskM1(void)
     STM_NextState( &STM[M1], CHARGE_BOOT_CAP );
     break;
 
-  case CHARGE_BOOT_CAP:
+    case CHARGE_BOOT_CAP:
     if ( TSK_ChargeBootCapDelayHasElapsedM1() )
     {
       STM_NextState(&STM[M1],OFFSET_CALIB);
     }
     break;
 
-  case OFFSET_CALIB:
-    if ( PWMC_CurrentReadingCalibr(pwmcHandle[M1]) )
+    case OFFSET_CALIB:
+    if (PWMC_CurrentReadingCalibr(pwmcHandle[M1]) )
     {
       STM_NextState( &STM[M1], CLEAR );
     }
     break;
 
-  case CLEAR:
+    case CLEAR:
     HALL_Clear( &HALL_M1 );
-//    STO_PLL_Clear( &STO_PLL_M1 );
+    STO_PLL_Clear( &STO_PLL_M1 );
 		AO_Clear( &AngleObserverM1 );
     if ( STM_NextState( &STM[M1], START ) == true )
     {
@@ -326,7 +327,7 @@ void TSK_MediumFrequencyTaskM1(void)
     break;
 
   case START_RUN:
-	  FOC_InitAdditionalMethods(M1);
+	FOC_InitAdditionalMethods(M1);
     FOC_CalcCurrRef( M1 );
     STM_NextState( &STM[M1], RUN );
     STC_ForceSpeedReferenceToCurrentSpeed( pSTC[M1] ); /* Init the reference speed to current speed */
@@ -338,7 +339,9 @@ void TSK_MediumFrequencyTaskM1(void)
 		{
 			STM_NextState( &STM[M1], ANY_STOP );
 		}
-//    MCI_ExecBufferedCommands( oMCInterface[M1] );
+		
+		MCI_ExecTorqueRamp(oMCInterface[M1], hTest, 100);
+    MCI_ExecBufferedCommands( oMCInterface[M1] );
     FOC_CalcCurrRef( M1 );
 
 		#if !(CURRENT_OPENLOOP || VOLTAGE_OPENLOOP)
@@ -527,8 +530,8 @@ uint8_t TSK_HighFrequencyTask(void)
   uint8_t bMotorNbr = 0;
   uint16_t hFOCreturn;
 
-//  Observer_Inputs_t STO_aux_Inputs; /*  only if sensorless aux*/
-//  STO_aux_Inputs.Valfa_beta = FOCVars[M1].Valphabeta;  /* only if sensorless*/
+  Observer_Inputs_t STO_aux_Inputs;
+  STO_aux_Inputs.Valfa_beta = FOCVars[M1].Valphabeta;
 
   HALL_CalcElAngle (&HALL_M1);
 	AO_CalcElAngle(&AngleObserverM1, 0);
@@ -648,15 +651,15 @@ void TSK_SafetyTask(void)
 void TSK_SafetyTask_PWMOFF(uint8_t bMotor)
 {
   uint16_t CodeReturn = MC_NO_ERROR;
-//  uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
+  uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
-  //CodeReturn |= errMask[bMotor] & NTC_CalcAvTemp(pTemperatureSensor[bMotor]); /* check for fault if FW protection is activated. It returns MC_OVER_TEMP or MC_NO_ERROR */
+  CodeReturn |= errMask[bMotor] & NTC_CalcAvTemp(pTemperatureSensor[bMotor]); /* check for fault if FW protection is activated. It returns MC_OVER_TEMP or MC_NO_ERROR */
   CodeReturn |= PWMC_CheckOverCurrent(pwmcHandle[bMotor]);                    /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
                                                                                  (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
-//  if(bMotor == M1)
-//  {
-//    CodeReturn |=  errMask[bMotor] &RVBS_CalcAvVbus(pBusSensorM1);
-//  }
+  if(bMotor == M1)
+  {
+    CodeReturn |=  errMask[bMotor] &RVBS_CalcAvVbus(pBusSensorM1);
+  }
 
   STM_FaultProcessing(&STM[bMotor], CodeReturn, ~CodeReturn); /* Update the STM according error code */
   switch (STM_GetState(&STM[bMotor])) /* Acts on PWM outputs in case of faults */

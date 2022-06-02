@@ -1,84 +1,93 @@
-
 /**
-  ******************************************************************************
-  * @file    regular_conversion_manager.h
-  * @author  FTEX inc
-  * @brief   This file contains all definitions and functions prototypes for the
-  *          regular_conversion_manager component of the Motor Control SDK.
-  ******************************************************************************
+* @file   regular_conversion_manager.h
+* @brief  Regular conversion manager module for non-injected ADC conversions.
+*
+* This file contains all definitions and functions prototypes for the regular_conversion_manager component of the Motor Control SDK.
+* Register conversion without callback
+* Execute regular conv directly from Temperature and VBus sensors
+* Manage conversion state machine
+*
 */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __regular_conversion_manager_h
 #define __regular_conversion_manager_h
 
-#ifdef __cplusplus
- extern "C" {
-#endif /* __cplusplus */
-
-/* Includes ------------------------------------------------------------------*/
 #include "stdint.h"
 #include "stdbool.h"
+#include "r_adc_b.h"
 
+// =================== Regular conversion manager enums =================== //
 
-/* Exported types ------------------------------------------------------------*/
-
-/**
-  * @brief RegConv_t contains all the parameters required to execute a regular conversion
-  *
-  * it is used by all regular_conversion_manager's client
-  *
-  */
-typedef struct
+typedef enum  // Used to select ADC scan group which needs to start scan 
 {
-//  ADC_TypeDef * regADC;
-//  uint8_t  channel;
-//  uint32_t samplingTime;
+    GROUP_1=1,  // GROUP_0 reserved for PWM based Injected conversion
+    GROUP_2,
+    GROUP_3,
+    GROUP_4,
+    GROUP_5,
+    GROUP_6,
+    GROUP_7,
+    GROUP_8,
+    GROUP_9
+} ScanGroup_t;
+
+// ====== Structure used to configure regular conversion manager ========== //
+
+typedef struct  // Parameters to configure an ADC conversion element in array.
+{
+    const adc_instance_t * regADC;
+    uint8_t channel;
+    uint8_t group;  // Group selection to be used in future
 } RegConv_t;
 
-typedef enum
-{
-  RCM_USERCONV_IDLE,
-  RCM_USERCONV_REQUESTED,
-  RCM_USERCONV_EOC
-}RCM_UserConvState_t;
+// ==================== Public function prototypes ========================= //
 
-typedef void (*RCM_exec_cb_t)(uint8_t handle, uint16_t data, void *UserData);
-
-/* Exported functions ------------------------------------------------------- */
-
-/*  Function used to register a regular conversion */
+/**
+  @brief Function used to register ADC convesion as a part of sequence which will be executed by RCM_ExecRegularConv function call.    
+ 
+  @param Receives pointer to ADC handle which will be used in module where it is called. 
+  @return Returns registry position for a registered conversion in regular conversion manager array.  
+*/
 uint8_t RCM_RegisterRegConv(RegConv_t * regConv);
 
-/*  Function used to register a regular conversion with a callback attached*/
-uint8_t RCM_RegisterRegConv_WithCB (RegConv_t * regConv, RCM_exec_cb_t fctCB, void *data);
+/**
+  @brief Function used to flag start of sequential ADC conversion registered by regular conversion manager. RCM_ExecRegularConv function call is expected to occur anywhere in the RTOS tasks. % Function for future use. %   
+ 
+  @param Receives information on which sequential group needs to start converting its registries.      
+  @return void  
+*/
+void RCM_ExecuteGroupRegularConv(ScanGroup_t group);
 
-/*  Function used to execute an already registered regular conversion */
-uint16_t RCM_ExecRegularConv (uint8_t handle);
+/**
+  @brief Function used to flag start of sequential ADC conversion registered by regular conversion manager. All ADC conversions specified in scan group 1 will executed with this function. CM_ExecRegularConvGroup1 function call is expected to occur anywhere in the RTOS tasks.   
+ 
+  @param void.      
+  @return void.  
+*/
+void RCM_ExecuteRegularConv(void);
 
-/* select the handle conversion to be executed during the next call to RCM_ExecUserConv */
-bool RCM_RequestUserConv(uint8_t handle);
+/**
+  @brief Function used to flag start of sequential ADC conversion registered by regular conversion manager. RCM_ExecRegularConv function call is expected to occur anywhere in the RTOS tasks.   
+ 
+  @param Receives registry position for desired registered conversion in regular conversion manager array.      
+  @return Returns ADC conversion value .  
+*/
+uint16_t RCM_ReadConv(uint8_t handle);
 
-/* return the latest user conversion value*/
-uint16_t RCM_GetUserConv(void);
+/**
+  @brief Function used to enable regular conversion manager. Registered ADC conversions will not execute unless the manager is enabled.    
+ 
+  @param void.      
+  @return void.  
+*/
+void RCM_EnableConv(void);
 
-/* Must be called by MC_TASK only to grantee proper scheduling*/
-void RCM_ExecUserConv (void);
+/**
+  @brief Function used to disable regular conversion manager. Registered ADC conversions will stop executing if the manager is enabled.    
+ 
+  @param void.      
+  @return void.  
+*/
+void RCM_DisableConv(void);
 
-/* return the state of the user conversion state machine*/
-RCM_UserConvState_t RCM_GetUserConvState(void);
-
-/* Function used to un-schedule a regular conversion exectuted after current sampling in HF task */
-bool RCM_PauseRegularConv (uint8_t handle);
-
-/* non blocking function to start conversion inside HF task */
-void RCM_ExecNextConv (void);
-
-/* non blocking function used to read back already started regular conversion*/
-void RCM_ReadOngoingConv (void);
-
-#ifdef __cplusplus
-}
-#endif /* __cpluplus */
-
-#endif /* __regular_conversion_manager_h */
+#endif
