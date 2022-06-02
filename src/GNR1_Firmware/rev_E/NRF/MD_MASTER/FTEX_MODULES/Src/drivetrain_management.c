@@ -106,8 +106,8 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 			/* Using throttle */
 			else
 			{
-				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hAux, hTempHeatSnkMainMotor );
-				pHandle->aTorque[pHandle->bMainMotor] = hTorqueRef;
+				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor );
+				pHandle->aTorque[pHandle->bMainMotor] = hAux;
 			}
 		}
 		if(pHandle->sParameters.bMode == DUAL_MOTOR)
@@ -229,10 +229,12 @@ void DRVT_StopMotors(DRVT_Handle_t * pHandle)
 {
 	if ( DRVT_IsMotor1Used(pHandle) )
 	{
+        MDI_SetTorqueRamp(pHandle->pMDI,M1, 0, 0); //Added safety to ensure STM target torque is 0
 		MDI_StopMotor(pHandle->pMDI, M1);
 	}
 	if ( DRVT_IsMotor2Used(pHandle) )
 	{
+        MDI_SetTorqueRamp(pHandle->pMDI,M2, 0, 0); //Added safety to ensure STM target torque is 0
 		MDI_StopMotor(pHandle->pMDI, M2);
 	}
 }

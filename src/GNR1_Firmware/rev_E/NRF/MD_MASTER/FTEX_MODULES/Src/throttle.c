@@ -45,7 +45,7 @@ void THRO_Clear(THRO_Handle_t * pHandle)
 void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle)
 {
 	uint32_t wAux;
-  uint16_t hAux;
+    uint16_t hAux;
 	uint16_t hBandwidth;
 	
 	/*
@@ -59,15 +59,18 @@ void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle)
 	else
 		hBandwidth = pHandle->hParam.hLowPassFilterBW2;
 
-	if ( hAux != UINT16_MAX )
+	if ( hAux == UINT16_MAX ) //Overflow protection
 	{
-		wAux =  ( uint32_t )( hBandwidth - 1u );
-		wAux *= ( uint32_t ) ( pHandle->hAvADCValue );
-		wAux += hAux;
-		wAux /= ( uint32_t )( hBandwidth );
+       hAux--;
+    }
+	
+    wAux =  ( uint32_t )( hBandwidth - 1u );
+	wAux *= ( uint32_t ) ( pHandle->hAvADCValue );
+	wAux += hAux;
+	wAux /= ( uint32_t )( hBandwidth );
 
-		pHandle->hAvADCValue = ( uint16_t ) wAux;
-	}
+	pHandle->hAvADCValue = ( uint16_t ) wAux;
+	
 	
 	/*
 		Compute throttle value (between 0 and 65535)
