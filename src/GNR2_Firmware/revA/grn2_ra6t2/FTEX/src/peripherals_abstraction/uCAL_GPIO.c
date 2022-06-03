@@ -81,21 +81,21 @@ uint32_t uCAL_GPIO_ReadPinOutput(bsp_io_port_pin_t aBSPPin);
 */
 bool uCAL_GPIO_Read(uint32_t aGPIO)
 {
-    uint32_t pinState;
+    uint32_t wPinState;
     bsp_io_port_pin_t bspPin;
 	
     bspPin = uCAL_GPIO_PinNumToBSP(aGPIO); // Convert from FTEX pins to BSP
 	
     if (R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.PDR) // Check the port direction 0 In,1 Out
     {                         
-        pinState = R_BSP_PinRead((bsp_io_port_pin_t) aGPIO);
+        wPinState = R_BSP_PinRead((bsp_io_port_pin_t) aGPIO);
     }
     else
     {
-        pinState = uCAL_GPIO_ReadPinOutput(bspPin);
+        wPinState = uCAL_GPIO_ReadPinOutput(bspPin);
     } 	 
 	 
-    return (bool) pinState; 
+    return (bool) wPinState; 
 }
 
 /**
@@ -150,13 +150,13 @@ void uCAL_GPIO_Toggle(uint32_t aGPIO)
 */
 bsp_io_port_pin_t uCAL_GPIO_PinNumToBSP(uint32_t aPinNum)
 {
-    uint32_t pinRef;
+    uint32_t wPinRef;
 	
     // Conversion from FTEX pin number to BSP means that we need to only shift the 
     // seconde quartet, one quartet to the left.Ex pin 177 0x00B1 becomes 0x0B01	
-    pinRef = ((aPinNum & 0x000000F0) << 4) + (aPinNum & 0x0000000F);
+    wPinRef = ((aPinNum & 0x000000F0) << 4) + (aPinNum & 0x0000000F);
 	
-    return (bsp_io_port_pin_t) pinRef;
+    return (bsp_io_port_pin_t) wPinRef;
 }
 
 /**
@@ -164,13 +164,13 @@ bsp_io_port_pin_t uCAL_GPIO_PinNumToBSP(uint32_t aPinNum)
 */
 uint32_t uCAL_GPIO_BSPToPinNum(bsp_io_port_pin_t aBSPPin)
 {
-    uint32_t pinRef;
+    uint32_t wPinRef;
 	
     // Conversion from BSP to FTEX pin number means that we need to only shift the 
     // seconde quartet, one quartet to the right.Ex Port 5 pin 7 0x0507 becomes 0x0057
-    pinRef = (((uint32_t)aBSPPin & 0x000000F0) << 4) + ((uint32_t)aBSPPin & 0x0000000F);
+    wPinRef = (((uint32_t)aBSPPin & 0x000000F0) << 4) + ((uint32_t)aBSPPin & 0x0000000F);
 	
-    return (uint32_t) pinRef;
+    return (uint32_t) wPinRef;
 }
 
 /**

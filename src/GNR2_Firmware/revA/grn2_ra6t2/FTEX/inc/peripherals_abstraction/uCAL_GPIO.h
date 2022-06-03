@@ -1,5 +1,6 @@
 /**
 * @file   uCAL_GPIO.h
+* @author Andy B
 * @brief  uController Abstraction Layer for General Purpose Inputs and Outputs
 *
 * This module is the interface that is used by the entire firmware
@@ -22,30 +23,30 @@
 
 typedef enum  // Used to select the pin direction
 {
-    Input,
-    Output	
-} Direction;
+    INPUT,
+    OUTPUT	
+} uCALPin_Direction_t;
 
 typedef enum  // Used to select if the pull up is enable
 {
-    None,
-    Up
+    NONE,
+    UP
    //Down // Still part of the FTEX standard but not supported by renesas	
-} PullType;
+} uCALPin_PullType_t;
 
 typedef enum  // Used to select the output
 {
-    PushPull,
-    OpenDrain	
-} OutputType;
+    PUSH_PULL,
+    OPEN_DRAIN	
+} uCALPin_OutputType_t;
 
 // ================= Structure used to configure a pin ===================== //
 
 struct GPIOConfig  //Contaisn the different parameters to configure a pin
 {
-    Direction  PinDirection;
-    PullType   PinPull;
-    OutputType PinOutput;
+    uCALPin_Direction_t  PinDirection;
+    uCALPin_PullType_t   PinPull;
+    uCALPin_OutputType_t PinOutput;
 };
 
 // ==================== Public function prototypes ========================= //
