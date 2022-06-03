@@ -25,7 +25,7 @@
 #define USE_SPEEDCONTROL									1
 
 #define DERATING_ENABLE										0
-#define CANBUS_ENABLE											0
+#define CANBUS_ENABLE											1
 #define PAS_ENABLE												0
 #define HOSTCOMM_ENABLE										0
 #define ERROR_MANAGEMENT_ENABLE						0

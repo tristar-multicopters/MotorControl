@@ -329,7 +329,6 @@ typedef struct
 	CAN_BaudRate_t baudrate;
 	uint8_t int_pin;
 	uint8_t stby_pin;
-	uint8_t lock_pin;
 	const nrf_queue_t* MCP_queue;
 	bool IT_received;
 	bool ongoing_transfer;

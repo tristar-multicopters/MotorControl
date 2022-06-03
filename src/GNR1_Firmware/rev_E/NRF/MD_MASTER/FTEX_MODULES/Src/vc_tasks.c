@@ -65,15 +65,6 @@ void VC_BootUp(void)
 	
 	/* Initialize GPIO module */
 	nrf_drv_gpiote_init();
-
-	#if CANBUS_ENABLE
-	/* Initialize SPI bus and CAN */
-	SPI_Init(&SPI0Manager);
-	
-	// todo: handle returned result
-	
-	MCP25625_Init(&CANController);
-	#endif
 	
 	/* Initialize vehicle controller components */
 	VCSTM_Init(pVCI->pStateMachine);
@@ -83,6 +74,15 @@ void VC_BootUp(void)
 
 	RCM_Init(&RegularConvertionManager);
 	
+    #if CANBUS_ENABLE
+	/* Initialize SPI bus and CAN */
+	SPI_Init(&SPI0Handle);
+	
+	// todo: handle returned result
+	
+	MCP25625_Init(&CANControllerHandle);
+	#endif
+    
 	STRG_Init();
 }
 
@@ -127,7 +127,7 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
 	
 	#if CANBUS_ENABLE
-	MCP25625_Handle_t * pCANController = &CANController;
+	MCP25625_Handle_t * pCANController = &CANControllerHandle;
 	#endif
 	
 	uint32_t xLastWakeTime = osKernelGetTickCount();
@@ -139,7 +139,7 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 		/* Wheel Speed read in slow loop test */ 
 		WSS_CalculateSpeed(pVCI->pDrivetrain->pWSS);
 
-		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain) )
+		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain)	 )
 		{
 			getMonitoringReg_Slow(M1);
 			#if CANBUS_ENABLE
@@ -380,9 +380,6 @@ static void sendVehicleMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Hand
 	CAN_SendThrottleBrake(pCANHandle, pVCHandle);
 	CAN_SendVbus(pCANHandle, pVCHandle);
 }
-#endif
-
-#if CANBUS_ENABLE
 static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle_t * pVCHandle, uint8_t motorSelection)
 {	
 	CAN_SendSpeed(pCANHandle, pVCHandle, motorSelection);

@@ -37,12 +37,12 @@ Change this define based on vehicle application
 /*------------------------------------*/
 
 
-#define CANBUS_ENABLE	0
+#define CANBUS_ENABLE	1
 
 
 extern VCI_Handle_t VCInterfaceHandle;
-extern SPI_Handle_t SPI0Manager;
-extern MCP25625_Handle_t CANController;
+extern SPI_Handle_t SPI0Handle;
+extern MCP25625_Handle_t CANControllerHandle;
 extern RCM_Handle_t RegularConvertionManager;
 extern eUART_protocol_t EUART_handle_t;
 

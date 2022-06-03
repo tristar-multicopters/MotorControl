@@ -13,7 +13,7 @@
 #include "nrf_delay.h"
 
 MCP25625_Handle_t * m_pMCPHandle;
-NRF_QUEUE_DEF(CAN_Message_t, m_MCP_queue, 32, NRF_QUEUE_MODE_NO_OVERFLOW);
+NRF_QUEUE_DEF(CAN_Message_t, m_MCP_queue, 128, NRF_QUEUE_MODE_NO_OVERFLOW);
 /*************** CAN QUEUE DEFINITION ****************/
 static osMessageQueueId_t CANTX_queue;
 
@@ -425,7 +425,8 @@ void MCP25625_manage_IT( void )
 {
 	m_pMCPHandle->IT_received = false;
 	// Get Flags...
-	MCP25625_ReadRegister(m_pMCPHandle, MCP_CANINTF, true);
+	MCP25625_ReadRegister(m_pMCPHandle, MCP_CANINTF, true);	
+	
 	if(m_pMCPHandle->reg_table[MCP_CANINTF] & MCP_RX0IF) // Receive message on the RX0 buffer
 	{
 		// Clear the RX0IF flag to be able to receive futur messages
@@ -514,21 +515,14 @@ uint8_t MCP25625_Init(MCP25625_Handle_t* p_Handle)
 	nrf_gpio_cfg_output(p_Handle->device.ss_pin);
 	nrf_gpio_pin_set(p_Handle->device.ss_pin);
 	
-	
 	// STBY pin of transciever put in 0 for go to normal mode
 	nrf_gpio_cfg_output(p_Handle->stby_pin);
 	nrf_gpio_pin_clear(p_Handle->stby_pin);
+    
 	//Delay for MCP transceiver to be ready to receive commands
 	nrf_delay_ms(5);
-	// Use resistor of 120ohms between CANH and CANL
-//	nrf_gpio_cfg_output(p_Handle->res120_pin);
-//	nrf_gpio_pin_set(p_Handle->res120_pin);
-	
-	// Lock pin for RX messages
-	nrf_gpio_cfg_output(p_Handle->lock_pin);
 	
 	//Put all the registers to their default value and put the MCP in Config mode
-	
 	MCP25625_Reset(p_Handle);
 	// Check to be sure we're in Config_mode.
 	if(MCP25625_GetMode(p_Handle, true) != MODE_CONFIG)
