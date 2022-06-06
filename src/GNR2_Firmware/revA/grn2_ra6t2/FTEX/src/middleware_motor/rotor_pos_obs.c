@@ -1,27 +1,19 @@
 /**
-  ******************************************************************************
-  * @file       ao_spd_pos_fdbk.c
-	* @author  		Sami Bouzid, FTEX.Inc
-  * @author  		Ronak Nemade, FTEX.Inc
+  * @file       rotor_pos_obs.c
   * @brief     	This file provides firmware functions that implement the features
-  *               of the Angle Observer  component  for the  Motor Control SDK.
+  *               of the Angle Observer component .
   *
-  ******************************************************************************
  **/
  
 /* Includes ------------------------------------------------------------------*/
 
-#include "ao_spd_pos_fdbk.h"
+#include "rotor_pos_obs.h"
 #include "mc_math.h"
 
 #include "mc_type.h"
 
-/**
-  * @brief  It initializes the state observer object
-  * @param  pHandle: handler of the current instance of the angle observer component
-  * @retval none
-  */
-void AO_Init( AO_Handle_t * pHandle )
+
+void RotorPosObs_Init( RotorPositionObserverHandle_t * pHandle )
 {
 	pHandle->hKpGain = pHandle->hKpGainDef;
 	pHandle->hKdGain = pHandle->hKdGainDef;
@@ -30,30 +22,28 @@ void AO_Init( AO_Handle_t * pHandle )
 	return;
 }
 
-/* It clears state observer object by re-initializing private variables*/
-void AO_Clear( AO_Handle_t * pHandle )
+void RotorPosObs_Clear( RotorPositionObserverHandle_t * pHandle )
 {	
-	pHandle->hEstElAngle = pHandle->pHallFdbk->_Super.hElAngle;
-	pHandle->hEstElSpeed = pHandle->pHallFdbk->_Super.hElSpeedDpp;
+	pHandle->hEstElAngle = pHandle->pHallFdbk->Super.hElAngle;
+	pHandle->hEstElSpeed = pHandle->pHallFdbk->Super.hElSpeedDpp;
 	pHandle->hEstMechTorque = 0;
 
-	pHandle->wEstElAngle = pHandle->pHallFdbk->_Super.hElAngle*INT16_MAX;
-	pHandle->wEstElSpeed = pHandle->pHallFdbk->_Super.hElSpeedDpp*INT16_MAX;
+	pHandle->wEstElAngle = pHandle->pHallFdbk->Super.hElAngle*INT16_MAX;
+	pHandle->wEstElSpeed = pHandle->pHallFdbk->Super.hElSpeedDpp*INT16_MAX;
 	pHandle->wEstMechTorque = 0;
 	
 	return;
 }
 
-int16_t AO_CalcElAngle( AO_Handle_t * pHandle, int16_t hElTorque)
+int16_t RotorPosObs_CalcElAngle( RotorPositionObserverHandle_t * pHandle, int16_t hElTorque)
 {
-	int64_t dAux; int32_t wAux; int16_t hAux;
+	int64_t dAux; int32_t wAux;
 	int16_t hErrorSin;
 	int32_t wEstElAngle_Next, wEstElSpeed_Next, wEstMechTorque_Next;
 	
-	hErrorSin = MCM_Trig_Functions( pHandle->pHallFdbk->_Super.hElAngle - pHandle->hEstElAngle ).hSin;
+	hErrorSin = MCMath_TrigFunctions( pHandle->pHallFdbk->Super.hElAngle - pHandle->hEstElAngle ).hSin;
 	
-	wAux = ( abs(pHandle->hEstElSpeed) * pHandle->hSpeedFactorGain ) / pHandle->hSpeedFactorDiv;
-	wAux += pHandle->hKdGainDef;
+	wAux = pHandle->hKdGainDef;
 	if (wAux > INT16_MAX)
 		wAux = INT16_MAX;
 	if (wAux < -INT16_MAX)
@@ -90,12 +80,12 @@ int16_t AO_CalcElAngle( AO_Handle_t * pHandle, int16_t hElTorque)
 	return pHandle->hEstElAngle;
 }
 
-int16_t AO_GetElAngle( AO_Handle_t * pHandle)
+int16_t RotorPosObs_GetElAngle( RotorPositionObserverHandle_t * pHandle)
 {
 	return pHandle->hEstElAngle;
 }
 
-int16_t AO_GetElSpeed( AO_Handle_t * pHandle)
+int16_t RotorPosObs_GetElSpeed( RotorPositionObserverHandle_t * pHandle)
 {
 	return pHandle->hEstElSpeed;
 }

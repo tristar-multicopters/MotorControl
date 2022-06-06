@@ -1,12 +1,7 @@
-
 /**
-  ******************************************************************************
   * @file    drive_parameters.h
-  * @author  FTEX inc
-  * @brief   This file contains the parameters needed for the Motor Control SDK
+  * @brief   This file contains the parameters needed for the Motor Control application
   *          in order to configure a motor drive.
-  *
-  ******************************************************************************
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -83,7 +78,6 @@
 #define PWM_FREQUENCY   20000
 #define PWM_FREQ_SCALING 1
 
-#define LOW_SIDE_SIGNALS_ENABLING        LS_PWM_TIMER
 #define SW_DEADTIME_NS                   250 /*!< Dead-time to be inserted
                                                            by FW, only if low side
                                                            signals are enabled */
@@ -112,9 +106,9 @@
 #define SPEED_LOOP_FREQUENCY_HZ       1000 /*!<Execution rate of speed
                                                       regulation loop (Hz) */
 
-#define PID_SPEED_KP_DEFAULT          3518/(SPEED_UNIT/10) /* Workbench compute the gain for 01Hz unit*/
-#define PID_SPEED_KI_DEFAULT          630/(SPEED_UNIT/10) /* Workbench compute the gain for 01Hz unit*/
-#define PID_SPEED_KD_DEFAULT          0/(SPEED_UNIT/10) /* Workbench compute the gain for 01Hz unit*/
+#define PID_SPEED_KP_DEFAULT          100
+#define PID_SPEED_KI_DEFAULT          10
+#define PID_SPEED_KD_DEFAULT          0
 /* Speed PID parameter dividers */
 #define SP_KPDIV                      256
 #define SP_KIDIV                      16384
@@ -191,7 +185,7 @@
 
 /******************************   ADDITIONAL FEATURES   **********************/
 
-#define FW_VOLTAGE_REF                985 /*!<Vs reference, tenth
+#define FW_VOLTAGE_REF                90 /*!<Vs reference, tenth
                                                         of a percent */
 #define FW_KP_GAIN                    0 /*!< Default Kp gain */
 #define FW_KI_GAIN                    0 /*!< Default Ki gain */
@@ -226,12 +220,9 @@
 #define AO_KPDIV         								256
 #define AO_KIDIV         								256
 #define AO_KDDIV         								1
-#define AO_KPDIV_LOG                  	LOG2(AO_KPDIV)
-#define AO_KIDIV_LOG                  	LOG2(AO_KIDIV)
-#define AO_KDDIV_LOG                  	LOG2(AO_KDDIV)
-
-#define AO_SPEEDFACTORGAIN							0
-#define	AO_SPEEDFACTORDIV								0	
+#define AO_KPDIV_LOG                  	LOG2(256)
+#define AO_KIDIV_LOG                  	LOG2(256)
+#define AO_KDDIV_LOG                  	LOG2(1)
 
 
 #endif /*__DRIVE_PARAMETERS_H*/

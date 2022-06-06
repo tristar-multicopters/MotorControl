@@ -1,11 +1,9 @@
 /**
-  ******************************************************************************
   * @file    pwm_common.c
   * @author  Sami Bouzid, FTEX inc
   * @brief   This file provides firmware functions that implement common features
   *          of the PWM & Current Feedback component.
   *
-  ******************************************************************************
 */
 
 /* Includes ------------------------------------------------------------------*/

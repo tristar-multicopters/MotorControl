@@ -405,6 +405,28 @@
         </Group>
         <Group>
           <GroupName>Application/Vehicle</GroupName>
+          <Files>
+            <File>
+              <FileName>vc_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_vehicle\vc_config.c</FilePath>
+            </File>
+            <File>
+              <FileName>vc_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_vehicle\vc_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>vc_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_vehicle\vc_tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>vc_defines.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_defines.h</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>Application/Motor</GroupName>
@@ -459,6 +481,16 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\mc_tuning.h</FilePath>
             </File>
+            <File>
+              <FileName>pmsm_motor_parameters_ebgo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_ebgo.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_grizzly.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_grizzly.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -471,6 +503,41 @@
               <FileName>md_interface.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\md_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>brake.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\brake.c</FilePath>
+            </File>
+            <File>
+              <FileName>powertrain_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\powertrain_management.c</FilePath>
+            </File>
+            <File>
+              <FileName>foldback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\foldback.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_selection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\motor_selection.c</FilePath>
+            </File>
+            <File>
+              <FileName>power_enable.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\power_enable.c</FilePath>
+            </File>
+            <File>
+              <FileName>throttle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\throttle.c</FilePath>
+            </File>
+            <File>
+              <FileName>vc_state_machine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\vc_state_machine.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -498,14 +565,14 @@
               <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
             </File>
             <File>
-              <FileName>motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
-            </File>
-            <File>
               <FileName>hall_speed_pos_fdbk.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
             </File>
             <File>
               <FileName>ntc_temperature_sensor.c</FileName>
@@ -538,11 +605,6 @@
               <FilePath>.\FTEX\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
             </File>
             <File>
-              <FileName>ramp_ext_mngr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ramp_ext_mngr.c</FilePath>
-            </File>
-            <File>
               <FileName>speed_pos_fdbk.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\speed_pos_fdbk.c</FilePath>
@@ -568,9 +630,9 @@
               <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
             </File>
             <File>
-              <FileName>ao_spd_pos_fdbk.c</FileName>
+              <FileName>rotor_pos_obs.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ao_spd_pos_fdbk.c</FilePath>
+              <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
             </File>
             <File>
               <FileName>feed_forward_ctrl.c</FileName>
@@ -601,11 +663,6 @@
               <FileName>regular_conversion_manager.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\regular_conversion_manager.c</FilePath>
-            </File>
-            <File>
-              <FileName>uCAL_GPIO.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_GPIO.c</FilePath>
             </File>
           </Files>
         </Group>

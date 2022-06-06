@@ -1,10 +1,7 @@
 /**
-  ******************************************************************************
   * @file    virtual_bus_voltage_sensor.h
-  * @author  FTEX inc
   * @brief   This file contains all definitions and functions prototypes for the
-  *          Virtual Bus Voltage Sensor component of the Motor Control SDK.
-  ******************************************************************************
+  *          Virtual Bus Voltage Sensor component of the Motor Control application.
 */
 
 
@@ -24,22 +21,39 @@ extern "C" {
   */
 typedef struct
 {
-  BusVoltageSensor_Handle_t _Super;
+  BusVoltageSensorHandle_t Super;
 
-  uint16_t ExpectedVbus_d;            /*!< Expected Vbus voltage expressed in
+  uint16_t hExpectedVbusDigital;            /*!< Expected Vbus voltage expressed in
                                            digital value
                                            hOverVoltageThreshold(digital value)=
                                            Over Voltage Threshold (V) * 65536
                                            / 500 */
-} VirtualBusVoltageSensor_Handle_t;
+} VirtualBusVoltageSensorHandle_t;
 
 /* Exported functions ------------------------------------------------------- */
-void VVBS_Init( VirtualBusVoltageSensor_Handle_t * pHandle );
-void VVBS_Clear( VirtualBusVoltageSensor_Handle_t * pHandle );
-uint16_t VVBS_NoErrors( VirtualBusVoltageSensor_Handle_t * pHandle );
+
+/**
+  * @brief  It initializes bus voltage conversion for virtual bus voltage sensor
+  * @param  pHandle related Handle of VirtualBusVoltageSensorHandle_t
+  * @retval none
+  */
+void VirtualBusVoltSensor_Init( VirtualBusVoltageSensorHandle_t * pHandle );
+
+/**
+  * @brief  It simply returns in virtual Vbus sensor implementation
+  * @param  pHandle related Handle of VirtualBusVoltageSensorHandle_t
+  * @retval none
+  */
+void VirtualBusVoltSensor_Clear( VirtualBusVoltageSensorHandle_t * pHandle );
+
+/**
+  * @brief  It returns MC_NO_ERROR
+  * @param  pHandle related Handle of VirtualBusVoltageSensorHandle_t
+* @retval uint16_t Fault code error: MC_NO_ERROR
+  */
+uint16_t VirtualBusVoltSensor_NoErrors( VirtualBusVoltageSensorHandle_t * pHandle );
 
 
-/** @} */
 #ifdef __cplusplus
 }
 #endif /* __cpluplus */

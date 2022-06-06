@@ -1,7 +1,8 @@
-/*
-*  hall_speed_pos_fdbk.c
-*  This file provides firmware functions that implement the features of the Hall Speed & Position Feedback component.
-*/ 
+ /**
+  * @file    hall_speed_pos_fdbk.c
+  * @brief   This file provides firmware functions that implement the features of
+  *          the Hall Speed & Position Feedback component.
+*/
 
 #include "speed_pos_fdbk.h"
 #include "hall_speed_pos_fdbk.h"
@@ -31,96 +32,80 @@
 
 #define HALL_MAX_PSEUDO_SPEED        ((int16_t)0x7FFF)  // With digit-per-PWM unit (here 2*PI rad = 0xFFFF)
 
-// ==================== Private function prototypes ======================== //
+static void HALL_Init_Electrical_Angle( HallPosSensorHandle_t * pHandle );
 
-/**
-* @brief  Read the logic level of the three Hall sensor and individuates in this
-*         way the position of the rotor (+/- 30???). Electrical angle is then
-*         initialized.
-* @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
-* @retval none
-*/
-static void HALL_Init_Electrical_Angle( HALL_Handle_t * pHandle );
 
-// ========================================================================= //
-
-/**
-* It initializes the hardware peripherals (Timer, GPIO and NVIC) required for the speed position sensor management using HALL sensors.
-*/
-void HALL_Init( HALL_Handle_t * pHandle )
+void HallPosSensor_Init( HallPosSensorHandle_t * pHandle )
 {
     // Calculate loacl variables and HALL handle variables
-    uint16_t hMinReliableElSpeedUnit = pHandle->_Super.hMinReliableMecSpeedUnit * pHandle->_Super.bElToMecRatio;
-    uint16_t hMaxReliableElSpeedUnit = pHandle->_Super.hMaxReliableMecSpeedUnit * pHandle->_Super.bElToMecRatio;
+    uint16_t hMinReliableElSpeedUnit = pHandle->Super.hMinReliableMecSpeedUnit * pHandle->Super.bElToMecRatio;
+    uint16_t hMaxReliableElSpeedUnit = pHandle->Super.hMaxReliableMecSpeedUnit * pHandle->Super.bElToMecRatio;
     uint8_t bSpeedBufferSize;
     uint8_t bIndex;
     /* Adjustment factor: minimum measurable speed is x time less than the minimum reliable speed */
     hMinReliableElSpeedUnit /= 4u;
     /* Adjustment factor: maximum measurable speed is x time greater than the maximum reliable speed */
     hMaxReliableElSpeedUnit *= 2u;
-    pHandle->OvfFreq = ( uint16_t )( pHandle->TIMClockFreq / 524287u );
+    pHandle->hOvfFreq = ( uint16_t )( pHandle->wTIMClockFreq / 524287u );
     /* Initialize hall-timeout so that it can be used for further calculations */
     if ( hMinReliableElSpeedUnit == 0u )
     {
         /* Set fixed to 150 ms */
-        pHandle->HallTimeout = 150u;
+        pHandle->hHallTimeout = 150u;
     }
     else
     {
         /* Set accordingly the min reliable speed */
-        /* 1000 comes from mS 
+        /* 1000 comes from mS
         * 6 comes from the fact that sensors are toggling each 60 deg = 360/6 deg */
-        pHandle->HallTimeout = 1000*SPEED_UNIT / ( 6u * hMinReliableElSpeedUnit );
+        pHandle->hHallTimeout = 1000*SPEED_UNIT / ( 6u * hMinReliableElSpeedUnit );
     }
     /* Compute the prescaler to the closet value of the TimeOut (in mS )*/
-    pHandle->HALLMaxRatio = ( pHandle->HallTimeout * pHandle->OvfFreq ) / 1000 ;					// prescaler so that counter counts 65536 in desired timeout value
-    /* Align MaxPeriod to a multiple of Overflow.*/
-    pHandle->MaxPeriod = ( pHandle->HALLMaxRatio ) * 524287uL;
-    pHandle->MaxElSum = pHandle->MaxPeriod * pHandle->SpeedBufferSize;
-    pHandle->SatSpeed = hMaxReliableElSpeedUnit;
-    pHandle->PseudoFreqConv = ( ( pHandle->TIMClockFreq/6u)/( pHandle->_Super.hMeasurementFrequency ) ) * ( pHandle->_Super.DPPConvFactor);
-    pHandle->MinPeriod = ( ( SPEED_UNIT * ( pHandle->TIMClockFreq /6uL) ) / hMaxReliableElSpeedUnit);
-    pHandle->PWMNbrPSamplingFreq = ( (pHandle->_Super.hMeasurementFrequency * pHandle->PWMFreqScaling) / pHandle->SpeedSamplingFreqHz ) - 1u;
+    pHandle->hHallMaxRatio = ( pHandle->hHallTimeout * pHandle->hOvfFreq ) / 1000 ;					// prescaler so that counter counts 65536 in desired timeout value
+    /* Align wMaxPeriod to a multiple of Overflow.*/
+    pHandle->wMaxPeriod = ( pHandle->hHallMaxRatio ) * 524287uL;
+    pHandle->wMaxElSum = pHandle->wMaxPeriod * pHandle->bSpeedBufferSize;
+    pHandle->hSaturationSpeed = hMaxReliableElSpeedUnit;
+    pHandle->wPseudoFreqConv = ( ( pHandle->wTIMClockFreq/6u)/( pHandle->Super.hMeasurementFrequency ) ) * ( pHandle->Super.DPPConvFactor);
+    pHandle->wMinPeriod = ( ( SPEED_UNIT * ( pHandle->wTIMClockFreq /6uL) ) / hMaxReliableElSpeedUnit);
+    pHandle->hPWMNbrPSamplingFreq = ( (pHandle->Super.hMeasurementFrequency * pHandle->bPWMFreqScaling) / pHandle->hSpeedSamplingFreqHz ) - 1u;
     /* Reset speed reliability */
-    pHandle->SensorIsReliable = true;
+    pHandle->bSensorIsReliable = true;
     /* Erase speed buffer */
-    bSpeedBufferSize = pHandle->SpeedBufferSize;
+    bSpeedBufferSize = pHandle->bSpeedBufferSize;
     for ( bIndex = 0u; bIndex < bSpeedBufferSize; bIndex++ )
     {
-        pHandle->SensorPeriod[bIndex]  = pHandle->MaxPeriod;
+        pHandle->SensorPeriod[bIndex]  = pHandle->wMaxPeriod;
     }
     /* Initialize Array used for angle confinement */
-    pHandle->Sector_Start_Angle[0] = 0;  
-    pHandle->Sector_Start_Angle[1] = ( int16_t ) (pHandle->PhaseShift + S16_60_PHASE_SHIFT);
-    pHandle->Sector_Start_Angle[2] = ( int16_t ) (pHandle->PhaseShift + S16_60_PHASE_SHIFT + S16_120_PHASE_SHIFT);
-    pHandle->Sector_Start_Angle[3] = ( int16_t ) ( pHandle->PhaseShift + S16_120_PHASE_SHIFT);
-    pHandle->Sector_Start_Angle[4] = ( int16_t ) (pHandle->PhaseShift - S16_60_PHASE_SHIFT);
-    pHandle->Sector_Start_Angle[5] = ( int16_t ) (pHandle->PhaseShift);
-    pHandle->Sector_Start_Angle[6] = ( int16_t ) (pHandle->PhaseShift - S16_120_PHASE_SHIFT);
-    pHandle->Sector_Destination_Angle[0] = 0;  
-    pHandle->Sector_Destination_Angle[1] = ( int16_t ) (pHandle->PhaseShift  + S16_120_PHASE_SHIFT) ;
-    pHandle->Sector_Destination_Angle[2] = ( int16_t ) (pHandle->PhaseShift - S16_120_PHASE_SHIFT );
-    pHandle->Sector_Destination_Angle[3] = ( int16_t ) (pHandle->PhaseShift + S16_60_PHASE_SHIFT + S16_120_PHASE_SHIFT) ;
-    pHandle->Sector_Destination_Angle[4] = ( int16_t ) (pHandle->PhaseShift );
-    pHandle->Sector_Destination_Angle[5] = ( int16_t ) (pHandle->PhaseShift  + S16_60_PHASE_SHIFT);
-    pHandle->Sector_Destination_Angle[6] = ( int16_t ) (pHandle->PhaseShift - S16_60_PHASE_SHIFT);
-    pHandle->Sector_Middle_Angle[0] = 0;  
-    pHandle->Sector_Middle_Angle[1] = ( int16_t ) ( pHandle->Sector_Start_Angle[1]  +  S16_30_PHASE_SHIFT );
-    pHandle->Sector_Middle_Angle[2] = ( int16_t ) ( pHandle->Sector_Start_Angle[2]  +  S16_30_PHASE_SHIFT);
-    pHandle->Sector_Middle_Angle[3] = ( int16_t )  ( pHandle->Sector_Start_Angle[3]  +  S16_30_PHASE_SHIFT);
-    pHandle->Sector_Middle_Angle[4] = ( int16_t ) ( pHandle->Sector_Start_Angle[4]  +  S16_30_PHASE_SHIFT);
-    pHandle->Sector_Middle_Angle[5] = ( int16_t ) ( pHandle->Sector_Start_Angle[5]  +  S16_30_PHASE_SHIFT);
-    pHandle->Sector_Middle_Angle[6] = ( int16_t ) ( pHandle->Sector_Start_Angle[6]  +  S16_30_PHASE_SHIFT);
-		
+    pHandle->SectorStartAngle[0] = 0;
+    pHandle->SectorStartAngle[1] = ( int16_t ) (pHandle->hPhaseShift + S16_60_PHASE_SHIFT);
+    pHandle->SectorStartAngle[2] = ( int16_t ) (pHandle->hPhaseShift + S16_60_PHASE_SHIFT + S16_120_PHASE_SHIFT);
+    pHandle->SectorStartAngle[3] = ( int16_t ) ( pHandle->hPhaseShift + S16_120_PHASE_SHIFT);
+    pHandle->SectorStartAngle[4] = ( int16_t ) (pHandle->hPhaseShift - S16_60_PHASE_SHIFT);
+    pHandle->SectorStartAngle[5] = ( int16_t ) (pHandle->hPhaseShift);
+    pHandle->SectorStartAngle[6] = ( int16_t ) (pHandle->hPhaseShift - S16_120_PHASE_SHIFT);
+    pHandle->SectorDestinationAngle[0] = 0;
+    pHandle->SectorDestinationAngle[1] = ( int16_t ) (pHandle->hPhaseShift  + S16_120_PHASE_SHIFT) ;
+    pHandle->SectorDestinationAngle[2] = ( int16_t ) (pHandle->hPhaseShift - S16_120_PHASE_SHIFT );
+    pHandle->SectorDestinationAngle[3] = ( int16_t ) (pHandle->hPhaseShift + S16_60_PHASE_SHIFT + S16_120_PHASE_SHIFT) ;
+    pHandle->SectorDestinationAngle[4] = ( int16_t ) (pHandle->hPhaseShift );
+    pHandle->SectorDestinationAngle[5] = ( int16_t ) (pHandle->hPhaseShift  + S16_60_PHASE_SHIFT);
+    pHandle->SectorDestinationAngle[6] = ( int16_t ) (pHandle->hPhaseShift - S16_60_PHASE_SHIFT);
+    pHandle->SectorMiddleAngle[0] = 0;
+    pHandle->SectorMiddleAngle[1] = ( int16_t ) ( pHandle->SectorStartAngle[1]  +  S16_30_PHASE_SHIFT );
+    pHandle->SectorMiddleAngle[2] = ( int16_t ) ( pHandle->SectorStartAngle[2]  +  S16_30_PHASE_SHIFT);
+    pHandle->SectorMiddleAngle[3] = ( int16_t )  ( pHandle->SectorStartAngle[3]  +  S16_30_PHASE_SHIFT);
+    pHandle->SectorMiddleAngle[4] = ( int16_t ) ( pHandle->SectorStartAngle[4]  +  S16_30_PHASE_SHIFT);
+    pHandle->SectorMiddleAngle[5] = ( int16_t ) ( pHandle->SectorStartAngle[5]  +  S16_30_PHASE_SHIFT);
+    pHandle->SectorMiddleAngle[6] = ( int16_t ) ( pHandle->SectorStartAngle[6]  +  S16_30_PHASE_SHIFT);
+
 		/*  Enable timer0 interrupts and counter */
     R_GPT_Start(pHandle->TIMx->p_ctrl);
     R_GPT_Enable(pHandle->TIMx->p_ctrl);
 }
 
-/*
-* Clear instantenous components in hall_speed_pos_fdbk
-*/
-void HALL_Clear( HALL_Handle_t * pHandle )
+void HallPosSensor_Clear( HallPosSensorHandle_t * pHandle )
 {
     /* Disable timer0 interrupts and counter */
     R_GPT_Disable(pHandle->TIMx->p_ctrl);
@@ -129,90 +114,82 @@ void HALL_Clear( HALL_Handle_t * pHandle )
     R_GPT_CounterSet(pHandle->TIMx->p_ctrl,HALL_COUNTER_RESET);
     /* Reinitialize variables in HALL handle */
     /* Reset speed reliability */
-    pHandle->SensorIsReliable = true;
+    pHandle->bSensorIsReliable = true;
     /* Acceleration measurement not implemented.*/
-    pHandle->_Super.hMecAccelUnitP = 0;
-    pHandle->FirstCapt = 0u;
-    pHandle->BufferFilled = 0u;
-    pHandle->OVFCounter = 0u;
-    pHandle->CompSpeed = 0;
-    pHandle->Direction = POSITIVE;
+    pHandle->Super.hMecAccelUnitP = 0;
+    pHandle->bFirstCapt = 0u;
+    pHandle->bBufferFilled = 0u;
+    pHandle->hOVFCounter = 0u;
+    pHandle->hCompSpeed = 0;
+    pHandle->bDirection = POSITIVE;
     /* Initialize speed buffer index */
-    pHandle->SpeedFIFOIdx = 0u;
+    pHandle->bSensorPeriod = 0u;
     /* Clear speed error counter */
-    pHandle->_Super.bSpeedErrorNumber = 0;
+    pHandle->Super.bSpeedErrorNumber = 0;
     HALL_Init_Electrical_Angle( pHandle );
     /*  Enable timer0 interrupts and counter */
     R_GPT_Start(pHandle->TIMx->p_ctrl);
     R_GPT_Enable(pHandle->TIMx->p_ctrl);
 }
 
-/**
-* Update the rotor electrical angle integrating the last measured instantaneous electrical speed express in dpp.
-*/
-int16_t HALL_CalcElAngle( HALL_Handle_t * pHandle )
+
+int16_t HallPosSensor_CalcElAngle( HallPosSensorHandle_t * pHandle )
 {
-    if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+    if ( pHandle->bBufferFilled < pHandle->bSpeedBufferSize )
     {
     }
     else
-    {   
+    {
         /*      Calculate angle by adding electrical speed in Dpp      */
-        if ( pHandle->_Super.hElSpeedDpp != HALL_MAX_PSEUDO_SPEED )
+        if ( pHandle->Super.hElSpeedDpp != HALL_MAX_PSEUDO_SPEED )
         {
-            pHandle->MeasuredElAngle += pHandle->_Super.hElSpeedDpp;
-            pHandle->_Super.hElAngle += pHandle->_Super.hElSpeedDpp + pHandle->CompSpeed;
-            pHandle->PrevRotorFreq = pHandle->_Super.hElSpeedDpp;
+            pHandle->hMeasuredElAngle += pHandle->Super.hElSpeedDpp;
+            pHandle->Super.hElAngle += pHandle->Super.hElSpeedDpp + pHandle->hCompSpeed;
+            pHandle->hPrevRotorFreq = pHandle->Super.hElSpeedDpp;
         }
         else
         {
-            pHandle->_Super.hElAngle += pHandle->PrevRotorFreq;
+            pHandle->Super.hElAngle += pHandle->hPrevRotorFreq;
         }
         /*      Confine angle calculation to 60-degrees      */
-		int32_t hAngle_Diff = abs(pHandle->_Super.hElAngle - pHandle->Sector_Middle_Angle[pHandle->HallState] ); 
+		int32_t hAngle_Diff = abs(pHandle->Super.hElAngle - pHandle->SectorMiddleAngle[pHandle->bHallState] );
 		if((hAngle_Diff>S16_40_PHASE_SHIFT))
 		{
-            uint16_t hAngle_Diffu = ((uint16_t) pHandle->_Super.hElAngle) - ((uint16_t) pHandle->Sector_Middle_Angle[pHandle->HallState]);			
+            uint16_t hAngle_Diffu = ((uint16_t) pHandle->Super.hElAngle) - ((uint16_t) pHandle->SectorMiddleAngle[pHandle->bHallState]);
 			if(abs((int16_t)hAngle_Diffu)>S16_40_PHASE_SHIFT)
             {
-                if(pHandle->Direction == POSITIVE)
+                if(pHandle->bDirection == POSITIVE)
                 {
-                    pHandle->_Super.hElAngle = pHandle->Sector_Destination_Angle[pHandle->HallState];
+                    pHandle->Super.hElAngle = pHandle->SectorDestinationAngle[pHandle->bHallState];
                 }
                 else
                 {
-                    pHandle->_Super.hElAngle = pHandle->Sector_Start_Angle[pHandle->HallState];
+                    pHandle->Super.hElAngle = pHandle->SectorStartAngle[pHandle->bHallState];
                 }
             }
 		}
     }
-    return pHandle->_Super.hElAngle;
+    return pHandle->Super.hElAngle;
 }
 
-/**
-* This method must be called - at least - with the same periodicity on which speed control is executed.
-* This method compute and store rotor istantaneous el speed (express in dpp considering the measurement frequency) in order to provide it to HALL_CalcElAngle function and SPD_GetElAngle.
-* Then compute rotor average el speed (express in dpp considering the measurement frequency) based on the buffer filled by IRQ, then - as a consequence - compute, store and return - through parameter
-* hMecSpeedUnit - the rotor average mech speed, expressed in Unit. Then check, store and return the reliability state of the sensor; in this function the reliability is measured with
-* reference to specific parameters of the derived sensor (HALL) through internal variables managed by IRQ.
-*/
-bool HALL_CalcAvrgMecSpeedUnit( HALL_Handle_t * pHandle, int16_t * hMecSpeedUnit )
+
+bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_t * hMecSpeedUnit )
 {
     bool bReliability;
-    if (pHandle->SensorIsReliable)
+    if (pHandle->bSensorIsReliable)
     {
         // Compare sum of the period with maximum permissible period
-        if(pHandle->ElPeriodSum >= pHandle->MaxElSum)
+        if(pHandle->wElPeriodSum >= pHandle->wMaxElSum)
         {
             /* At start-up or very low freq */
             /* Based on current prescaler value only */
-            pHandle->_Super.hElSpeedDpp = 0;
+            pHandle->Super.hElSpeedDpp = 0;
             *hMecSpeedUnit = 0;
         }
         else
         {
-            pHandle->_Super.hElSpeedDpp =  pHandle->AvrElSpeedDpp;
-            if ( pHandle->AvrElSpeedDpp == 0)
+            pHandle->Super.hElSpeedDpp =  pHandle->hAvrElSpeedDpp;
+            if ( pHandle->hAvrElSpeedDpp == 0)
             {
                 /* Speed is too low */
                 *hMecSpeedUnit = 0;
@@ -220,24 +197,24 @@ bool HALL_CalcAvrgMecSpeedUnit( HALL_Handle_t * pHandle, int16_t * hMecSpeedUnit
             else
             {
                 /* Check if speed is not to fast */
-                if (pHandle->AvrElSpeedDpp != HALL_MAX_PSEUDO_SPEED)
+                if (pHandle->hAvrElSpeedDpp != HALL_MAX_PSEUDO_SPEED)
                 {
-                    if (pHandle->HallMtpa == true)
+                    if (pHandle->bHallMtpa == true)
                     {
-                        pHandle->CompSpeed = 0;
+                        pHandle->hCompSpeed = 0;
                     }
-                    else  
+                    else
                     {
-                        pHandle->DeltaAngle = pHandle->MeasuredElAngle - pHandle->_Super.hElAngle;
-                        pHandle->CompSpeed = (int16_t)((int32_t)(pHandle->DeltaAngle)/( int32_t )( pHandle->PWMNbrPSamplingFreq ) );
+                        pHandle->hDeltaAngle = pHandle->hMeasuredElAngle - pHandle->Super.hElAngle;
+                        pHandle->hCompSpeed = (int16_t)((int32_t)(pHandle->hDeltaAngle)/( int32_t )( pHandle->hPWMNbrPSamplingFreq ) );
                     }
                     /* Convert el_dpp to MecUnit */
-                    *hMecSpeedUnit = ( int16_t )( (  pHandle->AvrElSpeedDpp * ( int32_t )pHandle->_Super.hMeasurementFrequency * (int32_t) SPEED_UNIT ) /
-                                                (( int32_t ) pHandle->_Super.DPPConvFactor * ( int32_t )pHandle->_Super.bElToMecRatio ) );
+                    *hMecSpeedUnit = ( int16_t )( (  pHandle->hAvrElSpeedDpp * ( int32_t )pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT ) /
+                                                (( int32_t ) pHandle->Super.DPPConvFactor * ( int32_t )pHandle->Super.bElToMecRatio ) );
                 }
                 else
                 {
-                    *hMecSpeedUnit = ( int16_t )pHandle->SatSpeed;
+                    *hMecSpeedUnit = ( int16_t )pHandle->hSaturationSpeed;
                 }
             }
         }
@@ -246,52 +223,49 @@ bool HALL_CalcAvrgMecSpeedUnit( HALL_Handle_t * pHandle, int16_t * hMecSpeedUnit
     else
     {
         bReliability = false;
-        pHandle->_Super.bSpeedErrorNumber = pHandle->_Super.bMaximumSpeedErrorsNumber;
+        pHandle->Super.bSpeedErrorNumber = pHandle->Super.bMaximumSpeedErrorsNumber;
         /* If speed is not reliable the El and Mec speed is set to 0 */
-        pHandle->_Super.hElSpeedDpp = 0;
+        pHandle->Super.hElSpeedDpp = 0;
         *hMecSpeedUnit = 0;
     }
-    pHandle->_Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
+    pHandle->Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
     return (bReliability);
 }
 
-/*
-* Interrupt service routine which needs to execute when there is a capture compare event. Capture compare event occurs at every edge detection on any three hall speed sensor pins.
-*/
-void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
+void * HallPosSensor_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
 {
-    HALL_Handle_t * pHandle = ( HALL_Handle_t * ) pHandleVoid;
+    HallPosSensorHandle_t * pHandle = ( HallPosSensorHandle_t * ) pHandleVoid;
     uint8_t bPrevHallState;
     int8_t PrevDirection;
     uint32_t wCaptBuf;
     bool bUnexpectedBehavior = false;
     bool bReliableDirectionChange = false;
 
-    if ( pHandle->SensorIsReliable )
+    if ( pHandle->bSensorIsReliable )
     {
         /* A capture event generated this interrupt */
-        bPrevHallState = pHandle->HallState;
-        PrevDirection = pHandle->Direction;
-        if ( pHandle->SensorPlacement == DEGREES_120 )
+        bPrevHallState = pHandle->bHallState;
+        PrevDirection = pHandle->bDirection;
+        if ( pHandle->bSensorPlacement == DEGREES_120 )
         {
-            pHandle->HallState  = (uint8_t) (R_BSP_PinRead(pHandle->H3PortPin) << 2 | R_BSP_PinRead(pHandle->H2PortPin) << 1 | R_BSP_PinRead(pHandle->H1PortPin)) ;
+            pHandle->bHallState  = (uint8_t) (R_BSP_PinRead(pHandle->H3PortPin) << 2 | R_BSP_PinRead(pHandle->H2PortPin) << 1 | R_BSP_PinRead(pHandle->H1PortPin)) ;
         }
         else
         {
-            pHandle->HallState  = (uint8_t) ( (R_BSP_PinRead(pHandle->H2PortPin) ^ 1 ) << 2  |  R_BSP_PinRead(pHandle->H3PortPin) << 1  |  R_BSP_PinRead(pHandle->H1PortPin) );
+            pHandle->bHallState  = (uint8_t) ( (R_BSP_PinRead(pHandle->H2PortPin) ^ 1 ) << 2  |  R_BSP_PinRead(pHandle->H3PortPin) << 1  |  R_BSP_PinRead(pHandle->H1PortPin) );
         }
-        switch ( pHandle->HallState )
+        switch ( pHandle->bHallState )
         {
             case STATE_5:
                 if ( bPrevHallState == STATE_4 )
                 {
-                    pHandle->Direction = POSITIVE;
-                    pHandle->MeasuredElAngle = pHandle->PhaseShift;
+                    pHandle->bDirection = POSITIVE;
+                    pHandle->hMeasuredElAngle = pHandle->hPhaseShift;
                 }
                 else if ( bPrevHallState == STATE_1 )
                 {
-                    pHandle->Direction = NEGATIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift + S16_60_PHASE_SHIFT );
+                    pHandle->bDirection = NEGATIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift + S16_60_PHASE_SHIFT );
                 }
                 else
                 {
@@ -302,13 +276,13 @@ void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
             case STATE_1:
                 if ( bPrevHallState == STATE_5 )
                 {
-                    pHandle->Direction = POSITIVE;
-                    pHandle->MeasuredElAngle = pHandle->PhaseShift + S16_60_PHASE_SHIFT;
+                    pHandle->bDirection = POSITIVE;
+                    pHandle->hMeasuredElAngle = pHandle->hPhaseShift + S16_60_PHASE_SHIFT;
                 }
                 else if ( bPrevHallState == STATE_3 )
                 {
-                    pHandle->Direction = NEGATIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift + S16_120_PHASE_SHIFT );
+                    pHandle->bDirection = NEGATIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift + S16_120_PHASE_SHIFT );
                 }
                 else
                 {
@@ -319,13 +293,13 @@ void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
             case STATE_3:
                 if ( bPrevHallState == STATE_1 )
                 {
-                    pHandle->Direction = POSITIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift + S16_120_PHASE_SHIFT );
+                    pHandle->bDirection = POSITIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift + S16_120_PHASE_SHIFT );
                 }
                 else if ( bPrevHallState == STATE_2 )
                 {
-                    pHandle->Direction = NEGATIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift + S16_120_PHASE_SHIFT + S16_60_PHASE_SHIFT );
+                    pHandle->bDirection = NEGATIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift + S16_120_PHASE_SHIFT + S16_60_PHASE_SHIFT );
                 }
                 else
                 {
@@ -336,13 +310,13 @@ void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
             case STATE_2:
                 if ( bPrevHallState == STATE_3 )
                 {
-                    pHandle->Direction = POSITIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift + S16_120_PHASE_SHIFT + S16_60_PHASE_SHIFT );//
+                    pHandle->bDirection = POSITIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift + S16_120_PHASE_SHIFT + S16_60_PHASE_SHIFT );//
                 }
                 else if ( bPrevHallState == STATE_6 )
                 {
-                    pHandle->Direction = NEGATIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift - S16_120_PHASE_SHIFT );
+                    pHandle->bDirection = NEGATIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift - S16_120_PHASE_SHIFT );
                 }
                 else
                 {
@@ -353,13 +327,13 @@ void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
             case STATE_6:
                 if ( bPrevHallState == STATE_2 )
                 {
-                    pHandle->Direction = POSITIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift - S16_120_PHASE_SHIFT );
+                    pHandle->bDirection = POSITIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift - S16_120_PHASE_SHIFT );
                 }
                 else if ( bPrevHallState == STATE_4 )
                 {
-                    pHandle->Direction = NEGATIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift - S16_60_PHASE_SHIFT );
+                    pHandle->bDirection = NEGATIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift - S16_60_PHASE_SHIFT );
                 }
                 else
                 {
@@ -370,13 +344,13 @@ void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
             case STATE_4:
                 if ( bPrevHallState == STATE_6 )
                 {
-                    pHandle->Direction = POSITIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift - S16_60_PHASE_SHIFT );//
+                    pHandle->bDirection = POSITIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift - S16_60_PHASE_SHIFT );//
                 }
                 else if ( bPrevHallState == STATE_5 )
                 {
-                    pHandle->Direction = NEGATIVE;
-                    pHandle->MeasuredElAngle = ( int16_t )( pHandle->PhaseShift );
+                    pHandle->bDirection = NEGATIVE;
+                    pHandle->hMeasuredElAngle = ( int16_t )( pHandle->hPhaseShift );
                 }
                 else
                 {
@@ -386,166 +360,164 @@ void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid , uint32_t * pCapture )
                 break;
 
             default:
-                pHandle->HallState = bPrevHallState;
+                pHandle->bHallState = bPrevHallState;
                 /* Bad hall sensor configutarion so update the speed reliability */
-                pHandle->SensorIsReliable = false;
+                pHandle->bSensorIsReliable = false;
                 bUnexpectedBehavior = true;
                 break;
         }
-        if (pHandle->Direction != PrevDirection)
+        if (pHandle->bDirection != PrevDirection)
         {
-            pHandle->DirectionChangeCounter++;
+            pHandle->bDirectionChangeCounter++;
         }
         else
         {
-            if (pHandle->DirectionChangeCounter != 0)
+            if (pHandle->bDirectionChangeCounter != 0)
             {
                 bReliableDirectionChange = true;
             }
-            pHandle->DirectionChangeCounter = 0;
+            pHandle->bDirectionChangeCounter = 0;
         }
 
         /* We need to check that the direction has not changed.
         If it is the case, the sign of the current speed can be the opposite of the
-        average speed, and the average time can be close to 0 which lead to a 
+        average speed, and the average time can be close to 0 which lead to a
         computed speed close to the infinite, and bring instability. */
         if (bReliableDirectionChange)
         {
-            /* Setting BufferFilled to 0 will prevent to compute the average speed based
+            /* Setting bBufferFilled to 0 will prevent to compute the average speed based
             on the SpeedPeriod buffer values */
-            pHandle->BufferFilled = 0 ;
-            pHandle->SpeedFIFOIdx = 0;
+            pHandle->bBufferFilled = 0 ;
+            pHandle->bSensorPeriod = 0;
         }
 
-        if ( !bUnexpectedBehavior && (pHandle->DirectionChangeCounter == 0 || pHandle->DirectionChangeCounter == 2) )
+        if ( !bUnexpectedBehavior && (pHandle->bDirectionChangeCounter == 0 || pHandle->bDirectionChangeCounter == 2) )
         {
             /* We need to check that the direction has not changed.
             If it is the case, the sign of the current speed can be the opposite of the
-            average speed, and the average time can be close to 0 which lead to a 
+            average speed, and the average time can be close to 0 which lead to a
             computed speed close to the infinite, and bring instability. */
-            if (pHandle->Direction != PrevDirection)
+            if (pHandle->bDirection != PrevDirection)
             {
-                /* Setting BufferFilled to 0 will prevent to compute the average speed based
+                /* Setting bBufferFilled to 0 will prevent to compute the average speed based
                 on the SpeedPeriod buffer values */
-                pHandle->BufferFilled = 0 ;
-                pHandle->SpeedFIFOIdx = 0;
+                pHandle->bBufferFilled = 0 ;
+                pHandle->bSensorPeriod = 0;
             }
-            if (pHandle->HallMtpa == true)
+            if (pHandle->bHallMtpa == true)
             {
-                pHandle->_Super.hElAngle = pHandle->MeasuredElAngle;
+                pHandle->Super.hElAngle = pHandle->hMeasuredElAngle;
             }
             else
             {
                 /* Nothing to do */
             }
             /* Discard first capture */
-            if ( pHandle->FirstCapt == 0u )
+            if ( pHandle->bFirstCapt == 0u )
             {
-                pHandle->FirstCapt++;
+                pHandle->bFirstCapt++;
                 // No need to update here
             }
             else
             {
                 /* used to validate the average speed measurement */
-                if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+                if ( pHandle->bBufferFilled < pHandle->bSpeedBufferSize )
                 {
-                    pHandle->BufferFilled++;
+                    pHandle->bBufferFilled++;
                 }
                 /* Store the latest speed acquisition */
                 wCaptBuf = *pCapture;
                 /* Add the numbers of overflow to the counter */
-                if ( pHandle->OVFCounter != 0u )
+                if ( pHandle->hOVFCounter != 0u )
                 {
-                    wCaptBuf += (uint32_t) pHandle->OVFCounter*0x80000uL;
+                    wCaptBuf += (uint32_t) pHandle->hOVFCounter*0x80000uL;
                 }
                 else
                 {
                     // Do nothing here
                 }
                 /* the HALL_MAX_PSEUDO_SPEED is temporary in the buffer, and never included in average computation*/
-                if ( wCaptBuf < pHandle->MinPeriod )
+                if ( wCaptBuf < pHandle->wMinPeriod )
                 {
                     /* Commented next line to prevent false drequency injection when moving from stop to moving condition */
-                    /* pHandle->AvrElSpeedDpp = HALL_MAX_PSEUDO_SPEED; */
+                    /* pHandle->hAvrElSpeedDpp = HALL_MAX_PSEUDO_SPEED; */
                 }
                 else
                 {
-                    pHandle->ElPeriodSum -= pHandle->SensorPeriod[pHandle->SpeedFIFOIdx]; /* value we gonna removed from the accumulator */
-                    if ( wCaptBuf >= pHandle->MaxPeriod )
+                    pHandle->wElPeriodSum -= pHandle->SensorPeriod[pHandle->bSensorPeriod]; /* value we gonna removed from the accumulator */
+                    if ( wCaptBuf >= pHandle->wMaxPeriod )
                     {
-                        pHandle->SensorPeriod[pHandle->SpeedFIFOIdx] =  pHandle->MaxPeriod;//*pHandle->Direction; 
+                        pHandle->SensorPeriod[pHandle->bSensorPeriod] =  pHandle->wMaxPeriod;//*pHandle->bDirection;
                     }
                     else
                     {
-                        pHandle->SensorPeriod[pHandle->SpeedFIFOIdx] =  wCaptBuf;
-                        pHandle->ElPeriodSum += pHandle->SensorPeriod[pHandle->SpeedFIFOIdx];
+                        pHandle->SensorPeriod[pHandle->bSensorPeriod] =  wCaptBuf;
+                        pHandle->wElPeriodSum += pHandle->SensorPeriod[pHandle->bSensorPeriod];
                     }
                     /* Update pointers to speed buffer */
-                    pHandle->SpeedFIFOIdx++;
-                    if ( pHandle->SpeedFIFOIdx == pHandle->SpeedBufferSize )
+                    pHandle->bSensorPeriod++;
+                    if ( pHandle->bSensorPeriod == pHandle->bSpeedBufferSize )
                     {
-                        pHandle->SpeedFIFOIdx = 0u;
+                        pHandle->bSensorPeriod = 0u;
                     }
-                    if ( pHandle->SensorIsReliable) 
+                    if ( pHandle->bSensorIsReliable)
                     {
-                        //	if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+                        //	if ( pHandle->bBufferFilled < pHandle->bSpeedBufferSize )
                         //	{
-                        //	    pHandle->AvrElSpeedDpp = ( int16_t ) ( pHandle->PseudoFreqConv / wCaptBuf )*pHandle->Direction;
+                        //	    pHandle->hAvrElSpeedDpp = ( int16_t ) ( pHandle->wPseudoFreqConv / wCaptBuf )*pHandle->bDirection;
                         //	}
-                        //	else 
+                        //	else
                         // { /* Average speed allow to smooth the mechanical sensors misalignement */
-                        pHandle->AvrElSpeedDpp =  (int16_t)(pHandle->PseudoFreqConv / (pHandle->ElPeriodSum / pHandle->SpeedBufferSize )) ; /* Average value */
-                        pHandle->AvrElSpeedDpp =  pHandle->AvrElSpeedDpp * pHandle->Direction;
+                        pHandle->hAvrElSpeedDpp =  (int16_t)(pHandle->wPseudoFreqConv / (pHandle->wElPeriodSum / pHandle->bSpeedBufferSize )) ; /* Average value */
+                        pHandle->hAvrElSpeedDpp =  pHandle->hAvrElSpeedDpp * pHandle->bDirection;
                         //	}
                     }
                     else /* Sensor is not reliable */
                     {
-                        pHandle->AvrElSpeedDpp = 0;
+                        pHandle->hAvrElSpeedDpp = 0;
                     }
                 }
                 /* Reset the number of overflow occurred */
-                pHandle->OVFCounter = 0u;
+                pHandle->hOVFCounter = 0u;
             }
         }
     }
-    if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+    if ( pHandle->bBufferFilled < pHandle->bSpeedBufferSize )
     {
         HALL_Init_Electrical_Angle(pHandle);
-    }	
-    
+    }
+
     return (void *)(0x0);
 }
 
-/**
-*  Interrupt service routine which needs to execute when there is timer over run. Here, overflow counter is incremented to add up total overruns when calculating capture value. 
-*/
-void * HALL_TIMx_UP_IRQHandler( void * pHandleVoid )
+
+void * HallPosSensor_TIMx_UP_IRQHandler( void * pHandleVoid )
 {
-    HALL_Handle_t * pHandle = ( HALL_Handle_t * ) pHandleVoid;
-    if (pHandle->SensorIsReliable)
+    HallPosSensorHandle_t * pHandle = ( HallPosSensorHandle_t * ) pHandleVoid;
+    if (pHandle->bSensorIsReliable)
     {
         /* an update event occured for this interrupt request generation */
-        pHandle->OVFCounter++;
-        if (pHandle->OVFCounter >= (pHandle->HALLMaxRatio))
+        pHandle->hOVFCounter++;
+        if (pHandle->hOVFCounter >= (pHandle->hHallMaxRatio))
         {
             /* Set rotor speed to zero */
-            pHandle->_Super.hElSpeedDpp = 0;
+            pHandle->Super.hElSpeedDpp = 0;
             /* Reset the electrical angle according the hall sensor configuration */
             HALL_Init_Electrical_Angle( pHandle );
             /* Reset the overflow counter */
-            pHandle->OVFCounter = 0u;
+            pHandle->hOVFCounter = 0u;
             /* Reset first capture flag */
-            pHandle->FirstCapt = 0u;
+            pHandle->bFirstCapt = 0u;
             /* Reset the SensorSpeed buffer*/
             uint8_t bIndex;
-            for ( bIndex = 0u; bIndex < pHandle->SpeedBufferSize; bIndex++ )
+            for ( bIndex = 0u; bIndex < pHandle->bSpeedBufferSize; bIndex++ )
             {
-                pHandle->SensorPeriod[bIndex]  = pHandle->MaxPeriod;
+                pHandle->SensorPeriod[bIndex]  = pHandle->wMaxPeriod;
             }
-            pHandle->BufferFilled = 0 ;
-            pHandle->AvrElSpeedDpp = 0;
-            pHandle->SpeedFIFOIdx = 0;
-            pHandle->ElPeriodSum = pHandle->MaxPeriod * pHandle->SpeedBufferSize;
+            pHandle->bBufferFilled = 0 ;
+            pHandle->hAvrElSpeedDpp = 0;
+            pHandle->bSensorPeriod = 0;
+            pHandle->wElPeriodSum = pHandle->wMaxPeriod * pHandle->bSpeedBufferSize;
         }
     }
     return (void *)(0x0);				// MC_NULL
@@ -554,54 +526,60 @@ void * HALL_TIMx_UP_IRQHandler( void * pHandleVoid )
 /**
 * Read the logic level of the three Hall sensor and individuates in this way the position of the rotor (+/- 30???). Electrical angle is then initialized.
 */
-static void HALL_Init_Electrical_Angle( HALL_Handle_t * pHandle )
+static void HALL_Init_Electrical_Angle( HallPosSensorHandle_t * pHandle )
 {
-    if (pHandle->SensorPlacement == DEGREES_120)
+    if (pHandle->bSensorPlacement == DEGREES_120)
     {
-        pHandle->HallState  = (uint8_t) ( R_BSP_PinRead(pHandle->H3PortPin) << 2 | R_BSP_PinRead(pHandle->H2PortPin) << 1 | R_BSP_PinRead(pHandle->H1PortPin) );
+        pHandle->bHallState  = (uint8_t) ( R_BSP_PinRead(pHandle->H3PortPin) << 2 | R_BSP_PinRead(pHandle->H2PortPin) << 1 | R_BSP_PinRead(pHandle->H1PortPin) );
     }
     else
     {
-        pHandle->HallState  = (uint8_t) ( (R_BSP_PinRead(pHandle->H2PortPin) ^ 1 ) << 2  |  R_BSP_PinRead(pHandle->H3PortPin) << 1  |  R_BSP_PinRead(pHandle->H1PortPin) );
+        pHandle->bHallState  = (uint8_t) ( (R_BSP_PinRead(pHandle->H2PortPin) ^ 1 ) << 2  |  R_BSP_PinRead(pHandle->H3PortPin) << 1  |  R_BSP_PinRead(pHandle->H1PortPin) );
     }
     /* Set angle based on hall sensor states */
-    switch (pHandle->HallState)
+    switch (pHandle->bHallState)
     {
         case STATE_5:
-            pHandle->_Super.hElAngle = ( int16_t )( pHandle->PhaseShift + S16_60_PHASE_SHIFT / 2 );
+            pHandle->Super.hElAngle = ( int16_t )( pHandle->hPhaseShift + S16_60_PHASE_SHIFT / 2 );
             break;
         case STATE_1:
-            pHandle->_Super.hElAngle = ( int16_t )( pHandle->PhaseShift + S16_60_PHASE_SHIFT + S16_60_PHASE_SHIFT / 2 );
+            pHandle->Super.hElAngle = ( int16_t )( pHandle->hPhaseShift + S16_60_PHASE_SHIFT + S16_60_PHASE_SHIFT / 2 );
             break;
         case STATE_3:
-            pHandle->_Super.hElAngle = ( int16_t )( pHandle->PhaseShift + S16_120_PHASE_SHIFT + S16_60_PHASE_SHIFT / 2 );
+            pHandle->Super.hElAngle = ( int16_t )( pHandle->hPhaseShift + S16_120_PHASE_SHIFT + S16_60_PHASE_SHIFT / 2 );
             break;
         case STATE_2:
-            pHandle->_Super.hElAngle = ( int16_t )( pHandle->PhaseShift - S16_120_PHASE_SHIFT - S16_60_PHASE_SHIFT / 2 );
+            pHandle->Super.hElAngle = ( int16_t )( pHandle->hPhaseShift - S16_120_PHASE_SHIFT - S16_60_PHASE_SHIFT / 2 );
             break;
         case STATE_6:
-            pHandle->_Super.hElAngle = ( int16_t )( pHandle->PhaseShift - S16_60_PHASE_SHIFT - S16_60_PHASE_SHIFT / 2 );
+            pHandle->Super.hElAngle = ( int16_t )( pHandle->hPhaseShift - S16_60_PHASE_SHIFT - S16_60_PHASE_SHIFT / 2 );
             break;
         case STATE_4:
-            pHandle->_Super.hElAngle = ( int16_t )( pHandle->PhaseShift - S16_60_PHASE_SHIFT / 2 );
+            pHandle->Super.hElAngle = ( int16_t )( pHandle->hPhaseShift - S16_60_PHASE_SHIFT / 2 );
             break;
         default:
             /* Bad hall sensor configutarion so update the speed reliability */
-            pHandle->SensorIsReliable = false;
+            pHandle->bSensorIsReliable = false;
             break;
     }
     /* Initialize the measured angle */
-    pHandle->MeasuredElAngle = pHandle->_Super.hElAngle;
-    pHandle->DirectionChangeCounter = 0;
+    pHandle->hMeasuredElAngle = pHandle->Super.hElAngle;
+    pHandle->bDirectionChangeCounter = 0;
 }
 
 /**
-* It could be used to set istantaneous information on rotor mechanical angle.
-*/
-void HALL_SetMecAngle( HALL_Handle_t * pHandle, int16_t hMecAngle )
+  * @brief  It could be used to set istantaneous information on rotor mechanical
+  *         angle.
+  *         Note: Mechanical angle management is not implemented in this
+  *         version of Hall sensor class.
+  * @param  pHandle pointer on related component instance
+  * @param  hMecAngle istantaneous measure of rotor mechanical angle
+  * @retval none
+  */
+void HallPosSensor_SetMecAngle( HallPosSensorHandle_t * pHandle, int16_t hMecAngle )
 {
 	if(pHandle!= NULL)
 	{
 		hMecAngle = 0;
-	}	
+	}
 }

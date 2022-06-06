@@ -1,5 +1,4 @@
 /**
-  ******************************************************************************
   * @file    ics_ra6t2_pwm_curr_fdbk.c
   * @author  Sami Bouzid, FTEX inc
   * @brief   This file provides firmware functions that implement current measurement
@@ -18,10 +17,10 @@
 
 
 /* Private function prototypes -----------------------------------------------*/
-static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl,ab_t * Iab );
+static void ICS_HFCurrentsPolarization( PWMCurrFdbkHandle_t * pHdl,ab_t * Iab );
 
 
-bool ICS_Init( PWMC_ICS_Handle_t * pHandle )
+bool PWMInsulCurrSensorFdbk_Init( PWMInsulCurrSensorFdbkHandle_t * pHandle )
 {
 	/* Nothing to initialize for now */
 	if(pHandle != NULL)
@@ -31,49 +30,49 @@ bool ICS_Init( PWMC_ICS_Handle_t * pHandle )
 	return bIsError;
 }
 
-void ICS_CurrentReadingPolarization( PWMC_Handle_t * pHdl )
+void PWMInsulCurrSensorFdbk_CurrentReadingPolarization( PWMCurrFdbkHandle_t * pHdl )
 {
-	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	PWMInsulCurrSensorFdbkHandle_t * pHandle = ( PWMInsulCurrSensorFdbkHandle_t * )pHdl;
 
   /* Reset offset and counter */
-  pHandle->PhaseAOffset = 0u;
-  pHandle->PhaseBOffset = 0u;
-  pHandle->PolarizationCounter = 0u;
+  pHandle->wPhaseAOffset = 0u;
+  pHandle->wPhaseBOffset = 0u;
+  pHandle->bPolarizationCounter = 0u;
 	
 	/* Disable PWM output */
-	R_GPT_OutputDisable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_U]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
-	R_GPT_OutputDisable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_V]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
-	R_GPT_OutputDisable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_W]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputDisable(pHandle->pParamsStructure->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_U]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputDisable(pHandle->pParamsStructure->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_V]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputDisable(pHandle->pParamsStructure->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_W]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
 	
   /* Change function to be executed in ADC interrupt routine */
-  pHandle->_Super.pFctGetPhaseCurrents = &ICS_HFCurrentsPolarization;
+  pHandle->Super.pFctGetPhaseCurrents = &ICS_HFCurrentsPolarization;
 	
 	/* Start PWM, but output is disabled */
-  ICS_SwitchOnPWM( &pHandle->_Super );
+  PWMInsulCurrSensorFdbk_SwitchOnPWM( &pHandle->Super );
 	
   /* Wait for NB_CONVERSIONS to be executed */
-  waitForPolarizationEnd(&pHandle->PolarizationCounter);
+  waitForPolarizationEnd(&pHandle->bPolarizationCounter);
 
 	/* Stop PWM */
-  ICS_SwitchOffPWM( &pHandle->_Super );
+  PWMInsulCurrSensorFdbk_SwitchOffPWM( &pHandle->Super );
 	
 	/* Compute sensor offsets */
-  pHandle->PhaseAOffset /= NB_CONVERSIONS;
-  pHandle->PhaseBOffset /= NB_CONVERSIONS;
+  pHandle->wPhaseAOffset /= NB_CONVERSIONS;
+  pHandle->wPhaseBOffset /= NB_CONVERSIONS;
 
   /* Change back function to be executed in ADC interrupt routine */
-  pHandle->_Super.pFctGetPhaseCurrents = &ICS_GetPhaseCurrents;
-  pHandle->_Super.pFctSetADCSampPointSectX = &ICS_WriteTIMRegisters;
+  pHandle->Super.pFctGetPhaseCurrents = &PWMInsulCurrSensorFdbk_GetPhaseCurrents;
+  pHandle->Super.pFctSetADCSampPointSectX = &PWMInsulCurrSensorFdbk_WriteTIMRegisters;
 
 	/* Enable PWM output */
-	R_GPT_OutputEnable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_U]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
-	R_GPT_OutputEnable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_V]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
-	R_GPT_OutputEnable(pHandle->pParams_str->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_W]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputEnable(pHandle->pParamsStructure->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_U]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputEnable(pHandle->pParamsStructure->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_V]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+	R_GPT_OutputEnable(pHandle->pParamsStructure->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_W]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
 }
 
-void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
+void PWMInsulCurrSensorFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHdl, ab_t * Iab )
 {
-	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	PWMInsulCurrSensorFdbkHandle_t * pHandle = ( PWMInsulCurrSensorFdbkHandle_t * )pHdl;
 	
 	pHandle->bOverrunFlag = false;
 	
@@ -81,12 +80,12 @@ void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
   uint16_t reg;
 	
 	/* Read ADC converted value and store it into handle  */
-	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIa, &pHandle->hIaRaw);
-	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIb, &pHandle->hIbRaw);
+	R_ADC_B_Read(pHandle->pParamsStructure->pADCHandle->p_ctrl, pHandle->pParamsStructure->ADCChannelIa, &pHandle->hIaRaw);
+	R_ADC_B_Read(pHandle->pParamsStructure->pADCHandle->p_ctrl, pHandle->pParamsStructure->ADCChannelIb, &pHandle->hIbRaw);
   
   /* Ia = (PHASE_A_ADC_CHANNEL value) - (hPhaseAOffset)  */
   reg = ( uint16_t )( pHandle->hIaRaw );
-  aux = ( int32_t )( reg ) - ( int32_t )( pHandle->PhaseAOffset );
+  aux = ( int32_t )( reg ) - ( int32_t )( pHandle->wPhaseAOffset );
 
   /* Saturation of Ia */
   if ( aux < -INT16_MAX )
@@ -104,7 +103,7 @@ void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
 
   /* Ib = (PHASE_B_ADC_CHANNEL value) - (hPhaseBOffset) */
   reg = ( uint16_t )( pHandle->hIbRaw );
-  aux = ( int32_t )( reg ) - ( int32_t )( pHandle->PhaseBOffset );
+  aux = ( int32_t )( reg ) - ( int32_t )( pHandle->wPhaseBOffset );
 
   /* Saturation of Ib */
   if ( aux < -INT16_MAX )
@@ -125,24 +124,24 @@ void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
 	Iab->b = -Iab->b;
 
 	/* Compute Ic from Ia and Ib. Store them into base handle. */
-  pHandle->_Super.Ia = Iab->a;
-  pHandle->_Super.Ib = Iab->b;
-  pHandle->_Super.Ic = -Iab->a - Iab->b;
+  pHandle->Super.Ia = Iab->a;
+  pHandle->Super.Ib = Iab->b;
+  pHandle->Super.Ic = -Iab->a - Iab->b;
 }
 
-uint16_t ICS_WriteTIMRegisters( PWMC_Handle_t * pHdl )
+uint16_t PWMInsulCurrSensorFdbk_WriteTIMRegisters( PWMCurrFdbkHandle_t * pHdl )
 {
-	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	PWMInsulCurrSensorFdbkHandle_t * pHandle = ( PWMInsulCurrSensorFdbkHandle_t * )pHdl;
 	uint16_t hAux = MC_NO_ERROR;
 	three_phase_duty_cycle_t sDutyCycle;
 	
 	/* Set duty cycles according to values in base handle */
-	sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->_Super.CntPhA;
-	sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->_Super.CntPhB;
-	sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->_Super.CntPhC;
+	sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->Super.hCntPhA;
+	sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->Super.hCntPhB;
+	sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->Super.hCntPhC;
 	
 	/* Update duty cycle registers */
-	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &sDutyCycle);
+	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl, &sDutyCycle);
 	
 	/* Check for overrun condition */
 	if (pHandle->bOverrunFlag)
@@ -154,30 +153,30 @@ uint16_t ICS_WriteTIMRegisters( PWMC_Handle_t * pHdl )
 }
 
 /**
-  * @brief  Implementation of PWMC_GetPhaseCurrents to be performed during
-  *         calibration. It sum up injected conversion data into PhaseAOffset and
-  *         PhaseBOffset to compute the offset introduced in the current feedback
+  * @brief  Implementation of PWMCurrFdbk_GetPhaseCurrents to be performed during
+  *         calibration. It sum up injected conversion data into wPhaseAOffset and
+  *         wPhaseBOffset to compute the offset introduced in the current feedback
   *         network. It is required to proper configure ADC inputs before to enable
   *         the offset computation.
-	* @param  pHdl: handler of the current instance of the PWMC_ICS_Handle_t component
+	* @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval It always returns {0,0} in ab_t format
   */
-static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl, ab_t * Iab )
+static void ICS_HFCurrentsPolarization( PWMCurrFdbkHandle_t * pHdl, ab_t * Iab )
 {
-	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	PWMInsulCurrSensorFdbkHandle_t * pHandle = ( PWMInsulCurrSensorFdbkHandle_t * )pHdl;
 	
 	pHandle->bOverrunFlag = false;
 	
 	/* Read ADC converted value and store it into handle  */
-	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIa, &pHandle->hIaRaw);
-	R_ADC_B_Read(pHandle->pParams_str->pADCHandle->p_ctrl, pHandle->pParams_str->ADCChannelIb, &pHandle->hIbRaw);
+	R_ADC_B_Read(pHandle->pParamsStructure->pADCHandle->p_ctrl, pHandle->pParamsStructure->ADCChannelIa, &pHandle->hIaRaw);
+	R_ADC_B_Read(pHandle->pParamsStructure->pADCHandle->p_ctrl, pHandle->pParamsStructure->ADCChannelIb, &pHandle->hIbRaw);
 	
 	/* Accumulate ADC converted value into handle until NB_CONVERTIONS is reached. */
-  if ( pHandle->PolarizationCounter < NB_CONVERSIONS )
+  if ( pHandle->bPolarizationCounter < NB_CONVERSIONS )
   {
-    pHandle->PhaseAOffset += pHandle->hIaRaw;
-    pHandle->PhaseBOffset += pHandle->hIbRaw;
-    pHandle->PolarizationCounter++;
+    pHandle->wPhaseAOffset += pHandle->hIaRaw;
+    pHandle->wPhaseBOffset += pHandle->hIbRaw;
+    pHandle->bPolarizationCounter++;
   }
 
   /* During offset calibration no current is flowing in the phases */
@@ -185,12 +184,12 @@ static void ICS_HFCurrentsPolarization( PWMC_Handle_t * pHdl, ab_t * Iab )
   Iab->b = 0;
 }
 
-void ICS_TurnOnLowSides( PWMC_Handle_t * pHdl )
+void PWMInsulCurrSensorFdbk_TurnOnLowSides( PWMCurrFdbkHandle_t * pHdl )
 {
-	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	PWMInsulCurrSensorFdbkHandle_t * pHandle = ( PWMInsulCurrSensorFdbkHandle_t * )pHdl;
 	three_phase_duty_cycle_t sDutyCycle;
 	
-	pHandle->_Super.TurnOnLowSidesAction = true;
+	pHandle->Super.hTurnOnLowSidesAction = true;
 	
 	/* Set duty cycles to zero, thus making low side switches always close and high sides always open */
 	sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = 0;
@@ -198,61 +197,61 @@ void ICS_TurnOnLowSides( PWMC_Handle_t * pHdl )
 	sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = 0;
 	
 	/* Update duty cycle registers */
-	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &sDutyCycle);
+	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl, &sDutyCycle);
 	
 	/* Start timer */
-	R_GPT_THREE_PHASE_Start(pHandle->pParams_str->pThreePhaseHandle->p_ctrl);
+	R_GPT_THREE_PHASE_Start(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl);
 }
 
-void ICS_SwitchOnPWM( PWMC_Handle_t * pHdl )
+void PWMInsulCurrSensorFdbk_SwitchOnPWM( PWMCurrFdbkHandle_t * pHdl )
 {
-	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	PWMInsulCurrSensorFdbkHandle_t * pHandle = ( PWMInsulCurrSensorFdbkHandle_t * )pHdl;
 	three_phase_duty_cycle_t sDutyCycle;
 	
-	pHandle->_Super.TurnOnLowSidesAction = false;
+	pHandle->Super.hTurnOnLowSidesAction = false;
 	
   /* Set all duty cycles to 50% */
-  sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->Half_PWMPeriod / 2;
-  sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->Half_PWMPeriod / 2;
-  sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->Half_PWMPeriod / 2;
+  sDutyCycle.duty[THREE_PHASE_CHANNEL_U] = pHandle->hHalfPWMPeriod / 2;
+  sDutyCycle.duty[THREE_PHASE_CHANNEL_V] = pHandle->hHalfPWMPeriod / 2;
+  sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = pHandle->hHalfPWMPeriod / 2;
 	
 	/* Update duty cycle registers */
-	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParams_str->pThreePhaseHandle->p_ctrl, &sDutyCycle);
+	R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl, &sDutyCycle);
 	
 	/* Start timer */
-	R_GPT_THREE_PHASE_Start(pHandle->pParams_str->pThreePhaseHandle->p_ctrl);
+	R_GPT_THREE_PHASE_Start(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl);
 }
 
-void ICS_SwitchOffPWM( PWMC_Handle_t * pHdl )
+void PWMInsulCurrSensorFdbk_SwitchOffPWM( PWMCurrFdbkHandle_t * pHdl )
 {
-	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	PWMInsulCurrSensorFdbkHandle_t * pHandle = ( PWMInsulCurrSensorFdbkHandle_t * )pHdl;
 	
-	pHandle->_Super.TurnOnLowSidesAction = false;
+	pHandle->Super.hTurnOnLowSidesAction = false;
 	
 	/* Stop timer and reset PWM output */
-	R_GPT_THREE_PHASE_Stop(pHandle->pParams_str->pThreePhaseHandle->p_ctrl);
+	R_GPT_THREE_PHASE_Stop(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl);
 }
 
-void * ICS_TIMx_UP_IRQHandler( PWMC_ICS_Handle_t * pHdl )
+void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler( PWMInsulCurrSensorFdbkHandle_t * pHdl )
 {
 	/* Make ADC ready for next conversion, will be triggered by timer */
-	R_ADC_B_ScanGroupStart(pHdl->pParams_str->pADCHandle->p_ctrl, pHdl->pParams_str->ADCGroupMask);
+	R_ADC_B_ScanGroupStart(pHdl->pParamsStructure->pADCHandle->p_ctrl, pHdl->pParamsStructure->ADCGroupMask);
 	
 	pHdl->bOverrunFlag = true;
 	
-	return &( pHdl->_Super.Motor );
+	return &( pHdl->Super.Motor );
 }
 
-void * ICS_BRK2_IRQHandler( PWMC_ICS_Handle_t * pHdl )
+void * PWMInsulCurrSensorFdbk_BRK_IRQHandler( PWMInsulCurrSensorFdbkHandle_t * pHdl )
 {
   pHdl->bOverCurrentFlag = true;
 
-  return &( pHdl->_Super.Motor );
+  return &( pHdl->Super.Motor );
 }
 
-uint16_t ICS_IsOverCurrentOccurred( PWMC_Handle_t * pHdl )
+uint16_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred( PWMCurrFdbkHandle_t * pHdl )
 {
-	PWMC_ICS_Handle_t * pHandle = ( PWMC_ICS_Handle_t * )pHdl;
+	PWMInsulCurrSensorFdbkHandle_t * pHandle = ( PWMInsulCurrSensorFdbkHandle_t * )pHdl;
 	
   uint16_t retVal = MC_NO_FAULTS;
 

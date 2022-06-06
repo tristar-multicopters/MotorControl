@@ -1,16 +1,20 @@
 /**
-  ******************************************************************************
   * @file    gnr_main.c
-  * @author  FTEX inc
   * @brief   This file is the main application of the ganrunner motor controller firmware
   *
-	******************************************************************************
 	*/
 
 #include "gnr_main.h"
 
+//****************** THREAD EXTERN FUNCTION PROTOTYPES ******************//
+
 extern void startMCSafetyTask(void * pvParameter);
 extern void startMCMediumFrequencyTask(void * pvParameter);
+extern void THR_VC_MediumFreq(void * pvParameter);
+extern void THR_VC_StateMachine(void * pvParameter);
+
+
+//****************** LOCAL FUNCTION PROTOTYPES ******************//
 
 static bool ADCInit(void);
 static bool GPTInit(void);
@@ -19,9 +23,18 @@ static bool DACInit(void);
 static bool ICUInit(void);
 static bool ELCInit(void);
 
+
+//****************** THREAD HANDLES ******************//
+
 osThreadId_t MC_MediumFrequencyTask_handle;
 osThreadId_t MC_SafetyTask_handle;
+osThreadId_t THR_VC_MediumFreq_handle;
+osThreadId_t THR_VC_StateMachine_handle;
 
+
+//****************** THREAD ATTRIBUTES ******************//
+
+//TODO: NEED TO ADJUST THREAD PRIORITIES
 
 static const osThreadAttr_t ThAtt_MC_SafetyTask = {
 	.name = "MC_SafetyTask",
@@ -35,21 +48,40 @@ static const osThreadAttr_t ThAtt_MC_MediumFrequencyTask = {
 	.priority = osPriorityNormal2
 };
 
+static const osThreadAttr_t ThAtt_VC_MediumFrequencyTask = {
+	.name = "VC_MediumFrequencyTask",
+	.stack_size = 512,
+	.priority = osPriorityAboveNormal2
+};
 
+static const osThreadAttr_t ThAtt_VehicleStateMachine = {
+	.name = "VC_StateMachine",
+	.stack_size = 512,
+	.priority = osPriorityAboveNormal3,
+};
+
+/**************************************************************/
+
+/**
+ * @brief Function for main application entry.
+ */
 void gnr_main(void)
 {
+	/* Hardware initialization */
 	ADCInit();
 	GPTInit();
 	POEGInit();
 	DACInit();
 	ICUInit();
 	ELCInit();
+	/* At this point, hardware should be ready to be used by application systems */
 
-	SystemCoreClockUpdate();
+	SystemCoreClockUpdate(); // Standard ARM function to update clock settings
 
 	osKernelInitialize();  // Initialise the kernel
-	//EventRecorderInitialize(EventRecordAll,1U); // Initialise the events
+	//EventRecorderInitialize(EventRecordAll,1U); // Initialise the event recorder
 
+	/* Create the threads */
 	MC_MediumFrequencyTask_handle   = osThreadNew(startMCMediumFrequencyTask,
 																								NULL,
 																								&ThAtt_MC_MediumFrequencyTask);
@@ -57,8 +89,16 @@ void gnr_main(void)
 	MC_SafetyTask_handle   					= osThreadNew(startMCSafetyTask,
 																								NULL,
 																								&ThAtt_MC_SafetyTask);
+	
+	THR_VC_MediumFreq_handle   				= osThreadNew(THR_VC_MediumFreq,
+																								NULL,
+																								&ThAtt_VC_MediumFrequencyTask);
+																																													
+	THR_VC_StateMachine_handle  = osThreadNew(THR_VC_StateMachine,
+																								NULL,
+																								&ThAtt_VehicleStateMachine);
 
-	// Start thread execution
+	/* Start RTOS */
 	if (osKernelGetState() == osKernelReady)
 	{
     osKernelStart();
@@ -120,7 +160,7 @@ static bool GPTInit(void)
 	 *		GPT0
 	 * ________________________ */
 	 
-	/* Capture Timer settings for hall sensing      */
+	/* Capture timer settings for hall sensing      */
 	bIsError |= R_GPT_Open(g_timer0.p_ctrl, g_timer0.p_cfg);
 	bIsError |= R_GPT_Enable(g_timer0.p_ctrl);
 	bIsError |= R_GPT_PeriodSet(g_timer0.p_ctrl, 524287uL);

@@ -1,208 +1,185 @@
 /**
-  ******************************************************************************
   * @file    mc_state_machine.c
-  * @author  FTEX inc
   * @brief   This file provides firmware functions that implement the features
-  *          of the Motor Control State Machine component of the Motor Control SDK:
+  *          of the Motor Control State Machine component of the Motor Control application:
   *
   *           * Check that transition from one state to another is legal
   *           * Handle the fault processing
   *           * Provide accessor to State machine internal state
   *           * Provide accessor to error state
   *
-  ******************************************************************************
 	*/
 
 /* Includes ------------------------------------------------------------------*/
 #include "mc_state_machine.h"
 
-/**
-  * @brief  Initializes all the object variables, usually it has to be called
-  *         once right after object creation.
-  * @param pHandle pointer on the component instance to initialize.
-  * @retval none.
-  */
-void STM_Init( STM_Handle_t * pHandle )
+
+void MCStateMachine_Init( MotorStateMachineHandle_t * pHandle )
 {
 
-  pHandle->bState = IDLE;
+  pHandle->bState = M_IDLE;
   pHandle->hFaultNow = MC_NO_FAULTS;
   pHandle->hFaultOccurred = MC_NO_FAULTS;
 }
 
-/**
-  * @brief It submits the request for moving the state machine into the state
-  *        specified by bState (FAULT_NOW and FAUL_OVER are not handled by this
-  *        method). Accordingly with the current state, the command is really
-  *        executed (state machine set to bState) or discarded (no state
-  *        changes).
-  *        If requested state can't be reached the return value is false and the
-  *        MC_SW_ERROR is raised, but if requested state is IDLE_START,
-  *        IDLE_ALIGNMENT or ANY_STOP, that corresponds with the user actions:
-  *        Start Motor, Encoder Alignemnt and Stop Motor, the MC_SW_ERROR is
-  *        not raised.
-  * @param pHanlde pointer of type  STM_Handle_t.
-  * @param bState New requested state
-  * @retval bool It returns true if the state has been really set equal to
-  *         bState, false if the requested state can't be reached
-  */
-bool STM_NextState( STM_Handle_t * pHandle, State_t bState )
+
+bool MCStateMachine_NextState( MotorStateMachineHandle_t * pHandle, MotorState_t bState )
 {
   bool bChangeState = false;
-  State_t bCurrentState = pHandle->bState;
-  State_t bNewState = bCurrentState;
+  MotorState_t bCurrentState = pHandle->bState;
+  MotorState_t bNewState = bCurrentState;
 
   switch ( bCurrentState )
   {
-    case ICLWAIT:
-      if ( bState == IDLE )
+    case M_ICLWAIT:
+      if ( bState == M_IDLE )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
-    case IDLE:
-      if ( ( bState == IDLE_START ) || ( bState == IDLE_ALIGNMENT )
-           || ( bState == ICLWAIT ) )
-      {
-        bNewState = bState;
-        bChangeState = true;
-      }
-      break;
-
-    case IDLE_ALIGNMENT:
-      if ( ( bState == ANY_STOP ) || ( bState == ALIGN_CHARGE_BOOT_CAP )
-           || ( bState == ALIGN_OFFSET_CALIB ) )
+    case M_IDLE:
+      if ( ( bState == M_IDLE_START ) || ( bState == M_IDLE_ALIGNMENT )
+           || ( bState == M_ICLWAIT ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case ALIGN_CHARGE_BOOT_CAP:
-      if ( ( bState == ALIGN_OFFSET_CALIB ) || ( bState == ANY_STOP ) )
+    case M_IDLE_ALIGNMENT:
+      if ( ( bState == M_ANY_STOP ) || ( bState == M_ALIGN_CHARGE_BOOT_CAP )
+           || ( bState == M_ALIGN_OFFSET_CALIB ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case ALIGN_OFFSET_CALIB:
-      if ( ( bState == ALIGN_CLEAR ) || ( bState == ANY_STOP ) )
+    case M_ALIGN_CHARGE_BOOT_CAP:
+      if ( ( bState == M_ALIGN_OFFSET_CALIB ) || ( bState == M_ANY_STOP ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case ALIGN_CLEAR:
-      if ( ( bState == ALIGNMENT ) || ( bState == ANY_STOP ) )
+    case M_ALIGN_OFFSET_CALIB:
+      if ( ( bState == M_ALIGN_CLEAR ) || ( bState == M_ANY_STOP ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case ALIGNMENT:
-      if ( bState == ANY_STOP )
+    case M_ALIGN_CLEAR:
+      if ( ( bState == M_ALIGNMENT ) || ( bState == M_ANY_STOP ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case IDLE_START:
-      if ( ( bState == ANY_STOP ) || ( bState == CHARGE_BOOT_CAP ) ||
-           ( bState == START ) ||
-           ( bState == OFFSET_CALIB ) || ( bState == IDLE_ALIGNMENT ) )
+    case M_ALIGNMENT:
+      if ( bState == M_ANY_STOP )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case CHARGE_BOOT_CAP:
-      if ( ( bState == OFFSET_CALIB ) || ( bState == ANY_STOP ) )
+    case M_IDLE_START:
+      if ( ( bState == M_ANY_STOP ) || ( bState == M_CHARGE_BOOT_CAP ) ||
+           ( bState == M_START ) ||
+           ( bState == M_OFFSET_CALIB ) || ( bState == M_IDLE_ALIGNMENT ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case OFFSET_CALIB:
-      if ( ( bState == CLEAR ) || ( bState == ANY_STOP ) || ( bState == WAIT_STOP_MOTOR ) )
+    case M_CHARGE_BOOT_CAP:
+      if ( ( bState == M_OFFSET_CALIB ) || ( bState == M_ANY_STOP ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-     case WAIT_STOP_MOTOR:
-      if ( ( bState == CLEAR ) || ( bState == ANY_STOP ) )
+    case M_OFFSET_CALIB:
+      if ( ( bState == M_CLEAR ) || ( bState == M_ANY_STOP ) || ( bState == M_WAIT_STOP_MOTOR ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case CLEAR:
-      if ( ( bState == START ) || ( bState == ANY_STOP ) )
+     case M_WAIT_STOP_MOTOR:
+      if ( ( bState == M_CLEAR ) || ( bState == M_ANY_STOP ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case START:
-      if ( ( bState == SWITCH_OVER ) || ( bState == ANY_STOP ) || (bState == START_RUN) )
+    case M_CLEAR:
+      if ( ( bState == M_START ) || ( bState == M_ANY_STOP ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case SWITCH_OVER:
-      if ( ( bState == START ) || ( bState == ANY_STOP ) || (bState == START_RUN) )
+    case M_START:
+      if ( ( bState == M_SWITCH_OVER ) || ( bState == M_ANY_STOP ) || (bState == M_START_RUN) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case START_RUN:
-      if ( ( bState == RUN ) || ( bState == ANY_STOP ) )
+    case M_SWITCH_OVER:
+      if ( ( bState == M_START ) || ( bState == M_ANY_STOP ) || (bState == M_START_RUN) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case RUN:
-      if ( bState == ANY_STOP )
+    case M_START_RUN:
+      if ( ( bState == M_RUN ) || ( bState == M_ANY_STOP ) )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case ANY_STOP:
-      if ( bState == STOP )
+    case M_RUN:
+      if ( bState == M_ANY_STOP )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case STOP:
-      if ( bState == STOP_IDLE )
+    case M_ANY_STOP:
+      if ( bState == M_STOP )
       {
         bNewState = bState;
         bChangeState = true;
       }
       break;
 
-    case STOP_IDLE:
-      if ( ( bState == IDLE ) || ( bState == ICLWAIT ) )
+    case M_STOP:
+      if ( bState == M_STOP_IDLE )
+      {
+        bNewState = bState;
+        bChangeState = true;
+      }
+      break;
+
+    case M_STOP_IDLE:
+      if ( ( bState == M_IDLE ) || ( bState == M_ICLWAIT ) )
       {
         bNewState = bState;
         bChangeState = true;
@@ -218,83 +195,62 @@ bool STM_NextState( STM_Handle_t * pHandle, State_t bState )
   }
   else
   {
-    if ( !( ( bState == IDLE_START ) || ( bState == IDLE_ALIGNMENT )
-            || ( bState == ANY_STOP ) ) )
+    if ( !( ( bState == M_IDLE_START ) || ( bState == M_IDLE_ALIGNMENT )
+            || ( bState == M_ANY_STOP ) ) )
     {
       /* If new state is not a user command START/STOP raise a software error */
-      STM_FaultProcessing( pHandle, MC_SW_ERROR, 0u );
+      MCStateMachine_FaultProcessing( pHandle, MC_SW_ERROR, 0u );
     }
   }
 
   return ( bChangeState );
 }
 
-/**
-  * @brief It clocks both HW and SW faults processing and update the state
-  *        machine accordingly with hSetErrors, hResetErrors and present state.
-  *        Refer to State_t description for more information about fault states.
-  * @param pHanlde pointer of type  STM_Handle_t
-  * @param hSetErrors Bit field reporting faults currently present
-  * @param hResetErrors Bit field reporting faults to be cleared
-  * @retval State_t New state machine state after fault processing
-  */
-State_t STM_FaultProcessing( STM_Handle_t * pHandle, uint16_t hSetErrors, uint16_t
+
+MotorState_t MCStateMachine_FaultProcessing( MotorStateMachineHandle_t * pHandle, uint16_t hSetErrors, uint16_t
                              hResetErrors )
 {
-  State_t LocalState =  pHandle->bState;
+  MotorState_t LocalState =  pHandle->bState;
 
   /* Set current errors */
   pHandle->hFaultNow = ( pHandle->hFaultNow | hSetErrors ) & ( ~hResetErrors );
   pHandle->hFaultOccurred |= hSetErrors;
 
-  if ( LocalState == FAULT_NOW )
+  if ( LocalState == M_FAULT_NOW )
   {
     if ( pHandle->hFaultNow == MC_NO_FAULTS )
     {
-      pHandle->bState = FAULT_OVER;
-      LocalState = FAULT_OVER;
+      pHandle->bState = M_FAULT_OVER;
+      LocalState = M_FAULT_OVER;
     }
   }
   else
   {
     if ( pHandle->hFaultNow != MC_NO_FAULTS )
     {
-      pHandle->bState = FAULT_NOW;
-      LocalState = FAULT_NOW;
+      pHandle->bState = M_FAULT_NOW;
+      LocalState = M_FAULT_NOW;
     }
   }
 
   return ( LocalState );
 }
 
-/**
-  * @brief  Returns the current state machine state
-  * @param  pHanlde pointer of type  STM_Handle_t
-  * @retval State_t Current state machine state
-  */
-State_t STM_GetState( STM_Handle_t * pHandle )
+
+MotorState_t MCStateMachine_GetState( MotorStateMachineHandle_t * pHandle )
 {
   return ( pHandle->bState );
 }
 
 
-/**
-  * @brief It reports to the state machine that the fault state has been
-  *        acknowledged by the user. If the state machine is in FAULT_OVER state
-  *        then it is moved into STOP_IDLE and the bit field variable containing
-  *        information about the faults historically occured is cleared.
-  *        The method call is discarded if the state machine is not in FAULT_OVER
-  * @param pHanlde pointer of type  STM_Handle_t
-  * @retval bool true if the state machine has been moved to IDLE, false if the
-  *        method call had no effects
-  */
-bool STM_FaultAcknowledged( STM_Handle_t * pHandle )
+
+bool MCStateMachine_FaultAcknowledged( MotorStateMachineHandle_t * pHandle )
 {
   bool bToBeReturned = false;
 
-  if ( pHandle->bState == FAULT_OVER )
+  if ( pHandle->bState == M_FAULT_OVER )
   {
-    pHandle->bState = STOP_IDLE;
+    pHandle->bState = M_STOP_IDLE;
     pHandle->hFaultOccurred = MC_NO_FAULTS;
     bToBeReturned = true;
   }
@@ -303,18 +259,8 @@ bool STM_FaultAcknowledged( STM_Handle_t * pHandle )
 }
 
 
-/**
-  * @brief It returns two 16 bit fields containing information about both faults
-  *        currently present and faults historically occurred since the state
-  *        machine has been moved into state
-  * @param pHanlde pointer of type  STM_Handle_t.
-  * @retval uint32_t  Two 16 bit fields: in the most significant half are stored
-  *         the information about currently present faults. In the least
-  *         significant half are stored the information about the faults
-  *         historically occurred since the state machine has been moved into
-  *         FAULT_NOW state
-  */
-uint32_t STM_GetFaultState( STM_Handle_t * pHandle )
+
+uint32_t MCStateMachine_GetFaultState( MotorStateMachineHandle_t * pHandle )
 {
   uint32_t LocalFaultState;
 

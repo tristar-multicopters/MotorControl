@@ -1,46 +1,30 @@
 /**
-  ******************************************************************************
   * @file    virtual_speed_sensor.c
-  * @author  FTEX inc
   * @brief   This file provides firmware functions that implement the features
-  *          of the Virtual Speed Sensor component of the Motor Control SDK.
+  *          of the Virtual Speed Sensor component of the Motor Control application.
   *
-  ******************************************************************************
 */
 
 /* Includes ------------------------------------------------------------------*/
 #include "virtual_speed_sensor.h"
 
-/**
-* @brief  Software initialization of VirtualSpeedSensor component
-* @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-* @retval none
-*/
-void VSS_Init( VirtualSpeedSensor_Handle_t * pHandle )
-{
-#ifdef FASTDIV
-  FD_Init( &( pHandle->fd ) );
-#endif
 
-  VSS_Clear( pHandle );
+void VirtualSpdSensor_Init( VirtualSpeedSensor_Handle_t * pHandle )
+{
+  VirtualSpdSensor_Clear( pHandle );
 }
 
-/**
-* @brief  Software initialization of VSS object to be performed at each restart
-*         of the motor.
-* @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-* @retval none
-*/
-void VSS_Clear( VirtualSpeedSensor_Handle_t * pHandle )
+
+void VirtualSpdSensor_Clear( VirtualSpeedSensor_Handle_t * pHandle )
 {
 
-  pHandle->_Super.bSpeedErrorNumber = 0u;
-  pHandle->_Super.hElAngle = 0;
-  pHandle->_Super.hMecAngle = 0;
-  pHandle->_Super.hAvrMecSpeedUnit = 0;
-  pHandle->_Super.hElSpeedDpp = 0;
-  pHandle->_Super.hMecAccelUnitP = 0;
-  pHandle->_Super.bSpeedErrorNumber = 0u;
+  pHandle->Super.bSpeedErrorNumber = 0u;
+  pHandle->Super.hElAngle = 0;
+  pHandle->Super.hMecAngle = 0;
+  pHandle->Super.hAvrMecSpeedUnit = 0;
+  pHandle->Super.hElSpeedDpp = 0;
+  pHandle->Super.hMecAccelUnitP = 0;
+  pHandle->Super.bSpeedErrorNumber = 0u;
 
   pHandle->wElAccDppP32 = 0;
   pHandle->wElSpeedDpp32 = 0;
@@ -53,22 +37,10 @@ void VSS_Clear( VirtualSpeedSensor_Handle_t * pHandle )
   pHandle->bTransitionLocked = false;
 
   pHandle->bCopyObserver = false;
-
-#ifdef FASTDIV
-  /* (Fast division optimization for cortex-M0 micros)*/
-  /* Dummy division to speed up next executions */
-  FD_FastDiv( &( pHandle->fd ), 1, ( int32_t )( pHandle->_Super.bElToMecRatio ) );
-  FD_FastDiv( &( pHandle->fd ), 1, ( int32_t )( pHandle->hTransitionSteps ) );
-#endif
 }
 
-/**
-* @brief  Update the rotor electrical angle integrating the last setled
-*         instantaneous electrical speed express in dpp.
-* @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-* @retval int16_t Measured electrical angle in s16degree format.
-*/
-int16_t VSS_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, void * pInputVars_str )
+
+int16_t VirtualSpdSensor_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, void * pInputVars_str )
 {
 
   int16_t hRetAngle;
@@ -83,16 +55,10 @@ int16_t VSS_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, void * pInputVar
   }
   else
   {
-    pHandle->hElAngleAccu += pHandle->_Super.hElSpeedDpp;
+    pHandle->hElAngleAccu += pHandle->Super.hElSpeedDpp;
 
-#ifdef FASTDIV
-    pHandle->_Super.hMecAngle += ( int16_t )( FD_FastDiv( &( pHandle->fd ),
-                                 ( int32_t )pHandle->_Super.hElSpeedDpp,
-                                 ( int32_t )pHandle->_Super.bElToMecRatio ) );
-#else
-    pHandle->_Super.hMecAngle += pHandle->_Super.hElSpeedDpp /
-                                 ( int16_t )pHandle->_Super.bElToMecRatio;
-#endif
+    pHandle->Super.hMecAngle += pHandle->Super.hElSpeedDpp /
+                                 ( int16_t )pHandle->Super.bElToMecRatio;
 
     if ( pHandle->bTransitionStarted == true )
     {
@@ -100,13 +66,13 @@ int16_t VSS_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, void * pInputVar
       {
         hRetAngle = *( int16_t * )pInputVars_str;
         pHandle->bTransitionEnded = true;
-        pHandle->_Super.bSpeedErrorNumber = 0u;
+        pHandle->Super.bSpeedErrorNumber = 0u;
       }
       else
       {
         pHandle->hTransitionRemainingSteps--;
 
-        if ( pHandle->_Super.hElSpeedDpp >= 0 )
+        if ( pHandle->Super.hElSpeedDpp >= 0 )
         {
           hAngleDiff = *( int16_t * )pInputVars_str - pHandle->hElAngleAccu;
         }
@@ -118,13 +84,9 @@ int16_t VSS_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, void * pInputVar
 
         wAux = ( int32_t )hAngleDiff * pHandle->hTransitionRemainingSteps;
 
-#ifdef FASTDIV
-        hAngleCorr = ( int16_t )( FD_FastDiv( &( pHandle->fd ),
-                                              wAux,
-                                              ( int32_t )( pHandle->hTransitionSteps ) ) );
-#else
+
         hAngleCorr = ( int16_t )( wAux / pHandle->hTransitionSteps );
-#endif
+
 
         hAngleCorr *= hSignCorr;
 
@@ -152,41 +114,26 @@ int16_t VSS_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, void * pInputVar
     }
   }
 
-  pHandle->_Super.hElAngle = hRetAngle;
+  pHandle->Super.hElAngle = hRetAngle;
   return hRetAngle;
 }
 
-/**
-  * @brief  This method must be called with the same periodicity
-  *         on which speed control is executed.
-  *         This method computes and stores rotor instantaneous el speed (express
-  *         in dpp considering the measurement frequency) in order to provide it
-  *         to SPD_CalcElAngle function and SPD_GetElAngle.
-  *         Then compute store and return - through parameter
-  *         hMecSpeedUnit - the rotor average mech speed, expressed in the unit
-  *         defined by #SPEED_UNIT. Then return the reliability state of the
-  *         sensor (always true).
-  * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @param  hMecSpeedUnit pointer to int16_t, used to return the rotor average
-  *         mechanical speed (SPED_UNIT)
-  * @retval true = sensor information is reliable
-  *         false = sensor information is not reliable
-  */
-bool VSS_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandle, int16_t * hMecSpeedUnit )
+
+bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandle, int16_t * hMecSpeedUnit )
 {
   bool SpeedSensorReliability = false;
 
   if ( pHandle->hRemainingStep > 1u )
   {
     pHandle->wElSpeedDpp32 += pHandle->wElAccDppP32;
-    pHandle->_Super.hElSpeedDpp = ( int16_t )( pHandle->wElSpeedDpp32 / 65536 );
+    pHandle->Super.hElSpeedDpp = ( int16_t )( pHandle->wElSpeedDpp32 / 65536 );
 
     /* Convert dpp into MecUnit */
-    *hMecSpeedUnit = ( int16_t )( ( ( int32_t )pHandle->_Super.hElSpeedDpp *
-                                    ( int32_t )pHandle->_Super.hMeasurementFrequency * SPEED_UNIT ) /
-                                  ( ( int32_t )pHandle->_Super.DPPConvFactor * ( int32_t )pHandle->_Super.bElToMecRatio ) );
+    *hMecSpeedUnit = ( int16_t )( ( ( int32_t )pHandle->Super.hElSpeedDpp *
+                                    ( int32_t )pHandle->Super.hMeasurementFrequency * SPEED_UNIT ) /
+                                  ( ( int32_t )pHandle->Super.DPPConvFactor * ( int32_t )pHandle->Super.bElToMecRatio ) );
 
-    pHandle->_Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
+    pHandle->Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
 
     pHandle->hRemainingStep--;
   }
@@ -194,62 +141,45 @@ bool VSS_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandle, int16_t * 
   {
     *hMecSpeedUnit = pHandle->hFinalMecSpeedUnit;
 
-    pHandle->_Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
+    pHandle->Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
 
-    pHandle->_Super.hElSpeedDpp = ( int16_t )( ( ( int32_t )( *hMecSpeedUnit ) *
-                                  ( int32_t ) ( pHandle->_Super.DPPConvFactor) ) /
-                                  ( ( int32_t )SPEED_UNIT * ( int32_t )pHandle->_Super.hMeasurementFrequency ) );
+    pHandle->Super.hElSpeedDpp = ( int16_t )( ( ( int32_t )( *hMecSpeedUnit ) *
+                                  ( int32_t ) ( pHandle->Super.DPPConvFactor) ) /
+                                  ( ( int32_t )SPEED_UNIT * ( int32_t )pHandle->Super.hMeasurementFrequency ) );
 
-    pHandle->_Super.hElSpeedDpp *= ( int16_t )( pHandle->_Super.bElToMecRatio );
+    pHandle->Super.hElSpeedDpp *= ( int16_t )( pHandle->Super.bElToMecRatio );
 
     pHandle->hRemainingStep = 0u;
   }
   else
   {
-    *hMecSpeedUnit = pHandle->_Super.hAvrMecSpeedUnit;
+    *hMecSpeedUnit = pHandle->Super.hAvrMecSpeedUnit;
   }
   /* If the transition is not done yet, we already know that speed is not reliable */
   if ( pHandle->bTransitionEnded == false )
   {
-    pHandle->_Super.bSpeedErrorNumber = pHandle->_Super.bMaximumSpeedErrorsNumber;
+    pHandle->Super.bSpeedErrorNumber = pHandle->Super.bMaximumSpeedErrorsNumber;
     SpeedSensorReliability = false;
   }
   else
   {
-    SpeedSensorReliability = SPD_IsMecSpeedReliable ( &pHandle->_Super, hMecSpeedUnit );
+    SpeedSensorReliability = SpdPosFdbk_CalcReliability ( &pHandle->Super, hMecSpeedUnit );
   }
 
   return ( SpeedSensorReliability );
 }
 
-/**
-  * @brief  It is used to set istantaneous information on VSS mechanical and
-  *         electrical angle.
-  * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @param  hMecAngle istantaneous measure of rotor mechanical angle
-  * @retval none
-  */
-void VSS_SetMecAngle( VirtualSpeedSensor_Handle_t * pHandle, int16_t hMecAngle )
+
+void VirtualSpdSensor_SetMecAngle( VirtualSpeedSensor_Handle_t * pHandle, int16_t hMecAngle )
 {
 
   pHandle->hElAngleAccu = hMecAngle;
-  pHandle->_Super.hMecAngle = pHandle->hElAngleAccu / ( int16_t )pHandle->_Super.bElToMecRatio;
-  pHandle->_Super.hElAngle = hMecAngle;
+  pHandle->Super.hMecAngle = pHandle->hElAngleAccu / ( int16_t )pHandle->Super.bElToMecRatio;
+  pHandle->Super.hElAngle = hMecAngle;
 }
 
-/**
-  * @brief  Set the mechanical acceleration of virtual sensor. This acceleration
-            is defined starting from current mechanical speed, final mechanical
-            speed expressed in 0.1Hz and duration expressed in milliseconds.
-  * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @param  hFinalMecSpeedUnit mechanical speed  assumed by
-            the virtual sensor at the end of the duration. Expressed in the unit defined
-            by #SPEED_UNIT.
-  * @param  hDurationms Duration expressed in ms. It can be 0 to apply
-            instantaneous the final speed.
-  * @retval none
-  */
-void  VSS_SetMecAcceleration( VirtualSpeedSensor_Handle_t * pHandle, int16_t  hFinalMecSpeedUnit,
+
+void  VirtualSpdSensor_SetMecAcceleration( VirtualSpeedSensor_Handle_t * pHandle, int16_t  hFinalMecSpeedUnit,
                               uint16_t hDurationms )
 {
 
@@ -262,13 +192,13 @@ void  VSS_SetMecAcceleration( VirtualSpeedSensor_Handle_t * pHandle, int16_t  hF
   {
     if ( hDurationms == 0u )
     {
-      pHandle->_Super.hAvrMecSpeedUnit = hFinalMecSpeedUnit;
+      pHandle->Super.hAvrMecSpeedUnit = hFinalMecSpeedUnit;
 
-      pHandle->_Super.hElSpeedDpp = ( int16_t )( ( ( int32_t )( hFinalMecSpeedUnit ) *
-                                    ( int32_t )( pHandle->_Super.DPPConvFactor) ) /
-                                    ( ( int32_t )SPEED_UNIT * ( int32_t )pHandle->_Super.hMeasurementFrequency ) );
+      pHandle->Super.hElSpeedDpp = ( int16_t )( ( ( int32_t )( hFinalMecSpeedUnit ) *
+                                    ( int32_t )( pHandle->Super.DPPConvFactor) ) /
+                                    ( ( int32_t )SPEED_UNIT * ( int32_t )pHandle->Super.hMeasurementFrequency ) );
 
-      pHandle->_Super.hElSpeedDpp *= ( int16_t )( pHandle->_Super.bElToMecRatio );
+      pHandle->Super.hElSpeedDpp *= ( int16_t )( pHandle->Super.bElToMecRatio );
 
       pHandle->hRemainingStep = 0u;
 
@@ -284,31 +214,26 @@ void  VSS_SetMecAcceleration( VirtualSpeedSensor_Handle_t * pHandle, int16_t  hF
 
       pHandle->hRemainingStep = hNbrStep;
 
-      hCurrentMecSpeedDpp = pHandle->_Super.hElSpeedDpp /
-                            ( int16_t )pHandle->_Super.bElToMecRatio;
+      hCurrentMecSpeedDpp = pHandle->Super.hElSpeedDpp /
+                            ( int16_t )pHandle->Super.bElToMecRatio;
 
-      hFinalMecSpeedDpp = ( int16_t )( ( ( int32_t )hFinalMecSpeedUnit * ( int32_t )( pHandle->_Super.DPPConvFactor) ) /
-                                       ( ( int32_t )SPEED_UNIT * ( int32_t )pHandle->_Super.hMeasurementFrequency ) );
+      hFinalMecSpeedDpp = ( int16_t )( ( ( int32_t )hFinalMecSpeedUnit * ( int32_t )( pHandle->Super.DPPConvFactor) ) /
+                                       ( ( int32_t )SPEED_UNIT * ( int32_t )pHandle->Super.hMeasurementFrequency ) );
 
       wMecAccDppP32 = ( ( ( int32_t )hFinalMecSpeedDpp - ( int32_t )hCurrentMecSpeedDpp ) *
                         ( int32_t )65536 ) / ( int32_t )hNbrStep;
 
-      pHandle->wElAccDppP32 = wMecAccDppP32 * ( int16_t )pHandle->_Super.bElToMecRatio;
+      pHandle->wElAccDppP32 = wMecAccDppP32 * ( int16_t )pHandle->Super.bElToMecRatio;
 
       pHandle->hFinalMecSpeedUnit = hFinalMecSpeedUnit;
 
-      pHandle->wElSpeedDpp32 = ( int32_t )pHandle->_Super.hElSpeedDpp * ( int32_t )65536;
+      pHandle->wElSpeedDpp32 = ( int32_t )pHandle->Super.hElSpeedDpp * ( int32_t )65536;
     }
   }
 }
 
-/**
-  * @brief  Checks if the ramp executed after a VSPD_SetMecAcceleration command
-  *         has been completed.
-  * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @retval bool true if the ramp is completed, otherwise false.
-  */
-bool VSS_RampCompleted( VirtualSpeedSensor_Handle_t * pHandle )
+
+bool VirtualSpdSensor_RampCompleted( VirtualSpeedSensor_Handle_t * pHandle )
 {
   bool retVal = false;
   if ( pHandle->hRemainingStep == 0u )
@@ -318,29 +243,14 @@ bool VSS_RampCompleted( VirtualSpeedSensor_Handle_t * pHandle )
   return retVal;
 }
 
-/**
-  * @brief  Get the final speed of last setled ramp of virtual sensor expressed
-            in 0.1Hz.
-  * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @retval none
-  */
-int16_t  VSS_GetLastRampFinalSpeed( VirtualSpeedSensor_Handle_t * pHandle )
+
+int16_t  VirtualSpdSensor_GetLastRampFinalSpeed( VirtualSpeedSensor_Handle_t * pHandle )
 {
   return pHandle->hFinalMecSpeedUnit;
 }
 
-/**
-  * @brief  Set the command to Start the transition phase from VirtualSpeedSensor
-            to other SpeedSensor.
-            Transition is to be considered ended when Sensor information is
-            declared 'Reliable' or if function returned value is false
-  * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @param  bool true to Start the transition phase, false has no effect
-  * @retval bool true if Transition phase is enabled (started or not), false if
-            transition has been triggered but it's actually disabled
-            (parameter hTransitionSteps = 0)
-  */
-bool VSS_SetStartTransition( VirtualSpeedSensor_Handle_t * pHandle, bool bCommand )
+
+bool VirtualSpdSensor_SetStartTransition( VirtualSpeedSensor_Handle_t * pHandle, bool bCommand )
 {
   bool bAux = true;
   if ( bCommand == true )
@@ -350,19 +260,15 @@ bool VSS_SetStartTransition( VirtualSpeedSensor_Handle_t * pHandle, bool bComman
     if ( pHandle->hTransitionSteps == 0 )
     {
       pHandle->bTransitionEnded = true;
-      pHandle->_Super.bSpeedErrorNumber = 0u;
+      pHandle->Super.bSpeedErrorNumber = 0u;
       bAux = false;
     }
   }
   return bAux;
 }
 
-/**
-  * @brief  Return the status of the transition phase.
-  * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @retval bool true if Transition phase is ongoing, false otherwise.
-  */
-bool VSS_IsTransitionOngoing( VirtualSpeedSensor_Handle_t * pHandle )
+
+bool VirtualSpdSensor_IsTransitionOngoing( VirtualSpeedSensor_Handle_t * pHandle )
 {
   uint16_t hTS = 0u, hTE = 0u, hAux;
   bool retVal = false;
@@ -382,31 +288,22 @@ bool VSS_IsTransitionOngoing( VirtualSpeedSensor_Handle_t * pHandle )
   return ( retVal );
 }
 
-bool VSS_TransitionEnded( VirtualSpeedSensor_Handle_t * pHandle )
+bool VirtualSpdSensor_TransitionEnded( VirtualSpeedSensor_Handle_t * pHandle )
 {
     return pHandle->bTransitionEnded;
 }
 
-/**
-  * @brief  It set istantaneous information on rotor electrical angle copied by state observer;
-  * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @retval none
-  */
-void VSS_SetCopyObserver( VirtualSpeedSensor_Handle_t * pHandle )
+
+void VirtualSpdSensor_SetCopyObserver( VirtualSpeedSensor_Handle_t * pHandle )
 {
   pHandle->bCopyObserver = true;
 }
 
-/**
-  * @brief  It  set istantaneous information on rotor electrical angle.
-  * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @param  hElAngle istantaneous measure of rotor electrical angle (s16degrees)
-  * @retval none
-  */
-void VSS_SetElAngle( VirtualSpeedSensor_Handle_t * pHandle, int16_t hElAngle )
+
+void VirtualSpdSensor_SetElAngle( VirtualSpeedSensor_Handle_t * pHandle, int16_t hElAngle )
 {
   pHandle->hElAngleAccu = hElAngle;
-  pHandle->_Super.hElAngle = hElAngle;
+  pHandle->Super.hElAngle = hElAngle;
 }
 
 

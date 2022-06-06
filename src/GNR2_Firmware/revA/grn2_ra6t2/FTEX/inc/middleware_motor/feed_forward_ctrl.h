@@ -1,10 +1,7 @@
 /**
-  ******************************************************************************
   * @file    feed_forward_ctrl.h
-  * @author  FTEX inc
   * @brief   This file contains all definitions and functions prototypes for the
-  *          Feed Forward Control component of the Motor Control SDK.
-  ******************************************************************************
+  *          Feed Forward Control component of the Motor Control application.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -29,13 +26,13 @@ typedef struct
   qd_t   Vqdff;                 /**< Feed Forward controller @f$I_{qd}@f$ contribution to @f$V_{qd}@f$ */
   qd_t   VqdPIout;              /**< @f$V_{qd}@f$ as output by PID controller */
   qd_t   VqdAvPIout;            /**< Averaged @f$V_{qd}@f$ as output by PID controller */
-  int32_t  wConstant_1D;                   /**< Feed forward default constant for the @f$d@f$ axis */
-  int32_t  wConstant_1Q;                   /**< Feed forward default constant for the @f$q@f$ axis */
-  int32_t  wConstant_2;                    /**< Default constant value used by Feed-Forward algorithm */
-  BusVoltageSensor_Handle_t * pBus_Sensor; /**< Related bus voltage sensor */
-  PID_Handle_t * pPID_q;                   /*!< Related PI for @f$I_{q}@f$ regulator */
-  PID_Handle_t * pPID_d;                   /*!< Related PI for @f$I_{d}@f$ regulator */
-  uint16_t hVqdLowPassFilterBW;            /**< Configures the @f$V_{qd}@f$
+  int32_t  wConstant1D;                   /**< Feed forward default constant for the @f$d@f$ axis */
+  int32_t  wConstant1Q;                   /**< Feed forward default constant for the @f$q@f$ axis */
+  int32_t  wConstant2;                    /**< Default constant value used by Feed-Forward algorithm */
+  BusVoltageSensorHandle_t * pBusSensor; /**< Related bus voltage sensor */
+  PIDHandle_t * pPIDq;                   /*!< Related PI for @f$I_{q}@f$ regulator */
+  PIDHandle_t * pPIDd;                   /*!< Related PI for @f$I_{d}@f$ regulator */
+  uint16_t hVqdLowPassFilterBw;            /**< Configures the @f$V_{qd}@f$
                                                 first order software filter bandwidth.
 
                                                 If #FULL_MISRA_COMPLIANCY is defined, this field must be
@@ -50,18 +47,15 @@ typedef struct
                                                 call rate [Hz]}{FilterBandwidth[Hz]})
                                                 @f]
                                                 */
-  int32_t  wDefConstant_1D;                /**< Feed forward default constant for d axes */
-  int32_t  wDefConstant_1Q;                /**< Feed forward default constant for q axes */
-  int32_t  wDefConstant_2;                 /**< Default constant value used by
+  int32_t  wDefConstant1D;                /**< Feed forward default constant for d axes */
+  int32_t  wDefConstant1Q;                /**< Feed forward default constant for q axes */
+  int32_t  wDefConstant2;                 /**< Default constant value used by
                                                 Feed-Forward algorithm*/
-  uint16_t hVqdLowPassFilterBWLOG;         /**< hVqdLowPassFilterBW expressed as power of 2.
+  uint16_t hVqdLowPassFilterBwLog;         /**< hVqdLowPassFilterBw expressed as power of 2.
                                                 E.g. if gain divisor is 512 the value
                                                 must be 9 because 2^9 = 512 */
 
-} FF_Handle_t;
-
-
-
+} FeedforwardHandle_t;
 
 
 /**
@@ -72,8 +66,8 @@ typedef struct
   * @param  pPIDIq Iq PID.
   * @retval none
   */
-void FF_Init( FF_Handle_t * pHandle, BusVoltageSensor_Handle_t * pBusSensor, PID_Handle_t * pPIDId,
-              PID_Handle_t * pPIDIq );
+void Feedforward_Init( FeedforwardHandle_t * pHandle, BusVoltageSensorHandle_t * pBusSensor, PIDHandle_t * pPIDId,
+              PIDHandle_t * pPIDIq );
 
 /**
   * @brief  It should be called before each motor restart and clears the Flux
@@ -81,7 +75,7 @@ void FF_Init( FF_Handle_t * pHandle, BusVoltageSensor_Handle_t * pBusSensor, PID
   * @param  pHandle Feed forward init strutcture.
   * @retval none
   */
-void FF_Clear( FF_Handle_t * pHandle );
+void Feedforward_Clear( FeedforwardHandle_t * pHandle );
 
 /**
   * @brief  It implements feed-forward controller by computing new Vqdff value.
@@ -90,10 +84,10 @@ void FF_Clear( FF_Handle_t * pHandle );
   * @param  pHandle Feed forward  strutcture.
   * @param  Iqdref Idq reference componets used to calcupate the feed forward
   *         action.
-  * @param  pSTC  Speed sensor.
+  * @param  pSpeedTorqCtrl  Speed sensor.
   * @retval none
   */
-void FF_VqdffComputation( FF_Handle_t * pHandle, qd_t Iqdref, SpeednTorqCtrl_Handle_t * pSTC );
+void Feedforward_VqdffComputation( FeedforwardHandle_t * pHandle, qd_t Iqdref, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl );
 
 /**
   * @brief  It return the Vqd componets fed in input plus the feed forward
@@ -102,41 +96,41 @@ void FF_VqdffComputation( FF_Handle_t * pHandle, qd_t Iqdref, SpeednTorqCtrl_Han
   * @param  Vqd Initial value of Vqd to be manipulated by FF.
   * @retval none
   */
-qd_t FF_VqdConditioning( FF_Handle_t * pHandle, qd_t Vqd );
+qd_t Feedforward_VqdConditioning( FeedforwardHandle_t * pHandle, qd_t Vqd );
 
 /**
   * @brief  It low-pass filters the Vqd voltage coming from the speed PI. Filter
-  *         bandwidth depends on hVqdLowPassFilterBW parameter.
+  *         bandwidth depends on hVqdLowPassFilterBw parameter.
   * @param  pHandle Feed forward  strutcture.
   * @retval none
   */
-void FF_DataProcess( FF_Handle_t * pHandle );
+void Feedforward_DataProcess( FeedforwardHandle_t * pHandle );
 
 /**
   * @brief  Use this method to initialize FF vars in START_TO_RUN state.
   * @param  pHandle Feed forward  strutcture.
   * @retval none
   */
-void FF_InitFOCAdditionalMethods( FF_Handle_t * pHandle );
+void Feedforward_InitFOCAdditionalMethods( FeedforwardHandle_t * pHandle );
 
 /**
   * @brief  Use this method to set new values for the constants utilized by
   *         feed-forward algorithm.
   * @param  pHandle Feed forward  strutcture.
-  * @param  sNewConstants The FF_TuningStruct_t containing constants utilized by
+  * @param  sNewConstants The FeedforwardTuningStruct_t containing constants utilized by
   *         feed-forward algorithm.
   * @retval none
   */
-void FF_SetFFConstants( FF_Handle_t * pHandle, FF_TuningStruct_t sNewConstants );
+void Feedforward_SetFFConstants( FeedforwardHandle_t * pHandle, FeedforwardTuningStruct_t sNewConstants );
 
 /**
   * @brief  Use this method to get present values for the constants utilized by
   *         feed-forward algorithm.
   * @param  pHandle Feed forward  strutcture.
-  * @retval FF_TuningStruct_t Values of the constants utilized by
+  * @retval FeedforwardTuningStruct_t Values of the constants utilized by
   *         feed-forward algorithm.
   */
-FF_TuningStruct_t FF_GetFFConstants( FF_Handle_t * pHandle );
+FeedforwardTuningStruct_t Feedforward_GetFFConstants( FeedforwardHandle_t * pHandle );
 
 /**
   * @brief  Use this method to get present values for the Vqd feed-forward
@@ -144,7 +138,7 @@ FF_TuningStruct_t FF_GetFFConstants( FF_Handle_t * pHandle );
   * @param  pHandle Feed forward  strutcture.
   * @retval qd_t Vqd feed-forward components.
   */
-qd_t FF_GetVqdff( const FF_Handle_t * pHandle );
+qd_t Feedforward_GetVqdff( const FeedforwardHandle_t * pHandle );
 
 /**
   * @brief  Use this method to get values of the averaged output of qd axes
@@ -152,7 +146,7 @@ qd_t FF_GetVqdff( const FF_Handle_t * pHandle );
   * @param  pHandle Feed forward  strutcture.
   * @retval qd_t Averaged output of qd axes currents PI regulators.
   */
-qd_t FF_GetVqdAvPIout( const FF_Handle_t * pHandle );
+qd_t Feedforward_GetVqdAvPIout( const FeedforwardHandle_t * pHandle );
 
 #ifdef __cplusplus
 }

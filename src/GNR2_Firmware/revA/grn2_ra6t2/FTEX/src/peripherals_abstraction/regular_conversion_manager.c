@@ -1,10 +1,15 @@
 /**
-*  regular_conversion_manager.c
-*  This file provides firmware functions that implement the following features of the regular_conversion_manager component of the Motor Control SDK:
-*  Register conversion without callback
-*  Execute regular conv directly from Temperature and VBus sensors
-*  Manage conversion state machine
-*/ 
+  * @file    regular_conversion_manager.c
+  * @brief   This file provides firmware functions that implement the following features
+  *          of the regular_conversion_manager component of the Motor Control application:
+  *           Register conversion with or without callback
+  *           Execute regular conv directly from Temperature and VBus sensors
+  *           Execute user regular conversion scheduled by medium frequency task
+  *           Manage user conversion state machine
+  *           +
+  *           +
+  *
+*/
 
 #include "regular_conversion_manager.h"
 #include "mc_config.h"
@@ -22,7 +27,7 @@ typedef enum    // Used to define state of regular conversion manager
 // ========================== Private defines ============================== //
 
 #define RCM_MAX_CONV  4
-#define ADC_EOC_STATUS_FLAGS 0x02u 
+#define ADC_EOC_STATUS_FLAGS 0x02u
 #define ADC_EOC_CLEAR_FLAGS 0x1FEU
 
 // ========================== Private variables ============================ //
@@ -66,7 +71,7 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
             }
         }
         i++;
-    }    
+    }
     if (handle < RCM_MAX_CONV )
     {
         RCM_handle_array[handle] = regConv;  // Register a regular conversion in array.
@@ -80,14 +85,14 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
 
 /*
  * This function is used to flag start of scan group passed as input.
- * Depending of the state of RCM manager for previous conversion, this function can change state of RCM manager and flag availability of scanned channel data. 
+ * Depending of the state of RCM manager for previous conversion, this function can change state of RCM manager and flag availability of scanned channel data.
  * If the ADC is already in use for currents sensing, the regular conversion can not
  * be executed instantaneously but have to be scheduled in order to be executed.
  * inside HF task.
  * If it is possible to execute the conversion instantaneously, it will be executed.
  * Otherwise, the latest stored conversion result will be returned.
  *
- * NOTE: This function is not completely defined. RegConv_t.group will be used to register scan group in which the adc conversion will be placed. 
+ * NOTE: This function is not completely defined. RegConv_t.group will be used to register scan group in which the adc conversion will be placed.
  */
 void RCM_ExecuteGroupRegularConv(ScanGroup_t group)
 {
@@ -100,12 +105,12 @@ void RCM_ExecuteGroupRegularConv(ScanGroup_t group)
     {
         R_ADC_B->ADSTR[group] |= 1UL << 0;  // Set ADC start of conversion bit using software
         ConversionStatus = ONGOING;  // update status
-    }   
+    }
 }
 
 /*
  * This function is used to flag start of scan group 1.
- * Depending of the state of RCM manager for previous conversion, this function can change state of RCM manager and flag availability of scanned channel data. 
+ * Depending of the state of RCM manager for previous conversion, this function can change state of RCM manager and flag availability of scanned channel data.
  * If the ADC is already in use for currents sensing, the regular conversion can not
  * be executed instantaneously but have to be scheduled in order to be executed after currents sensing
  * inside HF task.
@@ -121,7 +126,7 @@ void RCM_ExecuteRegularConv(void)
     }
     else if(ConversionStatus == START | ConversionStatus == DATA_AVAILABLE)  // Check if conversion is enabled or if data is available from previous conversion
     {
-        R_ADC_B->ADSTR[GROUP_1] |= 1UL << 0;  // setting last bit in element 1 of array ADSSTR flags start of conversion in scan group 1. 
+        R_ADC_B->ADSTR[GROUP_1] |= 1UL << 0;  // setting last bit in element 1 of array ADSSTR flags start of conversion in scan group 1.
         ConversionStatus = ONGOING;
     }
 }
@@ -146,7 +151,7 @@ void RCM_EnableConv(void)
     if(ConversionStatus == STOPPED)
     {
         ConversionStatus = START;
-    }    
+    }
 }
 
 /**

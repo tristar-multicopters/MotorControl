@@ -1,24 +1,10 @@
 /**
-  ******************************************************************************
   * @file    flux_weakening_ctrl.h
-  * @author  FTEX inc
-  * @brief   This file provides firmware functions that implement the FLUX WEAKENING
-  *          CTRL component of the Motor Control SDK.
+  * @brief   This file provides firmware functions that implement the Flux Weakening
+  *          Control component of the Motor Control application.
   *
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  * @ingroup FluxWeakeningCtrl
-  */
+*/
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __FLUXWEAKENINGCTRL_H
 #define __FLUXWEAKENINGCTRL_H
@@ -30,30 +16,23 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
 #include "pid_regulator.h"
-/** @addtogroup MCSDK
-  * @{
-  */
-
-/** @addtogroup FluxWeakeningCtrl
-  * @{
-  */
 
 /**
   * @brief  Flux Weakening Control Component handle structure
   */
 typedef struct
 {
-  PID_Handle_t        *       pFluxWeakeningPID; /**< PI object used for flux weakening */
-  PID_Handle_t        *       pSpeedPID;         /**< PI object used for speed control */
-  uint16_t        hFW_V_Ref;              /**< Voltage reference, tenth of
+  PIDHandle_t *       pFluxWeakeningPID; /**< PI object used for flux weakening */
+  PIDHandle_t *       pSpeedPID;         /**< PI object used for speed control */
+  uint16_t        hFwVoltRef;              /**< Voltage reference, tenth of
                                                  percentage points */
-  qd_t            AvVolt_qd;              /**< Average stator voltage in qd
+  qd_t            AvVoltQd;              /**< Average stator voltage in qd
                                                  reference frame */
   int16_t         AvVoltAmpl;             /**< Average stator voltage amplitude */
   int16_t         hIdRefOffset;           /**< Id reference offset */
   uint16_t        hMaxModule;             /**< Circle limitation maximum allowed module */
 
-  uint16_t        hDefaultFW_V_Ref;       /**< Default flux weakening voltage reference,
+  uint16_t        hDefaultFwVoltRef;       /**< Default flux weakening voltage reference,
                                                tenth of percentage points*/
   int16_t         hDemagCurrent;          /**< Demagnetization current in s16A:
                                                Current(Amp) = [Current(s16A) * Vdd micro]/
@@ -62,23 +41,20 @@ typedef struct
                                                where:
                                                Current(Amp) = [Current(s16A) * Vdd micro]/
                                                [65536 * Rshunt * Aop] */
-  uint16_t        hVqdLowPassFilterBW;    /**< Use this parameter to configure the Vqd
+  uint16_t        hVqdLowPassFilterBw;    /**< Use this parameter to configure the Vqd
                                                first order software filter bandwidth.
-                                               hVqdLowPassFilterBW = FOC_CurrController
+                                               hVqdLowPassFilterBw = FOC_CurrController
                                                call rate [Hz]/ FilterBandwidth[Hz] in
                                                case FULL_MISRA_COMPLIANCY is defined.
                                                On the contrary, if FULL_MISRA_COMPLIANCY
-                                               is not defined, hVqdLowPassFilterBW is
+                                               is not defined, hVqdLowPassFilterBw is
                                                equal to log with base two of previous
                                                definition */
-  uint16_t        hVqdLowPassFilterBWLOG; /**< hVqdLowPassFilterBW expressed as power of 2.
+  uint16_t        hVqdLowPassFilterBwLog; /**< hVqdLowPassFilterBw expressed as power of 2.
                                                E.g. if gain divisor is 512 the value
                                                must be 9 because 2^9 = 512 */
-} FW_Handle_t;
+} FluxWeakeningHandle_t;
 
-/**
-* @}
-*/
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -90,16 +66,16 @@ typedef struct
   * @param  pPIDFluxWeakeningHandle FW PID structure.
   * @retval none.
   */
-void FW_Init( FW_Handle_t * pHandle, PID_Handle_t * pPIDSpeed, PID_Handle_t * pPIDFluxWeakeningHandle );
+void FluxWkng_Init( FluxWeakeningHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDFluxWeakeningHandle );
 
 /**
   * @brief  It should be called before each motor restart and clears the Flux
   *         weakening internal variables with the exception of the target
-  *         voltage (hFW_V_Ref).
+  *         voltage (hFwVoltRef).
   * @param  pHandle Flux weakening init strutcture.
   * @retval none
   */
-void FW_Clear( FW_Handle_t * pHandle );
+void FluxWkng_Clear( FluxWeakeningHandle_t * pHandle );
 
 /**
   * @brief  It computes Iqdref according the flux weakening algorithm.  Inputs
@@ -113,16 +89,16 @@ void FW_Clear( FW_Handle_t * pHandle );
   *         manipulated by the flux weakening algorithm.
   * @retval qd_t Computed Iqdref.
   */
-qd_t FW_CalcCurrRef( FW_Handle_t * pHandle, qd_t Iqdref );
+qd_t FluxWkng_CalcCurrRef( FluxWeakeningHandle_t * pHandle, qd_t Iqdref );
 
 /**
   * @brief  It low-pass filters both the Vqd voltage components. Filter
-  *         bandwidth depends on hVqdLowPassFilterBW parameter
+  *         bandwidth depends on hVqdLowPassFilterBw parameter
   * @param  pHandle Flux weakening init strutcture.
   * @param  Vqd Voltage componets to be averaged.
   * @retval none
   */
-void FW_DataProcess( FW_Handle_t * pHandle, qd_t Vqd );
+void FluxWkng_DataProcess( FluxWeakeningHandle_t * pHandle, qd_t Vqd );
 
 /**
   * @brief  Use this method to set a new value for the voltage reference used by
@@ -132,7 +108,7 @@ void FW_DataProcess( FW_Handle_t * pHandle, qd_t Vqd );
   *         points of available voltage.
   * @retval none
   */
-void FW_SetVref( FW_Handle_t * pHandle, uint16_t hNewVref );
+void FluxWkng_SetVref( FluxWeakeningHandle_t * pHandle, uint16_t hNewVref );
 
 /**
   * @brief  It returns the present value of target voltage used by flux
@@ -141,7 +117,7 @@ void FW_SetVref( FW_Handle_t * pHandle, uint16_t hNewVref );
   * @retval int16_t Present target voltage value expressed in tenth of
   *         percentage points of available voltage.
   */
-uint16_t FW_GetVref( FW_Handle_t * pHandle );
+uint16_t FluxWkng_GetVref( FluxWeakeningHandle_t * pHandle );
 
 /**
   * @brief  It returns the present value of voltage actually used by flux
@@ -151,7 +127,7 @@ uint16_t FW_GetVref( FW_Handle_t * pHandle );
   *         in s16V (0-to-peak), where
   *         PhaseVoltage(V) = [PhaseVoltage(s16A) * Vbus(V)] /[sqrt(3) *32767].
   */
-int16_t FW_GetAvVAmplitude( FW_Handle_t * pHandle );
+int16_t FluxWkng_GetAvVAmplitude( FluxWeakeningHandle_t * pHandle );
 
 /**
   * @brief  It returns the measure of present voltage actually used by flux
@@ -160,15 +136,8 @@ int16_t FW_GetAvVAmplitude( FW_Handle_t * pHandle );
   * @retval uint16_t Present averaged phase stator voltage value, expressed in
   *         tenth of percentage points of available voltage.
   */
-uint16_t FW_GetAvVPercentage( FW_Handle_t * pHandle );
+uint16_t FluxWkng_GetAvVPercentage( FluxWeakeningHandle_t * pHandle );
 
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
 
 #ifdef __cplusplus
 }
@@ -176,4 +145,3 @@ uint16_t FW_GetAvVPercentage( FW_Handle_t * pHandle );
 
 #endif /* __FLUXWEAKENINGCTRL_H */
 
-/************************ (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/

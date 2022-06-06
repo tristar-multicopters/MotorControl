@@ -1,24 +1,9 @@
-
 /**
-  ******************************************************************************
   * @file    power_stage_parameters.h
-  * @author  FTEX inc
-  * @brief   This file contains the parameters needed for the Motor Control SDK
+  * @brief   This file contains the parameters needed for the Motor Control application
   *          in order to configure a power stage.
   *
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+*/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __POWER_STAGE_PARAMETERS_H
@@ -40,11 +25,6 @@
                                                        before being converted into
                                                        digital value */
 #define NOMINAL_BUS_VOLTAGE_V         48
-/******** Current reading parameters section ******/
-/*** Topology ***/
-#define ICS_SENSORS
-
-#define RSHUNT                        0.00200
 
 /*  ICSs gains in case of isolated current sensors,
         amplification gain for shunts based sensing */
@@ -66,4 +46,5 @@
                                                        temperature, Celsius degrees */
 
 #endif /*__POWER_STAGE_PARAMETERS_H*/
-/******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/
+
+

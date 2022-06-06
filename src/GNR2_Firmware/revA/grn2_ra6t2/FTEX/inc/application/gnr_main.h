@@ -1,3 +1,8 @@
+/**
+  * @file    gnr_main.h
+  * @brief   This file is the main application of the ganrunner motor controller firmware
+	*/
+
 #ifndef __GNR_MAIN_H
 #define __GNR_MAIN_H
 

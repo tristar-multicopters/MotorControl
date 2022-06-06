@@ -1,7 +1,7 @@
 /**
-* @file    bus_voltage_sensor.h
-* @brief   This file contains all definitions and functions prototypes for the BusVoltageSensor component of the Motor Control SDK.
-*
+  * @file    bus_voltage_sensor.h
+  * @brief   This file contains all definitions and functions prototypes for the
+  *          BusVoltageSensor component of the Motor Control application.
 */
 
 #ifndef __BUSVOLTAGESENSOR_H
@@ -25,33 +25,35 @@ typedef struct
 
 // ==================== Public function prototypes ========================= //
 
-/**
-* @brief  It return latest Vbus conversion result expressed in u16Volt
-* @param  pHandle related Handle of BusVoltageSensor_Handle_t
-* @retval uint16_t Latest Vbus conversion result in digit
-*/
-uint16_t VBS_GetBusVoltage_d( BusVoltageSensor_Handle_t * pHandle );
+/* Exported functions ------------------------------------------------------- */
 
 /**
-* @brief  It return latest averaged Vbus measurement expressed in u16Volt
-* @param  pHandle related Handle of BusVoltageSensor_Handle_t
-* @retval uint16_t Latest averaged Vbus measurement in digit
-*/
-uint16_t VBS_GetAvBusVoltage_d( BusVoltageSensor_Handle_t * pHandle );
+  * @brief  It return latest Vbus conversion result expressed in u16Volt
+  * @param  pHandle related Handle of BusVoltageSensorHandle_t
+  * @retval uint16_t Latest Vbus conversion result in digit
+  */
+uint16_t VbusSensor_GetBusVoltageDigital( BusVoltageSensorHandle_t * pHandle );
 
 /**
-* @brief  It return latest averaged Vbus measurement expressed in Volts
-* @param  pHandle related Handle of BusVoltageSensor_Handle_t
-* @retval uint16_t Latest averaged Vbus measurement in Volts
-*/
-uint16_t VBS_GetAvBusVoltage_V( BusVoltageSensor_Handle_t * pHandle );
+  * @brief  It return latest averaged Vbus measurement expressed in u16Volt
+  * @param  pHandle related Handle of BusVoltageSensorHandle_t
+  * @retval uint16_t Latest averaged Vbus measurement in digit
+  */
+uint16_t VbusSensor_GetAvBusVoltageDigital( BusVoltageSensorHandle_t * pHandle );
 
 /**
-* @brief  It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_ERROR depending on
-*         bus voltage and protection threshold values
-* @param  pHandle related Handle of BusVoltageSensor_Handle_t
-* @retval uint16_t Fault code error
-*/
-uint16_t VBS_CheckVbus( BusVoltageSensor_Handle_t * pHandle );
+  * @brief  It return latest averaged Vbus measurement expressed in Volts
+  * @param  pHandle related Handle of BusVoltageSensorHandle_t
+  * @retval uint16_t Latest averaged Vbus measurement in Volts
+  */
+uint16_t VbusSensor_GetAvBusVoltageVolt( BusVoltageSensorHandle_t * pHandle );
+
+/**
+  * @brief  It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_ERROR depending on
+  *         bus voltage and protection threshold values
+  * @param  pHandle related Handle of BusVoltageSensorHandle_t
+  * @retval uint16_t Fault code error
+  */
+uint16_t VbusSensor_GetFaultState( BusVoltageSensorHandle_t * pHandle );
 
 #endif

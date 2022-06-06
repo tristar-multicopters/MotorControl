@@ -1,12 +1,8 @@
 /**
-  ******************************************************************************
   * @file    sto_speed_pos_fdbk.c
-  * @author  FTEX inc
   * @brief   This file provides firmware functions that implement the features
-  *          of the State Observer + PLL Speed & Position Feedback component of the
-  *          Motor Control SDK.
+  *          of the State Observer + PLL Speed & Position Feedback module
   *
-  ******************************************************************************
 	*/
 
 /* Includes ------------------------------------------------------------------*/
@@ -18,28 +14,23 @@
 #define C6_COMP_CONST2  (int32_t) 10430
 
 /* Private function prototypes -----------------------------------------------*/
-static void STO_Store_Rotor_Speed( STO_PLL_Handle_t * pHandle, int16_t hRotor_Speed );
-static int16_t STO_ExecutePLL( STO_PLL_Handle_t * pHandle, int16_t hBemf_alfa_est,
-                               int16_t hBemf_beta_est );
-static void STO_InitSpeedBuffer( STO_PLL_Handle_t * pHandle );
+static void BemfObs_Store_Rotor_Speed( BemfObserverPllHandle_t * pHandle, int16_t hRotor_Speed );
+static int16_t BemfObs_ExecutePLL( BemfObserverPllHandle_t * pHandle, int16_t hBemfalfaEst,
+                               int16_t hBemfbetaEst );
+static void BemfObs_InitSpeedBuffer( BemfObserverPllHandle_t * pHandle );
 
 
-/**
-  * @brief  It initializes the state observer component
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval none
-  */
-void STO_PLL_Init( STO_PLL_Handle_t * pHandle )
+void BemfObsPll_Init( BemfObserverPllHandle_t * pHandle )
 {
   int16_t htempk;
   int32_t wAux;
 
 
-  pHandle->ConsistencyCounter = pHandle->StartUpConsistThreshold;
-  pHandle->EnableDualCheck = true;
+  pHandle->bConsistencyCounter = pHandle->bStartUpConsistThreshold;
+  pHandle->bEnableDualCheck = true;
 
   wAux = ( int32_t )1;
-  pHandle->F3POW2 = 0u;
+  pHandle->hF3Pow2 = 0u;
 
   htempk = ( int16_t )( C6_COMP_CONST1 / ( pHandle->hF2 ) );
 
@@ -47,44 +38,31 @@ void STO_PLL_Init( STO_PLL_Handle_t * pHandle )
   {
     htempk /= ( int16_t )2;
     wAux *= ( int32_t )2;
-    pHandle->F3POW2++;
+    pHandle->hF3Pow2++;
   }
 
   pHandle->hF3 = ( int16_t )wAux;
   wAux = ( int32_t )( pHandle->hF2 ) * pHandle->hF3;
   pHandle->hC6 = ( int16_t )( wAux / C6_COMP_CONST2 );
 
-  STO_PLL_Clear( pHandle );
+  BemfObsPll_Clear( pHandle );
 
   PID_HandleInit( & pHandle->PIRegulator );
 
   /* Acceleration measurement set to zero */
-  pHandle->_Super.hMecAccelUnitP = 0;
+  pHandle->Super.hMecAccelUnitP = 0;
 
   return;
 }
 
-/**
-  * @brief  It only returns, necessary to implement fictitious IRQ_Handler
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  uint8_t Fictitious interrupt flag
-  * @retval none
-  */
 
-void STO_PLL_Return( STO_PLL_Handle_t * pHandle, uint8_t flag )
+void BemfObsPll_Return( BemfObserverPllHandle_t * pHandle, uint8_t flag )
 {
   return;
 }
 
-/**
-  * @brief  This method executes Luenberger state observer equations and calls
-  *         PLL with the purpose of computing a new speed estimation and
-  *         updating the estimated electrical angle.
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  pInputVars_str pointer to the observer inputs structure
-  * @retval int16_t rotor electrical angle (s16Degrees)
-  */
-int16_t STO_PLL_CalcElAngle( STO_PLL_Handle_t * pHandle, Observer_Inputs_t * pInputs )
+
+int16_t BemfObsPll_CalcElAngle( BemfObserverPllHandle_t * pHandle, BemfObserverInputs_t * pInputs )
 {
   int32_t wAux, wDirection;
   int32_t wIalfa_est_Next, wIbeta_est_Next;
@@ -93,76 +71,76 @@ int16_t STO_PLL_CalcElAngle( STO_PLL_Handle_t * pHandle, Observer_Inputs_t * pIn
           hValfa, hVbeta;
 
 
-  if ( pHandle->wBemf_alfa_est > ( int32_t )( pHandle->hF2 )*INT16_MAX )
+  if ( pHandle->wBemfalfaEst > ( int32_t )( pHandle->hF2 )*INT16_MAX )
   {
-    pHandle->wBemf_alfa_est = INT16_MAX * ( int32_t )( pHandle->hF2 );
+    pHandle->wBemfalfaEst = INT16_MAX * ( int32_t )( pHandle->hF2 );
   }
-  else if ( pHandle->wBemf_alfa_est <= -INT16_MAX * ( int32_t )( pHandle->hF2 ) )
+  else if ( pHandle->wBemfalfaEst <= -INT16_MAX * ( int32_t )( pHandle->hF2 ) )
   {
-    pHandle->wBemf_alfa_est = -INT16_MAX * ( int32_t )( pHandle->hF2 );
+    pHandle->wBemfalfaEst = -INT16_MAX * ( int32_t )( pHandle->hF2 );
   }
   else
   {
   }
 #ifdef FULL_MISRA_C_COMPLIANCY
-  hAux_Alfa = ( int16_t )( pHandle->wBemf_alfa_est / pHandle->hF2 );
+  hAux_Alfa = ( int16_t )( pHandle->wBemfalfaEst / pHandle->hF2 );
 #else
-  hAux_Alfa = ( int16_t )( pHandle->wBemf_alfa_est >> pHandle->F2LOG );
+  hAux_Alfa = ( int16_t )( pHandle->wBemfalfaEst >> pHandle->hF2Log );
 #endif
 
-  if ( pHandle->wBemf_beta_est > INT16_MAX * ( int32_t )( pHandle->hF2 ) )
+  if ( pHandle->wBemfbetaEst > INT16_MAX * ( int32_t )( pHandle->hF2 ) )
   {
-    pHandle->wBemf_beta_est = INT16_MAX * ( int32_t )( pHandle->hF2 );
+    pHandle->wBemfbetaEst = INT16_MAX * ( int32_t )( pHandle->hF2 );
   }
-  else if ( pHandle->wBemf_beta_est <= -INT16_MAX * ( int32_t )( pHandle->hF2 ) )
+  else if ( pHandle->wBemfbetaEst <= -INT16_MAX * ( int32_t )( pHandle->hF2 ) )
   {
-    pHandle->wBemf_beta_est = -INT16_MAX * ( int32_t )( pHandle->hF2 );
+    pHandle->wBemfbetaEst = -INT16_MAX * ( int32_t )( pHandle->hF2 );
   }
   else
   {
   }
 #ifdef FULL_MISRA_C_COMPLIANCY
-  hAux_Beta = ( int16_t )( pHandle->wBemf_beta_est / pHandle->hF2 );
+  hAux_Beta = ( int16_t )( pHandle->wBemfbetaEst / pHandle->hF2 );
 #else
-  hAux_Beta = ( int16_t )( pHandle->wBemf_beta_est >> pHandle->F2LOG );
+  hAux_Beta = ( int16_t )( pHandle->wBemfbetaEst >> pHandle->hF2Log );
 #endif
 
-  if ( pHandle->Ialfa_est > INT16_MAX * ( int32_t )( pHandle->hF1 ) )
+  if ( pHandle->wIalfaEst > INT16_MAX * ( int32_t )( pHandle->hF1 ) )
   {
-    pHandle->Ialfa_est = INT16_MAX * ( int32_t )( pHandle->hF1 );
+    pHandle->wIalfaEst = INT16_MAX * ( int32_t )( pHandle->hF1 );
   }
-  else if ( pHandle->Ialfa_est <= -INT16_MAX * ( int32_t )( pHandle->hF1 ) )
+  else if ( pHandle->wIalfaEst <= -INT16_MAX * ( int32_t )( pHandle->hF1 ) )
   {
-    pHandle->Ialfa_est = -INT16_MAX * ( int32_t )( pHandle->hF1 );
+    pHandle->wIalfaEst = -INT16_MAX * ( int32_t )( pHandle->hF1 );
   }
   else
   {
   }
 
-  if ( pHandle->Ibeta_est > INT16_MAX * ( int32_t )( pHandle->hF1 ) )
+  if ( pHandle->wIbetaEst > INT16_MAX * ( int32_t )( pHandle->hF1 ) )
   {
-    pHandle->Ibeta_est = INT16_MAX * ( int32_t )( pHandle->hF1 );
+    pHandle->wIbetaEst = INT16_MAX * ( int32_t )( pHandle->hF1 );
   }
-  else if ( pHandle->Ibeta_est <= -INT16_MAX * ( int32_t )( pHandle->hF1 ) )
+  else if ( pHandle->wIbetaEst <= -INT16_MAX * ( int32_t )( pHandle->hF1 ) )
   {
-    pHandle->Ibeta_est = -INT16_MAX * ( int32_t )( pHandle->hF1 );
+    pHandle->wIbetaEst = -INT16_MAX * ( int32_t )( pHandle->hF1 );
   }
   else
   {
   }
 
 #ifdef FULL_MISRA_C_COMPLIANCY
-  hIalfa_err = ( int16_t )( pHandle->Ialfa_est / pHandle->hF1 );
+  hIalfa_err = ( int16_t )( pHandle->wIalfaEst / pHandle->hF1 );
 #else
-  hIalfa_err = ( int16_t )( pHandle->Ialfa_est >> pHandle->F1LOG );
+  hIalfa_err = ( int16_t )( pHandle->wIalfaEst >> pHandle->hF1Log );
 #endif
 
   hIalfa_err = hIalfa_err - pInputs->Ialfa_beta.alpha;
 
 #ifdef FULL_MISRA_C_COMPLIANCY
-  hIbeta_err = ( int16_t )( pHandle->Ibeta_est / pHandle->hF1 );
+  hIbeta_err = ( int16_t )( pHandle->wIbetaEst / pHandle->hF1 );
 #else
-  hIbeta_err = ( int16_t )( pHandle->Ibeta_est >> pHandle->F1LOG );
+  hIbeta_err = ( int16_t )( pHandle->wIbetaEst >> pHandle->hF1Log );
 #endif
 
   hIbeta_err = hIbeta_err - pInputs->Ialfa_beta.beta;
@@ -183,13 +161,13 @@ int16_t STO_PLL_CalcElAngle( STO_PLL_Handle_t * pHandle, Observer_Inputs_t * pIn
 
   /*alfa axes observer*/
 #ifdef FULL_MISRA_C_COMPLIANCY
-  hAux = ( int16_t ) ( pHandle->Ialfa_est / pHandle->hF1 );
+  hAux = ( int16_t ) ( pHandle->wIalfaEst / pHandle->hF1 );
 #else
-  hAux = ( int16_t ) ( pHandle->Ialfa_est >> pHandle->F1LOG );
+  hAux = ( int16_t ) ( pHandle->wIalfaEst >> pHandle->hF1Log );
 #endif
 
   wAux = ( int32_t ) ( pHandle->hC1 ) * hAux;
-  wIalfa_est_Next = pHandle->Ialfa_est - wAux;
+  wIalfa_est_Next = pHandle->wIalfaEst - wAux;
 
   wAux = ( int32_t ) ( pHandle->hC2 ) * hIalfa_err;
   wIalfa_est_Next += wAux;
@@ -201,27 +179,27 @@ int16_t STO_PLL_CalcElAngle( STO_PLL_Handle_t * pHandle, Observer_Inputs_t * pIn
   wIalfa_est_Next -= wAux;
 
   wAux = ( int32_t )( pHandle->hC4 ) * hIalfa_err;
-  wBemf_alfa_est_Next = pHandle->wBemf_alfa_est + wAux;
+  wBemf_alfa_est_Next = pHandle->wBemfalfaEst + wAux;
 
 #ifdef FULL_MISRA_C_COMPLIANCY
   wAux = ( int32_t ) hAux_Beta / pHandle->hF3;
 #else
-  wAux = ( int32_t ) hAux_Beta >> pHandle->F3POW2;
+  wAux = ( int32_t ) hAux_Beta >> pHandle->hF3Pow2;
 #endif
 
   wAux = wAux * pHandle->hC6;
-  wAux = pHandle->_Super.hElSpeedDpp * wAux;
+  wAux = pHandle->Super.hElSpeedDpp * wAux;
   wBemf_alfa_est_Next += wAux;
 
   /*beta axes observer*/
 #ifdef FULL_MISRA_C_COMPLIANCY
-  hAux = ( int16_t ) ( pHandle->Ibeta_est / pHandle->hF1 );
+  hAux = ( int16_t ) ( pHandle->wIbetaEst / pHandle->hF1 );
 #else
-  hAux = ( int16_t ) ( pHandle->Ibeta_est >> pHandle->F1LOG );
+  hAux = ( int16_t ) ( pHandle->wIbetaEst >> pHandle->hF1Log );
 #endif
 
   wAux = ( int32_t )  ( pHandle->hC1 ) * hAux;
-  wIbeta_est_Next = pHandle->Ibeta_est - wAux;
+  wIbeta_est_Next = pHandle->wIbetaEst - wAux;
 
   wAux = ( int32_t ) ( pHandle->hC2 ) * hIbeta_err;
   wIbeta_est_Next += wAux;
@@ -233,26 +211,26 @@ int16_t STO_PLL_CalcElAngle( STO_PLL_Handle_t * pHandle, Observer_Inputs_t * pIn
   wIbeta_est_Next -= wAux;
 
   wAux = ( int32_t )( pHandle->hC4 ) * hIbeta_err;
-  wBemf_beta_est_Next = pHandle->wBemf_beta_est + wAux;
+  wBemf_beta_est_Next = pHandle->wBemfbetaEst + wAux;
 
 #ifdef FULL_MISRA_C_COMPLIANCY
   wAux = ( int32_t )hAux_Alfa / pHandle->hF3;
 #else
-  wAux = ( int32_t ) hAux_Alfa >> pHandle->F3POW2;
+  wAux = ( int32_t ) hAux_Alfa >> pHandle->hF3Pow2;
 #endif
 
   wAux = wAux * pHandle->hC6;
-  wAux = pHandle->_Super.hElSpeedDpp * wAux;
+  wAux = pHandle->Super.hElSpeedDpp * wAux;
   wBemf_beta_est_Next -= wAux;
 
   /*Calls the PLL blockset*/
-  pHandle->hBemf_alfa_est = hAux_Alfa;
-  pHandle->hBemf_beta_est = hAux_Beta;
+  pHandle->hBemfalfaEst = hAux_Alfa;
+  pHandle->hBemfbetaEst = hAux_Beta;
 
   if (pHandle->hForcedDirection ==0)
   {
     /* we are in auxiliary mode, then rely on the speed detected */
-    if(pHandle->_Super.hElSpeedDpp >= 0)
+    if(pHandle->Super.hElSpeedDpp >= 0)
     {
       wDirection = 1;
     }
@@ -270,44 +248,29 @@ int16_t STO_PLL_CalcElAngle( STO_PLL_Handle_t * pHandle, Observer_Inputs_t * pIn
   hAux_Alfa = ( int16_t )( hAux_Alfa * wDirection  );
   hAux_Beta = ( int16_t )( hAux_Beta * wDirection  );
 
-  hRotor_Speed = STO_ExecutePLL( pHandle, hAux_Alfa, -hAux_Beta );
-  pHandle->_Super.InstantaneousElSpeedDpp = hRotor_Speed;
+  hRotor_Speed = BemfObs_ExecutePLL( pHandle, hAux_Alfa, -hAux_Beta );
+  pHandle->Super.InstantaneousElSpeedDpp = hRotor_Speed;
 
-  STO_Store_Rotor_Speed( pHandle, hRotor_Speed );
+  BemfObs_Store_Rotor_Speed( pHandle, hRotor_Speed );
 
-  pHandle->_Super.hElAngle += hRotor_Speed;
+  pHandle->Super.hElAngle += hRotor_Speed;
 
   /*storing previous values of currents and bemfs*/
-  pHandle->Ialfa_est = wIalfa_est_Next;
-  pHandle->wBemf_alfa_est = wBemf_alfa_est_Next;
+  pHandle->wIalfaEst = wIalfa_est_Next;
+  pHandle->wBemfalfaEst = wBemf_alfa_est_Next;
 
-  pHandle->Ibeta_est = wIbeta_est_Next;
-  pHandle->wBemf_beta_est = wBemf_beta_est_Next;
+  pHandle->wIbetaEst = wIbeta_est_Next;
+  pHandle->wBemfbetaEst = wBemf_beta_est_Next;
 
-  return ( pHandle->_Super.hElAngle );
+  return ( pHandle->Super.hElAngle );
 }
 
-/**
-  * @brief  This method must be called - at least - with the same periodicity
-  *         on which speed control is executed. It computes and returns - through
-  *         parameter hMecSpeedUnit - the rotor average mechanical speed,
-  *         expressed in Unit. Average is computed considering a FIFO depth
-  *         equal to bSpeedBufferSizeUnit. Moreover it also computes and returns
-  *         the reliability state of the sensor.
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  pMecSpeedUnit pointer to int16_t, used to return the rotor average
-  *         mechanical speed (expressed in the unit defined by #SPEED_UNIT)
-  * @retval bool speed sensor reliability, measured with reference to parameters
-  *         bReliability_hysteresys, hVariancePercentage and bSpeedBufferSize
-  *         true = sensor information is reliable
-  *         false = sensor information is not reliable
-  */
 
-bool STO_PLL_CalcAvrgMecSpeedUnit( STO_PLL_Handle_t * pHandle, int16_t * pMecSpeedUnit )
+bool BemfObsPll_CalcAvrgMecSpeedUnit( BemfObserverPllHandle_t * pHandle, int16_t * pMecSpeedUnit )
 {
   int32_t wAvrSpeed_dpp = ( int32_t )0;
   int32_t wError, wAux, wAvrSquareSpeed, wAvrQuadraticError = 0;
-  uint8_t i, bSpeedBufferSizeUnit = pHandle->SpeedBufferSizeUnit;
+  uint8_t i, bSpeedBufferSizeUnit = pHandle->bSpeedBufferSizeUnit;
   int32_t wObsBemf, wEstBemf;
   int32_t wObsBemfSq = 0, wEstBemfSq = 0;
   int32_t wEstBemfSqLo;
@@ -317,14 +280,14 @@ bool STO_PLL_CalcAvrgMecSpeedUnit( STO_PLL_Handle_t * pHandle, int16_t * pMecSpe
 
   for ( i = 0u; i < bSpeedBufferSizeUnit; i++ )
   {
-    wAvrSpeed_dpp += ( int32_t )( pHandle->Speed_Buffer[i] );
+    wAvrSpeed_dpp += ( int32_t )( pHandle->SpeedBuffer[i] );
   }
 
   wAvrSpeed_dpp = wAvrSpeed_dpp / ( int16_t )bSpeedBufferSizeUnit;
 
   for ( i = 0u; i < bSpeedBufferSizeUnit; i++ )
   {
-    wError = ( int32_t )( pHandle->Speed_Buffer[i] ) - wAvrSpeed_dpp;
+    wError = ( int32_t )( pHandle->SpeedBuffer[i] ) - wAvrSpeed_dpp;
     wError = ( wError * wError );
     wAvrQuadraticError += wError;
   }
@@ -335,7 +298,7 @@ bool STO_PLL_CalcAvrgMecSpeedUnit( STO_PLL_Handle_t * pHandle, int16_t * pMecSpe
   /* The maximum variance acceptable is here calculated as a function of average
      speed                                                                    */
   wAvrSquareSpeed = wAvrSpeed_dpp * wAvrSpeed_dpp;
-  wAvrSquareSpeed = ( wAvrSquareSpeed * ( int32_t )( pHandle->VariancePercentage )) / ( int16_t )128;
+  wAvrSquareSpeed = ( wAvrSquareSpeed * ( int32_t )( pHandle->hVariancePercentage )) / ( int16_t )128;
 
   if ( wAvrQuadraticError < wAvrSquareSpeed )
   {
@@ -343,36 +306,36 @@ bool STO_PLL_CalcAvrgMecSpeedUnit( STO_PLL_Handle_t * pHandle, int16_t * pMecSpe
   }
 
   /*Computation of Mechanical speed Unit*/
-  wAux = wAvrSpeed_dpp * ( int32_t )( pHandle->_Super.hMeasurementFrequency );
-  wAux = wAux * ( int32_t ) ( pHandle->_Super.SpeedUnit );
-  wAux = wAux / ( int32_t )( pHandle->_Super.DPPConvFactor);
-  wAux = wAux / ( int16_t )( pHandle->_Super.bElToMecRatio );
+  wAux = wAvrSpeed_dpp * ( int32_t )( pHandle->Super.hMeasurementFrequency );
+  wAux = wAux * ( int32_t ) ( pHandle->Super.bSpeedUnit );
+  wAux = wAux / ( int32_t )( pHandle->Super.DPPConvFactor);
+  wAux = wAux / ( int16_t )( pHandle->Super.bElToMecRatio );
 
   *pMecSpeedUnit = ( int16_t )wAux;
-  pHandle->_Super.hAvrMecSpeedUnit = ( int16_t )wAux;
+  pHandle->Super.hAvrMecSpeedUnit = ( int16_t )wAux;
 
-  pHandle->IsSpeedReliable = bIs_Speed_Reliable;
+  pHandle->bIsSpeedReliable = bIs_Speed_Reliable;
 
   /*Bemf Consistency Check algorithm*/
-  if ( pHandle->EnableDualCheck == true ) /*do algorithm if it's enabled*/
+  if ( pHandle->bEnableDualCheck == true ) /*do algorithm if it's enabled*/
   {
     wAux = ( wAux < 0 ? ( -wAux ) : ( wAux ) ); /* wAux abs value   */
-    if ( wAux < ( int32_t )( pHandle->MaxAppPositiveMecSpeedUnit ) )
+    if ( wAux < ( int32_t )( pHandle->hMaxAppPositiveMecSpeedUnit ) )
     {
       /*Computation of Observed back-emf*/
-      wObsBemf = ( int32_t )( pHandle->hBemf_alfa_est );
+      wObsBemf = ( int32_t )( pHandle->hBemfalfaEst );
       wObsBemfSq = wObsBemf * wObsBemf;
-      wObsBemf = ( int32_t )( pHandle->hBemf_beta_est );
+      wObsBemf = ( int32_t )( pHandle->hBemfbetaEst );
       wObsBemfSq += wObsBemf * wObsBemf;
 
       /*Computation of Estimated back-emf*/
-      wEstBemf = ( wAux * 32767 ) / ( int16_t )( pHandle->_Super.hMaxReliableMecSpeedUnit );
-      wEstBemfSq = ( wEstBemf * ( int32_t )( pHandle->BemfConsistencyGain ) ) / 64;
+      wEstBemf = ( wAux * 32767 ) / ( int16_t )( pHandle->Super.hMaxReliableMecSpeedUnit );
+      wEstBemfSq = ( wEstBemf * ( int32_t )( pHandle->bBemfConsistencyGain ) ) / 64;
       wEstBemfSq *= wEstBemf;
 
       /*Computation of threshold*/
       wEstBemfSqLo = wEstBemfSq -
-                     ( wEstBemfSq / 64 ) * ( int32_t )( pHandle->BemfConsistencyCheck );
+                     ( wEstBemfSq / 64 ) * ( int32_t )( pHandle->bBemfConsistencyCheck );
 
       /*Check*/
       if ( wObsBemfSq > wEstBemfSqLo )
@@ -381,9 +344,9 @@ bool STO_PLL_CalcAvrgMecSpeedUnit( STO_PLL_Handle_t * pHandle, int16_t * pMecSpe
       }
     }
 
-    pHandle->IsBemfConsistent = bIs_Bemf_Consistent;
-    pHandle->Obs_Bemf_Level = wObsBemfSq;
-    pHandle->Est_Bemf_Level = wEstBemfSq;
+    pHandle->bIsBemfConsistent = bIs_Bemf_Consistent;
+    pHandle->wObsBemfLevel = wObsBemfSq;
+    pHandle->wEstBemfLevel = wEstBemfSq;
   }
   else
   {
@@ -391,63 +354,53 @@ bool STO_PLL_CalcAvrgMecSpeedUnit( STO_PLL_Handle_t * pHandle, int16_t * pMecSpe
   }
 
   /*Decision making*/
-  if ( pHandle->IsAlgorithmConverged == false )
+  if ( pHandle->bIsAlgorithmConverged == false )
   {
-    bAux = SPD_IsMecSpeedReliable ( &pHandle->_Super, pMecSpeedUnit );
+    bAux = SpdPosFdbk_CalcReliability ( &pHandle->Super, pMecSpeedUnit );
   }
   else
   {
-    if ( ( pHandle->IsSpeedReliable == false ) || ( bIs_Bemf_Consistent == false ) )
+    if ( ( pHandle->bIsSpeedReliable == false ) || ( bIs_Bemf_Consistent == false ) )
     {
-      pHandle->ReliabilityCounter++;
-      if ( pHandle->ReliabilityCounter >= pHandle->Reliability_hysteresys )
+      pHandle->bReliabilityCounter++;
+      if ( pHandle->bReliabilityCounter >= pHandle->bReliabilityHysteresys )
       {
-        pHandle->ReliabilityCounter = 0u;
-        pHandle->_Super.bSpeedErrorNumber = pHandle->_Super.bMaximumSpeedErrorsNumber;
+        pHandle->bReliabilityCounter = 0u;
+        pHandle->Super.bSpeedErrorNumber = pHandle->Super.bMaximumSpeedErrorsNumber;
         bAux = false;
       }
       else
       {
-        bAux = SPD_IsMecSpeedReliable ( &pHandle->_Super, pMecSpeedUnit );
+        bAux = SpdPosFdbk_CalcReliability ( &pHandle->Super, pMecSpeedUnit );
       }
     }
     else
     {
-      pHandle->ReliabilityCounter = 0u;
-      bAux = SPD_IsMecSpeedReliable ( &pHandle->_Super, pMecSpeedUnit );
+      pHandle->bReliabilityCounter = 0u;
+      bAux = SpdPosFdbk_CalcReliability ( &pHandle->Super, pMecSpeedUnit );
     }
   }
   return ( bAux );
 }
 
-/**
-  * @brief  This method must be called - at least - with the same periodicity
-  *         on which speed control is executed. It computes and update component
-  *         variable hElSpeedDpp that is estimated average electrical speed
-  *         expressed in dpp used for instance in observer equations.
-  *         Average is computed considering a FIFO depth equal to
-  *         bSpeedBufferSizedpp.
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval none
-  */
-void STO_PLL_CalcAvrgElSpeedDpp( STO_PLL_Handle_t * pHandle )
-{
 
-  int16_t hIndexNew = ( int16_t )pHandle->Speed_Buffer_Index;
+void BemfObsPll_CalcAvrgElSpeedDpp( BemfObserverPllHandle_t * pHandle )
+{
+  int16_t hIndexNew = ( int16_t )pHandle->bSpeedBufferIndex;
   int16_t hIndexOld;
   int16_t hIndexOldTemp;
-  int32_t wSum = pHandle->DppBufferSum;
+  int32_t wSum = pHandle->wDppBufferSum;
   int32_t wAvrSpeed_dpp;
-  int16_t hSpeedBufferSizedpp = ( int16_t )( pHandle->SpeedBufferSizeDpp );
-  int16_t hSpeedBufferSizeUnit = ( int16_t )( pHandle->SpeedBufferSizeUnit );
+  int16_t hSpeedBufferSizedpp = ( int16_t )( pHandle->bSpeedBufferSizeDpp );
+  int16_t hSpeedBufferSizeUnit = ( int16_t )( pHandle->bSpeedBufferSizeUnit );
   int16_t hBufferSizeDiff;
 
   hBufferSizeDiff = hSpeedBufferSizeUnit - hSpeedBufferSizedpp;
 
   if ( hBufferSizeDiff == 0 )
   {
-    wSum = wSum + pHandle->Speed_Buffer[hIndexNew] -
-           pHandle->SpeedBufferOldestEl;
+    wSum = wSum + pHandle->SpeedBuffer[hIndexNew] -
+           pHandle->hSpeedBufferOldestEl;
   }
   else
   {
@@ -462,91 +415,87 @@ void STO_PLL_CalcAvrgElSpeedDpp( STO_PLL_Handle_t * pHandle )
       hIndexOld = hIndexOldTemp;
     }
 
-    wSum = wSum + pHandle->Speed_Buffer[hIndexNew] -
-           pHandle->Speed_Buffer[hIndexOld];
+    wSum = wSum + pHandle->SpeedBuffer[hIndexNew] -
+           pHandle->SpeedBuffer[hIndexOld];
   }
 
 #ifdef FULL_MISRA_C_COMPLIANCY
   wAvrSpeed_dpp = wSum / hSpeedBufferSizeDpp;
 #else
-  wAvrSpeed_dpp = wSum >> pHandle->SpeedBufferSizeDppLOG;
+  wAvrSpeed_dpp = wSum >> pHandle->hSpeedBufferSizeDppLog;
 #endif
 
-  pHandle->_Super.hElSpeedDpp = ( int16_t )wAvrSpeed_dpp;
-  pHandle->DppBufferSum = wSum;
+  pHandle->Super.hElSpeedDpp = ( int16_t )wAvrSpeed_dpp;
+  pHandle->wDppBufferSum = wSum;
 }
 
-/**
-  * @brief  It clears state observer component by re-initializing private variables
-  * @param  pHandle related object of class CSTO_SPD
-  * @retval none
-  */
-void STO_PLL_Clear( STO_PLL_Handle_t * pHandle )
-{
-  pHandle->Ialfa_est = ( int32_t )0;
-  pHandle->Ibeta_est = ( int32_t )0;
-  pHandle->wBemf_alfa_est = ( int32_t )0;
-  pHandle->wBemf_beta_est = ( int32_t )0;
-  pHandle->_Super.hElAngle = ( int16_t )0;
-  pHandle->_Super.hElSpeedDpp = ( int16_t )0;
-  pHandle->ConsistencyCounter = 0u;
-  pHandle->ReliabilityCounter = 0u;
-  pHandle->IsAlgorithmConverged = false;
-  pHandle->IsBemfConsistent = false;
-  pHandle->Obs_Bemf_Level = ( int32_t )0;
-  pHandle->Est_Bemf_Level = ( int32_t )0;
-  pHandle->DppBufferSum = ( int32_t )0;
-  pHandle->ForceConvergency = false;
-  pHandle->ForceConvergency2 = false;
 
-  STO_InitSpeedBuffer( pHandle );
+void BemfObsPll_Clear( BemfObserverPllHandle_t * pHandle )
+{
+  pHandle->wIalfaEst = ( int32_t )0;
+  pHandle->wIbetaEst = ( int32_t )0;
+  pHandle->wBemfalfaEst = ( int32_t )0;
+  pHandle->wBemfbetaEst = ( int32_t )0;
+  pHandle->Super.hElAngle = ( int16_t )0;
+  pHandle->Super.hElSpeedDpp = ( int16_t )0;
+  pHandle->bConsistencyCounter = 0u;
+  pHandle->bReliabilityCounter = 0u;
+  pHandle->bIsAlgorithmConverged = false;
+  pHandle->bIsBemfConsistent = false;
+  pHandle->wObsBemfLevel = ( int32_t )0;
+  pHandle->wEstBemfLevel = ( int32_t )0;
+  pHandle->wDppBufferSum = ( int32_t )0;
+  pHandle->bForceConvergency = false;
+  pHandle->bForceConvergency2 = false;
+
+  BemfObs_InitSpeedBuffer( pHandle );
   PID_SetIntegralTerm( & pHandle->PIRegulator, ( int32_t )0 );
 }
 
 /**
   * @brief  It stores in estimated speed FIFO latest calculated value of motor
   *         speed
-  * @param  pHandle: handler of the current instance of the STO component
+  * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval none
   */
-inline static void STO_Store_Rotor_Speed( STO_PLL_Handle_t * pHandle, int16_t hRotor_Speed )
+inline static void BemfObs_Store_Rotor_Speed( BemfObserverPllHandle_t * pHandle, int16_t hRotor_Speed )
 {
 
-  uint8_t bBuffer_index = pHandle->Speed_Buffer_Index;
+  uint8_t bBuffer_index = pHandle->bSpeedBufferIndex;
 
   bBuffer_index++;
-  if ( bBuffer_index == pHandle->SpeedBufferSizeUnit )
+  if ( bBuffer_index == pHandle->bSpeedBufferSizeUnit )
   {
     bBuffer_index = 0u;
   }
 
-  pHandle->SpeedBufferOldestEl = pHandle->Speed_Buffer[bBuffer_index];
+  pHandle->hSpeedBufferOldestEl = pHandle->SpeedBuffer[bBuffer_index];
 
-  pHandle->Speed_Buffer[bBuffer_index] = hRotor_Speed;
-  pHandle->Speed_Buffer_Index = bBuffer_index;
+  pHandle->SpeedBuffer[bBuffer_index] = hRotor_Speed;
+  pHandle->bSpeedBufferIndex = bBuffer_index;
 }
 
 /**
   * @brief  It executes PLL algorithm for rotor position extraction from B-emf
   *         alpha and beta
-  * @param  pHandle: handler of the current instance of the STO component
-  *         hBemf_alfa_est estimated Bemf alpha on the stator reference frame
-  *         hBemf_beta_est estimated Bemf beta on the stator reference frame
+  * @param  pHandle: handler of the current instance of the BemfObserver component
+  *         hBemfalfaEst estimated Bemf alpha on the stator reference frame
+  *         hBemfbetaEst estimated Bemf beta on the stator reference frame
   * @retval none
   */
-inline static int16_t STO_ExecutePLL( STO_PLL_Handle_t * pHandle, int16_t hBemf_alfa_est, int16_t
-                               hBemf_beta_est )
+inline static int16_t BemfObs_ExecutePLL( BemfObserverPllHandle_t * pHandle, int16_t hBemfalfaEst, int16_t
+                               hBemfbetaEst )
 {
   int32_t wAlfa_Sin_tmp, wBeta_Cos_tmp;
   int16_t hOutput;
-  Trig_Components Local_Components;
+  TrigComponents_t Local_Components;
   int16_t hAux1, hAux2;
 
-  Local_Components = MCM_Trig_Functions( pHandle->_Super.hElAngle );
+  Local_Components = MCMath_TrigFunctions( pHandle->Super.hElAngle );
 
   /* Alfa & Beta BEMF multiplied by Cos & Sin*/
-  wAlfa_Sin_tmp = ( int32_t )( hBemf_alfa_est ) * ( int32_t )Local_Components.hSin;
-  wBeta_Cos_tmp = ( int32_t )( hBemf_beta_est ) * ( int32_t )Local_Components.hCos;
+  wAlfa_Sin_tmp = ( int32_t )( hBemfalfaEst ) * ( int32_t )Local_Components.hSin;
+  wBeta_Cos_tmp = ( int32_t )( hBemfbetaEst ) * ( int32_t )Local_Components.hCos;
 
 #ifdef FULL_MISRA_C_COMPLIANCY
   hAux1 = ( int16_t )( wBeta_Cos_tmp / 32768 );
@@ -568,56 +517,47 @@ inline static int16_t STO_ExecutePLL( STO_PLL_Handle_t * pHandle, int16_t hBemf_
 
 /**
   * @brief  It clears the estimated speed buffer
-  * @param  pHandle: handler of the current instance of the STO component
+  * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval none
   */
-static void STO_InitSpeedBuffer( STO_PLL_Handle_t * pHandle )
+static void BemfObs_InitSpeedBuffer( BemfObserverPllHandle_t * pHandle )
 {
   uint8_t b_i;
-  uint8_t bSpeedBufferSize = pHandle->SpeedBufferSizeUnit;
+  uint8_t bSpeedBufferSize = pHandle->bSpeedBufferSizeUnit;
 
   /*init speed buffer*/
   for ( b_i = 0u; b_i < bSpeedBufferSize; b_i++ )
   {
-    pHandle->Speed_Buffer[b_i] = ( int16_t )0;
+    pHandle->SpeedBuffer[b_i] = ( int16_t )0;
   }
-  pHandle->Speed_Buffer_Index = 0u;
-  pHandle->SpeedBufferOldestEl = ( int16_t )0;
+  pHandle->bSpeedBufferIndex = 0u;
+  pHandle->hSpeedBufferOldestEl = ( int16_t )0;
 
   return;
 }
 
-/**
-  * @brief  It internally performs a set of checks necessary to state whether
-  *         the state observer algorithm converged. To be periodically called
-  *         during motor open-loop ramp-up (e.g. at the same frequency of
-  *         SPD_CalcElAngle), it returns true if the estimated angle and speed
-  *         can be considered reliable, false otherwise
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  hForcedMecSpeedUnit Mechanical speed in 0.1Hz unit as forced by VSS
-  * @retval bool sensor reliability state
-  */
-bool STO_PLL_IsObserverConverged( STO_PLL_Handle_t * pHandle, int16_t hForcedMecSpeedUnit )
+
+bool BemfObsPll_IsObserverConverged( BemfObserverPllHandle_t * pHandle, int16_t hForcedMecSpeedUnit )
 {
   int16_t hEstimatedSpeedUnit, hUpperThreshold, hLowerThreshold;
   int32_t wAux;
   bool bAux = false;
   int32_t wtemp;
   
-  if ( pHandle->ForceConvergency2 == true )
+  if ( pHandle->bForceConvergency2 == true )
   {
-    hForcedMecSpeedUnit = pHandle->_Super.hAvrMecSpeedUnit;
+    hForcedMecSpeedUnit = pHandle->Super.hAvrMecSpeedUnit;
   }
 
-  if ( pHandle->ForceConvergency == true )
+  if ( pHandle->bForceConvergency == true )
   {
     bAux = true;
-    pHandle->IsAlgorithmConverged = true;
-    pHandle->_Super.bSpeedErrorNumber = 0u;
+    pHandle->bIsAlgorithmConverged = true;
+    pHandle->Super.bSpeedErrorNumber = 0u;
   }
   else
   {
-    hEstimatedSpeedUnit = pHandle->_Super.hAvrMecSpeedUnit;
+    hEstimatedSpeedUnit = pHandle->Super.hAvrMecSpeedUnit;
 
     wtemp = ( int32_t )hEstimatedSpeedUnit * ( int32_t )hForcedMecSpeedUnit;
 
@@ -632,53 +572,53 @@ bool STO_PLL_IsObserverConverged( STO_PLL_Handle_t * pHandle, int16_t hForcedMec
       {
         hForcedMecSpeedUnit = -hForcedMecSpeedUnit;
       }
-      wAux = ( int32_t ) ( hForcedMecSpeedUnit ) * ( int16_t )pHandle->SpeedValidationBand_H;
+      wAux = ( int32_t ) ( hForcedMecSpeedUnit ) * ( int16_t )pHandle->bSpeedValidationBandHigh;
       hUpperThreshold = ( int16_t )( wAux / ( int32_t )16 );
 
-      wAux = ( int32_t ) ( hForcedMecSpeedUnit ) * ( int16_t )pHandle->SpeedValidationBand_L;
+      wAux = ( int32_t ) ( hForcedMecSpeedUnit ) * ( int16_t )pHandle->bSpeedValidationBandLight;
       hLowerThreshold = ( int16_t )( wAux / ( int32_t )16 );
 
       /* If the variance of the estimated speed is low enough...*/
-      if ( pHandle->IsSpeedReliable == true )
+      if ( pHandle->bIsSpeedReliable == true )
       {
-        if ( ( uint16_t )hEstimatedSpeedUnit > pHandle->MinStartUpValidSpeed )
+        if ( ( uint16_t )hEstimatedSpeedUnit > pHandle->hMinStartUpValidSpeed )
         {
           /*...and the estimated value is quite close to the expected value... */
           if ( hEstimatedSpeedUnit >= hLowerThreshold )
           {
             if ( hEstimatedSpeedUnit <= hUpperThreshold )
             {
-              pHandle->ConsistencyCounter++;
+              pHandle->bConsistencyCounter++;
 
               /*... for hConsistencyThreshold consecutive times... */
-              if ( pHandle->ConsistencyCounter >=
-                   pHandle->StartUpConsistThreshold )
+              if ( pHandle->bConsistencyCounter >=
+                   pHandle->bStartUpConsistThreshold )
               {
 
                 /* the algorithm converged.*/
                 bAux = true;
-                pHandle->IsAlgorithmConverged = true;
-                pHandle->_Super.bSpeedErrorNumber = 0u;
+                pHandle->bIsAlgorithmConverged = true;
+                pHandle->Super.bSpeedErrorNumber = 0u;
               }
             }
             else
             {
-              pHandle->ConsistencyCounter = 0u;
+              pHandle->bConsistencyCounter = 0u;
             }
           }
           else
           {
-            pHandle->ConsistencyCounter = 0u;
+            pHandle->bConsistencyCounter = 0u;
           }
         }
         else
         {
-          pHandle->ConsistencyCounter = 0u;
+          pHandle->bConsistencyCounter = 0u;
         }
       }
       else
       {
-        pHandle->ConsistencyCounter = 0u;
+        pHandle->bConsistencyCounter = 0u;
       }
     }
   }
@@ -686,81 +626,53 @@ bool STO_PLL_IsObserverConverged( STO_PLL_Handle_t * pHandle, int16_t hForcedMec
   return ( bAux );
 }
 
-/**
-  * @brief  It exports estimated Bemf alpha-beta in alphabeta_t format
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval alphabeta_t Bemf alpha-beta
-  */
-alphabeta_t STO_PLL_GetEstimatedBemf( STO_PLL_Handle_t * pHandle )
+
+AlphaBeta_t BemfObsPll_GetEstimatedBemf( BemfObserverPllHandle_t * pHandle )
 {
-  alphabeta_t Vaux;
-  Vaux.alpha = pHandle->hBemf_alfa_est;
-  Vaux.beta = pHandle->hBemf_beta_est;
+  AlphaBeta_t Vaux;
+  Vaux.alpha = pHandle->hBemfalfaEst;
+  Vaux.beta = pHandle->hBemfbetaEst;
   return ( Vaux );
 }
 
 
-/**
-  * @brief  It exports the stator current alpha-beta as estimated by state
-  *         observer
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval alphabeta_t State observer estimated stator current Ialpha-beta
-  */
-alphabeta_t STO_PLL_GetEstimatedCurrent( STO_PLL_Handle_t * pHandle )
+AlphaBeta_t BemfObsPll_GetEstimatedCurrent( BemfObserverPllHandle_t * pHandle )
 {
-  alphabeta_t Iaux;
+  AlphaBeta_t Iaux;
 
 #ifdef FULL_MISRA_C_COMPLIANCY
-  Iaux.alpha = ( int16_t )( pHandle->Ialfa_est / ( pHandle->hF1 ) );
+  Iaux.alpha = ( int16_t )( pHandle->wIalfaEst / ( pHandle->hF1 ) );
 #else
-  Iaux.alpha = ( int16_t )( pHandle->Ialfa_est >> pHandle->F1LOG );
+  Iaux.alpha = ( int16_t )( pHandle->wIalfaEst >> pHandle->hF1Log );
 #endif
 
 #ifdef FULL_MISRA_C_COMPLIANCY
-  Iaux.beta = ( int16_t )( pHandle->Ibeta_est / ( pHandle->hF1 ) );
+  Iaux.beta = ( int16_t )( pHandle->wIbetaEst / ( pHandle->hF1 ) );
 #else
-  Iaux.beta = ( int16_t )( pHandle->Ibeta_est >> pHandle->F1LOG );
+  Iaux.beta = ( int16_t )( pHandle->wIbetaEst >> pHandle->hF1Log );
 #endif
 
   return ( Iaux );
 }
 
-/**
-  * @brief  It exports current observer gains through parameters hhC2 and hhC4
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  phC2 pointer to int16_t used to return parameters hhC2
-  * @param  phC4 pointer to int16_t used to return parameters hhC4
-  * @retval none
-  */
-void STO_PLL_GetObserverGains( STO_PLL_Handle_t * pHandle, int16_t * phC2, int16_t * phC4 )
+
+void BemfObsPll_GetObserverGains( BemfObserverPllHandle_t * pHandle, int16_t * phC2, int16_t * phC4 )
 {
   *phC2 = pHandle->hC2;
   *phC4 = pHandle->hC4;
 }
 
 
-/**
-  * @brief  It allows setting new values for observer gains
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  wK1 new value for observer gain hhC1
-  * @param  wK2 new value for observer gain hhC2
-  * @retval none
-  */
-void STO_PLL_SetObserverGains( STO_PLL_Handle_t * pHandle, int16_t hhC1, int16_t hhC2 )
+
+void BemfObsPll_SetObserverGains( BemfObserverPllHandle_t * pHandle, int16_t hhC1, int16_t hhC2 )
 {
 
   pHandle->hC2 = hhC1;
   pHandle->hC4 = hhC2;
 }
 
-/**
-  * @brief  It exports current PLL gains through parameters pPgain and pIgain
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  pPgain pointer to int16_t used to return PLL proportional gain
-  * @param  pIgain pointer to int16_t used to return PLL integral gain
-  * @retval none
-  */
-void STO_GetPLLGains( STO_PLL_Handle_t * pHandle, int16_t * pPgain, int16_t * pIgain )
+
+void BemfObs_GetPLLGains( BemfObserverPllHandle_t * pHandle, int16_t * pPgain, int16_t * pIgain )
 {
 
   *pPgain = PID_GetKP( & pHandle->PIRegulator );
@@ -768,155 +680,86 @@ void STO_GetPLLGains( STO_PLL_Handle_t * pHandle, int16_t * pPgain, int16_t * pI
 }
 
 
-/**
-  * @brief  It allows setting new values for PLL gains
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  hPgain new value for PLL proportional gain
-  * @param  hIgain new value for PLL integral gain
-  * @retval none
-  */
-void STO_SetPLLGains( STO_PLL_Handle_t * pHandle, int16_t hPgain, int16_t hIgain )
+void BemfObsPll_SetPLLGains( BemfObserverPllHandle_t * pHandle, int16_t hPgain, int16_t hIgain )
 {
   PID_SetKP( & pHandle->PIRegulator, hPgain );
   PID_SetKI( & pHandle->PIRegulator, hIgain );
 }
 
 
-/**
-  * @brief  It could be used to set istantaneous information on rotor mechanical
-  *         angle.
-  *         Note: Mechanical angle management is not implemented in this
-  *         version of State observer sensor class.
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  hMecAngle istantaneous measure of rotor mechanical angle
-  * @retval none
-  */
-void STO_PLL_SetMecAngle( STO_PLL_Handle_t * pHandle, int16_t hMecAngle )
+void BemfObsPll_OtfResetPLL( BemfObserver_t * pHandle )
 {
-}
-
-/**
-  * @brief  It resets integral term of PLL during on-the-fly startup
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval none
-  */
-void STO_OTF_ResetPLL( STO_Handle_t * pHandle )
-{
-  STO_PLL_Handle_t * pHdl = ( STO_PLL_Handle_t * )pHandle->_Super;
+  BemfObserverPllHandle_t * pHdl = ( BemfObserverPllHandle_t * )pHandle->Super;
   PID_SetIntegralTerm( &pHdl->PIRegulator, ( int32_t )0 );
 }
 
-/**
-  * @brief  It resets integral term of PLL
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval none
-  */
-void STO_ResetPLL( STO_PLL_Handle_t * pHandle )
+
+void BemfObsPll_ResetPLL( BemfObserverPllHandle_t * pHandle )
 {
   PID_SetIntegralTerm( &pHandle->PIRegulator, ( int32_t )0 );
 }
 
-/**
-  * @brief  It sends locking info for PLL
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  hElSpeedDpp:
-  * @param  hElAngle:
-  * @retval none
-  */
-void STO_SetPLL( STO_PLL_Handle_t * pHandle, int16_t hElSpeedDpp, int16_t hElAngle )
+
+void BemfObsPll_SetPLL( BemfObserverPllHandle_t * pHandle, int16_t hElSpeedDpp, int16_t hElAngle )
 {
   PID_SetIntegralTerm( & pHandle->PIRegulator,
                        ( int32_t )hElSpeedDpp * ( int32_t )PID_GetKIDivisor( & pHandle->PIRegulator ) );
-  pHandle->_Super.hElAngle = hElAngle;
+  pHandle->Super.hElAngle = hElAngle;
 }
 
-/**
-  * @brief  It exports estimated Bemf squared level
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval int32_t
-  */
-int32_t STO_PLL_GetEstimatedBemfLevel( STO_PLL_Handle_t * pHandle )
+
+int32_t BemfObsPll_GetEstimatedBemfLevel( BemfObserverPllHandle_t * pHandle )
 {
-  return ( pHandle->Est_Bemf_Level );
+  return ( pHandle->wEstBemfLevel );
 }
 
-/**
-  * @brief  It exports observed Bemf squared level
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval int32_t
-  */
-int32_t STO_PLL_GetObservedBemfLevel( STO_PLL_Handle_t * pHandle )
+
+int32_t BemfObsPll_GetObservedBemfLevel( BemfObserverPllHandle_t * pHandle )
 {
-  return ( pHandle->Obs_Bemf_Level );
+  return ( pHandle->wObsBemfLevel );
 }
 
-/**
-  * @brief  It enables/disables the bemf consistency check
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  bSel boolean; true enables check; false disables check
-  */
-void STO_PLL_BemfConsistencyCheckSwitch( STO_PLL_Handle_t * pHandle, bool bSel )
+
+void BemfObsPll_BemfConsistencyCheckSwitch( BemfObserverPllHandle_t * pHandle, bool bSel )
 {
-  pHandle->EnableDualCheck = bSel;
+  pHandle->bEnableDualCheck = bSel;
 }
 
-/**
-  * @brief  It returns the result of the Bemf consistency check
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval bool Bemf consistency state
-  */
-bool STO_PLL_IsBemfConsistent( STO_PLL_Handle_t * pHandle )
+
+bool BemfObsPll_IsBemfConsistent( BemfObserverPllHandle_t * pHandle )
 {
-  return ( pHandle->IsBemfConsistent );
+  return ( pHandle->bIsBemfConsistent );
 }
 
-/**
-  * @brief  It returns the result of the last variance check
-  * @param  pHandle: handler of the current instance of the STO component
-  * @retval bool Variance state
-  */
-bool STO_PLL_IsVarianceTight( const STO_Handle_t * pHandle )
+
+bool BemfObsPll_IsVarianceTight( const BemfObserver_t * pHandle )
 {
-  STO_PLL_Handle_t * pHdl = ( STO_PLL_Handle_t * )pHandle->_Super;
-  return ( pHdl->IsSpeedReliable );
+  BemfObserverPllHandle_t * pHdl = ( BemfObserverPllHandle_t * )pHandle->Super;
+  return ( pHdl->bIsSpeedReliable );
 }
 
-/**
-  * @brief  It forces the state-observer to declare convergency
-  * @param  pHandle: handler of the current instance of the STO component
-  */
-void STO_PLL_ForceConvergency1( STO_Handle_t * pHandle )
+
+void BemfObsPll_ForceConvergency1( BemfObserver_t * pHandle )
 {
-  STO_PLL_Handle_t * pHdl = ( STO_PLL_Handle_t * )pHandle->_Super;
-  pHdl->ForceConvergency = true;
+  BemfObserverPllHandle_t * pHdl = ( BemfObserverPllHandle_t * )pHandle->Super;
+  pHdl->bForceConvergency = true;
 }
 
-/**
-  * @brief  It forces the state-observer to declare convergency
-  * @param  pHandle: handler of the current instance of the STO component
-  */
-void STO_PLL_ForceConvergency2( STO_Handle_t * pHandle )
+
+void BemfObsPll_ForceConvergency2( BemfObserver_t * pHandle )
 {
-  STO_PLL_Handle_t * pHdl = ( STO_PLL_Handle_t * )pHandle->_Super;
-  pHdl->ForceConvergency2 = true;
+  BemfObserverPllHandle_t * pHdl = ( BemfObserverPllHandle_t * )pHandle->Super;
+  pHdl->bForceConvergency2 = true;
 }
 
-/**
-  * @brief  Set the Absolute value of minimum mechanical speed (expressed in
-  *         the unit defined by #SPEED_UNIT) required to validate the start-up.
-  * @param  pHandle: handler of the current instance of the STO component
-  * @param  hMinStartUpValidSpeed: Absolute value of minimum mechanical speed
-  */
-void STO_SetMinStartUpValidSpeedUnit( STO_PLL_Handle_t * pHandle, uint16_t hMinStartUpValidSpeed )
+
+void BemfObsPll_SetMinStartUpValidSpeedUnit( BemfObserverPllHandle_t * pHandle, uint16_t hMinStartUpValidSpeed )
 {
-  pHandle->MinStartUpValidSpeed = hMinStartUpValidSpeed;
+  pHandle->hMinStartUpValidSpeed = hMinStartUpValidSpeed;
 }
 
-/**
-  * @brief  forces the rotation direction
-  * @param  direction: imposed direction
-  */
-void STO_SetDirection( STO_PLL_Handle_t * pHandle, uint8_t direction )
+
+void BemfObsPll_SetDirection( BemfObserverPllHandle_t * pHandle, uint8_t direction )
 {
   pHandle->hForcedDirection = direction;
 }

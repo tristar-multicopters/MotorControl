@@ -1,11 +1,8 @@
 /**
-  ******************************************************************************
   * @file    mc_math.h
-  * @author  Sami Bouzid, FTEX inc
   * @brief   This file provides mathematics functions useful for and specific to
-  *          Motor Control.
+  *          Motor Control application
   *
-  ******************************************************************************
 */
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef MC_MATH_H
@@ -47,7 +44,7 @@ typedef struct
 {
   int16_t hCos;
   int16_t hSin;
-} Trig_Components;
+} TrigComponents_t;
 
 /**
   * @brief  This function transforms stator currents Ia and qIb (which are
@@ -56,9 +53,9 @@ typedef struct
   *                               Ialpha = Ia
   *                       Ibeta = -(2*Ib+Ia)/sqrt(3)
   * @param  Curr_Input: stator current Ia and Ib in ab_t format
-  * @retval Stator current Ialpha and Ibeta in alphabeta_t format
+  * @retval Stator current Ialpha and Ibeta in AlphaBeta_t format
   */
-alphabeta_t MCM_Clarke( ab_t Input );
+AlphaBeta_t MCMath_Clarke( ab_t Input );
 
 /**
   * @brief  This function transforms stator values alpha and beta, which
@@ -66,11 +63,11 @@ alphabeta_t MCM_Clarke( ab_t Input );
   *         synchronous reference frame (properly oriented), so as Iq and Id.
   *                   Id= Ialpha *sin(theta)+qIbeta *cos(Theta)
   *                   Iq=qIalpha *cos(Theta)-qIbeta *sin(Theta)
-  * @param  Curr_Input: stator values alpha and beta in alphabeta_t format
+  * @param  Curr_Input: stator values alpha and beta in AlphaBeta_t format
   * @param  Theta: rotating frame angular position in q1.15 format
   * @retval Stator current q and d in qd_t format
   */
-qd_t MCM_Park( alphabeta_t Input, int16_t Theta );
+qd_t MCMath_Park( AlphaBeta_t Input, int16_t Theta );
 
 /**
   * @brief  This function transforms stator voltage qVq and qVd, that belong to
@@ -80,17 +77,17 @@ qd_t MCM_Park( alphabeta_t Input, int16_t Theta );
   *                  Vbeta=-Vq*Sin(theta)+ Vd*Cos(theta)
   * @param  Curr_Input: stator voltage Vq and Vd in qd_t format
   * @param  Theta: rotating frame angular position in q1.15 format
-  * @retval Stator values alpha and beta in alphabeta_t format
+  * @retval Stator values alpha and beta in AlphaBeta_t format
   */
-alphabeta_t MCM_Rev_Park( qd_t Input, int16_t Theta );
+AlphaBeta_t MCMath_RevPark( qd_t Input, int16_t Theta );
 
 /**
   * @brief  This function returns cosine and sine functions of the angle fed in
   *         input
   * @param  hAngle: angle in q1.15 format
-  * @retval Trig_Components Cos(angle) and Sin(angle) in Trig_Components format
+  * @retval TrigComponents_t Cos(angle) and Sin(angle) in TrigComponents_t format
   */
-Trig_Components MCM_Trig_Functions( int16_t hAngle );
+TrigComponents_t MCMath_TrigFunctions( int16_t hAngle );
 
 /**
   * @brief  It calculates the square root of a non-negative s32. It returns 0
@@ -98,16 +95,16 @@ Trig_Components MCM_Trig_Functions( int16_t hAngle );
   * @param  Input int32_t number
   * @retval int32_t Square root of Input (0 if Input<0)
   */
-int32_t MCM_Sqrt( int32_t wInput );
+int32_t MCMath_Sqrt( int32_t wInput );
 
 /**
   * @brief  It executes CORDIC algorithm for rotor position extraction from B-emf
   *         alpha and beta
-  * @param  wBemf_alfa_est estimated Bemf alpha on the stator reference frame
-  *         wBemf_beta_est estimated Bemf beta on the stator reference frame
+  * @param  wBemfalfaEst estimated Bemf alpha on the stator reference frame
+  *         wBemfbetaEst estimated Bemf beta on the stator reference frame
   * @retval int16_t rotor electrical angle (s16degrees)
   */
-int16_t MCM_PhaseComputation( int32_t wBemf_alfa_est, int32_t wBemf_beta_est );
+int16_t MCMath_PhaseComputation( int32_t wBemfalfaEst, int32_t wBemfbetaEst );
 
 /**
   * @brief  This function codify a floting point number into the relative
@@ -115,7 +112,7 @@ int16_t MCM_PhaseComputation( int32_t wBemf_alfa_est, int32_t wBemf_beta_est );
   * @param  float Floting point number to be coded.
   * @retval uint32_t Coded 32bit integer.
   */
-uint32_t MCM_floatToIntBit( float x );
+uint32_t MCMath_FloatToIntBit( float x );
 
 
 #endif /* MC_MATH_H*/

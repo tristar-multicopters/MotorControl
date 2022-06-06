@@ -1,10 +1,8 @@
 /**
-  ******************************************************************************
   * @file    pwm_common.h
   * @author  Sami Bouzid, FTEX inc
   * @brief   This file provides firmware functions that implement common features
   *          of the PWM & Current Feedback component.
-  ******************************************************************************
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -23,7 +21,7 @@ extern "C" {
 /* Exported functions --------------------------------------------------------*/
 
 /**
- * @brief  It waits for the end of the polarization.
+ * @brief  It waits for the end of the polarization, i.e. when the counter value reach NB_CONVERSIONS
  * @param  cnt: polarization counter value
  * @retval none
  */

@@ -1,11 +1,8 @@
 /**
-  ******************************************************************************
   * @file    mc_math.c
-  * @author  Sami Bouzid, FTEX inc
   * @brief   This file provides mathematics functions useful for and specific to
-  *          Motor Control.
+  *          Motor Control application
   *
-  ******************************************************************************
 	*/
 /* Includes ------------------------------------------------------------------*/
 #include "mc_math.h"
@@ -19,9 +16,9 @@
 const float fPi = (float)3.1416; /* pi */
 
 
-alphabeta_t MCM_Clarke( ab_t Input  )
+AlphaBeta_t MCMath_Clarke( ab_t Input  )
 {
-  alphabeta_t Output;
+  AlphaBeta_t Output;
 
   int32_t a_divSQRT3_tmp, b_divSQRT3_tmp ;
   int32_t wbeta_tmp;
@@ -72,15 +69,15 @@ alphabeta_t MCM_Clarke( ab_t Input  )
 }
 
 
-qd_t MCM_Park( alphabeta_t Input, int16_t Theta )
+qd_t MCMath_Park( AlphaBeta_t Input, int16_t Theta )
 {
   qd_t Output;
   int32_t d_tmp_1, d_tmp_2, q_tmp_1, q_tmp_2;
-  Trig_Components Local_Vector_Components;
+  TrigComponents_t Local_Vector_Components;
   int32_t wqd_tmp;
   int16_t hqd_tmp;
 
-  Local_Vector_Components = MCM_Trig_Functions( Theta );
+  Local_Vector_Components = MCMath_TrigFunctions( Theta );
 
   /*No overflow guaranteed*/
   q_tmp_1 = Input.alpha * ( int32_t )Local_Vector_Components.hCos;
@@ -160,13 +157,13 @@ qd_t MCM_Park( alphabeta_t Input, int16_t Theta )
 }
 
 
-alphabeta_t MCM_Rev_Park( qd_t Input, int16_t Theta )
+AlphaBeta_t MCMath_RevPark( qd_t Input, int16_t Theta )
 {
   int32_t alpha_tmp1, alpha_tmp2, beta_tmp1, beta_tmp2;
-  Trig_Components Local_Vector_Components;
-  alphabeta_t Output;
+  TrigComponents_t Local_Vector_Components;
+  AlphaBeta_t Output;
 
-  Local_Vector_Components = MCM_Trig_Functions( Theta );
+  Local_Vector_Components = MCMath_TrigFunctions( Theta );
 
   /*No overflow guaranteed*/
   alpha_tmp1 = Input.q * ( int32_t )Local_Vector_Components.hCos;
@@ -197,11 +194,11 @@ alphabeta_t MCM_Rev_Park( qd_t Input, int16_t Theta )
 }
 
 
-Trig_Components MCM_Trig_Functions( int16_t hAngle )
+TrigComponents_t MCMath_TrigFunctions( int16_t hAngle )
 {
 	float fAngle = 0;
 	float fSin, fCos;
-	Trig_Components sCosSin;
+	TrigComponents_t sCosSin;
 
 	fAngle = (float)hAngle/(INT16_MAX+1) * fPi;
 	sincosf(fAngle, &fSin, &fCos);
@@ -214,7 +211,7 @@ Trig_Components MCM_Trig_Functions( int16_t hAngle )
 }
 
 
-int32_t MCM_Sqrt( int32_t wInput )
+int32_t MCMath_Sqrt( int32_t wInput )
 {
   int32_t wtemprootnew;
 
@@ -257,18 +254,18 @@ int32_t MCM_Sqrt( int32_t wInput )
 }
 
 
-inline int16_t MCM_PhaseComputation( int32_t wBemf_alfa_est, int32_t wBemf_beta_est )
+inline int16_t MCMath_PhaseComputation( int32_t wBemfalfaEst, int32_t wBemfbetaEst )
 {
 	float fAngle = 0;
 	
-	fAngle = atan2f(wBemf_beta_est>>8, wBemf_alfa_est>>8); /* Reduce amplitude of BEMF to fit into float type*/
+	fAngle = atan2f(wBemfbetaEst>>8, wBemfalfaEst>>8); /* Reduce amplitude of BEMF to fit into float type*/
 
   return (int16_t)(fAngle/fPi*INT16_MAX);
 
 }
 
 
-uint32_t MCM_floatToIntBit( float x )
+uint32_t MCMath_FloatToIntBit( float x )
 {
   uint32_t * pInt;
   pInt = ( uint32_t * )( &x );

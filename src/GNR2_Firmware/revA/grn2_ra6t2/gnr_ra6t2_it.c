@@ -1,9 +1,6 @@
-/*
-  ******************************************************************************
+/**
   * @file    gnr_ra6t2_it.c
-	* @author  FTEX inc
   * @brief   Interrupt Service Routines.
-  ******************************************************************************
 */
 
 /* Includes ------------------------------------------------------------------*/
@@ -21,16 +18,8 @@ void CS_ADC_IRQHandler(adc_callback_args_t * p_args)
 {
 	if (p_args->event == ADC_EVENT_SCAN_COMPLETE && p_args->group_mask == ADC_GROUP_MASK_0)
 	{
-		/* Debug purpose, create pulse visible using oscilloscope */
-		R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_04, BSP_IO_LEVEL_HIGH);
-		R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_04, BSP_IO_LEVEL_LOW);
-
 		/* Run motor control high frequency task */
-		TSK_HighFrequencyTask();
-
-		/* Debug purpose, create pulse visible using oscilloscope */
-//		R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_HIGH);
-//		R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_LOW);
+		MC_HighFrequencyTask();
 	}
 
 }
@@ -47,9 +36,8 @@ void PWM_TIM_UP_IRQHandler(timer_callback_args_t * p_args)
 
 	if (p_args->event == TIMER_EVENT_CREST)
 	{
-		
 		/* Run motor control timer update routine */
-		ICS_TIMx_UP_IRQHandler(&PWM_Handle_M1);
+		PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(&PWMHandleM1);
 	}
 }
 
@@ -61,13 +49,13 @@ void PWM_TIM_UP_IRQHandler(timer_callback_args_t * p_args)
 void PWM_TIM_BRK_IRQHandler(poeg_callback_args_t * p_args)
 {
 	if(NULL != p_args)
-    {
-    /* Stop POEG module so it does not reenter this interrupt twice */
-	R_POEG_Close(PWM_Handle_M1.pParams_str->pPOEGHandle->p_ctrl);
+  {
+	  /* Stop POEG module so it does not reenter this interrupt twice */
+		R_POEG_Close(PWM_Handle_M1.pParams_str->pPOEGHandle->p_ctrl);
 
-	/* Run motor control PWM break routine */
-	ICS_BRK2_IRQHandler(&PWM_Handle_M1);
-    }
+		/* Run motor control PWM break routine */
+		ICS_BRK2_IRQHandler(&PWM_Handle_M1);
+  }
 }
 
 /**
@@ -81,18 +69,10 @@ void HALL_TIM_UP_CC_IRQHandler(timer_callback_args_t * p_args)
         switch (p_args->event)
         {
             case TIMER_EVENT_CYCLE_END:
-                HALL_TIMx_UP_IRQHandler(&HALL_M1);
+                HallPosSensor_TIMx_UP_IRQHandler(&HallPosSensorM1);
                 break;
             case TIMER_EVENT_CAPTURE_A:
-//								/* Debug purpose, create pulse visible using oscilloscope */
-//								R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_HIGH);
-//								R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_LOW);
-						
-                HALL_TIMx_CC_IRQHandler(&HALL_M1,&p_args->capture);
-						
-//								/* Debug purpose, create pulse visible using oscilloscope */
-//								R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_HIGH);
-//								R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_LOW);
+                HallPosSensor_TIMx_CC_IRQHandler(&HallPosSensorM1,&p_args->capture);
                 break;
             case TIMER_EVENT_CAPTURE_B:
                 break;

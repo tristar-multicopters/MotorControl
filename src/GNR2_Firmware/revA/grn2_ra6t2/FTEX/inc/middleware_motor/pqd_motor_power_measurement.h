@@ -1,11 +1,13 @@
 /**
-  ******************************************************************************
   * @file    pqd_motor_power_measurement.h
-  * @author  FTEX inc
-  * @brief   This file contains all definitions and functions prototypes for the
-  *          pqd_motor_power_measurement component of the Motor Control SDK.
-  ******************************************************************************
-  * @attention
+  * @brief   This file provides firmware functions that implement the following features
+  *          of the PQD Motor Power Measurement component of the Motor Control application:
+  *
+  *           * Calculate power of the motor
+  *           * Clear power measurement
+  *           * Get Power of the motor
+  *           * Get average Power of the motor
+  *
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -22,7 +24,7 @@ extern "C" {
 
 typedef struct
 {
-  MotorPowMeas_Handle_t _super;
+  MotorPowerMeasHandle_t Super;
 
   int32_t wConvFact; /* It is the conversion factor used to convert the
                          variables expressed in digit into variables expressed
@@ -31,8 +33,8 @@ typedef struct
                          (1000 * 3 * Vddï¿½)/(sqrt(3) * Rshunt * Aop) */
 
   pFOCVars_t pFOCVars;    /*!< Pointer to FOC vars used by MPM.*/
-  BusVoltageSensor_Handle_t * pVBS;              /*!< Bus voltage sensor object used by MPM.*/
-} PQD_MotorPowMeas_Handle_t;
+  BusVoltageSensorHandle_t * pVBS;              /*!< Bus voltage sensor object used by MPM.*/
+} MotorPowerQDHandle_t;
 
 
 
@@ -41,14 +43,14 @@ typedef struct
   * @param pHandle related component instance.
   * @retval none.
   */
-void PQD_Clear( PQD_MotorPowMeas_Handle_t * pHandle );
+void MotorPowerQD_Clear( MotorPowerQDHandle_t * pHandle );
 
 /**
   * @brief Implementation of derived class CalcElMotorPower.
   * @param pHandle related component instance.
   * @retval int16_t The measured motor power expressed in watt.
   */
-void PQD_CalcElMotorPower( PQD_MotorPowMeas_Handle_t * pHandle );
+void MotorPowerQD_CalcElMotorPower( MotorPowerQDHandle_t * pHandle );
 
 
 #ifdef __cplusplus

@@ -1,45 +1,38 @@
 /**
-* @file bus_voltage_sensor.c
-* @brief This file provides firmware functions that implement the features of the BusVoltageSensor component of the Motor Control SDK.
+  * @file    bus_voltage_sensor.c
+  * @brief   This file provides firmware functions that implement the features
+  *          of the BusVoltageSensor component of the Motor Control application.
+  *
 */
+
+/* Includes ------------------------------------------------------------------*/
 
 #include "bus_voltage_sensor.h"
 
-// ========================================================================= //
 
-/**
-* It return latest Vbus conversion result expressed in u16Volt
-*/
-uint16_t VBS_GetBusVoltage_d( BusVoltageSensor_Handle_t * pHandle )
+uint16_t VbusSensor_GetBusVoltageDigital( BusVoltageSensorHandle_t * pHandle )
 {
-    return pHandle->LatestConv;
+  return pHandle->LatestConv;
 }
 
-/**
-* It return latest averaged Vbus measurement expressed in u16Volt
-*/
-uint16_t VBS_GetAvBusVoltage_d( BusVoltageSensor_Handle_t * pHandle )
+
+uint16_t VbusSensor_GetAvBusVoltageDigital( BusVoltageSensorHandle_t * pHandle )
 {
-    return pHandle->AvBusVoltage_d;
+  return pHandle->AvBusVoltage_d;
 }
 
-/**
-* It return latest averaged Vbus measurement expressed in Volts
-*/
-uint16_t VBS_GetAvBusVoltage_V( BusVoltageSensor_Handle_t * pHandle )
+
+uint16_t VbusSensor_GetAvBusVoltageVolt( BusVoltageSensorHandle_t * pHandle )
 {
-    uint32_t temp;
-    temp = (uint32_t) pHandle->AvBusVoltage_d;
-    temp *= pHandle->ConversionFactor;  // To convert average voltage from digital to volts scale, AvBusVoltage_V = ( AvBusVoltage/ 65526 ) * (ADC_REF_VOLTAGE / V_BUS_SCALING_FACTOR)
-    temp /= 65536u;
-    return (uint16_t) temp;
+  uint32_t temp;
+  temp = (uint32_t) pHandle->AvBusVoltage_d;
+  temp *= pHandle->ConversionFactor;  // To convert average voltage from digital to volts scale, AvBusVoltage_V = ( AvBusVoltage/ 65526 ) * (ADC_REF_VOLTAGE / V_BUS_SCALING_FACTOR)
+  temp /= 65536u;
+  return (uint16_t) temp;
 }
 
-/**
-* It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_ERROR depending on bus voltage and protection threshold values
-*/
-uint16_t VBS_CheckVbus( BusVoltageSensor_Handle_t * pHandle )
-{
-    return pHandle->FaultState;
-}
 
+uint16_t VbusSensor_GetFaultState( BusVoltageSensorHandle_t * pHandle )
+{
+  return pHandle->FaultState;
+}

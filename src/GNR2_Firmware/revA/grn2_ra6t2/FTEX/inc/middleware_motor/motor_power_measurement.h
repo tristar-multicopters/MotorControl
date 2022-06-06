@@ -1,10 +1,7 @@
 /**
-  ******************************************************************************
   * @file    motor_power_measurement.h
-  * @author  FTEX inc
   * @brief   This file contains all definitions and functions prototypes for the
-  *          Motor Power Measurement component of the Motor Control SDK.
-  ******************************************************************************
+  *          Motor Power Measurement component of the Motor Control application.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -31,12 +28,8 @@ typedef struct
                                         motor power measurement. */
   int16_t hAvrgElMotorPowerW; /*!< The average measured motor power expressed in
                                      watt. */
-} MotorPowMeas_Handle_t;
+} MotorPowerMeasHandle_t;
 
-/**
-  * @brief  MotorPowerMeasurement class init struct definition
-  */
-typedef void * pMPMInitStruct_t;
 
 
 /**
@@ -45,7 +38,7 @@ typedef void * pMPMInitStruct_t;
   * @param power handle.
   * @retval none.
   */
-void MPM_Clear( MotorPowMeas_Handle_t * pHandle );
+void MotorPowMeas_Clear( MotorPowerMeasHandle_t * pHandle );
 
 /**
   * @brief  This method should be called with periodicity. It computes and
@@ -55,7 +48,7 @@ void MPM_Clear( MotorPowMeas_Handle_t * pHandle );
   * @param power handle.
   * @retval int16_t The measured motor power expressed in watt.
   */
-int16_t MPM_CalcElMotorPower( MotorPowMeas_Handle_t * pHandle, int16_t MotorPower );
+int16_t MotorPowMeas_CalcElMotorPower( MotorPowerMeasHandle_t * pHandle, int16_t MotorPower );
 
 /**
   * @brief  This method is used to get the last measured motor power
@@ -64,7 +57,7 @@ int16_t MPM_CalcElMotorPower( MotorPowMeas_Handle_t * pHandle, int16_t MotorPowe
   * @retval int16_t The last measured motor power (instantaneous value)
   *         expressed in watt.
   */
-int16_t MPM_GetElMotorPowerW( MotorPowMeas_Handle_t * pHandle );
+int16_t MotorPowMeas_GetElMotorPowerW( MotorPowerMeasHandle_t * pHandle );
 
 /**
   * @brief  This method is used to get the average measured motor power
@@ -72,7 +65,7 @@ int16_t MPM_GetElMotorPowerW( MotorPowMeas_Handle_t * pHandle );
   * @param pHandle related component instance.
   * @retval int16_t The average measured motor power expressed in watt.
   */
-int16_t MPM_GetAvrgElMotorPowerW( MotorPowMeas_Handle_t * pHandle );
+int16_t MotorPowMeas_GetAvrgElMotorPowerW( MotorPowerMeasHandle_t * pHandle );
 
 
 #ifdef __cplusplus

@@ -1,11 +1,8 @@
 /**
-  ******************************************************************************
   * @file    flux_weakening_ctrl.c
-  * @author  FTEX inc
   * @brief   This file provides firmware functions that implement the Flux Weakening
-  *          Control component of the Motor Control SDK.
+  *          Control component of the Motor Control application.
   *
-  ******************************************************************************
 */
 
 /* Includes ------------------------------------------------------------------*/
@@ -15,68 +12,44 @@
 #include "mc_type.h"
 #include "pid_regulator.h"
 
-/**
-  * @brief  Initializes all the object variables, usually it has to be called
-  *         once right after object creation.
-  * @param  pHandle Flux weakening init strutcture.
-  * @param  pPIDSpeed Speed PID strutcture.
-  * @param  PIDFluxWeakeningHandle FW PID strutcture.
-  * @retval none.
-  */
-void FW_Init( FW_Handle_t * pHandle, PID_Handle_t * pPIDSpeed, PID_Handle_t * pPIDFluxWeakeningHandle )
+
+void FluxWkng_Init( FluxWeakeningHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDFluxWeakeningHandle )
 {
-  pHandle->hFW_V_Ref = pHandle->hDefaultFW_V_Ref;
+  pHandle->hFwVoltRef = pHandle->hDefaultFwVoltRef;
 
   pHandle->pFluxWeakeningPID = pPIDFluxWeakeningHandle;
 
   pHandle->pSpeedPID = pPIDSpeed;
 }
 
-/**
-  * @brief  It should be called before each motor restart and clears the Flux
-  *         weakening internal variables with the exception of the target
-  *         voltage (hFW_V_Ref).
-  * @param  pHandle Flux weakening init strutcture.
-  * @retval none
-  */
-void FW_Clear( FW_Handle_t * pHandle )
+
+void FluxWkng_Clear( FluxWeakeningHandle_t * pHandle )
 {
   qd_t V_null = {( int16_t )0, ( int16_t )0};
 
   PID_SetIntegralTerm( pHandle->pFluxWeakeningPID, ( int32_t )0 );
-  pHandle->AvVolt_qd = V_null;
+  pHandle->AvVoltQd = V_null;
   pHandle->AvVoltAmpl = ( int16_t )0;
   pHandle->hIdRefOffset = ( int16_t )0;
 }
 
-/**
-  * @brief  It computes Iqdref according the flux weakening algorithm.  Inputs
-  *         are the starting Iqref components.
-  *         As soon as the speed increases beyond the nominal one, fluxweakening
-  *         algorithm take place and handles Idref value. Finally, accordingly
-  *         with new Idref, a new Iqref saturation value is also computed and
-  *         put into speed PI.
-  * @param  pHandle Flux weakening init strutcture.
-  * @param  Iqdref The starting current components that have to be
-  *         manipulated by the flux weakening algorithm.
-  * @retval qd_t Computed Iqdref.
-  */
-qd_t FW_CalcCurrRef( FW_Handle_t * pHandle, qd_t Iqdref )
+
+qd_t FluxWkng_CalcCurrRef( FluxWeakeningHandle_t * pHandle, qd_t Iqdref )
 {
   int32_t wIdRef, wIqSatSq, wIqSat, wAux1, wAux2;
   uint32_t wVoltLimit_Ref;
   int16_t hId_fw;
 
   /* Computation of the Id contribution coming from flux weakening algorithm */
-  wVoltLimit_Ref = ( ( uint32_t )( pHandle->hFW_V_Ref ) * pHandle->hMaxModule )
+  wVoltLimit_Ref = ( ( uint32_t )( pHandle->hFwVoltRef ) * pHandle->hMaxModule )
                    / 1000u;
-  wAux1 = ( int32_t )( pHandle->AvVolt_qd.q ) *
-          pHandle->AvVolt_qd.q;
-  wAux2 = ( int32_t )( pHandle->AvVolt_qd.d ) *
-          pHandle->AvVolt_qd.d;
+  wAux1 = ( int32_t )( pHandle->AvVoltQd.q ) *
+          pHandle->AvVoltQd.q;
+  wAux2 = ( int32_t )( pHandle->AvVoltQd.d ) *
+          pHandle->AvVoltQd.d;
   wAux1 += wAux2;
 
-  wAux1 = MCM_Sqrt( wAux1 );
+  wAux1 = MCMath_Sqrt( wAux1 );
   pHandle->AvVoltAmpl = ( int16_t )wAux1;
 
   /* Just in case sqrt rounding exceeded INT16_MAX */
@@ -110,7 +83,7 @@ qd_t FW_CalcCurrRef( FW_Handle_t * pHandle, qd_t Iqdref )
 
   /* New saturation for Iqref */
   wIqSatSq =  pHandle->wNominalSqCurr - wIdRef * wIdRef;
-  wIqSat = MCM_Sqrt( wIqSatSq );
+  wIqSat = MCMath_Sqrt( wIqSatSq );
 
   /* Iqref saturation value used for updating integral term limitations of
   speed PI */
@@ -136,57 +109,44 @@ qd_t FW_CalcCurrRef( FW_Handle_t * pHandle, qd_t Iqdref )
   return ( Iqdref );
 }
 
-/**
-  * @brief  It low-pass filters both the Vqd voltage components. Filter
-  *         bandwidth depends on hVqdLowPassFilterBW parameter
-  * @param  pHandle Flux weakening init strutcture.
-  * @param  Vqd Voltage componets to be averaged.
-  * @retval none
-  */
-void FW_DataProcess( FW_Handle_t * pHandle, qd_t Vqd )
+
+void FluxWkng_DataProcess( FluxWeakeningHandle_t * pHandle, qd_t Vqd )
 {
   int32_t wAux;
-  int32_t lowPassFilterBW = ( int32_t )( pHandle->hVqdLowPassFilterBW ) - ( int32_t )1 ;
+  int32_t lowPassFilterBW = ( int32_t )( pHandle->hVqdLowPassFilterBw ) - ( int32_t )1 ;
   
 #ifdef FULL_MISRA_C_COMPLIANCY
-  wAux = ( int32_t )( pHandle->AvVolt_qd.q ) * lowPassFilterBW;
+  wAux = ( int32_t )( pHandle->AvVoltQd.q ) * lowPassFilterBW;
   wAux += Vqd.q;
 
-  pHandle->AvVolt_qd.q = ( int16_t )( wAux /
-                                     ( int32_t )( pHandle->hVqdLowPassFilterBW ) );
+  pHandle->AvVoltQd.q = ( int16_t )( wAux /
+                                     ( int32_t )( pHandle->hVqdLowPassFilterBw ) );
 
-  wAux = ( int32_t )( pHandle->AvVolt_qd.d ) * lowPassFilterBW;
+  wAux = ( int32_t )( pHandle->AvVoltQd.d ) * lowPassFilterBW;
   wAux += Vqd.d;
 
-  pHandle->AvVolt_qd.d = ( int16_t )( wAux /
-                                     ( int32_t )pHandle->hVqdLowPassFilterBW );
+  pHandle->AvVoltQd.d = ( int16_t )( wAux /
+                                     ( int32_t )pHandle->hVqdLowPassFilterBw );
 #else
-  wAux = ( int32_t )( pHandle->AvVolt_qd.q ) * lowPassFilterBW;
+  wAux = ( int32_t )( pHandle->AvVoltQd.q ) * lowPassFilterBW;
   wAux += Vqd.q;
 
-  pHandle->AvVolt_qd.q = ( int16_t )( wAux >>
-                                      pHandle->hVqdLowPassFilterBWLOG );
+  pHandle->AvVoltQd.q = ( int16_t )( wAux >>
+                                      pHandle->hVqdLowPassFilterBwLog );
   
-  wAux = ( int32_t )( pHandle->AvVolt_qd.d ) * lowPassFilterBW;
+  wAux = ( int32_t )( pHandle->AvVoltQd.d ) * lowPassFilterBW;
   wAux += Vqd.d;
-  pHandle->AvVolt_qd.d = ( int16_t )( wAux >>
-                                      pHandle->hVqdLowPassFilterBWLOG );
+  pHandle->AvVoltQd.d = ( int16_t )( wAux >>
+                                      pHandle->hVqdLowPassFilterBwLog );
   
 #endif
   return;
 }
 
-/**
-  * @brief  Use this method to set a new value for the voltage reference used by
-  *         flux weakening algorithm.
-  * @param  pHandle Flux weakening init strutcture.
-  * @param  uint16_t New target voltage value, expressend in tenth of percentage
-  *         points of available voltage.
-  * @retval none
-  */
-void FW_SetVref( FW_Handle_t * pHandle, uint16_t hNewVref )
+
+void FluxWkng_SetVref( FluxWeakeningHandle_t * pHandle, uint16_t hNewVref )
 {
-  pHandle->hFW_V_Ref = hNewVref;
+  pHandle->hFwVoltRef = hNewVref;
 }
 
 /**
@@ -196,9 +156,9 @@ void FW_SetVref( FW_Handle_t * pHandle, uint16_t hNewVref )
   * @retval int16_t Present target voltage value expressed in tenth of
   *         percentage points of available voltage.
   */
-uint16_t FW_GetVref( FW_Handle_t * pHandle )
+uint16_t FluxWkng_GetVref( FluxWeakeningHandle_t * pHandle )
 {
-  return ( pHandle->hFW_V_Ref );
+  return ( pHandle->hFwVoltRef );
 }
 
 /**
@@ -209,7 +169,7 @@ uint16_t FW_GetVref( FW_Handle_t * pHandle )
   *         in s16V (0-to-peak), where
   *         PhaseVoltage(V) = [PhaseVoltage(s16A) * Vbus(V)] /[sqrt(3) *32767].
   */
-int16_t FW_GetAvVAmplitude( FW_Handle_t * pHandle )
+int16_t FluxWkng_GetAvVAmplitude( FluxWeakeningHandle_t * pHandle )
 {
   return ( pHandle->AvVoltAmpl );
 }
@@ -221,7 +181,7 @@ int16_t FW_GetAvVAmplitude( FW_Handle_t * pHandle )
   * @retval uint16_t Present averaged phase stator voltage value, expressed in
   *         tenth of percentage points of available voltage.
   */
-uint16_t FW_GetAvVPercentage( FW_Handle_t * pHandle )
+uint16_t FluxWkng_GetAvVPercentage( FluxWeakeningHandle_t * pHandle )
 {
   return ( uint16_t )( ( uint32_t )( pHandle->AvVoltAmpl ) * 1000u /
                        ( uint32_t )( pHandle->hMaxModule ) );

@@ -1,23 +1,8 @@
 /**
-  ******************************************************************************
   * @file    mc_tuning.h
-  * @author  FTEX inc
   * @brief   This file contains all definitions and functions prototypes for the
-  *          motor control tuning component of the Motor Control SDK.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  * @ingroup MCTuning
-  */
+  *          motor control tuning component of the Motor Control application.
+*/
 
 
 
@@ -49,21 +34,21 @@ extern "C" {
   */
 typedef struct
 {
-  PID_Handle_t * pPIDSpeed;
-  PID_Handle_t * pPIDIq;
-  PID_Handle_t * pPIDId;
-  PID_Handle_t * pPIDFluxWeakening;
-  PWMC_Handle_t * pPWMnCurrFdbk;
-  SpeednPosFdbk_Handle_t * pSpeedSensorMain;
-  SpeednPosFdbk_Handle_t * pSpeedSensorAux;
+  PIDHandle_t * pPIDSpeed;
+  PIDHandle_t * pPIDIq;
+  PIDHandle_t * pPIDId;
+  PIDHandle_t * pPIDFluxWeakening;
+  PWMCurrFdbkHandle_t * pPWMnCurrFdbk;
+  SpeednPosFdbkHandle_t * pSpeedSensorMain;
+  SpeednPosFdbkHandle_t * pSpeedSensorAux;
   VirtualSpeedSensor_Handle_t * pSpeedSensorVirtual;
-  SpeednTorqCtrl_Handle_t * pSpeednTorqueCtrl;
-  STM_Handle_t * pStateMachine;
-  NTC_Handle_t * pTemperatureSensor;
-  BusVoltageSensor_Handle_t * pBusVoltageSensor;
-  MotorPowMeas_Handle_t * pMPM;
-  FW_Handle_t  * pFW;
-  FF_Handle_t  * pFF;
-} MCT_Handle_t;
+  SpeednTorqCtrlHandle_t * pSpeednTorqueCtrl;
+  MotorStateMachineHandle_t * pStateMachine;
+  NTCTempSensorHandle_t * pTemperatureSensor;
+  BusVoltageSensorHandle_t * pBusVoltageSensor;
+  MotorPowerMeasHandle_t * pMotorPower;
+  FluxWeakeningHandle_t  * pFieldWeakening;
+  FeedforwardHandle_t  * pFeedforward;
+} MotorControlTuningHandle_t;
 
 #endif
