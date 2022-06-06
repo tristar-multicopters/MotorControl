@@ -14,7 +14,7 @@
 #include "mc_type.h"
 
 
-void PID_HandleInit( PIDHandle_t * pHandle )
+void PID_Init( PIDHandle_t * pHandle )
 {
   pHandle->hKpGain =  pHandle->hDefKpGain;
   pHandle->hKiGain =  pHandle->hDefKiGain;

@@ -47,7 +47,7 @@ void BemfObsPll_Init( BemfObserverPllHandle_t * pHandle )
 
   BemfObsPll_Clear( pHandle );
 
-  PID_HandleInit( & pHandle->PIRegulator );
+  PID_Init( & pHandle->PIRegulator );
 
   /* Acceleration measurement set to zero */
   pHandle->Super.hMecAccelUnitP = 0;
@@ -575,7 +575,7 @@ bool BemfObsPll_IsObserverConverged( BemfObserverPllHandle_t * pHandle, int16_t 
       wAux = ( int32_t ) ( hForcedMecSpeedUnit ) * ( int16_t )pHandle->bSpeedValidationBandHigh;
       hUpperThreshold = ( int16_t )( wAux / ( int32_t )16 );
 
-      wAux = ( int32_t ) ( hForcedMecSpeedUnit ) * ( int16_t )pHandle->bSpeedValidationBandLight;
+      wAux = ( int32_t ) ( hForcedMecSpeedUnit ) * ( int16_t )pHandle->bSpeedValidationBandLow;
       hLowerThreshold = ( int16_t )( wAux / ( int32_t )16 );
 
       /* If the variance of the estimated speed is low enough...*/

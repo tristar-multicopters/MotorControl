@@ -109,7 +109,7 @@ typedef struct
                                            being considered wrong. The
                                            measurement unit is 1/16 of forced
                                            speed */
-  uint8_t bSpeedValidationBandLight;   /*!< It expresses how much estimated speed
+  uint8_t bSpeedValidationBandLow;   /*!< It expresses how much estimated speed
                                            can be below forced stator electrical
                                            frequency during start-up without
                                            being considered wrong. The

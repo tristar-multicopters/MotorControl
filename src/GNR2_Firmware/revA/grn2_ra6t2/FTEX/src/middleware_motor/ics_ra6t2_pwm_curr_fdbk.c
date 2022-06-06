@@ -244,6 +244,9 @@ void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler( PWMInsulCurrSensorFdbkHandle_t
 
 void * PWMInsulCurrSensorFdbk_BRK_IRQHandler( PWMInsulCurrSensorFdbkHandle_t * pHdl )
 {
+	/* Stop POEG module so it does not reenter the interrupt twice */
+	R_POEG_Close(pHdl->pParamsStructure->pPOEGHandle->p_ctrl);
+	
   pHdl->bOverCurrentFlag = true;
 
   return &( pHdl->Super.Motor );

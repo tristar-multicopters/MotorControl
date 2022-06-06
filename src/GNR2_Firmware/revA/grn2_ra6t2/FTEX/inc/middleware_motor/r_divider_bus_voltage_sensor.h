@@ -58,13 +58,6 @@ void ResDivVbusSensor_Init( ResDivVbusSensorHandle_t * pHandle );
   */
 void ResDivVbusSensor_Clear( ResDivVbusSensorHandle_t * pHandle );
 
-/**
-  * @brief  It actually performes the Vbus ADC conversion and updates average
-  *         value
-  * @param  pHandle related ResDivVbusSensorHandle_t
-  * @retval uint16_t Fault code error
-  */
-uint16_t ResDivVbusSensor_CalcAvVbusFilt( ResDivVbusSensorHandle_t * pHandle );
 
 /**
   * @brief  It actually performes the Vbus ADC conversion and updates average

@@ -21,7 +21,5 @@
 #define ADC_CLK_MHz     60
 #define HALL_TIM_CLK    120000000uL
 
-#define M1_VBUS_SW_FILTER_BW_FACTOR     6
-
 
 #endif /*__PARAMETERS_CONVERSION_RA6T2_H*/

@@ -145,7 +145,7 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
 /**
   * @brief  Current sensor parameters Dual Drive Motor 1 - ICS, STM32G4xx
   */
-PWMInsulCurrSensorFdbkHandle_t PWMHandleM1 = {
+PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
   {
     .pFctGetPhaseCurrents              = &PWMInsulCurrSensorFdbk_GetPhaseCurrents,
     .pFctSwitchOffPwm                  = &PWMInsulCurrSensorFdbk_SwitchOffPWM,
@@ -191,9 +191,9 @@ PWMInsulCurrSensorFdbkHandle_t PWMHandleM1 = {
   */
 BemfObserverPllHandle_t BemfObserverPllM1 =
 {
-  ._Super = {
+  .Super = {
 	.bElToMecRatio                     =	POLE_PAIR_NUM,
-    .SpeedUnit                         =    SPEED_UNIT,
+    .bSpeedUnit                         =    SPEED_UNIT,
     .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.15*MAX_APPLICATION_SPEED_UNIT),
     .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
     .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
@@ -223,20 +223,20 @@ BemfObserverPllHandle_t BemfObserverPllM1 =
      .hKiDivisorPOW2 = PLL_KIDIV_LOG,
      .hKdDivisorPOW2       = 0x0000U,
    },
- .SpeedBufferSizeUnit                =	STO_FIFO_DEPTH_UNIT,
- .SpeedBufferSizeDpp                 =	STO_FIFO_DEPTH_DPP,
- .VariancePercentage                 =	PERCENTAGE_FACTOR,
- .SpeedValidationBand_H              =	SPEED_BAND_UPPER_LIMIT,
- .SpeedValidationBand_L              =	SPEED_BAND_LOWER_LIMIT,
- .MinStartUpValidSpeed               =	OBS_MINIMUM_SPEED_UNIT,
- .StartUpConsistThreshold            =	NB_CONSECUTIVE_TESTS,
- .Reliability_hysteresys             =	OBS_MEAS_ERRORS_BEFORE_FAULTS,
- .BemfConsistencyCheck               =	BEMF_CONSISTENCY_TOL,
- .BemfConsistencyGain                =	BEMF_CONSISTENCY_GAIN,
- .MaxAppPositiveMecSpeedUnit         =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT*1.15),
- .F1LOG                              =	F1_LOG,
- .F2LOG                              =	F2_LOG,
- .SpeedBufferSizeDppLOG              =	STO_FIFO_DEPTH_DPP_LOG,
+ .bSpeedBufferSizeUnit                =	STO_FIFO_DEPTH_UNIT,
+ .bSpeedBufferSizeDpp                 =	STO_FIFO_DEPTH_DPP,
+ .hVariancePercentage                 =	PERCENTAGE_FACTOR,
+ .bSpeedValidationBandHigh              =	SPEED_BAND_UPPER_LIMIT,
+ .bSpeedValidationBandLow              =	SPEED_BAND_LOWER_LIMIT,
+ .hMinStartUpValidSpeed               =	OBS_MINIMUM_SPEED_UNIT,
+ .bStartUpConsistThreshold            =	NB_CONSECUTIVE_TESTS,
+ .bReliabilityHysteresys             =	OBS_MEAS_ERRORS_BEFORE_FAULTS,
+ .bBemfConsistencyCheck               =	BEMF_CONSISTENCY_TOL,
+ .bBemfConsistencyGain                =	BEMF_CONSISTENCY_GAIN,
+ .hMaxAppPositiveMecSpeedUnit         =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT*1.15),
+ .hF1Log                              =	F1_LOG,
+ .hF2Log                              =	F2_LOG,
+ .hSpeedBufferSizeDppLog              =	STO_FIFO_DEPTH_DPP_LOG,
  .hForcedDirection                   =  0x0000U
 }; BemfObserverPllHandle_t *pBemfObserverPllM1 = &BemfObserverPllM1;
 
@@ -270,7 +270,7 @@ HallPosSensorHandle_t HallPosSensorM1 =
 /**
   * temperature sensor parameters Motor 1
   */
-NTC_Handle_t TempSensorParamsM1 =
+NTCTempSensorHandle_t TempSensorParamsM1 =
 {
   .bSensorType = REAL_SENSOR,
   .TempRegConv =
@@ -279,7 +279,7 @@ NTC_Handle_t TempSensorParamsM1 =
     .channel = ADC_CHANNEL_0,
     .group = GROUP_1,
   },
-  .hLowPassFilterBW        = M1_TEMP_SW_FILTER_BW_FACTOR,
+  .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
   .hOverTempThreshold      = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d),
   .hOverTempDeactThreshold = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d - OV_TEMPERATURE_HYSTERESIS_d),
   .hSensitivity            = (uint16_t)(ADC_REFERENCE_VOLTAGE/dV_dT),
@@ -293,12 +293,12 @@ uint16_t RealBusVoltageSensorFilterBufferM1[M1_VBUS_SW_FILTER_BW_FACTOR];
 /**
   * Bus voltage sensor parameters Motor 1
   */
-RDivider_Handle_t RealBusVoltageSensorParamsM1 =
+ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1 =
 {
-  ._Super                =
+  .Super                =
   {
     .SensorType          = REAL_SENSOR,
-    .ConversionFactor    = (uint16_t)(ADC_REFERENCE_VOLTAGE / VBUS_PARTITIONING_FACTOR),
+    .hConversionFactor    = (uint16_t)(ADC_REFERENCE_VOLTAGE / VBUS_PARTITIONING_FACTOR),
   },
 
   .VbusRegConv =
@@ -307,9 +307,9 @@ RDivider_Handle_t RealBusVoltageSensorParamsM1 =
     .channel = ADC_CHANNEL_1,
     .group = GROUP_1,
   },
-  .LowPassFilterBW       =  M1_VBUS_SW_FILTER_BW_FACTOR,
-  .OverVoltageThreshold  = OVERVOLTAGE_THRESHOLD_d,
-  .UnderVoltageThreshold =  UNDERVOLTAGE_THRESHOLD_d,
+  .hLowPassFilterBw       =  M1_VBUS_SW_FILTER_BW_FACTOR,
+  .hOverVoltageThreshold  = OVERVOLTAGE_THRESHOLD_d,
+  .hUnderVoltageThreshold =  UNDERVOLTAGE_THRESHOLD_d,
   .aBuffer = RealBusVoltageSensorFilterBufferM1,
 };
 

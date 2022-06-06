@@ -84,6 +84,8 @@
 #define DELTA_V_HYSTERESIS           (dV_dT * DELTA_TEMP_HYSTERESIS)
 #define OV_TEMPERATURE_HYSTERESIS_d  (DELTA_V_HYSTERESIS*INT_SUPPLY_VOLTAGE)
 
+#define M1_VBUS_SW_FILTER_BW_FACTOR     6
+
 /*************** Timer for PWM generation & currenst sensing parameters  ******/
 #define PWM_PERIOD_CYCLES (uint16_t)((ADV_TIM_CLK_MHz*(uint32_t)1000000u/((uint32_t)(PWM_FREQUENCY)))&0xFFFE)
 

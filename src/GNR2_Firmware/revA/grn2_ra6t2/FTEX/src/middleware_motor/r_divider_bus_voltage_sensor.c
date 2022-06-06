@@ -11,41 +11,41 @@
 /**
 * It initializes bus voltage conversion (ADC, ADC channel, conversion time. It must be called only after PWMC_Init.
 */
-void RVBS_Init( RDivider_Handle_t * pHandle )
+void ResDivVbusSensor_Init( ResDivVbusSensorHandle_t * pHandle )
 {
-    pHandle->convHandle = RCM_RegisterRegConv(&pHandle->VbusRegConv);  // Need to be register with RegularConvManager    
-    RVBS_Clear( pHandle );  // Check
+    pHandle->bConvHandle = RCM_RegisterRegConv(&pHandle->VbusRegConv);  // Need to be register with RegularConvManager    
+    ResDivVbusSensor_Clear( pHandle );  // Check
 }
 
 /**
 * It clears bus voltage FW variable containing average bus voltage value
 */
-void RVBS_Clear( RDivider_Handle_t * pHandle )
+void ResDivVbusSensor_Clear( ResDivVbusSensorHandle_t * pHandle )
 {
     uint16_t aux;  // Temporary data variable
-    uint16_t index;  // Temporary index variable
-    aux = ( pHandle->OverVoltageThreshold + pHandle->UnderVoltageThreshold ) / 2u;
-    for ( index = 0u; index < pHandle->LowPassFilterBW; index++ )
+    uint16_t bIndex;  // Temporary bIndex variable
+    aux = ( pHandle->hOverVoltageThreshold + pHandle->hUnderVoltageThreshold ) / 2u;
+    for ( bIndex = 0u; bIndex < pHandle->hLowPassFilterBw; bIndex++ )
     {
-        pHandle->aBuffer[index] = aux;  // It initalizes average buffer elements by average of under and over voltage threshold. 
+        pHandle->aBuffer[bIndex] = aux;  // It initalizes average buffer elements by average of under and over voltage threshold. 
     }
-    pHandle->_Super.LatestConv = aux;
-    pHandle->_Super.AvBusVoltage_d = aux;
-    pHandle->index = 0;
+    pHandle->Super.hLatestConv = aux;
+    pHandle->Super.hAvBusVoltageDigital = aux;
+    pHandle->bIndex = 0;
 }
 
 /**
 * It filters measured value of converted bus voltage 
 */
-static uint16_t RVBS_ConvertVbusFiltrered( RDivider_Handle_t * pHandle )
+static uint16_t RVBS_ConvertVbusFiltrered( ResDivVbusSensorHandle_t * pHandle )
 {
     uint16_t hAux;
     uint8_t vindex;
     uint16_t max = 0, min = 0;
     uint32_t tot = 0u;
-    for ( vindex = 0; vindex < pHandle->LowPassFilterBW; )  // for every elemnet of average filter buffer
+    for ( vindex = 0; vindex < pHandle->hLowPassFilterBw; )  // for every elemnet of average filter buffer
     {
-        hAux = RCM_ReadConv(pHandle->convHandle);
+        hAux = RCM_ReadConv(pHandle->bConvHandle);
         if ( hAux != 0xFFFFu )  // Checks if measurement is saturated.
         {
             if ( vindex == 0 )  // for first element
@@ -70,13 +70,13 @@ static uint16_t RVBS_ConvertVbusFiltrered( RDivider_Handle_t * pHandle )
     }
     tot -= max;  // Remove measurements that increases standard deviation 
     tot -= min;
-    return (uint16_t)(tot/(pHandle->LowPassFilterBW-2u));
+    return (uint16_t)(tot/(pHandle->hLowPassFilterBw-2u));
 }
 
 /**
 * It actually reads the Vbus ADC conversion and updates average value
 */
-uint16_t RVBS_CalcAvVbusFilt( RDivider_Handle_t * pHandle )
+uint16_t ResDivVbusSensor_CalcAvVbusFilt( ResDivVbusSensorHandle_t * pHandle )
 {
     uint32_t wtemp;
     uint16_t hAux;
@@ -84,72 +84,72 @@ uint16_t RVBS_CalcAvVbusFilt( RDivider_Handle_t * pHandle )
     hAux = RVBS_ConvertVbusFiltrered( pHandle );
     if ( hAux != 0xFFFF )  // Check if measurment is not saturated.
     {
-        pHandle->aBuffer[pHandle->index] = hAux;  // Update average buffer element with current value
+        pHandle->aBuffer[pHandle->bIndex] = hAux;  // Update average buffer element with current value
         wtemp = 0;
-        for ( i = 0; i < pHandle->LowPassFilterBW; i++ )
+        for ( i = 0; i < pHandle->hLowPassFilterBw; i++ )
         {
             wtemp += pHandle->aBuffer[i];  // Add all the elements of average filter.
         }
-        wtemp /= pHandle->LowPassFilterBW;  // Calculate average of summation
-        pHandle->_Super.AvBusVoltage_d = ( uint16_t )wtemp;
-        pHandle->_Super.LatestConv = hAux;  // Update latest conversion to element of RDivider_Handle
-        if ( pHandle->index < pHandle->LowPassFilterBW - 1 )  // Update index to which next conversion will be stored. 
+        wtemp /= pHandle->hLowPassFilterBw;  // Calculate average of summation
+        pHandle->Super.hAvBusVoltageDigital = ( uint16_t )wtemp;
+        pHandle->Super.hLatestConv = hAux;  // Update latest conversion to element of RDivider_Handle
+        if ( pHandle->bIndex < pHandle->hLowPassFilterBw - 1 )  // Update bIndex to which next conversion will be stored. 
         {
-            pHandle->index++;  
+            pHandle->bIndex++;  
         }
         else
         {
-            pHandle->index = 0;
+            pHandle->bIndex = 0;
         }
     }
-    pHandle->_Super.FaultState = RVBS_CheckFaultState( pHandle );
-    return ( pHandle->_Super.FaultState );
+    pHandle->Super.hFaultState = ResDivVbusSensor_CheckFaultState( pHandle );
+    return ( pHandle->Super.hFaultState );
 }
 
 /**
 * It actually performes the Vbus ADC conversion and updates average value
 */
-uint16_t RVBS_CalcAvVbus( RDivider_Handle_t * pHandle )
+uint16_t ResDivVbusSensor_CalcAvVbus( ResDivVbusSensorHandle_t * pHandle )
 {
     uint32_t wtemp;
     uint16_t hAux;
     uint8_t i;
-    hAux = RCM_ReadConv(pHandle->convHandle); // Reads current value of bus voltage
+    hAux = RCM_ReadConv(pHandle->bConvHandle); // Reads current value of bus voltage
     if ( hAux != 0xFFFF )  // Checks if measured value is not saturated
     {
-        pHandle->aBuffer[pHandle->index] = hAux; // Update average buffer element with current value
+        pHandle->aBuffer[pHandle->bIndex] = hAux; // Update average buffer element with current value
         wtemp = 0;
-        for ( i = 0; i < pHandle->LowPassFilterBW; i++ )  
+        for ( i = 0; i < pHandle->hLowPassFilterBw; i++ )  
         {
             wtemp += pHandle->aBuffer[i];  // Add all the elements of average filter.
         }
-        wtemp /= pHandle->LowPassFilterBW;  // Calculate average of summation
-        pHandle->_Super.AvBusVoltage_d = ( uint16_t )wtemp;
-        pHandle->_Super.LatestConv = hAux;  // Update latest conversion to element of RDivider_Handle
-        if ( pHandle->index < pHandle->LowPassFilterBW - 1 )  // Update index to which next conversion will be stored.
+        wtemp /= pHandle->hLowPassFilterBw;  // Calculate average of summation
+        pHandle->Super.hAvBusVoltageDigital = ( uint16_t )wtemp;
+        pHandle->Super.hLatestConv = hAux;  // Update latest conversion to element of RDivider_Handle
+        if ( pHandle->bIndex < pHandle->hLowPassFilterBw - 1 )  // Update bIndex to which next conversion will be stored.
         {
-            pHandle->index++;
+            pHandle->bIndex++;
         }
         else
         {
-            pHandle->index = 0;
+            pHandle->bIndex = 0;
         }
     }
-    pHandle->_Super.FaultState = RVBS_CheckFaultState( pHandle );
-    return ( pHandle->_Super.FaultState );
+    pHandle->Super.hFaultState = ResDivVbusSensor_CheckFaultState( pHandle );
+    return ( pHandle->Super.hFaultState );
 }
 
 /**
 * It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_ERROR depending on bus voltage and protection threshold values
 */
-uint16_t RVBS_CheckFaultState( RDivider_Handle_t * pHandle )
+uint16_t ResDivVbusSensor_CheckFaultState( ResDivVbusSensorHandle_t * pHandle )
 {
     uint16_t fault;
-    if ( pHandle->_Super.AvBusVoltage_d > pHandle->OverVoltageThreshold )  // Checks if measured average voltage is above over voltage threshold
+    if ( pHandle->Super.hAvBusVoltageDigital > pHandle->hOverVoltageThreshold )  // Checks if measured average voltage is above over voltage threshold
     {
         fault = MC_OVER_VOLT;
     }
-    else if ( pHandle->_Super.AvBusVoltage_d < pHandle->UnderVoltageThreshold ) // Checks if measured average voltage is below under voltage threshold
+    else if ( pHandle->Super.hAvBusVoltageDigital < pHandle->hUnderVoltageThreshold ) // Checks if measured average voltage is below under voltage threshold
     {
         fault = MC_UNDER_VOLT;
     }

@@ -98,13 +98,13 @@ void MC_Bootup(void)
   /**********************************************************/
   /*    PWM and current sensing component initialization    */
   /**********************************************************/
-  pPWMCurrFdbk[M1] = &PWMHandleM1.Super;
-  PWMInsulCurrSensorFdbk_Init(&PWMHandleM1);
+  pPWMCurrFdbk[M1] = &PWMInsulCurrSensorFdbkHandleM1.Super;
+  PWMInsulCurrSensorFdbk_Init(&PWMInsulCurrSensorFdbkHandleM1);
 
   /******************************************************/
   /*   PID component initialization: speed regulation   */
   /******************************************************/
-  PID_HandleInit(&PIDSpeedHandleM1);
+  PID_Init(&PIDSpeedHandleM1);
   pPIDSpeed[M1] = &PIDSpeedHandleM1;
 
   /******************************************************/
@@ -127,16 +127,16 @@ void MC_Bootup(void)
   /********************************************************/
   /*   PID component initialization: current regulation   */
   /********************************************************/
-  PID_HandleInit(&PIDIqHandleM1);
-  PID_HandleInit(&PIDIdHandleM1);
+  PID_Init(&PIDIqHandleM1);
+  PID_Init(&PIDIdHandleM1);
   pPIDIq[M1] = &PIDIqHandleM1;
   pPIDId[M1] = &PIDIdHandleM1;
 
-//  /********************************************************/
-//  /*   Bus voltage sensor component initialization        */
-//  /********************************************************/
-    pBusSensorM1 = &RealBusVoltageSensorParamsM1;
-    RVBS_Init(pBusSensorM1);
+  /********************************************************/
+  /*   Bus voltage sensor component initialization        */
+  /********************************************************/
+  pBusSensorM1 = &RealBusVoltageSensorParamsM1;
+  ResDivVbusSensor_Init(pBusSensorM1);
 
   /*************************************************/
   /*   Power measurement component initialization  */
@@ -145,15 +145,15 @@ void MC_Bootup(void)
   pMotorPower[M1]->pVBS = &(pBusSensorM1->Super);
   pMotorPower[M1]->pFOCVars = &FOCVars[M1];
 
-//  /*******************************************************/
-//  /*   Temperature measurement component initialization  */
-//  /*******************************************************/
-    NTC_Init(&TempSensorParamsM1);
-    pTemperatureSensor[M1] = &TempSensorParamsM1;
+  /*******************************************************/
+  /*   Temperature measurement component initialization  */
+  /*******************************************************/
+  NTCTempSensor_Init(&TempSensorParamsM1);
+  pTemperatureSensor[M1] = &TempSensorParamsM1;
   /*******************************************************/
   /*   Flux weakening component initialization           */
   /*******************************************************/
-  PID_HandleInit(&PIDFluxWeakeningHandleM1);
+  PID_Init(&PIDFluxWeakeningHandleM1);
   FluxWkng_Init(pFieldWeakening[M1],pPIDSpeed[M1],&PIDFluxWeakeningHandleM1);
 
   /*******************************************************/

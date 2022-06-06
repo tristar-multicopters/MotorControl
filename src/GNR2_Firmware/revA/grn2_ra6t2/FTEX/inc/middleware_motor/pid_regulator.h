@@ -72,7 +72,7 @@ typedef struct PID_Handle
  * @param  pHandle: handler of the current instance of the PID component
  * @retval None
  */
-void PID_HandleInit( PIDHandle_t * pHandle );
+void PID_Init( PIDHandle_t * pHandle );
 
 /**
  * @brief  It updates the Kp gain

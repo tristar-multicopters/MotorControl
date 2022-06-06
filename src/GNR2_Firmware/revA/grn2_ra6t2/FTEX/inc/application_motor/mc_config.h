@@ -37,7 +37,7 @@ extern PIDHandle_t PIDIdHandleM1;
 extern NTCTempSensorHandle_t TempSensorParamsM1;
 extern PIDHandle_t PIDFluxWeakeningHandleM1;
 extern FluxWeakeningHandle_t FluxWeakeningM1;
-extern PWMInsulCurrSensorFdbkHandle_t PWMHandleM1;
+extern PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1;
 extern SpeednTorqCtrlHandle_t SpeednTorqCtrlM1;
 extern MotorPowerQDHandle_t PQDMotorPowMeasM1;
 extern MotorPowerQDHandle_t *pPQD_MotorPowMeasM1;

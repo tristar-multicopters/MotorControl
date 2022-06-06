@@ -37,7 +37,7 @@ void PWM_TIM_UP_IRQHandler(timer_callback_args_t * p_args)
 	if (p_args->event == TIMER_EVENT_CREST)
 	{
 		/* Run motor control timer update routine */
-		PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(&PWMHandleM1);
+		PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
 	}
 }
 
@@ -50,11 +50,8 @@ void PWM_TIM_BRK_IRQHandler(poeg_callback_args_t * p_args)
 {
 	if(NULL != p_args)
   {
-	  /* Stop POEG module so it does not reenter this interrupt twice */
-		R_POEG_Close(PWM_Handle_M1.pParams_str->pPOEGHandle->p_ctrl);
-
 		/* Run motor control PWM break routine */
-		ICS_BRK2_IRQHandler(&PWM_Handle_M1);
+		PWMInsulCurrSensorFdbk_BRK_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
   }
 }
 
