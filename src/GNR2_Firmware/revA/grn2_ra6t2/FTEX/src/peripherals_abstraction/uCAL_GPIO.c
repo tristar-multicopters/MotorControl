@@ -141,7 +141,7 @@ void uCAL_GPIO_Toggle(uint32_t aGPIO)
     }		
     else
     {
-        R_BSP_PinWrite(bspPin,(bsp_io_level_t) 1);// If not, it is already low so put it high
+         R_BSP_PinWrite(bspPin,(bsp_io_level_t) 1);// If not, it is already low so put it high
     } 
 }
 
