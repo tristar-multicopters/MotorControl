@@ -27,9 +27,7 @@
 #include "sto_pll_speed_pos_fdbk.h"
 #include "rotor_pos_obs.h"
 
-
 #define NBR_OF_MOTORS 1
-
 
 extern PIDHandle_t PIDSpeedHandleM1;
 extern PIDHandle_t PIDIqHandleM1;

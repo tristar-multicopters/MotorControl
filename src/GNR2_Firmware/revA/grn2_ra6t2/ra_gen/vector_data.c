@@ -12,6 +12,9 @@
             [5] = r_icu_isr, /* ICU IRQ10 (External pin interrupt 10) */
             [6] = r_icu_isr, /* ICU IRQ11 (External pin interrupt 11) */
             [7] = r_icu_isr, /* ICU IRQ1 (External pin interrupt 1) */
+            [8] = agt_int_isr, /* AGT0 INT (AGT interrupt) */
+            [9] = gpt_counter_overflow_isr, /* GPT8 COUNTER OVERFLOW (Overflow) */
+            [10] = gpt_capture_b_isr, /* GPT8 CAPTURE COMPARE B (Compare match B) */
         };
         const bsp_interrupt_event_t g_interrupt_event_link_select[BSP_ICU_VECTOR_MAX_ENTRIES] =
         {
@@ -23,5 +26,8 @@
             [5] = BSP_PRV_IELS_ENUM(EVENT_ICU_IRQ10), /* ICU IRQ10 (External pin interrupt 10) */
             [6] = BSP_PRV_IELS_ENUM(EVENT_ICU_IRQ11), /* ICU IRQ11 (External pin interrupt 11) */
             [7] = BSP_PRV_IELS_ENUM(EVENT_ICU_IRQ1), /* ICU IRQ1 (External pin interrupt 1) */
+            [8] = BSP_PRV_IELS_ENUM(EVENT_AGT0_INT), /* AGT0 INT (AGT interrupt) */
+            [9] = BSP_PRV_IELS_ENUM(EVENT_GPT8_COUNTER_OVERFLOW), /* GPT8 COUNTER OVERFLOW (Overflow) */
+            [10] = BSP_PRV_IELS_ENUM(EVENT_GPT8_CAPTURE_COMPARE_B), /* GPT8 CAPTURE COMPARE B (Compare match B) */
         };
         #endif

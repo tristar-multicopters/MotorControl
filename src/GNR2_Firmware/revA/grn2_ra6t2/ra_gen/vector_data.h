@@ -6,7 +6,7 @@
         #endif
                 /* Number of interrupts allocated */
         #ifndef VECTOR_DATA_IRQ_COUNT
-        #define VECTOR_DATA_IRQ_COUNT    (8)
+        #define VECTOR_DATA_IRQ_COUNT    (11)
         #endif
         /* ISR prototypes */
         void gpt_counter_overflow_isr(void);
@@ -14,6 +14,8 @@
         void poeg_event_isr(void);
         void gpt_capture_a_isr(void);
         void r_icu_isr(void);
+        void agt_int_isr(void);
+        void gpt_capture_b_isr(void);
 
         /* Vector table allocations */
         #define VECTOR_NUMBER_GPT4_COUNTER_OVERFLOW ((IRQn_Type) 0) /* GPT4 COUNTER OVERFLOW (Overflow) */
@@ -32,6 +34,12 @@
         #define ICU_IRQ11_IRQn          ((IRQn_Type) 6) /* ICU IRQ11 (External pin interrupt 11) */
         #define VECTOR_NUMBER_ICU_IRQ1 ((IRQn_Type) 7) /* ICU IRQ1 (External pin interrupt 1) */
         #define ICU_IRQ1_IRQn          ((IRQn_Type) 7) /* ICU IRQ1 (External pin interrupt 1) */
+        #define VECTOR_NUMBER_AGT0_INT ((IRQn_Type) 8) /* AGT0 INT (AGT interrupt) */
+        #define AGT0_INT_IRQn          ((IRQn_Type) 8) /* AGT0 INT (AGT interrupt) */
+        #define VECTOR_NUMBER_GPT8_COUNTER_OVERFLOW ((IRQn_Type) 9) /* GPT8 COUNTER OVERFLOW (Overflow) */
+        #define GPT8_COUNTER_OVERFLOW_IRQn          ((IRQn_Type) 9) /* GPT8 COUNTER OVERFLOW (Overflow) */
+        #define VECTOR_NUMBER_GPT8_CAPTURE_COMPARE_B ((IRQn_Type) 10) /* GPT8 CAPTURE COMPARE B (Compare match B) */
+        #define GPT8_CAPTURE_COMPARE_B_IRQn          ((IRQn_Type) 10) /* GPT8 CAPTURE COMPARE B (Compare match B) */
         #ifdef __cplusplus
         }
         #endif

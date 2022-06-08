@@ -13,7 +13,6 @@ extern void startMCMediumFrequencyTask(void * pvParameter);
 extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
 
-
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
 
 static bool ADCInit(void);
@@ -22,6 +21,7 @@ static bool POEGInit(void);
 static bool DACInit(void);
 static bool ICUInit(void);
 static bool ELCInit(void);
+static bool AGTInit(void);
 
 
 //****************** THREAD HANDLES ******************//
@@ -74,6 +74,7 @@ void gnr_main(void)
 	DACInit();
 	ICUInit();
 	ELCInit();
+	AGTInit(); 
 	/* At this point, hardware should be ready to be used by application systems */
 
 	SystemCoreClockUpdate(); // Standard ARM function to update clock settings
@@ -164,7 +165,15 @@ static bool GPTInit(void)
 	bIsError |= R_GPT_Open(g_timer0.p_ctrl, g_timer0.p_cfg);
 	bIsError |= R_GPT_Enable(g_timer0.p_ctrl);
 	bIsError |= R_GPT_PeriodSet(g_timer0.p_ctrl, 524287uL);
+	
+	/* ________________________
+	 *		GPT8
+	 * ________________________ */
 
+	/* Capture Timer settings for Wheel speed sensor   */
+	bIsError |= R_GPT_Open(g_timer8.p_ctrl, g_timer8.p_cfg);
+	bIsError |= R_GPT_Enable(g_timer8.p_ctrl);
+	
 	return bIsError;
 }
 
@@ -224,3 +233,16 @@ static bool ICUInit(void)
 	return bIsError;
 }
 
+/**
+  Function used to Initialize the Low Power Timer
+*/
+static bool AGTInit(void)
+{
+    bool bIsError = false;
+		// Initialize the Low Power Timer for Capture Mode 
+    bIsError |=	R_AGT_Open(ag_timer0.p_ctrl, ag_timer0.p_cfg); 
+		// Enables external event triggers that start the AGT
+    bIsError |= R_AGT_Enable(ag_timer0.p_ctrl);
+
+    return bIsError;
+}

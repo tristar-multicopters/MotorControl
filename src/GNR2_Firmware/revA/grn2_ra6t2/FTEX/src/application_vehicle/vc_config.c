@@ -7,6 +7,10 @@
 #include "vc_config.h"
 
 
+//*******************************************************************************
+//	Vehicle
+//*******************************************************************************
+
 MultipleDriveInterfaceHandle_t MDInterfaceHandle = 
 {
 	0
@@ -27,6 +31,22 @@ BRK_Handle_t BrakeHandle =
 	.bIsInvertedLogic = true,
 };
 
+/**@brief Pulse Frequeny initializing Parameters.
+ */
+PF_Handle_AGT_t PulseFreqHandle =
+{
+	.agt_start_measurement = false,
+	.PF_Param_AGT =
+	{
+		 .PF_AGT_Timer = &ag_timer0,
+	}
+};
+
+/**@brief Pedal assist initializing Parameters.
+ */
+PAS_Handle_t PedalAssistHandle = {
+	.pSpulse = &PulseFreqHandle,
+};
 
 THRO_Handle_t ThrottleHandle =
 {
@@ -269,6 +289,7 @@ PWRT_Handle_t PowertrainHandle =
 	.pBrake = &BrakeHandle,
 	.pMS = &MotorSelectorHandle,
 	.pPWREN = &PowerEnableHandle,
+	.pPAS = &PedalAssistHandle,
 	
 	.sSpeedFoldback[M1] = 
 	{
@@ -307,5 +328,4 @@ VCI_Handle_t VCInterfaceHandle =
 	.pStateMachine = &VCStateMachineHandle,
 	.pPowertrain = &PowertrainHandle,
 };
-
 

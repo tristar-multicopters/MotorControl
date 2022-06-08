@@ -19,19 +19,13 @@ void VirtualBusVoltSensor_Init( VirtualBusVoltageSensorHandle_t * pHandle )
 
 void VirtualBusVoltSensor_Clear( VirtualBusVoltageSensorHandle_t * pHandle )
 {
-    if(pHandle)
-    {
-    }
   return;
 }
 
 
 uint16_t VirtualBusVoltSensor_NoErrors( VirtualBusVoltageSensorHandle_t * pHandle )
 {
-    if(pHandle)
-    {
-    }
-    return ( MC_NO_ERROR );
+  return ( MC_NO_ERROR );
 }
 
 

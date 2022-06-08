@@ -4,10 +4,12 @@
 #include <stdint.h>
 #include "bsp_api.h"
 #include "common_data.h"
-#include "r_icu.h"
-#include "r_external_irq_api.h"
 #include "r_gpt.h"
 #include "r_timer_api.h"
+#include "r_agt.h"
+#include "r_timer_api.h"
+#include "r_icu.h"
+#include "r_external_irq_api.h"
 #include "r_dac.h"
 #include "r_dac_api.h"
 #include "r_poeg.h"
@@ -17,6 +19,26 @@
 #include "r_gpt_three_phase.h"
             #include "r_three_phase_api.h"
 FSP_HEADER
+/** Timer on GPT Instance. */
+extern const timer_instance_t g_timer8;
+
+/** Access the GPT instance using these structures when calling API functions directly (::p_api is not used). */
+extern gpt_instance_ctrl_t g_timer8_ctrl;
+extern const timer_cfg_t g_timer8_cfg;
+
+#ifndef WFREQ_TIM_Callback
+void WFREQ_TIM_Callback(timer_callback_args_t * p_args);
+#endif
+/** AGT Timer Instance */
+extern const timer_instance_t ag_timer0;
+
+/** Access the AGT instance using these structures when calling API functions directly (::p_api is not used). */
+extern agt_instance_ctrl_t ag_timer0_ctrl;
+extern const timer_cfg_t ag_timer0_cfg;
+
+#ifndef PFREQ_TIM_Callback
+void PFREQ_TIM_Callback(timer_callback_args_t * p_args);
+#endif
 /** External IRQ on ICU Instance. */
 extern const external_irq_instance_t g_external_irq2;
 

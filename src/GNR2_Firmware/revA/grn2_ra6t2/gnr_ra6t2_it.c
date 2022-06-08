@@ -8,7 +8,7 @@
 #include "mc_config.h"
 #include "mc_tasks.h"
 #include "bsp_pin_cfg.h"
-
+#include "vc_config.h"
 
 /**
   * @brief  Interrupt routine of ADC hardware.
@@ -77,4 +77,53 @@ void HALL_TIM_UP_CC_IRQHandler(timer_callback_args_t * p_args)
                 break;
         }
     }
+}
+/**
+  * @brief  Interrupt routine of Pedal speed frequency reading
+  * @param  p_args: AGT callback function arguments, not used.
+  */
+void PFREQ_TIM_Callback (timer_callback_args_t * p_args)
+{
+	if (NULL != p_args)
+	{
+		/* Check for the event */
+		switch(p_args->event)
+		{
+			case TIMER_EVENT_CAPTURE_A :	
+			/* Call ISR AGT Capture function */						
+			PulseFrequency_IsrCallUpdate_AGT(VCInterfaceHandle.pPowertrain->pPAS->pSpulse,p_args->capture);
+			break;
+			case TIMER_EVENT_CYCLE_END:
+			/* An overflow occurred during capture. */
+			PulseFrequency_IsrOverFlowUpdate_AGT(VCInterfaceHandle.pPowertrain->pPAS->pSpulse);
+			break;
+			default:
+			break;
+		}	
+	}		
+}
+
+/**
+  * @brief  Interrupt routine of Wheel speed frequency reading
+  * @param  p_args: GPT callback function arguments, not used.
+  */
+void WFREQ_TIM_Callback (timer_callback_args_t * p_args)
+{
+	if (NULL != p_args)
+	{
+	 /* Check for the event */
+    switch(p_args->event)
+    {
+			case TIMER_EVENT_CAPTURE_B :
+			/* Call ISR AGT Capture function */						
+			PulseFrequency_IsrCallUpdate_GPT(VCInterfaceHandle.pPowertrain->pPAS->pSpulse,p_args->capture);
+			break;
+			case TIMER_EVENT_CYCLE_END:
+			/* An overflow occurred during capture. */
+			PulseFrequency_IsrOverFlowUpdate_GPT(VCInterfaceHandle.pPowertrain->pPAS->pSpulse);
+			break;
+			default:
+			break;
+    }  
+	}		
 }

@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>6</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -539,6 +539,16 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\vc_state_machine.c</FilePath>
             </File>
+            <File>
+              <FileName>pedal_speed_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\pedal_speed_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>pedal_speed_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\middleware_vehicle\pedal_speed_sensor.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -630,11 +640,6 @@
               <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
             </File>
             <File>
-              <FileName>rotor_pos_obs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
-            </File>
-            <File>
               <FileName>feed_forward_ctrl.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\feed_forward_ctrl.c</FilePath>
@@ -654,6 +659,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
             </File>
+            <File>
+              <FileName>rotor_pos_obs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -663,6 +673,26 @@
               <FileName>regular_conversion_manager.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\regular_conversion_manager.c</FilePath>
+            </File>
+            <File>
+              <FileName>pulse_frequency_agt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\pulse_frequency_agt.c</FilePath>
+            </File>
+            <File>
+              <FileName>pulse_frequency_agt.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\peripherals_abstraction\pulse_frequency_agt.h</FilePath>
+            </File>
+            <File>
+              <FileName>pulse_frequency_gpt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\pulse_frequency_gpt.c</FilePath>
+            </File>
+            <File>
+              <FileName>pulse_frequency_gpt.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\peripherals_abstraction\pulse_frequency_gpt.h</FilePath>
             </File>
           </Files>
         </Group>
