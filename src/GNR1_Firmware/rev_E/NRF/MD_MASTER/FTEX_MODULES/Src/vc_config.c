@@ -310,13 +310,22 @@ WSS_Handle_t WheelSpeedSensorHandle = {
 
 	.wSpulse = &WheelSpeedPulse,
 	#if VEHICLE_SELECTION == VEHICLE_ECELL
-	.bWSPulseNb = 0,
+	.bWSPulseNb = 1,
+	.bWSSslowDetect = false,
+	.bSlowDetectCount = 0,		
+	.bSlowDetectCountValue = 1, 
 
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
-	.bWSPulseNb = 0,
+	.bWSPulseNb = 1,
+	.bWSSslowDetect = true,	
+	.bSlowDetectCount = 0,		
+	.bSlowDetectCountValue = 5,
 	
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bWSPulseNb = 3,
+	.bWSSslowDetect = false,	
+	.bSlowDetectCount = 0,		
+	.bSlowDetectCountValue = 1, 
 	
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bWSPulseNb = 0,
@@ -360,7 +369,7 @@ PWREN_Handle_t PowerEnableHandle = {
 	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
-	.bUsePowerLock = false,
+	.bUsePowerLock = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bUsePowerLock = true,                   
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
@@ -397,6 +406,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.bMode = SINGLE_MOTOR,
 	.sParameters.bCtrlType = TORQUE_CTRL,
 	.sParameters.bM2TorqueInversion = false,
+	.sParameters.hTorquePASRampTimeUp = 1250,
 	.sParameters.hTorqueRampTimeUp = 200,
 	.sParameters.hTorqueRampTimeDown = 50,
 	.sParameters.hSpeedRampTimeUp = 200,
@@ -405,7 +415,9 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -7000,
-	.sParameters.hPASMaxSpeed = 500,
+	.sParameters.hPASMaxSpeed = 400,
+	.sParameters.bUseWheelSpeedSensor = true,
+	.sParameters.bWheelSpreedRatio = 2,
 	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
 	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY

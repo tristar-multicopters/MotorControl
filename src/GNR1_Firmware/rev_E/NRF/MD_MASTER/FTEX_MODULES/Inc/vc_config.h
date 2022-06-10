@@ -32,12 +32,12 @@ Change this define based on vehicle application
 ------------------------------------
 */
 
-#define VEHICLE_SELECTION 	VEHICLE_GRIZZLY 
+#define VEHICLE_SELECTION 	VEHICLE_EBGO 
 
 /*------------------------------------*/
 
 
-#define CANBUS_ENABLE	1
+#define CANBUS_ENABLE	0
 
 
 extern VCI_Handle_t VCInterfaceHandle;

@@ -187,7 +187,7 @@ uint8_t GPIOTE_Wheel_Capture_Init(WPR_Handle_t* pHandle)
 	static nrf_ppi_channel_t ppi_ch_gpiote_restart_2;
 	
 	/* Optionally, enable pullup or pulldown on the input pin */
-	nrf_gpio_cfg_input(pHandle->pWheelSpeed_Pulse_pin, NRF_GPIO_PIN_PULLDOWN);
+	nrf_gpio_cfg_input(pHandle->pWheelSpeed_Pulse_pin, NRF_GPIO_PIN_NOPULL);
 
 	/* Allocate two PPI channels to the GPIOTE */
 	nrfx_ppi_channel_alloc(&ppi_ch_gpiote_capture_2);

@@ -28,6 +28,18 @@ void WSS_Init(WSS_Handle_t* pHandle)
 	*/
 void WSS_CalculateSpeed(WSS_Handle_t* pHandle)
 {
+	/* Detect if the WSS is in slow mode read (more than 200ms)*/
+	if (pHandle->bWSSslowDetect)
+	{
+		pHandle->bSlowDetectCount ++;
+		if (pHandle->bSlowDetectCount > pHandle->bSlowDetectCountValue)
+		{
+			Wheel_capture_get_value(pHandle->wSpulse);
+			pHandle->bSlowDetectCount = 0;
+		}
+	}
+	/* WSS calculate speed in normal mode*/
+	else
 	Wheel_capture_get_value(pHandle->wSpulse);
 }
 

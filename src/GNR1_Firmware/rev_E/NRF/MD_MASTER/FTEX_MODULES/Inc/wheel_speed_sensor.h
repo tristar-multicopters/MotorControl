@@ -38,6 +38,10 @@ typedef struct {
 	
 	bool bWSSDetected;		/* USE WSS flag  for detection */
 	
+	bool bWSSslowDetect;	/* Wheel Speed Pulse detected in a slow Mode */
+	uint8_t bSlowDetectCount; 		/* Wheel Speed Pulse detected counter for slow Mode */ 
+	uint8_t bSlowDetectCountValue;/* Wheel Speed Pulse detected counter value for slow Mode */ 
+	
 } WSS_Handle_t;
 
 

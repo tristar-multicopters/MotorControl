@@ -136,9 +136,10 @@ __NO_RETURN void TSK_SlowLoopMD (void * pvParameter)
 	{
 		/* Pulse calcualte period in slow loop test */ 
 		PAS_CalculateSpeed(pVCI->pDrivetrain->pPAS);
+
 		/* Wheel Speed read in slow loop test */ 
 		WSS_CalculateSpeed(pVCI->pDrivetrain->pWSS);
-
+		
 		if ( DRVT_IsMotor1Used(pVCI->pDrivetrain)	 )
 		{
 			getMonitoringReg_Slow(M1);
