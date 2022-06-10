@@ -192,8 +192,8 @@ TS_Handle_t TorqueSensor =
 #if VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.hParam =
 	{	
-		.hLowPassFilterBW1 = 8,
-		.hLowPassFilterBW2 = 14,
+		.hLowPassFilterBW1 = 5,
+		.hLowPassFilterBW2 = 25,
 		
 		.hOffsetTS = 12500,
 		.bSlopeTS = 5,			
@@ -427,7 +427,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.bMode = SINGLE_MOTOR,
 	.sParameters.bCtrlType = TORQUE_CTRL,
 	.sParameters.bM2TorqueInversion = false,
-	.sParameters.hTorquePASRampTimeUp = 750,	
+	.sParameters.hTorquePASRampTimeUp = 1000,	
 	.sParameters.hTorqueRampTimeUp = 200,
 	.sParameters.hTorqueRampTimeDown = 50,
 	.sParameters.hSpeedRampTimeUp = 200,
@@ -435,7 +435,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -10000,
+	.sParameters.hPASMaxTorque = -15000,
 	.sParameters.hPASMaxSpeed = 500,
 	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
 	.sParameters.bUseWheelSpeedSensor = true,

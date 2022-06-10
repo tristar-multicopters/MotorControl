@@ -99,9 +99,18 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 			/* Using PAS */
 			if ( PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle) )
 			{
-				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], hTorqueRef, abs(wSpeedMainMotor) );
-				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hAux, hTempHeatSnkMainMotor );
-				pHandle->aTorque[pHandle->bMainMotor] = hAux;
+                /* Torque sensor enabled */
+                if (pHandle->pPAS->bTorqueSensorUse)
+                {
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor );
+                    pHandle->aTorque[pHandle->bMainMotor] = hAux;
+                } 
+                else
+                {
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], hTorqueRef, abs(wSpeedMainMotor) );
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hAux, hTempHeatSnkMainMotor );
+                    pHandle->aTorque[pHandle->bMainMotor] = hAux;
+                }
 			}
 			/* Using throttle */
 			else
@@ -112,15 +121,29 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		}
 		if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
+            /* Using PAS */
 			if ( PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle) )
 			{
-				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[M1], hTorqueRef, abs(wSpeedM1) );
-				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[M1], hAux, hTempHeatSnkM1 );
-				pHandle->aTorque[M1] = hAux;
-				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[M2], hTorqueRef, abs(wSpeedM2) );
-				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[M2], hAux, hTempHeatSnkM2 );
-				pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
+                /* Torque sensor enabled */
+                if (pHandle->pPAS->bTorqueSensorUse)
+                {
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[M1], hTorqueRef, hTempHeatSnkM1 );
+                    pHandle->aTorque[M1] = hAux;
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[M2], hTorqueRef, hTempHeatSnkM2 );
+                    pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
+                } 
+                else
+                {
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[M1], hTorqueRef, abs(wSpeedM1) );
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[M1], hAux, hTempHeatSnkM1 );
+                    pHandle->aTorque[M1] = hAux;
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[M2], hTorqueRef, abs(wSpeedM2) );
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[M2], hAux, hTempHeatSnkM2 );
+                    pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
+                }
+                
 			}
+            /* Using throttle */
 			else
 			{
 				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[M1], hTorqueRef, hTempHeatSnkM1 );
@@ -879,13 +902,12 @@ int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 		/* Torque sensor enabled */
 		if (pHandle->pPAS->bTorqueSensorUse)
 		{
-				pHandle->hTorqueSelect = DRVT_GetTorqueFromTS(pHandle);
-				DRVT_PASSetMaxSpeed(pHandle);
+            pHandle->hTorqueSelect = DRVT_GetTorqueFromTS(pHandle);
 		}
 		else
 		{
-				pHandle->hTorqueSelect= DRVT_GetPASTorque(pHandle);
-				DRVT_PASSetMaxSpeed(pHandle);
+            pHandle->hTorqueSelect= DRVT_GetPASTorque(pHandle);
+            DRVT_PASSetMaxSpeed(pHandle); 
 		}
 	}
 	else
