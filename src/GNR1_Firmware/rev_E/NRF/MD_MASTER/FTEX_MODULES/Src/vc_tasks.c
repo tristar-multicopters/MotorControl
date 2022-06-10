@@ -307,6 +307,7 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					break;
 					
 			case V_FAULT_OVER:
+                    DRVT_RequestSlowStart(pVCI->pDrivetrain);
 					VCSTM_FaultAcknowledged( pVCI->pStateMachine );
 					break;
 			

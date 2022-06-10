@@ -127,8 +127,7 @@ bool VCSTM_NextState( VCSTM_Handle_t * pHandle, VC_State_t bState )
   * @param hResetErrors Bit field reporting faults to be cleared
   * @retval VC_State_t New state machine state after fault processing
   */
-VC_State_t VCSTM_FaultProcessing( VCSTM_Handle_t * pHandle, uint16_t hSetErrors, uint16_t
-                             hResetErrors )
+VC_State_t VCSTM_FaultProcessing(VCSTM_Handle_t * pHandle, uint16_t hSetErrors, uint16_t hResetErrors)
 {
   VC_State_t LocalState =  pHandle->bVState;
 

@@ -493,6 +493,8 @@ DRVT_Handle_t DrivetrainHandle =
 		.hIntervalValue = 200,
 		.hEndValue = 400,
 		.hDefaultMaxTorque = 10000,
+        .hSlowStartBandwidth = 12,
+        .wSlowStartTimeout =  400
 	},
 	.sSpeedFoldback[M2] = 
 	{
@@ -501,6 +503,8 @@ DRVT_Handle_t DrivetrainHandle =
 		.hIntervalValue = 200,
 		.hEndValue = 400,
 		.hDefaultMaxTorque = 10000,
+        .hSlowStartBandwidth = 12,
+        .wSlowStartTimeout =  400
 	},
 	.sHeatsinkTempFoldback[M1] = 
 	{
@@ -508,6 +512,7 @@ DRVT_Handle_t DrivetrainHandle =
 		.hStartValue = 45,
 		.hEndValue = 70,
 		.hDefaultMaxTorque = 17000,
+        
 	},
 	.sHeatsinkTempFoldback[M2] = 
 	{

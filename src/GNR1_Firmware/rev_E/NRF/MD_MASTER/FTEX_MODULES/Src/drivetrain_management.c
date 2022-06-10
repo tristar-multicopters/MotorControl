@@ -93,29 +93,33 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 		if ( bIsBrakePressed )
 		{
 			hTorqueRef = 0;
+            FLDBK_EnableSlowStart(pHandle->sSpeedFoldback);
 		}
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
 			/* Using PAS */
 			if ( PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle) )
 			{
-                /* Torque sensor enabled */
-                if (pHandle->pPAS->bTorqueSensorUse)
-                {
-                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor );
-                    pHandle->aTorque[pHandle->bMainMotor] = hAux;
-                } 
-                else
-                {
-                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], hTorqueRef, abs(wSpeedMainMotor) );
-                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hAux, hTempHeatSnkMainMotor );
-                    pHandle->aTorque[pHandle->bMainMotor] = hAux;
-                }
+
+            /* Torque sensor enabled */
+            if (pHandle->pPAS->bTorqueSensorUse)
+            {
+                hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor );
+                pHandle->aTorque[pHandle->bMainMotor] = hAux;
+            } 
+            else
+            {
+                hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], hTorqueRef, abs(wSpeedMainMotor) );
+                hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hAux, hTempHeatSnkMainMotor );
+                hAux = FLDBK_ApplySlowStart(&pHandle->sSpeedFoldback[pHandle->bMainMotor], hAux); //Apply the slow start if needed  
+                pHandle->aTorque[pHandle->bMainMotor] = hAux;
+            }
 			}
 			/* Using throttle */
 			else
 			{
 				hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor );
+                hAux = FLDBK_ApplySlowStart(&pHandle->sSpeedFoldback[pHandle->bMainMotor], hAux); //Apply the slow start if needed
 				pHandle->aTorque[pHandle->bMainMotor] = hAux;
 			}
 		}
@@ -916,4 +920,10 @@ int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 		pHandle->hTorqueSelect = THRO_ThrottleToTorque(pHandle->pThrottle);
 	}
 	return pHandle->hTorqueSelect;
+}
+
+void DRVT_RequestSlowStart(DRVT_Handle_t * pHandle)
+{
+    FLDBK_EnableSlowStart(&pHandle->sSpeedFoldback[M1]);
+    FLDBK_EnableSlowStart(&pHandle->sSpeedFoldback[M2]);
 }

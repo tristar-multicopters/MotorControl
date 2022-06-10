@@ -95,6 +95,7 @@ int16_t FLDBK_ApplyTorqueLimitation(FLDBK_Handle_t * pHandle, int16_t hInitialTo
 		{
 			hTorqueOut = hInitialTorque;
 		}
+               
 	}
 	else
 	{
@@ -120,5 +121,74 @@ void FLDBK_SetEndValue (FLDBK_Handle_t * pHandle, uint16_t hStartValue)
 	pHandle->hEndValue = hEndval;
 }
 
+/**
+	* @brief  Apply a low pass filter on the torque after the break is
+    *         used or after a fault to ensure we wont hit over current
+    *         from an accelaration overshoot  
+	* @param  Foldback handle and torque value
+	* @retval Torque after passing it through the filter
+	*/
+int16_t FLDBK_ApplySlowStart(FLDBK_Handle_t * pHandle, int16_t hTorque)
+{
+    static uint32_t wTimeCounter;
+    static  int16_t hAverageTorque;
+            int32_t wTemp = 0;
+            int16_t hTorqueOut;
+    
+    hTorqueOut = hTorque;
+    
+    if(pHandle->bRefreshSlowStart) //Used to reset the counter and the
+    {
+       wTimeCounter = 0; 
+       hAverageTorque = 0; 
+       pHandle->bRefreshSlowStart = false; 
+    }    
+    
+    if (pHandle->bEnableSlowStart) //Check if a slow start was requested or is in progress
+    {    
+           
+        if(abs(hTorque) >= abs(hAverageTorque)) //Apply the filter only on acceleration
+        {
+            wTimeCounter ++; 
+            
+            wTemp =  (pHandle->hSlowStartBandwidth - 1u); //Apply a low pass filter to the torque
+            wTemp *= hAverageTorque;
+            wTemp += hTorque;
+            wTemp /= pHandle->hSlowStartBandwidth ;
 
+            hAverageTorque =  wTemp;
+            hTorqueOut = hAverageTorque;            
+        }  
 
+        if (abs(hAverageTorque) > (abs(hTorque) - (abs(hTorque)/40)) && abs(hTorque) > abs(hAverageTorque)) // First condition to exit the slow start is that the average torque 
+        {                                                                                                   // is at least 97.5% of the value of the requested torque
+            wTimeCounter = 0; 
+            hAverageTorque = 0;
+            pHandle->bEnableSlowStart = false;            
+        }    
+        else if (wTimeCounter > pHandle->wSlowStartTimeout)          // Timeout condition is there to make sure we cant get stuck in a slow start
+        {
+            wTimeCounter = 0;
+            hAverageTorque = 0; 
+            pHandle->bEnableSlowStart = false;        
+        }              
+    }
+    else
+    {
+      wTimeCounter = 0;
+      hAverageTorque = 0;        
+    }        
+       
+    return hTorqueOut;
+}
+
+/**
+	* @brief  Used to start or refresh a slow start
+	* @param  Foldback handle 
+	* @retval Nothing
+	*/
+void FLDBK_EnableSlowStart(FLDBK_Handle_t * pHandle)
+{        
+    pHandle->bRefreshSlowStart = true;
+    pHandle->bEnableSlowStart = true;   
+}    

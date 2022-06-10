@@ -88,7 +88,7 @@ typedef struct
 	int16_t			 	hTorqueSelect;
 
 	FLDBK_Handle_t sHeatsinkTempFoldback[2];		/* Foldback handle using M1 and M2 heatsink temperature */
-	FLDBK_Handle_t sSpeedFoldback[2];						/* Foldback handle using M1 and M2 speed */
+	FLDBK_Handle_t sSpeedFoldback[2];			    /* Foldback handle using M1 and M2 speed */
 	FLDBK_Handle_t sDCVoltageFoldback;				/* Foldback handle using DCbus voltage */
 	
 	uint16_t aFaultManagementCounters[3][2];  /* Array of counter before acknowledging motor faults. First dimension is
@@ -292,6 +292,8 @@ int16_t DRVT_GetTorqueFromTS(DRVT_Handle_t * pHandle);
 	*/
 int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle);
 
+
+void DRVT_RequestSlowStart(DRVT_Handle_t * pHandle);
 
 #endif /*__DRIVETRAIN_MANAGEMENT_H*/
 
