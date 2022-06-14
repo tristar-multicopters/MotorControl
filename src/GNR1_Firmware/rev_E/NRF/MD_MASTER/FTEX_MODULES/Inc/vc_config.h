@@ -19,9 +19,9 @@
 #include "lcd_apt_comm.h"
 #include "ev_config_tool.h"
 
-#define VEHICLE_DEFAULT			0
-#define VEHICLE_ECELL 			1
-#define VEHICLE_EBGO 				2
+#define VEHICLE_DEFAULT		0
+#define VEHICLE_ECELL 		1
+#define VEHICLE_EBGO 	    2
 #define VEHICLE_GRIZZLY     3
 #define VEHICLE_GEEBEECARGO 4
 
@@ -32,7 +32,7 @@ Change this define based on vehicle application
 ------------------------------------
 */
 
-#define VEHICLE_SELECTION 	VEHICLE_EBGO 
+#define VEHICLE_SELECTION 	VEHICLE_GRIZZLY 
 
 /*------------------------------------*/
 

@@ -565,6 +565,49 @@ bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle)
 }
 
 /**
+	* @brief  Check if conditions of an overloaded drivetrain are met.
+    *         if they are go to stop state and request an Overload Start
+	* @param  Drivetrain handle
+	* @retval Returns true if drivetrain overload conditions are met, false otherwise
+	*/
+bool DRVT_CheckOverloadConditions(DRVT_Handle_t * pHandle)
+{
+  bool bCheckOverload1 = false;
+  bool bCheckOverload2 = false;
+  bool bCheckOverload3 = false;
+    
+  int32_t wSpeedM1 = MDI_getSpeed(pHandle->pMDI, M1);
+  int32_t wSpeedM2 = MDI_getSpeed(pHandle->pMDI, M2);  
+    
+  uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);  
+
+    
+    if (DRVT_IsMotor1Used(pHandle)) //If M1 is used and not spinning
+	{
+		if (abs(wSpeedM1) <= pHandle->sParameters.hStoppingSpeed)
+		{
+			bCheckOverload1 = true;
+		}
+	}
+	
+	if (DRVT_IsMotor2Used(pHandle)) //If M2 is used and not spinning
+	{
+		if (abs(wSpeedM2) <= pHandle->sParameters.hStoppingSpeed)
+		{
+			bCheckOverload2 = true;
+		}
+	}
+    
+     //If torque is being sent
+    if (abs(pHandle->aTorque[M1]) > 0 || abs(pHandle->aTorque[M2]) > 0)
+	{
+		bCheckOverload3 = true;
+	}    
+   
+   return ((bCheckOverload1 | bCheckOverload2) & bCheckOverload3); //If either motors are stopped and we are pushing power, a wheel might be stuck  
+}
+
+/**
 	* @brief  Check if conditions to start drivetrain are met
 	* @param  Drivetrain handle
 	* @retval Returns true if drivetrain can be started
@@ -574,11 +617,43 @@ bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle)
 	bool bCheckStart = false;
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 	
-	if ( (hThrottleValue > pHandle->sParameters.hStartingThrottle || (pHandle->pPAS->bPASDetected)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
+	if ((hThrottleValue > pHandle->sParameters.hStartingThrottle || (pHandle->pPAS->bPASDetected)) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake))
 	{
-		bCheckStart = true;
+	   bCheckStart = true;
 	}
+    
+    if(pHandle->bOverloadStart) // If the bike was stopped due to overload we need to ensure that                               
+    {                           // the throttle is released and the pass is inactive before applying power once more
+       if(DRVT_IsThrottleReleased(pHandle) && !pHandle->pPAS->bPASDetected)
+       {
+          bCheckStart = true;
+          pHandle->bOverloadStart = false;   
+       }    
+       else
+       {
+          bCheckStart = false; 
+       }                
+    }
 	return bCheckStart;
+}
+
+
+/**
+	* @brief  Check if the throttle is released
+	* @param  Drivetrain handle
+	* @retval Returns true if the throttle is released
+	*/
+bool DRVT_IsThrottleReleased(DRVT_Handle_t * pHandle)
+{
+  if(pHandle->pThrottle->hAvThrottleValue < pHandle->sParameters.hStoppingThrottle)
+  {  
+     return true;
+  }
+  else
+  {
+     return false;
+  }
+
 }
 
 /**
@@ -922,6 +997,11 @@ int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 	return pHandle->hTorqueSelect;
 }
 
+/**
+	* @brief  Used to request a slow start
+	* @param  Drivetrain handle
+	* @retval nothing                                                                                    
+	*/
 void DRVT_RequestSlowStart(DRVT_Handle_t * pHandle)
 {
     FLDBK_EnableSlowStart(&pHandle->sSpeedFoldback[M1]);

@@ -91,10 +91,11 @@ typedef struct
 	FLDBK_Handle_t sSpeedFoldback[2];			    /* Foldback handle using M1 and M2 speed */
 	FLDBK_Handle_t sDCVoltageFoldback;				/* Foldback handle using DCbus voltage */
 	
-	uint16_t aFaultManagementCounters[3][2];  /* Array of counter before acknowledging motor faults. First dimension is
-																							fault type in this order:	Over current, startup, and speed feedback. 
-																							Second dimension is for motor number in this order:	M1 and M2 */
+	uint16_t aFaultManagementCounters[3][2];  // Array of counter before acknowledging motor faults. First dimension is
+										      // fault type in this order:	Over current, startup, and speed feedback. 
+    									  // Second dimension is for motor number in this order:	M1 and M2 
 
+    bool  bOverloadStart;
 	DRVT_Parameters_t sParameters;
 	
 } DRVT_Handle_t;
@@ -184,12 +185,27 @@ bool DRVT_IsDrivetrainStopped(DRVT_Handle_t * pHandle);
 bool DRVT_CheckStopConditions(DRVT_Handle_t * pHandle);
 
 /**
+	* @brief  Check if conditions of an overloaded drivetrain are met.
+    *         if they are go to stop state
+	* @param  Drivetrain handle
+	* @retval Returns true if drivetrain overload conditions are met, false otherwise
+	*/
+bool DRVT_CheckOverloadConditions(DRVT_Handle_t * pHandle);
+
+/**
 	* @brief  Check if conditions to start drivetrain are met
 	* @param  Drivetrain handle
 	* @retval Returns true if drivetrain can be started
 	*/
 bool DRVT_CheckStartConditions(DRVT_Handle_t * pHandle);
 
+/**
+	* @brief  Check if the throttle is released
+	* @param  Drivetrain handle
+	* @retval Returns true if the throttle is released
+	*/
+bool DRVT_IsThrottleReleased(DRVT_Handle_t * pHandle);
+    
 /**
 	* @brief  Manage motor faults. Check if faults are still present and send motor fault acknowledge when faults are gone.
 	* @param  Drivetrain handle
@@ -292,7 +308,11 @@ int16_t DRVT_GetTorqueFromTS(DRVT_Handle_t * pHandle);
 	*/
 int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle);
 
-
+/**
+	* @brief  Used to request a slow start
+	* @param  Drivetrain handle
+	* @retval nothing                                                                                    
+	*/
 void DRVT_RequestSlowStart(DRVT_Handle_t * pHandle);
 
 #endif /*__DRIVETRAIN_MANAGEMENT_H*/

@@ -38,8 +38,9 @@ struct {
 
 /************* DEFINES ****************/
 
-#define RETURN_TO_STANDBY_LOOPTICKS 0		// Max number of ticks to stay in run while stop conditions are met
+#define RETURN_TO_STANDBY_LOOPTICKS     0		// Max number of ticks to stay in run while stop conditions are met
 #define START_MOTORS_LOOPTICKS 			2		// Max number of ticks to stay in run while stop conditions are met
+#define OVERLOAD_STOP_LOOPTICKS        50       // Max number of ticks to stay in run while applying power but motor isnt spinning  
 #define START_LOOPTICKS							100 // Max number of ticks to stay in start state
 #define STOP_LOOPTICKS							100 // Max number of ticks to stay in stop state
 
@@ -183,10 +184,13 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 	sDebugVariables.hSpeedRef = 0;
 	#else
 	uint32_t wCounter;
+    uint32_t wOverloadCounter;
 	uint16_t hVehicleFault;
 	VC_State_t StateVC;
 	#endif
 	
+    pVCI->pDrivetrain->bOverloadStart = false;
+    
 	uint32_t xLastWakeTime = osKernelGetTickCount();
 	while (true)
 	{	
@@ -256,7 +260,8 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					hVehicleFault = DRVT_RunStateCheck(pVCI->pDrivetrain);
 					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 );
 					DRVT_UpdateMotorRamps(pVCI->pDrivetrain); 			
-					if ( DRVT_CheckStopConditions(pVCI->pDrivetrain) )
+					
+                    if (DRVT_CheckStopConditions(pVCI->pDrivetrain))
 					{
 						wCounter++;
 					}
@@ -264,12 +269,30 @@ __NO_RETURN void TSK_VehicleStateMachine (void * pvParameter)
 					{
 						wCounter = 0;
 					}
-
-					if (wCounter > RETURN_TO_STANDBY_LOOPTICKS)
+                    if (wCounter > RETURN_TO_STANDBY_LOOPTICKS)
 					{
 						wCounter = 0;
+                        wOverloadCounter = 0;
 						VCSTM_NextState( pVCI->pStateMachine, V_ANY_STOP );
 					}
+                    
+                    if(DRVT_CheckOverloadConditions(pVCI->pDrivetrain)) // Overload protection if we are pushing power
+                    {                                                   // but the motor isnt spinning
+                      wOverloadCounter ++;
+                    }
+                    else
+                    {
+                      wOverloadCounter = 0;
+                    }
+                    
+                    if (wOverloadCounter > OVERLOAD_STOP_LOOPTICKS)
+					{
+						wCounter = 0;
+                        wOverloadCounter = 0;
+                        pVCI->pDrivetrain->bOverloadStart = true;
+						VCSTM_NextState( pVCI->pStateMachine, V_ANY_STOP );
+					}
+			
 					break;
 					
 			case V_ANY_STOP:
