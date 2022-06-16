@@ -5,7 +5,7 @@
 	*/
 
 #include "gnr_main.h"
-
+#include "vc_tasks.h"
 //****************** THREAD EXTERN FUNCTION PROTOTYPES ******************//
 
 extern void startMCSafetyTask(void * pvParameter);
@@ -78,7 +78,7 @@ void gnr_main(void)
 	/* At this point, hardware should be ready to be used by application systems */
 
 	SystemCoreClockUpdate(); // Standard ARM function to update clock settings
-
+    
 	osKernelInitialize();  // Initialise the kernel
 	//EventRecorderInitialize(EventRecordAll,1U); // Initialise the event recorder
 

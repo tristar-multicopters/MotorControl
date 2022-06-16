@@ -58,7 +58,7 @@ typedef struct
 void PulseFrequency_ReadInputCapture_AGT (PF_Handle_AGT_t * pHandle);
 
 /**
-	@brief  Function used to return the capture read input from the AGT
+  @brief  Function used to return the capture read input from the AGT
   @param  PF_Handle_AGT_t handle
   @return None
 */

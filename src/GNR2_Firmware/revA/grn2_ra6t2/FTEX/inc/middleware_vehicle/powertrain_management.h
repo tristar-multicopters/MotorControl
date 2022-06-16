@@ -20,6 +20,7 @@
 #include "pulse_frequency_agt.h"
 #include "pulse_frequency_gpt.h"
 #include "pedal_speed_sensor.h"
+#include "pedal_torque_sensor.h"
 
 typedef enum
 {

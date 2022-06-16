@@ -31,6 +31,31 @@ BRK_Handle_t BrakeHandle =
 	.bIsInvertedLogic = true,
 };
 
+/**@brief Pedal torque sensor initializing Parameters.
+ */
+PedalTorqSensorHandle_t PedalTorqueSensor =
+{
+    .PTS_RegConv =
+    {
+        .regADC = &g_adc,
+        .channel = ADC_CHANNEL_20,
+        .group = GROUP_1,
+    },
+    .hParam =
+    {	
+        .hLowPassFilterBW1 = 5,
+        .hLowPassFilterBW2 = 25,
+
+        .hOffsetPTS = 12500,
+        .bSlopePTS = 5,			
+        .bDivisorPTS = 4,
+
+        .hOffsetMT = 20000, /* Offset to launch the torque sensing */
+        .bSlopeMT = -7,
+        .bDivisorMT = 2,
+    }
+
+};
 /**@brief Pulse Frequeny initializing Parameters.
  */
 PF_Handle_AGT_t PulseFreqHandle =
@@ -45,7 +70,8 @@ PF_Handle_AGT_t PulseFreqHandle =
 /**@brief Pedal assist initializing Parameters.
  */
 PAS_Handle_t PedalAssistHandle = {
-	.pSpulse = &PulseFreqHandle,
+	.pTorque = &PedalTorqueSensor,
+    .pSpulse = &PulseFreqHandle,
 };
 
 THRO_Handle_t ThrottleHandle =

@@ -502,15 +502,15 @@
       <property id="module.driver.adc.virtual_channel_1_add_average_count" value="module.driver.adc.virtual_channel_1_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_1_limit_clip_table_id" value="module.driver.adc.virtual_channel_1_limit_clip_table_id.disabled"/>
       <property id="module.driver.adc.virtual_channel_1_resolution_format" value="module.driver.adc.virtual_channel_1_resolution_format.16_bit_data_format"/>
-      <property id="module.driver.adc.virtual_channel_2_scan_group" value="module.driver.adc.virtual_channel_2_scan_group.none"/>
-      <property id="module.driver.adc.virtual_channel_2_channel_select" value="module.driver.adc.virtual_channel_2_channel_select.an000"/>
+      <property id="module.driver.adc.virtual_channel_2_scan_group" value="module.driver.adc.virtual_channel_2_scan_group.scan_group_1"/>
+      <property id="module.driver.adc.virtual_channel_2_channel_select" value="module.driver.adc.virtual_channel_2_channel_select.an020"/>
       <property id="module.driver.adc.virtual_channel_2_sampling_table_id" value="module.driver.adc.virtual_channel_2_sampling_table_id.sampling_state_entry_0"/>
       <property id="module.driver.adc.virtual_channel_2_gain_table" value="module.driver.adc.virtual_channel_2_gain_table.disabled"/>
       <property id="module.driver.adc.virtual_channel_2_offset_table" value="module.driver.adc.virtual_channel_2_offset_table.disabled"/>
       <property id="module.driver.adc.virtual_channel_2_add_average_mode" value="module.driver.adc.virtual_channel_2_add_average_mode.disabled"/>
       <property id="module.driver.adc.virtual_channel_2_add_average_count" value="module.driver.adc.virtual_channel_2_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_2_limit_clip_table_id" value="module.driver.adc.virtual_channel_2_limit_clip_table_id.disabled"/>
-      <property id="module.driver.adc.virtual_channel_2_resolution_format" value="module.driver.adc.virtual_channel_2_resolution_format.12_bit_data_format"/>
+      <property id="module.driver.adc.virtual_channel_2_resolution_format" value="module.driver.adc.virtual_channel_2_resolution_format.16_bit_data_format"/>
       <property id="module.driver.adc.virtual_channel_3_scan_group" value="module.driver.adc.virtual_channel_3_scan_group.none"/>
       <property id="module.driver.adc.virtual_channel_3_channel_select" value="module.driver.adc.virtual_channel_3_channel_select.an000"/>
       <property id="module.driver.adc.virtual_channel_3_sampling_table_id" value="module.driver.adc.virtual_channel_3_sampling_table_id.sampling_state_entry_0"/>
@@ -829,7 +829,7 @@
       <property id="module.driver.adc.scan_group_0_fifo_enable" value="module.driver.adc.scan_group_0_fifo_enable.enable"/>
       <property id="module.driver.adc.scan_group_0_fifo_isr_enable" value="module.driver.adc.scan_group_0_fifo_isr_enable.disable"/>
       <property id="module.driver.adc.scan_group_0_fifo_isr_generation_level" value="0"/>
-      <property id="module.driver.adc.scan_group_1_enable" value="module.driver.adc.scan_group_1_enable.disable"/>
+      <property id="module.driver.adc.scan_group_1_enable" value="module.driver.adc.scan_group_1_enable.enable"/>
       <property id="module.driver.adc.scan_group_1_converter_selection" value="module.driver.adc.scan_group_1_converter_selection.adc_0"/>
       <property id="module.driver.adc.scan_group_1_start_trigger_delay" value="0"/>
       <property id="module.driver.adc.scan_group_1_self_diag_voltage" value="Disabled"/>
@@ -1228,6 +1228,7 @@
     <pincfg active="true" name="R7FA6T2BB3CFP.pincfg" selected="true" symbol="g_bsp_pin_cfg">
       <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
       <configSetting altId="adc12.an004.pa04" configurationId="adc12.an004"/>
+      <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
       <configSetting altId="adc12.mode.custom.free" configurationId="adc12.mode"/>
       <configSetting altId="agt0.agtio0.pa08" configurationId="agt0.agtio0"/>
       <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0"/>
@@ -1313,6 +1314,8 @@
       <configSetting altId="pd02.gpio_mode.gpio_mode_out.low" configurationId="pd02.gpio_mode"/>
       <configSetting altId="pd03.output.low" configurationId="pd03"/>
       <configSetting altId="pd03.gpio_mode.gpio_mode_out.low" configurationId="pd03.gpio_mode"/>
+      <configSetting altId="pe08.adc12.an020" configurationId="pe08"/>
+      <configSetting altId="pe08.gpio_mode.gpio_mode_an" configurationId="pe08.gpio_mode"/>
       <configSetting altId="spi1.pairing.b" configurationId="spi1.pairing"/>
       <configSetting altId="system.md.p201" configurationId="system.md"/>
       <configSetting altId="system.mode.custom.free" configurationId="system.mode"/>
