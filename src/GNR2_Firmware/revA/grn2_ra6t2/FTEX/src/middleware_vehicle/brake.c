@@ -6,20 +6,32 @@
 */
 
 #include "brake.h"
+#include "ASSERT_FTEX.h"
 
 /* Functions ---------------------------------------------------- */
 
 /**
- * @brief Initializes brake sensor module
+ *  Initializes brake sensor module
  */
 void BRK_Init(BRK_Handle_t * pHandle)
 {	
-
+   ASSERT(pHandle != NULL); 
+   struct GPIOConfig PinConfig;
+   
+   PinConfig.PinDirection = INPUT;
+   PinConfig.PinPull      = UP; 
+   PinConfig.PinOutput    = PUSH_PULL; 
+    
+   uCAL_GPIO_ReInit(pHandle->wPinNumber, PinConfig);
 }
 
-bool BRK_IsPressed( BRK_Handle_t * pHandle )
+/**
+ *  Returns state of the brake
+ */
+bool BRK_IsPressed(BRK_Handle_t * pHandle)
 {
-	bool bAux = false; //TODO: check gpio input, for now just mock
+	ASSERT(pHandle != NULL); 
+    bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
 	pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
 	
 	return pHandle->bIsPressed;

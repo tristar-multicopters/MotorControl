@@ -57,7 +57,7 @@ struct GPIOConfig  //Contaisn the different parameters to configure a pin
   @param Receives GPIO number and config struct
   @return void
 */
-void uCAL_GPIO_Init(uint32_t aGPIO, struct GPIOConfig aPinConfig);
+void uCAL_GPIO_ReInit(uint32_t aGPIO, struct GPIOConfig aPinConfig);
 
 /**
   @brief Function used to read the state of a GPIO using the renesas API
@@ -92,5 +92,7 @@ void uCAL_GPIO_Reset(uint32_t aGPIO);
   @return void
 */
 void uCAL_GPIO_Toggle(uint32_t aGPIO);
+
+void uCAL_GPIO_InitInputPin(uint32_t aPinNum);
 
 #endif

@@ -38,43 +38,44 @@ uint32_t uCAL_GPIO_ReadPinOutput(bsp_io_port_pin_t aBSPPin);
 /**
   Function used to reinitialise the state of a GPIO
 */
-/*void uCAL_GPIO_ReInit(uint32_t aGPIO, struct GPIOConfig aPinConfig)
+void uCAL_GPIO_ReInit(uint32_t aGPIO, struct GPIOConfig aPinConfig)
 {
     bsp_io_port_pin_t bspPin;
 	
     bspPin = uCAL_GPIO_PinNumToBSP(aGPIO); // Convert to BSP pin standard
 		
-	
+	R_BSP_PinAccessEnable();
+    
     // Direction input or output
-    if (aPinConfig.PinDirection == Input) 
+    if (aPinConfig.PinDirection == INPUT) 
     {
         R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.PDR = 0; // Setting pin as input
     }
-    else if (aPinConfig.PinDirection == Output)
+    else if (aPinConfig.PinDirection == OUTPUT)
     {
         R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.PDR = 1; // Setting pin as output
     }		 
 	 
     // Pull up or none
-    if (aPinConfig.PinPull == None)
+    if (aPinConfig.PinPull == NONE)
     {
         R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.PCR = 0;  // Disable pull up
     }
-    else if (aPinConfig.PinPull == Up)
+    else if (aPinConfig.PinPull == UP)
     {
         R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.PCR = 1;  // Enable pull up
     } 
 	 
     // Output open drain or push/pull
-    if (aPinConfig.PinOutput == PushPull)
+    if (aPinConfig.PinOutput == PUSH_PULL)
     { 
         R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.NCODR = 0; // Setting pin as PushPull
     }
-    else if (aPinConfig.PinOutput == OpenDrain)
+    else if (aPinConfig.PinOutput == OPEN_DRAIN)
     {
 	    R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.NCODR = 1; // Setting pin as OpenDrain
     }	 
-}*/
+}
 
 /**
   Function used to read the state of a GPIO
@@ -84,15 +85,17 @@ bool uCAL_GPIO_Read(uint32_t aGPIO)
     uint32_t wPinState;
     bsp_io_port_pin_t bspPin;
 	
+    R_BSP_PinAccessEnable();
+    
     bspPin = uCAL_GPIO_PinNumToBSP(aGPIO); // Convert from FTEX pins to BSP
 	
     if (R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.PDR) // Check the port direction 0 In,1 Out
     {                         
-        wPinState = R_BSP_PinRead((bsp_io_port_pin_t) aGPIO);
+         wPinState = uCAL_GPIO_ReadPinOutput(bspPin);
     }
     else
     {
-        wPinState = uCAL_GPIO_ReadPinOutput(bspPin);
+         wPinState = R_BSP_PinRead((bsp_io_port_pin_t) aGPIO);
     } 	 
 	 
     return (bool) wPinState; 
@@ -180,3 +183,13 @@ uint32_t uCAL_GPIO_ReadPinOutput(bsp_io_port_pin_t aBSPPin)
 {   
     return R_PFS->PORT[aBSPPin >> 8].PIN[aBSPPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.PODR;
 }
+
+/*void uCAL_GPIO_InitInputPin(uint32_t aPinNum)
+{
+  bsp_io_port_pin_t BSPPIn;
+    
+  BSPPIn = uCAL_GPIO_PinNumToBSP(aPinNum); 
+  R_IOPORT_Open (&g_ioport_ctrl, &g_bsp_pin_cfg);
+  R_IOPORT_PinCfg(&g_ioport_ctrl, BSPPIn, IOPORT_CFG_PORT_DIRECTION_INPUT);    
+  
+}*/
