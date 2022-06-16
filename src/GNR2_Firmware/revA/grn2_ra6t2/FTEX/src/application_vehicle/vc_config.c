@@ -74,21 +74,16 @@ PAS_Handle_t PedalAssistHandle = {
     .pSpulse = &PulseFreqHandle,
 };
 
+/**@brief Throttle initializing Parameters.
+ */
 THRO_Handle_t ThrottleHandle =
 {
-//	.pRegularConversionManager = &RegularConvertionManager,
-//	.hChannelConfig =
-//	{
-//		.resistor_p = NRF_SAADC_RESISTOR_DISABLED,
-//		.resistor_n = NRF_SAADC_RESISTOR_DISABLED,
-//		.gain = NRF_SAADC_GAIN1_6,
-//		.reference = NRF_SAADC_REFERENCE_INTERNAL,
-//		.acq_time = NRF_SAADC_ACQTIME_10US,
-//		.mode = NRF_SAADC_MODE_SINGLE_ENDED,
-//		.burst = NRF_SAADC_BURST_DISABLED,
-//		.pin_p = THROTTLE_ANALOG_PIN,
-//		.pin_n = NRF_SAADC_INPUT_DISABLED,
-//	},
+    .Throttle_RegConv =
+    {
+        .regADC = &g_adc,
+        .channel = ADC_CHANNEL_21, //TODO: update to selected channel
+        .group = GROUP_1,
+    },
 	#if VEHICLE_SELECTION == VEHICLE_ECELL
 	.hParam =
 	{
