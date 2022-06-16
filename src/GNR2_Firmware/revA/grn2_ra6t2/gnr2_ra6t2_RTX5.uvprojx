@@ -398,6 +398,11 @@
               <FileType>5</FileType>
               <FilePath>.\gnr_parameters.h</FilePath>
             </File>
+            <File>
+              <FileName>ASSERT_FTEX.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application\ASSERT_FTEX.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -693,6 +698,11 @@
               <FileName>pulse_frequency_gpt.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\peripherals_abstraction\pulse_frequency_gpt.h</FilePath>
+            </File>
+            <File>
+              <FileName>uCAL_GPIO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_GPIO.c</FilePath>
             </File>
           </Files>
         </Group>
