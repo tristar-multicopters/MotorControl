@@ -505,10 +505,14 @@ __weak void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
   {
 	  Iab->b = ( int16_t )aux;
   }
-	
-	Iab->a = -Iab->a;
+   
+  #ifdef Rev_F
+  
+  	Iab->a = -Iab->a;
 	Iab->b = -Iab->b;
-
+  
+  #endif
+	
   pHandle->_Super.Ia = Iab->a;
   pHandle->_Super.Ib = Iab->b;
   pHandle->_Super.Ic = -Iab->a - Iab->b;

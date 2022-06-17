@@ -76,6 +76,23 @@ void Error_Handler(void);
 #define M1_HALL_H3_GPIO_Port GPIOB
 #define M1_BUS_VOLTAGE_Pin GPIO_PIN_11
 #define M1_BUS_VOLTAGE_GPIO_Port GPIOB
+#define TMS_Pin GPIO_PIN_13
+#define TMS_GPIO_Port GPIOA
+#define TCK_Pin GPIO_PIN_14
+#define TCK_GPIO_Port GPIOA
+#define M1_HALL_H1_Pin GPIO_PIN_15
+#define M1_HALL_H1_GPIO_Port GPIOA
+#define M1_HALL_H2_Pin GPIO_PIN_3
+#define M1_HALL_H2_GPIO_Port GPIOB
+
+/* USER CODE BEGIN Private defines */
+
+#define HALL_V_SLCT_Pin GPIO_PIN_14
+#define HALL_V_SLCT_GPIO_Port GPIOC
+
+#ifdef Rev_E
+// PWM
+
 #define M1_PWM_UL_Pin GPIO_PIN_13
 #define M1_PWM_UL_GPIO_Port GPIOB
 #define M1_PWM_VL_Pin GPIO_PIN_14
@@ -88,22 +105,60 @@ void Error_Handler(void);
 #define M1_PWM_VH_GPIO_Port GPIOA
 #define M1_PWM_WH_Pin GPIO_PIN_10
 #define M1_PWM_WH_GPIO_Port GPIOA
-#define TMS_Pin GPIO_PIN_13
-#define TMS_GPIO_Port GPIOA
-#define TCK_Pin GPIO_PIN_14
-#define TCK_GPIO_Port GPIOA
-#define M1_HALL_H1_Pin GPIO_PIN_15
-#define M1_HALL_H1_GPIO_Port GPIOA
-#define M1_HALL_H2_Pin GPIO_PIN_3
-#define M1_HALL_H2_GPIO_Port GPIOB
+
+#define M1_PWM_UL_Pin_AF GPIO_AF6_TIM1
+#define M1_PWM_VL_Pin_AF GPIO_AF6_TIM1
+#define M1_PWM_WL_Pin_AF GPIO_AF4_TIM1
+#define M1_PWM_UH_Pin_AF GPIO_AF6_TIM1
+#define M1_PWM_VH_Pin_AF GPIO_AF6_TIM1
+#define M1_PWM_WH_Pin_AF GPIO_AF6_TIM1
+
+// USART
+
 #define UART_TX_Pin GPIO_PIN_6
 #define UART_TX_GPIO_Port GPIOB
 #define UART_RX_Pin GPIO_PIN_7
 #define UART_RX_GPIO_Port GPIOB
-/* USER CODE BEGIN Private defines */
 
-#define HALL_V_SLCT_Pin GPIO_PIN_14
-#define HALL_V_SLCT_GPIO_Port GPIOC
+#define UART_TX_Pin_AF GPIO_AF7_USART1
+#define UART_RX_Pin_AF GPIO_AF7_USART1
+
+#endif
+
+#ifdef Rev_F
+// PWM
+
+#define M1_PWM_UL_Pin GPIO_PIN_13
+#define M1_PWM_UL_GPIO_Port GPIOB
+#define M1_PWM_VL_Pin GPIO_PIN_14
+#define M1_PWM_VL_GPIO_Port GPIOB
+#define M1_PWM_WL_Pin GPIO_PIN_15
+#define M1_PWM_WL_GPIO_Port GPIOB
+#define M1_PWM_UH_Pin GPIO_PIN_8
+#define M1_PWM_UH_GPIO_Port GPIOA
+#define M1_PWM_VH_Pin GPIO_PIN_9
+#define M1_PWM_VH_GPIO_Port GPIOA
+#define M1_PWM_WH_Pin GPIO_PIN_10
+#define M1_PWM_WH_GPIO_Port GPIOA
+
+#define M1_PWM_UL_Pin_AF GPIO_AF6_TIM1
+#define M1_PWM_VL_Pin_AF GPIO_AF6_TIM1
+#define M1_PWM_WL_Pin_AF GPIO_AF4_TIM1
+#define M1_PWM_UH_Pin_AF GPIO_AF6_TIM1
+#define M1_PWM_VH_Pin_AF GPIO_AF6_TIM1
+#define M1_PWM_WH_Pin_AF GPIO_AF6_TIM1
+
+// USART
+
+#define UART_TX_Pin GPIO_PIN_4
+#define UART_TX_GPIO_Port GPIOC
+#define UART_RX_Pin GPIO_PIN_5
+#define UART_RX_GPIO_Port GPIOC
+
+#define UART_TX_Pin_AF GPIO_AF7_USART1
+#define UART_RX_Pin_AF GPIO_AF7_USART1
+
+#endif
 
 /* USER CODE END Private defines */
 

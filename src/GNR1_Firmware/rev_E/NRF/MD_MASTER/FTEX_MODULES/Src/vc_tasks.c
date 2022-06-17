@@ -26,6 +26,7 @@ static void sendMotorMonitoringCANmsg(MCP25625_Handle_t * pCANHandle, VCI_Handle
 
 #define DEBUG_ENABLE		0
 
+
 #if DEBUG_ENABLE
 struct {
 	int16_t hIqref;

@@ -96,7 +96,19 @@ uint32_t GetChipID(uint8_t ID_Half);
 
 /* Wheel speed  ---------------------------------------------*/
 
+#ifdef Rev_E
+
 #define WH_TIMER_INSTANCE_ADDR		&timer3_inst
 #define WH_PUL_GPIO_PIN						NRF_GPIO_PIN_MAP(1,15)
+
+#endif
+
+#ifdef Rev_F
+
+#define WH_TIMER_INSTANCE_ADDR		&timer3_inst
+#define WH_PUL_GPIO_PIN						NRF_GPIO_PIN_MAP(1,12)
+
+#endif
+
 
 #endif /*__BOARD_HARDWARE_H*/

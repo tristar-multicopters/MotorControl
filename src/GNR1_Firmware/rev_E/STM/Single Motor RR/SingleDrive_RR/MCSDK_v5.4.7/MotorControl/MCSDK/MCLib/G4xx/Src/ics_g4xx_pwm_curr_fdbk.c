@@ -505,6 +505,13 @@ __weak void ICS_GetPhaseCurrents( PWMC_Handle_t * pHdl, ab_t * Iab )
   {
 	  Iab->b = ( int16_t )aux;
   }
+  
+  #ifdef Rev_F
+  
+  	Iab->a = -Iab->a;   // Inversion of current, This setting depends on the hall effect current sensor connection and how it is connected to uController on hardware level
+	Iab->b = -Iab->b;   // The power connection in hall effect current sensor is inverted due to hardware layout constaints. Hence current inversion has to be accounted on software level 
+  
+  #endif
 
   pHandle->_Super.Ia = Iab->a;
   pHandle->_Super.Ib = Iab->b;
