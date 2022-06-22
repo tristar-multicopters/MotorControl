@@ -45,7 +45,7 @@ extern ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1;
 extern CircleLimitationHandle_t CircleLimitationM1;
 extern FeedforwardHandle_t FeedforwardM1;
 
-extern RotorPositionObserverHandle_t AngleObserverM1;
+extern RotorPositionObserverHandle_t RotorPosObsM1;
 
 
 #endif /* __MC_CONFIG_H */

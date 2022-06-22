@@ -112,12 +112,12 @@ void MC_Bootup(void)
   /******************************************************/
   pSpeedTorqCtrl[M1] = &SpeednTorqCtrlM1;
   HallPosSensor_Init (&HallPosSensorM1);
-	RotorPosObs_Init( &AngleObserverM1 );
+	RotorPosObs_Init( &RotorPosObsM1 );
 
   /******************************************************/
   /*   Speed & torque component initialization          */
   /******************************************************/
-  SpdTorqCtrl_Init(pSpeedTorqCtrl[M1],pPIDSpeed[M1], &HallPosSensorM1.Super);
+  SpdTorqCtrl_Init(pSpeedTorqCtrl[M1],pPIDSpeed[M1], &RotorPosObsM1.Super);
 
   /******************************************************/
   /*   Auxiliary speed sensor component initialization  */
@@ -172,7 +172,7 @@ void MC_Bootup(void)
   MCTuning[M1].pPIDId = pPIDId[M1];
   MCTuning[M1].pPIDFluxWeakening = &PIDFluxWeakeningHandleM1; /* only if M1 has FW */
   MCTuning[M1].pPWMnCurrFdbk = pPWMCurrFdbk[M1];
-  MCTuning[M1].pSpeedSensorMain = (SpeednPosFdbkHandle_t *) &HallPosSensorM1;
+  MCTuning[M1].pSpeedSensorMain = (SpeednPosFdbkHandle_t *) &RotorPosObsM1;
   MCTuning[M1].pSpeedSensorAux = (SpeednPosFdbkHandle_t *) &BemfObserverPllM1;
   MCTuning[M1].pSpeedSensorVirtual = MC_NULL;
   MCTuning[M1].pSpeednTorqueCtrl = pSpeedTorqCtrl[M1];
@@ -240,9 +240,10 @@ void MediumFrequencyTaskM1(void)
   int16_t wAux = 0;
 
 //  (void) BemfObsPll_CalcAvrgMecSpeedUnit( &BemfObserverPllM1, &wAux );
-  bool bIsSpeedReliable = HallPosSensor_CalcAvrgMecSpeedUnit( &HallPosSensorM1, &wAux );
+  (void) HallPosSensor_CalcAvrgMecSpeedUnit( &HallPosSensorM1, &wAux );
+	bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit( &RotorPosObsM1, &wAux );
 //  MotorPowerQD_CalcElMotorPower( pMotorPower[M1] );
-RCM_ExecuteRegularConv();
+	RCM_ExecuteRegularConv();
 
   StateM1 = MCStateMachine_GetState( &MCStateMachine[M1] );
 
@@ -280,7 +281,7 @@ RCM_ExecuteRegularConv();
   case M_CLEAR:
     HallPosSensor_Clear( &HallPosSensorM1 );
     BemfObsPll_Clear( &BemfObserverPllM1 );
-		RotorPosObs_Clear( &AngleObserverM1 );
+		RotorPosObs_Clear( &RotorPosObsM1 );
     if ( MCStateMachine_NextState( &MCStateMachine[M1], M_START ) == true )
     {
       FOC_Clear( M1 );
@@ -504,7 +505,7 @@ uint8_t MC_HighFrequencyTask(void)
   BemfObsInputs.Valfa_beta = FOCVars[M1].Valphabeta;
 
   HallPosSensor_CalcElAngle (&HallPosSensorM1);
-	RotorPosObs_CalcElAngle(&AngleObserverM1, 0);
+	RotorPosObs_CalcElAngle(&RotorPosObsM1, 0);
 
   hFOCreturn = FOC_CurrControllerM1();
   if(hFOCreturn == MC_FOC_DURATION)
@@ -543,7 +544,6 @@ inline uint16_t FOC_CurrControllerM1(void)
 
   speedHandle = SpdTorqCtrl_GetSpeedSensor(pSpeedTorqCtrl[M1]);
   hElAngle = SpdPosFdbk_GetElAngle(speedHandle);
-	hElAngle = RotorPosObs_GetElAngle(&AngleObserverM1);
 
 	#if (CURRENT_OPENLOOP)
 	hOpenloopTheta += hOpenloopSpeed;

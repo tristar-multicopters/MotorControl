@@ -192,20 +192,28 @@ int16_t HallPosSensor_CalcElAngle( HallPosSensorHandle_t * pHandle );
   *         Then compute rotor average el speed (express in dpp considering the
   *         measurement frequency) based on the buffer filled by IRQ, then - as
   *         a consequence - compute, store and return - through parameter
-  *         hMecSpeedUnit - the rotor average mech speed, expressed in Unit.
+  *         pMecSpeedUnit - the rotor average mech speed, expressed in Unit.
   *         Then check, store and return the reliability state of
   *         the sensor; in this function the reliability is measured with
   *         reference to specific parameters of the derived
   *         sensor (HALL) through internal variables managed by IRQ.
   * @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
-  * @param  hMecSpeedUnit pointer to int16_t, used to return the rotor average
+  * @param  pMecSpeedUnit pointer to int16_t, used to return the rotor average
   *         mechanical speed (expressed in the unit defined by #SPEED_UNIT)
   * @retval true = sensor information is reliable
   *         false = sensor information is not reliable
   */
-bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_t * hMecSpeedUnit );
+bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_t * pMecSpeedUnit );
 
-
+/**
+  * @brief  It could be used to set istantaneous information on rotor mechanical
+  *         angle.
+  *         Note: Mechanical angle management is not implemented in this
+  *         version of Hall sensor class.
+  * @param  pHandle pointer on related component instance
+  * @param  hMecAngle istantaneous measure of rotor mechanical angle
+  * @retval none
+  */
 void HallPosSensor_SetMecAngle( HallPosSensorHandle_t * pHandle, int16_t hMecAngle );
 
 

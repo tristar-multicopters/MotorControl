@@ -84,16 +84,16 @@ int16_t VirtualSpdSensor_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, voi
   *         in dpp considering the measurement frequency) in order to provide it
   *         to SPD_CalcElAngle function and SpdPosFdbk_GetElAngle.
   *         Then compute store and return - through parameter
-  *         hMecSpeedUnit - the rotor average mech speed, expressed in the unit
+  *         pMecSpeedUnit - the rotor average mech speed, expressed in the unit
   *         defined by #SPEED_UNIT. Then return the reliability state of the
   *         sensor (always true).
   * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
-  * @param  hMecSpeedUnit pointer to int16_t, used to return the rotor average
+  * @param  pMecSpeedUnit pointer to int16_t, used to return the rotor average
   *         mechanical speed (SPED_UNIT)
   * @retval true = sensor information is reliable
   *         false = sensor information is not reliable
   */
-bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandle, int16_t * hMecSpeedUnit );
+bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandle, int16_t * pMecSpeedUnit );
 
 /**
   * @brief  It is used to set istantaneous information on VSS mechanical and

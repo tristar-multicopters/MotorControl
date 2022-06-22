@@ -173,7 +173,7 @@ int16_t HallPosSensor_CalcElAngle( HallPosSensorHandle_t * pHandle )
 }
 
 
-bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_t * hMecSpeedUnit )
+bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_t * pMecSpeedUnit )
 {
     bool bReliability;
     if (pHandle->bSensorIsReliable)
@@ -184,7 +184,7 @@ bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_
             /* At start-up or very low freq */
             /* Based on current prescaler value only */
             pHandle->Super.hElSpeedDpp = 0;
-            *hMecSpeedUnit = 0;
+            *pMecSpeedUnit = 0;
         }
         else
         {
@@ -192,7 +192,7 @@ bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_
             if ( pHandle->hAvrElSpeedDpp == 0)
             {
                 /* Speed is too low */
-                *hMecSpeedUnit = 0;
+                *pMecSpeedUnit = 0;
             }
             else
             {
@@ -209,12 +209,12 @@ bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_
                         pHandle->hCompSpeed = (int16_t)((int32_t)(pHandle->hDeltaAngle)/( int32_t )( pHandle->hPWMNbrPSamplingFreq ) );
                     }
                     /* Convert el_dpp to MecUnit */
-                    *hMecSpeedUnit = ( int16_t )( (  pHandle->hAvrElSpeedDpp * ( int32_t )pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT ) /
+                    *pMecSpeedUnit = ( int16_t )( (  pHandle->hAvrElSpeedDpp * ( int32_t )pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT ) /
                                                 (( int32_t ) pHandle->Super.DPPConvFactor * ( int32_t )pHandle->Super.bElToMecRatio ) );
                 }
                 else
                 {
-                    *hMecSpeedUnit = ( int16_t )pHandle->hSaturationSpeed;
+                    *pMecSpeedUnit = ( int16_t )pHandle->hSaturationSpeed;
                 }
             }
         }
@@ -226,9 +226,9 @@ bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_
         pHandle->Super.bSpeedErrorNumber = pHandle->Super.bMaximumSpeedErrorsNumber;
         /* If speed is not reliable the El and Mec speed is set to 0 */
         pHandle->Super.hElSpeedDpp = 0;
-        *hMecSpeedUnit = 0;
+        *pMecSpeedUnit = 0;
     }
-    pHandle->Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
+    pHandle->Super.hAvrMecSpeedUnit = *pMecSpeedUnit;
     return (bReliability);
 }
 
@@ -567,15 +567,7 @@ static void HALL_Init_Electrical_Angle( HallPosSensorHandle_t * pHandle )
     pHandle->bDirectionChangeCounter = 0;
 }
 
-/**
-  * @brief  It could be used to set istantaneous information on rotor mechanical
-  *         angle.
-  *         Note: Mechanical angle management is not implemented in this
-  *         version of Hall sensor class.
-  * @param  pHandle pointer on related component instance
-  * @param  hMecAngle istantaneous measure of rotor mechanical angle
-  * @retval none
-  */
+
 void HallPosSensor_SetMecAngle( HallPosSensorHandle_t * pHandle, int16_t hMecAngle )
 {
 	if(pHandle!= NULL)

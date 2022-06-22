@@ -119,7 +119,7 @@ int16_t VirtualSpdSensor_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, voi
 }
 
 
-bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandle, int16_t * hMecSpeedUnit )
+bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandle, int16_t * pMecSpeedUnit )
 {
   bool SpeedSensorReliability = false;
 
@@ -129,21 +129,21 @@ bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandl
     pHandle->Super.hElSpeedDpp = ( int16_t )( pHandle->wElSpeedDpp32 / 65536 );
 
     /* Convert dpp into MecUnit */
-    *hMecSpeedUnit = ( int16_t )( ( ( int32_t )pHandle->Super.hElSpeedDpp *
+    *pMecSpeedUnit = ( int16_t )( ( ( int32_t )pHandle->Super.hElSpeedDpp *
                                     ( int32_t )pHandle->Super.hMeasurementFrequency * SPEED_UNIT ) /
                                   ( ( int32_t )pHandle->Super.DPPConvFactor * ( int32_t )pHandle->Super.bElToMecRatio ) );
 
-    pHandle->Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
+    pHandle->Super.hAvrMecSpeedUnit = *pMecSpeedUnit;
 
     pHandle->hRemainingStep--;
   }
   else if ( pHandle->hRemainingStep == 1u )
   {
-    *hMecSpeedUnit = pHandle->hFinalMecSpeedUnit;
+    *pMecSpeedUnit = pHandle->hFinalMecSpeedUnit;
 
-    pHandle->Super.hAvrMecSpeedUnit = *hMecSpeedUnit;
+    pHandle->Super.hAvrMecSpeedUnit = *pMecSpeedUnit;
 
-    pHandle->Super.hElSpeedDpp = ( int16_t )( ( ( int32_t )( *hMecSpeedUnit ) *
+    pHandle->Super.hElSpeedDpp = ( int16_t )( ( ( int32_t )( *pMecSpeedUnit ) *
                                   ( int32_t ) ( pHandle->Super.DPPConvFactor) ) /
                                   ( ( int32_t )SPEED_UNIT * ( int32_t )pHandle->Super.hMeasurementFrequency ) );
 
@@ -153,7 +153,7 @@ bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandl
   }
   else
   {
-    *hMecSpeedUnit = pHandle->Super.hAvrMecSpeedUnit;
+    *pMecSpeedUnit = pHandle->Super.hAvrMecSpeedUnit;
   }
   /* If the transition is not done yet, we already know that speed is not reliable */
   if ( pHandle->bTransitionEnded == false )
@@ -163,7 +163,7 @@ bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandl
   }
   else
   {
-    SpeedSensorReliability = SpdPosFdbk_CalcReliability ( &pHandle->Super, hMecSpeedUnit );
+    SpeedSensorReliability = SpdPosFdbk_CalcReliability ( &pHandle->Super, pMecSpeedUnit );
   }
 
   return ( SpeedSensorReliability );

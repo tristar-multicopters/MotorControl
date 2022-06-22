@@ -192,7 +192,7 @@ int16_t BemfObsPll_CalcElAngle( BemfObserverPllHandle_t * pHandle, BemfObserverI
 /**
   * @brief  This method must be called - at least - with the same periodicity
   *         on which speed control is executed. It computes and returns - through
-  *         parameter hMecSpeedUnit - the rotor average mechanical speed,
+  *         parameter pMecSpeedUnit - the rotor average mechanical speed,
   *         expressed in Unit. Average is computed considering a FIFO depth
   *         equal to bSpeedBufferSizeUnit. Moreover it also computes and returns
   *         the reliability state of the sensor.
