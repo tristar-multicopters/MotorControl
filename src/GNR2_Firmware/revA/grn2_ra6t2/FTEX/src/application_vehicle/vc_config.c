@@ -56,20 +56,31 @@ PedalTorqSensorHandle_t PedalTorqueSensor =
     }
 
 };
-/**@brief Pulse Frequeny initializing Parameters.
+/**@brief Pulse Frequeny initializing Parameters for AGT Timer.
  */
-PF_Handle_AGT_t PulseFreqHandle =
+PulseFrequency_Handle_AGT_t PulseFreqHandle =
 {
 	.agt_start_measurement = false,
-	.PF_Param_AGT =
+	.PulseFreqParam_AGT =
 	{
 		 .PF_AGT_Timer = &ag_timer0,
 	}
 };
 
+/**@brief Pulse Frequeny initializing Parameters for GPT Timer.
+ */
+WheelFrequency_Handle_GPT_t PulseFreqHandle_Wheel =
+{
+	.gpt_start_measurement = false,
+	.PulseFreqParam_GPT =
+	{
+		 .PF_GPT_Timer = &g_timer8,
+	}
+};
+
 /**@brief Pedal assist initializing Parameters.
  */
-PAS_Handle_t PedalAssistHandle = {
+PedalSpeedSens_Handle_t PedalAssistHandle = {
 	.pTorque = &PedalTorqueSensor,
     .pSpulse = &PulseFreqHandle,
 };

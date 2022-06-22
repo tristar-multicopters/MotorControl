@@ -28,7 +28,7 @@ typedef struct
 {
     const timer_instance_t* PF_AGT_Timer;
 	
-} PF_Param_AGT_t;
+} PulseFreqParam_AGT_t;
 
 
 typedef struct
@@ -38,9 +38,9 @@ typedef struct
 
     volatile bool  agt_start_measurement; /* AGT Flag start measurment */	
 
-    PF_Param_AGT_t PF_Param_AGT; /* AGT Parameters*/
+    PulseFreqParam_AGT_t PulseFreqParam_AGT; /* AGT Parameters*/
 	
-} PF_Handle_AGT_t; 
+} PulseFrequency_Handle_AGT_t; 
 
 
 // ============================== Variables ================================ //
@@ -52,31 +52,31 @@ typedef struct
 
 /**
   @brief  Function used to read the capture input from the AGT
-  @param  PF_Handle_AGT_t handle
+  @param  PulseFrequency_Handle_AGT_t handle
   @return None
 */
-void PulseFrequency_ReadInputCapture_AGT (PF_Handle_AGT_t * pHandle);
+void PulseFrequency_ReadInputCapture_AGT (PulseFrequency_Handle_AGT_t * pHandle);
 
 /**
   @brief  Function used to return the capture read input from the AGT
-  @param  PF_Handle_AGT_t handle
+  @param  PulseFrequency_Handle_AGT_t handle
   @return None
 */
-uint64_t PulseFrequency_InputCaptureValue_AGT (PF_Handle_AGT_t * pHandle);
+uint64_t PulseFrequency_InputCaptureValue_AGT (PulseFrequency_Handle_AGT_t * pHandle);
 
 /**
   @brief  Function used to update the capture variables from the AGT interrupt
-  @param  PF_Handle_AGT_t handle
+  @param  PulseFrequency_Handle_AGT_t handle
   @return None
 */
-void PulseFrequency_IsrCallUpdate_AGT( PF_Handle_AGT_t * pHandle , uint64_t  wCapture );
+void PulseFrequency_IsrCallUpdate_AGT( PulseFrequency_Handle_AGT_t * pHandle , uint64_t  wCapture );
 
 /**
   @brief  Function used to update the overflow variable from the AGT interrupt
-  @param  PF_Handle_AGT_t handle
+  @param  PulseFrequency_Handle_AGT_t handle
   @return None
 */
-void PulseFrequency_IsrOverFlowUpdate_AGT( PF_Handle_AGT_t * pHandle );
+void PulseFrequency_IsrOverFlowUpdate_AGT( PulseFrequency_Handle_AGT_t * pHandle );
 
 
 #endif /* __GNR_MAIN_H */

@@ -564,6 +564,16 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\middleware_vehicle\pedal_torque_sensor.h</FilePath>
             </File>
+            <File>
+              <FileName>wheel_speed_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\wheel_speed_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>wheel_speed_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\middleware_vehicle\wheel_speed_sensor.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

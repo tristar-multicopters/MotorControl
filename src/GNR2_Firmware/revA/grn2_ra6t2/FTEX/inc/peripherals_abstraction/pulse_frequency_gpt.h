@@ -26,18 +26,21 @@ typedef struct
 {
     const timer_instance_t* PF_GPT_Timer;
 	
-} PF_Param_GPT_t;
+}  PulseFreqParam_GPT_t; 
 
 
 typedef struct
 {
-    uint64_t gpt_capture_count; 	/* GPT timer capture variable */
+    
+    
+    uint32_t gpt_capture_count; 	/* GPT timer capture variable */
     uint32_t gpt_capture_overflow;/* GPT timer capture overflow variable */
 
     volatile bool  gpt_start_measurement;		/* GPT Flag start measurment */	
-    PF_Param_GPT_t PF_Param_GPT;						/* GPT Parameters */
+     PulseFreqParam_GPT_t PulseFreqParam_GPT;						/* GPT Parameters */
 	
-} PF_Handle_GPT_t; 
+} WheelFrequency_Handle_GPT_t; 
+
 
 
 // ============================== Variables ================================ //
@@ -48,31 +51,31 @@ typedef struct
 
 /**
   @brief  Function used to read the capture input from the GPT
-  @param  PF_Handle_GPT_t handle
+  @param  WheelFrequency_Handle_GPT_t handle
   @return None
 */
-void PulseFrequency_ReadInputCapture_GPT (PF_Handle_GPT_t * pHandle);
+void PulseFrequency_ReadInputCapture_GPT (WheelFrequency_Handle_GPT_t * pHandle);
 
 /**
   @brief  Function used to return the capture read input from the GPT
-  @param  PF_Handle_GPT_t handle
+  @param  WheelFrequency_Handle_GPT_t handle
   @return None
 */
-uint64_t PulseFrequency_InputCaptureValue_GPT (PF_Handle_GPT_t * pHandle);
+uint64_t PulseFrequency_InputCaptureValue_GPT (WheelFrequency_Handle_GPT_t * pHandle);
 
 /**
   @brief  Function used to update the capture variables from the GPT interrupt
-  @param  PF_Handle_GPT_t handle
+  @param  WheelFrequency_Handle_GPT_t handle
   @return None
 */
-void PulseFrequency_IsrCallUpdate_GPT( PF_Handle_GPT_t * pHandle , uint64_t  wCapture );
+void PulseFrequency_IsrCallUpdate_GPT( WheelFrequency_Handle_GPT_t * pHandle , uint64_t  wCapture );
 
 /**
   @brief  Function used to update the overflow variable from the GPT interrupt
-  @param  PF_Handle_GPT_t handle
+  @param  WheelFrequency_Handle_GPT_t handle
   @return None
 */
-void PulseFrequency_IsrOverFlowUpdate_GPT( PF_Handle_GPT_t * pHandle );
+void PulseFrequency_IsrOverFlowUpdate_GPT( WheelFrequency_Handle_GPT_t * pHandle );
 	
 
 

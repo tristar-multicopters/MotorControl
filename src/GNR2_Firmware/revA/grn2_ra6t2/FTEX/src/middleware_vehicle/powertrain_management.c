@@ -24,7 +24,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1)
     MDI_Init(pHandle->pMDI, pMci_M1);
     THRO_Init(pHandle->pThrottle);
     BRK_Init(pHandle->pBrake);
-    PAS_Init(pHandle->pPAS); 
+    PSS_Init(pHandle->pPAS); 
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
 
@@ -79,7 +79,7 @@ void PWRT_CalcTorqueSpeed(PWRT_Handle_t * pHandle)
     THRO_CalcAvThrottleValue(pHandle->pThrottle);
 
     /* Update torque value */
-    PAS_CalcTSAvValue(pHandle->pPAS);
+    PSS_CalcTSAvValue(pHandle->pPAS);
     
 	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
 	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;

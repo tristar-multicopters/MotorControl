@@ -80,7 +80,7 @@ typedef struct
 	BRK_Handle_t * pBrake;				  	/* Pointer to brake handle */
 	MS_Handle_t * pMS;						  	/* Pointer to motor selector handle */
 	PWREN_Handle_t * pPWREN;			  	/* Pointer to power enable pin handle */
-	PAS_Handle_t * pPAS;					  	/* Pointer to PAS handle */
+	PedalSpeedSens_Handle_t * pPAS;					  	/* Pointer to PAS handle */
 	
 	uint8_t bMainMotor;						  	/* Main motor selection. It is updated by user using motor selector switch */
 	int16_t aTorque[2];						  	/* Array of torque reference, first element is for M1, second is for M2 */
