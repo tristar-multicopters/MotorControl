@@ -130,7 +130,7 @@ THRO_Handle_t ThrottleHandle =
 		.bDivisorThrottle = 3,
 		
 		.hOffsetTorque = 4000,
-		.bSlopeTorque = -14,///15
+		.bSlopeTorque = -13,///15
 		.bDivisorTorque = 48,
 		
 		.hDetectionThreshold = 1000,
@@ -511,7 +511,7 @@ DRVT_Handle_t DrivetrainHandle =
 		.bEnableFoldback = true,
 		.hStartValue = 45,
 		.hEndValue = 70,
-		.hDefaultMaxTorque = 17000,
+		.hDefaultMaxTorque = 15000,
         
 	},
 	.sHeatsinkTempFoldback[M2] = 
@@ -519,7 +519,7 @@ DRVT_Handle_t DrivetrainHandle =
 		.bEnableFoldback = true,
 		.hStartValue = 45,
 		.hEndValue = 70,
-		.hDefaultMaxTorque = 17000,
+		.hDefaultMaxTorque = 15000,
 	},
 };
 
