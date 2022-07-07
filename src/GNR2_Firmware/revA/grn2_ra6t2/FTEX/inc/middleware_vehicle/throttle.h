@@ -50,7 +50,7 @@ typedef struct
 	uint16_t hAvADCValue;            // It contains latest available average ADC value.
 	uint16_t hAvThrottleValue;       // It contains latest available throttle value.
 	
-	THRO_Param_t hParam;
+	THRO_Param_t hParameters;
 	
 } THRO_Handle_t;
 

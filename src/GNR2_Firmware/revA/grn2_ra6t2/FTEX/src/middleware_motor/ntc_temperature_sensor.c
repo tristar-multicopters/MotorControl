@@ -44,7 +44,7 @@ void NTCTempSensor_Init( NTCTempSensorHandle_t * pHandle )
 {
   if ( pHandle->bSensorType == REAL_SENSOR )
   {
-      pHandle->bConvHandle = RCM_RegisterRegConv(&pHandle->TempRegConv);  // Need to be register with RegularConvManager
+      pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->TempRegConv);  // Need to be register with RegularConvManager
       NTCTempSensor_Clear( pHandle );
   }
   else  // VIRTUAL_SENSOR
@@ -67,7 +67,7 @@ uint16_t NTCTempSensor_CalcAvTemp( NTCTempSensorHandle_t * pHandle )
   uint16_t hAux;   // temporary 16 bit variable for calculation
   if ( pHandle->bSensorType == REAL_SENSOR )  // Checks if the sensor is real or virtual
   {
-      hAux = RCM_ReadConv(pHandle->bConvHandle);   // Reads raw value of converted ADC value.
+      hAux = RegConvMng_ReadConv(pHandle->bConvHandle);   // Reads raw value of converted ADC value.
       if ( hAux != 0xFFFFu )  // Checks for max reading, if yes, no point of averaging
           {   // Performs first order averaging:
               // new_average = (instantenous_measurment + (previous_average * number_of_smaples - 1 )) / number_of_smaples

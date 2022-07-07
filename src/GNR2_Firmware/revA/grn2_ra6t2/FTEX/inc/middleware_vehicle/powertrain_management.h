@@ -109,18 +109,25 @@ typedef struct
 void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1);
 
 /**
-	* @brief  Compute target torque and speed to be applied to each motors. To be called periodically.
+	* @brief  Update current value of powertrain peripherals, such as throttle. To be called periodically.
 	* @param  Powertrain handle
 	* @retval None
 	*/
-void PWRT_CalcTorqueSpeed(PWRT_Handle_t * pHandle);
+void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle);
+
+/**
+	* @brief  Compute target torque and speed to be applied to each motors.
+	* @param  Powertrain handle
+	* @retval None
+	*/
+void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle);
 
 /**
 	* @brief  Send torque and/or speed ramp commands to motors
 	* @param  Powertrain handle
 	* @retval None
 	*/
-void PWRT_UpdateMotorRamps(PWRT_Handle_t * pHandle);
+void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle);
 
 /**
 	* @brief  Send command to start motors

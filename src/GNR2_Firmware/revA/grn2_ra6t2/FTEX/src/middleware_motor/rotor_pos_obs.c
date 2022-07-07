@@ -87,7 +87,7 @@ int16_t RotorPosObs_CalcElAngle( RotorPositionObserverHandle_t * pHandle, int16_
 bool RotorPosObs_CalcMecSpeedUnit( RotorPositionObserverHandle_t * pHandle, int16_t * pMecSpeedUnit)
 {
 	bool bIsReliable = SpdPosFdbk_GetReliability(&pHandle->pHallSensor->Super);
-	bIsReliable |= SpdPosFdbk_CalcReliability ( &pHandle->Super, pMecSpeedUnit );
+	bIsReliable &= SpdPosFdbk_CalcReliability ( &pHandle->Super, pMecSpeedUnit );
 	
 	if (bIsReliable)
 	{

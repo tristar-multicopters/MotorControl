@@ -57,8 +57,11 @@
   <raModuleConfiguration/>
   <raPinConfiguration>
     <pincfg active="true" name="" symbol="">
+      <configSetting altId="adc12.an000.pa00" configurationId="adc12.an000"/>
+      <configSetting altId="adc12.an001.pa01" configurationId="adc12.an001"/>
       <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
       <configSetting altId="adc12.an004.pa04" configurationId="adc12.an004"/>
+      <configSetting altId="adc12.an018.pb02" configurationId="adc12.an018"/>
       <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
       <configSetting altId="agt0.agtio0.pa08" configurationId="agt0.agtio0" isUsedByDriver="true"/>
       <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0" isUsedByDriver="true"/>
@@ -78,6 +81,7 @@
       <configSetting altId="jtag_fslash_swd.swclk.pa14" configurationId="jtag_fslash_swd.swclk"/>
       <configSetting altId="jtag_fslash_swd.swdio.pa13" configurationId="jtag_fslash_swd.swdio"/>
       <configSetting altId="jtag_fslash_swd.swo.pb03" configurationId="jtag_fslash_swd.swo"/>
+      <configSetting altId="pc09.input" configurationId="pc09"/>
       <configSetting altId="pd01.output.low" configurationId="pd01"/>
       <configSetting altId="pd02.output.low" configurationId="pd02"/>
       <configSetting altId="pd03.output.low" configurationId="pd03"/>

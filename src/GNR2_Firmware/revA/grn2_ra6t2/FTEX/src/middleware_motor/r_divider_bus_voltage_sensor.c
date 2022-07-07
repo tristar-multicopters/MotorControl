@@ -13,7 +13,7 @@
 */
 void ResDivVbusSensor_Init( ResDivVbusSensorHandle_t * pHandle )
 {
-    pHandle->bConvHandle = RCM_RegisterRegConv(&pHandle->VbusRegConv);  // Need to be register with RegularConvManager    
+    pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->VbusRegConv);  // Need to be register with RegularConvManager    
     ResDivVbusSensor_Clear( pHandle );  // Check
 }
 
@@ -45,7 +45,7 @@ static uint16_t RVBS_ConvertVbusFiltrered( ResDivVbusSensorHandle_t * pHandle )
     uint32_t tot = 0u;
     for ( vindex = 0; vindex < pHandle->hLowPassFilterBw; )  // for every elemnet of average filter buffer
     {
-        hAux = RCM_ReadConv(pHandle->bConvHandle);
+        hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
         if ( hAux != 0xFFFFu )  // Checks if measurement is saturated.
         {
             if ( vindex == 0 )  // for first element
@@ -114,7 +114,7 @@ uint16_t ResDivVbusSensor_CalcAvVbus( ResDivVbusSensorHandle_t * pHandle )
     uint32_t wtemp;
     uint16_t hAux;
     uint8_t i;
-    hAux = RCM_ReadConv(pHandle->bConvHandle); // Reads current value of bus voltage
+    hAux = RegConvMng_ReadConv(pHandle->bConvHandle); // Reads current value of bus voltage
     if ( hAux != 0xFFFF )  // Checks if measured value is not saturated
     {
         pHandle->aBuffer[pHandle->bIndex] = hAux; // Update average buffer element with current value

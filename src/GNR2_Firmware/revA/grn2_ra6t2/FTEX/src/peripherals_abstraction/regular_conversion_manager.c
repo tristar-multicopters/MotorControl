@@ -12,28 +12,19 @@
 */
 
 #include "regular_conversion_manager.h"
-#include "mc_config.h"
+#include "hal_data.h"
+#include "ASSERT_FTEX.h"
 
-// ========================== Private typedef ============================== //
-
-typedef enum    // Used to define state of regular conversion manager
-{
-    STOPPED,
-    START,
-    ONGOING,
-    DATA_AVAILABLE
-} RCM_status_t;
 
 // ========================== Private defines ============================== //
 
-#define RCM_MAX_CONV  4
+#define RCM_MAX_CONV  8
 #define ADC_EOC_STATUS_FLAGS 0x02u
 #define ADC_EOC_CLEAR_FLAGS 0x1FEU
 
 // ========================== Private variables ============================ //
 
 RegConv_t * RCM_handle_array [RCM_MAX_CONV];
-RCM_status_t ConversionStatus = STOPPED;
 uint16_t RCM_ReadValue = 0;
 
 // ========================================================================= //
@@ -43,13 +34,13 @@ uint16_t RCM_ReadValue = 0;
   * returns a handle that uniquely identifies the conversion. This handle is used in the other API
   * of the Regular Converion Manager to reference the registered conversion.
   *
-  * A regular conversion is defined by an ADC + ADC channel pair. If a registration already exists
-  * for the requested ADC + ADC channel pair, the same handle will be reused.
+  * A regular conversion is defined by an ADC + ADC hChannel pair. If a registration already exists
+  * for the requested ADC + ADC hChannel pair, the same handle will be reused.
   *
   * The registration may fail if there is no space left for additional conversions. The
   * maximum number of regular conversion that can be registered is defined by #RCM_MAX_CONV.
   */
-uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
+uint8_t RegConvMng_RegisterRegConv(RegConv_t * regConv)
 {
     uint8_t handle=255;
     uint8_t i=0;
@@ -61,10 +52,9 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
         {
             handle = i; /* First location available, but still looping to check that this config does not already exist*/
         }
-        /* Ticket 64042 : If RCM_handle_array [i] is null access to data member will cause Memory Fault. */
         if (  RCM_handle_array [i] != 0 )
         {
-            if ( RCM_handle_array [i]->channel == regConv->channel )
+            if ( RCM_handle_array [i]->hChannel == regConv->hChannel )
             {
                 handle = i; /* Reuse the same handle */
                 i = RCM_MAX_CONV; /* we can skip the rest of the loop*/
@@ -85,82 +75,37 @@ uint8_t RCM_RegisterRegConv(RegConv_t * regConv)
 
 /*
  * This function is used to flag start of scan group passed as input.
- * Depending of the state of RCM manager for previous conversion, this function can change state of RCM manager and flag availability of scanned channel data.
- * If the ADC is already in use for currents sensing, the regular conversion can not
- * be executed instantaneously but have to be scheduled in order to be executed.
- * inside HF task.
- * If it is possible to execute the conversion instantaneously, it will be executed.
- * Otherwise, the latest stored conversion result will be returned.
- *
- * NOTE: This function is not completely defined. RegConv_t.group will be used to register scan group in which the adc conversion will be placed.
  */
-void RCM_ExecuteGroupRegularConv(ScanGroup_t group)
+void RegConvMng_ExecuteGroupRegularConv(const adc_group_mask_t ADCGroupMask)
 {
-    if(ConversionStatus == ONGOING && R_ADC_B->ADSCANENDSR >= ADC_EOC_STATUS_FLAGS)  // Check if Previous status was ongoing and any of end of conversion flags form any group is active
-    {
-        R_ADC_B->ADSCANENDSCR = ADC_EOC_CLEAR_FLAGS;  // Clear end of conversion flags from group 1 to group 9
-        ConversionStatus = DATA_AVAILABLE;
-    }
-    else if(ConversionStatus == START | ConversionStatus == DATA_AVAILABLE)  // Check if conversion is enabled or if data is available from previous conversion
-    {
-        R_ADC_B->ADSTR[group] |= 1UL << 0;  // Set ADC start of conversion bit using software
-        ConversionStatus = ONGOING;  // update status
-    }
-}
-
-/*
- * This function is used to flag start of scan group 1.
- * Depending of the state of RCM manager for previous conversion, this function can change state of RCM manager and flag availability of scanned channel data.
- * If the ADC is already in use for currents sensing, the regular conversion can not
- * be executed instantaneously but have to be scheduled in order to be executed after currents sensing
- * inside HF task.
- * If it is possible to execute the conversion instantaneously, it will be executed.
- * Otherwise, the latest stored conversion result will be returned.
- */
-void RCM_ExecuteRegularConv(void)
-{
-    if(ConversionStatus == ONGOING && R_ADC_B->ADSCANENDSR >= ADC_EOC_STATUS_FLAGS) // Check if Previous status was ongoing and any of end of conversion flags form any group is active
-    {
-        R_ADC_B->ADSCANENDSCR = ADC_EOC_CLEAR_FLAGS;  // Clear end of conversion flags from group 1 to group 9
-        ConversionStatus = DATA_AVAILABLE;
-    }
-    else if(ConversionStatus == START | ConversionStatus == DATA_AVAILABLE)  // Check if conversion is enabled or if data is available from previous conversion
-    {
-        R_ADC_B->ADSTR[GROUP_1] |= 1UL << 0;  // setting last bit in element 1 of array ADSSTR flags start of conversion in scan group 1.
-        ConversionStatus = ONGOING;
-    }
+		ASSERT(!(ADCGroupMask & ADC_GROUP_MASK_0)); // Input scan group cannot contain group 0, since it is reserved for PWM module
+		ASSERT(ADCGroupMask <= ADC_GROUP_MASK_ALL); // Input scan cannot be higher than ADC_GROUP_MASK_ALL
+	
+		adc_status_t ADCStatus;
+		
+		R_ADC_B_StatusGet(g_adc.p_ctrl, &ADCStatus);
+		
+//		while (ADCStatus.state != ADC_STATE_IDLE)
+//		{
+//		}
+		
+		// Issue here to start conversion with R_ADC_B_ScanGroupStart function. Group 2 works but not group 1.
+		// As quick workaround, we use direct register manipulation with ADTRGENR and ADSYSTR.
+		R_ADC_B->ADTRGENR |= ADCGroupMask;
+		R_ADC_B->ADSYSTR |= ADCGroupMask;
+		
+		//R_ADC_B_ScanGroupStart(g_adc.p_ctrl, ADCGroupMask);
 }
 
 /**
- * This function reads data available in ADC result register if end of conversion flag is received ands state of manager is changed to "dataavailable"
+ * This function reads data available in ADC result register
  */
-uint16_t RCM_ReadConv(uint8_t handle)
+uint16_t RegConvMng_ReadConv(uint8_t handle)
 {
-    if (ConversionStatus == DATA_AVAILABLE)
-    {
-        RCM_ReadValue = (uint16_t) R_ADC_B->ADDR[RCM_handle_array[handle]->channel];
-    }
-    return RCM_ReadValue;
+	uint16_t hConvResult = 0;
+	
+	R_ADC_B_Read(g_adc.p_ctrl, RCM_handle_array[handle]->hChannel, &hConvResult);
+	
+	return hConvResult;
 }
 
-/**
- * This function changes regular conversion manager state to start so that manager can receive execution commands.
- */
-void RCM_EnableConv(void)
-{
-    if(ConversionStatus == STOPPED)
-    {
-        ConversionStatus = START;
-    }
-}
-
-/**
- * This function changes regular conversion manager state to stop so that manager can not receive execution commands.
- */
-void RCM_DisableConv(void)
-{
-    if(ConversionStatus == DATA_AVAILABLE || ConversionStatus == ONGOING )
-    {
-        ConversionStatus = STOPPED;
-    }
-}

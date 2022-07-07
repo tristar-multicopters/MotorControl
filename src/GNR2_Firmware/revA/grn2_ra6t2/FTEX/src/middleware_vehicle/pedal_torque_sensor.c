@@ -17,7 +17,7 @@
 */
 void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle)
 {	
-    pHandle->bConvHandle = RCM_RegisterRegConv(&pHandle->PTS_RegConv);
+    pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->PTS_RegConv);
     PedalTorqSensor_Clear(pHandle);
 }
 
@@ -42,13 +42,13 @@ void PedalTorqSensor_CalcAvValue( PedalTorqSensorHandle_t * pHandle )
 	
     uint16_t hBandwidth;
     /* Use the Read conversion Manager for ADC read*/
-    htorque = RCM_ReadConv(pHandle->bConvHandle);
+    htorque = RegConvMng_ReadConv(pHandle->bConvHandle);
     pHandle->hInstTorque = htorque;
 	/* Verify the filter coefficient to apply*/
 	if (pHandle->hInstTorque > pHandle->hAvADCValue)
-		hBandwidth = pHandle->hParam.hLowPassFilterBW1;
+		hBandwidth = pHandle->hParameters.hLowPassFilterBW1;
 	else
-		hBandwidth = pHandle->hParam.hLowPassFilterBW2;
+		hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
     /* Filter pedal torque sensor ADC data */
 	if (htorque != 0xFFFFu)
 	{
@@ -61,14 +61,14 @@ void PedalTorqSensor_CalcAvValue( PedalTorqSensorHandle_t * pHandle )
 	}
 
 	/* Compute torque sesnor value (between 0 and 65535) */
-	hTorqux = (pHandle->hAvADCValue > pHandle->hParam.hOffsetPTS) ? 
-					(pHandle->hAvADCValue - pHandle->hParam.hOffsetPTS) : 0; //Substraction without overflow
+	hTorqux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 
+					(pHandle->hAvADCValue - pHandle->hParameters.hOffsetPTS) : 0; //Substraction without overflow
 	
-	tTorqaux = (uint32_t)(pHandle->hParam.bSlopePTS * hTorqux);
-	tTorqaux /= pHandle->hParam.bDivisorPTS;
-	if (tTorqaux > pHandle->hParam.hTorqueSensMax) 
+	tTorqaux = (uint32_t)(pHandle->hParameters.bSlopePTS * hTorqux);
+	tTorqaux /= pHandle->hParameters.bDivisorPTS;
+	if (tTorqaux > pHandle->hParameters.hTorqueSensMax) 
     {	
-        tTorqaux = pHandle->hParam.hTorqueSensMax;
+        tTorqaux = pHandle->hParameters.hTorqueSensMax;
     }
 	hTorqux = (uint16_t)tTorqaux;
 	
@@ -92,14 +92,14 @@ int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle)
 	int32_t tAux;
 	
 	/* Compute torque value (between -32768 and 32767) */
-	tAux = (int32_t)(pHandle->hAvTorqueValue - pHandle->hParam.hOffsetMT);
+	tAux = (int32_t)(pHandle->hAvTorqueValue - pHandle->hParameters.hOffsetMT);
 	if (tAux < 0)
     {
 		tAux = 0;
 	}
         /* Use slope factor to translate the torque speed sensor to a motor torque */
-	tAux = ((pHandle->hParam.bSlopeMT)*tAux);
-	tAux /= pHandle->hParam.bDivisorMT;
+	tAux = ((pHandle->hParameters.bSlopeMT)*tAux);
+	tAux /= pHandle->hParameters.bDivisorMT;
 	
 	/* Data limitation secure if there is any exceed */
 	if (tAux > INT16_MAX)

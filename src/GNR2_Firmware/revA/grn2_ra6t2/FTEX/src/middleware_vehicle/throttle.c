@@ -18,7 +18,7 @@ void THRO_Init(THRO_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     
 	/* Need to be register with RegularConvManager */
-	pHandle->bConvHandle = RCM_RegisterRegConv(&pHandle->Throttle_RegConv);
+	pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
 	THRO_Clear(pHandle);
 }
 
@@ -47,16 +47,16 @@ void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle)
 	/*
 		Compute averaged raw ADC value (between 0 and 65535)
 	*/
-	hAux = RCM_ReadConv(pHandle->bConvHandle);
+	hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
 	pHandle->hInstADCValue = hAux;
 	
 	if (pHandle->hInstADCValue > pHandle->hAvADCValue)
     {    
-		hBandwidth = pHandle->hParam.hLowPassFilterBW1;
+		hBandwidth = pHandle->hParameters.hLowPassFilterBW1;
 	}
     else
     {	
-	    hBandwidth = pHandle->hParam.hLowPassFilterBW2;
+	    hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
     }
     
 	if (hAux != UINT16_MAX)
@@ -72,11 +72,11 @@ void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle)
 	/*
 		Compute throttle value (between 0 and 65535)
 	*/
-	hAux = (pHandle->hAvADCValue > pHandle->hParam.hOffsetThrottle) ? 
-					(pHandle->hAvADCValue - pHandle->hParam.hOffsetThrottle) : 0; //Substraction without overflow
+	hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetThrottle) ? 
+					(pHandle->hAvADCValue - pHandle->hParameters.hOffsetThrottle) : 0; //Substraction without overflow
 	
-	wAux = (uint32_t)(pHandle->hParam.bSlopeThrottle * hAux);
-	wAux /= pHandle->hParam.bDivisorThrottle;
+	wAux = (uint32_t)(pHandle->hParameters.bSlopeThrottle * hAux);
+	wAux /= pHandle->hParameters.bDivisorThrottle;
 	if (wAux > UINT16_MAX)
     {    
 		wAux = UINT16_MAX;
@@ -107,14 +107,14 @@ int16_t THRO_ThrottleToTorque(THRO_Handle_t * pHandle)
 	/*
 		Compute torque value (between -32768 and 32767)
 	*/
-	wAux = pHandle->hAvThrottleValue - pHandle->hParam.hOffsetTorque;
+	wAux = pHandle->hAvThrottleValue - pHandle->hParameters.hOffsetTorque;
 	if (wAux < 0)
     {
 		wAux = 0;
 	}
     
-	wAux = (int32_t)(pHandle->hParam.bSlopeTorque * wAux);
-	wAux /= pHandle->hParam.bDivisorTorque;
+	wAux = (int32_t)(pHandle->hParameters.bSlopeTorque * wAux);
+	wAux /= pHandle->hParameters.bDivisorTorque;
 	
     if (wAux > INT16_MAX)
     {    
@@ -147,7 +147,7 @@ bool THRO_IsThrottleDetected (THRO_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
 	uint16_t hThrottle;
 	hThrottle = THRO_GetAvThrottleValue(pHandle);
-	if (hThrottle <= pHandle->hParam.hDetectionThreshold)
+	if (hThrottle <= pHandle->hParameters.hDetectionThreshold)
     {    
 		return false;
     }    

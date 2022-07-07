@@ -403,6 +403,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\ASSERT_FTEX.c</FilePath>
             </File>
+            <File>
+              <FileName>board_hardware.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\board_hardware.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -430,6 +435,21 @@
               <FileName>vc_defines.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_defines.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_ebgo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_ebgo.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_grizzly.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_grizzly.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -680,14 +700,14 @@
               <FilePath>.\FTEX\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
             </File>
             <File>
-              <FileName>mc_type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
-            </File>
-            <File>
               <FileName>rotor_pos_obs.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_type.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -705,19 +725,9 @@
               <FilePath>.\FTEX\src\peripherals_abstraction\pulse_frequency_agt.c</FilePath>
             </File>
             <File>
-              <FileName>pulse_frequency_agt.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\peripherals_abstraction\pulse_frequency_agt.h</FilePath>
-            </File>
-            <File>
               <FileName>pulse_frequency_gpt.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\pulse_frequency_gpt.c</FilePath>
-            </File>
-            <File>
-              <FileName>pulse_frequency_gpt.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\peripherals_abstraction\pulse_frequency_gpt.h</FilePath>
             </File>
             <File>
               <FileName>uCAL_GPIO.c</FileName>

@@ -183,8 +183,6 @@ void MC_Bootup(void)
   MCTuning[M1].pFieldWeakening = pFieldWeakening[M1];
   MCTuning[M1].pFeedforward = pFeedforward[M1];
 
-  RCM_EnableConv();
-
   bMCBootCompleted = 1;
 }
 
@@ -243,19 +241,20 @@ void MediumFrequencyTaskM1(void)
   (void) HallPosSensor_CalcAvrgMecSpeedUnit( &HallPosSensorM1, &wAux );
 	bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit( &RotorPosObsM1, &wAux );
 //  MotorPowerQD_CalcElMotorPower( pMotorPower[M1] );
-	RCM_ExecuteRegularConv();
+	
+	RegConvMng_ExecuteGroupRegularConv(ADC_GROUP_MASK_1 | ADC_GROUP_MASK_2);
 
   StateM1 = MCStateMachine_GetState( &MCStateMachine[M1] );
 
   switch ( StateM1 )
   {
 	case M_IDLE:
-		/* FOR INTEGRATION PURPOSE. NEED TO BE REMOVED ONCE POWERTRAIN MODULE IS INTEGRATED */
-		if (bStartMotor)
-		{
-			MCStateMachine_NextState( &MCStateMachine[M1], M_IDLE_START );
-		}
-		/* UNTIL HERE */
+//		/* FOR INTEGRATION PURPOSE. NEED TO BE REMOVED ONCE POWERTRAIN MODULE IS INTEGRATED */
+//		if (bStartMotor)
+//		{
+//			MCStateMachine_NextState( &MCStateMachine[M1], M_IDLE_START );
+//		}
+//		/* UNTIL HERE */
 		break;
 
   case M_IDLE_START:
@@ -303,13 +302,13 @@ void MediumFrequencyTaskM1(void)
     break;
 
   case M_RUN:
-		/* FOR INTEGRATION PURPOSE. NEED TO BE REMOVED ONCE POWERTRAIN MODULE IS INTEGRATED */
-		if (!bStartMotor)
-		{
-			MCStateMachine_NextState( &MCStateMachine[M1], M_ANY_STOP );
-		}
-		MCInterface_ExecTorqueRamp(oMCInterface[M1], hTest, 100);
-		/* UNTIL HERE */
+//		/* FOR INTEGRATION PURPOSE. NEED TO BE REMOVED ONCE POWERTRAIN MODULE IS INTEGRATED */
+//		if (!bStartMotor)
+//		{
+//			MCStateMachine_NextState( &MCStateMachine[M1], M_ANY_STOP );
+//		}
+//		MCInterface_ExecTorqueRamp(oMCInterface[M1], hTest, 100);
+//		/* UNTIL HERE */
 
     MCInterface_ExecBufferedCommands( oMCInterface[M1] );
     FOC_CalcCurrRef( M1 );
@@ -621,7 +620,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
                                                                                  (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
   if(bMotor == M1)
   {
-    CodeReturn |=  errMask[bMotor] &ResDivVbusSensor_CalcAvVbus(pBusSensorM1);
+    CodeReturn |=  errMask[bMotor] & ResDivVbusSensor_CalcAvVbus(pBusSensorM1);
   }
 
   MCStateMachine_FaultProcessing(&MCStateMachine[bMotor], CodeReturn, ~CodeReturn); /* Update the MCStateMachine according error code */
@@ -689,8 +688,6 @@ void MC_HardwareFaultTask(void)
 __NO_RETURN void startMCMediumFrequencyTask(void * pvParameter)
 {
 	UNUSED_PARAMETER(pvParameter);
-
-	MC_Bootup();
 
   /* Infinite loop */
   for(;;)

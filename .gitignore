@@ -84,3 +84,9 @@ RTE_Components.h
 *.build_log.htm
 *.lnp
 *.Andy B
+
+# Renesas project files
+*.gpdsc
+*.sbd
+*.prefs
+*.secure_azone

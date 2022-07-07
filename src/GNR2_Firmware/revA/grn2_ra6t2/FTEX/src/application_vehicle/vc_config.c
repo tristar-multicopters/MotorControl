@@ -5,31 +5,57 @@
 */
 
 #include "vc_config.h"
+#include "gnr_parameters.h"
+#include "board_hardware.h"
+#include "vc_parameters.h"
 
 
-//*******************************************************************************
-//	Vehicle
-//*******************************************************************************
-
-MultipleDriveInterfaceHandle_t MDInterfaceHandle = 
+MultipleDriveInterfaceHandle_t MDInterfaceHandle =
 {
 	0
 };
 
 
-VCSTM_Handle_t VCStateMachineHandle = 
-{	
+VCSTM_Handle_t VCStateMachineHandle =
+{
 	.bVState = V_IDLE,
 	.hVFaultNow = 0,
 	.hVFaultOccurred = 0
 };
 
 
-BRK_Handle_t BrakeHandle = 
-{ 
-//	.wPinNumber = BRAKE_GPIO_PIN,
+BRK_Handle_t BrakeHandle =
+{
+	.wPinNumber = BRAKE_GPIO_PIN,
 	.bIsInvertedLogic = true,
 };
+
+
+/**@brief Throttle initializing Parameters.
+ */
+THRO_Handle_t ThrottleHandle =
+{
+	.Throttle_RegConv =
+	{
+			.hChannel = THROTTLE_ANALOG_CHANNEL,
+	},
+	.hParameters =
+	{
+		.hLowPassFilterBW1 = THROTTLE_LOWPASS_FILTER_BW1,
+		.hLowPassFilterBW2 = THROTTLE_LOWPASS_FILTER_BW2,
+
+		.hOffsetThrottle = THROTTLE_OFFSET_ADC2THROTTLE,
+		.bSlopeThrottle = THROTTLE_SLOPE_ADC2THROTTLE,
+		.bDivisorThrottle = THROTTLE_DIVISOR_ADC2THROTTLE,
+
+		.hOffsetTorque = THROTTLE_OFFSET_THROTTLE2TORQUE,
+		.bSlopeTorque = THROTTLE_SLOPE_THROTTLE2TORQUE,
+		.bDivisorTorque = THROTTLE_DIVISOR_THROTTLE2TORQUE,
+
+		.hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
+	}
+};
+
 
 /**@brief Pedal torque sensor initializing Parameters.
  */
@@ -37,26 +63,24 @@ PedalTorqSensorHandle_t PedalTorqueSensor =
 {
     .PTS_RegConv =
     {
-        .regADC = &g_adc,
-        .channel = ADC_CHANNEL_20,
-        .group = GROUP_1,
+        .hChannel = PEDAL_TORQUE_SENSOR_ANALOG_CHANNEL,
     },
-    .hParam =
-    {	
-        .hLowPassFilterBW1 = 5,
-        .hLowPassFilterBW2 = 25,
+    .hParameters =
+    {
+        .hLowPassFilterBW1 = PTS_LOWPASS_FILTER_BW1,
+        .hLowPassFilterBW2 = PTS_LOWPASS_FILTER_BW2,
 
-        .hOffsetPTS = 12500,
-        .bSlopePTS = 5,			
-        .bDivisorPTS = 4,
+        .hOffsetPTS = PTS_OFFSET_ADC2PTS,
+        .bSlopePTS = PTS_SLOPE_ADC2PTS,
+        .bDivisorPTS = PTS_DIVISOR_ADC2PTS,
 
-        .hOffsetMT = 20000, /* Offset to launch the torque sensing */
-        .bSlopeMT = -7,
-        .bDivisorMT = 2,
+        .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
+        .bSlopeMT = PTS_SLOPE_PTS2TORQUE,
+        .bDivisorMT = PTS_DIVISOR_PTS2TORQUE,
     }
-
 };
-/**@brief Pulse Frequeny initializing Parameters for AGT Timer.
+
+/**@brief Pulse Frequeny initializing Parameters.
  */
 PulseFrequency_Handle_AGT_t PulseFreqHandle =
 {
@@ -85,279 +109,89 @@ PedalSpeedSens_Handle_t PedalAssistHandle = {
     .pSpulse = &PulseFreqHandle,
 };
 
-/**@brief Throttle initializing Parameters.
- */
-THRO_Handle_t ThrottleHandle =
-{
-    .Throttle_RegConv =
-    {
-        .regADC = &g_adc,
-        .channel = ADC_CHANNEL_21, //TODO: update to selected channel
-        .group = GROUP_1,
-    },
-	#if VEHICLE_SELECTION == VEHICLE_ECELL
-	.hParam =
-	{
-		.hLowPassFilterBW1 = 8,
-		.hLowPassFilterBW2 = 2,
-		
-		.hOffsetThrottle = 10000,
-		.bSlopeThrottle = 5,
-		.bDivisorThrottle = 3,
-		
-		.hOffsetTorque = 4000,
-		.bSlopeTorque = -7,
-		.bDivisorTorque = 25,
-	
-		.hDetectionThreshold = 1000,
-	}
-	#elif VEHICLE_SELECTION == VEHICLE_EBGO
-	.hParam =
-	{
-		.hLowPassFilterBW1 = 8,
-		.hLowPassFilterBW2 = 2,
-	
-		.hOffsetThrottle = 10000,
-		.bSlopeThrottle = 5,
-		.bDivisorThrottle = 3,
-		
-		.hOffsetTorque = 4000,
-		.bSlopeTorque = -7,
-		.bDivisorTorque = 45,
-		
-		.hDetectionThreshold = 1000,
-	}
-		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
-	.hParam =
-	{
-		.hLowPassFilterBW1 = 8,
-		.hLowPassFilterBW2 = 2,
-	
-		.hOffsetThrottle = 10000,
-		.bSlopeThrottle = 5,
-		.bDivisorThrottle = 3,
-		
-		.hOffsetTorque = 4000,
-		.bSlopeTorque = -14,
-		.bDivisorTorque = 48,
-		
-		.hDetectionThreshold = 1000,
-	}
-	
-	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
-	.hParam =
-	{
-		.hLowPassFilterBW1 = 8,
-		.hLowPassFilterBW2 = 2,
-	
-		.hOffsetThrottle = 10000,
-		.bSlopeThrottle = 5,
-		.bDivisorThrottle = 3,
-		
-		.hOffsetTorque = 4000,
-		.bSlopeTorque = 8,
-		.bDivisorTorque = 32,
-	
-		.hDetectionThreshold = 1000,
-	}
-	#else
-	.hParam =
-	{
-		.hLowPassFilterBW1 = 16,
-		.hLowPassFilterBW2 = 2,
-	
-		.hOffsetThrottle = 10000,
-		.bSlopeThrottle = 5,
-		.bDivisorThrottle = 3,
-		
-		.hOffsetTorque = 4000,
-		.bSlopeTorque = -7,
-		.bDivisorTorque = 25,
-		
-		.hDetectionThreshold = 1000,
-	}
-	#endif
-};
 
-
-MS_Handle_t MotorSelectorHandle = 
+MS_Handle_t MotorSelectorHandle =
 {
 //	.wM1SelectPinNumber = M1SELECT_GPIO_PIN,
 //	.wM2SelectPinNumber = M2SELECT_GPIO_PIN,
-	
-	#if VEHICLE_SELECTION == VEHICLE_ECELL
+
 	.bIsInvertedLogic = false,
-	.bMSEnable = true,
-	#elif VEHICLE_SELECTION == VEHICLE_EBGO
-	.bIsInvertedLogic = false,
-	.bMSEnable = false,
-		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
-	.bIsInvertedLogic = false,
-	.bMSEnable = false,
-		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
-	.bIsInvertedLogic = false,
-	.bMSEnable = false,
-	#else
-	.bIsInvertedLogic = false,
-	.bMSEnable = true,
-	#endif
+	.bMSEnable = MOTOR_SELECTOR_ENABLE,
 };
 
 
-PWREN_Handle_t PowerEnableHandle = {
+PWREN_Handle_t PowerEnableHandle =
+{
 //	.wPinNumber = PWREN_GPIO_PIN,
 	.bIsInvertedLogic = false,
-	#if VEHICLE_SELECTION == VEHICLE_ECELL
-	.bUsePowerLock = true,
-	#elif VEHICLE_SELECTION == VEHICLE_EBGO
-	.bUsePowerLock = false,
-	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
-	.bUsePowerLock = true,
-	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
-	.bUsePowerLock = false,
-	#else
-	.bUsePowerLock = true;
-	#endif
+	.bUsePowerLock = POWER_ENABLE_ENABLE,
 };
 
-PWRT_Handle_t PowertrainHandle = 
-{	
-	#if VEHICLE_SELECTION == VEHICLE_ECELL
-	.sParameters.bUseMotorM1 = true,
-	.sParameters.bUseMotorM2 = true,
-	.sParameters.bDefaultMainMotor = M1,
-	.sParameters.bMode = DUAL_MOTOR,
-	.sParameters.bCtrlType = TORQUE_CTRL,
-	.sParameters.bM2TorqueInversion = false,
-	.sParameters.hTorqueRampTimeUp = 200,
-	.sParameters.hTorqueRampTimeDown = 50,
-	.sParameters.hSpeedRampTimeUp = 200,
-	.sParameters.hSpeedRampTimeDown = 50,
-	.sParameters.hStartingThrottle = 1000,
-	.sParameters.hStoppingThrottle = 500,
-	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -10000,
-	.sParameters.hPASMaxSpeed = 500,
-  .sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
-	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
-	#elif VEHICLE_SELECTION == VEHICLE_EBGO
-	.sParameters.bUseMotorM1 = true,
-	.sParameters.bUseMotorM2 = false,
-	.sParameters.bDefaultMainMotor = M1,
-	.sParameters.bMode = SINGLE_MOTOR,
-	.sParameters.bCtrlType = TORQUE_CTRL,
-	.sParameters.bM2TorqueInversion = false,
-	.sParameters.hTorqueRampTimeUp = 200,
-	.sParameters.hTorqueRampTimeDown = 50,
-	.sParameters.hSpeedRampTimeUp = 200,
-	.sParameters.hSpeedRampTimeDown = 50,
-	.sParameters.hStartingThrottle = 1000,
-	.sParameters.hStoppingThrottle = 500,
-	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -7000,
-	.sParameters.hPASMaxSpeed = 500,
-	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
-	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
-		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
-	.sParameters.bUseMotorM1 = true,
-	.sParameters.bUseMotorM2 = false,
-	.sParameters.bDefaultMainMotor = M1,
-	.sParameters.bMode = SINGLE_MOTOR,
-	.sParameters.bCtrlType = TORQUE_CTRL,
-	.sParameters.bM2TorqueInversion = false,
-	.sParameters.hTorquePASRampTimeUp = 750,	
-	.sParameters.hTorqueRampTimeUp = 200,
-	.sParameters.hTorqueRampTimeDown = 50,
-	.sParameters.hSpeedRampTimeUp = 200,
-	.sParameters.hSpeedRampTimeDown = 50,
-	.sParameters.hStartingThrottle = 1000,
-	.sParameters.hStoppingThrottle = 500,
-	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -10000,
-	.sParameters.hPASMaxSpeed = 500,
-	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
-	.sParameters.bUseWheelSpeedSensor = true,
-	.sParameters.bWheelSpreedRatio = 2,
-	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
-		#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
-	.sParameters.bUseMotorM1 = true,
-	.sParameters.bUseMotorM2 = true,
-	.sParameters.bDefaultMainMotor = M1,
-	.sParameters.bMode = DUAL_MOTOR,
-	.sParameters.bCtrlType = TORQUE_CTRL,
-	.sParameters.bM2TorqueInversion = true,
-	.sParameters.hTorqueRampTimeUp = 200,
-	.sParameters.hTorqueRampTimeDown = 50,
-	.sParameters.hSpeedRampTimeUp = 200,
-	.sParameters.hSpeedRampTimeDown = 50,
-	.sParameters.hStartingThrottle = 1000,
-	.sParameters.hStoppingThrottle = 500,
-	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -7000,
-	.sParameters.hPASMaxSpeed = 500,
-	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
-	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
-	#else
-	.sParameters.bUseMotorM1 = true,
-	.sParameters.bUseMotorM2 = false,
-	.sParameters.bDefaultMainMotor = M1,
-	.sParameters.bCtrlType = TORQUE_CTRL,
-	.sParameters.bM2TorqueInversion = false,
-	.sParameters.hTorqueRampTimeUp = 200,
-	.sParameters.hTorqueRampTimeDown = 50,
-	.sParameters.hSpeedRampTimeUp = 200,
-	.sParameters.hSpeedRampTimeDown = 50,
-	.sParameters.hStartingThrottle = 1000,
-	.sParameters.hStoppingThrottle = 500,
-	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -10000,
-	.sParameters.hPASMaxSpeed = 500,
-	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed	
-	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
-	#endif
-	
+PWRT_Handle_t PowertrainHandle =
+{
+	.sParameters.bUseMotorM1 = POWERTRAIN_USE_MOTOR1,
+	.sParameters.bUseMotorM2 = POWERTRAIN_USE_MOTOR2,
+	.sParameters.bDefaultMainMotor = POWERTRAIN_DEFAULT_MAIN_MOTOR,
+	.sParameters.bMode = POWERTRAIN_DEFAULT_MODE,
+	.sParameters.bCtrlType = POWERTRAIN_DEFAULT_CONTROL_TYPE,
+	.sParameters.bM2TorqueInversion = POWERTRAIN_M2_TORQUE_INVERSION,
+	.sParameters.hTorqueRampTimeUp = POWERTRAIN_THROTTLE_TORQUE_RAMPTIME_UP,
+	.sParameters.hTorqueRampTimeDown = POWERTRAIN_THROTTLE_TORQUE_RAMPTIME_DOWN,
+	.sParameters.hTorquePASRampTimeUp = POWERTRAIN_PAS_TORQUE_RAMPTIME_UP,
+	.sParameters.hSpeedRampTimeUp = POWERTRAIN_THROTTLE_SPEED_RAMPTIME_UP,
+	.sParameters.hSpeedRampTimeDown = POWERTRAIN_THROTTLE_SPEED_RAMPTIME_DOWN,
+	.sParameters.hStartingThrottle = POWERTRAIN_START_THROTTLE_THRESHOLD,
+	.sParameters.hStoppingThrottle = POWERTRAIN_STOP_THROTTLE_THRESHOLD,
+	.sParameters.hStoppingSpeed = POWERTRAIN_STOP_SPEED_THRESHOLD,
+	.sParameters.hPASMaxTorque = POWERTRAIN_PAS_MAX_TORQUE,
+	.sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
+	.sParameters.GearRatio = POWERTRAIN_MOTOR_GEARRATIO,
+	.sParameters.bUseWheelSpeedSensor = POWERTRAIN_WHEEL_SPEED_SENSOR_ENABLE,
+	.sParameters.bWheelSpreedRatio = POWERTRAIN_WHEEL_SPEED_SENSOR_PPR,
+	.sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
+
 	.pMDI = &MDInterfaceHandle,
 	.pThrottle = &ThrottleHandle,
 	.pBrake = &BrakeHandle,
 	.pMS = &MotorSelectorHandle,
 	.pPWREN = &PowerEnableHandle,
 	.pPAS = &PedalAssistHandle,
-	
-	.sSpeedFoldback[M1] = 
+
+//	.sSpeedFoldback[M1] =
+//	{
+//		.bEnableFoldback = false,
+//		.hStartValue = 200,
+//		.hIntervalValue = 200,
+//		.hEndValue = 400,
+//		.hDefaultMaxTorque = 10000,
+//	},
+//	.sSpeedFoldback[M2] =
+//	{
+//		.bEnableFoldback = false,
+//		.hStartValue = 200,
+//		.hIntervalValue = 200,
+//		.hEndValue = 400,
+//		.hDefaultMaxTorque = 10000,
+//	},
+
+	.sHeatsinkTempFoldback[M1] =
 	{
-		.bEnableFoldback = false,
-		.hStartValue = 200,
-		.hIntervalValue = 200,
-		.hEndValue = 400,
-		.hDefaultMaxTorque = 10000,
+		.bEnableFoldback = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_ENABLE,
+		.hStartValue = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_START,
+		.hEndValue = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_END,
+		.hDefaultMaxTorque = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_MAX_TORQUE,
 	},
-	.sSpeedFoldback[M2] = 
+	.sHeatsinkTempFoldback[M2] =
 	{
-		.bEnableFoldback = false,
-		.hStartValue = 200,
-		.hIntervalValue = 200,
-		.hEndValue = 400,
-		.hDefaultMaxTorque = 10000,
-	},
-	.sHeatsinkTempFoldback[M1] = 
-	{
-		.bEnableFoldback = false,
-		.hStartValue = 45,
-		.hEndValue = 70,
-		.hDefaultMaxTorque = 17000,
-	},
-	.sHeatsinkTempFoldback[M2] = 
-	{
-		.bEnableFoldback = false,
-		.hStartValue = 45,
-		.hEndValue = 70,
-		.hDefaultMaxTorque = 17000,
+		.bEnableFoldback = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_ENABLE,
+		.hStartValue = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_START,
+		.hEndValue = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_END,
+		.hDefaultMaxTorque = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_MAX_TORQUE,
 	},
 };
 
-VCI_Handle_t VCInterfaceHandle = 
+VCI_Handle_t VCInterfaceHandle =
 {
 	.pStateMachine = &VCStateMachineHandle,
 	.pPowertrain = &PowertrainHandle,
 };
-

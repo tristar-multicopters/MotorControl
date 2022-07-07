@@ -24,7 +24,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1)
     MDI_Init(pHandle->pMDI, pMci_M1);
     THRO_Init(pHandle->pThrottle);
     BRK_Init(pHandle->pBrake);
-    PSS_Init(pHandle->pPAS); 
+    PSS_Init(pHandle->pPAS);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
 
@@ -36,11 +36,25 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1)
 }
 
 /**
-	* @brief  Compute target torque and speed to be applied to each motors. To be called periodically.
+	* @brief  Update current value of powertrain peripherals, such as throttle. To be called periodically.
 	* @param  Powertrain handle
 	* @retval None
 	*/
-void PWRT_CalcTorqueSpeed(PWRT_Handle_t * pHandle)
+void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle)
+{
+    /* Update throttle sensor handle */
+    THRO_CalcAvThrottleValue(pHandle->pThrottle);
+
+    /* Update torque sensor handle */
+    //PAS_CalcTSAvValue(pHandle->pPAS);
+}
+
+/**
+	* @brief  Compute target torque and speed to be applied to each motors and store value into powertrain handle.
+	* @param  Powertrain handle
+	* @retval None
+	*/
+void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 {
 	bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
 	bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);
@@ -50,14 +64,14 @@ void PWRT_CalcTorqueSpeed(PWRT_Handle_t * pHandle)
 	int16_t hTempHeatSnkM1 = 0; //TODO
 	int16_t hTempHeatSnkM2 = 0; //TODO
 	int16_t hTempHeatSnkMainMotor = 0; //TODO
-	
-	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS);
+
+	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
 	int16_t hTorqueRef = 0; int32_t hSpeedRef = 0;
 	int16_t hAux = 0;
-	
+
 	if (pHandle->pMS->bMSEnable)
 	{
-		switch (bMotorSelection)
+		switch (bMotorSelection) // Change powertrain mode and main motor depending on motor selection
 		{
 			case M1_SELECTED:
 				pHandle->sParameters.bMode = SINGLE_MOTOR;
@@ -75,34 +89,32 @@ void PWRT_CalcTorqueSpeed(PWRT_Handle_t * pHandle)
 				break;
 		}
 	}
-    /* Update throttle sensor handle */
-    THRO_CalcAvThrottleValue(pHandle->pThrottle);
 
-    /* Update torque value */
-    PSS_CalcTSAvValue(pHandle->pPAS);
-    
 	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
 	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
 
-	if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
+	if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
 	{
-		hTorqueRef = THRO_ThrottleToTorque(pHandle->pThrottle);
-		
+		hTorqueRef = THRO_ThrottleToTorque(pHandle->pThrottle); // Translate throttle value to powertrain target torque value
+
 		if (bIsBrakePressed)
 		{
 			hTorqueRef = 0;
 		}
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
+      // Apply torque limitation based on heatsink temperature of M1
 			hAux = FLDBK_ApplyTorqueLimitation(&pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor);
-			pHandle->aTorque[pHandle->bMainMotor] = hAux;
+			pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
 		}
 		if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
+      // Apply torque limitation based on heatsink temperature of M1
 			hAux = FLDBK_ApplyTorqueLimitation(&pHandle->sHeatsinkTempFoldback[M1], hTorqueRef, hTempHeatSnkM1);
 			pHandle->aTorque[M1] = hAux;
+      // Apply torque limitation based on heatsink temperature of M2
 			hAux = FLDBK_ApplyTorqueLimitation(&pHandle->sHeatsinkTempFoldback[M2], hTorqueRef, hTempHeatSnkM2);
-			pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
+			pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux; // Store powertrain target torque value in handle. Invert torque if needed.
 		}
 	}
 	else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
@@ -113,7 +125,7 @@ void PWRT_CalcTorqueSpeed(PWRT_Handle_t * pHandle)
 		{
 			hSpeedRef = 0;
 		}
-		
+
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
 			pHandle->aSpeed[pHandle->bMainMotor] = hSpeedRef;
@@ -132,12 +144,13 @@ void PWRT_CalcTorqueSpeed(PWRT_Handle_t * pHandle)
 	* @param  Powertrain handle
 	* @retval None
 	*/
-void PWRT_UpdateMotorRamps(PWRT_Handle_t * pHandle)
+void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle)
 {
 	if (PWRT_IsMotor1Used(pHandle))
 	{
 		if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 		{
+      /* Apply different torque ramp duration based on if we are ramping up or down */
 			if (abs(pHandle->aTorque[M1]) > abs(MDI_GetIqd(pHandle->pMDI, M1).q))
 			{
 				MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorqueRampTimeUp);
@@ -157,6 +170,7 @@ void PWRT_UpdateMotorRamps(PWRT_Handle_t * pHandle)
 	{
 		if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 		{
+      /* Apply different torque ramp duration based on if we are ramping up or down */
 			if (abs(pHandle->aTorque[M2]) > abs(MDI_GetIqd(pHandle->pMDI, M2).q))
 			{
 				MDI_ExecTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->sParameters.hTorqueRampTimeUp);
@@ -216,7 +230,7 @@ void PWRT_StopMotors(PWRT_Handle_t * pHandle)
 uint16_t PWRT_StandbyStateCheck(PWRT_Handle_t * pHandle)
 {
 	uint16_t hVehicleFault = 0;
-	
+
 	if (PWRT_IsMotor1Used(pHandle))
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M1))
@@ -249,7 +263,7 @@ uint16_t PWRT_StandbyStateCheck(PWRT_Handle_t * pHandle)
 				break;
 		}
 	}
-	
+
 	return hVehicleFault;
 }
 
@@ -261,7 +275,7 @@ uint16_t PWRT_StandbyStateCheck(PWRT_Handle_t * pHandle)
 uint16_t PWRT_StartStateCheck(PWRT_Handle_t * pHandle)
 {
 	uint16_t hVehicleFault = 0;
-	
+
 	if (PWRT_IsMotor1Used(pHandle))
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M1))
@@ -290,7 +304,7 @@ uint16_t PWRT_StartStateCheck(PWRT_Handle_t * pHandle)
 				break;
 		}
 	}
-	
+
 	return hVehicleFault;
 }
 
@@ -302,7 +316,7 @@ uint16_t PWRT_StartStateCheck(PWRT_Handle_t * pHandle)
 uint16_t PWRT_RunStateCheck(PWRT_Handle_t * pHandle)
 {
 	uint16_t hVehicleFault = 0;
-	
+
 	if (PWRT_IsMotor1Used(pHandle))
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M1))
@@ -333,7 +347,7 @@ uint16_t PWRT_RunStateCheck(PWRT_Handle_t * pHandle)
 				break;
 		}
 	}
-	
+
 	return hVehicleFault;
 }
 
@@ -345,7 +359,7 @@ uint16_t PWRT_RunStateCheck(PWRT_Handle_t * pHandle)
 uint16_t PWRT_StopStateCheck(PWRT_Handle_t * pHandle)
 {
 	uint16_t hVehicleFault = 0;
-	
+
 	if ( PWRT_IsMotor1Used(pHandle) )
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M1))
@@ -374,7 +388,7 @@ uint16_t PWRT_StopStateCheck(PWRT_Handle_t * pHandle)
 				break;
 		}
 	}
-	
+
 	return hVehicleFault;
 }
 
@@ -386,7 +400,7 @@ uint16_t PWRT_StopStateCheck(PWRT_Handle_t * pHandle)
 bool PWRT_IsPowertrainActive(PWRT_Handle_t * pHandle)
 {
 	bool bActive = true;
-	
+
 	if ( PWRT_IsMotor1Used(pHandle) )
 	{
 		if (MDI_GetSTMState(pHandle->pMDI, M1) != M_RUN)
@@ -412,7 +426,7 @@ bool PWRT_IsPowertrainActive(PWRT_Handle_t * pHandle)
 bool PWRT_IsPowertrainStopped(PWRT_Handle_t * pHandle)
 {
 	bool bStopped = true;
-	
+
 	if ( PWRT_IsMotor1Used(pHandle) )
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M1))
@@ -449,19 +463,22 @@ bool PWRT_IsPowertrainStopped(PWRT_Handle_t * pHandle)
 	*/
 bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 {
+  /* bCheckStopX variable are stopping condition checks.
+    By default they are false, but if a specific stopping condition is met they may toggle true. */
 	bool bCheckStop1 = false;
 	bool bCheckStop2 = false;
 	bool bCheckStop3 = false;
 	bool bCheckStop4 = false;
-	bool bCheckStop5 = false;
+	//bool bCheckStop5 = false;
 	bool bCheckStop6 = false;
+
 	int32_t wSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
-	
+
 	if ( PWRT_IsMotor1Used(pHandle) )
 	{
-		if (abs(wSpeedM1) <= pHandle->sParameters.hStoppingSpeed)
+		if (abs(wSpeedM1) <= pHandle->sParameters.hStoppingSpeed) // If motor speed is lower than stopping speed parameter
 		{
 			bCheckStop1 = true;
 		}
@@ -470,10 +487,10 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 	{
 		bCheckStop1 = true;
 	}
-	
+
 	if ( PWRT_IsMotor2Used(pHandle) )
 	{
-		if (abs(wSpeedM2) <= pHandle->sParameters.hStoppingSpeed)
+		if (abs(wSpeedM2) <= pHandle->sParameters.hStoppingSpeed) // If motor speed is lower than stopping speed parameter
 		{
 			bCheckStop2 = true;
 		}
@@ -482,23 +499,23 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 	{
 		bCheckStop2 = true;
 	}
-	
-	if (!PWREN_IsPowerEnabled(pHandle->pPWREN))
+
+	if (!PWREN_IsPowerEnabled(pHandle->pPWREN)) // If power is enabled through power enable input
 	{
 		bCheckStop3 = true;
-	}	
-	
-	if (BRK_IsPressed(pHandle->pBrake))
+	}
+
+	if (BRK_IsPressed(pHandle->pBrake)) // If brake is pressed
 	{
 		bCheckStop4 = true;
-	}  
+	}
 
-	if (hThrottleValue < pHandle->sParameters.hStoppingThrottle)
+	if (hThrottleValue < pHandle->sParameters.hStoppingThrottle) // If throttle value is lower than stopping throttle parameter
 	{
 		bCheckStop6 = true;
-	}    
+	}
 
-	return (bCheckStop1 & bCheckStop2 & bCheckStop5 & bCheckStop6) | bCheckStop3 | bCheckStop4;
+	return (bCheckStop1 & bCheckStop2 & bCheckStop6) | bCheckStop3 | bCheckStop4; // Final logic to know if powertrain should be stopped.
 }
 
 /**
@@ -508,14 +525,27 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 	*/
 bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
 {
-	bool bCheckStart = false;
+  /* bCheckStartX variable are starting condition checks.
+    By default they are false, but if a specific starting condition is met they may toggle true. */
+	bool bCheckStart1 = false;
+  bool bCheckStart2 = false;
+  bool bCheckStart3 = false;
+
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
-	
-	if ( (hThrottleValue > pHandle->sParameters.hStartingThrottle) && PWREN_IsPowerEnabled(pHandle->pPWREN) && !BRK_IsPressed(pHandle->pBrake) )
+
+	if (hThrottleValue > pHandle->sParameters.hStartingThrottle) // If throttle is higher than starting throttle parameter
 	{
-		bCheckStart = true;
+		bCheckStart1 = true;
 	}
-	return bCheckStart;
+  if (PWREN_IsPowerEnabled(pHandle->pPWREN)) // If power is enabled through power enable input
+	{
+		bCheckStart2 = true;
+	}
+  if (!BRK_IsPressed(pHandle->pBrake)) // If brake is pressed
+	{
+		bCheckStart3 = true;
+	}
+	return bCheckStart1 && bCheckStart2 && bCheckStart3; // Final logic to know if powertrain should be started.
 }
 
 /**
@@ -529,15 +559,15 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 	uint16_t hM1FaultOccurredCode = MDI_GetOccurredFaults(pHandle->pMDI, M1);
 	uint16_t hM2FaultNowCode = MDI_GetCurrentFaults(pHandle->pMDI, M2);
 	uint16_t hM2FaultOccurredCode = MDI_GetOccurredFaults(pHandle->pMDI, M2);
-	
+
 	bool bFaultNow = hM1FaultNowCode | hM2FaultNowCode;
-	
+
 	//If there's no current motor errors
 	if (!bFaultNow)
 	{
 		if ( PWRT_IsMotor1Used(pHandle) )
 		{// If there's an over current (OC) that has occurred but has already been cleared
-			if ( hM1FaultOccurredCode & MC_BREAK_IN ) 
+			if ( hM1FaultOccurredCode & MC_BREAK_IN )
 			{
 				if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the OC fault
@@ -549,7 +579,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 					pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
 				}
 			}
-			
+
 			if ( hM1FaultOccurredCode & MC_SPEED_FDBK )
 			{// If there's a speed feedback (SF) that has occurred but has already been cleared
 				if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
@@ -562,7 +592,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 					pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1]++;
 				}
 			}
-			
+
 			if ( hM1FaultOccurredCode & MC_START_UP )
 			{
 				/* In case of motor startup failure... */
@@ -576,29 +606,29 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 					pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1]++;
 				}
 			}
-			
+
 			if ( hM1FaultOccurredCode & MC_OVER_TEMP )
 			{
 				// In case of overtemperature, clear the OT fault
 				hM1FaultOccurredCode &= ~MC_OVER_TEMP;
 			}
-			
+
 			if ( hM1FaultOccurredCode & MC_OVER_VOLT )
 			{
 				// In case of DCbus overvoltage, clear the OV fault
 				hM1FaultOccurredCode &= ~MC_OVER_VOLT;
 			}
-			
+
 			if ( hM1FaultOccurredCode & MC_UNDER_VOLT )
 			{
 				// In case of DCbus undervoltage, clear the UV fault
 				hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
 			}
 		}
-		
+
 		if ( PWRT_IsMotor2Used(pHandle) )
 		{
-			if ( hM2FaultOccurredCode & MC_BREAK_IN ) 
+			if ( hM2FaultOccurredCode & MC_BREAK_IN )
 			{
 				if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the OC fault
@@ -610,7 +640,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 					pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2]++;
 				}
 			}
-			
+
 			if ( hM2FaultOccurredCode & MC_SPEED_FDBK )
 			{// If there's a speed feedback (SF) that has occurred but has already been cleared
 				if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
@@ -623,7 +653,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 					pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2]++;
 				}
 			}
-			
+
 			if ( hM2FaultOccurredCode & MC_START_UP )
 			{// If there's a start-up (SU) that has occurred but has already been cleared
 				if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
@@ -636,19 +666,19 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 					pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2]++;
 				}
 			}
-			
+
 			if ( hM2FaultOccurredCode & MC_OVER_TEMP )
 			{
 				/* In case of overtemperature... */
 				hM2FaultOccurredCode &= ~MC_OVER_TEMP;
 			}
-			
+
 			if ( hM2FaultOccurredCode & MC_OVER_VOLT )
 			{
 				/* In case of DCbus overvoltage... */
 				hM2FaultOccurredCode &= ~MC_OVER_VOLT;
 			}
-			
+
 			if ( hM2FaultOccurredCode & MC_UNDER_VOLT )
 			{
 				/* In case of DCbus undervoltage... */
@@ -656,17 +686,17 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 			}
 		}
 	} // End of if (!bFaultNow)
-	
+
 	// Verify if all fault occured have been cleared
 	bool bFaultOccured = (hM1FaultOccurredCode | hM2FaultOccurredCode);
 
 	if (!bFaultOccured)
 	{
-				//todo: handle result from MDI_FaultAcknowledged below
+		//todo: handle result from MDI_FaultAcknowledged below
 		MDI_FaultAcknowledged(pHandle->pMDI, M1);
 		MDI_FaultAcknowledged(pHandle->pMDI, M2);
-	}	
-	return bFaultOccured; 
+	}
+	return bFaultOccured;
 }
 
 
@@ -770,9 +800,9 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 //	int16_t hRefTorque;
 //	PAS_sLevel Got_Level;
 //	Got_Level = PWRT_GetPASLevel(pHandle);
-//	
+//
 //	hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * Got_Level;
-//	
+//
 //	return hRefTorque;
 //}
 
@@ -785,7 +815,7 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 //{
 //	PAS_sLevel Got_Level;
 //	Got_Level = PWRT_GetPASLevel(pHandle);
-//	
+//
 //	FLDBK_SetStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
 //	FLDBK_SetEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
 
@@ -804,9 +834,9 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 //	PAS_sLevel Got_Level;
 //	hReadTS = TS_ToMotorTorque(pHandle->pPAS->pTorque);
 //	Got_Level = PWRT_GetPASLevel(pHandle);
-//	
+//
 //	hRefTorqueS = (hReadTS * Got_Level) / pHandle->pPAS->bMaxLevel;
-//	
+//
 //	if (hRefTorqueS < pHandle->pPAS->bMaxTorque)
 //	{
 //		hRefTorqueS = pHandle->pPAS->bMaxTorque;
@@ -816,11 +846,11 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 ///**
 //	* @brief  Select Control assistance based on Throttle or PAS
 //	* @param  Powertrain handle
-//	* @retval pHandle->pTorqueSelect in int16                                                                                    
+//	* @retval pHandle->pTorqueSelect in int16
 //	*/
 //int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
-//{	
-//	
+//{
+//
 //	/* PAS and Throttle management */
 //	if ( PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle))
 //	{
@@ -837,7 +867,7 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 //		}
 //	}
 //	else
-//	{		
+//	{
 //		/* Throttle value convert to torque */
 //		pHandle->hTorqueSelect = THRO_ThrottleToTorque(pHandle->pThrottle);
 //	}

@@ -46,7 +46,7 @@ typedef struct
     uint16_t    hAvADCValue;            /* It contains latest available average ADC value */
     uint16_t    hAvTorqueValue;         /* It contains latest available average torque */
 
-    PTS_Param_t hParam;
+    PTS_Param_t hParameters;
     
 } PedalTorqSensorHandle_t;
 // ==================== Public function prototypes ========================= //

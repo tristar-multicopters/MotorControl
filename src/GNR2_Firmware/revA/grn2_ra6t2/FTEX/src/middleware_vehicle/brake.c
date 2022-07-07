@@ -31,7 +31,7 @@ void BRK_Init(BRK_Handle_t * pHandle)
 bool BRK_IsPressed(BRK_Handle_t * pHandle)
 {
 	ASSERT(pHandle != NULL); 
-    bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
+  bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
 	pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
 	
 	return pHandle->bIsPressed;

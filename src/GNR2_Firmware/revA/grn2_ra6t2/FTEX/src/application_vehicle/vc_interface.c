@@ -63,13 +63,13 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		
 	// Peripheral parameters (256-511)//
 		case REG_THROTTLE_SLOPE:
-			value = pHandle->pPowertrain->pThrottle->hParam.bSlopeThrottle;
+			value = pHandle->pPowertrain->pThrottle->hParameters.bSlopeThrottle;
 			break;
 		case REG_THROTTLE_DIVISOR:
-			value = pHandle->pPowertrain->pThrottle->hParam.bDivisorThrottle;
+			value = pHandle->pPowertrain->pThrottle->hParameters.bDivisorThrottle;
 			break;
 		case REG_THROTTLE_OFFSET:
-			value = pHandle->pPowertrain->pThrottle->hParam.hOffsetThrottle;
+			value = pHandle->pPowertrain->pThrottle->hParameters.hOffsetThrottle;
 			break;
 		case REG_TORQE_RAMP_UP:
 			value = pHandle->pPowertrain->sParameters.hTorqueRampTimeUp;
@@ -84,23 +84,23 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 			value = pHandle->pPowertrain->sParameters.hStoppingThrottle;
 			break;
 		case REG_THROTTLE_BW1:
-			value = pHandle->pPowertrain->pThrottle->hParam.hLowPassFilterBW1;
+			value = pHandle->pPowertrain->pThrottle->hParameters.hLowPassFilterBW1;
 			break;
 		case REG_THROTTLE_BW2:
-			value = pHandle->pPowertrain->pThrottle->hParam.hLowPassFilterBW2;
+			value = pHandle->pPowertrain->pThrottle->hParameters.hLowPassFilterBW2;
 			break;
 		case REG_THROTTLE_DEADBAND_THR:
 			break;
 		case REG_THROTTLE_FAULTRANGE:
 			break;
 		case REG_TORQUE_SLOPE:
-			value = pHandle->pPowertrain->pThrottle->hParam.bSlopeTorque;
+			value = pHandle->pPowertrain->pThrottle->hParameters.bSlopeTorque;
 			break;
 		case REG_TORQUE_DIVISOR:
-			value = pHandle->pPowertrain->pThrottle->hParam.bDivisorTorque;
+			value = pHandle->pPowertrain->pThrottle->hParameters.bDivisorTorque;
 			break;
 		case REG_TORQUE_OFFSET:
-			value = pHandle->pPowertrain->pThrottle->hParam.hOffsetTorque;
+			value = pHandle->pPowertrain->pThrottle->hParameters.hOffsetTorque;
 			break;
 		case REG_TORQUESENSOR_HIGH_THR:
 			break;
@@ -110,13 +110,13 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 			value = pHandle->pPowertrain->sParameters.hStoppingSpeed;
 			break;
 		case REG_SPEED_OFFSET:
-			value = pHandle->pPowertrain->pThrottle->hParam.hOffsetSpeed;
+			value = pHandle->pPowertrain->pThrottle->hParameters.hOffsetSpeed;
 			break;
 		case REG_SPEED_SLOPE:
-			value = pHandle->pPowertrain->pThrottle->hParam.bSlopeSpeed;
+			value = pHandle->pPowertrain->pThrottle->hParameters.bSlopeSpeed;
 			break;
 		case REG_SPEED_DIVISOR:
-			value = pHandle->pPowertrain->pThrottle->hParam.bDivisorSpeed;
+			value = pHandle->pPowertrain->pThrottle->hParameters.bDivisorSpeed;
 			break;
 		case REG_SPEED_RAMP_UP:
 			value = pHandle->pPowertrain->sParameters.hSpeedRampTimeUp;
@@ -662,13 +662,13 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		
 	// Peripheral parameters (256-511)//
 		case REG_THROTTLE_SLOPE:
-			pHandle->pPowertrain->pThrottle->hParam.bSlopeThrottle = value;
+			pHandle->pPowertrain->pThrottle->hParameters.bSlopeThrottle = value;
 			break;
 		case REG_THROTTLE_DIVISOR:
-			pHandle->pPowertrain->pThrottle->hParam.bDivisorThrottle = value;
+			pHandle->pPowertrain->pThrottle->hParameters.bDivisorThrottle = value;
 			break;
 		case REG_THROTTLE_OFFSET:
-			pHandle->pPowertrain->pThrottle->hParam.hOffsetThrottle = value;
+			pHandle->pPowertrain->pThrottle->hParameters.hOffsetThrottle = value;
 			break;
 		case REG_START_THROTTLE:
 			pHandle->pPowertrain->sParameters.hStartingThrottle = value;
@@ -677,10 +677,10 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 			pHandle->pPowertrain->sParameters.hStoppingThrottle = value;
 			break;
 		case REG_THROTTLE_BW1:
-			pHandle->pPowertrain->pThrottle->hParam.hLowPassFilterBW1 = value;
+			pHandle->pPowertrain->pThrottle->hParameters.hLowPassFilterBW1 = value;
 			break;
 		case REG_THROTTLE_BW2:
-			pHandle->pPowertrain->pThrottle->hParam.hLowPassFilterBW2 = value;
+			pHandle->pPowertrain->pThrottle->hParameters.hLowPassFilterBW2 = value;
 			break;
 		case REG_THROTTLE_DEADBAND_THR:
 			break;
@@ -710,13 +710,13 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 //			pHandle->pPowertrain->pPAS->bMaxLevel = value;
 			break;
 		case REG_TORQUE_SLOPE:
-			pHandle->pPowertrain->pThrottle->hParam.bSlopeTorque = value;
+			pHandle->pPowertrain->pThrottle->hParameters.bSlopeTorque = value;
 			break;
 		case REG_TORQUE_DIVISOR:
-			pHandle->pPowertrain->pThrottle->hParam.bDivisorTorque = value;
+			pHandle->pPowertrain->pThrottle->hParameters.bDivisorTorque = value;
 			break;
 		case REG_TORQUE_OFFSET:
-			pHandle->pPowertrain->pThrottle->hParam.hOffsetTorque = value;
+			pHandle->pPowertrain->pThrottle->hParameters.hOffsetTorque = value;
 			break;
 		case REG_TORQE_RAMP_DOWN:
 			pHandle->pPowertrain->sParameters.hTorqueRampTimeDown = value;
@@ -732,13 +732,13 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 			pHandle->pPowertrain->sParameters.hStoppingSpeed = value;
 			break;
 		case REG_SPEED_OFFSET:
-			pHandle->pPowertrain->pThrottle->hParam.hOffsetSpeed = value;
+			pHandle->pPowertrain->pThrottle->hParameters.hOffsetSpeed = value;
 			break;
 		case REG_SPEED_SLOPE:
-			pHandle->pPowertrain->pThrottle->hParam.bSlopeSpeed = value;
+			pHandle->pPowertrain->pThrottle->hParameters.bSlopeSpeed = value;
 			break;
 		case REG_SPEED_DIVISOR:
-			pHandle->pPowertrain->pThrottle->hParam.bDivisorSpeed = value;
+			pHandle->pPowertrain->pThrottle->hParameters.bDivisorSpeed = value;
 			break;
 		case REG_SPEED_RAMP_UP:
 			pHandle->pPowertrain->sParameters.hSpeedRampTimeUp = value;

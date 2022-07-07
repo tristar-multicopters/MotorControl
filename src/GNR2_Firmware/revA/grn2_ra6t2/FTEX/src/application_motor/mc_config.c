@@ -9,6 +9,8 @@
 #include "mc_parameters.h"
 #include "pqd_motor_power_measurement.h"
 #include "mc_config.h"
+#include "board_hardware.h"
+
 
 #define OFFCALIBRWAIT_MS     0
 #define MAX_DUTY     				 30000 /* INT16_MAX is 100% duty cycle */
@@ -275,9 +277,7 @@ NTCTempSensorHandle_t TempSensorParamsM1 =
   .bSensorType = REAL_SENSOR,
   .TempRegConv =
   {
-    .regADC = &g_adc,
-    .channel = ADC_CHANNEL_0,
-    .group = GROUP_1,
+    .hChannel = HEATSINK_TEMP_ANALOG_CHANNEL,
   },
   .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
   .hOverTempThreshold      = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d),
@@ -287,7 +287,7 @@ NTCTempSensorHandle_t TempSensorParamsM1 =
   .hT0                     = T0_C,
 };
 
-///* Bus voltage sensor value filter buffer */
+/* Bus voltage sensor value filter buffer */
 uint16_t RealBusVoltageSensorFilterBufferM1[M1_VBUS_SW_FILTER_BW_FACTOR];
 
 /**
@@ -303,9 +303,7 @@ ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1 =
 
   .VbusRegConv =
   {
-    .regADC = &g_adc,
-    .channel = ADC_CHANNEL_1,
-    .group = GROUP_1,
+    .hChannel = BUS_VOLTAGE_ANALOG_CHANNEL,
   },
   .hLowPassFilterBw       =  M1_VBUS_SW_FILTER_BW_FACTOR,
   .hOverVoltageThreshold  = OVERVOLTAGE_THRESHOLD_d,

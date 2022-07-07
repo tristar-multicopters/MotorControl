@@ -6,6 +6,8 @@
 
 #include "gnr_main.h"
 #include "vc_tasks.h"
+#include "mc_tasks.h"
+
 //****************** THREAD EXTERN FUNCTION PROTOTYPES ******************//
 
 extern void startMCSafetyTask(void * pvParameter);
@@ -76,6 +78,9 @@ void gnr_main(void)
 	ELCInit();
 	AGTInit(); 
 	/* At this point, hardware should be ready to be used by application systems */
+	
+	MC_Bootup();
+	VC_BootUp();
 
 	SystemCoreClockUpdate(); // Standard ARM function to update clock settings
     
@@ -104,6 +109,11 @@ void gnr_main(void)
 	{
     osKernelStart();
   }
+
+	while (1)
+	{
+		// We should never get here...
+	}
 
 }
 
