@@ -87,10 +87,10 @@
                                                            number of PWM cycles */
 /* Gains values for torque and flux control loops */
 #define PID_TORQUE_KP_DEFAULT         300
-#define PID_TORQUE_KI_DEFAULT         50
+#define PID_TORQUE_KI_DEFAULT         4000
 #define PID_TORQUE_KD_DEFAULT         100
-#define PID_FLUX_KP_DEFAULT           300
-#define PID_FLUX_KI_DEFAULT           50
+#define PID_FLUX_KP_DEFAULT           100
+#define PID_FLUX_KI_DEFAULT           6000
 #define PID_FLUX_KD_DEFAULT           100
 
 /* Torque/Flux control loop gains dividers*/
@@ -211,18 +211,18 @@
 
 /*** On the fly start-up ***/
 
-/******************************   Angle observer Motor 1   **********************/
+/******************************   Rotor position observer Motor 1   **********************/
 
-#define AO_KP         									1250 // High speed: 1000, All speed: 150
-#define AO_KI         									0
-#define AO_KD         									1000 // High speed: 1000, All speed: 300
+#define ROTOR_POS_OBS_KP         									1250
+#define ROTOR_POS_OBS_KI         									0
+#define ROTOR_POS_OBS_KD         									1000
 
-#define AO_KPDIV         								256
-#define AO_KIDIV         								256
-#define AO_KDDIV         								1
-#define AO_KPDIV_LOG                  	LOG2(256)
-#define AO_KIDIV_LOG                  	LOG2(256)
-#define AO_KDDIV_LOG                  	LOG2(1)
+#define ROTOR_POS_OBS_KPDIV         							256
+#define ROTOR_POS_OBS_KIDIV         							256
+#define ROTOR_POS_OBS_KDDIV         							1
+#define ROTOR_POS_OBS_KPDIV_LOG                  	LOG2(256)
+#define ROTOR_POS_OBS_KIDIV_LOG                  	LOG2(256)
+#define ROTOR_POS_OBS_KDDIV_LOG                  	LOG2(1)
 
 
 #endif /*__DRIVE_PARAMETERS_H*/

@@ -33,6 +33,9 @@
 #define STOPPERMANENCY_TICKS   (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS)/ 1000)
 #define STOPPERMANENCY_TICKS2  (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS2)/ 1000)
 #define VBUS_TEMP_ERR_MASK ~(0 | MC_UNDER_VOLT | 0)
+#define OCSP_SAFETY_MARGIN 	4000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+																		than reference current before overcurrent software protection triggers */
+#define OCSP_MAX_CURRENT    6000
 
 /* Private variables----------------------------------------------------------*/
 FOCVars_t FOCVars[NBR_OF_MOTORS];
@@ -60,7 +63,8 @@ static volatile uint16_t hStopPermanencyCounterM1 = 0;
 uint8_t bMCBootCompleted = 0;
 
 bool bStartMotor = false;
-int16_t hTest = 0;
+int16_t hTorqueTest = 0;
+int16_t hTorqueRampTest = 100;
 int16_t hOpenloopTheta = 0;
 int16_t hOpenloopSpeed = 10;
 
@@ -241,7 +245,7 @@ void MediumFrequencyTaskM1(void)
   (void) HallPosSensor_CalcAvrgMecSpeedUnit( &HallPosSensorM1, &wAux );
 	bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit( &RotorPosObsM1, &wAux );
 //  MotorPowerQD_CalcElMotorPower( pMotorPower[M1] );
-	
+
 	RegConvMng_ExecuteGroupRegularConv(ADC_GROUP_MASK_1 | ADC_GROUP_MASK_2);
 
   StateM1 = MCStateMachine_GetState( &MCStateMachine[M1] );
@@ -307,7 +311,7 @@ void MediumFrequencyTaskM1(void)
 //		{
 //			MCStateMachine_NextState( &MCStateMachine[M1], M_ANY_STOP );
 //		}
-//		MCInterface_ExecTorqueRamp(oMCInterface[M1], hTest, 100);
+//		MCInterface_ExecTorqueRamp(oMCInterface[M1], hTest, hTorqueRampTest);
 //		/* UNTIL HERE */
 
     MCInterface_ExecBufferedCommands( oMCInterface[M1] );
@@ -500,27 +504,30 @@ uint8_t MC_HighFrequencyTask(void)
   uint8_t bMotorNbr = 0;
   uint16_t hFOCreturn;
 
-  BemfObserverInputs_t BemfObsInputs;
-  BemfObsInputs.Valfa_beta = FOCVars[M1].Valphabeta;
+	BemfObserverInputs_t BemfObsInputs;
+	BemfObsInputs.Valfa_beta = FOCVars[M1].Valphabeta;
 
-  HallPosSensor_CalcElAngle (&HallPosSensorM1);
+	HallPosSensor_CalcElAngle (&HallPosSensorM1);
 	RotorPosObs_CalcElAngle(&RotorPosObsM1, 0);
 
-  hFOCreturn = FOC_CurrControllerM1();
-  if(hFOCreturn == MC_FOC_DURATION)
-  {
-    MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_FOC_DURATION, 0);
-  }
-  else
-  {
+	hFOCreturn = FOC_CurrControllerM1();
+	if(hFOCreturn == MC_FOC_DURATION)
+	{
+		MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_FOC_DURATION, 0);
+	}
+	else
+	{
 //    BemfObsInputs.Ialfa_beta = FOCVars[M1].Ialphabeta;
 //    BemfObsInputs.Vbus = VbusSensor_GetAvBusVoltageDigital(&(pBusSensorM1->Super));
 //    BemfObsPll_CalcElAngle (&BemfObserverPllM1, &BemfObsInputs);
 //		BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
-  }
+	}
 
   return bMotorNbr;
 }
+
+int16_t hIqdrefAmplitude = 0;
+int32_t hThresholdOCSP = 0;
 
 /**
   * @brief It executes the core of FOC drive that is the controllers for Iqd
@@ -550,43 +557,61 @@ inline uint16_t FOC_CurrControllerM1(void)
 	#endif
 
   PWMCurrFdbk_GetPhaseCurrents(pPWMCurrFdbk[M1], &Iab);
-  Ialphabeta = MCMath_Clarke(Iab);
-  Iqd = MCMath_Park(Ialphabeta, hElAngle);
 
-  Vqd.q = PI_Controller(pPIDIq[M1],
-            (int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
-
-  Vqd.d = PI_Controller(pPIDId[M1],
-            (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
-
-  Vqd = Feedforward_VqdConditioning(pFeedforward[M1],Vqd);
-
-	#if (VOLTAGE_OPENLOOP)
-	Vqd.q = 10000;
-	Vqd.d = 0;
-	#endif
-
-  Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
-  Valphabeta = MCMath_RevPark(Vqd, hElAngle);
-
-  hCodeError = PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
-
-  FOCVars[M1].Vqd = Vqd;
-  FOCVars[M1].Iab = Iab;
-  FOCVars[M1].Ialphabeta = Ialphabeta;
-  FOCVars[M1].Iqd = Iqd;
-  FOCVars[M1].Valphabeta = Valphabeta;
-  FOCVars[M1].hElAngle = hElAngle;
-  FluxWkng_DataProcess(pFieldWeakening[M1], Vqd);
-  Feedforward_DataProcess(pFeedforward[M1]);
-
-	#if ENABLE_DAC_DEBUGGING
-	if (MCStateMachine_GetState(&MCStateMachine[M1]) == M_RUN)
+  MotorState_t StateM1;
+  StateM1 = MCStateMachine_GetState( &MCStateMachine[M1] );
+	if (StateM1 == M_RUN)
 	{
-		R_DAC_Write( g_dac1.p_ctrl, (uint16_t)FOCVars[M1].Iab.a + INT16_MAX );
-		R_DAC_Write( g_dac0.p_ctrl, (uint16_t)FOCVars[M1].hElAngle + INT16_MAX );
+		Ialphabeta = MCMath_Clarke(Iab);
+		Iqd = MCMath_Park(Ialphabeta, hElAngle);
+
+		Vqd.q = PI_Controller(pPIDIq[M1],
+							(int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
+
+		Vqd.d = PI_Controller(pPIDId[M1],
+							(int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
+
+		Vqd = Feedforward_VqdConditioning(pFeedforward[M1],Vqd);
+
+		#if (VOLTAGE_OPENLOOP)
+		Vqd.q = 10000;
+		Vqd.d = 0;
+		#endif
+
+		Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
+		Valphabeta = MCMath_RevPark(Vqd, hElAngle);
+
+		hCodeError = PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
+
+		FOCVars[M1].Vqd = Vqd;
+		FOCVars[M1].Iab = Iab;
+		FOCVars[M1].Ialphabeta = Ialphabeta;
+		FOCVars[M1].Iqd = Iqd;
+		FOCVars[M1].Valphabeta = Valphabeta;
+		FOCVars[M1].hElAngle = hElAngle;
+		FluxWkng_DataProcess(pFieldWeakening[M1], Vqd);
+		Feedforward_DataProcess(pFeedforward[M1]);
+
+		//Check for overcurrent condition (overcurrent software protection)
+		hIqdrefAmplitude = MCMath_AmplitudeFromVectors(FOCVars[M1].Iqdref.d, FOCVars[M1].Iqdref.q);
+		hThresholdOCSP = hIqdrefAmplitude + OCSP_SAFETY_MARGIN;
+    if (hThresholdOCSP > OCSP_MAX_CURRENT)
+    {
+      hThresholdOCSP = OCSP_MAX_CURRENT;
+    }
+		if (abs(PWMCurrFdbk_GetIa(pPWMCurrFdbk[M1])) > hThresholdOCSP ||
+			  abs(PWMCurrFdbk_GetIb(pPWMCurrFdbk[M1])) > hThresholdOCSP ||
+				abs(PWMCurrFdbk_GetIc(pPWMCurrFdbk[M1])) > hThresholdOCSP)
+		{
+			PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
+			MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_OCSP, 0);
+		}
+
+		#if ENABLE_DAC_DEBUGGING
+		R_DAC_Write( g_dac0.p_ctrl, (uint16_t)FOCVars[M1].Iab.a + INT16_MAX );
+		R_DAC_Write( g_dac1.p_ctrl, (uint16_t)FOCVars[M1].Iab.b + INT16_MAX );
+		#endif
 	}
-	#endif
 
   return(hCodeError);
 }

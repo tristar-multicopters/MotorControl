@@ -145,13 +145,44 @@ struct PWMCurrFdbkHandle
 };
 
 /**
-  * @brief Returns the phase current of the motor (in s16A unit)
+  * @brief Returns the phase current of the motor (in s16A unit).
+	*					To call in order to compute Ia, Ib and Ic and store into handle.
   * @param  pHandle: handle on the target PWMC component
   * @param  Iab: Pointer to the structure that will receive motor current
   *         of phase A and B in s16A unit.
 */
 void PWMCurrFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHandle,
                             ab_t * Iab );
+
+/**
+  * @brief Returns the current phase a
+  * @param  pHandle: handle on the target PWMC component
+  * @retval  Ia in s16A unit
+*/
+static inline int16_t PWMCurrFdbk_GetIa( PWMCurrFdbkHandle_t * pHandle )
+{
+  return pHandle->Ia;
+}
+
+/**
+  * @brief Returns the current phase b
+  * @param  pHandle: handle on the target PWMC component
+  * @retval  Ib in s16A unit
+*/
+static inline int16_t PWMCurrFdbk_GetIb( PWMCurrFdbkHandle_t * pHandle )
+{
+  return pHandle->Ib;
+}
+
+/**
+  * @brief Returns the current phase c
+  * @param  pHandle: handle on the target PWMC component
+  * @retval  Ic in s16A unit
+*/
+static inline int16_t PWMCurrFdbk_GetIc( PWMCurrFdbkHandle_t * pHandle )
+{
+  return pHandle->Ic;
+}
 
 /**
   * @brief  Converts input voltages @f$ V_{\alpha} @f$ and @f$ V_{\beta} @f$ into PWM duty cycles

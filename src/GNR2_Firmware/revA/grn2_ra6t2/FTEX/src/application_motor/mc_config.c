@@ -336,12 +336,12 @@ RotorPositionObserverHandle_t RotorPosObsM1 =
 	
   .pHallSensor = &HallPosSensorM1,
 
-	.hKpGainDef = AO_KP,
-	.hKpDivisorPOW2 = AO_KPDIV_LOG,
+	.hKpGainDef = ROTOR_POS_OBS_KP,
+	.hKpDivisorPOW2 = ROTOR_POS_OBS_KPDIV_LOG,
 
-	.hKiGainDef = AO_KI,
-	.hKiDivisorPOW2 = AO_KIDIV_LOG,
+	.hKiGainDef = ROTOR_POS_OBS_KI,
+	.hKiDivisorPOW2 = ROTOR_POS_OBS_KIDIV_LOG,
 
-	.hKdGainDef = AO_KD,
-	.hKdDivisorPOW2 = AO_KDDIV_LOG,
+	.hKdGainDef = ROTOR_POS_OBS_KD,
+	.hKdDivisorPOW2 = ROTOR_POS_OBS_KDDIV_LOG,
 };

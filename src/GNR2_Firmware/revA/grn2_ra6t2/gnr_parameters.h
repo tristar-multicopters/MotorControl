@@ -11,7 +11,7 @@
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 #define SWD_CONTROL_ENABLE 		0
-#define ENABLE_DAC_DEBUGGING	0
+#define ENABLE_DAC_DEBUGGING	1
 #define VEHICLE_SELECTION 		VEHICLE_GRIZZLY
 #define VOLTAGE_OPENLOOP			0
 #define CURRENT_OPENLOOP			0
