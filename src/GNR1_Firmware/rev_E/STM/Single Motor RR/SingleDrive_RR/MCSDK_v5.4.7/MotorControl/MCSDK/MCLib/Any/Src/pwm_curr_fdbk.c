@@ -92,6 +92,7 @@ __weak void PWMC_GetPhaseCurrents( PWMC_Handle_t * pHandle, ab_t * Iab )
   pHandle->pFctGetPhaseCurrents( pHandle, Iab );
 }
 
+
 #if defined (CCMRAM)
 #if defined (__ICCARM__)
 #pragma location = ".ccmram"

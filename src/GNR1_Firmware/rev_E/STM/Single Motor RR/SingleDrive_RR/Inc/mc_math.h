@@ -146,6 +146,15 @@ int16_t MCM_PhaseComputation( int32_t wBemf_alfa_est, int32_t wBemf_beta_est );
   */
 uint32_t MCM_floatToIntBit( float x );
 
+
+/**
+  * @brief  This function calculate the amplitude of a signal from its vector components
+  * @param  Xvector X vector component value
+  * @param  Yvector Y vector component value
+  * @retval Amplitude of the signal
+  */
+int16_t MCMath_AmplitudeFromVectors( int16_t Xvector, int16_t Yvector );
+
 /**
   * @}
   */

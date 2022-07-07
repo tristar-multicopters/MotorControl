@@ -213,6 +213,36 @@ typedef enum CRCAction
 void PWMC_GetPhaseCurrents( PWMC_Handle_t * pHandle,
                             ab_t * Iab );
 
+/**
+  * @brief Returns the current phase a
+  * @param  pHandle: handle on the target PWMC component
+  * @retval  Ia in s16A unit
+*/
+static inline int16_t PWMC_GetIa( PWMC_Handle_t * pHandle )
+{
+  return pHandle->Ia;
+}
+
+/**
+  * @brief Returns the current phase b
+  * @param  pHandle: handle on the target PWMC component
+  * @retval  Ib in s16A unit
+*/
+static inline int16_t PWMC_GetIb( PWMC_Handle_t * pHandle )
+{
+  return pHandle->Ib;
+}
+
+/**
+  * @brief Returns the current phase c
+  * @param  pHandle: handle on the target PWMC component
+  * @retval  Ic in s16A unit
+*/
+static inline int16_t PWMC_GetIc( PWMC_Handle_t * pHandle )
+{
+  return pHandle->Ic;
+}
+
 /*  Converts input voltage components Valfa, beta into duty cycles and feed it to the inverter */
 uint16_t PWMC_SetPhaseVoltage( PWMC_Handle_t * pHandle,
                                alphabeta_t Valfa_beta );

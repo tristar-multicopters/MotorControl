@@ -33,9 +33,6 @@
 #define STOPPERMANENCY_TICKS   (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS)/ 1000)
 #define STOPPERMANENCY_TICKS2  (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS2)/ 1000)
 #define VBUS_TEMP_ERR_MASK ~(0 | MC_UNDER_VOLT | 0)
-#define OCSP_SAFETY_MARGIN 	4000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
-																		than reference current before overcurrent software protection triggers */
-#define OCSP_MAX_CURRENT    6000
 
 /* Private variables----------------------------------------------------------*/
 FOCVars_t FOCVars[NBR_OF_MOTORS];
@@ -526,9 +523,6 @@ uint8_t MC_HighFrequencyTask(void)
   return bMotorNbr;
 }
 
-int16_t hIqdrefAmplitude = 0;
-int32_t hThresholdOCSP = 0;
-
 /**
   * @brief It executes the core of FOC drive that is the controllers for Iqd
   *        currents regulation. Reference frame transformations are carried out
@@ -593,15 +587,15 @@ inline uint16_t FOC_CurrControllerM1(void)
 		Feedforward_DataProcess(pFeedforward[M1]);
 
 		//Check for overcurrent condition (overcurrent software protection)
-		hIqdrefAmplitude = MCMath_AmplitudeFromVectors(FOCVars[M1].Iqdref.d, FOCVars[M1].Iqdref.q);
-		hThresholdOCSP = hIqdrefAmplitude + OCSP_SAFETY_MARGIN;
-    if (hThresholdOCSP > OCSP_MAX_CURRENT)
+		int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(FOCVars[M1].Iqdref.d, FOCVars[M1].Iqdref.q);
+		int32_t wThresholdOCSP = hIqdrefAmplitude + OCSP_SAFETY_MARGIN;
+    if (wThresholdOCSP > OCSP_MAX_CURRENT)
     {
-      hThresholdOCSP = OCSP_MAX_CURRENT;
+      wThresholdOCSP = OCSP_MAX_CURRENT;
     }
-		if (abs(PWMCurrFdbk_GetIa(pPWMCurrFdbk[M1])) > hThresholdOCSP ||
-			  abs(PWMCurrFdbk_GetIb(pPWMCurrFdbk[M1])) > hThresholdOCSP ||
-				abs(PWMCurrFdbk_GetIc(pPWMCurrFdbk[M1])) > hThresholdOCSP)
+		if (ABSOLUTE(PWMCurrFdbk_GetIa(pPWMCurrFdbk[M1])) > wThresholdOCSP ||
+			  ABSOLUTE(PWMCurrFdbk_GetIb(pPWMCurrFdbk[M1])) > wThresholdOCSP ||
+				ABSOLUTE(PWMCurrFdbk_GetIc(pPWMCurrFdbk[M1])) > wThresholdOCSP)
 		{
 			PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
 			MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_OCSP, 0);

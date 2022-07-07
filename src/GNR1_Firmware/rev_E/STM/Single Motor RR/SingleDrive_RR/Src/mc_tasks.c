@@ -781,6 +781,22 @@ inline uint16_t FOC_CurrControllerM1(void)
   FOCVars[M1].hElAngle = hElAngle;
   FW_DataProcess(pFW[M1], Vqd);
   FF_DataProcess(pFF[M1]);
+  
+  //Check for overcurrent condition (overcurrent software protection)
+  int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(FOCVars[M1].Iqdref.d, FOCVars[M1].Iqdref.q);
+  int32_t wThresholdOCSP = hIqdrefAmplitude + OCSP_SAFETY_MARGIN;
+  if (wThresholdOCSP > OCSP_MAX_CURRENT)
+  {
+    wThresholdOCSP = OCSP_MAX_CURRENT;
+  }
+  if (ABSOLUTE(PWMC_GetIa(pwmcHandle[M1])) > wThresholdOCSP ||
+      ABSOLUTE(PWMC_GetIb(pwmcHandle[M1])) > wThresholdOCSP ||
+      ABSOLUTE(PWMC_GetIc(pwmcHandle[M1])) > wThresholdOCSP)
+  {
+    PWMC_SwitchOffPWM(pwmcHandle[M1]);
+    STM_FaultProcessing(&STM[M1], MC_OCSP, 0);
+  }
+  
   return(hCodeError);
 }
 

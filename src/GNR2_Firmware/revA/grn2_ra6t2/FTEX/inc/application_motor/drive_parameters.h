@@ -225,5 +225,13 @@
 #define ROTOR_POS_OBS_KDDIV_LOG                  	LOG2(1)
 
 
+/******************************   Software overcurrent protection Motor 1   **********************/
+
+#define OCSP_SAFETY_MARGIN 	            4000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+                                                than reference current before overcurrent software protection triggers */
+#define OCSP_MAX_CURRENT                22000 /* Max current that can be reached before triggering software overcurrent */
+
+
+
 #endif /*__DRIVE_PARAMETERS_H*/
 

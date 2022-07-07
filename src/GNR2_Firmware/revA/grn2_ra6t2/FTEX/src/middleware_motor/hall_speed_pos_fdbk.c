@@ -152,11 +152,11 @@ int16_t HallPosSensor_CalcElAngle( HallPosSensorHandle_t * pHandle )
             pHandle->Super.hElAngle += pHandle->hPrevRotorFreq;
         }
         /*      Confine angle calculation to 60-degrees      */
-		int32_t hAngle_Diff = abs(pHandle->Super.hElAngle - pHandle->SectorMiddleAngle[pHandle->bHallState] );
+		int32_t hAngle_Diff = ABSOLUTE(pHandle->Super.hElAngle - pHandle->SectorMiddleAngle[pHandle->bHallState] );
 		if((hAngle_Diff>S16_40_PHASE_SHIFT))
 		{
             uint16_t hAngle_Diffu = ((uint16_t) pHandle->Super.hElAngle) - ((uint16_t) pHandle->SectorMiddleAngle[pHandle->bHallState]);
-			if(abs((int16_t)hAngle_Diffu)>S16_40_PHASE_SHIFT)
+			if(ABSOLUTE((int16_t)hAngle_Diffu)>S16_40_PHASE_SHIFT)
             {
                 if(pHandle->bDirection == POSITIVE)
                 {

@@ -62,6 +62,8 @@ extern "C" {
 #define BB_REG_BIT_READ(regAddr,bit_number) (*(uint32_t *) (0x42000000+(((uint32_t)regAddr - 0x40000000)<<5) + (bit_number <<2)) )
 /** @} */
 
+#define ABSOLUTE(x) (x < 0) ? -x : x
+
 /** @brief Not initialized pointer */
 #define MC_NULL    (void *)(0x0)
 
@@ -84,6 +86,7 @@ extern "C" {
 #define  MC_SPEED_FDBK  (uint16_t)(0x0020u)    /**< @brief Error: Speed feedback.*/
 #define  MC_BREAK_IN  (uint16_t)(0x0040u)      /**< @brief Error: Emergency input (Over current).*/
 #define  MC_SW_ERROR  (uint16_t)(0x0080u)      /**< @brief Software Error.*/
+#define  MC_OCSP  		(uint16_t)(0x0100u)      			/**< @brief Error: Overcurrent software protection.*/
 /** @} */
 
 /** @name Dual motor Frequency comparison definition */

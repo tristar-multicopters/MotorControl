@@ -65,6 +65,9 @@ extern "C" {
 #define BB_REG_BIT_READ(regAddr,bit_number) (*(uint32_t *) (0x42000000+(((uint32_t)regAddr - 0x40000000)<<5) + (bit_number <<2)) )
 /** @} */
 
+/** @brief Macro to calculate absolute value of a number */
+#define ABSOLUTE(x) (x < 0) ? -x : x
+
 /** @brief Not initialized pointer */
 #define MC_NULL    (void *)(0x0)
 

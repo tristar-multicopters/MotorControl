@@ -382,6 +382,24 @@ __weak uint32_t MCM_floatToIntBit( float x )
   return *pInt;
 }
 
+int16_t MCMath_AmplitudeFromVectors( int16_t Xvector, int16_t Yvector )
+{
+  int32_t wAux1, wAux2;
+
+  wAux1 = ( int32_t )( Xvector ) * Xvector;
+  wAux2 = ( int32_t )( Yvector ) * Yvector;
+
+  wAux1 += wAux2;
+  wAux1 = MCM_Sqrt( wAux1 );
+
+  if ( wAux1 > INT16_MAX )
+  {
+    wAux1 = ( int32_t ) INT16_MAX;
+  }
+
+  return ( ( int16_t )wAux1 );
+}
+
 /**
   * @}
   */

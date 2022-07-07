@@ -248,6 +248,10 @@
 #define AO_SPEEDFACTORGAIN							0
 #define	AO_SPEEDFACTORDIV								0	
 
+#define OCSP_SAFETY_MARGIN 	            4000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+																		than reference current before overcurrent software protection triggers */
+#define OCSP_MAX_CURRENT                22000 /* Max current that can be reached before triggering software overcurrent */
+
 /* ##@@_USER_CODE_END_##@@ */
 
 #endif /*__DRIVE_PARAMETERS_H*/

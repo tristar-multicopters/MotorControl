@@ -37,6 +37,7 @@
                  ((x) == 2 ? 1 : \
                   ((x) == 1 ? 0 : -1)))))))))))))))))
 
+
 /**
   * @brief  Trigonometrical functions type definition
   */
