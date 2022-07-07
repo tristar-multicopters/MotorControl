@@ -31,6 +31,7 @@
 #define VEHICLE_SELECTION 		VEHICLE_GRIZZLY
 #define VOLTAGE_OPENLOOP			0
 #define POSITION_OPENLOOP			0
+#define SWD_TORQUE_CONTROL		0
 /*______________________________________________________*/
 
 

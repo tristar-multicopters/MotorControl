@@ -95,8 +95,13 @@ uint8_t bMCBootCompleted = 0;
 
 /* USER CODE BEGIN Private Variables */
 
-int16_t hOpenLoopTheta = 0;
+#if SWD_TORQUE_CONTROL
+bool bStartMotor = false;
+int16_t hDebugIq = 0;
+uint16_t hDebugRampTime = 100;
+#endif
 
+int16_t hOpenLoopTheta = 0;
 #define OPEN_LOOP_SPEED 					20
 
 /* USER CODE END Private Variables */
@@ -370,6 +375,15 @@ __weak void TSK_MediumFrequencyTaskM1(void)
 
   switch ( StateM1 )
   {
+	case IDLE:
+		#if SWD_TORQUE_CONTROL
+		if (bStartMotor)
+		{
+			MCI_StartMotor(&Mci[M1]);
+		}
+		#endif
+		break;
+		
   case IDLE_START:
     ICS_TurnOnLowSides( pwmcHandle[M1] );
     TSK_SetChargeBootCapDelayM1( CHARGE_BOOT_CAP_TICKS );
@@ -430,6 +444,14 @@ __weak void TSK_MediumFrequencyTaskM1(void)
 
   case RUN:
     /* USER CODE BEGIN MediumFrequencyTask M1 2 */
+		#if SWD_TORQUE_CONTROL
+		MCI_ExecTorqueRamp(&Mci[M1], hDebugIq, hDebugRampTime);
+	
+		if (!bStartMotor)
+		{
+			MCI_StopMotor(&Mci[M1]);
+		}
+		#endif
 
     /* USER CODE END MediumFrequencyTask M1 2 */
 
