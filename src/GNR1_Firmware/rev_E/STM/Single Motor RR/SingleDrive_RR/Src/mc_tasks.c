@@ -746,7 +746,7 @@ inline uint16_t FOC_CurrControllerM1(void)
 
   speedHandle = STC_GetSpeedSensor(pSTC[M1]);
   hElAngle = SPD_GetElAngle(speedHandle);
-	//hElAngle = AO_GetElAngle(&AngleObserverM1);
+	hElAngle = AO_GetElAngle(&AngleObserverM1);
 	#if (POSITION_OPENLOOP)
 	hOpenLoopTheta += OPEN_LOOP_SPEED;
 	hElAngle = hOpenLoopTheta;
@@ -755,47 +755,53 @@ inline uint16_t FOC_CurrControllerM1(void)
   PWMC_GetPhaseCurrents(pwmcHandle[M1], &Iab);
   RCM_ReadOngoingConv();
   RCM_ExecNextConv();
-  Ialphabeta = MCM_Clarke(Iab);
-  Iqd = MCM_Park(Ialphabeta, hElAngle);
-  Vqd.q = PI_Controller(pPIDIq[M1],
-            (int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
-
-  Vqd.d = PI_Controller(pPIDId[M1],
-            (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
-  Vqd = FF_VqdConditioning(pFF[M1],Vqd);
-	
-	#if (VOLTAGE_OPENLOOP)
-	Vqd.q = 1500;
-	Vqd.d = 0;
-	#endif
-
-  Vqd = Circle_Limitation(pCLM[M1], Vqd);
-  hElAngle += SPD_GetInstElSpeedDpp(speedHandle)*REV_PARK_ANGLE_COMPENSATION_FACTOR;
-  Valphabeta = MCM_Rev_Park(Vqd, hElAngle);
-  hCodeError = PWMC_SetPhaseVoltage(pwmcHandle[M1], Valphabeta);
-  FOCVars[M1].Vqd = Vqd;
-  FOCVars[M1].Iab = Iab;
-  FOCVars[M1].Ialphabeta = Ialphabeta;
-  FOCVars[M1].Iqd = Iqd;
-  FOCVars[M1].Valphabeta = Valphabeta;
-  FOCVars[M1].hElAngle = hElAngle;
-  FW_DataProcess(pFW[M1], Vqd);
-  FF_DataProcess(pFF[M1]);
   
-  //Check for overcurrent condition (overcurrent software protection)
-  int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(FOCVars[M1].Iqdref.d, FOCVars[M1].Iqdref.q);
-  int32_t wThresholdOCSP = hIqdrefAmplitude + OCSP_SAFETY_MARGIN;
-  if (wThresholdOCSP > OCSP_MAX_CURRENT)
-  {
-    wThresholdOCSP = OCSP_MAX_CURRENT;
-  }
-  if (ABSOLUTE(PWMC_GetIa(pwmcHandle[M1])) > wThresholdOCSP ||
-      ABSOLUTE(PWMC_GetIb(pwmcHandle[M1])) > wThresholdOCSP ||
-      ABSOLUTE(PWMC_GetIc(pwmcHandle[M1])) > wThresholdOCSP)
-  {
-    PWMC_SwitchOffPWM(pwmcHandle[M1]);
-    STM_FaultProcessing(&STM[M1], MC_OCSP, 0);
-  }
+  State_t StateM1;
+  StateM1 = STM_GetState( &STM[M1] );
+	if (StateM1 == RUN || StateM1 == ANY_STOP)
+	{
+    Ialphabeta = MCM_Clarke(Iab);
+    Iqd = MCM_Park(Ialphabeta, hElAngle);
+    Vqd.q = PI_Controller(pPIDIq[M1],
+              (int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
+
+    Vqd.d = PI_Controller(pPIDId[M1],
+              (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
+    Vqd = FF_VqdConditioning(pFF[M1],Vqd);
+    
+    #if (VOLTAGE_OPENLOOP)
+    Vqd.q = 1500;
+    Vqd.d = 0;
+    #endif
+
+    Vqd = Circle_Limitation(pCLM[M1], Vqd);
+    hElAngle += SPD_GetInstElSpeedDpp(speedHandle)*REV_PARK_ANGLE_COMPENSATION_FACTOR;
+    Valphabeta = MCM_Rev_Park(Vqd, hElAngle);
+    hCodeError = PWMC_SetPhaseVoltage(pwmcHandle[M1], Valphabeta);
+    FOCVars[M1].Vqd = Vqd;
+    FOCVars[M1].Iab = Iab;
+    FOCVars[M1].Ialphabeta = Ialphabeta;
+    FOCVars[M1].Iqd = Iqd;
+    FOCVars[M1].Valphabeta = Valphabeta;
+    FOCVars[M1].hElAngle = hElAngle;
+    FW_DataProcess(pFW[M1], Vqd);
+    FF_DataProcess(pFF[M1]);
+    
+    //Check for overcurrent condition (overcurrent software protection)
+    int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(FOCVars[M1].Iqdref.d, FOCVars[M1].Iqdref.q);
+    int32_t wThresholdOCSP = hIqdrefAmplitude + OCSP_SAFETY_MARGIN;
+    if (wThresholdOCSP > OCSP_MAX_CURRENT)
+    {
+      wThresholdOCSP = OCSP_MAX_CURRENT;
+    }
+    if (abs(PWMC_GetIa(pwmcHandle[M1])) > wThresholdOCSP ||
+        abs(PWMC_GetIb(pwmcHandle[M1])) > wThresholdOCSP ||
+        abs(PWMC_GetIc(pwmcHandle[M1])) > wThresholdOCSP)
+    {
+      PWMC_SwitchOffPWM(pwmcHandle[M1]);
+      STM_FaultProcessing(&STM[M1], MC_OCSP, 0);
+    }
+  }  
   
   return(hCodeError);
 }

@@ -554,7 +554,7 @@ inline uint16_t FOC_CurrControllerM1(void)
 
   MotorState_t StateM1;
   StateM1 = MCStateMachine_GetState( &MCStateMachine[M1] );
-	if (StateM1 == M_RUN)
+	if (StateM1 == M_RUN || StateM1 == M_ANY_STOP)
 	{
 		Ialphabeta = MCMath_Clarke(Iab);
 		Iqd = MCMath_Park(Ialphabeta, hElAngle);
@@ -593,9 +593,9 @@ inline uint16_t FOC_CurrControllerM1(void)
     {
       wThresholdOCSP = OCSP_MAX_CURRENT;
     }
-		if (ABSOLUTE(PWMCurrFdbk_GetIa(pPWMCurrFdbk[M1])) > wThresholdOCSP ||
-			  ABSOLUTE(PWMCurrFdbk_GetIb(pPWMCurrFdbk[M1])) > wThresholdOCSP ||
-				ABSOLUTE(PWMCurrFdbk_GetIc(pPWMCurrFdbk[M1])) > wThresholdOCSP)
+		if (abs(PWMCurrFdbk_GetIa(pPWMCurrFdbk[M1])) > wThresholdOCSP ||
+			  abs(PWMCurrFdbk_GetIb(pPWMCurrFdbk[M1])) > wThresholdOCSP ||
+				abs(PWMCurrFdbk_GetIc(pPWMCurrFdbk[M1])) > wThresholdOCSP)
 		{
 			PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
 			MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_OCSP, 0);
