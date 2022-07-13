@@ -131,6 +131,14 @@ FeedforwardHandle_t FeedforwardM1 =
   */
 SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
 {
+  .TorqueRampMngr = 
+  {
+    .wScalingFactor = INT16_MAX,
+  },
+  .SpeedRampMngr = 
+  {
+    .wScalingFactor = INT16_MAX,
+  },
   .hSTCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,
   .hMaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
   .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
@@ -142,6 +150,10 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
   .hMecSpeedRefUnitDefault =		(int16_t)(DEFAULT_TARGET_SPEED_UNIT),
   .hTorqueRefDefault =				(int16_t)DEFAULT_TORQUE_COMPONENT,
   .hIdrefDefault =					(int16_t)DEFAULT_FLUX_COMPONENT,
+  .wTorqueSlopePerSecondUp =    DEFAULT_TORQUE_SLOPE_UP,
+  .wTorqueSlopePerSecondDown =  DEFAULT_TORQUE_SLOPE_DOWN,
+  .wSpeedSlopePerSecondUp =     DEFAULT_SPEED_SLOPE_UP,
+  .wSpeedSlopePerSecondDown =   DEFAULT_SPEED_SLOPE_DOWN,
 };
 
 /**

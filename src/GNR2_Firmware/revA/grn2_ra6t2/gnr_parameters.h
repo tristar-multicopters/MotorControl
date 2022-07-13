@@ -3,17 +3,25 @@
   * @brief   This file contains general parameters used by ganrunner firmware
 */
 
-#define VEHICLE_DEFAULT 			0
-#define VEHICLE_EBGO 					1
-#define VEHICLE_GRIZZLY 			2
+#define VEHICLE_DEFAULT               0
+#define VEHICLE_EBGO                  1
+#define VEHICLE_GRIZZLY               2
 
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
-#define SWD_CONTROL_ENABLE 		0
-#define ENABLE_DAC_DEBUGGING	1
-#define VEHICLE_SELECTION 		VEHICLE_GRIZZLY
-#define VOLTAGE_OPENLOOP			0
-#define CURRENT_OPENLOOP			0
+#define SWD_CONTROL_ENABLE            0                   /* Enable controlling motor directly from debugging interface with vehicle control layer */
+#define DEBUGMODE_MOTOR_CONTROL       1                   /* Disable vehicle control and communications to debug only motor control layer */
+#define ENABLE_DAC_DEBUGGING          1                   /* Update DAC outputs during FOC interrupt */
+#define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters.
+                                                         Will be changed in the future for a more flexible way 
+                                                         of parametrization. */
+/*
+  Set BYPASS_POSITION_SENSOR to 1 and BYPASS_CURRENT_CONTROL to 1 for simple open loop voltage output.
+  Set BYPASS_POSITION_SENSOR to 1 and BYPASS_CURRENT_CONTROL to 0 for simple current control without position sensor.
+  Set BYPASS_POSITION_SENSOR to 0 and BYPASS_CURRENT_CONTROL to 0 for normal operation.
+*/                                                         
+#define BYPASS_POSITION_SENSOR        0             /* Hall sensor is bypassed; instead angle is increasing at constant speed. */
+#define BYPASS_CURRENT_CONTROL        0             /* Current control is bypassed, thus outputing a constant voltage */
 /*______________________________________________________*/
 

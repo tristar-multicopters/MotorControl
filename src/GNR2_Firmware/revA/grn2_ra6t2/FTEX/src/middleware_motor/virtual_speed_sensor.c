@@ -233,7 +233,7 @@ void  VirtualSpdSensor_SetMecAcceleration( VirtualSpeedSensor_Handle_t * pHandle
 }
 
 
-bool VirtualSpdSensor_RampCompleted( VirtualSpeedSensor_Handle_t * pHandle )
+bool VirtualSpdSensor_IsRampCompleted( VirtualSpeedSensor_Handle_t * pHandle )
 {
   bool retVal = false;
   if ( pHandle->hRemainingStep == 0u )

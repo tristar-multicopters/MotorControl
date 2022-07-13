@@ -150,19 +150,11 @@ void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle)
 	{
 		if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 		{
-      /* Apply different torque ramp duration based on if we are ramping up or down */
-			if (abs(pHandle->aTorque[M1]) > abs(MDI_GetIqd(pHandle->pMDI, M1).q))
-			{
-				MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorqueRampTimeUp);
-			}
-			else
-			{
-				MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1], pHandle->sParameters.hTorqueRampTimeDown);
-			}
+      MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1]);
 		}
 		else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
 		{
-			MDI_ExecSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1], pHandle->sParameters.hSpeedRampTimeUp);
+			MDI_ExecSpeedRamp(pHandle->pMDI, M1, pHandle->aSpeed[M1]);
 		}
 		else {}
 	}
@@ -170,21 +162,8 @@ void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle)
 	{
 		if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 		{
-      /* Apply different torque ramp duration based on if we are ramping up or down */
-			if (abs(pHandle->aTorque[M2]) > abs(MDI_GetIqd(pHandle->pMDI, M2).q))
-			{
-				MDI_ExecTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->sParameters.hTorqueRampTimeUp);
-			}
-			else
-			{
-				MDI_ExecTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2], pHandle->sParameters.hTorqueRampTimeDown);
-			}
+			MDI_ExecTorqueRamp(pHandle->pMDI, M2, pHandle->aTorque[M2]);
 		}
-		else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
-		{
-			MDI_ExecSpeedRamp(pHandle->pMDI, M2, pHandle->aSpeed[M2], pHandle->sParameters.hSpeedRampTimeUp);
-		}
-		else {}
 	}
 }
 

@@ -52,8 +52,6 @@ typedef struct
                                    command.*/
   qd_t Iqdref;     /*!< Current component of last
                                    SetCurrentReferences command.*/
-  uint16_t hDurationms;       /*!< Duration in ms of last ExecSpeedRamp or
-                                   ExecTorqueRamp command.*/
 
   MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
   STCModality_t LastModalitySetByUser; /*!< The last STCModality_t set by the
@@ -73,7 +71,7 @@ typedef struct
   * @param  pFOCVars pointer to FOC vars to be used by MCI.
   * @retval none.
   */
-void MCInterface_Init( MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars );
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars);
 
 /**
   * @brief  This is usually a method managed by task. It must be called
@@ -83,7 +81,7 @@ void MCInterface_Init( MotorControlInterfaceHandle_t * pHandle, MotorStateMachin
   * @param  pHandle Pointer on the component instance to work on.
   * @retval none.
   */
-void MCInterface_ExecBufferedCommands( MotorControlInterfaceHandle_t * pHandle );
+void MCInterface_ExecBufferedCommands(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  This is a buffered command to set a motor speed ramp. This commands
@@ -93,12 +91,9 @@ void MCInterface_ExecBufferedCommands( MotorControlInterfaceHandle_t * pHandle )
   * @param  pHandle Pointer on the component instance to operate on.
   * @param  hFinalSpeed is the value of mechanical rotor speed reference at the
   *         end of the ramp expressed in tenths of HZ.
-  * @param  hDurationms the duration of the ramp expressed in milliseconds. It
-  *         is possible to set 0 to perform an instantaneous change in the
-  *         value.
   * @retval none.
   */
-void MCInterface_ExecSpeedRamp( MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalSpeed, uint16_t hDurationms );
+void MCInterface_ExecSpeedRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalSpeed);
 
 /**
   * @brief  This is a buffered command to set a motor torque ramp. This commands
@@ -112,12 +107,9 @@ void MCInterface_ExecSpeedRamp( MotorControlInterfaceHandle_t * pHandle,  int16_
   *         To convert current expressed in Amps to current expressed in digit
   *         is possible to use the formula:
   *         Current (digit) = [Current(Amp) * 65536 * Rshunt * Aop] / Vdd micro.
-  * @param  hDurationms the duration of the ramp expressed in milliseconds. It
-  *         is possible to set 0 to perform an instantaneous change in the
-  *         value.
   * @retval none.
   */
-void MCInterface_ExecTorqueRamp( MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalTorque, uint16_t hDurationms );
+void MCInterface_ExecTorqueRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalTorque);
 
 /**
   * @brief  This is a buffered command to set directly the motor current
@@ -130,7 +122,7 @@ void MCInterface_ExecTorqueRamp( MotorControlInterfaceHandle_t * pHandle,  int16
   *         format.
   * @retval none.
   */
-void MCInterface_SetCurrentReferences( MotorControlInterfaceHandle_t * pHandle, qd_t Iqdref );
+void MCInterface_SetCurrentReferences(MotorControlInterfaceHandle_t * pHandle, qd_t Iqdref);
 
 /**
   * @brief  This is a user command used to begin the start-up procedure.
@@ -153,7 +145,7 @@ void MCInterface_SetCurrentReferences( MotorControlInterfaceHandle_t * pHandle, 
   * @retval bool It returns true if the command is successfully executed
   *         otherwise it return false.
   */
-bool MCInterface_StartMotor( MotorControlInterfaceHandle_t * pHandle );
+bool MCInterface_StartMotor(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  This is a user command used to begin the stop motor procedure.
@@ -170,7 +162,7 @@ bool MCInterface_StartMotor( MotorControlInterfaceHandle_t * pHandle );
   * @retval bool It returns true if the command is successfully executed
   *         otherwise it return false.
   */
-bool MCInterface_StopMotor( MotorControlInterfaceHandle_t * pHandle );
+bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  This is a user command used to indicate that the user has seen the
@@ -181,7 +173,7 @@ bool MCInterface_StopMotor( MotorControlInterfaceHandle_t * pHandle );
   * @retval bool It returns true if the command is successfully executed
   *         otherwise it return false.
   */
-bool MCInterface_FaultAcknowledged( MotorControlInterfaceHandle_t * pHandle );
+bool MCInterface_FaultAcknowledged(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns information about the state of the last buffered command.
@@ -197,14 +189,14 @@ bool MCInterface_FaultAcknowledged( MotorControlInterfaceHandle_t * pHandle );
   *         been executed unsuccessfully. In this case calling this function
   *         reset the command state to BC_BUFFER_EMPTY.
   */
-MCInterfaceCommandState_t  MCI_IsCommandAcknowledged( MotorControlInterfaceHandle_t * pHandle );
+MCInterfaceCommandState_t  MCI_IsCommandAcknowledged(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns information about the state of the related pSTM object.
   * @param  pHandle Pointer on the component instance to work on.
   * @retval MotorState_t It returns the current state of the related pSTM object.
   */
-MotorState_t  MCInterface_GetSTMState( MotorControlInterfaceHandle_t * pHandle );
+MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about faults
@@ -217,7 +209,7 @@ MotorState_t  MCInterface_GetSTMState( MotorControlInterfaceHandle_t * pHandle )
   *         FAULT_NOW state.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint16_t MCInterface_GetOccurredFaults( MotorControlInterfaceHandle_t * pHandle );
+uint16_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about faults
@@ -228,7 +220,7 @@ uint16_t MCInterface_GetOccurredFaults( MotorControlInterfaceHandle_t * pHandle 
   *         present faults.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint16_t MCInterface_GetCurrentFaults( MotorControlInterfaceHandle_t * pHandle );
+uint16_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the modality of the speed and torque controller.
@@ -236,7 +228,7 @@ uint16_t MCInterface_GetCurrentFaults( MotorControlInterfaceHandle_t * pHandle )
   * @retval STCModality_t It returns the modality of STC. It can be one of
   *         these two values: STC_TORQUE_MODE or STC_SPEED_MODE.
   */
-STCModality_t MCInterface_GetControlMode( MotorControlInterfaceHandle_t * pHandle );
+STCModality_t MCInterface_GetControlMode(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the motor direction imposed by the last command
@@ -245,7 +237,7 @@ STCModality_t MCInterface_GetControlMode( MotorControlInterfaceHandle_t * pHandl
   * @retval int16_t It returns 1 or -1 according the sign of hFinalSpeed,
   *         hFinalTorque or Iqdref.q of the last command.
   */
-int16_t MCInterface_GetImposedMotorDirection( MotorControlInterfaceHandle_t * pHandle );
+int16_t MCInterface_GetImposedMotorDirection(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns information about the last ramp final speed sent by the
@@ -254,20 +246,20 @@ int16_t MCInterface_GetImposedMotorDirection( MotorControlInterfaceHandle_t * pH
   * @retval int16_t last ramp final speed sent by the user expressed in tehts
   *         of HZ.
   */
-int16_t MCInterface_GetLastRampFinalSpeed( MotorControlInterfaceHandle_t * pHandle );
+int16_t MCInterface_GetLastRampFinalSpeed(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  Check if the settled speed or torque ramp has been completed.
   * @param  pHandle Pointer on the component instance to work on.
   * @retval bool It returns true if the ramp is completed, false otherwise.
   */
-bool MCInterface_RampCompleted( MotorControlInterfaceHandle_t * pHandle );
+bool MCInterface_IsRampCompleted(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  Stop the execution of ongoing ramp.
   * @param  pHandle Pointer on the component instance to work on.
   */
-void MCInterface_StopRamp( MotorControlInterfaceHandle_t * pHandle );
+void MCInterface_StopRamp(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns speed sensor reliability with reference to the sensor
@@ -277,7 +269,7 @@ void MCInterface_StopRamp( MotorControlInterfaceHandle_t * pHandle );
   *         frame transformation and (in speed control mode) for speed
   *         regulation is reliable, false otherwise
   */
-bool MCInterface_GetSpdSensorReliability( MotorControlInterfaceHandle_t * pHandle );
+bool MCInterface_GetSpdSensorReliability(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  Returns the last computed average mechanical speed, expressed in
@@ -285,7 +277,7 @@ bool MCInterface_GetSpdSensorReliability( MotorControlInterfaceHandle_t * pHandl
   *         used by FOC algorithm
   * @param  pHandle Pointer on the component instance to work on.
   */
-int16_t MCInterface_GetAvrgMecSpeedUnit( MotorControlInterfaceHandle_t * pHandle );
+int16_t MCInterface_GetAvrgMecSpeedUnit(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  Returns the current mechanical rotor speed reference expressed in the unit defined by #SPEED_UNIT
@@ -293,28 +285,28 @@ int16_t MCInterface_GetAvrgMecSpeedUnit( MotorControlInterfaceHandle_t * pHandle
   * @param  pHandle Pointer on the component instance to work on.
   *
   */
-int16_t MCInterface_GetMecSpeedRefUnit( MotorControlInterfaceHandle_t * pHandle );
+int16_t MCInterface_GetMecSpeedRefUnit(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns stator current Iab in ab_t format
   * @param  pHandle Pointer on the component instance to work on.
   * @retval ab_t Stator current Iab
   */
-ab_t MCInterface_GetIab( MotorControlInterfaceHandle_t * pHandle );
+ab_t MCInterface_GetIab(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns stator current Ialphabeta in AlphaBeta_t format
   * @param  pHandle Pointer on the component instance to work on.
   * @retval AlphaBeta_t Stator current Ialphabeta
   */
-AlphaBeta_t MCInterface_GetIalphabeta( MotorControlInterfaceHandle_t * pHandle );
+AlphaBeta_t MCInterface_GetIalphabeta(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns stator current Iqd in qd_t format
   * @param  pHandle Pointer on the component instance to work on.
   * @retval qd_t Stator current Iqd
   */
-qd_t MCInterface_GetIqd( MotorControlInterfaceHandle_t * pHandle );
+qd_t MCInterface_GetIqd(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns stator current IqdHF in qd_t format
@@ -322,28 +314,28 @@ qd_t MCInterface_GetIqd( MotorControlInterfaceHandle_t * pHandle );
   * @retval qd_t Stator current IqdHF if HFI is selected as main
   *         sensor. Otherwise it returns { 0, 0}.
   */
-qd_t MCInterface_GetIqdHF( MotorControlInterfaceHandle_t * pHandle );
+qd_t MCInterface_GetIqdHF(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns stator current Iqdref in qd_t format
   * @param  pHandle Pointer on the component instance to work on.
   * @retval qd_t Stator current Iqdref
   */
-qd_t MCInterface_GetIqdref( MotorControlInterfaceHandle_t * pHandle );
+qd_t MCInterface_GetIqdref(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns stator current Vqd in qd_t format
   * @param  pHandle Pointer on the component instance to work on.
   * @retval qd_t Stator current Vqd
   */
-qd_t MCInterface_GetVqd( MotorControlInterfaceHandle_t * pHandle );
+qd_t MCInterface_GetVqd(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns stator current Valphabeta in AlphaBeta_t format
   * @param  pHandle Pointer on the component instance to work on.
   * @retval AlphaBeta_t Stator current Valphabeta
   */
-AlphaBeta_t MCInterface_GetValphabeta( MotorControlInterfaceHandle_t * pHandle );
+AlphaBeta_t MCInterface_GetValphabeta(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the rotor electrical angle actually used for reference
@@ -351,7 +343,7 @@ AlphaBeta_t MCInterface_GetValphabeta( MotorControlInterfaceHandle_t * pHandle )
   * @param  pHandle Pointer on the component instance to work on.
   * @retval int16_t Rotor electrical angle in dpp format
   */
-int16_t MCInterface_GetElAngledpp( MotorControlInterfaceHandle_t * pHandle );
+int16_t MCInterface_GetElAngledpp(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the reference eletrical torque, fed to derived class for
@@ -359,7 +351,7 @@ int16_t MCInterface_GetElAngledpp( MotorControlInterfaceHandle_t * pHandle );
   * @param  pHandle Pointer on the component instance to work on.
   * @retval int16_t Teref
   */
-int16_t MCInterface_GetTeref( MotorControlInterfaceHandle_t * pHandle );
+int16_t MCInterface_GetTeref(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the motor phase current amplitude (0-to-peak) in s16A
@@ -368,7 +360,7 @@ int16_t MCInterface_GetTeref( MotorControlInterfaceHandle_t * pHandle );
   * @param  pHandle Pointer on the component instance to work on.
   * @retval int16_t Motor phase current (0-to-peak) in s16A
   */
-int16_t MCInterface_GetPhaseCurrentAmplitude( MotorControlInterfaceHandle_t * pHandle );
+int16_t MCInterface_GetPhaseCurrentAmplitude(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the applied motor phase voltage amplitude (0-to-peak) in
@@ -377,14 +369,14 @@ int16_t MCInterface_GetPhaseCurrentAmplitude( MotorControlInterfaceHandle_t * pH
   * @param  pHandle Pointer on the component instance to work on.
   * @retval int16_t Motor phase voltage (0-to-peak) in s16V
   */
-int16_t MCInterface_GetPhaseVoltageAmplitude( MotorControlInterfaceHandle_t * pHandle );
+int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It re-initializes Iqdref variables with their default values.
   * @param  pHandle Pointer on the component instance to work on.
   * @retval none
   */
-void MCInterface_ClearIqdref( MotorControlInterfaceHandle_t * pHandle );
+void MCInterface_ClearIqdref(MotorControlInterfaceHandle_t * pHandle);
 
 #ifdef __cplusplus
 }

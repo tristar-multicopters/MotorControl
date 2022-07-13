@@ -125,7 +125,7 @@ void  VirtualSpdSensor_SetMecAcceleration( VirtualSpeedSensor_Handle_t * pHandle
   * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
   * @retval bool true if the ramp is completed, otherwise false.
   */
-bool VirtualSpdSensor_RampCompleted( VirtualSpeedSensor_Handle_t * pHandle );
+bool VirtualSpdSensor_IsRampCompleted( VirtualSpeedSensor_Handle_t * pHandle );
 
 /**
   * @brief  Get the final speed of last setled ramp of virtual sensor expressed

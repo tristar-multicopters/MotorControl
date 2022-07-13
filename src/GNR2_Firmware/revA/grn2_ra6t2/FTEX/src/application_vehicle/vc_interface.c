@@ -48,7 +48,6 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		case REG_MAXSPEED_THROTTLE:
 			break;
 		case REG_MAXSPEED_PAS:
-//			value = pHandle->pPowertrain->pPAS
 			break;
 		case REG_FLDB_END_VOLTAGE:
 			value = pHandle->pPowertrain->sDCVoltageFoldback.hEndValue;
@@ -72,10 +71,8 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 			value = pHandle->pPowertrain->pThrottle->hParameters.hOffsetThrottle;
 			break;
 		case REG_TORQE_RAMP_UP:
-			value = pHandle->pPowertrain->sParameters.hTorqueRampTimeUp;
 			break;
 		case REG_TORQE_RAMP_DOWN:
-			value = pHandle->pPowertrain->sParameters.hTorqueRampTimeDown;
 			break;
 		case REG_START_THROTTLE:
 			value = pHandle->pPowertrain->sParameters.hStartingThrottle;
@@ -119,10 +116,8 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 			value = pHandle->pPowertrain->pThrottle->hParameters.bDivisorSpeed;
 			break;
 		case REG_SPEED_RAMP_UP:
-			value = pHandle->pPowertrain->sParameters.hSpeedRampTimeUp;
 			break;
 		case REG_SPEED_RAMP_DOWN:
-			value = pHandle->pPowertrain->sParameters.hSpeedRampTimeDown;
 			break;
 		
 		case REG_PAS_ENABLE:
@@ -719,10 +714,8 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 			pHandle->pPowertrain->pThrottle->hParameters.hOffsetTorque = value;
 			break;
 		case REG_TORQE_RAMP_DOWN:
-			pHandle->pPowertrain->sParameters.hTorqueRampTimeDown = value;
 			break;
 		case REG_TORQE_RAMP_UP:
-			value = pHandle->pPowertrain->sParameters.hTorqueRampTimeUp;
 			break;
 		case REG_TORQUESENSOR_HIGH_THR:
 			break;
@@ -741,10 +734,8 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 			pHandle->pPowertrain->pThrottle->hParameters.bDivisorSpeed = value;
 			break;
 		case REG_SPEED_RAMP_UP:
-			pHandle->pPowertrain->sParameters.hSpeedRampTimeUp = value;
 			break;
 		case REG_SPEED_RAMP_DOWN:
-			pHandle->pPowertrain->sParameters.hSpeedRampTimeDown = value;
 			break;
 
 	// Battery parameters (512-767)//

@@ -62,12 +62,6 @@
 #define POWERTRAIN_DEFAULT_MODE                            SINGLE_MOTOR      /* Default powertrain mode, can be SINGLE_MOTOR or DUAL_MOTOR  */
 #define POWERTRAIN_DEFAULT_CONTROL_TYPE                    TORQUE_CTRL        /* Default control type, can be TORQUE_CTRL or SPEED_CTRL  */
 #define POWERTRAIN_M2_TORQUE_INVERSION                     false              /* If true, M2 torque is inverted compared to M1  */
-#define POWERTRAIN_THROTTLE_TORQUE_RAMPTIME_UP             200                /* When using throttle, torque ramping up time in milliseconds  */
-#define POWERTRAIN_THROTTLE_TORQUE_RAMPTIME_DOWN           50                /* When using throttle, torque ramping down time in milliseconds  */
-#define POWERTRAIN_PAS_TORQUE_RAMPTIME_UP                  750                /* When using pedal assist, torque ramping up time in milliseconds  */
-#define POWERTRAIN_PAS_TORQUE_RAMPTIME_DOWN                50                /* When using pedal assist, torque ramping down time in milliseconds  */
-#define POWERTRAIN_THROTTLE_SPEED_RAMPTIME_UP              1000              /* When using throttle, speed ramping up time in milliseconds  */
-#define POWERTRAIN_THROTTLE_SPEED_RAMPTIME_DOWN            200                /* When using throttle, speed ramping down time in milliseconds  */
 #define POWERTRAIN_START_THROTTLE_THRESHOLD                1000              /* Throttle value to start powertrain  */
 #define POWERTRAIN_STOP_THROTTLE_THRESHOLD                 500                /* Throttle value to stop powertrain  */
 #define POWERTRAIN_STOP_SPEED_THRESHOLD                    0                  /* Speed value to stop powertrain  */

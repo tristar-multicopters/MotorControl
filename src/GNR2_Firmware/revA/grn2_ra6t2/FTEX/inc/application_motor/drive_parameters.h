@@ -132,6 +132,11 @@
 #define DEFAULT_TORQUE_COMPONENT       0
 #define DEFAULT_FLUX_COMPONENT         0
 
+#define DEFAULT_TORQUE_SLOPE_UP        1000
+#define DEFAULT_TORQUE_SLOPE_DOWN      1000
+#define DEFAULT_SPEED_SLOPE_UP         1000
+#define DEFAULT_SPEED_SLOPE_DOWN       1000
+
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
 #define OV_VOLTAGE_PROT_ENABLING        ENABLE
 #define UV_VOLTAGE_PROT_ENABLING        ENABLE
