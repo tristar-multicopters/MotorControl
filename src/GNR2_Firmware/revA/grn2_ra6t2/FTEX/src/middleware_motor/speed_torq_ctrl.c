@@ -55,14 +55,14 @@ void SpdTorqCtrl_Clear(SpeednTorqCtrlHandle_t * pHandle)
 int16_t SpdTorqCtrl_GetMecSpeedRefUnit(SpeednTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    return ( (int16_t)(RampMngr_GetValue(&pHandle->SpeedRampMngr) / INT16_MAX) );
+    return ((int16_t)(RampMngr_GetValue(&pHandle->SpeedRampMngr) / INT16_MAX));
 }
 
 
 int16_t SpdTorqCtrl_GetTorqueRef(SpeednTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    return ( (int16_t)(RampMngr_GetValue(&pHandle->TorqueRampMngr) / INT16_MAX) );
+    return ((int16_t)(RampMngr_GetValue(&pHandle->TorqueRampMngr) / INT16_MAX));
 }
 
 
@@ -91,12 +91,12 @@ bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal
          a limitation is applied. */
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
-        if ( (int32_t)hTargetFinal > (int32_t)pHandle->hMaxPositiveTorque)
+        if ((int32_t)hTargetFinal > (int32_t)pHandle->hMaxPositiveTorque)
         {
             hTargetFinalSat = (int16_t) pHandle->hMaxPositiveTorque;
             AllowedRange = false;
         }
-        if ( (int32_t)hTargetFinal < (int32_t)pHandle->hMinNegativeTorque)
+        if ((int32_t)hTargetFinal < (int32_t)pHandle->hMinNegativeTorque)
         {
             hTargetFinalSat = (int16_t) pHandle->hMinNegativeTorque;
             AllowedRange = false;
@@ -104,7 +104,7 @@ bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal
     }
     else
     {
-        if ( (int32_t)hTargetFinal > (int32_t)pHandle->hMaxAppPositiveMecSpeedUnit)
+        if ((int32_t)hTargetFinal > (int32_t)pHandle->hMaxAppPositiveMecSpeedUnit)
         {
             hTargetFinalSat = (int16_t) pHandle->hMaxAppPositiveMecSpeedUnit;
             AllowedRange = false;
@@ -114,7 +114,7 @@ bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal
             AllowedRange = false;
             hTargetFinalSat = (int16_t) pHandle->hMinAppNegativeMecSpeedUnit;
         }
-        else if ( (int32_t)hTargetFinal < (int32_t)pHandle->hMinAppPositiveMecSpeedUnit)
+        else if ((int32_t)hTargetFinal < (int32_t)pHandle->hMinAppPositiveMecSpeedUnit)
         {
             if (hTargetFinal > pHandle->hMaxAppNegativeMecSpeedUnit)
             {
@@ -125,7 +125,7 @@ bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal
                 }
             }
         }
-        else if ( (int32_t)hTargetFinal > (int32_t)pHandle->hMaxAppNegativeMecSpeedUnit)
+        else if ((int32_t)hTargetFinal > (int32_t)pHandle->hMaxAppNegativeMecSpeedUnit)
         {
             if (hTargetFinal > pHandle->hMinAppPositiveMecSpeedUnit)
             {

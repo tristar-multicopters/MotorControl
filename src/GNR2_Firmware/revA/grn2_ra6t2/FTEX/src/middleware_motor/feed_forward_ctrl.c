@@ -32,8 +32,8 @@ extern ResDivVbusSensorHandle_t * pBusSensorM1;
   {}                              \
 
 
-void Feedforward_Init( FeedforwardHandle_t * pHandle, BusVoltageSensorHandle_t * pBusSensor, PIDHandle_t * pPIDId,
-              PIDHandle_t * pPIDIq )
+void Feedforward_Init(FeedforwardHandle_t * pHandle, BusVoltageSensorHandle_t * pBusSensor, PIDHandle_t * pPIDId,
+              PIDHandle_t * pPIDIq)
 {
 
   pHandle->wConstant1D = pHandle->wDefConstant1D;
@@ -48,130 +48,130 @@ void Feedforward_Init( FeedforwardHandle_t * pHandle, BusVoltageSensorHandle_t *
 }
 
 
-void Feedforward_Clear( FeedforwardHandle_t * pHandle )
+void Feedforward_Clear(FeedforwardHandle_t * pHandle)
 {
-  pHandle->Vqdff.q = ( int16_t )0;
-  pHandle->Vqdff.d = ( int16_t )0;
+  pHandle->Vqdff.q = (int16_t)0;
+  pHandle->Vqdff.d = (int16_t)0;
 
   return;
 }
 
 
-void Feedforward_VqdffComputation( FeedforwardHandle_t * pHandle, qd_t Iqdref, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl )
+void Feedforward_VqdffComputation(FeedforwardHandle_t * pHandle, qd_t Iqdref, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl)
 {
   int32_t wtemp1, wtemp2;
   int16_t hSpeed_dpp;
   uint16_t hAvBusVoltage_d;
   SpeednPosFdbkHandle_t * SpeedSensor;
 
-  SpeedSensor = SpdTorqCtrl_GetSpeedSensor( pSpeedTorqCtrl );
-  hSpeed_dpp = SpdPosFdbk_GetElSpeedDpp( SpeedSensor );
-  hAvBusVoltage_d = VbusSensor_GetAvBusVoltageDigital( &( pBusSensorM1->Super ) ) / 2u;
+  SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pSpeedTorqCtrl);
+  hSpeed_dpp = SpdPosFdbk_GetElSpeedDpp(SpeedSensor);
+  hAvBusVoltage_d = VbusSensor_GetAvBusVoltageDigital(&(pBusSensorM1->Super)) / 2u;
 
   if (hAvBusVoltage_d != (uint16_t)0)
   {
     /*q-axes ff voltage calculation */
-    wtemp1 = ( ( ( int32_t )( hSpeed_dpp ) * Iqdref.d ) / ( int32_t )32768 );
-    wtemp2 = ( wtemp1 * pHandle->wConstant1D ) / ( int32_t )( hAvBusVoltage_d );
-    wtemp2 *= ( int32_t )2;
+    wtemp1 = (((int32_t)(hSpeed_dpp) * Iqdref.d) / (int32_t)32768);
+    wtemp2 = (wtemp1 * pHandle->wConstant1D) / (int32_t)(hAvBusVoltage_d);
+    wtemp2 *= (int32_t)2;
 
-    wtemp1 = ( ( pHandle->wConstant2 * hSpeed_dpp ) / ( int32_t )hAvBusVoltage_d )
-                   * ( int32_t )16;
+    wtemp1 = ((pHandle->wConstant2 * hSpeed_dpp) / (int32_t)hAvBusVoltage_d)
+                   * (int32_t)16;
 
     wtemp2 = wtemp1 + wtemp2 + pHandle->VqdAvPIout.q;
 
-    SATURATION_TO_S16( wtemp2 )
+    SATURATION_TO_S16(wtemp2)
 
-    pHandle->Vqdff.q = ( int16_t )( wtemp2 );
+    pHandle->Vqdff.q = (int16_t)(wtemp2);
 
     /* d-axes ff voltage calculation */
-    wtemp1 = ( ( ( int32_t )( hSpeed_dpp ) * Iqdref.q ) / ( int32_t )32768 );
-    wtemp2 = ( wtemp1 * pHandle->wConstant1Q ) / ( int32_t )( hAvBusVoltage_d );
-    wtemp2 *= ( int32_t )2;
+    wtemp1 = (((int32_t)(hSpeed_dpp) * Iqdref.q) / (int32_t)32768);
+    wtemp2 = (wtemp1 * pHandle->wConstant1Q) / (int32_t)(hAvBusVoltage_d);
+    wtemp2 *= (int32_t)2;
 
-    wtemp2 = ( int32_t )pHandle->VqdAvPIout.d - wtemp2;
+    wtemp2 = (int32_t)pHandle->VqdAvPIout.d - wtemp2;
 
-    SATURATION_TO_S16( wtemp2 )
+    SATURATION_TO_S16(wtemp2)
 
-    pHandle->Vqdff.d = ( int16_t )( wtemp2 );
+    pHandle->Vqdff.d = (int16_t)(wtemp2);
   }
   else
   {
-    pHandle->Vqdff.q = ( int16_t ) 0;
-    pHandle->Vqdff.d = ( int16_t ) 0;
+    pHandle->Vqdff.q = (int16_t) 0;
+    pHandle->Vqdff.d = (int16_t) 0;
   }
 }
 
 
-qd_t Feedforward_VqdConditioning( FeedforwardHandle_t * pHandle, qd_t Vqd )
+qd_t Feedforward_VqdConditioning(FeedforwardHandle_t * pHandle, qd_t Vqd)
 {
   int32_t wtemp;
   qd_t lVqd;
 
   pHandle->VqdPIout = Vqd;
 
-  wtemp = ( int32_t )( Vqd.q ) + pHandle->Vqdff.q;
+  wtemp = (int32_t)(Vqd.q) + pHandle->Vqdff.q;
 
-  SATURATION_TO_S16( wtemp )
+  SATURATION_TO_S16(wtemp)
 
-  lVqd.q= ( int16_t )wtemp;
+  lVqd.q= (int16_t)wtemp;
 
-  wtemp = ( int32_t )( Vqd.d ) + pHandle->Vqdff.d;
+  wtemp = (int32_t)(Vqd.d) + pHandle->Vqdff.d;
 
-  SATURATION_TO_S16( wtemp )
+  SATURATION_TO_S16(wtemp)
 
-  lVqd.d = ( int16_t )wtemp;
+  lVqd.d = (int16_t)wtemp;
 
-  return ( lVqd );
+  return (lVqd);
 }
 
 
-void Feedforward_DataProcess( FeedforwardHandle_t * pHandle )
+void Feedforward_DataProcess(FeedforwardHandle_t * pHandle)
 {
   int32_t wAux;
-  int32_t lowPassFilterBW = ( int32_t ) pHandle->hVqdLowPassFilterBw - ( int32_t )1;
+  int32_t lowPassFilterBW = (int32_t) pHandle->hVqdLowPassFilterBw - (int32_t)1;
   
 #ifdef FULL_MISRA_C_COMPLIANCY
   /* Computation of average Vqd as output by PI(D) current controllers, used by
      feed-forward controller algorithm */
-  wAux = ( int32_t )( pHandle->VqdAvPIout.q ) * lowPassFilterBW;
+  wAux = (int32_t)(pHandle->VqdAvPIout.q) * lowPassFilterBW;
   wAux += pHandle->VqdPIout.q;
 
-  pHandle->VqdAvPIout.q = ( int16_t )( wAux /
-                                      ( int32_t )( pHandle->hVqdLowPassFilterBw ) );
+  pHandle->VqdAvPIout.q = (int16_t)(wAux /
+                                      (int32_t)(pHandle->hVqdLowPassFilterBw));
 
-  wAux = ( int32_t )( pHandle->VqdAvPIout.d ) * lowPassFilterBW;
+  wAux = (int32_t)(pHandle->VqdAvPIout.d) * lowPassFilterBW;
   wAux += pHandle->VqdPIout.d;
 
-  pHandle->VqdAvPIout.d = ( int16_t )( wAux /
-                                      ( int32_t )( pHandle->hVqdLowPassFilterBw ) );
+  pHandle->VqdAvPIout.d = (int16_t)(wAux /
+                                      (int32_t)(pHandle->hVqdLowPassFilterBw));
 #else
   /* Computation of average Vqd as output by PI(D) current controllers, used by
      feed-forward controller algorithm */
-  wAux = ( int32_t )( pHandle->VqdAvPIout.q ) * lowPassFilterBW;
+  wAux = (int32_t)(pHandle->VqdAvPIout.q) * lowPassFilterBW;
   wAux += pHandle->VqdPIout.q;
-  pHandle->VqdAvPIout.q = ( int16_t ) ( wAux >>
-                                        pHandle->hVqdLowPassFilterBwLog );
+  pHandle->VqdAvPIout.q = (int16_t) (wAux >>
+                                        pHandle->hVqdLowPassFilterBwLog);
 
-  wAux = ( int32_t )( pHandle->VqdAvPIout.d ) * lowPassFilterBW;
+  wAux = (int32_t)(pHandle->VqdAvPIout.d) * lowPassFilterBW;
   wAux += pHandle->VqdPIout.d;
-  pHandle->VqdAvPIout.d = ( int16_t )  ( wAux >>
-                                         pHandle->hVqdLowPassFilterBwLog );
+  pHandle->VqdAvPIout.d = (int16_t)  (wAux >>
+                                         pHandle->hVqdLowPassFilterBwLog);
 
 #endif
 }
 
 
-void Feedforward_InitFOCAdditionalMethods( FeedforwardHandle_t * pHandle )
+void Feedforward_InitFOCAdditionalMethods(FeedforwardHandle_t * pHandle)
 {
   pHandle->VqdAvPIout.q = 0;
   pHandle->VqdAvPIout.d = 0;
-  PID_SetIntegralTerm( pHandle->pPIDq, 0 );
-  PID_SetIntegralTerm( pHandle->pPIDd, 0 );
+  PID_SetIntegralTerm(pHandle->pPIDq, 0);
+  PID_SetIntegralTerm(pHandle->pPIDd, 0);
 }
 
 
-void Feedforward_SetFFConstants( FeedforwardHandle_t * pHandle, FeedforwardTuningStruct_t sNewConstants )
+void Feedforward_SetFFConstants(FeedforwardHandle_t * pHandle, FeedforwardTuningStruct_t sNewConstants)
 {
   pHandle->wConstant1D = sNewConstants.wConst1D;
   pHandle->wConstant1Q = sNewConstants.wConst1Q;
@@ -179,7 +179,7 @@ void Feedforward_SetFFConstants( FeedforwardHandle_t * pHandle, FeedforwardTunin
 }
 
 
-FeedforwardTuningStruct_t Feedforward_GetFFConstants( FeedforwardHandle_t * pHandle )
+FeedforwardTuningStruct_t Feedforward_GetFFConstants(FeedforwardHandle_t * pHandle)
 {
   FeedforwardTuningStruct_t LocalConstants;
 
@@ -187,18 +187,18 @@ FeedforwardTuningStruct_t Feedforward_GetFFConstants( FeedforwardHandle_t * pHan
   LocalConstants.wConst1Q = pHandle->wConstant1Q;
   LocalConstants.wConst2 =  pHandle->wConstant2;
 
-  return ( LocalConstants );
+  return (LocalConstants);
 }
 
 
-qd_t Feedforward_GetVqdff( const FeedforwardHandle_t * pHandle )
+qd_t Feedforward_GetVqdff(const FeedforwardHandle_t * pHandle)
 {
-  return ( pHandle->Vqdff );
+  return (pHandle->Vqdff);
 }
 
 
-qd_t Feedforward_GetVqdAvPIout( const FeedforwardHandle_t * pHandle )
+qd_t Feedforward_GetVqdAvPIout(const FeedforwardHandle_t * pHandle)
 {
-  return ( pHandle->Vqdff );
+  return (pHandle->Vqdff);
 }
 

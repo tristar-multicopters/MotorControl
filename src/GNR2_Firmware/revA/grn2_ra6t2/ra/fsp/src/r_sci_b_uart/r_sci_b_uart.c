@@ -651,7 +651,7 @@ fsp_err_t R_SCI_B_UART_Write (uart_ctrl_t * const p_api_ctrl, uint8_t const * co
  * @retval  FSP_ERR_NO_CALLBACK_MEMORY   p_callback is non-secure and p_callback_memory is either secure or NULL.
  **********************************************************************************************************************/
 fsp_err_t R_SCI_B_UART_CallbackSet (uart_ctrl_t * const          p_api_ctrl,
-                                    void (                     * p_callback)(uart_callback_args_t *),
+                                    void (                    * p_callback)(uart_callback_args_t *),
                                     void const * const           p_context,
                                     uart_callback_args_t * const p_callback_memory)
 {

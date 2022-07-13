@@ -62,21 +62,21 @@ void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle);
   @param  PedalTorqSensorHandle_t handle
   @return None
 */
-void PedalTorqSensor_Clear( PedalTorqSensorHandle_t * pHandle );
+void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle);
 
 /**
   @brief  Pedal torque Sensor ADC value calculation and filtering
   @param  PedalTorqSensorHandle_t handle
   @return None
 */
-void PedalTorqSensor_CalcAvValue( PedalTorqSensorHandle_t * pHandle );
+void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle);
 
 /**
   @brief  Pedal torque Sensor return ADC value
   @param  PedalTorqSensorHandle_t handle
   @return hAvTorqueValue in uin16_t format
 */
-uint16_t PedalTorqSensor_GetAvValue( PedalTorqSensorHandle_t * pHandle );
+uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle);
 
 /**
   @brief  Pedal torque Sensor  Convert Torque sensor data to motor torque

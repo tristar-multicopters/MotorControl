@@ -95,7 +95,7 @@ bool RampMngr_ExecRamp(RampMngr_Handle_t * pHandle, int32_t wTargetFinal, uint32
         
         /* Compute the (wRampRemainingStep) number of steps remaining to complete
         the ramp. */
-        aux1 = (abs(wTargetFinal - current_ref) ) * (int32_t)(pHandle->wScalingFactor);
+        aux1 = (abs(wTargetFinal - current_ref)) * (int32_t)(pHandle->wScalingFactor);
         aux1 /= (int32_t) wSlopePerControlPeriod;
         pHandle->wRampRemainingStep = (uint32_t) aux1;
         pHandle->wRampRemainingStep++;

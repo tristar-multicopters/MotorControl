@@ -11,12 +11,12 @@
 /**
  * @brief Initializes brake sensor module
  */
-void PWREN_Init( PWREN_Handle_t * pHandle )
+void PWREN_Init(PWREN_Handle_t * pHandle)
 {	
 	
 }
 
-bool PWREN_IsPowerEnabled( PWREN_Handle_t * pHandle )
+bool PWREN_IsPowerEnabled(PWREN_Handle_t * pHandle)
 {
 	if (pHandle->bUsePowerLock)
 	{

@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-#if   defined ( __ICCARM__ )
+#if   defined (__ICCARM__)
   #pragma system_include         /* treat file as system include file for MISRA check */
 #elif defined (__clang__)
   #pragma clang system_header    /* treat file as system include file */
@@ -32,10 +32,10 @@
 #define ARM_MPU_ARMV8_H
 
 /** \brief Attribute for device memory (outer only) */
-#define ARM_MPU_ATTR_DEVICE                           ( 0U )
+#define ARM_MPU_ATTR_DEVICE                           (0U)
 
 /** \brief Attribute for non-cacheable, normal memory */
-#define ARM_MPU_ATTR_NON_CACHEABLE                    ( 4U )
+#define ARM_MPU_ATTR_NON_CACHEABLE                    (4U)
 
 /** \brief Attribute for normal memory (outer and inner)
 * \param NT Non-Transient: Set to 1 for non-transient data.

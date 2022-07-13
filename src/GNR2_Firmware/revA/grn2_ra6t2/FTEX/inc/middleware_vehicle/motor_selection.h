@@ -31,7 +31,7 @@ typedef struct
 } MS_Handle_t;
 
 
-void MS_Init( MS_Handle_t * pHandle );
+void MS_Init(MS_Handle_t * pHandle);
 
 MotorSelection_t MS_CheckSelection(MS_Handle_t * pHandle);
 

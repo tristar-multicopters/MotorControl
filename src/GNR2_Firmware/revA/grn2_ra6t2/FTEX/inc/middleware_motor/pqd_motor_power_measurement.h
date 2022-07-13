@@ -43,14 +43,14 @@ typedef struct
   * @param pHandle related component instance.
   * @retval none.
   */
-void MotorPowerQD_Clear( MotorPowerQDHandle_t * pHandle );
+void MotorPowerQD_Clear(MotorPowerQDHandle_t * pHandle);
 
 /**
   * @brief Implementation of derived class CalcElMotorPower.
   * @param pHandle related component instance.
   * @retval int16_t The measured motor power expressed in watt.
   */
-void MotorPowerQD_CalcElMotorPower( MotorPowerQDHandle_t * pHandle );
+void MotorPowerQD_CalcElMotorPower(MotorPowerQDHandle_t * pHandle);
 
 
 #ifdef __cplusplus

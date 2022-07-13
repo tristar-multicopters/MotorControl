@@ -57,14 +57,14 @@ typedef struct
   * @param  pHandle: handler of the current instance of the RotorPosObs component
   * @retval none
   */
-void RotorPosObs_Init( RotorPositionObserverHandle_t * pHandle );
+void RotorPosObs_Init(RotorPositionObserverHandle_t * pHandle);
 
 /**
   * @brief  It clears state observer object by re-initializing private variables
   * @param  pHandle: handler of the current instance of the RotorPosObs component
   * @retval none
   */
-void RotorPosObs_Clear( RotorPositionObserverHandle_t * pHandle );
+void RotorPosObs_Clear(RotorPositionObserverHandle_t * pHandle);
 
 /**
   * @brief  It executes vector tracking state observer to compute new angle estimation
@@ -73,7 +73,7 @@ void RotorPosObs_Clear( RotorPositionObserverHandle_t * pHandle );
   * @param  hElTorque: electrical torque currently applied to the shaft (zero if only angle filtering is required)
   * @retval none
   */
-int16_t RotorPosObs_CalcElAngle( RotorPositionObserverHandle_t * pHandle, int16_t hElTorque);
+int16_t RotorPosObs_CalcElAngle(RotorPositionObserverHandle_t * pHandle, int16_t hElTorque);
 
 /**
   * @brief  It convert electrical speed dpp to mechanical speed unit
@@ -81,21 +81,21 @@ int16_t RotorPosObs_CalcElAngle( RotorPositionObserverHandle_t * pHandle, int16_
   * @retval true = sensor information is reliable
   *         false = sensor information is not reliable
   */
-bool RotorPosObs_CalcMecSpeedUnit( RotorPositionObserverHandle_t * pHandle, int16_t * pMecSpeedUnit);
+bool RotorPosObs_CalcMecSpeedUnit(RotorPositionObserverHandle_t * pHandle, int16_t * pMecSpeedUnit);
 
 /**
   * @brief  It returns the latest estimated electrical angle
   * @param  pHandle: handler of the current instance of the RotorPosObs component
   * @retval estimated electrical angle
   */
-int16_t RotorPosObs_GetElAngle( RotorPositionObserverHandle_t * pHandle);
+int16_t RotorPosObs_GetElAngle(RotorPositionObserverHandle_t * pHandle);
 
 /**
   * @brief  It returns the latest estimated electrical speed
   * @param  pHandle: handler of the current instance of the RotorPosObs component
   * @retval estimated electrical speed
   */
-int16_t RotorPosObs_GetElSpeed( RotorPositionObserverHandle_t * pHandle);
+int16_t RotorPosObs_GetElSpeed(RotorPositionObserverHandle_t * pHandle);
 
 
 

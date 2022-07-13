@@ -17,17 +17,17 @@
 #include "mc_type.h"
 
 
-void MotorPowerQD_CalcElMotorPower( MotorPowerQDHandle_t * pHandle )
+void MotorPowerQD_CalcElMotorPower(MotorPowerQDHandle_t * pHandle)
 {
 
   int32_t wAux, wAux2, wAux3;
   qd_t Iqd = pHandle->pFOCVars->Iqd;
   qd_t Vqd = pHandle->pFOCVars->Vqd;
-  wAux = ( ( int32_t )Iqd.q * ( int32_t )Vqd.q ) +
-         ( ( int32_t )Iqd.d * ( int32_t )Vqd.d );
+  wAux = ((int32_t)Iqd.q * (int32_t)Vqd.q) +
+         ((int32_t)Iqd.d * (int32_t)Vqd.d);
   wAux /= 65536;
 
-  wAux2 = pHandle->wConvFact * ( int32_t )VbusSensor_GetAvBusVoltageVolt( pHandle->pVBS );
+  wAux2 = pHandle->wConvFact * (int32_t)VbusSensor_GetAvBusVoltageVolt(pHandle->pVBS);
   wAux2 /= 600; /* 600 is max bus voltage expressed in volt.*/
 
   wAux3 = wAux * wAux2;
@@ -35,7 +35,7 @@ void MotorPowerQD_CalcElMotorPower( MotorPowerQDHandle_t * pHandle )
   wAux3 /= 10;
   wAux3 /= 65536;
 
-  MPM_CalcElMotorPower( &pHandle->Super, wAux3 );
+  MPM_CalcElMotorPower(&pHandle->Super, wAux3);
 
 }
 

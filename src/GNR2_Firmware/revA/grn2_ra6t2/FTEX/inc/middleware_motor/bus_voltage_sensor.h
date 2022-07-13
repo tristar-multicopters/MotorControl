@@ -32,21 +32,21 @@ typedef struct
   * @param  pHandle related Handle of BusVoltageSensorHandle_t
   * @retval uint16_t Latest Vbus conversion result in digit
   */
-uint16_t VbusSensor_GetBusVoltageDigital( BusVoltageSensorHandle_t * pHandle );
+uint16_t VbusSensor_GetBusVoltageDigital(BusVoltageSensorHandle_t * pHandle);
 
 /**
   * @brief  It return latest averaged Vbus measurement expressed in u16Volt
   * @param  pHandle related Handle of BusVoltageSensorHandle_t
   * @retval uint16_t Latest averaged Vbus measurement in digit
   */
-uint16_t VbusSensor_GetAvBusVoltageDigital( BusVoltageSensorHandle_t * pHandle );
+uint16_t VbusSensor_GetAvBusVoltageDigital(BusVoltageSensorHandle_t * pHandle);
 
 /**
   * @brief  It return latest averaged Vbus measurement expressed in Volts
   * @param  pHandle related Handle of BusVoltageSensorHandle_t
   * @retval uint16_t Latest averaged Vbus measurement in Volts
   */
-uint16_t VbusSensor_GetAvBusVoltageVolt( BusVoltageSensorHandle_t * pHandle );
+uint16_t VbusSensor_GetAvBusVoltageVolt(BusVoltageSensorHandle_t * pHandle);
 
 /**
   * @brief  It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_ERROR depending on
@@ -54,6 +54,6 @@ uint16_t VbusSensor_GetAvBusVoltageVolt( BusVoltageSensorHandle_t * pHandle );
   * @param  pHandle related Handle of BusVoltageSensorHandle_t
   * @retval uint16_t Fault code error
   */
-uint16_t VbusSensor_GetFaultState( BusVoltageSensorHandle_t * pHandle );
+uint16_t VbusSensor_GetFaultState(BusVoltageSensorHandle_t * pHandle);
 
 #endif

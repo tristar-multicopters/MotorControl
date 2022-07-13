@@ -30,7 +30,7 @@
  * Macro definitions
  **********************************************************************************************************************/
 
-/* Mask to select CP bits( 0xF00000 ) */
+/* Mask to select CP bits(0xF00000) */
 #define CP_MASK                                       (0x0000000FU << 20)
 
 /* Value to write to OAD register of MPU stack monitor to enable NMI when a stack overflow is detected. */

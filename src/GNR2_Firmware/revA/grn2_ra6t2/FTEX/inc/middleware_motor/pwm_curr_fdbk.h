@@ -50,7 +50,7 @@ typedef struct PWMCurrFdbkHandle PWMCurrFdbkHandle_t;
   * - PWMCurrFdbkHandle::pFctRLDetectionModeDisable
   *
   */
-typedef void ( *PWMCurrFdbk_Generic_Cb_t )( PWMCurrFdbkHandle_t * pHandle );
+typedef void (*PWMCurrFdbk_Generic_Cb_t)(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief Pointer on the interrupt handling function of the PWMC component instance.
@@ -59,7 +59,7 @@ typedef void ( *PWMCurrFdbk_Generic_Cb_t )( PWMCurrFdbkHandle_t * pHandle );
   * (See PWMCurrFdbkHandle::pFctIrqHandler).
   *
   */
-typedef void * ( *PWMCurrFdbk_IrqHandler_Cb_t )( PWMCurrFdbkHandle_t * pHandle, unsigned char flag );
+typedef void * (*PWMCurrFdbk_IrqHandler_Cb_t)(PWMCurrFdbkHandle_t * pHandle, unsigned char flag);
 
 /**
   * @brief Pointer on the function provided by the PMWC component instance to get the phase current.
@@ -68,7 +68,7 @@ typedef void * ( *PWMCurrFdbk_IrqHandler_Cb_t )( PWMCurrFdbkHandle_t * pHandle, 
   * (See PWMCurrFdbkHandle::pFctGetPhaseCurrents).
   *
   */
-typedef void ( *PWMCurrFdbk_GetPhaseCurr_Cb_t )( PWMCurrFdbkHandle_t * pHandle, ab_t * Iab );
+typedef void (*PWMCurrFdbk_GetPhaseCurr_Cb_t)(PWMCurrFdbkHandle_t * pHandle, ab_t * Iab);
 
 /**
   * @brief Pointer on the functions provided by the PMWC component instance to set the ADC sampling
@@ -83,7 +83,7 @@ typedef void ( *PWMCurrFdbk_GetPhaseCurr_Cb_t )( PWMCurrFdbkHandle_t * pHandle, 
   * - PWMCurrFdbkHandle::pFctSetADCSampPointSect6
   *
   */
-typedef uint16_t ( *PWMCurrFdbk_SetSampPointSectX_Cb_t )( PWMCurrFdbkHandle_t * pHandle);
+typedef uint16_t (*PWMCurrFdbk_SetSampPointSectX_Cb_t)(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief Pointer on the function provided by the PMWC component instance to check if an over current
@@ -93,7 +93,7 @@ typedef uint16_t ( *PWMCurrFdbk_SetSampPointSectX_Cb_t )( PWMCurrFdbkHandle_t * 
   * (See PWMCurrFdbkHandle::pFctIsOverCurrentOccurred).
   *
   */
-typedef uint16_t ( *PWMCurrFdbk_OverCurr_Cb_t )( PWMCurrFdbkHandle_t * pHandle );
+typedef uint16_t (*PWMCurrFdbk_OverCurr_Cb_t)(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief Pointer on the function provided by the PMWC component instance to set the PWM duty cycle
@@ -103,7 +103,7 @@ typedef uint16_t ( *PWMCurrFdbk_OverCurr_Cb_t )( PWMCurrFdbkHandle_t * pHandle )
   * (See PWMCurrFdbkHandle::pFctRLDetectionModeSetDuty).
   *
   */
-typedef uint16_t ( *PWMCurrFdbk_RLDetectSetDuty_Cb_t )( PWMCurrFdbkHandle_t * pHandle, uint16_t hDuty );
+typedef uint16_t (*PWMCurrFdbk_RLDetectSetDuty_Cb_t)(PWMCurrFdbkHandle_t * pHandle, uint16_t hDuty);
 
 /**
   * @brief This structure is used to handle the data of an instance of the PWM & Current Feedback component
@@ -151,15 +151,15 @@ struct PWMCurrFdbkHandle
   * @param  Iab: Pointer to the structure that will receive motor current
   *         of phase A and B in s16A unit.
 */
-void PWMCurrFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHandle,
-                            ab_t * Iab );
+void PWMCurrFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHandle,
+                            ab_t * Iab);
 
 /**
   * @brief Returns the current phase a
   * @param  pHandle: handle on the target PWMC component
   * @retval  Ia in s16A unit
 */
-static inline int16_t PWMCurrFdbk_GetIa( PWMCurrFdbkHandle_t * pHandle )
+static inline int16_t PWMCurrFdbk_GetIa(PWMCurrFdbkHandle_t * pHandle)
 {
   return pHandle->Ia;
 }
@@ -169,7 +169,7 @@ static inline int16_t PWMCurrFdbk_GetIa( PWMCurrFdbkHandle_t * pHandle )
   * @param  pHandle: handle on the target PWMC component
   * @retval  Ib in s16A unit
 */
-static inline int16_t PWMCurrFdbk_GetIb( PWMCurrFdbkHandle_t * pHandle )
+static inline int16_t PWMCurrFdbk_GetIb(PWMCurrFdbkHandle_t * pHandle)
 {
   return pHandle->Ib;
 }
@@ -179,7 +179,7 @@ static inline int16_t PWMCurrFdbk_GetIb( PWMCurrFdbkHandle_t * pHandle )
   * @param  pHandle: handle on the target PWMC component
   * @retval  Ic in s16A unit
 */
-static inline int16_t PWMCurrFdbk_GetIc( PWMCurrFdbkHandle_t * pHandle )
+static inline int16_t PWMCurrFdbk_GetIc(PWMCurrFdbkHandle_t * pHandle)
 {
   return pHandle->Ic;
 }
@@ -203,20 +203,20 @@ static inline int16_t PWMCurrFdbk_GetIc( PWMCurrFdbkHandle_t * pHandle )
   * @retval Returns #MC_NO_ERROR if no error occurred or #MC_FOC_DURATION if the duty cycles were
   *         set too late for being taken into account in the next PWM cycle (overrun condition).
   */
-uint16_t PWMCurrFdbk_SetPhaseVoltage( PWMCurrFdbkHandle_t * pHandle,
-                               AlphaBeta_t Valfa_beta );
+uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle,
+                               AlphaBeta_t Valfa_beta);
 
 /**
   * @brief  Switches PWM generation off
 	* @param  pHandle: Handle on the target instance of the PWMC component
   */
-void PWMCurrFdbk_SwitchOffPWM( PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_SwitchOffPWM(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief  Switches PWM generation on
 	* @param  pHandle: Handle on the target instance of the PWMC component
   */
-void PWMCurrFdbk_SwitchOnPWM( PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_SwitchOnPWM(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief  Calibrates ADC current conversions by reading the offset voltage
@@ -226,7 +226,7 @@ void PWMCurrFdbk_SwitchOnPWM( PWMCurrFdbkHandle_t * pHandle );
   * @retval true if the current calibration has been completed, false if it is
   *         still ongoing.
   */
-bool PWMCurrFdbk_CurrentReadingCalibr( PWMCurrFdbkHandle_t * pHandle );
+bool PWMCurrFdbk_CurrentReadingCalibr(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief  Switches power stage low sides transistors on.
@@ -234,14 +234,14 @@ bool PWMCurrFdbk_CurrentReadingCalibr( PWMCurrFdbkHandle_t * pHandle );
   * section. It has to be called on each motor start-up.
   * @param  pHandle: handle on the target instance of the PWMC component
   */
-void PWMCurrFdbk_TurnOnLowSides( PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle);
 
 /** @brief Check if overcurrent occured since last call.
  *  @param  pHandle: Handle on the target instance of the PWMC component
  *	@retval Returns #MC_BREAK_IN if an over current condition was detected on the power stage
  *         controlled by the PWMC component pointed by  @p pHandle, since the last call to this function;
  *         returns #MC_NO_FAULTS otherwise. */
-uint16_t PWMCurrFdbk_CheckOverCurrent( PWMCurrFdbkHandle_t * pHandle );
+uint16_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief  It is used to retrieve the status of TurnOnLowSides action.
@@ -249,17 +249,17 @@ uint16_t PWMCurrFdbk_CheckOverCurrent( PWMCurrFdbkHandle_t * pHandle );
   * @retval bool It returns the state of TurnOnLowSides action:
   *         true if TurnOnLowSides action is active, false otherwise.
   */
-bool PWMCurrFdbk_GetTurnOnLowSidesAction( PWMCurrFdbkHandle_t * pHandle );
+bool PWMCurrFdbk_GetTurnOnLowSidesAction(PWMCurrFdbkHandle_t * pHandle);
 
 /** @brief Enables the RL detection mode on the power stage controlled by the @p pHandle PWMC component.
 	* @param  pHandle: Handle on the target instance of the PWMC component
 */
-void PWMCurrFdbk_RLDetectionModeEnable( PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RLDetectionModeEnable(PWMCurrFdbkHandle_t * pHandle);
 
 /** @brief Disables the RL detection mode on the power stage controlled by the @p pHandle PWMC component. 
 	* @param  pHandle: Handle on the target instance of the PWMC component
 */
-void PWMCurrFdbk_RLDetectionModeDisable( PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RLDetectionModeDisable(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief  Sets the PWM duty cycle to apply in the RL Detection mode.
@@ -269,8 +269,8 @@ void PWMCurrFdbk_RLDetectionModeDisable( PWMCurrFdbkHandle_t * pHandle );
   * @retval If the Duty Cycle could be applied on time for the next PWM period,
   *         #MC_NO_ERROR is returned. Otherwise, #MC_FOC_DURATION is returned.
   */
-uint16_t PWMCurrFdbk_RLDetectionModeSetDuty( PWMCurrFdbkHandle_t * pHandle,
-                                      uint16_t hDuty );
+uint16_t PWMCurrFdbk_RLDetectionModeSetDuty(PWMCurrFdbkHandle_t * pHandle,
+                                      uint16_t hDuty);
 
 /**
  * @brief Sets the Callback that the PWMC component shall invoke to get phases current.
@@ -278,8 +278,8 @@ uint16_t PWMCurrFdbk_RLDetectionModeSetDuty( PWMCurrFdbkHandle_t * pHandle,
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-void PWMCurrFdbk_RegisterGetPhaseCurrentsCallBack( PWMCurrFdbk_GetPhaseCurr_Cb_t pCallBack,
-    PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterGetPhaseCurrentsCallBack(PWMCurrFdbk_GetPhaseCurr_Cb_t pCallBack,
+    PWMCurrFdbkHandle_t * pHandle);
 
 /**
  * @brief Sets the Callback that the PWMC component shall invoke to switch PWM
@@ -288,8 +288,8 @@ void PWMCurrFdbk_RegisterGetPhaseCurrentsCallBack( PWMCurrFdbk_GetPhaseCurr_Cb_t
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-void PWMCurrFdbk_RegisterSwitchOffPwmCallBack( PWMCurrFdbk_Generic_Cb_t pCallBack,
-                                        PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterSwitchOffPwmCallBack(PWMCurrFdbk_Generic_Cb_t pCallBack,
+                                        PWMCurrFdbkHandle_t * pHandle);
 
 /**
  * @brief Sets the Callback that the PWMC component shall invoke to switch PWM
@@ -298,8 +298,8 @@ void PWMCurrFdbk_RegisterSwitchOffPwmCallBack( PWMCurrFdbk_Generic_Cb_t pCallBac
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-void PWMCurrFdbk_RegisterSwitchonPwmCallBack( PWMCurrFdbk_Generic_Cb_t pCallBack,
-                                       PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterSwitchonPwmCallBack(PWMCurrFdbk_Generic_Cb_t pCallBack,
+                                       PWMCurrFdbkHandle_t * pHandle);
 
 /**
  * @brief Sets the Callback that the PWMC component shall invoke to execute a calibration
@@ -308,8 +308,8 @@ void PWMCurrFdbk_RegisterSwitchonPwmCallBack( PWMCurrFdbk_Generic_Cb_t pCallBack
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-void PWMCurrFdbk_RegisterReadingCalibrationCallBack( PWMCurrFdbk_Generic_Cb_t pCallBack,
-    PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterReadingCalibrationCallBack(PWMCurrFdbk_Generic_Cb_t pCallBack,
+    PWMCurrFdbkHandle_t * pHandle);
 
 /**
  * @brief Sets the Callback that the PWMC component shall invoke to turn low sides on.
@@ -317,8 +317,8 @@ void PWMCurrFdbk_RegisterReadingCalibrationCallBack( PWMCurrFdbk_Generic_Cb_t pC
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-void PWMCurrFdbk_RegisterTurnOnLowSidesCallBack( PWMCurrFdbk_Generic_Cb_t pCallBack,
-    PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterTurnOnLowSidesCallBack(PWMCurrFdbk_Generic_Cb_t pCallBack,
+    PWMCurrFdbkHandle_t * pHandle);
 
 /**
  * @brief Sets the Callback that the PWMC component shall invoke to compute ADC sampling point
@@ -326,8 +326,8 @@ void PWMCurrFdbk_RegisterTurnOnLowSidesCallBack( PWMCurrFdbk_Generic_Cb_t pCallB
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-void PWMCurrFdbk_RegisterSampPointSectXCallBack( PWMCurrFdbk_SetSampPointSectX_Cb_t pCallBack,
-    PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterSampPointSectXCallBack(PWMCurrFdbk_SetSampPointSectX_Cb_t pCallBack,
+    PWMCurrFdbkHandle_t * pHandle);
 
 
 /**
@@ -336,8 +336,8 @@ void PWMCurrFdbk_RegisterSampPointSectXCallBack( PWMCurrFdbk_SetSampPointSectX_C
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-void PWMCurrFdbk_RegisterIsOverCurrentOccurredCallBack( PWMCurrFdbk_OverCurr_Cb_t pCallBack,
-    PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterIsOverCurrentOccurredCallBack(PWMCurrFdbk_OverCurr_Cb_t pCallBack,
+    PWMCurrFdbkHandle_t * pHandle);
 
 
 /**
@@ -346,16 +346,16 @@ void PWMCurrFdbk_RegisterIsOverCurrentOccurredCallBack( PWMCurrFdbk_OverCurr_Cb_
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-void PWMCurrFdbk_RegisterRLDetectionModeEnableCallBack( PWMCurrFdbk_Generic_Cb_t pCallBack,
-    PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterRLDetectionModeEnableCallBack(PWMCurrFdbk_Generic_Cb_t pCallBack,
+    PWMCurrFdbkHandle_t * pHandle);
 
 /**
  * @brief Sets the Callback wIch PWMC shall invoke to disable the R/L detection mode
  * @param pCallBack pointer on the callback
  * @param pHandle pointer on the handle structure of the PWMC instance
  */
-void PWMCurrFdbk_RegisterRLDetectionModeDisableCallBack( PWMCurrFdbk_Generic_Cb_t pCallBack,
-    PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterRLDetectionModeDisableCallBack(PWMCurrFdbk_Generic_Cb_t pCallBack,
+    PWMCurrFdbkHandle_t * pHandle);
 
 /**
  * @brief Sets the Callback that the PWMC component shall invoke to set the duty cycle
@@ -364,8 +364,8 @@ void PWMCurrFdbk_RegisterRLDetectionModeDisableCallBack( PWMCurrFdbk_Generic_Cb_
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-void PWMCurrFdbk_RegisterRLDetectionModeSetDutyCallBack( PWMCurrFdbk_RLDetectSetDuty_Cb_t pCallBack,
-    PWMCurrFdbkHandle_t * pHandle );
+void PWMCurrFdbk_RegisterRLDetectionModeSetDutyCallBack(PWMCurrFdbk_RLDetectSetDuty_Cb_t pCallBack,
+    PWMCurrFdbkHandle_t * pHandle);
 
 
 #ifdef __cplusplus

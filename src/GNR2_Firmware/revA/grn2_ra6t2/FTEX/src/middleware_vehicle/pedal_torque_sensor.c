@@ -25,7 +25,7 @@ void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle)
 /**
 	Pedal torque Sensor ADC hardware values clear
 */
-void PedalTorqSensor_Clear( PedalTorqSensorHandle_t * pHandle )
+void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle)
 {
     pHandle->hAvTorqueValue = 0u;
     pHandle->hAvADCValue = 0u;
@@ -34,7 +34,7 @@ void PedalTorqSensor_Clear( PedalTorqSensorHandle_t * pHandle )
 /**
 	Pedal torque Sensor ADC value calculation and filtering
 */
-void PedalTorqSensor_CalcAvValue( PedalTorqSensorHandle_t * pHandle )
+void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
 {
     uint32_t tTorqaux;
     uint16_t hTorqux;
@@ -79,7 +79,7 @@ void PedalTorqSensor_CalcAvValue( PedalTorqSensorHandle_t * pHandle )
 /**
 	Pedal torque Sensor return ADC value
 */
-uint16_t PedalTorqSensor_GetAvValue( PedalTorqSensorHandle_t * pHandle )
+uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle)
 {
   return pHandle->hAvTorqueValue;
 }

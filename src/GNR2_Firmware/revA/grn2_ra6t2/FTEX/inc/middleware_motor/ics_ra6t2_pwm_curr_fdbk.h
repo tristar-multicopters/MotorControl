@@ -81,7 +81,7 @@ typedef struct
   * @param  pHandle: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval none
   */
-bool PWMInsulCurrSensorFdbk_Init( PWMInsulCurrSensorFdbkHandle_t * pHandle );
+bool PWMInsulCurrSensorFdbk_Init(PWMInsulCurrSensorFdbkHandle_t * pHandle);
 
 /**
   * @brief  This function starts the current sensor polarization routine. It stores into the provided handle 
@@ -90,14 +90,14 @@ bool PWMInsulCurrSensorFdbk_Init( PWMInsulCurrSensorFdbkHandle_t * pHandle );
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval none
   */
-void PWMInsulCurrSensorFdbk_CurrentReadingPolarization( PWMCurrFdbkHandle_t * pHdl );
+void PWMInsulCurrSensorFdbk_CurrentReadingPolarization(PWMCurrFdbkHandle_t * pHdl);
 
 /**
   * @brief  This function computes and return latest converted motor phase currents motor
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval Ia and Ib current in ab_t format
   */ 
-void PWMInsulCurrSensorFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHdl, ab_t * Iab );
+void PWMInsulCurrSensorFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHdl, ab_t * Iab);
 
 /**
   * @brief  Function to turn on low sides switches. This function is intended to be
@@ -106,28 +106,28 @@ void PWMInsulCurrSensorFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHdl, ab_t *
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval none
   */
-void PWMInsulCurrSensorFdbk_TurnOnLowSides( PWMCurrFdbkHandle_t * pHdl );
+void PWMInsulCurrSensorFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHdl);
 
 /**
   * @brief  It enables PWM generation
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval none
   */
-void PWMInsulCurrSensorFdbk_SwitchOnPWM( PWMCurrFdbkHandle_t * pHdl );
+void PWMInsulCurrSensorFdbk_SwitchOnPWM(PWMCurrFdbkHandle_t * pHdl);
 
 /**
   * @brief  It stops PWM generation
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval none
   */
-void PWMInsulCurrSensorFdbk_SwitchOffPWM( PWMCurrFdbkHandle_t * pHdl );
+void PWMInsulCurrSensorFdbk_SwitchOffPWM(PWMCurrFdbkHandle_t * pHdl);
 
 /**
   * @brief  Function to update duty cycle registers.
 	* @param  pHdl: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component.
 * @retval Motor control error code: MC_FOC_DURATION if overrun occured, MC_NO_FAULTS otherwise.
   */
-uint16_t PWMInsulCurrSensorFdbk_WriteTIMRegisters( PWMCurrFdbkHandle_t * pHdl );
+uint16_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl);
 
 
 /**
@@ -135,14 +135,14 @@ uint16_t PWMInsulCurrSensorFdbk_WriteTIMRegisters( PWMCurrFdbkHandle_t * pHdl );
   * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval Motor instance number
   */
-void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler( PWMInsulCurrSensorFdbkHandle_t * pHdl );
+void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
 
 /**
   * @brief  It is the routine to run when overcurrent trigger interrupt occured
   * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval Motor instance number
   */
-void * PWMInsulCurrSensorFdbk_BRK_IRQHandler( PWMInsulCurrSensorFdbkHandle_t * pHdl );
+void * PWMInsulCurrSensorFdbk_BRK_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
 
 /**
   * @brief  It is used to check if an overcurrent occurred since last call.
@@ -150,7 +150,7 @@ void * PWMInsulCurrSensorFdbk_BRK_IRQHandler( PWMInsulCurrSensorFdbkHandle_t * p
   * @retval uint16_t It returns MC_BREAK_IN whether an overcurrent has been
   *                  detected since last method call, MC_NO_FAULTS otherwise.
   */
-uint16_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred( PWMCurrFdbkHandle_t * pHdl );
+uint16_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl);
 
 
 #ifdef __cplusplus

@@ -102,7 +102,7 @@ uint64_t PulseFrequency_InputCaptureValue_AGT (PulseFrequency_Handle_AGT_t * pHa
 /**
   Function used to update the capture variables from the Low Power Timer interrupt
 */
-void PulseFrequency_IsrCallUpdate_AGT( PulseFrequency_Handle_AGT_t * pHandle , uint64_t  wCapture )
+void PulseFrequency_IsrCallUpdate_AGT(PulseFrequency_Handle_AGT_t * pHandle , uint64_t  wCapture)
 {
     /* Capture the count in a variable */
     pHandle->agt_capture_count = wCapture;
@@ -113,7 +113,7 @@ void PulseFrequency_IsrCallUpdate_AGT( PulseFrequency_Handle_AGT_t * pHandle , u
 /**
   Function used to update the overflow variable from the Low Power Timer interrupt
 */
-void PulseFrequency_IsrOverFlowUpdate_AGT ( PulseFrequency_Handle_AGT_t * pHandle )
+void PulseFrequency_IsrOverFlowUpdate_AGT (PulseFrequency_Handle_AGT_t * pHandle)
 {
     pHandle->agt_capture_overflow ++;
 }

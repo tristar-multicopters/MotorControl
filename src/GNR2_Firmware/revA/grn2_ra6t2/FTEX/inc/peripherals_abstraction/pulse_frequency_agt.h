@@ -69,14 +69,14 @@ uint64_t PulseFrequency_InputCaptureValue_AGT (PulseFrequency_Handle_AGT_t * pHa
   @param  PulseFrequency_Handle_AGT_t handle
   @return None
 */
-void PulseFrequency_IsrCallUpdate_AGT( PulseFrequency_Handle_AGT_t * pHandle , uint64_t  wCapture );
+void PulseFrequency_IsrCallUpdate_AGT(PulseFrequency_Handle_AGT_t * pHandle , uint64_t  wCapture);
 
 /**
   @brief  Function used to update the overflow variable from the AGT interrupt
   @param  PulseFrequency_Handle_AGT_t handle
   @return None
 */
-void PulseFrequency_IsrOverFlowUpdate_AGT( PulseFrequency_Handle_AGT_t * pHandle );
+void PulseFrequency_IsrOverFlowUpdate_AGT(PulseFrequency_Handle_AGT_t * pHandle);
 
 
 #endif /* __GNR_MAIN_H */

@@ -59,7 +59,7 @@ typedef struct
 * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
 * @retval none
 */
-void VirtualSpdSensor_Init( VirtualSpeedSensor_Handle_t * pHandle );
+void VirtualSpdSensor_Init(VirtualSpeedSensor_Handle_t * pHandle);
 
 /**
 * @brief  Software initialization of VSS object to be performed at each restart
@@ -67,7 +67,7 @@ void VirtualSpdSensor_Init( VirtualSpeedSensor_Handle_t * pHandle );
 * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
 * @retval none
 */
-void VirtualSpdSensor_Clear( VirtualSpeedSensor_Handle_t * pHandle );
+void VirtualSpdSensor_Clear(VirtualSpeedSensor_Handle_t * pHandle);
 
 /**
 * @brief  Update the rotor electrical angle integrating the last setled
@@ -75,7 +75,7 @@ void VirtualSpdSensor_Clear( VirtualSpeedSensor_Handle_t * pHandle );
 * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
 * @retval int16_t Measured electrical angle in s16degree format.
 */
-int16_t VirtualSpdSensor_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, void * pInputVars_str );
+int16_t VirtualSpdSensor_CalcElAngle(VirtualSpeedSensor_Handle_t * pHandle, void * pInputVars_str);
 
 /**
   * @brief  This method must be called with the same periodicity
@@ -93,7 +93,7 @@ int16_t VirtualSpdSensor_CalcElAngle( VirtualSpeedSensor_Handle_t * pHandle, voi
   * @retval true = sensor information is reliable
   *         false = sensor information is not reliable
   */
-bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandle, int16_t * pMecSpeedUnit );
+bool VirtualSpdSensor_CalcAvrgMecSpeedUnit(VirtualSpeedSensor_Handle_t * pHandle, int16_t * pMecSpeedUnit);
 
 /**
   * @brief  It is used to set istantaneous information on VSS mechanical and
@@ -102,7 +102,7 @@ bool VirtualSpdSensor_CalcAvrgMecSpeedUnit( VirtualSpeedSensor_Handle_t * pHandl
   * @param  hMecAngle istantaneous measure of rotor mechanical angle
   * @retval none
   */
-void VirtualSpdSensor_SetMecAngle( VirtualSpeedSensor_Handle_t * pHandle, int16_t hMecAngle );
+void VirtualSpdSensor_SetMecAngle(VirtualSpeedSensor_Handle_t * pHandle, int16_t hMecAngle);
 
 /**
   * @brief  Set the mechanical acceleration of virtual sensor. This acceleration
@@ -116,8 +116,8 @@ void VirtualSpdSensor_SetMecAngle( VirtualSpeedSensor_Handle_t * pHandle, int16_
             instantaneous the final speed.
   * @retval none
   */
-void  VirtualSpdSensor_SetMecAcceleration( VirtualSpeedSensor_Handle_t * pHandle, int16_t  hFinalMecSpeedUnit,
-                              uint16_t hDurationms );
+void  VirtualSpdSensor_SetMecAcceleration(VirtualSpeedSensor_Handle_t * pHandle, int16_t  hFinalMecSpeedUnit,
+                              uint16_t hDurationms);
 
 /**
   * @brief  Checks if the ramp executed after a VSPD_SetMecAcceleration command
@@ -125,7 +125,7 @@ void  VirtualSpdSensor_SetMecAcceleration( VirtualSpeedSensor_Handle_t * pHandle
   * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
   * @retval bool true if the ramp is completed, otherwise false.
   */
-bool VirtualSpdSensor_IsRampCompleted( VirtualSpeedSensor_Handle_t * pHandle );
+bool VirtualSpdSensor_IsRampCompleted(VirtualSpeedSensor_Handle_t * pHandle);
 
 /**
   * @brief  Get the final speed of last setled ramp of virtual sensor expressed
@@ -133,7 +133,7 @@ bool VirtualSpdSensor_IsRampCompleted( VirtualSpeedSensor_Handle_t * pHandle );
   * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
   * @retval none
   */
-int16_t  VirtualSpdSensor_GetLastRampFinalSpeed( VirtualSpeedSensor_Handle_t * pHandle );
+int16_t  VirtualSpdSensor_GetLastRampFinalSpeed(VirtualSpeedSensor_Handle_t * pHandle);
 
 /**
   * @brief  Set the command to Start the transition phase from VirtualSpeedSensor
@@ -146,23 +146,23 @@ int16_t  VirtualSpdSensor_GetLastRampFinalSpeed( VirtualSpeedSensor_Handle_t * p
             transition has been triggered but it's actually disabled
             (parameter hTransitionSteps = 0)
   */
-bool VirtualSpdSensor_SetStartTransition( VirtualSpeedSensor_Handle_t * pHandle, bool bCommand );
+bool VirtualSpdSensor_SetStartTransition(VirtualSpeedSensor_Handle_t * pHandle, bool bCommand);
 
 /**
   * @brief  Return the status of the transition phase.
   * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
   * @retval bool true if Transition phase is ongoing, false otherwise.
   */
-bool VirtualSpdSensor_IsTransitionOngoing( VirtualSpeedSensor_Handle_t * pHandle );
+bool VirtualSpdSensor_IsTransitionOngoing(VirtualSpeedSensor_Handle_t * pHandle);
 
-bool VirtualSpdSensor_TransitionEnded( VirtualSpeedSensor_Handle_t * pHandle );
+bool VirtualSpdSensor_TransitionEnded(VirtualSpeedSensor_Handle_t * pHandle);
 
 /**
   * @brief  It set istantaneous information on rotor electrical angle copied by state observer;
   * @param  pHandle: handler of the current instance of the VirtualSpeedSensor component
   * @retval none
   */
-void VirtualSpdSensor_SetCopyObserver( VirtualSpeedSensor_Handle_t * pHandle );
+void VirtualSpdSensor_SetCopyObserver(VirtualSpeedSensor_Handle_t * pHandle);
 
 /**
   * @brief  It  set istantaneous information on rotor electrical angle.
@@ -170,7 +170,7 @@ void VirtualSpdSensor_SetCopyObserver( VirtualSpeedSensor_Handle_t * pHandle );
   * @param  hElAngle istantaneous measure of rotor electrical angle (s16degrees)
   * @retval none
   */
-void VirtualSpdSensor_SetElAngle( VirtualSpeedSensor_Handle_t * pHandle, int16_t hElAngle );
+void VirtualSpdSensor_SetElAngle(VirtualSpeedSensor_Handle_t * pHandle, int16_t hElAngle);
 
 #ifdef __cplusplus
 }

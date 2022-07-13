@@ -37,21 +37,21 @@ typedef struct
   * @param  pHandle related Handle of VirtualBusVoltageSensorHandle_t
   * @retval none
   */
-void VirtualBusVoltSensor_Init( VirtualBusVoltageSensorHandle_t * pHandle );
+void VirtualBusVoltSensor_Init(VirtualBusVoltageSensorHandle_t * pHandle);
 
 /**
   * @brief  It simply returns in virtual Vbus sensor implementation
   * @param  pHandle related Handle of VirtualBusVoltageSensorHandle_t
   * @retval none
   */
-void VirtualBusVoltSensor_Clear( VirtualBusVoltageSensorHandle_t * pHandle );
+void VirtualBusVoltSensor_Clear(VirtualBusVoltageSensorHandle_t * pHandle);
 
 /**
   * @brief  It returns MC_NO_ERROR
   * @param  pHandle related Handle of VirtualBusVoltageSensorHandle_t
 * @retval uint16_t Fault code error: MC_NO_ERROR
   */
-uint16_t VirtualBusVoltSensor_NoErrors( VirtualBusVoltageSensorHandle_t * pHandle );
+uint16_t VirtualBusVoltSensor_NoErrors(VirtualBusVoltageSensorHandle_t * pHandle);
 
 
 #ifdef __cplusplus

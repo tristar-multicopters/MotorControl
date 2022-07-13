@@ -162,7 +162,7 @@ typedef struct
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval none
   */
-void BemfObsPll_Init( BemfObserverPllHandle_t * pHandle );
+void BemfObsPll_Init(BemfObserverPllHandle_t * pHandle);
 
 /**
   * @brief  It only returns, necessary to implement fictitious IRQ_Handler
@@ -170,14 +170,14 @@ void BemfObsPll_Init( BemfObserverPllHandle_t * pHandle );
   * @param  uint8_t Fictitious interrupt flag
   * @retval none
   */
-void BemfObsPll_Return( BemfObserverPllHandle_t * pHandle, uint8_t flag );
+void BemfObsPll_Return(BemfObserverPllHandle_t * pHandle, uint8_t flag);
 
 /**
   * @brief  It clears state observer component by re-initializing private variables
   * @param  pHandle related object of class STO
   * @retval none
   */
-void BemfObsPll_Clear( BemfObserverPllHandle_t * pHandle );
+void BemfObsPll_Clear(BemfObserverPllHandle_t * pHandle);
 
 /**
   * @brief  This method executes Luenberger state observer equations and calls
@@ -187,7 +187,7 @@ void BemfObsPll_Clear( BemfObserverPllHandle_t * pHandle );
   * @param  pInputVars_str pointer to the observer inputs structure
   * @retval int16_t rotor electrical angle (s16Degrees)
   */
-int16_t BemfObsPll_CalcElAngle( BemfObserverPllHandle_t * pHandle, BemfObserverInputs_t * pInputVars_str );
+int16_t BemfObsPll_CalcElAngle(BemfObserverPllHandle_t * pHandle, BemfObserverInputs_t * pInputVars_str);
 
 /**
   * @brief  This method must be called - at least - with the same periodicity
@@ -204,21 +204,21 @@ int16_t BemfObsPll_CalcElAngle( BemfObserverPllHandle_t * pHandle, BemfObserverI
   *         true = sensor information is reliable
   *         false = sensor information is not reliable
   */
-bool BemfObsPll_CalcAvrgMecSpeedUnit( BemfObserverPllHandle_t * pHandle, int16_t * pMecSpeedUnit );
+bool BemfObsPll_CalcAvrgMecSpeedUnit(BemfObserverPllHandle_t * pHandle, int16_t * pMecSpeedUnit);
 
 /**
   * @brief  It resets integral term of PLL during on-the-fly startup
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval none
   */
-void BemfObsPll_OtfResetPLL( BemfObserver_t * pHandle );
+void BemfObsPll_OtfResetPLL(BemfObserver_t * pHandle);
 
 /**
   * @brief  It resets integral term of PLL
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval none
   */
-void BemfObsPll_ResetPLL( BemfObserverPllHandle_t * pHandle );
+void BemfObsPll_ResetPLL(BemfObserverPllHandle_t * pHandle);
 
 /**
   * @brief  It internally performs a set of checks necessary to state whether
@@ -230,7 +230,7 @@ void BemfObsPll_ResetPLL( BemfObserverPllHandle_t * pHandle );
   * @param  hForcedMecSpeedUnit Mechanical speed in 0.1Hz unit as forced by VSS
   * @retval bool sensor reliability state
   */
-bool BemfObsPll_IsObserverConverged( BemfObserverPllHandle_t * pHandle, int16_t hForcedMecSpeedUnit );
+bool BemfObsPll_IsObserverConverged(BemfObserverPllHandle_t * pHandle, int16_t hForcedMecSpeedUnit);
 
 /**
   * @brief  This method must be called - at least - with the same periodicity
@@ -242,14 +242,14 @@ bool BemfObsPll_IsObserverConverged( BemfObserverPllHandle_t * pHandle, int16_t 
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval none
   */
-void BemfObsPll_CalcAvrgElSpeedDpp( BemfObserverPllHandle_t * pHandle );
+void BemfObsPll_CalcAvrgElSpeedDpp(BemfObserverPllHandle_t * pHandle);
 
 /**
   * @brief  It exports estimated Bemf alpha-beta in AlphaBeta_t format
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval AlphaBeta_t Bemf alpha-beta
   */
-AlphaBeta_t BemfObsPll_GetEstimatedBemf( BemfObserverPllHandle_t * pHandle );
+AlphaBeta_t BemfObsPll_GetEstimatedBemf(BemfObserverPllHandle_t * pHandle);
 
 /**
   * @brief  It exports the stator current alpha-beta as estimated by state
@@ -257,7 +257,7 @@ AlphaBeta_t BemfObsPll_GetEstimatedBemf( BemfObserverPllHandle_t * pHandle );
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval AlphaBeta_t State observer estimated stator current Ialpha-beta
   */
-AlphaBeta_t BemfObsPll_GetEstimatedCurrent( BemfObserverPllHandle_t * pHandle );
+AlphaBeta_t BemfObsPll_GetEstimatedCurrent(BemfObserverPllHandle_t * pHandle);
 
 /**
   * @brief  It allows setting new values for observer gains
@@ -266,7 +266,7 @@ AlphaBeta_t BemfObsPll_GetEstimatedCurrent( BemfObserverPllHandle_t * pHandle );
   * @param  wK2 new value for observer gain hhC2
   * @retval none
   */
-void BemfObsPll_SetObserverGains( BemfObserverPllHandle_t * pHandle, int16_t hC1, int16_t hC2 );
+void BemfObsPll_SetObserverGains(BemfObserverPllHandle_t * pHandle, int16_t hC1, int16_t hC2);
 
 /**
   * @brief  It exports current observer gains through parameters hhC2 and hhC4
@@ -275,7 +275,7 @@ void BemfObsPll_SetObserverGains( BemfObserverPllHandle_t * pHandle, int16_t hC1
   * @param  phC4 pointer to int16_t used to return parameters hhC4
   * @retval none
   */
-void BemfObsPll_GetObserverGains( BemfObserverPllHandle_t * pHandle, int16_t * pC2, int16_t * pC4 );
+void BemfObsPll_GetObserverGains(BemfObserverPllHandle_t * pHandle, int16_t * pC2, int16_t * pC4);
 
 /**
   * @brief  It exports current PLL gains through parameters pPgain and pIgain
@@ -284,7 +284,7 @@ void BemfObsPll_GetObserverGains( BemfObserverPllHandle_t * pHandle, int16_t * p
   * @param  pIgain pointer to int16_t used to return PLL integral gain
   * @retval none
   */
-void BemfObs_GetPLLGains( BemfObserverPllHandle_t * pHandle, int16_t * pPgain, int16_t * pIgain );
+void BemfObs_GetPLLGains(BemfObserverPllHandle_t * pHandle, int16_t * pPgain, int16_t * pIgain);
 
 /**
   * @brief  It allows setting new values for PLL gains
@@ -293,9 +293,9 @@ void BemfObs_GetPLLGains( BemfObserverPllHandle_t * pHandle, int16_t * pPgain, i
   * @param  hIgain new value for PLL integral gain
   * @retval none
   */
-void BemfObsPll_SetPLLGains( BemfObserverPllHandle_t * pHandle, int16_t hPgain, int16_t hIgain );
+void BemfObsPll_SetPLLGains(BemfObserverPllHandle_t * pHandle, int16_t hPgain, int16_t hIgain);
 
-void BemfObsPll_SetMecAngle( BemfObserverPllHandle_t * pHandle, int16_t hMecAngle );
+void BemfObsPll_SetMecAngle(BemfObserverPllHandle_t * pHandle, int16_t hMecAngle);
 
 /**
   * @brief  It sends locking info for PLL
@@ -304,54 +304,54 @@ void BemfObsPll_SetMecAngle( BemfObserverPllHandle_t * pHandle, int16_t hMecAngl
   * @param  hElAngle:
   * @retval none
   */
-void BemfObsPll_SetPLL( BemfObserverPllHandle_t * pHandle, int16_t hElSpeedDpp, int16_t hElAngle );
+void BemfObsPll_SetPLL(BemfObserverPllHandle_t * pHandle, int16_t hElSpeedDpp, int16_t hElAngle);
 
 /**
   * @brief  It exports estimated Bemf squared level
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval int32_t
   */
-int32_t BemfObsPll_GetEstimatedBemfLevel( BemfObserverPllHandle_t * pHandle );
+int32_t BemfObsPll_GetEstimatedBemfLevel(BemfObserverPllHandle_t * pHandle);
 
 /**
   * @brief  It exports observed Bemf squared level
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval int32_t
   */
-int32_t BemfObsPll_GetObservedBemfLevel( BemfObserverPllHandle_t * pHandle );
+int32_t BemfObsPll_GetObservedBemfLevel(BemfObserverPllHandle_t * pHandle);
 
 /**
   * @brief  It enables/disables the bemf consistency check
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @param  bSel boolean; true enables check; false disables check
   */
-void BemfObsPll_BemfConsistencyCheckSwitch( BemfObserverPllHandle_t * pHandle, bool bSel );
+void BemfObsPll_BemfConsistencyCheckSwitch(BemfObserverPllHandle_t * pHandle, bool bSel);
 
 /**
   * @brief  It returns the result of the Bemf consistency check
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval bool Bemf consistency state
   */
-bool BemfObsPll_IsBemfConsistent( BemfObserverPllHandle_t * pHandle );
+bool BemfObsPll_IsBemfConsistent(BemfObserverPllHandle_t * pHandle);
 
 /**
   * @brief  It returns the result of the last variance check
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval bool Variance state
   */
-bool BemfObsPll_IsVarianceTight( const BemfObserver_t * pHandle );
+bool BemfObsPll_IsVarianceTight(const BemfObserver_t * pHandle);
 
 /**
   * @brief  It forces the state-observer to declare convergency
   * @param  pHandle: handler of the current instance of the BemfObserver component
   */
-void BemfObsPll_ForceConvergency1( BemfObserver_t * pHandle );
+void BemfObsPll_ForceConvergency1(BemfObserver_t * pHandle);
 
 /**
   * @brief  It forces the state-observer to declare convergency
   * @param  pHandle: handler of the current instance of the BemfObserver component
   */
-void BemfObsPll_ForceConvergency2( BemfObserver_t * pHandle );
+void BemfObsPll_ForceConvergency2(BemfObserver_t * pHandle);
 
 /**
   * @brief  Set the Absolute value of minimum mechanical speed (expressed in
@@ -359,13 +359,13 @@ void BemfObsPll_ForceConvergency2( BemfObserver_t * pHandle );
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @param  hMinStartUpValidSpeed: Absolute value of minimum mechanical speed
   */
-void BemfObsPll_SetMinStartUpValidSpeedUnit( BemfObserverPllHandle_t * pHandle, uint16_t hMinStartUpValidSpeed );
+void BemfObsPll_SetMinStartUpValidSpeedUnit(BemfObserverPllHandle_t * pHandle, uint16_t hMinStartUpValidSpeed);
 
 /**
   * @brief  forces the rotation direction
   * @param  direction: imposed direction
   */
-void BemfObsPll_SetDirection( BemfObserverPllHandle_t * pHandle, uint8_t direction );
+void BemfObsPll_SetDirection(BemfObserverPllHandle_t * pHandle, uint8_t direction);
 
 
 #ifdef __cplusplus

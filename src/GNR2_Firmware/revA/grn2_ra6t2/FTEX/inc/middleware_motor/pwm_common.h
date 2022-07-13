@@ -25,7 +25,7 @@ extern "C" {
  * @param  cnt: polarization counter value
  * @retval none
  */
-void waitForPolarizationEnd( volatile uint8_t *cnt );
+void waitForPolarizationEnd(volatile uint8_t *cnt);
 
 
 #ifdef __cplusplus

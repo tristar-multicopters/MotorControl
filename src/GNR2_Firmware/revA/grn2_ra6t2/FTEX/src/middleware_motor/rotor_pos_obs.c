@@ -13,7 +13,7 @@
 #include "mc_type.h"
 
 
-void RotorPosObs_Init( RotorPositionObserverHandle_t * pHandle )
+void RotorPosObs_Init(RotorPositionObserverHandle_t * pHandle)
 {
 	pHandle->hKpGain = pHandle->hKpGainDef;
 	pHandle->hKdGain = pHandle->hKdGainDef;
@@ -22,7 +22,7 @@ void RotorPosObs_Init( RotorPositionObserverHandle_t * pHandle )
 	return;
 }
 
-void RotorPosObs_Clear( RotorPositionObserverHandle_t * pHandle )
+void RotorPosObs_Clear(RotorPositionObserverHandle_t * pHandle)
 {	
 	pHandle->hEstElAngle = pHandle->pHallSensor->Super.hElAngle;
 	pHandle->hEstElSpeedDpp = pHandle->pHallSensor->Super.hElSpeedDpp;
@@ -35,13 +35,13 @@ void RotorPosObs_Clear( RotorPositionObserverHandle_t * pHandle )
 	return;
 }
 
-int16_t RotorPosObs_CalcElAngle( RotorPositionObserverHandle_t * pHandle, int16_t hElTorque)
+int16_t RotorPosObs_CalcElAngle(RotorPositionObserverHandle_t * pHandle, int16_t hElTorque)
 {
 	int64_t dAux; int32_t wAux;
 	int16_t hErrorSin;
 	int32_t wEstElAngle_Next, wEstElSpeed_Next, wEstMechTorque_Next;
 	
-	hErrorSin = MCMath_TrigFunctions( pHandle->pHallSensor->Super.hElAngle - pHandle->hEstElAngle ).hSin;
+	hErrorSin = MCMath_TrigFunctions(pHandle->pHallSensor->Super.hElAngle - pHandle->hEstElAngle).hSin;
 	
 	wAux = pHandle->hKdGainDef;
 	if (wAux > INT16_MAX)
@@ -84,16 +84,16 @@ int16_t RotorPosObs_CalcElAngle( RotorPositionObserverHandle_t * pHandle, int16_
 }
 
 
-bool RotorPosObs_CalcMecSpeedUnit( RotorPositionObserverHandle_t * pHandle, int16_t * pMecSpeedUnit)
+bool RotorPosObs_CalcMecSpeedUnit(RotorPositionObserverHandle_t * pHandle, int16_t * pMecSpeedUnit)
 {
 	bool bIsReliable = SpdPosFdbk_GetReliability(&pHandle->pHallSensor->Super);
-	bIsReliable &= SpdPosFdbk_CalcReliability ( &pHandle->Super, pMecSpeedUnit );
+	bIsReliable &= SpdPosFdbk_CalcReliability (&pHandle->Super, pMecSpeedUnit);
 	
 	if (bIsReliable)
 	{
 		/* Convert el_dpp to MecUnit */
-		*pMecSpeedUnit = ( int16_t )( (  pHandle->hEstElSpeedDpp * ( int32_t )pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT ) /
-																(( int32_t ) pHandle->Super.DPPConvFactor * ( int32_t )pHandle->Super.bElToMecRatio ) );
+		*pMecSpeedUnit = (int16_t)(( pHandle->hEstElSpeedDpp * (int32_t)pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT) /
+																((int32_t) pHandle->Super.DPPConvFactor * (int32_t)pHandle->Super.bElToMecRatio));
 	}
 	else
 	{
@@ -106,12 +106,12 @@ bool RotorPosObs_CalcMecSpeedUnit( RotorPositionObserverHandle_t * pHandle, int1
 }
 
 
-int16_t RotorPosObs_GetElAngle( RotorPositionObserverHandle_t * pHandle)
+int16_t RotorPosObs_GetElAngle(RotorPositionObserverHandle_t * pHandle)
 {
 	return pHandle->hEstElAngle;
 }
 
-int16_t RotorPosObs_GetElSpeed( RotorPositionObserverHandle_t * pHandle)
+int16_t RotorPosObs_GetElSpeed(RotorPositionObserverHandle_t * pHandle)
 {
 	return pHandle->hEstElSpeedDpp;
 }

@@ -38,7 +38,7 @@ typedef struct
   * @param power handle.
   * @retval none.
   */
-void MotorPowMeas_Clear( MotorPowerMeasHandle_t * pHandle );
+void MotorPowMeas_Clear(MotorPowerMeasHandle_t * pHandle);
 
 /**
   * @brief  This method should be called with periodicity. It computes and
@@ -48,7 +48,7 @@ void MotorPowMeas_Clear( MotorPowerMeasHandle_t * pHandle );
   * @param power handle.
   * @retval int16_t The measured motor power expressed in watt.
   */
-int16_t MotorPowMeas_CalcElMotorPower( MotorPowerMeasHandle_t * pHandle, int16_t MotorPower );
+int16_t MotorPowMeas_CalcElMotorPower(MotorPowerMeasHandle_t * pHandle, int16_t MotorPower);
 
 /**
   * @brief  This method is used to get the last measured motor power
@@ -57,7 +57,7 @@ int16_t MotorPowMeas_CalcElMotorPower( MotorPowerMeasHandle_t * pHandle, int16_t
   * @retval int16_t The last measured motor power (instantaneous value)
   *         expressed in watt.
   */
-int16_t MotorPowMeas_GetElMotorPowerW( MotorPowerMeasHandle_t * pHandle );
+int16_t MotorPowMeas_GetElMotorPowerW(MotorPowerMeasHandle_t * pHandle);
 
 /**
   * @brief  This method is used to get the average measured motor power
@@ -65,7 +65,7 @@ int16_t MotorPowMeas_GetElMotorPowerW( MotorPowerMeasHandle_t * pHandle );
   * @param pHandle related component instance.
   * @retval int16_t The average measured motor power expressed in watt.
   */
-int16_t MotorPowMeas_GetAvrgElMotorPowerW( MotorPowerMeasHandle_t * pHandle );
+int16_t MotorPowMeas_GetAvrgElMotorPowerW(MotorPowerMeasHandle_t * pHandle);
 
 
 #ifdef __cplusplus

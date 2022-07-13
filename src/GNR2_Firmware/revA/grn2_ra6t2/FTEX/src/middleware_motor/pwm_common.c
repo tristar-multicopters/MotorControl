@@ -10,7 +10,7 @@
 #include "pwm_common.h"
 
 
-void waitForPolarizationEnd( volatile uint8_t *cnt )
+void waitForPolarizationEnd(volatile uint8_t *cnt)
 {
   while (*cnt < NB_CONVERSIONS)
   {

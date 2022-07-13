@@ -66,8 +66,8 @@ typedef struct
   * @param  pPIDIq Iq PID.
   * @retval none
   */
-void Feedforward_Init( FeedforwardHandle_t * pHandle, BusVoltageSensorHandle_t * pBusSensor, PIDHandle_t * pPIDId,
-              PIDHandle_t * pPIDIq );
+void Feedforward_Init(FeedforwardHandle_t * pHandle, BusVoltageSensorHandle_t * pBusSensor, PIDHandle_t * pPIDId,
+              PIDHandle_t * pPIDIq);
 
 /**
   * @brief  It should be called before each motor restart and clears the Flux
@@ -75,7 +75,7 @@ void Feedforward_Init( FeedforwardHandle_t * pHandle, BusVoltageSensorHandle_t *
   * @param  pHandle Feed forward init strutcture.
   * @retval none
   */
-void Feedforward_Clear( FeedforwardHandle_t * pHandle );
+void Feedforward_Clear(FeedforwardHandle_t * pHandle);
 
 /**
   * @brief  It implements feed-forward controller by computing new Vqdff value.
@@ -87,7 +87,7 @@ void Feedforward_Clear( FeedforwardHandle_t * pHandle );
   * @param  pSpeedTorqCtrl  Speed sensor.
   * @retval none
   */
-void Feedforward_VqdffComputation( FeedforwardHandle_t * pHandle, qd_t Iqdref, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl );
+void Feedforward_VqdffComputation(FeedforwardHandle_t * pHandle, qd_t Iqdref, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl);
 
 /**
   * @brief  It return the Vqd componets fed in input plus the feed forward
@@ -96,7 +96,7 @@ void Feedforward_VqdffComputation( FeedforwardHandle_t * pHandle, qd_t Iqdref, S
   * @param  Vqd Initial value of Vqd to be manipulated by FF.
   * @retval none
   */
-qd_t Feedforward_VqdConditioning( FeedforwardHandle_t * pHandle, qd_t Vqd );
+qd_t Feedforward_VqdConditioning(FeedforwardHandle_t * pHandle, qd_t Vqd);
 
 /**
   * @brief  It low-pass filters the Vqd voltage coming from the speed PI. Filter
@@ -104,14 +104,14 @@ qd_t Feedforward_VqdConditioning( FeedforwardHandle_t * pHandle, qd_t Vqd );
   * @param  pHandle Feed forward  strutcture.
   * @retval none
   */
-void Feedforward_DataProcess( FeedforwardHandle_t * pHandle );
+void Feedforward_DataProcess(FeedforwardHandle_t * pHandle);
 
 /**
   * @brief  Use this method to initialize FF vars in START_TO_RUN state.
   * @param  pHandle Feed forward  strutcture.
   * @retval none
   */
-void Feedforward_InitFOCAdditionalMethods( FeedforwardHandle_t * pHandle );
+void Feedforward_InitFOCAdditionalMethods(FeedforwardHandle_t * pHandle);
 
 /**
   * @brief  Use this method to set new values for the constants utilized by
@@ -121,7 +121,7 @@ void Feedforward_InitFOCAdditionalMethods( FeedforwardHandle_t * pHandle );
   *         feed-forward algorithm.
   * @retval none
   */
-void Feedforward_SetFFConstants( FeedforwardHandle_t * pHandle, FeedforwardTuningStruct_t sNewConstants );
+void Feedforward_SetFFConstants(FeedforwardHandle_t * pHandle, FeedforwardTuningStruct_t sNewConstants);
 
 /**
   * @brief  Use this method to get present values for the constants utilized by
@@ -130,7 +130,7 @@ void Feedforward_SetFFConstants( FeedforwardHandle_t * pHandle, FeedforwardTunin
   * @retval FeedforwardTuningStruct_t Values of the constants utilized by
   *         feed-forward algorithm.
   */
-FeedforwardTuningStruct_t Feedforward_GetFFConstants( FeedforwardHandle_t * pHandle );
+FeedforwardTuningStruct_t Feedforward_GetFFConstants(FeedforwardHandle_t * pHandle);
 
 /**
   * @brief  Use this method to get present values for the Vqd feed-forward
@@ -138,7 +138,7 @@ FeedforwardTuningStruct_t Feedforward_GetFFConstants( FeedforwardHandle_t * pHan
   * @param  pHandle Feed forward  strutcture.
   * @retval qd_t Vqd feed-forward components.
   */
-qd_t Feedforward_GetVqdff( const FeedforwardHandle_t * pHandle );
+qd_t Feedforward_GetVqdff(const FeedforwardHandle_t * pHandle);
 
 /**
   * @brief  Use this method to get values of the averaged output of qd axes
@@ -146,7 +146,7 @@ qd_t Feedforward_GetVqdff( const FeedforwardHandle_t * pHandle );
   * @param  pHandle Feed forward  strutcture.
   * @retval qd_t Averaged output of qd axes currents PI regulators.
   */
-qd_t Feedforward_GetVqdAvPIout( const FeedforwardHandle_t * pHandle );
+qd_t Feedforward_GetVqdAvPIout(const FeedforwardHandle_t * pHandle);
 
 #ifdef __cplusplus
 }

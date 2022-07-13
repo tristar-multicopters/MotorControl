@@ -306,7 +306,7 @@ extern "C" {
 #endif
 			/* Block Protection Register 0 */
 #ifndef BSP_CFG_ROM_REG_BPS0
-            #define BSP_CFG_ROM_REG_BPS0 (~( 0U))
+            #define BSP_CFG_ROM_REG_BPS0 (~(0U))
 #endif
             /* Block Protection Register 1 */
 #ifndef BSP_CFG_ROM_REG_BPS1
@@ -318,7 +318,7 @@ extern "C" {
 #endif
             /* Permanent Block Protection Register 0 */
 #ifndef BSP_CFG_ROM_REG_PBPS0
-            #define BSP_CFG_ROM_REG_PBPS0 (~( 0U))
+            #define BSP_CFG_ROM_REG_PBPS0 (~(0U))
 #endif
             /* Permanent Block Protection Register 1 */
 #ifndef BSP_CFG_ROM_REG_PBPS1

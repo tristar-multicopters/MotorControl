@@ -121,7 +121,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 	{
 		/* SPEED CONTROL NOT IMPLEMENTED YET. JUST PLACEHOLDER CODE */
 		hSpeedRef = THRO_ThrottleToSpeed(pHandle->pThrottle);
-		if ( bIsBrakePressed )
+		if (bIsBrakePressed)
 		{
 			hSpeedRef = 0;
 		}
@@ -158,7 +158,7 @@ void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle)
 		}
 		else {}
 	}
-	if ( PWRT_IsMotor2Used(pHandle) )
+	if (PWRT_IsMotor2Used(pHandle))
 	{
 		if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 		{
@@ -226,7 +226,7 @@ uint16_t PWRT_StandbyStateCheck(PWRT_Handle_t * pHandle)
 				break;
 		}
 	}
-	if ( PWRT_IsMotor2Used(pHandle) )
+	if (PWRT_IsMotor2Used(pHandle))
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M2))
 		{
@@ -311,7 +311,7 @@ uint16_t PWRT_RunStateCheck(PWRT_Handle_t * pHandle)
 				break;
 		}
 	}
-	if ( PWRT_IsMotor2Used(pHandle) )
+	if (PWRT_IsMotor2Used(pHandle))
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M2))
 		{
@@ -339,7 +339,7 @@ uint16_t PWRT_StopStateCheck(PWRT_Handle_t * pHandle)
 {
 	uint16_t hVehicleFault = 0;
 
-	if ( PWRT_IsMotor1Used(pHandle) )
+	if (PWRT_IsMotor1Used(pHandle))
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M1))
 		{
@@ -353,7 +353,7 @@ uint16_t PWRT_StopStateCheck(PWRT_Handle_t * pHandle)
 				break;
 		}
 	}
-	if ( PWRT_IsMotor2Used(pHandle) )
+	if (PWRT_IsMotor2Used(pHandle))
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M2))
 		{
@@ -380,14 +380,14 @@ bool PWRT_IsPowertrainActive(PWRT_Handle_t * pHandle)
 {
 	bool bActive = true;
 
-	if ( PWRT_IsMotor1Used(pHandle) )
+	if (PWRT_IsMotor1Used(pHandle))
 	{
 		if (MDI_GetSTMState(pHandle->pMDI, M1) != M_RUN)
 		{
 			bActive = false;
 		}
 	}
-	if ( PWRT_IsMotor2Used(pHandle) )
+	if (PWRT_IsMotor2Used(pHandle))
 	{
 		if (MDI_GetSTMState(pHandle->pMDI, M2) != M_RUN)
 		{
@@ -406,7 +406,7 @@ bool PWRT_IsPowertrainStopped(PWRT_Handle_t * pHandle)
 {
 	bool bStopped = true;
 
-	if ( PWRT_IsMotor1Used(pHandle) )
+	if (PWRT_IsMotor1Used(pHandle))
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M1))
 		{
@@ -455,7 +455,7 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 	int32_t wSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
 	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
 
-	if ( PWRT_IsMotor1Used(pHandle) )
+	if (PWRT_IsMotor1Used(pHandle))
 	{
 		if (abs(wSpeedM1) <= pHandle->sParameters.hStoppingSpeed) // If motor speed is lower than stopping speed parameter
 		{
@@ -467,7 +467,7 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 		bCheckStop1 = true;
 	}
 
-	if ( PWRT_IsMotor2Used(pHandle) )
+	if (PWRT_IsMotor2Used(pHandle))
 	{
 		if (abs(wSpeedM2) <= pHandle->sParameters.hStoppingSpeed) // If motor speed is lower than stopping speed parameter
 		{
@@ -544,9 +544,9 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 	//If there's no current motor errors
 	if (!bFaultNow)
 	{
-		if ( PWRT_IsMotor1Used(pHandle) )
+		if (PWRT_IsMotor1Used(pHandle))
 		{// If there's an over current (OC) that has occurred but has already been cleared
-			if ( hM1FaultOccurredCode & MC_BREAK_IN )
+			if (hM1FaultOccurredCode & MC_BREAK_IN)
 			{
 				if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the OC fault
@@ -559,7 +559,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 				}
 			}
 
-			if ( hM1FaultOccurredCode & MC_SPEED_FDBK )
+			if (hM1FaultOccurredCode & MC_SPEED_FDBK)
 			{// If there's a speed feedback (SF) that has occurred but has already been cleared
 				if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the SF fault
@@ -572,7 +572,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 				}
 			}
 
-			if ( hM1FaultOccurredCode & MC_START_UP )
+			if (hM1FaultOccurredCode & MC_START_UP)
 			{
 				/* In case of motor startup failure... */
 				if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
@@ -586,28 +586,28 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 				}
 			}
 
-			if ( hM1FaultOccurredCode & MC_OVER_TEMP )
+			if (hM1FaultOccurredCode & MC_OVER_TEMP)
 			{
 				// In case of overtemperature, clear the OT fault
 				hM1FaultOccurredCode &= ~MC_OVER_TEMP;
 			}
 
-			if ( hM1FaultOccurredCode & MC_OVER_VOLT )
+			if (hM1FaultOccurredCode & MC_OVER_VOLT)
 			{
 				// In case of DCbus overvoltage, clear the OV fault
 				hM1FaultOccurredCode &= ~MC_OVER_VOLT;
 			}
 
-			if ( hM1FaultOccurredCode & MC_UNDER_VOLT )
+			if (hM1FaultOccurredCode & MC_UNDER_VOLT)
 			{
 				// In case of DCbus undervoltage, clear the UV fault
 				hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
 			}
 		}
 
-		if ( PWRT_IsMotor2Used(pHandle) )
+		if (PWRT_IsMotor2Used(pHandle))
 		{
-			if ( hM2FaultOccurredCode & MC_BREAK_IN )
+			if (hM2FaultOccurredCode & MC_BREAK_IN)
 			{
 				if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the OC fault
@@ -620,7 +620,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 				}
 			}
 
-			if ( hM2FaultOccurredCode & MC_SPEED_FDBK )
+			if (hM2FaultOccurredCode & MC_SPEED_FDBK)
 			{// If there's a speed feedback (SF) that has occurred but has already been cleared
 				if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the SF fault
@@ -633,7 +633,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 				}
 			}
 
-			if ( hM2FaultOccurredCode & MC_START_UP )
+			if (hM2FaultOccurredCode & MC_START_UP)
 			{// If there's a start-up (SU) that has occurred but has already been cleared
 				if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the SF fault
@@ -646,19 +646,19 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 				}
 			}
 
-			if ( hM2FaultOccurredCode & MC_OVER_TEMP )
+			if (hM2FaultOccurredCode & MC_OVER_TEMP)
 			{
 				/* In case of overtemperature... */
 				hM2FaultOccurredCode &= ~MC_OVER_TEMP;
 			}
 
-			if ( hM2FaultOccurredCode & MC_OVER_VOLT )
+			if (hM2FaultOccurredCode & MC_OVER_VOLT)
 			{
 				/* In case of DCbus overvoltage... */
 				hM2FaultOccurredCode &= ~MC_OVER_VOLT;
 			}
 
-			if ( hM2FaultOccurredCode & MC_UNDER_VOLT )
+			if (hM2FaultOccurredCode & MC_UNDER_VOLT)
 			{
 				/* In case of DCbus undervoltage... */
 				hM2FaultOccurredCode &= ~MC_UNDER_VOLT;
@@ -831,7 +831,7 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 //{
 //
 //	/* PAS and Throttle management */
-//	if ( PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle))
+//	if (PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle))
 //	{
 //		/* Torque sensor enabled */
 //		if (pHandle->pPAS->bTorqueSensorUse)

@@ -13,7 +13,7 @@
  *
  *  @p pHandle : Pointer on Handle structure of TD_Handle_t component
  */
-void MS_Init( MS_Handle_t * pHandle )
+void MS_Init(MS_Handle_t * pHandle)
 {
 
 }

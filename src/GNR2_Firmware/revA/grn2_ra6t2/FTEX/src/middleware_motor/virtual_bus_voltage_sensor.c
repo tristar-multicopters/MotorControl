@@ -9,7 +9,7 @@
 #include "virtual_bus_voltage_sensor.h"
 
 
-void VirtualBusVoltSensor_Init( VirtualBusVoltageSensorHandle_t * pHandle )
+void VirtualBusVoltSensor_Init(VirtualBusVoltageSensorHandle_t * pHandle)
 {
   pHandle->Super.hFaultState = MC_NO_ERROR;
   pHandle->Super.hLatestConv = pHandle->hExpectedVbusDigital;
@@ -17,15 +17,15 @@ void VirtualBusVoltSensor_Init( VirtualBusVoltageSensorHandle_t * pHandle )
 }
 
 
-void VirtualBusVoltSensor_Clear( VirtualBusVoltageSensorHandle_t * pHandle )
+void VirtualBusVoltSensor_Clear(VirtualBusVoltageSensorHandle_t * pHandle)
 {
   return;
 }
 
 
-uint16_t VirtualBusVoltSensor_NoErrors( VirtualBusVoltageSensorHandle_t * pHandle )
+uint16_t VirtualBusVoltSensor_NoErrors(VirtualBusVoltageSensorHandle_t * pHandle)
 {
-  return ( MC_NO_ERROR );
+  return (MC_NO_ERROR);
 }
 
 

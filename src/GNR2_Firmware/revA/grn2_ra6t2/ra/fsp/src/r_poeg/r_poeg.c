@@ -233,7 +233,7 @@ fsp_err_t R_POEG_StatusGet (poeg_ctrl_t * const p_ctrl, poeg_status_t * const p_
  * @retval  FSP_ERR_NO_CALLBACK_MEMORY   p_callback is non-secure and p_callback_memory is either secure or NULL.
  **********************************************************************************************************************/
 fsp_err_t R_POEG_CallbackSet (poeg_ctrl_t * const          p_ctrl,
-                              void (                     * p_callback)(poeg_callback_args_t *),
+                              void (                    * p_callback)(poeg_callback_args_t *),
                               void const * const           p_context,
                               poeg_callback_args_t * const p_callback_memory)
 {

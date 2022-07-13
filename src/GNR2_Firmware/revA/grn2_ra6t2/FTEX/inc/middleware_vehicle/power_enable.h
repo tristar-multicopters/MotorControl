@@ -21,8 +21,8 @@ typedef struct
 } PWREN_Handle_t;
 
 
-void PWREN_Init( PWREN_Handle_t * pHandle );
-bool PWREN_IsPowerEnabled( PWREN_Handle_t * pHandle );
+void PWREN_Init(PWREN_Handle_t * pHandle);
+bool PWREN_IsPowerEnabled(PWREN_Handle_t * pHandle);
 
 
 #endif /*__POWER_ENABLE_H*/

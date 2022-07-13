@@ -89,7 +89,7 @@ void PSS_UpdatePASDetection (PedalSpeedSens_Handle_t * pHandle)
 	wSpeedt = PSS_GetPeriodValue(pHandle);
 	hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pTorque);
 
-	if ((pHandle->bTorqueSensorUsed) && (hTorqueSens > pHandle->pTorque->hParameters.hOffsetMT) )
+	if ((pHandle->bTorqueSensorUsed) && (hTorqueSens > pHandle->pTorque->hParameters.hOffsetMT))
 		pHandle->bPSSDetected = true;
 	else if (wSpeedt > 0)
 		pHandle->bPSSDetected = true;

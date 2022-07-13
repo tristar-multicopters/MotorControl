@@ -153,7 +153,7 @@ typedef struct
 * @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
 * @retval none
 */
-void * HallPosSensor_TIMx_UP_IRQHandler( void * pHandleVoid );
+void * HallPosSensor_TIMx_UP_IRQHandler(void * pHandleVoid);
 
 /**
 * @brief  Method of the class HALL to implement an MC IRQ function
@@ -161,7 +161,7 @@ void * HallPosSensor_TIMx_UP_IRQHandler( void * pHandleVoid );
 * @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
 * @retval none
 */
-void * HallPosSensor_TIMx_CC_IRQHandler( void * pHandleVoid, uint32_t* pCapture );
+void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid, uint32_t* pCapture);
 
 /**
   * @brief  It initializes the hardware peripherals (Timer, GPIO and NVIC)
@@ -170,10 +170,10 @@ void * HallPosSensor_TIMx_CC_IRQHandler( void * pHandleVoid, uint32_t* pCapture 
   * @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
   * @retval none
   */
-void HallPosSensor_Init( HallPosSensorHandle_t * pHandle );
+void HallPosSensor_Init(HallPosSensorHandle_t * pHandle);
 
 
-void HallPosSensor_Clear( HallPosSensorHandle_t * pHandle );
+void HallPosSensor_Clear(HallPosSensorHandle_t * pHandle);
 
 /**
 * @brief  Update the rotor electrical angle integrating the last measured
@@ -181,7 +181,7 @@ void HallPosSensor_Clear( HallPosSensorHandle_t * pHandle );
 * @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
 * @retval int16_t Measured electrical angle in s16degree format.
 */
-int16_t HallPosSensor_CalcElAngle( HallPosSensorHandle_t * pHandle );
+int16_t HallPosSensor_CalcElAngle(HallPosSensorHandle_t * pHandle);
 
 /**
   * @brief  This method must be called - at least - with the same periodicity
@@ -203,7 +203,7 @@ int16_t HallPosSensor_CalcElAngle( HallPosSensorHandle_t * pHandle );
   * @retval true = sensor information is reliable
   *         false = sensor information is not reliable
   */
-bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_t * pMecSpeedUnit );
+bool HallPosSensor_CalcAvrgMecSpeedUnit(HallPosSensorHandle_t * pHandle, int16_t * pMecSpeedUnit);
 
 /**
   * @brief  It could be used to set istantaneous information on rotor mechanical
@@ -214,7 +214,7 @@ bool HallPosSensor_CalcAvrgMecSpeedUnit( HallPosSensorHandle_t * pHandle, int16_
   * @param  hMecAngle istantaneous measure of rotor mechanical angle
   * @retval none
   */
-void HallPosSensor_SetMecAngle( HallPosSensorHandle_t * pHandle, int16_t hMecAngle );
+void HallPosSensor_SetMecAngle(HallPosSensorHandle_t * pHandle, int16_t hMecAngle);
 
 
 

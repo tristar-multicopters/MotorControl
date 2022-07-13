@@ -129,7 +129,7 @@ typedef struct
   * @param pHandle pointer on the component instance to initialize.
   * @retval none.
   */
-void MCStateMachine_Init( MotorStateMachineHandle_t * pHandle );
+void MCStateMachine_Init(MotorStateMachineHandle_t * pHandle);
 
 /**
   * @brief It submits the request for moving the state machine into the state
@@ -147,7 +147,7 @@ void MCStateMachine_Init( MotorStateMachineHandle_t * pHandle );
   * @retval bool It returns true if the state has been really set equal to
   *         bState, false if the requested state can't be reached
   */
-bool MCStateMachine_NextState( MotorStateMachineHandle_t * pHandle, MotorState_t bState );
+bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t bState);
 
 /**
   * @brief It clocks both HW and SW faults processing and update the state
@@ -158,15 +158,15 @@ bool MCStateMachine_NextState( MotorStateMachineHandle_t * pHandle, MotorState_t
   * @param hResetErrors Bit field reporting faults to be cleared
   * @retval MotorState_t New state machine state after fault processing
   */
-MotorState_t MCStateMachine_FaultProcessing( MotorStateMachineHandle_t * pHandle, uint16_t hSetErrors, uint16_t
-                             hResetErrors );
+MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle, uint16_t hSetErrors, uint16_t
+                             hResetErrors);
 
 /**
   * @brief  Returns the current state machine state
   * @param  pHanlde pointer of type  MotorStateMachineHandle_t
   * @retval MotorState_t Current state machine state
   */
-MotorState_t MCStateMachine_GetState( MotorStateMachineHandle_t * pHandle );
+MotorState_t MCStateMachine_GetState(MotorStateMachineHandle_t * pHandle);
 
 /**
   * @brief It reports to the state machine that the fault state has been
@@ -178,7 +178,7 @@ MotorState_t MCStateMachine_GetState( MotorStateMachineHandle_t * pHandle );
   * @retval bool true if the state machine has been moved to IDLE, false if the
   *        method call had no effects
   */
-bool MCStateMachine_FaultAcknowledged( MotorStateMachineHandle_t * pHandle );
+bool MCStateMachine_FaultAcknowledged(MotorStateMachineHandle_t * pHandle);
 
 /**
   * @brief It returns two 16 bit fields containing information about both faults
@@ -191,7 +191,7 @@ bool MCStateMachine_FaultAcknowledged( MotorStateMachineHandle_t * pHandle );
   *         historically occurred since the state machine has been moved into
   *         FAULT_NOW state
   */
-uint32_t MCStateMachine_GetFaultState( MotorStateMachineHandle_t * pHandle );
+uint32_t MCStateMachine_GetFaultState(MotorStateMachineHandle_t * pHandle);
 
 
 #ifdef __cplusplus

@@ -23,10 +23,10 @@ extern "C" {
 /** @brief PWM & Current Sensing component handle type */
 typedef struct BemfObserverHandle BemfObserver_t;
 
-typedef void ( *BemfObs_ForceConvergency1_Cb_t )( BemfObserver_t * pHandle );
-typedef void ( *BemfObs_ForceConvergency2_Cb_t )( BemfObserver_t * pHandle );
-typedef void ( *BemfObs_OtfResetPLL_Cb_t )( BemfObserver_t * pHandle );
-typedef bool ( *BemfObs_SpeedReliabilityCheck_Cb_t )( const BemfObserver_t * pHandle );
+typedef void (*BemfObs_ForceConvergency1_Cb_t)(BemfObserver_t * pHandle);
+typedef void (*BemfObs_ForceConvergency2_Cb_t)(BemfObserver_t * pHandle);
+typedef void (*BemfObs_OtfResetPLL_Cb_t)(BemfObserver_t * pHandle);
+typedef bool (*BemfObs_SpeedReliabilityCheck_Cb_t)(const BemfObserver_t * pHandle);
 
 /**
   * @brief  SpeednPosFdbk  handle definition

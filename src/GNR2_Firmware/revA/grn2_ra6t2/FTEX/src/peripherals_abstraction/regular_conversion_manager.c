@@ -48,13 +48,13 @@ uint8_t RegConvMng_RegisterRegConv(RegConv_t * regConv)
     * conversion does not already exist*/
     while (i < RCM_MAX_CONV)
     {
-        if (  RCM_handle_array [i] == 0 && handle > RCM_MAX_CONV)
+        if ( RCM_handle_array [i] == 0 && handle > RCM_MAX_CONV)
         {
             handle = i; /* First location available, but still looping to check that this config does not already exist*/
         }
-        if (  RCM_handle_array [i] != 0 )
+        if ( RCM_handle_array [i] != 0)
         {
-            if ( RCM_handle_array [i]->hChannel == regConv->hChannel )
+            if (RCM_handle_array [i]->hChannel == regConv->hChannel)
             {
                 handle = i; /* Reuse the same handle */
                 i = RCM_MAX_CONV; /* we can skip the rest of the loop*/
@@ -62,7 +62,7 @@ uint8_t RegConvMng_RegisterRegConv(RegConv_t * regConv)
         }
         i++;
     }
-    if (handle < RCM_MAX_CONV )
+    if (handle < RCM_MAX_CONV)
     {
         RCM_handle_array[handle] = regConv;  // Register a regular conversion in array.
     }

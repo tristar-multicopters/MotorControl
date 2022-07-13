@@ -940,7 +940,7 @@ fsp_err_t R_GPT_PwmOutputDelaySet (timer_ctrl_t * const           p_ctrl,
  * @retval  FSP_ERR_NO_CALLBACK_MEMORY   p_callback is non-secure and p_callback_memory is either secure or NULL.
  **********************************************************************************************************************/
 fsp_err_t R_GPT_CallbackSet (timer_ctrl_t * const          p_api_ctrl,
-                             void (                      * p_callback)(timer_callback_args_t *),
+                             void (                     * p_callback)(timer_callback_args_t *),
                              void const * const            p_context,
                              timer_callback_args_t * const p_callback_memory)
 {

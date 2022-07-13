@@ -48,7 +48,7 @@ typedef struct
   * @param  pHandle related ResDivVbusSensorHandle_t
   * @retval none
   */
-void ResDivVbusSensor_Init( ResDivVbusSensorHandle_t * pHandle );
+void ResDivVbusSensor_Init(ResDivVbusSensorHandle_t * pHandle);
 
 /**
   * @brief  It clears bus voltage FW variable containing average bus voltage
@@ -56,7 +56,7 @@ void ResDivVbusSensor_Init( ResDivVbusSensorHandle_t * pHandle );
   * @param  pHandle related ResDivVbusSensorHandle_t
   * @retval none
   */
-void ResDivVbusSensor_Clear( ResDivVbusSensorHandle_t * pHandle );
+void ResDivVbusSensor_Clear(ResDivVbusSensorHandle_t * pHandle);
 
 
 /**
@@ -65,7 +65,7 @@ void ResDivVbusSensor_Clear( ResDivVbusSensorHandle_t * pHandle );
   * @param  pHandle related ResDivVbusSensorHandle_t
   * @retval uint16_t Fault code error
   */
-uint16_t ResDivVbusSensor_CalcAvVbus( ResDivVbusSensorHandle_t * pHandle );
+uint16_t ResDivVbusSensor_CalcAvVbus(ResDivVbusSensorHandle_t * pHandle);
 
 /**
   * @brief  It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_ERROR depending on
@@ -73,6 +73,6 @@ uint16_t ResDivVbusSensor_CalcAvVbus( ResDivVbusSensorHandle_t * pHandle );
   * @param  pHandle related ResDivVbusSensorHandle_t
   * @retval uint16_t Fault code error
   */
-uint16_t ResDivVbusSensor_CheckFaultState( ResDivVbusSensorHandle_t * pHandle );
+uint16_t ResDivVbusSensor_CheckFaultState(ResDivVbusSensorHandle_t * pHandle);
 
 #endif

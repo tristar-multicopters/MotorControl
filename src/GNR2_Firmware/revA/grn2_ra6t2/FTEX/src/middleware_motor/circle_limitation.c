@@ -76,38 +76,38 @@ qd_t CircleLimitation(CircleLimitationHandle_t * pHandle, qd_t Vqd)
   * @param  Vqd Voltage in qd reference frame
   * @retval qd_t Limited Vqd vector
   */
-qd_t CircleLimitation( CircleLimitationHandle_t * pHandle, qd_t Vqd )
+qd_t CircleLimitation(CircleLimitationHandle_t * pHandle, qd_t Vqd)
 {
   uint16_t table_element;
   uint32_t uw_temp;
   int32_t  sw_temp;
   qd_t local_vqd = Vqd;
 
-  sw_temp = ( int32_t )( Vqd.q ) * Vqd.q +
-            ( int32_t )( Vqd.d ) * Vqd.d;
+  sw_temp = (int32_t)(Vqd.q) * Vqd.q +
+            (int32_t)(Vqd.d) * Vqd.d;
 
-  uw_temp = ( uint32_t ) sw_temp;
+  uw_temp = (uint32_t) sw_temp;
 
   /* uw_temp min value 0, max value 32767*32767 */
-  if ( uw_temp > ( uint32_t )( pHandle->hMaxModule ) * pHandle->hMaxModule )
+  if (uw_temp > (uint32_t)(pHandle->hMaxModule) * pHandle->hMaxModule)
   {
 
-    uw_temp /= ( uint32_t )( 16777216 );
+    uw_temp /= (uint32_t)(16777216);
 
     /* wtemp min value pHandle->bStartIndex, max value 127 */
     uw_temp -= pHandle->bStartIndex;
 
     /* uw_temp min value 0, max value 127 - pHandle->bStartIndex */
-    table_element = pHandle->CircleLimitTable[( uint8_t )uw_temp];
+    table_element = pHandle->CircleLimitTable[(uint8_t)uw_temp];
 
-    sw_temp = Vqd.q * ( int32_t )table_element;
-    local_vqd.q = ( int16_t )( sw_temp / 32768 );
+    sw_temp = Vqd.q * (int32_t)table_element;
+    local_vqd.q = (int16_t)(sw_temp / 32768);
 
-    sw_temp = Vqd.d * ( int32_t )( table_element );
-    local_vqd.d = ( int16_t )( sw_temp / 32768 );
+    sw_temp = Vqd.d * (int32_t)(table_element);
+    local_vqd.d = (int16_t)(sw_temp / 32768);
   }
 
-  return ( local_vqd );
+  return (local_vqd);
 }
 #endif
 

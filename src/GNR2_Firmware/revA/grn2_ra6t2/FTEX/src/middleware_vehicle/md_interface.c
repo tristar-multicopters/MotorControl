@@ -40,7 +40,7 @@ void MDI_ExecTorqueRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor
     }
 }
 
-void MDI_SetCurrentReferences( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, qd_t Iqdref )
+void MDI_SetCurrentReferences(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, qd_t Iqdref)
 {
     switch (bMotor)
     {
@@ -54,7 +54,7 @@ void MDI_SetCurrentReferences( MultipleDriveInterfaceHandle_t * pHandle, uint8_t
     }
 }
 
-bool MDI_StartMotor( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+bool MDI_StartMotor(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     bool bReturnValue = 0;
     
@@ -72,7 +72,7 @@ bool MDI_StartMotor( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
     return bReturnValue;
 }
 
-bool MDI_StopMotor( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+bool MDI_StopMotor(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     bool bReturnValue = 0;
     
@@ -90,7 +90,7 @@ bool MDI_StopMotor( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
     return bReturnValue;
 }
 
-bool MDI_FaultAcknowledged( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+bool MDI_FaultAcknowledged(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     bool bReturnValue = 0;
     
@@ -108,7 +108,7 @@ bool MDI_FaultAcknowledged( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bM
     return bReturnValue;
 }
 
-MotorState_t  MDI_GetSTMState( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+MotorState_t  MDI_GetSTMState(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     MotorState_t bReturnValue = 0;
     
@@ -126,7 +126,7 @@ MotorState_t  MDI_GetSTMState( MultipleDriveInterfaceHandle_t * pHandle, uint8_t
     return bReturnValue;
 }
 
-uint16_t MDI_GetOccurredFaults( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+uint16_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     uint16_t bReturnValue = 0;
     
@@ -144,7 +144,7 @@ uint16_t MDI_GetOccurredFaults( MultipleDriveInterfaceHandle_t * pHandle, uint8_
     return bReturnValue;
 }
 
-uint16_t MDI_GetCurrentFaults( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+uint16_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     uint16_t bReturnValue = 0;
     
@@ -162,7 +162,7 @@ uint16_t MDI_GetCurrentFaults( MultipleDriveInterfaceHandle_t * pHandle, uint8_t
     return bReturnValue;
 }
 
-STCModality_t MDI_GetControlMode( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+STCModality_t MDI_GetControlMode(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     STCModality_t bReturnValue = 0;
     
@@ -180,7 +180,7 @@ STCModality_t MDI_GetControlMode( MultipleDriveInterfaceHandle_t * pHandle, uint
     return bReturnValue;
 }
 
-int16_t MDI_GetImposedMotorDirection( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+int16_t MDI_GetImposedMotorDirection(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     int16_t bReturnValue = 0;
     
@@ -198,7 +198,7 @@ int16_t MDI_GetImposedMotorDirection( MultipleDriveInterfaceHandle_t * pHandle, 
     return bReturnValue;
 }
 
-int16_t MDI_GetLastRampFinalSpeed( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+int16_t MDI_GetLastRampFinalSpeed(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     int16_t bReturnValue = 0;
     
@@ -216,7 +216,7 @@ int16_t MDI_GetLastRampFinalSpeed( MultipleDriveInterfaceHandle_t * pHandle, uin
     return bReturnValue;
 }
 
-bool MDI_IsRampCompleted( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+bool MDI_IsRampCompleted(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     bool bReturnValue = 0;
     
@@ -234,7 +234,7 @@ bool MDI_IsRampCompleted( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMot
     return bReturnValue;
 }
 
-void MDI_StopRamp( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+void MDI_StopRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     switch (bMotor)
     {
@@ -248,7 +248,7 @@ void MDI_StopRamp( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
     }
 }
 
-bool MDI_GetSpdSensorReliability( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+bool MDI_GetSpdSensorReliability(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     bool bReturnValue = 0;
     
@@ -266,7 +266,7 @@ bool MDI_GetSpdSensorReliability( MultipleDriveInterfaceHandle_t * pHandle, uint
     return bReturnValue;
 }
 
-int16_t MDI_GetAvrgMecSpeedUnit( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+int16_t MDI_GetAvrgMecSpeedUnit(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     int16_t bReturnValue = 0;
     
@@ -284,7 +284,7 @@ int16_t MDI_GetAvrgMecSpeedUnit( MultipleDriveInterfaceHandle_t * pHandle, uint8
     return bReturnValue;
 }
 
-int16_t MDI_GetMecSpeedRefUnit( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+int16_t MDI_GetMecSpeedRefUnit(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     int16_t bReturnValue = 0;
     
@@ -302,7 +302,7 @@ int16_t MDI_GetMecSpeedRefUnit( MultipleDriveInterfaceHandle_t * pHandle, uint8_
     return bReturnValue;
 }
 
-ab_t MDI_GetIab( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+ab_t MDI_GetIab(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ab_t bReturnValue = {0};
     
@@ -320,7 +320,7 @@ ab_t MDI_GetIab( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
     return bReturnValue;
 }
 
-AlphaBeta_t MDI_GetIalphabeta( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+AlphaBeta_t MDI_GetIalphabeta(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     AlphaBeta_t bReturnValue = {0};
     
@@ -338,7 +338,7 @@ AlphaBeta_t MDI_GetIalphabeta( MultipleDriveInterfaceHandle_t * pHandle, uint8_t
     return bReturnValue;
 }
 
-qd_t MDI_GetIqd( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+qd_t MDI_GetIqd(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     qd_t bReturnValue = {0};
     
@@ -356,7 +356,7 @@ qd_t MDI_GetIqd( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
     return bReturnValue;
 }
 
-qd_t MDI_GetIqdHF( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+qd_t MDI_GetIqdHF(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     qd_t bReturnValue = {0};
     
@@ -374,7 +374,7 @@ qd_t MDI_GetIqdHF( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
     return bReturnValue;
 }
 
-qd_t MDI_GetIqdref( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+qd_t MDI_GetIqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     qd_t bReturnValue = {0};
     
@@ -392,7 +392,7 @@ qd_t MDI_GetIqdref( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
     return bReturnValue;
 }
 
-qd_t MDI_GetVqd( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+qd_t MDI_GetVqd(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     qd_t bReturnValue = {0};
     
@@ -410,7 +410,7 @@ qd_t MDI_GetVqd( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
     return bReturnValue;
 }
 
-AlphaBeta_t MDI_GetValphabeta( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+AlphaBeta_t MDI_GetValphabeta(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     AlphaBeta_t bReturnValue = {0};
     
@@ -428,7 +428,7 @@ AlphaBeta_t MDI_GetValphabeta( MultipleDriveInterfaceHandle_t * pHandle, uint8_t
     return bReturnValue;
 }
 
-int16_t MDI_GetElAngledpp( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+int16_t MDI_GetElAngledpp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     int16_t bReturnValue = 0;
     
@@ -446,7 +446,7 @@ int16_t MDI_GetElAngledpp( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMo
     return bReturnValue;
 }
 
-int16_t MDI_GetTeref( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+int16_t MDI_GetTeref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     int16_t bReturnValue = 0;
     
@@ -464,7 +464,7 @@ int16_t MDI_GetTeref( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
     return bReturnValue;
 }
 
-int16_t MDI_GetPhaseCurrentAmplitude( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+int16_t MDI_GetPhaseCurrentAmplitude(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     int16_t bReturnValue = 0;
     
@@ -482,7 +482,7 @@ int16_t MDI_GetPhaseCurrentAmplitude( MultipleDriveInterfaceHandle_t * pHandle, 
     return bReturnValue;
 }
 
-int16_t MDI_GetPhaseVoltageAmplitude( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+int16_t MDI_GetPhaseVoltageAmplitude(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     int16_t bReturnValue = 0;
     
@@ -500,7 +500,7 @@ int16_t MDI_GetPhaseVoltageAmplitude( MultipleDriveInterfaceHandle_t * pHandle, 
     return bReturnValue;
 }
 
-void MDI_Clear_Iqdref( MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor )
+void MDI_Clear_Iqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     switch (bMotor)
     {

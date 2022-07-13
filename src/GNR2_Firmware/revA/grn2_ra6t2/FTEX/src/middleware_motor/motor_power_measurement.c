@@ -17,10 +17,10 @@
 #include "mc_type.h"
 
 
-void MotorPowMeas_Clear( MotorPowerMeasHandle_t * pHandle )
+void MotorPowMeas_Clear(MotorPowerMeasHandle_t * pHandle)
 {
   uint16_t i;
-  for ( i = 0u; i < MPM_BUFFER_LENGHT; i++ )
+  for (i = 0u; i < MPM_BUFFER_LENGHT; i++)
   {
     pHandle->hMeasBuffer[i] = 0;
   }
@@ -30,7 +30,7 @@ void MotorPowMeas_Clear( MotorPowerMeasHandle_t * pHandle )
 }
 
 
-int16_t MPM_CalcElMotorPower( MotorPowerMeasHandle_t * pHandle, int16_t CurrentMotorPower )
+int16_t MPM_CalcElMotorPower(MotorPowerMeasHandle_t * pHandle, int16_t CurrentMotorPower)
 {
   uint16_t i;
   int32_t wAux = 0;
@@ -39,31 +39,31 @@ int16_t MPM_CalcElMotorPower( MotorPowerMeasHandle_t * pHandle, int16_t CurrentM
   pHandle->hMeasBuffer[pHandle->hNextMeasBufferIndex] = CurrentMotorPower;
   pHandle->hLastMeasBufferIndex = pHandle->hNextMeasBufferIndex;
   pHandle->hNextMeasBufferIndex++;
-  if ( pHandle->hNextMeasBufferIndex >= MPM_BUFFER_LENGHT )
+  if (pHandle->hNextMeasBufferIndex >= MPM_BUFFER_LENGHT)
   {
     pHandle->hNextMeasBufferIndex = 0u;
   }
   /* Compute the average measured motor power */
-  for ( i = 0u; i < MPM_BUFFER_LENGHT; i++ )
+  for (i = 0u; i < MPM_BUFFER_LENGHT; i++)
   {
-    wAux += ( int32_t )( pHandle->hMeasBuffer[i] );
+    wAux += (int32_t)(pHandle->hMeasBuffer[i]);
   }
-  wAux /= ( int32_t )MPM_BUFFER_LENGHT;
-  pHandle->hAvrgElMotorPowerW = ( int16_t )( wAux );
+  wAux /= (int32_t)MPM_BUFFER_LENGHT;
+  pHandle->hAvrgElMotorPowerW = (int16_t)(wAux);
   /* Return the last measured motor power */
   return CurrentMotorPower;
 }
 
 
-int16_t MPM_GetElMotorPowerW( MotorPowerMeasHandle_t * pHandle )
+int16_t MPM_GetElMotorPowerW(MotorPowerMeasHandle_t * pHandle)
 {
-  return ( pHandle->hMeasBuffer[pHandle->hLastMeasBufferIndex] );
+  return (pHandle->hMeasBuffer[pHandle->hLastMeasBufferIndex]);
 }
 
 
-int16_t MotorPowMeas_GetAvrgElMotorPowerW( MotorPowerMeasHandle_t * pHandle )
+int16_t MotorPowMeas_GetAvrgElMotorPowerW(MotorPowerMeasHandle_t * pHandle)
 {
-  return ( pHandle->hAvrgElMotorPowerW );
+  return (pHandle->hAvrgElMotorPowerW);
 }
 
 

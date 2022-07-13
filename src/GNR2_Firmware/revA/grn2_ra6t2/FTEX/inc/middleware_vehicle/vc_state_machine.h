@@ -57,7 +57,7 @@ typedef struct
   * @param pHandle pointer on the component instance to initialize.
   * @retval none.
   */
-void VCSTM_Init( VCSTM_Handle_t * pHandle );
+void VCSTM_Init(VCSTM_Handle_t * pHandle);
 
 /**
   * @brief It submits the request for moving the state machine into the state
@@ -72,7 +72,7 @@ void VCSTM_Init( VCSTM_Handle_t * pHandle );
   * @retval bool It returns true if the state has been really set equal to
   *         bState, false if the requested state can't be reached
   */
-bool VCSTM_NextState( VCSTM_Handle_t * pHandle, VC_State_t bVState );
+bool VCSTM_NextState(VCSTM_Handle_t * pHandle, VC_State_t bVState);
 
 /**
   * @brief It clocks both HW and SW faults processing and update the state
@@ -83,21 +83,21 @@ bool VCSTM_NextState( VCSTM_Handle_t * pHandle, VC_State_t bVState );
   * @param hResetErrors Bit field reporting faults to be cleared
   * @retval VC_State_t New state machine state after fault processing
   */
-VC_State_t VCSTM_FaultProcessing( VCSTM_Handle_t * pHandle, uint16_t hSetErrors, uint16_t
-                             hResetErrors );
+VC_State_t VCSTM_FaultProcessing(VCSTM_Handle_t * pHandle, uint16_t hSetErrors, uint16_t
+                             hResetErrors);
 
 /**
   * @brief  Returns the current state machine state
   * @param  pHanlde pointer of type  VCSTM_Handle_t
   * @retval VC_State_t Current state machine state
   */
-VC_State_t VCSTM_GetState( VCSTM_Handle_t * pHandle );
+VC_State_t VCSTM_GetState(VCSTM_Handle_t * pHandle);
 
 /*	Function to get the current fault (if there's any) of the vehicle*/
-uint16_t VCSTM_getCurrentFaults( VCSTM_Handle_t * pHandle );
+uint16_t VCSTM_getCurrentFaults(VCSTM_Handle_t * pHandle);
 
 /*	Function to get faults that occured of the vehicle	*/
-uint16_t VCSTM_getOccurredFaults( VCSTM_Handle_t * pHandle );
+uint16_t VCSTM_getOccurredFaults(VCSTM_Handle_t * pHandle);
 
 /**
   * @brief It reports to the state machine that the fault state has been
@@ -106,7 +106,7 @@ uint16_t VCSTM_getOccurredFaults( VCSTM_Handle_t * pHandle );
   * @retval bool true if the state machine has been moved to V_IDLE, false if the
   *        method call had no effects
   */
-bool VCSTM_FaultAcknowledged( VCSTM_Handle_t * pHandle );
+bool VCSTM_FaultAcknowledged(VCSTM_Handle_t * pHandle);
 
 /**
   * @brief It returns two 16 bit fields containing information about both faults
@@ -119,7 +119,7 @@ bool VCSTM_FaultAcknowledged( VCSTM_Handle_t * pHandle );
   *         historically occurred since the state machine has been moved into
   *         V_FAULT_NOW state
   */
-uint32_t VCSTM_GetFaultState( VCSTM_Handle_t * pHandle );
+uint32_t VCSTM_GetFaultState(VCSTM_Handle_t * pHandle);
 
 
 #endif /* __VC_STATEMACHINE_H */

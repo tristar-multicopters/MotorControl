@@ -57,34 +57,34 @@ typedef struct
  * 	@brief Initializes temperature sensing conversions
  * 	@param pHandle : Pointer on Handle structure of TemperatureSensor component
  */
-void NTCTempSensor_Init( NTCTempSensorHandle_t * pHandle );
+void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle);
 
 /**
  * 	@brief Initializes internal average temperature computed value
  *  @param pHandle : Pointer on Handle structure of TemperatureSensor component
  */
-void NTCTempSensor_Clear( NTCTempSensorHandle_t * pHandle );
+void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle);
 
 /**
  * 	@brief Performs the temperature sensing average computation after an ADC conversion
  *  @param pHandle : Pointer on Handle structure of TemperatureSensor component
  *  @retval Fault status : Error reported in case of an over temperature detection
  */
-uint16_t NTCTempSensor_CalcAvTemp( NTCTempSensorHandle_t * pHandle );
+uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle);
 
 /**
   * @brief  Returns latest averaged temperature measured expressed in u16Celsius
   * @param 	pHandle : Pointer on Handle structure of TemperatureSensor component
   * @retval AverageTemperature : Current averaged temperature measured (in u16Celsius)
   */
-uint16_t NTCTempSensor_GetAvTempDigital( NTCTempSensorHandle_t * pHandle );
+uint16_t NTCTempSensor_GetAvTempDigital(NTCTempSensorHandle_t * pHandle);
 
 /**
   * @brief  Returns latest averaged temperature expressed in Celsius degrees
   * @param 	pHandle : Pointer on Handle structure of TemperatureSensor component
   * @retval AverageTemperature : Latest averaged temperature measured (in Celsius degrees)
   */
-int16_t NTCTempSensor_GetAvTempCelcius( NTCTempSensorHandle_t * pHandle );
+int16_t NTCTempSensor_GetAvTempCelcius(NTCTempSensorHandle_t * pHandle);
 
 /**
  * @brief  Returns Temperature measurement fault status
@@ -93,7 +93,7 @@ int16_t NTCTempSensor_GetAvTempCelcius( NTCTempSensorHandle_t * pHandle );
  * @param pHandle: Pointer on Handle structure of TemperatureSensor component.
  * @retval Fault status : read internal fault state
  */
-uint16_t NTCTempSensor_GetFaultState( NTCTempSensorHandle_t * pHandle );
+uint16_t NTCTempSensor_GetFaultState(NTCTempSensorHandle_t * pHandle);
 
 
 #ifdef __cplusplus

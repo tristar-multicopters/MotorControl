@@ -103,7 +103,7 @@ uint64_t PulseFrequency_InputCaptureValue_GPT (WheelFrequency_Handle_GPT_t * pHa
 /**
   Function used to update the capture variables from the Genral Purpose Timer interrupt
 */
-void PulseFrequency_IsrCallUpdate_GPT( WheelFrequency_Handle_GPT_t * pHandle , uint64_t wCapture )
+void PulseFrequency_IsrCallUpdate_GPT(WheelFrequency_Handle_GPT_t * pHandle , uint64_t wCapture)
 {
 	/* Capture the count in a variable */
 	pHandle->gpt_capture_count = wCapture;
@@ -114,7 +114,7 @@ void PulseFrequency_IsrCallUpdate_GPT( WheelFrequency_Handle_GPT_t * pHandle , u
 /**
   Function used to update the overflow variable from the Genral Purpose Timer interrupt
 */
-void PulseFrequency_IsrOverFlowUpdate_GPT( WheelFrequency_Handle_GPT_t * pHandle )
+void PulseFrequency_IsrOverFlowUpdate_GPT(WheelFrequency_Handle_GPT_t * pHandle)
 {
 	pHandle->gpt_capture_overflow ++;
 }

@@ -68,14 +68,14 @@ uint64_t PulseFrequency_InputCaptureValue_GPT (WheelFrequency_Handle_GPT_t * pHa
   @param  WheelFrequency_Handle_GPT_t handle
   @return None
 */
-void PulseFrequency_IsrCallUpdate_GPT( WheelFrequency_Handle_GPT_t * pHandle , uint64_t  wCapture );
+void PulseFrequency_IsrCallUpdate_GPT(WheelFrequency_Handle_GPT_t * pHandle , uint64_t  wCapture);
 
 /**
   @brief  Function used to update the overflow variable from the GPT interrupt
   @param  WheelFrequency_Handle_GPT_t handle
   @return None
 */
-void PulseFrequency_IsrOverFlowUpdate_GPT( WheelFrequency_Handle_GPT_t * pHandle );
+void PulseFrequency_IsrOverFlowUpdate_GPT(WheelFrequency_Handle_GPT_t * pHandle);
 	
 
 

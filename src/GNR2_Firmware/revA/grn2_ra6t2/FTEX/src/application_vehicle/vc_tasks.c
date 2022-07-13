@@ -105,21 +105,21 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
 		sDebugVariables.bStartM1 ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M1) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M1);
 		sDebugVariables.bStartM2 ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M2) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M2);
 		#else
-		StateVC = VCSTM_GetState( pVCI->pStateMachine );
-		switch ( StateVC )
+		StateVC = VCSTM_GetState(pVCI->pStateMachine);
+		switch (StateVC)
 		{
 			case V_IDLE:
           /* Vehicule is idle, does not do anything */
 					osDelay(100);
 					wCounter = 0;
-					VCSTM_NextState( pVCI->pStateMachine, V_STANDBY );
+					VCSTM_NextState(pVCI->pStateMachine, V_STANDBY);
 					break;
 			
 			case V_STANDBY:
           /* Vehicule is in standby, waiting for a condition to start powertrain */
 					hVehicleFault = PWRT_StandbyStateCheck(pVCI->pPowertrain); // Check state of motors. Return error if they are not into the state they are supposed to be.
-					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 ); // If motor state check fails, triggers vehicle fault.
-					if ( PWRT_CheckStartConditions(pVCI->pPowertrain) ) // If powertrain start conditions are met, increase counter.
+					VCSTM_FaultProcessing(pVCI->pStateMachine, hVehicleFault, 0); // If motor state check fails, triggers vehicle fault.
+					if (PWRT_CheckStartConditions(pVCI->pPowertrain)) // If powertrain start conditions are met, increase counter.
 					{
 						wCounter++;
 					}
@@ -130,14 +130,14 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
 					if (wCounter > START_MOTORS_LOOPTICKS) // If counter reach target, start powertrain. 
 					{
 						wCounter = 0;
-						VCSTM_NextState( pVCI->pStateMachine, V_STANDBY_START );
+						VCSTM_NextState(pVCI->pStateMachine, V_STANDBY_START);
 					}
 					break;
 			
 			case V_STANDBY_START:
           /* Temporary state in between standby and start */
 					wCounter = 0;
-					VCSTM_NextState( pVCI->pStateMachine, V_START );
+					VCSTM_NextState(pVCI->pStateMachine, V_START);
 					break;
 			
 			case V_START:
@@ -145,26 +145,26 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
 					PWRT_ApplyMotorRamps(pVCI->pPowertrain); // Send target ramp (torque or speed) to motors
 					PWRT_StartMotors(pVCI->pPowertrain); // Send start command to motors
 					hVehicleFault = PWRT_StartStateCheck(pVCI->pPowertrain); // Check state of motors. Return error if they are not into the state they are supposed to be.
-					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 ); // If motor state check fails, triggers vehicle fault.
-					if ( PWRT_IsPowertrainActive(pVCI->pPowertrain) ) // If powertrain is active, go to run state.
+					VCSTM_FaultProcessing(pVCI->pStateMachine, hVehicleFault, 0); // If motor state check fails, triggers vehicle fault.
+					if (PWRT_IsPowertrainActive(pVCI->pPowertrain)) // If powertrain is active, go to run state.
 					{
 						wCounter = 0;
-						VCSTM_NextState( pVCI->pStateMachine, V_RUN );
+						VCSTM_NextState(pVCI->pStateMachine, V_RUN);
 					}
 					wCounter++;
-					if ( wCounter > START_LOOPTICKS ) // If counter reach target, it means start vehicle state takes too long and vehicle fault is triggered.
+					if (wCounter > START_LOOPTICKS) // If counter reach target, it means start vehicle state takes too long and vehicle fault is triggered.
 					{
 						wCounter = 0;
-						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_START_TIMEOUT, 0 );
+						VCSTM_FaultProcessing(pVCI->pStateMachine, VC_START_TIMEOUT, 0);
 					}
 					break;
 					
 			case V_RUN:
           /* Vehicle is running, motors are active */
 					hVehicleFault = PWRT_RunStateCheck(pVCI->pPowertrain); // Check state of motors. Return error if they are not into the state they are supposed to be.
-					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 ); // If motor state check fails, triggers vehicle fault.
+					VCSTM_FaultProcessing(pVCI->pStateMachine, hVehicleFault, 0); // If motor state check fails, triggers vehicle fault.
 					PWRT_ApplyMotorRamps(pVCI->pPowertrain); // Update ramp command to motors			
-					if ( PWRT_CheckStopConditions(pVCI->pPowertrain) ) // If powertrain stop conditions are met, increase counter.
+					if (PWRT_CheckStopConditions(pVCI->pPowertrain)) // If powertrain stop conditions are met, increase counter.
 					{
 						wCounter++;
 					}
@@ -176,50 +176,50 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
 					if (wCounter > RETURN_TO_STANDBY_LOOPTICKS) // If counter reach target, stop powertrain. 
 					{
 						wCounter = 0;
-						VCSTM_NextState( pVCI->pStateMachine, V_ANY_STOP );
+						VCSTM_NextState(pVCI->pStateMachine, V_ANY_STOP);
 					}
 					break;
 					
 			case V_ANY_STOP:
           /* Temporary state before stopping vehicle */
 					wCounter = 0;
-					VCSTM_NextState( pVCI->pStateMachine, V_STOP );					
+					VCSTM_NextState(pVCI->pStateMachine, V_STOP);					
 					break;
 					
 			case V_STOP:
           /* Vehicle is getting stopped */
 					PWRT_StopMotors(pVCI->pPowertrain); // Send command to stop powertrain
 					hVehicleFault = PWRT_StopStateCheck(pVCI->pPowertrain); // Check state of motors. Return error if they are not into the state they are supposed to be.
-					VCSTM_FaultProcessing( pVCI->pStateMachine, hVehicleFault, 0 ); // If motor state check fails, triggers vehicle fault.
-					if ( PWRT_IsPowertrainStopped(pVCI->pPowertrain) ) // If powertrain is stopped, go back to idle/standby state.
+					VCSTM_FaultProcessing(pVCI->pStateMachine, hVehicleFault, 0); // If motor state check fails, triggers vehicle fault.
+					if (PWRT_IsPowertrainStopped(pVCI->pPowertrain)) // If powertrain is stopped, go back to idle/standby state.
 					{
 						wCounter = 0;
-						VCSTM_NextState( pVCI->pStateMachine, V_IDLE );
+						VCSTM_NextState(pVCI->pStateMachine, V_IDLE);
 					}
 					wCounter++;
-					if ( wCounter > STOP_LOOPTICKS ) // If counter reach target, it means stop vehicle state takes too long and vehicle fault is triggered.
+					if (wCounter > STOP_LOOPTICKS) // If counter reach target, it means stop vehicle state takes too long and vehicle fault is triggered.
 					{
 						wCounter = 0;
-						VCSTM_FaultProcessing( pVCI->pStateMachine, VC_STOP_TIMEOUT, 0 );
+						VCSTM_FaultProcessing(pVCI->pStateMachine, VC_STOP_TIMEOUT, 0);
 					}
 					break;
 					
 			case V_FAULT_NOW:
           /* A vehicle fault happened and not processed yet */
 					PWRT_StopMotors(pVCI->pPowertrain); // Stop powertrain when fault happens
-					if ( PWRT_IsPowertrainStopped(pVCI->pPowertrain) ) // If powertrain is stopped, do fault management strategy.
+					if (PWRT_IsPowertrainStopped(pVCI->pPowertrain)) // If powertrain is stopped, do fault management strategy.
 					{
-						if ( !PWRT_MotorFaultManagement(pVCI->pPowertrain) ) // If motor fault management is successful, remove vehicle faults related to motors.
+						if (!PWRT_MotorFaultManagement(pVCI->pPowertrain)) // If motor fault management is successful, remove vehicle faults related to motors.
 						{
-							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M1_FAULTS ); // Remove VC_M1_FAULTS flag
-							VCSTM_FaultProcessing( pVCI->pStateMachine, 0, VC_M2_FAULTS ); // Remove VC_M2_FAULTS flag
+							VCSTM_FaultProcessing(pVCI->pStateMachine, 0, VC_M1_FAULTS); // Remove VC_M1_FAULTS flag
+							VCSTM_FaultProcessing(pVCI->pStateMachine, 0, VC_M2_FAULTS); // Remove VC_M2_FAULTS flag
 						}
 					}
 					break;
 					
 			case V_FAULT_OVER:
           /* Faults have been managed and vehicle is now in a safe state */
-					VCSTM_FaultAcknowledged( pVCI->pStateMachine ); // Acknowledge vehicle faults, which means return to idle state. 
+					VCSTM_FaultAcknowledged(pVCI->pStateMachine); // Acknowledge vehicle faults, which means return to idle state. 
 					break;
 			
 			default:

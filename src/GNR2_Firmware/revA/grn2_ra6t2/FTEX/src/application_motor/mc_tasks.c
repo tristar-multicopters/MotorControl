@@ -115,7 +115,7 @@ void MC_Bootup(void)
     /******************************************************/
     pSpeedTorqCtrl[M1] = &SpeednTorqCtrlM1;
     HallPosSensor_Init (&HallPosSensorM1);
-    RotorPosObs_Init( &RotorPosObsM1 );
+    RotorPosObs_Init(&RotorPosObsM1);
 
     /******************************************************/
     /*     Speed & torque component initialization        */
@@ -169,7 +169,7 @@ void MC_Bootup(void)
     FOCVars[M1].Iqdref = SpdTorqCtrl_GetDefaultIqdref(pSpeedTorqCtrl[M1]);
     FOCVars[M1].UserIdref = SpdTorqCtrl_GetDefaultIqdref(pSpeedTorqCtrl[M1]).d;
     oMCInterface[M1] = & MCInterface[M1];
-    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1] );
+    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1]);
     MCTuning[M1].pPIDSpeed = pPIDSpeed[M1];
     MCTuning[M1].pPIDIq = pPIDIq[M1];
     MCTuning[M1].pPIDId = pPIDId[M1];
@@ -192,7 +192,7 @@ void MC_Bootup(void)
 
 void MC_RunMotorControlTasks(void)
 {
-    if ( bMCBootCompleted ) {
+    if (bMCBootCompleted) {
         /* ** Medium Frequency Tasks ** */
         MC_Scheduler();
     }
@@ -239,84 +239,84 @@ void MediumFrequencyTaskM1(void)
     MotorState_t StateM1;
     int16_t wAux = 0;
 
-//    (void) BemfObsPll_CalcAvrgMecSpeedUnit( &BemfObserverPllM1, &wAux );
-    (void) HallPosSensor_CalcAvrgMecSpeedUnit( &HallPosSensorM1, &wAux );
-    bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit( &RotorPosObsM1, &wAux );
-//    MotorPowerQD_CalcElMotorPower( pMotorPower[M1] );
+//    (void) BemfObsPll_CalcAvrgMecSpeedUnit(&BemfObserverPllM1, &wAux);
+    (void) HallPosSensor_CalcAvrgMecSpeedUnit(&HallPosSensorM1, &wAux);
+    bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
+//    MotorPowerQD_CalcElMotorPower(pMotorPower[M1]);
 
     RegConvMng_ExecuteGroupRegularConv(ADC_GROUP_MASK_1 | ADC_GROUP_MASK_2);
 
-    StateM1 = MCStateMachine_GetState( &MCStateMachine[M1] );
-    switch ( StateM1 )
+    StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
+    switch (StateM1)
     {
         case M_IDLE:
             #if DEBUGMODE_MOTOR_CONTROL
             if (bStartMotor)
             {
                     MCInterface_ExecTorqueRamp(oMCInterface[M1], hTorqueFinalValueTest);
-                    MCStateMachine_NextState( &MCStateMachine[M1], M_IDLE_START );
+                    MCStateMachine_NextState(&MCStateMachine[M1], M_IDLE_START);
             }
             #endif
             break;
 
         case M_IDLE_START:
-            PWMInsulCurrSensorFdbk_TurnOnLowSides( pPWMCurrFdbk[M1] );
-            SetChargeBootCapDelayM1( CHARGE_BOOT_CAP_TICKS );
-            MCStateMachine_NextState( &MCStateMachine[M1], M_CHARGE_BOOT_CAP );
+            PWMInsulCurrSensorFdbk_TurnOnLowSides(pPWMCurrFdbk[M1]);
+            SetChargeBootCapDelayM1(CHARGE_BOOT_CAP_TICKS);
+            MCStateMachine_NextState(&MCStateMachine[M1], M_CHARGE_BOOT_CAP);
             break;
 
         case M_CHARGE_BOOT_CAP:
-            if ( ChargeBootCapDelayHasElapsedM1() )
+            if (ChargeBootCapDelayHasElapsedM1())
             {
                 MCStateMachine_NextState(&MCStateMachine[M1],M_OFFSET_CALIB);
             }
             break;
 
         case M_OFFSET_CALIB:
-            if ( PWMCurrFdbk_CurrentReadingCalibr(pPWMCurrFdbk[M1]) )
+            if (PWMCurrFdbk_CurrentReadingCalibr(pPWMCurrFdbk[M1]))
             {
-                MCStateMachine_NextState( &MCStateMachine[M1], M_CLEAR );
+                MCStateMachine_NextState(&MCStateMachine[M1], M_CLEAR);
             }
             break;
 
         case M_CLEAR:
-            HallPosSensor_Clear( &HallPosSensorM1 );
-            BemfObsPll_Clear( &BemfObserverPllM1 );
-            RotorPosObs_Clear( &RotorPosObsM1 );
-            if ( MCStateMachine_NextState( &MCStateMachine[M1], M_START ) == true )
+            HallPosSensor_Clear(&HallPosSensorM1);
+            BemfObsPll_Clear(&BemfObserverPllM1);
+            RotorPosObs_Clear(&RotorPosObsM1);
+            if (MCStateMachine_NextState(&MCStateMachine[M1], M_START) == true)
             {
-                FOC_Clear( M1 );
+                FOC_Clear(M1);
 
-                PWMInsulCurrSensorFdbk_SwitchOnPWM( pPWMCurrFdbk[M1] );
+                PWMInsulCurrSensorFdbk_SwitchOnPWM(pPWMCurrFdbk[M1]);
             }
             break;
 
         case M_START:
-            MCStateMachine_NextState( &MCStateMachine[M1], M_START_RUN );
+            MCStateMachine_NextState(&MCStateMachine[M1], M_START_RUN);
             break;
 
         case M_START_RUN:
             FOC_InitAdditionalMethods(M1);
-            FOC_CalcCurrRef( M1 );
-            MCStateMachine_NextState( &MCStateMachine[M1], M_RUN );
-            SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed( pSpeedTorqCtrl[M1] ); /* Init the reference speed to current speed */
-            MCInterface_ExecBufferedCommands( oMCInterface[M1] ); /* Exec the speed ramp after changing of the speed sensor */
+            FOC_CalcCurrRef(M1);
+            MCStateMachine_NextState(&MCStateMachine[M1], M_RUN);
+            SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(pSpeedTorqCtrl[M1]); /* Init the reference speed to current speed */
+            MCInterface_ExecBufferedCommands(oMCInterface[M1]); /* Exec the speed ramp after changing of the speed sensor */
             break;
 
         case M_RUN:
             #if DEBUGMODE_MOTOR_CONTROL
             if (!bStartMotor)
             {
-                    MCStateMachine_NextState( &MCStateMachine[M1], M_ANY_STOP );
+                    MCStateMachine_NextState(&MCStateMachine[M1], M_ANY_STOP);
             }
             MCInterface_ExecTorqueRamp(oMCInterface[M1], hTorqueFinalValueTest);
             #endif
 
-            MCInterface_ExecBufferedCommands( oMCInterface[M1] );
-            FOC_CalcCurrRef( M1 );
+            MCInterface_ExecBufferedCommands(oMCInterface[M1]);
+            FOC_CalcCurrRef(M1);
 
             #if !(BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
-            if( !bIsSpeedReliable )
+            if(!bIsSpeedReliable)
             {
                 MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_SPEED_FDBK, 0);
             }
@@ -327,7 +327,7 @@ void MediumFrequencyTaskM1(void)
             PWMInsulCurrSensorFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
             FOC_Clear(M1);
             MotorPowMeas_Clear((MotorPowerMeasHandle_t*) pMotorPower[M1]);
-            SetStopPermanencyTimeM1( STOPPERMANENCY_TICKS );
+            SetStopPermanencyTimeM1(STOPPERMANENCY_TICKS);
 
             MCStateMachine_NextState(&MCStateMachine[M1], M_STOP);
             break;
@@ -554,7 +554,7 @@ inline uint16_t FOC_CurrControllerM1(void)
     PWMCurrFdbk_GetPhaseCurrents(pPWMCurrFdbk[M1], &Iab);
 
     MotorState_t StateM1;
-    StateM1 = MCStateMachine_GetState( &MCStateMachine[M1] );
+    StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
     if (StateM1 == M_RUN || StateM1 == M_ANY_STOP)
     {
         Ialphabeta = MCMath_Clarke(Iab);
@@ -603,8 +603,8 @@ inline uint16_t FOC_CurrControllerM1(void)
         }
 
         #if ENABLE_DAC_DEBUGGING
-        R_DAC_Write( g_dac0.p_ctrl, (uint16_t)FOCVars[M1].Iab.a + INT16_MAX );
-        R_DAC_Write( g_dac1.p_ctrl, (uint16_t)FOCVars[M1].Iab.b + INT16_MAX );
+        R_DAC_Write(g_dac0.p_ctrl, (uint16_t)FOCVars[M1].Iab.a + INT16_MAX);
+        R_DAC_Write(g_dac1.p_ctrl, (uint16_t)FOCVars[M1].Iab.b + INT16_MAX);
         #endif
     }
 

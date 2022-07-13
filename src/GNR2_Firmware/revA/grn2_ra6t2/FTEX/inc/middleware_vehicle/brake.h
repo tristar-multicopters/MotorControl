@@ -30,14 +30,14 @@ typedef struct
  * @brief Initializes Brake module pin
  * @param pHandle : Pointer on Handle structure of Brake module
  */
-void BRK_Init( BRK_Handle_t * pHandle);
+void BRK_Init(BRK_Handle_t * pHandle);
 
 /**
  * @brief Checks if the brake is pressed
  * @param pHandle : Pointer on Handle structure of Brake module
  * @return state of the brake
  */
-bool BRK_IsPressed( BRK_Handle_t * pHandle);
+bool BRK_IsPressed(BRK_Handle_t * pHandle);
 
 
 #endif /*__BRAKE_H*/

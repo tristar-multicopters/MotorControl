@@ -137,8 +137,8 @@ MCInterfaceCommandState_t  MCI_IsCommandAcknowledged(MotorControlInterfaceHandle
 {
   MCInterfaceCommandState_t retVal = pHandle->CommandState;
 
-  if ( (retVal == MCI_COMMAND_EXECUTED_SUCCESFULLY) |
-       (retVal == MCI_COMMAND_EXECUTED_UNSUCCESFULLY) )
+  if ((retVal == MCI_COMMAND_EXECUTED_SUCCESFULLY) |
+       (retVal == MCI_COMMAND_EXECUTED_UNSUCCESFULLY))
   {
     pHandle->CommandState = MCI_BUFFER_EMPTY;
   }
@@ -154,7 +154,7 @@ MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle)
 
 uint16_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle)
 {
-  return (uint16_t)(MCStateMachine_GetFaultState(pHandle->pSTM) );
+  return (uint16_t)(MCStateMachine_GetFaultState(pHandle->pSTM));
 }
 
 
@@ -218,7 +218,7 @@ bool MCInterface_IsRampCompleted(MotorControlInterfaceHandle_t * pHandle)
 {
   bool retVal = false;
 
-  if ( (MCStateMachine_GetState(pHandle->pSTM) ) == M_RUN)
+  if ((MCStateMachine_GetState(pHandle->pSTM)) == M_RUN)
   {
     retVal = SpdTorqCtrl_IsRampCompleted(pHandle->pSpeedTorqCtrl);
   }
@@ -237,7 +237,7 @@ bool MCInterface_GetSpdSensorReliability(MotorControlInterfaceHandle_t * pHandle
 {
   SpeednPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
 
-  return (SpdPosFdbk_GetReliability(SpeedSensor) );
+  return (SpdPosFdbk_GetReliability(SpeedSensor));
 }
 
 
@@ -245,13 +245,13 @@ int16_t MCInterface_GetAvrgMecSpeedUnit(MotorControlInterfaceHandle_t * pHandle)
 {
   SpeednPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
 
-  return (SpdPosFdbk_GetAvrgMecSpeedUnit(SpeedSensor) );
+  return (SpdPosFdbk_GetAvrgMecSpeedUnit(SpeedSensor));
 }
 
 
 int16_t MCInterface_GetMecSpeedRefUnit(MotorControlInterfaceHandle_t * pHandle)
 {
-  return (SpdTorqCtrl_GetMecSpeedRefUnit(pHandle->pSpeedTorqCtrl) );
+  return (SpdTorqCtrl_GetMecSpeedRefUnit(pHandle->pSpeedTorqCtrl));
 }
 
 
@@ -326,7 +326,7 @@ int16_t MCInterface_GetPhaseCurrentAmplitude(MotorControlInterfaceHandle_t * pHa
     wAux1 = (int32_t) INT16_MAX;
   }
 
-  return ( (int16_t)wAux1);
+  return ((int16_t)wAux1);
 }
 
 
@@ -347,7 +347,7 @@ int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHa
     wAux1 = (int32_t) INT16_MAX;
   }
 
-  return ( (int16_t) wAux1);
+  return ((int16_t) wAux1);
 }
 
 
