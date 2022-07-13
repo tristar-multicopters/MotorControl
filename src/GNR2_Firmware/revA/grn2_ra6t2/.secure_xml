@@ -67,12 +67,12 @@
       <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0" isUsedByDriver="true"/>
       <configSetting altId="dac120.da0.pa06" configurationId="dac120.da0"/>
       <configSetting altId="dac121.da1.pa07" configurationId="dac121.da1"/>
-      <configSetting altId="gpt4.gtioc4a.pb04" configurationId="gpt4.gtioc4a"/>
-      <configSetting altId="gpt4.gtioc4b.pb05" configurationId="gpt4.gtioc4b"/>
-      <configSetting altId="gpt5.gtioc5a.pb06" configurationId="gpt5.gtioc5a"/>
-      <configSetting altId="gpt5.gtioc5b.pb07" configurationId="gpt5.gtioc5b"/>
-      <configSetting altId="gpt6.gtioc6a.pb08" configurationId="gpt6.gtioc6a"/>
-      <configSetting altId="gpt6.gtioc6b.pb09" configurationId="gpt6.gtioc6b"/>
+      <configSetting altId="gpt4.gtioc4a.pb04" configurationId="gpt4.gtioc4a" isUsedByDriver="true"/>
+      <configSetting altId="gpt4.gtioc4b.pb05" configurationId="gpt4.gtioc4b" isUsedByDriver="true"/>
+      <configSetting altId="gpt5.gtioc5a.pb06" configurationId="gpt5.gtioc5a" isUsedByDriver="true"/>
+      <configSetting altId="gpt5.gtioc5b.pb07" configurationId="gpt5.gtioc5b" isUsedByDriver="true"/>
+      <configSetting altId="gpt6.gtioc6a.pb08" configurationId="gpt6.gtioc6a" isUsedByDriver="true"/>
+      <configSetting altId="gpt6.gtioc6b.pb09" configurationId="gpt6.gtioc6b" isUsedByDriver="true"/>
       <configSetting altId="gpt8.gtioc8b_a.pa09" configurationId="gpt8.gtioc8b" isUsedByDriver="true"/>
       <configSetting altId="gpt_poegb.gtetrgb.pa12" configurationId="gpt_poegb.gtetrgb"/>
       <configSetting altId="icu1.irq1.pb01" configurationId="icu1.irq1"/>
@@ -85,6 +85,8 @@
       <configSetting altId="pd01.output.low" configurationId="pd01"/>
       <configSetting altId="pd02.output.low" configurationId="pd02"/>
       <configSetting altId="pd03.output.low" configurationId="pd03"/>
+      <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9"/>
+      <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9"/>
       <configSetting altId="system.md.p201" configurationId="system.md"/>
     </pincfg>
   </raPinConfiguration>

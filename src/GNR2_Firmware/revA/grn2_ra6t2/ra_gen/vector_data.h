@@ -6,7 +6,7 @@
         #endif
                 /* Number of interrupts allocated */
         #ifndef VECTOR_DATA_IRQ_COUNT
-        #define VECTOR_DATA_IRQ_COUNT    (11)
+        #define VECTOR_DATA_IRQ_COUNT    (15)
         #endif
         /* ISR prototypes */
         void gpt_counter_overflow_isr(void);
@@ -16,6 +16,10 @@
         void r_icu_isr(void);
         void agt_int_isr(void);
         void gpt_capture_b_isr(void);
+        void sci_b_uart_rxi_isr(void);
+        void sci_b_uart_txi_isr(void);
+        void sci_b_uart_tei_isr(void);
+        void sci_b_uart_eri_isr(void);
 
         /* Vector table allocations */
         #define VECTOR_NUMBER_GPT4_COUNTER_OVERFLOW ((IRQn_Type) 0) /* GPT4 COUNTER OVERFLOW (Overflow) */
@@ -40,6 +44,14 @@
         #define GPT8_COUNTER_OVERFLOW_IRQn          ((IRQn_Type) 9) /* GPT8 COUNTER OVERFLOW (Overflow) */
         #define VECTOR_NUMBER_GPT8_CAPTURE_COMPARE_B ((IRQn_Type) 10) /* GPT8 CAPTURE COMPARE B (Compare match B) */
         #define GPT8_CAPTURE_COMPARE_B_IRQn          ((IRQn_Type) 10) /* GPT8 CAPTURE COMPARE B (Compare match B) */
+        #define VECTOR_NUMBER_SCI9_RXI ((IRQn_Type) 11) /* SCI9 RXI (Received data full) */
+        #define SCI9_RXI_IRQn          ((IRQn_Type) 11) /* SCI9 RXI (Received data full) */
+        #define VECTOR_NUMBER_SCI9_TXI ((IRQn_Type) 12) /* SCI9 TXI (Transmit data empty) */
+        #define SCI9_TXI_IRQn          ((IRQn_Type) 12) /* SCI9 TXI (Transmit data empty) */
+        #define VECTOR_NUMBER_SCI9_TEI ((IRQn_Type) 13) /* SCI9 TEI (Transmit end) */
+        #define SCI9_TEI_IRQn          ((IRQn_Type) 13) /* SCI9 TEI (Transmit end) */
+        #define VECTOR_NUMBER_SCI9_ERI ((IRQn_Type) 14) /* SCI9 ERI (Receive error) */
+        #define SCI9_ERI_IRQn          ((IRQn_Type) 14) /* SCI9 ERI (Receive error) */
         #ifdef __cplusplus
         }
         #endif

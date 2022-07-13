@@ -24,6 +24,7 @@ static bool DACInit(void);
 static bool ICUInit(void);
 static bool ELCInit(void);
 static bool AGTInit(void);
+static bool UARTInit(void);
 
 
 //****************** THREAD HANDLES ******************//
@@ -76,7 +77,8 @@ void gnr_main(void)
 	DACInit();
 	ICUInit();
 	ELCInit();
-	AGTInit(); 
+	AGTInit();
+    UARTInit();    
 	/* At this point, hardware should be ready to be used by application systems */
 	
 	MC_Bootup();
@@ -244,8 +246,8 @@ static bool ICUInit(void)
 }
 
 /**
-  Function used to Initialize the Low Power Timer
-*/
+  * @brief  Function used to Initialize the Low Power Timer
+  */
 static bool AGTInit(void)
 {
     bool bIsError = false;
@@ -254,5 +256,19 @@ static bool AGTInit(void)
 		// Enables external event triggers that start the AGT
     bIsError |= R_AGT_Enable(ag_timer0.p_ctrl);
 
+    return bIsError;
+}
+
+/**
+  * @brief  Function used to Initialize the UART
+  */
+static bool UARTInit(void)
+{
+    bool bIsError = false;
+    
+    // Initialise the UART
+    bIsError |= R_SCI_B_UART_Open(&g_uart0_ctrl, &g_uart0_cfg);
+    
+    
     return bIsError;
 }

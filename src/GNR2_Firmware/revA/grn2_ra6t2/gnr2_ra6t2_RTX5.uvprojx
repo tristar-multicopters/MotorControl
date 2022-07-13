@@ -724,6 +724,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_GPIO.c</FilePath>
             </File>
+            <File>
+              <FileName>uCAL_UART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_UART.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

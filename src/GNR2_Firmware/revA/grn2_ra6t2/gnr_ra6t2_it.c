@@ -133,3 +133,37 @@ void WFREQ_TIM_Callback (timer_callback_args_t * p_args)
     }  
 	}		
 }
+
+/**
+  * @brief  Interrupt routine of UART module
+  * @param  p_args: UART callback function arguments.
+  */
+void UART_IRQHandler(uart_callback_args_t * p_args)
+{
+    // Handle the UART event 
+    switch (p_args->event)
+    {
+        // Received a character (unplanned reception)
+        case UART_EVENT_RX_CHAR:
+        {
+             
+            break;
+        }
+        // Receive complete 
+        case UART_EVENT_RX_COMPLETE:
+        {
+            
+            break;
+        }
+        // Transmit complete 
+        case UART_EVENT_TX_COMPLETE:
+        {
+            
+            break;
+        }
+        default:
+        {
+        }
+    }
+
+}  
