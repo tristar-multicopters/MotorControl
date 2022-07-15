@@ -152,37 +152,6 @@ PWRT_Handle_t PowertrainHandle =
 	.pPWREN = &PowerEnableHandle,
 	.pPAS = &PedalAssistHandle,
 
-//	.sSpeedFoldback[M1] =
-//	{
-//		.bEnableFoldback = false,
-//		.hStartValue = 200,
-//		.hIntervalValue = 200,
-//		.hEndValue = 400,
-//		.hDefaultMaxTorque = 10000,
-//	},
-//	.sSpeedFoldback[M2] =
-//	{
-//		.bEnableFoldback = false,
-//		.hStartValue = 200,
-//		.hIntervalValue = 200,
-//		.hEndValue = 400,
-//		.hDefaultMaxTorque = 10000,
-//	},
-
-	.sHeatsinkTempFoldback[M1] =
-	{
-		.bEnableFoldback = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_ENABLE,
-		.hStartValue = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_START,
-		.hEndValue = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_END,
-		.hDefaultMaxTorque = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_MAX_TORQUE,
-	},
-	.sHeatsinkTempFoldback[M2] =
-	{
-		.bEnableFoldback = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_ENABLE,
-		.hStartValue = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_START,
-		.hEndValue = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_END,
-		.hDefaultMaxTorque = POWERTRAIN_HEATSINK_TEMP_FOLDBACK_MAX_TORQUE,
-	},
 };
 
 VCI_Handle_t VCInterfaceHandle =

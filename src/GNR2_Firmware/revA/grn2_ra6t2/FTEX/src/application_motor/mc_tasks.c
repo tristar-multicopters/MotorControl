@@ -117,10 +117,10 @@ void MC_Bootup(void)
     HallPosSensor_Init (&HallPosSensorM1);
     RotorPosObs_Init(&RotorPosObsM1);
 
-    /******************************************************/
-    /*     Speed & torque component initialization        */
-    /******************************************************/
-    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1],pPIDSpeed[M1], &RotorPosObsM1.Super);
+  /******************************************************/
+  /*   Speed & torque component initialization          */
+  /******************************************************/
+  SpdTorqCtrl_Init(pSpeedTorqCtrl[M1],pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorParamsM1, NULL);
 
     /******************************************************/
     /*  Auxiliary speed sensor component initialization   */

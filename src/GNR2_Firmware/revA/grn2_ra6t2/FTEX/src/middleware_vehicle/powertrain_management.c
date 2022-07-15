@@ -1,7 +1,7 @@
 /**
   * @file    powertrain_management.c
   * @author  Sami Bouzid, FTEX
-	* @author  Jorge Polo, FTEX
+  * @author  Jorge Polo, FTEX
   * @brief   This module handles management of the vehicle powertrain
   *
 */
@@ -9,8 +9,8 @@
 #include "powertrain_management.h"
 
 #define OVERCURRENT_COUNTER 		0
-#define STARTUP_COUNTER 				1
-#define SPEEDFEEDBACK_COUNTER 	2
+#define STARTUP_COUNTER 			1
+#define SPEEDFEEDBACK_COUNTER 	    2
 
 /* Functions ---------------------------------------------------- */
 
@@ -58,15 +58,10 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 {
 	bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
 	bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);
-	int32_t wSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
-	int32_t wSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
-	int32_t wSpeedMainMotor = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, pHandle->bMainMotor);
-	int16_t hTempHeatSnkM1 = 0; //TODO
-	int16_t hTempHeatSnkM2 = 0; //TODO
-	int16_t hTempHeatSnkMainMotor = 0; //TODO
 
 	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
-	int16_t hTorqueRef = 0; int32_t hSpeedRef = 0;
+	int16_t hTorqueRef = 0; 
+    int32_t hSpeedRef = 0;
 	int16_t hAux = 0;
 
 	if (pHandle->pMS->bMSEnable)
@@ -103,17 +98,11 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 		}
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
-      // Apply torque limitation based on heatsink temperature of M1
-			hAux = FLDBK_ApplyTorqueLimitation(&pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor);
-			pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
+            pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
 		}
 		if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
-      // Apply torque limitation based on heatsink temperature of M1
-			hAux = FLDBK_ApplyTorqueLimitation(&pHandle->sHeatsinkTempFoldback[M1], hTorqueRef, hTempHeatSnkM1);
 			pHandle->aTorque[M1] = hAux;
-      // Apply torque limitation based on heatsink temperature of M2
-			hAux = FLDBK_ApplyTorqueLimitation(&pHandle->sHeatsinkTempFoldback[M2], hTorqueRef, hTempHeatSnkM2);
 			pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux; // Store powertrain target torque value in handle. Invert torque if needed.
 		}
 	}
@@ -795,11 +784,11 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 //	PAS_sLevel Got_Level;
 //	Got_Level = PWRT_GetPASLevel(pHandle);
 //
-//	FLDBK_SetStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
-//	FLDBK_SetEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
+//	Foldback_SetStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
+//	Foldback_SetEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
 
-//	FLDBK_SetStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
-//	FLDBK_SetEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
+//	Foldback_SetStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
+//	Foldback_SetEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
 //}
 
 ///**
@@ -852,3 +841,5 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 //	}
 //	return pHandle->hTorqueSelect;
 //}
+
+

@@ -131,14 +131,36 @@ FeedforwardHandle_t FeedforwardM1 =
   */
 SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
 {
-  .TorqueRampMngr = 
+  .TorqueRampMngr =
   {
     .wScalingFactor = INT16_MAX,
   },
-  .SpeedRampMngr = 
+  .SpeedRampMngr =
   {
     .wScalingFactor = INT16_MAX,
   },
+  .FoldbackMotorSpeed =
+  {
+      .bEnableFoldback = true,
+      .hDefaultMaxOutput = NOMINAL_CURRENT,
+      .hDecreasingEndValue = MAX_APPLICATION_SPEED_UNIT,
+      .hDecreasingRange = MAX_APPLICATION_SPEED_UNIT/2,
+  },
+  .FoldbackMotorTemperature =
+  {
+      .bEnableFoldback = false,
+      .hDefaultMaxOutput = NOMINAL_CURRENT,
+      .hDecreasingEndValue = MOTOR_MAX_TEMPERATURE_C,
+      .hDecreasingRange = MOTOR_MAX_TEMPERATURE_C/2,
+  },
+  .FoldbackHeatsinkTemperature =
+  {
+      .bEnableFoldback = false,
+      .hDefaultMaxOutput = NOMINAL_CURRENT,
+      .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C,
+      .hDecreasingRange = OV_TEMPERATURE_THRESHOLD_C/2,
+  },
+
   .hSTCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,
   .hMaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
   .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
@@ -208,7 +230,7 @@ BemfObserverPllHandle_t BemfObserverPllM1 =
   .Super = {
 	.bElToMecRatio                     =	POLE_PAIR_NUM,
     .bSpeedUnit                         =    SPEED_UNIT,
-    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.15*MAX_APPLICATION_SPEED_UNIT),
+    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
     .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
     .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
     .hMaxReliableMecAccelUnitP         =	65535,
@@ -261,7 +283,7 @@ HallPosSensorHandle_t HallPosSensorM1 =
 {
   .Super = {
     .bElToMecRatio                     =	POLE_PAIR_NUM,
-    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.15*MAX_APPLICATION_SPEED_UNIT),
+    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
     .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
     .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
     .hMaxReliableMecAccelUnitP         =	65535,
@@ -338,14 +360,14 @@ RotorPositionObserverHandle_t RotorPosObsM1 =
 {
   .Super = {
     .bElToMecRatio                     =	POLE_PAIR_NUM,
-    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.15*MAX_APPLICATION_SPEED_UNIT),
+    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
     .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
     .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
     .hMaxReliableMecAccelUnitP         =	65535,
     .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
     .DPPConvFactor                     =  DPP_CONV_FACTOR,
   },
-	
+
   .pHallSensor = &HallPosSensorM1,
 
 	.hKpGainDef = ROTOR_POS_OBS_KP,

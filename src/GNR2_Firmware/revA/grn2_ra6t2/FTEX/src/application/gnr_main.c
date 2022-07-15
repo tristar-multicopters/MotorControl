@@ -97,7 +97,7 @@ void gnr_main(void)
 	MC_SafetyTask_handle   					= osThreadNew(startMCSafetyTask,
 																								NULL,
 																								&ThAtt_MC_SafetyTask);
-	
+    #if !DEBUGMODE_MOTOR_CONTROL
 	THR_VC_MediumFreq_handle   				= osThreadNew(THR_VC_MediumFreq,
 																								NULL,
 																								&ThAtt_VC_MediumFrequencyTask);
@@ -105,7 +105,8 @@ void gnr_main(void)
 	THR_VC_StateMachine_handle  = osThreadNew(THR_VC_StateMachine,
 																								NULL,
 																								&ThAtt_VehicleStateMachine);
-
+    #endif
+    
 	/* Start RTOS */
 	if (osKernelGetState() == osKernelReady)
 	{

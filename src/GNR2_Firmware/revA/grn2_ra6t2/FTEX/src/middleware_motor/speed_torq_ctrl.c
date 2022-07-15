@@ -12,14 +12,27 @@
 
 #include "mc_type.h"
 
+static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 
-void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpeednPosFdbkHandle_t * SPD_Handle)
+void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpeednPosFdbkHandle_t * SPD_Handle,
+                        NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
 {
     ASSERT(pHandle != NULL);
     pHandle->pPISpeed = pPI;
     pHandle->pSPD = SPD_Handle;
+    pHandle->pHeatsinkTempSensor = pTempSensorHS;
+    pHandle->pMotorTempSensor = pTempSensorMotor;
     pHandle->Mode = pHandle->ModeDefault;
-    
+
+    if (pTempSensorHS == NULL)
+    {
+        Foldback_DisableFoldback(&pHandle->FoldbackHeatsinkTemperature);
+    }
+    if (pTempSensorMotor == NULL)
+    {
+        Foldback_DisableFoldback(&pHandle->FoldbackMotorTemperature);
+    }
+
     pHandle->TorqueRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     RampMngr_Init(&pHandle->TorqueRampMngr);
@@ -48,6 +61,9 @@ void SpdTorqCtrl_Clear(SpeednTorqCtrlHandle_t * pHandle)
     {
         PID_SetIntegralTerm(pHandle->pPISpeed, 0);
     }
+    
+    RampMngr_Init(&pHandle->TorqueRampMngr);
+    RampMngr_Init(&pHandle->SpeedRampMngr);
     SpdTorqCtrl_StopRamp(pHandle);
 }
 
@@ -137,7 +153,7 @@ bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal
             }
         }
     }
-    
+
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         pHandle->hFinalTorque = hTargetFinalSat; // Store final torque value in handle
@@ -182,10 +198,11 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpeednTorqCtrlHandle_t * pHandle)
     int16_t hMeasuredSpeed;
     int16_t hTargetSpeed;
     int16_t hError;
-    
+
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
+        hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
     }
@@ -205,11 +222,12 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpeednTorqCtrlHandle_t * pHandle)
             RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTorqueReference, pHandle->wTorqueSlopePerSecondDown); // Setup torque ramp going down
         }
         hTorqueReference = (int16_t) RampMngr_Calc(&pHandle->TorqueRampMngr); // Apply torque ramp
+        hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
         pHandle->hCurrentSpeedRef = hTargetSpeed;
     }
-     
+
     return hTorqueReference;
 }
 
@@ -239,7 +257,7 @@ bool SpdTorqCtrl_IsRampCompleted(SpeednTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     bool retVal = false;
-    
+
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         retVal = RampMngr_IsRampCompleted(&pHandle->TorqueRampMngr);
@@ -248,7 +266,7 @@ bool SpdTorqCtrl_IsRampCompleted(SpeednTorqCtrlHandle_t * pHandle)
     {
         retVal = RampMngr_IsRampCompleted(&pHandle->SpeedRampMngr);
     }
-    
+
     return retVal;
 }
 
@@ -298,4 +316,30 @@ void SpdTorqCtrl_SetSpeedRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t wS
     pHandle->wSpeedSlopePerSecondDown = wSlopePerSecondDown;
 }
 
+/*
+    Apply all torque foldbacks and returns limited torque.
+*/
+static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
+{
+    ASSERT(pHandle != NULL);
+    int16_t hMeasuredSpeed = 0;
+    int16_t hMeasuredMotorTemp = 0;
+    int16_t hMeasuredHeatsinkTemp = 0;
 
+    hMeasuredSpeed = SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
+    if (pHandle->pMotorTempSensor != NULL)
+    {
+        hMeasuredMotorTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pMotorTempSensor);
+    }
+    if (pHandle->pMotorTempSensor != NULL)
+    {
+        hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor);
+    }
+
+    int16_t hOutputTorque;
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque, abs(hMeasuredSpeed));
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
+
+    return hOutputTorque;
+}

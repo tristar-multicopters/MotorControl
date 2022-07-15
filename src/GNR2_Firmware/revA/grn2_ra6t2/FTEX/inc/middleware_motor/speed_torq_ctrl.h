@@ -18,6 +18,8 @@ extern "C" {
 #include "pid_regulator.h"
 #include "speed_pos_fdbk.h"
 #include "ramp_mngr.h"
+#include "foldback.h"
+#include "ntc_temperature_sensor.h"
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -28,13 +30,17 @@ typedef struct
 {
     RampMngr_Handle_t TorqueRampMngr;
     RampMngr_Handle_t SpeedRampMngr;
-  
+
+    Foldback_Handle_t FoldbackMotorSpeed;
+    Foldback_Handle_t FoldbackMotorTemperature;
+    Foldback_Handle_t FoldbackHeatsinkTemperature;
+
     int16_t hCurrentTorqueRef;
     int16_t hCurrentSpeedRef;
-  
+
     int16_t hFinalTorque;
     int16_t hFinalSpeed;
-  
+
     STCModality_t Mode;   /*!< Modality of STC. It can be one of these two
                                settings: STC_TORQUE_MODE to enable the
                                Torque mode or STC_SPEED_MODE to enable the
@@ -43,6 +49,8 @@ typedef struct
                                      control loop.*/
     SpeednPosFdbkHandle_t * pSPD;/*!< The speed sensor used to perform the speed
                                      regulation.*/
+    NTCTempSensorHandle_t * pHeatsinkTempSensor; /* Temperature sensor used to monitor heatsink temperature */
+    NTCTempSensorHandle_t * pMotorTempSensor; /* Temperature sensor used to monitor motor temperature */
 
     uint16_t hSTCFrequencyHz;             /*!< Frequency on which the user updates
                                              the torque reference calling
@@ -82,7 +90,7 @@ typedef struct
     uint32_t wTorqueSlopePerSecondDown;   /*!< Slope in torque unit per second when ramping down torque. */
     uint32_t wSpeedSlopePerSecondUp;      /*!< Slope in #SPEED_UNIT per second when ramping up speed. */
     uint32_t wSpeedSlopePerSecondDown;    /*!< Slope in #SPEED_UNIT per second when ramping down speed. */
-  
+
 } SpeednTorqCtrlHandle_t;
 
 
@@ -97,9 +105,14 @@ typedef struct
   * @param  oSPD the speed sensor used to perform the speed regulation.
   *         It can be equal to MC_NULL if the STC is used only in torque
   *         mode.
+  * @param  pTempSensorHS the temperature sensor used to monitor heatsink temperature.
+  *          If NULL, foldback feature won't take it into consideration.
+  * @param  pTempSensorHS the temperature sensor used to monitor heatsink temperature.
+  *          If NULL, foldback feature won't take it into consideration.
   * @retval none.
   */
-void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PIDHandle_t * oPI, SpeednPosFdbkHandle_t * oSPD);
+void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpeednPosFdbkHandle_t * SPD_Handle,
+                        NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor);
 
 /**
   * @brief  It should be called before each motor restart. If STC is set in
@@ -300,6 +313,3 @@ void SpdTorqCtrl_SetSpeedRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t wS
 #endif /* __cpluplus */
 
 #endif /* __SPEEDNTORQCTRLCLASS_H */
-
-
-

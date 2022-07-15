@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       1500 /*!< rpm, mechanical */
+#define MAX_APPLICATION_SPEED_RPM       600 /*!< rpm, mechanical */
 #define MIN_APPLICATION_SPEED_RPM       0 /*!< rpm, mechanical,
                                                            absolute value */
 #define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
@@ -232,7 +232,7 @@
 
 /******************************   Software overcurrent protection Motor 1   **********************/
 
-#define OCSP_SAFETY_MARGIN 	            4000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_SAFETY_MARGIN 	            6000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
 #define OCSP_MAX_CURRENT                22000 /* Max current that can be reached before triggering software overcurrent */
 

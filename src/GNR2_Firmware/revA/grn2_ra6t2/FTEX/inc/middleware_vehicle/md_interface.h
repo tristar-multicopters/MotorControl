@@ -28,7 +28,7 @@ void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHan
   * @param  pHandle Pointer on the component instance to operate on.
   * @param  hFinalSpeed is the value of mechanical rotor speed reference at the
   *         end of the ramp expressed in tenths of HZ.
-  * @param  bMotor is the target motor number
+	*	@param	bMotor is the target motor number
   * @retval none.
   */
 void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, int16_t hFinalSpeed);
@@ -45,7 +45,7 @@ void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor,
   *         To convert current expressed in Amps to current expressed in digit
   *         is possible to use the formula:
   *         Current (digit) = [Current(Amp) * 65536 * Rshunt * Aop] / Vdd micro.
-  * @param  bMotor is the target motor number
+	*	@param	bMotor is the target motor number
   * @retval none.
   */
 void MDI_ExecTorqueRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, int16_t hFinalTorque);
@@ -330,4 +330,3 @@ void MDI_Clear_Iqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 
 #endif /* __MD_INTERFACE_H */
-
