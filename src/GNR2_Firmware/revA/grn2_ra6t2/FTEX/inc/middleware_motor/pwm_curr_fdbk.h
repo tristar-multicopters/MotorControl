@@ -265,7 +265,7 @@ bool PWMCurrFdbk_CurrentReadingCalibr(PWMCurrFdbkHandle_t * pHandle);
   */
 void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle);
 
-/** @brief Check if overcurrent occured since last call.
+/** @brief Check if hardware overcurrent occured since last call.
  *  @param  pHandle: Handle on the target instance of the PWMC component
  *	@retval Returns #MC_BREAK_IN if an over current condition was detected on the power stage
  *         controlled by the PWMC component pointed by  @p pHandle, since the last call to this function;

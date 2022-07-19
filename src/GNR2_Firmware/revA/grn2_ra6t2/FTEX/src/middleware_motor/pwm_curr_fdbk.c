@@ -15,7 +15,9 @@
 #include "mc_math.h"
 #include "mc_type.h"
 
-
+/*
+    Initialize PWM&Current feedback module.
+*/
 bool PWMCurrFdbk_Init( PWMCurrFdbkHandle_t * pHandle)
 {
     bool bIsError = false;
@@ -28,11 +30,18 @@ bool PWMCurrFdbk_Init( PWMCurrFdbkHandle_t * pHandle)
 	return bIsError;
 }
 
+/*
+    Returns the phase current of the motor (in s16A unit).
+	To call in order to compute Ia, Ib and Ic and store into handle.
+*/
 void PWMCurrFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHandle, ab_t * Iab )
 {
   pHandle->pFctGetPhaseCurrents(pHandle, Iab);
 }
 
+/*
+    Execute software overcurrent protection algorithm. Must be called periodically to update current filters.
+*/
 bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
 {
     int16_t IaFiltered, IbFiltered, IcFiltered;
@@ -56,7 +65,10 @@ bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const 
     return false;
 }
 
-
+/*
+    Converts input voltages @f$ V_{\alpha} @f$ and @f$ V_{\beta} @f$ into PWM duty cycles
+    and update duty cycle registers.
+*/
 uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t Valfa_beta)
 {
   int32_t wX, wY, wZ, wUAlpha, wUBeta, wTimePhA, wTimePhB, wTimePhC;
@@ -145,19 +157,27 @@ uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t 
   return (pHandle->pFctSetADCSampPointSectX(pHandle));
 }
 
-
+/*
+    Switches PWM generation off
+*/
 void PWMCurrFdbk_SwitchOffPWM(PWMCurrFdbkHandle_t * pHandle)
 {
   pHandle->pFctSwitchOffPwm(pHandle);
 }
 
-
+/*
+    Switches PWM generation on
+*/
 void PWMCurrFdbk_SwitchOnPWM(PWMCurrFdbkHandle_t * pHandle)
 {
   pHandle->pFctSwitchOnPwm(pHandle);
 }
 
-
+/*
+    Calibrates ADC current conversions by reading the offset voltage
+    present on ADC pins when no motor current is flowing in. This function
+    should be called before each motor start-up.
+*/
 bool PWMCurrFdbk_CurrentReadingCalibr(PWMCurrFdbkHandle_t * pHandle)
 {
   bool retVal = true;
@@ -169,14 +189,20 @@ bool PWMCurrFdbk_CurrentReadingCalibr(PWMCurrFdbkHandle_t * pHandle)
   return retVal;
 }
 
-
+/*
+    Switches power stage low sides transistors on.
+    This function is meant for charging boot capacitors of the driving
+    section. It has to be called on each motor start-up.
+*/
 void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle)
 {
   pHandle->pFctTurnOnLowSides(pHandle);
 }
 
 
-
+/*
+    Check if hardware overcurrent occured since last call.
+*/
 uint16_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle)
 {
   return pHandle->pFctIsOverCurrentOccurred(pHandle);

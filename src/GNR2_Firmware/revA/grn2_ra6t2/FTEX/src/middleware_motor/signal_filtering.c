@@ -11,7 +11,9 @@
 
 static void SignalFiltering_PerformTimestep(SignalFilteringHandle_t * pHandle, int16_t hInputData, int16_t hOutputData);
 
-
+/*
+    Initializes filter handle.
+*/
 void SignalFiltering_Init(SignalFilteringHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -29,6 +31,10 @@ void SignalFiltering_Init(SignalFilteringHandle_t * pHandle)
     pHandle->hPastOutputs[1] = 0;
 }
 
+/*
+    Calculate filter output from provided input data. 
+    Must be called periodically at desired filter sampling time.
+*/
 int16_t SignalFiltering_CalcOutput(SignalFilteringHandle_t * pHandle, int16_t hInputData)
 {
     ASSERT(pHandle != NULL);
@@ -36,7 +42,7 @@ int16_t SignalFiltering_CalcOutput(SignalFilteringHandle_t * pHandle, int16_t hI
     float fSum;
     float fTemp1, fTemp2, fTemp3, fTemp4, fTemp5;
     
-    if (pHandle->FilterType != NOT_CONFIGURED)
+    if (pHandle->FilterType != NOT_CONFIGURED) // Compute output only if filter is configured
     {
         if (pHandle->pIIRFAInstance == NULL)
         {
@@ -67,6 +73,10 @@ int16_t SignalFiltering_CalcOutput(SignalFilteringHandle_t * pHandle, int16_t hI
     return hRetVal;
 }
 
+/*
+    Configure recursive average filter.
+    Discrete equation: y[n] = ( (A-1)*y[n-1] + x[n] )/A, where A is hCoeff
+*/
 void SignalFiltering_ConfigureRecursiveAverage(SignalFilteringHandle_t * pHandle, uint16_t hCoeff)
 {
     ASSERT(pHandle != NULL);
@@ -115,6 +125,10 @@ void SignalFiltering_ConfigureRecursiveAverage(SignalFilteringHandle_t * pHandle
     }
 }
 
+/*
+    Configure first order low pass butterworth filter.
+    Discrete equation: y[n] = ( x[n]+x[n-1]-beta*y(n-1) )/alpha
+*/
 void SignalFiltering_ConfigureButterworthFOLP(SignalFilteringHandle_t * pHandle, float fAlpha, float fBeta)
 {
     ASSERT(pHandle != NULL);
@@ -161,6 +175,9 @@ void SignalFiltering_ConfigureButterworthFOLP(SignalFilteringHandle_t * pHandle,
     }
 }
 
+/*
+    Perform a timestep for calculating filter output, i.e. shifting past values.
+*/
 static void SignalFiltering_PerformTimestep(SignalFilteringHandle_t * pHandle, int16_t hInputData, int16_t hOutputData)
 {
     ASSERT(pHandle != NULL);
