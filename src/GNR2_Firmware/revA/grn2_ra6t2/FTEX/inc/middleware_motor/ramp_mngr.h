@@ -20,6 +20,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
 #include "ASSERT_FTEX.h"
+#include "stdlib.h"
 
 
 typedef struct

@@ -65,7 +65,7 @@ int16_t hTorqueFinalValueTest = 0;
 #endif
 #if (BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
 int16_t hOpenloopTheta = 0;
-int16_t hOpenloopSpeed = 10;
+int16_t hOpenloopSpeed = 100;
 #endif
 
 /* Private functions ---------------------------------------------------------*/
@@ -166,8 +166,6 @@ void MC_Bootup(void)
 
     FOC_Clear(M1);
     FOCVars[M1].bDriveInput = INTERNAL;
-    FOCVars[M1].Iqdref = SpdTorqCtrl_GetDefaultIqdref(pSpeedTorqCtrl[M1]);
-    FOCVars[M1].UserIdref = SpdTorqCtrl_GetDefaultIqdref(pSpeedTorqCtrl[M1]).d;
     oMCInterface[M1] = & MCInterface[M1];
     MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1]);
     MCTuning[M1].pPIDSpeed = pPIDSpeed[M1];
@@ -253,8 +251,8 @@ void MediumFrequencyTaskM1(void)
             #if DEBUGMODE_MOTOR_CONTROL
             if (bStartMotor)
             {
-                    MCInterface_ExecTorqueRamp(oMCInterface[M1], hTorqueFinalValueTest);
-                    MCStateMachine_NextState(&MCStateMachine[M1], M_IDLE_START);
+                MCInterface_ExecTorqueRamp(oMCInterface[M1], hTorqueFinalValueTest);
+                MCStateMachine_NextState( &MCStateMachine[M1], M_IDLE_START );
             }
             #endif
             break;
@@ -307,7 +305,7 @@ void MediumFrequencyTaskM1(void)
             #if DEBUGMODE_MOTOR_CONTROL
             if (!bStartMotor)
             {
-                    MCStateMachine_NextState(&MCStateMachine[M1], M_ANY_STOP);
+                MCStateMachine_NextState( &MCStateMachine[M1], M_ANY_STOP );
             }
             MCInterface_ExecTorqueRamp(oMCInterface[M1], hTorqueFinalValueTest);
             #endif
@@ -420,7 +418,8 @@ void FOC_CalcCurrRef(uint8_t bMotor)
     if(FOCVars[bMotor].bDriveInput == INTERNAL)
     {
         FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSpeedTorqCtrl[bMotor]);
-        FOCVars[bMotor].Iqdref.q = FOCVars[bMotor].hTeref;
+        FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
+        FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
 
         if (pFieldWeakening[bMotor])
         {
@@ -561,10 +560,10 @@ inline uint16_t FOC_CurrControllerM1(void)
         Iqd = MCMath_Park(Ialphabeta, hElAngle);
 
         Vqd.q = PI_Controller(pPIDIq[M1],
-                                                (int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
+                (int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
 
         Vqd.d = PI_Controller(pPIDId[M1],
-                                                (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
+                (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
 
         Vqd = Feedforward_VqdConditioning(pFeedforward[M1],Vqd);
 
@@ -587,19 +586,11 @@ inline uint16_t FOC_CurrControllerM1(void)
         FluxWkng_DataProcess(pFieldWeakening[M1], Vqd);
         Feedforward_DataProcess(pFeedforward[M1]);
 
-        //Check for overcurrent condition (overcurrent software protection)
-        int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(FOCVars[M1].Iqdref.d, FOCVars[M1].Iqdref.q);
-        int32_t wThresholdOCSP = hIqdrefAmplitude + OCSP_SAFETY_MARGIN;
-        if (wThresholdOCSP > OCSP_MAX_CURRENT)
+        //Check for overcurrent condition (software overcurrent protection)
+        if (PWMCurrFdbk_CheckSoftwareOverCurrent(pPWMCurrFdbk[M1], &FOCVars[M1].Iab, &FOCVars[M1].Iqdref))
         {
-            wThresholdOCSP = OCSP_MAX_CURRENT;
-        }
-        if (abs(PWMCurrFdbk_GetIa(pPWMCurrFdbk[M1])) > wThresholdOCSP ||
-                    abs(PWMCurrFdbk_GetIb(pPWMCurrFdbk[M1])) > wThresholdOCSP ||
-                        abs(PWMCurrFdbk_GetIc(pPWMCurrFdbk[M1])) > wThresholdOCSP)
-        {
-                PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
-                MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_OCSP, 0);
+            PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
+            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_OCSP, 0);
         }
 
         #if ENABLE_DAC_DEBUGGING

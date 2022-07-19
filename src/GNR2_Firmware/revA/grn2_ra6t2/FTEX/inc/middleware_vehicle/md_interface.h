@@ -40,11 +40,7 @@ void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor,
   *         of the command calling the MDI_IsCommandAcknowledged method.
   * @param  pHandle Pointer on the component instance to work on.
   * @param  hFinalTorque is the value of motor torque reference at the end of
-  *         the ramp. This value represents actually the Iq current expressed in
-  *         digit.
-  *         To convert current expressed in Amps to current expressed in digit
-  *         is possible to use the formula:
-  *         Current (digit) = [Current(Amp) * 65536 * Rshunt * Aop] / Vdd micro.
+  *         the ramp in cNm (Nm/100).
 	*	@param	bMotor is the target motor number
   * @retval none.
   */
@@ -59,6 +55,9 @@ void MDI_ExecTorqueRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor
   * @param  pHandle Pointer on the component instance to work on.
   * @param  Iqdref current references on qd reference frame in qd_t
   *         format.
+  *         To convert current expressed in Amps to current expressed in digit
+  *         is possible to use the formula:
+  *         Current (digit) = [Current(Amp) * 65536 * Rshunt * Aop] / Vdd micro.
   * @param  bMotor is the target motor number
   * @retval none.
   */

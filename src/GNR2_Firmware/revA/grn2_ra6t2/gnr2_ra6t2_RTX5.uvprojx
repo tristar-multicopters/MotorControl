@@ -540,6 +540,11 @@
               <FilePath>.\FTEX\src\middleware_vehicle\powertrain_management.c</FilePath>
             </File>
             <File>
+              <FileName>foldback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\foldback.c</FilePath>
+            </File>
+            <File>
               <FileName>motor_selection.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\motor_selection.c</FilePath>
@@ -690,9 +695,9 @@
               <FilePath>.\FTEX\src\middleware_motor\ramp_mngr.c</FilePath>
             </File>
             <File>
-              <FileName>foldback.c</FileName>
+              <FileName>signal_filtering.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\foldback.c</FilePath>
+              <FilePath>.\FTEX\src\middleware_motor\signal_filtering.c</FilePath>
             </File>
             <File>
               <FileName>mc_type.h</FileName>
@@ -723,6 +728,11 @@
               <FileName>uCAL_GPIO.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_GPIO.c</FilePath>
+            </File>
+            <File>
+              <FileName>uCAL_UART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_UART.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -23,16 +23,16 @@ typedef struct
 	uint16_t hLowPassFilterBW2;
 	
 	uint16_t hOffsetThrottle;            // Offset of ADC value vs throttle
-	uint8_t bSlopeThrottle;              // Gain factor of ADC value vs throttle
-	uint8_t bDivisorThrottle;            // Scaling factor of ADC value vs throttle   
+	uint16_t bSlopeThrottle;              // Gain factor of ADC value vs throttle
+	uint16_t bDivisorThrottle;            // Scaling factor of ADC value vs throttle   
 	
 	uint16_t hOffsetTorque;          	 // Offset of throttle vs torque 
-	int8_t bSlopeTorque;                 // Gain factor of throttle vs torque   
-	uint8_t bDivisorTorque;              // Scaling factor of throttle vs torque   
+	int16_t bSlopeTorque;                 // Gain factor of throttle vs torque   
+	uint16_t bDivisorTorque;              // Scaling factor of throttle vs torque   
 	
 	uint16_t hOffsetSpeed;               // Offset of throttle vs speed 
-	int8_t bSlopeSpeed;                  // Gain factor of throttle vs speed   
-	uint8_t bDivisorSpeed;               // Scaling factor of throttle vs speed   
+	int16_t bSlopeSpeed;                  // Gain factor of throttle vs speed   
+	uint16_t bDivisorSpeed;               // Scaling factor of throttle vs speed   
 	
 	uint16_t hDetectionThreshold;        // Minimum throttle at which throttle is detected
 	

@@ -79,7 +79,7 @@ typedef struct
 /**
   * @brief  It initializes the module and its hardware components.
   * @param  pHandle: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
-  * @retval none
+  * @retval true if initialization is successful
   */
 bool PWMInsulCurrSensorFdbk_Init(PWMInsulCurrSensorFdbkHandle_t * pHandle);
 

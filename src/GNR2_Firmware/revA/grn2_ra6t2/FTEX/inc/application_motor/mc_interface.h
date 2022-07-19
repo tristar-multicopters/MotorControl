@@ -102,11 +102,7 @@ void MCInterface_ExecSpeedRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t
   *         of the command calling the MCI_IsCommandAcknowledged method.
   * @param  pHandle Pointer on the component instance to work on.
   * @param  hFinalTorque is the value of motor torque reference at the end of
-  *         the ramp. This value represents actually the Iq current expressed in
-  *         digit.
-  *         To convert current expressed in Amps to current expressed in digit
-  *         is possible to use the formula:
-  *         Current (digit) = [Current(Amp) * 65536 * Rshunt * Aop] / Vdd micro.
+  *         the ramp in cNm (Nm/100).
   * @retval none.
   */
 void MCInterface_ExecTorqueRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalTorque);
@@ -120,6 +116,9 @@ void MCInterface_ExecTorqueRamp(MotorControlInterfaceHandle_t * pHandle,  int16_
   * @param  pHandle Pointer on the component instance to work on.
   * @param  Iqdref current references on qd reference frame in qd_t
   *         format.
+  *         To convert current expressed in Amps to current expressed in digit
+  *         is possible to use the formula:
+  *         Current (digit) = [Current(Amp) * 65536 * Rshunt * Aop] / Vdd micro.
   * @retval none.
   */
 void MCInterface_SetCurrentReferences(MotorControlInterfaceHandle_t * pHandle, qd_t Iqdref);
@@ -371,12 +370,6 @@ int16_t MCInterface_GetPhaseCurrentAmplitude(MotorControlInterfaceHandle_t * pHa
   */
 int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHandle);
 
-/**
-  * @brief  It re-initializes Iqdref variables with their default values.
-  * @param  pHandle Pointer on the component instance to work on.
-  * @retval none
-  */
-void MCInterface_ClearIqdref(MotorControlInterfaceHandle_t * pHandle);
 
 #ifdef __cplusplus
 }

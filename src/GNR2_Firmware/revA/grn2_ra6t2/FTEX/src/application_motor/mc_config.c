@@ -28,10 +28,10 @@ PIDHandle_t PIDSpeedHandleM1 =
 {
   .hDefKpGain          = (int16_t)PID_SPEED_KP_DEFAULT,
   .hDefKiGain          = (int16_t)PID_SPEED_KI_DEFAULT,
-  .wUpperIntegralLimit = (int32_t)IQMAX * (int32_t)SP_KIDIV,
-  .wLowerIntegralLimit = -(int32_t)IQMAX * (int32_t)SP_KIDIV,
-  .hUpperOutputLimit       = (int16_t)IQMAX,
-  .hLowerOutputLimit       = -(int16_t)IQMAX,
+  .wUpperIntegralLimit = (int32_t)SPD_CTRL_MAX_TORQUE * (int32_t)SP_KIDIV,
+  .wLowerIntegralLimit = -(int32_t)SPD_CTRL_MAX_TORQUE * (int32_t)SP_KIDIV,
+  .hUpperOutputLimit       = (int16_t)SPD_CTRL_MAX_TORQUE,
+  .hLowerOutputLimit       = -(int16_t)SPD_CTRL_MAX_TORQUE,
   .hKpDivisor          = (uint16_t)SP_KPDIV,
   .hKiDivisor          = (uint16_t)SP_KIDIV,
   .hKpDivisorPOW2      = (uint16_t)SP_KPDIV_LOG,
@@ -169,13 +169,12 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
   .hMaxPositiveTorque =				(int16_t)NOMINAL_CURRENT,
   .hMinNegativeTorque =				-(int16_t)NOMINAL_CURRENT,
   .ModeDefault =					DEFAULT_CONTROL_MODE,
-  .hMecSpeedRefUnitDefault =		(int16_t)(DEFAULT_TARGET_SPEED_UNIT),
-  .hTorqueRefDefault =				(int16_t)DEFAULT_TORQUE_COMPONENT,
-  .hIdrefDefault =					(int16_t)DEFAULT_FLUX_COMPONENT,
   .wTorqueSlopePerSecondUp =    DEFAULT_TORQUE_SLOPE_UP,
   .wTorqueSlopePerSecondDown =  DEFAULT_TORQUE_SLOPE_DOWN,
   .wSpeedSlopePerSecondUp =     DEFAULT_SPEED_SLOPE_UP,
   .wSpeedSlopePerSecondDown =   DEFAULT_SPEED_SLOPE_DOWN,
+  .fGainTorqueIqref =           GAIN_TORQUE_IQREF,
+  .fGainTorqueIdref =           GAIN_TORQUE_IDREF,
 };
 
 /**
@@ -206,6 +205,20 @@ PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
     .Ib = 0,
     .Ic = 0,
     .hPWMperiod          = PWM_PERIOD_CYCLES,
+    
+    .IaFilter = 
+    {
+        .pIIRFAInstance = &g_iirfa0,
+    },
+    .IbFilter = 
+    {
+        .pIIRFAInstance = &g_iirfa1,
+    },
+    .fCurrentFilterAlpha = CURRENT_FILTER_ALPHA,
+    .fCurrentFilterBeta  = CURRENT_FILTER_BETA,
+    
+    .hSoftwareOCPMarginCurrent = OCSP_SAFETY_MARGIN,
+    .hSoftwareOCPMaximumCurrent = OCSP_MAX_CURRENT,
 
   },
 	.hIaRaw = 0,

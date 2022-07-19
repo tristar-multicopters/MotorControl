@@ -8,6 +8,36 @@
                      #define ADC_B_TRIGGER_ADC_B1        ADC_B_TRIGGER_SYNC_ELC
                      #define ADC_B_TRIGGER_ADC_B1_B      ADC_B_TRIGGER_SYNC_ELC
 
+iirfa_instance_ctrl_t g_iirfa1_ctrl;
+
+const iir_cfg_t g_iirfa1_cfg =
+{
+    .channel         = 1,
+    .p_extend        = NULL,
+};
+
+/* Instance structure to use this module. */
+const iirfa_instance_t g_iirfa1 =
+{
+    .p_ctrl          = &g_iirfa1_ctrl,
+    .p_cfg           = &g_iirfa1_cfg,
+    .p_api           = &g_iir_on_iirfa
+};
+iirfa_instance_ctrl_t g_iirfa0_ctrl;
+
+const iir_cfg_t g_iirfa0_cfg =
+{
+    .channel         = 0,
+    .p_extend        = NULL,
+};
+
+/* Instance structure to use this module. */
+const iirfa_instance_t g_iirfa0 =
+{
+    .p_ctrl          = &g_iirfa0_ctrl,
+    .p_cfg           = &g_iirfa0_cfg,
+    .p_api           = &g_iir_on_iirfa
+};
 sci_b_uart_instance_ctrl_t     g_uart0_ctrl;
 
             sci_b_baud_setting_t               g_uart0_baud_setting =

@@ -22,9 +22,9 @@ static void ICS_HFCurrentsPolarization(PWMCurrFdbkHandle_t * pHdl,ab_t * Iab);
 
 bool PWMInsulCurrSensorFdbk_Init(PWMInsulCurrSensorFdbkHandle_t * pHandle)
 {
-	/* Nothing to initialize for now */
-	
-	bool bIsError = false;
+    bool bIsError = false;
+    
+	bIsError = PWMCurrFdbk_Init(&pHandle->Super);
 	
 	return bIsError;
 }

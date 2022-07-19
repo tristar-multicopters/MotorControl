@@ -156,7 +156,7 @@ bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal
 
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
-        pHandle->hFinalTorque = hTargetFinalSat; // Store final torque value in handle
+        pHandle->hFinalTorqueRef = hTargetFinalSat; // Store final torque value in handle
         if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
         {
             RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTargetFinalSat, pHandle->wTorqueSlopePerSecondUp); // Setup torque ramp going up
@@ -168,7 +168,7 @@ bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal
     }
     else
     {
-        pHandle->hFinalSpeed = hTargetFinalSat; // Store final speed value in handle
+        pHandle->hFinalSpeedRef = hTargetFinalSat; // Store final speed value in handle
         if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
         {
             RampMngr_ExecRamp(&pHandle->SpeedRampMngr, hTargetFinalSat, pHandle->wSpeedSlopePerSecondUp); // Setup speed ramp going up
@@ -232,13 +232,6 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpeednTorqCtrlHandle_t * pHandle)
 }
 
 
-int16_t SpdTorqCtrl_GetMecSpeedRefUnitDefault(SpeednTorqCtrlHandle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-    return pHandle->hMecSpeedRefUnitDefault;
-}
-
-
 uint16_t SpdTorqCtrl_GetMaxAppPositiveMecSpeedUnit(SpeednTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -268,24 +261,6 @@ bool SpdTorqCtrl_IsRampCompleted(SpeednTorqCtrlHandle_t * pHandle)
     }
 
     return retVal;
-}
-
-
-qd_t SpdTorqCtrl_GetDefaultIqdref(SpeednTorqCtrlHandle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-    qd_t IqdRefDefault;
-    IqdRefDefault.q = pHandle->hTorqueRefDefault;
-    IqdRefDefault.d = pHandle->hIdrefDefault;
-    return IqdRefDefault;
-}
-
-
-void SpdTorqCtrl_SetNominalCurrent(SpeednTorqCtrlHandle_t * pHandle, uint16_t hNominalCurrent)
-{
-    ASSERT(pHandle != NULL);
-    pHandle->hMaxPositiveTorque = hNominalCurrent;
-    pHandle->hMinNegativeTorque = -hNominalCurrent;
 }
 
 
@@ -343,3 +318,40 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle,
 
     return hOutputTorque;
 }
+
+
+int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
+{
+    float fTemp;
+    
+    fTemp = (float) (hTorqueRef * pHandle->fGainTorqueIqref);
+    if (fTemp > INT16_MAX)
+    {
+        fTemp = INT16_MAX;
+    }
+    if (fTemp < INT16_MIN)
+    {
+        fTemp = INT16_MIN;
+    }
+    
+    return (int16_t) fTemp;
+}
+
+int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
+{
+    float fTemp;
+    
+    fTemp = (float) (hTorqueRef * pHandle->fGainTorqueIdref);
+    if (fTemp > INT16_MAX)
+    {
+        fTemp = INT16_MAX;
+    }
+    if (fTemp < INT16_MIN)
+    {
+        fTemp = INT16_MIN;
+    }
+    
+    return (int16_t) fTemp;
+}
+    
+

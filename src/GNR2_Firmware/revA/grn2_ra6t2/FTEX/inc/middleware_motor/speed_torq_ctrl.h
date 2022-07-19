@@ -28,18 +28,18 @@ extern "C" {
   */
 typedef struct
 {
-    RampMngr_Handle_t TorqueRampMngr;
-    RampMngr_Handle_t SpeedRampMngr;
+    RampMngr_Handle_t TorqueRampMngr;                   /* Ramp management structure for torque reference */
+    RampMngr_Handle_t SpeedRampMngr;                    /* Ramp management structure for speed reference */
 
-    Foldback_Handle_t FoldbackMotorSpeed;
-    Foldback_Handle_t FoldbackMotorTemperature;
-    Foldback_Handle_t FoldbackHeatsinkTemperature;
+    Foldback_Handle_t FoldbackMotorSpeed;               /* Foldback structure used to limit maximum motor speed */
+    Foldback_Handle_t FoldbackMotorTemperature;         /* Foldback structure used to limit maximum motor temperature */
+    Foldback_Handle_t FoldbackHeatsinkTemperature;      /* Foldback structure used to limit maximum heatsink temperature */
 
     int16_t hCurrentTorqueRef;
     int16_t hCurrentSpeedRef;
 
-    int16_t hFinalTorque;
-    int16_t hFinalSpeed;
+    int16_t hFinalTorqueRef;
+    int16_t hFinalSpeedRef;
 
     STCModality_t Mode;   /*!< Modality of STC. It can be one of these two
                                settings: STC_TORQUE_MODE to enable the
@@ -69,27 +69,17 @@ typedef struct
                                              of the rotor mechanical speed. Expressed in
                                              the unit defined by #SPEED_UNIT.*/
     uint16_t hMaxPositiveTorque;          /*!< Maximum positive value of motor
-                                             torque. This value represents
-                                             actually the maximum Iq current
-                                             expressed in digit.*/
+                                             torque in cNm.*/
     int16_t hMinNegativeTorque;           /*!< Minimum negative value of motor
-                                             torque. This value represents
-                                             actually the maximum Iq current
-                                             expressed in digit.*/
+                                             torque in cNm.*/
     STCModality_t ModeDefault;          /*!< Default STC modality.*/
-    int16_t hMecSpeedRefUnitDefault;      /*!< Default mechanical rotor speed
-                                             reference expressed in the unit
-                                             defined by #SPEED_UNIT.*/
-    int16_t hTorqueRefDefault;            /*!< Default motor torque reference.
-                                             This value represents actually the
-                                             Iq current reference expressed in
-                                             digit.*/
-    int16_t hIdrefDefault;                /*!< Default Id current reference expressed
-                                             in digit.*/
-    uint32_t wTorqueSlopePerSecondUp;     /*!< Slope in torque unit per second when ramping up torque. */
-    uint32_t wTorqueSlopePerSecondDown;   /*!< Slope in torque unit per second when ramping down torque. */
+    uint32_t wTorqueSlopePerSecondUp;     /*!< Slope in cNm per second when ramping up torque. */
+    uint32_t wTorqueSlopePerSecondDown;   /*!< Slope in cNm per second when ramping down torque. */
     uint32_t wSpeedSlopePerSecondUp;      /*!< Slope in #SPEED_UNIT per second when ramping up speed. */
     uint32_t wSpeedSlopePerSecondDown;    /*!< Slope in #SPEED_UNIT per second when ramping down speed. */
+    
+    float fGainTorqueIqref;            /* Gain (G) between Iqref in digital amps and torque reference in cNm. Iqref = Torq * G/D  */
+    float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
 
 } SpeednTorqCtrlHandle_t;
 
@@ -132,14 +122,9 @@ void SpdTorqCtrl_Clear(SpeednTorqCtrlHandle_t * pHandle);
 int16_t SpdTorqCtrl_GetMecSpeedRefUnit(SpeednTorqCtrlHandle_t * pHandle);
 
 /**
-  * @brief  Get the current motor torque reference. This value represents
-  *         actually the Iq current reference expressed in digit.
-  *         To convert current expressed in digit to current expressed in Amps
-  *         is possible to use the formula:
-  *         Current(Amp) = [Current(digit) * Vdd micro] / [65536 * Rshunt * Aop]
+  * @brief  Get the current motor torque reference in cNm (Nm/100).
   * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval int16_t current motor torque reference. This value represents
-  *         actually the Iq current expressed in digit.
+  * @retval int16_t current motor torque reference in cNm.
   */
 int16_t SpdTorqCtrl_GetTorqueRef(SpeednTorqCtrlHandle_t * pHandle);
 
@@ -179,27 +164,21 @@ STCModality_t SpdTorqCtrl_GetControlMode(SpeednTorqCtrlHandle_t * pHandle);
   * @param  hTargetFinal final value of command. This is different accordingly
   *         the STC modality.
   *         If STC is in Torque mode hTargetFinal is the value of motor torque
-  *         reference at the end of the ramp. This value represents actually the
-  *         Iq current expressed in digit.
-  *         To convert current expressed in Amps to current expressed in digit
-  *         is possible to use the formula:
-  *         Current(digit) = [Current(Amp) * 65536 * Rshunt * Aop]  /  Vdd micro
+  *         reference at the end of the ramp expressed in cNm.
   *         If STC is in Speed mode hTargetFinal is the value of mechanical
   *         rotor speed reference at the end of the ramp expressed in tenths of
   *         HZ.
-  * @param  hDurationms the duration of the ramp expressed in milliseconds. It
-  *         is possible to set 0 to perform an instantaneous change in the value.
   * @retval bool It return false if the absolute value of hTargetFinal is out of
   *         the boundary of the application (Above max application speed or max
   *         application torque or below min application speed depending on
-  *         current modality of TSC) in this case the command is ignored and the
+  *         current modality of STC) in this case the command is ignored and the
   *         previous ramp is not interrupted, otherwise it returns true.
   */
 bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal);
 
 /**
   * @brief  This command interrupts the execution of any previous ramp command.
-  *         If STC has been set in Torque mode the last value of Iq is
+  *         If STC has been set in Torque mode the last value of torque is
   *         maintained.
   *         If STC has been set in Speed mode the last value of mechanical
   *         rotor speed reference is maintained.
@@ -214,22 +193,9 @@ void SpdTorqCtrl_StopRamp(SpeednTorqCtrlHandle_t * pHandle);
   *         passing as parameter the speed sensor used to perform the speed
   *         regulation.
   * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval int16_t motor torque reference. This value represents actually the
-  *         Iq current expressed in digit.
-  *         To convert current expressed in Amps to current expressed in digit
-  *         is possible to use the formula:
-  *         Current(digit) = [Current(Amp) * 65536 * Rshunt * Aop]  /  Vdd micro
+  * @retval int16_t motor torque reference in cNm (Nm/100).
   */
 int16_t SpdTorqCtrl_CalcTorqueReference(SpeednTorqCtrlHandle_t * pHandle);
-
-/**
-  * @brief  Get the Default mechanical rotor speed reference expressed in tenths
-  *         of HZ.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval int16_t It returns the Default mechanical rotor speed. reference
-  *         expressed in tenths of HZ.
-  */
-int16_t SpdTorqCtrl_GetMecSpeedRefUnitDefault(SpeednTorqCtrlHandle_t * pHandle);
 
 /**
   * @brief  Returns the Application maximum positive value of rotor speed. Expressed in the unit defined by #SPEED_UNIT.
@@ -265,21 +231,6 @@ void SpdTorqCtrl_SetSpeedSensor(SpeednTorqCtrlHandle_t * pHandle, SpeednPosFdbkH
   */
 SpeednPosFdbkHandle_t * SpdTorqCtrl_GetSpeedSensor(SpeednTorqCtrlHandle_t * pHandle);
 
-/**
-  * @brief It returns the default values of Iqdref.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval default values of Iqdref.
-  */
-qd_t SpdTorqCtrl_GetDefaultIqdref(SpeednTorqCtrlHandle_t * pHandle);
-
-/**
-  * @brief  Change the nominal current .
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @param  hNominalCurrent This value represents actually the maximum Iq current
-            expressed in digit.
-  * @retval none
-  */
-void SpdTorqCtrl_SetNominalCurrent(SpeednTorqCtrlHandle_t * pHandle, uint16_t hNominalCurrent);
 
 /**
   * @brief  Force the speed reference to the curren speed. It is used
@@ -306,6 +257,37 @@ void SpdTorqCtrl_SetTorqueRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t w
   * @retval none
   */
 void SpdTorqCtrl_SetSpeedRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t wSlopePerSecondUp, uint32_t wSlopePerSecondDown);
+
+/**
+  * @brief  Set speed ramp slope values, for ramping up and ramping down.
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  wSpeedSlopePerSecondUp: Slope value in #SPEED_UNIT per second when ramping up
+  * @param  wSpeedSlopePerSecondDown: Slope value in #SPEED_UNIT per second when ramping down
+  * @retval none
+  */
+void SpdTorqCtrl_SetSpeedRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t wSlopePerSecondUp, uint32_t wSlopePerSecondDown);
+
+/**
+  * @brief  Get Iq from provided torque reference.
+  *         To convert current expressed in Amps to current expressed in digit
+  *         is possible to use the formula:
+  *         Current(digit) = [Current(Amp) * 65536 * Rshunt * Aop]  /  Vdd micro
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  hTorqueRef: Torque reference in cNm
+  * @retval int16_t Iq in digital A
+  */
+int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef);
+
+/**
+  * @brief  Get Id from provided torque reference.
+  *         To convert current expressed in Amps to current expressed in digit
+  *         is possible to use the formula:
+  *         Current(digit) = [Current(Amp) * 65536 * Rshunt * Aop]  /  Vdd micro
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  hTorqueRef: Torque reference in cNm
+  * @retval int16_t Id in digital A
+  */
+int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef);
 
 
 #ifdef __cplusplus

@@ -20,6 +20,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
+#include "signal_filtering.h"
 
 /* Exported defines ------------------------------------------------------------*/
 
@@ -111,6 +112,7 @@ typedef uint16_t (*PWMCurrFdbk_RLDetectSetDuty_Cb_t)(PWMCurrFdbkHandle_t * pHand
   */
 struct PWMCurrFdbkHandle
 {
+  PWMCurrFdbk_Generic_Cb_t                      pFctInitialize;              /**< pointer on the function the component instance uses to initialize PWM&Curr feedback module */
   PWMCurrFdbk_IrqHandler_Cb_t 					pFctIrqHandler;              /**< pointer on the interrupt handling function. */
   PWMCurrFdbk_GetPhaseCurr_Cb_t 				pFctGetPhaseCurrents;        /**< pointer on the function the component instance uses to retrieve pahse currents */
   PWMCurrFdbk_Generic_Cb_t 						pFctSwitchOffPwm;            /**< pointer on the function the component instance uses to switch PWM off */
@@ -132,17 +134,35 @@ struct PWMCurrFdbkHandle
   uint16_t  hLowDuty;
   uint16_t  hMidDuty;
   uint16_t  hHighDuty;
-  bool 			hTurnOnLowSidesAction;                            /**< true if TurnOnLowSides action is active,
+  bool 			hTurnOnLowSidesAction;                  /**< true if TurnOnLowSides action is active,
                                                               false otherwise. */
   uint8_t   Motor;                                      /**< Motor reference number */
-  bool      bRLDetectionMode;                             /**< true if enabled, false if disabled. */
+  bool      bRLDetectionMode;                           /**< true if enabled, false if disabled. */
   int16_t   Ia;                                         /**< Last @f$I_{A}@f$ measurement. */
   int16_t   Ib;                                         /**< Last @f$I_{B}@f$ measurement. */
   int16_t   Ic;                                         /**< Last @f$I_{C}@f$ measurement. */
  
   uint16_t hPWMperiod;                                   /**< PWM period expressed in timer clock cycles unit:
                                                            *  @f$hPWMPeriod = TimerFreq_{CLK} / F_{PWM}@f$    */
+                                                           
+  SignalFilteringHandle_t IaFilter;                  /* Pointer to filter instance used for filtering Ia signal (only for software ocp) */
+  SignalFilteringHandle_t IbFilter;                  /* Pointer to filter instance used for filtering Ib signal (only for software ocp) */
+  float fCurrentFilterAlpha;
+  float fCurrentFilterBeta;
+  
+  int16_t hSoftwareOCPMarginCurrent;                   /* Measured current amplitude can be until hSoftwareOCPMarginCurrent higher
+                                                            than reference current before overcurrent software protection triggers */    
+  int16_t hSoftwareOCPMaximumCurrent;                   /* Max current that can be reached before triggering software overcurrent */
+  
 };
+
+
+/**
+  * @brief Initialize PWM&Current feedback module.
+  * @param  pHandle: handle on the target PWMC component
+  * @retval true if initialization is successful
+*/
+bool PWMCurrFdbk_Init( PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief Returns the phase current of the motor (in s16A unit).
@@ -183,6 +203,15 @@ static inline int16_t PWMCurrFdbk_GetIc(PWMCurrFdbkHandle_t * pHandle)
 {
   return pHandle->Ic;
 }
+
+/**
+  * @brief  Execute software overcurrent protection algorithm. Must be called periodically to update current filters.
+  * @param  pHandle: handle on the target PWMC component
+  * @param  Iab: Pointer to the structure that contains Ia and Ib
+  * @param  Iqdref: Pointer to the structure that contains Idref and Iqref
+  * @retval True if overcurrent condition, false otherwise.
+*/
+bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref);
 
 /**
   * @brief  Converts input voltages @f$ V_{\alpha} @f$ and @f$ V_{\beta} @f$ into PWM duty cycles

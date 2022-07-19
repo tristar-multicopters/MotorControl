@@ -204,6 +204,10 @@
       <description>SCI UART</description>
       <originalPack>Renesas.RA.3.6.0.pack</originalPack>
     </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_iirfa" variant="" vendor="Renesas" version="3.6.0">
+      <description>IIR Filter Accelerator</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
   </raComponentSelection>
   <raElcConfiguration>
     <eventProduced event="event.icu.irq1"/>
@@ -1129,6 +1133,14 @@
       <property id="module.driver.uart.tei_ipl" value="board.icu.common.irq.priority12"/>
       <property id="module.driver.uart.eri_ipl" value="board.icu.common.irq.priority12"/>
     </module>
+    <module id="module.driver.iir_on_iirfa.1335325192">
+      <property id="module.driver.iirfa.name" value="g_iirfa0"/>
+      <property id="module.driver.iirfa.channel" value="0"/>
+    </module>
+    <module id="module.driver.iir_on_iirfa.773567500">
+      <property id="module.driver.iirfa.name" value="g_iirfa1"/>
+      <property id="module.driver.iirfa.channel" value="1"/>
+    </module>
     <context id="_hal.0">
       <stack module="module.driver.ioport_on_ioport.0"/>
       <stack module="module.driver.three_phase_on_gpt_three_phase.769777526">
@@ -1148,6 +1160,8 @@
       <stack module="module.driver.timer_on_agt.494947181"/>
       <stack module="module.driver.timer_on_gpt.742765003"/>
       <stack module="module.driver.uart_on_sci_b_uart.1259470755"/>
+      <stack module="module.driver.iir_on_iirfa.1335325192"/>
+      <stack module="module.driver.iir_on_iirfa.773567500"/>
     </context>
     <config id="config.driver.ioport">
       <property id="config.driver.ioport.checking" value="config.driver.ioport.checking.system"/>
@@ -1163,6 +1177,13 @@
       <property id="config.driver.sci_b_uart.fifo_support" value="config.driver.sci_b_uart.fifo_support.disabled"/>
       <property id="config.driver.sci_b_uart.dtc_support" value="config.driver.sci_b_uart.dtc_support.disabled"/>
       <property id="config.driver.sci_b_uart.flow_control" value="config.driver.sci_b_uart.flow_control.disabled"/>
+    </config>
+    <config id="config.driver.iirfa">
+      <property id="config.driver.iirfa.param_checking_enable" value="config.driver.iirfa.param_checking_enable.bsp"/>
+      <property id="config.driver.iirfa.use_polling" value="config.driver.iirfa.use_polling.enabled"/>
+      <property id="config.driver.iirfa.loop_unroll_depth" value="config.driver.iirfa.loop_unroll_depth.1"/>
+      <property id="config.driver.iirfa.ecc" value="config.driver.iirfa.ecc.enabled"/>
+      <property id="config.driver.iirfa.round" value="config.driver.iirfa.round.nearest"/>
     </config>
     <config id="config.driver.elc">
       <property id="config.driver.elc.checking" value="config.driver.elc.checking.system"/>

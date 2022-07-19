@@ -12,13 +12,48 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "pwm_curr_fdbk.h"
-
+#include "mc_math.h"
 #include "mc_type.h"
 
 
-void PWMCurrFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHandle, ab_t * Iab)
+bool PWMCurrFdbk_Init( PWMCurrFdbkHandle_t * pHandle)
+{
+    bool bIsError = false;
+
+    SignalFiltering_Init(&pHandle->IaFilter);
+    SignalFiltering_ConfigureButterworthFOLP(&pHandle->IaFilter, pHandle->fCurrentFilterAlpha, pHandle->fCurrentFilterBeta);
+    SignalFiltering_Init(&pHandle->IbFilter);
+    SignalFiltering_ConfigureButterworthFOLP(&pHandle->IbFilter, pHandle->fCurrentFilterAlpha, pHandle->fCurrentFilterBeta);
+
+	return bIsError;
+}
+
+void PWMCurrFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHandle, ab_t * Iab )
 {
   pHandle->pFctGetPhaseCurrents(pHandle, Iab);
+}
+
+bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
+{
+    int16_t IaFiltered, IbFiltered, IcFiltered;
+
+    IaFiltered = SignalFiltering_CalcOutput(&pHandle->IaFilter, Iab->a);
+    IbFiltered = SignalFiltering_CalcOutput(&pHandle->IbFilter, Iab->b);
+    IcFiltered = -IaFiltered - IbFiltered;
+
+    int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(Iqdref->d, Iqdref->q);
+    int32_t wThresholdOCSP = hIqdrefAmplitude + abs(pHandle->hSoftwareOCPMarginCurrent);
+    if (wThresholdOCSP > abs(pHandle->hSoftwareOCPMaximumCurrent))
+    {
+        wThresholdOCSP = abs(pHandle->hSoftwareOCPMaximumCurrent);
+    }
+    if (abs(IaFiltered) > wThresholdOCSP ||
+        abs(IbFiltered) > wThresholdOCSP ||
+        abs(IcFiltered) > wThresholdOCSP)
+    {
+        return true;
+    }
+    return false;
 }
 
 
@@ -126,9 +161,9 @@ void PWMCurrFdbk_SwitchOnPWM(PWMCurrFdbkHandle_t * pHandle)
 bool PWMCurrFdbk_CurrentReadingCalibr(PWMCurrFdbkHandle_t * pHandle)
 {
   bool retVal = true;
-  
+
 	PWMCurrFdbk_SwitchOffPWM(pHandle);
-	
+
   pHandle->pFctCurrReadingCalib(pHandle);
 
   return retVal;
@@ -251,6 +286,3 @@ void PWMCurrFdbk_RegisterRLDetectionModeSetDutyCallBack(PWMCurrFdbk_RLDetectSetD
 {
   pHandle->pFctRLDetectionModeSetDuty = pCallBack;
 }
-
-
-

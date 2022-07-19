@@ -351,7 +351,3 @@ int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHa
 }
 
 
-void MCInterface_ClearIqdref(MotorControlInterfaceHandle_t * pHandle)
-{
-  pHandle->pFOCVars->Iqdref = SpdTorqCtrl_GetDefaultIqdref(pHandle->pSpeedTorqCtrl);
-}
