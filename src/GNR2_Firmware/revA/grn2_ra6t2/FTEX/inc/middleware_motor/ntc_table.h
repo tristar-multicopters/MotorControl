@@ -7,7 +7,7 @@
 
 #include "stdint.h"
 
-#define NTC_LUT_SIZE                        5
-#define NTC_LUT_DIGITAL_STEP                1000
-#define NTC_LUT_DIGITAL_FIRST_VALUE         5000
+#define NTC_LUT_SIZE                        19
+#define NTC_LUT_DIGITAL_STEP                2000
+#define NTC_LUT_DIGITAL_FIRST_VALUE         25000
 extern const int32_t NTCLookupTable[NTC_LUT_SIZE];
