@@ -25,6 +25,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "pwm_curr_fdbk.h"
+#include "mc_math.h"
 
 #include "mc_type.h"
 
@@ -90,6 +91,29 @@ __attribute__( ( section ( ".ccmram" ) ) )
 __weak void PWMC_GetPhaseCurrents( PWMC_Handle_t * pHandle, ab_t * Iab )
 {
   pHandle->pFctGetPhaseCurrents( pHandle, Iab );
+}
+
+bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMC_Handle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
+{
+    int16_t IaFiltered, IbFiltered, IcFiltered;
+
+    IaFiltered = SignalFiltering_CalcOutput(&pHandle->IaFilter, Iab->a);
+    IbFiltered = SignalFiltering_CalcOutput(&pHandle->IbFilter, Iab->b);
+    IcFiltered = -IaFiltered - IbFiltered;
+
+    int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(Iqdref->d, Iqdref->q);
+    int32_t wThresholdOCSP = hIqdrefAmplitude + abs(pHandle->hSoftwareOCPMarginCurrent);
+    if (wThresholdOCSP > abs(pHandle->hSoftwareOCPMaximumCurrent))
+    {
+        wThresholdOCSP = abs(pHandle->hSoftwareOCPMaximumCurrent);
+    }
+    if (abs(IaFiltered) > wThresholdOCSP ||
+        abs(IbFiltered) > wThresholdOCSP ||
+        abs(IcFiltered) > wThresholdOCSP)
+    {
+        return true;
+    }
+    return false;
 }
 
 

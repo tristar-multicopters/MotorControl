@@ -48,7 +48,7 @@ extern "C" {
 
 typedef struct
 {
-  SpeednTorqCtrl_Handle_t * pSTC;       /*!< Speed and torque controller object used by  EAC.*/
+  SpeednTorqCtrlHandle_t * pSTC;       /*!< Speed and torque controller object used by  EAC.*/
   VirtualSpeedSensor_Handle_t * pVSS;   /*!< Virtual speed sensor object used by EAC.*/
   ENCODER_Handle_t * pENC;              /*!< Encoder object used by EAC.*/
   uint16_t hRemainingTicks;             /*!< Number of clock events remaining to complete
@@ -78,7 +78,7 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 
 /*  Function used to initialize an instance of the EncAlignCtrl component */
-void EAC_Init( EncAlign_Handle_t * pHandle, SpeednTorqCtrl_Handle_t * pSTC, VirtualSpeedSensor_Handle_t * pVSS,
+void EAC_Init( EncAlign_Handle_t * pHandle, SpeednTorqCtrlHandle_t * pSTC, VirtualSpeedSensor_Handle_t * pVSS,
                ENCODER_Handle_t * pENC );
 
 /* Function used to start the encoder alignment procedure.*/

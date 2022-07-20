@@ -11,6 +11,12 @@
 #include "mc_type.h"
 #include "regular_conversion_manager.h"
 
+#define USE_NTC_LOOKUP_TABLE    1
+
+#if USE_NTC_LOOKUP_TABLE
+#include "lookup_table.h"
+#endif
+
 
 typedef struct
 {
@@ -19,8 +25,9 @@ typedef struct
 
   RegConv_t      TempRegConv;
 
-  uint16_t hAvTempDigital;          /**< It contains latest available average Vbus.
+  uint16_t hAvTempDigital;          /**< It contains latest available average temperature.
                                     This parameter is expressed in u16Celsius */
+  int16_t hAvTempCelcius;            /**< It contains latest computation of temperature in Celcius */
 
   uint16_t hExpectedTempDigital;    /**< Default set when no sensor available (ie virtual sensor) */
 
@@ -49,6 +56,11 @@ typedef struct
   uint16_t hT0;                /**< T0 temperature constant value used to convert the temperature into Volts
                                     Used in through formula: V[V]=V0+dV/dT[V/°C]*(T-T0)[°C] */
   uint8_t bConvHandle;            /*!< handle to the regular conversion */
+  
+  
+  #if USE_NTC_LOOKUP_TABLE
+  LookupTableHandle_t NTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
+  #endif
 
 } NTCTempSensorHandle_t;
 

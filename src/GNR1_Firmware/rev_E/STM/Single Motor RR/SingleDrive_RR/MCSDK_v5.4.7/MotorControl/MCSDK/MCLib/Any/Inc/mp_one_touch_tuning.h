@@ -109,7 +109,7 @@ typedef struct
 	  SpeednPosFdbk_Handle_t *pSpeedSensor;       /*!< Related speed sensor used. */
 	  pFOCVars_t pFOCVars;  /*!< Related structure of FOC vars.*/
 	  PID_Handle_t * pPIDSpeed;          /*!< Related speed controller used. */
-	  SpeednTorqCtrl_Handle_t *pSTC;            /*!< Speed and torque controller used.*/
+	  SpeednTorqCtrlHandle_t *pSTC;            /*!< Speed and torque controller used.*/
 
   RampExtMngr_Handle_t *pREMng;           /*!< Ramp manager used.*/
   int16_t hFDetIq[2];      /*!< Array used to store Iq measurements done during F estimation.*/

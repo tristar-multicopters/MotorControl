@@ -163,7 +163,7 @@ typedef enum
 
 
 /**
-  * @brief  STC_Modality_t type definition, it's used by STC_SetControlMode and STC_GetControlMode methods in
+  * @brief  STC_Modality_t type definition, it's used by SpdTorqCtrl_SetControlMode and STC_GetControlMode methods in
   *         SpeednTorqCtrl class to specify the control modality type
   */
 typedef enum

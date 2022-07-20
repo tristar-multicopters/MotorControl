@@ -627,6 +627,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
     CodeReturn |= errMask[bMotor] & NTCTempSensor_CalcAvTemp(pTemperatureSensor[bMotor]); /* check for fault if FW protection is activated. It returns MC_OVER_TEMP or MC_NO_ERROR */
+    NTCTempSensor_GetAvTempCelcius(pTemperatureSensor[bMotor]);                           /* store into handle temperature in Celcius */
     CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);                     /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
                                                                                             (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
     if(bMotor == M1)

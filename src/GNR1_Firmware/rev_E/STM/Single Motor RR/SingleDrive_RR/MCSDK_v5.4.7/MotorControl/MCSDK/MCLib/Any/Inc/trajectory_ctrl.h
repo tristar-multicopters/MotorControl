@@ -100,11 +100,11 @@ typedef struct
   AlignStatus_t AlignmentStatus;
 
   ENCODER_Handle_t *pENC;
-  SpeednTorqCtrl_Handle_t * pSTC;
+  SpeednTorqCtrlHandle_t * pSTC;
   PID_Handle_t * PIDPosRegulator;
 } PosCtrl_Handle_t;
 
-void TC_Init(PosCtrl_Handle_t *pHandle, PID_Handle_t * pPIDPosReg, SpeednTorqCtrl_Handle_t * pSTC, ENCODER_Handle_t * pENC);
+void TC_Init(PosCtrl_Handle_t *pHandle, PID_Handle_t * pPIDPosReg, SpeednTorqCtrlHandle_t * pSTC, ENCODER_Handle_t * pENC);
 bool TC_MoveCommand  (PosCtrl_Handle_t *pHandle, float startingAngle, float angleStep, float movementDuration);
 void TC_FollowCommand(PosCtrl_Handle_t *pHandle, float Angle);
 void TC_PositionRegulation(PosCtrl_Handle_t *pHandle);

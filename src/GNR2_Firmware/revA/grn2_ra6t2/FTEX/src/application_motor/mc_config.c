@@ -10,6 +10,7 @@
 #include "pqd_motor_power_measurement.h"
 #include "mc_config.h"
 #include "board_hardware.h"
+#include "ntc_table.h"
 
 
 #define OFFCALIBRWAIT_MS     0
@@ -332,6 +333,16 @@ NTCTempSensorHandle_t TempSensorParamsM1 =
   .hSensitivity            = (uint16_t)(ADC_REFERENCE_VOLTAGE/dV_dT),
   .wV0                     = (uint16_t)(V0_V *65536/ ADC_REFERENCE_VOLTAGE),
   .hT0                     = T0_C,
+  
+  #if USE_NTC_LOOKUP_TABLE
+  .NTCLookupTable = 
+  {
+      .hXDataStep = NTC_LUT_DIGITAL_STEP,
+      .wXDataFirstValue = NTC_LUT_DIGITAL_FIRST_VALUE,
+      .hTableLength = NTC_LUT_SIZE,
+      .pOutputTable = NTCLookupTable,
+  },
+  #endif
 };
 
 /* Bus voltage sensor value filter buffer */

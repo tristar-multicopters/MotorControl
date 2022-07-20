@@ -204,20 +204,6 @@ __weak MCI_CommandState_t  MC_GetCommandStateMotor1( void)
 	return MCI_IsCommandAcknowledged( pMCI[M1] );
 }
 
-/**
- * @brief Stops the execution of the on-going speed ramp for Motor 1, if any.
- *
- *  If a speed ramp is currently being executed, it is immediately stopped, the rotation
- * speed of Motor 1 is maintained to its current value and true is returned. If no speed
- * ramp is on-going, nothing is done and false is returned.
- *
- * @deprecated This function is deprecated and should not be used anymore. It will be
- *             removed in a future version of the MCSDK. Use MC_StopRampMotor1() instead.
- */
-__weak bool MC_StopSpeedRampMotor1(void)
-{
-	return MCI_StopSpeedRamp( pMCI[M1] );
-}
 
 /**
  * @brief Stops the execution of the on-going ramp for Motor 1, if any.

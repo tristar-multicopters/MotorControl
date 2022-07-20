@@ -956,13 +956,13 @@ __weak int32_t UI_GetReg(UI_Handle_t *pHandle, MC_Protocol_REG_t bRegID, bool * 
 
     case MC_PROTOCOL_REG_MAX_APP_SPEED:
     {
-      bRetVal = (STC_GetMaxAppPositiveMecSpeedUnit(pMCT->pSpeednTorqueCtrl) * _RPM)/SPEED_UNIT ;
+      bRetVal = (SpdTorqCtrl_GetMaxAppPositiveMecSpeedUnit(pMCT->pSpeednTorqueCtrl) * _RPM)/SPEED_UNIT ;
     }
     break;
 
     case MC_PROTOCOL_REG_MIN_APP_SPEED:
     {
-      bRetVal = (STC_GetMinAppNegativeMecSpeedUnit(pMCT->pSpeednTorqueCtrl)  * _RPM)/SPEED_UNIT ;
+      bRetVal = (SpdTorqCtrl_GetMinAppNegativeMecSpeedUnit(pMCT->pSpeednTorqueCtrl)  * _RPM)/SPEED_UNIT ;
     }
     break;
 

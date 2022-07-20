@@ -44,6 +44,9 @@ void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle)
 {
   if (pHandle->bSensorType == REAL_SENSOR)
   {
+      #if USE_NTC_LOOKUP_TABLE
+      LookupTable_Init(&pHandle->NTCLookupTable);
+      #endif
       pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->TempRegConv);  // Need to be register with RegularConvManager
       NTCTempSensor_Clear(pHandle);
   }
@@ -92,22 +95,27 @@ uint16_t NTCTempSensor_GetAvTempDigital(NTCTempSensorHandle_t * pHandle)
     return pHandle->hAvTempDigital;
 }
 
-
 int16_t NTCTempSensor_GetAvTempCelcius(NTCTempSensorHandle_t * pHandle)
 {
   int32_t wTemp;  // temporary 32 bit variable for calculation
   if (pHandle->bSensorType == REAL_SENSOR)  // Checks for sensor type
-      {  // Converts averaged temperature measurement from digital to celsius by formula:
+  {
+      #if USE_NTC_LOOKUP_TABLE
+      wTemp = LookupTable_CalcOutput(&pHandle->NTCLookupTable, pHandle->hAvTempDigital);
+      #else
+      // Converts averaged temperature measurement from digital to celsius by formula:
          // AvTCelsius = (((AvTDigital-DigitalOffset)*Sensitivity)/MaxDigitalValue)+ CelsiusOffset
       wTemp = (int32_t)(pHandle->hAvTempDigital);
       wTemp -= (int32_t)(pHandle->wV0);
       wTemp *= pHandle->hSensitivity;
       wTemp = wTemp / 65536 + (int32_t)(pHandle->hT0);
+      #endif
   }
   else
   {
       wTemp = pHandle->hExpectedTempCelcius;
   }
+  pHandle->hAvTempCelcius = (int16_t) wTemp;
   return (int16_t) wTemp;
 }
 

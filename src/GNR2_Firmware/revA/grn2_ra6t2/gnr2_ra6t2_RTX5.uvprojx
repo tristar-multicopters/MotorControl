@@ -700,9 +700,24 @@
               <FilePath>.\FTEX\src\middleware_motor\signal_filtering.c</FilePath>
             </File>
             <File>
+              <FileName>lookup_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\lookup_table.c</FilePath>
+            </File>
+            <File>
               <FileName>mc_type.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+            </File>
+            <File>
+              <FileName>ntc_table.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\middleware_motor\ntc_table.h</FilePath>
+            </File>
+            <File>
+              <FileName>ntc_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\ntc_table.c</FilePath>
             </File>
           </Files>
         </Group>
