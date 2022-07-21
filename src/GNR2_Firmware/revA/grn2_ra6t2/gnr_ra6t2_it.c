@@ -9,6 +9,8 @@
 #include "mc_tasks.h"
 #include "bsp_pin_cfg.h"
 #include "vc_config.h"
+#include "uCAL_UART.h"
+#include "comm_config.h"
 
 /**
   * @brief  Interrupt routine of ADC hardware.
@@ -139,31 +141,25 @@ void WFREQ_TIM_Callback (timer_callback_args_t * p_args)
   * @param  p_args: UART callback function arguments.
   */
 void UART_IRQHandler(uart_callback_args_t * p_args)
-{
+{  
     // Handle the UART event 
     switch (p_args->event)
     {
         // Received a character (unplanned reception)
         case UART_EVENT_RX_CHAR:
-        {
-             
-            break;
-        }
+                 
+            break;       
         // Receive complete 
         case UART_EVENT_RX_COMPLETE:
-        {
-            
-            break;
-        }
+        
+            UART0_handle.pRxCallback(UART0_handle.Super_Handle);
+            break;        
         // Transmit complete 
         case UART_EVENT_TX_COMPLETE:
-        {
-            
-            break;
-        }
+        
+            UART0_handle.pTxCallback(UART0_handle.Super_Handle);   
+            break;        
         default:
-        {
-        }
-    }
-
+            break; 
+    }    
 }  

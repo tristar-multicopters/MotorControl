@@ -7,6 +7,7 @@
 #include "gnr_main.h"
 #include "vc_tasks.h"
 #include "mc_tasks.h"
+#include "comm_tasks.h"
 
 //****************** THREAD EXTERN FUNCTION PROTOTYPES ******************//
 
@@ -14,6 +15,7 @@ extern void startMCSafetyTask(void * pvParameter);
 extern void startMCMediumFrequencyTask(void * pvParameter);
 extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
+extern void ProcessUARTFrames(void * pvParameter);
 
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
 
@@ -34,6 +36,7 @@ osThreadId_t MC_MediumFrequencyTask_handle;
 osThreadId_t MC_SafetyTask_handle;
 osThreadId_t THR_VC_MediumFreq_handle;
 osThreadId_t THR_VC_StateMachine_handle;
+osThreadId_t COMM_Uart_handle;
 
 
 //****************** THREAD ATTRIBUTES ******************//
@@ -66,6 +69,11 @@ static const osThreadAttr_t ThAtt_VehicleStateMachine = {
 };
 #endif
 
+static const osThreadAttr_t ThAtt_UART = {
+	.name = "TSK_UART",
+	.stack_size = 512,
+	.priority = osPriorityBelowNormal
+};
 /**************************************************************/
 
 /**
@@ -73,6 +81,7 @@ static const osThreadAttr_t ThAtt_VehicleStateMachine = {
  */
 void gnr_main(void)
 {
+
     /* Hardware initialization */
     ADCInit();
     GPTInit();
@@ -112,6 +121,9 @@ void gnr_main(void)
                                       &ThAtt_VehicleStateMachine);
     #endif
 
+   	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
+												          		NULL,
+																	    &ThAtt_UART);		
     /* Start RTOS */
     if (osKernelGetState() == osKernelReady)
     {

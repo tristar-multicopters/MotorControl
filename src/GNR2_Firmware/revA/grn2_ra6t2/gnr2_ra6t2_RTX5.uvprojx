@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>5</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -412,6 +412,33 @@
         </Group>
         <Group>
           <GroupName>Application/Communications</GroupName>
+          <Files>
+            <File>
+              <FileName>comm_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_communications\comm_config.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_communications\comm_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm_parameters.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_communications\comm_parameters.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm_tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_communications\comm_tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm_defines.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_communications\comm_defines.h</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>Application/Vehicle</GroupName>
@@ -520,6 +547,13 @@
         </Group>
         <Group>
           <GroupName>Middleware/Communications</GroupName>
+          <Files>
+            <File>
+              <FileName>lcd_apt_comm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_communications\lcd_apt_comm.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>Middleware/Vehicle</GroupName>

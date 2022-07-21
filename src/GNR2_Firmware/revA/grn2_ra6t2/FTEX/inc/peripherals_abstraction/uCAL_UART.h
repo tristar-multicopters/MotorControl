@@ -16,6 +16,8 @@
 #include "stdint.h"
 #include "r_sci_b_uart.h"
 
+#define UART_FLAG  0x10 //TODO move to the proper spot
+
 // ======================== Pin configuration enums ======================== // 
 
 typedef enum  // Used to select the UART baudrate
@@ -25,11 +27,33 @@ typedef enum  // Used to select the UART baudrate
     BAUD115200 = 115200,
 } uCAL_BaudRate_t;
 
+typedef enum
+{
+  	UART_DISABLE,
+	UART_EVIONICS,
+	UART_BAFANG,
+	UART_FTEX,
+	UART_APT, 
+    UART_LOG_HS 
+
+} uCAL_Protocol_t;
+
 typedef struct
 {
-    uart_instance_t * UARTInstance;
-    uCAL_BaudRate_t   UARTBaudrate;
-    uint8_t           OpenRecpBuffer[30];
+ const uart_instance_t  *UARTInstance;   
+}UART_Parameters_t, *pUART_Parameters_t;
+
+typedef struct
+{
+    
+    uCAL_BaudRate_t    UARTBaudrate;
+    uCAL_Protocol_t    UARTProtocol;
+    pUART_Parameters_t pUART_Parameters;
+    uint8_t            OpenRecpBuffer[30];
+    void* Super_Handle;                    // Points to the higher handle that is using the uart port
+                                           // MUST be initialised before using.
+    void (*pRxCallback)(void *);
+    void (*pTxCallback)(void *);
 }
 UART_Handle_t;
 
@@ -66,5 +90,8 @@ void uCAL_UART_Transmit(UART_Handle_t *pHandle, uint8_t *Buffer, uint32_t Buffer
   @return void
 */
 void uCAL_UART_Receive(UART_Handle_t *pHandle, uint8_t *Buffer, uint32_t BufferSize);
+
+
+void uCAL_UART_IRQHandler(UART_Handle_t *pHandle,uart_callback_args_t * p_args);
 
 #endif

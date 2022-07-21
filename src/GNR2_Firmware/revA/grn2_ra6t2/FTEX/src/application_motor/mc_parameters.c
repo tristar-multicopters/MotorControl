@@ -15,7 +15,7 @@ const PWMInsulCurrSensorFdbkParams_t PWMICSParamsM1 =
 {
 /* Current reading A/D Conversions initialization -----------------------------*/
 	.pADCHandle = &g_adc,
-  .ADCChannelIa = ADC_CHANNEL_4,
+    .ADCChannelIa = ADC_CHANNEL_4,
 	.ADCChannelIb = ADC_CHANNEL_2,
 	.ADCGroupMask = ADC_GROUP_MASK_0,
 
