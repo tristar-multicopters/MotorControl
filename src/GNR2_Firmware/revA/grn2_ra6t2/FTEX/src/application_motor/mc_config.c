@@ -90,7 +90,7 @@ FluxWeakeningHandle_t FluxWeakeningM1 =
   .hMaxModule             = MAX_MODULE,
   .hDefaultFwVoltRef       = (int16_t)FW_VOLTAGE_REF,
   .hDemagCurrent          = ID_DEMAG,
-  .wNominalSqCurr         = ((int32_t)NOMINAL_CURRENT*(int32_t)NOMINAL_CURRENT),
+  .wNominalSqCurr         = ((int32_t)NOMINAL_PEAK_CURRENT*(int32_t)NOMINAL_PEAK_CURRENT),
   .hVqdLowPassFilterBw    = M1_VQD_SW_FILTER_BW_FACTOR,
   .hVqdLowPassFilterBwLog = M1_VQD_SW_FILTER_BW_FACTOR_LOG
 };
@@ -103,7 +103,7 @@ PIDHandle_t PIDFluxWeakeningHandleM1 =
   .hDefKpGain          = (int16_t)FW_KP_GAIN,
   .hDefKiGain          = (int16_t)FW_KI_GAIN,
   .wUpperIntegralLimit = 0,
-  .wLowerIntegralLimit = (int32_t)(-NOMINAL_CURRENT) * (int32_t)FW_KIDIV,
+  .wLowerIntegralLimit = (int32_t)(-NOMINAL_PEAK_CURRENT) * (int32_t)FW_KIDIV,
   .hUpperOutputLimit       = 0,
   .hLowerOutputLimit       = -INT16_MAX,
   .hKpDivisor          = (uint16_t)FW_KPDIV,
@@ -143,21 +143,21 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
   .FoldbackMotorSpeed =
   {
       .bEnableFoldback = true,
-      .hDefaultMaxOutput = NOMINAL_CURRENT,
+      .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
       .hDecreasingEndValue = MAX_APPLICATION_SPEED_UNIT,
       .hDecreasingRange = MAX_APPLICATION_SPEED_UNIT/2,
   },
   .FoldbackMotorTemperature =
   {
       .bEnableFoldback = false,
-      .hDefaultMaxOutput = NOMINAL_CURRENT,
+      .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
       .hDecreasingEndValue = MOTOR_MAX_TEMPERATURE_C,
       .hDecreasingRange = MOTOR_MAX_TEMPERATURE_C/2,
   },
   .FoldbackHeatsinkTemperature =
   {
       .bEnableFoldback = false,
-      .hDefaultMaxOutput = NOMINAL_CURRENT,
+      .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
       .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C,
       .hDecreasingRange = OV_TEMPERATURE_THRESHOLD_C/2,
   },
@@ -167,8 +167,8 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
   .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
   .hMaxAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
   .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
-  .hMaxPositiveTorque =				(int16_t)NOMINAL_CURRENT,
-  .hMinNegativeTorque =				-(int16_t)NOMINAL_CURRENT,
+  .hMaxPositiveTorque =				(int16_t)NOMINAL_PEAK_TORQUE,
+  .hMinNegativeTorque =				-(int16_t)NOMINAL_PEAK_TORQUE,
   .ModeDefault =					DEFAULT_CONTROL_MODE,
   .wTorqueSlopePerSecondUp =    DEFAULT_TORQUE_SLOPE_UP,
   .wTorqueSlopePerSecondDown =  DEFAULT_TORQUE_SLOPE_DOWN,

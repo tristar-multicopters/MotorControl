@@ -15,11 +15,11 @@
 
 /***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
 #define POLE_PAIR_NUM          23 /* Number of motor pole pairs */
-#define RS                     0.50 /* Stator resistance , ohm*/
-#define LS                     0.000200 /* Stator inductance, H
+#define RS                     0.071 /* Stator resistance , ohm*/
+#define LS                     0.000150 /* Stator inductance, H
                                                  For I-PMSM it is equal to Lq */
 
-/* When using Id = 0, NOMINAL_CURRENT is utilized to saturate the output of the
+/* When using Id = 0, NOMINAL_PEAK_CURRENT is utilized to saturate the output of the
    PID for speed regulation (i.e. reference torque).
    Transformation of real currents (A) into int16_t format must be done accordingly with
    formula:
@@ -27,7 +27,9 @@
                                    *Amplifying network gain)/(MCU supply voltage/2)
 */
 
-#define NOMINAL_CURRENT         12000
+#define NOMINAL_PEAK_TORQUE     2000  /* Maximum torque to apply to motor in cNm */
+#define NOMINAL_PEAK_CURRENT    18000 /* Maximum current amplitude that can be injected
+                                            per phase in digital Amps */
 #define MOTOR_MAX_SPEED_RPM     1500 /*!< Maximum rated speed  */
 #define MOTOR_VOLTAGE_CONSTANT  15.0 /*!< Volts RMS ph-ph /kRPM */
 #define ID_DEMAG                -1000 /*!< Demagnetization current */
