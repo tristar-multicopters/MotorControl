@@ -435,19 +435,14 @@
               <FilePath>.\FTEX\src\application_communications\comm_tasks.c</FilePath>
             </File>
             <File>
-              <FileName>comm_defines.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_communications\comm_defines.h</FilePath>
-            </File>
-            <File>
-              <FileName>CAN_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_communications\CAN_task.c</FilePath>
-            </File>
-            <File>
               <FileName>co_gnr2_specs.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application_communications\co_gnr2_specs.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm_defines.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_communications\comm_defines.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -800,14 +795,14 @@
               <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_UART.c</FilePath>
             </File>
             <File>
-              <FileName>co_can_callbacks.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_can_callbacks.c</FilePath>
-            </File>
-            <File>
               <FileName>co_can_ra6t2.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_can_ra6t2.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_timer_ra6t2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_timer_ra6t2.c</FilePath>
             </File>
             <File>
               <FileName>co_nvm_ra6t2.c</FileName>
@@ -815,9 +810,9 @@
               <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_nvm_ra6t2.c</FilePath>
             </File>
             <File>
-              <FileName>co_timer_ra6t2.c</FileName>
+              <FileName>co_can_callbacks.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_timer_ra6t2.c</FilePath>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_can_callbacks.c</FilePath>
             </File>
           </Files>
         </Group>

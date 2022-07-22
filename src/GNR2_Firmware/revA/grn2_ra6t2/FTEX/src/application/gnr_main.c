@@ -39,7 +39,7 @@ osThreadId_t MC_SafetyTask_handle;
 osThreadId_t THR_VC_MediumFreq_handle;
 osThreadId_t THR_VC_StateMachine_handle;
 osThreadId_t COMM_Uart_handle;
-osThreadId_t CANThreadHandle; // For testing purposes
+osThreadId_t CANThreadHandle;
 
 //****************** THREAD ATTRIBUTES ******************//
 
