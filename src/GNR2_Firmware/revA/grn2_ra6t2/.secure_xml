@@ -65,6 +65,8 @@
       <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
       <configSetting altId="agt0.agtio0.pa08" configurationId="agt0.agtio0" isUsedByDriver="true"/>
       <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0" isUsedByDriver="true"/>
+      <configSetting altId="canfd0.crx0.pb12" configurationId="canfd0.crx0" isUsedByDriver="true"/>
+      <configSetting altId="canfd0.ctx0.pb13" configurationId="canfd0.ctx0" isUsedByDriver="true"/>
       <configSetting altId="dac120.da0.pa06" configurationId="dac120.da0"/>
       <configSetting altId="dac121.da1.pa07" configurationId="dac121.da1"/>
       <configSetting altId="gpt4.gtioc4a.pb04" configurationId="gpt4.gtioc4a" isUsedByDriver="true"/>
