@@ -9,7 +9,7 @@
 #include "signal_filtering.h"
 #include "ASSERT_FTEX.h"
 
-static void SignalFiltering_PerformTimestep(SignalFilteringHandle_t * pHandle, int16_t hInputData, int16_t hOutputData);
+static void SignalFiltering_PerformTimestep(SignalFilteringHandle_t * pHandle, int32_t hInputData, int32_t hOutputData);
 
 /*
     Initializes filter handle.
@@ -32,10 +32,10 @@ void SignalFiltering_Init(SignalFilteringHandle_t * pHandle)
 }
 
 /*
-    Calculate filter output from provided input data. 
+    Calculate filter output from provided input data (int16_t). 
     Must be called periodically at desired filter sampling time.
 */
-int16_t SignalFiltering_CalcOutput(SignalFilteringHandle_t * pHandle, int16_t hInputData)
+int16_t SignalFiltering_CalcOutputI16(SignalFilteringHandle_t * pHandle, int16_t hInputData)
 {
     ASSERT(pHandle != NULL);
     int16_t hRetVal = 0;
@@ -47,10 +47,10 @@ int16_t SignalFiltering_CalcOutput(SignalFilteringHandle_t * pHandle, int16_t hI
         if (pHandle->pIIRFAInstance == NULL)
         {
             fTemp1 = pHandle->Coeffs.b0*hInputData;
-            fTemp2 = pHandle->Coeffs.b1*pHandle->hPastInputs[0];
-            fTemp3 = pHandle->Coeffs.b2*pHandle->hPastInputs[1];
-            fTemp4 = pHandle->Coeffs.a1*pHandle->hPastOutputs[0];
-            fTemp5 = pHandle->Coeffs.a2*pHandle->hPastOutputs[1];
+            fTemp2 = pHandle->Coeffs.b1*(int16_t)pHandle->hPastInputs[0];
+            fTemp3 = pHandle->Coeffs.b2*(int16_t)pHandle->hPastInputs[1];
+            fTemp4 = pHandle->Coeffs.a1*(int16_t)pHandle->hPastOutputs[0];
+            fTemp5 = pHandle->Coeffs.a2*(int16_t)pHandle->hPastOutputs[1];
             
             fSum = (fTemp1 + fTemp2 + fTemp3 + fTemp4 + fTemp5);
             if (fSum > INT16_MAX)
@@ -67,6 +67,48 @@ int16_t SignalFiltering_CalcOutput(SignalFilteringHandle_t * pHandle, int16_t hI
         else
         {
             hRetVal = (int16_t) R_IIRFA_SingleFilter(pHandle->pIIRFAInstance->p_ctrl, (float) hInputData);
+        }
+    }
+    
+    return hRetVal;
+}
+
+/*
+    Calculate filter output from provided input data (uint16_t). 
+    Must be called periodically at desired filter sampling time.
+*/
+uint16_t SignalFiltering_CalcOutputU16(SignalFilteringHandle_t * pHandle, uint16_t hInputData)
+{
+    ASSERT(pHandle != NULL);
+    uint16_t hRetVal = 0;
+    float fSum;
+    float fTemp1, fTemp2, fTemp3, fTemp4, fTemp5;
+    
+    if (pHandle->FilterType != NOT_CONFIGURED) // Compute output only if filter is configured
+    {
+        if (pHandle->pIIRFAInstance == NULL)
+        {
+            fTemp1 = pHandle->Coeffs.b0*hInputData;
+            fTemp2 = pHandle->Coeffs.b1*(uint16_t)pHandle->hPastInputs[0];
+            fTemp3 = pHandle->Coeffs.b2*(uint16_t)pHandle->hPastInputs[1];
+            fTemp4 = pHandle->Coeffs.a1*(uint16_t)pHandle->hPastOutputs[0];
+            fTemp5 = pHandle->Coeffs.a2*(uint16_t)pHandle->hPastOutputs[1];
+            
+            fSum = (fTemp1 + fTemp2 + fTemp3 + fTemp4 + fTemp5);
+            if (fSum > UINT16_MAX)
+            {
+                fSum = UINT16_MAX;
+            }
+            if (fSum < 0)
+            {
+                fSum = 0;
+            }
+            hRetVal = (uint16_t) fSum;
+            SignalFiltering_PerformTimestep(pHandle, hInputData, hRetVal);
+        }    
+        else
+        {
+            hRetVal = (uint16_t) R_IIRFA_SingleFilter(pHandle->pIIRFAInstance->p_ctrl, (float) hInputData);
         }
     }
     
@@ -178,7 +220,7 @@ void SignalFiltering_ConfigureButterworthFOLP(SignalFilteringHandle_t * pHandle,
 /*
     Perform a timestep for calculating filter output, i.e. shifting past values.
 */
-static void SignalFiltering_PerformTimestep(SignalFilteringHandle_t * pHandle, int16_t hInputData, int16_t hOutputData)
+static void SignalFiltering_PerformTimestep(SignalFilteringHandle_t * pHandle, int32_t hInputData, int32_t hOutputData)
 {
     ASSERT(pHandle != NULL);
     pHandle->hPastInputs[1] = pHandle->hPastInputs[0];

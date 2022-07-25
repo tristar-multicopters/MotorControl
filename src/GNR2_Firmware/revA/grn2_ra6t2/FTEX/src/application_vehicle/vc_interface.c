@@ -80,10 +80,8 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 			value = pHandle->pPowertrain->sParameters.hStoppingThrottle;
 			break;
 		case REG_THROTTLE_BW1:
-			value = pHandle->pPowertrain->pThrottle->hParameters.hLowPassFilterBW1;
 			break;
 		case REG_THROTTLE_BW2:
-			value = pHandle->pPowertrain->pThrottle->hParameters.hLowPassFilterBW2;
 			break;
 		case REG_THROTTLE_DEADBAND_THR:
 			break;
@@ -670,10 +668,8 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 			pHandle->pPowertrain->sParameters.hStoppingThrottle = value;
 			break;
 		case REG_THROTTLE_BW1:
-			pHandle->pPowertrain->pThrottle->hParameters.hLowPassFilterBW1 = value;
 			break;
 		case REG_THROTTLE_BW2:
-			pHandle->pPowertrain->pThrottle->hParameters.hLowPassFilterBW2 = value;
 			break;
 		case REG_THROTTLE_DEADBAND_THR:
 			break;

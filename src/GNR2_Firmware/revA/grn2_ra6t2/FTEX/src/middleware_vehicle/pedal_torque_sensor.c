@@ -17,6 +17,11 @@
 */
 void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle)
 {	
+    SignalFiltering_Init(&pHandle->TorqSensorFilter);
+    SignalFiltering_ConfigureButterworthFOLP(&pHandle->TorqSensorFilter,
+                                                pHandle->hParameters.fFilterAlpha,
+                                                    pHandle->hParameters.fFilterBeta);
+    
     pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->PTS_RegConv);
     PedalTorqSensor_Clear(pHandle);
 }
@@ -40,25 +45,11 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
     uint16_t hTorqux;
     uint16_t htorque;
 	
-    uint16_t hBandwidth;
     /* Use the Read conversion Manager for ADC read*/
     htorque = RegConvMng_ReadConv(pHandle->bConvHandle);
     pHandle->hInstTorque = htorque;
-	/* Verify the filter coefficient to apply*/
-	if (pHandle->hInstTorque > pHandle->hAvADCValue)
-		hBandwidth = pHandle->hParameters.hLowPassFilterBW1;
-	else
-		hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
-    /* Filter pedal torque sensor ADC data */
-	if (htorque != 0xFFFFu)
-	{
-		tTorqaux = (uint32_t)(hBandwidth - 1u);
-		tTorqaux *= (uint32_t)(pHandle->hAvADCValue);
-		tTorqaux += htorque;
-		tTorqaux /= (uint32_t)(hBandwidth);
 
-		pHandle->hAvADCValue = (uint16_t)tTorqaux;
-	}
+    pHandle->hAvADCValue = SignalFiltering_CalcOutputU16(&pHandle->TorqSensorFilter, htorque);
 
 	/* Compute torque sesnor value (between 0 and 65535) */
 	hTorqux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 

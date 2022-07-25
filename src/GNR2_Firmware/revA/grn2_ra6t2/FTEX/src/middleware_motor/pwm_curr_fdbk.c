@@ -46,8 +46,8 @@ bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const 
 {
     int16_t IaFiltered, IbFiltered, IcFiltered;
 
-    IaFiltered = SignalFiltering_CalcOutput(&pHandle->IaFilter, Iab->a);
-    IbFiltered = SignalFiltering_CalcOutput(&pHandle->IbFilter, Iab->b);
+    IaFiltered = SignalFiltering_CalcOutputI16(&pHandle->IaFilter, Iab->a);
+    IbFiltered = SignalFiltering_CalcOutputI16(&pHandle->IbFilter, Iab->b);
     IcFiltered = -IaFiltered - IbFiltered;
 
     int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(Iqdref->d, Iqdref->q);

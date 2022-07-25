@@ -13,19 +13,24 @@
 /**
    Initializes throttle sensing conversions
  */
-void THRO_Init(THRO_Handle_t * pHandle)
+void Throttle_Init(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
+    SignalFiltering_Init(&pHandle->ThrottleFilter);
+    SignalFiltering_ConfigureButterworthFOLP(&pHandle->ThrottleFilter,
+                                                pHandle->hParameters.fFilterAlpha,
+                                                    pHandle->hParameters.fFilterBeta);
+    
 	/* Need to be register with RegularConvManager */
 	pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
-	THRO_Clear(pHandle);
+	Throttle_Clear(pHandle);
 }
 
 /**
    Initializes internal average throttle computed value
  */
-void THRO_Clear(THRO_Handle_t * pHandle)
+void Throttle_Clear(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 	pHandle->hAvADCValue = 0u;
@@ -37,38 +42,19 @@ void THRO_Clear(THRO_Handle_t * pHandle)
 	Compute torque value in u16 (0 at minimum throttle and 65535 when max throttle).
 	Need to be called periodically.
   */
-void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle)
+void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 	uint32_t wAux;
     uint16_t hAux;
-	uint16_t hBandwidth;
 	
 	/*
 		Compute averaged raw ADC value (between 0 and 65535)
 	*/
 	hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
 	pHandle->hInstADCValue = hAux;
-	
-	if (pHandle->hInstADCValue > pHandle->hAvADCValue)
-    {    
-		hBandwidth = pHandle->hParameters.hLowPassFilterBW1;
-	}
-    else
-    {	
-	    hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
-    }
+    pHandle->hAvADCValue = SignalFiltering_CalcOutputU16(&pHandle->ThrottleFilter, hAux);
     
-	if (hAux != UINT16_MAX)
-	{
-		wAux =  (uint32_t) (hBandwidth - 1u);
-		wAux *= (uint32_t) (pHandle->hAvADCValue);
-		wAux += hAux;
-		wAux /= (uint32_t) (hBandwidth);
-
-		pHandle->hAvADCValue = (uint16_t) wAux;
-	}
-	
 	/*
 		Compute throttle value (between 0 and 65535)
 	*/
@@ -90,7 +76,7 @@ void THRO_CalcAvThrottleValue(THRO_Handle_t * pHandle)
 /**
    Returns latest averaged throttle measured expressed in u16
   */
-uint16_t THRO_GetAvThrottleValue(THRO_Handle_t * pHandle)
+uint16_t Throttle_GetAvThrottleValue(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     return pHandle->hAvThrottleValue;
@@ -99,7 +85,7 @@ uint16_t THRO_GetAvThrottleValue(THRO_Handle_t * pHandle)
 /**
     Compute motor torque reference value from current throttle value stored in the handle 
   */
-int16_t THRO_ThrottleToTorque(THRO_Handle_t * pHandle)
+int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 	int32_t wAux;
@@ -130,7 +116,7 @@ int16_t THRO_ThrottleToTorque(THRO_Handle_t * pHandle)
 /**
     Compute motor speed reference value from current throttle value stored in the handle 
   */
-int16_t THRO_ThrottleToSpeed(THRO_Handle_t * pHandle)
+int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 	// todo: implementation
@@ -142,11 +128,11 @@ int16_t THRO_ThrottleToSpeed(THRO_Handle_t * pHandle)
 /**
 	 Return true if throttled is pressed (threshold is passed) 
    */
-bool THRO_IsThrottleDetected (THRO_Handle_t * pHandle) 
+bool Throttle_IsThrottleDetected (ThrottleHandle_t * pHandle) 
 {
     ASSERT(pHandle != NULL);
 	uint16_t hThrottle;
-	hThrottle = THRO_GetAvThrottleValue(pHandle);
+	hThrottle = Throttle_GetAvThrottleValue(pHandle);
 	if (hThrottle <= pHandle->hParameters.hDetectionThreshold)
     {    
 		return false;

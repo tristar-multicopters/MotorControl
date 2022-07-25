@@ -22,7 +22,7 @@
 void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1)
 {
     MDI_Init(pHandle->pMDI, pMci_M1);
-    THRO_Init(pHandle->pThrottle);
+    Throttle_Init(pHandle->pThrottle);
     BRK_Init(pHandle->pBrake);
     PSS_Init(pHandle->pPAS);
     MS_Init(pHandle->pMS);
@@ -43,7 +43,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1)
 void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle)
 {
     /* Update throttle sensor handle */
-    THRO_CalcAvThrottleValue(pHandle->pThrottle);
+    Throttle_CalcAvThrottleValue(pHandle->pThrottle);
 
     /* Update torque sensor handle */
     //PAS_CalcTSAvValue(pHandle->pPAS);
@@ -90,7 +90,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 
 	if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
 	{
-		hTorqueRef = THRO_ThrottleToTorque(pHandle->pThrottle); // Translate throttle value to powertrain target torque value
+		hTorqueRef = Throttle_ThrottleToTorque(pHandle->pThrottle); // Translate throttle value to powertrain target torque value
 
 		if (bIsBrakePressed)
 		{
@@ -109,7 +109,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 	else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
 	{
 		/* SPEED CONTROL NOT IMPLEMENTED YET. JUST PLACEHOLDER CODE */
-		hSpeedRef = THRO_ThrottleToSpeed(pHandle->pThrottle);
+		hSpeedRef = Throttle_ThrottleToSpeed(pHandle->pThrottle);
 		if (bIsBrakePressed)
 		{
 			hSpeedRef = 0;
@@ -442,7 +442,7 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 
 	int32_t wSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
-	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
+	uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
 
 	if (PWRT_IsMotor1Used(pHandle))
 	{
@@ -499,7 +499,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
   bool bCheckStart2 = false;
   bool bCheckStart3 = false;
 
-	uint16_t hThrottleValue = THRO_GetAvThrottleValue(pHandle->pThrottle);
+	uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
 
 	if (hThrottleValue > pHandle->sParameters.hStartingThrottle) // If throttle is higher than starting throttle parameter
 	{
@@ -820,7 +820,7 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 //{
 //
 //	/* PAS and Throttle management */
-//	if (PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle))
+//	if (PAS_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle))
 //	{
 //		/* Torque sensor enabled */
 //		if (pHandle->pPAS->bTorqueSensorUse)
@@ -837,7 +837,7 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 //	else
 //	{
 //		/* Throttle value convert to torque */
-//		pHandle->hTorqueSelect = THRO_ThrottleToTorque(pHandle->pThrottle);
+//		pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);
 //	}
 //	return pHandle->hTorqueSelect;
 //}

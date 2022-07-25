@@ -14,14 +14,15 @@
 
 
 #include "regular_conversion_manager.h"
+#include "signal_filtering.h"
 
 // ================= Structure used to configure a pin ===================== //
 
 /* Torque_Param_t structure used to store torque user parameters */
 typedef struct
 {          
-    uint16_t    hLowPassFilterBW1;   /* used to configure the first order software filter bandwidth */
-    uint16_t    hLowPassFilterBW2;	
+    float fFilterAlpha;                 // Alpha coefficient for low pass first order butterworth filter
+    float fFilterBeta;                  // Beta coefficient for low pass first order butterworth filter
 
     uint16_t    hTorqueSensMax;   /* torque signal when at maximum position */
     
@@ -45,6 +46,8 @@ typedef struct
 										   This parameter is expressed in u16 */
     uint16_t    hAvADCValue;            /* It contains latest available average ADC value */
     uint16_t    hAvTorqueValue;         /* It contains latest available average torque */
+    
+    SignalFilteringHandle_t TorqSensorFilter; // Filter structure used to filter out noise.
 
     PTS_Param_t hParameters;
     
