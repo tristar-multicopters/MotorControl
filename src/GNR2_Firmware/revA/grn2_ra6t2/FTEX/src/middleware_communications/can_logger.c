@@ -147,7 +147,7 @@ void CANLOG_SendTemperature(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 void CANLOG_SendThrottleBrake(VCI_Handle_t * pHandle)
 {
     can_frame_t msgToSend;
-    uint32_t throttleBrake = (uint32_t)BRK_IsPressed(pHandle->pPowertrain->pBrake) << 16 | THRO_GetAvThrottleValue(pHandle->pPowertrain->pThrottle);
+    uint32_t throttleBrake = (uint32_t)BRK_IsPressed(pHandle->pPowertrain->pBrake) << 16 | Throttle_GetAvThrottleValue(pHandle->pPowertrain->pThrottle);
     
     // Prepare Header of CAN message 
     msgToSend.id = CAN_ID_THROTTLE_BRAKE;
@@ -162,4 +162,4 @@ void CANLOG_SendThrottleBrake(VCI_Handle_t * pHandle)
     //Send CAN message
     uCAL_CAN_SendMsg(msgToSend);
 }
-#endif ENABLE_CAN_LOGGER
+#endif

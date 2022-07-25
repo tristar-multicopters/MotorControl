@@ -6,9 +6,11 @@
 // ==================== INCLUDES ======================== //
 
 #include "co_gnr2_specs.h"
-                                        /* select application drivers: */
+#include "gnr_parameters.h" // To use ENABLE_CAN_LOGGER
+#if !ENABLE_CAN_LOGGER
+                                    /* select application drivers: */
 #include "uCAL_CAN.h"               /* CAN driver                  */
-#include "uCAL_TIM1.h"             /* Timer driver                */
+#include "uCAL_TIM1.h"              /* Timer driver                */
 #include "uCAL_NVM.h"               /* NVM driver                  */
 
 // ==================== PRIVATE DEFINES ======================== //
@@ -126,3 +128,4 @@ struct CO_NODE_SPEC_T GnR2ModuleSpec = {
     &CoGnrDriver,             /* select drivers for application */
     &SdoSrvMem[0]             /* SDO Transfer Buffer Memory     */
 };
+#endif

@@ -127,7 +127,7 @@ __NO_RETURN void processCANmsgTask (void * pvParameter)
     UNUSED_PARAMETER(pvParameter);
     
     #if ENABLE_CAN_LOGGER
-    CAN_initInterface();
+    uCAL_CAN_DrvInit();
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     uint32_t xLastWakeTime = osKernelGetTickCount();
     #else
