@@ -33,16 +33,20 @@ BRK_Handle_t BrakeHandle =
 
 /**@brief Throttle initializing Parameters.
  */
-THRO_Handle_t ThrottleHandle =
+ThrottleHandle_t ThrottleHandle =
 {
 	.Throttle_RegConv =
 	{
 			.hChannel = THROTTLE_ANALOG_CHANNEL,
 	},
+    .ThrottleFilter = 
+    {
+        .pIIRFAInstance = NULL, // NULL to apply software filtering, no hardware accelerator
+    },
 	.hParameters =
 	{
-		.hLowPassFilterBW1 = THROTTLE_LOWPASS_FILTER_BW1,
-		.hLowPassFilterBW2 = THROTTLE_LOWPASS_FILTER_BW2,
+		.fFilterAlpha = THROTTLE_FILTER_ALPHA,
+		.fFilterBeta = THROTTLE_FILTER_BETA,
 
 		.hOffsetThrottle = THROTTLE_OFFSET_ADC2THROTTLE,
 		.bSlopeThrottle = THROTTLE_SLOPE_ADC2THROTTLE,
@@ -65,10 +69,14 @@ PedalTorqSensorHandle_t PedalTorqueSensor =
     {
         .hChannel = PEDAL_TORQUE_SENSOR_ANALOG_CHANNEL,
     },
+    .TorqSensorFilter = 
+    {
+        .pIIRFAInstance = NULL, // NULL to apply software filtering, no hardware accelerator
+    },
     .hParameters =
     {
-        .hLowPassFilterBW1 = PTS_LOWPASS_FILTER_BW1,
-        .hLowPassFilterBW2 = PTS_LOWPASS_FILTER_BW2,
+		.fFilterAlpha = PTS_FILTER_ALPHA,
+		.fFilterBeta = PTS_FILTER_BETA,
 
         .hOffsetPTS = PTS_OFFSET_ADC2PTS,
         .bSlopePTS = PTS_SLOPE_ADC2PTS,

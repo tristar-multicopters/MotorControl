@@ -593,7 +593,7 @@ inline uint16_t FOC_CurrControllerM1(void)
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_OCSP, 0);
         }
 
-        #if ENABLE_DAC_DEBUGGING
+        #if ENABLE_MC_DAC_DEBUGGING
         R_DAC_Write(g_dac0.p_ctrl, (uint16_t)FOCVars[M1].Iab.a + INT16_MAX);
         R_DAC_Write(g_dac1.p_ctrl, (uint16_t)FOCVars[M1].Iab.b + INT16_MAX);
         #endif

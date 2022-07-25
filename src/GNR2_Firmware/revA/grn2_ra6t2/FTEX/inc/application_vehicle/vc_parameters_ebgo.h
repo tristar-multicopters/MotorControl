@@ -14,11 +14,10 @@
 
 /***************** THROTTLE PARAMETERS  ******************************/
 
-#define THROTTLE_LOWPASS_FILTER_BW1            8        /* Low pass filter bandwidth when going up,
-                                                          higher number means slower response */
-#define THROTTLE_LOWPASS_FILTER_BW2            2        /* Low pass filter bandwidth when going down,
-                                                          higher number means slower response */
-#define THROTTLE_OFFSET_ADC2THROTTLE           11000    /* Offset for ADC to throttle linear transformation  */
+#define THROTTLE_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient */
+#define THROTTLE_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient */
+
+#define THROTTLE_OFFSET_ADC2THROTTLE           12500    /* Offset for ADC to throttle linear transformation  */
 #define THROTTLE_SLOPE_ADC2THROTTLE            5        /* Slope for ADC to throttle linear transformation  */
 #define THROTTLE_DIVISOR_ADC2THROTTLE          3        /* Divisor for ADC to throttle linear transformation  */
 
@@ -31,10 +30,9 @@
 
 /***************** PEDAL TORQUE SENSOR PARAMETERS  ******************************/
 
-#define PTS_LOWPASS_FILTER_BW1            5        /* Low pass filter bandwidth when going up,
-                                                          higher number means slower response */
-#define PTS_LOWPASS_FILTER_BW2            25        /* Low pass filter bandwidth when going down,
-                                                          higher number means slower response */
+#define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient */
+#define PTS_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient */
+
 #define PTS_OFFSET_ADC2PTS                12500    /* Offset for ADC to pedal torque sensor linear transformation  */
 #define PTS_SLOPE_ADC2PTS                 5        /* Slope for ADC to pedal torque sensor linear transformation  */
 #define PTS_DIVISOR_ADC2PTS               4        /* Divisor for ADC to pedal torque sensor linear transformation  */

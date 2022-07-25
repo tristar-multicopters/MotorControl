@@ -41,8 +41,8 @@ typedef struct
 typedef struct
 {
     FilterType_t FilterType;            /* Current configuration of the filter */
-    int16_t hPastInputs[2];             /* Past inputs. hPastInputs[0] is the most recent */
-    int16_t hPastOutputs[2];            /* Past outputs. hPastOutputs[0] is the most recent */
+    int32_t hPastInputs[2];             /* Past inputs. hPastInputs[0] is the most recent */
+    int32_t hPastOutputs[2];            /* Past outputs. hPastOutputs[0] is the most recent */
     SignalFilteringCoeffs_t Coeffs;     /* Biquad filter coefficients */
 
     const iirfa_instance_t * pIIRFAInstance;  /* Pointer to renesas IIR filter accelerator.
@@ -61,13 +61,22 @@ typedef struct
 void SignalFiltering_Init(SignalFilteringHandle_t * pHandle);
 
 /**
-  * @brief  Calculate filter output from provided input data.
+  * @brief  Calculate filter output from provided input data (uint16).
+            Must be called periodically at desired filter sampling time.
+  * @param  pHandle: handler of the current instance of the SignalFiltering component
+  * @param  hInputData: Input data in uint16_t
+  * @retval Output data in uint16_t
+  */
+uint16_t SignalFiltering_CalcOutputU16(SignalFilteringHandle_t * pHandle, uint16_t hInputData);
+
+/**
+  * @brief  Calculate filter output from provided input data (int16).
             Must be called periodically at desired filter sampling time.
   * @param  pHandle: handler of the current instance of the SignalFiltering component
   * @param  hInputData: Input data in int16_t
   * @retval Output data in int16_t
   */
-int16_t SignalFiltering_CalcOutput(SignalFilteringHandle_t * pHandle, int16_t hInputData);
+int16_t SignalFiltering_CalcOutputI16(SignalFilteringHandle_t * pHandle, int16_t hInputData);
 
 /**
   * @brief  Configure recursive average filter.
