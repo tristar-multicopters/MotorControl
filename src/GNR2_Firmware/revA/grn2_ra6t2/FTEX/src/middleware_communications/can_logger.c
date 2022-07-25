@@ -3,7 +3,7 @@
 *  Middleware layer for managing CAN logging messages
 */
 #include "can_logger.h"
-
+#if ENABLE_CAN_LOGGER
 /* Function for sending the vehicle status */
 
 void CANLOG_getStatus(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
@@ -42,7 +42,7 @@ void CANLOG_getStatus(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 	msgToSend.data[2] = (status >> 16) & 0xFF; // State
     
     //Send CAN message
-    CAN_SendMsg(msgToSend);
+    uCAL_CAN_SendMsg(msgToSend);
 }
 
 /* Function for sending the bus voltage value*/
@@ -60,7 +60,7 @@ void CANLOG_getVbus(VCI_Handle_t * pHandle)
     msgToSend.data[0] = bVoltage;
     
     //Send CAN message
-    CAN_SendMsg(msgToSend);
+    uCAL_CAN_SendMsg(msgToSend);
 }
 
 /* Function for sending the reference and measured currents */
@@ -92,7 +92,7 @@ void CANLOG_getCurrent(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
     msgToSend.data[7] = hCurrentMeasd >> 8 & 0xFF;
     
     //Send CAN message
-    CAN_SendMsg(msgToSend);
+    uCAL_CAN_SendMsg(msgToSend);
 }
 
 /* Function for sending the reference and measured speed */
@@ -117,7 +117,7 @@ void CANLOG_getSpeed(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
     msgToSend.data[3] = speedMeas >> 8 & 0xFF;
     
     //Send CAN message
-    CAN_SendMsg(msgToSend);
+    uCAL_CAN_SendMsg(msgToSend);
 }
 
 /* Function for sending the measured temperature */
@@ -140,7 +140,7 @@ void CANLOG_SendTemperature(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
     msgToSend.data[1] = temperature >> 8 & 0xFF;
     
     //Send CAN message
-    CAN_SendMsg(msgToSend);
+    uCAL_CAN_SendMsg(msgToSend);
 }
 
 /* Function for sending the throttle value and the brake status */
@@ -160,5 +160,6 @@ void CANLOG_SendThrottleBrake(VCI_Handle_t * pHandle)
     msgToSend.data[2] = (throttleBrake >> 16) & 0xFF;
     
     //Send CAN message
-    CAN_SendMsg(msgToSend);
+    uCAL_CAN_SendMsg(msgToSend);
 }
+#endif ENABLE_CAN_LOGGER

@@ -13,37 +13,33 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ******************************************************************************/
-
-/* TODO: rename the include protection to match the naming convention: 
- *   CO_CAN_<device-name>_H_
- */
-#ifndef CO_CAN_RA6T2_H_
-#define CO_CAN_RA6T2_H_
+/**
+* @file   uCAL_TIM1.h
+* @author Ftex
+* @brief  uController Abstraction Layer for hardware timer 1 (TIM1)
+*
+* This module is used to interact with the TIM1. 
+* It is the bridge between the TIM1 interface and the CANOpen stack
+*
+*/
+#ifndef UCAL_TIM1_H_
+#define UCAL_TIM1_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
 #endif
 
-/******************************************************************************
-* INCLUDES
-******************************************************************************/
-
+// ================================== INCLUDES ================================== //
 #include "co_if.h"
+#include "co_core.h"
 #include "hal_data.h"
 #include <cmsis_os2.h>
 
-#define CAN_GNR2_ID     0x601
-#define CAN_OK          0x00
-#define CAN_FAIL        0x01
-/******************************************************************************
-* PUBLIC SYMBOLS
-******************************************************************************/
-void CAN_initInterface(void);
-uint8_t CAN_SendMsg(can_frame_t msg_to_send);
-/* TODO: rename the extern variable declaration to match the naming convention:
- *   <device-name>CanDriver
- */
-extern const CO_IF_CAN_DRV CoCanDriver;
+// ================================== PUBLIC SYMBOLS ============================ //
+void uCAL_TIM1_manageCallback(CO_TMR *tmr);
+/* Get external entities */
+extern const CO_IF_TIMER_DRV CoTimerDriver;
+extern osSemaphoreId_t canTmrSemaphore;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

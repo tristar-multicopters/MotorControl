@@ -795,24 +795,24 @@
               <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_UART.c</FilePath>
             </File>
             <File>
-              <FileName>co_can_ra6t2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_can_ra6t2.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_timer_ra6t2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_timer_ra6t2.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_nvm_ra6t2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_nvm_ra6t2.c</FilePath>
-            </File>
-            <File>
               <FileName>co_can_callbacks.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_can_callbacks.c</FilePath>
+            </File>
+            <File>
+              <FileName>uCAL_CAN.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\uCAL_CAN.c</FilePath>
+            </File>
+            <File>
+              <FileName>uCAL_NVM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\uCAL_NVM.c</FilePath>
+            </File>
+            <File>
+              <FileName>uCAL_TIM1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\uCAL_TIM1.c</FilePath>
             </File>
           </Files>
         </Group>

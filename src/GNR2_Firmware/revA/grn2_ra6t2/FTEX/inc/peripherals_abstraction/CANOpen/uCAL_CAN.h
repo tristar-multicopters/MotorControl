@@ -13,12 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ******************************************************************************/
-
-/* TODO: rename the include protection to match the naming convention: 
- *   CO_NVM_<device>_H_
- */
-#ifndef CO_NVM_RA6T2_H_
-#define CO_NVM_RA6T2_H_
+/**
+* @file   uCAL_CAN.h
+* @author Ftex
+* @brief  uController Abstraction Layer for CAN
+*
+* This module is used to interact with the CANFD interface. 
+* It is the bridge between the CAN interface and the CANOpen stack
+*
+*/
+#ifndef UCAL_CAN_H_
+#define UCAL_CAN_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -29,15 +34,43 @@ extern "C" {
 ******************************************************************************/
 
 #include "co_if.h"
+#include "hal_data.h"
+#include "co_core.h"
+#include "gnr_parameters.h" // To be able to use ENABLE_CAN_LOGGER flag
 
+#include <cmsis_os2.h>
+
+#define CAN_GNR2_ID     0x601
+#define CAN_OK          0x00
+#define CAN_FAIL        0x01
 /******************************************************************************
 * PUBLIC SYMBOLS
 ******************************************************************************/
 
+typedef struct
+{
+    CO_NODE canNode;
+    uint16_t hError;
+    bool bTxFlag;
+}CAN_Handler_t;
+
+#if ENABLE_CAN_LOGGER
+void uCAL_CAN_DrvInit(void);
+uint8_t uCAL_CAN_SendMsg(can_frame_t msg_to_send);
+#else
+/**
+*  @brief Function used to process a message received
+*         from callback function of the CANbus
+*  @param pHandler: Handle of the CAN interface
+*  @param rxFrame: frame received from the CAN callback function
+*  @return void
+*/
+void uCAL_CAN_ProcessRxMessage(CAN_Handler_t * pHandler, can_frame_t rxFrame);
+#endif
 /* TODO: rename the extern variable declaration to match the naming convention:
- *   <device-name>NvmDriver
+ *   <device-name>CanDriver
  */
-extern const CO_IF_NVM_DRV CoNvmDriver;
+extern const CO_IF_CAN_DRV CoCanDriver;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

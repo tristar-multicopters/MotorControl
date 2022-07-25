@@ -13,12 +13,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ******************************************************************************/
+/**
+* @file   uCAL_NVM.h
+* @author Ftex
+* @brief  uController Abstraction Layer for hardware Non-volatil memory (NVM).
+*         This module is used as a bridge between the NVM interface and the 
+*         CANOpen stack
+*
+*/
 
-/* TODO: rename the include protection to match the naming convention: 
- *   CO_TIMER_<device>_H_
- */
-#ifndef CO_TIMER_RA6T2_H_
-#define CO_TIMER_RA6T2_H_
+#ifndef UCAL_NVM_H_
+#define UCAL_NVM_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -34,7 +39,10 @@ extern "C" {
 * PUBLIC SYMBOLS
 ******************************************************************************/
 
-extern const CO_IF_TIMER_DRV CoTimerDriver;
+/* TODO: rename the extern variable declaration to match the naming convention:
+ *   <device-name>NvmDriver
+ */
+extern const CO_IF_NVM_DRV CoNvmDriver;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

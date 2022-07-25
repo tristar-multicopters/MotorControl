@@ -25,7 +25,7 @@ const timer_cfg_t g_timer1_cfg =
     .mode                = TIMER_MODE_PERIODIC,
     /* Actual period: 0.001 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0xea60, .duty_cycle_counts = 0x7530, .source_div = (timer_source_div_t)0,
     .channel             = 1,
-    .p_callback          = g_co_TIM_callback,
+    .p_callback          = CAN_TIM_Callback,
     /** If NULL then do not add & */
 #if defined(NULL)
     .p_context           = NULL,
@@ -110,7 +110,7 @@ const can_cfg_t g_canfd0_cfg =
 {
     .channel                = 0,
     .p_bit_timing           = &g_canfd0_bit_timing_cfg,
-    .p_callback             = canfd0_callback,
+    .p_callback             = CANFD_IRQhandler,
     .p_extend               = &g_canfd0_extended_cfg,
     .p_context              = NULL,
     .ipl                    = (7),

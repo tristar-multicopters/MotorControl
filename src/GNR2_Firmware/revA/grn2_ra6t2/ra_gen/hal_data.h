@@ -32,8 +32,8 @@ extern const timer_instance_t g_timer1;
 extern agt_instance_ctrl_t g_timer1_ctrl;
 extern const timer_cfg_t g_timer1_cfg;
 
-#ifndef g_co_TIM_callback
-void g_co_TIM_callback(timer_callback_args_t * p_args);
+#ifndef CAN_TIM_Callback
+void CAN_TIM_Callback(timer_callback_args_t * p_args);
 #endif
 /** CANFD on CANFD Instance. */
 extern const can_instance_t g_canfd0;
@@ -42,8 +42,8 @@ extern canfd_instance_ctrl_t g_canfd0_ctrl;
 extern const can_cfg_t g_canfd0_cfg;
 extern const canfd_extended_cfg_t g_canfd0_cfg_extend;
 
-#ifndef canfd0_callback
-void canfd0_callback(can_callback_args_t * p_args);
+#ifndef CANFD_IRQhandler
+void CANFD_IRQhandler(can_callback_args_t * p_args);
 #endif
 
 /* Global configuration (referenced by all instances) */

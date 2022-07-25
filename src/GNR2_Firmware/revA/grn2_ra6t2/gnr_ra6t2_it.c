@@ -162,4 +162,50 @@ void UART_IRQHandler(uart_callback_args_t * p_args)
         default:
             break; 
     }    
-}  
+}
+
+/**
+  * @brief  Interrupt routine of CAN Interface
+  * @param  p_args: UART callback function arguments.
+*/
+void CANFD_IRQhandler(can_callback_args_t *p_args)
+{
+	switch (p_args->event)
+	{
+		case CAN_EVENT_RX_COMPLETE:    /* Receive complete event. */
+		{
+			uCAL_CAN_ProcessRxMessage(&CAN_handle, p_args->frame);
+			break;
+		}
+		case CAN_EVENT_TX_COMPLETE:    /* Transmit complete event. */
+		{
+			break;
+		}
+		case CAN_EVENT_ERR_BUS_OFF:          /* Bus error event. (bus off) */
+		case CAN_EVENT_ERR_PASSIVE:          /* Bus error event. (error passive) */
+		case CAN_EVENT_ERR_WARNING:          /* Bus error event. (error warning) */
+		case CAN_EVENT_BUS_RECOVERY:         /* Bus error event. (bus recovery) */
+		case CAN_EVENT_MAILBOX_MESSAGE_LOST: /* Overwrite/overrun error */
+		{
+			/* Set error flag */
+			//g_err_flag = true;
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+	return;
+}
+/**
+  * @brief  Interrupt routine of timer used for CANOpen Stack
+  * @param  p_args: UART callback function arguments.
+*/
+void CAN_TIM_Callback(timer_callback_args_t * p_args)
+{
+    if( p_args->event == TIMER_EVENT_CYCLE_END)
+    {
+        uCAL_TIM1_manageCallback(&CAN_handle.canNode.Tmr);        
+    }
+}

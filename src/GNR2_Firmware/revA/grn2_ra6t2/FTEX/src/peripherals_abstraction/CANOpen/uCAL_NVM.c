@@ -13,15 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 ******************************************************************************/
+/**
+*  uCAL_NVM.c
+*  Abstraction Layer module for NVM interface
+*/
 
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
 
-/* TODO: rename the include file name to match the naming convention:
- *   co_nvm_<device>.h
- */
-#include "co_nvm_ra6t2.h"
+#include "uCAL_NVM.h"
 
 #include <cmsis_os2.h>
 
@@ -35,9 +36,9 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static void     DrvNvmInit  (void);
-static uint32_t DrvNvmRead  (uint32_t start, uint8_t *buffer, uint32_t size);
-static uint32_t DrvNvmWrite (uint32_t start, uint8_t *buffer, uint32_t size);
+static void     uCAL_NVM_Init  (void);
+static uint32_t uCAL_NVM_Read  (uint32_t start, uint8_t *buffer, uint32_t size);
+static uint32_t uCAL_NVM_Write (uint32_t start, uint8_t *buffer, uint32_t size);
 
 
 /******************************************************************************
@@ -48,22 +49,22 @@ static uint32_t DrvNvmWrite (uint32_t start, uint8_t *buffer, uint32_t size);
  *   <device>NvmDriver
  */
 const CO_IF_NVM_DRV CoNvmDriver = {
-    DrvNvmInit,
-    DrvNvmRead,
-    DrvNvmWrite
+    uCAL_NVM_Init,
+    uCAL_NVM_Read,
+    uCAL_NVM_Write
 };
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static void DrvNvmInit(void)
+static void uCAL_NVM_Init(void)
 {
 	/* TODO: initialize the non-volatile memory */
 	//R_FLASH_HP_Open	(	&g_flash0_ctrl, &g_flash0_cfg );
 }
 
-static uint32_t DrvNvmRead(uint32_t start, uint8_t *buffer, uint32_t size)
+static uint32_t uCAL_NVM_Read(uint32_t start, uint8_t *buffer, uint32_t size)
 {
 	(void)start;
 	(void)buffer;
@@ -73,7 +74,7 @@ static uint32_t DrvNvmRead(uint32_t start, uint8_t *buffer, uint32_t size)
 	return (0u);
 }
 
-static uint32_t DrvNvmWrite(uint32_t start, uint8_t *buffer, uint32_t size)
+static uint32_t uCAL_NVM_Write(uint32_t start, uint8_t *buffer, uint32_t size)
 {
 	(void)start;
 	(void)buffer;

@@ -11,8 +11,9 @@
 #define CAN_LOGGER
 
 #include "vc_interface.h"
-#include "co_can_ra6t2.h"
+#include "uCAL_CAN.h"
 
+#if ENABLE_CAN_LOGGER
 typedef enum
 {
 	CAN_ID_STATUS_VC      = 0x1,
@@ -65,5 +66,7 @@ void CANLOG_SendTemperature(VCI_Handle_t * phandle, uint8_t motorSelection);
 /** @brief  Function for sending the throttle value and the brake status
 */
 void CANLOG_SendThrottleBrake(VCI_Handle_t * phandle);
+
+#endif
 
 #endif

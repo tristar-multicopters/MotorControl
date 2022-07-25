@@ -7,9 +7,9 @@
 
 #include "co_gnr2_specs.h"
                                         /* select application drivers: */
-#include "co_can_ra6t2.h"               /* CAN driver                  */
-#include "co_timer_ra6t2.h"             /* Timer driver                */
-#include "co_nvm_ra6t2.h"               /* NVM driver                  */
+#include "uCAL_CAN.h"               /* CAN driver                  */
+#include "uCAL_TIM1.h"             /* Timer driver                */
+#include "uCAL_NVM.h"               /* NVM driver                  */
 
 // ==================== PRIVATE DEFINES ======================== //
 

@@ -14,44 +14,70 @@
    limitations under the License.
 ******************************************************************************/
 /**
-*  co_can_ra6t2.c
+*  uCAL_CAN.c
 *  Abstraction Layer module for CAN interface
 */
 
-#include "co_can_ra6t2.h"
-#include "co_core.h"
+#include "uCAL_CAN.h"
 
-extern CO_NODE GnR2Module;
-//static fsp_err_t m_err;
-    
-/* TODO: place here your CAN controller register definitions */
+// ================================== Private Functions Prototypes ====================== //
+#if !ENABLE_CAN_LOGGER
 
-// ================================== Private Functions Prototypes ================================== //
+/**
+  @brief Function used to initialise the CAN driver
+  @return void
+*/
+static void    uCAL_CAN_DrvInit   (void);
 
-static void    DrvCanInit   (void);
-static void    DrvCanEnable (uint32_t baudrate);
-static int16_t DrvCanSend   (CO_IF_FRM *frm);
-static int16_t DrvCanRead   (CO_IF_FRM *frm);
-static void    DrvCanReset  (void);
-static void    DrvCanClose  (void);
+/**
+  @brief Function used to enable the CAN driver
+  @param Receives CAN baud rate
+  @return void
+*/
+static void    uCAL_CAN_DrvEnable (uint32_t baudrate);
+
+/**
+  @brief Function used to Send a CAN message
+  @param Receives CAN frame
+  @return void
+*/
+static int16_t uCAL_CAN_DrvSend   (CO_IF_FRM *frm);
+
+/**
+  @brief Function used to read the CAN bus
+  @return 0
+*/
+static int16_t uCAL_CAN_DrvRead   (CO_IF_FRM *frm);
+
+/**
+  @brief Function used to reset the CAN interface
+  @return void
+*/
+static void    uCAL_CAN_DrvReset  (void);
+
+/**
+  @brief Function used to close the CAN interface
+  @return void
+*/
+static void    uCAL_CAN_DrvClose  (void);
+
+// ================================== Private variables Prototypes ====================== //
+static can_frame_t mRxCanFrame;
 
 // ================================== Public Variables ================================== //
 
 const CO_IF_CAN_DRV CoCanDriver = {
-    DrvCanInit,
-    DrvCanEnable,
-    DrvCanRead,
-    DrvCanSend,
-    DrvCanReset,
-    DrvCanClose
+    uCAL_CAN_DrvInit,
+    uCAL_CAN_DrvEnable,
+    uCAL_CAN_DrvRead,
+    uCAL_CAN_DrvSend,
+    uCAL_CAN_DrvReset,
+    uCAL_CAN_DrvClose
 };
 
-can_frame_t g_can_tx_frame;
-can_frame_t g_can_rx_frame;
-volatile bool     g_rx_flag  = false;
-volatile bool     g_tx_flag  = false;
-volatile bool     g_err_flag = false;
-volatile uint32_t g_rx_id;
+
+#endif
+
 
 //Filter list for which frame to accept
 const canfd_afl_entry_t p_canfd0_afl[CANFD_CFG_AFL_CH0_RULE_NUM] =
@@ -84,44 +110,14 @@ const canfd_afl_entry_t p_canfd0_afl[CANFD_CFG_AFL_CH0_RULE_NUM] =
     }
 };
 
-// Callback function for CAN events
-void canfd0_callback( can_callback_args_t *p_args )
-{
-	switch (p_args->event)
-	{
-		case CAN_EVENT_RX_COMPLETE:    /* Receive complete event. */
-		{
-			g_can_rx_frame = p_args->frame;
-			
-			CONodeProcess(&GnR2Module);
-			break;
-		}
-		case CAN_EVENT_TX_COMPLETE:    /* Transmit complete event. */
-		{
-			g_tx_flag = true;
-			break;
-		}
-		case CAN_EVENT_ERR_BUS_OFF:          /* Bus error event. (bus off) */
-		case CAN_EVENT_ERR_PASSIVE:          /* Bus error event. (error passive) */
-		case CAN_EVENT_ERR_WARNING:          /* Bus error event. (error warning) */
-		case CAN_EVENT_BUS_RECOVERY:         /* Bus error event. (bus recovery) */
-		case CAN_EVENT_MAILBOX_MESSAGE_LOST: /* Overwrite/overrun error */
-		{
-			/* Set error flag */
-			g_err_flag = true;
-			break;
-		}
-		default:
-		{
-			break;
-		}
-	}
-	return;
-}
-
 // ================================== Private Functions Definitions ================================== //
 
-static void DrvCanInit(void)
+#if !ENABLE_CAN_LOGGER
+
+/**
+  Function used to initialise the CAN interface
+*/
+static void uCAL_CAN_DrvInit(void)
 {
 
     //Use the external loopback mode for initial testing
@@ -130,7 +126,10 @@ static void DrvCanInit(void)
 	osDelay(10);
 }
 
-static void DrvCanEnable(uint32_t baudrate)
+/**
+  Function used to enable the CAN interface
+*/
+static void uCAL_CAN_DrvEnable(uint32_t baudrate)
 {
 	(void)baudrate;
 
@@ -138,7 +137,10 @@ static void DrvCanEnable(uint32_t baudrate)
 	R_CANFD_ModeTransition(&g_canfd0_ctrl,CAN_OPERATION_MODE_NORMAL,CAN_TEST_MODE_DISABLED);
 }
 
-static int16_t DrvCanSend(CO_IF_FRM *frm)
+/**
+  Function used to Send messages through the CAN interface
+*/
+static int16_t uCAL_CAN_DrvSend(CO_IF_FRM *frm)
 {
 	(void)frm;
 	uint32_t mailbox = CANFD_TX_MB_0;
@@ -157,25 +159,34 @@ static int16_t DrvCanSend(CO_IF_FRM *frm)
 	return (0u);
 }
 
-static int16_t DrvCanRead (CO_IF_FRM *frm)
+/**
+  Function used to read messages through the CAN interface
+*/
+static int16_t uCAL_CAN_DrvRead (CO_IF_FRM *frm)
 {
 	(void)frm;
 		
-	frm->Identifier = g_can_rx_frame.id;
-	frm->DLC = g_can_rx_frame.data_length_code;
+	frm->Identifier = mRxCanFrame.id;
+	frm->DLC = mRxCanFrame.data_length_code;
 	
-	memcpy(frm->Data, g_can_rx_frame.data, 8);
+	memcpy(frm->Data, mRxCanFrame.data, 8);
 	
 	return (sizeof(CO_IF_FRM));
 }
 
-static void DrvCanReset(void)
+/**
+  Function used to reset the CAN interface
+*/
+static void uCAL_CAN_DrvReset(void)
 {
   /* TODO: reset CAN controller while keeping baudrate */
 	R_CANFD_ModeTransition(&g_canfd0_ctrl, CAN_OPERATION_MODE_RESET, CAN_TEST_MODE_DISABLED);
 }
 
-static void DrvCanClose(void)
+/**
+  Function used to close the CAN interface
+*/
+static void uCAL_CAN_DrvClose(void)
 {
 	/* TODO: remove CAN controller from CAN network */
 	R_CANFD_Close	(	&g_canfd0_ctrl );
@@ -184,17 +195,29 @@ static void DrvCanClose(void)
 // ================================== Public Functions (for CAN Logger only) ================================== //
 
 /**
-  Function used to initialise CAN bus for can logger.
+*  Function used to process a message received 
+*  from callback function of the CANbus
 */
-void CAN_initInterface(void)
+void uCAL_CAN_ProcessRxMessage(CAN_Handler_t * pHandler, can_frame_t rxFrame)
 {
-    R_CANFD_ModeTransition(&g_canfd0_ctrl, CAN_OPERATION_MODE_NORMAL, CAN_TEST_MODE_DISABLED);
+    mRxCanFrame = rxFrame;
+    CONodeProcess(&pHandler->canNode);
+}
+
+#else
+/**
+  Function used to initialise the CAN interface (used only for CAN logger)
+*/
+void uCAL_CAN_DrvInit(void)
+{
+    //Use the external loopback mode for initial testing
+    R_CANFD_ModeTransition(&g_canfd0_ctrl,CAN_OPERATION_MODE_NORMAL,CAN_TEST_MODE_DISABLED);
 }
 
 /**
-  Function used to send a message over CAN bus (for can logger only)
+  Function used to send a message over CAN bus (used only for CAN logger)
 */
-uint8_t CAN_SendMsg(can_frame_t msg_to_send)
+uint8_t uCAL_CAN_SendMsg(can_frame_t msg_to_send)
 {
     fsp_err_t err;
     
@@ -208,3 +231,4 @@ uint8_t CAN_SendMsg(can_frame_t msg_to_send)
     else
         return CAN_OK;
 }
+#endif

@@ -19,8 +19,6 @@
 
 /********* PUBLIC MEMBERS *************/
 
-/* Allocate a global CANopen node object */
-CO_NODE GnR2Module;
 // Semaphore for CANOpen timer
 osSemaphoreId_t canTmrSemaphore;
 
@@ -137,10 +135,10 @@ __NO_RETURN void processCANmsgTask (void * pvParameter)
     // Initialize canTmrSemaphore
     canTmrSemaphore = osSemaphoreNew(16, 0, &canTmrSemaphoreAttr);
     // Initialize hardware layer and the CANopen stack. 
-	CONodeInit(&GnR2Module, &GnR2ModuleSpec);
+	CONodeInit(&CAN_handle.canNode, &GnR2ModuleSpec);
 	
     // Stop execution if an error is detected.
-    if (CONodeGetErr(&GnR2Module) != CO_ERR_NONE) 
+    if (CONodeGetErr(&CAN_handle.canNode) != CO_ERR_NONE) 
     {
 			while(1);
 	}
@@ -149,14 +147,14 @@ __NO_RETURN void processCANmsgTask (void * pvParameter)
 	 * call to the callback function 'GnR2ModuleApp()' with a period
 	 * of 1s (equal: 1000ms).
 	 */
-	ticks = COTmrGetTicks(&GnR2Module.Tmr, 1000U, (uint32_t)CO_TMR_UNIT_1MS);
-	COTmrCreate(&GnR2Module.Tmr, 0, ticks, GnR2ModuleApp, &GnR2Module);
+	ticks = COTmrGetTicks(&CAN_handle.canNode.Tmr, 1000U, (uint32_t)CO_TMR_UNIT_1MS);
+	COTmrCreate(&CAN_handle.canNode.Tmr, 0, ticks, GnR2ModuleApp, &CAN_handle.canNode);
         
     /* Start the CANopen node and set it automatically to
 	 * NMT mode: 'OPERATIONAL'.
 	 */
-	CONodeStart(&GnR2Module);
-	CONmtSetMode(&GnR2Module.Nmt, CO_OPERATIONAL);
+	CONodeStart(&CAN_handle.canNode);
+	CONmtSetMode(&CAN_handle.canNode.Nmt, CO_OPERATIONAL);
     #endif
     
     while(true)
@@ -167,7 +165,7 @@ __NO_RETURN void processCANmsgTask (void * pvParameter)
         xLastWakeTime += TASK_CAN_SAMPLE_TIME_TICK;
         osDelayUntil(xLastWakeTime);  
         #else
-        COTmrProcess(&GnR2Module.Tmr);
+        COTmrProcess(&CAN_handle.canNode.Tmr);
         osSemaphoreAcquire(canTmrSemaphore, osWaitForever);
         #endif              
     }

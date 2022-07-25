@@ -18,3 +18,6 @@ UART_Handle_t UART0_handle =
 };     
 
 APT_Handle_t LCD_APT_handle;
+
+// CAN handler declaration
+CAN_Handler_t CAN_handle = {0};
