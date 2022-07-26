@@ -217,7 +217,7 @@ void CANo_DrvInit(void)
 /**
   Function used to send a message over CAN bus (used only for CAN logger)
 */
-uint8_t CANo_SendMsg(can_frame_t msg_to_send)
+uint8_t CAN_SendMsg(can_frame_t msg_to_send)
 {
     fsp_err_t err;
     

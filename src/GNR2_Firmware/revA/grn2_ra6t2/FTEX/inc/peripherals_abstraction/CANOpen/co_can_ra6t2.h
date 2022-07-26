@@ -56,7 +56,7 @@ typedef struct
 
 #if ENABLE_CAN_LOGGER
 void CANo_DrvInit(void);
-uint8_t CANo_SendMsg(can_frame_t msg_to_send);
+uint8_t CAN_SendMsg(can_frame_t msg_to_send);
 #else
 /**
 *  @brief Function used to process a message received
