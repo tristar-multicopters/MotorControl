@@ -30,7 +30,7 @@ static uint8_t  	Obj1001_00_08 = 0;
 static uint16_t  	HbTime = 0xFA;			    // 250ms
 
 /* Allocate global variables for GNR objects */
-static uint8_t  objSpeedMeas = 0;
+static int16_t  objSpeedMeas = 0;
 static uint8_t  objSOC = 0;
 static uint8_t  objPAS = 0;
 static uint8_t  objMaxPAS = 0;
@@ -65,15 +65,15 @@ static struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x1280, 3, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)1},								// SDO Client Parameter - Client Node ID
 
     //GNR2 OBJECTS
-    {CO_KEY(0x2000, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&objSpeedMeas},			    // Application - Inst Speed
-    {CO_KEY(0x2001, 0, CO_UNSIGNED16  |CO_OBJ____RW), 0, (uintptr_t)&objPowerMeas},			    // Application - Inst Power
-    {CO_KEY(0x2002, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&objSOC},					    // Application - State of Charge
+    {CO_KEY(0x2000, 0, CO_SIGNED16    |CO_OBJ____R_), 0, (uintptr_t)&objSpeedMeas},			        // Application - Inst Speed
+    {CO_KEY(0x2001, 0, CO_UNSIGNED16  |CO_OBJ____R_), 0, (uintptr_t)&objPowerMeas},			        // Application - Inst Power
+    {CO_KEY(0x2002, 0, CO_UNSIGNED8   |CO_OBJ____R_), 0, (uintptr_t)&objSOC},					    // Application - State of Charge
     {CO_KEY(0x2003, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&objPAS},						// Application - PAS Level
-    {CO_KEY(0x2004, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&objMaxPAS},					// Application - Max PAS Level
-    {CO_KEY(0x2005, 0, CO_SIGNED16    |CO_OBJ____RW), 0, (uintptr_t)&objMaxPower},				// Application - Max Power
-    {CO_KEY(0x2006, 0, CO_SIGNED16    |CO_OBJ____RW), 0, (uintptr_t)&objErrorState},				// Application - Error State
-    {CO_KEY(0x2007, 0, CO_UNSIGNED64  |CO_OBJ____RW), 0, (uintptr_t)&objserialNb},			    // Application - Serial Number
-    {CO_KEY(0x2008, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&objFwVersion},				// Application - Firmware Version
+    {CO_KEY(0x2004, 0, CO_UNSIGNED8   |CO_OBJ____R_), 0, (uintptr_t)&objMaxPAS},					// Application - Max PAS Level
+    {CO_KEY(0x2005, 0, CO_SIGNED16    |CO_OBJ____R_), 0, (uintptr_t)&objMaxPower},				    // Application - Max Power
+    {CO_KEY(0x2006, 0, CO_SIGNED16    |CO_OBJ____R_), 0, (uintptr_t)&objErrorState},				// Application - Error State
+    {CO_KEY(0x2007, 0, CO_UNSIGNED32  |CO_OBJ____R_), 0, (uintptr_t)&objserialNb},			        // Application - Serial Number
+    {CO_KEY(0x2008, 0, CO_UNSIGNED16   |CO_OBJ____RW), 0, (uintptr_t)&objFwVersion},				    // Application - Firmware Version
     CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
 };
 

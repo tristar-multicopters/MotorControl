@@ -53,9 +53,27 @@ static void GnR2ModuleApp(void *p_arg)
 {
     CO_NODE  *node;
     node = (CO_NODE *)p_arg;
+    VCI_Handle_t * pVCI = &VCInterfaceHandle;
+    CO_OBJ *objSpeed    = CODictFind(&node->Dict, CO_DEV(0x2000, 0));
+    CO_OBJ *objSOC      = CODictFind(&node->Dict, CO_DEV(0x2002, 0));
+    CO_OBJ *objPAS      = CODictFind(&node->Dict, CO_DEV(0x2003, 0));
+    CO_OBJ *objMaxPAS   = CODictFind(&node->Dict, CO_DEV(0x2004, 0));
+    CO_OBJ *objMaxPwr   = CODictFind(&node->Dict, CO_DEV(0x2005, 0));
+    CO_OBJ *objErrorSt  = CODictFind(&node->Dict, CO_DEV(0x2006, 0));
+    CO_OBJ *objSerialNb = CODictFind(&node->Dict, CO_DEV(0x2007, 0));
+    CO_OBJ *objFWver    = CODictFind(&node->Dict, CO_DEV(0x2008, 0));
     
-    CO_OBJ *objSpeed = CODictFind(&node->Dict, CO_DEV(0x2000, 0));
-    uint8_t speed = 100;
+    int16_t speed     = MDI_GetAvrgMecSpeedUnit(pVCI->pPowertrain->pMDI,M1);
+    uint8_t soc       = 50;     // TODO: Implement function that allows to get the SOC. Use a hardcoded value for now...
+    uint8_t pas       = (uint8_t)VCI_ReadRegister(pVCI,REG_PAS_LEVEL);
+    uint8_t maxPas    = (uint8_t)VCI_ReadRegister(pVCI,REG_PAS_MAXLEVEL);  
+    uint16_t maxPwr   = 3000; // TODO: Implement function that allows to get the maxPower. Use a hardcoded value for now...
+    uint16_t ErrorState = MDI_GetCurrentFaults(pVCI->pPowertrain->pMDI,M1);
+    // Get serial number
+    uint32_t wLowId   = (uint32_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_LOW);
+    uint64_t dHighId  = (uint64_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_LOW) << 32;
+    uint64_t serialNb =  wLowId | dHighId;
+    uint16_t FWVer    =   (uint16_t)VCI_ReadRegister(pVCI,REG_FIRMVER);
     
     if(node == 0)
     {
@@ -65,6 +83,13 @@ static void GnR2ModuleApp(void *p_arg)
     if(CONmtGetMode(&node->Nmt) == CO_OPERATIONAL)
     {
         COObjWrValue(objSpeed, node,&speed,1,0);
+        COObjWrValue(objSOC, node,&soc,1,0);
+        COObjWrValue(objPAS, node,&pas,1,0);
+        COObjWrValue(objMaxPAS, node,&maxPas,1,0);
+        COObjWrValue(objMaxPwr, node,&maxPwr,2,0);
+        COObjWrValue(objErrorSt, node,&ErrorState,2,0);
+        COObjWrValue(objSerialNb, node,&serialNb,4,0); // Send only the Low part for now
+        COObjWrValue(objFWver, node,&FWVer,2,0);
     }
 }
 #endif
