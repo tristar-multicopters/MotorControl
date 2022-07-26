@@ -27,11 +27,11 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
     
     if (!pHandle->bIsInverted)
     {
-        hStartValue = pHandle->hDecreasingEndValue - pHandle->hDecreasingRange;
+        hStartValue = pHandle->hDecreasingEndValue - (int16_t) pHandle->hDecreasingRange;
     }
     else
     {
-        hStartValue = pHandle->hDecreasingEndValue + pHandle->hDecreasingRange;
+        hStartValue = pHandle->hDecreasingEndValue + (int16_t) pHandle->hDecreasingRange;
     }
 
 	if (pHandle->bEnableFoldback)
@@ -51,7 +51,7 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
 			if(hValue > hStartValue && hValue < pHandle->hDecreasingEndValue)
 			{ 
 				// Find the max torque value according to the foldback settings
-				wAux = pHandle->hDefaultMaxOutput * (pHandle->hDecreasingEndValue - hValue);
+				wAux = (uint32_t)(pHandle->hDefaultMaxOutput * (pHandle->hDecreasingEndValue - hValue));
 				wAux /= (uint32_t)(pHandle->hDecreasingEndValue - hStartValue);
 				hTorqueMax = (int16_t)wAux;
 			}
@@ -70,8 +70,8 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
 			if(hValue < hStartValue && hValue > pHandle->hDecreasingEndValue)
 			{ 
 				// Find the max torque value according to the foldback settings
-				wAux = pHandle->hDefaultMaxOutput * (pHandle->hDecreasingEndValue - hValue);
-				wAux /= (int32_t)(hStartValue - pHandle->hDecreasingEndValue);
+				wAux = (uint32_t)(pHandle->hDefaultMaxOutput * (pHandle->hDecreasingEndValue - hValue));
+				wAux /= (uint32_t)(hStartValue - pHandle->hDecreasingEndValue);
 				hTorqueMax = (int16_t)wAux;
 			}
 			else if (hValue >= hStartValue)

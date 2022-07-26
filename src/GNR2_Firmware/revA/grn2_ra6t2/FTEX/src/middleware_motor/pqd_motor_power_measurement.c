@@ -34,9 +34,8 @@ void MotorPowerQD_CalcElMotorPower(MotorPowerQDHandle_t * pHandle)
   wAux3 *= 6; /* 6 is max bus voltage expressed in thousend of volt.*/
   wAux3 /= 10;
   wAux3 /= 65536;
-
-  MPM_CalcElMotorPower(&pHandle->Super, wAux3);
-
+    
+  // MotorPowMeas_CalcElMotorPower(&pHandle->Super, (int16_t)wAux3); // TODO
 }
 
 

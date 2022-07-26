@@ -28,20 +28,16 @@ typedef struct
 	
 }  PulseFreqParam_GPT_t; 
 
-
 typedef struct
-{
-    
-    
+{  
     uint32_t gpt_capture_count; 	/* GPT timer capture variable */
     uint32_t gpt_capture_overflow;/* GPT timer capture overflow variable */
 
     volatile bool  gpt_start_measurement;		/* GPT Flag start measurment */	
-     PulseFreqParam_GPT_t PulseFreqParam_GPT;						/* GPT Parameters */
+    
+    PulseFreqParam_GPT_t PulseFreqParam_GPT;						/* GPT Parameters */
 	
 } WheelFrequency_Handle_GPT_t; 
-
-
 
 // ============================== Variables ================================ //
 
@@ -68,7 +64,7 @@ uint64_t PulseFrequency_InputCaptureValue_GPT (WheelFrequency_Handle_GPT_t * pHa
   @param  WheelFrequency_Handle_GPT_t handle
   @return None
 */
-void PulseFrequency_IsrCallUpdate_GPT(WheelFrequency_Handle_GPT_t * pHandle , uint64_t  wCapture);
+void PulseFrequency_IsrCallUpdate_GPT(WheelFrequency_Handle_GPT_t * pHandle , uint32_t  wCapture);
 
 /**
   @brief  Function used to update the overflow variable from the GPT interrupt

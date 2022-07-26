@@ -57,7 +57,8 @@ void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle)
 void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 {
 	bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
-	bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);
+    
+	/*bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);*/
 
 	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
 	int16_t hTorqueRef = 0; 
@@ -117,12 +118,12 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
-			pHandle->aSpeed[pHandle->bMainMotor] = hSpeedRef;
+			pHandle->aSpeed[pHandle->bMainMotor] = (int16_t) hSpeedRef;
 		}
 		if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
-			pHandle->aSpeed[M1] = hSpeedRef;
-			pHandle->aSpeed[M2] = hSpeedRef;
+			pHandle->aSpeed[M1] = (int16_t) hSpeedRef;
+			pHandle->aSpeed[M2] = (int16_t) hSpeedRef;
 		}
 	}
 	else {}

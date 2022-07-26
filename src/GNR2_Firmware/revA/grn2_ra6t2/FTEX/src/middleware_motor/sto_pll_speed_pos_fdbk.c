@@ -10,6 +10,7 @@
 #include "mc_math.h"
 
 /* Private defines -----------------------------------------------------------*/
+
 #define C6_COMP_CONST1  (int32_t) 1043038
 #define C6_COMP_CONST2  (int32_t) 10430
 
@@ -55,9 +56,10 @@ void BemfObsPll_Init(BemfObserverPllHandle_t * pHandle)
   return;
 }
 
-
 void BemfObsPll_Return(BemfObserverPllHandle_t * pHandle, uint8_t flag)
 {
+   UNUSED_PARAMETER(pHandle);
+   UNUSED_VARIABLE(flag);    
   return;
 }
 
@@ -759,7 +761,7 @@ void BemfObsPll_SetMinStartUpValidSpeedUnit(BemfObserverPllHandle_t * pHandle, u
 }
 
 
-void BemfObsPll_SetDirection(BemfObserverPllHandle_t * pHandle, uint8_t direction)
+void BemfObsPll_SetDirection(BemfObserverPllHandle_t * pHandle, int8_t direction)
 {
   pHandle->hForcedDirection = direction;
 }

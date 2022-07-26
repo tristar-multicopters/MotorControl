@@ -7,7 +7,6 @@
 
 #include "motor_selection.h"
 
-
 /**
  * @brief Initializes torque distribution module
  *
@@ -15,7 +14,7 @@
  */
 void MS_Init(MS_Handle_t * pHandle)
 {
-
+    UNUSED_PARAMETER(pHandle);
 }
 
 MotorSelection_t MS_CheckSelection(MS_Handle_t* pHandle)

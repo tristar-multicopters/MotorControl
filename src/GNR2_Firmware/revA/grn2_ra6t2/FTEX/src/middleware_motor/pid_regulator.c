@@ -77,7 +77,7 @@ uint16_t PID_GetKPDivisor(PIDHandle_t * pHandle)
 void PID_SetKPDivisorPOW2(PIDHandle_t * pHandle, uint16_t hKpDivisorPOW2)
 {
   pHandle->hKpDivisorPOW2 = hKpDivisorPOW2;
-  pHandle->hKpDivisor = ((uint16_t)(1u) << hKpDivisorPOW2);
+  pHandle->hKpDivisor = (uint16_t)((1u) << hKpDivisorPOW2);
 }
 
 
@@ -149,7 +149,7 @@ uint16_t PID_GetKDDivisor(PIDHandle_t * pHandle)
  void PID_SetKDDivisorPOW2(PIDHandle_t * pHandle, uint16_t hKdDivisorPOW2)
 {
   pHandle->hKdDivisorPOW2 = hKdDivisorPOW2;
-  pHandle->hKdDivisor = ((uint16_t)(1u) << hKdDivisorPOW2);
+  pHandle->hKdDivisor = (uint16_t) ((1u) << hKdDivisorPOW2);
 }
 
 

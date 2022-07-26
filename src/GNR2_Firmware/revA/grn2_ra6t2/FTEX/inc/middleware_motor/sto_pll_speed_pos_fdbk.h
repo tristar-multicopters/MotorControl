@@ -17,7 +17,7 @@ extern "C" {
 #include "speed_pos_fdbk.h"
 #include "sto_speed_pos_fdbk.h"
 #include "pid_regulator.h"
-
+#include "ASSERT_FTEX.h"
 /* Exported types ------------------------------------------------------------*/
 
 /**
@@ -365,7 +365,7 @@ void BemfObsPll_SetMinStartUpValidSpeedUnit(BemfObserverPllHandle_t * pHandle, u
   * @brief  forces the rotation direction
   * @param  direction: imposed direction
   */
-void BemfObsPll_SetDirection(BemfObserverPllHandle_t * pHandle, uint8_t direction);
+void BemfObsPll_SetDirection(BemfObserverPllHandle_t * pHandle, int8_t direction);
 
 
 #ifdef __cplusplus

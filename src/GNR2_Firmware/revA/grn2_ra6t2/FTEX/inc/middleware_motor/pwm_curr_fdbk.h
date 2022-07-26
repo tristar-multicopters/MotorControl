@@ -21,6 +21,8 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
 #include "signal_filtering.h"
+#include "math.h"
+#include "stdlib.h"
 
 /* Exported defines ------------------------------------------------------------*/
 
@@ -133,7 +135,7 @@ struct PWMCurrFdbkHandle
   uint8_t   Sector;                                     /**< the space vector sector number */
   uint16_t  hLowDuty;
   uint16_t  hMidDuty;
-  uint16_t  hHighDuty;
+  uint16_t  hHighDuty;                      
   bool 			hTurnOnLowSidesAction;                  /**< true if TurnOnLowSides action is active,
                                                               false otherwise. */
   uint8_t   Motor;                                      /**< Motor reference number */

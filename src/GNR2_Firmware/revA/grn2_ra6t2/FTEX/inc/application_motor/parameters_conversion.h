@@ -115,7 +115,7 @@
 /*************** Current vs torque ratio ******/
 #define MOTOR_MAGNET_FLUX              MOTOR_VOLTAGE_CONSTANT*60*SQRT_2/(POLE_PAIR_NUM*1000*SQRT_3*PI_)     /*!< In weber rms */
 
-#define GAIN_TORQUE_IQREF              (float) 1/(100*3*POLE_PAIR_NUM*MOTOR_MAGNET_FLUX*MAX_CURRENT/(2*UINT16_MAX))
+#define GAIN_TORQUE_IQREF              (float) (1/(100*3*POLE_PAIR_NUM*MOTOR_MAGNET_FLUX*MAX_CURRENT/(2*UINT16_MAX)))
 #define GAIN_TORQUE_IDREF              0
 
 /**********************/

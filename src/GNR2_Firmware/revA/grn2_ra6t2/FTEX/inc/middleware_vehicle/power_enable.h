@@ -10,6 +10,7 @@
 #define __POWER_ENABLE_H
 
 #include "stdbool.h"
+#include "ASSERT_FTEX.h"
 
 typedef struct
 {          

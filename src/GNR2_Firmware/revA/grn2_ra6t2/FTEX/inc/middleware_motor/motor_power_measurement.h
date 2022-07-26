@@ -31,7 +31,6 @@ typedef struct
 } MotorPowerMeasHandle_t;
 
 
-
 /**
   * @brief  It should be called before each motor restart. It clears the
   *         measurement buffer and initialize the index.

@@ -25,6 +25,7 @@
 
 typedef struct {
     WheelFrequency_Handle_GPT_t * wSpulse; /* Pointer to wheel speed handle */
+    
     uint32_t wWheel_Sensor_Read; /* Wheel Speed Sensor Periode value*/
     uint32_t wWheelSpeedFreq;   /* Wheel Speed sensor frequency calculated value */
     int32_t wWheelSpeedRpm;     /* Wheel Speed sensor rotation per minute calculated value */

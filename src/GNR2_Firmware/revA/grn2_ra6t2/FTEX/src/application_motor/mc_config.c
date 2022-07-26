@@ -92,7 +92,7 @@ FluxWeakeningHandle_t FluxWeakeningM1 =
   .hDemagCurrent          = ID_DEMAG,
   .wNominalSqCurr         = ((int32_t)NOMINAL_PEAK_CURRENT*(int32_t)NOMINAL_PEAK_CURRENT),
   .hVqdLowPassFilterBw    = M1_VQD_SW_FILTER_BW_FACTOR,
-  .hVqdLowPassFilterBwLog = M1_VQD_SW_FILTER_BW_FACTOR_LOG
+  .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG
 };
 
 /**
@@ -124,7 +124,7 @@ FeedforwardHandle_t FeedforwardM1 =
   .wDefConstant1D        = (int32_t)CONSTANT1_D,
   .wDefConstant1Q        = (int32_t)CONSTANT1_Q,
   .wDefConstant2         = (int32_t)CONSTANT2_QD,
-  .hVqdLowPassFilterBwLog = M1_VQD_SW_FILTER_BW_FACTOR_LOG
+  .hVqdLowPassFilterBwLog =(uint16_t)M1_VQD_SW_FILTER_BW_FACTOR_LOG
 };
 
 /**
@@ -269,8 +269,8 @@ BemfObserverPllHandle_t BemfObserverPllM1 =
      .wLowerIntegralLimit = -INT32_MAX,
      .hUpperOutputLimit = INT16_MAX,
      .hLowerOutputLimit = -INT16_MAX,
-     .hKpDivisorPOW2 = PLL_KPDIV_LOG,
-     .hKiDivisorPOW2 = PLL_KIDIV_LOG,
+     .hKpDivisorPOW2 = (uint16_t)PLL_KPDIV_LOG,
+     .hKiDivisorPOW2 = (uint16_t)PLL_KIDIV_LOG,
      .hKdDivisorPOW2       = 0x0000U,
    },
  .bSpeedBufferSizeUnit                =	STO_FIFO_DEPTH_UNIT,
@@ -284,9 +284,9 @@ BemfObserverPllHandle_t BemfObserverPllM1 =
  .bBemfConsistencyCheck               =	BEMF_CONSISTENCY_TOL,
  .bBemfConsistencyGain                =	BEMF_CONSISTENCY_GAIN,
  .hMaxAppPositiveMecSpeedUnit         =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT*1.15),
- .hF1Log                              =	F1_LOG,
- .hF2Log                              =	F2_LOG,
- .hSpeedBufferSizeDppLog              =	STO_FIFO_DEPTH_DPP_LOG,
+ .hF1Log                              =	(uint16_t)F1_LOG,
+ .hF2Log                              =	(uint16_t)F2_LOG,
+ .hSpeedBufferSizeDppLog              =	(uint16_t)STO_FIFO_DEPTH_DPP_LOG,
  .hForcedDirection                   =  0x0000U
 }; BemfObserverPllHandle_t *pBemfObserverPllM1 = &BemfObserverPllM1;
 
@@ -395,11 +395,11 @@ RotorPositionObserverHandle_t RotorPosObsM1 =
   .pHallSensor = &HallPosSensorM1,
 
 	.hKpGainDef = ROTOR_POS_OBS_KP,
-	.hKpDivisorPOW2 = ROTOR_POS_OBS_KPDIV_LOG,
+	.hKpDivisorPOW2 = (uint16_t) ROTOR_POS_OBS_KPDIV_LOG,
 
 	.hKiGainDef = ROTOR_POS_OBS_KI,
-	.hKiDivisorPOW2 = ROTOR_POS_OBS_KIDIV_LOG,
+	.hKiDivisorPOW2 = (uint16_t) ROTOR_POS_OBS_KIDIV_LOG,
 
 	.hKdGainDef = ROTOR_POS_OBS_KD,
-	.hKdDivisorPOW2 = ROTOR_POS_OBS_KDDIV_LOG,
+	.hKdDivisorPOW2 = (uint16_t) ROTOR_POS_OBS_KDDIV_LOG,
 };

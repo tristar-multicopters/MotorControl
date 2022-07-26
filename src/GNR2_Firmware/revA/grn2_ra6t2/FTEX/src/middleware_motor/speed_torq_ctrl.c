@@ -312,7 +312,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle,
     }
 
     int16_t hOutputTorque;
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque, abs(hMeasuredSpeed));
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)(abs(hMeasuredSpeed)));
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
 

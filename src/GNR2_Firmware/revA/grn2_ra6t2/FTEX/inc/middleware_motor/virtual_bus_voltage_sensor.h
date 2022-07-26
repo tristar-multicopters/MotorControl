@@ -15,6 +15,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "bus_voltage_sensor.h"
+#include "ASSERT_FTEX.h"
 
 /**
   * @brief  Virtual Vbus sensor class parameters definition

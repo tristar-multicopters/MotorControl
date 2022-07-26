@@ -11,7 +11,6 @@
 
 #define LOGENABLE 1 //To be moved to the apropriate location when the CAN logger module is implemented
 
-
 /**
   DO NOT DIRECLY CALL THIS FUNCTION
   
@@ -22,12 +21,13 @@
 
   For now the line and file number arent used. Waiting on the CAN bus logging module.
 */
-void InternalAssert(bool expression, const char* failedFile, int failedLine)
+void InternalAssert(bool expression , const char* failedFile, int failedLine)
 { 
     #ifdef LOGENABLE //If we want to log asserts
         
         //TODO: add call to the CAN logger when module is integrated into this project
-        
+        UNUSED_VARIABLE(failedFile);
+        UNUSED_VARIABLE(failedLine);    
         //Send data to log
         //log(e, file, line);
            

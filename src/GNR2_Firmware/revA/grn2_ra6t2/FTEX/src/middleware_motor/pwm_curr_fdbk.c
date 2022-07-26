@@ -15,6 +15,7 @@
 #include "mc_math.h"
 #include "mc_type.h"
 
+
 /*
     Initialize PWM&Current feedback module.
 */
@@ -89,9 +90,9 @@ uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t 
       wTimePhA = (int32_t)(pHandle->hPWMperiod) / 4 + ((wY - wZ) / (int32_t)262144);
       wTimePhB = wTimePhA + wZ / 131072;
       wTimePhC = wTimePhA - wY / 131072;
-      pHandle->hLowDuty = wTimePhC;
-      pHandle->hMidDuty = wTimePhA;
-      pHandle->hHighDuty = wTimePhB;
+      pHandle->hLowDuty = (uint16_t) wTimePhC;
+      pHandle->hMidDuty = (uint16_t) wTimePhA;
+      pHandle->hHighDuty =(uint16_t) wTimePhB;
     }
     else /* wZ >= 0 */
       if (wX <= 0)
@@ -100,9 +101,9 @@ uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t 
         wTimePhA = (int32_t)(pHandle->hPWMperiod) / 4 + ((wX - wZ) / (int32_t)262144);
         wTimePhB = wTimePhA + wZ / 131072;
         wTimePhC = wTimePhB - wX / 131072;
-        pHandle->hLowDuty = wTimePhC;
-        pHandle->hMidDuty = wTimePhB;
-        pHandle->hHighDuty = wTimePhA;
+        pHandle->hLowDuty = (uint16_t) wTimePhC;
+        pHandle->hMidDuty = (uint16_t) wTimePhB;
+        pHandle->hHighDuty= (uint16_t) wTimePhA;
       }
       else /* wX > 0 */
       {
@@ -110,9 +111,9 @@ uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t 
         wTimePhA = (int32_t)(pHandle->hPWMperiod) / 4 + ((wY - wX) / (int32_t)262144);
         wTimePhC = wTimePhA - wY / 131072;
         wTimePhB = wTimePhC + wX / 131072;
-        pHandle->hLowDuty = wTimePhB;
-        pHandle->hMidDuty = wTimePhC;
-        pHandle->hHighDuty = wTimePhA;
+        pHandle->hLowDuty = (uint16_t) wTimePhB;
+        pHandle->hMidDuty = (uint16_t) wTimePhC;
+        pHandle->hHighDuty = (uint16_t) wTimePhA;
       }
   }
   else /* wY > 0 */
@@ -123,9 +124,9 @@ uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t 
       wTimePhA = (int32_t)(pHandle->hPWMperiod) / 4 + ((wY - wZ) / (int32_t)262144);
       wTimePhB = wTimePhA + wZ / 131072;
       wTimePhC = wTimePhA - wY / 131072;
-      pHandle->hLowDuty = wTimePhB;
-      pHandle->hMidDuty = wTimePhA;
-      pHandle->hHighDuty = wTimePhC;
+      pHandle->hLowDuty = (uint16_t) wTimePhB;
+      pHandle->hMidDuty = (uint16_t) wTimePhA;
+      pHandle->hHighDuty = (uint16_t) wTimePhC;
     }
     else /* wZ < 0 */
       if (wX <= 0)
@@ -134,9 +135,9 @@ uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t 
         wTimePhA = (int32_t)(pHandle->hPWMperiod) / 4 + ((wY - wX) / (int32_t)262144);
         wTimePhC = wTimePhA - wY / 131072;
         wTimePhB = wTimePhC + wX / 131072;
-        pHandle->hLowDuty = wTimePhA;
-        pHandle->hMidDuty = wTimePhC;
-        pHandle->hHighDuty = wTimePhB;
+        pHandle->hLowDuty = (uint16_t) wTimePhA;
+        pHandle->hMidDuty = (uint16_t) wTimePhC;
+        pHandle->hHighDuty = (uint16_t) wTimePhB;
       }
       else /* wX > 0 */
       {
@@ -144,9 +145,9 @@ uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t 
         wTimePhA = (int32_t)(pHandle->hPWMperiod) / 4 + ((wX - wZ) / (int32_t)262144);
         wTimePhB = wTimePhA + wZ / 131072;
         wTimePhC = wTimePhB - wX / 131072;
-        pHandle->hLowDuty = wTimePhA;
-        pHandle->hMidDuty = wTimePhB;
-        pHandle->hHighDuty = wTimePhC;
+        pHandle->hLowDuty = (uint16_t) wTimePhA;
+        pHandle->hMidDuty = (uint16_t) wTimePhB;
+        pHandle->hHighDuty =(uint16_t) wTimePhC;
       }
   }
 

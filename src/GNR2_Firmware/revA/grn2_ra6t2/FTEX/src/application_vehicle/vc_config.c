@@ -88,7 +88,7 @@ PedalTorqSensorHandle_t PedalTorqueSensor =
     }
 };
 
-/**@brief Pulse Frequeny initializing Parameters.
+/**@brief Pulse Frequency initializing Parameters.
  */
 PulseFrequency_Handle_AGT_t PulseFreqHandle =
 {
@@ -99,7 +99,13 @@ PulseFrequency_Handle_AGT_t PulseFreqHandle =
 	}
 };
 
-/**@brief Pulse Frequeny initializing Parameters for GPT Timer.
+/**@brief Pedal assist initializing Parameters.
+ */
+PedalSpeedSens_Handle_t PedalAssistHandle = {
+	.pTorque = &PedalTorqueSensor,
+    .pSpulse = &PulseFreqHandle,
+};
+/**@brief Pulse Frequency initializing Parameters for GPT Timer.
  */
 WheelFrequency_Handle_GPT_t PulseFreqHandle_Wheel =
 {
@@ -110,12 +116,11 @@ WheelFrequency_Handle_GPT_t PulseFreqHandle_Wheel =
 	}
 };
 
-/**@brief Pedal assist initializing Parameters.
- */
-PedalSpeedSens_Handle_t PedalAssistHandle = {
-	.pTorque = &PedalTorqueSensor,
-    .pSpulse = &PulseFreqHandle,
+WheelSpeedSens_Handle_t WheelSpeedHandle =
+{
+    .wSpulse = &PulseFreqHandle_Wheel,
 };
+
 
 
 MS_Handle_t MotorSelectorHandle =
@@ -159,6 +164,7 @@ PWRT_Handle_t PowertrainHandle =
 	.pMS = &MotorSelectorHandle,
 	.pPWREN = &PowerEnableHandle,
 	.pPAS = &PedalAssistHandle,
+    .pWSS = &WheelSpeedHandle,
 
 };
 

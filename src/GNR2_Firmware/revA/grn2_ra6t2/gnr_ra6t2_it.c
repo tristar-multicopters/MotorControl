@@ -124,11 +124,11 @@ void WFREQ_TIM_Callback (timer_callback_args_t * p_args)
     {
 			case TIMER_EVENT_CAPTURE_B :
 			/* Call ISR AGT Capture function */						
-			PulseFrequency_IsrCallUpdate_GPT(VCInterfaceHandle.pPowertrain->pPAS->pSpulse,p_args->capture);
+			PulseFrequency_IsrCallUpdate_GPT(VCInterfaceHandle.pPowertrain->pWSS->wSpulse,p_args->capture);
 			break;
 			case TIMER_EVENT_CYCLE_END:
 			/* An overflow occurred during capture. */
-			PulseFrequency_IsrOverFlowUpdate_GPT(VCInterfaceHandle.pPowertrain->pPAS->pSpulse);
+			PulseFrequency_IsrOverFlowUpdate_GPT(VCInterfaceHandle.pPowertrain->pWSS->wSpulse);
 			break;
 			default:
 			break;

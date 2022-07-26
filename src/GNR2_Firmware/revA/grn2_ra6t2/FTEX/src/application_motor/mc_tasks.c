@@ -32,7 +32,7 @@
 #define OFFCALIBRWAITTICKS2        (uint16_t)((SYS_TICK_FREQUENCY * OFFCALIBRWAIT_MS2)/ 1000)
 #define STOPPERMANENCY_TICKS     (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS)/ 1000)
 #define STOPPERMANENCY_TICKS2    (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS2)/ 1000)
-#define VBUS_TEMP_ERR_MASK ~(0 | MC_UNDER_VOLT | 0)
+#define VBUS_TEMP_ERR_MASK       (uint16_t) ~(0 | MC_UNDER_VOLT | 0)
 
 /* Private variables----------------------------------------------------------*/
 FOCVars_t FOCVars[NBR_OF_MOTORS];

@@ -23,7 +23,8 @@
 
 #define ASSERT(e) InternalAssert(e, __FILENAME__,__LINE__) //Macro used to add the file name and line # 
                                                        //automatically to help debugging.
-
+#define UNUSED_VARIABLE(X) ((void)(X))
+#define UNUSED_PARAMETER(X) UNUSED_VARIABLE(X)
 extern void InternalAssert(bool, const char *, int);
 
 #endif /* __ASSERT_FTEX_H */

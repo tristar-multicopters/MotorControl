@@ -13,7 +13,7 @@
  */
 void PWREN_Init(PWREN_Handle_t * pHandle)
 {	
-	
+	UNUSED_PARAMETER(pHandle);
 }
 
 bool PWREN_IsPowerEnabled(PWREN_Handle_t * pHandle)

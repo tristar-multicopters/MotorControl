@@ -73,9 +73,9 @@ int16_t RotorPosObs_CalcElAngle(RotorPositionObserverHandle_t * pHandle, int16_t
 	pHandle->wEstElSpeedDpp = wEstElSpeed_Next;
 	pHandle->wEstMechTorque = wEstMechTorque_Next;
 	
-	pHandle->hEstElAngle = pHandle->wEstElAngle / INT16_MAX;
-	pHandle->hEstElSpeedDpp = pHandle->wEstElSpeedDpp / INT16_MAX;
-	pHandle->hEstMechTorque = pHandle->wEstMechTorque / INT16_MAX;
+	pHandle->hEstElAngle = (int16_t)(pHandle->wEstElAngle / INT16_MAX);
+	pHandle->hEstElSpeedDpp =(int16_t)(pHandle->wEstElSpeedDpp / INT16_MAX);
+	pHandle->hEstMechTorque = (int16_t)(pHandle->wEstMechTorque / INT16_MAX);
 	
 	pHandle->Super.hElAngle = pHandle->hEstElAngle;
 	pHandle->Super.hElSpeedDpp = pHandle->hEstElSpeedDpp;

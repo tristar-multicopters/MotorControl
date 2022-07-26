@@ -10,7 +10,7 @@
 #define __MOTOR_SELECTION_H
 
 #include "stdbool.h"
-
+#include "ASSERT_FTEX.h"
 typedef enum
 {
 	M1_SELECTED,
