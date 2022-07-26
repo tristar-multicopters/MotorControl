@@ -162,7 +162,7 @@ typedef struct
 	  PID_Handle_t *pPIDId;           /*!< Id PID used.*/
 	  RevUpCtrl_Handle_t *pRevupCtrl; /*!< RUC used.*/
 	  STO_PLL_Handle_t *pSTO;            /*!< State Observer used.*/
-	  SpeednTorqCtrlHandle_t *pSTC;            /*!< Speed and torque controller used.*/
+	  SpeednTorqCtrl_Handle_t *pSTC;            /*!< Speed and torque controller used.*/
 	  OTT_Handle_t *pOTT;
 
   SCC_State_t sm_state; /*!< SCC state machine state.*/

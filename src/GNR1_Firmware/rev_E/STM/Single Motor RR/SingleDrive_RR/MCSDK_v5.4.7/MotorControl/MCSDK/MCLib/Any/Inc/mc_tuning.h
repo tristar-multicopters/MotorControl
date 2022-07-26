@@ -90,7 +90,7 @@ typedef struct
   SpeednPosFdbk_Handle_t * pSpeedSensorMain;
   SpeednPosFdbk_Handle_t * pSpeedSensorAux;
   VirtualSpeedSensor_Handle_t * pSpeedSensorVirtual;
-  SpeednTorqCtrlHandle_t * pSpeednTorqueCtrl;
+  SpeednTorqCtrl_Handle_t * pSpeednTorqueCtrl;
   STM_Handle_t * pStateMachine;
   NTC_Handle_t * pTemperatureSensor;
   BusVoltageSensor_Handle_t * pBusVoltageSensor;

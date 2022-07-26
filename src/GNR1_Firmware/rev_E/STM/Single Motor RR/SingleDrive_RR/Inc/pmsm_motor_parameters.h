@@ -24,14 +24,14 @@
 #define __PMSM_MOTOR_PARAMETERS_H
 
 #define VEHICLE_EBGO 					1
-#define VEHICLE_GRIZZLY 			    2
+#define VEHICLE_GRIZZLY 			2
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 #define VEHICLE_SELECTION 		VEHICLE_GRIZZLY
 #define VOLTAGE_OPENLOOP			0
 #define POSITION_OPENLOOP			0
-#define SWD_TORQUE_CONTROL		    0
+#define SWD_TORQUE_CONTROL		0
 /*______________________________________________________*/
 
 

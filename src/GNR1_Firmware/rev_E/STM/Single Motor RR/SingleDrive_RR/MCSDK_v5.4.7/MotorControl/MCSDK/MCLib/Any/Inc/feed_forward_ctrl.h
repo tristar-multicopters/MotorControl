@@ -114,7 +114,7 @@ void FF_Clear( FF_Handle_t * pHandle );
   * @param  pSTC  Speed sensor.
   * @retval none
   */
-void FF_VqdffComputation( FF_Handle_t * pHandle, qd_t Iqdref, SpeednTorqCtrlHandle_t * pSTC );
+void FF_VqdffComputation( FF_Handle_t * pHandle, qd_t Iqdref, SpeednTorqCtrl_Handle_t * pSTC );
 
 /**
   * @brief  It return the Vqd componets fed in input plus the feed forward

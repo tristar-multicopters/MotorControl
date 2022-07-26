@@ -48,7 +48,7 @@
 
 #include "sto_speed_pos_fdbk.h"
 #include "sto_pll_speed_pos_fdbk.h"
-#include "rotor_pos_obs.h"
+#include "ao_spd_pos_fdbk.h"
 /* USER CODE BEGIN Additional include */
 
 /* USER CODE END Additional include */
@@ -59,7 +59,7 @@ extern NTC_Handle_t TempSensorParamsM1;
 extern PID_Handle_t PIDFluxWeakeningHandle_M1;
 extern FW_Handle_t FW_M1;
 extern PWMC_ICS_Handle_t PWM_Handle_M1;
-extern SpeednTorqCtrlHandle_t SpeednTorqCtrlM1;
+extern SpeednTorqCtrl_Handle_t SpeednTorqCtrlM1;
 extern PQD_MotorPowMeas_Handle_t PQD_MotorPowMeasM1;
 extern PQD_MotorPowMeas_Handle_t *pPQD_MotorPowMeasM1;
 extern STO_PLL_Handle_t STO_PLL_M1;
@@ -75,7 +75,7 @@ extern DAC_UI_Handle_t DAC_UI_Params;
 extern UFCP_Handle_t pUSART;
 
 /* USER CODE BEGIN Additional extern */
-extern RotorPositionObserverHandle_t RotorPosObsM1;
+extern AO_Handle_t AngleObserverM1;
 
 /* USER CODE END Additional extern */
 #define NBR_OF_MOTORS 1

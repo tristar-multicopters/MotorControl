@@ -57,7 +57,7 @@
   * @param  pFOCVars pointer to FOC vars to be used by MCI.
   * @retval none.
   */
-__weak void MCI_Init( MCI_Handle_t * pHandle, STM_Handle_t * pSTM, SpeednTorqCtrlHandle_t * pSTC, pFOCVars_t pFOCVars )
+__weak void MCI_Init( MCI_Handle_t * pHandle, STM_Handle_t * pSTM, SpeednTorqCtrl_Handle_t * pSTC, pFOCVars_t pFOCVars )
 {
   pHandle->pSTM = pSTM;
   pHandle->pSTC = pSTC;
@@ -246,15 +246,15 @@ __weak void MCI_ExecBufferedCommands( MCI_Handle_t * pHandle )
         case MCI_EXECSPEEDRAMP:
         {
           pHandle->pFOCVars->bDriveInput = INTERNAL;
-          SpdTorqCtrl_SetControlMode( pHandle->pSTC, STC_SPEED_MODE );
-          commandHasBeenExecuted = SpdTorqCtrl_ExecRamp( pHandle->pSTC, pHandle->hFinalSpeed );
+          STC_SetControlMode( pHandle->pSTC, STC_SPEED_MODE );
+          commandHasBeenExecuted = STC_ExecRamp( pHandle->pSTC, pHandle->hFinalSpeed, pHandle->hDurationms );
         }
         break;
         case MCI_EXECTORQUERAMP:
         {
           pHandle->pFOCVars->bDriveInput = INTERNAL;
-          SpdTorqCtrl_SetControlMode( pHandle->pSTC, STC_TORQUE_MODE );
-          commandHasBeenExecuted = SpdTorqCtrl_ExecRamp( pHandle->pSTC, pHandle->hFinalTorque );
+          STC_SetControlMode( pHandle->pSTC, STC_TORQUE_MODE );
+          commandHasBeenExecuted = STC_ExecRamp( pHandle->pSTC, pHandle->hFinalTorque, pHandle->hDurationms );
         }
         break;
         case MCI_SETCURRENTREFERENCES:
@@ -349,8 +349,8 @@ __weak uint16_t MCI_GetCurrentFaults( MCI_Handle_t * pHandle )
 /**
   * @brief  It returns the modality of the speed and torque controller.
   * @param  pHandle Pointer on the component instance to work on.
-  * @retval SpdTorqCtrl_Modality_t It returns the modality of STC. It can be one of
-  *         these two values: SpdTorqCtrl_TORQUE_MODE or SpdTorqCtrl_SPEED_MODE.
+  * @retval STC_Modality_t It returns the modality of STC. It can be one of
+  *         these two values: STC_TORQUE_MODE or STC_SPEED_MODE.
   */
 __weak STC_Modality_t MCI_GetControlMode( MCI_Handle_t * pHandle )
 {
@@ -424,12 +424,24 @@ __weak bool MCI_RampCompleted( MCI_Handle_t * pHandle )
 
   if ( ( STM_GetState( pHandle->pSTM ) ) == RUN )
   {
-    retVal = SpdTorqCtrl_IsRampCompleted( pHandle->pSTC );
+    retVal = STC_RampCompleted( pHandle->pSTC );
   }
 
   return retVal;
 }
 
+/**
+  * @brief  Stop the execution of speed ramp.
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval bool It returns true if the command is executed, false otherwise.
+  *
+  * @deprecated This function is deprecated and should not be used anymore. It will be
+  *             removed in a future version of the MCSDK. Use MCI_StopRamp() instead.
+  */
+__weak bool MCI_StopSpeedRamp( MCI_Handle_t * pHandle )
+{
+  return STC_StopSpeedRamp( pHandle->pSTC );
+}
 
 /**
   * @brief  Stop the execution of ongoing ramp.
@@ -437,7 +449,7 @@ __weak bool MCI_RampCompleted( MCI_Handle_t * pHandle )
   */
 __weak void MCI_StopRamp( MCI_Handle_t * pHandle)
 {
-   SpdTorqCtrl_StopRamp( pHandle->pSTC );
+   STC_StopRamp( pHandle->pSTC );
 }
 
 /**
@@ -450,7 +462,7 @@ __weak void MCI_StopRamp( MCI_Handle_t * pHandle)
   */
 __weak bool MCI_GetSpdSensorReliability( MCI_Handle_t * pHandle )
 {
-  SpeednPosFdbk_Handle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor( pHandle->pSTC );
+  SpeednPosFdbk_Handle_t * SpeedSensor = STC_GetSpeedSensor( pHandle->pSTC );
 
   return ( SPD_Check( SpeedSensor ) );
 }
@@ -463,7 +475,7 @@ __weak bool MCI_GetSpdSensorReliability( MCI_Handle_t * pHandle )
   */
 __weak int16_t MCI_GetAvrgMecSpeedUnit( MCI_Handle_t * pHandle )
 {
-  SpeednPosFdbk_Handle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor( pHandle->pSTC );
+  SpeednPosFdbk_Handle_t * SpeedSensor = STC_GetSpeedSensor( pHandle->pSTC );
 
   return ( SPD_GetAvrgMecSpeedUnit( SpeedSensor ) );
 }
@@ -476,7 +488,7 @@ __weak int16_t MCI_GetAvrgMecSpeedUnit( MCI_Handle_t * pHandle )
   */
 __weak int16_t MCI_GetMecSpeedRefUnit( MCI_Handle_t * pHandle )
 {
-  return ( SpdTorqCtrl_GetMecSpeedRefUnit( pHandle->pSTC ) );
+  return ( STC_GetMecSpeedRefUnit( pHandle->pSTC ) );
 }
 
 /**
@@ -648,7 +660,7 @@ __weak void MCI_SetIdref( MCI_Handle_t * pHandle, int16_t hNewIdref )
   */
 __weak void MCI_Clear_Iqdref( MCI_Handle_t * pHandle )
 {
-  pHandle->pFOCVars->Iqdref = SpdTorqCtrl_GetDefaultIqdref( pHandle->pSTC );
+  pHandle->pFOCVars->Iqdref = STC_GetDefaultIqdref( pHandle->pSTC );
 }
 
 /**

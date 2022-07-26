@@ -64,7 +64,7 @@ typedef enum
 typedef struct
 {
   STM_Handle_t * pSTM; /*!< State machine object used by MCI.*/
-  SpeednTorqCtrlHandle_t * pSTC; /*!< Speed and torque controller object used by MCI.*/
+  SpeednTorqCtrl_Handle_t * pSTC; /*!< Speed and torque controller object used by MCI.*/
   pFOCVars_t pFOCVars;    /*!< Pointer to FOC vars used by MCI.*/
   MCI_UserCommands_t lastCommand; /*!< Last command coming from the user.*/
   int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
@@ -81,7 +81,7 @@ typedef struct
 } MCI_Handle_t;
 
 /* Exported functions ------------------------------------------------------- */
-void MCI_Init( MCI_Handle_t * pHandle, STM_Handle_t * pSTM, SpeednTorqCtrlHandle_t * pSTC, pFOCVars_t pFOCVars );
+void MCI_Init( MCI_Handle_t * pHandle, STM_Handle_t * pSTM, SpeednTorqCtrl_Handle_t * pSTC, pFOCVars_t pFOCVars );
 void MCI_ExecBufferedCommands( MCI_Handle_t * pHandle );
 void MCI_ExecSpeedRamp( MCI_Handle_t * pHandle,  int16_t hFinalSpeed, uint16_t hDurationms );
 void MCI_ExecTorqueRamp( MCI_Handle_t * pHandle,  int16_t hFinalTorque, uint16_t hDurationms );
@@ -104,6 +104,7 @@ STC_Modality_t MCI_GetControlMode( MCI_Handle_t * pHandle );
 int16_t MCI_GetImposedMotorDirection( MCI_Handle_t * pHandle );
 int16_t MCI_GetLastRampFinalSpeed( MCI_Handle_t * pHandle );
 bool MCI_RampCompleted( MCI_Handle_t * pHandle );
+bool MCI_StopSpeedRamp( MCI_Handle_t * pHandle );
 void MCI_StopRamp( MCI_Handle_t * pHandle );
 bool MCI_GetSpdSensorReliability( MCI_Handle_t * pHandle );
 int16_t MCI_GetAvrgMecSpeedUnit( MCI_Handle_t * pHandle );

@@ -728,6 +728,11 @@
           <GroupName>Middlewares/MotorControl</GroupName>
           <Files>
             <File>
+              <FileName>ao_spd_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\ao_spd_pos_fdbk.c</FilePath>
+            </File>
+            <File>
               <FileName>encoder_speed_pos_fdbk.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\MCSDK_v5.4.6\MotorControl\MCSDK\MCLib\Any\Src\encoder_speed_pos_fdbk.c</FilePath>
@@ -2017,26 +2022,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>foldback.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MCSDK_v5.4.7\MotorControl\MCSDK\MCLib\Any\Src\foldback.c</FilePath>
-            </File>
-            <File>
-              <FileName>ramp_mngr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MCSDK_v5.4.7\MotorControl\MCSDK\MCLib\Any\Src\ramp_mngr.c</FilePath>
-            </File>
-            <File>
-              <FileName>signal_filtering.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MCSDK_v5.4.7\MotorControl\MCSDK\MCLib\Any\Src\signal_filtering.c</FilePath>
-            </File>
-            <File>
-              <FileName>rotor_pos_obs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MCSDK_v5.4.7\MotorControl\MCSDK\MCLib\Any\Src\rotor_pos_obs.c</FilePath>
             </File>
           </Files>
         </Group>

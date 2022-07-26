@@ -31,7 +31,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       500 /*!< rpm, mechanical */
+#define MAX_APPLICATION_SPEED_RPM       1500 /*!< rpm, mechanical */
 #define MIN_APPLICATION_SPEED_RPM       0 /*!< rpm, mechanical,
                                                            absolute value */
 #define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
@@ -104,10 +104,10 @@
                                                            number of PWM cycles */
 /* Gains values for torque and flux control loops */
 #define PID_TORQUE_KP_DEFAULT         300
-#define PID_TORQUE_KI_DEFAULT         4000
+#define PID_TORQUE_KI_DEFAULT         50
 #define PID_TORQUE_KD_DEFAULT         100
-#define PID_FLUX_KP_DEFAULT           100
-#define PID_FLUX_KI_DEFAULT           6000
+#define PID_FLUX_KP_DEFAULT           300
+#define PID_FLUX_KI_DEFAULT           50
 #define PID_FLUX_KD_DEFAULT           100
 
 /* Torque/Flux control loop gains dividers*/
@@ -148,11 +148,6 @@
 #define DEFAULT_TARGET_SPEED_UNIT      (DEFAULT_TARGET_SPEED_RPM*SPEED_UNIT/_RPM)
 #define DEFAULT_TORQUE_COMPONENT       0
 #define DEFAULT_FLUX_COMPONENT         0
-
-#define DEFAULT_TORQUE_SLOPE_UP        10000
-#define DEFAULT_TORQUE_SLOPE_DOWN      10000
-#define DEFAULT_SPEED_SLOPE_UP         1000
-#define DEFAULT_SPEED_SLOPE_DOWN       1000
 
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
 #define OV_VOLTAGE_PROT_ENABLING        ENABLE
@@ -239,25 +234,23 @@
 
 /* ##@@_USER_CODE_START_##@@ */
 
-#define ROTOR_POS_OBS_KP         					1250
-#define ROTOR_POS_OBS_KI         					0
-#define ROTOR_POS_OBS_KD         					1000
+#define AO_KP         									1250 // High speed: 1000, All speed: 150
+#define AO_KI         									0
+#define AO_KD         									1000 // High speed: 1000, All speed: 300
 
-#define ROTOR_POS_OBS_KPDIV         				256
-#define ROTOR_POS_OBS_KIDIV         				256
-#define ROTOR_POS_OBS_KDDIV         				1
-#define ROTOR_POS_OBS_KPDIV_LOG                  	LOG2(256)
-#define ROTOR_POS_OBS_KIDIV_LOG                  	LOG2(256)
-#define ROTOR_POS_OBS_KDDIV_LOG                  	LOG2(1)
+#define AO_KPDIV         								256
+#define AO_KIDIV         								256
+#define AO_KDDIV         								1
+#define AO_KPDIV_LOG                  	LOG2(AO_KPDIV)
+#define AO_KIDIV_LOG                  	LOG2(AO_KIDIV)
+#define AO_KDDIV_LOG                  	LOG2(AO_KDDIV)
 
-/******************************   Software overcurrent protection Motor 1   **********************/
+#define AO_SPEEDFACTORGAIN							0
+#define	AO_SPEEDFACTORDIV								0	
 
-#define OCSP_SAFETY_MARGIN 	            3000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
-                                                than reference current before overcurrent software protection triggers */
-#define OCSP_MAX_CURRENT                20000   /* Max current that can be reached before triggering software overcurrent */
-#define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering */
-#define CURRENT_FILTER_BETA             -0.273F      /* Beta constant used in butterworth filter for current filtering */
-
+#define OCSP_SAFETY_MARGIN 	            4000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+																		than reference current before overcurrent software protection triggers */
+#define OCSP_MAX_CURRENT                22000 /* Max current that can be reached before triggering software overcurrent */
 
 /* ##@@_USER_CODE_END_##@@ */
 

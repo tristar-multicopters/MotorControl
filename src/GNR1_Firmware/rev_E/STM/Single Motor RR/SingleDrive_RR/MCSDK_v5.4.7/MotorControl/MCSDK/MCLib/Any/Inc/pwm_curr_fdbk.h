@@ -29,7 +29,6 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
-#include "signal_filtering.h"
 
 /** @addtogroup MCSDK
   * @{
@@ -198,14 +197,6 @@ struct PWMC_Handle
   uint16_t  Ton;                                         /**< Reserved */
   uint16_t  Toff;                                        /**< Reserved */
 
-  SignalFilteringHandle_t IaFilter;                  /* Pointer to filter instance used for filtering Ia signal (only for software ocp) */
-  SignalFilteringHandle_t IbFilter;                  /* Pointer to filter instance used for filtering Ib signal (only for software ocp) */
-  float fCurrentFilterAlpha;
-  float fCurrentFilterBeta;
-  
-  int16_t hSoftwareOCPMarginCurrent;                   /* Measured current amplitude can be until hSoftwareOCPMarginCurrent higher
-                                                            than reference current before overcurrent software protection triggers */    
-  int16_t hSoftwareOCPMaximumCurrent;                   /* Max current that can be reached before triggering software overcurrent */
 };
 
 /**
@@ -251,15 +242,6 @@ static inline int16_t PWMC_GetIc( PWMC_Handle_t * pHandle )
 {
   return pHandle->Ic;
 }
-
-/**
-  * @brief  Execute software overcurrent protection algorithm. Must be called periodically to update current filters.
-  * @param  pHandle: handle on the target PWMC component
-  * @param  Iab: Pointer to the structure that contains Ia and Ib
-  * @param  Iqdref: Pointer to the structure that contains Idref and Iqref
-  * @retval True if overcurrent condition, false otherwise.
-*/
-bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMC_Handle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref);
 
 /*  Converts input voltage components Valfa, beta into duty cycles and feed it to the inverter */
 uint16_t PWMC_SetPhaseVoltage( PWMC_Handle_t * pHandle,
