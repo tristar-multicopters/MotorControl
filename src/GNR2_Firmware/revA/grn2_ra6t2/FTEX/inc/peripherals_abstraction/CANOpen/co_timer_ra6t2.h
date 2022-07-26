@@ -14,7 +14,7 @@
    limitations under the License.
 ******************************************************************************/
 /**
-* @file   uCAL_TIM1.h
+* @file   co_timer_ra6t2.h
 * @author Ftex
 * @brief  uController Abstraction Layer for hardware timer 1 (TIM1)
 *
@@ -22,8 +22,8 @@
 * It is the bridge between the TIM1 interface and the CANOpen stack
 *
 */
-#ifndef UCAL_TIM1_H_
-#define UCAL_TIM1_H_
+#ifndef CO_TIMER_RA6T2_H
+#define CO_TIMER_RA6T2_H
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {

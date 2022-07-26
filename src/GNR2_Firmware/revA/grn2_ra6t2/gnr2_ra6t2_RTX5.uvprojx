@@ -800,19 +800,19 @@
               <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_can_callbacks.c</FilePath>
             </File>
             <File>
-              <FileName>uCAL_CAN.c</FileName>
+              <FileName>co_can_ra6t2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\uCAL_CAN.c</FilePath>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_can_ra6t2.c</FilePath>
             </File>
             <File>
-              <FileName>uCAL_NVM.c</FileName>
+              <FileName>co_nvm_ra6t2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\uCAL_NVM.c</FilePath>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_nvm_ra6t2.c</FilePath>
             </File>
             <File>
-              <FileName>uCAL_TIM1.c</FileName>
+              <FileName>co_timer_ra6t2.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\uCAL_TIM1.c</FilePath>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_timer_ra6t2.c</FilePath>
             </File>
           </Files>
         </Group>

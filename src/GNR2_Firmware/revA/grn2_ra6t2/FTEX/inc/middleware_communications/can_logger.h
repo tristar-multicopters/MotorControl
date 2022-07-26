@@ -11,7 +11,7 @@
 #define CAN_LOGGER
 
 #include "vc_interface.h"
-#include "uCAL_CAN.h"
+#include "co_can_ra6t2.h"
 
 #if ENABLE_CAN_LOGGER
 typedef enum

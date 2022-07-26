@@ -64,7 +64,7 @@ static void GnR2ModuleApp(void *p_arg)
     CO_OBJ *objFWver    = CODictFind(&node->Dict, CO_DEV(0x2008, 0));
     
     int16_t speed     = MDI_GetAvrgMecSpeedUnit(pVCI->pPowertrain->pMDI,M1);
-    uint8_t soc       = 50;     // TODO: Implement function that allows to get the SOC. Use a hardcoded value for now...
+    uint8_t soc       = 50; // TODO: Implement function that allows to get the SOC. Use a hardcoded value for now...
     uint8_t pas       = (uint8_t)VCI_ReadRegister(pVCI,REG_PAS_LEVEL);
     uint8_t maxPas    = (uint8_t)VCI_ReadRegister(pVCI,REG_PAS_MAXLEVEL);  
     uint16_t maxPwr   = 3000; // TODO: Implement function that allows to get the maxPower. Use a hardcoded value for now...
@@ -73,7 +73,7 @@ static void GnR2ModuleApp(void *p_arg)
     uint32_t wLowId   = (uint32_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_LOW);
     uint64_t dHighId  = (uint64_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_LOW) << 32;
     uint64_t serialNb =  wLowId | dHighId;
-    uint16_t FWVer    =   (uint16_t)VCI_ReadRegister(pVCI,REG_FIRMVER);
+    uint16_t FWVer    =  (uint16_t)VCI_ReadRegister(pVCI,REG_FIRMVER);
     
     if(node == 0)
     {
@@ -152,7 +152,7 @@ __NO_RETURN void processCANmsgTask (void * pvParameter)
     UNUSED_PARAMETER(pvParameter);
     
     #if ENABLE_CAN_LOGGER
-    uCAL_CAN_DrvInit();
+    CANo_DrvInit();
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     uint32_t xLastWakeTime = osKernelGetTickCount();
     #else

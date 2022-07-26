@@ -14,13 +14,13 @@
    limitations under the License.
 ******************************************************************************/
 /**
-*  uCAL_TIM1.c
+*  co_timer_ra6t2.c
 *  Abstraction Layer module for Timer 1 used for CANOpen stack
 */
 
 // ================================== INCLUDES ================================== //
 
-#include "uCAL_TIM1.h"
+#include "co_timer_ra6t2.h"
 
 // ================================== PRIVATE FUNCTIONS ================================== //
 
@@ -30,48 +30,48 @@
   @param freq of timer (not used)
   @return void
 */
-static void     uCAL_TIM1_Init   (uint32_t freq);
+static void     CANo_TIM_Init   (uint32_t freq);
 
 /**
   @brief Function used to start the hardware Timer 1 driver
   @return void
 */
-static void     uCAL_TIM1_Start  (void);
+static void     CANo_TIM_Start  (void);
 
 /**
   @brief Function used to update the Timer 1 driver
   @return return 1 if timer event is elapsed, otherwise 0
 */
-static uint8_t  uCAL_TIM1_Update (void);
+static uint8_t  CANo_TIM_Update (void);
 
 /**
   @brief Function to return current Timer 1 counter value
   @return: Current timer counter value
 */
-static uint32_t uCAL_TIM1_Delay  (void);
+static uint32_t CANo_TIM_Delay  (void);
 
 /**
   @brief Function to reload timer counter value
   @param:  reload value
   @return: void
 */
-static void     uCAL_TIM1_Reload (uint32_t reload);
+static void     CANo_TIM_Reload (uint32_t reload);
 
 /**
   @brief Function to stop the counter value
   @return: void
 */
-static void     uCAL_TIM1_Stop   (void);
+static void     CANo_TIM_Stop   (void);
 
 // ================================== PUBLIC VARIABLES ================================== //
 
 const CO_IF_TIMER_DRV CoTimerDriver = {
-    uCAL_TIM1_Init,
-    uCAL_TIM1_Reload,
-    uCAL_TIM1_Delay,
-    uCAL_TIM1_Stop,
-    uCAL_TIM1_Start,
-    uCAL_TIM1_Update
+    CANo_TIM_Init,
+    CANo_TIM_Reload,
+    CANo_TIM_Delay,
+    CANo_TIM_Stop,
+    CANo_TIM_Start,
+    CANo_TIM_Update
 };
 
 // ================================== PRIVATE VARIABLES ================================== //
@@ -83,7 +83,7 @@ uint32_t m_period = 0;
 /**
   Function used to initialise the Timer 1 driver
 */
-static void uCAL_TIM1_Init(uint32_t freq)
+static void CANo_TIM_Init(uint32_t freq)
 {
 	(void)freq;
 	m_counter = 0;
@@ -95,7 +95,7 @@ static void uCAL_TIM1_Init(uint32_t freq)
 /**
   Function used to start the Timer 1 driver
 */
-static void uCAL_TIM1_Start(void)
+static void CANo_TIM_Start(void)
 {
 	R_AGT_Start(&g_timer1_ctrl);
 }
@@ -103,7 +103,7 @@ static void uCAL_TIM1_Start(void)
 /**
   Function used to update the Timer 1 driver
 */
-static uint8_t uCAL_TIM1_Update(void)
+static uint8_t CANo_TIM_Update(void)
 {
 	uint8_t elapsed = 0;
 	
@@ -122,7 +122,7 @@ static uint8_t uCAL_TIM1_Update(void)
 /**
   Function to return current Timer 1 counter value
 */
-static uint32_t uCAL_TIM1_Delay(void)
+static uint32_t CANo_TIM_Delay(void)
 {
 	if(m_period > m_counter)
 	{
@@ -137,7 +137,7 @@ static uint32_t uCAL_TIM1_Delay(void)
 /**
   Function to reload timer counter value
 */
-static void uCAL_TIM1_Reload(uint32_t reload)
+static void CANo_TIM_Reload(uint32_t reload)
 {
 	m_period = reload;
 }
@@ -145,7 +145,7 @@ static void uCAL_TIM1_Reload(uint32_t reload)
 /**
   Function to Stop timer counter value
 */
-static void uCAL_TIM1_Stop(void)
+static void CANo_TIM_Stop(void)
 {
 	/* TODO: start hardware timer and clear counter value */
 	R_AGT_Stop( &g_timer1_ctrl );

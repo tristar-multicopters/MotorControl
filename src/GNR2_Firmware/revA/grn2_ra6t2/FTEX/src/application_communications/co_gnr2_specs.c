@@ -9,9 +9,9 @@
 #include "gnr_parameters.h" // To use ENABLE_CAN_LOGGER
 #if !ENABLE_CAN_LOGGER
                                     /* select application drivers: */
-#include "uCAL_CAN.h"               /* CAN driver                  */
-#include "uCAL_TIM1.h"              /* Timer driver                */
-#include "uCAL_NVM.h"               /* NVM driver                  */
+#include "co_can_ra6t2.h"               /* CAN driver                  */
+#include "co_timer_ra6t2.h"              /* Timer driver                */
+#include "co_nvm_ra6t2.h"               /* NVM driver                  */
 
 // ==================== PRIVATE DEFINES ======================== //
 
@@ -34,7 +34,7 @@ static int16_t  objSpeedMeas = 0;
 static uint8_t  objSOC = 0;
 static uint8_t  objPAS = 0;
 static uint8_t  objMaxPAS = 0;
-static uint8_t  objFwVersion = 0;
+static uint16_t  objFwVersion = 0;
 static uint16_t objPowerMeas = 0;
 static uint16_t objMaxPower = 0;
 static uint16_t objErrorState = 0;
