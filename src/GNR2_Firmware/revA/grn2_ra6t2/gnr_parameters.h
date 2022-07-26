@@ -14,6 +14,7 @@
 #define DEBUGMODE_MOTOR_CONTROL       0                   /* Disable vehicle control and communications to debug only motor control layer */
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       1                   /* Update DAC outputs during VC medium frequency task */
+#define ENABLE_CAN_LOGGER             0                   /* Flag for enable CAN Log messages for Vehicle and motor diagnostics */
 #define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters.
                                                          Will be changed in the future for a more flexible way
                                                          of parametrization. */

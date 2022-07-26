@@ -101,7 +101,7 @@ extern "C" {
 #endif
 #ifndef BSP_TZ_CFG_PSARD
 #define BSP_TZ_CFG_PSARD (\
-            (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 2) /* AGT1 */ | \
+            (((1 > 0) ? 0U : 1U) << 2) /* AGT1 */ | \
             (((1 > 0) ? 0U : 1U) << 3) /* AGT0 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 11) /* POEG3 */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 12) /* POEG2 */ | \
@@ -306,7 +306,7 @@ extern "C" {
 #endif
 			/* Block Protection Register 0 */
 #ifndef BSP_CFG_ROM_REG_BPS0
-            #define BSP_CFG_ROM_REG_BPS0 (~(0U))
+            #define BSP_CFG_ROM_REG_BPS0 (~( 0U))
 #endif
             /* Block Protection Register 1 */
 #ifndef BSP_CFG_ROM_REG_BPS1
@@ -318,7 +318,7 @@ extern "C" {
 #endif
             /* Permanent Block Protection Register 0 */
 #ifndef BSP_CFG_ROM_REG_PBPS0
-            #define BSP_CFG_ROM_REG_PBPS0 (~(0U))
+            #define BSP_CFG_ROM_REG_PBPS0 (~( 0U))
 #endif
             /* Permanent Block Protection Register 1 */
 #ifndef BSP_CFG_ROM_REG_PBPS1

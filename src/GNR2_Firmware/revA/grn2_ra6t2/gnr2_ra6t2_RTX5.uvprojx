@@ -10,7 +10,7 @@
       <TargetName>Target 1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6160000::V6.16::ARMCLANG</pCCUsed>
+      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -186,6 +186,7 @@
             <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -339,7 +340,7 @@
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\peripherals_abstraction</IncludePath>
+              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -432,6 +433,11 @@
               <FileName>comm_tasks.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application_communications\comm_tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_gnr2_specs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_communications\co_gnr2_specs.c</FilePath>
             </File>
             <File>
               <FileName>comm_defines.h</FileName>
@@ -548,6 +554,11 @@
         <Group>
           <GroupName>Middleware/Communications</GroupName>
           <Files>
+            <File>
+              <FileName>can_logger.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_communications\can_logger.c</FilePath>
+            </File>
             <File>
               <FileName>lcd_apt_comm.c</FileName>
               <FileType>1</FileType>
@@ -783,6 +794,26 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_UART.c</FilePath>
             </File>
+            <File>
+              <FileName>co_can_callbacks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_can_callbacks.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_can_ra6t2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_can_ra6t2.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_nvm_ra6t2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_nvm_ra6t2.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_timer_ra6t2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\CANOpen\co_timer_ra6t2.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -792,6 +823,96 @@
               <FileName>hal_entry.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\hal_entry.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>CANOpen_Lib</GroupName>
+          <Files>
+            <File>
+              <FileName>co_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_csdo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_csdo.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_dict.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_dict.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_emcy.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_if.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_if_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_nvm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_if_nvm.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_if_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_lss.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_lss.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_nmt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_nmt.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_obj.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_obj.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_para.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_pdo.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_ssdo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_ssdo.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_sync.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_tmr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_tmr.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_ver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\source\co_ver.c</FilePath>
             </File>
           </Files>
         </Group>

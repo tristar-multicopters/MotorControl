@@ -16,6 +16,7 @@ extern void startMCMediumFrequencyTask(void * pvParameter);
 extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
 extern void ProcessUARTFrames(void * pvParameter);
+extern void processCANmsgTask(void * pvParameter);
 
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
 
@@ -27,6 +28,7 @@ static bool ICUInit(void);
 static bool ELCInit(void);
 static bool AGTInit(void);
 static bool UARTInit(void);
+static bool CANInit(void);
 static bool IIRFAInit(void);
 
 
@@ -37,7 +39,7 @@ osThreadId_t MC_SafetyTask_handle;
 osThreadId_t THR_VC_MediumFreq_handle;
 osThreadId_t THR_VC_StateMachine_handle;
 osThreadId_t COMM_Uart_handle;
-
+osThreadId_t CANThreadHandle;
 
 //****************** THREAD ATTRIBUTES ******************//
 
@@ -69,6 +71,13 @@ static const osThreadAttr_t ThAtt_VehicleStateMachine = {
 };
 #endif
 
+// For testing purposes
+static const osThreadAttr_t ThAtt_CAN = {
+    .name = "CAN_TASK",
+    .stack_size = 512,
+    .priority = osPriorityNormal
+};
+
 static const osThreadAttr_t ThAtt_UART = {
 	.name = "TSK_UART",
 	.stack_size = 512,
@@ -91,6 +100,7 @@ void gnr_main(void)
     ELCInit();
     AGTInit();
     UARTInit();
+    CANInit();
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
 
@@ -122,8 +132,12 @@ void gnr_main(void)
     #endif
 
    	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
-												          		NULL,
-																	    &ThAtt_UART);		
+                                      NULL,
+                                      &ThAtt_UART);
+                                          
+    CANThreadHandle                  = osThreadNew(processCANmsgTask,
+                                      NULL,
+                                      &ThAtt_CAN);
     /* Start RTOS */
     if (osKernelGetState() == osKernelReady)
     {
@@ -286,6 +300,19 @@ static bool UARTInit(void)
 
     // Initialise the UART
     bIsError |= R_SCI_B_UART_Open(&g_uart0_ctrl, &g_uart0_cfg);
+
+    return bIsError;
+}
+
+/**
+  * @brief  Function used to Initialize the CAN
+  */
+static bool CANInit(void)
+{
+    bool bIsError = false;
+
+    // Initialise the UART
+    bIsError |= R_CANFD_Open(&g_canfd0_ctrl, &g_canfd0_cfg);
 
     return bIsError;
 }

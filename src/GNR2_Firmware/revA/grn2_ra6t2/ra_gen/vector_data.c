@@ -19,6 +19,11 @@
             [12] = sci_b_uart_txi_isr, /* SCI9 TXI (Transmit data empty) */
             [13] = sci_b_uart_tei_isr, /* SCI9 TEI (Transmit end) */
             [14] = sci_b_uart_eri_isr, /* SCI9 ERI (Receive error) */
+            [15] = canfd_error_isr, /* CAN0 CHERR (Channel error) */
+            [16] = canfd_channel_tx_isr, /* CAN0 TX (Transmit interrupt) */
+            [17] = canfd_error_isr, /* CAN GLERR (Global error) */
+            [18] = canfd_rx_fifo_isr, /* CAN RXF (Global recieve FIFO interrupt) */
+            [19] = agt_int_isr, /* AGT1 INT (AGT interrupt) */
         };
         const bsp_interrupt_event_t g_interrupt_event_link_select[BSP_ICU_VECTOR_MAX_ENTRIES] =
         {
@@ -37,5 +42,10 @@
             [12] = BSP_PRV_IELS_ENUM(EVENT_SCI9_TXI), /* SCI9 TXI (Transmit data empty) */
             [13] = BSP_PRV_IELS_ENUM(EVENT_SCI9_TEI), /* SCI9 TEI (Transmit end) */
             [14] = BSP_PRV_IELS_ENUM(EVENT_SCI9_ERI), /* SCI9 ERI (Receive error) */
+            [15] = BSP_PRV_IELS_ENUM(EVENT_CAN0_CHERR), /* CAN0 CHERR (Channel error) */
+            [16] = BSP_PRV_IELS_ENUM(EVENT_CAN0_TX), /* CAN0 TX (Transmit interrupt) */
+            [17] = BSP_PRV_IELS_ENUM(EVENT_CAN_GLERR), /* CAN GLERR (Global error) */
+            [18] = BSP_PRV_IELS_ENUM(EVENT_CAN_RXF), /* CAN RXF (Global recieve FIFO interrupt) */
+            [19] = BSP_PRV_IELS_ENUM(EVENT_AGT1_INT), /* AGT1 INT (AGT interrupt) */
         };
         #endif

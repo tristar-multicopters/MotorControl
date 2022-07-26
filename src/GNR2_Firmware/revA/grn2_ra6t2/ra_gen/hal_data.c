@@ -8,6 +8,130 @@
                      #define ADC_B_TRIGGER_ADC_B1        ADC_B_TRIGGER_SYNC_ELC
                      #define ADC_B_TRIGGER_ADC_B1_B      ADC_B_TRIGGER_SYNC_ELC
 
+agt_instance_ctrl_t g_timer1_ctrl;
+const agt_extended_cfg_t g_timer1_extend =
+{
+    .count_source            = AGT_CLOCK_PCLKB,
+    .agto                    = AGT_PIN_CFG_DISABLED,
+    .agtoab_settings_b.agtoa = AGT_PIN_CFG_DISABLED,
+    .agtoab_settings_b.agtob = AGT_PIN_CFG_DISABLED,
+    .measurement_mode        = AGT_MEASURE_DISABLED,
+    .agtio_filter            = AGT_AGTIO_FILTER_NONE,
+    .enable_pin              = AGT_ENABLE_PIN_NOT_USED,
+    .trigger_edge            = AGT_TRIGGER_EDGE_RISING,
+};
+const timer_cfg_t g_timer1_cfg =
+{
+    .mode                = TIMER_MODE_PERIODIC,
+    /* Actual period: 0.001 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0xea60, .duty_cycle_counts = 0x7530, .source_div = (timer_source_div_t)0,
+    .channel             = 1,
+    .p_callback          = CAN_TIM_Callback,
+    /** If NULL then do not add & */
+#if defined(NULL)
+    .p_context           = NULL,
+#else
+    .p_context           = &NULL,
+#endif
+    .p_extend            = &g_timer1_extend,
+    .cycle_end_ipl       = (2),
+#if defined(VECTOR_NUMBER_AGT1_INT)
+    .cycle_end_irq       = VECTOR_NUMBER_AGT1_INT,
+#else
+    .cycle_end_irq       = FSP_INVALID_VECTOR,
+#endif
+};
+/* Instance structure to use this module. */
+const timer_instance_t g_timer1 =
+{
+    .p_ctrl        = &g_timer1_ctrl,
+    .p_cfg         = &g_timer1_cfg,
+    .p_api         = &g_timer_on_agt
+};
+/* Nominal and Data bit timing configuration */
+
+can_bit_timing_cfg_t g_canfd0_bit_timing_cfg =
+{
+    /* Actual bitrate: 500000 Hz. Actual sample point: 75 %. */
+    .baud_rate_prescaler = 2,
+    .time_segment_1 = 29,
+    .time_segment_2 = 10,
+    .synchronization_jump_width = 4
+};
+
+can_bit_timing_cfg_t g_canfd0_data_timing_cfg =
+{
+    /* Actual bitrate: 500000 Hz. Actual sample point: 75 %. */
+    .baud_rate_prescaler = 2,
+    .time_segment_1 = 29,
+    .time_segment_2 = 10,
+    .synchronization_jump_width = 4
+};
+
+
+extern const canfd_afl_entry_t p_canfd0_afl[CANFD_CFG_AFL_CH0_RULE_NUM];
+
+#ifndef CANFD_PRV_GLOBAL_CFG
+#define CANFD_PRV_GLOBAL_CFG
+canfd_global_cfg_t g_canfd_global_cfg =
+{
+    .global_interrupts = CANFD_CFG_GLOBAL_ERR_SOURCES,
+    .global_config     = (CANFD_CFG_TX_PRIORITY | CANFD_CFG_DLC_CHECK | (BSP_CFG_CANFDCLK_SOURCE == BSP_CLOCKS_SOURCE_CLOCK_MAIN_OSC ? R_CANFD_CFDGCFG_DCS_Msk : 0U) | CANFD_CFG_FD_OVERFLOW),
+    .rx_mb_config      = (CANFD_CFG_RXMB_NUMBER | (CANFD_CFG_RXMB_SIZE << R_CANFD_CFDRMNB_RMPLS_Pos)),
+    .global_err_ipl = CANFD_CFG_GLOBAL_ERR_IPL,
+    .rx_fifo_ipl    = CANFD_CFG_RX_FIFO_IPL,
+    .rx_fifo_config    =
+    {
+        ((CANFD_CFG_RXFIFO0_INT_THRESHOLD << R_CANFD_CFDRFCC_RFIGCV_Pos) | (CANFD_CFG_RXFIFO0_DEPTH << R_CANFD_CFDRFCC_RFDC_Pos) | (CANFD_CFG_RXFIFO0_PAYLOAD << R_CANFD_CFDRFCC_RFPLS_Pos) | (CANFD_CFG_RXFIFO0_INT_MODE) | (CANFD_CFG_RXFIFO0_ENABLE)),
+        ((CANFD_CFG_RXFIFO1_INT_THRESHOLD << R_CANFD_CFDRFCC_RFIGCV_Pos) | (CANFD_CFG_RXFIFO1_DEPTH << R_CANFD_CFDRFCC_RFDC_Pos) | (CANFD_CFG_RXFIFO1_PAYLOAD << R_CANFD_CFDRFCC_RFPLS_Pos) | (CANFD_CFG_RXFIFO1_INT_MODE) | (CANFD_CFG_RXFIFO1_ENABLE)),
+#if !BSP_FEATURE_CANFD_LITE
+        ((CANFD_CFG_RXFIFO2_INT_THRESHOLD << R_CANFD_CFDRFCC_RFIGCV_Pos) | (CANFD_CFG_RXFIFO2_DEPTH << R_CANFD_CFDRFCC_RFDC_Pos) | (CANFD_CFG_RXFIFO2_PAYLOAD << R_CANFD_CFDRFCC_RFPLS_Pos) | (CANFD_CFG_RXFIFO2_INT_MODE) | (CANFD_CFG_RXFIFO2_ENABLE)),
+        ((CANFD_CFG_RXFIFO3_INT_THRESHOLD << R_CANFD_CFDRFCC_RFIGCV_Pos) | (CANFD_CFG_RXFIFO3_DEPTH << R_CANFD_CFDRFCC_RFDC_Pos) | (CANFD_CFG_RXFIFO3_PAYLOAD << R_CANFD_CFDRFCC_RFPLS_Pos) | (CANFD_CFG_RXFIFO3_INT_MODE) | (CANFD_CFG_RXFIFO3_ENABLE)),
+        ((CANFD_CFG_RXFIFO4_INT_THRESHOLD << R_CANFD_CFDRFCC_RFIGCV_Pos) | (CANFD_CFG_RXFIFO4_DEPTH << R_CANFD_CFDRFCC_RFDC_Pos) | (CANFD_CFG_RXFIFO4_PAYLOAD << R_CANFD_CFDRFCC_RFPLS_Pos) | (CANFD_CFG_RXFIFO4_INT_MODE) | (CANFD_CFG_RXFIFO4_ENABLE)),
+        ((CANFD_CFG_RXFIFO5_INT_THRESHOLD << R_CANFD_CFDRFCC_RFIGCV_Pos) | (CANFD_CFG_RXFIFO5_DEPTH << R_CANFD_CFDRFCC_RFDC_Pos) | (CANFD_CFG_RXFIFO5_PAYLOAD << R_CANFD_CFDRFCC_RFPLS_Pos) | (CANFD_CFG_RXFIFO5_INT_MODE) | (CANFD_CFG_RXFIFO5_ENABLE)),
+        ((CANFD_CFG_RXFIFO6_INT_THRESHOLD << R_CANFD_CFDRFCC_RFIGCV_Pos) | (CANFD_CFG_RXFIFO6_DEPTH << R_CANFD_CFDRFCC_RFDC_Pos) | (CANFD_CFG_RXFIFO6_PAYLOAD << R_CANFD_CFDRFCC_RFPLS_Pos) | (CANFD_CFG_RXFIFO6_INT_MODE) | (CANFD_CFG_RXFIFO6_ENABLE)),
+        ((CANFD_CFG_RXFIFO7_INT_THRESHOLD << R_CANFD_CFDRFCC_RFIGCV_Pos) | (CANFD_CFG_RXFIFO7_DEPTH << R_CANFD_CFDRFCC_RFDC_Pos) | (CANFD_CFG_RXFIFO7_PAYLOAD << R_CANFD_CFDRFCC_RFPLS_Pos) | (CANFD_CFG_RXFIFO7_INT_MODE) | (CANFD_CFG_RXFIFO7_ENABLE)),
+#endif
+    },
+};
+#endif
+
+canfd_extended_cfg_t g_canfd0_extended_cfg =
+{
+    .p_afl              = p_canfd0_afl,
+    .txmb_txi_enable    = ((1ULL << 0) |  0ULL),
+    .error_interrupts   = ( 0U),
+    .p_data_timing      = &g_canfd0_data_timing_cfg,
+    .delay_compensation = (1),
+    .p_global_cfg       = &g_canfd_global_cfg,
+};
+
+canfd_instance_ctrl_t g_canfd0_ctrl;
+const can_cfg_t g_canfd0_cfg =
+{
+    .channel                = 0,
+    .p_bit_timing           = &g_canfd0_bit_timing_cfg,
+    .p_callback             = CANFD_IRQhandler,
+    .p_extend               = &g_canfd0_extended_cfg,
+    .p_context              = NULL,
+    .ipl                    = (7),
+#if defined(VECTOR_NUMBER_CAN0_TX)
+    .tx_irq             = VECTOR_NUMBER_CAN0_TX,
+#else
+    .tx_irq             = FSP_INVALID_VECTOR,
+#endif
+#if defined(VECTOR_NUMBER_CAN0_CHERR)
+    .error_irq             = VECTOR_NUMBER_CAN0_CHERR,
+#else
+    .error_irq             = FSP_INVALID_VECTOR,
+#endif
+};
+/* Instance structure to use this module. */
+const can_instance_t g_canfd0 =
+{
+    .p_ctrl        = &g_canfd0_ctrl,
+    .p_cfg         = &g_canfd0_cfg,
+    .p_api         = &g_canfd_on_canfd
+};
 iirfa_instance_ctrl_t g_iirfa1_ctrl;
 
 const iir_cfg_t g_iirfa1_cfg =
@@ -157,9 +281,9 @@ const gpt_extended_cfg_t g_timer8_extend =
     .start_source        = (gpt_source_t) (GPT_SOURCE_GTIOCB_RISING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
     .stop_source         = (gpt_source_t) (GPT_SOURCE_GTIOCB_FALLING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
     .clear_source        = (gpt_source_t) (GPT_SOURCE_GTIOCB_RISING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
-    .count_up_source     = (gpt_source_t) (GPT_SOURCE_NONE),
-    .count_down_source   = (gpt_source_t) (GPT_SOURCE_NONE),
-    .capture_a_source    = (gpt_source_t) (GPT_SOURCE_NONE),
+    .count_up_source     = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .count_down_source   = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .capture_a_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_b_source    = (gpt_source_t) (GPT_SOURCE_GTIOCB_FALLING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
     .capture_a_ipl       = (BSP_IRQ_DISABLED),
     .capture_b_ipl       = (12),
@@ -384,13 +508,13 @@ const gpt_extended_cfg_t g_timer0_extend =
     .gtiocb = { .output_enabled = false,
                 .stop_level     = GPT_PIN_LEVEL_LOW
               },
-    .start_source        = (gpt_source_t) (GPT_SOURCE_NONE),
-    .stop_source         = (gpt_source_t) (GPT_SOURCE_NONE),
+    .start_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .stop_source         = (gpt_source_t) ( GPT_SOURCE_NONE),
     .clear_source        = (gpt_source_t) (GPT_SOURCE_GPT_A |  GPT_SOURCE_NONE),
-    .count_up_source     = (gpt_source_t) (GPT_SOURCE_NONE),
-    .count_down_source   = (gpt_source_t) (GPT_SOURCE_NONE),
+    .count_up_source     = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .count_down_source   = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_source    = (gpt_source_t) (GPT_SOURCE_GPT_H | GPT_SOURCE_GPT_G | GPT_SOURCE_GPT_F |  GPT_SOURCE_NONE),
-    .capture_b_source    = (gpt_source_t) (GPT_SOURCE_NONE),
+    .capture_b_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_ipl       = (5),
     .capture_b_ipl       = (BSP_IRQ_DISABLED),
 #if defined(VECTOR_NUMBER_GPT0_CAPTURE_COMPARE_A)
@@ -2740,8 +2864,8 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .converter_selection             = (0),
                          .scan_group_enable               = (1),
                          .scan_end_interrupt_enable       = (1),
-                         .external_trigger_enable_mask    = (ADC_B_EXTERNAL_TRIGGER_NONE),
-                         .elc_trigger_enable_mask         = (0x00),
+                         .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
+                         .elc_trigger_enable_mask         = ( 0x00),
                          .gpt_trigger_enable_mask         = (0x10 |  ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
@@ -2765,9 +2889,9 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .converter_selection             = (0),
                          .scan_group_enable               = (1),
                          .scan_end_interrupt_enable       = (1),
-                         .external_trigger_enable_mask    = (ADC_B_EXTERNAL_TRIGGER_NONE),
-                         .elc_trigger_enable_mask         = (0x00),
-                         .gpt_trigger_enable_mask         = (ADC_B_GPT_TRIGGER_NONE),
+                         .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
+                         .elc_trigger_enable_mask         = ( 0x00),
+                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2790,9 +2914,9 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .converter_selection             = (1),
                          .scan_group_enable               = (1),
                          .scan_end_interrupt_enable       = (1),
-                         .external_trigger_enable_mask    = (ADC_B_EXTERNAL_TRIGGER_NONE),
-                         .elc_trigger_enable_mask         = (0x00),
-                         .gpt_trigger_enable_mask         = (ADC_B_GPT_TRIGGER_NONE),
+                         .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
+                         .elc_trigger_enable_mask         = ( 0x00),
+                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2815,9 +2939,9 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .converter_selection             = (0),
                          .scan_group_enable               = (0),
                          .scan_end_interrupt_enable       = (1),
-                         .external_trigger_enable_mask    = (ADC_B_EXTERNAL_TRIGGER_NONE),
-                         .elc_trigger_enable_mask         = (0x00),
-                         .gpt_trigger_enable_mask         = (ADC_B_GPT_TRIGGER_NONE),
+                         .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
+                         .elc_trigger_enable_mask         = ( 0x00),
+                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2840,9 +2964,9 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .converter_selection             = (0),
                          .scan_group_enable               = (0),
                          .scan_end_interrupt_enable       = (1),
-                         .external_trigger_enable_mask    = (ADC_B_EXTERNAL_TRIGGER_NONE),
-                         .elc_trigger_enable_mask         = (0x00),
-                         .gpt_trigger_enable_mask         = (ADC_B_GPT_TRIGGER_NONE),
+                         .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
+                         .elc_trigger_enable_mask         = ( 0x00),
+                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2865,9 +2989,9 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .converter_selection             = (0),
                          .scan_group_enable               = (0),
                          .scan_end_interrupt_enable       = (1),
-                         .external_trigger_enable_mask    = (ADC_B_EXTERNAL_TRIGGER_NONE),
-                         .elc_trigger_enable_mask         = (0x00),
-                         .gpt_trigger_enable_mask         = (ADC_B_GPT_TRIGGER_NONE),
+                         .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
+                         .elc_trigger_enable_mask         = ( 0x00),
+                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2890,9 +3014,9 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .converter_selection             = (0),
                          .scan_group_enable               = (0),
                          .scan_end_interrupt_enable       = (1),
-                         .external_trigger_enable_mask    = (ADC_B_EXTERNAL_TRIGGER_NONE),
-                         .elc_trigger_enable_mask         = (0x00),
-                         .gpt_trigger_enable_mask         = (ADC_B_GPT_TRIGGER_NONE),
+                         .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
+                         .elc_trigger_enable_mask         = ( 0x00),
+                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2915,9 +3039,9 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .converter_selection             = (0),
                          .scan_group_enable               = (0),
                          .scan_end_interrupt_enable       = (1),
-                         .external_trigger_enable_mask    = (ADC_B_EXTERNAL_TRIGGER_NONE),
-                         .elc_trigger_enable_mask         = (0x00),
-                         .gpt_trigger_enable_mask         = (ADC_B_GPT_TRIGGER_NONE),
+                         .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
+                         .elc_trigger_enable_mask         = ( 0x00),
+                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2940,9 +3064,9 @@ const adc_b_virtual_channel_cfg_t *const group_8_virtual_channels[] = {
                          .converter_selection             = (0),
                          .scan_group_enable               = (0),
                          .scan_end_interrupt_enable       = (1),
-                         .external_trigger_enable_mask    = (ADC_B_EXTERNAL_TRIGGER_NONE),
-                         .elc_trigger_enable_mask         = (0x00),
-                         .gpt_trigger_enable_mask         = (ADC_B_GPT_TRIGGER_NONE),
+                         .external_trigger_enable_mask    = ( ADC_B_EXTERNAL_TRIGGER_NONE),
+                         .elc_trigger_enable_mask         = ( 0x00),
+                         .gpt_trigger_enable_mask         = ( ADC_B_GPT_TRIGGER_NONE),
 
                          .self_diagnosis_mask             = (ADC_B_SELF_DIAGNOSIS_DISABLED << R_ADC_B0_ADSGDCR0_DIAGVAL_Pos),
 
@@ -2999,7 +3123,7 @@ const adc_b_group_cfg_t * const adc_b_scan_cfg_groups[] = {
 
                        const adc_b_scan_cfg_t g_adc_scan_cfg =
                        {
-                       .group_count = (0 +
+                       .group_count = ( 0 +
                        (0 != (1)) + (0 != (1)) + (0 != (1)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0)) + (0 != (0))),
 #if ((0 != (1))||(0 != (1))||(0 != (1))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0))||(0 != (0)))
                        .p_adc_groups = (adc_b_group_cfg_t**)adc_b_scan_cfg_groups,
@@ -3203,9 +3327,9 @@ const adc_b_extended_cfg_t g_adc_cfg_extend =
                             ((95 << R_ADC_B0_ADSSTR6_SST12_Pos) | (95 << R_ADC_B0_ADSSTR6_SST13_Pos)),
                             ((95 << R_ADC_B0_ADSSTR7_SST14_Pos) | (95 << R_ADC_B0_ADSSTR7_SST15_Pos)),
                             },
-    .sample_and_hold_enable_mask = (ADC_B_SAMPLE_AND_HOLD_MASK_NONE),
-    .sample_and_hold_config_012 = ((95 << R_ADC_B0_ADSHSTR1_SHSST_Pos)|
-                                   (5 << R_ADC_B0_ADSHSTR0_SHHST_Pos)),
+    .sample_and_hold_enable_mask = ( ADC_B_SAMPLE_AND_HOLD_MASK_NONE),
+    .sample_and_hold_config_012 = ((95 << R_ADC_B0_ADSHSTR1_SHSST_Pos )|
+                                   (5 << R_ADC_B0_ADSHSTR0_SHHST_Pos )),
     .sample_and_hold_config_456 = ((95 << R_ADC_B0_ADSHSTR1_SHSST_Pos) |
                                    (5 << R_ADC_B0_ADSHSTR1_SHHST_Pos)),
     .conversion_state = ((5 << R_ADC_B0_ADCNVSTR_CST0_Pos) |
@@ -3230,7 +3354,7 @@ const adc_b_extended_cfg_t g_adc_cfg_extend =
                         0,
                         0,
                         },
-    .limiter_clip_interrupt_enable_mask = (0x00),
+    .limiter_clip_interrupt_enable_mask = ( 0x00),
     .limiter_clip_tables = {
                            (0 | 0 << R_ADC_B0_ADLIMTR0_LIMU_Pos),
                            (0 | 0 << R_ADC_B0_ADLIMTR1_LIMU_Pos),
@@ -3349,13 +3473,13 @@ const gpt_extended_cfg_t g_timer6_extend =
     .gtiocb = { .output_enabled = true,
                 .stop_level     = GPT_PIN_LEVEL_LOW
               },
-    .start_source        = (gpt_source_t) (GPT_SOURCE_NONE),
-    .stop_source         = (gpt_source_t) (GPT_SOURCE_NONE),
-    .clear_source        = (gpt_source_t) (GPT_SOURCE_NONE),
-    .count_up_source     = (gpt_source_t) (GPT_SOURCE_NONE),
-    .count_down_source   = (gpt_source_t) (GPT_SOURCE_NONE),
-    .capture_a_source    = (gpt_source_t) (GPT_SOURCE_NONE),
-    .capture_b_source    = (gpt_source_t) (GPT_SOURCE_NONE),
+    .start_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .stop_source         = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .clear_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .count_up_source     = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .count_down_source   = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .capture_a_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .capture_b_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_ipl       = (BSP_IRQ_DISABLED),
     .capture_b_ipl       = (BSP_IRQ_DISABLED),
 #if defined(VECTOR_NUMBER_GPT6_CAPTURE_COMPARE_A)
@@ -3453,13 +3577,13 @@ const gpt_extended_cfg_t g_timer5_extend =
     .gtiocb = { .output_enabled = true,
                 .stop_level     = GPT_PIN_LEVEL_LOW
               },
-    .start_source        = (gpt_source_t) (GPT_SOURCE_NONE),
-    .stop_source         = (gpt_source_t) (GPT_SOURCE_NONE),
-    .clear_source        = (gpt_source_t) (GPT_SOURCE_NONE),
-    .count_up_source     = (gpt_source_t) (GPT_SOURCE_NONE),
-    .count_down_source   = (gpt_source_t) (GPT_SOURCE_NONE),
-    .capture_a_source    = (gpt_source_t) (GPT_SOURCE_NONE),
-    .capture_b_source    = (gpt_source_t) (GPT_SOURCE_NONE),
+    .start_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .stop_source         = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .clear_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .count_up_source     = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .count_down_source   = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .capture_a_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .capture_b_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_ipl       = (BSP_IRQ_DISABLED),
     .capture_b_ipl       = (BSP_IRQ_DISABLED),
 #if defined(VECTOR_NUMBER_GPT5_CAPTURE_COMPARE_A)
@@ -3557,13 +3681,13 @@ const gpt_extended_cfg_t g_timer4_extend =
     .gtiocb = { .output_enabled = true,
                 .stop_level     = GPT_PIN_LEVEL_LOW
               },
-    .start_source        = (gpt_source_t) (GPT_SOURCE_NONE),
-    .stop_source         = (gpt_source_t) (GPT_SOURCE_NONE),
-    .clear_source        = (gpt_source_t) (GPT_SOURCE_NONE),
-    .count_up_source     = (gpt_source_t) (GPT_SOURCE_NONE),
-    .count_down_source   = (gpt_source_t) (GPT_SOURCE_NONE),
-    .capture_a_source    = (gpt_source_t) (GPT_SOURCE_NONE),
-    .capture_b_source    = (gpt_source_t) (GPT_SOURCE_NONE),
+    .start_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .stop_source         = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .clear_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .count_up_source     = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .count_down_source   = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .capture_a_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .capture_b_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_ipl       = (BSP_IRQ_DISABLED),
     .capture_b_ipl       = (BSP_IRQ_DISABLED),
 #if defined(VECTOR_NUMBER_GPT4_CAPTURE_COMPARE_A)
