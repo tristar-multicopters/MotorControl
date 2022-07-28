@@ -681,11 +681,14 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 	{
 		if ( DRVT_IsMotor1Used(pHandle) )
 		{// If there's an over current (OC) that has occurred but has already been cleared on the STM side
-			if ( hM1FaultOccurredCode & MC_BREAK_IN ) 
-			{
+			if ( (hM1FaultOccurredCode & MC_BREAK_IN) || (hM1FaultOccurredCode & MC_SOCP) )
+            {
 				if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the OC fault
 					hM1FaultOccurredCode &= ~MC_BREAK_IN;
+                    hM1FaultOccurredCode &= ~MC_SOCP;
+                    hM1FaultOccurredCode &= ~MC_FOC_DURATION;
+                    hM1FaultOccurredCode &= ~MC_SW_ERROR;
 					pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
 				}
 				else
@@ -742,11 +745,14 @@ bool DRVT_MotorFaultManagement(DRVT_Handle_t * pHandle)
 		
 		if ( DRVT_IsMotor2Used(pHandle) )
 		{
-			if ( hM2FaultOccurredCode & MC_BREAK_IN ) 
-			{
+			if ( (hM2FaultOccurredCode & MC_BREAK_IN) || (hM2FaultOccurredCode & MC_SOCP) )
+            {
 				if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout (500ms), clear the OC fault
 					hM2FaultOccurredCode &= ~MC_BREAK_IN;
+                    hM2FaultOccurredCode &= ~MC_SOCP;
+                    hM2FaultOccurredCode &= ~MC_FOC_DURATION;
+                    hM2FaultOccurredCode &= ~MC_SW_ERROR;
 					pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
 				}
 				else

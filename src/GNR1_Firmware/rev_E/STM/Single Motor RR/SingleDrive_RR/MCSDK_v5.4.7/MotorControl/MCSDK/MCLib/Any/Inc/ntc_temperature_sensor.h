@@ -31,6 +31,8 @@ extern "C" {
 #include "mc_type.h"
 #include "regular_conversion_manager.h"
 
+#include "lookup_table.h"
+
 /** @addtogroup MCSDK
   * @{
   */
@@ -80,7 +82,9 @@ typedef struct
                                     Used in through formula: V[V]=V0+dV/dT[V/°C]*(T-T0)[°C] */
   uint16_t hT0;                /**< T0 temperature constant value used to convert the temperature into Volts
                                     Used in through formula: V[V]=V0+dV/dT[V/°C]*(T-T0)[°C] */
-  uint8_t convHandle;            /*!< handle to the regular conversion */                         
+  uint8_t convHandle;            /*!< handle to the regular conversion */    
+
+  LookupTableHandle_t * pNTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
 
 } NTC_Handle_t;
 

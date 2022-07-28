@@ -185,19 +185,19 @@ __weak void HALL_Init( HALL_Handle_t * pHandle )
 
 	pHandle->Sector_Destination_Angle[0] = 0;  
 	pHandle->Sector_Destination_Angle[1] = ( int16_t ) (pHandle->PhaseShift  + S16_120_PHASE_SHIFT) ;
-  pHandle->Sector_Destination_Angle[2] = ( int16_t ) (pHandle->PhaseShift - S16_120_PHASE_SHIFT );
+    pHandle->Sector_Destination_Angle[2] = ( int16_t ) (pHandle->PhaseShift - S16_120_PHASE_SHIFT );
 	pHandle->Sector_Destination_Angle[3] = ( int16_t ) (pHandle->PhaseShift + S16_60_PHASE_SHIFT + S16_120_PHASE_SHIFT) ;
-  pHandle->Sector_Destination_Angle[4] =  (int16_t ) (pHandle->PhaseShift );
+    pHandle->Sector_Destination_Angle[4] =  (int16_t ) (pHandle->PhaseShift );
 	pHandle->Sector_Destination_Angle[5] = ( int16_t ) (pHandle->PhaseShift  + S16_60_PHASE_SHIFT);
-  pHandle->Sector_Destination_Angle[6] = ( int16_t ) (pHandle->PhaseShift - S16_60_PHASE_SHIFT);
+    pHandle->Sector_Destination_Angle[6] = ( int16_t ) (pHandle->PhaseShift - S16_60_PHASE_SHIFT);
 	
 	pHandle->Sector_Middle_Angle[0] = 0;  
 	pHandle->Sector_Middle_Angle[1] = ( int16_t ) ( pHandle->Sector_Start_Angle[1]  +  S16_30_PHASE_SHIFT );
-  pHandle->Sector_Middle_Angle[2] = ( int16_t ) ( pHandle->Sector_Start_Angle[2]  +  S16_30_PHASE_SHIFT);
+    pHandle->Sector_Middle_Angle[2] = ( int16_t ) ( pHandle->Sector_Start_Angle[2]  +  S16_30_PHASE_SHIFT);
 	pHandle->Sector_Middle_Angle[3] = ( int16_t )  ( pHandle->Sector_Start_Angle[3]  +  S16_30_PHASE_SHIFT);
-  pHandle->Sector_Middle_Angle[4] = ( int16_t ) ( pHandle->Sector_Start_Angle[4]  +  S16_30_PHASE_SHIFT);
+    pHandle->Sector_Middle_Angle[4] = ( int16_t ) ( pHandle->Sector_Start_Angle[4]  +  S16_30_PHASE_SHIFT);
 	pHandle->Sector_Middle_Angle[5] =( int16_t ) ( pHandle->Sector_Start_Angle[5]  +  S16_30_PHASE_SHIFT);
-  pHandle->Sector_Middle_Angle[6] = ( int16_t ) ( pHandle->Sector_Start_Angle[6]  +  S16_30_PHASE_SHIFT);
+    pHandle->Sector_Middle_Angle[6] = ( int16_t ) ( pHandle->Sector_Start_Angle[6]  +  S16_30_PHASE_SHIFT);
 }
 
 /**
@@ -700,12 +700,11 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
 						{
 							if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
 							{
-								pHandle->AvrElSpeedDpp = ( int16_t ) (( pHandle->PseudoFreqConv / wCaptBuf )*pHandle->Direction);
+								pHandle->AvrElSpeedDpp = ( int16_t ) (( pHandle->PseudoFreqConv / wCaptBuf )*pHandle->Direction); 
 							}
 							else 
 							{ /* Average speed allow to smooth the mechanical sensors misalignement */
 								pHandle->AvrElSpeedDpp = ( int16_t )((int32_t) pHandle->PseudoFreqConv / ( pHandle->ElPeriodSum / pHandle->SpeedBufferSize )); /* Average value */
-
 							}
 						}
 						else /* Sensor is not reliable */

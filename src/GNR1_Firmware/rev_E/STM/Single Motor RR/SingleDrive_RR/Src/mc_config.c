@@ -21,6 +21,7 @@
 #include "parameters_conversion.h"
 #include "mc_parameters.h"
 #include "mc_config.h"
+#include "ntc_table.h"
 
 /* USER CODE BEGIN Additional include */
 
@@ -150,19 +151,65 @@ FF_Handle_t FF_M1 =
 /**
   * @brief  SpeednTorque Controller parameters Motor 1
   */
-SpeednTorqCtrl_Handle_t SpeednTorqCtrlM1 =
+SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
 {
-  .STCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,
-  .MaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
-  .MinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-  .MaxAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
-  .MinAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
-  .MaxPositiveTorque =				(int16_t)NOMINAL_CURRENT,
-  .MinNegativeTorque =				-(int16_t)NOMINAL_CURRENT,
+  .TorqueRampMngr =
+  {
+    .wScalingFactor = INT16_MAX,
+  },
+  .SpeedRampMngr =
+  {
+    .wScalingFactor = INT16_MAX,
+  },
+  .FoldbackMotorSpeed =
+  {
+      .bEnableFoldback = true,
+      .hDefaultMaxOutput = NOMINAL_TORQUE,
+      .hDecreasingEndValue = MAX_APPLICATION_SPEED_UNIT,
+      .hDecreasingRange = MAX_APPLICATION_SPEED_UNIT/5,
+  },
+  .FoldbackMotorTemperature =
+  {
+      .bEnableFoldback = false,
+      .hDefaultMaxOutput = NOMINAL_TORQUE,
+      .hDecreasingEndValue = 0,
+      .hDecreasingRange = 0,
+  },
+  .FoldbackHeatsinkTemperature =
+  {
+      .bEnableFoldback = true,
+      .hDefaultMaxOutput = NOMINAL_TORQUE,
+      .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C,
+      .hDecreasingRange = OV_TEMPERATURE_THRESHOLD_C/3,
+  },
+  .FoldbackMotorPower =
+  {
+      .bEnableFoldback = false,
+      .hDefaultMaxOutput = NOMINAL_TORQUE,
+      .hDecreasingEndValue = MOTOR_MAX_POWER,
+      .hDecreasingRange = MOTOR_MAX_POWER/2,
+  },
+
+  .hSTCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,
+  .hMaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
+  .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+  .hMaxAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
+  .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
+  .hMaxPositiveTorque =				(int16_t)NOMINAL_TORQUE,
+  .hMinNegativeTorque =				-(int16_t)NOMINAL_TORQUE,
+  .hMaxPositivePower =				(int16_t)MAX_APPLICATION_POSITIVE_POWER,
+  .hMinNegativePower =				-(int16_t)MAX_APPLICATION_NEGATIVE_POWER,
   .ModeDefault =					DEFAULT_CONTROL_MODE,
-  .MecSpeedRefUnitDefault =		(int16_t)(DEFAULT_TARGET_SPEED_UNIT),
-  .TorqueRefDefault =				(int16_t)DEFAULT_TORQUE_COMPONENT,
-  .IdrefDefault =					(int16_t)DEFAULT_FLUX_COMPONENT,
+  .hMecSpeedRefUnitDefault =		(int16_t)(DEFAULT_TARGET_SPEED_UNIT),
+  .hTorqueRefDefault =				(int16_t)DEFAULT_TORQUE_COMPONENT,
+  .hIdrefDefault =					(int16_t)DEFAULT_FLUX_COMPONENT,
+  .wTorqueSlopePerSecondUp =    DEFAULT_TORQUE_SLOPE_UP,
+  .wTorqueSlopePerSecondDown =  DEFAULT_TORQUE_SLOPE_DOWN,
+  .wSpeedSlopePerSecondUp =     DEFAULT_SPEED_SLOPE_UP,
+  .wSpeedSlopePerSecondDown =   DEFAULT_SPEED_SLOPE_DOWN,
+  
+  .fGainTorqueIqref =           GAIN_TORQUE_IQREF,
+  .fGainTorqueIdref =           GAIN_TORQUE_IDREF,
 };
 
 /**
@@ -199,14 +246,29 @@ PWMC_ICS_Handle_t PWM_Handle_M1 = {
     .PWMperiod          = PWM_PERIOD_CYCLES,
     .OffCalibrWaitTicks = (uint16_t)((SYS_TICK_FREQUENCY * OFFCALIBRWAIT_MS)/ 1000),
     .Ton                 = TON,
-    .Toff                = TOFF
+    .Toff                = TOFF,
+
+    .IaFilter =
+    {
+        0
+    },
+    .IbFilter =
+    {
+        0
+    },
+    .fCurrentFilterAlpha = CURRENT_FILTER_ALPHA,
+    .fCurrentFilterBeta  = CURRENT_FILTER_BETA,
+
+    .hSoftwareOCPMarginCurrent = OCSP_SAFETY_MARGIN,
+    .hSoftwareOCPMaximumCurrent = OCSP_MAX_CURRENT,
 
   },
   .PhaseAOffset = 0,
   .PhaseBOffset = 0,
   .Half_PWMPeriod = PWM_PERIOD_CYCLES/2u,
   .PolarizationCounter = 0,
-  .OverCurrentFlag = false,
+  .HwOverCurrentFlag = false,
+  .SwOverCurrentFlag = false,
   .OverVoltageFlag = false,
   .BrakeActionLock = false,
 
@@ -321,6 +383,8 @@ NTC_Handle_t TempSensorParamsM1 =
   .hSensitivity            = (uint16_t)(ADC_REFERENCE_VOLTAGE/dV_dT),
   .wV0                     = (uint16_t)(V0_V *65536/ ADC_REFERENCE_VOLTAGE),
   .hT0                     = T0_C,
+  
+  .pNTCLookupTable = &NTCLookupTable,
 };
 
 /* Bus voltage sensor value filter buffer */
@@ -395,27 +459,31 @@ UFCP_Handle_t pUSART =
 
 /* USER CODE BEGIN Additional configuration */
 
-AO_Handle_t AngleObserverM1 =
+RotorPositionObserverHandle_t RotorPosObsM1 =
 {
-  .pHallFdbk = &HALL_M1,
-	
-	.hKpGainDef = AO_KP,
-	.hKpDivisor = AO_KPDIV,
-	.hKpDivisorPOW2 = AO_KPDIV_LOG,
-	
-	.hKiGainDef = AO_KI,
-	.hKiDivisor = AO_KIDIV,
-	.hKiDivisorPOW2 = AO_KIDIV_LOG,
-	
-	.hKdGainDef = AO_KD,
-	.hKdDivisor = AO_KDDIV,
-	.hKdDivisorPOW2 = AO_KDDIV_LOG,
-	
-	.hSpeedFactorGain = AO_SPEEDFACTORGAIN,
-	.hSpeedFactorDiv = AO_SPEEDFACTORDIV,
+  .Super = {
+    .bElToMecRatio                     =	POLE_PAIR_NUM,
+    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
+    .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+    .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
+    .hMaxReliableMecAccelUnitP         =	65535,
+    .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
+    .DPPConvFactor                     =  DPP_CONV_FACTOR,
+  },
+
+  .pHallSensor = &HALL_M1,
+
+	.hKpGainDef = ROTOR_POS_OBS_KP,
+	.hKpDivisorPOW2 = ROTOR_POS_OBS_KPDIV_LOG,
+
+	.hKiGainDef = ROTOR_POS_OBS_KI,
+	.hKiDivisorPOW2 = ROTOR_POS_OBS_KIDIV_LOG,
+
+	.hKdGainDef = ROTOR_POS_OBS_KD,
+	.hKdDivisorPOW2 = ROTOR_POS_OBS_KDDIV_LOG,
 };
+
 
 /* USER CODE END Additional configuration */
 
 /******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/
-

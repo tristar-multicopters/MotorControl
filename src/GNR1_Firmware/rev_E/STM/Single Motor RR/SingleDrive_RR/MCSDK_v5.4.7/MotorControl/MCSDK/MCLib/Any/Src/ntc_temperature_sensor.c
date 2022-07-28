@@ -95,6 +95,11 @@ __weak void NTC_Init( NTC_Handle_t * pHandle )
 
   if ( pHandle->bSensorType == REAL_SENSOR )
   {
+      if (pHandle->pNTCLookupTable != NULL)
+      {
+          LookupTable_Init(pHandle->pNTCLookupTable);
+      }
+      
     /* Need to be register with RegularConvManager */
     pHandle->convHandle = RCM_RegisterRegConv(&pHandle->TempRegConv);
     NTC_Clear( pHandle );
@@ -178,10 +183,17 @@ __weak int16_t NTC_GetAvTemp_C( NTC_Handle_t * pHandle )
 
   if ( pHandle->bSensorType == REAL_SENSOR )
   {
-    wTemp = ( int32_t )( pHandle->hAvTemp_d );
-    wTemp -= ( int32_t )( pHandle->wV0 );
-    wTemp *= pHandle->hSensitivity;
-    wTemp = wTemp / 65536 + ( int32_t )( pHandle->hT0 );
+      if (pHandle->pNTCLookupTable != NULL)
+      {
+        wTemp = LookupTable_CalcOutput(pHandle->pNTCLookupTable, pHandle->hAvTemp_d);
+      }
+      else
+      {
+        wTemp = ( int32_t )( pHandle->hAvTemp_d );
+        wTemp -= ( int32_t )( pHandle->wV0 );
+        wTemp *= pHandle->hSensitivity;
+        wTemp = wTemp / 65536 + ( int32_t )( pHandle->hT0 );
+      }
   }
   else
   {

@@ -36,6 +36,7 @@
   */
 #define SQRT_2  1.4142
 #define SQRT_3  1.732
+#define PI_     3.1416
 
 /* CORDIC coprocessor configuration register settings */
 

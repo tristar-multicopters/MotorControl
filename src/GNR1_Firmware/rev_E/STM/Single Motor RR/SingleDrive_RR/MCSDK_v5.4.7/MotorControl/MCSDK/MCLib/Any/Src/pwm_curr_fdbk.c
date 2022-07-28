@@ -25,6 +25,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "pwm_curr_fdbk.h"
+#include "mc_math.h"
 
 #include "mc_type.h"
 
@@ -65,6 +66,21 @@
   * See PWMC_Handle for more details on this mechanism.
   * @{
   */
+  
+/*
+    Initialize PWM&Current feedback module.
+*/
+bool PWMCurrFdbk_Init( PWMC_Handle_t * pHandle)
+{
+    bool bIsError = false;
+
+    SignalFiltering_Init(&pHandle->IaFilter);
+    SignalFiltering_ConfigureButterworthFOLP(&pHandle->IaFilter, pHandle->fCurrentFilterAlpha, pHandle->fCurrentFilterBeta);
+    SignalFiltering_Init(&pHandle->IbFilter);
+    SignalFiltering_ConfigureButterworthFOLP(&pHandle->IbFilter, pHandle->fCurrentFilterAlpha, pHandle->fCurrentFilterBeta);
+
+	return bIsError;
+}
 
 #if defined (CCMRAM)
 #if defined (__ICCARM__)
@@ -90,6 +106,32 @@ __attribute__( ( section ( ".ccmram" ) ) )
 __weak void PWMC_GetPhaseCurrents( PWMC_Handle_t * pHandle, ab_t * Iab )
 {
   pHandle->pFctGetPhaseCurrents( pHandle, Iab );
+}
+
+uint16_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMC_Handle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
+{
+    int16_t IaFiltered, IbFiltered, IcFiltered;
+    
+    IaFiltered = Iab->a;
+    IbFiltered = Iab->b;
+
+    //IaFiltered = SignalFiltering_CalcOutput(&pHandle->IaFilter, Iab->a);
+    //IbFiltered = SignalFiltering_CalcOutput(&pHandle->IbFilter, Iab->b);
+    IcFiltered = -IaFiltered - IbFiltered;
+
+    int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(Iqdref->d, Iqdref->q);
+    int32_t wThresholdOCSP = hIqdrefAmplitude + abs(pHandle->hSoftwareOCPMarginCurrent);
+    if (wThresholdOCSP > abs(pHandle->hSoftwareOCPMaximumCurrent))
+    {
+        wThresholdOCSP = abs(pHandle->hSoftwareOCPMaximumCurrent);
+    }
+    if (abs(IaFiltered) > wThresholdOCSP ||
+        abs(IbFiltered) > wThresholdOCSP ||
+        abs(IcFiltered) > wThresholdOCSP)
+    {
+        return MC_OCSP;
+    }
+    return MC_NO_ERROR;
 }
 
 

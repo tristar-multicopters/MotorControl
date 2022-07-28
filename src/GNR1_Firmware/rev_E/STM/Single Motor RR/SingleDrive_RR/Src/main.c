@@ -675,6 +675,11 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
+  sBreakInputConfig.Enable = TIM_BREAKINPUTSOURCE_ENABLE;
+  if (HAL_TIMEx_ConfigBreakInput(&htim1, TIM_BREAKINPUT_BRK, &sBreakInputConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sBreakInputConfig.Source = TIM_BREAKINPUTSOURCE_COMP2;
   sBreakInputConfig.Enable = TIM_BREAKINPUTSOURCE_ENABLE;
   sBreakInputConfig.Polarity = TIM_BREAKINPUTSOURCE_POLARITY_HIGH;
@@ -707,6 +712,7 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM2;
+  sConfigOC.Pulse = 0;
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();

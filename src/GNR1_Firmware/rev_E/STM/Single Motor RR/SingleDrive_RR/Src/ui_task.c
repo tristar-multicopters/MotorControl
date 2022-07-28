@@ -45,8 +45,8 @@ void UI_TaskInit( uint32_t* pUICfg, uint8_t bMCNum, MCI_Handle_t* pMCIList[],
 
       UI_Init( &pDAC->_Super, bMCNum, pMCIList, pMCTList, pUICfg ); /* Init UI and link MC obj */
       UI_DACInit( &pDAC->_Super ); /* Init DAC */
-      UI_SetDAC( &pDAC->_Super, DAC_CH0, MC_PROTOCOL_REG_I_A );
-      UI_SetDAC( &pDAC->_Super, DAC_CH1, MC_PROTOCOL_REG_I_B );
+      UI_SetDAC( &pDAC->_Super, DAC_CH0, MC_PROTOCOL_REG_I_Q );
+      UI_SetDAC( &pDAC->_Super, DAC_CH1, MC_PROTOCOL_REG_SPEED_MEAS );
 
     pMCP = &MCP_UI_Params;
     pMCP->_Super = UI_Params;

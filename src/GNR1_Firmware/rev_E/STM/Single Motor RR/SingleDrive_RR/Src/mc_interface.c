@@ -162,14 +162,13 @@ __weak void MCI_SetCurrentReferences( MCI_Handle_t * pHandle, qd_t Iqdref )
   */
 __weak bool MCI_StartMotor( MCI_Handle_t * pHandle )
 {
-  bool RetVal = STM_NextState( pHandle->pSTM, IDLE_START );
-
-  if ( RetVal == true )
+  bool bRetVal = false;  
+  
+  if (STM_GetState(pHandle->pSTM) == IDLE)
   {
-    pHandle->CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
+      bRetVal = STM_NextState( pHandle->pSTM, IDLE_START );
   }
-
-  return RetVal;
+  return bRetVal;
 }
 
 /**
@@ -189,7 +188,13 @@ __weak bool MCI_StartMotor( MCI_Handle_t * pHandle )
   */
 __weak bool MCI_StopMotor( MCI_Handle_t * pHandle )
 {
-  return STM_NextState( pHandle->pSTM, ANY_STOP );
+  bool bRetVal = false;  
+  
+  if (STM_GetState(pHandle->pSTM) == RUN)
+  {
+      bRetVal = STM_NextState( pHandle->pSTM, ANY_STOP );
+  }
+  return bRetVal;
 }
 
 /**

@@ -122,16 +122,16 @@ THRO_Handle_t ThrottleHandle =
 		#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.hParam =
 	{
-		.hLowPassFilterBW1 = 8,
-		.hLowPassFilterBW2 = 2,
+		.hLowPassFilterBW1 = 1,
+		.hLowPassFilterBW2 = 1,
 	
 		.hOffsetThrottle = 10000,
 		.bSlopeThrottle = 5,
 		.bDivisorThrottle = 3,
 		
 		.hOffsetTorque = 4000,
-		.bSlopeTorque = -13,///15
-		.bDivisorTorque = 48,
+		.bSlopeTorque = -3,///15
+		.bDivisorTorque = 120,
 		
 		.hDetectionThreshold = 1000,
 	}
@@ -201,7 +201,7 @@ TS_Handle_t TorqueSensor =
 		
 		.hOffsetMT = 20000, /* Offset to launch the torque sensing */
 		.bSlopeMT = -7,
-		.bDivisorMT = 2,
+		.bDivisorMT = 160,
 			
 		.hMax = UINT16_MAX,
 	}
@@ -353,7 +353,7 @@ PAS_Handle_t PedalAssistHandle = {
 	.bTorqueSensorUse = false,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bMaxLevel	=	5,
-	.bMaxTorque = -17000,
+	.bMaxTorque = -1000,
 	.bPulseNb	= 0,	
 	.bTorqueSensorUse = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
@@ -435,7 +435,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -15000,
+	.sParameters.hPASMaxTorque = -1000,
 	.sParameters.hPASMaxSpeed = 500,
 	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
 	.sParameters.bUseWheelSpeedSensor = true,
@@ -492,7 +492,7 @@ DRVT_Handle_t DrivetrainHandle =
 		.hStartValue = 200,
 		.hIntervalValue = 200,
 		.hEndValue = 400,
-		.hDefaultMaxTorque = 10000,
+		.hDefaultMaxTorque = 1000,
         .hSlowStartBandwidth = 12,
         .wSlowStartTimeout =  400
 	},
@@ -502,13 +502,13 @@ DRVT_Handle_t DrivetrainHandle =
 		.hStartValue = 200,
 		.hIntervalValue = 200,
 		.hEndValue = 400,
-		.hDefaultMaxTorque = 10000,
+		.hDefaultMaxTorque = 1000,
         .hSlowStartBandwidth = 12,
         .wSlowStartTimeout =  400
 	},
 	.sHeatsinkTempFoldback[M1] = 
 	{
-		.bEnableFoldback = true,
+		.bEnableFoldback = false,
 		.hStartValue = 45,
 		.hEndValue = 70,
 		.hDefaultMaxTorque = 15000,
@@ -516,7 +516,7 @@ DRVT_Handle_t DrivetrainHandle =
 	},
 	.sHeatsinkTempFoldback[M2] = 
 	{
-		.bEnableFoldback = true,
+		.bEnableFoldback = false,
 		.hStartValue = 45,
 		.hEndValue = 70,
 		.hDefaultMaxTorque = 15000,

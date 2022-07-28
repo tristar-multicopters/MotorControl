@@ -1,23 +1,10 @@
-/*
-  ******************************************************************************
-  * @file    speed_torq_ctrl.c
-  * @author  Motor Control SDK Team, ST Microelectronics
-  * @brief   This file provides firmware functions that implement the following features
-  *          of the Speed & Torque Control component of the Motor Control SDK.
-  *
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+/**
+    * @file      speed_torq_ctrl.c
+    * @author    Sami Bouzid, FTEX inc
+    * @brief     This file provides firmware functions that implement the following features
+    *            of the Speed & Torque Control component of the Motor Control application.
+    *
+*/
 
 /* Includes ------------------------------------------------------------------*/
 #include "speed_torq_ctrl.h"
@@ -25,443 +12,404 @@
 
 #include "mc_type.h"
 
-#define CHECK_BOUNDARY
+static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 
-/** @addtogroup MCSDK
-  * @{
-  */
-
-/** @defgroup SpeednTorqCtrl Speed & Torque Control
-  * @brief Speed & Torque Control component of the Motor Control SDK
-  *
-  * @todo Document the Speed & Torque Control "module".
-  *
-  * @{
-  */
-
-/**
-  * @brief  Initializes all the object variables, usually it has to be called
-  *         once right after object creation.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @param  oPI the PI object used as controller for the speed regulation.
-  *         It can be equal to MC_NULL if the STC is initialized in torque mode
-  *         and it will never be configured in speed mode.
-  * @param  oSPD the speed sensor used to perform the speed regulation.
-  *         It can be equal to MC_NULL if the STC is used only in torque
-  *         mode.
-  * @retval none.
-  */
-__weak void STC_Init( SpeednTorqCtrl_Handle_t * pHandle, PID_Handle_t * pPI, SpeednPosFdbk_Handle_t * SPD_Handle )
+void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PID_Handle_t * pPI, SpeednPosFdbk_Handle_t * SPD_Handle,
+                        NTC_Handle_t* pTempSensorHS, NTC_Handle_t* pTempSensorMotor)
 {
+    pHandle->pPISpeed = pPI;
+    pHandle->pSPD = SPD_Handle;
+    pHandle->pHeatsinkTempSensor = pTempSensorHS;
+    pHandle->pMotorTempSensor = pTempSensorMotor;
+    pHandle->Mode = pHandle->ModeDefault;
 
-  pHandle->PISpeed = pPI;
-  pHandle->SPD = SPD_Handle;
-  pHandle->Mode = pHandle->ModeDefault;
-  pHandle->SpeedRefUnitExt = ( int32_t )pHandle->MecSpeedRefUnitDefault * 65536;
-  pHandle->TorqueRef = ( int32_t )pHandle->TorqueRefDefault * 65536;
-  pHandle->TargetFinal = 0;
-  pHandle->RampRemainingStep = 0u;
-  pHandle->IncDecAmount = 0;
-}
-
-/**
-  * @brief It sets in real time the speed sensor utilized by the STC.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @param SPD_Handle Speed sensor component to be set.
-  * @retval none
-  */
-__weak void STC_SetSpeedSensor( SpeednTorqCtrl_Handle_t * pHandle, SpeednPosFdbk_Handle_t * SPD_Handle )
-{
-  pHandle->SPD = SPD_Handle;
-}
-
-/**
-  * @brief It returns the speed sensor utilized by the FOC.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval SpeednPosFdbk_Handle_t speed sensor utilized by the FOC.
-  */
-__weak SpeednPosFdbk_Handle_t * STC_GetSpeedSensor( SpeednTorqCtrl_Handle_t * pHandle )
-{
-  return ( pHandle->SPD );
-}
-
-/**
-  * @brief  It should be called before each motor restart. If STC is set in
-            speed mode, this method resets the integral term of speed regulator.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval none.
-  */
-__weak void STC_Clear( SpeednTorqCtrl_Handle_t * pHandle )
-{
-  if ( pHandle->Mode == STC_SPEED_MODE )
-  {
-    PID_SetIntegralTerm( pHandle->PISpeed, 0 );
-  }
-}
-
-/**
-  * @brief  Get the current mechanical rotor speed reference expressed in tenths
-  *         of HZ.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval int16_t current mechanical rotor speed reference expressed in tenths
-  *         of HZ.
-  */
-__weak int16_t STC_GetMecSpeedRefUnit( SpeednTorqCtrl_Handle_t * pHandle )
-{
-  return ( ( int16_t )( pHandle->SpeedRefUnitExt / 65536 ) );
-}
-
-/**
-  * @brief  Get the current motor torque reference. This value represents
-  *         actually the Iq current reference expressed in digit.
-  *         To convert current expressed in digit to current expressed in Amps
-  *         is possible to use the formula:
-  *         Current(Amp) = [Current(digit) * Vdd micro] / [65536 * Rshunt * Aop]
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval int16_t current motor torque reference. This value represents
-  *         actually the Iq current expressed in digit.
-  */
-__weak int16_t STC_GetTorqueRef( SpeednTorqCtrl_Handle_t * pHandle )
-{
-  return ( ( int16_t )( pHandle->TorqueRef / 65536 ) );
-}
-
-/**
-  * @brief  Set the modality of the speed and torque controller. Two modality
-  *         are available Torque mode and Speed mode.
-  *         In Torque mode is possible to set directly the motor torque
-  *         reference or execute a motor torque ramp. This value represents
-  *         actually the Iq current reference expressed in digit.
-  *         In Speed mode is possible to set the mechanical rotor speed
-  *         reference or execute a speed ramp. The required motor torque is
-  *         automatically calculated by the STC.
-  *         This command interrupts the execution of any previous ramp command
-  *         maintaining the last value of Iq.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @param  bMode modality of STC. It can be one of these two settings:
-  *         STC_TORQUE_MODE to enable the Torque mode or STC_SPEED_MODE to
-  *         enable the Speed mode.
-  * @retval none
-  */
-__weak void STC_SetControlMode( SpeednTorqCtrl_Handle_t * pHandle, STC_Modality_t bMode )
-{
-  pHandle->Mode = bMode;
-  pHandle->RampRemainingStep = 0u; /* Interrupts previous ramp. */
-}
-
-/**
-  * @brief  Get the modality of the speed and torque controller.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval STC_Modality_t It returns the modality of STC. It can be one of
-  *         these two values: STC_TORQUE_MODE or STC_SPEED_MODE.
-  */
-__weak STC_Modality_t STC_GetControlMode( SpeednTorqCtrl_Handle_t * pHandle )
-{
-  return pHandle->Mode;
-}
-
-/**
-  * @brief  Starts the execution of a ramp using new target and duration. This
-  *         command interrupts the execution of any previous ramp command.
-  *         The generated ramp will be in the modality previously set by
-  *         STC_SetControlMode method.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @param  hTargetFinal final value of command. This is different accordingly
-  *         the STC modality.
-  *         If STC is in Torque mode hTargetFinal is the value of motor torque
-  *         reference at the end of the ramp. This value represents actually the
-  *         Iq current expressed in digit.
-  *         To convert current expressed in Amps to current expressed in digit
-  *         is possible to use the formula:
-  *         Current(digit) = [Current(Amp) * 65536 * Rshunt * Aop]  /  Vdd micro
-  *         If STC is in Speed mode hTargetFinal is the value of mechanical
-  *         rotor speed reference at the end of the ramp expressed in tenths of
-  *         HZ.
-  * @param  hDurationms the duration of the ramp expressed in milliseconds. It
-  *         is possible to set 0 to perform an instantaneous change in the value.
-  * @retval bool It return false if the absolute value of hTargetFinal is out of
-  *         the boundary of the application (Above max application speed or max
-  *         application torque or below min application speed depending on
-  *         current modality of TSC) in this case the command is ignored and the
-  *         previous ramp is not interrupted, otherwise it returns true.
-  */
-__weak bool STC_ExecRamp( SpeednTorqCtrl_Handle_t * pHandle, int16_t hTargetFinal, uint32_t hDurationms )
-{
-  bool AllowedRange = true;
-  uint32_t wAux;
-  int32_t wAux1;
-  int16_t hCurrentReference;
-
-  /* Check if the hTargetFinal is out of the bound of application. */
-  if ( pHandle->Mode == STC_TORQUE_MODE )
-  {
-    hCurrentReference = STC_GetTorqueRef( pHandle );
-#ifdef CHECK_BOUNDARY
-    if ( ( int32_t )hTargetFinal > ( int32_t )pHandle->MaxPositiveTorque )
+    if (pTempSensorHS == NULL)
     {
-      AllowedRange = false;
+        Foldback_DisableFoldback(&pHandle->FoldbackHeatsinkTemperature);
     }
-    if ( ( int32_t )hTargetFinal < ( int32_t )pHandle->MinNegativeTorque )
+    if (pTempSensorMotor == NULL)
     {
-      AllowedRange = false;
+        Foldback_DisableFoldback(&pHandle->FoldbackMotorTemperature);
     }
-#endif
-  }
-  else
-  {
-    hCurrentReference = ( int16_t )( pHandle->SpeedRefUnitExt / 65536 );
 
-#ifdef CHECK_BOUNDARY
-    if ( ( int32_t )hTargetFinal > ( int32_t )pHandle->MaxAppPositiveMecSpeedUnit )
-    {
-      AllowedRange = false;
-    }
-    else if ( hTargetFinal < pHandle->MinAppNegativeMecSpeedUnit )
-    {
-      AllowedRange = false;
-    }
-    else if ( ( int32_t )hTargetFinal < ( int32_t )pHandle->MinAppPositiveMecSpeedUnit )
-    {
-      if ( hTargetFinal > pHandle->MaxAppNegativeMecSpeedUnit )
-      {
-        AllowedRange = false;
-      }
-    }
-    else {}
-#endif
-  }
+    pHandle->TorqueRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
+    pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
+    RampMngr_Init(&pHandle->TorqueRampMngr);
+    RampMngr_Init(&pHandle->SpeedRampMngr);
+}
 
-  if ( AllowedRange == true )
-  {
-    /* Interrupts the execution of any previous ramp command */
-    if ( hDurationms == 0u )
+
+void SpdTorqCtrl_SetSpeedSensor(SpeednTorqCtrlHandle_t * pHandle, SpeednPosFdbk_Handle_t * SPD_Handle)
+{
+
+    pHandle->pSPD = SPD_Handle;
+}
+
+
+SpeednPosFdbk_Handle_t * SpdTorqCtrl_GetSpeedSensor(SpeednTorqCtrlHandle_t * pHandle)
+{
+
+    return (pHandle->pSPD);
+}
+
+
+void SpdTorqCtrl_Clear(SpeednTorqCtrlHandle_t * pHandle)
+{
+
+    if (pHandle->Mode == STC_SPEED_MODE)
     {
-      if ( pHandle->Mode == STC_SPEED_MODE )
-      {
-        pHandle->SpeedRefUnitExt = ( int32_t )hTargetFinal * 65536;
-      }
-      else
-      {
-        pHandle->TorqueRef = ( int32_t )hTargetFinal * 65536;
-      }
-      pHandle->RampRemainingStep = 0u;
-      pHandle->IncDecAmount = 0;
+        PID_SetIntegralTerm(pHandle->pPISpeed, 0);
+    }
+
+    RampMngr_Init(&pHandle->TorqueRampMngr);
+    RampMngr_Init(&pHandle->SpeedRampMngr);
+    SpdTorqCtrl_StopRamp(pHandle);
+}
+
+
+int16_t SpdTorqCtrl_GetMecSpeedRefUnit(SpeednTorqCtrlHandle_t * pHandle)
+{
+
+    return ((int16_t)(RampMngr_GetValue(&pHandle->SpeedRampMngr) / INT16_MAX));
+}
+
+
+int16_t SpdTorqCtrl_GetTorqueRef(SpeednTorqCtrlHandle_t * pHandle)
+{
+
+    return ((int16_t)(RampMngr_GetValue(&pHandle->TorqueRampMngr) / INT16_MAX));
+}
+
+
+void SpdTorqCtrl_SetControlMode(SpeednTorqCtrlHandle_t * pHandle, STC_Modality_t bMode)
+{
+
+    pHandle->Mode = bMode;
+    SpdTorqCtrl_StopRamp(pHandle);
+}
+
+
+STC_Modality_t SpdTorqCtrl_GetControlMode(SpeednTorqCtrlHandle_t * pHandle)
+{
+
+    return pHandle->Mode;
+}
+
+
+bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal)
+{
+
+    bool AllowedRange = true;
+    int16_t hTargetFinalSat = hTargetFinal;
+
+    /* Check if the hTargetFinal is out of bound of application. If it is out of bound,
+         a limitation is applied. */
+    if (pHandle->Mode == STC_TORQUE_MODE)
+    {
+        if ((int32_t)hTargetFinal > (int32_t)pHandle->hMaxPositiveTorque)
+        {
+            hTargetFinalSat = (int16_t) pHandle->hMaxPositiveTorque;
+            AllowedRange = false;
+        }
+        if ((int32_t)hTargetFinal < (int32_t)pHandle->hMinNegativeTorque)
+        {
+            hTargetFinalSat = (int16_t) pHandle->hMinNegativeTorque;
+            AllowedRange = false;
+        }
     }
     else
     {
-      /* Store the hTargetFinal to be applied in the last step */
-      pHandle->TargetFinal = hTargetFinal;
-
-      /* Compute the (wRampRemainingStep) number of steps remaining to complete
-      the ramp. */
-      wAux = ( uint32_t )hDurationms * ( uint32_t )pHandle->STCFrequencyHz;
-      wAux /= 1000u;
-      pHandle->RampRemainingStep = wAux;
-      pHandle->RampRemainingStep++;
-
-      /* Compute the increment/decrement amount (wIncDecAmount) to be applied to
-      the reference value at each CalcTorqueReference. */
-      wAux1 = ( ( int32_t )hTargetFinal - ( int32_t )hCurrentReference ) * 65536;
-      wAux1 /= ( int32_t )pHandle->RampRemainingStep;
-      pHandle->IncDecAmount = wAux1;
+        if ((int32_t)hTargetFinal > (int32_t)pHandle->hMaxAppPositiveMecSpeedUnit)
+        {
+            hTargetFinalSat = (int16_t) pHandle->hMaxAppPositiveMecSpeedUnit;
+            AllowedRange = false;
+        }
+        else if (hTargetFinal < pHandle->hMinAppNegativeMecSpeedUnit)
+        {
+            AllowedRange = false;
+            hTargetFinalSat = (int16_t) pHandle->hMinAppNegativeMecSpeedUnit;
+        }
+        else if ((int32_t)hTargetFinal < (int32_t)pHandle->hMinAppPositiveMecSpeedUnit)
+        {
+            if (hTargetFinal > pHandle->hMaxAppNegativeMecSpeedUnit)
+            {
+                if (hTargetFinal >= 0)
+                {
+                    hTargetFinalSat = (int16_t) pHandle->hMinAppPositiveMecSpeedUnit;
+                    AllowedRange = false;
+                }
+            }
+        }
+        else if ((int32_t)hTargetFinal > (int32_t)pHandle->hMaxAppNegativeMecSpeedUnit)
+        {
+            if (hTargetFinal > pHandle->hMinAppPositiveMecSpeedUnit)
+            {
+                if (hTargetFinal < 0)
+                {
+                    hTargetFinalSat = (int16_t) pHandle->hMaxAppNegativeMecSpeedUnit;
+                    AllowedRange = false;
+                }
+            }
+        }
     }
-  }
 
-  return AllowedRange;
+    if (pHandle->Mode == STC_TORQUE_MODE)
+    {
+        pHandle->hFinalTorque = hTargetFinalSat; // Store final torque value in handle
+        if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
+        {
+            RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTargetFinalSat, pHandle->wTorqueSlopePerSecondUp); // Setup torque ramp going up
+        }
+        else
+        {
+            RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTargetFinalSat, pHandle->wTorqueSlopePerSecondDown); // Setup torque ramp going down
+        }
+    }
+    else
+    {
+        pHandle->hFinalSpeed = hTargetFinalSat; // Store final speed value in handle
+        if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
+        {
+            RampMngr_ExecRamp(&pHandle->SpeedRampMngr, hTargetFinalSat, pHandle->wSpeedSlopePerSecondUp); // Setup speed ramp going up
+        }
+        else
+        {
+            RampMngr_ExecRamp(&pHandle->SpeedRampMngr, hTargetFinalSat, pHandle->wSpeedSlopePerSecondDown); // Setup speed ramp going down
+        }
+    }
+
+    return AllowedRange;
 }
 
-/**
-  * @brief  This command interrupts the execution of any previous ramp command.
-  *         If STC has been set in Torque mode the last value of Iq is
-  *         maintained.
-  *         If STC has been set in Speed mode the last value of mechanical
-  *         rotor speed reference is maintained.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval none
-  */
-__weak void STC_StopRamp( SpeednTorqCtrl_Handle_t * pHandle )
+
+void SpdTorqCtrl_StopRamp(SpeednTorqCtrlHandle_t * pHandle)
 {
 
-  pHandle->RampRemainingStep = 0u;
-  pHandle->IncDecAmount = 0;
+    RampMngr_StopRamp(&pHandle->TorqueRampMngr);
+    RampMngr_StopRamp(&pHandle->SpeedRampMngr);
 }
 
-/**
-  * @brief  It is used to compute the new value of motor torque reference. It
-  *         must be called at fixed time equal to hSTCFrequencyHz. It is called
-  *         passing as parameter the speed sensor used to perform the speed
-  *         regulation.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval int16_t motor torque reference. This value represents actually the
-  *         Iq current expressed in digit.
-  *         To convert current expressed in Amps to current expressed in digit
-  *         is possible to use the formula:
-  *         Current(digit) = [Current(Amp) * 65536 * Rshunt * Aop]  /  Vdd micro
-  */
-__weak int16_t STC_CalcTorqueReference( SpeednTorqCtrl_Handle_t * pHandle )
+
+int16_t SpdTorqCtrl_CalcTorqueReference(SpeednTorqCtrlHandle_t * pHandle)
 {
-  int32_t wCurrentReference;
-  int16_t hTorqueReference = 0;
-  int16_t hMeasuredSpeed;
-  int16_t hTargetSpeed;
-  int16_t hError;
 
-  if ( pHandle->Mode == STC_TORQUE_MODE )
-  {
-    wCurrentReference = pHandle->TorqueRef;
-  }
-  else
-  {
-    wCurrentReference = pHandle->SpeedRefUnitExt;
-  }
+    int16_t hTorqueReference = 0;
+    int16_t hMeasuredSpeed;
+    int16_t hTargetSpeed;
+    int16_t hError;
 
-  /* Update the speed reference or the torque reference according to the mode
-     and terminates the ramp if needed. */
-  if ( pHandle->RampRemainingStep > 1u )
-  {
-    /* Increment/decrement the reference value. */
-    wCurrentReference += pHandle->IncDecAmount;
+    if (pHandle->Mode == STC_TORQUE_MODE)
+    {
+        hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
+        hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
+        hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
+        /* Store values in handle */
+        pHandle->hCurrentTorqueRef = hTorqueReference;
+    }
+    else
+    {
+        hTargetSpeed = (int16_t) RampMngr_Calc(&pHandle->SpeedRampMngr);
+        /* Run the speed control loop */
+        hMeasuredSpeed = SPD_GetAvrgMecSpeedUnit(pHandle->pSPD);
+        hError = hTargetSpeed - hMeasuredSpeed; // Compute speed error
+        hTorqueReference = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute final torque value with PI controller
+        if (abs(hTorqueReference) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
+        {
+            RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTorqueReference, pHandle->wTorqueSlopePerSecondUp); // Setup torque ramp going up
+        }
+        else
+        {
+            RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTorqueReference, pHandle->wTorqueSlopePerSecondDown); // Setup torque ramp going down
+        }
+        hTorqueReference = (int16_t) RampMngr_Calc(&pHandle->TorqueRampMngr); // Apply torque ramp
+        hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
+        hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
+        /* Store values in handle */
+        pHandle->hCurrentTorqueRef = hTorqueReference;
+        pHandle->hCurrentSpeedRef = hTargetSpeed;
+    }
 
-    /* Decrement the number of remaining steps */
-    pHandle->RampRemainingStep--;
-  }
-  else if ( pHandle->RampRemainingStep == 1u )
-  {
-    /* Set the backup value of hTargetFinal. */
-    wCurrentReference = ( int32_t )pHandle->TargetFinal * 65536;
-    pHandle->RampRemainingStep = 0u;
-  }
-  else
-  {
-    /* Do nothing. */
-  }
-
-  if ( pHandle->Mode == STC_SPEED_MODE )
-  {
-    /* Run the speed control loop */
-
-    /* Compute speed error */
-    hTargetSpeed = ( int16_t )( wCurrentReference / 65536 );
-    hMeasuredSpeed = SPD_GetAvrgMecSpeedUnit( pHandle->SPD );
-    hError = hTargetSpeed - hMeasuredSpeed;
-    hTorqueReference = PI_Controller( pHandle->PISpeed, ( int32_t )hError );
-
-    pHandle->SpeedRefUnitExt = wCurrentReference;
-    pHandle->TorqueRef = ( int32_t )hTorqueReference * 65536;
-  }
-  else
-  {
-    pHandle->TorqueRef = wCurrentReference;
-    hTorqueReference = ( int16_t )( wCurrentReference / 65536 );
-  }
-
-  return hTorqueReference;
+    return hTorqueReference;
 }
 
-/**
-  * @brief  Get the Default mechanical rotor speed reference expressed in tenths
-  *         of HZ.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval int16_t It returns the Default mechanical rotor speed. reference
-  *         expressed in tenths of HZ.
-  */
-__weak int16_t STC_GetMecSpeedRefUnitDefault( SpeednTorqCtrl_Handle_t * pHandle )
+
+int16_t SpdTorqCtrl_GetMecSpeedRefUnitDefault(SpeednTorqCtrlHandle_t * pHandle)
 {
-  return pHandle->MecSpeedRefUnitDefault;
+
+    return pHandle->hMecSpeedRefUnitDefault;
 }
 
-/**
-  * @brief  Returns the Application maximum positive value of rotor speed. Expressed in the unit defined by #SPEED_UNIT.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  */
-__weak uint16_t STC_GetMaxAppPositiveMecSpeedUnit( SpeednTorqCtrl_Handle_t * pHandle )
+
+uint16_t SpdTorqCtrl_GetMaxAppPositiveMecSpeedUnit(SpeednTorqCtrlHandle_t * pHandle)
 {
-  return pHandle->MaxAppPositiveMecSpeedUnit;
+
+    return pHandle->hMaxAppPositiveMecSpeedUnit;
 }
 
-/**
-  * @brief  Returns the Application minimum negative value of rotor speed. Expressed in the unit defined by #SPEED_UNIT.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  */
-__weak int16_t STC_GetMinAppNegativeMecSpeedUnit( SpeednTorqCtrl_Handle_t * pHandle )
+
+int16_t SpdTorqCtrl_GetMinAppNegativeMecSpeedUnit(SpeednTorqCtrlHandle_t * pHandle)
 {
-  return pHandle->MinAppNegativeMecSpeedUnit;
+
+    return pHandle->hMinAppNegativeMecSpeedUnit;
 }
 
-/**
-  * @brief  Check if the settled speed or torque ramp has been completed.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval bool It returns true if the ramp is completed, false otherwise.
-  */
-__weak bool STC_RampCompleted( SpeednTorqCtrl_Handle_t * pHandle )
+
+bool SpdTorqCtrl_IsRampCompleted(SpeednTorqCtrlHandle_t * pHandle)
 {
-  bool retVal = false;
-  if ( pHandle->RampRemainingStep == 0u )
-  {
-    retVal = true;
-  }
-  return retVal;
+
+    bool retVal = false;
+
+    if (pHandle->Mode == STC_TORQUE_MODE)
+    {
+        retVal = RampMngr_IsRampCompleted(&pHandle->TorqueRampMngr);
+    }
+    else
+    {
+        retVal = RampMngr_IsRampCompleted(&pHandle->SpeedRampMngr);
+    }
+
+    return retVal;
 }
 
-/**
-  * @brief  Stop the execution of speed ramp.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval bool It returns true if the command is executed, false otherwise.
-  */
-__weak bool STC_StopSpeedRamp( SpeednTorqCtrl_Handle_t * pHandle )
+
+qd_t SpdTorqCtrl_GetDefaultIqdref(SpeednTorqCtrlHandle_t * pHandle)
 {
-  bool retVal = false;
-  if ( pHandle->Mode == STC_SPEED_MODE )
-  {
-    pHandle->RampRemainingStep = 0u;
-    retVal = true;
-  }
-  return retVal;
+
+    qd_t IqdRefDefault;
+    IqdRefDefault.q = pHandle->hTorqueRefDefault;
+    IqdRefDefault.d = pHandle->hIdrefDefault;
+    return IqdRefDefault;
 }
 
-/**
-  * @brief It returns the default values of Iqdref.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval default values of Iqdref.
-  */
-__weak qd_t STC_GetDefaultIqdref( SpeednTorqCtrl_Handle_t * pHandle )
+
+void SpdTorqCtrl_SetNominalCurrent(SpeednTorqCtrlHandle_t * pHandle, uint16_t hNominalCurrent)
 {
-  qd_t IqdRefDefault;
-  IqdRefDefault.q = pHandle->TorqueRefDefault;
-  IqdRefDefault.d = pHandle->IdrefDefault;
-  return IqdRefDefault;
+
+    pHandle->hMaxPositiveTorque = hNominalCurrent;
+    pHandle->hMinNegativeTorque = -hNominalCurrent;
 }
 
-/**
-  * @brief  Change the nominal current .
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @param  hNominalCurrent This value represents actually the maximum Iq current
-            expressed in digit.
-  * @retval none
-  */
-__weak void STC_SetNominalCurrent( SpeednTorqCtrl_Handle_t * pHandle, uint16_t hNominalCurrent )
+
+void SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(SpeednTorqCtrlHandle_t * pHandle)
 {
-  pHandle->MaxPositiveTorque = hNominalCurrent;
-  pHandle->MinNegativeTorque = -hNominalCurrent;
+
+    RampMngr_ExecRamp(&pHandle->SpeedRampMngr, (int32_t)SPD_GetAvrgMecSpeedUnit(pHandle->pSPD) * (int32_t)65536, 0);
 }
 
-/**
-  * @brief  Force the speed reference to the curren speed. It is used
-  *         at the START_RUN state to initialize the speed reference.
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval none
-  */
-__weak void STC_ForceSpeedReferenceToCurrentSpeed( SpeednTorqCtrl_Handle_t * pHandle )
+/*
+    Set torque ramp slope values, for ramping up and ramping down.
+*/
+void SpdTorqCtrl_SetTorqueRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t wSlopePerSecondUp, uint32_t wSlopePerSecondDown)
 {
-  pHandle->SpeedRefUnitExt = ( int32_t )SPD_GetAvrgMecSpeedUnit( pHandle->SPD ) * ( int32_t )65536;
+
+    pHandle->wTorqueSlopePerSecondUp = wSlopePerSecondUp;
+    pHandle->wTorqueSlopePerSecondDown = wSlopePerSecondDown;
 }
 
-/**
-  * @}
-  */
 
-/**
-  * @}
-  */
+/*
+    Set speed ramp slope values, for ramping up and ramping down.
+*/
+void SpdTorqCtrl_SetSpeedRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t wSlopePerSecondUp, uint32_t wSlopePerSecondDown)
+{
 
-/************************ (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/
+    pHandle->wSpeedSlopePerSecondUp = wSlopePerSecondUp;
+    pHandle->wSpeedSlopePerSecondDown = wSlopePerSecondDown;
+}
+
+/*
+    Apply all torque foldbacks and returns limited torque.
+*/
+static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
+{
+    int16_t hMeasuredSpeed = 0;
+    int16_t hMeasuredMotorTemp = 0;
+    int16_t hMeasuredHeatsinkTemp = 0;
+
+    hMeasuredSpeed = SPD_GetAvrgMecSpeedUnit(pHandle->pSPD);
+    if (pHandle->pMotorTempSensor != NULL)
+    {
+        hMeasuredMotorTemp = NTC_GetAvTemp_C(pHandle->pMotorTempSensor);
+    }
+    if (pHandle->pHeatsinkTempSensor != NULL)
+    {
+        hMeasuredHeatsinkTemp = NTC_GetAvTemp_C(pHandle->pHeatsinkTempSensor);
+    }
+
+    int16_t hOutputTorque;
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque, abs(hMeasuredSpeed));
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
+
+    return hOutputTorque;
+}
+
+int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
+{
+    float fTemp;
+
+    fTemp = (float) (hTorqueRef * pHandle->fGainTorqueIqref);
+    if (fTemp > INT16_MAX)
+    {
+        fTemp = INT16_MAX;
+    }
+    if (fTemp < INT16_MIN)
+    {
+        fTemp = INT16_MIN;
+    }
+
+    return (int16_t) fTemp;
+}
+
+int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
+{
+    float fTemp;
+
+    fTemp = (float) (hTorqueRef * pHandle->fGainTorqueIdref);
+    if (fTemp > INT16_MAX)
+    {
+        fTemp = INT16_MAX;
+    }
+    if (fTemp < INT16_MIN)
+    {
+        fTemp = INT16_MIN;
+    }
+
+    return (int16_t) fTemp;
+}
+
+/*
+    Apply motor power limitation to torque reference
+*/
+static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
+{
+    int32_t wTorqueLimit = 0;
+    int16_t hMeasuredSpeedTenthRadPerSec = 0;
+    int16_t hMeasuredSpeedUnit = 0;
+    int16_t hRetval = hInputTorque;
+
+    hMeasuredSpeedUnit = SPD_GetAvrgMecSpeedUnit(pHandle->pSPD);
+    hMeasuredSpeedTenthRadPerSec = (int16_t)((10*hMeasuredSpeedUnit*2*3.1416F)/SPEED_UNIT);
+
+    if (hMeasuredSpeedUnit != 0)
+    {
+        if (hInputTorque > 0)
+        {
+            wTorqueLimit = 1000*pHandle->hMaxPositivePower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            if (hInputTorque > wTorqueLimit)
+            {
+                hRetval = (int16_t) wTorqueLimit;
+            }
+        }
+        else
+        {
+            wTorqueLimit = 1000*pHandle->hMinNegativePower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            if (hInputTorque < wTorqueLimit)
+            {
+                hRetval = (int16_t) wTorqueLimit;
+            }
+        }
+    }
+    return hRetval;
+}

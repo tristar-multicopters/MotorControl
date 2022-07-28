@@ -134,7 +134,8 @@ typedef struct
   uint16_t Half_PWMPeriod;  /*!< Half PWM Period in timer clock counts */
   volatile uint8_t PolarizationCounter;
 
-  bool OverCurrentFlag;     /*!< This flag is set when an overcurrent occurs.*/
+  bool SwOverCurrentFlag;     /*!< This flag is set when an overcurrent occurs by software (software triggered).*/
+  bool HwOverCurrentFlag;     /*!< This flag is set when an overcurrent occurs by hardware (hardware triggered).*/
   bool OverVoltageFlag;     /*!< This flag is set when an overvoltage occurs.*/
   bool BrakeActionLock;     /*!< This flag is set to avoid that brake action is
                                  interrupted.*/

@@ -48,7 +48,7 @@
 
 /*  ICSs gains in case of isolated current sensors,
         amplification gain for shunts based sensing */
-#define AMPLIFICATION_GAIN            0.050
+#define AMPLIFICATION_GAIN            0.0132
 
 /*** Noise parameters ***/
 #define TNOISE_NS                     2550

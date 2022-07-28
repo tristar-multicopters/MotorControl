@@ -82,6 +82,8 @@ __weak void ICS_Init( PWMC_ICS_Handle_t * pHandle )
   COMP_TypeDef * COMP_OCPBx = pHandle->pParams_str->CompOCPBSelection;
   DAC_TypeDef * DAC_OCPAx = pHandle->pParams_str->DAC_OCP_ASelection;
   DAC_TypeDef * DAC_OCPBx = pHandle->pParams_str->DAC_OCP_BSelection;
+    
+  PWMCurrFdbk_Init(&pHandle->_Super);
 
   /*Check that _Super is the first member of the structure PWMC_ICS_Handle_t */
   if ( ( uint32_t )pHandle == ( uint32_t )&pHandle->_Super )
@@ -893,7 +895,7 @@ __weak void * ICS_BRK2_IRQHandler( PWMC_ICS_Handle_t * pHandle )
       LL_GPIO_ResetOutputPin( pHandle->pParams_str->pwm_en_w_port, pHandle->pParams_str->pwm_en_w_pin );
     }
   }
-  pHandle->OverCurrentFlag = true;
+  pHandle->HwOverCurrentFlag = true;
 
   return &( pHandle->_Super.Motor );
 }
@@ -912,10 +914,7 @@ __attribute__( ( section ( ".ccmram" ) ) )
   */
 __weak void * ICS_BRK_IRQHandler( PWMC_ICS_Handle_t * pHandle )
 {
-
-  pHandle->pParams_str->TIMx->BDTR |= LL_TIM_OSSI_ENABLE;
-  pHandle->OverVoltageFlag = true;
-  pHandle->BrakeActionLock = true;
+  pHandle->SwOverCurrentFlag = true;
 
   return &( pHandle->_Super.Motor );
 }
@@ -944,10 +943,15 @@ __weak uint16_t ICS_IsOverCurrentOccurred( PWMC_Handle_t * pHdl )
     pHandle->OverVoltageFlag = false;
   }
 
-  if ( pHandle->OverCurrentFlag == true )
+  if ( pHandle->HwOverCurrentFlag == true )
   {
     retVal |= MC_BREAK_IN;
-    pHandle->OverCurrentFlag = false;
+    pHandle->HwOverCurrentFlag = false;
+  }
+  if ( pHandle->SwOverCurrentFlag == true )
+  {
+    retVal |= MC_OCSP;
+    pHandle->SwOverCurrentFlag = false;
   }
 
   return retVal;

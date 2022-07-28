@@ -31,6 +31,7 @@
 #include "digital_output.h"
 #include "state_machine.h"
 #include "pwm_common.h"
+#include "current_pid_vs_speed_table.h"
 
 #include "mc_tasks.h"
 #include "parameters_conversion.h"
@@ -70,7 +71,7 @@ MCI_Handle_t Mci[NBR_OF_MOTORS];
 MCI_Handle_t * oMCInterface[NBR_OF_MOTORS];
 MCT_Handle_t MCT[NBR_OF_MOTORS];
 STM_Handle_t STM[NBR_OF_MOTORS];
-SpeednTorqCtrl_Handle_t *pSTC[NBR_OF_MOTORS];
+SpeednTorqCtrlHandle_t *pSTC[NBR_OF_MOTORS];
 PID_Handle_t *pPIDSpeed[NBR_OF_MOTORS];
 PID_Handle_t *pPIDIq[NBR_OF_MOTORS];
 PID_Handle_t *pPIDId[NBR_OF_MOTORS];
@@ -111,6 +112,7 @@ void TSK_MediumFrequencyTaskM1(void);
 void FOC_Clear(uint8_t bMotor);
 void FOC_InitAdditionalMethods(uint8_t bMotor);
 void FOC_CalcCurrRef(uint8_t bMotor);
+void FOC_UpdatePIDGains(uint8_t bMotor);
 static uint16_t FOC_CurrControllerM1(void);
 void TSK_SetChargeBootCapDelayM1(uint16_t hTickCount);
 bool TSK_ChargeBootCapDelayHasElapsedM1(void);
@@ -174,11 +176,12 @@ __weak void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList
   /******************************************************/
   pSTC[M1] = &SpeednTorqCtrlM1;
   HALL_Init (&HALL_M1);
+  RotorPosObs_Init( &RotorPosObsM1 );
 
   /******************************************************/
   /*   Speed & torque component initialization          */
   /******************************************************/
-  STC_Init(pSTC[M1],pPIDSpeed[M1], &HALL_M1._Super);
+  SpdTorqCtrl_Init(pSTC[M1],pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorParamsM1, NULL);
 
   /******************************************************/
   /*   Auxiliary speed sensor component initialization  */
@@ -228,12 +231,12 @@ __weak void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList
 
   FOC_Clear(M1);
   FOCVars[M1].bDriveInput = EXTERNAL;
-  FOCVars[M1].Iqdref = STC_GetDefaultIqdref(pSTC[M1]);
-  FOCVars[M1].UserIdref = STC_GetDefaultIqdref(pSTC[M1]).d;
+  FOCVars[M1].Iqdref = SpdTorqCtrl_GetDefaultIqdref(pSTC[M1]);
+  FOCVars[M1].UserIdref = SpdTorqCtrl_GetDefaultIqdref(pSTC[M1]).d;
   oMCInterface[M1] = & Mci[M1];
   MCI_Init(oMCInterface[M1], &STM[M1], pSTC[M1], &FOCVars[M1] );
   MCI_ExecSpeedRamp(oMCInterface[M1],
-  STC_GetMecSpeedRefUnitDefault(pSTC[M1]),0); /*First command to STC*/
+  SpdTorqCtrl_GetMecSpeedRefUnitDefault(pSTC[M1]),0); /*First command to STC*/
   pMCIList[M1] = oMCInterface[M1];
   MCT[M1].pPIDSpeed = pPIDSpeed[M1];
   MCT[M1].pPIDIq = pPIDIq[M1];
@@ -261,7 +264,7 @@ __weak void MCboot( MCI_Handle_t* pMCIList[NBR_OF_MOTORS],MCT_Handle_t* pMCTList
   pMCTList[M1] = &MCT[M1];
 
   /* USER CODE BEGIN MCboot 2 */
-	AO_Init( &AngleObserverM1 );
+
   /* USER CODE END MCboot 2 */
 
   bMCBootCompleted = 1;
@@ -300,23 +303,23 @@ __weak void MC_RunMotorControlTasks(void)
 __weak void MC_Scheduler(void)
 {
 /* USER CODE BEGIN MC_Scheduler 0 */
-	int32_t wSpeedM1 = AO_GetElSpeed(&AngleObserverM1);
+	int32_t wSpeedM1 = RotorPosObs_GetElSpeed(&RotorPosObsM1);
 	//Atempt to fix deadlock
 	//Rx Timeout timer
 	if(WaitingforBytes)
 	{
-	 RXTimoutCounter ++;	
-		
+	 RXTimoutCounter ++;
+
 	  if(RXTimoutCounter > 60)
-	  { 
+	  {
 	    //Send NOACKError
 			MCP_SendTimeoutMessage(pMCP);
 	    //Reset Frame level
 			MCP_WaitNextFrame(pMCP);
-	  }	 
+	  }
 	}
-	
-	
+
+
 /* USER CODE END MC_Scheduler 0 */
 
   if (bMCBootCompleted == 1)
@@ -367,9 +370,11 @@ __weak void TSK_MediumFrequencyTaskM1(void)
   State_t StateM1;
   int16_t wAux = 0;
 
-  (void) STO_PLL_CalcAvrgMecSpeedUnit( &STO_PLL_M1, &wAux );
-  bool IsSpeedReliable = HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
+  //(void) STO_PLL_CalcAvrgMecSpeedUnit( &STO_PLL_M1, &wAux );
+  HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
+  bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
   PQD_CalcElMotorPower( pMPM[M1] );
+  FOC_UpdatePIDGains(M1);
 
   StateM1 = STM_GetState( &STM[M1] );
 
@@ -383,7 +388,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
 		}
 		#endif
 		break;
-		
+
   case IDLE_START:
     ICS_TurnOnLowSides( pwmcHandle[M1] );
     TSK_SetChargeBootCapDelayM1( CHARGE_BOOT_CAP_TICKS );
@@ -413,7 +418,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
   case CLEAR:
     HALL_Clear( &HALL_M1 );
     //STO_PLL_Clear( &STO_PLL_M1 );
-		AO_Clear( &AngleObserverM1 );
+		RotorPosObs_Clear( &RotorPosObsM1 );
     if ( STM_NextState( &STM[M1], START ) == true )
     {
       FOC_Clear( M1 );
@@ -437,7 +442,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
       FOC_CalcCurrRef( M1 );
       STM_NextState( &STM[M1], RUN );
     }
-    STC_ForceSpeedReferenceToCurrentSpeed( pSTC[M1] ); /* Init the reference speed to current speed */
+    SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed( pSTC[M1] ); /* Init the reference speed to current speed */
     MCI_ExecBufferedCommands( oMCInterface[M1] ); /* Exec the speed ramp after changing of the speed sensor */
 
     break;
@@ -446,7 +451,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
     /* USER CODE BEGIN MediumFrequencyTask M1 2 */
 		#if SWD_TORQUE_CONTROL
 		MCI_ExecTorqueRamp(&Mci[M1], hDebugIq, hDebugRampTime);
-	
+
 		if (!bStartMotor)
 		{
 			MCI_StopMotor(&Mci[M1]);
@@ -459,7 +464,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
     FOC_CalcCurrRef( M1 );
 
 		#if !(POSITION_OPENLOOP || VOLTAGE_OPENLOOP)
-    if( !IsSpeedReliable )
+    if( !bIsSpeedReliable )
     {
       STM_FaultProcessing( &STM[M1], MC_SPEED_FDBK, 0 );
     }
@@ -531,11 +536,12 @@ __weak void FOC_Clear(uint8_t bMotor)
   FOCVars[bMotor].Vqd = NULL_qd;
   FOCVars[bMotor].Valphabeta = NULL_alphabeta;
   FOCVars[bMotor].hElAngle = (int16_t)0;
+  FOCVars[M1].hCodeError = 0;
 
   PID_SetIntegralTerm(pPIDIq[bMotor], (int32_t)0);
   PID_SetIntegralTerm(pPIDId[bMotor], (int32_t)0);
 
-  STC_Clear(pSTC[bMotor]);
+  SpdTorqCtrl_Clear(pSTC[bMotor]);
 
   PWMC_SwitchOffPWM(pwmcHandle[bMotor]);
 
@@ -569,6 +575,19 @@ __weak void FOC_InitAdditionalMethods(uint8_t bMotor)
   /* USER CODE END FOC_InitAdditionalMethods 0 */
 }
 
+void FOC_UpdatePIDGains(uint8_t bMotor)
+{   
+    SpeednPosFdbk_Handle_t * SpeedHandle;
+    SpeedHandle = SpdTorqCtrl_GetSpeedSensor(pSTC[bMotor]);
+    
+    int16_t hM1SpeedUnit = SPD_GetAvrgMecSpeedUnit(SpeedHandle);
+    
+    PID_SetKP(pPIDIq[bMotor], LookupTable_CalcOutput(&LookupTableM1IqKp, abs(hM1SpeedUnit)));
+    PID_SetKI(pPIDIq[bMotor], LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
+    PID_SetKP(pPIDId[bMotor], LookupTable_CalcOutput(&LookupTableM1IdKp, abs(hM1SpeedUnit)));
+    PID_SetKI(pPIDId[bMotor], LookupTable_CalcOutput(&LookupTableM1IdKi, abs(hM1SpeedUnit)));
+}
+
 /**
   * @brief  It computes the new values of Iqdref (current references on qd
   *         reference frame) based on the required electrical torque information
@@ -588,8 +607,9 @@ __weak void FOC_CalcCurrRef(uint8_t bMotor)
   /* USER CODE END FOC_CalcCurrRef 0 */
   if(FOCVars[bMotor].bDriveInput == INTERNAL)
   {
-    FOCVars[bMotor].hTeref = STC_CalcTorqueReference(pSTC[bMotor]);
-    FOCVars[bMotor].Iqdref.q = FOCVars[bMotor].hTeref;
+    FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSTC[bMotor]);
+    FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(pSTC[bMotor], FOCVars[bMotor].hTeref);
+    FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(pSTC[bMotor], FOCVars[bMotor].hTeref);
 
     if (pFW[bMotor])
     {
@@ -691,7 +711,7 @@ __weak uint8_t TSK_HighFrequencyTask(void)
   HALL_CalcElAngle (&HALL_M1);
 
   /* USER CODE BEGIN HighFrequencyTask SINGLEDRIVE_1 */
-	AO_CalcElAngle(&AngleObserverM1, 0);
+	RotorPosObs_CalcElAngle(&RotorPosObsM1, 0);
   /* USER CODE END HighFrequencyTask SINGLEDRIVE_1 */
   hFOCreturn = FOC_CurrControllerM1();
   /* USER CODE BEGIN HighFrequencyTask SINGLEDRIVE_2 */
@@ -705,8 +725,8 @@ __weak uint8_t TSK_HighFrequencyTask(void)
   {
     STO_aux_Inputs.Ialfa_beta = FOCVars[M1].Ialphabeta; /*  only if sensorless*/
     STO_aux_Inputs.Vbus = VBS_GetAvBusVoltage_d(&(pBusSensorM1->_Super)); /*  only for sensorless*/
-    STO_PLL_CalcElAngle (&STO_PLL_M1, &STO_aux_Inputs);
-	STO_PLL_CalcAvrgElSpeedDpp (&STO_PLL_M1);
+    //STO_PLL_CalcElAngle (&STO_PLL_M1, &STO_aux_Inputs);
+	//STO_PLL_CalcAvrgElSpeedDpp (&STO_PLL_M1);
     /* USER CODE BEGIN HighFrequencyTask SINGLEDRIVE_3 */
 
     /* USER CODE END HighFrequencyTask SINGLEDRIVE_3 */
@@ -738,28 +758,27 @@ inline uint16_t FOC_CurrControllerM1(void)
 {
   qd_t Iqd, Vqd;
   ab_t Iab;
-  alphabeta_t Ialphabeta, Valphabeta;
+  alphabeta_t Ialphabeta = {0}, Valphabeta = {0};
 
   int16_t hElAngle;
-  uint16_t hCodeError;
+  uint16_t hCodeError = 0;
   SpeednPosFdbk_Handle_t *speedHandle;
 
-  speedHandle = STC_GetSpeedSensor(pSTC[M1]);
+  speedHandle = SpdTorqCtrl_GetSpeedSensor(pSTC[M1]);
   hElAngle = SPD_GetElAngle(speedHandle);
-	hElAngle = AO_GetElAngle(&AngleObserverM1);
 	#if (POSITION_OPENLOOP)
 	hOpenLoopTheta += OPEN_LOOP_SPEED;
 	hElAngle = hOpenLoopTheta;
 	#endif
-	
+
   PWMC_GetPhaseCurrents(pwmcHandle[M1], &Iab);
+    
   RCM_ReadOngoingConv();
   RCM_ExecNextConv();
-  
+
   State_t StateM1;
   StateM1 = STM_GetState( &STM[M1] );
-	if (StateM1 == RUN || StateM1 == ANY_STOP)
-	{
+  
     Ialphabeta = MCM_Clarke(Iab);
     Iqd = MCM_Park(Ialphabeta, hElAngle);
     Vqd.q = PI_Controller(pPIDIq[M1],
@@ -768,7 +787,7 @@ inline uint16_t FOC_CurrControllerM1(void)
     Vqd.d = PI_Controller(pPIDId[M1],
               (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
     Vqd = FF_VqdConditioning(pFF[M1],Vqd);
-    
+
     #if (VOLTAGE_OPENLOOP)
     Vqd.q = 1500;
     Vqd.d = 0;
@@ -777,7 +796,8 @@ inline uint16_t FOC_CurrControllerM1(void)
     Vqd = Circle_Limitation(pCLM[M1], Vqd);
     hElAngle += SPD_GetInstElSpeedDpp(speedHandle)*REV_PARK_ANGLE_COMPENSATION_FACTOR;
     Valphabeta = MCM_Rev_Park(Vqd, hElAngle);
-    hCodeError = PWMC_SetPhaseVoltage(pwmcHandle[M1], Valphabeta);
+    hCodeError |= PWMC_SetPhaseVoltage(pwmcHandle[M1], Valphabeta);
+    
     FOCVars[M1].Vqd = Vqd;
     FOCVars[M1].Iab = Iab;
     FOCVars[M1].Ialphabeta = Ialphabeta;
@@ -787,21 +807,16 @@ inline uint16_t FOC_CurrControllerM1(void)
     FW_DataProcess(pFW[M1], Vqd);
     FF_DataProcess(pFF[M1]);
     
+  if (StateM1 == RUN || StateM1 == ANY_STOP)
+  {
     //Check for overcurrent condition (overcurrent software protection)
-    int16_t hIqdrefAmplitude = MCMath_AmplitudeFromVectors(FOCVars[M1].Iqdref.d, FOCVars[M1].Iqdref.q);
-    int32_t wThresholdOCSP = hIqdrefAmplitude + OCSP_SAFETY_MARGIN;
-    if (wThresholdOCSP > OCSP_MAX_CURRENT)
+    hCodeError |= PWMCurrFdbk_CheckSoftwareOverCurrent(pwmcHandle[M1], &Iab, &FOCVars[M1].Iqdref);
+    if (hCodeError & MC_OCSP)
     {
-      wThresholdOCSP = OCSP_MAX_CURRENT;
-    }
-    if (abs(PWMC_GetIa(pwmcHandle[M1])) > wThresholdOCSP ||
-        abs(PWMC_GetIb(pwmcHandle[M1])) > wThresholdOCSP ||
-        abs(PWMC_GetIc(pwmcHandle[M1])) > wThresholdOCSP)
-    {
-      PWMC_SwitchOffPWM(pwmcHandle[M1]);
-      STM_FaultProcessing(&STM[M1], MC_OCSP, 0);
-    }
-  }  
+        FOCVars[M1].hCodeError = hCodeError;
+        LL_TIM_GenerateEvent_BRK2(TIM1);
+    } 
+  }
   
   return(hCodeError);
 }
@@ -843,8 +858,9 @@ __weak void TSK_SafetyTask_PWMOFF(uint8_t bMotor)
   uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
   CodeReturn |= errMask[bMotor] & NTC_CalcAvTemp(pTemperatureSensor[bMotor]); /* check for fault if FW protection is activated. It returns MC_OVER_TEMP or MC_NO_ERROR */
-  CodeReturn |= PWMC_CheckOverCurrent(pwmcHandle[bMotor]);                    /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
+  CodeReturn |= PWMC_CheckOverCurrent(pwmcHandle[bMotor]);                    /* check for fault. It return MC_BREAK_IN or MC_OCSP or MC_NO_FAULTS
                                                                                  (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
+  CodeReturn |= FOCVars[M1].hCodeError;         /* Add FOC error code in CodeReturn (to check for OCSP) */
   if(bMotor == M1)
   {
     CodeReturn |=  errMask[bMotor] &RVBS_CalcAvVbus(pBusSensorM1);
