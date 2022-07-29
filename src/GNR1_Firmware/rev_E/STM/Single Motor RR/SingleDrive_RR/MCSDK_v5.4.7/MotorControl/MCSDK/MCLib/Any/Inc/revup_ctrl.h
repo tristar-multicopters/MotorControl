@@ -119,7 +119,7 @@ typedef struct
 
   RevUpCtrl_PhaseParams_t OTFPhaseParams; /**< RevUp phase parameter of OTF feature.*/
 
-  SpeednTorqCtrl_Handle_t * pSTC;                      /**< Speed and torque controller object used by RevUpCtrl.*/
+  SpeednTorqCtrlHandle_t * pSTC;                      /**< Speed and torque controller object used by RevUpCtrl.*/
 
   VirtualSpeedSensor_Handle_t * pVSS;                  /**< Virtual speed sensor object used by RevUpCtrl.*/
 
@@ -134,7 +134,7 @@ typedef struct
 
 /*  Function used to initialize and configure the RevUpCtrl Component */
 void RUC_Init( RevUpCtrl_Handle_t * pHandle,
-               SpeednTorqCtrl_Handle_t * pSTC,
+               SpeednTorqCtrlHandle_t * pSTC,
                VirtualSpeedSensor_Handle_t * pVSS,
                STO_Handle_t * pSNSL,
                PWMC_Handle_t * pPWM );

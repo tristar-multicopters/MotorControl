@@ -184,7 +184,7 @@ struct PWMC_Handle
   int16_t   Ib;                                         /**< Last @f$I_{B}@f$ measurement. */
   int16_t   Ic;                                         /**< Last @f$I_{C}@f$ measurement. */
   uint16_t  DTTest;                                      /**< Reserved */
- 
+
   /* former  PWMnCurrFdbkParams_t */
   uint16_t PWMperiod;                                   /**< PWM period expressed in timer clock cycles unit:
                                                            *  @f$hPWMPeriod = TimerFreq_{CLK} / F_{PWM}@f$    */
@@ -202,9 +202,9 @@ struct PWMC_Handle
   SignalFilteringHandle_t IbFilter;                  /* Pointer to filter instance used for filtering Ib signal (only for software ocp) */
   float fCurrentFilterAlpha;
   float fCurrentFilterBeta;
-  
+
   int16_t hSoftwareOCPMarginCurrent;                   /* Measured current amplitude can be until hSoftwareOCPMarginCurrent higher
-                                                            than reference current before overcurrent software protection triggers */    
+                                                            than reference current before overcurrent software protection triggers */
   int16_t hSoftwareOCPMaximumCurrent;                   /* Max current that can be reached before triggering software overcurrent */
 };
 

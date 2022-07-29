@@ -576,12 +576,12 @@ __weak void FOC_InitAdditionalMethods(uint8_t bMotor)
 }
 
 void FOC_UpdatePIDGains(uint8_t bMotor)
-{   
+{
     SpeednPosFdbk_Handle_t * SpeedHandle;
     SpeedHandle = SpdTorqCtrl_GetSpeedSensor(pSTC[bMotor]);
-    
+
     int16_t hM1SpeedUnit = SPD_GetAvrgMecSpeedUnit(SpeedHandle);
-    
+
     PID_SetKP(pPIDIq[bMotor], LookupTable_CalcOutput(&LookupTableM1IqKp, abs(hM1SpeedUnit)));
     PID_SetKI(pPIDIq[bMotor], LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
     PID_SetKP(pPIDId[bMotor], LookupTable_CalcOutput(&LookupTableM1IdKp, abs(hM1SpeedUnit)));
@@ -772,13 +772,13 @@ inline uint16_t FOC_CurrControllerM1(void)
 	#endif
 
   PWMC_GetPhaseCurrents(pwmcHandle[M1], &Iab);
-    
+
   RCM_ReadOngoingConv();
   RCM_ExecNextConv();
 
   State_t StateM1;
   StateM1 = STM_GetState( &STM[M1] );
-  
+
     Ialphabeta = MCM_Clarke(Iab);
     Iqd = MCM_Park(Ialphabeta, hElAngle);
     Vqd.q = PI_Controller(pPIDIq[M1],
@@ -797,7 +797,7 @@ inline uint16_t FOC_CurrControllerM1(void)
     hElAngle += SPD_GetInstElSpeedDpp(speedHandle)*REV_PARK_ANGLE_COMPENSATION_FACTOR;
     Valphabeta = MCM_Rev_Park(Vqd, hElAngle);
     hCodeError |= PWMC_SetPhaseVoltage(pwmcHandle[M1], Valphabeta);
-    
+
     FOCVars[M1].Vqd = Vqd;
     FOCVars[M1].Iab = Iab;
     FOCVars[M1].Ialphabeta = Ialphabeta;
@@ -806,7 +806,7 @@ inline uint16_t FOC_CurrControllerM1(void)
     FOCVars[M1].hElAngle = hElAngle;
     FW_DataProcess(pFW[M1], Vqd);
     FF_DataProcess(pFF[M1]);
-    
+
   if (StateM1 == RUN || StateM1 == ANY_STOP)
   {
     //Check for overcurrent condition (overcurrent software protection)
@@ -815,9 +815,9 @@ inline uint16_t FOC_CurrControllerM1(void)
     {
         FOCVars[M1].hCodeError = hCodeError;
         LL_TIM_GenerateEvent_BRK2(TIM1);
-    } 
+    }
   }
-  
+
   return(hCodeError);
 }
 

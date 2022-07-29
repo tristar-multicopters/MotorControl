@@ -132,14 +132,14 @@ __weak void FF_Clear( FF_Handle_t * pHandle )
   * @param  pSTC  Speed sensor.
   * @retval none
   */
-__weak void FF_VqdffComputation( FF_Handle_t * pHandle, qd_t Iqdref, SpeednTorqCtrl_Handle_t * pSTC )
+__weak void FF_VqdffComputation( FF_Handle_t * pHandle, qd_t Iqdref, SpeednTorqCtrlHandle_t * pSTC )
 {
   int32_t wtemp1, wtemp2;
   int16_t hSpeed_dpp;
   uint16_t hAvBusVoltage_d;
   SpeednPosFdbk_Handle_t * SpeedSensor;
 
-  SpeedSensor = STC_GetSpeedSensor( pSTC );
+  SpeedSensor = SpdTorqCtrl_GetSpeedSensor( pSTC );
   hSpeed_dpp = SPD_GetElSpeedDpp( SpeedSensor );
   hAvBusVoltage_d = VBS_GetAvBusVoltage_d( &( pBusSensorM1->_Super ) ) / 2u;
 

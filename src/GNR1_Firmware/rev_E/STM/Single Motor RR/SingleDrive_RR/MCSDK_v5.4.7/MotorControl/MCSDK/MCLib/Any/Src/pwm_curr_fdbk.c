@@ -66,7 +66,7 @@
   * See PWMC_Handle for more details on this mechanism.
   * @{
   */
-  
+
 /*
     Initialize PWM&Current feedback module.
 */
@@ -111,7 +111,7 @@ __weak void PWMC_GetPhaseCurrents( PWMC_Handle_t * pHandle, ab_t * Iab )
 uint16_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMC_Handle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
 {
     int16_t IaFiltered, IbFiltered, IcFiltered;
-    
+
     IaFiltered = Iab->a;
     IbFiltered = Iab->b;
 
@@ -251,7 +251,7 @@ __weak uint16_t PWMC_SetPhaseVoltage( PWMC_Handle_t * pHandle, alphabeta_t Valfa
   pHandle->CntPhA = (uint16_t)(MAX(wTimePhA,0));
   pHandle->CntPhB = (uint16_t)(MAX(wTimePhB,0));
   pHandle->CntPhC = (uint16_t)(MAX(wTimePhC,0));
-  
+
   if ( pHandle->DTTest == 1u )
   {
     /* Dead time compensation */

@@ -86,7 +86,7 @@
   *  @retval none
   */
 __weak void RUC_Init( RevUpCtrl_Handle_t * pHandle,
-               SpeednTorqCtrl_Handle_t * pSTC,
+               SpeednTorqCtrlHandle_t * pSTC,
                VirtualSpeedSensor_Handle_t * pVSS,
                STO_Handle_t * pSNSL,
                PWMC_Handle_t * pPWM )
@@ -124,7 +124,7 @@ __weak void RUC_Init( RevUpCtrl_Handle_t * pHandle,
 __weak void RUC_Clear( RevUpCtrl_Handle_t * pHandle, int16_t hMotorDirection )
 {
   VirtualSpeedSensor_Handle_t * pVSS = pHandle->pVSS;
-  SpeednTorqCtrl_Handle_t * pSTC = pHandle->pSTC;
+  SpeednTorqCtrlHandle_t * pSTC = pHandle->pSTC;
   RevUpCtrl_PhaseParams_t * pPhaseParams = pHandle->ParamsData;
 
   pHandle->hDirection = hMotorDirection;
@@ -139,17 +139,16 @@ __weak void RUC_Clear( RevUpCtrl_Handle_t * pHandle, int16_t hMotorDirection )
   VSS_Clear( pVSS );
 
   /* Sets the STC in torque mode.*/
-  STC_SetControlMode( pSTC, STC_TORQUE_MODE );
+  SpdTorqCtrl_SetControlMode( pSTC, STC_TORQUE_MODE );
 
   /* Sets the mechanical starting angle of VSS.*/
   VSS_SetMecAngle( pVSS, pHandle->hStartingMecAngle * hMotorDirection );
 
   /* Sets to zero the starting torque of STC */
-  STC_ExecRamp( pSTC, 0, 0u );
+  SpdTorqCtrl_ExecRamp( pSTC, 0 );
 
   /* Gives the first command to STC and VSS.*/
-  STC_ExecRamp( pSTC, pPhaseParams->hFinalTorque * hMotorDirection,
-                ( uint32_t )( pPhaseParams->hDurationms ) );
+  SpdTorqCtrl_ExecRamp( pSTC, pPhaseParams->hFinalTorque * hMotorDirection);
 
   VSS_SetMecAcceleration( pVSS, pPhaseParams->hFinalMecSpeedUnit * hMotorDirection,
                           pPhaseParams->hDurationms );
@@ -315,7 +314,7 @@ __weak bool RUC_OTF_Exec( RevUpCtrl_Handle_t * pHandle )
                 hTorqueReference = ( int16_t )( ( ( ( int32_t )hObsSpeedUnit ) * wDeltaTorqueRevUp ) / wDeltaSpeedRevUp ) +
                         hOldFinalTorque;
 
-                STC_ExecRamp( pHandle->pSTC, pHandle->hDirection * hTorqueReference, 0u );
+                SpdTorqCtrl_ExecRamp( pHandle->pSTC, pHandle->hDirection * hTorqueReference );
 
                 pHandle->hPhaseRemainingTicks = 1u;
 
@@ -360,8 +359,7 @@ __weak bool RUC_OTF_Exec( RevUpCtrl_Handle_t * pHandle )
 
       /* If it becomes zero the current phase has been completed.*/
       /* Gives the next command to STC and VSS.*/
-      STC_ExecRamp( pHandle->pSTC, pHandle->pCurrentPhaseParams->hFinalTorque * pHandle->hDirection,
-                    ( uint32_t )( pHandle->pCurrentPhaseParams->hDurationms ) );
+      SpdTorqCtrl_ExecRamp( pHandle->pSTC, pHandle->pCurrentPhaseParams->hFinalTorque * pHandle->hDirection );
 
       VSS_SetMecAcceleration( pHandle->pVSS,
                               pHandle->pCurrentPhaseParams->hFinalMecSpeedUnit * pHandle->hDirection,
@@ -421,8 +419,7 @@ __weak bool RUC_Exec( RevUpCtrl_Handle_t * pHandle )
 
       /* If it becomes zero the current phase has been completed.*/
       /* Gives the next command to STC and VSS.*/
-      STC_ExecRamp( pHandle->pSTC, pHandle->pCurrentPhaseParams->hFinalTorque * pHandle->hDirection,
-                    ( uint32_t )( pHandle->pCurrentPhaseParams->hDurationms ) );
+      SpdTorqCtrl_ExecRamp( pHandle->pSTC, pHandle->pCurrentPhaseParams->hFinalTorque * pHandle->hDirection );
 
       VSS_SetMecAcceleration( pHandle->pVSS,
                               pHandle->pCurrentPhaseParams->hFinalMecSpeedUnit * pHandle->hDirection,

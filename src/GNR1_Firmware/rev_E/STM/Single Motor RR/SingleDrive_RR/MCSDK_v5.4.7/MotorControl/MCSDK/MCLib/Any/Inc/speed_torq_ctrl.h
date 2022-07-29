@@ -80,8 +80,8 @@ typedef struct
     uint16_t hMaxPositivePower;             /*!< Maximum positive value of motor
                                              power in W.*/
     int16_t hMinNegativePower;              /*!< Minimum negative value of motor
-                                             power in W.*/                                       
-                                             
+                                             power in W.*/
+
     STC_Modality_t ModeDefault;          /*!< Default STC modality.*/
     int16_t hMecSpeedRefUnitDefault;      /*!< Default mechanical rotor speed
                                              reference expressed in the unit
@@ -99,7 +99,7 @@ typedef struct
 
     float fGainTorqueIqref;            /* Gain (G) between Iqref in digital amps and torque reference in cNm. Iqref = Torq * G/D  */
     float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
-    
+
 } SpeednTorqCtrlHandle_t;
 
 

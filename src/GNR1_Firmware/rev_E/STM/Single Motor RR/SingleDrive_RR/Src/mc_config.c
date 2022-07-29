@@ -207,7 +207,7 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
   .wTorqueSlopePerSecondDown =  DEFAULT_TORQUE_SLOPE_DOWN,
   .wSpeedSlopePerSecondUp =     DEFAULT_SPEED_SLOPE_UP,
   .wSpeedSlopePerSecondDown =   DEFAULT_SPEED_SLOPE_DOWN,
-  
+
   .fGainTorqueIqref =           GAIN_TORQUE_IQREF,
   .fGainTorqueIdref =           GAIN_TORQUE_IDREF,
 };
@@ -383,7 +383,7 @@ NTC_Handle_t TempSensorParamsM1 =
   .hSensitivity            = (uint16_t)(ADC_REFERENCE_VOLTAGE/dV_dT),
   .wV0                     = (uint16_t)(V0_V *65536/ ADC_REFERENCE_VOLTAGE),
   .hT0                     = T0_C,
-  
+
   .pNTCLookupTable = &NTCLookupTable,
 };
 
