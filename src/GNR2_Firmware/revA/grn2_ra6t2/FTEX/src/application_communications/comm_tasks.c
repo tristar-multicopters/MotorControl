@@ -18,14 +18,14 @@
 /************* DEFINES ****************/
 
 /********* PUBLIC MEMBERS *************/
-
 // Semaphore for CANOpen timer
 osSemaphoreId_t canTmrSemaphore;
+#if !ENABLE_CAN_LOGGER
+
 
 /********* PRIVATE MEMBERS *************/
 
-extern osThreadId_t CANThreadHandle;
-
+extern osThreadId_t CANmanagerHandle;
 // Attributes for the canTmrSemaphore
 osSemaphoreAttr_t canTmrSemaphoreAttr =
 {
@@ -38,14 +38,6 @@ osSemaphoreAttr_t canTmrSemaphoreAttr =
 
 /********* PRIVATE FUNCTIONS *************/
 
-#if ENABLE_CAN_LOGGER
-VC_CAN_id_t currenLogId = CAN_ID_STATUS_VC;
-
-/** @brief  Function for sending the vehicle and motor diagnostics
-            ENABLE_CAN_LOGGER flag has to be on to be able to log
-*/
-static void CANLOG_SendLogs(VCI_Handle_t * pVChandle);
-#else
 /** @brief  Callback function used for updating the values of the GNR2
 *           object dictionary.
 */
@@ -55,25 +47,27 @@ static void GnR2ModuleApp(void *p_arg)
     node = (CO_NODE *)p_arg;
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     CO_OBJ *objSpeed    = CODictFind(&node->Dict, CO_DEV(0x2000, 0));
+    CO_OBJ *objpwr      = CODictFind(&node->Dict, CO_DEV(0x2001, 0));
     CO_OBJ *objSOC      = CODictFind(&node->Dict, CO_DEV(0x2002, 0));
     CO_OBJ *objPAS      = CODictFind(&node->Dict, CO_DEV(0x2003, 0));
     CO_OBJ *objMaxPAS   = CODictFind(&node->Dict, CO_DEV(0x2004, 0));
     CO_OBJ *objMaxPwr   = CODictFind(&node->Dict, CO_DEV(0x2005, 0));
     CO_OBJ *objErrorSt  = CODictFind(&node->Dict, CO_DEV(0x2006, 0));
-    CO_OBJ *objSerialNb = CODictFind(&node->Dict, CO_DEV(0x2007, 0));
+    CO_OBJ *objSerialNbHigh  = CODictFind(&node->Dict, CO_DEV(0x2007, 0));
+    CO_OBJ *objSerialNbLow = CODictFind(&node->Dict, CO_DEV(0x2007, 1));
     CO_OBJ *objFWver    = CODictFind(&node->Dict, CO_DEV(0x2008, 0));
     
     int16_t speed     = MDI_GetAvrgMecSpeedUnit(pVCI->pPowertrain->pMDI,M1);
-    uint8_t soc       = 50; // TODO: Implement function that allows to get the SOC. Use a hardcoded value for now...
+    int16_t pwr       = 750; // TODO: Implement function that allows to get the obtained power. Use a hardcoded value for now...
+    uint8_t soc       = 75;  // TODO: Implement function that allows to get the SOC. Use a hardcoded value for now...
     uint8_t pas       = (uint8_t)VCI_ReadRegister(pVCI,REG_PAS_LEVEL);
     uint8_t maxPas    = (uint8_t)VCI_ReadRegister(pVCI,REG_PAS_MAXLEVEL);  
-    uint16_t maxPwr   = 3000; // TODO: Implement function that allows to get the maxPower. Use a hardcoded value for now...
+    uint16_t maxPwr   = 2000; // TODO: Implement function that allows to get the maxPower. Use a hardcoded value for now...
     uint16_t ErrorState = MDI_GetCurrentFaults(pVCI->pPowertrain->pMDI,M1);
-    // Get serial number
-    uint32_t wLowId   = (uint32_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_LOW);
-    uint64_t dHighId  = (uint64_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_LOW) << 32;
-    uint64_t serialNb =  wLowId | dHighId;
     uint16_t FWVer    =  (uint16_t)VCI_ReadRegister(pVCI,REG_FIRMVER);
+    // Get serial number
+    uint64_t serialNbLow  =  (uint32_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_LOW);
+    uint64_t serialNbHigh =  (uint64_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_HIGH);
     
     if(node == 0)
     {
@@ -83,12 +77,14 @@ static void GnR2ModuleApp(void *p_arg)
     if(CONmtGetMode(&node->Nmt) == CO_OPERATIONAL)
     {
         COObjWrValue(objSpeed, node,&speed,1,0);
+        COObjWrValue(objpwr, node,&pwr,2,0);
         COObjWrValue(objSOC, node,&soc,1,0);
         COObjWrValue(objPAS, node,&pas,1,0);
         COObjWrValue(objMaxPAS, node,&maxPas,1,0);
         COObjWrValue(objMaxPwr, node,&maxPwr,2,0);
         COObjWrValue(objErrorSt, node,&ErrorState,2,0);
-        COObjWrValue(objSerialNb, node,&serialNb,4,0); // Send only the Low part for now
+        COObjWrValue(objSerialNbLow, node,&serialNbLow,4,0); // Send only the Low part for now
+        COObjWrValue(objSerialNbHigh, node,&serialNbHigh,4,0); // Send only the Low part for now
         COObjWrValue(objFWver, node,&FWVer,2,0);
     }
 }
@@ -147,7 +143,7 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 /**
   Task to handle the received messages and to send messages through the CAN bus
 */
-__NO_RETURN void processCANmsgTask (void * pvParameter)
+__NO_RETURN void CANManagerTask (void * pvParameter)
 {
     UNUSED_PARAMETER(pvParameter);
     
@@ -192,55 +188,21 @@ __NO_RETURN void processCANmsgTask (void * pvParameter)
         #else
         COTmrProcess(&CAN_handle.canNode.Tmr);
         osSemaphoreAcquire(canTmrSemaphore, osWaitForever);
+        
         #endif              
     }
 }
 
-#if ENABLE_CAN_LOGGER
 /**
-* Function for sending the vehicle and motor diagnostics
+  Task to process the received messages from CANBus
 */
-static void CANLOG_SendLogs(VCI_Handle_t * pVChandle)
+__NO_RETURN void CANProcessMsgs (void * pvParameter)
 {
-    switch(currenLogId)
-    {
-        case CAN_ID_STATUS_VC:
-            CANLOG_getStatus(pVChandle, M_NONE);
-            currenLogId = CAN_ID_THROTTLE_BRAKE;
-        break;
-        
-        case CAN_ID_THROTTLE_BRAKE:
-            CANLOG_SendThrottleBrake(pVChandle);
-            currenLogId = CAN_ID_VBUS;
-        break;
-        
-        case CAN_ID_VBUS:
-            CANLOG_getVbus(pVChandle);
-            currenLogId = CAN_ID_STATUS_M1;
-        break;
-        
-        case CAN_ID_STATUS_M1:
-            CANLOG_getStatus(pVChandle, M1);
-            currenLogId = CAN_ID_CURRENT_M1;
-        break;
-        
-        case CAN_ID_CURRENT_M1:
-            CANLOG_getCurrent(pVChandle, M1);
-            currenLogId = CAN_ID_SPEED_M1;
-        break;
-        
-        case CAN_ID_SPEED_M1:
-            CANLOG_getSpeed(pVChandle, M1);
-            currenLogId = CAN_ID_TEMPERATURE_M1;
-        break;
-        
-        case CAN_ID_TEMPERATURE_M1:
-            CANLOG_SendTemperature(pVChandle, M1);
-            currenLogId = CAN_ID_STATUS_VC;
-        break;
-        
-        default:
-            break;  
-    }
+	UNUSED_PARAMETER(pvParameter);
+		
+	while(true)
+	{
+		osThreadFlagsWait(CAN_RX_FLAG, osFlagsWaitAny, osWaitForever);
+        uCAL_CAN_ProcessRxMessage(&CAN_handle);
+	}
 }
-#endif

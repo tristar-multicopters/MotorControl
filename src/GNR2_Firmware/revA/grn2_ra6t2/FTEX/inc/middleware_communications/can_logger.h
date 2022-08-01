@@ -35,38 +35,12 @@ typedef enum
 
 // ==================== Public function prototypes ========================= //
 
-/** @brief  Function for sending the vehicle status
-    @p 		motorSelection  motor ID
+/* Function for sending all the vehicle and motor values */
+/** @brief  This function should be called for getting 
+*           vehicle and motor diagnostics
+*   @param  pVChandle: pointer for vehicle handle
 */
-void CANLOG_getStatus(VCI_Handle_t * phandle, uint8_t motorSelection);
-
-/** @brief  Function for sending the bus voltage value
-*/
-void CANLOG_getVbus(VCI_Handle_t * phandle);
-
-/* Function for sending the reference and measured current values */
-/** @brief  Function for sending the current values
-    @p 		motorSelection  motor ID
-*/
-void CANLOG_getCurrent(VCI_Handle_t * phandle, uint8_t motorSelection);
-
-/* Function for sending the motor reference and measured speed values*/
-/** @brief  Function for sending the speed values
-    @p 		motorSelection  motor ID
-*/
-void CANLOG_getSpeed(VCI_Handle_t * phandle, uint8_t motorSelection);
-
-/* Function for sending the motor drive temperature */
-/** @brief  Function for sending the motor drive temperature
-    @p 		motorSelection  motor ID
-*/
-void CANLOG_SendTemperature(VCI_Handle_t * phandle, uint8_t motorSelection);
-
-/* Function for sending the vehicle throttle value and the brake status*/
-/** @brief  Function for sending the throttle value and the brake status
-*/
-void CANLOG_SendThrottleBrake(VCI_Handle_t * phandle);
-
+void CANLOG_SendLogs(VCI_Handle_t * pVChandle);
 #endif
 
 #endif

@@ -19,11 +19,21 @@
 #define TASK_CAN_SAMPLE_TIME_TICK  50     /*  Loop for executing the task every 375ms */
 
 /**
-  * @brief  Task to handle the received messages and to send messages
+  * @brief  Task to managing the CAN interface
+  *         This task updates periodically the GNR2 Object Dictionary and executes when the
+  *         the hardware timer 1 is timeout.
+  * @retval None
+  */
+void CANManagerTask (void * pvParameter);
+
+/**
+  * @brief  Task to handle the received messages (SDO requests)
   *         through the CAN bus
   * @retval None
   */
-void processCANmsgTask (void * pvParameter);
+void CANProcessMsgs (void * pvParameter);
+    
+
 void Comm_BootUp(void);
 
 

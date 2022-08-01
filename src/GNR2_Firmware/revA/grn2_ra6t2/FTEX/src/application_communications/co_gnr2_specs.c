@@ -38,8 +38,8 @@ static uint16_t  objFwVersion = 0;
 static uint16_t objPowerMeas = 0;
 static uint16_t objMaxPower = 0;
 static uint16_t objErrorState = 0;
-static uint64_t objserialNb = 0;
-
+static uint32_t objserialNbL = 0;
+static uint32_t objserialNbH = 0;
 /* define the static object dictionary */
 static struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     // Mandatory entries
@@ -72,7 +72,8 @@ static struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x2004, 0, CO_UNSIGNED8   |CO_OBJ____R_), 0, (uintptr_t)&objMaxPAS},					// Application - Max PAS Level
     {CO_KEY(0x2005, 0, CO_SIGNED16    |CO_OBJ____R_), 0, (uintptr_t)&objMaxPower},				    // Application - Max Power
     {CO_KEY(0x2006, 0, CO_SIGNED16    |CO_OBJ____R_), 0, (uintptr_t)&objErrorState},				// Application - Error State
-    {CO_KEY(0x2007, 0, CO_UNSIGNED32  |CO_OBJ____R_), 0, (uintptr_t)&objserialNb},			        // Application - Serial Number
+    {CO_KEY(0x2007, 0, CO_UNSIGNED32  |CO_OBJ____R_), 0, (uintptr_t)&objserialNbH},			        // Application - Serial Number High side
+    {CO_KEY(0x2007, 1, CO_UNSIGNED32  |CO_OBJ____R_), 0, (uintptr_t)&objserialNbL},			        // Application - Serial Number Low side
     {CO_KEY(0x2008, 0, CO_UNSIGNED16   |CO_OBJ____RW), 0, (uintptr_t)&objFwVersion},				    // Application - Firmware Version
     CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
 };

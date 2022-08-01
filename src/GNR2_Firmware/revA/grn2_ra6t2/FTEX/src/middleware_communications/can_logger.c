@@ -4,9 +4,49 @@
 */
 #include "can_logger.h"
 #if ENABLE_CAN_LOGGER
-/* Function for sending the vehicle status */
 
-void CANLOG_getStatus(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
+//================================= PRIVATE MEMBERS =================================//
+static VC_CAN_id_t currenLogId = CAN_ID_STATUS_VC;
+
+//========================== PRIVATE FUNCTION PROTOTYPES ============================//
+
+/** @brief  Function for sending the vehicle status
+    @p 		motorSelection  motor ID
+*/
+static void CANLOG_getStatus(VCI_Handle_t * phandle, uint8_t motorSelection);
+
+/** @brief  Function for sending the bus voltage value
+*/
+static void CANLOG_getVbus(VCI_Handle_t * phandle);
+
+/* Function for sending the reference and measured current values */
+/** @brief  Function for sending the current values
+    @p 		motorSelection  motor ID
+*/
+static void CANLOG_getCurrent(VCI_Handle_t * phandle, uint8_t motorSelection);
+
+/* Function for sending the motor reference and measured speed values*/
+/** @brief  Function for sending the speed values
+    @p 		motorSelection  motor ID
+*/
+static void CANLOG_getSpeed(VCI_Handle_t * phandle, uint8_t motorSelection);
+
+/* Function for sending the motor drive temperature */
+/** @brief  Function for sending the motor drive temperature
+    @p 		motorSelection  motor ID
+*/
+static void CANLOG_SendTemperature(VCI_Handle_t * phandle, uint8_t motorSelection);
+
+/* Function for sending the vehicle throttle value and the brake status*/
+/** @brief  Function for sending the throttle value and the brake status
+*/
+static void CANLOG_SendThrottleBrake(VCI_Handle_t * phandle);
+
+
+//========================== PRIVATE FUNCTION DEFINITIONS ============================//
+
+/* Function for sending the vehicle status */
+static void CANLOG_getStatus(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 {
     can_frame_t msgToSend;
     uint32_t status = 0;
@@ -46,7 +86,7 @@ void CANLOG_getStatus(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 }
 
 /* Function for sending the bus voltage value*/
-void CANLOG_getVbus(VCI_Handle_t * pHandle)
+static void CANLOG_getVbus(VCI_Handle_t * pHandle)
 {
     can_frame_t msgToSend;
     // TO DO: Add a function in the MDI module for getting the Bus voltage
@@ -64,7 +104,7 @@ void CANLOG_getVbus(VCI_Handle_t * pHandle)
 }
 
 /* Function for sending the reference and measured currents */
-void CANLOG_getCurrent(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
+static void CANLOG_getCurrent(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 {
     can_frame_t msgToSend;
     // Get current values
@@ -96,7 +136,7 @@ void CANLOG_getCurrent(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 }
 
 /* Function for sending the reference and measured speed */
-void CANLOG_getSpeed(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
+static void CANLOG_getSpeed(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 {
     can_frame_t msgToSend;
     // Get speed values
@@ -121,7 +161,7 @@ void CANLOG_getSpeed(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 }
 
 /* Function for sending the measured temperature */
-void CANLOG_SendTemperature(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
+static void CANLOG_SendTemperature(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 {
     can_frame_t msgToSend;
     // TO DO : Add a function in MDI module to get the motor temperature
@@ -144,7 +184,7 @@ void CANLOG_SendTemperature(VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 }
 
 /* Function for sending the throttle value and the brake status */
-void CANLOG_SendThrottleBrake(VCI_Handle_t * pHandle)
+static void CANLOG_SendThrottleBrake(VCI_Handle_t * pHandle)
 {
     can_frame_t msgToSend;
     uint32_t throttleBrake = (uint32_t)BRK_IsPressed(pHandle->pPowertrain->pBrake) << 16 | Throttle_GetAvThrottleValue(pHandle->pPowertrain->pThrottle);
@@ -161,5 +201,53 @@ void CANLOG_SendThrottleBrake(VCI_Handle_t * pHandle)
     
     //Send CAN message
     CAN_SendMsg(msgToSend);
+}
+
+//=================================== PUBLIC FUNCTIONS =====================================================//
+/**
+* Function for sending the vehicle and motor diagnostics
+*/
+void CANLOG_SendLogs(VCI_Handle_t * pVChandle)
+{
+    switch(currenLogId)
+    {
+        case CAN_ID_STATUS_VC:
+            CANLOG_getStatus(pVChandle, M_NONE);
+            currenLogId = CAN_ID_THROTTLE_BRAKE;
+        break;
+        
+        case CAN_ID_THROTTLE_BRAKE:
+            CANLOG_SendThrottleBrake(pVChandle);
+            currenLogId = CAN_ID_VBUS;
+        break;
+        
+        case CAN_ID_VBUS:
+            CANLOG_getVbus(pVChandle);
+            currenLogId = CAN_ID_STATUS_M1;
+        break;
+        
+        case CAN_ID_STATUS_M1:
+            CANLOG_getStatus(pVChandle, M1);
+            currenLogId = CAN_ID_CURRENT_M1;
+        break;
+        
+        case CAN_ID_CURRENT_M1:
+            CANLOG_getCurrent(pVChandle, M1);
+            currenLogId = CAN_ID_SPEED_M1;
+        break;
+        
+        case CAN_ID_SPEED_M1:
+            CANLOG_getSpeed(pVChandle, M1);
+            currenLogId = CAN_ID_TEMPERATURE_M1;
+        break;
+        
+        case CAN_ID_TEMPERATURE_M1:
+            CANLOG_SendTemperature(pVChandle, M1);
+            currenLogId = CAN_ID_STATUS_VC;
+        break;
+        
+        default:
+            break;  
+    }
 }
 #endif

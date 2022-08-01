@@ -16,7 +16,7 @@ extern void startMCMediumFrequencyTask(void * pvParameter);
 extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
 extern void ProcessUARTFrames(void * pvParameter);
-extern void processCANmsgTask(void * pvParameter);
+extern void CANManagerTask(void * pvParameter);
 
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
 
@@ -39,7 +39,8 @@ osThreadId_t MC_SafetyTask_handle;
 osThreadId_t THR_VC_MediumFreq_handle;
 osThreadId_t THR_VC_StateMachine_handle;
 osThreadId_t COMM_Uart_handle;
-osThreadId_t CANThreadHandle;
+osThreadId_t CANmanagerHandle;
+osThreadId_t CANRxFrameHandle;
 
 //****************** THREAD ATTRIBUTES ******************//
 
@@ -71,13 +72,19 @@ static const osThreadAttr_t ThAtt_VehicleStateMachine = {
 };
 #endif
 
-// For testing purposes
-static const osThreadAttr_t ThAtt_CAN = {
-    .name = "CAN_TASK",
+// For CAN purposes
+static const osThreadAttr_t ThAtt_CANMngr = {
+    .name = "CAN_ManagerTask",
     .stack_size = 512,
     .priority = osPriorityNormal
 };
 
+static const osThreadAttr_t ThAtt_CANRxProcess = {
+    .name = "CAN_RxTask",
+    .stack_size = 512,
+    .priority = osPriorityNormal
+};
+/////////////////////////////////////////////////
 static const osThreadAttr_t ThAtt_UART = {
 	.name = "TSK_UART",
 	.stack_size = 512,
@@ -135,9 +142,13 @@ void gnr_main(void)
                                       NULL,
                                       &ThAtt_UART);
                                           
-    CANThreadHandle                  = osThreadNew(processCANmsgTask,
+    CANmanagerHandle                = osThreadNew(CANManagerTask,
                                       NULL,
-                                      &ThAtt_CAN);
+                                      &ThAtt_CANMngr);
+                                      
+    CANRxFrameHandle                = osThreadNew(CANProcessMsgs,
+                                      NULL,
+                                      &ThAtt_CANRxProcess);                               
     /* Start RTOS */
     if (osKernelGetState() == osKernelReady)
     {

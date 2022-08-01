@@ -51,7 +51,7 @@ typedef struct
 {
     CO_NODE canNode;
     uint16_t hError;
-    bool bTxFlag;
+    can_frame_t rxFrame;
 }CAN_Handler_t;
 
 #if ENABLE_CAN_LOGGER
@@ -65,7 +65,7 @@ uint8_t CAN_SendMsg(can_frame_t msg_to_send);
 *  @param rxFrame: frame received from the CAN callback function
 *  @return void
 */
-void uCAL_CAN_ProcessRxMessage(CAN_Handler_t * pHandler, can_frame_t rxFrame);
+void uCAL_CAN_ProcessRxMessage(CAN_Handler_t * pHandler);
 #endif
 /* TODO: rename the extern variable declaration to match the naming convention:
  *   <device-name>CanDriver

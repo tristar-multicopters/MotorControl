@@ -175,7 +175,8 @@ void CANFD_IRQhandler(can_callback_args_t *p_args)
 		case CAN_EVENT_RX_COMPLETE:    /* Receive complete event. */
 		{
             #if !ENABLE_CAN_LOGGER
-			uCAL_CAN_ProcessRxMessage(&CAN_handle, p_args->frame);
+            CAN_handle.rxFrame = *p_args->p_frame;
+            osThreadFlagsSet(CANRxFrameHandle, CAN_RX_FLAG);
             #endif
 			break;
 		}

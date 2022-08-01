@@ -198,9 +198,9 @@ static void CANo_DrvClose(void)
 *  Function used to process a message received 
 *  from callback function of the CANbus
 */
-void uCAL_CAN_ProcessRxMessage(CAN_Handler_t * pHandler, can_frame_t rxFrame)
+void uCAL_CAN_ProcessRxMessage(CAN_Handler_t * pHandler)
 {
-    mRxCanFrame = rxFrame;
+    mRxCanFrame = pHandler->rxFrame;
     CONodeProcess(&pHandler->canNode);
 }
 
