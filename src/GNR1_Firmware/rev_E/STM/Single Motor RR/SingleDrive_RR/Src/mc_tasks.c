@@ -103,7 +103,7 @@ uint16_t hDebugRampTime = 100;
 #endif
 
 int16_t hOpenLoopTheta = 0;
-#define OPEN_LOOP_SPEED 					20
+#define OPEN_LOOP_SPEED 					-20
 
 /* USER CODE END Private Variables */
 
@@ -760,7 +760,7 @@ inline uint16_t FOC_CurrControllerM1(void)
   ab_t Iab;
   alphabeta_t Ialphabeta = {0}, Valphabeta = {0};
 
-  int16_t hElAngle;
+  int16_t hElAngle = 0;
   uint16_t hCodeError = 0;
   SpeednPosFdbk_Handle_t *speedHandle;
 

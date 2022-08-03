@@ -266,11 +266,11 @@ __attribute__( ( section ( ".ccmram" ) ) )
 __weak int16_t HALL_CalcElAngle( HALL_Handle_t * pHandle )
 {
 
-	if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
-	{
-	}
-	else
-	{
+//	if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+//	{
+//	}
+//	else
+//	{
 		if ( pHandle->_Super.hElSpeedDpp != HALL_MAX_PSEUDO_SPEED )
 		{
 			pHandle->MeasuredElAngle += pHandle->_Super.hElSpeedDpp;
@@ -289,7 +289,7 @@ __weak int16_t HALL_CalcElAngle( HALL_Handle_t * pHandle )
 			else
 					{pHandle->_Super.hElAngle = pHandle->Sector_Start_Angle[pHandle->HallState];}
 		}
-	}
+//	}
 
   return pHandle->_Super.hElAngle;
 }

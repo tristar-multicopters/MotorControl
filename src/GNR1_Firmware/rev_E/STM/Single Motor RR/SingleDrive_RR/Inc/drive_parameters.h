@@ -43,7 +43,7 @@
                                                            measurements before main sensor
                                                            goes in fault */
 
-#define HALL_AVERAGING_FIFO_DEPTH        1 /*!< depth of the FIFO used to
+#define HALL_AVERAGING_FIFO_DEPTH        6 /*!< depth of the FIFO used to
                                                            average mechanical speed in
                                                            0.1Hz resolution */
 #define HALL_MTPA  true
@@ -152,7 +152,7 @@
 #define DEFAULT_TORQUE_COMPONENT       0
 #define DEFAULT_FLUX_COMPONENT         0
 
-#define DEFAULT_TORQUE_SLOPE_UP        1000
+#define DEFAULT_TORQUE_SLOPE_UP        5000
 #define DEFAULT_TORQUE_SLOPE_DOWN      10000
 #define DEFAULT_SPEED_SLOPE_UP         500
 #define DEFAULT_SPEED_SLOPE_DOWN       500

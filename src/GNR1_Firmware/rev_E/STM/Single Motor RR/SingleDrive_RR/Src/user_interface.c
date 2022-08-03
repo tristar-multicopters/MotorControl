@@ -439,7 +439,7 @@ __weak int32_t UI_GetReg(UI_Handle_t *pHandle, MC_Protocol_REG_t bRegID, bool * 
 
     case MC_PROTOCOL_REG_SPEED_MEAS:
     {
-      bRetVal = (int32_t)((MCI_GetAvrgMecSpeedUnit(pMCI) * _RPM)/SPEED_UNIT);
+      bRetVal = (int32_t)((HALL_M1._Super.hAvrMecSpeedUnit * _RPM)/SPEED_UNIT); //NEVER DO THIS IN GNR2 FIRMWARE
     }
     break;
 
