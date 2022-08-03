@@ -192,11 +192,11 @@ TS_Handle_t TorqueSensor =
 #if VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.hParam =
 	{	
-		.hLowPassFilterBW1 = 5,
+		.hLowPassFilterBW1 = 1,
 		.hLowPassFilterBW2 = 25,
 		
 		.hOffsetTS = 12500,
-		.bSlopeTS = 5,			
+		.bSlopeTS = 18,			
 		.bDivisorTS = 4,
 		
 		.hOffsetMT = 20000, /* Offset to launch the torque sensing */

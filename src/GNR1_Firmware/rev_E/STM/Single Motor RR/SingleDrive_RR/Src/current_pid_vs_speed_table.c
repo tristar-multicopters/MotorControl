@@ -8,26 +8,26 @@
 #include "current_pid_vs_speed_table.h"
 
 #define CURRENT_PID_VS_SPEED_LUT_SIZE                 2
-#define CURRENT_PID_LUT_SPEED_STEP                    150
-#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             200
+#define CURRENT_PID_LUT_SPEED_STEP                    200
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             250
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
+    100,
     300,
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    50,
+    20,
     4000,
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
+    100,
     100,
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    50,
+    20,
     6000,
 };
 
