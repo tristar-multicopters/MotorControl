@@ -12,9 +12,10 @@
 
 #include "mc_type.h"
 
-static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 
-void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpeednPosFdbkHandle_t * SPD_Handle,
+void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
 {
     ASSERT(pHandle != NULL);
@@ -40,21 +41,21 @@ void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, Speed
 }
 
 
-void SpdTorqCtrl_SetSpeedSensor(SpeednTorqCtrlHandle_t * pHandle, SpeednPosFdbkHandle_t * SPD_Handle)
+void SpdTorqCtrl_SetSpeedSensor(SpdTorqCtrlHandle_t * pHandle, SpdPosFdbkHandle_t * SPD_Handle)
 {
     ASSERT(pHandle != NULL);
     pHandle->pSPD = SPD_Handle;
 }
 
 
-SpeednPosFdbkHandle_t * SpdTorqCtrl_GetSpeedSensor(SpeednTorqCtrlHandle_t * pHandle)
+SpdPosFdbkHandle_t * SpdTorqCtrl_GetSpeedSensor(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     return (pHandle->pSPD);
 }
 
 
-void SpdTorqCtrl_Clear(SpeednTorqCtrlHandle_t * pHandle)
+void SpdTorqCtrl_Clear(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     if (pHandle->Mode == STC_SPEED_MODE)
@@ -68,21 +69,21 @@ void SpdTorqCtrl_Clear(SpeednTorqCtrlHandle_t * pHandle)
 }
 
 
-int16_t SpdTorqCtrl_GetMecSpeedRefUnit(SpeednTorqCtrlHandle_t * pHandle)
+int16_t SpdTorqCtrl_GetMecSpeedRefUnit(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     return ((int16_t)(RampMngr_GetValue(&pHandle->SpeedRampMngr) / INT16_MAX));
 }
 
 
-int16_t SpdTorqCtrl_GetTorqueRef(SpeednTorqCtrlHandle_t * pHandle)
+int16_t SpdTorqCtrl_GetTorqueRef(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     return ((int16_t)(RampMngr_GetValue(&pHandle->TorqueRampMngr) / INT16_MAX));
 }
 
 
-void SpdTorqCtrl_SetControlMode(SpeednTorqCtrlHandle_t * pHandle, STCModality_t bMode)
+void SpdTorqCtrl_SetControlMode(SpdTorqCtrlHandle_t * pHandle, STCModality_t bMode)
 {
     ASSERT(pHandle != NULL);
     pHandle->Mode = bMode;
@@ -90,14 +91,14 @@ void SpdTorqCtrl_SetControlMode(SpeednTorqCtrlHandle_t * pHandle, STCModality_t 
 }
 
 
-STCModality_t SpdTorqCtrl_GetControlMode(SpeednTorqCtrlHandle_t * pHandle)
+STCModality_t SpdTorqCtrl_GetControlMode(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     return pHandle->Mode;
 }
 
 
-bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal)
+bool SpdTorqCtrl_ExecRamp(SpdTorqCtrlHandle_t * pHandle, int16_t hTargetFinal)
 {
     ASSERT(pHandle != NULL);
     bool AllowedRange = true;
@@ -183,7 +184,7 @@ bool SpdTorqCtrl_ExecRamp(SpeednTorqCtrlHandle_t * pHandle, int16_t hTargetFinal
 }
 
 
-void SpdTorqCtrl_StopRamp(SpeednTorqCtrlHandle_t * pHandle)
+void SpdTorqCtrl_StopRamp(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     RampMngr_StopRamp(&pHandle->TorqueRampMngr);
@@ -191,7 +192,7 @@ void SpdTorqCtrl_StopRamp(SpeednTorqCtrlHandle_t * pHandle)
 }
 
 
-int16_t SpdTorqCtrl_CalcTorqueReference(SpeednTorqCtrlHandle_t * pHandle)
+int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     int16_t hTorqueReference = 0;
@@ -203,6 +204,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpeednTorqCtrlHandle_t * pHandle)
     {
         hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
         hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
+        hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
     }
@@ -223,6 +225,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpeednTorqCtrlHandle_t * pHandle)
         }
         hTorqueReference = (int16_t) RampMngr_Calc(&pHandle->TorqueRampMngr); // Apply torque ramp
         hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
+        hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
         pHandle->hCurrentSpeedRef = hTargetSpeed;
@@ -232,21 +235,21 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpeednTorqCtrlHandle_t * pHandle)
 }
 
 
-uint16_t SpdTorqCtrl_GetMaxAppPositiveMecSpeedUnit(SpeednTorqCtrlHandle_t * pHandle)
+uint16_t SpdTorqCtrl_GetMaxAppPositiveMecSpeedUnit(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     return pHandle->hMaxAppPositiveMecSpeedUnit;
 }
 
 
-int16_t SpdTorqCtrl_GetMinAppNegativeMecSpeedUnit(SpeednTorqCtrlHandle_t * pHandle)
+int16_t SpdTorqCtrl_GetMinAppNegativeMecSpeedUnit(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     return pHandle->hMinAppNegativeMecSpeedUnit;
 }
 
 
-bool SpdTorqCtrl_IsRampCompleted(SpeednTorqCtrlHandle_t * pHandle)
+bool SpdTorqCtrl_IsRampCompleted(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     bool retVal = false;
@@ -264,7 +267,7 @@ bool SpdTorqCtrl_IsRampCompleted(SpeednTorqCtrlHandle_t * pHandle)
 }
 
 
-void SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(SpeednTorqCtrlHandle_t * pHandle)
+void SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     RampMngr_ExecRamp(&pHandle->SpeedRampMngr, (int32_t)SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD) * (int32_t)65536, 0);
@@ -273,7 +276,7 @@ void SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(SpeednTorqCtrlHandle_t * pHan
 /*
     Set torque ramp slope values, for ramping up and ramping down.
 */
-void SpdTorqCtrl_SetTorqueRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t wSlopePerSecondUp, uint32_t wSlopePerSecondDown)
+void SpdTorqCtrl_SetTorqueRampSlope(SpdTorqCtrlHandle_t * pHandle, uint32_t wSlopePerSecondUp, uint32_t wSlopePerSecondDown)
 {
     ASSERT(pHandle != NULL);
     pHandle->wTorqueSlopePerSecondUp = wSlopePerSecondUp;
@@ -284,7 +287,7 @@ void SpdTorqCtrl_SetTorqueRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t w
 /*
     Set speed ramp slope values, for ramping up and ramping down.
 */
-void SpdTorqCtrl_SetSpeedRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t wSlopePerSecondUp, uint32_t wSlopePerSecondDown)
+void SpdTorqCtrl_SetSpeedRampSlope(SpdTorqCtrlHandle_t * pHandle, uint32_t wSlopePerSecondUp, uint32_t wSlopePerSecondDown)
 {
     ASSERT(pHandle != NULL);
     pHandle->wSpeedSlopePerSecondUp = wSlopePerSecondUp;
@@ -294,7 +297,7 @@ void SpdTorqCtrl_SetSpeedRampSlope(SpeednTorqCtrlHandle_t * pHandle, uint32_t wS
 /*
     Apply all torque foldbacks and returns limited torque.
 */
-static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
+static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
 {
     ASSERT(pHandle != NULL);
     int16_t hMeasuredSpeed = 0;
@@ -320,7 +323,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle,
 }
 
 
-int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
+int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
 {
     float fTemp;
     
@@ -337,7 +340,7 @@ int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t
     return (int16_t) fTemp;
 }
 
-int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
+int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
 {
     float fTemp;
     
@@ -354,4 +357,38 @@ int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t
     return (int16_t) fTemp;
 }
     
+/*
+    Apply motor power limitation to torque reference
+*/
+static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
+{
+    int32_t wTorqueLimit = 0;
+    int16_t hMeasuredSpeedTenthRadPerSec = 0;
+    int16_t hMeasuredSpeedUnit = 0;
+    int16_t hRetval = hInputTorque;
+
+    hMeasuredSpeedUnit = SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
+    hMeasuredSpeedTenthRadPerSec = (int16_t)((10*hMeasuredSpeedUnit*2*3.1416F)/SPEED_UNIT);
+
+    if (hMeasuredSpeedUnit != 0)
+    {
+        if (hInputTorque > 0)
+        {
+            wTorqueLimit = 1000*pHandle->hMaxPositivePower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            if (hInputTorque > wTorqueLimit)
+            {
+                hRetval = (int16_t) wTorqueLimit;
+            }
+        }
+        else
+        {
+            wTorqueLimit = 1000*pHandle->hMinNegativePower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            if (hInputTorque < wTorqueLimit)
+            {
+                hRetval = (int16_t) wTorqueLimit;
+            }
+        }
+    }
+    return hRetval;
+}
 

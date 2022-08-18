@@ -43,7 +43,7 @@ void PWMCurrFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHandle, ab_t * Iab )
 /*
     Execute software overcurrent protection algorithm. Must be called periodically to update current filters.
 */
-bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
+uint16_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
 {
     int16_t IaFiltered, IbFiltered, IcFiltered;
 
@@ -61,9 +61,9 @@ bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const 
         abs(IbFiltered) > wThresholdOCSP ||
         abs(IcFiltered) > wThresholdOCSP)
     {
-        return true;
+        return MC_OCSP;
     }
-    return false;
+    return MC_NO_ERROR;
 }
 
 /*

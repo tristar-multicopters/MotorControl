@@ -130,7 +130,7 @@ FeedforwardHandle_t FeedforwardM1 =
 /**
   * @brief  SpeednTorque Controller parameters Motor 1
   */
-SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
+SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
 {
   .TorqueRampMngr =
   {
@@ -145,21 +145,21 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .bEnableFoldback = true,
       .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
       .hDecreasingEndValue = MAX_APPLICATION_SPEED_UNIT,
-      .hDecreasingRange = MAX_APPLICATION_SPEED_UNIT/2,
+      .hDecreasingRange = MAX_APPLICATION_SPEED_UNIT/5,
   },
   .FoldbackMotorTemperature =
   {
       .bEnableFoldback = false,
       .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
       .hDecreasingEndValue = MOTOR_MAX_TEMPERATURE_C,
-      .hDecreasingRange = MOTOR_MAX_TEMPERATURE_C/2,
+      .hDecreasingRange = MOTOR_MAX_TEMPERATURE_C/3,
   },
   .FoldbackHeatsinkTemperature =
   {
       .bEnableFoldback = false,
       .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
       .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C,
-      .hDecreasingRange = OV_TEMPERATURE_THRESHOLD_C/2,
+      .hDecreasingRange = OV_TEMPERATURE_THRESHOLD_C/3,
   },
 
   .hSTCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,
@@ -169,6 +169,8 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
   .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
   .hMaxPositiveTorque =				(int16_t)NOMINAL_PEAK_TORQUE,
   .hMinNegativeTorque =				-(int16_t)NOMINAL_PEAK_TORQUE,
+  .hMaxPositivePower =				(int16_t)MAX_APPLICATION_POSITIVE_POWER,
+  .hMinNegativePower =				-(int16_t)MAX_APPLICATION_NEGATIVE_POWER,
   .ModeDefault =					DEFAULT_CONTROL_MODE,
   .wTorqueSlopePerSecondUp =    DEFAULT_TORQUE_SLOPE_UP,
   .wTorqueSlopePerSecondDown =  DEFAULT_TORQUE_SLOPE_DOWN,
@@ -334,15 +336,7 @@ NTCTempSensorHandle_t TempSensorParamsM1 =
   .wV0                     = (uint16_t)(V0_V *65536/ ADC_REFERENCE_VOLTAGE),
   .hT0                     = T0_C,
   
-  #if USE_NTC_LOOKUP_TABLE
-  .NTCLookupTable = 
-  {
-      .hXDataStep = NTC_LUT_DIGITAL_STEP,
-      .wXDataFirstValue = NTC_LUT_DIGITAL_FIRST_VALUE,
-      .hTableLength = NTC_LUT_SIZE,
-      .pOutputTable = NTCLookupTable,
-  },
-  #endif
+  .pNTCLookupTable = &NTCLookupTable,
 };
 
 /* Bus voltage sensor value filter buffer */

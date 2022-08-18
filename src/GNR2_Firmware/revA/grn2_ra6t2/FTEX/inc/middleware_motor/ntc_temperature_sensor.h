@@ -56,11 +56,8 @@ typedef struct
   uint16_t hT0;                /**< T0 temperature constant value used to convert the temperature into Volts
                                     Used in through formula: V[V]=V0+dV/dT[V/°C]*(T-T0)[°C] */
   uint8_t bConvHandle;            /*!< handle to the regular conversion */
-  
-  
-  #if USE_NTC_LOOKUP_TABLE
-  LookupTableHandle_t NTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
-  #endif
+  LookupTableHandle_t * pNTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected 
+                                              degree Celcius) */
 
 } NTCTempSensorHandle_t;
 

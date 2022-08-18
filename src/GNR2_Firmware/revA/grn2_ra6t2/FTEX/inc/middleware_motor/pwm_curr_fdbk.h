@@ -213,7 +213,7 @@ static inline int16_t PWMCurrFdbk_GetIc(PWMCurrFdbkHandle_t * pHandle)
   * @param  Iqdref: Pointer to the structure that contains Idref and Iqref
   * @retval True if overcurrent condition, false otherwise.
 */
-bool PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref);
+uint16_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref);
 
 /**
   * @brief  Converts input voltages @f$ V_{\alpha} @f$ and @f$ V_{\beta} @f$ into PWM duty cycles

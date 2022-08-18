@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       500 /*!< rpm, mechanical */
+#define MAX_APPLICATION_SPEED_RPM       1250 /*!< rpm, mechanical */
 #define MIN_APPLICATION_SPEED_RPM       0 /*!< rpm, mechanical,
                                                            absolute value */
 #define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
@@ -27,7 +27,7 @@
                                                            measurements before main sensor
                                                            goes in fault */
 
-#define HALL_AVERAGING_FIFO_DEPTH        8 /*!< depth of the FIFO used to
+#define HALL_AVERAGING_FIFO_DEPTH        3 /*!< depth of the FIFO used to
                                                            average mechanical speed in
                                                            0.1Hz resolution */
 #define HALL_MTPA  true
@@ -124,6 +124,9 @@
 #define SPD_DIFFERENTIAL_TERM_ENABLING DISABLE
 #define SPD_CTRL_MAX_TORQUE                          32000
 
+#define MAX_APPLICATION_POSITIVE_POWER  500
+#define MAX_APPLICATION_NEGATIVE_POWER  500
+
 /* Default settings */
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< STC_TORQUE_MODE or
                                                         STC_SPEED_MODE */
@@ -133,7 +136,7 @@
 #define DEFAULT_FLUX_COMPONENT         0
 
 #define DEFAULT_TORQUE_SLOPE_UP        1000        /* Slope in cNm per second */
-#define DEFAULT_TORQUE_SLOPE_DOWN      1000        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
 #define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */
 
@@ -151,7 +154,7 @@
 #endif /* 0 */
 #define R_BRAKE_SWITCH_OFF_THRES_V      60
 
-#define OV_TEMPERATURE_THRESHOLD_C      65 /*!< Celsius degrees */
+#define OV_TEMPERATURE_THRESHOLD_C      75 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     10 /*!< Celsius degrees */
 
 #define HW_OV_CURRENT_PROT_BYPASS       DISABLE /*!< In case ON_OVER_VOLTAGE
@@ -190,7 +193,7 @@
 
 /******************************   ADDITIONAL FEATURES   **********************/
 
-#define FW_VOLTAGE_REF                90 /*!<Vs reference, tenth
+#define FW_VOLTAGE_REF                900 /*!<Vs reference, tenth
                                                         of a percent */
 #define FW_KP_GAIN                    0 /*!< Default Kp gain */
 #define FW_KI_GAIN                    0 /*!< Default Ki gain */
@@ -232,7 +235,7 @@
 
 /******************************   Software overcurrent protection Motor 1   **********************/
 
-#define OCSP_SAFETY_MARGIN 	            6000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_SAFETY_MARGIN 	            20000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
 #define OCSP_MAX_CURRENT                20000   /* Max current that can be reached before triggering software overcurrent */
 #define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering */

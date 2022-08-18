@@ -19,7 +19,7 @@
 
 /* Functions -----------------------------------------------*/
 
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars)
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars)
 {
   pHandle->pSTM = pSTM;
   pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
@@ -235,7 +235,7 @@ void MCInterface_StopRamp(MotorControlInterfaceHandle_t * pHandle)
 
 bool MCInterface_GetSpdSensorReliability(MotorControlInterfaceHandle_t * pHandle)
 {
-  SpeednPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
+  SpdPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
 
   return (SpdPosFdbk_GetReliability(SpeedSensor));
 }
@@ -243,7 +243,7 @@ bool MCInterface_GetSpdSensorReliability(MotorControlInterfaceHandle_t * pHandle
 
 int16_t MCInterface_GetAvrgMecSpeedUnit(MotorControlInterfaceHandle_t * pHandle)
 {
-  SpeednPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
+  SpdPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
 
   return (SpdPosFdbk_GetAvrgMecSpeedUnit(SpeedSensor));
 }

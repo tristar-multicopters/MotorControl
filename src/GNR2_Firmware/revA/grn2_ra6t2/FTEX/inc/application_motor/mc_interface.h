@@ -44,7 +44,7 @@ typedef enum
 typedef struct
 {
   MotorStateMachineHandle_t * pSTM; /*!< State machine object used by MCI.*/
-  SpeednTorqCtrlHandle_t * pSpeedTorqCtrl; /*!< Speed and torque controller object used by MCI.*/
+  SpdTorqCtrlHandle_t * pSpeedTorqCtrl; /*!< Speed and torque controller object used by MCI.*/
   pFOCVars_t pFOCVars;    /*!< Pointer to FOC vars used by MCI.*/
   MCInterfaceUserCommands_t LastCommand; /*!< Last command coming from the user.*/
   int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
@@ -71,7 +71,7 @@ typedef struct
   * @param  pFOCVars pointer to FOC vars to be used by MCI.
   * @retval none.
   */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars);
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars);
 
 /**
   * @brief  This is usually a method managed by task. It must be called

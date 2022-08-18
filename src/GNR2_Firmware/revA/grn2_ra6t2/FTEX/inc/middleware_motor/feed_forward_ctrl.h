@@ -87,7 +87,7 @@ void Feedforward_Clear(FeedforwardHandle_t * pHandle);
   * @param  pSpeedTorqCtrl  Speed sensor.
   * @retval none
   */
-void Feedforward_VqdffComputation(FeedforwardHandle_t * pHandle, qd_t Iqdref, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl);
+void Feedforward_VqdffComputation(FeedforwardHandle_t * pHandle, qd_t Iqdref, SpdTorqCtrlHandle_t * pSpeedTorqCtrl);
 
 /**
   * @brief  It return the Vqd componets fed in input plus the feed forward
