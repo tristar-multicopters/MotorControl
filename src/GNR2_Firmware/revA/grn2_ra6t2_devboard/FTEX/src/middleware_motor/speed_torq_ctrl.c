@@ -14,7 +14,8 @@
 
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 
-void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpeednPosFdbkHandle_t * SPD_Handle,
+
+void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
 {
     ASSERT(pHandle != NULL);
@@ -61,7 +62,7 @@ void SpdTorqCtrl_Clear(SpeednTorqCtrlHandle_t * pHandle)
     {
         PID_SetIntegralTerm(pHandle->pPISpeed, 0);
     }
-    
+
     RampMngr_Init(&pHandle->TorqueRampMngr);
     RampMngr_Init(&pHandle->SpeedRampMngr);
     SpdTorqCtrl_StopRamp(pHandle);
@@ -323,7 +324,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle,
 int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
 {
     float fTemp;
-    
+
     fTemp = (float) (hTorqueRef * pHandle->fGainTorqueIqref);
     if (fTemp > INT16_MAX)
     {
@@ -333,14 +334,14 @@ int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t
     {
         fTemp = INT16_MIN;
     }
-    
+
     return (int16_t) fTemp;
 }
 
 int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
 {
     float fTemp;
-    
+
     fTemp = (float) (hTorqueRef * pHandle->fGainTorqueIdref);
     if (fTemp > INT16_MAX)
     {
@@ -350,8 +351,41 @@ int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpeednTorqCtrlHandle_t * pHandle, int16_t
     {
         fTemp = INT16_MIN;
     }
-    
+
     return (int16_t) fTemp;
 }
-    
 
+/*
+    Apply motor power limitation to torque reference
+*/
+static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
+{
+    int32_t wTorqueLimit = 0;
+    int16_t hMeasuredSpeedTenthRadPerSec = 0;
+    int16_t hMeasuredSpeedUnit = 0;
+    int16_t hRetval = hInputTorque;
+
+    hMeasuredSpeedUnit = SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
+    hMeasuredSpeedTenthRadPerSec = (int16_t)((10*hMeasuredSpeedUnit*2*3.1416F)/SPEED_UNIT);
+
+    if (hMeasuredSpeedUnit != 0)
+    {
+        if (hInputTorque > 0)
+        {
+            wTorqueLimit = 1000*pHandle->hMaxPositivePower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            if (hInputTorque > wTorqueLimit)
+            {
+                hRetval = (int16_t) wTorqueLimit;
+            }
+        }
+        else
+        {
+            wTorqueLimit = 1000*pHandle->hMinNegativePower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            if (hInputTorque < wTorqueLimit)
+            {
+                hRetval = (int16_t) wTorqueLimit;
+            }
+        }
+    }
+    return hRetval;
+}

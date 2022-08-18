@@ -592,8 +592,42 @@ inline uint16_t FOC_CurrControllerM1(void)
             PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_OCSP, 0);
         }
+    }
 
-        #if ENABLE_MC_DAC_DEBUGGING
+    Ialphabeta = MCMath_Clarke(Iab);
+    Iqd = MCMath_Park(Ialphabeta, hElAngle);
+
+    Vqd.q = PI_Controller(pPIDIq[M1],
+            (int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
+
+    Vqd.d = PI_Controller(pPIDId[M1],
+            (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
+
+    Vqd = Feedforward_VqdConditioning(pFeedforward[M1],Vqd);
+
+    #if (BYPASS_CURRENT_CONTROL)
+    Vqd.q = 10000;
+    Vqd.d = 0;
+    #endif
+
+    Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
+    Valphabeta = MCMath_RevPark(Vqd, hElAngle);
+
+    FluxWkng_DataProcess(pFieldWeakening[M1], Vqd);
+    Feedforward_DataProcess(pFeedforward[M1]);
+
+    hCodeError |= PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
+
+    FOCVars[M1].Vqd = Vqd;
+    FOCVars[M1].Iab = Iab;
+    FOCVars[M1].Ialphabeta = Ialphabeta;
+    FOCVars[M1].Iqd = Iqd;
+    FOCVars[M1].Valphabeta = Valphabeta;
+    FOCVars[M1].hElAngle = hElAngle;
+
+    #if ENABLE_MC_DAC_DEBUGGING
+    if (StateM1 == M_RUN || StateM1 == M_ANY_STOP)
+    {
         R_DAC_Write(g_dac0.p_ctrl, (uint16_t)FOCVars[M1].Iab.a + INT16_MAX);
         R_DAC_Write(g_dac1.p_ctrl, (uint16_t)FOCVars[M1].Iab.b + INT16_MAX);
         #endif
