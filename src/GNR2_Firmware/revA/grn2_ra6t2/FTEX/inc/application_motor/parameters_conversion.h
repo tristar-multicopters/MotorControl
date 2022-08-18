@@ -87,11 +87,11 @@
 #define M1_VBUS_SW_FILTER_BW_FACTOR     6
 
 /*************** Timer for PWM generation & currenst sensing parameters  ******/
-#define PWM_PERIOD_CYCLES (uint16_t)((ADV_TIM_CLK_MHz*(uint32_t)1000000u/((uint32_t)(PWM_FREQUENCY)))&0xFFFE)
+#define PWM_PERIOD_CYCLES (uint16_t)((PWM_TIM_CLK_MHz*(uint32_t)1000000u/((uint32_t)(PWM_FREQUENCY)))&0xFFFE)
 
 #define DEADTIME_NS  SW_DEADTIME_NS
 
-#define DEAD_TIME_ADV_TIM_CLK_MHz (ADV_TIM_CLK_MHz * TIM_CLOCK_DIVIDER)
+#define DEAD_TIME_ADV_TIM_CLK_MHz (PWM_TIM_CLK_MHz)
 #define DEAD_TIME_COUNTS_1  (DEAD_TIME_ADV_TIM_CLK_MHz * DEADTIME_NS/1000uL)
 
 #if (DEAD_TIME_COUNTS_1 <= 255)
@@ -106,11 +106,11 @@
 #define DEAD_TIME_COUNTS 510
 #endif
 
-#define DTCOMPCNT (uint16_t)((DEADTIME_NS * ADV_TIM_CLK_MHz) / 2000)
+#define DTCOMPCNT (uint16_t)((DEADTIME_NS * PWM_TIM_CLK_MHz) / 2000)
 #define TON_NS  500
 #define TOFF_NS 500
-#define TON  (uint16_t)((TON_NS * ADV_TIM_CLK_MHz)  / 2000)
-#define TOFF (uint16_t)((TOFF_NS * ADV_TIM_CLK_MHz) / 2000)
+#define TON  (uint16_t)((TON_NS * PWM_TIM_CLK_MHz)  / 2000)
+#define TOFF (uint16_t)((TOFF_NS * PWM_TIM_CLK_MHz) / 2000)
 
 /*************** Current vs torque ratio ******/
 #define MOTOR_MAGNET_FLUX              MOTOR_VOLTAGE_CONSTANT*60*SQRT_2/(POLE_PAIR_NUM*1000*SQRT_3*PI_)     /*!< In weber rms */
@@ -118,15 +118,6 @@
 #define GAIN_TORQUE_IQREF              (float) (1/(100*3*POLE_PAIR_NUM*MOTOR_MAGNET_FLUX*MAX_CURRENT/(2*UINT16_MAX)))
 #define GAIN_TORQUE_IDREF              0
 
-/**********************/
-/* MOTOR 1 ADC Timing */
-/**********************/
-#define SAMPLING_TIME ((ADC_SAMPLING_CYCLES * ADV_TIM_CLK_MHz) / ADC_CLK_MHz) /* In ADV_TIMER CLK cycles*/
-#define HTMIN 1 /* Required for main.c compilation only, CCR4 is overwritten at runtime */
-#define TW_BEFORE ((uint16_t)((ADC_TRIG_CONV_LATENCY_CYCLES + ADC_SAMPLING_CYCLES) * ADV_TIM_CLK_MHz) / ADC_CLK_MHz  + 1u)
-#define TW_BEFORE_R3_1 ((uint16_t)((ADC_TRIG_CONV_LATENCY_CYCLES + ADC_SAMPLING_CYCLES*2 + ADC_SAR_CYCLES) * ADV_TIM_CLK_MHz) / ADC_CLK_MHz  + 1u)
-#define TW_AFTER ((uint16_t)(((DEADTIME_NS+MAX_TNTR_NS)*ADV_TIM_CLK_MHz)/1000ul))
-#define MAX_TWAIT ((uint16_t)((TW_AFTER - SAMPLING_TIME)/2))
 
 /* USER CODE BEGIN temperature */
 

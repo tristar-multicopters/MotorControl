@@ -118,11 +118,10 @@ void PWMInsulCurrSensorFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHdl, ab_t * 
 	  Iab->b = (int16_t)aux;
   }
 	
-	/* Inversion of Ia and Ib. Temporary fix. */
-	Iab->a = -Iab->a;
-	Iab->b = -Iab->b;
+  /* NOTE: Ia and Ib need to be inverted (to investigate later). Since it is already inverted in hardware gnr2 revA,
+            no need to do by software. */
 
-	/* Compute Ic from Ia and Ib. Store them into base handle. */
+  /* Compute Ic from Ia and Ib. Store them into base handle. */
   pHandle->Super.Ia = Iab->a;
   pHandle->Super.Ib = Iab->b;
   pHandle->Super.Ic = -Iab->a - Iab->b;
@@ -242,10 +241,7 @@ void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(PWMInsulCurrSensorFdbkHandle_t 
 }
 
 void * PWMInsulCurrSensorFdbk_BRK_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl)
-{
-	/* Stop POEG module so it does not reenter the interrupt twice */
-	R_POEG_Close(pHdl->pParamsStructure->pPOEGHandle->p_ctrl);
-	
+{	
   pHdl->bOverCurrentFlag = true;
 
   return &(pHdl->Super.Motor);

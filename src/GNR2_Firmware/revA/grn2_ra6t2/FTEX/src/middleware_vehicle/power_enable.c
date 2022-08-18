@@ -13,11 +13,12 @@
  */
 void PWREN_Init(PWREN_Handle_t * pHandle)
 {	
-	UNUSED_PARAMETER(pHandle);
+	ASSERT(pHandle != NULL);
 }
 
 bool PWREN_IsPowerEnabled(PWREN_Handle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
 	if (pHandle->bUsePowerLock)
 	{
 		bool bAux = true; //TODO: check gpio input, for now just mock

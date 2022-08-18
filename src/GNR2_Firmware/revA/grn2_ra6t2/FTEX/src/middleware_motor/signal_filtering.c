@@ -32,6 +32,19 @@ void SignalFiltering_Init(SignalFilteringHandle_t * pHandle)
 }
 
 /*
+    Clear filter handle, while keeping current configuration.
+*/
+void SignalFiltering_Clear(SignalFilteringHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+  
+    pHandle->hPastInputs[0] = 0;
+    pHandle->hPastInputs[1] = 0;
+    pHandle->hPastOutputs[0] = 0;
+    pHandle->hPastOutputs[1] = 0;
+}
+
+/*
     Calculate filter output from provided input data (int16_t). 
     Must be called periodically at desired filter sampling time.
 */

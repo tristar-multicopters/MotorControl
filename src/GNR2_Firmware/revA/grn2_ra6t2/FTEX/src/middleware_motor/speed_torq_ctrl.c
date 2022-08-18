@@ -12,8 +12,9 @@
 
 #include "mc_type.h"
 
-static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
-static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+
 
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
@@ -62,7 +63,7 @@ void SpdTorqCtrl_Clear(SpdTorqCtrlHandle_t * pHandle)
     {
         PID_SetIntegralTerm(pHandle->pPISpeed, 0);
     }
-    
+
     RampMngr_Init(&pHandle->TorqueRampMngr);
     RampMngr_Init(&pHandle->SpeedRampMngr);
     SpdTorqCtrl_StopRamp(pHandle);
@@ -326,7 +327,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
 int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
 {
     float fTemp;
-    
+
     fTemp = (float) (hTorqueRef * pHandle->fGainTorqueIqref);
     if (fTemp > INT16_MAX)
     {
@@ -336,14 +337,14 @@ int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
     {
         fTemp = INT16_MIN;
     }
-    
+
     return (int16_t) fTemp;
 }
 
 int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
 {
     float fTemp;
-    
+
     fTemp = (float) (hTorqueRef * pHandle->fGainTorqueIdref);
     if (fTemp > INT16_MAX)
     {
@@ -353,14 +354,14 @@ int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
     {
         fTemp = INT16_MIN;
     }
-    
+
     return (int16_t) fTemp;
 }
-    
+
 /*
     Apply motor power limitation to torque reference
 */
-static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
+static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpeednTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
 {
     int32_t wTorqueLimit = 0;
     int16_t hMeasuredSpeedTenthRadPerSec = 0;
@@ -391,4 +392,3 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     }
     return hRetval;
 }
-

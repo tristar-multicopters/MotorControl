@@ -30,7 +30,7 @@
 /*
  * Arm Compiler 4/5
  */
-#if   defined (__CC_ARM)
+#if   defined ( __CC_ARM )
   #include "cmsis_armcc.h"
 
 
@@ -50,21 +50,21 @@
 /*
  * GNU Compiler
  */
-#elif defined (__GNUC__)
+#elif defined ( __GNUC__ )
   #include "cmsis_gcc.h"
 
 
 /*
  * IAR Compiler
  */
-#elif defined (__ICCARM__)
+#elif defined ( __ICCARM__ )
   #include <cmsis_iccarm.h>
 
 
 /*
  * TI Arm Compiler
  */
-#elif defined (__TI_ARM__)
+#elif defined ( __TI_ARM__ )
   #include <cmsis_ccs.h>
 
   #ifndef   __ASM
@@ -132,7 +132,7 @@
 /*
  * TASKING Compiler
  */
-#elif defined (__TASKING__)
+#elif defined ( __TASKING__ )
   /*
    * The CMSIS functions have been implemented as intrinsics in the compiler.
    * Please use "carm -?i" to get an up to date list of all intrinsics,
@@ -205,7 +205,7 @@
 /*
  * COSMIC Compiler
  */
-#elif defined (__CSMC__)
+#elif defined ( __CSMC__ )
    #include <cmsis_csm.h>
 
  #ifndef   __ASM

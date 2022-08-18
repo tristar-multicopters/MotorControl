@@ -11,11 +11,7 @@
 #include "mc_type.h"
 #include "regular_conversion_manager.h"
 
-#define USE_NTC_LOOKUP_TABLE    1
-
-#if USE_NTC_LOOKUP_TABLE
 #include "lookup_table.h"
-#endif
 
 
 typedef struct
@@ -56,8 +52,9 @@ typedef struct
   uint16_t hT0;                /**< T0 temperature constant value used to convert the temperature into Volts
                                     Used in through formula: V[V]=V0+dV/dT[V/°C]*(T-T0)[°C] */
   uint8_t bConvHandle;            /*!< handle to the regular conversion */
-  LookupTableHandle_t * pNTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected 
-                                              degree Celcius) */
+
+
+  LookupTableHandle_t * pNTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
 
 } NTCTempSensorHandle_t;
 

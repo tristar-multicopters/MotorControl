@@ -319,7 +319,7 @@ typedef struct
         {
             __IOM uint16_t RFC  : 12;  /*!< [11..0] Auto-Refresh Request Interval Setting                             */
             __IOM uint16_t REFW : 4;   /*!< [15..12] Auto-Refresh Cycle/ Self-Refresh Clearing Cycle Count
-                                        *   Setting. (REFW+1 Cycles)                                                */
+                                        *   Setting. ( REFW+1 Cycles )                                                */
         } SDRFCR_b;
     };
 
@@ -355,10 +355,10 @@ typedef struct
 
         struct
         {
-            __IOM uint16_t ARFI : 4;   /*!< [3..0] Initialization Auto-Refresh Interval (PRF+3 cycles)              */
+            __IOM uint16_t ARFI : 4;   /*!< [3..0] Initialization Auto-Refresh Interval ( PRF+3 cycles )              */
             __IOM uint16_t ARFC : 4;   /*!< [7..4] Initialization Auto-Refresh Count                                  */
-            __IOM uint16_t PRC  : 3;   /*!< [10..8] Initialization Precharge Cycle Count (PRF+3 cycles
-                                        *  )                                                                         */
+            __IOM uint16_t PRC  : 3;   /*!< [10..8] Initialization Precharge Cycle Count ( PRF+3 cycles
+                                        *   )                                                                         */
             uint16_t : 5;
         } SDIR_b;
     };
@@ -387,8 +387,8 @@ typedef struct
             __IOM uint32_t CL  : 3;    /*!< [2..0] SDRAMC Column Latency                                              */
             uint32_t           : 5;
             __IOM uint32_t WR  : 1;    /*!< [8..8] Write Recovery Interval                                            */
-            __IOM uint32_t RP  : 3;    /*!< [11..9] Row Precharge Interval (RP+1 cycles)                            */
-            __IOM uint32_t RCD : 2;    /*!< [13..12] Row Column Latency (RCD+1 cycles)                              */
+            __IOM uint32_t RP  : 3;    /*!< [11..9] Row Precharge Interval ( RP+1 cycles )                            */
+            __IOM uint32_t RCD : 2;    /*!< [13..12] Row Column Latency ( RCD+1 cycles )                              */
             uint32_t           : 2;
             __IOM uint32_t RAS : 3;    /*!< [18..16] Row Active Interval                                              */
             uint32_t           : 13;
@@ -7865,7 +7865,7 @@ typedef struct                         /*!< (@ 0x40074000) R_CRC Structure      
 
             struct
             {
-                __IOM uint32_t CRCDIR : 32; /*!< [31..0] Calculation input Data (Case of CRC-32, CRC-32C)                 */
+                __IOM uint32_t CRCDIR : 32; /*!< [31..0] Calculation input Data (Case of CRC-32, CRC-32C )                 */
             } CRCDIR_b;
         };
 
@@ -7875,8 +7875,8 @@ typedef struct                         /*!< (@ 0x40074000) R_CRC Structure      
 
             struct
             {
-                __IOM uint8_t CRCDIR_BY : 8; /*!< [7..0] Calculation input Data (Case of CRC-8, CRC-16 or CRC-CCITT
-                                              *  )                                                                         */
+                __IOM uint8_t CRCDIR_BY : 8; /*!< [7..0] Calculation input Data ( Case of CRC-8, CRC-16 or CRC-CCITT
+                                              *   )                                                                         */
             } CRCDIR_BY_b;
         };
     };
@@ -7889,7 +7889,7 @@ typedef struct                         /*!< (@ 0x40074000) R_CRC Structure      
 
             struct
             {
-                __IOM uint32_t CRCDOR : 32; /*!< [31..0] Calculation output Data (Case of CRC-32, CRC-32C)                */
+                __IOM uint32_t CRCDOR : 32; /*!< [31..0] Calculation output Data (Case of CRC-32, CRC-32C )                */
             } CRCDOR_b;
         };
 
@@ -7900,7 +7900,7 @@ typedef struct                         /*!< (@ 0x40074000) R_CRC Structure      
             struct
             {
                 __IOM uint16_t CRCDOR_HA : 16; /*!< [15..0] Calculation output Data (Case of CRC-16 or CRC-CCITT
-                                                *  )                                                                         */
+                                                *   )                                                                         */
             } CRCDOR_HA_b;
         };
 
@@ -7910,7 +7910,7 @@ typedef struct                         /*!< (@ 0x40074000) R_CRC Structure      
 
             struct
             {
-                __IOM uint8_t CRCDOR_BY : 8; /*!< [7..0] Calculation output Data (Case of CRC-8)                           */
+                __IOM uint8_t CRCDOR_BY : 8; /*!< [7..0] Calculation output Data (Case of CRC-8 )                           */
             } CRCDOR_BY_b;
         };
     };
@@ -8105,7 +8105,7 @@ typedef struct                            /*!< (@ 0x40081000) R_CTSU Structure  
         struct
         {
             __IOM uint16_t CTSUSO : 10;  /*!< [9..0] CTSU Sensor Offset AdjustmentCurrent offset amount is
-                                          *   CTSUSO (0 to 1023)                                                      */
+                                          *   CTSUSO ( 0 to 1023 )                                                      */
             __IOM uint16_t CTSUSNUM : 6; /*!< [15..10] CTSU Measurement Count Setting                                   */
         } CTSUSO0_b;
     };
@@ -8117,9 +8117,9 @@ typedef struct                            /*!< (@ 0x40081000) R_CTSU Structure  
         struct
         {
             __IOM uint16_t CTSURICOA : 8; /*!< [7..0] CTSU Reference ICO Current AdjustmentCurrent offset amount
-                                           *   is CTSUSO (0 to 255)                                                    */
+                                           *   is CTSUSO ( 0 to 255 )                                                    */
             __IOM uint16_t CTSUSDPA : 5;  /*!< [12..8] CTSU Base Clock SettingOperating clock divided by (
-                                           *   CTSUSDPA + 1) x 2                                                        */
+                                           *   CTSUSDPA + 1 ) x 2                                                        */
             __IOM uint16_t CTSUICOG : 2;  /*!< [14..13] CTSU ICO Gain Adjustment                                         */
             uint16_t                : 1;
         } CTSUSO1_b;
@@ -15148,8 +15148,8 @@ typedef struct                         /*!< (@ 0x40053000) R_IIC0 Structure     
         {
             __IOM uint8_t BC   : 3;    /*!< [2..0] Bit Counter                                                        */
             __OM uint8_t  BCWP : 1;    /*!< [3..3] BC Write Protect(This bit is read as 1.)                           */
-            __IOM uint8_t CKS  : 3;    /*!< [6..4] Internal Reference Clock (fIIC) Selection (fIIC = PCLKB
-                                        *   / 2^CKS)                                                                 */
+            __IOM uint8_t CKS  : 3;    /*!< [6..4] Internal Reference Clock (fIIC) Selection ( fIIC = PCLKB
+                                        *   / 2^CKS )                                                                 */
             __IOM uint8_t MTWP : 1;    /*!< [7..7] MST/TRS Write Protect                                              */
         } ICMR1_b;
     };
@@ -15798,7 +15798,7 @@ typedef struct                         /*!< (@ 0x400E6000) R_JPEG Structure     
 
         struct
         {
-            __IOM uint8_t ERR : 4;     /*!< [3..0] Error Code (See tables)Identify the type of the error
+            __IOM uint8_t ERR : 4;     /*!< [3..0] Error Code (See tables )Identify the type of the error
                                         *   which has occurred in the compressed data analysis for
                                         *   decompression.                                                            */
             uint8_t : 4;
@@ -19619,7 +19619,7 @@ typedef struct                          /*!< (@ 0x4009C000) R_SDADC0 Structure  
         struct
         {
             __IOM uint32_t PGAGC : 5;  /*!< [4..0] Gain selection of a programmable gain instrumentation
-                                        *   amplifier (Gset1, Gset2, Gtotal)                                        */
+                                        *   amplifier ( Gset1, Gset2, Gtotal )                                        */
             __IOM uint32_t PGAOSR : 3; /*!< [7..5] Oversampling ratio select                                          */
             __IOM uint32_t PGAOFS : 5; /*!< [12..8] Offset voltage select                                             */
             uint32_t              : 1;
@@ -20382,8 +20382,8 @@ typedef struct                         /*!< (@ 0x40072000) R_SPI0 Structure     
     union
     {
         __IOM uint32_t SPDR;           /*!< (@ 0x00000004) SPI Data Register                                          */
-        __IOM uint16_t SPDR_HA;        /*!< (@ 0x00000004) SPI Data Register (halfword access)                      */
-        __IOM uint8_t  SPDR_BY;        /*!< (@ 0x00000004) SPI Data Register (byte access)                          */
+        __IOM uint16_t SPDR_HA;        /*!< (@ 0x00000004) SPI Data Register ( halfword access )                      */
+        __IOM uint8_t  SPDR_BY;        /*!< (@ 0x00000004) SPI Data Register ( byte access )                          */
     };
 
     union

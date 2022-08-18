@@ -491,7 +491,7 @@ fsp_err_t R_ADC_B_ScanCfg (adc_ctrl_t * p_ctrl, void const * const p_scan_cfg)
  * @retval  FSP_ERR_NO_CALLBACK_MEMORY   p_callback is non-secure and p_callback_memory is either secure or NULL.
  **********************************************************************************************************************/
 fsp_err_t R_ADC_B_CallbackSet (adc_ctrl_t * const          p_api_ctrl,
-                               void (                   * p_callback)(adc_callback_args_t *),
+                               void (                    * p_callback)(adc_callback_args_t *),
                                void const * const          p_context,
                                adc_callback_args_t * const p_callback_memory)
 {

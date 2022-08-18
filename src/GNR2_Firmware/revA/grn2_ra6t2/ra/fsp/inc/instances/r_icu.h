@@ -79,7 +79,7 @@ fsp_err_t R_ICU_ExternalIrqEnable(external_irq_ctrl_t * const p_api_ctrl);
 fsp_err_t R_ICU_ExternalIrqDisable(external_irq_ctrl_t * const p_api_ctrl);
 
 fsp_err_t R_ICU_ExternalIrqCallbackSet(external_irq_ctrl_t * const          p_api_ctrl,
-                                       void (                            * p_callback)(external_irq_callback_args_t *),
+                                       void (                             * p_callback)(external_irq_callback_args_t *),
                                        void const * const                   p_context,
                                        external_irq_callback_args_t * const p_callback_memory);
 

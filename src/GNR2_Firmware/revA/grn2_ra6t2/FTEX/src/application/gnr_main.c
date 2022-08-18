@@ -26,9 +26,9 @@ static bool POEGInit(void);
 static bool DACInit(void);
 static bool ICUInit(void);
 static bool ELCInit(void);
-static bool AGTInit(void);
-static bool UARTInit(void);
-static bool CANInit(void);
+//static bool AGTInit(void);
+//static bool UARTInit(void);
+//static bool CANInit(void);
 static bool IIRFAInit(void);
 
 
@@ -70,34 +70,35 @@ static const osThreadAttr_t ThAtt_VehicleStateMachine = {
     .stack_size = 512,
     .priority = osPriorityAboveNormal3,
 };
+
+
+//// For CAN purposes
+//static const osThreadAttr_t ThAtt_CANMngr = {
+//    .name = "CAN_ManagerTask",
+//    .stack_size = 512,
+//    .priority = osPriorityNormal
+//};
+
+//static const osThreadAttr_t ThAtt_CANRxProcess = {
+//    .name = "CAN_RxTask",
+//    .stack_size = 512,
+//    .priority = osPriorityNormal
+//};
+
+//static const osThreadAttr_t ThAtt_UART = {
+//	.name = "TSK_UART",
+//	.stack_size = 512,
+//	.priority = osPriorityBelowNormal
+//};
 #endif
 
-// For CAN purposes
-static const osThreadAttr_t ThAtt_CANMngr = {
-    .name = "CAN_ManagerTask",
-    .stack_size = 512,
-    .priority = osPriorityNormal
-};
-
-static const osThreadAttr_t ThAtt_CANRxProcess = {
-    .name = "CAN_RxTask",
-    .stack_size = 512,
-    .priority = osPriorityNormal
-};
-/////////////////////////////////////////////////
-static const osThreadAttr_t ThAtt_UART = {
-	.name = "TSK_UART",
-	.stack_size = 512,
-	.priority = osPriorityBelowNormal
-};
 /**************************************************************/
 
 /**
  * @brief Function for main application entry.
  */
 void gnr_main(void)
-{
-
+{  
     /* Hardware initialization */
     ADCInit();
     GPTInit();
@@ -105,9 +106,9 @@ void gnr_main(void)
     DACInit();
     ICUInit();
     ELCInit();
-    AGTInit();
-    UARTInit();
-    CANInit();
+    //AGTInit();
+    //UARTInit();
+    //CANInit();
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
 
@@ -136,24 +137,25 @@ void gnr_main(void)
     THR_VC_StateMachine_handle      = osThreadNew(THR_VC_StateMachine,
                                       NULL,
                                       &ThAtt_VehicleStateMachine);
-    #endif
 
-   	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
-                                      NULL,
-                                      &ThAtt_UART);
-                                          
-    CANmanagerHandle                = osThreadNew(CANManagerTask,
-                                      NULL,
-                                      &ThAtt_CANMngr);
-                                      
-    CANRxFrameHandle                = osThreadNew(CANProcessMsgs,
-                                      NULL,
-                                      &ThAtt_CANRxProcess);                               
+//   	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
+//                                      NULL,
+//                                      &ThAtt_UART);
+//                                          
+//    CANmanagerHandle                = osThreadNew(CANManagerTask,
+//                                      NULL,
+//                                      &ThAtt_CANMngr);
+//                                      
+//    CANRxFrameHandle                = osThreadNew(CANProcessMsgs,
+//                                      NULL,
+//                                      &ThAtt_CANRxProcess);       
+    #endif
+    
     /* Start RTOS */
     if (osKernelGetState() == osKernelReady)
     {
     osKernelStart();
-  }
+    }
 
     while (1)
     {
@@ -169,19 +171,19 @@ static bool ADCInit(void)
 {
     bool bIsError = false;
 
-    bIsError |= (bool)R_ADC_B_Open(g_adc.p_ctrl, g_adc.p_cfg);
+    bIsError |= (bool)R_ADC_B_Open(g_adc0.p_ctrl, g_adc0.p_cfg);
 
-    bIsError |= (bool)R_ADC_B_Calibrate(g_adc.p_ctrl, NULL);
+    bIsError |= (bool)R_ADC_B_Calibrate(g_adc0.p_ctrl, NULL);
 
     /* Wait for calibration to complete */
     adc_status_t status = {.state = ADC_STATE_SCAN_IN_PROGRESS};
     while ((ADC_STATE_SCAN_IN_PROGRESS == status.state) &&
                  (FSP_SUCCESS == bIsError))
     {
-        bIsError |= (bool)R_ADC_B_StatusGet(g_adc.p_ctrl, &status);
+        bIsError |= (bool)R_ADC_B_StatusGet(g_adc0.p_ctrl, &status);
     }
 
-    bIsError |= R_ADC_B_ScanCfg(g_adc.p_ctrl, &g_adc_scan_cfg);
+    bIsError |= R_ADC_B_ScanCfg(g_adc0.p_ctrl, &g_adc0_scan_cfg);
 
     return bIsError;
 }
@@ -221,13 +223,13 @@ static bool GPTInit(void)
     bIsError |= R_GPT_Enable(g_timer0.p_ctrl);
     bIsError |= R_GPT_PeriodSet(g_timer0.p_ctrl, 524287uL);
 
-    /* ________________________
-     *        GPT8
-     * ________________________ */
+//    /* ________________________
+//     *        GPT2
+//     * ________________________ */
 
-    /* Capture Timer settings for Wheel speed sensor   */
-    bIsError |= R_GPT_Open(g_timer8.p_ctrl, g_timer8.p_cfg);
-    bIsError |= R_GPT_Enable(g_timer8.p_ctrl);
+//    /* Capture timer settings for wheel speed sensor   */
+//    bIsError |= R_GPT_Open(g_timer2.p_ctrl, g_timer2.p_cfg);
+//    bIsError |= R_GPT_Enable(g_timer2.p_ctrl);
 
     return bIsError;
 }
@@ -239,7 +241,7 @@ static bool POEGInit(void)
 {
     bool bIsError = false;
 
-    bIsError |= R_POEG_Open(g_poeg1.p_ctrl, g_poeg1.p_cfg);
+    bIsError |= R_POEG_Open(g_poeg0.p_ctrl, g_poeg0.p_cfg);
 
     return bIsError;
 }
@@ -251,11 +253,11 @@ static bool DACInit(void)
 {
     bool bIsError = false;
 
-    bIsError |= R_DAC_Open(g_dac1.p_ctrl,g_dac1.p_cfg);
-    bIsError |= R_DAC_Start(g_dac1.p_ctrl);
+    bIsError |= R_DAC_Open(g_dac2.p_ctrl,g_dac2.p_cfg);
+    bIsError |= R_DAC_Start(g_dac2.p_ctrl);
 
-    bIsError |= R_DAC_Open(g_dac0.p_ctrl,g_dac0.p_cfg);
-    bIsError |= R_DAC_Start(g_dac0.p_ctrl);
+    bIsError |= R_DAC_Open(g_dac3.p_ctrl,g_dac3.p_cfg);
+    bIsError |= R_DAC_Start(g_dac3.p_ctrl);
 
     return bIsError;
 }
@@ -281,52 +283,52 @@ static bool ICUInit(void)
     bool bIsError = false;
 
     /* Configure external interrupts for hall sensing  */
-    bIsError |= R_ICU_ExternalIrqOpen(g_external_irq0.p_ctrl,g_external_irq0.p_cfg);
-    bIsError |= R_ICU_ExternalIrqOpen(g_external_irq1.p_ctrl,g_external_irq1.p_cfg);
-    bIsError |= R_ICU_ExternalIrqOpen(g_external_irq2.p_ctrl,g_external_irq2.p_cfg);
+    bIsError |= R_ICU_ExternalIrqOpen(g_external_irq3.p_ctrl,g_external_irq3.p_cfg);
+    bIsError |= R_ICU_ExternalIrqOpen(g_external_irq4.p_ctrl,g_external_irq4.p_cfg);
+    bIsError |= R_ICU_ExternalIrqOpen(g_external_irq5.p_ctrl,g_external_irq5.p_cfg);
 
     return bIsError;
 }
 
-/**
-  * @brief  Function used to Initialize the Low Power Timer
-  */
-static bool AGTInit(void)
-{
-    bool bIsError = false;
-    // Initialize the Low Power Timer for Capture Mode
-    bIsError |=    R_AGT_Open(ag_timer0.p_ctrl, ag_timer0.p_cfg);
-    // Enables external event triggers that start the AGT
-    bIsError |= R_AGT_Enable(ag_timer0.p_ctrl);
+///**
+//  * @brief  Function used to initialize the low power timer
+//  */
+//static bool AGTInit(void)
+//{
+//    bool bIsError = false;
+//    // Initialize the low power timer for capture mode
+//    bIsError |= R_AGT_Open(g_timer_a0.p_ctrl, g_timer_a0.p_cfg);
+//    // Enable external event triggers that start the AGT
+//    bIsError |= R_AGT_Enable(g_timer_a0.p_ctrl);
 
-    return bIsError;
-}
+//    return bIsError;
+//}
 
-/**
-  * @brief  Function used to Initialize the UART
-  */
-static bool UARTInit(void)
-{
-    bool bIsError = false;
+///**
+//  * @brief  Function used to Initialize the UART
+//  */
+//static bool UARTInit(void)
+//{
+//    bool bIsError = false;
 
-    // Initialise the UART
-    bIsError |= R_SCI_B_UART_Open(&g_uart0_ctrl, &g_uart0_cfg);
+//    // Initialise the UART
+//    bIsError |= R_SCI_B_UART_Open(&g_uart0_ctrl, &g_uart0_cfg);
 
-    return bIsError;
-}
+//    return bIsError;
+//}
 
-/**
-  * @brief  Function used to Initialize the CAN
-  */
-static bool CANInit(void)
-{
-    bool bIsError = false;
+///**
+//  * @brief  Function used to Initialize the CAN
+//  */
+//static bool CANInit(void)
+//{
+//    bool bIsError = false;
 
-    // Initialise the UART
-    bIsError |= R_CANFD_Open(&g_canfd0_ctrl, &g_canfd0_cfg);
+//    // Initialise the UART
+//    bIsError |= R_CANFD_Open(&g_canfd0_ctrl, &g_canfd0_cfg);
 
-    return bIsError;
-}
+//    return bIsError;
+//}
 
 /**
   * @brief  Function used to Initialize IIR filter hardware accelerator peripheral

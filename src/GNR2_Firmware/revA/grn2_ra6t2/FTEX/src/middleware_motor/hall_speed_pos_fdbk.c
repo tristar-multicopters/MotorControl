@@ -99,14 +99,20 @@ void HallPosSensor_Init(HallPosSensorHandle_t * pHandle)
     pHandle->SectorMiddleAngle[4] = (int16_t) (pHandle->SectorStartAngle[4]  +  S16_30_PHASE_SHIFT);
     pHandle->SectorMiddleAngle[5] = (int16_t) (pHandle->SectorStartAngle[5]  +  S16_30_PHASE_SHIFT);
     pHandle->SectorMiddleAngle[6] = (int16_t) (pHandle->SectorStartAngle[6]  +  S16_30_PHASE_SHIFT);
-
-		/*  Enable timer0 interrupts and counter */
+    
+    SignalFiltering_Init(&pHandle->SpeedFilter);
+    SignalFiltering_ConfigureButterworthFOLP(&pHandle->SpeedFilter,
+                                                pHandle->fFilterAlpha,
+                                                    pHandle->fFilterBeta);
+    
+    /*  Enable timer0 interrupts and counter */
     R_GPT_Start(pHandle->TIMx->p_ctrl);
     R_GPT_Enable(pHandle->TIMx->p_ctrl);
 }
 
 void HallPosSensor_Clear(HallPosSensorHandle_t * pHandle)
 {
+    SignalFiltering_Clear(&pHandle->SpeedFilter);
     /* Disable timer0 interrupts and counter */
     R_GPT_Disable(pHandle->TIMx->p_ctrl);
     R_GPT_Stop(pHandle->TIMx->p_ctrl);
@@ -122,6 +128,7 @@ void HallPosSensor_Clear(HallPosSensorHandle_t * pHandle)
     pHandle->hOVFCounter = 0u;
     pHandle->hCompSpeed = 0;
     pHandle->bDirection = POSITIVE;
+    pHandle->hFiltElSpeedDpp = 0;
     /* Initialize speed buffer index */
     pHandle->bSensorPeriod = 0u;
     /* Clear speed error counter */
@@ -135,8 +142,11 @@ void HallPosSensor_Clear(HallPosSensorHandle_t * pHandle)
 
 int16_t HallPosSensor_CalcElAngle(HallPosSensorHandle_t * pHandle)
 {
+    //HALL_Init_Electrical_Angle(pHandle);
+    
     if (pHandle->bBufferFilled < pHandle->bSpeedBufferSize)
     {
+        HALL_Init_Electrical_Angle(pHandle);
     }
     else
     {
@@ -151,7 +161,7 @@ int16_t HallPosSensor_CalcElAngle(HallPosSensorHandle_t * pHandle)
         {
             pHandle->Super.hElAngle += pHandle->hPrevRotorFreq;
         }
-        /*      Confine angle calculation to 60-degrees      */
+        /* Confine angle calculation to 60-degrees */
 		int32_t hAngle_Diff = abs(pHandle->Super.hElAngle - pHandle->SectorMiddleAngle[pHandle->bHallState]);
 		if((hAngle_Diff>S16_40_PHASE_SHIFT))
 		{
@@ -176,6 +186,10 @@ int16_t HallPosSensor_CalcElAngle(HallPosSensorHandle_t * pHandle)
 bool HallPosSensor_CalcAvrgMecSpeedUnit(HallPosSensorHandle_t * pHandle, int16_t * pMecSpeedUnit)
 {
     bool bReliability;
+    
+    pHandle->hFiltElSpeedDpp = SignalFiltering_CalcOutputI16(&pHandle->SpeedFilter, pHandle->hAvrElSpeedDpp);
+    //pHandle->hFiltElSpeedDpp = pHandle->hAvrElSpeedDpp;
+    
     if (pHandle->bSensorIsReliable)
     {
         // Compare sum of the period with maximum permissible period
@@ -188,7 +202,7 @@ bool HallPosSensor_CalcAvrgMecSpeedUnit(HallPosSensorHandle_t * pHandle, int16_t
         }
         else
         {
-            pHandle->Super.hElSpeedDpp =  pHandle->hAvrElSpeedDpp;
+            pHandle->Super.hElSpeedDpp =  pHandle->hFiltElSpeedDpp;
             if (pHandle->hAvrElSpeedDpp == 0)
             {
                 /* Speed is too low */
@@ -209,7 +223,7 @@ bool HallPosSensor_CalcAvrgMecSpeedUnit(HallPosSensorHandle_t * pHandle, int16_t
                         pHandle->hCompSpeed = (int16_t)((int32_t)(pHandle->hDeltaAngle)/(int32_t)(pHandle->hPWMNbrPSamplingFreq));
                     }
                     /* Convert el_dpp to MecUnit */
-                    *pMecSpeedUnit = (int16_t)(( pHandle->hAvrElSpeedDpp * (int32_t)pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT) /
+                    *pMecSpeedUnit = (int16_t)(( pHandle->hFiltElSpeedDpp * (int32_t)pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT) /
                                                 ((int32_t) pHandle->Super.DPPConvFactor * (int32_t)pHandle->Super.bElToMecRatio));
                 }
                 else
@@ -439,8 +453,7 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
                 /* the HALL_MAX_PSEUDO_SPEED is temporary in the buffer, and never included in average computation*/
                 if (wCaptBuf < pHandle->wMinPeriod)
                 {
-                    /* Commented next line to prevent false drequency injection when moving from stop to moving condition */
-                    /* pHandle->hAvrElSpeedDpp = HALL_MAX_PSEUDO_SPEED; */
+                    pHandle->hAvrElSpeedDpp = HALL_MAX_PSEUDO_SPEED;
                 }
                 else
                 {
@@ -462,15 +475,15 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
                     }
                     if (pHandle->bSensorIsReliable)
                     {
-                        //	if (pHandle->bBufferFilled < pHandle->bSpeedBufferSize)
-                        //	{
-                        //	    pHandle->hAvrElSpeedDpp = (int16_t) (pHandle->wPseudoFreqConv / wCaptBuf)*pHandle->bDirection;
-                        //	}
-                        //	else
-                        // { /* Average speed allow to smooth the mechanical sensors misalignement */
-                        pHandle->hAvrElSpeedDpp =  (int16_t)(pHandle->wPseudoFreqConv / (pHandle->wElPeriodSum / pHandle->bSpeedBufferSize)) ; /* Average value */
-                        pHandle->hAvrElSpeedDpp =  pHandle->hAvrElSpeedDpp * pHandle->bDirection;
-                        //	}
+                        if (pHandle->bBufferFilled < pHandle->bSpeedBufferSize)
+                        {
+                            pHandle->hAvrElSpeedDpp = (int16_t) (pHandle->wPseudoFreqConv / wCaptBuf)*pHandle->bDirection;
+                        }
+                        else
+                        { /* Average speed allow to smooth the mechanical sensors misalignement */
+                            pHandle->hAvrElSpeedDpp =  (int16_t)(pHandle->wPseudoFreqConv / (pHandle->wElPeriodSum / pHandle->bSpeedBufferSize)) ; /* Average value */
+                            pHandle->hAvrElSpeedDpp =  pHandle->hAvrElSpeedDpp * pHandle->bDirection;
+                        }
                     }
                     else /* Sensor is not reliable */
                     {
@@ -481,10 +494,6 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
                 pHandle->hOVFCounter = 0u;
             }
         }
-    }
-    if (pHandle->bBufferFilled < pHandle->bSpeedBufferSize)
-    {
-        HALL_Init_Electrical_Angle(pHandle);
     }
 
     return (void *)(0x0);

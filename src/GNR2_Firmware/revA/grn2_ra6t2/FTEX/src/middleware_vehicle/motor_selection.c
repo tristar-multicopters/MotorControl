@@ -6,6 +6,7 @@
 */
 
 #include "motor_selection.h"
+#include "ASSERT_FTEX.h"
 
 /**
  * @brief Initializes torque distribution module
@@ -14,12 +15,12 @@
  */
 void MS_Init(MS_Handle_t * pHandle)
 {
-    UNUSED_PARAMETER(pHandle);
+    ASSERT(pHandle != NULL);
 }
 
 MotorSelection_t MS_CheckSelection(MS_Handle_t* pHandle)
 {
-	
+	ASSERT(pHandle != NULL);
 	if (pHandle->bMSEnable)
 	{
 		bool bM1Select = true; //TODO: check gpio input, for now just mock

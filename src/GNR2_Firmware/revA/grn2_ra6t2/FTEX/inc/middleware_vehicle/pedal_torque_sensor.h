@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    pedal_toque_sensor.h
+  * @file    pedal_torque_sensor.h
   * @author  FTEX Inc
   * @brief   This file defines the handles, constants and function prototypes 
   *          used in higher level modules for pedal torque sensor
@@ -16,15 +16,11 @@
 #include "regular_conversion_manager.h"
 #include "signal_filtering.h"
 
-// ================= Structure used to configure a pin ===================== //
 
-/* Torque_Param_t structure used to store torque user parameters */
 typedef struct
 {          
-    float fFilterAlpha;                 // Alpha coefficient for low pass first order butterworth filter
-    float fFilterBeta;                  // Beta coefficient for low pass first order butterworth filter
-
-    uint16_t    hTorqueSensMax;   /* torque signal when at maximum position */
+    float fFilterAlpha;          // Alpha coefficient for low pass first order butterworth filter
+    float fFilterBeta;           // Beta coefficient for low pass first order butterworth filter
     
     uint16_t    hOffsetPTS;  /* Offset of the torque sensor signal when at lowest position */
     uint8_t     bSlopePTS;   /* Gain factor of ADC value vs torque sensor */
@@ -39,10 +35,10 @@ typedef struct
 
 typedef struct
 {
-    RegConv_t   PTS_RegConv;
+    RegConv_t   PTSRegConv;
     uint8_t     bConvHandle;            /* handle to the regular conversion */
 
-    uint16_t    hInstTorque;            /* It contains latest available insteateonous torque
+    uint16_t    hInstTorque;            /* It contains latest available instantaneous torque
 										   This parameter is expressed in u16 */
     uint16_t    hAvADCValue;            /* It contains latest available average ADC value */
     uint16_t    hAvTorqueValue;         /* It contains latest available average torque */
@@ -87,4 +83,5 @@ uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle);
   @return torque reference value in int16 format
 */
 int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle);
+
 #endif

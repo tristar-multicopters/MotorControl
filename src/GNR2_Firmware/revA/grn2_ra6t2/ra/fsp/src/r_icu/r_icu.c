@@ -220,7 +220,7 @@ fsp_err_t R_ICU_ExternalIrqDisable (external_irq_ctrl_t * const p_api_ctrl)
  * @retval  FSP_ERR_NO_CALLBACK_MEMORY   p_callback is non-secure and p_callback_memory is either secure or NULL.
  **********************************************************************************************************************/
 fsp_err_t R_ICU_ExternalIrqCallbackSet (external_irq_ctrl_t * const p_api_ctrl,
-                                        void (                   * p_callback)(
+                                        void (                    * p_callback)(
                                             external_irq_callback_args_t *),
                                         void const * const                   p_context,
                                         external_irq_callback_args_t * const p_callback_memory)

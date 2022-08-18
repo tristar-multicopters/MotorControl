@@ -660,7 +660,7 @@ fsp_err_t R_ADC_B_Close(adc_ctrl_t * p_ctrl);
 fsp_err_t R_ADC_B_OffsetSet(adc_ctrl_t * const p_ctrl, adc_channel_t const reg_id, int32_t offset);
 fsp_err_t R_ADC_B_Calibrate(adc_ctrl_t * const p_ctrl, void const * p_extend);
 fsp_err_t R_ADC_B_CallbackSet(adc_ctrl_t * const          p_api_ctrl,
-                              void (                   * p_callback)(adc_callback_args_t *),
+                              void (                    * p_callback)(adc_callback_args_t *),
                               void const * const          p_context,
                               adc_callback_args_t * const p_callback_memory);
 

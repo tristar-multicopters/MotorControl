@@ -8,30 +8,30 @@
 #include "current_pid_vs_speed_table.h"
 
 #define CURRENT_PID_VS_SPEED_LUT_SIZE                 2
-#define CURRENT_PID_LUT_SPEED_STEP                    100
-#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             80
+#define CURRENT_PID_LUT_SPEED_STEP                    700
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
-    300,
+    150,
+    300
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    50,
+    25,
     4000,
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
+    150,
     100,
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    50,
+    25,
     6000,
 };
 
-LookupTableHandle_t LookupTableM1IqKp = 
+LookupTableHandle_t LookupTableM1IqKp =
 {
   .hXDataStep = CURRENT_PID_LUT_SPEED_STEP,
   .wXDataFirstValue = CURRENT_PID_LUT_SPEED_FIRST_VALUE,
@@ -63,3 +63,10 @@ LookupTableHandle_t LookupTableM1IdKi =
   .pOutputTable = IdKiVsSpeedTable,
 };
 
+LookupTableHandle_t LookupTableM1RotorPosObsKp =
+{
+  .hXDataStep = CURRENT_PID_LUT_SPEED_STEP,
+  .wXDataFirstValue = CURRENT_PID_LUT_SPEED_FIRST_VALUE,
+  .hTableLength = CURRENT_PID_VS_SPEED_LUT_SIZE,
+  .pOutputTable = IdKiVsSpeedTable,
+};

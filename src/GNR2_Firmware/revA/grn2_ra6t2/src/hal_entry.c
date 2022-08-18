@@ -1,8 +1,5 @@
-
 #include "hal_data.h"
 #include "gnr_main.h"
-
-
 
 FSP_CPP_HEADER
 void R_BSP_WarmStart(bsp_warm_start_event_t event);
@@ -15,14 +12,8 @@ FSP_CPP_FOOTER
 void hal_entry(void)
 {
     /* TODO: add your own code here */
+    gnr_main();
 
-	gnr_main();
-	
-	while(1)
-	{
-	 }
-	
-	
 #if BSP_TZ_SECURE_BUILD
     /* Enter non-secure code */
     R_BSP_NonSecureEnter();

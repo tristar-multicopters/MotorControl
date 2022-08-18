@@ -65,7 +65,7 @@ ThrottleHandle_t ThrottleHandle =
  */
 PedalTorqSensorHandle_t PedalTorqueSensor =
 {
-    .PTS_RegConv =
+    .PTSRegConv =
     {
         .hChannel = PEDAL_TORQUE_SENSOR_ANALOG_CHANNEL,
     },
@@ -88,38 +88,39 @@ PedalTorqSensorHandle_t PedalTorqueSensor =
     }
 };
 
-/**@brief Pulse Frequency initializing Parameters.
- */
-PulseFrequency_Handle_AGT_t PulseFreqHandle =
-{
-	.agt_start_measurement = false,
-	.PulseFreqParam_AGT =
-	{
-		 .PF_AGT_Timer = &ag_timer0,
-	}
-};
+///**@brief Pulse Frequency initializing Parameters.
+// */
+//PulseFrequency_Handle_AGT_t PulseFreqHandle =
+//{
+//	.agt_start_measurement = false,
+//	.PulseFreqParam_AGT =
+//	{
+//		.PF_AGT_Timer = PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
+//	}
+//};
 
-/**@brief Pedal assist initializing Parameters.
- */
-PedalSpeedSens_Handle_t PedalAssistHandle = {
-	.pTorque = &PedalTorqueSensor,
-    .pSpulse = &PulseFreqHandle,
-};
-/**@brief Pulse Frequency initializing Parameters for GPT Timer.
- */
-WheelFrequency_Handle_GPT_t PulseFreqHandle_Wheel =
-{
-	.gpt_start_measurement = false,
-	.PulseFreqParam_GPT =
-	{
-		 .PF_GPT_Timer = &g_timer8,
-	}
-};
+///**@brief Pedal assist initializing Parameters.
+// */
+//PedalSpeedSensorHandle_t PedalAssistHandle = {
+//	.pTorque = &PedalTorqueSensor,
+//    .pSpulse = &PulseFreqHandle,
+//};
 
-WheelSpeedSens_Handle_t WheelSpeedHandle =
-{
-    .wSpulse = &PulseFreqHandle_Wheel,
-};
+///**@brief Pulse Frequency initializing Parameters for GPT Timer.
+// */
+//WheelFrequency_Handle_GPT_t PulseFreqHandle_Wheel =
+//{
+//	.gpt_start_measurement = false,
+//	.PulseFreqParam_GPT =
+//	{
+//		 .PF_GPT_Timer = WHEEL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
+//	}
+//};
+
+//WheelSpeedSens_Handle_t WheelSpeedHandle =
+//{
+//    .wSpulse = &PulseFreqHandle_Wheel,
+//};
 
 
 
@@ -153,9 +154,7 @@ PWRT_Handle_t PowertrainHandle =
 	.sParameters.hStoppingSpeed = POWERTRAIN_STOP_SPEED_THRESHOLD,
 	.sParameters.hPASMaxTorque = POWERTRAIN_PAS_MAX_TORQUE,
 	.sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
-	.sParameters.GearRatio = POWERTRAIN_MOTOR_GEARRATIO,
-	.sParameters.bUseWheelSpeedSensor = POWERTRAIN_WHEEL_SPEED_SENSOR_ENABLE,
-	.sParameters.bWheelSpreedRatio = POWERTRAIN_WHEEL_SPEED_SENSOR_PPR,
+	.sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
 	.sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
 
 	.pMDI = &MDInterfaceHandle,
@@ -163,8 +162,6 @@ PWRT_Handle_t PowertrainHandle =
 	.pBrake = &BrakeHandle,
 	.pMS = &MotorSelectorHandle,
 	.pPWREN = &PowerEnableHandle,
-	.pPAS = &PedalAssistHandle,
-    .pWSS = &WheelSpeedHandle,
 
 };
 

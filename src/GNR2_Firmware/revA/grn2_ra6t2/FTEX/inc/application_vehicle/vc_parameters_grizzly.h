@@ -22,7 +22,7 @@
 #define THROTTLE_DIVISOR_ADC2THROTTLE         3        /* Divisor for ADC to throttle linear transformation  */
 
 #define THROTTLE_OFFSET_THROTTLE2TORQUE       4000    /* Offset for throttle to torque linear transformation  */
-#define THROTTLE_SLOPE_THROTTLE2TORQUE        -14        /* Slope for throttle to torque linear transformation  */
+#define THROTTLE_SLOPE_THROTTLE2TORQUE        14        /* Slope for throttle to torque linear transformation  */
 #define THROTTLE_DIVISOR_THROTTLE2TORQUE      600        /* Divisor for throttle to torque linear transformation  */
 
 #define THROTTLE_DETECTION_THRESHOLD          1000    /* Throttle is considered pressed once it passed this threshold  */
@@ -67,7 +67,6 @@
 #define POWERTRAIN_PAS_MAX_SPEED                          500                /* Maximum motor speed reachable using pedal assist  */
 #define POWERTRAIN_MOTOR_GEARRATIO                        0x000B0005        /* Motor gear ratio, i.e. wheel speed divided by motor speed.
                                                                                 Upper half of 32 bits is numerator, second half is denominator */
-#define POWERTRAIN_WHEEL_SPEED_SENSOR_ENABLE              false              /* True if wheel speed sensor is used */
 #define POWERTRAIN_WHEEL_SPEED_SENSOR_PPR                 2                  /* Number of electrical pulses per wheel rotation */
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT               200                /* Number of task ticks to wait after a fault occurs to attempt
                                                                               a powertrain restart (OC, SF and SU faults)   */
