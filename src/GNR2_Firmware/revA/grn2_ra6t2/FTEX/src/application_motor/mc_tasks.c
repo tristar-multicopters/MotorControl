@@ -76,7 +76,6 @@ void MediumFrequencyTaskM1(void);
 void FOC_Clear(uint8_t bMotor);
 void FOC_UpdatePIDGains(uint8_t bMotor);
 void FOC_InitAdditionalMethods(uint8_t bMotor);
-void FOC_UpdatePIDGains(uint8_t bMotor);
 void FOC_CalcCurrRef(uint8_t bMotor);
 static uint16_t FOC_CurrControllerM1(void);
 void SetChargeBootCapDelayM1(uint16_t hTickCount);
@@ -432,19 +431,6 @@ void FOC_InitAdditionalMethods(uint8_t bMotor)
     }
 }
 
-void FOC_UpdatePIDGains(uint8_t bMotor)
-{
-    SpeednPosFdbkHandle_t * SpeedHandle;
-    SpeedHandle = SpdTorqCtrl_GetSpeedSensor(pSpeedTorqCtrl[bMotor]);
-
-    int16_t hM1SpeedUnit = SpdPosFdbk_GetAvrgMecSpeedUnit(SpeedHandle);
-
-    PID_SetKP(pPIDIq[bMotor], (int16_t) LookupTable_CalcOutput(&LookupTableM1IqKp, abs(hM1SpeedUnit)));
-    PID_SetKI(pPIDIq[bMotor], (int16_t) LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
-    PID_SetKP(pPIDId[bMotor], (int16_t) LookupTable_CalcOutput(&LookupTableM1IdKp, abs(hM1SpeedUnit)));
-    PID_SetKI(pPIDId[bMotor], (int16_t) LookupTable_CalcOutput(&LookupTableM1IdKi, abs(hM1SpeedUnit)));
-}
-
 /**
     * @brief It computes the new values of Iqdref (current references on qd
     *        reference frame) based on the required electrical torque information
@@ -639,14 +625,9 @@ inline uint16_t FOC_CurrControllerM1(void)
         }
     }
 
-    Ialphabeta = MCMath_Clarke(Iab);
-    Iqd = MCMath_Park(Ialphabeta, hElAngle);
-
-        #if ENABLE_MC_DAC_DEBUGGING
-        R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)HallPosSensorM1.Super.hElAngle + INT16_MAX);
-        R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)RotorPosObsM1.Super.hElAngle + INT16_MAX);
-        #endif
-    }
+    #if ENABLE_MC_DAC_DEBUGGING
+    R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)HallPosSensorM1.Super.hElAngle + INT16_MAX);
+    R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)RotorPosObsM1.Super.hElAngle + INT16_MAX);
     #endif
 
     return(hCodeError);
