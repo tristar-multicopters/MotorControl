@@ -61,13 +61,6 @@ typedef struct
 void SignalFiltering_Init(SignalFilteringHandle_t * pHandle);
 
 /**
-  * @brief  Clear filter handle, while keeping current configuration.
-  * @param  pHandle: handler of the current instance of the SignalFiltering component
-  * @retval none.
-  */
-void SignalFiltering_Clear(SignalFilteringHandle_t * pHandle);
-
-/**
   * @brief  Calculate filter output from provided input data (uint16).
             Must be called periodically at desired filter sampling time.
   * @param  pHandle: handler of the current instance of the SignalFiltering component

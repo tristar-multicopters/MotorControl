@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       1200 /*!< rpm, mechanical */
+#define MAX_APPLICATION_SPEED_RPM       1250 /*!< rpm, mechanical */
 #define MIN_APPLICATION_SPEED_RPM       0 /*!< rpm, mechanical,
                                                            absolute value */
 #define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
@@ -27,12 +27,9 @@
                                                            measurements before main sensor
                                                            goes in fault */
 
-#define HALL_AVERAGING_FIFO_DEPTH        6 /*!< depth of the FIFO used to
+#define HALL_AVERAGING_FIFO_DEPTH        3 /*!< depth of the FIFO used to
                                                            average mechanical speed in
                                                            0.1Hz resolution */
-#define HALL_FILTER_BUTTERWORTH_ALPHA    7.366197724 /*!< Alpha constant to configure butterworth filter */
-#define HALL_FILTER_BUTTERWORTH_BETA     -5.366197724 /*!< Beta constant to configure butterworth filter */
-
 #define HALL_MTPA  true
 /****** State Observer + PLL ****/
 #define VARIANCE_THRESHOLD              0.062 /*!<Maximum accepted
@@ -89,11 +86,11 @@
 #define REGULATION_EXECUTION_RATE     1    /*!< FOC execution rate in
                                                            number of PWM cycles */
 /* Gains values for torque and flux control loops */
-#define PID_TORQUE_KP_DEFAULT         600
-#define PID_TORQUE_KI_DEFAULT         1000
+#define PID_TORQUE_KP_DEFAULT         300
+#define PID_TORQUE_KI_DEFAULT         4000
 #define PID_TORQUE_KD_DEFAULT         100
-#define PID_FLUX_KP_DEFAULT           600
-#define PID_FLUX_KI_DEFAULT           3000
+#define PID_FLUX_KP_DEFAULT           100
+#define PID_FLUX_KI_DEFAULT           6000
 #define PID_FLUX_KD_DEFAULT           100
 
 /* Torque/Flux control loop gains dividers*/
@@ -120,10 +117,12 @@
 #define SP_KIDIV_LOG                  LOG2(16384)
 #define SP_KDDIV_LOG                  LOG2(16)
 
-#define SPD_CTRL_MAX_TORQUE             1000
+/* USER CODE BEGIN PID_SPEED_INTEGRAL_INIT_DIV */
+#define PID_SPEED_INTEGRAL_INIT_DIV 1 /*  */
+/* USER CODE END PID_SPEED_INTEGRAL_INIT_DIV */
 
-#define MAX_APPLICATION_POSITIVE_POWER  800
-#define MAX_APPLICATION_NEGATIVE_POWER  800
+#define SPD_DIFFERENTIAL_TERM_ENABLING DISABLE
+#define SPD_CTRL_MAX_TORQUE                          32000
 
 #define MAX_APPLICATION_POSITIVE_POWER  500
 #define MAX_APPLICATION_NEGATIVE_POWER  500
@@ -136,28 +135,34 @@
 #define DEFAULT_TORQUE_COMPONENT       0
 #define DEFAULT_FLUX_COMPONENT         0
 
-#define DEFAULT_TORQUE_SLOPE_UP        10000        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_UP        1000        /* Slope in cNm per second */
 #define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
 #define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */
 
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
-
+#define OV_VOLTAGE_PROT_ENABLING        ENABLE
+#define UV_VOLTAGE_PROT_ENABLING        ENABLE
 #define OV_VOLTAGE_THRESHOLD_V          75 /*!< Over-voltage
                                                //          threshold */
 #define UD_VOLTAGE_THRESHOLD_V          24 /*!< Under-voltage
                                                //           threshold */
-
+#if 0
+#define ON_OVER_VOLTAGE                 TURN_OFF_PWM /*!< TURN_OFF_PWM,
+                                                         TURN_ON_R_BRAKE or
+                                                         TURN_ON_LOW_SIDES */
+#endif /* 0 */
+#define R_BRAKE_SWITCH_OFF_THRES_V      60
 
 #define OV_TEMPERATURE_THRESHOLD_C      75 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     10 /*!< Celsius degrees */
 
-#define OCSP_SAFETY_MARGIN 	            20000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
-                                                than reference current before overcurrent software protection triggers */
-#define OCSP_MAX_CURRENT                20000   /* Max current that can be reached before triggering software overcurrent */
-#define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering */
-#define CURRENT_FILTER_BETA             -0.273F      /* Beta constant used in butterworth filter for current filtering */
-
+#define HW_OV_CURRENT_PROT_BYPASS       DISABLE /*!< In case ON_OVER_VOLTAGE
+                                                          is set to TURN_ON_LOW_SIDES
+                                                          this feature may be used to
+                                                          bypass HW over-current
+                                                          protection (if supported by
+                                                          power stage) */
 /******************************   START-UP PARAMETERS   **********************/
 
 /* Observer start-up output conditions  */
@@ -179,6 +184,12 @@
                                                              In 1/16 of forced speed */
 
 #define TRANSITION_DURATION            25  /* Switch over duration, ms */
+/******************************   BUS VOLTAGE Motor 1  **********************/
+#define  M1_VBUS_SAMPLING_TIME  LL_ADC_SAMPLING_CYCLE(24)
+/******************************   Temperature sensing Motor 1  **********************/
+#define  M1_TEMP_SAMPLING_TIME  LL_ADC_SAMPLING_CYCLE(24)
+/******************************   Current sensing Motor 1   **********************/
+#define ADC_SAMPLING_CYCLES (6 + SAMPLING_CYCLE_CORRECTION)
 
 /******************************   ADDITIONAL FEATURES   **********************/
 
@@ -201,6 +212,7 @@
 #define FW_KPDIV_LOG                  LOG2(32768)
 #define FW_KIDIV_LOG                  LOG2(32768)
 /*  Feed-forward parameters */
+#define FEED_FORWARD_CURRENT_REG_ENABLING ENABLE
 #define CONSTANT1_Q                    0
 #define CONSTANT1_D                    0
 #define CONSTANT2_QD                   0
@@ -221,5 +233,12 @@
 #define ROTOR_POS_OBS_KDDIV_LOG                  	LOG2(1)
 
 
+/******************************   Software overcurrent protection Motor 1   **********************/
+
+#define OCSP_SAFETY_MARGIN 	            20000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+                                                than reference current before overcurrent software protection triggers */
+#define OCSP_MAX_CURRENT                20000   /* Max current that can be reached before triggering software overcurrent */
+#define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering */
+#define CURRENT_FILTER_BETA             -0.273F      /* Beta constant used in butterworth filter for current filtering */
 
 #endif /*__DRIVE_PARAMETERS_H*/

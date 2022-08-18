@@ -13,8 +13,6 @@
 #include "mc_tuning.h"
 #include "mc_state_machine.h"
 #include "pwm_common.h"
-#include "board_hardware.h"
-#include "uCAL_GPIO.h"
 #include "current_pid_vs_speed_table.h"
 
 #include "mc_tasks.h"
@@ -68,7 +66,7 @@ int16_t hTorqueFinalValueTest = 0;
 #endif
 #if (BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
 int16_t hOpenloopTheta = 0;
-int16_t hOpenloopSpeed = 10;
+int16_t hOpenloopSpeed = 100;
 #endif
 
 /* Private functions ---------------------------------------------------------*/
@@ -121,10 +119,10 @@ void MC_Bootup(void)
     HallPosSensor_Init (&HallPosSensorM1);
     RotorPosObs_Init(&RotorPosObsM1);
 
-    /******************************************************/
-    /*   Speed & torque component initialization          */
-    /******************************************************/
-    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1],pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorParamsM1, NULL);
+  /******************************************************/
+  /*   Speed & torque component initialization          */
+  /******************************************************/
+  SpdTorqCtrl_Init(pSpeedTorqCtrl[M1],pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorParamsM1, NULL);
 
     /******************************************************/
     /*  Auxiliary speed sensor component initialization   */
@@ -168,9 +166,6 @@ void MC_Bootup(void)
     /*******************************************************/
     Feedforward_Init(pFeedforward[M1],&(pBusSensorM1->Super),pPIDId[M1],pPIDIq[M1]);
 
-    /*******************************************************/
-    /*     MCTuning & FOC variables initialization         */
-    /*******************************************************/
     FOC_Clear(M1);
     FOCVars[M1].bDriveInput = INTERNAL;
     oMCInterface[M1] = & MCInterface[M1];
@@ -190,14 +185,6 @@ void MC_Bootup(void)
     MCTuning[M1].pMotorPower =    (MotorPowerMeasHandle_t*)pMotorPower[M1];
     MCTuning[M1].pFieldWeakening = pFieldWeakening[M1];
     MCTuning[M1].pFeedforward = pFeedforward[M1];
-
-    /*******************************************************/
-    /*     Dynamic PI lookup table initialization         */
-    /*******************************************************/
-    LookupTable_Init(&LookupTableM1IqKp);
-    LookupTable_Init(&LookupTableM1IqKi);
-    LookupTable_Init(&LookupTableM1IdKp);
-    LookupTable_Init(&LookupTableM1IdKi);
 
     bMCBootCompleted = 1;
 }
@@ -256,11 +243,9 @@ void MediumFrequencyTaskM1(void)
     (void) HallPosSensor_CalcAvrgMecSpeedUnit(&HallPosSensorM1, &wAux);
     bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
     MotorPowerQD_CalcElMotorPower(pMotorPower[M1]);
-    #if DYNAMIC_CURRENT_CONTROL_PID
     FOC_UpdatePIDGains(M1);
-    #endif
 
-    RegConvMng_ExecuteGroupRegularConv(FIRST_REG_CONV_ADC_GROUP_MASK | SECOND_REG_CONV_ADC_GROUP_MASK);
+    RegConvMng_ExecuteGroupRegularConv(ADC_GROUP_MASK_1 | ADC_GROUP_MASK_2);
 
     StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
     switch (StateM1)
@@ -587,36 +572,6 @@ inline uint16_t FOC_CurrControllerM1(void)
     StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
     if (StateM1 == M_RUN || StateM1 == M_ANY_STOP)
     {
-        Ialphabeta = MCMath_Clarke(Iab);
-        Iqd = MCMath_Park(Ialphabeta, hElAngle);
-
-        Vqd.q = PI_Controller(pPIDIq[M1],
-                (int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
-
-        Vqd.d = PI_Controller(pPIDId[M1],
-                (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
-
-        Vqd = Feedforward_VqdConditioning(pFeedforward[M1],Vqd);
-
-        #if (BYPASS_CURRENT_CONTROL)
-        Vqd.q = 2000;
-        Vqd.d = 0;
-        #endif
-
-        Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
-        Valphabeta = MCMath_RevPark(Vqd, hElAngle);
-
-        hCodeError = PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
-
-        FOCVars[M1].Vqd = Vqd;
-        FOCVars[M1].Iab = Iab;
-        FOCVars[M1].Ialphabeta = Ialphabeta;
-        FOCVars[M1].Iqd = Iqd;
-        FOCVars[M1].Valphabeta = Valphabeta;
-        FOCVars[M1].hElAngle = hElAngle;
-        FluxWkng_DataProcess(pFieldWeakening[M1], Vqd);
-        Feedforward_DataProcess(pFeedforward[M1]);
-
         //Check for overcurrent condition (software overcurrent protection)
         if (PWMCurrFdbk_CheckSoftwareOverCurrent(pPWMCurrFdbk[M1], &Iab, &FOCVars[M1].Iqdref))
         {
@@ -625,9 +580,43 @@ inline uint16_t FOC_CurrControllerM1(void)
         }
     }
 
+    Ialphabeta = MCMath_Clarke(Iab);
+    Iqd = MCMath_Park(Ialphabeta, hElAngle);
+
+    Vqd.q = PI_Controller(pPIDIq[M1],
+            (int32_t)(FOCVars[M1].Iqdref.q) - Iqd.q);
+
+    Vqd.d = PI_Controller(pPIDId[M1],
+            (int32_t)(FOCVars[M1].Iqdref.d) - Iqd.d);
+
+    Vqd = Feedforward_VqdConditioning(pFeedforward[M1],Vqd);
+
+    #if (BYPASS_CURRENT_CONTROL)
+    Vqd.q = 10000;
+    Vqd.d = 0;
+    #endif
+
+    Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
+    Valphabeta = MCMath_RevPark(Vqd, hElAngle);
+
+    FluxWkng_DataProcess(pFieldWeakening[M1], Vqd);
+    Feedforward_DataProcess(pFeedforward[M1]);
+
+    hCodeError |= PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
+
+    FOCVars[M1].Vqd = Vqd;
+    FOCVars[M1].Iab = Iab;
+    FOCVars[M1].Ialphabeta = Ialphabeta;
+    FOCVars[M1].Iqd = Iqd;
+    FOCVars[M1].Valphabeta = Valphabeta;
+    FOCVars[M1].hElAngle = hElAngle;
+
     #if ENABLE_MC_DAC_DEBUGGING
-    R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)HallPosSensorM1.Super.hElAngle + INT16_MAX);
-    R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)RotorPosObsM1.Super.hElAngle + INT16_MAX);
+    if (StateM1 == M_RUN || StateM1 == M_ANY_STOP)
+    {
+        R_DAC_Write(g_dac0.p_ctrl, (uint16_t)FOCVars[M1].Iab.a + INT16_MAX);
+        R_DAC_Write(g_dac1.p_ctrl, (uint16_t)FOCVars[M1].Iab.b + INT16_MAX);
+    }
     #endif
 
     return(hCodeError);

@@ -8,7 +8,6 @@
 */
 
 #include "pedal_torque_sensor.h"
-#include "ASSERT_FTEX.h"
 
 // ==================== Public function prototypes ======================== //
 
@@ -18,13 +17,12 @@
 */
 void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle)
 {	
-    ASSERT(pHandle != NULL);
     SignalFiltering_Init(&pHandle->TorqSensorFilter);
     SignalFiltering_ConfigureButterworthFOLP(&pHandle->TorqSensorFilter,
                                                 pHandle->hParameters.fFilterAlpha,
                                                     pHandle->hParameters.fFilterBeta);
     
-    pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->PTSRegConv);
+    pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->PTS_RegConv);
     PedalTorqSensor_Clear(pHandle);
 }
 
@@ -34,7 +32,6 @@ void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle)
 */
 void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle)
 {
-    ASSERT(pHandle != NULL);
     pHandle->hAvTorqueValue = 0u;
     pHandle->hAvADCValue = 0u;
 }
@@ -44,29 +41,29 @@ void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle)
 */
 void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
 {
-    ASSERT(pHandle != NULL);
-    uint32_t wAux;
-    uint16_t hAux;
+    uint32_t tTorqaux;
+    uint16_t hTorqux;
+    uint16_t htorque;
 	
     /* Use the Read conversion Manager for ADC read*/
-    hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
-    pHandle->hInstTorque = hAux;
+    htorque = RegConvMng_ReadConv(pHandle->bConvHandle);
+    pHandle->hInstTorque = htorque;
 
-    pHandle->hAvADCValue = SignalFiltering_CalcOutputU16(&pHandle->TorqSensorFilter, hAux);
+    pHandle->hAvADCValue = SignalFiltering_CalcOutputU16(&pHandle->TorqSensorFilter, htorque);
 
-	/* Compute torque sensor value (between 0 and 65535) */
-	hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 
+	/* Compute torque sesnor value (between 0 and 65535) */
+	hTorqux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 
 					(pHandle->hAvADCValue - pHandle->hParameters.hOffsetPTS) : 0; //Substraction without overflow
 	
-	wAux = (uint32_t)(pHandle->hParameters.bSlopePTS * hAux);
-	wAux /= pHandle->hParameters.bDivisorPTS;
-	if (wAux > UINT16_MAX) 
+	tTorqaux = (uint32_t)(pHandle->hParameters.bSlopePTS * hTorqux);
+	tTorqaux /= pHandle->hParameters.bDivisorPTS;
+	if (tTorqaux > pHandle->hParameters.hTorqueSensMax) 
     {	
-        wAux = UINT16_MAX;
+        tTorqaux = pHandle->hParameters.hTorqueSensMax;
     }
-	hAux = (uint16_t)wAux;
+	hTorqux = (uint16_t)tTorqaux;
 	
-	pHandle->hAvTorqueValue = hAux;	
+	pHandle->hAvTorqueValue = hTorqux;	
 }
 
 
@@ -75,7 +72,6 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
 */
 uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle)
 {
-  ASSERT(pHandle != NULL);
   return pHandle->hAvTorqueValue;
 }
 
@@ -84,7 +80,6 @@ uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle)
 */
 int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle)
 {
-    ASSERT(pHandle != NULL);
 	int32_t tAux;
 	
 	/* Compute torque value (between -32768 and 32767) */

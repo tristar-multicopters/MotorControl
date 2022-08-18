@@ -25,6 +25,10 @@
 
 //#define CMSIS_device_header "RTE_Patch.h"
 
+#define UNUSED_VARIABLE(X)  ((void)(X))
+#define UNUSED_PARAMETER(X) UNUSED_VARIABLE(X)
+#define UNUSED_RETURN_VALUE(X) UNUSED_VARIABLE(X)
+
 /* Structures ------------------------------------------------------------------*/
 
 

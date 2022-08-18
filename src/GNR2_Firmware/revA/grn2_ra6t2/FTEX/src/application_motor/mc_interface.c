@@ -63,25 +63,20 @@ void MCInterface_SetCurrentReferences(MotorControlInterfaceHandle_t * pHandle, q
 
 bool MCInterface_StartMotor(MotorControlInterfaceHandle_t * pHandle)
 {
-  bool bRetVal = false;  
-  
-  if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE)
+  bool RetVal = MCStateMachine_NextState(pHandle->pSTM, M_IDLE_START);
+
+  if (RetVal == true)
   {
-      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_IDLE_START );
+    pHandle->CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
   }
-  return bRetVal;
+
+  return RetVal;
 }
 
 
 bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle)
 {
-  bool bRetVal = false;  
-  
-  if (MCStateMachine_GetState(pHandle->pSTM) == M_RUN)
-  {
-      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_ANY_STOP );
-  }
-  return bRetVal;
+  return MCStateMachine_NextState(pHandle->pSTM, M_ANY_STOP);
 }
 
 

@@ -10,7 +10,7 @@
 #include "speed_pos_fdbk.h"
 #include "r_gpt.h"
 #include "r_timer_api.h"
-#include "signal_filtering.h"
+
 
 #define HALL_SPEED_FIFO_SIZE  ((uint8_t)18)
 #define DEGREES_120 0u
@@ -143,11 +143,6 @@ typedef struct
     int16_t SectorDestinationAngle[7];
     int16_t SectorMiddleAngle[7];
     int8_t bDirectionChangeCounter;
-    
-    SignalFilteringHandle_t SpeedFilter;
-    float fFilterAlpha;                 // Alpha coefficient for low pass first order butterworth filter
-    float fFilterBeta;                  // Beta coefficient for low pass first order butterworth filter
-    int16_t hFiltElSpeedDpp;
 
 } HallPosSensorHandle_t;
 

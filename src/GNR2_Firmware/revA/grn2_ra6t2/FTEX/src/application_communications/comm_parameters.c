@@ -11,5 +11,5 @@
 
 UART_Parameters_t UART0_Parameters = 
 {
-  .UARTInstance = &g_uart9  
+  .UARTInstance = &g_uart0  
 };

@@ -26,12 +26,13 @@ struct {
 
 /************* DEFINES ****************/
 
-#define TASK_VCFASTLOOP_SAMPLE_TIME_TICK     10     /* VC_FastLoop execute every 10 ticks */
-#define TASK_VCSTM_SAMPLE_TIME_TICK          10     /* VC_StateMachine execute every 10 ticks */
-#define RETURN_TO_STANDBY_LOOPTICKS          0      // Max number of ticks to stay in run while stop conditions are met
-#define START_MOTORS_LOOPTICKS               2      // Max number of ticks to stay in standby while start conditions are met
-#define START_LOOPTICKS                      100    // Max number of ticks to stay in start state
-#define STOP_LOOPTICKS                       100    // Max number of ticks to stay in stop state
+#define TASK_VCFASTLOOP_SAMPLE_TIME_TICK     10       /* VC_FastLoop execute every 10 ticks */
+#define TASK_VCSLOWLOOP_SAMPLE_TIME_TICK     100      /* VC_FastLoop execute every 100 ticks */
+#define TASK_VCSTM_SAMPLE_TIME_TICK          5        /* VC_FastLoop execute every 10 ticks */
+#define RETURN_TO_STANDBY_LOOPTICKS          0        // Max number of ticks to stay in run while stop conditions are met
+#define START_MOTORS_LOOPTICKS               2        // Max number of ticks to stay in standby while start conditions are met
+#define START_LOOPTICKS                      100 // Max number of ticks to stay in start state
+#define STOP_LOOPTICKS                       100 // Max number of ticks to stay in stop state
 
 
 /************* TASKS ****************/
@@ -68,8 +69,8 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         PWRT_CalcMotorTorqueSpeed(pVCI->pPowertrain);
         
         #if ENABLE_VC_DAC_DEBUGGING
-        R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);
-        R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hAvADCValue);
+        R_DAC_Write(g_dac0.p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);
+        R_DAC_Write(g_dac1.p_ctrl, pVCI->pPowertrain->pThrottle->hAvADCValue);
         #endif
         
         xLastWakeTime += TASK_VCFASTLOOP_SAMPLE_TIME_TICK;
@@ -106,7 +107,6 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
     {    
         #if SWD_CONTROL_ENABLE
         MDI_ExecTorqueRamp(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hTorqRef);
-        MDI_ExecTorqueRamp(pVCI->pPowertrain->pMDI, M2, sDebugVariables.hTorqRef);
         
         sDebugVariables.bStartM1 ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M1) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M1);
         sDebugVariables.bStartM2 ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M2) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M2);

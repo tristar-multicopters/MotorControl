@@ -11,7 +11,6 @@
 #include "mc_config.h"
 #include "board_hardware.h"
 #include "ntc_table.h"
-#include "board_hardware.h"
 
 
 #define OFFCALIBRWAIT_MS     0
@@ -150,14 +149,14 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
   },
   .FoldbackMotorTemperature =
   {
-      .bEnableFoldback = true,
+      .bEnableFoldback = false,
       .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
       .hDecreasingEndValue = MOTOR_MAX_TEMPERATURE_C,
       .hDecreasingRange = MOTOR_MAX_TEMPERATURE_C/3,
   },
   .FoldbackHeatsinkTemperature =
   {
-      .bEnableFoldback = true,
+      .bEnableFoldback = false,
       .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
       .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C,
       .hDecreasingRange = OV_TEMPERATURE_THRESHOLD_C/3,
@@ -212,11 +211,11 @@ PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
     
     .IaFilter = 
     {
-        .pIIRFAInstance = SOCP_IA_IIRFA_HANDLE_ADDRESS,
+        .pIIRFAInstance = &g_iirfa0,
     },
     .IbFilter = 
     {
-        .pIIRFAInstance = SOCP_IB_IIRFA_HANDLE_ADDRESS,
+        .pIIRFAInstance = &g_iirfa1,
     },
     .fCurrentFilterAlpha = CURRENT_FILTER_ALPHA,
     .fCurrentFilterBeta  = CURRENT_FILTER_BETA,
@@ -307,7 +306,7 @@ HallPosSensorHandle_t HallPosSensorM1 =
     .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
     .DPPConvFactor                     =  DPP_CONV_FACTOR,
   },
-  .TIMx                = HALL_POSITION_TIMER_HANDLE_ADDRESS,
+  .TIMx                = &g_timer0,
   .bSensorPlacement     = HALL_SENSORS_PLACEMENT,
   .hPhaseShift          = (int16_t)(HALL_PHASE_SHIFT * 65536/360),
   .hSpeedSamplingFreqHz = MEDIUM_FREQUENCY_TASK_RATE,
@@ -315,11 +314,9 @@ HallPosSensorHandle_t HallPosSensorM1 =
   .wTIMClockFreq       = HALL_TIM_CLK,
   .bPWMFreqScaling      = PWM_FREQ_SCALING,
   .bHallMtpa            = HALL_MTPA,
-  .H1PortPin = HALL_POSITION_HU_GPIO_PIN,
-  .H2PortPin = HALL_POSITION_HV_GPIO_PIN,
-  .H3PortPin = HALL_POSITION_HW_GPIO_PIN,
-  .fFilterAlpha = HALL_FILTER_BUTTERWORTH_ALPHA,
-  .fFilterBeta = HALL_FILTER_BUTTERWORTH_BETA,
+  .H1PortPin = M1_ENC_U,
+  .H2PortPin = M1_ENC_V,
+  .H3PortPin = M1_ENC_W,
 };
 
 /**
@@ -379,7 +376,7 @@ CircleLimitationHandle_t CircleLimitationM1 =
 
 RotorPositionObserverHandle_t RotorPosObsM1 =
 {
-    .Super = {
+  .Super = {
     .bElToMecRatio                     =	POLE_PAIR_NUM,
     .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
     .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
@@ -387,9 +384,9 @@ RotorPositionObserverHandle_t RotorPosObsM1 =
     .hMaxReliableMecAccelUnitP         =	65535,
     .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
     .DPPConvFactor                     =  DPP_CONV_FACTOR,
-    },
+  },
 
-    .pHallSensor = &HallPosSensorM1,
+  .pHallSensor = &HallPosSensorM1,
 
 	.hKpGainDef = ROTOR_POS_OBS_KP,
 	.hKpDivisorPOW2 = (uint16_t) ROTOR_POS_OBS_KPDIV_LOG,

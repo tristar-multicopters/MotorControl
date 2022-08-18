@@ -4,7 +4,7 @@
   *
 */
 
-/* Define to prevent recursive inclusion ---
+/* Define to prevent recursive inclusion --- 
 ----------------------------------*/
 #ifndef __PMSM_MOTOR_PARAMETERS_GRIZZLY_H
 #define __PMSM_MOTOR_PARAMETERS_GRIZZLY_H
@@ -19,7 +19,9 @@
 #define LS                     0.000150 /* Stator inductance, H
                                                  For I-PMSM it is equal to Lq */
 
-/* Transformation of real currents (A) into int16_t format must be done accordingly with
+/* When using Id = 0, NOMINAL_PEAK_CURRENT is utilized to saturate the output of the
+   PID for speed regulation (i.e. reference torque).
+   Transformation of real currents (A) into int16_t format must be done accordingly with
    formula:
    Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
                                    *Amplifying network gain)/(MCU supply voltage/2)
@@ -28,9 +30,9 @@
 #define NOMINAL_PEAK_TORQUE     1400  /* Maximum torque to apply to motor in cNm */
 #define NOMINAL_PEAK_CURRENT    14000 /* Maximum current amplitude that can be injected
                                             per phase in digital Amps */
-#define MOTOR_MAX_SPEED_RPM     1250 /*!< Maximum rated speed  */
+#define MOTOR_MAX_SPEED_RPM     800 /*!< Maximum rated speed  */
 #define MOTOR_VOLTAGE_CONSTANT  22.5 /*!< Volts RMS ph-ph /kRPM */
-#define ID_DEMAG                -1000 /*!< Demagnetization current */
+#define ID_DEMAG                -5000 /*!< Demagnetization current */
 #define MOTOR_MAX_TEMPERATURE_C 70    /* Maximum temperature in degree C */
 
 /***************** MOTOR SENSORS PARAMETERS  ******************************/
@@ -49,5 +51,9 @@
                                                  the low to high transition of
                                                  signal H1 and the maximum of
                                                  the Bemf induced on phase A */
-
+/*** Quadrature encoder ***/
+#define M1_ENCODER_PPR             400  /*!< Number of pulses per
+                                            revolution */
+																						
 #endif
+

@@ -15,10 +15,11 @@
 #include "mc_math.h"
 
 /************************* CPU & ADC PERIPHERAL CLOCK CONFIG ******************/
-#define SYSCLK_FREQ         240000000uL
-#define PWM_TIM_CLK_MHz     120
-#define ADC_CLK_MHz         60
-#define HALL_TIM_CLK        120000000uL
+#define SYSCLK_FREQ      240000000uL
+#define TIM_CLOCK_DIVIDER  1
+#define ADV_TIM_CLK_MHz  120
+#define ADC_CLK_MHz     60
+#define HALL_TIM_CLK    120000000uL
 
 
 #endif /*__PARAMETERS_CONVERSION_RA6T2_H*/

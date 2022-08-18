@@ -316,7 +316,7 @@ fsp_err_t R_GPT_THREE_PHASE_DutyCycleSet (three_phase_ctrl_t * const       p_ctr
  * @retval  FSP_ERR_NOT_OPEN             The control block has not been opened.
  **********************************************************************************************************************/
 fsp_err_t R_GPT_THREE_PHASE_CallbackSet (three_phase_ctrl_t * const    p_ctrl,
-                                         void (                      * p_callback)(timer_callback_args_t *),
+                                         void (                     * p_callback)(timer_callback_args_t *),
                                          void const * const            p_context,
                                          timer_callback_args_t * const p_callback_memory)
 {

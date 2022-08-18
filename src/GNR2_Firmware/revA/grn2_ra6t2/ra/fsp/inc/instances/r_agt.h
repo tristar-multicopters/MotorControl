@@ -195,7 +195,7 @@ fsp_err_t R_AGT_StatusGet(timer_ctrl_t * const p_ctrl, timer_status_t * const p_
 fsp_err_t R_AGT_Stop(timer_ctrl_t * const p_ctrl);
 fsp_err_t R_AGT_Open(timer_ctrl_t * const p_ctrl, timer_cfg_t const * const p_cfg);
 fsp_err_t R_AGT_CallbackSet(timer_ctrl_t * const          p_api_ctrl,
-                            void (                      * p_callback)(timer_callback_args_t *),
+                            void (                     * p_callback)(timer_callback_args_t *),
                             void const * const            p_context,
                             timer_callback_args_t * const p_callback_memory);
 

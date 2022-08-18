@@ -83,7 +83,7 @@ void RegConvMng_ExecuteGroupRegularConv(const adc_group_mask_t ADCGroupMask)
 	
 		adc_status_t ADCStatus;
 		
-		R_ADC_B_StatusGet(g_adc0.p_ctrl, &ADCStatus);
+		R_ADC_B_StatusGet(g_adc.p_ctrl, &ADCStatus);
 		
 //		while (ADCStatus.state != ADC_STATE_IDLE)
 //		{
@@ -104,7 +104,7 @@ uint16_t RegConvMng_ReadConv(uint8_t handle)
 {
 	uint16_t hConvResult = 0;
 	
-	R_ADC_B_Read(g_adc0.p_ctrl, RCM_handle_array[handle]->hChannel, &hConvResult);
+	R_ADC_B_Read(g_adc.p_ctrl, RCM_handle_array[handle]->hChannel, &hConvResult);
 	
 	return hConvResult;
 }

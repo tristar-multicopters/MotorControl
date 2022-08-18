@@ -71,7 +71,7 @@ extern const poeg_api_t g_poeg_on_poeg;
 fsp_err_t R_POEG_Open(poeg_ctrl_t * const p_ctrl, poeg_cfg_t const * const p_cfg);
 fsp_err_t R_POEG_StatusGet(poeg_ctrl_t * const p_ctrl, poeg_status_t * const p_status);
 fsp_err_t R_POEG_CallbackSet(poeg_ctrl_t * const          p_ctrl,
-                             void (                     * p_callback)(poeg_callback_args_t *),
+                             void (                    * p_callback)(poeg_callback_args_t *),
                              void const * const           p_context,
                              poeg_callback_args_t * const p_callback_memory);
 fsp_err_t R_POEG_OutputDisable(poeg_ctrl_t * const p_ctrl);

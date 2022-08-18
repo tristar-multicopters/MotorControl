@@ -146,7 +146,7 @@ typedef struct st_external_irq_api
      *                                       Callback arguments allocated here are only valid during the callback.
      */
     fsp_err_t (* callbackSet)(external_irq_ctrl_t * const          p_api_ctrl,
-                              void (                             * p_callback)(external_irq_callback_args_t *),
+                              void (                            * p_callback)(external_irq_callback_args_t *),
                               void const * const                   p_context,
                               external_irq_callback_args_t * const p_callback_memory);
 

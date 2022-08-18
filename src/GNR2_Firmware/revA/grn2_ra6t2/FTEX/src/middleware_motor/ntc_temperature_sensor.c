@@ -44,7 +44,7 @@ void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle)
 {
   if (pHandle->bSensorType == REAL_SENSOR)
   {
-      if(pHandle->pNTCLookupTable != NULL)
+      if (pHandle->pNTCLookupTable != NULL)
       {
           LookupTable_Init(pHandle->pNTCLookupTable);
       }
@@ -101,7 +101,7 @@ int16_t NTCTempSensor_GetAvTempCelcius(NTCTempSensorHandle_t * pHandle)
   int32_t wTemp;  // temporary 32 bit variable for calculation
   if (pHandle->bSensorType == REAL_SENSOR)  // Checks for sensor type
   {
-      if(pHandle->pNTCLookupTable != NULL)
+      if (pHandle->pNTCLookupTable != NULL)
       {
           wTemp = LookupTable_CalcOutput(pHandle->pNTCLookupTable, pHandle->hAvTempDigital);
       }
