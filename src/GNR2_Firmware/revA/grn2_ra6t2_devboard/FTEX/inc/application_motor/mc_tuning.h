@@ -39,10 +39,10 @@ typedef struct
   PIDHandle_t * pPIDId;
   PIDHandle_t * pPIDFluxWeakening;
   PWMCurrFdbkHandle_t * pPWMnCurrFdbk;
-  SpeednPosFdbkHandle_t * pSpeedSensorMain;
-  SpeednPosFdbkHandle_t * pSpeedSensorAux;
+  SpdPosFdbkHandle_t * pSpeedSensorMain;
+  SpdPosFdbkHandle_t * pSpeedSensorAux;
   VirtualSpeedSensor_Handle_t * pSpeedSensorVirtual;
-  SpeednTorqCtrlHandle_t * pSpeednTorqueCtrl;
+  SpdTorqCtrlHandle_t * pSpeednTorqueCtrl;
   MotorStateMachineHandle_t * pStateMachine;
   NTCTempSensorHandle_t * pTemperatureSensor;
   BusVoltageSensorHandle_t * pBusVoltageSensor;

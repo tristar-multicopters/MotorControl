@@ -9,37 +9,37 @@
 #include "speed_pos_fdbk.h"
 
 
-int16_t SpdPosFdbk_GetElAngle(SpeednPosFdbkHandle_t * pHandle)
+int16_t SpdPosFdbk_GetElAngle(SpdPosFdbkHandle_t * pHandle)
 {
   return (pHandle->hElAngle);
 }
 
 
-int32_t SpdPosFdbk_GetMecAngle(SpeednPosFdbkHandle_t * pHandle)
+int32_t SpdPosFdbk_GetMecAngle(SpdPosFdbkHandle_t * pHandle)
 {
   return (pHandle->wMecAngle);
 }
 
 
-int16_t SpdPosFdbk_GetAvrgMecSpeedUnit(SpeednPosFdbkHandle_t * pHandle)
+int16_t SpdPosFdbk_GetAvrgMecSpeedUnit(SpdPosFdbkHandle_t * pHandle)
 {
   return (pHandle->hAvrMecSpeedUnit);
 }
 
 
-int16_t SpdPosFdbk_GetElSpeedDpp(SpeednPosFdbkHandle_t * pHandle)
+int16_t SpdPosFdbk_GetElSpeedDpp(SpdPosFdbkHandle_t * pHandle)
 {
   return (pHandle->hElSpeedDpp);
 }
 
 
-int16_t SpdPosFdbk_GetInstElSpeedDpp(SpeednPosFdbkHandle_t * pHandle)
+int16_t SpdPosFdbk_GetInstElSpeedDpp(SpdPosFdbkHandle_t * pHandle)
 {
   return (pHandle->InstantaneousElSpeedDpp);
 }
 
 
-bool SpdPosFdbk_GetReliability(SpeednPosFdbkHandle_t * pHandle)
+bool SpdPosFdbk_GetReliability(SpdPosFdbkHandle_t * pHandle)
 {
   bool SpeedSensorReliability = true;
   if (pHandle->bSpeedErrorNumber ==
@@ -51,7 +51,7 @@ bool SpdPosFdbk_GetReliability(SpeednPosFdbkHandle_t * pHandle)
 }
 
 
-bool SpdPosFdbk_CalcReliability(SpeednPosFdbkHandle_t * pHandle, int16_t * pMecSpeedUnit)
+bool SpdPosFdbk_CalcReliability(SpdPosFdbkHandle_t * pHandle, int16_t * pMecSpeedUnit)
 {
   bool SpeedSensorReliability = true;
   uint8_t bSpeedErrorNumber;
@@ -126,7 +126,7 @@ bool SpdPosFdbk_CalcReliability(SpeednPosFdbkHandle_t * pHandle, int16_t * pMecS
 }
 
 
-int16_t SpdPosFdbk_GetS16Speed(SpeednPosFdbkHandle_t * pHandle)
+int16_t SpdPosFdbk_GetS16Speed(SpdPosFdbkHandle_t * pHandle)
 {
   int32_t wAux = (int32_t) pHandle->hAvrMecSpeedUnit;
   wAux *= INT16_MAX;
@@ -135,13 +135,13 @@ int16_t SpdPosFdbk_GetS16Speed(SpeednPosFdbkHandle_t * pHandle)
 }
 
 
-uint8_t SpdPosFdbk_GetElToMecRatio(SpeednPosFdbkHandle_t * pHandle)
+uint8_t SpdPosFdbk_GetElToMecRatio(SpdPosFdbkHandle_t * pHandle)
 {
   return (pHandle->bElToMecRatio);
 }
 
 
-void SpdPosFdbk_SetElToMecRatio(SpeednPosFdbkHandle_t * pHandle, uint8_t bPP)
+void SpdPosFdbk_SetElToMecRatio(SpdPosFdbkHandle_t * pHandle, uint8_t bPP)
 {
   pHandle->bElToMecRatio = bPP;
 }

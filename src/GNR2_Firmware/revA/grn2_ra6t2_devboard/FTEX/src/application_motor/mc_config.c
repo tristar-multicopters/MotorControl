@@ -130,7 +130,7 @@ FeedforwardHandle_t FeedforwardM1 =
 /**
   * @brief  SpeednTorque Controller parameters Motor 1
   */
-SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
+SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
 {
   .TorqueRampMngr =
   {

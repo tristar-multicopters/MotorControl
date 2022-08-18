@@ -57,12 +57,12 @@ void Feedforward_Clear(FeedforwardHandle_t * pHandle)
 }
 
 
-void Feedforward_VqdffComputation(FeedforwardHandle_t * pHandle, qd_t Iqdref, SpeednTorqCtrlHandle_t * pSpeedTorqCtrl)
+void Feedforward_VqdffComputation(FeedforwardHandle_t * pHandle, qd_t Iqdref, SpdTorqCtrlHandle_t * pSpeedTorqCtrl)
 {
   int32_t wtemp1, wtemp2;
   int16_t hSpeed_dpp;
   uint16_t hAvBusVoltage_d;
-  SpeednPosFdbkHandle_t * SpeedSensor;
+  SpdPosFdbkHandle_t * SpeedSensor;
 
   SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pSpeedTorqCtrl);
   hSpeed_dpp = SpdPosFdbk_GetElSpeedDpp(SpeedSensor);

@@ -63,7 +63,7 @@ typedef struct
     uint32_t DPPConvFactor; /* (65536/PWM_FREQ_SCALING) */
 
 
-} SpeednPosFdbkHandle_t;
+} SpdPosFdbkHandle_t;
 
 /**
   * @brief input structure type definition for SPD_CalcAngle
@@ -82,7 +82,7 @@ typedef struct
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component
   * @retval int16_t rotor electrical angle (s16degrees)
   */
-int16_t SpdPosFdbk_GetElAngle(SpeednPosFdbkHandle_t * pHandle);
+int16_t SpdPosFdbk_GetElAngle(SpdPosFdbkHandle_t * pHandle);
 
 /**
   * @brief  It returns the last computed rotor mechanical angle, expressed in
@@ -94,14 +94,14 @@ int16_t SpdPosFdbk_GetElAngle(SpeednPosFdbkHandle_t * pHandle);
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component
   * @retval int16_t rotor mechanical angle (s16degrees)
   */
-int32_t SpdPosFdbk_GetMecAngle(SpeednPosFdbkHandle_t * pHandle);
+int32_t SpdPosFdbk_GetMecAngle(SpdPosFdbkHandle_t * pHandle);
 
 /**
   * @brief  Returns the last computed average mechanical speed, expressed in
   *         the unit defined by #SPEED_UNIT.
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component
   */
-int16_t SpdPosFdbk_GetAvrgMecSpeedUnit(SpeednPosFdbkHandle_t * pHandle);
+int16_t SpdPosFdbk_GetAvrgMecSpeedUnit(SpdPosFdbkHandle_t * pHandle);
 
 /**
   * @brief  It returns the last computed electrical speed, expressed in Dpp.
@@ -111,7 +111,7 @@ int16_t SpdPosFdbk_GetAvrgMecSpeedUnit(SpeednPosFdbkHandle_t * pHandle);
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component
   * @retval int16_t rotor electrical speed (Dpp)
   */
-int16_t SpdPosFdbk_GetElSpeedDpp(SpeednPosFdbkHandle_t * pHandle);
+int16_t SpdPosFdbk_GetElSpeedDpp(SpdPosFdbkHandle_t * pHandle);
 
 /**
   * @brief  It returns the last instantaneous computed electrical speed, expressed in Dpp.
@@ -121,7 +121,7 @@ int16_t SpdPosFdbk_GetElSpeedDpp(SpeednPosFdbkHandle_t * pHandle);
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component
   * @retval int16_t rotor instantaneous electrical speed (Dpp)
   */
-int16_t SpdPosFdbk_GetInstElSpeedDpp (SpeednPosFdbkHandle_t * pHandle);
+int16_t SpdPosFdbk_GetInstElSpeedDpp (SpdPosFdbkHandle_t * pHandle);
 
 /**
   * @brief  It returns the result of the last reliability check performed.
@@ -133,7 +133,7 @@ int16_t SpdPosFdbk_GetInstElSpeedDpp (SpeednPosFdbkHandle_t * pHandle);
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component
   * @retval bool sensor reliability state
   */
-bool SpdPosFdbk_GetReliability(SpeednPosFdbkHandle_t * pHandle);
+bool SpdPosFdbk_GetReliability(SpdPosFdbkHandle_t * pHandle);
 
 /**
   * @brief  This method must be called - at least - with the same periodicity
@@ -150,7 +150,7 @@ bool SpdPosFdbk_GetReliability(SpeednPosFdbkHandle_t * pHandle);
   *         mechanical speed (expressed in the unit defined by #SPEED_UNIT)
   * @retval none
   */
-bool SpdPosFdbk_CalcReliability(SpeednPosFdbkHandle_t * pHandle, int16_t * pMecSpeedUnit);
+bool SpdPosFdbk_CalcReliability(SpdPosFdbkHandle_t * pHandle, int16_t * pMecSpeedUnit);
 
 /**
   * @brief  This method returns the average mechanical rotor speed expressed in
@@ -163,7 +163,7 @@ bool SpdPosFdbk_CalcReliability(SpeednPosFdbkHandle_t * pHandle, int16_t * pMecS
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component
   * @retval int16_t The average mechanical rotor speed expressed in "S16Speed".
   */
-int16_t SpdPosFdbk_GetS16Speed(SpeednPosFdbkHandle_t * pHandle);
+int16_t SpdPosFdbk_GetS16Speed(SpdPosFdbkHandle_t * pHandle);
 
 /**
   * @brief  This method returns the coefficient used to transform electrical to
@@ -172,7 +172,7 @@ int16_t SpdPosFdbk_GetS16Speed(SpeednPosFdbkHandle_t * pHandle);
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component
   * @retval uint8_t The motor pole pairs number.
   */
-uint8_t SpdPosFdbk_GetElToMecRatio(SpeednPosFdbkHandle_t * pHandle);
+uint8_t SpdPosFdbk_GetElToMecRatio(SpdPosFdbkHandle_t * pHandle);
 
 /**
   * @brief  This method sets the coefficient used to transform electrical to
@@ -181,7 +181,7 @@ uint8_t SpdPosFdbk_GetElToMecRatio(SpeednPosFdbkHandle_t * pHandle);
   * @param  pHandle: handler of the current instance of the SpeednPosFdbk component
   * @param  bPP The motor pole pairs number to be set.
   */
-void SpdPosFdbk_SetElToMecRatio(SpeednPosFdbkHandle_t * pHandle, uint8_t bPP);
+void SpdPosFdbk_SetElToMecRatio(SpdPosFdbkHandle_t * pHandle, uint8_t bPP);
 
 
 #ifdef __cplusplus

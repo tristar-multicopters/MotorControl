@@ -27,7 +27,7 @@ extern "C" {
 
 typedef struct
 {
-  SpeednPosFdbkHandle_t Super;
+  SpdPosFdbkHandle_t Super;
 
   int16_t  hC1;                 /*!< Variable containing state observer constant
                                      C1 to speed-up computations */

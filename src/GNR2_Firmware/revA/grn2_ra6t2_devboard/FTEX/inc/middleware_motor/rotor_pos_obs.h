@@ -22,7 +22,7 @@
   */
 typedef struct
 { 
-	SpeednPosFdbkHandle_t Super; /* Base class module */
+	SpdPosFdbkHandle_t Super; /* Base class module */
 	
 	HallPosSensorHandle_t * pHallSensor;									/* Pointer to hall sensor handle used by rotor position observer */
 	

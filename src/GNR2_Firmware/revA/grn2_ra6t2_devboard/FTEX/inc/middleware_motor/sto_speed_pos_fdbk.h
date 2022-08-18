@@ -33,7 +33,7 @@ typedef bool (*BemfObs_SpeedReliabilityCheck_Cb_t)(const BemfObserver_t * pHandl
   */
 struct BemfObserverHandle
 {
-  SpeednPosFdbkHandle_t     *     Super;
+  SpdPosFdbkHandle_t     *     Super;
   BemfObs_ForceConvergency1_Cb_t       pFctForceConvergency1;
   BemfObs_ForceConvergency2_Cb_t       pFctForceConvergency2;
   BemfObs_OtfResetPLL_Cb_t             pFctStoOtfResetPLL;

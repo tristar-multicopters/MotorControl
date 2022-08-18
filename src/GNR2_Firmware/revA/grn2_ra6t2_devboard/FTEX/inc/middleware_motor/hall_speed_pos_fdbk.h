@@ -21,7 +21,7 @@
 
 typedef struct
 {
-    SpeednPosFdbkHandle_t Super; /* Base class module */
+    SpdPosFdbkHandle_t Super; /* Base class module */
 
     uint8_t  bSensorPlacement; /*!< Define here the mechanical position of the sensors
                      with reference to an electrical cycle.

@@ -23,7 +23,7 @@ extern "C" {
   */
 typedef struct
 {
-  SpeednPosFdbkHandle_t   Super;
+  SpdPosFdbkHandle_t   Super;
   int32_t wElAccDppP32;   /*!< Delta electrical speed expressed in dpp per speed
                                sampling period to be appied each time is called
                                SPD_CalcAvrgMecSpeedUnit multiplied by scaling

@@ -11,7 +11,7 @@
 #include "mc_type.h"
 #include "regular_conversion_manager.h"
 
-#define USE_NTC_LOOKUP_TABLE    1
+#define USE_NTC_LOOKUP_TABLE    0
 
 #if USE_NTC_LOOKUP_TABLE
 #include "lookup_table.h"

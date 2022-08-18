@@ -510,16 +510,6 @@
               <FilePath>.\FTEX\src\application_motor\mc_tasks.c</FilePath>
             </File>
             <File>
-              <FileName>ntc_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>current_pid_vs_speed_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
-            </File>
-            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>

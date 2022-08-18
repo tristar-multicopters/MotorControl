@@ -40,7 +40,7 @@ MotorControlInterfaceHandle_t * oMCInterface[NBR_OF_MOTORS];
 MotorControlInterfaceHandle_t MCInterface[NBR_OF_MOTORS];
 MotorControlTuningHandle_t MCTuning[NBR_OF_MOTORS];
 MotorStateMachineHandle_t MCStateMachine[NBR_OF_MOTORS];
-SpeednTorqCtrlHandle_t *pSpeedTorqCtrl[NBR_OF_MOTORS];
+SpdTorqCtrlHandle_t *pSpeedTorqCtrl[NBR_OF_MOTORS];
 PIDHandle_t *pPIDSpeed[NBR_OF_MOTORS];
 PIDHandle_t *pPIDIq[NBR_OF_MOTORS];
 PIDHandle_t *pPIDId[NBR_OF_MOTORS];
@@ -173,8 +173,8 @@ void MC_Bootup(void)
     MCTuning[M1].pPIDId = pPIDId[M1];
     MCTuning[M1].pPIDFluxWeakening = &PIDFluxWeakeningHandleM1; /* only if M1 has FW */
     MCTuning[M1].pPWMnCurrFdbk = pPWMCurrFdbk[M1];
-    MCTuning[M1].pSpeedSensorMain = (SpeednPosFdbkHandle_t *) &RotorPosObsM1;
-    MCTuning[M1].pSpeedSensorAux = (SpeednPosFdbkHandle_t *) &BemfObserverPllM1;
+    MCTuning[M1].pSpeedSensorMain = (SpdPosFdbkHandle_t *) &RotorPosObsM1;
+    MCTuning[M1].pSpeedSensorAux = (SpdPosFdbkHandle_t *) &BemfObserverPllM1;
     MCTuning[M1].pSpeedSensorVirtual = MC_NULL;
     MCTuning[M1].pSpeednTorqueCtrl = pSpeedTorqCtrl[M1];
     MCTuning[M1].pStateMachine = &MCStateMachine[M1];
@@ -540,7 +540,7 @@ inline uint16_t FOC_CurrControllerM1(void)
 
     int16_t hElAngle;
     uint16_t hCodeError = 0;
-    SpeednPosFdbkHandle_t *speedHandle;
+    SpdPosFdbkHandle_t *speedHandle;
 
     speedHandle = SpdTorqCtrl_GetSpeedSensor(pSpeedTorqCtrl[M1]);
     hElAngle = SpdPosFdbk_GetElAngle(speedHandle);
@@ -630,8 +630,9 @@ inline uint16_t FOC_CurrControllerM1(void)
     {
         R_DAC_Write(g_dac0.p_ctrl, (uint16_t)FOCVars[M1].Iab.a + INT16_MAX);
         R_DAC_Write(g_dac1.p_ctrl, (uint16_t)FOCVars[M1].Iab.b + INT16_MAX);
-        #endif
+        
     }
+    #endif
 
     return(hCodeError);
 }
