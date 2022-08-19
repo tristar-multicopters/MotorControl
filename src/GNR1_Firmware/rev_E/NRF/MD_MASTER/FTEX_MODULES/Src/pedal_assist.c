@@ -94,11 +94,13 @@ void PAS_UpdatePASDetection (PAS_Handle_t * pHandle)
 {
 	uint32_t	wSpeedt;
 	uint16_t	hTorqueSens;
+	/* Calculate the offset based on ration percentage */
+	uint16_t  hOffsetTemp = (pHandle->pTorque->hParam.hOffsetMT * pHandle->pTorque->hParam.hMax) / MAX_TORQUE_PERCENTAGE;
 	
 	wSpeedt = PAS_GetPeriodValue(pHandle);
 	hTorqueSens = TS_GetAvValue(pHandle->pTorque);
 
-	if ((pHandle->bTorqueSensorUse) && (hTorqueSens > pHandle->pTorque->hParam.hOffsetMT) )
+	if ((pHandle->bTorqueSensorUse) && (hTorqueSens > hOffsetTemp) )
 		pHandle->bPASDetected = true;
 	else if (wSpeedt > 0)
 		pHandle->bPASDetected = true;

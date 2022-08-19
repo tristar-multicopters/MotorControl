@@ -26,6 +26,7 @@
 #define RPMCOEFF 				60			// RPM multiplication for r/min
 #define PRECISIONCOEFF	1000	// ms coefficient precision
 #define COEFFREQ				1000000000	// Period coeff for usecond division
+#define PAS_PERCENTAGE	(uint8_t)100		/* Percentage for PAS use */
 
 /* PAS Level enumeration ------------------------------------------------ */
 typedef enum
@@ -54,7 +55,8 @@ typedef struct {
 	uint32_t wPASFreq;
 	int32_t wPASRpm;
 	
-	int16_t bMaxTorque;
+	int16_t	hMaxTorqueRatio;
+	uint16_t	hMaxSpeedRatio;
 	uint8_t bMaxLevel;
 		
 	uint8_t	bPulseNb;		/* NUMBER_OF_PINS of pulse per rotation */

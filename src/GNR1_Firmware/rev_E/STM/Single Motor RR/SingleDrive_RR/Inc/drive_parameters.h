@@ -43,7 +43,7 @@
                                                            measurements before main sensor
                                                            goes in fault */
 
-#define HALL_AVERAGING_FIFO_DEPTH        6 /*!< depth of the FIFO used to
+#define HALL_AVERAGING_FIFO_DEPTH        10 /*!< depth of the FIFO used to
                                                            average mechanical speed in
                                                            0.1Hz resolution */
 #define HALL_MTPA  true
@@ -141,8 +141,8 @@
 #define SPD_DIFFERENTIAL_TERM_ENABLING DISABLE
 #define IQMAX                          32000
 
-#define MAX_APPLICATION_POSITIVE_POWER  500
-#define MAX_APPLICATION_NEGATIVE_POWER  500
+#define MAX_APPLICATION_POSITIVE_POWER  1200
+#define MAX_APPLICATION_NEGATIVE_POWER  1200
 
 /* Default settings */
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< STC_TORQUE_MODE or
@@ -263,6 +263,8 @@
 
 
 /* ##@@_USER_CODE_END_##@@ */
+
+#define SPEED_FILTER_LENGTH         10 // Length of the speed filter in power calculation
 
 #endif /*__DRIVE_PARAMETERS_H*/
 /******************* (C) COPYRIGHT 2019 STMicroelectronics *****END OF FILE****/

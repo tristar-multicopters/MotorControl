@@ -374,7 +374,7 @@ __weak void TSK_MediumFrequencyTaskM1(void)
   HALL_CalcAvrgMecSpeedUnit( &HALL_M1, &wAux );
   bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
   PQD_CalcElMotorPower( pMPM[M1] );
-  FOC_UpdatePIDGains(M1);
+  FOC_UpdatePIDGains(M1); // dynamic PID
 
   StateM1 = STM_GetState( &STM[M1] );
 

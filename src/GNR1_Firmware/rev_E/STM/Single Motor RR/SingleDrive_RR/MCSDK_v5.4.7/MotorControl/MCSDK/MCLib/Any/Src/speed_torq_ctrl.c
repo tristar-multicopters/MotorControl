@@ -37,6 +37,9 @@ void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PID_Handle_t * pPI, Spee
     pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     RampMngr_Init(&pHandle->TorqueRampMngr);
     RampMngr_Init(&pHandle->SpeedRampMngr);
+		
+		SignalFiltering_Init(&pHandle->SpeedFilter);
+    SignalFiltering_ConfigureRecursiveAverage(&pHandle->SpeedFilter,pHandle->hSpeedFilterLength );
 }
 
 
@@ -390,6 +393,8 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpeednTorqCtrlHandle_t * pHandle
     int16_t hRetval = hInputTorque;
 
     hMeasuredSpeedUnit = SPD_GetAvrgMecSpeedUnit(pHandle->pSPD);
+		hMeasuredSpeedUnit = SignalFiltering_CalcOutput(&pHandle->SpeedFilter,hMeasuredSpeedUnit);  // filter out the speed
+	
     hMeasuredSpeedTenthRadPerSec = (int16_t)((10*hMeasuredSpeedUnit*2*3.1416F)/SPEED_UNIT);
 
     if (hMeasuredSpeedUnit != 0)

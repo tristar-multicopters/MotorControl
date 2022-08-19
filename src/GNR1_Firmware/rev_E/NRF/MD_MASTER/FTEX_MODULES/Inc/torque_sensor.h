@@ -49,6 +49,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 
+#define MAX_TORQUE_PERCENTAGE	(uint8_t)100		/* Percentage for PAS use */
 /* Torque_Param_t structure used to store torque user parameters */
 typedef struct
 {          

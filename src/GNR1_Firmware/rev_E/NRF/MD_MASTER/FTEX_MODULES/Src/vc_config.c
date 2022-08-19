@@ -196,12 +196,12 @@ TS_Handle_t TorqueSensor =
 		.hLowPassFilterBW2 = 25,
 		
 		.hOffsetTS = 12500,
-		.bSlopeTS = 18,			
+		.bSlopeTS = 5,			
 		.bDivisorTS = 4,
 		
-		.hOffsetMT = 20000, /* Offset to launch the torque sensing */
+		.hOffsetMT = 30, /* Offset to launch the torque sensing in percentage from 100% */
 		.bSlopeMT = -7,
-		.bDivisorMT = 160,
+		.bDivisorMT = 160,	
 			
 		.hMax = UINT16_MAX,
 	}
@@ -349,11 +349,14 @@ PAS_Handle_t PedalAssistHandle = {
 	.bTorqueSensorUse = false,
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
 	.bMaxLevel	=	5,
+	.hMaxTorqueRatio = 80, /* Max torque Percentage ratio for use in % for a total of 100%*/
+	.hMaxSpeedRatio = 30, /* Max Speed Percentage ratio for use in % for a total of 100%*/
 	.bPulseNb	= 30,	// NUMBER_OF_PINS of pulse / rotation
 	.bTorqueSensorUse = false,
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bMaxLevel	=	5,
-	.bMaxTorque = -1000,
+	.hMaxTorqueRatio = 80, /* Max torque Percentage ratio for use in % for a total of 100%*/
+	.hMaxSpeedRatio = 30, /* Max Speed Percentage ratio for use in % for a total of 100%*/
 	.bPulseNb	= 0,	
 	.bTorqueSensorUse = true,
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
@@ -395,8 +398,8 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -10000,
-	.sParameters.hPASMaxSpeed = 500,
+	.sParameters.hPASMaxTorque = -1000,
+	.sParameters.hPASMaxSpeed = 1250,
   .sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
 	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 	#elif VEHICLE_SELECTION == VEHICLE_EBGO
@@ -406,16 +409,16 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.bMode = SINGLE_MOTOR,
 	.sParameters.bCtrlType = TORQUE_CTRL,
 	.sParameters.bM2TorqueInversion = false,
-	.sParameters.hTorquePASRampTimeUp = 1250,
-	.sParameters.hTorqueRampTimeUp = 200,
-	.sParameters.hTorqueRampTimeDown = 50,
+	.sParameters.hTorquePASRampTimeUp = 15000,
+	.sParameters.hTorqueRampTimeUp = 10000,
+	.sParameters.hTorqueRampTimeDown = 10000,
 	.sParameters.hSpeedRampTimeUp = 200,
 	.sParameters.hSpeedRampTimeDown = 50,
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
-	.sParameters.hPASMaxTorque = -7000,
-	.sParameters.hPASMaxSpeed = 400,
+	.sParameters.hPASMaxTorque = -1000,
+	.sParameters.hPASMaxSpeed = 1250,
 	.sParameters.bUseWheelSpeedSensor = true,
 	.sParameters.bWheelSpreedRatio = 2,
 	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
@@ -427,16 +430,16 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.bMode = SINGLE_MOTOR,
 	.sParameters.bCtrlType = TORQUE_CTRL,
 	.sParameters.bM2TorqueInversion = false,
-	.sParameters.hTorquePASRampTimeUp = 1000,	
-	.sParameters.hTorqueRampTimeUp = 200,
-	.sParameters.hTorqueRampTimeDown = 50,
+	.sParameters.hTorquePASRampTimeUp = 6000,	
+	.sParameters.hTorqueRampTimeUp = 10000,
+	.sParameters.hTorqueRampTimeDown = 10000,
 	.sParameters.hSpeedRampTimeUp = 200,
 	.sParameters.hSpeedRampTimeDown = 50,
 	.sParameters.hStartingThrottle = 1000,
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -1000,
-	.sParameters.hPASMaxSpeed = 500,
+	.sParameters.hPASMaxSpeed = 1250,
 	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
 	.sParameters.bUseWheelSpeedSensor = true,
 	.sParameters.bWheelSpreedRatio = 2,
@@ -456,7 +459,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -7000,
-	.sParameters.hPASMaxSpeed = 500,
+	.sParameters.hPASMaxSpeed = 1250,
 	.sParameters.GearRatio = 0x00010001, //Ratio is unknown so 1/1 assumed
 	.sParameters.hFaultManagementTimeout = 25, // Timer of 500ms for clear OC, SF and SU faults (20ms * 25)
 	#else

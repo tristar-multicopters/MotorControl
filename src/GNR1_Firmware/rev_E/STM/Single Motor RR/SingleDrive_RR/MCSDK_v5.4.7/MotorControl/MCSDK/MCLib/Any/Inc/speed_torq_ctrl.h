@@ -20,6 +20,7 @@ extern "C" {
 #include "ramp_mngr.h"
 #include "foldback.h"
 #include "ntc_temperature_sensor.h"
+#include "signal_filtering.h"
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -99,6 +100,9 @@ typedef struct
 
     float fGainTorqueIqref;            /* Gain (G) between Iqref in digital amps and torque reference in cNm. Iqref = Torq * G/D  */
     float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
+		
+		SignalFilteringHandle_t SpeedFilter ;
+    uint16_t hSpeedFilterLength;
 
 } SpeednTorqCtrlHandle_t;
 

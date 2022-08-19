@@ -128,9 +128,10 @@ uint16_t TS_GetAvValue( TS_Handle_t * pHandle )
 int16_t TS_ToMotorTorque(TS_Handle_t * pHandle)
 {
 	int32_t tAux;
-	
+	/* Calculate the offset based on ration percentage */
+	uint16_t hOffsetTS = (pHandle->hParam.hOffsetMT * pHandle->hParam.hMax) / MAX_TORQUE_PERCENTAGE;
 	/* Compute torque value (between -32768 and 32767) */
-	tAux = (int32_t)(pHandle->hAvTorqueValue - pHandle->hParam.hOffsetMT);
+	tAux = (int32_t)(pHandle->hAvTorqueValue - hOffsetTS);
 	if (tAux < 0)
 		tAux = 0;
 	/* Use slope factor */

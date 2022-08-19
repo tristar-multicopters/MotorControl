@@ -943,14 +943,17 @@ int16_t DRVT_GetPASTorque(DRVT_Handle_t * pHandle)
 	*/
 void DRVT_PASSetMaxSpeed(DRVT_Handle_t * pHandle)
 {
+	uint16_t hMaxSpeedTemp;
+	
 	PAS_sLevel Got_Level;
 	Got_Level = DRVT_GetPASLevel(pHandle);
+	hMaxSpeedTemp = (pHandle->pPAS->hMaxSpeedRatio * pHandle->sParameters.hPASMaxSpeed) / PAS_PERCENTAGE;
 	
-	FLDBK_SetStartValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
-	FLDBK_SetEndValue (&pHandle->sSpeedFoldback[M1], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
+	FLDBK_SetStartValue (&pHandle->sSpeedFoldback[M1], (hMaxSpeedTemp / pHandle->pPAS->bMaxLevel) * Got_Level);
+	FLDBK_SetEndValue (&pHandle->sSpeedFoldback[M1], (hMaxSpeedTemp / pHandle->pPAS->bMaxLevel) * Got_Level);
 
-	FLDBK_SetStartValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
-	FLDBK_SetEndValue (&pHandle->sSpeedFoldback[M2], (pHandle->sParameters.hPASMaxSpeed / pHandle->pPAS->bMaxLevel) * Got_Level);
+	FLDBK_SetStartValue (&pHandle->sSpeedFoldback[M2], (hMaxSpeedTemp / pHandle->pPAS->bMaxLevel) * Got_Level);
+	FLDBK_SetEndValue (&pHandle->sSpeedFoldback[M2], (hMaxSpeedTemp / pHandle->pPAS->bMaxLevel) * Got_Level);
 }
 
 /**
@@ -960,16 +963,16 @@ void DRVT_PASSetMaxSpeed(DRVT_Handle_t * pHandle)
 	*/
 int16_t DRVT_GetTorqueFromTS(DRVT_Handle_t * pHandle)
 {
-	int16_t hRefTorqueS, hReadTS;
+	int16_t hRefTorqueS, hReadTS, hMaxTorq_Temp;
 	PAS_sLevel Got_Level;
 	hReadTS = TS_ToMotorTorque(pHandle->pPAS->pTorque);
 	Got_Level = DRVT_GetPASLevel(pHandle);
 	
 	hRefTorqueS = (hReadTS * Got_Level) / pHandle->pPAS->bMaxLevel;
-	
-	if (hRefTorqueS < pHandle->pPAS->bMaxTorque)
+	hMaxTorq_Temp = (pHandle->pPAS->hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+	if (hRefTorqueS < hMaxTorq_Temp)
 	{
-		hRefTorqueS = pHandle->pPAS->bMaxTorque;
+		hRefTorqueS = hMaxTorq_Temp;
 	}
 	return hRefTorqueS;
 }

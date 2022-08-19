@@ -210,6 +210,12 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
 
   .fGainTorqueIqref =           GAIN_TORQUE_IQREF,
   .fGainTorqueIdref =           GAIN_TORQUE_IDREF,
+	.SpeedFilter =
+    {
+        0
+    },
+  .hSpeedFilterLength =  SPEED_FILTER_LENGTH,	
+	
 };
 
 /**
