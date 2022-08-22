@@ -5,31 +5,82 @@
     *
 */
 
+#include "gnr_parameters.h"
 #include "current_pid_vs_speed_table.h"
+
+
 
 #define CURRENT_PID_VS_SPEED_LUT_SIZE                 2
 #define CURRENT_PID_LUT_SPEED_STEP                    700
 #define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
 
+#if VEHICLE_SELECTION == VEHICLE_GRIZZLY
+
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    150,
-    300
+    800,
+    600
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    25,
-    4000,
+    600,
+    1000,
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    150,
-    100,
+    800,
+    600,
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    25,
-    6000,
+    2000,
+    3000,
 };
+
+#elif VEHICLE_SELECTION == VEHICLE_EBGO
+
+const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    800,
+    600
+};
+
+const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    600,
+    1000,
+};
+
+const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    800,
+    600,
+};
+
+const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    2000,
+    3000,
+};
+
+#elif VEHICLE_SELECTION == VEHICLE_E_CELLS
+
+const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    800,
+    600
+};
+
+const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    600,
+    1000,
+};
+
+const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    800,
+    600,
+};
+
+const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    2000,
+    3000,
+};
+
+#endif
 
 LookupTableHandle_t LookupTableM1IqKp =
 {

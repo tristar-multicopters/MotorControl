@@ -25,7 +25,7 @@ const PWMInsulCurrSensorFdbkParams_t PWMICSParamsM1 =
     .bRepetitionCounter 	=	REP_COUNTER,
 	
 /* PWM break input parameters --------------------------------------------------*/
-	.pPOEGHandle = PWM_POEG_HANDLE_ADDRESS,
+	.pPOEGHandle = PWM_POEG0_HANDLE_ADDRESS,
 	
 };
 

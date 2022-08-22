@@ -21,6 +21,10 @@
 
 #include "vc_parameters_ebgo.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_E_CELLS
+
+#include "vc_parameters_e_cells.h"
+
 #endif
 
 #endif /*__VC_PARAMETERS_H*/

@@ -60,7 +60,7 @@ void PWMBreak1_IRQHandler(poeg_callback_args_t * p_args)
     if(NULL != p_args)
     {
         /* Stop POEG module so it does not reenter the interrupt twice */
-        R_POEG_Close((PWM_POEG_HANDLE_ADDRESS)->p_ctrl);
+        R_POEG_Close((PWM_POEG0_HANDLE_ADDRESS)->p_ctrl);
         /* Run motor control PWM break routine */
         PWMInsulCurrSensorFdbk_BRK_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
     }

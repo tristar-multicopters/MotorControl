@@ -45,7 +45,7 @@ uint32_t GetChipID(uint8_t ID_Half);
 #define CURRENT_SENSOR_ADC_GROUP_MASK                       ADC_GROUP_MASK_0 // Current sensing pins must have their own ADC group, separated from other analog pins
 
 #define PWM_THREE_PHASE_HANDLE_ADDRESS                      &g_three_phase0
-#define PWM_POEG_HANDLE_ADDRESS                             &g_poeg0
+#define PWM_POEG0_HANDLE_ADDRESS                            &g_poeg0
 
 #define SOCP_IA_IIRFA_HANDLE_ADDRESS                        &g_iirfa0
 #define SOCP_IB_IIRFA_HANDLE_ADDRESS                        &g_iirfa1

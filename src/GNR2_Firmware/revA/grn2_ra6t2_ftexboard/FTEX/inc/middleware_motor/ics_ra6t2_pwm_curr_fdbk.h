@@ -67,7 +67,7 @@ typedef struct
   uint16_t hHalfPWMPeriod;  /*!< Half PWM Period in timer clock counts */
   volatile uint8_t bPolarizationCounter;
 
-  bool bOverCurrentFlag;     /*!< This flag is used to check if overcurrent occured */
+  volatile bool bOverCurrentFlag;     /*!< This flag is used to check if overcurrent occured */
 	
   pPWMInsulCurrSensorFdbkParams_t pParamsStructure; /*!< PWM component parameters*/
 	

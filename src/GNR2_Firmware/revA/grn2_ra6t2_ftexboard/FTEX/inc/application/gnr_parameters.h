@@ -6,6 +6,7 @@
 #define VEHICLE_DEFAULT               0
 #define VEHICLE_EBGO                  1
 #define VEHICLE_GRIZZLY               2
+#define VEHICLE_E_CELLS               3      
 
 
 /*______________________________________________________*/
@@ -15,7 +16,7 @@
 #define ENABLE_MC_DAC_DEBUGGING       1                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 #define ENABLE_CAN_LOGGER             0                   /* Enable CAN log messages for vehicle system diagnostic */
-#define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_E_CELLS     /* Vehicle selection to adapt motor/vehicle parameters.
                                                          Will be changed in the future for a more flexible way
                                                          of parametrization. */
 /*

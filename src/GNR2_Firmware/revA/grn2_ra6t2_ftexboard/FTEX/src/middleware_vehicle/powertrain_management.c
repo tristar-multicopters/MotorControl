@@ -142,7 +142,7 @@ void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle)
 	{
 		if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 		{
-      MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1]);
+            MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1]);
 		}
 		else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
 		{
@@ -525,7 +525,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
 	{
 		bCheckStart3 = true;
 	}
-	return bCheckStart1 && bCheckStart2 && bCheckStart3; // Final logic to know if powertrain should be started.
+	return bCheckStart1 & bCheckStart2 & bCheckStart3; // Final logic to know if powertrain should be started.
 }
 
 /**

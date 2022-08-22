@@ -187,8 +187,8 @@ bool HallPosSensor_CalcAvrgMecSpeedUnit(HallPosSensorHandle_t * pHandle, int16_t
 {
     bool bReliability;
     
-    pHandle->hFiltElSpeedDpp = SignalFiltering_CalcOutputI16(&pHandle->SpeedFilter, pHandle->hAvrElSpeedDpp);
-    //pHandle->hFiltElSpeedDpp = pHandle->hAvrElSpeedDpp;
+    //pHandle->hFiltElSpeedDpp = SignalFiltering_CalcOutputI16(&pHandle->SpeedFilter, pHandle->hAvrElSpeedDpp);
+    pHandle->hFiltElSpeedDpp = pHandle->hAvrElSpeedDpp;
     
     if (pHandle->bSensorIsReliable)
     {

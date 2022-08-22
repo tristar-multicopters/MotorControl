@@ -20,6 +20,10 @@
 
 #include "pmsm_motor_parameters_ebgo.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_E_CELLS
+
+#include "pmsm_motor_parameters_e_cells.h"
+
 #endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/

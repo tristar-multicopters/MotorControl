@@ -206,7 +206,9 @@ void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle)
 */
 uint16_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle)
 {
-  return pHandle->pFctIsOverCurrentOccurred(pHandle);
+  uint16_t retVal = 0;  
+  retVal = pHandle->pFctIsOverCurrentOccurred(pHandle);
+  return retVal;
 }
 
 
