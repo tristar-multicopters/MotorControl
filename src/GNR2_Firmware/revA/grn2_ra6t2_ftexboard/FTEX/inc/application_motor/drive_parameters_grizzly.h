@@ -147,6 +147,7 @@
                                                //           threshold */
 
 
+
 #define OV_TEMPERATURE_THRESHOLD_C      75 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     10 /*!< Celsius degrees */
 

@@ -18,8 +18,10 @@
 #define THROTTLE_FILTER_BETA                  -0.27F   /* Butterworth beta coefficient */
 
 #define THROTTLE_OFFSET_ADC2THROTTLE          12500    /* Offset for ADC to throttle linear transformation  */
-#define THROTTLE_SLOPE_ADC2THROTTLE           5        /* Slope for ADC to throttle linear transformation  */
-#define THROTTLE_DIVISOR_ADC2THROTTLE         3        /* Divisor for ADC to throttle linear transformation  */
+
+#define THROTTLE_SLOPE_ADC2THROTTLE           100//5        /* Slope for ADC to throttle linear transformation  */
+#define THROTTLE_DIVISOR_ADC2THROTTLE         69//7        /* Divisor for ADC to throttle linear transformation  */
+
 
 #define THROTTLE_OFFSET_THROTTLE2TORQUE       4000    /* Offset for throttle to torque linear transformation  */
 #define THROTTLE_SLOPE_THROTTLE2TORQUE        14        /* Slope for throttle to torque linear transformation  */

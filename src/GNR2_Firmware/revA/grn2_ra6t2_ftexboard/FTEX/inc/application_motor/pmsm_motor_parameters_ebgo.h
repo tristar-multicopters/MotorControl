@@ -29,6 +29,7 @@
 #define NOMINAL_PEAK_CURRENT    18000 /* Maximum current amplitude that can be injected
                                             per phase in digital Amps */
 #define MOTOR_MAX_SPEED_RPM     2640 /*!< Maximum rated speed  */
+#define MOTOR_MAGNET_FLUX       0.02 
 #define MOTOR_VOLTAGE_CONSTANT  28.84 /*!< Volts RMS ph-ph /kRPM */
 #define ID_DEMAG                -1000 /*!< Demagnetization current */
 #define MOTOR_MAX_TEMPERATURE_C 70    /* Maximum temperature in degree C */

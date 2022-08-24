@@ -160,7 +160,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .bEnableFoldback = true,
       .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
       .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C,
-      .hDecreasingRange = OV_TEMPERATURE_THRESHOLD_C/3,
+      .hDecreasingRange = 4*(OV_TEMPERATURE_THRESHOLD_C/5),
   },
 
   .hSTCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,

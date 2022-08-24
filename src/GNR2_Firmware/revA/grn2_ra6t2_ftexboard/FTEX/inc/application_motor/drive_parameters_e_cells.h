@@ -122,9 +122,8 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000
 
-#define MAX_APPLICATION_POSITIVE_POWER  1200
-#define MAX_APPLICATION_NEGATIVE_POWER  1200
-
+#define MAX_APPLICATION_POSITIVE_POWER  1500
+#define MAX_APPLICATION_NEGATIVE_POWER  1500
 
 /* Default settings */
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< STC_TORQUE_MODE or
@@ -146,8 +145,8 @@
 #define UD_VOLTAGE_THRESHOLD_V          24 /*!< Under-voltage
                                                //           threshold */
 
+#define OV_TEMPERATURE_THRESHOLD_C      50 /*!< Celsius degrees */
 
-#define OV_TEMPERATURE_THRESHOLD_C      75 /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     10 /*!< Celsius degrees */
 
 #define OCSP_SAFETY_MARGIN 	            20000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher

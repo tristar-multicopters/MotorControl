@@ -24,6 +24,7 @@ struct {
 } sDebugVariables;
 #endif
 
+
 /************* DEFINES ****************/
 
 #define TASK_VCFASTLOOP_SAMPLE_TIME_TICK     10     /* VC_FastLoop execute every 10 ticks */
