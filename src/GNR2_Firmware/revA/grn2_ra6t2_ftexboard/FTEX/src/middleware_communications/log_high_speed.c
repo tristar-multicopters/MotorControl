@@ -29,7 +29,7 @@ void LogHS_Init(LogHighSpeed_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Ha
 	
     pHandle->pVController = pVCIHandle;               // Pointer to VController
     pHandle->pUART_handle = pUARTHandle;              // Pointer to UART instance  
-    pHandle->pUART_handle->Super_Handle = pHandle;    // Initialise the super pointer that the UART needs   
+    pHandle->pUART_handle->Super = pHandle;    // Initialise the super pointer that the UART needs   
     
     pHandle->pUART_handle->pRxCallback = &LogHS_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LogHS_TX_IRQ_Handler; 

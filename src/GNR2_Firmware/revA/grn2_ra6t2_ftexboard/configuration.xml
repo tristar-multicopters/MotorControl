@@ -1079,17 +1079,17 @@
       <property id="module.driver.canfd.manual.data.sync_jump_width" value="1"/>
       <property id="module.driver.canfd.bitrate.manual.use_manual" value="module.driver.canfd.bitrate.manual.use_manual.disabled"/>
       <property id="module.driver.canfd.p_callback" value="CANFD_IRQhandler"/>
-      <property id="module.driver.canfd.txmb.int" value="module.driver.canfd.txmb.int.0"/>
+      <property id="module.driver.canfd.txmb.int" value="module.driver.canfd.txmb.int.0,module.driver.canfd.txmb.int.1,module.driver.canfd.txmb.int.2,module.driver.canfd.txmb.int.3"/>
       <property id="module.driver.canfd.ch_err.int" value=""/>
       <property id="module.driver.canfd.ipl" value="board.icu.common.irq.priority7"/>
-      <property id="module.driver.canfd.afl_array" value="p_canfd0_afl"/>
+      <property id="module.driver.canfd.afl_array" value="CANFD_FilterListArray"/>
     </module>
     <module id="module.driver.timer_on_agt.467807930">
-      <property id="module.driver.timer.name" value="g_timer1"/>
+      <property id="module.driver.timer.name" value="g_timer_a1"/>
       <property id="module.driver.timer.channel" value="1"/>
       <property id="module.driver.timer.mode" value="module.driver.timer.mode.mode_periodic"/>
-      <property id="module.driver.timer.period" value="1000"/>
-      <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_usec"/>
+      <property id="module.driver.timer.period" value="0x10000"/>
+      <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_raw_counts"/>
       <property id="module.driver.timer.duty_cycle" value="50"/>
       <property id="module.driver.timer.count_source" value="module.driver.timer.count_source.clock_pclkb"/>
       <property id="module.driver.timer.agtoa_output_enable" value="module.driver.timer.agtoa_output_enable.false"/>
@@ -1099,7 +1099,7 @@
       <property id="module.driver.timer.agtio_filter" value="module.driver.timer.agtio_filter.agtio_filter_none"/>
       <property id="module.driver.timer.enable_pin" value="module.driver.timer.enable_pin.enable_pin_not_used"/>
       <property id="module.driver.timer.trigger_edge" value="module.driver.timer.trigger_edge.trigger_edge_rising"/>
-      <property id="module.driver.timer.p_callback" value="CANTimer_Callback"/>
+      <property id="module.driver.timer.p_callback" value="CANTimer_IRQHandler"/>
       <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority12"/>
     </module>
     <module id="module.driver.timer_on_agt.1314836952">
@@ -1268,8 +1268,8 @@
       <property id="config.driver.canfd.rxmb.number" value="1"/>
       <property id="config.driver.canfd.rxmb.size" value="config.driver.canfd.rxmb.size.8"/>
       <property id="config.driver.canfd.rxfifo.ipl" value="board.icu.common.irq.priority12"/>
-      <property id="config.driver.canfd.rxfifo.0.enable" value="config.driver.canfd.rxfifo.0.enable.enabled"/>
-      <property id="config.driver.canfd.rxfifo.0.int_mode" value="enum.driver.canfd.fifo.int_mode.every_frame"/>
+      <property id="config.driver.canfd.rxfifo.0.enable" value="config.driver.canfd.rxfifo.0.enable.disabled"/>
+      <property id="config.driver.canfd.rxfifo.0.int_mode" value="enum.driver.canfd.fifo.int_mode.disabled"/>
       <property id="config.driver.canfd.rxfifo.0.int_threshold" value="enum.driver.canfd.fifo.int_threshold.1_2"/>
       <property id="config.driver.canfd.rxfifo.0.payload" value="enum.driver.canfd.fifo.payload.8"/>
       <property id="config.driver.canfd.rxfifo.0.depth" value="enum.driver.canfd.fifo.depth.4"/>
@@ -1328,6 +1328,7 @@
     <symbolicName propertyId="pa07.symbolic_name" value="M1_MOT_TEMP"/>
     <symbolicName propertyId="pb00.symbolic_name" value="M1_HS_TEMP"/>
     <symbolicName propertyId="pb01.symbolic_name" value="THROTTLE"/>
+    <symbolicName propertyId="pb04.symbolic_name" value="CAN_STBY_N"/>
     <symbolicName propertyId="pb05.symbolic_name" value="M1_ENC_U"/>
     <symbolicName propertyId="pb06.symbolic_name" value="M1_ENC_V"/>
     <symbolicName propertyId="pb07.symbolic_name" value="M1_ENC_W"/>
@@ -1336,6 +1337,7 @@
     <symbolicName propertyId="pc05.symbolic_name" value="DEBUG2_DAC"/>
     <symbolicName propertyId="pc14.symbolic_name" value="OCD2_U"/>
     <symbolicName propertyId="pc15.symbolic_name" value="OCD2_V"/>
+    <symbolicName propertyId="pd07.symbolic_name" value="CAN_EN"/>
     <symbolicName propertyId="pe00.symbolic_name" value="STATUS1"/>
     <symbolicName propertyId="pe01.symbolic_name" value="STATUS2"/>
     <symbolicName propertyId="pe08.symbolic_name" value="PAS_TORQUE"/>
@@ -1412,6 +1414,8 @@
       <configSetting altId="pb01.gpio_mode.gpio_mode_an" configurationId="pb01.gpio_mode"/>
       <configSetting altId="pb03.jtag_fslash_swd.tdo" configurationId="pb03"/>
       <configSetting altId="pb03.gpio_mode.gpio_mode_peripheral" configurationId="pb03.gpio_mode"/>
+      <configSetting altId="pb04.output.low" configurationId="pb04"/>
+      <configSetting altId="pb04.gpio_mode.gpio_mode_out.low" configurationId="pb04.gpio_mode"/>
       <configSetting altId="pb05.icu3.irq3_dash_ds" configurationId="pb05"/>
       <configSetting altId="pb05.gpio_irq.gpio_irq_enabled" configurationId="pb05.gpio_irq"/>
       <configSetting altId="pb05.gpio_mode.gpio_mode_irq" configurationId="pb05.gpio_mode"/>
@@ -1439,6 +1443,8 @@
       <configSetting altId="pd05.gpio_mode.gpio_mode_peripheral" configurationId="pd05.gpio_mode"/>
       <configSetting altId="pd06.sci9.rxd9" configurationId="pd06"/>
       <configSetting altId="pd06.gpio_mode.gpio_mode_peripheral" configurationId="pd06.gpio_mode"/>
+      <configSetting altId="pd07.output.low" configurationId="pd07"/>
+      <configSetting altId="pd07.gpio_mode.gpio_mode_out.low" configurationId="pd07.gpio_mode"/>
       <configSetting altId="pe08.adc12.an020" configurationId="pe08"/>
       <configSetting altId="pe08.gpio_mode.gpio_mode_an" configurationId="pe08.gpio_mode"/>
       <configSetting altId="pe10.gpt4.gtioc4a" configurationId="pe10"/>

@@ -34,39 +34,17 @@ extern "C" {
 ******************************************************************************/
 
 #include "co_if.h"
-#include "hal_data.h"
 #include "co_core.h"
-#include "gnr_parameters.h" // To be able to use ENABLE_CAN_LOGGER flag
+#include "hal_data.h"
 
 #include <cmsis_os2.h>
 
-#define CAN_GNR2_ID     0x601
 #define CAN_OK          0x00
 #define CAN_FAIL        0x01
 /******************************************************************************
 * PUBLIC SYMBOLS
 ******************************************************************************/
 
-typedef struct
-{
-    CO_NODE canNode;
-    uint16_t hError;
-    can_frame_t rxFrame;
-}CAN_Handler_t;
-
-#if ENABLE_CAN_LOGGER
-void CANo_DrvInit(void);
-uint8_t CAN_SendMsg(can_frame_t msg_to_send);
-#else
-/**
-*  @brief Function used to process a message received
-*         from callback function of the CANbus
-*  @param pHandler: Handle of the CAN interface
-*  @param rxFrame: frame received from the CAN callback function
-*  @return void
-*/
-void uCAL_CAN_ProcessRxMessage(CAN_Handler_t * pHandler);
-#endif
 /* TODO: rename the extern variable declaration to match the naming convention:
  *   <device-name>CanDriver
  */

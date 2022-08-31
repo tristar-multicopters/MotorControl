@@ -24,7 +24,7 @@
 
 
 #define THROTTLE_OFFSET_THROTTLE2TORQUE       4000    /* Offset for throttle to torque linear transformation  */
-#define THROTTLE_SLOPE_THROTTLE2TORQUE        14        /* Slope for throttle to torque linear transformation  */
+#define THROTTLE_SLOPE_THROTTLE2TORQUE        12        /* Slope for throttle to torque linear transformation  */
 #define THROTTLE_DIVISOR_THROTTLE2TORQUE      600        /* Divisor for throttle to torque linear transformation  */
 
 #define THROTTLE_DETECTION_THRESHOLD          1000    /* Throttle is considered pressed once it passed this threshold  */
@@ -57,9 +57,9 @@
 /***************** POWERTRAIN MANAGEMENT PARAMETERS  ******************************/
 
 #define POWERTRAIN_USE_MOTOR1                             true              /* True if motor1 is used  */
-#define POWERTRAIN_USE_MOTOR2                             false              /* True if motor2 is used  */
+#define POWERTRAIN_USE_MOTOR2                             true              /* True if motor2 is used  */
 #define POWERTRAIN_DEFAULT_MAIN_MOTOR                     M1                /* Default main motor, can be M1 or M2  */
-#define POWERTRAIN_DEFAULT_MODE                           SINGLE_MOTOR      /* Default powertrain mode, can be SINGLE_MOTOR or DUAL_MOTOR  */
+#define POWERTRAIN_DEFAULT_MODE                           DUAL_MOTOR      /* Default powertrain mode, can be SINGLE_MOTOR or DUAL_MOTOR  */
 #define POWERTRAIN_DEFAULT_CONTROL_TYPE                   TORQUE_CTRL        /* Default control type, can be TORQUE_CTRL or SPEED_CTRL  */
 #define POWERTRAIN_M2_TORQUE_INVERSION                    false              /* If true, M2 torque is inverted compared to M1  */
 #define POWERTRAIN_START_THROTTLE_THRESHOLD               1000              /* Throttle value to start powertrain  */

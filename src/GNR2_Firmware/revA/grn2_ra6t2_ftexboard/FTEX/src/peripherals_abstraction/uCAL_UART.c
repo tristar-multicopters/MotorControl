@@ -37,7 +37,7 @@ void uCAL_UART_SetBaudRate(UART_Handle_t *pHandle)
     ASSERT(FSP_SUCCESS == err);
     
     //Setting the registers accoridng to the previously calculated values
-    err = R_SCI_B_UART_BaudSet(pHandle->pUART_Parameters->UARTInstance->p_ctrl, (void *) &baud_setting);
+    err = R_SCI_B_UART_BaudSet(pHandle->pUARTInstance->p_ctrl, (void *) &baud_setting);
     ASSERT(FSP_SUCCESS == err);
 
 }
@@ -49,7 +49,7 @@ void uCAL_UART_Transmit(UART_Handle_t *pHandle, uint8_t *Buffer, uint32_t Buffer
 {
     ASSERT(pHandle != NULL); 
     //Send the values via UART using Renesas API
-    fsp_err_t err = R_SCI_B_UART_Write(pHandle->pUART_Parameters->UARTInstance->p_ctrl, Buffer, BufferSize);
+    fsp_err_t err = R_SCI_B_UART_Write(pHandle->pUARTInstance->p_ctrl, Buffer, BufferSize);
     ASSERT(FSP_SUCCESS == err);    
 }
 
@@ -60,7 +60,7 @@ void uCAL_UART_Receive(UART_Handle_t *pHandle, uint8_t *Buffer, uint32_t BufferS
 {
     ASSERT(pHandle != NULL); 
     //Receive the values via UART using Renesas API
-    fsp_err_t err = R_SCI_B_UART_Read(pHandle->pUART_Parameters->UARTInstance->p_ctrl, Buffer, BufferSize);
+    fsp_err_t err = R_SCI_B_UART_Read(pHandle->pUARTInstance->p_ctrl, Buffer, BufferSize);
     ASSERT(FSP_SUCCESS == err);
 }
 

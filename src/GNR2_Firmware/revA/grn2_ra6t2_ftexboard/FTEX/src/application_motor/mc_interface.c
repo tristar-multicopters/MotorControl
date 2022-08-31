@@ -19,6 +19,9 @@
 
 /* Functions -----------------------------------------------*/
 
+/*
+* see function definition
+*/
 void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars)
 {
   pHandle->pSTM = pSTM;
@@ -32,7 +35,9 @@ void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachine
   pHandle->CommandState = MCI_BUFFER_EMPTY;
 }
 
-
+/*
+* see function definition
+*/
 void MCInterface_ExecSpeedRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalSpeed)
 {
   pHandle->LastCommand = MCI_EXECSPEEDRAMP;
@@ -41,7 +46,9 @@ void MCInterface_ExecSpeedRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t
   pHandle->LastModalitySetByUser = STC_SPEED_MODE;
 }
 
-
+/*
+* see function definition
+*/
 void MCInterface_ExecTorqueRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalTorque)
 {
   pHandle->LastCommand = MCI_EXECTORQUERAMP;
@@ -50,7 +57,9 @@ void MCInterface_ExecTorqueRamp(MotorControlInterfaceHandle_t * pHandle,  int16_
   pHandle->LastModalitySetByUser = STC_TORQUE_MODE;
 }
 
-
+/*
+* see function definition
+*/
 void MCInterface_SetCurrentReferences(MotorControlInterfaceHandle_t * pHandle, qd_t Iqdref)
 {
   pHandle->LastCommand = MCI_SETCURRENTREFERENCES;
@@ -60,11 +69,13 @@ void MCInterface_SetCurrentReferences(MotorControlInterfaceHandle_t * pHandle, q
   pHandle->LastModalitySetByUser = STC_TORQUE_MODE;
 }
 
-
+/*
+* see function definition
+*/
 bool MCInterface_StartMotor(MotorControlInterfaceHandle_t * pHandle)
 {
-  bool bRetVal = false;  
-  
+  bool bRetVal = false;
+
   if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE)
   {
       bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_IDLE_START );
@@ -72,11 +83,13 @@ bool MCInterface_StartMotor(MotorControlInterfaceHandle_t * pHandle)
   return bRetVal;
 }
 
-
+/*
+* see function definition
+*/
 bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle)
 {
-  bool bRetVal = false;  
-  
+  bool bRetVal = false;
+
   if (MCStateMachine_GetState(pHandle->pSTM) == M_RUN)
   {
       bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_ANY_STOP );
@@ -84,13 +97,17 @@ bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle)
   return bRetVal;
 }
 
-
+/*
+* see function definition
+*/
 bool MCInterface_FaultAcknowledged(MotorControlInterfaceHandle_t * pHandle)
 {
   return MCStateMachine_FaultAcknowledged(pHandle->pSTM);
 }
 
-
+/*
+* see function definition
+*/
 void MCInterface_ExecBufferedCommands(MotorControlInterfaceHandle_t * pHandle)
 {
   if (pHandle != MC_NULL)
@@ -137,7 +154,9 @@ void MCInterface_ExecBufferedCommands(MotorControlInterfaceHandle_t * pHandle)
   }
 }
 
-
+/*
+* see function definition
+*/
 MCInterfaceCommandState_t  MCI_IsCommandAcknowledged(MotorControlInterfaceHandle_t * pHandle)
 {
   MCInterfaceCommandState_t retVal = pHandle->CommandState;
@@ -150,31 +169,41 @@ MCInterfaceCommandState_t  MCI_IsCommandAcknowledged(MotorControlInterfaceHandle
   return retVal;
 }
 
-
+/*
+* see function definition
+*/
 MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle)
 {
   return MCStateMachine_GetState(pHandle->pSTM);
 }
 
-
+/*
+* see function definition
+*/
 uint16_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle)
 {
   return (uint16_t)(MCStateMachine_GetFaultState(pHandle->pSTM));
 }
 
-
+/*
+* see function definition
+*/
 uint16_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle)
 {
   return (uint16_t)(MCStateMachine_GetFaultState(pHandle->pSTM) >> 16);
 }
 
-
+/*
+* see function definition
+*/
 STCModality_t MCInterface_GetControlMode(MotorControlInterfaceHandle_t * pHandle)
 {
   return pHandle->LastModalitySetByUser;
 }
 
-
+/*
+* see function definition
+*/
 int16_t MCInterface_GetImposedMotorDirection(MotorControlInterfaceHandle_t * pHandle)
 {
   int16_t retVal = 1;
@@ -205,7 +234,9 @@ int16_t MCInterface_GetImposedMotorDirection(MotorControlInterfaceHandle_t * pHa
   return retVal;
 }
 
-
+/*
+* see function definition
+*/
 int16_t MCInterface_GetLastRampFinalSpeed(MotorControlInterfaceHandle_t * pHandle)
 {
   int16_t hRetVal = 0;
@@ -218,7 +249,9 @@ int16_t MCInterface_GetLastRampFinalSpeed(MotorControlInterfaceHandle_t * pHandl
   return hRetVal;
 }
 
-
+/*
+* see function definition
+*/
 bool MCInterface_IsRampCompleted(MotorControlInterfaceHandle_t * pHandle)
 {
   bool retVal = false;
@@ -231,13 +264,17 @@ bool MCInterface_IsRampCompleted(MotorControlInterfaceHandle_t * pHandle)
   return retVal;
 }
 
-
+/*
+* see function definition
+*/
 void MCInterface_StopRamp(MotorControlInterfaceHandle_t * pHandle)
 {
    SpdTorqCtrl_StopRamp(pHandle->pSpeedTorqCtrl);
 }
 
-
+/*
+* see function definition
+*/
 bool MCInterface_GetSpdSensorReliability(MotorControlInterfaceHandle_t * pHandle)
 {
   SpdPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
@@ -245,75 +282,99 @@ bool MCInterface_GetSpdSensorReliability(MotorControlInterfaceHandle_t * pHandle
   return (SpdPosFdbk_GetReliability(SpeedSensor));
 }
 
-
+/*
+* see function definition
+*/
 int16_t MCInterface_GetAvrgMecSpeedUnit(MotorControlInterfaceHandle_t * pHandle)
 {
   SpdPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
-
+    
   return (SpdPosFdbk_GetAvrgMecSpeedUnit(SpeedSensor));
 }
 
-
+/*
+* see function definition
+*/
 int16_t MCInterface_GetMecSpeedRefUnit(MotorControlInterfaceHandle_t * pHandle)
 {
   return (SpdTorqCtrl_GetMecSpeedRefUnit(pHandle->pSpeedTorqCtrl));
 }
 
-
+/*
+* see function definition
+*/
 ab_t MCInterface_GetIab(MotorControlInterfaceHandle_t * pHandle)
 {
   return (pHandle->pFOCVars->Iab);
 }
 
-
+/*
+* see function definition
+*/
 AlphaBeta_t MCInterface_GetIalphabeta(MotorControlInterfaceHandle_t * pHandle)
 {
   return (pHandle->pFOCVars->Ialphabeta);
 }
 
-
+/*
+* see function definition
+*/
 qd_t MCInterface_GetIqd(MotorControlInterfaceHandle_t * pHandle)
 {
   return (pHandle->pFOCVars->Iqd);
 }
 
-
+/*
+* see function definition
+*/
 qd_t MCInterface_GetIqdHF(MotorControlInterfaceHandle_t * pHandle)
 {
   return (pHandle->pFOCVars->IqdHF);
 }
 
-
+/*
+* see function definition
+*/
 qd_t MCInterface_GetIqdref(MotorControlInterfaceHandle_t * pHandle)
 {
   return (pHandle->pFOCVars->Iqdref);
 }
 
-
+/*
+* see function definition
+*/
 qd_t MCInterface_GetVqd(MotorControlInterfaceHandle_t * pHandle)
 {
   return (pHandle->pFOCVars->Vqd);
 }
 
-
+/*
+* see function definition
+*/
 AlphaBeta_t MCInterface_GetValphabeta(MotorControlInterfaceHandle_t * pHandle)
 {
   return (pHandle->pFOCVars->Valphabeta);
 }
 
-
+/*
+* see function definition
+*/
 int16_t MCInterface_GetElAngledpp(MotorControlInterfaceHandle_t * pHandle)
 {
   return (pHandle->pFOCVars->hElAngle);
 }
 
-
+/*
+* see function definition
+*/
 int16_t MCInterface_GetTeref(MotorControlInterfaceHandle_t * pHandle)
 {
   return (pHandle->pFOCVars->hTeref);
 }
 
-
+/*
+* see function definition
+*/
 int16_t MCInterface_GetPhaseCurrentAmplitude(MotorControlInterfaceHandle_t * pHandle)
 {
   AlphaBeta_t Local_Curr;
@@ -334,7 +395,9 @@ int16_t MCInterface_GetPhaseCurrentAmplitude(MotorControlInterfaceHandle_t * pHa
   return ((int16_t)wAux1);
 }
 
-
+/*
+* see function definition
+*/
 int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHandle)
 {
   AlphaBeta_t Local_Voltage;
@@ -354,5 +417,3 @@ int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHa
 
   return ((int16_t) wAux1);
 }
-
-

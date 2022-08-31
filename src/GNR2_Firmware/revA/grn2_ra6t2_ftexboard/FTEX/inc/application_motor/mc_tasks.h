@@ -21,7 +21,7 @@ extern MotorControlInterfaceHandle_t MCInterface[NBR_OF_MOTORS];
 	* @param	None
 	* @retval None
   */
-void MC_Bootup(void);
+void MC_BootUp(void);
 
 
 /**
@@ -74,4 +74,3 @@ void MC_HardwareFaultTask(void);
 
 
 #endif /* __MCTASKS_H */
-

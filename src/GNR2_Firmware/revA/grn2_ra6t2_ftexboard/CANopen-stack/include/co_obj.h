@@ -325,12 +325,12 @@ extern "C" {
 */
 #define CO_COBID_EMCY_STD(valid, id)               \
     (((uint32_t)(id) & 0x7ffuL)                  | \
-     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u)
+     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u))
 
 #define CO_COBID_EMCY_EXT(valid, id)               \
     (((uint32_t)(id) & 0x1fffffffuL)             | \
      ((uint32_t)0x1uL << 29u)                    | \
-     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u)
+     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u))
 /*! \} */
 
 /*! \brief SDO server/client COB-ID parameter

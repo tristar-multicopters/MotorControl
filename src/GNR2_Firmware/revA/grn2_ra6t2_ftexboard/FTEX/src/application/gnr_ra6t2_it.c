@@ -7,11 +7,11 @@
 #include "gnr_main.h"
 #include "mc_config.h"
 #include "mc_tasks.h"
-#include "bsp_pin_cfg.h"
 #include "vc_config.h"
 #include "uCAL_UART.h"
 #include "comm_config.h"
 #include "board_hardware.h"
+#include "comm_tasks.h"
 
 /**
   * @brief  Interrupt routine of ADC hardware.
@@ -113,14 +113,14 @@ void PedalSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
 		/* Check for the event */
 		switch(p_args->event)
 		{
-			case TIMER_EVENT_CAPTURE_A :					
+			case TIMER_EVENT_CAPTURE_A :
 			break;
 			case TIMER_EVENT_CYCLE_END:
 			break;
 			default:
 			break;
-		}	
-	}		
+		}
+	}
 }
 
 /**
@@ -134,14 +134,14 @@ void WheelSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
         /* Check for the event */
         switch(p_args->event)
         {
-            case TIMER_EVENT_CAPTURE_B :			
+            case TIMER_EVENT_CAPTURE_B :
             break;
             case TIMER_EVENT_CYCLE_END:
             break;
             default:
             break;
-        }  
-	}		
+        }
+	}
 }
 
 /**
@@ -151,26 +151,26 @@ void WheelSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
 void UART_IRQHandler(uart_callback_args_t * p_args)
 {
     UNUSED_PARAMETER(p_args);
-    // Handle the UART event 
+    // Handle the UART event
     switch (p_args->event)
     {
         // Received a character (unplanned reception)
         case UART_EVENT_RX_CHAR:
-                 
-            break;       
-        // Receive complete 
+
+            break;
+        // Receive complete
         case UART_EVENT_RX_COMPLETE:
-        
-            UART0_handle.pRxCallback(UART0_handle.Super_Handle);
-            break;        
-        // Transmit complete 
+
+            UART0Handle.pRxCallback(UART0Handle.Super);
+            break;
+        // Transmit complete
         case UART_EVENT_TX_COMPLETE:
-        
-            UART0_handle.pTxCallback(UART0_handle.Super_Handle);   
-            break;        
+
+            UART0Handle.pTxCallback(UART0Handle.Super);
+            break;
         default:
-            break; 
-    }    
+            break;
+    }
 }
 
 /**
@@ -180,46 +180,49 @@ void UART_IRQHandler(uart_callback_args_t * p_args)
 void CANFD_IRQhandler(can_callback_args_t *p_args)
 {
     UNUSED_PARAMETER(p_args);
-//	switch (p_args->event)
-//	{
-//		case CAN_EVENT_RX_COMPLETE:    /* Receive complete event. */
-//		{
-//            #if !ENABLE_CAN_LOGGER
-//            CAN_handle.rxFrame = *p_args->p_frame;
-//            osThreadFlagsSet(CANRxFrameHandle, CAN_RX_FLAG);
-//            #endif
-//			break;
-//		}
-//		case CAN_EVENT_TX_COMPLETE:    /* Transmit complete event. */
-//		{
-//			break;
-//		}
-//		case CAN_EVENT_ERR_BUS_OFF:          /* Bus error event. (bus off) */
-//		case CAN_EVENT_ERR_PASSIVE:          /* Bus error event. (error passive) */
-//		case CAN_EVENT_ERR_WARNING:          /* Bus error event. (error warning) */
-//		case CAN_EVENT_BUS_RECOVERY:         /* Bus error event. (bus recovery) */
-//		case CAN_EVENT_MAILBOX_MESSAGE_LOST: /* Overwrite/overrun error */
-//		{
-//			/* Set error flag */
-//			//g_err_flag = true;
-//			break;
-//		}
-//		default:
-//		{
-//			break;
-//		}
-//	}
-//	return;
+    switch (p_args->event)
+    {
+        case CAN_EVENT_RX_COMPLETE:    /* Receive complete event. */
+        {
+            break;
+        }
+        case CAN_EVENT_TX_COMPLETE:    /* Transmit complete event. */
+        {
+            break;
+        }
+        case CAN_EVENT_ERR_BUS_OFF:          /* Bus error event. (bus off) */
+        case CAN_EVENT_ERR_PASSIVE:          /* Bus error event. (error passive) */
+        case CAN_EVENT_ERR_WARNING:          /* Bus error event. (error warning) */
+        case CAN_EVENT_BUS_RECOVERY:         /* Bus error event. (bus recovery) */
+        case CAN_EVENT_MAILBOX_MESSAGE_LOST: /* Overwrite/overrun error */
+        {
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    return;
 }
 /**
   * @brief  Interrupt routine of timer used for CANOpen Stack
   * @param  p_args: UART callback function arguments.
 */
-void CANTimer_Callback(timer_callback_args_t * p_args)
+void CANTimer_IRQHandler(timer_callback_args_t * p_args)
 {
     if( p_args->event == TIMER_EVENT_CYCLE_END)
     {
-//        uCAL_TIM1_manageCallback(&CAN_handle.canNode.Tmr);        
+        can_info_t CANinfo;
+        R_CANFD_InfoGet(&g_canfd0_ctrl, &CANinfo);
+        if (CANinfo.rx_mb_status != 0) // New message received
+        {
+            if (bCANOpenTaskBootUpCompleted == true)
+            {
+                CONodeProcess(&CONodeGNR);
+            }
+        }
+
+        COTimerCallback(&CONodeGNR.Tmr);
     }
 }
-

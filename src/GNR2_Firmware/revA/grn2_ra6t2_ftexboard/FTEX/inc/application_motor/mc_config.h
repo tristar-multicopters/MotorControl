@@ -49,4 +49,3 @@ extern RotorPositionObserverHandle_t RotorPosObsM1;
 
 
 #endif /* __MC_CONFIG_H */
-

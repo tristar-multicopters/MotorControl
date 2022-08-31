@@ -143,7 +143,7 @@ typedef struct
     int16_t SectorDestinationAngle[7];
     int16_t SectorMiddleAngle[7];
     int8_t bDirectionChangeCounter;
-    
+
     SignalFilteringHandle_t SpeedFilter;
     float fFilterAlpha;                 // Alpha coefficient for low pass first order butterworth filter
     float fFilterBeta;                  // Beta coefficient for low pass first order butterworth filter

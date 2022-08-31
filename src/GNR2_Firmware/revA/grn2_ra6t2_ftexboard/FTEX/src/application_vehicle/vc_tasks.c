@@ -21,6 +21,7 @@ struct {
     int32_t hSpeedRef;
     bool bStartM1;
     bool bStartM2;
+    bool FaultAck;
 } sDebugVariables;
 #endif
 
@@ -31,8 +32,8 @@ struct {
 #define TASK_VCSTM_SAMPLE_TIME_TICK          10     /* VC_StateMachine execute every 10 ticks */
 #define RETURN_TO_STANDBY_LOOPTICKS          0      // Max number of ticks to stay in run while stop conditions are met
 #define START_MOTORS_LOOPTICKS               2      // Max number of ticks to stay in standby while start conditions are met
-#define START_LOOPTICKS                      100    // Max number of ticks to stay in start state
-#define STOP_LOOPTICKS                       100    // Max number of ticks to stay in stop state
+#define START_LOOPTICKS                      500    // Max number of ticks to stay in start state
+#define STOP_LOOPTICKS                       500    // Max number of ticks to stay in stop state
 
 
 /************* TASKS ****************/
@@ -92,6 +93,7 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
     #if SWD_CONTROL_ENABLE
     sDebugVariables.bStartM1 = false;
     sDebugVariables.bStartM2 = false;
+    sDebugVariables.FaultAck = false;
     sDebugVariables.hTorqRef = 0;
     sDebugVariables.hIqdRef.q = 0;
     sDebugVariables.hIqdRef.d = 0;
@@ -111,6 +113,14 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
         
         sDebugVariables.bStartM1 ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M1) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M1);
         sDebugVariables.bStartM2 ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M2) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M2);
+        
+        if (sDebugVariables.FaultAck)
+        {
+            sDebugVariables.FaultAck = false;
+            MDI_FaultAcknowledged(pVCI->pPowertrain->pMDI, M1);
+            MDI_FaultAcknowledged(pVCI->pPowertrain->pMDI, M2);
+        }
+        
         #else
         StateVC = VCSTM_GetState(pVCI->pStateMachine);
         switch (StateVC)

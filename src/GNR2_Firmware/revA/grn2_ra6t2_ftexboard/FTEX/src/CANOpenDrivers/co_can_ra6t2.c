@@ -21,7 +21,6 @@
 #include "co_can_ra6t2.h"
 
 // ================================== Private Functions Prototypes ====================== //
-#if !ENABLE_CAN_LOGGER
 
 /**
   @brief Function used to initialise the CAN driver
@@ -61,8 +60,9 @@ static void    CANo_DrvReset  (void);
 */
 static void    CANo_DrvClose  (void);
 
-// ================================== Private variables Prototypes ====================== //
-static can_frame_t mRxCanFrame;
+// ================================== Private variables ====================== //
+
+uint32_t wTxBufferNum = CANFD_TX_MB_0;
 
 // ================================== Public Variables ================================== //
 
@@ -76,24 +76,21 @@ const CO_IF_CAN_DRV CoCanDriver = {
 };
 
 
-#endif
-
-
 //Filter list for which frame to accept
-const canfd_afl_entry_t p_canfd0_afl[CANFD_CFG_AFL_CH0_RULE_NUM] =
+const canfd_afl_entry_t CANFD_FilterListArray[CANFD_CFG_AFL_CH0_RULE_NUM] =
 {
     {
         .id =
         {
             // Specify the ID, ID type and frame type to accept.
-            .id         = CAN_GNR2_ID,
+            .id         = 0,
             .frame_type = CAN_FRAME_TYPE_DATA,
             .id_mode    = CAN_ID_MODE_STANDARD,
         },
         .mask =
         {
             // These values mask which ID/mode bits to compare when filtering messages. 
-            .mask_id         = 0x1FFFFFFF,
+            .mask_id         = 0,
             .mask_frame_type = 1,
             .mask_id_mode    = 1,
         },
@@ -103,7 +100,7 @@ const canfd_afl_entry_t p_canfd0_afl[CANFD_CFG_AFL_CH0_RULE_NUM] =
             .minimum_dlc = CANFD_MINIMUM_DLC_0,
             // Optionally specify a Receive Message Buffer (RX MB) to store accepted frames. RX MBs do not have an
             //  interrupt or overwrite protection and must be checked with R_CANFD_InfoGet and R_CANFD_Read. 
-            .rx_buffer   = CANFD_RX_MB_NONE,
+            .rx_buffer   = CANFD_RX_MB_0,
             // Specify which FIFO(s) to send filtered messages to. Multiple FIFOs can be OR'd together. 
             .fifo_select_flags = CANFD_RX_FIFO_0,
         }
@@ -112,18 +109,14 @@ const canfd_afl_entry_t p_canfd0_afl[CANFD_CFG_AFL_CH0_RULE_NUM] =
 
 // ================================== Private Functions Definitions ================================== //
 
-#if !ENABLE_CAN_LOGGER
-
 /**
   Function used to initialise the CAN interface
 */
 static void CANo_DrvInit(void)
 {
-
-    //Use the external loopback mode for initial testing
-    R_CANFD_ModeTransition(&g_canfd0_ctrl,CAN_OPERATION_MODE_HALT,CAN_TEST_MODE_DISABLED);
+    R_CANFD_ModeTransition(&g_canfd0_ctrl,CAN_OPERATION_MODE_HALT, CAN_TEST_MODE_DISABLED);
     		
-	osDelay(10);
+	//osDelay(10); //WTF WHY
 }
 
 /**
@@ -134,7 +127,7 @@ static void CANo_DrvEnable(uint32_t baudrate)
 	(void)baudrate;
 
 	/* TODO: set the given baudrate to the CAN controller */
-	R_CANFD_ModeTransition(&g_canfd0_ctrl,CAN_OPERATION_MODE_NORMAL,CAN_TEST_MODE_DISABLED);
+	R_CANFD_ModeTransition(&g_canfd0_ctrl, CAN_OPERATION_MODE_NORMAL, CAN_TEST_MODE_DISABLED);
 }
 
 /**
@@ -142,9 +135,7 @@ static void CANo_DrvEnable(uint32_t baudrate)
 */
 static int16_t CANo_DrvSend(CO_IF_FRM *frm)
 {
-	(void)frm;
-	uint32_t mailbox = CANFD_TX_MB_0;
-	can_frame_t c_frame =
+	can_frame_t tx_frame =
 	{
 		.id = frm->Identifier,
 		.id_mode = CAN_ID_MODE_STANDARD,
@@ -152,10 +143,22 @@ static int16_t CANo_DrvSend(CO_IF_FRM *frm)
 		.data_length_code = frm->DLC
 	};
 	
-	memcpy(c_frame.data, frm->Data, 8);
+	memcpy(tx_frame.data, frm->Data, 8);
 	
-	/* TODO: wait for free CAN message slot and send the given CAN frame */
-	R_CANFD_Write(&g_canfd0_ctrl, mailbox, &c_frame);
+    can_info_t CANInfo;
+    R_CANFD_InfoGet(&g_canfd0_ctrl, &CANInfo);
+    if (CANInfo.status & R_CANFD_CFDC_STS_TRMSTS_Msk) //If CAN driver is already transmitting something, use another TX buffer
+	{
+        if (wTxBufferNum == CANFD_TX_MB_3)
+        {
+            wTxBufferNum = CANFD_TX_MB_0;
+        }
+        else
+        {
+            wTxBufferNum++;
+        }
+    }
+    R_CANFD_Write(&g_canfd0_ctrl, wTxBufferNum, &tx_frame);
 	return (0u);
 }
 
@@ -164,12 +167,14 @@ static int16_t CANo_DrvSend(CO_IF_FRM *frm)
 */
 static int16_t CANo_DrvRead (CO_IF_FRM *frm)
 {
-	(void)frm;
-		
-	frm->Identifier = mRxCanFrame.id;
-	frm->DLC = mRxCanFrame.data_length_code;
+    can_frame_t rx_frame;
+    
+    R_CANFD_Read(&g_canfd0_ctrl, CANFD_RX_BUFFER_MB_0, &rx_frame);
+    
+	frm->Identifier = rx_frame.id;
+	frm->DLC = rx_frame.data_length_code;
 	
-	memcpy(frm->Data, mRxCanFrame.data, 8);
+	memcpy(frm->Data, rx_frame.data, 8);
 	
 	return (sizeof(CO_IF_FRM));
 }
@@ -189,46 +194,7 @@ static void CANo_DrvReset(void)
 static void CANo_DrvClose(void)
 {
 	/* TODO: remove CAN controller from CAN network */
-	R_CANFD_Close	(	&g_canfd0_ctrl );
+    R_CANFD_ModeTransition(&g_canfd0_ctrl, CAN_OPERATION_MODE_RESET, CAN_TEST_MODE_DISABLED);
+	R_CANFD_Close(&g_canfd0_ctrl);
 }
 
-// ================================== Public Functions (for CAN Logger only) ================================== //
-
-/**
-*  Function used to process a message received 
-*  from callback function of the CANbus
-*/
-void uCAL_CAN_ProcessRxMessage(CAN_Handler_t * pHandler)
-{
-    mRxCanFrame = pHandler->rxFrame;
-    CONodeProcess(&pHandler->canNode);
-}
-
-#else
-/**
-  Function used to initialise the CAN interface (used only for CAN logger)
-*/
-void CANo_DrvInit(void)
-{
-    //Use the external loopback mode for initial testing
-    R_CANFD_ModeTransition(&g_canfd0_ctrl,CAN_OPERATION_MODE_NORMAL,CAN_TEST_MODE_DISABLED);
-}
-
-/**
-  Function used to send a message over CAN bus (used only for CAN logger)
-*/
-uint8_t CAN_SendMsg(can_frame_t msg_to_send)
-{
-    fsp_err_t err;
-    
-    err = R_CANFD_Write(&g_canfd0_ctrl, CANFD_TX_MB_0, &msg_to_send);
-    
-    if(err != FSP_SUCCESS)
-    {
-        return CAN_FAIL;
-    }
-    
-    else
-        return CAN_OK;
-}
-#endif

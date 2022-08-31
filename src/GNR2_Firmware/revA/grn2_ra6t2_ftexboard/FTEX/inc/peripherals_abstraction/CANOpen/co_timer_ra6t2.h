@@ -15,11 +15,11 @@
 ******************************************************************************/
 /**
 * @file   co_timer_ra6t2.h
-* @author Ftex
-* @brief  uController Abstraction Layer for hardware timer 1 (TIM1)
+* @author FTEX inc
+* @brief  uController Abstraction Layer for hardware timer used by CANOpen stack
 *
-* This module is used to interact with the TIM1. 
-* It is the bridge between the TIM1 interface and the CANOpen stack
+* This module is used to interact with the timer
+* It is the bridge between the timer interface and the CANOpen stack
 *
 */
 #ifndef CO_TIMER_RA6T2_H
@@ -34,9 +34,13 @@ extern "C" {
 #include "co_core.h"
 #include "hal_data.h"
 #include <cmsis_os2.h>
+#include "ASSERT_FTEX.h"
+
+// ================================== DEFINES ================================== //
+#define CO_HARDWARE_TIMER_FREQ_HZ    60000000  // Hardware timer frequency chosen in RASC configurator
 
 // ================================== PUBLIC SYMBOLS ============================ //
-void uCAL_TIM1_manageCallback(CO_TMR *tmr);
+void COTimerCallback(CO_TMR *tmr);
 /* Get external entities */
 extern const CO_IF_TIMER_DRV CoTimerDriver;
 extern osSemaphoreId_t canTmrSemaphore;

@@ -235,8 +235,8 @@ const timer_instance_t g_timer_a0 =
     .p_cfg         = &g_timer_a0_cfg,
     .p_api         = &g_timer_on_agt
 };
-agt_instance_ctrl_t g_timer1_ctrl;
-const agt_extended_cfg_t g_timer1_extend =
+agt_instance_ctrl_t g_timer_a1_ctrl;
+const agt_extended_cfg_t g_timer_a1_extend =
 {
     .count_source            = AGT_CLOCK_PCLKB,
     .agto                    = AGT_PIN_CFG_DISABLED,
@@ -247,19 +247,19 @@ const agt_extended_cfg_t g_timer1_extend =
     .enable_pin              = AGT_ENABLE_PIN_NOT_USED,
     .trigger_edge            = AGT_TRIGGER_EDGE_RISING,
 };
-const timer_cfg_t g_timer1_cfg =
+const timer_cfg_t g_timer_a1_cfg =
 {
     .mode                = TIMER_MODE_PERIODIC,
-    /* Actual period: 0.001 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0xea60, .duty_cycle_counts = 0x7530, .source_div = (timer_source_div_t)0,
+    /* Actual period: 0.0010922666666666667 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0x10000, .duty_cycle_counts = 0x8000, .source_div = (timer_source_div_t)0,
     .channel             = 1,
-    .p_callback          = CANTimer_Callback,
+    .p_callback          = CANTimer_IRQHandler,
     /** If NULL then do not add & */
 #if defined(NULL)
     .p_context           = NULL,
 #else
     .p_context           = &NULL,
 #endif
-    .p_extend            = &g_timer1_extend,
+    .p_extend            = &g_timer_a1_extend,
     .cycle_end_ipl       = (12),
 #if defined(VECTOR_NUMBER_AGT1_INT)
     .cycle_end_irq       = VECTOR_NUMBER_AGT1_INT,
@@ -268,10 +268,10 @@ const timer_cfg_t g_timer1_cfg =
 #endif
 };
 /* Instance structure to use this module. */
-const timer_instance_t g_timer1 =
+const timer_instance_t g_timer_a1 =
 {
-    .p_ctrl        = &g_timer1_ctrl,
-    .p_cfg         = &g_timer1_cfg,
+    .p_ctrl        = &g_timer_a1_ctrl,
+    .p_cfg         = &g_timer_a1_cfg,
     .p_api         = &g_timer_on_agt
 };
 /* Nominal and Data bit timing configuration */
@@ -297,7 +297,7 @@ can_bit_timing_cfg_t g_canfd0_data_timing_cfg =
 #endif
 
 
-extern const canfd_afl_entry_t p_canfd0_afl[CANFD_CFG_AFL_CH0_RULE_NUM];
+extern const canfd_afl_entry_t CANFD_FilterListArray[CANFD_CFG_AFL_CH0_RULE_NUM];
 
 #ifndef CANFD_PRV_GLOBAL_CFG
 #define CANFD_PRV_GLOBAL_CFG
@@ -326,8 +326,8 @@ canfd_global_cfg_t g_canfd_global_cfg =
 
 canfd_extended_cfg_t g_canfd0_extended_cfg =
 {
-    .p_afl              = p_canfd0_afl,
-    .txmb_txi_enable    = ((1ULL << 0) |  0ULL),
+    .p_afl              = CANFD_FilterListArray,
+    .txmb_txi_enable    = ((1ULL << 0) | (1ULL << 1) | (1ULL << 2) | (1ULL << 3) |  0ULL),
     .error_interrupts   = ( 0U),
 #if BSP_FEATURE_CANFD_FD_SUPPORT
     .p_data_timing      = &g_canfd0_data_timing_cfg,

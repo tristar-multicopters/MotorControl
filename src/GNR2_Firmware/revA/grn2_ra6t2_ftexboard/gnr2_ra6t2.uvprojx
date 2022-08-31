@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>5</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -398,11 +398,6 @@
               <FileName>ASSERT_FTEX.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\ASSERT_FTEX.c</FilePath>
-            </File>
-            <File>
-              <FileName>gnr_main.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\gnr_main.h</FilePath>
             </File>
             <File>
               <FileName>board_hardware.h</FileName>
@@ -495,11 +490,6 @@
               <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>mc_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\mc_parameters.h</FilePath>
@@ -530,14 +520,19 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_grizzly.h</FilePath>
             </File>
             <File>
+              <FileName>pmsm_motor_parameters_e_cells.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_e_cells.h</FilePath>
+            </File>
+            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_e_cells.h</FileName>
+              <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_e_cells.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_e_cells.h</FileName>
@@ -573,11 +568,6 @@
               <FileName>comm_interface.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application_communications\comm_interface.c</FilePath>
-            </File>
-            <File>
-              <FileName>comm_parameters.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_communications\comm_parameters.c</FilePath>
             </File>
             <File>
               <FileName>comm_tasks.c</FileName>
@@ -769,16 +759,16 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
             </File>
+            <File>
+              <FileName>mc_type.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Middleware/Communication</GroupName>
           <Files>
-            <File>
-              <FileName>can_logger.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_communications\can_logger.c</FilePath>
-            </File>
             <File>
               <FileName>lcd_apt_comm.c</FileName>
               <FileType>1</FileType>

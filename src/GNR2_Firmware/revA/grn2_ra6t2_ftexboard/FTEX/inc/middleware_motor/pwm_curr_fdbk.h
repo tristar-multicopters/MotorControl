@@ -135,7 +135,7 @@ struct PWMCurrFdbkHandle
   uint8_t   Sector;                                     /**< the space vector sector number */
   uint16_t  hLowDuty;
   uint16_t  hMidDuty;
-  uint16_t  hHighDuty;                      
+  uint16_t  hHighDuty;
   bool 			hTurnOnLowSidesAction;                  /**< true if TurnOnLowSides action is active,
                                                               false otherwise. */
   uint8_t   Motor;                                      /**< Motor reference number */
@@ -143,19 +143,19 @@ struct PWMCurrFdbkHandle
   int16_t   Ia;                                         /**< Last @f$I_{A}@f$ measurement. */
   int16_t   Ib;                                         /**< Last @f$I_{B}@f$ measurement. */
   int16_t   Ic;                                         /**< Last @f$I_{C}@f$ measurement. */
- 
+
   uint16_t hPWMperiod;                                   /**< PWM period expressed in timer clock cycles unit:
                                                            *  @f$hPWMPeriod = TimerFreq_{CLK} / F_{PWM}@f$    */
-                                                           
+
   SignalFilteringHandle_t IaFilter;                  /* Pointer to filter instance used for filtering Ia signal (only for software ocp) */
   SignalFilteringHandle_t IbFilter;                  /* Pointer to filter instance used for filtering Ib signal (only for software ocp) */
   float fCurrentFilterAlpha;
   float fCurrentFilterBeta;
-  
+
   int16_t hSoftwareOCPMarginCurrent;                   /* Measured current amplitude can be until hSoftwareOCPMarginCurrent higher
-                                                            than reference current before overcurrent software protection triggers */    
+                                                            than reference current before overcurrent software protection triggers */
   int16_t hSoftwareOCPMaximumCurrent;                   /* Max current that can be reached before triggering software overcurrent */
-  
+
 };
 
 
@@ -287,7 +287,7 @@ bool PWMCurrFdbk_GetTurnOnLowSidesAction(PWMCurrFdbkHandle_t * pHandle);
 */
 void PWMCurrFdbk_RLDetectionModeEnable(PWMCurrFdbkHandle_t * pHandle);
 
-/** @brief Disables the RL detection mode on the power stage controlled by the @p pHandle PWMC component. 
+/** @brief Disables the RL detection mode on the power stage controlled by the @p pHandle PWMC component.
 	* @param  pHandle: Handle on the target instance of the PWMC component
 */
 void PWMCurrFdbk_RLDetectionModeDisable(PWMCurrFdbkHandle_t * pHandle);

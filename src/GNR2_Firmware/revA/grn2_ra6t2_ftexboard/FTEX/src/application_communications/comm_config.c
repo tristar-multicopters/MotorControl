@@ -7,17 +7,14 @@
 #include "comm_config.h"
 #include "gnr_parameters.h"
 #include "board_hardware.h"
-#include "comm_parameters.h"
-#include "lcd_apt_comm.h"
 
-UART_Handle_t UART0_handle = 
+UART_Handle_t UART0Handle =
 {
-      .UARTBaudrate = BAUD115200,
-      .UARTProtocol = UART_LOG_HS,
-      .pUART_Parameters = &UART0_Parameters    
-};     
+    .UARTBaudrate = BAUD115200,
+    .UARTProtocol = UART_LOG_HS,
+    .pUARTInstance = &g_uart9,
+};
 
 APT_Handle_t LCD_APT_handle;
+CO_NODE CONodeGNR;
 LogHighSpeed_Handle_t LogHS_handle;
-// CAN handler declaration
-CAN_Handler_t CAN_handle = {0};

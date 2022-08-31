@@ -209,18 +209,18 @@ PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
     .Ib = 0,
     .Ic = 0,
     .hPWMperiod          = PWM_PERIOD_CYCLES,
-    
-    .IaFilter = 
+
+    .IaFilter =
     {
         .pIIRFAInstance = SOCP_IA_IIRFA_HANDLE_ADDRESS,
     },
-    .IbFilter = 
+    .IbFilter =
     {
         .pIIRFAInstance = SOCP_IB_IIRFA_HANDLE_ADDRESS,
     },
     .fCurrentFilterAlpha = CURRENT_FILTER_ALPHA,
     .fCurrentFilterBeta  = CURRENT_FILTER_BETA,
-    
+
     .hSoftwareOCPMarginCurrent = OCSP_SAFETY_MARGIN,
     .hSoftwareOCPMaximumCurrent = OCSP_MAX_CURRENT,
 
@@ -338,7 +338,7 @@ NTCTempSensorHandle_t TempSensorParamsM1 =
   .hSensitivity            = (uint16_t)(ADC_REFERENCE_VOLTAGE/dV_dT),
   .wV0                     = (uint16_t)(V0_V *65536/ ADC_REFERENCE_VOLTAGE),
   .hT0                     = T0_C,
-  
+
   .pNTCLookupTable = &NTCLookupTable,
 };
 

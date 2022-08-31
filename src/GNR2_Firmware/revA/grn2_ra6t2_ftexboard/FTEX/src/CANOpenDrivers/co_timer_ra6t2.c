@@ -25,9 +25,9 @@
 // ================================== PRIVATE FUNCTIONS ================================== //
 
 /**
-  @brief Function used to initialise the Timer 1 driver
+  @brief Function used to initialise the timer driver
          It initializes the timer, the counter and keeps timer stopped
-  @param freq of timer (not used)
+  @param freq of timer in Hz
   @return void
 */
 static void     CANo_TIM_Init   (uint32_t freq);
@@ -75,39 +75,41 @@ const CO_IF_TIMER_DRV CoTimerDriver = {
 };
 
 // ================================== PRIVATE VARIABLES ================================== //
-uint32_t m_counter = 0;
-uint32_t m_period = 0;
+
+uint32_t COTimerCounter = 0;
+uint32_t COTimerPeriod = 0;
 
 // ================================== PRIVATE FUNCTIONS ================================== //
 
 /**
-  Function used to initialise the Timer 1 driver
+  Function used to initialise the timer
 */
 static void CANo_TIM_Init(uint32_t freq)
 {
-	(void)freq;
-	m_counter = 0;
-	R_AGT_Open(&g_timer1_ctrl, &g_timer1_cfg);
-	R_AGT_Reset( &g_timer1_ctrl );
-	R_AGT_Stop( &g_timer1_ctrl );
+    COTimerCounter = 0;
+    // g_timer_a1_ctrl handle must be set to periodic mode prior to initialization. The period is then set below.
+	R_AGT_Stop(&g_timer_a1_ctrl);
+	R_AGT_Reset(&g_timer_a1_ctrl);
+    R_AGT_PeriodSet(&g_timer_a1_ctrl, CO_HARDWARE_TIMER_FREQ_HZ/freq);
+    R_AGT_Enable(&g_timer_a1_ctrl);
 }
 
 /**
-  Function used to start the Timer 1 driver
+  Function used to start the timer
 */
 static void CANo_TIM_Start(void)
 {
-	R_AGT_Start(&g_timer1_ctrl);
+	R_AGT_Start(&g_timer_a1_ctrl);
 }
 
 /**
-  Function used to update the Timer 1 driver
+  Function used to update the timer
 */
 static uint8_t CANo_TIM_Update(void)
 {
 	uint8_t elapsed = 0;
-	
-	if(m_counter >= m_period)
+    
+	if(COTimerCounter >= (COTimerPeriod-1))
 	{
 		elapsed = 1;
 	}
@@ -115,18 +117,18 @@ static uint8_t CANo_TIM_Update(void)
 	{
 		elapsed = 0;
 	}
-	
+
 	return elapsed;
 }
 
 /**
-  Function to return current Timer 1 counter value
+  Function to return current timer counter value
 */
 static uint32_t CANo_TIM_Delay(void)
 {
-	if(m_period > m_counter)
+	if(COTimerPeriod > COTimerCounter)
 	{
-		return (m_period - m_counter - 1);
+		return (COTimerPeriod - COTimerCounter - 1);
 	}
 	else
 	{
@@ -139,7 +141,7 @@ static uint32_t CANo_TIM_Delay(void)
 */
 static void CANo_TIM_Reload(uint32_t reload)
 {
-	m_period = reload;
+    COTimerPeriod = reload;
 }
 
 /**
@@ -147,10 +149,9 @@ static void CANo_TIM_Reload(uint32_t reload)
 */
 static void CANo_TIM_Stop(void)
 {
-	/* TODO: start hardware timer and clear counter value */
-	R_AGT_Stop( &g_timer1_ctrl );
-	R_AGT_Reset( &g_timer1_ctrl );
-	m_counter = 0;
+	R_AGT_Stop(&g_timer_a1_ctrl);
+	R_AGT_Reset(&g_timer_a1_ctrl);
+    COTimerCounter = 0;
 }
 
 // ================================== PUBLIC FUNCTIONS ================================== //
@@ -158,19 +159,20 @@ static void CANo_TIM_Stop(void)
 /**
   Function to manage the callback of the timer (defined on gnr_ra6t2_it.c)
 */
-void uCAL_TIM1_manageCallback(CO_TMR *tmr)
+void COTimerCallback(CO_TMR *tmr)
 {
-    /* collect elapsed timed actions */
-    if(m_counter >= m_period)
+    if(COTimerCounter >= (COTimerPeriod-1))
     {
         if(COTmrService(tmr))
         {
             osSemaphoreRelease(canTmrSemaphore);
         }
-        m_counter = 0;
-    }
+        COTimerCounter = 0;
+	}
     else
     {
-        m_counter++;
+        COTimerCounter++;
     }
+    
 }
+    

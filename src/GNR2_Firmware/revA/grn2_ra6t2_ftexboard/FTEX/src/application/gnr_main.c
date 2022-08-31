@@ -16,7 +16,7 @@ extern void startMCMediumFrequencyTask(void * pvParameter);
 extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
 extern void ProcessUARTFrames(void * pvParameter);
-extern void CANManagerTask(void * pvParameter);
+extern void CANOpenTask(void * pvParameter);
 
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
 
@@ -26,9 +26,9 @@ static bool POEGInit(void);
 static bool DACInit(void);
 static bool ICUInit(void);
 static bool ELCInit(void);
-//static bool AGTInit(void);
+static bool AGTInit(void);
 static bool UARTInit(void);
-//static bool CANInit(void);
+static bool CANInit(void);
 static bool IIRFAInit(void);
 
 
@@ -39,7 +39,7 @@ osThreadId_t MC_SafetyTask_handle;
 osThreadId_t THR_VC_MediumFreq_handle;
 osThreadId_t THR_VC_StateMachine_handle;
 osThreadId_t COMM_Uart_handle;
-osThreadId_t CANmanagerHandle;
+osThreadId_t CANOpenTaskHandle;
 osThreadId_t CANRxFrameHandle;
 
 //****************** THREAD ATTRIBUTES ******************//
@@ -59,6 +59,7 @@ static const osThreadAttr_t ThAtt_MC_MediumFrequencyTask = {
 };
 
 #if !DEBUGMODE_MOTOR_CONTROL
+#if GNR_MASTER
 static const osThreadAttr_t ThAtt_VC_MediumFrequencyTask = {
     .name = "VC_MediumFrequencyTask",
     .stack_size = 512,
@@ -71,25 +72,19 @@ static const osThreadAttr_t ThAtt_VehicleStateMachine = {
     .priority = osPriorityAboveNormal3,
 };
 
-
-//// For CAN purposes
-//static const osThreadAttr_t ThAtt_CANMngr = {
-//    .name = "CAN_ManagerTask",
-//    .stack_size = 512,
-//    .priority = osPriorityNormal
-//};
-
-//static const osThreadAttr_t ThAtt_CANRxProcess = {
-//    .name = "CAN_RxTask",
-//    .stack_size = 512,
-//    .priority = osPriorityNormal
-//};
-
 static const osThreadAttr_t ThAtt_UART = {
 	.name = "TSK_UART",
 	.stack_size = 512,
 	.priority = osPriorityBelowNormal
 };
+#endif
+
+static const osThreadAttr_t ThAtt_CANOpen = {
+    .name = "CANOpenTask",
+    .stack_size = 512,
+    .priority = osPriorityNormal
+};
+
 #endif
 
 /**************************************************************/
@@ -98,7 +93,7 @@ static const osThreadAttr_t ThAtt_UART = {
  * @brief Function for main application entry.
  */
 void gnr_main(void)
-{  
+{
     /* Hardware initialization */
     ADCInit();
     GPTInit();
@@ -106,15 +101,17 @@ void gnr_main(void)
     DACInit();
     ICUInit();
     ELCInit();
-    //AGTInit();
+    AGTInit();
     UARTInit();
-    //CANInit();
+    CANInit();
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
 
-    MC_Bootup();
+    MC_BootUp();
+    #if GNR_MASTER
     VC_BootUp();
-	  Comm_BootUp();
+    #endif
+    Comm_BootUp();
 
     SystemCoreClockUpdate(); // Standard ARM function to update clock settings
 
@@ -131,6 +128,7 @@ void gnr_main(void)
                                       &ThAtt_MC_SafetyTask);
 
     #if !DEBUGMODE_MOTOR_CONTROL
+    #if GNR_MASTER
     THR_VC_MediumFreq_handle        = osThreadNew(THR_VC_MediumFreq,
                                       NULL,
                                       &ThAtt_VC_MediumFrequencyTask);
@@ -142,16 +140,13 @@ void gnr_main(void)
    	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
                                       NULL,
                                       &ThAtt_UART);
-//                                          
-//    CANmanagerHandle                = osThreadNew(CANManagerTask,
-//                                      NULL,
-//                                      &ThAtt_CANMngr);
-//                                      
-//    CANRxFrameHandle                = osThreadNew(CANProcessMsgs,
-//                                      NULL,
-//                                      &ThAtt_CANRxProcess);       
     #endif
-    
+
+    CANOpenTaskHandle                = osThreadNew(CANOpenTask,
+                                      NULL,
+                                      &ThAtt_CANOpen);
+    #endif
+
     /* Start RTOS */
     if (osKernelGetState() == osKernelReady)
     {
@@ -291,23 +286,26 @@ static bool ICUInit(void)
     return bIsError;
 }
 
-///**
-//  * @brief  Function used to initialize the low power timer
-//  */
-//static bool AGTInit(void)
-//{
-//    bool bIsError = false;
-//    // Initialize the low power timer for capture mode
+/**
+  * @brief  Function used to initialize the low power timer
+  */
+static bool AGTInit(void)
+{
+    bool bIsError = false;
+//    // Initialize the low power timer 0 for capture mode
 //    bIsError |= R_AGT_Open(g_timer_a0.p_ctrl, g_timer_a0.p_cfg);
 //    // Enable external event triggers that start the AGT
 //    bIsError |= R_AGT_Enable(g_timer_a0.p_ctrl);
 
-//    return bIsError;
-//}
+	  // Initialize the low power timer 1 as timer for CANOpen
+    bIsError |= R_AGT_Open(g_timer_a1.p_ctrl, g_timer_a1.p_cfg);
 
-///**
-//  * @brief  Function used to Initialize the UART
-//  */
+    return bIsError;
+}
+
+/**
+  * @brief  Function used to Initialize the UART
+  */
 static bool UARTInit(void)
 {
     bool bIsError = false;
@@ -318,18 +316,18 @@ static bool UARTInit(void)
     return bIsError;
 }
 
-///**
-//  * @brief  Function used to Initialize the CAN
-//  */
-//static bool CANInit(void)
-//{
-//    bool bIsError = false;
+/**
+  * @brief  Function used to Initialize the CAN
+  */
+static bool CANInit(void)
+{
+    bool bIsError = false;
 
-//    // Initialise the UART
-//    bIsError |= R_CANFD_Open(&g_canfd0_ctrl, &g_canfd0_cfg);
+    // Initialise the CAN
+    bIsError |= R_CANFD_Open(&g_canfd0_ctrl, &g_canfd0_cfg);
 
-//    return bIsError;
-//}
+    return bIsError;
+}
 
 /**
   * @brief  Function used to Initialize IIR filter hardware accelerator peripheral

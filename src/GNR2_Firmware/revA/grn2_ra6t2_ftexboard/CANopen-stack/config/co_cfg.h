@@ -50,7 +50,7 @@
 *    will support.
 */
 #ifndef CO_RPDO_N
-#define CO_RPDO_N               0
+#define CO_RPDO_N               1
 #endif
 
 /*! \brief DEFAULT TRANSMIT PDO
@@ -59,7 +59,7 @@
 *    will support.
 */
 #ifndef CO_TPDO_N
-#define CO_TPDO_N               0
+#define CO_TPDO_N               1
 #endif
 
 /*! \brief DEFAULT ENABLE LSS

@@ -1,10 +1,12 @@
 /**
   * @file    comm_tasks.c
-  * @brief   This module gather 
+  * @brief   This module gather
   *
   */
 #include "comm_tasks.h"
-#include "vc_config.h"
+#include "mc_tasks.h"
+#include "vc_tasks.h"
+
 #include "comm_config.h"
 #include "gnr_main.h"
 // CANOpen includes
@@ -20,124 +22,208 @@
 /********* PUBLIC MEMBERS *************/
 // Semaphore for CANOpen timer
 osSemaphoreId_t canTmrSemaphore;
-#if !ENABLE_CAN_LOGGER
+
+bool bCANOpenTaskBootUpCompleted = false;
 
 
 /********* PRIVATE MEMBERS *************/
 
-extern osThreadId_t CANmanagerHandle;
+extern osThreadId_t CANOpenTaskHandle;
 // Attributes for the canTmrSemaphore
 osSemaphoreAttr_t canTmrSemaphoreAttr =
 {
-  "CAN Tmr Semaphore",   						///< name of the semaphore
-  0, 											///< attribute bits (none)
-  NULL,       									///< memory for control block
-  0   											///< size of provided memory for control block
+    "CAN_Tmr_Semaphore",   		//< name of the semaphore
+    0, 							//< attribute bits (none)
+    NULL,       				//< memory for control block
+    0   						//< size of provided memory for control block
 };
-
 
 /********* PRIVATE FUNCTIONS *************/
 
-/** @brief  Callback function used for updating the values of the GNR2
-*           object dictionary.
-*/
-static void GnR2ModuleApp(void *p_arg)
+/* The application specific SDO transfer finalization callback */
+void AppCSdoUploadFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
 {
-    CO_NODE  *node;
-    node = (CO_NODE *)p_arg;
-    VCI_Handle_t * pVCI = &VCInterfaceHandle;
-    CO_OBJ *objSpeed    = CODictFind(&node->Dict, CO_DEV(0x2000, 0));
-    CO_OBJ *objpwr      = CODictFind(&node->Dict, CO_DEV(0x2001, 0));
-    CO_OBJ *objSOC      = CODictFind(&node->Dict, CO_DEV(0x2002, 0));
-    CO_OBJ *objPAS      = CODictFind(&node->Dict, CO_DEV(0x2003, 0));
-    CO_OBJ *objMaxPAS   = CODictFind(&node->Dict, CO_DEV(0x2004, 0));
-    CO_OBJ *objMaxPwr   = CODictFind(&node->Dict, CO_DEV(0x2005, 0));
-    CO_OBJ *objErrorSt  = CODictFind(&node->Dict, CO_DEV(0x2006, 0));
-    CO_OBJ *objSerialNbHigh  = CODictFind(&node->Dict, CO_DEV(0x2007, 0));
-    CO_OBJ *objSerialNbLow = CODictFind(&node->Dict, CO_DEV(0x2007, 1));
-    CO_OBJ *objFWver    = CODictFind(&node->Dict, CO_DEV(0x2008, 0));
-    
-    int16_t speed     = MDI_GetAvrgMecSpeedUnit(pVCI->pPowertrain->pMDI,M1);
-    int16_t pwr       = 750; // TODO: Implement function that allows to get the obtained power. Use a hardcoded value for now...
-    uint8_t soc       = 75;  // TODO: Implement function that allows to get the SOC. Use a hardcoded value for now...
-    uint8_t pas       = (uint8_t)VCI_ReadRegister(pVCI,REG_PAS_LEVEL);
-    uint8_t maxPas    = (uint8_t)VCI_ReadRegister(pVCI,REG_PAS_MAXLEVEL);  
-    uint16_t maxPwr   = 2000; // TODO: Implement function that allows to get the maxPower. Use a hardcoded value for now...
-    uint16_t ErrorState = MDI_GetCurrentFaults(pVCI->pPowertrain->pMDI,M1);
-    uint16_t FWVer    =  (uint16_t)VCI_ReadRegister(pVCI,REG_FIRMVER);
-    // Get serial number
-    uint64_t serialNbLow  =  (uint32_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_LOW);
-    uint64_t serialNbHigh =  (uint64_t)VCI_ReadRegister(pVCI,REG_DEVICE_ID_HIGH);
-    
-    if(node == 0)
+
+}
+
+/* The application specific SDO transfer finalization callback */
+void AppCSdoDownloadFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
+{
+    (void)csdo;
+    if (code == 0)
     {
-        return;
+        /* SDO completed succesfully */
+        switch(index)
+        {
+            case CO_OD_REG_FAULT_ACK:
+            {
+                if (sub == M2)
+                {
+                    // Reset fault ack command of virtual motor 2 when command was succefully transmitted
+                    VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.bFaultAck = false;
+                }
+            } break;
+
+            default:
+            {
+
+            } break;
+        }
+
     }
-    
-    if(CONmtGetMode(&node->Nmt) == CO_OPERATIONAL)
+    else
     {
-        COObjWrValue(objSpeed, node,&speed,1,0);
-        COObjWrValue(objpwr, node,&pwr,2,0);
-        COObjWrValue(objSOC, node,&soc,1,0);
-        COObjWrValue(objPAS, node,&pas,1,0);
-        COObjWrValue(objMaxPAS, node,&maxPas,1,0);
-        COObjWrValue(objMaxPwr, node,&maxPwr,2,0);
-        COObjWrValue(objErrorSt, node,&ErrorState,2,0);
-        COObjWrValue(objSerialNbLow, node,&serialNbLow,4,0); // Send only the Low part for now
-        COObjWrValue(objSerialNbHigh, node,&serialNbHigh,4,0); // Send only the Low part for now
-        COObjWrValue(objFWver, node,&FWVer,2,0);
+    /* a timeout or abort is detected during SDO transfer  */
     }
 }
-#endif
+
+
+/** @brief  Callback function used for updating the values of the GNR
+*           object dictionary.
+*/
+static void UpdateObjectDictionnary(void *p_arg)
+{
+    CO_NODE  *pNode;
+    pNode = (CO_NODE *)p_arg;
+    if (pNode == NULL) {return;}
+
+    /* Get data from motor control and vehicle control layer */
+    int16_t hMotorSpeedMeas         = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
+    int16_t hBusVoltage             = 0;
+    int16_t hMotorTemp              = 0;
+    int16_t hHeatsinkTemp           = 0;
+    uint16_t hMotorState            = MCInterface_GetSTMState(&MCInterface[0]);
+    uint16_t hMotorOccuredFaults    = MCInterface_GetOccurredFaults(&MCInterface[0]);
+    uint16_t hMotorCurrentFaults    = MCInterface_GetCurrentFaults(&MCInterface[0]);
+    #if GNR_MASTER
+    int16_t hMotor1TorqRef      = MCInterface_GetTeref(&MCInterface[0]);
+    uint8_t bMotor1Start        = MCInterface_GetSTMState(&MCInterface[0]) == M_RUN ? true : false;
+    int16_t hMotor2TorqRef      = VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.hTorqueRef;
+    uint8_t bMotor2Start        = VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.bStartMotor;
+    uint8_t bMotor2FaultAck     = VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.bFaultAck;
+    #else
+    int16_t hMotor2TorqRef      = 0;
+    uint8_t bMotor2Start        = 0;
+    uint8_t bMotor2FaultAck     = 0;
+    #endif
+
+    if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
+    {
+        #if GNR_MASTER
+        /* Update M1 feedback data to CANOpen object dictionnary */
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &hMotorOccuredFaults, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &hMotorCurrentFaults, 2, 0);
+
+        /* Update M1 and M2 commands to CANOpen object dictionnary */
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M1)), pNode, &hMotor1TorqRef, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M1)), pNode, &bMotor1Start, 1, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, 1, 0);
+
+        /* Update virtual motor 2 structure used vehicle control layer */
+        VirtualMotorFeedback_t VirtualMotor2Feedback = {0};
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &VirtualMotor2Feedback.bState, 2, 0);
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &VirtualMotor2Feedback.hOccuredFaults, 2, 0);
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &VirtualMotor2Feedback.hCurrentFaults, 2, 0);
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &VirtualMotor2Feedback.hMotorSpeed, 2, 0);
+        MDI_UpdateVirtualMotorFeedback(VCInterfaceHandle.pPowertrain->pMDI, M2, VirtualMotor2Feedback);
+
+        /* If vehicle control request a fault ack to motor 2, send a SDO */
+        if (bMotor2FaultAck)
+        {
+            CO_CSDO *csdo;
+            csdo = COCSdoFind(&(CONodeGNR), 0);
+            uint8_t Data = true;
+            COCSdoRequestDownload(csdo, CO_DEV(CO_OD_REG_FAULT_ACK, M2), &Data, 1, AppCSdoDownloadFinishCb, 200);
+        }
+
+        #else
+        /* Update M2 feedback data to CANOpen object dictionnary */
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &hMotorSpeedMeas, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2)), pNode, &hBusVoltage, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M2)), pNode, &hMotorTemp, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2)), pNode, &hHeatsinkTemp, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &hMotorState, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &hMotorOccuredFaults, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &hMotorCurrentFaults, 2, 0);
+
+        /* Read commands in CANOpen object dictionnary received by RPDO */
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, 2, 0);
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, 1, 0);
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, 1, 0);
+
+        /* Execute received commands using motor control api */
+        MCInterface_ExecTorqueRamp(&MCInterface[0], hMotor2TorqRef);
+        bMotor2Start ? MCInterface_StartMotor(&MCInterface[0]) : MCInterface_StopMotor(&MCInterface[0]);
+        if (bMotor2FaultAck)
+        {
+            // Reset fault ack after reception
+            bMotor2FaultAck = 0;
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, 1, 0);
+            MCInterface_FaultAcknowledged(&MCInterface[0]);
+        }
+        #endif
+    }
+}
 
 /************* TASKS ****************/
 
 /**
   * @brief  It initializes the vehicle control application. Needs to be called before using
-	*					vehicle control related modules.
+	*		vehicle control related modules.
   * @retval None
   */
 void Comm_BootUp(void)
-{	
-      
-    switch(UART0_handle.UARTProtocol)
-	  {	
-		/*case UART_BAFANG:
-			LCD_BAF_init(&VCInterfaceHandle);
-			break;
-		*/		
+{
+    // Enable CAN transceiver by pulling standby_n and enable_n pin high
+    struct GPIOConfig PinConfig;
+    PinConfig.PinDirection = OUTPUT;
+    PinConfig.PinPull      = NONE;
+    PinConfig.PinOutput    = PUSH_PULL;
+    uCAL_GPIO_ReInit(CAN_ENABLE_N_GPIO_PIN, PinConfig);
+    uCAL_GPIO_Set(CAN_ENABLE_N_GPIO_PIN);
+
+    PinConfig.PinDirection = OUTPUT;
+    PinConfig.PinPull      = NONE;
+    PinConfig.PinOutput    = PUSH_PULL;
+    uCAL_GPIO_ReInit(CAN_STANDBY_N_GPIO_PIN, PinConfig);
+    uCAL_GPIO_Set(CAN_STANDBY_N_GPIO_PIN);
+
+    switch(UART0Handle.UARTProtocol)
+	  {
+        case UART_LOG_HS:
+            LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
+            break;
     		case UART_APT:
-                    LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0_handle);
-			     break;
-		    case UART_LOG_HS:
-                   LogHSInit(&LogHS_handle, &VCInterfaceHandle, &UART0_handle);
-		       break;
-		    case UART_DISABLE:
-        default:
-			//Dont initialise the euart		
-			     break;
+    			  LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
+    			  break;
+    		case UART_DISABLE:
+            default:
+    			//Dont initialise the euart
+    			break;
 	  }
 }
 
 __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 {
 	UNUSED_PARAMETER(pvParameter);
-		
+
 	while(true)
 	{
 		osThreadFlagsWait(UART_FLAG, osFlagsWaitAny, osWaitForever);
-		
-    switch(UART0_handle.UARTProtocol)
-        {			
-           /*case UART_BAFANG:
-                LCD_BAF_frame_Process();
-                break;*/
 
+    switch(UART0Handle.UARTProtocol)
+        {			
            case UART_APT:
                 LCD_APT_frame_Process(&LCD_APT_handle);
                 break;
            case UART_LOG_HS:
-                LogHSProcessFrame(&LogHS_handle);
+                LogHS_ProcessFrame(&LogHS_handle);
                 break;
             default:
 				break;
@@ -145,69 +231,51 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 	}
 }
 
+
 /**
-  Task to handle the received messages and to send messages through the CAN bus
+  Task to manage CANOpen protocol
 */
-__NO_RETURN void CANManagerTask (void * pvParameter)
+__NO_RETURN void CANOpenTask (void * pvParameter)
 {
     UNUSED_PARAMETER(pvParameter);
-    
-    #if ENABLE_CAN_LOGGER
-    CANo_DrvInit();
-    VCI_Handle_t * pVCI = &VCInterfaceHandle;
-    uint32_t xLastWakeTime = osKernelGetTickCount();
+
+    #if GNR_MASTER
     #else
-    uint32_t ticks;
-    // Initialize canTmrSemaphore
+    osDelay(100);
+    #endif
+
+    // Initialize canTmrSemaphore to control this task execution
     canTmrSemaphore = osSemaphoreNew(16, 0, &canTmrSemaphoreAttr);
-    // Initialize hardware layer and the CANopen stack. 
-	CONodeInit(&CAN_handle.canNode, &GnR2ModuleSpec);
-	
-    // Stop execution if an error is detected.
-    if (CONodeGetErr(&CAN_handle.canNode) != CO_ERR_NONE) 
+
+    // Initialize hardware layer and the CANopen stack
+	CONodeInit(&CONodeGNR, &GnR2ModuleSpec);
+
+    // Stop execution if an error is detected on GNR2 node
+    if (CONodeGetErr(&CONodeGNR) != CO_ERR_NONE)
     {
 			while(1);
 	}
-    
+
     /* Use CANopen software timer to create a cyclic function
-	 * call to the callback function 'GnR2ModuleApp()' with a period
-	 * of 1s (equal: 1000ms).
+	 * call to the callback function 'UpdateObjectDictionnary()' with a period
+	 * of 10ms.
 	 */
-	ticks = COTmrGetTicks(&CAN_handle.canNode.Tmr, 1000U, (uint32_t)CO_TMR_UNIT_1MS);
-	COTmrCreate(&CAN_handle.canNode.Tmr, 0, ticks, GnR2ModuleApp, &CAN_handle.canNode);
-        
+    uint32_t ticks;
+	ticks = COTmrGetTicks(&CONodeGNR.Tmr, 20U, (uint32_t)CO_TMR_UNIT_1MS);
+	COTmrCreate(&CONodeGNR.Tmr, 0, ticks, UpdateObjectDictionnary, &CONodeGNR);
+
     /* Start the CANopen node and set it automatically to
 	 * NMT mode: 'OPERATIONAL'.
 	 */
-	CONodeStart(&CAN_handle.canNode);
-	CONmtSetMode(&CAN_handle.canNode.Nmt, CO_OPERATIONAL);
-    #endif
-    
+	CONodeStart(&CONodeGNR);
+	CONmtSetMode(&CONodeGNR.Nmt, CO_OPERATIONAL);
+
+    bCANOpenTaskBootUpCompleted = true;
+
     while(true)
     {
-        // Send CAN log messages
-        #if ENABLE_CAN_LOGGER
-        CANLOG_SendLogs(pVCI); // Initialise the CAN interface
-        xLastWakeTime += TASK_CAN_SAMPLE_TIME_TICK;
-        osDelayUntil(xLastWakeTime);  
-        #else
-        COTmrProcess(&CAN_handle.canNode.Tmr);
+        // This task unblocks when a CANOpen timer elapses
         osSemaphoreAcquire(canTmrSemaphore, osWaitForever);
-        
-        #endif              
+        COTmrProcess(&CONodeGNR.Tmr);
     }
-}
-
-/**
-  Task to process the received messages from CANBus
-*/
-__NO_RETURN void CANProcessMsgs (void * pvParameter)
-{
-	UNUSED_PARAMETER(pvParameter);
-		
-	while(true)
-	{
-		osThreadFlagsWait(CAN_RX_FLAG, osFlagsWaitAny, osWaitForever);
-        uCAL_CAN_ProcessRxMessage(&CAN_handle);
-	}
 }

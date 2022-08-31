@@ -4,7 +4,7 @@
   *
 */
 
-/* Define to prevent recursive inclusion --- 
+/* Define to prevent recursive inclusion ---
 ----------------------------------*/
 #ifndef __DRIVE_PARAMETERS_H
 #define __DRIVE_PARAMETERS_H

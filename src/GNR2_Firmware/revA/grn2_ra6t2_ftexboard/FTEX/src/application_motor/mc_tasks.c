@@ -92,7 +92,7 @@ void SafetyTask_PWMOFF(uint8_t motor);
     *        parameters.
     * @retval None
     */
-void MC_Bootup(void)
+void MC_BootUp(void)
 {
     /**************************************/
     /*    State machine initialization    */
@@ -555,7 +555,7 @@ uint8_t MC_HighFrequencyTask(void)
 //                BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
     }
 
-		LogHSLogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
+		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
 				
     return bMotorNbr;
 }
@@ -629,15 +629,12 @@ inline uint16_t FOC_CurrControllerM1(void)
             PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_OCSP, 0);
         }
+
+        #if ENABLE_MC_DAC_DEBUGGING
+        R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)HallPosSensorM1.Super.hElAngle + INT16_MAX);
+        R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)RotorPosObsM1.Super.hElAngle + INT16_MAX);
+        #endif
     }
-
-    Ialphabeta = MCMath_Clarke(Iab);
-    Iqd = MCMath_Park(Ialphabeta, hElAngle);
-
-    #if ENABLE_MC_DAC_DEBUGGING
-    R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)HallPosSensorM1.Super.hElAngle + INT16_MAX);
-    R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)RotorPosObsM1.Super.hElAngle + INT16_MAX);
-    #endif
 
     return(hCodeError);
 }

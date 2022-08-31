@@ -22,7 +22,7 @@
 #define	 VC_M1_UNEXPECTED_BEHAVIOR   	(uint16_t)(0x0020u)     /**< @brief Error: Unexpected behavior of M1, i.e. when state is not what it's supposed to be*/
 #define	 VC_M2_UNEXPECTED_BEHAVIOR   	(uint16_t)(0x0040u)     /**< @brief Error: Unexpected behavior of M2, i.e. when state is not what it's supposed to be*/
 #define	 VC_START_TIMEOUT				   		(uint16_t)(0x0080u)     /**< @brief Error: Startup procedure reached timeout.*/
-#define	 VC_STOP_TIMEOUT				   		(uint16_t)(0x0080u)     /**< @brief Error: Stop procedure reached timeout.*/
+#define	 VC_STOP_TIMEOUT				   		(uint16_t)(0x0100u)     /**< @brief Error: Stop procedure reached timeout.*/
 /** @} */
 
 

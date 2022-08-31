@@ -153,4 +153,3 @@ qd_t Feedforward_GetVqdAvPIout(const FeedforwardHandle_t * pHandle);
 #endif /* __cpluplus */
 
 #endif /* __FEEDFORWARDCTRL_H */
-

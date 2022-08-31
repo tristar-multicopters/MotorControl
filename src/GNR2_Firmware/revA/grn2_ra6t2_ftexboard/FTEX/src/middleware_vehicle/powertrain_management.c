@@ -377,23 +377,33 @@ uint16_t PWRT_StopStateCheck(PWRT_Handle_t * pHandle)
 bool PWRT_IsPowertrainActive(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-	bool bActive = true;
+	bool bM1Active = false;
+    bool bM2Active = false;
 
 	if (PWRT_IsMotor1Used(pHandle))
 	{
-		if (MDI_GetSTMState(pHandle->pMDI, M1) != M_RUN)
+		if (MDI_GetSTMState(pHandle->pMDI, M1) == M_RUN)
 		{
-			bActive = false;
+			bM1Active = true;
 		}
 	}
+    else
+    {
+        bM1Active = false;
+    }
 	if (PWRT_IsMotor2Used(pHandle))
 	{
-		if (MDI_GetSTMState(pHandle->pMDI, M2) != M_RUN)
+		if (MDI_GetSTMState(pHandle->pMDI, M2) == M_RUN)
 		{
-			bActive = false;
+			bM2Active = true;
 		}
 	}
-	return bActive;
+    else
+    {
+        bM2Active = false;
+    }
+    
+	return bM1Active & bM2Active;
 }
 
 /**
@@ -404,7 +414,8 @@ bool PWRT_IsPowertrainActive(PWRT_Handle_t * pHandle)
 bool PWRT_IsPowertrainStopped(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-	bool bStopped = true;
+	bool bM1Stopped = false;
+    bool bM2Stopped = false;
 
 	if (PWRT_IsMotor1Used(pHandle))
 	{
@@ -413,12 +424,17 @@ bool PWRT_IsPowertrainStopped(PWRT_Handle_t * pHandle)
 			case M_IDLE:
 			case M_FAULT_NOW:
 			case M_FAULT_OVER:
+                bM1Stopped = true;
 				break;
 			default:
-				bStopped = false;
+				
 				break;
 		}
 	}
+    else
+    {
+        bM1Stopped = true;
+    }
 	if (PWRT_IsMotor2Used(pHandle))
 	{
 		switch (MDI_GetSTMState(pHandle->pMDI, M2))
@@ -426,13 +442,18 @@ bool PWRT_IsPowertrainStopped(PWRT_Handle_t * pHandle)
 			case M_IDLE:
 			case M_FAULT_NOW:
 			case M_FAULT_OVER:
+                bM2Stopped = true;
 				break;
 			default:
-				bStopped = false;
+				
 				break;
 		}
 	}
-	return bStopped;
+    else
+    {
+        bM2Stopped = true;
+    }
+	return bM1Stopped & bM2Stopped;
 }
 
 /**

@@ -40,18 +40,12 @@ typedef enum
 
 typedef struct
 {
- const uart_instance_t  *UARTInstance;   
-}UART_Parameters_t, *pUART_Parameters_t;
-
-typedef struct
-{
-    
+    const uart_instance_t * pUARTInstance;
     uCAL_BaudRate_t    UARTBaudrate;
     uCAL_Protocol_t    UARTProtocol;
-    pUART_Parameters_t pUART_Parameters;
     uint8_t            OpenRecpBuffer[30];
-    void* Super_Handle;                    // Points to the higher handle that is using the uart port
-                                           // MUST be initialised before using.
+    void* Super;                    /* Pointer to the higher handle that is using the uart port
+                                       MUST be initialized before using. */
     void (*pRxCallback)(void *);
     void (*pTxCallback)(void *);
 }

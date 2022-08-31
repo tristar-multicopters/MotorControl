@@ -5,7 +5,7 @@
             extern "C" {
             #endif
 
-            /* Buffer RAM used: 100 bytes */
+            /* Buffer RAM used: 20 bytes */
 
             #define CANFD_CFG_PARAM_CHECKING_ENABLE   ((BSP_CFG_PARAM_CHECKING_ENABLE))
 
@@ -29,8 +29,8 @@
             #define CANFD_CFG_RXFIFO0_INT_THRESHOLD ((3U))
             #define CANFD_CFG_RXFIFO0_DEPTH         ((1))
             #define CANFD_CFG_RXFIFO0_PAYLOAD       ((0))
-            #define CANFD_CFG_RXFIFO0_INT_MODE      ((R_CANFD_CFDRFCC_RFIE_Msk | R_CANFD_CFDRFCC_RFIM_Msk))
-            #define CANFD_CFG_RXFIFO0_ENABLE        ((1))
+            #define CANFD_CFG_RXFIFO0_INT_MODE      ((0))
+            #define CANFD_CFG_RXFIFO0_ENABLE        ((0))
 
             #define CANFD_CFG_RXFIFO1_INT_THRESHOLD ((3U))
             #define CANFD_CFG_RXFIFO1_DEPTH         ((3))

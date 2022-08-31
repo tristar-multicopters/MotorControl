@@ -6,17 +6,17 @@
 #define VEHICLE_DEFAULT               0
 #define VEHICLE_EBGO                  1
 #define VEHICLE_GRIZZLY               2
-#define VEHICLE_E_CELLS               3      
+#define VEHICLE_E_CELLS               3
 
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
+#define GNR_MASTER                    1                   /* If master, controller manages canbus communication with slaves and vehicle control layer.  */
 #define SWD_CONTROL_ENABLE            0                   /* Enable controlling motor directly from debugging interface with vehicle control layer */
-#define DEBUGMODE_MOTOR_CONTROL       0                  /* Disable vehicle control and communications to debug only motor control layer */
-#define ENABLE_MC_DAC_DEBUGGING       1                   /* Update DAC outputs during FOC interrupt */
+#define DEBUGMODE_MOTOR_CONTROL       0                   /* Disable vehicle control and communications to debug only motor control layer */
+#define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
-#define ENABLE_CAN_LOGGER             0                   /* Enable CAN log messages for vehicle system diagnostic */
-#define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_E_CELLS     /* Vehicle selection to adapt motor/vehicle parameters.
                                                          Will be changed in the future for a more flexible way
                                                          of parametrization. */
 /*

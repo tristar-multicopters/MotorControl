@@ -11,14 +11,58 @@
 
 #include "mc_interface.h"
 
+/*
+*  Structure used to hold feedback from slave motor, 
+    i.e. motor controller not locally present on this ganrunner device.
+*/
+typedef struct
+{
+    MotorState_t bState;
+    uint16_t hOccuredFaults;
+    uint16_t hCurrentFaults;
+    int16_t hMotorSpeed;
+    int16_t hMotorTemp;
+    int16_t hHeatsinkTemp;
+    uint16_t hBusVoltage;
+} VirtualMotorFeedback_t;
 
+/*
+*  Structure used to hold feedback and commands from/to slave motor, 
+    i.e. motor controller not locally present on this ganrunner device.
+*/
+typedef struct
+{
+    bool bStartMotor;
+    bool bFaultAck;
+    int16_t hTorqueRef;
+    VirtualMotorFeedback_t Feedback;
+} VirtualMotorHandle_t;
+
+/*
+*  Structure used to hold all motor controller instances (M1, M2, M3, ...).
+*/
 typedef struct
 {
     MotorControlInterfaceHandle_t * pMCI;
+    VirtualMotorHandle_t VirtualMotor2;
 } MultipleDriveInterfaceHandle_t;
 
-
+/**
+  * @brief  This function update the virtual motor habdle with the provided feedback.
+  * @param  pHandle Pointer on the component instance to operate on.
+  * @param  pMCI Pointer to the MotorControlInterface handle of M1 (local motor controller of this ganrunner device)
+  * @retval none.
+  */
 void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI);
+
+/**
+  * @brief  This function update the virtual motor handle with the provided feedback.
+  * @param  pHandle Pointer on the component instance to operate on.
+  * @param  bMotor Motor number. Must be higher than M2
+	*	@param	pFeedback pointer to a virtual motor feedback structure. Data will be copied in pHandle.
+  * @retval none.
+  */
+void MDI_UpdateVirtualMotorFeedback(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, VirtualMotorFeedback_t Feedback);
 
 /**
   * @brief  This is a buffered command to set a motor speed ramp. This commands

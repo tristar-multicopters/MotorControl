@@ -25,8 +25,8 @@
                                    *Amplifying network gain)/(MCU supply voltage/2)
 */
 
-#define NOMINAL_PEAK_TORQUE     1374  /* Maximum torque to apply to motor in cNm */
-#define NOMINAL_PEAK_CURRENT    14000 //12000 /* Maximum current amplitude that can be injected
+#define NOMINAL_PEAK_TORQUE     1080  /* Maximum torque to apply to motor in cNm */
+#define NOMINAL_PEAK_CURRENT    11000 //12000 /* Maximum current amplitude that can be injected
                                         //    per phase in digital Amps */
 #define MOTOR_MAX_SPEED_RPM     1250 /*!< Maximum rated speed  */
 #define MOTOR_MAGNET_FLUX     0.013 

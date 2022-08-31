@@ -55,14 +55,14 @@ extern const timer_cfg_t g_timer_a0_cfg;
 void PedalSpeedTimer_IRQHandler(timer_callback_args_t * p_args);
 #endif
 /** AGT Timer Instance */
-extern const timer_instance_t g_timer1;
+extern const timer_instance_t g_timer_a1;
 
 /** Access the AGT instance using these structures when calling API functions directly (::p_api is not used). */
-extern agt_instance_ctrl_t g_timer1_ctrl;
-extern const timer_cfg_t g_timer1_cfg;
+extern agt_instance_ctrl_t g_timer_a1_ctrl;
+extern const timer_cfg_t g_timer_a1_cfg;
 
-#ifndef CANTimer_Callback
-void CANTimer_Callback(timer_callback_args_t * p_args);
+#ifndef CANTimer_IRQHandler
+void CANTimer_IRQHandler(timer_callback_args_t * p_args);
 #endif
 /** CANFD on CANFD Instance. */
 extern const can_instance_t g_canfd0;
