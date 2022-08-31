@@ -12,12 +12,12 @@
 
 UART_Handle_t UART0_handle = 
 {
-      .UARTBaudrate = BAUD9600,
-      .UARTProtocol = UART_APT,
+      .UARTBaudrate = BAUD115200,
+      .UARTProtocol = UART_LOG_HS,
       .pUART_Parameters = &UART0_Parameters    
 };     
 
 APT_Handle_t LCD_APT_handle;
-
+LogHighSpeed_Handle_t LogHS_handle;
 // CAN handler declaration
 CAN_Handler_t CAN_handle = {0};

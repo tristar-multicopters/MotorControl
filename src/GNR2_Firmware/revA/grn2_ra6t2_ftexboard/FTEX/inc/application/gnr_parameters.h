@@ -12,11 +12,11 @@
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 #define SWD_CONTROL_ENABLE            0                   /* Enable controlling motor directly from debugging interface with vehicle control layer */
-#define DEBUGMODE_MOTOR_CONTROL       0                   /* Disable vehicle control and communications to debug only motor control layer */
+#define DEBUGMODE_MOTOR_CONTROL       0                  /* Disable vehicle control and communications to debug only motor control layer */
 #define ENABLE_MC_DAC_DEBUGGING       1                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 #define ENABLE_CAN_LOGGER             0                   /* Enable CAN log messages for vehicle system diagnostic */
-#define VEHICLE_SELECTION             VEHICLE_E_CELLS     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters.
                                                          Will be changed in the future for a more flexible way
                                                          of parametrization. */
 /*
@@ -24,7 +24,7 @@
   Set BYPASS_POSITION_SENSOR to 1 and BYPASS_CURRENT_CONTROL to 0 for simple current control without position sensor.
   Set BYPASS_POSITION_SENSOR to 0 and BYPASS_CURRENT_CONTROL to 0 for normal operation.
 */
-#define BYPASS_POSITION_SENSOR        0             /* Hall sensor is bypassed; instead angle is increasing at constant speed. */
-#define BYPASS_CURRENT_CONTROL        0             /* Current control is bypassed, thus outputing a constant voltage */
+#define BYPASS_POSITION_SENSOR        0           /* Hall sensor is bypassed; instead angle is increasing at constant speed. */
+#define BYPASS_CURRENT_CONTROL        0           /* Current control is bypassed, thus outputing a constant voltage */
 #define DYNAMIC_CURRENT_CONTROL_PID   1
 /*______________________________________________________*/

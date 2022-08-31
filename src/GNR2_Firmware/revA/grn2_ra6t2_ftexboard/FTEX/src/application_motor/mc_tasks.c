@@ -16,6 +16,8 @@
 #include "board_hardware.h"
 #include "uCAL_GPIO.h"
 #include "current_pid_vs_speed_table.h"
+#include "log_high_speed.h"
+#include "comm_config.h"
 
 #include "mc_tasks.h"
 #include "parameters_conversion.h"
@@ -530,7 +532,8 @@ bool StopPermanencyTimeHasElapsedM1(void)
     */
 uint8_t MC_HighFrequencyTask(void)
 {
-    uint8_t bMotorNbr = 0;
+	
+	  uint8_t bMotorNbr = 0;
     uint16_t hFOCreturn;
 
     BemfObserverInputs_t BemfObsInputs;
@@ -552,6 +555,8 @@ uint8_t MC_HighFrequencyTask(void)
 //                BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
     }
 
+		LogHSLogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
+				
     return bMotorNbr;
 }
 

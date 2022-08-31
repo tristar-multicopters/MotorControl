@@ -99,22 +99,24 @@ static void GnR2ModuleApp(void *p_arg)
   */
 void Comm_BootUp(void)
 {	
-    
-    
+      
     switch(UART0_handle.UARTProtocol)
-	{	
+	  {	
 		/*case UART_BAFANG:
 			LCD_BAF_init(&VCInterfaceHandle);
 			break;
 		*/		
-		case UART_APT:
-			LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0_handle);
-			break;
-		case UART_DISABLE:
+    		case UART_APT:
+                    LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0_handle);
+			     break;
+		    case UART_LOG_HS:
+                   LogHSInit(&LogHS_handle, &VCInterfaceHandle, &UART0_handle);
+		       break;
+		    case UART_DISABLE:
         default:
 			//Dont initialise the euart		
-			break;
-	}
+			     break;
+	  }
 }
 
 __NO_RETURN void ProcessUARTFrames (void * pvParameter)
@@ -125,16 +127,19 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 	{
 		osThreadFlagsWait(UART_FLAG, osFlagsWaitAny, osWaitForever);
 		
-        switch(UART0_handle.UARTProtocol)
-		{			
-			/*case UART_BAFANG:
-				LCD_BAF_frame_Process();
-				break;*/
-			
-			case UART_APT:
-				LCD_APT_frame_Process(&LCD_APT_handle);
-				break;
-			default:
+    switch(UART0_handle.UARTProtocol)
+        {			
+           /*case UART_BAFANG:
+                LCD_BAF_frame_Process();
+                break;*/
+
+           case UART_APT:
+                LCD_APT_frame_Process(&LCD_APT_handle);
+                break;
+           case UART_LOG_HS:
+                LogHSProcessFrame(&LogHS_handle);
+                break;
+            default:
 				break;
 		}
 	}

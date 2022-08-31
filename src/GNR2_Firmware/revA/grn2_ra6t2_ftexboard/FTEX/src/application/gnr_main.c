@@ -27,7 +27,7 @@ static bool DACInit(void);
 static bool ICUInit(void);
 static bool ELCInit(void);
 //static bool AGTInit(void);
-//static bool UARTInit(void);
+static bool UARTInit(void);
 //static bool CANInit(void);
 static bool IIRFAInit(void);
 
@@ -85,11 +85,11 @@ static const osThreadAttr_t ThAtt_VehicleStateMachine = {
 //    .priority = osPriorityNormal
 //};
 
-//static const osThreadAttr_t ThAtt_UART = {
-//	.name = "TSK_UART",
-//	.stack_size = 512,
-//	.priority = osPriorityBelowNormal
-//};
+static const osThreadAttr_t ThAtt_UART = {
+	.name = "TSK_UART",
+	.stack_size = 512,
+	.priority = osPriorityBelowNormal
+};
 #endif
 
 /**************************************************************/
@@ -107,13 +107,14 @@ void gnr_main(void)
     ICUInit();
     ELCInit();
     //AGTInit();
-    //UARTInit();
+    UARTInit();
     //CANInit();
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
 
     MC_Bootup();
     VC_BootUp();
+	  Comm_BootUp();
 
     SystemCoreClockUpdate(); // Standard ARM function to update clock settings
 
@@ -138,9 +139,9 @@ void gnr_main(void)
                                       NULL,
                                       &ThAtt_VehicleStateMachine);
 
-//   	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
-//                                      NULL,
-//                                      &ThAtt_UART);
+   	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
+                                      NULL,
+                                      &ThAtt_UART);
 //                                          
 //    CANmanagerHandle                = osThreadNew(CANManagerTask,
 //                                      NULL,
@@ -307,15 +308,15 @@ static bool ICUInit(void)
 ///**
 //  * @brief  Function used to Initialize the UART
 //  */
-//static bool UARTInit(void)
-//{
-//    bool bIsError = false;
+static bool UARTInit(void)
+{
+    bool bIsError = false;
 
-//    // Initialise the UART
-//    bIsError |= R_SCI_B_UART_Open(&g_uart0_ctrl, &g_uart0_cfg);
+    // Initialise the UART
+    bIsError |= R_SCI_B_UART_Open(&g_uart9_ctrl, &g_uart9_cfg);
 
-//    return bIsError;
-//}
+    return bIsError;
+}
 
 ///**
 //  * @brief  Function used to Initialize the CAN

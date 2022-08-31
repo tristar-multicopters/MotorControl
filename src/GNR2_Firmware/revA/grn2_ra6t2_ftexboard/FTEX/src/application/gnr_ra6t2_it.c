@@ -9,8 +9,8 @@
 #include "mc_tasks.h"
 #include "bsp_pin_cfg.h"
 #include "vc_config.h"
-//#include "uCAL_UART.h"
-//#include "comm_config.h"
+#include "uCAL_UART.h"
+#include "comm_config.h"
 #include "board_hardware.h"
 
 /**
@@ -151,26 +151,26 @@ void WheelSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
 void UART_IRQHandler(uart_callback_args_t * p_args)
 {
     UNUSED_PARAMETER(p_args);
-//    // Handle the UART event 
-//    switch (p_args->event)
-//    {
-//        // Received a character (unplanned reception)
-//        case UART_EVENT_RX_CHAR:
-//                 
-//            break;       
-//        // Receive complete 
-//        case UART_EVENT_RX_COMPLETE:
-//        
-//            UART0_handle.pRxCallback(UART0_handle.Super_Handle);
-//            break;        
-//        // Transmit complete 
-//        case UART_EVENT_TX_COMPLETE:
-//        
-//            UART0_handle.pTxCallback(UART0_handle.Super_Handle);   
-//            break;        
-//        default:
-//            break; 
-//    }    
+    // Handle the UART event 
+    switch (p_args->event)
+    {
+        // Received a character (unplanned reception)
+        case UART_EVENT_RX_CHAR:
+                 
+            break;       
+        // Receive complete 
+        case UART_EVENT_RX_COMPLETE:
+        
+            UART0_handle.pRxCallback(UART0_handle.Super_Handle);
+            break;        
+        // Transmit complete 
+        case UART_EVENT_TX_COMPLETE:
+        
+            UART0_handle.pTxCallback(UART0_handle.Super_Handle);   
+            break;        
+        default:
+            break; 
+    }    
 }
 
 /**
