@@ -23,7 +23,7 @@
 #define THROTTLE_DIVISOR_ADC2THROTTLE         7        /* Divisor for ADC to throttle linear transformation  */
 
 #define THROTTLE_OFFSET_THROTTLE2TORQUE       4000    /* Offset for throttle to torque linear transformation  */
-#define THROTTLE_SLOPE_THROTTLE2TORQUE        14        /* Slope for throttle to torque linear transformation  */
+#define THROTTLE_SLOPE_THROTTLE2TORQUE        28        /* Slope for throttle to torque linear transformation  */
 #define THROTTLE_DIVISOR_THROTTLE2TORQUE      600        /* Divisor for throttle to torque linear transformation  */
 
 #define THROTTLE_DETECTION_THRESHOLD          1000    /* Throttle is considered pressed once it passed this threshold  */

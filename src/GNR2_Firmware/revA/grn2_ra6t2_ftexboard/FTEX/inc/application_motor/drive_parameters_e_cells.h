@@ -122,8 +122,12 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000
 
-#define MAX_APPLICATION_POSITIVE_POWER  1500
+#define MAX_APPLICATION_POSITIVE_POWER  1500    /* Refers to maximum power that drive can push to the motor under any operating conditions*/
 #define MAX_APPLICATION_NEGATIVE_POWER  1500
+
+
+#define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to Motor speed over which Maximum foldback torque is equal to lower limit */
+
 
 /* Default settings */
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< STC_TORQUE_MODE or

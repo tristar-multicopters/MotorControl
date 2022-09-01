@@ -15,26 +15,26 @@
 
 #if VEHICLE_SELECTION == VEHICLE_GRIZZLY
 
-#define CURRENT_PID_LUT_SPEED_STEP                    700
-#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
+#define CURRENT_PID_LUT_SPEED_STEP                    400
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             200
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    800,
+    300,
     600
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    600,
+    50,
     1000,
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    800,
+    300,
     600,
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    2000,
+    50,
     3000,
 };
 

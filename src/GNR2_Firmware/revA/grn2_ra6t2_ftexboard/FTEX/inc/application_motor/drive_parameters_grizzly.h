@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       1200 /*!< rpm, mechanical */
+#define MAX_APPLICATION_SPEED_RPM       1250 /*!< rpm, mechanical */
 #define MIN_APPLICATION_SPEED_RPM       0 /*!< rpm, mechanical,
                                                            absolute value */
 #define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
@@ -122,9 +122,11 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000
 
-#define MAX_APPLICATION_POSITIVE_POWER  1200
+#define MAX_APPLICATION_POSITIVE_POWER  1200    /* Refers to maximum power that drive can push to the motor under any operating conditions*/
 #define MAX_APPLICATION_NEGATIVE_POWER  1200
 
+
+#define DYNAMICTORQUE_THRESHOLD_SPEED  120      /* Refers to Motor speed over which Maximum foldback torque is equal to lower limit */
 
 /* Default settings */
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< STC_TORQUE_MODE or

@@ -162,7 +162,8 @@ PWRT_Handle_t PowertrainHandle =
     {
         .hDecreasingEndValue = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END,
         .hDecreasingRange = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL,
-        .hDefaultMaxOutput = POWERTRAIN_MAX_MOTOR_TORQUE,
+        .hDefaultOutputLimitHigh = POWERTRAIN_MAX_MOTOR_TORQUE,
+        .hDefaultOutputLimitLow = 0,
         .bEnableFoldback = true,
     },
 

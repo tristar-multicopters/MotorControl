@@ -34,6 +34,8 @@ typedef struct
     Foldback_Handle_t FoldbackMotorSpeed;               /* Foldback structure used to limit maximum motor speed */
     Foldback_Handle_t FoldbackMotorTemperature;         /* Foldback structure used to limit maximum motor temperature */
     Foldback_Handle_t FoldbackHeatsinkTemperature;      /* Foldback structure used to limit maximum heatsink temperature */
+    
+    Foldback_Handle_t FoldbackDynamicMaxTorque;      /* Foldback structure used to limit maximum Torque to other foldbacks */   
 
     int16_t hCurrentTorqueRef;
     int16_t hCurrentSpeedRef;
@@ -70,8 +72,8 @@ typedef struct
                                              the unit defined by #SPEED_UNIT.*/
     uint16_t hMaxPositiveTorque;          /*!< Maximum positive value of motor
                                              torque in cNm.*/
-    int16_t hMinNegativeTorque;           /*!< Minimum negative value of motor
-                                             torque in cNm.*/
+    int16_t  hMinNegativeTorque;           /*!< Minimum negative value of motor
+                                             torque in cNm.*/                         
     uint16_t hMaxPositivePower;             /*!< Maximum positive value of motor
                                              power in W.*/
     int16_t hMinNegativePower;              /*!< Minimum negative value of motor
@@ -84,7 +86,7 @@ typedef struct
 
     float fGainTorqueIqref;            /* Gain (G) between Iqref in digital amps and torque reference in cNm. Iqref = Torq * G/D  */
     float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
-
+    
 } SpdTorqCtrlHandle_t;
 
 
@@ -292,7 +294,6 @@ int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
   * @retval int16_t Id in digital A
   */
 int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef);
-
 
 #ifdef __cplusplus
 }

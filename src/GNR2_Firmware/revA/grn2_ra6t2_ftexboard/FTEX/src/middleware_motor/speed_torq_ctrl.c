@@ -16,6 +16,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 
 
+
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
 {
@@ -39,6 +40,12 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     RampMngr_Init(&pHandle->TorqueRampMngr);
     RampMngr_Init(&pHandle->SpeedRampMngr);
+    
+    Foldback_Init(&pHandle->FoldbackDynamicMaxTorque);
+    Foldback_Init(&pHandle->FoldbackHeatsinkTemperature);
+    Foldback_Init(&pHandle->FoldbackMotorSpeed);
+    Foldback_Init(&pHandle->FoldbackMotorTemperature);
+    
 }
 
 
@@ -314,8 +321,13 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     {
         hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor);
     }
-
-    int16_t hOutputTorque;
+    
+    int16_t hOutputTorque, hMaxTorque; 
+    hMaxTorque = Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxTorque, NULL,(int16_t) abs(hMeasuredSpeed) );
+    Foldback_UpdateMaxValue(&pHandle->FoldbackMotorSpeed, &hMaxTorque);
+    Foldback_UpdateMaxValue(&pHandle->FoldbackMotorTemperature, &hMaxTorque);
+    Foldback_UpdateMaxValue(&pHandle->FoldbackHeatsinkTemperature, &hMaxTorque);
+    
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)(abs(hMeasuredSpeed)));
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
@@ -392,3 +404,4 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     }
     return hRetval;
 }
+

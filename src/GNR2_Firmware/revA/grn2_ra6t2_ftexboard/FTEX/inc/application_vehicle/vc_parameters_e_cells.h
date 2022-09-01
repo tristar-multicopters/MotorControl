@@ -73,7 +73,7 @@
 #define POWERTRAIN_WHEEL_SPEED_SENSOR_PPR                 2                  /* Number of electrical pulses per wheel rotation */
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT               200                /* Number of task ticks to wait after a fault occurs to attempt
                                                                               a powertrain restart (OC, SF and SU faults)   */
-#define POWERTRAIN_MAX_MOTOR_TORQUE                       NOMINAL_PEAK_TORQUE               /* Maximum motor torque to apply with powertrain management */
+#define POWERTRAIN_MAX_MOTOR_TORQUE                       STARTING_TORQUE               /* Maximum motor torque to apply with powertrain management */
 #define POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE              true                              /* Enable dual motor startup when single motor mode is selected */
 #define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END           MAX_APPLICATION_SPEED_RPM/4       /* Speed value that dual motor startup strategy stops outputting
                                                                                                torque */

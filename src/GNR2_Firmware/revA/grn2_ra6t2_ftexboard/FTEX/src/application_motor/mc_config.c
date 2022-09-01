@@ -144,23 +144,38 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
   .FoldbackMotorSpeed =
   {
       .bEnableFoldback = true,
-      .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
+      .FoldbackConfig = TRIM,
+      .hDefaultOutputLimitHigh = STARTING_TORQUE,
+      .hDefaultOutputLimitLow = 0,
       .hDecreasingEndValue = MAX_APPLICATION_SPEED_UNIT,
       .hDecreasingRange = MAX_APPLICATION_SPEED_UNIT/5,
   },
   .FoldbackMotorTemperature =
   {
-      .bEnableFoldback = true,
-      .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
+      .bEnableFoldback = false,
+      .FoldbackConfig = TRIM,
+      .hDefaultOutputLimitHigh = STARTING_TORQUE,
+      .hDefaultOutputLimitLow = 0,
       .hDecreasingEndValue = MOTOR_MAX_TEMPERATURE_C,
       .hDecreasingRange = MOTOR_MAX_TEMPERATURE_C/3,
   },
   .FoldbackHeatsinkTemperature =
   {
       .bEnableFoldback = true,
-      .hDefaultMaxOutput = NOMINAL_PEAK_TORQUE,
+      .FoldbackConfig = TRIM,
+      .hDefaultOutputLimitHigh = STARTING_TORQUE,
+      .hDefaultOutputLimitLow = 0,
       .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C,
       .hDecreasingRange = 4*(OV_TEMPERATURE_THRESHOLD_C/5),
+  },
+  .FoldbackDynamicMaxTorque = 
+  {
+      .bEnableFoldback = true,
+      .FoldbackConfig = SET_THRESHOLD,
+      .hDefaultOutputLimitHigh = STARTING_TORQUE,
+      .hDefaultOutputLimitLow =  NOMINAL_TORQUE,
+      .hDecreasingRange = DYNAMICTORQUE_THRESHOLD_SPEED/2,
+      .hDecreasingEndValue = DYNAMICTORQUE_THRESHOLD_SPEED,
   },
 
   .hSTCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,
@@ -168,8 +183,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
   .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
   .hMaxAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
   .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
-  .hMaxPositiveTorque =				(int16_t)NOMINAL_PEAK_TORQUE,
-  .hMinNegativeTorque =				-(int16_t)NOMINAL_PEAK_TORQUE,
+  .hMaxPositiveTorque =				(int16_t)STARTING_TORQUE,
+  .hMinNegativeTorque =				-(int16_t)STARTING_TORQUE,
   .hMaxPositivePower =				(int16_t)MAX_APPLICATION_POSITIVE_POWER,
   .hMinNegativePower =				-(int16_t)MAX_APPLICATION_NEGATIVE_POWER,
   .ModeDefault =					DEFAULT_CONTROL_MODE,
