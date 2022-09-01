@@ -11,29 +11,14 @@
 /*
 * see function definition
 */
-void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle,  MotorControlInterfaceHandle_t * pMCI)
+void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2)
 {
     ASSERT(pHandle != NULL);
     ASSERT(pMCI != NULL);
+    ASSERT(pSlaveM2 != NULL);
+    
     pHandle->pMCI = pMCI;
-}
-
-/*
-* see function definition
-*/
-void MDI_UpdateVirtualMotorFeedback(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, VirtualMotorFeedback_t Feedback)
-{
-    ASSERT(pHandle != NULL);
-    switch (bMotor)
-    {
-        case M1:
-            break;
-        case M2:
-            pHandle->VirtualMotor2.Feedback = Feedback;
-            break;
-        default:
-            break;
-    }
+    pHandle->pSlaveM2 = pSlaveM2;
 }
 
 /*
@@ -66,7 +51,7 @@ void MDI_ExecTorqueRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor
             MCInterface_ExecTorqueRamp(pHandle->pMCI, hFinalTorque);
             break;
         case M2:
-            pHandle->VirtualMotor2.hTorqueRef = hFinalTorque;
+            SlaveMCInterface_ExecTorqueRamp(pHandle->pSlaveM2, hFinalTorque);
             break;
         default:
             break;
@@ -105,7 +90,7 @@ bool MDI_StartMotor(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
             bReturnValue = MCInterface_StartMotor(pHandle->pMCI);
             break;
         case M2:
-            pHandle->VirtualMotor2.bStartMotor = true;
+            bReturnValue = SlaveMCInterface_StartMotor(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -128,7 +113,7 @@ bool MDI_StopMotor(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
             bReturnValue = MCInterface_StopMotor(pHandle->pMCI);
             break;
         case M2:
-            pHandle->VirtualMotor2.bStartMotor = false;
+            bReturnValue = SlaveMCInterface_StopMotor(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -151,7 +136,7 @@ bool MDI_FaultAcknowledged(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMo
             bReturnValue = MCInterface_FaultAcknowledged(pHandle->pMCI);
             break;
         case M2:
-            pHandle->VirtualMotor2.bFaultAck = true;
+            bReturnValue = SlaveMCInterface_FaultAcknowledged(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -174,7 +159,7 @@ MotorState_t  MDI_GetSTMState(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
             bReturnValue = MCInterface_GetSTMState(pHandle->pMCI);
             break;
         case M2:
-            bReturnValue = (MotorState_t)pHandle->VirtualMotor2.Feedback.bState;
+            bReturnValue = SlaveMCInterface_GetSTMState(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -197,7 +182,7 @@ uint16_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t
             hReturnValue = MCInterface_GetOccurredFaults(pHandle->pMCI);
             break;
         case M2:
-            hReturnValue = pHandle->VirtualMotor2.Feedback.hOccuredFaults;
+            hReturnValue = SlaveMCInterface_GetOccurredFaults(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -220,7 +205,7 @@ uint16_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
             hReturnValue = MCInterface_GetCurrentFaults(pHandle->pMCI);
             break;
         case M2:
-            hReturnValue = pHandle->VirtualMotor2.Feedback.hCurrentFaults;
+            hReturnValue = SlaveMCInterface_GetCurrentFaults(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -371,7 +356,7 @@ int16_t MDI_GetAvrgMecSpeedUnit(MultipleDriveInterfaceHandle_t * pHandle, uint8_
             hReturnValue = MCInterface_GetAvrgMecSpeedUnit(pHandle->pMCI);
             break;
         case M2:
-            hReturnValue = pHandle->VirtualMotor2.Feedback.hMotorSpeed;
+            hReturnValue = SlaveMCInterface_GetAvrgMecSpeedUnit(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -592,7 +577,6 @@ int16_t MDI_GetTeref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
             hReturnValue = MCInterface_GetTeref(pHandle->pMCI);
             break;
         case M2:
-            hReturnValue = pHandle->VirtualMotor2.hTorqueRef;
             break;
         default:
             break;

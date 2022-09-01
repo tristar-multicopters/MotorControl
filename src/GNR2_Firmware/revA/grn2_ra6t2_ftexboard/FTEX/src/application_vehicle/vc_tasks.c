@@ -4,9 +4,12 @@
   *
     */
 
+#include "vc_config.h"
+#include "comm_config.h"
+
 #include "vc_tasks.h"
 #include "mc_tasks.h"
-#include "vc_config.h"
+#include "comm_tasks.h"
 
 #include "gnr_main.h"
 
@@ -50,7 +53,7 @@ void VC_BootUp(void)
     
     /* Initialize vehicle controller state machine and powertrain components */
     VCSTM_Init(pVCI->pStateMachine);
-    PWRT_Init(pVCI->pPowertrain, &MCInterface[M1]);
+    PWRT_Init(pVCI->pPowertrain, &MCInterface[M1], &SlaveM2);
 }
 
 /**
@@ -103,6 +106,8 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
     uint16_t hVehicleFault;
     VC_State_t StateVC;
     #endif
+    
+    osDelay(500); //Simple delay to prevent starting motors just after system bootup
     
     uint32_t xLastWakeTime = osKernelGetTickCount();
     while (true)
