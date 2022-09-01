@@ -11,7 +11,7 @@
 UART_Handle_t UART0Handle =
 {
     .UARTBaudrate = BAUD115200,
-    .UARTProtocol = UART_LOG_HS,
+    .UARTProtocol = UART_DISABLE,
     .pUARTInstance = &g_uart9,
 };
 

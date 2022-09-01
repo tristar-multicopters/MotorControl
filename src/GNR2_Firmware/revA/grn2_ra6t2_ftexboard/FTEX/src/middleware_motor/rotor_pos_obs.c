@@ -89,17 +89,10 @@ bool RotorPosObs_CalcMecSpeedUnit(RotorPositionObserverHandle_t * pHandle, int16
 	bool bIsReliable = SpdPosFdbk_GetReliability(&pHandle->pHallSensor->Super);
 	bIsReliable &= SpdPosFdbk_CalcReliability (&pHandle->Super, pMecSpeedUnit);
 	
-	if (bIsReliable)
-	{
-		/* Convert el_dpp to MecUnit */
-		*pMecSpeedUnit = (int16_t)(( pHandle->hEstElSpeedDpp * (int32_t)pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT) /
-																((int32_t) pHandle->Super.DPPConvFactor * (int32_t)pHandle->Super.bElToMecRatio));
-	}
-	else
-	{
-		*pMecSpeedUnit = 0;
-	}
-	
+    /* Convert el_dpp to MecUnit */
+    *pMecSpeedUnit = (int16_t)(( pHandle->hEstElSpeedDpp * (int32_t)pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT) /
+                                                            ((int32_t) pHandle->Super.DPPConvFactor * (int32_t)pHandle->Super.bElToMecRatio));
+
 	pHandle->Super.hAvrMecSpeedUnit = *pMecSpeedUnit;
 	
 	return bIsReliable;

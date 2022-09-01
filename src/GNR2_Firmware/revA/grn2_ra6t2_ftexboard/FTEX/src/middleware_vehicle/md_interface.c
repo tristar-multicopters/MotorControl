@@ -14,7 +14,7 @@
 void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle,  MotorControlInterfaceHandle_t * pMCI)
 {
     ASSERT(pHandle != NULL);
-    ASSERT(pMCI != NULL); 
+    ASSERT(pMCI != NULL);
     pHandle->pMCI = pMCI;
 }
 
@@ -23,7 +23,7 @@ void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle,  MotorControlInterfaceHa
 */
 void MDI_UpdateVirtualMotorFeedback(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, VirtualMotorFeedback_t Feedback)
 {
-    ASSERT(pHandle != NULL); 
+    ASSERT(pHandle != NULL);
     switch (bMotor)
     {
         case M1:
@@ -41,7 +41,7 @@ void MDI_UpdateVirtualMotorFeedback(MultipleDriveInterfaceHandle_t * pHandle, ui
 */
 void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, int16_t hFinalSpeed)
 {
-    ASSERT(pHandle != NULL); 
+    ASSERT(pHandle != NULL);
     switch (bMotor)
     {
         case M1:

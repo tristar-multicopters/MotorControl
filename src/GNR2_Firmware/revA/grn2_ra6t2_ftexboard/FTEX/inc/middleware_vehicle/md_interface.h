@@ -12,7 +12,7 @@
 #include "mc_interface.h"
 
 /*
-*  Structure used to hold feedback from slave motor, 
+*  Structure used to hold feedback from slave motor,
     i.e. motor controller not locally present on this ganrunner device.
 */
 typedef struct
@@ -27,7 +27,7 @@ typedef struct
 } VirtualMotorFeedback_t;
 
 /*
-*  Structure used to hold feedback and commands from/to slave motor, 
+*  Structure used to hold feedback and commands from/to slave motor,
     i.e. motor controller not locally present on this ganrunner device.
 */
 typedef struct

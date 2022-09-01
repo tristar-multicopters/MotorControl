@@ -16,6 +16,14 @@
 void MS_Init(MS_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
+    struct GPIOConfig PinConfig;
+   
+    PinConfig.PinDirection = INPUT;
+    PinConfig.PinPull      = UP; 
+    PinConfig.PinOutput    = PUSH_PULL; 
+    
+    uCAL_GPIO_ReInit(pHandle->wM1SelectPinNumber, PinConfig);
+    uCAL_GPIO_ReInit(pHandle->wM2SelectPinNumber, PinConfig);
 }
 
 MotorSelection_t MS_CheckSelection(MS_Handle_t* pHandle)
@@ -23,8 +31,8 @@ MotorSelection_t MS_CheckSelection(MS_Handle_t* pHandle)
 	ASSERT(pHandle != NULL);
 	if (pHandle->bMSEnable)
 	{
-		bool bM1Select = true; //TODO: check gpio input, for now just mock
-		bool bM2Select = true; //TODO: check gpio input, for now just mock
+		bool bM1Select = uCAL_GPIO_Read(pHandle->wM1SelectPinNumber);
+		bool bM2Select = uCAL_GPIO_Read(pHandle->wM2SelectPinNumber);
 		bool bBothSelect = bM1Select && bM2Select;
 		
 		if (bBothSelect)

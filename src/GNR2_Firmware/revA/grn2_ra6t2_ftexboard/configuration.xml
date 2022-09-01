@@ -9,7 +9,7 @@
     <option key="#DeviceCommand#" value="R7FA6T2BD"/>
     <option key="#RTOS#" value="_none"/>
     <option key="#pinconfiguration#" value="R7FA6T2BD3CFP.pincfg"/>
-    <option key="#FSPVersion#" value="3.8.0"/>
+    <option key="#FSPVersion#" value="3.6.0"/>
     <option key="#SELECTED_TOOLCHAIN#" value="com.arm.toolchain"/>
   </generalSettings>
   <raBspConfiguration>
@@ -140,77 +140,77 @@
     <node id="board.clock.iicclk.display" option="board.clock.iicclk.display.value"/>
   </raClockConfiguration>
   <raComponentSelection>
-    <component apiversion="" class="BSP" condition="" group="Board" subgroup="custom" variant="" vendor="Renesas" version="3.8.0">
-      <description>Custom Board Support Files</description>
-      <originalPack>Renesas.RA_board_custom.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="R7FA6T2BD3CFP" vendor="Renesas" version="3.8.0">
-      <description>Board support package for R7FA6T2BD3CFP</description>
-      <originalPack>Renesas.RA_mcu_ra6t2.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="" vendor="Renesas" version="3.8.0">
-      <description>Board support package for RA6T2</description>
-      <originalPack>Renesas.RA_mcu_ra6t2.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="fsp" variant="" vendor="Renesas" version="3.8.0">
-      <description>Board support package for RA6T2 - FSP Data</description>
-      <originalPack>Renesas.RA_mcu_ra6t2.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="Common" condition="" group="all" subgroup="fsp_common" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="Common" condition="" group="all" subgroup="fsp_common" variant="" vendor="Renesas" version="3.6.0">
       <description>Board Support Package Common Files</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_adc_b" variant="" vendor="Renesas" version="3.8.0">
-      <description>A/D Converter</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_agt" variant="" vendor="Renesas" version="3.8.0">
-      <description>Asynchronous General Purpose Timer</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_canfd" variant="" vendor="Renesas" version="3.8.0">
-      <description>Controller Area Network - Flexible Data</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_dac" variant="" vendor="Renesas" version="3.8.0">
-      <description>12-bit D/A Converter</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_elc" variant="" vendor="Renesas" version="3.8.0">
-      <description>Event Link Controller</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_gpt" variant="" vendor="Renesas" version="3.8.0">
-      <description>General PWM Timer</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_gpt_three_phase" variant="" vendor="Renesas" version="3.8.0">
-      <description>General PWM Timer Three-Phase Motor Control Driver</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_icu" variant="" vendor="Renesas" version="3.8.0">
-      <description>External Interrupt</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_iirfa" variant="" vendor="Renesas" version="3.8.0">
-      <description>IIR Filter Accelerator</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_ioport" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_ioport" variant="" vendor="Renesas" version="3.6.0">
       <description>I/O Port</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_poeg" variant="" vendor="Renesas" version="3.8.0">
-      <description>Port Output Enable for GPT</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_sci_b_uart" variant="" vendor="Renesas" version="3.8.0">
-      <description>SCI UART</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="CMSIS" condition="" group="CMSIS5" subgroup="CoreM" variant="" vendor="Arm" version="5.9.0+renesas.0.fsp.3.8.0">
+    <component apiversion="" class="CMSIS" condition="" group="CMSIS5" subgroup="CoreM" variant="" vendor="Arm" version="5.8.0+renesas.0.fsp.3.6.0">
       <description>Arm CMSIS Version 5 - Core (M)</description>
-      <originalPack>Arm.CMSIS5.5.9.0+renesas.0.fsp.3.8.0.pack</originalPack>
+      <originalPack>Arm.CMSIS5.5.8.0+renesas.0.fsp.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="R7FA6T2BD3CFP" vendor="Renesas" version="3.6.0">
+      <description>Board support package for R7FA6T2BD3CFP</description>
+      <originalPack>Renesas.RA_mcu_ra6t2.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="" vendor="Renesas" version="3.6.0">
+      <description>Board support package for RA6T2</description>
+      <originalPack>Renesas.RA_mcu_ra6t2.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="fsp" variant="" vendor="Renesas" version="3.6.0">
+      <description>Board support package for RA6T2 - FSP Data</description>
+      <originalPack>Renesas.RA_mcu_ra6t2.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="BSP" condition="" group="Board" subgroup="custom" variant="" vendor="Renesas" version="3.6.0">
+      <description>Custom Board Support Files</description>
+      <originalPack>Renesas.RA_board_custom.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_adc_b" variant="" vendor="Renesas" version="3.6.0">
+      <description>A/D Converter</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_dac" variant="" vendor="Renesas" version="3.6.0">
+      <description>12-bit D/A Converter</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_gpt" variant="" vendor="Renesas" version="3.6.0">
+      <description>General PWM Timer</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_gpt_three_phase" variant="" vendor="Renesas" version="3.6.0">
+      <description>General PWM Timer Three-Phase Motor Control Driver</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_icu" variant="" vendor="Renesas" version="3.6.0">
+      <description>External Interrupt</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_iirfa" variant="" vendor="Renesas" version="3.6.0">
+      <description>IIR Filter Accelerator</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_poeg" variant="" vendor="Renesas" version="3.6.0">
+      <description>Port Output Enable for GPT</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_sci_b_uart" variant="" vendor="Renesas" version="3.6.0">
+      <description>SCI UART</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_elc" variant="" vendor="Renesas" version="3.6.0">
+      <description>Event Link Controller</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_agt" variant="" vendor="Renesas" version="3.6.0">
+      <description>Asynchronous General Purpose Timer</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_canfd" variant="" vendor="Renesas" version="3.6.0">
+      <description>Controller Area Network - Flexible Data</description>
+      <originalPack>Renesas.RA.3.6.0.pack</originalPack>
     </component>
   </raComponentSelection>
   <raElcConfiguration>
@@ -1038,8 +1038,8 @@
       <property id="module.driver.timer.clear_source" value="_signal.event.icu.irq3,_signal.event.icu.irq4,_signal.event.icu.irq5"/>
       <property id="module.driver.timer.capture_a_source" value="_signal.event.icu.irq3,_signal.event.icu.irq4,_signal.event.icu.irq5"/>
       <property id="module.driver.timer.capture_b_source" value=""/>
-      <property id="module.driver.timer.gtioca_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_pclkd_div_16"/>
-      <property id="module.driver.timer.gtiocb_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_pclkd_div_16"/>
+      <property id="module.driver.timer.gtioca_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_none"/>
+      <property id="module.driver.timer.gtiocb_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_none"/>
       <property id="module.driver.timer.p_callback" value="HallTimer_IRQHandler"/>
       <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority5"/>
       <property id="module.driver.timer.capture_a_ipl" value="board.icu.common.irq.priority5"/>
@@ -1058,6 +1058,32 @@
       <property id="module.driver.timer.interrupt_skip.adc" value="module.driver.timer.interrupt_skip.adc.none"/>
       <property id="module.driver.timer.gtioca_disable_setting" value="module.driver.timer.gtioca_disable_setting.gtioc_disable_prohibited"/>
       <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_prohibited"/>
+    </module>
+    <module id="module.driver.uart_on_sci_b_uart.798334560">
+      <property id="module.driver.uart.name" value="g_uart9"/>
+      <property id="module.driver.uart.channel" value="9"/>
+      <property id="module.driver.uart.data_bits" value="module.driver.uart.data_bits.data_bits_8"/>
+      <property id="module.driver.uart.parity" value="module.driver.uart.parity.parity_off"/>
+      <property id="module.driver.uart.stop_bits" value="module.driver.uart.stop_bits.stop_bits_1"/>
+      <property id="module.driver.uart.baud" value="115200"/>
+      <property id="module.driver.uart.baudrate_modulation" value="module.driver.uart.baudrate_modulation.disabled"/>
+      <property id="module.driver.uart.baudrate_max_err" value="5"/>
+      <property id="module.driver.uart.flow_control" value="module.driver.uart.flow_control.rts"/>
+      <property id="module.driver.uart.pin_control_port" value="module.driver.uart.pin_control_port.PORT_DISABLE"/>
+      <property id="module.driver.uart.pin_control_pin" value="module.driver.uart.pin_control_pin.PIN_DISABLE"/>
+      <property id="module.driver.uart.clk_src" value="module.driver.uart.clk_src.int_clk"/>
+      <property id="module.driver.uart.rx_edge_start" value="module.driver.uart.rx_edge_start.falling_edge"/>
+      <property id="module.driver.uart.noisecancel_en" value="module.driver.uart.noisecancel_en.disabled"/>
+      <property id="module.driver.uart.rx_fifo_trigger" value="module.driver.uart.rx_fifo_trigger.max"/>
+      <property id="module.driver.uart.rs485.de_enable" value="module.driver.uart.rs485.de_enable.disabled"/>
+      <property id="module.driver.uart.rs485.de_polarity" value="module.driver.uart.rs485.de_polarity.high"/>
+      <property id="module.driver.uart.rs485.de_assertion_time" value="1"/>
+      <property id="module.driver.uart.rs485.de_negation_time" value="1"/>
+      <property id="module.driver.uart.callback" value="UART_IRQHandler"/>
+      <property id="module.driver.uart.rxi_ipl" value="board.icu.common.irq.priority12"/>
+      <property id="module.driver.uart.txi_ipl" value="board.icu.common.irq.priority12"/>
+      <property id="module.driver.uart.tei_ipl" value="board.icu.common.irq.priority12"/>
+      <property id="module.driver.uart.eri_ipl" value="board.icu.common.irq.priority12"/>
     </module>
     <module id="module.driver.elc_on_elc.192724923">
       <property id="module.driver.elc.name" value="g_elc"/>
@@ -1079,7 +1105,7 @@
       <property id="module.driver.canfd.manual.data.sync_jump_width" value="1"/>
       <property id="module.driver.canfd.bitrate.manual.use_manual" value="module.driver.canfd.bitrate.manual.use_manual.disabled"/>
       <property id="module.driver.canfd.p_callback" value="CANFD_IRQhandler"/>
-      <property id="module.driver.canfd.txmb.int" value="module.driver.canfd.txmb.int.0,module.driver.canfd.txmb.int.1,module.driver.canfd.txmb.int.2,module.driver.canfd.txmb.int.3"/>
+      <property id="module.driver.canfd.txmb.int" value="module.driver.canfd.txmb.int.0"/>
       <property id="module.driver.canfd.ch_err.int" value=""/>
       <property id="module.driver.canfd.ipl" value="board.icu.common.irq.priority7"/>
       <property id="module.driver.canfd.afl_array" value="CANFD_FilterListArray"/>
@@ -1120,80 +1146,6 @@
       <property id="module.driver.timer.p_callback" value="PedalSpeedTimer_IRQHandler"/>
       <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority12"/>
     </module>
-    <module id="module.driver.timer_on_gpt.1296312980">
-      <property id="module.driver.timer.name" value="g_timer2"/>
-      <property id="module.driver.timer.channel" value="2"/>
-      <property id="module.driver.timer.mode" value="module.driver.timer.mode.mode_periodic"/>
-      <property id="module.driver.timer.period" value="0x100000000"/>
-      <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_usec"/>
-      <property id="module.driver.timer.gtior.gtioa.initial_output_level" value="module.driver.timer.gtior.gtioa.initial_output_level.low"/>
-      <property id="module.driver.timer.gtior.gtioa.cycle_end_output_level" value="module.driver.timer.gtior.gtioa.cycle_end_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtioa.compare_match_output_level" value="module.driver.timer.gtior.gtioa.compare_match_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtioa.count_stop_retain" value="module.driver.timer.gtior.gtioa.count_stop_retain.disabled"/>
-      <property id="module.driver.timer.gtior.gtiob.initial_output_level" value="module.driver.timer.gtior.gtiob.initial_output_level.low"/>
-      <property id="module.driver.timer.gtior.gtiob.cycle_end_output_level" value="module.driver.timer.gtior.gtiob.cycle_end_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtiob.compare_match_output_level" value="module.driver.timer.gtior.gtiob.compare_match_output_level.retain"/>
-      <property id="module.driver.timer.gtior.gtiob.count_stop_retain" value="module.driver.timer.gtior.gtiob.count_stop_retain.disabled"/>
-      <property id="module.driver.timer.gtior.custom_waveform_enable" value="module.driver.timer.gtior.custom_waveform_enable.disabled"/>
-      <property id="module.driver.timer.duty_cycle" value="50"/>
-      <property id="module.driver.timer.gtioca_output_enabled" value="module.driver.timer.gtioca_output_enabled.false"/>
-      <property id="module.driver.timer.gtioca_stop_level" value="module.driver.timer.gtioca_stop_level.pin_level_low"/>
-      <property id="module.driver.timer.gtiocb_output_enabled" value="module.driver.timer.gtiocb_output_enabled.false"/>
-      <property id="module.driver.timer.gtiocb_stop_level" value="module.driver.timer.gtiocb_stop_level.pin_level_low"/>
-      <property id="module.driver.timer.count_up_source" value=""/>
-      <property id="module.driver.timer.count_down_source" value=""/>
-      <property id="module.driver.timer.start_source" value=""/>
-      <property id="module.driver.timer.stop_source" value=""/>
-      <property id="module.driver.timer.clear_source" value=""/>
-      <property id="module.driver.timer.capture_a_source" value="module.driver.gpt.source_gtiocb_rising_gtioca_low"/>
-      <property id="module.driver.timer.capture_b_source" value=""/>
-      <property id="module.driver.timer.gtioca_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_none"/>
-      <property id="module.driver.timer.gtiocb_filter" value="module.driver.timer.gtioc_filter.gtioc_filter_none"/>
-      <property id="module.driver.timer.p_callback" value="WheelSpeedTimer_IRQHandler"/>
-      <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority12"/>
-      <property id="module.driver.timer.capture_a_ipl" value="board.icu.common.irq.priority12"/>
-      <property id="module.driver.timer.capture_b_ipl" value="_disabled"/>
-      <property id="module.driver.timer.trough_ipl" value="_disabled"/>
-      <property id="module.driver.timer.extra" value="module.driver.timer.extra.disabled"/>
-      <property id="module.driver.timer.poeg_link" value="module.driver.timer.poeg_link.poeg_link_poeg0"/>
-      <property id="module.driver.timer.output_disable" value=""/>
-      <property id="module.driver.timer.adc_trigger" value=""/>
-      <property id="module.driver.timer.dead_time_count_up" value="0"/>
-      <property id="module.driver.timer.dead_time_count_down" value="0"/>
-      <property id="module.driver.timer.adc_a_compare_match" value="0"/>
-      <property id="module.driver.timer.adc_b_compare_match" value="0"/>
-      <property id="module.driver.timer.interrupt_skip.source" value="module.driver.timer.interrupt_skip.source.none"/>
-      <property id="module.driver.timer.interrupt_skip.count" value="module.driver.timer.interrupt_skip.count.count_0"/>
-      <property id="module.driver.timer.interrupt_skip.adc" value="module.driver.timer.interrupt_skip.adc.none"/>
-      <property id="module.driver.timer.gtioca_disable_setting" value="module.driver.timer.gtioca_disable_setting.gtioc_disable_prohibited"/>
-      <property id="module.driver.timer.gtiocb_disable_setting" value="module.driver.timer.gtiocb_disable_setting.gtioc_disable_prohibited"/>
-    </module>
-    <module id="module.driver.uart_on_sci_b_uart.1626594675">
-      <property id="module.driver.uart.name" value="g_uart9"/>
-      <property id="module.driver.uart.channel" value="9"/>
-      <property id="module.driver.uart.data_bits" value="module.driver.uart.data_bits.data_bits_8"/>
-      <property id="module.driver.uart.parity" value="module.driver.uart.parity.parity_off"/>
-      <property id="module.driver.uart.stop_bits" value="module.driver.uart.stop_bits.stop_bits_1"/>
-      <property id="module.driver.uart.baud" value="115200"/>
-      <property id="module.driver.uart.baudrate_modulation" value="module.driver.uart.baudrate_modulation.disabled"/>
-      <property id="module.driver.uart.baudrate_max_err" value="5"/>
-      <property id="module.driver.uart.flow_control" value="module.driver.uart.flow_control.rts"/>
-      <property id="module.driver.uart.pin_control_port" value="module.driver.uart.pin_control_port.PORT_DISABLE"/>
-      <property id="module.driver.uart.pin_control_pin" value="module.driver.uart.pin_control_pin.PIN_DISABLE"/>
-      <property id="module.driver.uart.clk_src" value="module.driver.uart.clk_src.int_clk"/>
-      <property id="module.driver.uart.rx_edge_start" value="module.driver.uart.rx_edge_start.falling_edge"/>
-      <property id="module.driver.uart.noisecancel_en" value="module.driver.uart.noisecancel_en.disabled"/>
-      <property id="module.driver.uart.rx_fifo_trigger" value="module.driver.uart.rx_fifo_trigger.max"/>
-      <property id="module.driver.uart.rs485.de_enable" value="module.driver.uart.rs485.de_enable.disabled"/>
-      <property id="module.driver.uart.rs485.de_polarity" value="module.driver.uart.rs485.de_polarity.high"/>
-      <property id="module.driver.uart.rs485.de_assertion_time" value="1"/>
-      <property id="module.driver.uart.rs485.de_negation_time" value="1"/>
-      <property id="module.driver.uart.callback" value="UART_IRQHandler"/>
-      <property id="module.driver.uart.rxi_ipl" value="board.icu.common.irq.priority12"/>
-      <property id="module.driver.uart.txi_ipl" value="board.icu.common.irq.priority12"/>
-      <property id="module.driver.uart.tei_ipl" value="board.icu.common.irq.priority12"/>
-      <property id="module.driver.uart.eri_ipl" value="board.icu.common.irq.priority12"/>
-    </module>
     <context id="_hal.0">
       <stack module="module.driver.ioport_on_ioport.0"/>
       <stack module="module.driver.three_phase_on_gpt_three_phase.566906103">
@@ -1212,12 +1164,11 @@
       <stack module="module.driver.external_irq_on_icu.943185978"/>
       <stack module="module.driver.external_irq_on_icu.1921967873"/>
       <stack module="module.driver.timer_on_gpt.1178725709"/>
+      <stack module="module.driver.uart_on_sci_b_uart.798334560"/>
       <stack module="module.driver.elc_on_elc.192724923"/>
       <stack module="module.driver.canfd_on_canfd.683341238"/>
       <stack module="module.driver.timer_on_agt.467807930"/>
       <stack module="module.driver.timer_on_agt.1314836952"/>
-      <stack module="module.driver.timer_on_gpt.1296312980"/>
-      <stack module="module.driver.uart_on_sci_b_uart.1626594675"/>
     </context>
     <config id="config.driver.ioport">
       <property id="config.driver.ioport.checking" value="config.driver.ioport.checking.system"/>
@@ -1326,6 +1277,7 @@
     <symbolicName propertyId="pa02.symbolic_name" value="M1_CURR_V"/>
     <symbolicName propertyId="pa06.symbolic_name" value="VBUS_SENSE_M1"/>
     <symbolicName propertyId="pa07.symbolic_name" value="M1_MOT_TEMP"/>
+    <symbolicName propertyId="pa09.symbolic_name" value="M1_SLCT"/>
     <symbolicName propertyId="pb00.symbolic_name" value="M1_HS_TEMP"/>
     <symbolicName propertyId="pb01.symbolic_name" value="THROTTLE"/>
     <symbolicName propertyId="pb04.symbolic_name" value="CAN_STBY_N"/>
@@ -1338,6 +1290,7 @@
     <symbolicName propertyId="pc14.symbolic_name" value="OCD2_U"/>
     <symbolicName propertyId="pc15.symbolic_name" value="OCD2_V"/>
     <symbolicName propertyId="pd07.symbolic_name" value="CAN_EN"/>
+    <symbolicName propertyId="pd15.symbolic_name" value="M2_SLCT"/>
     <symbolicName propertyId="pe00.symbolic_name" value="STATUS1"/>
     <symbolicName propertyId="pe01.symbolic_name" value="STATUS2"/>
     <symbolicName propertyId="pe08.symbolic_name" value="PAS_TORQUE"/>
@@ -1366,8 +1319,6 @@
       <configSetting altId="dac122.mode.enabled.free" configurationId="dac122.mode"/>
       <configSetting altId="dac123.da3.pc05" configurationId="dac123.da3"/>
       <configSetting altId="dac123.mode.enabled.free" configurationId="dac123.mode"/>
-      <configSetting altId="gpt2.gtioc2b.pa09" configurationId="gpt2.gtioc2b"/>
-      <configSetting altId="gpt2.mode.gtiocaorgtiocb.free" configurationId="gpt2.mode"/>
       <configSetting altId="gpt4.gtioc4a.pe10" configurationId="gpt4.gtioc4a"/>
       <configSetting altId="gpt4.gtioc4b.pe13" configurationId="gpt4.gtioc4b"/>
       <configSetting altId="gpt4.mode.gtiocaandgtiocb.free" configurationId="gpt4.mode"/>
@@ -1400,8 +1351,9 @@
       <configSetting altId="pa07.gpio_mode.gpio_mode_an" configurationId="pa07.gpio_mode"/>
       <configSetting altId="pa08.agt0.agtio0" configurationId="pa08"/>
       <configSetting altId="pa08.gpio_mode.gpio_mode_peripheral" configurationId="pa08.gpio_mode"/>
-      <configSetting altId="pa09.gpt2.gtioc2b" configurationId="pa09"/>
-      <configSetting altId="pa09.gpio_mode.gpio_mode_peripheral" configurationId="pa09.gpio_mode"/>
+      <configSetting altId="pa09.input" configurationId="pa09"/>
+      <configSetting altId="pa09.gpio_mode.gpio_mode_in" configurationId="pa09.gpio_mode"/>
+      <configSetting altId="pa09.gpio_pupd.gpio_pupd_ip_up" configurationId="pa09.gpio_pupd"/>
       <configSetting altId="pa13.jtag_fslash_swd.tms" configurationId="pa13"/>
       <configSetting altId="pa13.gpio_mode.gpio_mode_peripheral" configurationId="pa13.gpio_mode"/>
       <configSetting altId="pa14.jtag_fslash_swd.tck" configurationId="pa14"/>
@@ -1445,6 +1397,9 @@
       <configSetting altId="pd06.gpio_mode.gpio_mode_peripheral" configurationId="pd06.gpio_mode"/>
       <configSetting altId="pd07.output.low" configurationId="pd07"/>
       <configSetting altId="pd07.gpio_mode.gpio_mode_out.low" configurationId="pd07.gpio_mode"/>
+      <configSetting altId="pd15.input" configurationId="pd15"/>
+      <configSetting altId="pd15.gpio_mode.gpio_mode_in" configurationId="pd15.gpio_mode"/>
+      <configSetting altId="pd15.gpio_pupd.gpio_pupd_ip_up" configurationId="pd15.gpio_pupd"/>
       <configSetting altId="pe08.adc12.an020" configurationId="pe08"/>
       <configSetting altId="pe08.gpio_mode.gpio_mode_an" configurationId="pe08.gpio_mode"/>
       <configSetting altId="pe10.gpt4.gtioc4a" configurationId="pe10"/>

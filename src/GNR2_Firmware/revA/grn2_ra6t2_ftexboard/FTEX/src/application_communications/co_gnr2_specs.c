@@ -1,7 +1,7 @@
 /**
 *  co_gnr2_specs.c
 *  Module for defining the CANOpen specs of GNR2
-*/ 
+*/
 
 // ==================== INCLUDES ======================== //
 
@@ -14,8 +14,8 @@
 
 // ==================== PRIVATE DEFINES ======================== //
 
-#define GNR2_MASTER_NODE_ID        0x01 
-#define GNR2_SLAVE_NODE_ID         0x02 
+#define GNR2_MASTER_NODE_ID        0x01
+#define GNR2_SLAVE_NODE_ID         0x02
 
 #if GNR_MASTER
 #define GNR2_NODE_ID       GNR2_MASTER_NODE_ID          /* CANopen node ID             */
@@ -25,14 +25,14 @@
 
 #define GNR2_BAUDRATE      500000u             /* CAN baudrate                */
 #define GNR2_TMR_N         16u                 /* Number of software timers   */
-#define GNR2_TICKS_PER_SEC 5000u               /* Timer clock frequency in Hz */
+#define GNR2_TICKS_PER_SEC 2000u               /* Timer clock frequency in Hz */
 #define GNR2_OBJ_N         128u                /* Object dictionary max size  */
 
 #if GNR_MASTER
 
 #define GENERATE_SYNC           1           /* Generate or not the SYNC frame. 1 for yes, 0 for no. */
 #define STD_ID_SYNC             0x80        /* SYNC frame standard ID */
-#define SYNC_PERIOD_US          20000       /* SYNC frame period in us */
+#define SYNC_PERIOD_US          50000       /* SYNC frame period in us */
 
 #define USE_EMCY                0           /* Use emergency frame */
 #define STD_ID_EMCY             0           /* Emergency frame standard ID */
@@ -40,16 +40,16 @@
 #define HEARTBEAT_PERIOD_MS     250         /* Period of the heartbeat frame */
 
 #define USE_RPDO                1           /* Use or not RPDO. 1 for yes, 0 for no. */
-#define STD_ID_RPDO1            0x20        /* Standard ID of RPDO 1 */
-#define STD_ID_RPDO2            0x21        /* Standard ID of TPDO 2 */
+#define STD_ID_RPDO1            0x300        /* Standard ID of RPDO 1 */
+#define STD_ID_RPDO2            0x301        /* Standard ID of TPDO 2 */
 #define RPDO_TRANSMISSION_TYPE  254         /* RPDO transmission type. Event-driven (manufacturer-specific) is chosen */
-#define RPDO_PERIOD_MS          20          /* Period in ms for RPDO processing */
+#define RPDO_PERIOD_MS          50          /* Period in ms for RPDO processing */
 
 #define USE_TPDO                1           /* Use or not TPDO. 1 for yes, 0 for no. */
-#define STD_ID_TPDO1            0x17        /* Standard ID of TPDO 1 */
-#define STD_ID_TPDO2            0x18        /* Standard ID of TPDO 2 */
+#define STD_ID_TPDO1            0x400        /* Standard ID of TPDO 1 */
+#define STD_ID_TPDO2            0x401        /* Standard ID of TPDO 2 */
 #define TPDO_TRANSMISSION_TYPE  254         /* TPDO transmission type. Event-driven (manufacturer-specific) is chosen */
-#define TPDO_PERIOD_MS          20          /* Period in ms for TPDO transmission */
+#define TPDO_PERIOD_MS          50          /* Period in ms for TPDO transmission */
 
 #define USE_SSDO                1           /* Use or not SSDO. 1 for yes, 0 for no. */
 #define USE_CSDO                1           /* Use or not CSDO. 1 for yes, 0 for no. */
@@ -66,16 +66,16 @@
 #define HEARTBEAT_PERIOD_MS     250         /* Period of the heartbeat frame */
 
 #define USE_RPDO                1           /* Use or not RPDO. 1 for yes, 0 for no. */
-#define STD_ID_RPDO1            0x17        /* Standard ID of RPDO 1 */
-#define STD_ID_RPDO2            0x18        /* Standard ID of TPDO 2 */
+#define STD_ID_RPDO1            0x400        /* Standard ID of RPDO 1 */
+#define STD_ID_RPDO2            0x401        /* Standard ID of TPDO 2 */
 #define RPDO_TRANSMISSION_TYPE  0           /* RPDO transmission type. Synchronous after SYNC is chosen */
 #define RPDO_PERIOD_MS          0           /* Period in ms for RPDO processing. Not applicable for synchronous transmission type */
 
 #define USE_TPDO                1           /* Use or not TPDO. 1 for yes, 0 for no. */
-#define STD_ID_TPDO1            0x20        /* Standard ID of TPDO 1 */
-#define STD_ID_TPDO2            0x21        /* Standard ID of TPDO 2 */
+#define STD_ID_TPDO1            0x300        /* Standard ID of TPDO 1 */
+#define STD_ID_TPDO2            0x301        /* Standard ID of TPDO 2 */
 #define TPDO_TRANSMISSION_TYPE  1           /* Period in ms for TPDO transmission. Not applicable for synchronous transmission type */
-#define TPDO_PERIOD_MS          0           /* Period in ms for RPDO processing. Not applicable for synchronous transmission typeé */
+#define TPDO_PERIOD_MS          0           /* Period in ms for RPDO processing. Not applicable for synchronous transmission typeï¿½ */
 
 #define USE_SSDO                1           /* Use or not SSDO. 1 for yes, 0 for no. */
 #define USE_CSDO                1           /* Use or not CSDO. 1 for yes, 0 for no. */
@@ -142,13 +142,13 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_STD(USE_SSDO, 0, 0x600+GNR2_SLAVE_NODE_ID)},		                                    // SDO Srv Parameter - COB-ID Client to Server
     {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_STD(USE_SSDO, 0, 0x580+GNR2_SLAVE_NODE_ID)},		                                // SDO Srv Parameter - COB-ID Server to Client
     #endif
-    
+
     // SDO Client
     {CO_KEY(0x1280, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)3},						                // SDO Client Parameter - Highest Sub Index
     {CO_KEY(0x1280, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
     {CO_KEY(0x1280, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
     {CO_KEY(0x1280, 3, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)GNR2_SLAVE_NODE_ID},
-    
+
     // RPDO 1
     {CO_KEY(0x1400, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},						                // RPDO1 Parameter - Highest Sub Index
     {CO_KEY(0x1400, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_RPDO_STD(USE_RPDO, STD_ID_RPDO1)},			// RPDO1 Parameter - COB-ID RPDO
@@ -165,7 +165,7 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x1600, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)},			// RPDO1 Mapping - Object 1
     {CO_KEY(0x1600, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)},			    // RPDO1 Mapping - Object 2
     #endif
-    
+
 //    // RPDO 2
 //    {CO_KEY(0x1401, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},						                // RPDO1 Parameter - Highest Sub Index
 //    {CO_KEY(0x1401, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_RPDO_STD(USE_RPDO, STD_ID_RPDO2)},			// RPDO1 Parameter - COB-ID RPDO
@@ -180,12 +180,13 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
 //    #else
 //    {CO_KEY(0x1601, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0},						                // RPDO1 Mapping - Number of mapped object in PDO
 //    #endif
-    
+
     // TPDO 1
-    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},						                // TPDO1 Parameter - Highest Sub Index
+    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)6},						                // TPDO1 Parameter - Highest Sub Index
     {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_STD(USE_TPDO, STD_ID_TPDO1)},			// TPDO1 Parameter - COB-ID TPDO
     {CO_KEY(0x1800, 2, CO_UNSIGNED8|CO_OBJ_D__R_), 0, TPDO_TRANSMISSION_TYPE},			                    // TPDO1 Parameter - Transmission type
     {CO_KEY(0x1800, 5, CO_UNSIGNED16|CO_OBJ_D__R_), 0, TPDO_PERIOD_MS},			                            // TPDO1 Parameter - Transmission type
+    {CO_KEY(0x1800, 6, CO_UNSIGNED8|CO_OBJ_D__R_), 0, 0},			                                        // TPDO1 Parameter - SYNC start value
     #if GNR_MASTER
     {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},						                // RPDO1 Mapping - Number of mapped object in PDO
     {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)},			// RPDO1 Mapping - Object 1
@@ -197,7 +198,7 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x1A00, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
     {CO_KEY(0x1A00, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)},			    // RPDO1 Mapping - Object 2
     #endif
-    
+
 //    // TPDO 2
 //    {CO_KEY(0x1801, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},						                // TPDO1 Parameter - Highest Sub Index
 //    {CO_KEY(0x1801, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_STD(USE_TPDO, STD_ID_TPDO2)},			// TPDO1 Parameter - COB-ID TPDO
@@ -212,41 +213,41 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
 //    {CO_KEY(0x1A01, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2002, 1, 16)},			                    // RPDO1 Mapping - Object 3
 //    {CO_KEY(0x1A01, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2003, 1, 16)},			                    // RPDO1 Mapping - Object 4
 //    #endif
-    
+
     //GNR2 Objects
     {CO_KEY(CO_OD_REG_MOTOR_SPEED, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1SpeedMeas},			        // Application - Measured motor speed of master
     {CO_KEY(CO_OD_REG_MOTOR_SPEED, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2SpeedMeas},			        // Application - Measured motor speed of slave 1
-    
+
     {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1BusVoltage},			    // Application - Measured bus voltage of master
     {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2BusVoltage},			    // Application - Measured bus voltage of slave 1
-    
+
     {CO_KEY(CO_OD_REG_MOTOR_TEMP, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1Temp},			                // Application - Measured motor Iq of master
     {CO_KEY(CO_OD_REG_MOTOR_TEMP, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2Temp},			                // Application - Measured motor Iq of slave 1
-     
+
     {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataHeatsink1Temp},			        // Application - Measured motor Id of master
     {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataHeatsink2Temp},			        // Application - Measured motor Id of slave 1
 
     {CO_KEY(CO_OD_REG_MOTOR_STATE, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1State},			            // Application - Motor state of master
     {CO_KEY(CO_OD_REG_MOTOR_STATE, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2State},			            // Application - Motor state of slave 1
-        
+
     {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1OccuredFaults},	    // Application - Motor faults of master
     {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2OccuredFaults},		// Application - Motor faults of slave 1
-    
+
     {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1CurrentFaults},		// Application - Motor faults of master
     {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2CurrentFaults},		// Application - Motor faults of slave 1
-    
+
     {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 0, CO_SIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataMotor1TorqRef},		        // Application - Reference torque to master motor
     {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 1, CO_SIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataMotor2TorqRef},		        // Application - Reference torque to slave motor 1
-    
+
     {CO_KEY(CO_OD_REG_MOTOR_START, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor1Start},		            // Application - Start bit to activate master
     {CO_KEY(CO_OD_REG_MOTOR_START, 1, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor2Start},		            // Application - Start bit to activate slave motor 1
-    
+
     {CO_KEY(CO_OD_REG_FAULT_ACK, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor1FaultAck},		            // Application - Bit to acknowledge motor fault master
     {CO_KEY(CO_OD_REG_FAULT_ACK, 1, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor2FaultAck},		            // Application - Bit to acknowledge motor fault slave 1
-    
+
     {CO_KEY(0x200E, 0, CO_UNSIGNED32|CO_OBJ____R_), 0, (uintptr_t)&wObjDataSerialNbH},			            // Application - Serial number high side
     {CO_KEY(0x200E, 1, CO_UNSIGNED32|CO_OBJ____R_), 0, (uintptr_t)&wObjDataSerialNbL},			            // Application - Serial number low side
-    
+
     {CO_KEY(0x200F, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataFwVersion},		                // Application - Firmware version
     CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
 };
@@ -302,4 +303,3 @@ struct CO_NODE_SPEC_T GnR2ModuleSpec = {
     &CoGnrDriver,             /* select drivers for application */
     &SdoSrvMem[0]             /* SDO Transfer Buffer Memory     */
 };
-

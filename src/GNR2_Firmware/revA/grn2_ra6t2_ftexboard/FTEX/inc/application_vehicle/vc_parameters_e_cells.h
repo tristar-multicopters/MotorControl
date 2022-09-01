@@ -9,7 +9,8 @@
 #ifndef __VC_PARAMETERS_E_CELLS_H
 #define __VC_PARAMETERS_E_CELLS_H
 
-#include "powertrain_management.h"
+#include "pmsm_motor_parameters.h"
+#include "drive_parameters.h"
 
 
 /***************** THROTTLE PARAMETERS  ******************************/
@@ -19,8 +20,8 @@
 
 #define THROTTLE_OFFSET_ADC2THROTTLE          12500    /* Offset for ADC to throttle linear transformation  */
 
-#define THROTTLE_SLOPE_ADC2THROTTLE           100//5        /* Slope for ADC to throttle linear transformation  */
-#define THROTTLE_DIVISOR_ADC2THROTTLE         69//7        /* Divisor for ADC to throttle linear transformation  */
+#define THROTTLE_SLOPE_ADC2THROTTLE           100        /* Slope for ADC to throttle linear transformation  */
+#define THROTTLE_DIVISOR_ADC2THROTTLE         69        /* Divisor for ADC to throttle linear transformation  */
 
 
 #define THROTTLE_OFFSET_THROTTLE2TORQUE       4000    /* Offset for throttle to torque linear transformation  */
@@ -46,7 +47,7 @@
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
-#define MOTOR_SELECTOR_ENABLE              false      /* True if active motor can be changed using 3 way switch  */
+#define MOTOR_SELECTOR_ENABLE              true      /* True if active motor can be changed using 3 way switch  */
   
 
 /***************** POWER ENABLE PARAMETERS  ******************************/
@@ -72,7 +73,12 @@
 #define POWERTRAIN_WHEEL_SPEED_SENSOR_PPR                 2                  /* Number of electrical pulses per wheel rotation */
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT               200                /* Number of task ticks to wait after a fault occurs to attempt
                                                                               a powertrain restart (OC, SF and SU faults)   */
-
+#define POWERTRAIN_MAX_MOTOR_TORQUE                       NOMINAL_PEAK_TORQUE               /* Maximum motor torque to apply with powertrain management */
+#define POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE              true                              /* Enable dual motor startup when single motor mode is selected */
+#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END           MAX_APPLICATION_SPEED_RPM/4       /* Speed value that dual motor startup strategy stops outputting
+                                                                                               torque */
+#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL      MAX_APPLICATION_SPEED_RPM/8       /* Speed interval value between maximum torque and zero torque,
+                                                                                               when using dual motor startup strategy. */
 
 #endif                                            
 

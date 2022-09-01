@@ -58,6 +58,8 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 	bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
     
 	/*bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);*/
+    int16_t hSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
+    int16_t hSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
 
 	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
 	int16_t hTorqueRef = 0; 
@@ -84,29 +86,61 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 				break;
 		}
 	}
-
-	pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
-	pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
+    
+    // Reset to zero before placing computed value again
+    pHandle->aTorque[M1] = 0;
+    pHandle->aTorque[M2] = 0;
+    pHandle->aSpeed[M1] = 0;
+    pHandle->aSpeed[M2] = 0;
 
 	if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
 	{
 		hTorqueRef = Throttle_ThrottleToTorque(pHandle->pThrottle); // Translate throttle value to powertrain target torque value
-
+        hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on foldback and brake state for example.
+        
 		if (bIsBrakePressed)
 		{
-			hTorqueRef = 0;
+			hAux = 0;
 		}
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
-            hAux = hTorqueRef;
-            pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
+            if (pHandle->sParameters.bEnableDualMotorStartup)
+            {
+                // Execute dual motor startup strategy...
+                // TODO: Following foldbacks are computed using speed of M1 or M2. Should use vehicle speed instead when it is ready.
+                if (pHandle->bMainMotor == M1)
+                {
+                    pHandle->aTorque[M1] = hAux;
+                    hAux = Foldback_ApplyFoldback(&pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1));
+                    // Store powertrain target torque value in handle. Invert torque if needed.
+                    pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
+                }
+                else if (pHandle->bMainMotor == M2)
+                {
+                    // Store powertrain target torque value in handle. Invert torque if needed.
+                    pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
+                    hAux = Foldback_ApplyFoldback(&pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM2));
+                    pHandle->aTorque[M1] = hAux;
+                }
+                else
+                {
+                }
+            }
+            else
+            {
+                pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
+            }
 		}
-		if(pHandle->sParameters.bMode == DUAL_MOTOR)
+		else if(pHandle->sParameters.bMode == DUAL_MOTOR)
 		{
-            hAux = hTorqueRef;
-			pHandle->aTorque[M1] = hAux;
-			pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux; // Store powertrain target torque value in handle. Invert torque if needed.
-		}
+            // Apply same torque to both motors...
+            pHandle->aTorque[M1] = hAux;
+            // Store powertrain target torque value in handle. Invert torque if needed.
+            pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
+        }
+        else
+        {
+        }
 	}
 	else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
 	{
@@ -126,8 +160,10 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 			pHandle->aSpeed[M1] = (int16_t) hSpeedRef;
 			pHandle->aSpeed[M2] = (int16_t) hSpeedRef;
 		}
-	}
-	else {}
+    }
+    else
+    {
+    }
 }
 
 /**
@@ -569,7 +605,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 	{
 		if (PWRT_IsMotor1Used(pHandle))
 		{// If there's an over current (OC) that has occurred but has already been cleared
-			if ((hM1FaultOccurredCode & MC_BREAK_IN) || (hM1FaultOccurredCode & MC_OCSP))
+			if ((hM1FaultOccurredCode & MC_BREAK_IN) | (hM1FaultOccurredCode & MC_OCSP))
 			{
 				if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
 				{// If the timer has timeout, clear the OC fault

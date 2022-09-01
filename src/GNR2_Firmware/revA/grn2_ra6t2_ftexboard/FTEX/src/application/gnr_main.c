@@ -48,41 +48,48 @@ osThreadId_t CANRxFrameHandle;
 
 static const osThreadAttr_t ThAtt_MC_SafetyTask = {
     .name = "MC_SafetyTask",
-    .stack_size = 512,
-    .priority = osPriorityAboveNormal3,
+    .stack_size = 1024,
+    .priority = osPriorityAboveNormal6,
 };
 
 static const osThreadAttr_t ThAtt_MC_MediumFrequencyTask = {
     .name = "MC_MediumFrequencyTask",
-    .stack_size = 512,
-    .priority = osPriorityNormal2
+    .stack_size = 1024,
+    .priority = osPriorityNormal5
 };
 
 #if !DEBUGMODE_MOTOR_CONTROL
 #if GNR_MASTER
 static const osThreadAttr_t ThAtt_VC_MediumFrequencyTask = {
     .name = "VC_MediumFrequencyTask",
-    .stack_size = 512,
-    .priority = osPriorityAboveNormal2
+    .stack_size = 1024,
+    .priority = osPriorityAboveNormal3
 };
 
 static const osThreadAttr_t ThAtt_VehicleStateMachine = {
     .name = "VC_StateMachine",
-    .stack_size = 512,
-    .priority = osPriorityAboveNormal3,
+    .stack_size = 1024,
+    .priority = osPriorityAboveNormal2,
 };
+
+static const osThreadAttr_t ThAtt_CANLogger = {
+    .name = "CANLoggerTask",
+    .stack_size = 512,
+    .priority = osPriorityLow
+};
+
+#endif
 
 static const osThreadAttr_t ThAtt_UART = {
 	.name = "TSK_UART",
 	.stack_size = 512,
 	.priority = osPriorityBelowNormal
 };
-#endif
 
 static const osThreadAttr_t ThAtt_CANOpen = {
     .name = "CANOpenTask",
-    .stack_size = 512,
-    .priority = osPriorityNormal
+    .stack_size = 1024,
+    .priority = osPriorityHigh // High priority to manage timer elapsing asap
 };
 
 #endif
@@ -97,12 +104,12 @@ void gnr_main(void)
     /* Hardware initialization */
     ADCInit();
     GPTInit();
-    POEGInit();
+    //POEGInit(); //Disable POEG temporally because it creates issue. Need investigation. Until then, only SOCP protection is used.
     DACInit();
     ICUInit();
     ELCInit();
     AGTInit();
-    UARTInit();
+    //UARTInit();
     CANInit();
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
@@ -137,14 +144,19 @@ void gnr_main(void)
                                       NULL,
                                       &ThAtt_VehicleStateMachine);
 
-   	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
+    CANOpenTaskHandle               = osThreadNew(CANLoggerTask,
                                       NULL,
-                                      &ThAtt_UART);
+                                      &ThAtt_CANLogger);
+
     #endif
 
     CANOpenTaskHandle                = osThreadNew(CANOpenTask,
                                       NULL,
                                       &ThAtt_CANOpen);
+
+   	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
+                                      NULL,
+                                      &ThAtt_UART);
     #endif
 
     /* Start RTOS */

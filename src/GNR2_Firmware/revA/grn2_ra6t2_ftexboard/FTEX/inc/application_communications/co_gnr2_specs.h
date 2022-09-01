@@ -22,16 +22,16 @@ extern "C" {
 // ================================== PUBLIC DEFINES ================================== //
 
 /* Application specific CANopen registers */
-#define CO_OD_REG_MOTOR_SPEED              0x2600
-#define CO_OD_REG_BUS_VOLTAGE              0x2601
-#define CO_OD_REG_MOTOR_TEMP               0x2602
-#define CO_OD_REG_HEATSINK_TEMP            0x2603
-#define CO_OD_REG_MOTOR_STATE              0x2604
-#define CO_OD_REG_MOTOR_OCC_FAULTS         0x2605
-#define CO_OD_REG_MOTOR_CUR_FAULTS         0x2606
-#define CO_OD_REG_MOTOR_TORQUE_REF         0x2607
-#define CO_OD_REG_MOTOR_START              0x2608
-#define CO_OD_REG_FAULT_ACK                0x2609
+#define CO_OD_REG_MOTOR_SPEED              0x2000
+#define CO_OD_REG_BUS_VOLTAGE              0x2001
+#define CO_OD_REG_MOTOR_TEMP               0x2002
+#define CO_OD_REG_HEATSINK_TEMP            0x2003
+#define CO_OD_REG_MOTOR_STATE              0x2004
+#define CO_OD_REG_MOTOR_OCC_FAULTS         0x2005
+#define CO_OD_REG_MOTOR_CUR_FAULTS         0x2006
+#define CO_OD_REG_MOTOR_TORQUE_REF         0x2007
+#define CO_OD_REG_MOTOR_START              0x2008
+#define CO_OD_REG_FAULT_ACK                0x2009
 
 
 /* Specify the EMCY-IDs for the application */

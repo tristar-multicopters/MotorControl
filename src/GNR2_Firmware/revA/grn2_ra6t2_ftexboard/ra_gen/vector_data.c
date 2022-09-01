@@ -13,18 +13,16 @@
             [6] = r_icu_isr, /* ICU IRQ5 (External pin interrupt 5) */
             [7] = gpt_counter_overflow_isr, /* GPT0 COUNTER OVERFLOW (Overflow) */
             [8] = gpt_capture_a_isr, /* GPT0 CAPTURE COMPARE A (Compare match A) */
-            [9] = canfd_error_isr, /* CAN0 CHERR (Channel error) */
-            [10] = canfd_channel_tx_isr, /* CAN0 TX (Transmit interrupt) */
-            [11] = canfd_error_isr, /* CAN GLERR (Global error) */
-            [12] = canfd_rx_fifo_isr, /* CAN RXF (Global recieve FIFO interrupt) */
-            [13] = agt_int_isr, /* AGT1 INT (AGT interrupt) */
-            [14] = agt_int_isr, /* AGT0 INT (AGT interrupt) */
-            [15] = gpt_counter_overflow_isr, /* GPT2 COUNTER OVERFLOW (Overflow) */
-            [16] = gpt_capture_a_isr, /* GPT2 CAPTURE COMPARE A (Compare match A) */
-            [17] = sci_b_uart_rxi_isr, /* SCI9 RXI (Received data full) */
-            [18] = sci_b_uart_txi_isr, /* SCI9 TXI (Transmit data empty) */
-            [19] = sci_b_uart_tei_isr, /* SCI9 TEI (Transmit end) */
-            [20] = sci_b_uart_eri_isr, /* SCI9 ERI (Receive error) */
+            [9] = sci_b_uart_rxi_isr, /* SCI9 RXI (Received data full) */
+            [10] = sci_b_uart_txi_isr, /* SCI9 TXI (Transmit data empty) */
+            [11] = sci_b_uart_tei_isr, /* SCI9 TEI (Transmit end) */
+            [12] = sci_b_uart_eri_isr, /* SCI9 ERI (Receive error) */
+            [13] = canfd_error_isr, /* CAN0 CHERR (Channel error) */
+            [14] = canfd_channel_tx_isr, /* CAN0 TX (Transmit interrupt) */
+            [15] = canfd_error_isr, /* CAN GLERR (Global error) */
+            [16] = canfd_rx_fifo_isr, /* CAN RXF (Global recieve FIFO interrupt) */
+            [17] = agt_int_isr, /* AGT1 INT (AGT interrupt) */
+            [18] = agt_int_isr, /* AGT0 INT (AGT interrupt) */
         };
         const bsp_interrupt_event_t g_interrupt_event_link_select[BSP_ICU_VECTOR_MAX_ENTRIES] =
         {
@@ -37,17 +35,15 @@
             [6] = BSP_PRV_IELS_ENUM(EVENT_ICU_IRQ5), /* ICU IRQ5 (External pin interrupt 5) */
             [7] = BSP_PRV_IELS_ENUM(EVENT_GPT0_COUNTER_OVERFLOW), /* GPT0 COUNTER OVERFLOW (Overflow) */
             [8] = BSP_PRV_IELS_ENUM(EVENT_GPT0_CAPTURE_COMPARE_A), /* GPT0 CAPTURE COMPARE A (Compare match A) */
-            [9] = BSP_PRV_IELS_ENUM(EVENT_CAN0_CHERR), /* CAN0 CHERR (Channel error) */
-            [10] = BSP_PRV_IELS_ENUM(EVENT_CAN0_TX), /* CAN0 TX (Transmit interrupt) */
-            [11] = BSP_PRV_IELS_ENUM(EVENT_CAN_GLERR), /* CAN GLERR (Global error) */
-            [12] = BSP_PRV_IELS_ENUM(EVENT_CAN_RXF), /* CAN RXF (Global recieve FIFO interrupt) */
-            [13] = BSP_PRV_IELS_ENUM(EVENT_AGT1_INT), /* AGT1 INT (AGT interrupt) */
-            [14] = BSP_PRV_IELS_ENUM(EVENT_AGT0_INT), /* AGT0 INT (AGT interrupt) */
-            [15] = BSP_PRV_IELS_ENUM(EVENT_GPT2_COUNTER_OVERFLOW), /* GPT2 COUNTER OVERFLOW (Overflow) */
-            [16] = BSP_PRV_IELS_ENUM(EVENT_GPT2_CAPTURE_COMPARE_A), /* GPT2 CAPTURE COMPARE A (Compare match A) */
-            [17] = BSP_PRV_IELS_ENUM(EVENT_SCI9_RXI), /* SCI9 RXI (Received data full) */
-            [18] = BSP_PRV_IELS_ENUM(EVENT_SCI9_TXI), /* SCI9 TXI (Transmit data empty) */
-            [19] = BSP_PRV_IELS_ENUM(EVENT_SCI9_TEI), /* SCI9 TEI (Transmit end) */
-            [20] = BSP_PRV_IELS_ENUM(EVENT_SCI9_ERI), /* SCI9 ERI (Receive error) */
+            [9] = BSP_PRV_IELS_ENUM(EVENT_SCI9_RXI), /* SCI9 RXI (Received data full) */
+            [10] = BSP_PRV_IELS_ENUM(EVENT_SCI9_TXI), /* SCI9 TXI (Transmit data empty) */
+            [11] = BSP_PRV_IELS_ENUM(EVENT_SCI9_TEI), /* SCI9 TEI (Transmit end) */
+            [12] = BSP_PRV_IELS_ENUM(EVENT_SCI9_ERI), /* SCI9 ERI (Receive error) */
+            [13] = BSP_PRV_IELS_ENUM(EVENT_CAN0_CHERR), /* CAN0 CHERR (Channel error) */
+            [14] = BSP_PRV_IELS_ENUM(EVENT_CAN0_TX), /* CAN0 TX (Transmit interrupt) */
+            [15] = BSP_PRV_IELS_ENUM(EVENT_CAN_GLERR), /* CAN GLERR (Global error) */
+            [16] = BSP_PRV_IELS_ENUM(EVENT_CAN_RXF), /* CAN RXF (Global recieve FIFO interrupt) */
+            [17] = BSP_PRV_IELS_ENUM(EVENT_AGT1_INT), /* AGT1 INT (AGT interrupt) */
+            [18] = BSP_PRV_IELS_ENUM(EVENT_AGT0_INT), /* AGT0 INT (AGT interrupt) */
         };
         #endif

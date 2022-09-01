@@ -50,6 +50,16 @@ extern "C" {
  */
 extern const CO_IF_CAN_DRV CoCanDriver;
 
+/******************************************************************************
+* PUBLIC FUNCTIONS
+******************************************************************************/
+
+/**
+    @brief This function must be called when next CAN frame is ready to be sent. 
+            Sends the next available frame using TX hardware buffer 0.
+*/
+void CAN_SendNextFrame(void);
+
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif

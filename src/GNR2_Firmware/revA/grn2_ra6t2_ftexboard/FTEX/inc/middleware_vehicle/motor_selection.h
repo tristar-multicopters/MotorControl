@@ -11,6 +11,9 @@
 
 #include "stdbool.h"
 #include "ASSERT_FTEX.h"
+#include "uCAL_GPIO.h"
+
+
 typedef enum
 {
 	M1_SELECTED,
@@ -21,8 +24,8 @@ typedef enum
 
 typedef struct
 {          
-//	nrfx_gpiote_pin_t wM1SelectPinNumber;
-//	nrfx_gpiote_pin_t wM2SelectPinNumber;
+	uint32_t wM1SelectPinNumber;
+	uint32_t wM2SelectPinNumber;
 	bool bIsInvertedLogic;
 	bool bMSEnable;
 	

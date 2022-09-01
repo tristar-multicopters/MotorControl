@@ -50,6 +50,7 @@ typedef struct
     PowertrainMode_t bMode;              /* Single or dual motor. It is updated by user using motor selector switch */
     uint8_t bDefaultMainMotor;           /* Default main motor selection */
     CtrlType_t bCtrlType;                /* Torque or speed control */
+    bool bEnableDualMotorStartup;        /* When in single motor mode, second motor will assist during startup until a certain speed if enabled. */
     
     uint16_t hStartingThrottle;          /* Minimum torque to start powertrain */
     uint16_t hStoppingThrottle;          /* Minimum torque to stop powertrain */
@@ -76,7 +77,8 @@ typedef struct
     int16_t aSpeed[2];                            /* Array of speed reference, first element is for M1, second is for M2 */
     uint8_t bCurrentAssistLevel;                  /* Current pedal assist level */
 
-    Foldback_Handle_t sDCVoltageFoldback;         /* Foldback handle using DCbus voltage */
+    Foldback_Handle_t DCVoltageFoldback;          /* Foldback handle using DCbus voltage */
+    Foldback_Handle_t SpeedFoldbackStartupDualMotor;     /* Foldback handle using speed for dual motor control */
     
     uint16_t aFaultManagementCounters[3][2];      /* Array of counter before acknowledging motor faults. First dimension is
                                                    fault type in this order: Over current, startup, and speed feedback. 

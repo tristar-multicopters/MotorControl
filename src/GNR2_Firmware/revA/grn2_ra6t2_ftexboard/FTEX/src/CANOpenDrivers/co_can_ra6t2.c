@@ -60,9 +60,15 @@ static void    CANo_DrvReset  (void);
 */
 static void    CANo_DrvClose  (void);
 
+
 // ================================== Private variables ====================== //
 
-uint32_t wTxBufferNum = CANFD_TX_MB_0;
+#define CAN_TX_BUFFER_LENGTH   32  //Maximum number of CAN frame in TX buffer
+
+can_frame_t TxFrameBuffer[CAN_TX_BUFFER_LENGTH];
+uint32_t wBufferCurrentPosition = 0;
+uint32_t wBufferProjectedPosition = 0;
+
 
 // ================================== Public Variables ================================== //
 
@@ -134,7 +140,27 @@ static void CANo_DrvEnable(uint32_t baudrate)
   Function used to Send messages through the CAN interface
 */
 static int16_t CANo_DrvSend(CO_IF_FRM *frm)
-{
+{    
+    uint32_t pos = wBufferProjectedPosition;
+    
+    // Increment projected position
+    if (pos == CAN_TX_BUFFER_LENGTH-1)
+    {
+        pos = 0;
+    }
+    else
+    {
+        pos++;
+    }
+    
+    if (pos == wBufferCurrentPosition)
+    {
+        // Buffer is full
+        return (-1);
+    }
+
+    wBufferProjectedPosition = pos;
+    
 	can_frame_t tx_frame =
 	{
 		.id = frm->Identifier,
@@ -142,24 +168,13 @@ static int16_t CANo_DrvSend(CO_IF_FRM *frm)
 		.type = CAN_FRAME_TYPE_DATA,
 		.data_length_code = frm->DLC
 	};
-	
-	memcpy(tx_frame.data, frm->Data, 8);
-	
-    can_info_t CANInfo;
-    R_CANFD_InfoGet(&g_canfd0_ctrl, &CANInfo);
-    if (CANInfo.status & R_CANFD_CFDC_STS_TRMSTS_Msk) //If CAN driver is already transmitting something, use another TX buffer
-	{
-        if (wTxBufferNum == CANFD_TX_MB_3)
-        {
-            wTxBufferNum = CANFD_TX_MB_0;
-        }
-        else
-        {
-            wTxBufferNum++;
-        }
-    }
-    R_CANFD_Write(&g_canfd0_ctrl, wTxBufferNum, &tx_frame);
-	return (0u);
+    memcpy(tx_frame.data, frm->Data, 8);
+    
+    TxFrameBuffer[wBufferProjectedPosition] = tx_frame;
+    
+    CAN_SendNextFrame();
+    
+	return (0);
 }
 
 /**
@@ -184,8 +199,8 @@ static int16_t CANo_DrvRead (CO_IF_FRM *frm)
 */
 static void CANo_DrvReset(void)
 {
-  /* TODO: reset CAN controller while keeping baudrate */
-	R_CANFD_ModeTransition(&g_canfd0_ctrl, CAN_OPERATION_MODE_RESET, CAN_TEST_MODE_DISABLED);
+    CANo_DrvInit();
+    CANo_DrvEnable(0);
 }
 
 /**
@@ -198,3 +213,27 @@ static void CANo_DrvClose(void)
 	R_CANFD_Close(&g_canfd0_ctrl);
 }
 
+// ================================== Public Functions Definitions ================================== //
+
+void CAN_SendNextFrame(void)
+{
+    if (wBufferCurrentPosition != wBufferProjectedPosition)
+    {
+        if (R_CANFD_Write(&g_canfd0_ctrl, CANFD_TX_MB_0, &TxFrameBuffer[wBufferCurrentPosition]) == FSP_ERR_CAN_TRANSMIT_NOT_READY)
+        {
+            
+        }
+        else
+        {
+            // Increment current position
+            if (wBufferCurrentPosition == CAN_TX_BUFFER_LENGTH-1)
+            {
+                wBufferCurrentPosition = 0;
+            }
+            else
+            {
+                wBufferCurrentPosition++;
+            }
+        }
+    }
+}

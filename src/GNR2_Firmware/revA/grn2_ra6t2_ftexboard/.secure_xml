@@ -70,7 +70,6 @@
       <configSetting altId="canfd0.ctx0.pb13" configurationId="canfd0.ctx0" isUsedByDriver="true"/>
       <configSetting altId="dac122.da2.pc04" configurationId="dac122.da2"/>
       <configSetting altId="dac123.da3.pc05" configurationId="dac123.da3"/>
-      <configSetting altId="gpt2.gtioc2b.pa09" configurationId="gpt2.gtioc2b" isUsedByDriver="true"/>
       <configSetting altId="gpt4.gtioc4a.pe10" configurationId="gpt4.gtioc4a" isUsedByDriver="true"/>
       <configSetting altId="gpt4.gtioc4b.pe13" configurationId="gpt4.gtioc4b" isUsedByDriver="true"/>
       <configSetting altId="gpt5.gtioc5a.pe11" configurationId="gpt5.gtioc5a" isUsedByDriver="true"/>
@@ -85,9 +84,11 @@
       <configSetting altId="jtag_fslash_swd.tdi.pa15" configurationId="jtag_fslash_swd.tdi"/>
       <configSetting altId="jtag_fslash_swd.tdo.pb03" configurationId="jtag_fslash_swd.tdo"/>
       <configSetting altId="jtag_fslash_swd.tms.pa13" configurationId="jtag_fslash_swd.tms"/>
+      <configSetting altId="pa09.input" configurationId="pa09"/>
       <configSetting altId="pb04.output.low" configurationId="pb04"/>
       <configSetting altId="pc00.input" configurationId="pc00"/>
       <configSetting altId="pd07.output.low" configurationId="pd07"/>
+      <configSetting altId="pd15.input" configurationId="pd15"/>
       <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9"/>
       <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9"/>
     </pincfg>

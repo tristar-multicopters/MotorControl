@@ -126,8 +126,8 @@ PedalTorqSensorHandle_t PedalTorqueSensor =
 
 MS_Handle_t MotorSelectorHandle =
 {
-//	.wM1SelectPinNumber = M1SELECT_GPIO_PIN,
-//	.wM2SelectPinNumber = M2SELECT_GPIO_PIN,
+	.wM1SelectPinNumber = M1SELECT_GPIO_PIN,
+	.wM2SelectPinNumber = M2SELECT_GPIO_PIN,
 
 	.bIsInvertedLogic = false,
 	.bMSEnable = MOTOR_SELECTOR_ENABLE,
@@ -156,6 +156,15 @@ PWRT_Handle_t PowertrainHandle =
 	.sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
 	.sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
 	.sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
+    .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
+        
+    .SpeedFoldbackStartupDualMotor =
+    {
+        .hDecreasingEndValue = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END,
+        .hDecreasingRange = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL,
+        .hDefaultMaxOutput = POWERTRAIN_MAX_MOTOR_TORQUE,
+        .bEnableFoldback = true,
+    },
 
 	.pMDI = &MDInterfaceHandle,
 	.pThrottle = &ThrottleHandle,

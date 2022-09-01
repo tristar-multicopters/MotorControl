@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       1200 /*!< rpm, mechanical */
+#define MAX_APPLICATION_SPEED_RPM       1800 /*!< rpm, mechanical */
 #define MIN_APPLICATION_SPEED_RPM       0 /*!< rpm, mechanical,
                                                            absolute value */
 #define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
@@ -133,7 +133,7 @@
 #define DEFAULT_TORQUE_COMPONENT       0
 #define DEFAULT_FLUX_COMPONENT         0
 
-#define DEFAULT_TORQUE_SLOPE_UP        10000        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_UP        4000        /* Slope in cNm per second */
 #define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
 #define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */

@@ -336,7 +336,7 @@ void MediumFrequencyTaskM1(void)
             #if !(BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
             if(!bIsSpeedReliable)
             {
-                MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_SPEED_FDBK, 0);
+                //MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_SPEED_FDBK, 0);
             }
             #endif
             break;
@@ -555,7 +555,7 @@ uint8_t MC_HighFrequencyTask(void)
 //                BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
     }
 
-		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
+//		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
 				
     return bMotorNbr;
 }

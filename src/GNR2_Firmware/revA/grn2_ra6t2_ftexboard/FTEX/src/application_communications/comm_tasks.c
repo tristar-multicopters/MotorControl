@@ -12,12 +12,14 @@
 // CANOpen includes
 #include "co_core.h"
 #include "co_gnr2_specs.h"
-
-/************* DEBUG ****************/
-
+// CAN logger
+#include "can_logger.h"
 
 
 /************* DEFINES ****************/
+
+#define CAN_LOG_INTERVAL_TICK               25      /* CAN logger task send a new log frame every 25 RTOS ticks */
+
 
 /********* PUBLIC MEMBERS *************/
 // Semaphore for CANOpen timer
@@ -57,11 +59,6 @@ void AppCSdoDownloadFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_
         {
             case CO_OD_REG_FAULT_ACK:
             {
-                if (sub == M2)
-                {
-                    // Reset fault ack command of virtual motor 2 when command was succefully transmitted
-                    VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.bFaultAck = false;
-                }
             } break;
 
             default:
@@ -136,6 +133,8 @@ static void UpdateObjectDictionnary(void *p_arg)
         /* If vehicle control request a fault ack to motor 2, send a SDO */
         if (bMotor2FaultAck)
         {
+            VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.bFaultAck = false;
+
             CO_CSDO *csdo;
             csdo = COCSdoFind(&(CONodeGNR), 0);
             uint8_t Data = true;
@@ -199,13 +198,14 @@ void Comm_BootUp(void)
         case UART_LOG_HS:
             LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
             break;
-    		case UART_APT:
-    			  LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
-    			  break;
-    		case UART_DISABLE:
-            default:
-    			//Dont initialise the euart
-    			break;
+    	case UART_APT:
+            LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
+    		break;
+    	case UART_DISABLE:
+            break;
+        default:
+            //Dont initialise the euart
+            break;
 	  }
 }
 
@@ -218,7 +218,7 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 		osThreadFlagsWait(UART_FLAG, osFlagsWaitAny, osWaitForever);
 
     switch(UART0Handle.UARTProtocol)
-        {			
+        {
            case UART_APT:
                 LCD_APT_frame_Process(&LCD_APT_handle);
                 break;
@@ -258,10 +258,10 @@ __NO_RETURN void CANOpenTask (void * pvParameter)
 
     /* Use CANopen software timer to create a cyclic function
 	 * call to the callback function 'UpdateObjectDictionnary()' with a period
-	 * of 10ms.
+	 * of 25ms.
 	 */
     uint32_t ticks;
-	ticks = COTmrGetTicks(&CONodeGNR.Tmr, 20U, (uint32_t)CO_TMR_UNIT_1MS);
+	ticks = COTmrGetTicks(&CONodeGNR.Tmr, 25U, (uint32_t)CO_TMR_UNIT_1MS);
 	COTmrCreate(&CONodeGNR.Tmr, 0, ticks, UpdateObjectDictionnary, &CONodeGNR);
 
     /* Start the CANopen node and set it automatically to
@@ -277,5 +277,43 @@ __NO_RETURN void CANOpenTask (void * pvParameter)
         // This task unblocks when a CANOpen timer elapses
         osSemaphoreAcquire(canTmrSemaphore, osWaitForever);
         COTmrProcess(&CONodeGNR.Tmr);
+    }
+}
+
+
+/**
+  Task to handle the received messages anad to send messages through the CAN bus
+*/
+__NO_RETURN void CANLoggerTask (void * pvParameter)
+{
+    UNUSED_PARAMETER(pvParameter);
+
+    while(true)
+    {
+        if (bCANOpenTaskBootUpCompleted)
+        {
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendStatus(&CoCanDriver, &VCInterfaceHandle, M_NONE); //Send vehicle status
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendStatus(&CoCanDriver, &VCInterfaceHandle, M1); //Send M1 status
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendStatus(&CoCanDriver, &VCInterfaceHandle, M2); //Send M2 status
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendVbus(&CoCanDriver, &VCInterfaceHandle); //Send Vbus
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendCurrent(&CoCanDriver, &VCInterfaceHandle, M1); //Send currents M1
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendCurrent(&CoCanDriver, &VCInterfaceHandle, M2); //Send currents M2
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendSpeed(&CoCanDriver, &VCInterfaceHandle, M1); //Send speed M1
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendSpeed(&CoCanDriver, &VCInterfaceHandle, M2); //Send speed M2
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendTemperature(&CoCanDriver, &VCInterfaceHandle, M1); //Send temperature M2
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendTemperature(&CoCanDriver, &VCInterfaceHandle, M2); //Send temperature M2
+            osDelay(CAN_LOG_INTERVAL_TICK);
+            CANLog_SendThrottleBrake(&CoCanDriver, &VCInterfaceHandle); //Send throttle & brake info
+        }
     }
 }
