@@ -19,11 +19,10 @@
 	* @param  Powertrain handle
 	* @retval None
 	*/
-void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1, SlaveMotorHandle_t * pSlaveM2)
+void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1)
 {
     ASSERT(pHandle != NULL);
-    
-    MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
+    MDI_Init(pHandle->pMDI, pMci_M1);
     Throttle_Init(pHandle->pThrottle);
     BRK_Init(pHandle->pBrake);
     MS_Init(pHandle->pMS);

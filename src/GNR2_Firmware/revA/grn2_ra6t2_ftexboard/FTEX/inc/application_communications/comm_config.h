@@ -22,11 +22,9 @@
 
 //========================= EXTERN TYPES ==========================//
 
-extern CO_NODE CONodeGNR;
-extern SlaveMotorHandle_t SlaveM2;
-
 extern APT_Handle_t  LCD_APT_handle;
 extern UART_Handle_t  UART0Handle;
+extern CO_NODE CONodeGNR;
 extern LogHighSpeed_Handle_t LogHS_handle;
 
 #endif /* __COMM_CONFIG_H */
