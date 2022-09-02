@@ -23,6 +23,8 @@
             [16] = canfd_rx_fifo_isr, /* CAN RXF (Global recieve FIFO interrupt) */
             [17] = agt_int_isr, /* AGT1 INT (AGT interrupt) */
             [18] = agt_int_isr, /* AGT0 INT (AGT interrupt) */
+            [19] = gpt_counter_overflow_isr, /* GPT9 COUNTER OVERFLOW (Overflow) */
+            [20] = gpt_capture_b_isr, /* GPT9 CAPTURE COMPARE B (Compare match B) */
         };
         const bsp_interrupt_event_t g_interrupt_event_link_select[BSP_ICU_VECTOR_MAX_ENTRIES] =
         {
@@ -45,5 +47,7 @@
             [16] = BSP_PRV_IELS_ENUM(EVENT_CAN_RXF), /* CAN RXF (Global recieve FIFO interrupt) */
             [17] = BSP_PRV_IELS_ENUM(EVENT_AGT1_INT), /* AGT1 INT (AGT interrupt) */
             [18] = BSP_PRV_IELS_ENUM(EVENT_AGT0_INT), /* AGT0 INT (AGT interrupt) */
+            [19] = BSP_PRV_IELS_ENUM(EVENT_GPT9_COUNTER_OVERFLOW), /* GPT9 COUNTER OVERFLOW (Overflow) */
+            [20] = BSP_PRV_IELS_ENUM(EVENT_GPT9_CAPTURE_COMPARE_B), /* GPT9 CAPTURE COMPARE B (Compare match B) */
         };
         #endif

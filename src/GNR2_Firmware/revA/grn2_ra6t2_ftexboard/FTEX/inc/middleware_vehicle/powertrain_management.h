@@ -71,8 +71,11 @@ typedef struct
     BRK_Handle_t * pBrake;                        /* Pointer to brake handle */
     MS_Handle_t * pMS;                            /* Pointer to motor selector handle */
     PWREN_Handle_t * pPWREN;                      /* Pointer to power enable pin handle */
+		PedalSpeedSensorHandle_t * pPSS;							/* Pointer to Pedal Speed Sensor handle */
+		PedalTorqSensorHandle_t * pPTS;								/* Pointer to Pedal Torque Sensor handle */	
+    WheelSpeedSensorHandle_t * pWSS;     					/* Pointer to Wheel Speed Sensor handle */
     
-    uint8_t bMainMotor;                           /* Main motor selection. It is updated by user using motor selector switch */
+		uint8_t bMainMotor;                           /* Main motor selection. It is updated by user using motor selector switch */
     int16_t aTorque[2];                           /* Array of torque reference, first element is for M1, second is for M2 */
     int16_t aSpeed[2];                            /* Array of speed reference, first element is for M1, second is for M2 */
     uint8_t bCurrentAssistLevel;                  /* Current pedal assist level */

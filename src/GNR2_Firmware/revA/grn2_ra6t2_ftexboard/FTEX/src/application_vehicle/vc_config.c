@@ -8,7 +8,7 @@
 #include "gnr_parameters.h"
 #include "board_hardware.h"
 #include "vc_parameters.h"
-
+#include "hal_data.h"
 
 MultipleDriveInterfaceHandle_t MDInterfaceHandle =
 {
@@ -88,40 +88,40 @@ PedalTorqSensorHandle_t PedalTorqueSensor =
     }
 };
 
-///**@brief Pulse Frequency initializing Parameters.
-// */
-//PulseFrequency_Handle_AGT_t PulseFreqHandle =
-//{
-//	.agt_start_measurement = false,
-//	.PulseFreqParam_AGT =
-//	{
-//		.PF_AGT_Timer = PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
-//	}
-//};
+/**@brief Pulse Frequency initializing Parameters.
+ */
+PulseFrequencyHandle_t PulseFreqHandlePedal =
+{	
+	.TimerType = AGT_TIMER,	
+	.start_measurement = false,	
+	.PulseFreqParam =
+	{
+		.PF_Timer = PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
+	}
+};
 
-///**@brief Pedal assist initializing Parameters.
-// */
-//PedalSpeedSensorHandle_t PedalAssistHandle = {
-//	.pTorque = &PedalTorqueSensor,
-//    .pSpulse = &PulseFreqHandle,
-//};
+/**@brief Pulse Frequency initializing Parameters.
+ */
+PulseFrequencyHandle_t PulseFreqHandleWheel =
+{		
+	.TimerType = GPT_TIMER,
+	.start_measurement = false,	
+	.PulseFreqParam =
+	{
+		.PF_Timer = WHEEL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
+	}
+};
 
-///**@brief Pulse Frequency initializing Parameters for GPT Timer.
-// */
-//WheelFrequency_Handle_GPT_t PulseFreqHandle_Wheel =
-//{
-//	.gpt_start_measurement = false,
-//	.PulseFreqParam_GPT =
-//	{
-//		 .PF_GPT_Timer = WHEEL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
-//	}
-//};
+/**@brief Pedal assist initializing Parameters.
+ */
+PedalSpeedSensorHandle_t PedalAssistHandle = {
+  .pPulseFrequency = &PulseFreqHandlePedal,
+};
 
-//WheelSpeedSens_Handle_t WheelSpeedHandle =
-//{
-//    .wSpulse = &PulseFreqHandle_Wheel,
-//};
-
+WheelSpeedSensorHandle_t WheelSpeedHandle =
+{
+   .pPulseFrequency = &PulseFreqHandleWheel,
+};
 
 
 MS_Handle_t MotorSelectorHandle =
@@ -172,6 +172,9 @@ PWRT_Handle_t PowertrainHandle =
 	.pBrake = &BrakeHandle,
 	.pMS = &MotorSelectorHandle,
 	.pPWREN = &PowerEnableHandle,
+	.pPSS = &PedalAssistHandle,
+	.pPTS = &PedalTorqueSensor,
+  .pWSS = &WheelSpeedHandle,	
 
 };
 

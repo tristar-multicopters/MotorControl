@@ -35,7 +35,6 @@ struct {
 #define START_LOOPTICKS                      500    // Max number of ticks to stay in start state
 #define STOP_LOOPTICKS                       500    // Max number of ticks to stay in stop state
 
-
 /************* TASKS ****************/
 
 
@@ -73,7 +72,6 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);
         R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hAvADCValue);
         #endif
-        
         xLastWakeTime += TASK_VCFASTLOOP_SAMPLE_TIME_TICK;
         osDelayUntil(xLastWakeTime);
     }

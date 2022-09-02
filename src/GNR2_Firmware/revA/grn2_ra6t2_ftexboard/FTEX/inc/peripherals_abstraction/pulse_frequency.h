@@ -10,45 +10,59 @@
 #ifndef __PULSE_FREQUENCY_H
 #define __PULSE_FREQUENCY_H
 
-/* Includes ------------------------------------------------------------------*/
+// =============================== Includes ================================== //
 #include "stdint.h"
 #include "stdbool.h"
 #include "r_gpt.h"
 #include "r_agt.h"
 
+// =============================== Defines ================================== //
+#define RPMCOEFF        60      		// RPM multiplication for r/min
+#define PRECISIONCOEFF	1000				// ms coefficient precision
+#define COEFFREQ        1000000	// Period coeff for usecond division
+#define MICRO_SEC 			1000000 		// us coefficient precision
+#define PERIOD_FACTOR		2						// Period factor
+	   
+// =============================== Variables ================================== //
+
+	
+// ================= Structure used to configure a pin ===================== //
 typedef enum
 {
-	AGT_TIMER = 0,
-	GPT_TIMER,
+	GPT_TIMER = 0,
+	AGT_TIMER,
 } TimerType_t;
 
 typedef struct
 {
-	TimerType_t TimerType;
-    const timer_instance_t* pTimer;
+	  const timer_instance_t* PF_Timer;
 	
-    uint32_t wCaptureCount; 	/* GPT timer capture variable */
-    uint32_t wCaptureOverflow;  /* GPT timer capture overflow variable */
+}  PulseFrequencyParam_t; 
+
+
+typedef struct
+{
+	TimerType_t TimerType;
+  const timer_instance_t* pTimer;
+	
+  uint32_t wCaptureCount; 		/* timer capture variable */
+	uint32_t wCaptureOverflow; /* timer capture overflow variable */
+	uint32_t wUsPeriod; 			/* timer us Period Detection */
+	
+	volatile bool  start_measurement;		/* Flag start measurment */	
+
+	PulseFrequencyParam_t PulseFreqParam; /* AGT Parameters*/
 	
 } PulseFrequencyHandle_t; 
-
-
 
 // ==================== Public function prototypes ========================= //
 
 /**
-  @brief  Function used to Initialize the timer for Capture Mode 
-  @param  PulseFrequencyHandle_t
-  @return bIsError in boolean
-*/
-bool PulseFrequency_Init(PulseFrequencyHandle_t * pHandle);
-
-/**
-  @brief  Function used to return frequency of pulse signal
+  @brief  Function used to read the capture input from the Timer
   @param  PulseFrequencyHandle_t handle
-  @return Latest frequency measurement of pulse signal
+  @return None
 */
-uint32_t PulseFrequency_GetFrequency(PulseFrequencyHandle_t * pHandle);
+void PulseFrequency_ReadInputCapture (PulseFrequencyHandle_t * pHandle);
 
 /**
   @brief  Function used to return period of pulse signal
@@ -62,7 +76,7 @@ uint32_t PulseFrequency_GetPeriod(PulseFrequencyHandle_t * pHandle);
   @param  PulseFrequencyHandle_t handle
   @return None
 */
-void PulseFrequency_ISRCaptureUpdate(PulseFrequencyHandle_t * pHandle , uint32_t  wCapture);
+void PulseFrequency_IsrCallUpdate(PulseFrequencyHandle_t * pHandle, uint32_t wCapture);
 
 /**
   @brief  Function used to update the overflow variable from the interrupt
@@ -70,7 +84,7 @@ void PulseFrequency_ISRCaptureUpdate(PulseFrequencyHandle_t * pHandle , uint32_t
   @return None
 */
 void PulseFrequency_ISROverflowUpdate(PulseFrequencyHandle_t * pHandle);
-	
+
 
 #endif /* __PULSE_FREQUENCY_H */
 

@@ -114,8 +114,12 @@ void PedalSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
 		switch(p_args->event)
 		{
 			case TIMER_EVENT_CAPTURE_A :
+			/* Call ISR AGT Capture function */
+			PulseFrequency_IsrCallUpdate(VCInterfaceHandle.pPowertrain->pPSS->pPulseFrequency,p_args->capture);				
 			break;
 			case TIMER_EVENT_CYCLE_END:
+			/* An overflow occurred during capture. */
+			PulseFrequency_ISROverflowUpdate(VCInterfaceHandle.pPowertrain->pPSS->pPulseFrequency);
 			break;
 			default:
 			break;
@@ -131,17 +135,21 @@ void WheelSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
 {
 	if (NULL != p_args)
 	{
-        /* Check for the event */
-        switch(p_args->event)
-        {
-            case TIMER_EVENT_CAPTURE_B :
-            break;
-            case TIMER_EVENT_CYCLE_END:
-            break;
-            default:
-            break;
-        }
-	}
+			/* Check for the event */
+			switch(p_args->event)
+			{
+				case TIMER_EVENT_CAPTURE_B :
+				/* Call ISR GPT Capture function */
+				PulseFrequency_IsrCallUpdate(VCInterfaceHandle.pPowertrain->pWSS->pPulseFrequency, p_args->capture);	 					
+				break;
+				case TIMER_EVENT_CYCLE_END:
+				/* An overflow occurred during capture. */
+				PulseFrequency_ISROverflowUpdate(VCInterfaceHandle.pPowertrain->pWSS->pPulseFrequency); 
+				break;
+				default:
+				break;
+			}
+	}		
 }
 
 /**

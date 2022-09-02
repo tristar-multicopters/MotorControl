@@ -157,6 +157,7 @@ void gnr_main(void)
    	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
                                       NULL,
                                       &ThAtt_UART);
+
     #endif
 
     /* Start RTOS */
@@ -231,13 +232,13 @@ static bool GPTInit(void)
     bIsError |= R_GPT_Enable(g_timer0.p_ctrl);
     bIsError |= R_GPT_PeriodSet(g_timer0.p_ctrl, 524287uL);
 
-//    /* ________________________
-//     *        GPT2
-//     * ________________________ */
+    /* ________________________
+     *        GPT9
+     * ________________________ */
 
-//    /* Capture timer settings for wheel speed sensor   */
-//    bIsError |= R_GPT_Open(g_timer2.p_ctrl, g_timer2.p_cfg);
-//    bIsError |= R_GPT_Enable(g_timer2.p_ctrl);
+    /* Capture timer settings for wheel speed sensor   */
+    bIsError |= R_GPT_Open(g_timer9.p_ctrl, g_timer9.p_cfg);
+    bIsError |= R_GPT_Enable(g_timer9.p_ctrl);
 
     return bIsError;
 }
@@ -304,13 +305,19 @@ static bool ICUInit(void)
 static bool AGTInit(void)
 {
     bool bIsError = false;
-//    // Initialize the low power timer 0 for capture mode
-//    bIsError |= R_AGT_Open(g_timer_a0.p_ctrl, g_timer_a0.p_cfg);
-//    // Enable external event triggers that start the AGT
-//    bIsError |= R_AGT_Enable(g_timer_a0.p_ctrl);
-
-	  // Initialize the low power timer 1 as timer for CANOpen
+	  /* ________________________
+     *        AGT0
+     * ________________________ */
+    // Initialize the low power timer for capture mode
+    bIsError |= R_AGT_Open(g_timer_a0.p_ctrl, g_timer_a0.p_cfg);
+    // Enable external event triggers that start the AGT
+    bIsError |= R_AGT_Enable(g_timer_a0.p_ctrl);
+	  /* ________________________
+     *        AGT1
+     * ________________________ */
+		// Initialize the low power timer 1 as timer for CANOpen
     bIsError |= R_AGT_Open(g_timer_a1.p_ctrl, g_timer_a1.p_cfg);
+
 
     return bIsError;
 }

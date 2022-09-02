@@ -9,8 +9,8 @@
 #include "powertrain_management.h"
 
 #define OVERCURRENT_COUNTER 		0
-#define STARTUP_COUNTER 			1
-#define SPEEDFEEDBACK_COUNTER 	    2
+#define STARTUP_COUNTER					1
+#define SPEEDFEEDBACK_COUNTER		2
 
 /* Functions ---------------------------------------------------- */
 
@@ -27,8 +27,12 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1)
     BRK_Init(pHandle->pBrake);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
+		
+	PedalSpdSensor_Init(pHandle->pPSS);
+	PedalTorqSensor_Init(pHandle->pPTS);
+	WheelSpdSensor_Init(pHandle->pWSS);
+	
     Foldback_Init(&pHandle->SpeedFoldbackStartupDualMotor);
-    
 
     pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
     pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;

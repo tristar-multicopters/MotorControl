@@ -61,24 +61,20 @@ uint32_t GetChipID(uint8_t ID_Half);
 
 /* ADC Regular conversion manager ---------------------------------------------*/
 
-#define BUS_VOLTAGE_ANALOG_CHANNEL							ADC_CHANNEL_6
-#define HEATSINK_TEMP_ANALOG_CHANNEL						ADC_CHANNEL_8
-#define THROTTLE_ANALOG_CHANNEL							    ADC_CHANNEL_9
+#define BUS_VOLTAGE_ANALOG_CHANNEL											ADC_CHANNEL_6
+#define HEATSINK_TEMP_ANALOG_CHANNEL										ADC_CHANNEL_8
+#define THROTTLE_ANALOG_CHANNEL							    				ADC_CHANNEL_9
 #define PEDAL_TORQUE_SENSOR_ANALOG_CHANNEL			        ADC_CHANNEL_20
 
-#define FIRST_REG_CONV_ADC_GROUP_MASK                       ADC_GROUP_MASK_1 // Regular ADC conversion manager will work with ADC pins contained in two designated groups
-#define SECOND_REG_CONV_ADC_GROUP_MASK                      ADC_GROUP_MASK_2 // Regular ADC conversion manager will work with ADC pins contained in two designated groups
-
+#define FIRST_REG_CONV_ADC_GROUP_MASK                   ADC_GROUP_MASK_1 // Regular ADC conversion manager will work with ADC pins contained in two designated groups
+#define SECOND_REG_CONV_ADC_GROUP_MASK                  ADC_GROUP_MASK_2 // Regular ADC conversion manager will work with ADC pins contained in two designated groups
 
 /* Pedal speed sensor ---------------------------------------------*/
 
-//#define PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS             &ag_timer0 
-
+#define PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS         &g_timer_a0 
 
 /* Wheel speed sensor ---------------------------------------------*/
 
-//#define WHEEL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS             &g_timer8
-
-
+#define WHEEL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS         &g_timer9
 
 #endif /*__BOARD_HARDWARE_H*/

@@ -6,7 +6,7 @@
         #endif
                 /* Number of interrupts allocated */
         #ifndef VECTOR_DATA_IRQ_COUNT
-        #define VECTOR_DATA_IRQ_COUNT    (19)
+        #define VECTOR_DATA_IRQ_COUNT    (21)
         #endif
         /* ISR prototypes */
         void gpt_counter_overflow_isr(void);
@@ -22,6 +22,7 @@
         void canfd_channel_tx_isr(void);
         void canfd_rx_fifo_isr(void);
         void agt_int_isr(void);
+        void gpt_capture_b_isr(void);
 
         /* Vector table allocations */
         #define VECTOR_NUMBER_GPT4_COUNTER_OVERFLOW ((IRQn_Type) 0) /* GPT4 COUNTER OVERFLOW (Overflow) */
@@ -62,6 +63,10 @@
         #define AGT1_INT_IRQn          ((IRQn_Type) 17) /* AGT1 INT (AGT interrupt) */
         #define VECTOR_NUMBER_AGT0_INT ((IRQn_Type) 18) /* AGT0 INT (AGT interrupt) */
         #define AGT0_INT_IRQn          ((IRQn_Type) 18) /* AGT0 INT (AGT interrupt) */
+        #define VECTOR_NUMBER_GPT9_COUNTER_OVERFLOW ((IRQn_Type) 19) /* GPT9 COUNTER OVERFLOW (Overflow) */
+        #define GPT9_COUNTER_OVERFLOW_IRQn          ((IRQn_Type) 19) /* GPT9 COUNTER OVERFLOW (Overflow) */
+        #define VECTOR_NUMBER_GPT9_CAPTURE_COMPARE_B ((IRQn_Type) 20) /* GPT9 CAPTURE COMPARE B (Compare match B) */
+        #define GPT9_CAPTURE_COMPARE_B_IRQn          ((IRQn_Type) 20) /* GPT9 CAPTURE COMPARE B (Compare match B) */
         #ifdef __cplusplus
         }
         #endif
