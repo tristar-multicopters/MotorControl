@@ -117,7 +117,7 @@ __weak void MCI_ExecTorqueRamp( MCI_Handle_t * pHandle,  int16_t hFinalTorque, u
 	pHandle->hDurationms = hSlopeCnm;
   pHandle->CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
   pHandle->LastModalitySetByUser = STC_TORQUE_MODE;
-	SpdTorqCtrl_SetTorqueRampSlope(pHandle->pSTC, (uint16_t) hSlopeCnm, (uint16_t) hSlopeCnm);
+	//SpdTorqCtrl_SetTorqueRampSlope(pHandle->pSTC, (uint16_t) hSlopeCnm, (uint16_t) hSlopeCnm);
 }
 
 /**

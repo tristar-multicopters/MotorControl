@@ -130,8 +130,8 @@ THRO_Handle_t ThrottleHandle =
 		.bDivisorThrottle = 3,
 		
 		.hOffsetTorque = 4000,
-		.bSlopeTorque = -3,///15
-		.bDivisorTorque = 120,
+		.bSlopeTorque = -4,///15
+		.bDivisorTorque = 140,
 		
 		.hDetectionThreshold = 1000,
 	}
@@ -431,7 +431,7 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.bCtrlType = TORQUE_CTRL,
 	.sParameters.bM2TorqueInversion = false,
 	.sParameters.hTorquePASRampTimeUp = 6000,	
-	.sParameters.hTorqueRampTimeUp = 10000,
+	.sParameters.hTorqueRampTimeUp = 2000,
 	.sParameters.hTorqueRampTimeDown = 10000,
 	.sParameters.hSpeedRampTimeUp = 200,
 	.sParameters.hSpeedRampTimeDown = 50,

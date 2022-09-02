@@ -165,6 +165,9 @@ __weak void HALL_Init( HALL_Handle_t * pHandle )
 
   LL_TIM_CC_EnableChannel  ( TIMx, LL_TIM_CHANNEL_CH1 );
   LL_TIM_EnableCounter ( TIMx );
+  
+  pHandle->AvrElSpeedDppFilter[0] = 0;
+  pHandle->AvrElSpeedDppFilter[1] = 0;
 
 
   /* Erase speed buffer */
@@ -266,11 +269,11 @@ __attribute__( ( section ( ".ccmram" ) ) )
 __weak int16_t HALL_CalcElAngle( HALL_Handle_t * pHandle )
 {
 
-//	if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
-//	{
-//	}
-//	else
-//	{
+	if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
+	{
+	}
+	else
+	{
 		if ( pHandle->_Super.hElSpeedDpp != HALL_MAX_PSEUDO_SPEED )
 		{
 			pHandle->MeasuredElAngle += pHandle->_Super.hElSpeedDpp;
@@ -282,16 +285,17 @@ __weak int16_t HALL_CalcElAngle( HALL_Handle_t * pHandle )
 			pHandle->_Super.hElAngle += pHandle->PrevRotorFreq;
 		}
 		
-		if ( abs(pHandle->_Super.hElAngle - pHandle->Sector_Middle_Angle[pHandle->HallState]) > S16_30_PHASE_SHIFT)
-		{
-			if(pHandle->Direction == POSITIVE)
-					{pHandle->_Super.hElAngle = pHandle->Sector_Destination_Angle[pHandle->HallState];}
-			else
-					{pHandle->_Super.hElAngle = pHandle->Sector_Start_Angle[pHandle->HallState];}
-		}
-//	}
-
+        if ( abs(pHandle->_Super.hElAngle - pHandle->Sector_Middle_Angle[pHandle->HallState]) > S16_30_PHASE_SHIFT)
+        {
+            if(pHandle->Direction == POSITIVE)
+                {pHandle->_Super.hElAngle = pHandle->Sector_Destination_Angle[pHandle->HallState];}
+            else
+                {pHandle->_Super.hElAngle = pHandle->Sector_Start_Angle[pHandle->HallState];}
+        }    
+    
+	}
   return pHandle->_Super.hElAngle;
+    
 }
 
 
@@ -577,17 +581,17 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
 		
 		if ( !bUnexpectedBehavior && (pHandle->DirectionChangeCounter == 0 || pHandle->DirectionChangeCounter == 2) )
 		{
-//			/* We need to check that the direction has not changed.
-//				 If it is the case, the sign of the current speed can be the opposite of the
-//				 average speed, and the average time can be close to 0 which lead to a 
-//				 computed speed close to the infinite, and bring instability. */
-//			if (pHandle->Direction != PrevDirection)
-//			{
-//				/* Setting BufferFilled to 0 will prevent to compute the average speed based
-//				 on the SpeedPeriod buffer values */
-//				pHandle->BufferFilled = 0 ;
-//				pHandle->SpeedFIFOIdx = 0;
-//			}
+			/* We need to check that the direction has not changed.
+				 If it is the case, the sign of the current speed can be the opposite of the
+				 average speed, and the average time can be close to 0 which lead to a 
+				 computed speed close to the infinite, and bring instability. */
+			if (pHandle->Direction != PrevDirection)
+			{
+				/* Setting BufferFilled to 0 will prevent to compute the average speed based
+				 on the SpeedPeriod buffer values */
+				pHandle->BufferFilled = 0 ;
+				pHandle->SpeedFIFOIdx = 0;
+			}
 
 			if (pHandle->HallMtpa == true)
 			{
@@ -603,6 +607,7 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
 			{
 				pHandle->FirstCapt++;
 				LL_TIM_IC_GetCaptureCH1( TIMx );
+                  
 			}
 			else
 			{
@@ -700,16 +705,20 @@ __weak void * HALL_TIMx_CC_IRQHandler( void * pHandleVoid )
 						{
 							if ( pHandle->BufferFilled < pHandle->SpeedBufferSize )
 							{
-								pHandle->AvrElSpeedDpp = ( int16_t ) (( pHandle->PseudoFreqConv / wCaptBuf )*pHandle->Direction); 
+								pHandle->AvrElSpeedDpp = ( int16_t ) (( pHandle->PseudoFreqConv / wCaptBuf )*pHandle->Direction);
+                               
 							}
 							else 
 							{ /* Average speed allow to smooth the mechanical sensors misalignement */
-								pHandle->AvrElSpeedDpp = ( int16_t )((int32_t) pHandle->PseudoFreqConv / ( pHandle->ElPeriodSum / pHandle->SpeedBufferSize )); /* Average value */
+                                
+                                pHandle->AvrElSpeedDpp  = ( int16_t )((int32_t) pHandle->PseudoFreqConv / ( pHandle->ElPeriodSum / pHandle->SpeedBufferSize )); /* Average value */
+								// pHandle->AvrElSpeedDpp = ((pHandle->AvrElSpeedDppFilter[0] + pHandle->AvrElSpeedDppFilter[1]) /2);  
+                                // pHandle->AvrElSpeedDppFilter[1] = pHandle->AvrElSpeedDppFilter[0];
 							}
 						}
 						else /* Sensor is not reliable */
 						{
-							pHandle->AvrElSpeedDpp = 0;
+							pHandle->AvrElSpeedDpp =  0;
 						}
 					}
 				/* Reset the number of overflow occurred */
@@ -773,7 +782,9 @@ __weak void * HALL_TIMx_UP_IRQHandler( void * pHandleVoid )
         pHandle->SensorPeriod[bIndex]  = pHandle->MaxPeriod;
       }
       pHandle->BufferFilled = 0 ;
-      pHandle->AvrElSpeedDpp = 0;
+      pHandle->AvrElSpeedDpp =  0;
+      pHandle->AvrElSpeedDppFilter[0] = 0;
+      pHandle->AvrElSpeedDppFilter[1] = 0;
       pHandle->SpeedFIFOIdx = 0;
       pHandle->ElPeriodSum =pHandle->MaxPeriod * pHandle->SpeedBufferSize;
     }

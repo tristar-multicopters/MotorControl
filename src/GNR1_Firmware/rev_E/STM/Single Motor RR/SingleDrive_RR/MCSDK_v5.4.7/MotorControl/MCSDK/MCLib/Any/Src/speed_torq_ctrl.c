@@ -37,8 +37,14 @@ void SpdTorqCtrl_Init(SpeednTorqCtrlHandle_t * pHandle, PID_Handle_t * pPI, Spee
     pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     RampMngr_Init(&pHandle->TorqueRampMngr);
     RampMngr_Init(&pHandle->SpeedRampMngr);
-		
-		SignalFiltering_Init(&pHandle->SpeedFilter);
+    
+    Foldback_InitFoldback(&pHandle->FoldbackHeatsinkTemperature);
+    Foldback_InitFoldback(&pHandle->FoldbackMotorSpeed);
+    Foldback_InitFoldback(&pHandle->FoldbackMotorTemperature);
+    Foldback_InitFoldback(&pHandle->FoldbackMotorPower);
+    Foldback_InitFoldback(&pHandle->FoldbackDymamicMaxTorque);
+    
+    SignalFiltering_Init(&pHandle->SpeedFilter);
     SignalFiltering_ConfigureRecursiveAverage(&pHandle->SpeedFilter,pHandle->hSpeedFilterLength );
 }
 
@@ -340,7 +346,12 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle,
         hMeasuredHeatsinkTemp = NTC_GetAvTemp_C(pHandle->pHeatsinkTempSensor);
     }
 
-    int16_t hOutputTorque;
+    int16_t hOutputTorque, MaxDynamicTorque;
+    MaxDynamicTorque = Foldback_ApplyFoldback( &pHandle->FoldbackDymamicMaxTorque,NULL,abs(hMeasuredSpeed));
+    Foldback_UpdateMaxValue( &pHandle->FoldbackMotorSpeed, MaxDynamicTorque );
+    Foldback_UpdateMaxValue( &pHandle->FoldbackMotorTemperature, MaxDynamicTorque );
+    Foldback_UpdateMaxValue( &pHandle->FoldbackHeatsinkTemperature, MaxDynamicTorque );
+    
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque, abs(hMeasuredSpeed));
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);

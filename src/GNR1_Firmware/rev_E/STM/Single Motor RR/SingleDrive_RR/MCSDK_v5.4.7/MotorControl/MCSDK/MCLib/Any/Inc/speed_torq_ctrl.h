@@ -36,6 +36,7 @@ typedef struct
     Foldback_Handle_t FoldbackMotorTemperature;
     Foldback_Handle_t FoldbackHeatsinkTemperature;
     Foldback_Handle_t FoldbackMotorPower;
+    Foldback_Handle_t FoldbackDymamicMaxTorque;
 
     int16_t hCurrentTorqueRef;
     int16_t hCurrentSpeedRef;
@@ -101,7 +102,7 @@ typedef struct
     float fGainTorqueIqref;            /* Gain (G) between Iqref in digital amps and torque reference in cNm. Iqref = Torq * G/D  */
     float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
 		
-		SignalFilteringHandle_t SpeedFilter ;
+    SignalFilteringHandle_t SpeedFilter ;
     uint16_t hSpeedFilterLength;
 
 } SpeednTorqCtrlHandle_t;

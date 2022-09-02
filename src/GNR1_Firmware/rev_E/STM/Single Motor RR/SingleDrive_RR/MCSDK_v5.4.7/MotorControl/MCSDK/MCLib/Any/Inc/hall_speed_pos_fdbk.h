@@ -153,6 +153,8 @@ typedef struct
 
   int16_t AvrElSpeedDpp; /*!< It is the averaged rotor electrical speed express
                                in s16degree per current control period.*/
+                               
+  int16_t AvrElSpeedDppFilter[2];                             
 
   uint8_t HallState;     /*!< Current HALL state configuration */
 
