@@ -17,8 +17,8 @@
 
 typedef enum    // Enumerated data type to set the configuration of foldback
 {
-    TRIM = 1,
-    SET_THRESHOLD = 2
+    TRIM = 0,
+    SET_THRESHOLD = 1
 } FoldbackConfig_t;
 
 typedef struct

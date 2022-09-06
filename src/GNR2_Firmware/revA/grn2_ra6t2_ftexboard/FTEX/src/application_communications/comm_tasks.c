@@ -42,38 +42,6 @@ osSemaphoreAttr_t canTmrSemaphoreAttr =
 
 /********* PRIVATE FUNCTIONS *************/
 
-/* The application specific SDO transfer finalization callback */
-void AppCSdoUploadFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
-{
-
-}
-
-/* The application specific SDO transfer finalization callback */
-void AppCSdoDownloadFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
-{
-    (void)csdo;
-    if (code == 0)
-    {
-        /* SDO completed succesfully */
-        switch(index)
-        {
-            case CO_OD_REG_FAULT_ACK:
-            {
-            } break;
-
-            default:
-            {
-
-            } break;
-        }
-
-    }
-    else
-    {
-    /* a timeout or abort is detected during SDO transfer  */
-    }
-}
-
 
 /** @brief  Callback function used for updating the values of the GNR
 *           object dictionary.
@@ -92,13 +60,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint16_t hMotorState            = MCInterface_GetSTMState(&MCInterface[0]);
     uint16_t hMotorOccuredFaults    = MCInterface_GetOccurredFaults(&MCInterface[0]);
     uint16_t hMotorCurrentFaults    = MCInterface_GetCurrentFaults(&MCInterface[0]);
-    #if GNR_MASTER
-    int16_t hMotor1TorqRef      = MCInterface_GetTeref(&MCInterface[0]);
-    uint8_t bMotor1Start        = MCInterface_GetSTMState(&MCInterface[0]) == M_RUN ? true : false;
-    int16_t hMotor2TorqRef      = VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.hTorqueRef;
-    uint8_t bMotor2Start        = VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.bStartMotor;
-    uint8_t bMotor2FaultAck     = VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.bFaultAck;
-    #else
+    #if !GNR_MASTER
     int16_t hMotor2TorqRef      = 0;
     uint8_t bMotor2Start        = 0;
     uint8_t bMotor2FaultAck     = 0;
@@ -108,53 +70,31 @@ static void UpdateObjectDictionnary(void *p_arg)
     {
         #if GNR_MASTER
         /* Update M1 feedback data to CANOpen object dictionnary */
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &hMotorOccuredFaults, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &hMotorCurrentFaults, 2, 0);
-
-        /* Update M1 and M2 commands to CANOpen object dictionnary */
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M1)), pNode, &hMotor1TorqRef, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M1)), pNode, &bMotor1Start, 1, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, 1, 0);
-
-        /* Update virtual motor 2 structure used vehicle control layer */
-        VirtualMotorFeedback_t VirtualMotor2Feedback = {0};
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &VirtualMotor2Feedback.bState, 2, 0);
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &VirtualMotor2Feedback.hOccuredFaults, 2, 0);
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &VirtualMotor2Feedback.hCurrentFaults, 2, 0);
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &VirtualMotor2Feedback.hMotorSpeed, 2, 0);
-        MDI_UpdateVirtualMotorFeedback(VCInterfaceHandle.pPowertrain->pMDI, M2, VirtualMotor2Feedback);
-
-        /* If vehicle control request a fault ack to motor 2, send a SDO */
-        if (bMotor2FaultAck)
-        {
-            VCInterfaceHandle.pPowertrain->pMDI->VirtualMotor2.bFaultAck = false;
-
-            CO_CSDO *csdo;
-            csdo = COCSdoFind(&(CONodeGNR), 0);
-            uint8_t Data = true;
-            COCSdoRequestDownload(csdo, CO_DEV(CO_OD_REG_FAULT_ACK, M2), &Data, 1, AppCSdoDownloadFinishCb, 200);
-        }
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &hMotorOccuredFaults, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &hMotorCurrentFaults, CO_WORD, 0);
+        
+        /* Update virtual motor 2 structure used by vehicle control layer */
+        SlaveMCInterface_UpdateFeedback(&SlaveM2);
 
         #else
         /* Update M2 feedback data to CANOpen object dictionnary */
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &hMotorSpeedMeas, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2)), pNode, &hBusVoltage, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M2)), pNode, &hMotorTemp, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2)), pNode, &hHeatsinkTemp, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &hMotorState, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &hMotorOccuredFaults, 2, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &hMotorCurrentFaults, 2, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &hMotorSpeedMeas, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2)), pNode, &hBusVoltage, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M2)), pNode, &hMotorTemp, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2)), pNode, &hHeatsinkTemp, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &hMotorState, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &hMotorOccuredFaults, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &hMotorCurrentFaults, CO_WORD, 0);
 
         /* Read commands in CANOpen object dictionnary received by RPDO */
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, 2, 0);
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, 1, 0);
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, 1, 0);
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, CO_WORD, 0);
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, CO_BYTE, 0);
+        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, CO_BYTE, 0);
 
         /* Execute received commands using motor control api */
         MCInterface_ExecTorqueRamp(&MCInterface[0], hMotor2TorqRef);
@@ -163,7 +103,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         {
             // Reset fault ack after reception
             bMotor2FaultAck = 0;
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, 1, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, CO_BYTE, 0);
             MCInterface_FaultAcknowledged(&MCInterface[0]);
         }
         #endif
@@ -178,7 +118,7 @@ static void UpdateObjectDictionnary(void *p_arg)
   * @retval None
   */
 void Comm_BootUp(void)
-{
+{   
     // Enable CAN transceiver by pulling standby_n and enable_n pin high
     struct GPIOConfig PinConfig;
     PinConfig.PinDirection = OUTPUT;
@@ -192,7 +132,24 @@ void Comm_BootUp(void)
     PinConfig.PinOutput    = PUSH_PULL;
     uCAL_GPIO_ReInit(CAN_STANDBY_N_GPIO_PIN, PinConfig);
     uCAL_GPIO_Set(CAN_STANDBY_N_GPIO_PIN);
+    
+    /* Initialize motor 2 handle to be used by vehicle control layer */
+    SlaveMotorRegisterAddr_t M2RegAddr = 
+    {
+        .wRegAddrMotorSpeed = CO_DEV(CO_OD_REG_MOTOR_SPEED, M2),
+        .wRegAddrBusVoltage = CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2),
+        .wRegAddrCurrentFaults = CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2),
+        .wRegAddrOccuredFaults = CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2),
+        .wRegAddrState = CO_DEV(CO_OD_REG_MOTOR_STATE, M2),
+        .wRegAddrMotorTemp = CO_DEV(CO_OD_REG_MOTOR_TEMP, M2),
+        .wRegAddrHeatsinkTemp = CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2),
+        .wRegAddrStartMotor = CO_DEV(CO_OD_REG_MOTOR_START, M2),
+        .wRegAddrFaultAck = CO_DEV(CO_OD_REG_FAULT_ACK, M2),
+        .wRegAddrTorqueRef = CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2),       
+    };
+    SlaveMCInterface_Init(&SlaveM2, &CONodeGNR, M2RegAddr);
 
+    /* Select UART protocol */
     switch(UART0Handle.UARTProtocol)
 	  {
         case UART_LOG_HS:

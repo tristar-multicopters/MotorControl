@@ -164,6 +164,7 @@ PWRT_Handle_t PowertrainHandle =
         .hDecreasingRange = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL,
         .hDefaultOutputLimitHigh = POWERTRAIN_MAX_MOTOR_TORQUE,
         .hDefaultOutputLimitLow = 0,
+        .FoldbackConfig = TRIM,
         .bEnableFoldback = true,
     },
 

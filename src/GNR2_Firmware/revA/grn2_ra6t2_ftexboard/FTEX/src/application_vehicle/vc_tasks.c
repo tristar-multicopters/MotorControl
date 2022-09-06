@@ -4,9 +4,12 @@
   *
     */
 
+#include "vc_config.h"
+#include "comm_config.h"
+
 #include "vc_tasks.h"
 #include "mc_tasks.h"
-#include "vc_config.h"
+#include "comm_tasks.h"
 
 #include "gnr_main.h"
 
@@ -28,6 +31,7 @@ struct {
 
 /************* DEFINES ****************/
 
+#define DELAY_AFTER_BOOTUP                   500    /* 500 RTOS ticks delay to prevent starting motors just after system bootup */
 #define TASK_VCFASTLOOP_SAMPLE_TIME_TICK     10     /* VC_FastLoop execute every 10 ticks */
 #define TASK_VCSTM_SAMPLE_TIME_TICK          10     /* VC_StateMachine execute every 10 ticks */
 #define RETURN_TO_STANDBY_LOOPTICKS          0      // Max number of ticks to stay in run while stop conditions are met
@@ -49,7 +53,7 @@ void VC_BootUp(void)
     
     /* Initialize vehicle controller state machine and powertrain components */
     VCSTM_Init(pVCI->pStateMachine);
-    PWRT_Init(pVCI->pPowertrain, &MCInterface[M1]);
+    PWRT_Init(pVCI->pPowertrain, &MCInterface[M1], &SlaveM2);
 }
 
 /**
@@ -101,6 +105,8 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
     uint16_t hVehicleFault;
     VC_State_t StateVC;
     #endif
+    
+    osDelay(DELAY_AFTER_BOOTUP); //Simple delay to prevent starting motors just after system bootup
     
     uint32_t xLastWakeTime = osKernelGetTickCount();
     while (true)
