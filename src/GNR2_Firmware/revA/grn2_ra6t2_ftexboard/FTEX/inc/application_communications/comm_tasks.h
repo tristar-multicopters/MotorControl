@@ -7,10 +7,10 @@
 #ifndef __COMM_TASKS_H
 #define __COMM_TASKS_H
 
-#include "lcd_apt_comm.h"
 
-#include "vc_config.h"
+#include "stdbool.h"
 #include "gnr_parameters.h"
+#include "comm_defines.h"
 
 
 extern bool bCANOpenTaskBootUpCompleted;

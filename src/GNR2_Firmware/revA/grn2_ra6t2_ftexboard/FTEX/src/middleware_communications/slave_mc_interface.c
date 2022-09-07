@@ -9,12 +9,7 @@
 #include "ASSERT_FTEX.h"
 
 
-/* Private defines */
-//-----------------------------
-
 #define SDO_TIMEOUT_FAULT_ACK       200 // 200ms timeout when sending a fault ack SDO
-
-//-----------------------------
 
 
 /* The SDO transfer finalization callback when acknowledging a fault */
@@ -38,7 +33,7 @@ void SlaveMCInterface_Init(SlaveMotorHandle_t * pHandle, CO_NODE * pNode, SlaveM
 {
     ASSERT(pHandle != NULL);
     ASSERT(pNode != NULL);
-    
+
     pHandle->pCONode = pNode;
     pHandle->RegisterAddr = RegisterAddr;
 }
@@ -63,7 +58,7 @@ void SlaveMCInterface_UpdateFeedback(SlaveMotorHandle_t * pHandle)
 void SlaveMCInterface_ExecTorqueRamp(SlaveMotorHandle_t * pHandle, int16_t hFinalTorque)
 {
     ASSERT(pHandle != NULL);
-    
+
     int16_t Tref = hFinalTorque;
 
     COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrTorqueRef), pHandle->pCONode, &Tref, CO_WORD, 0);
@@ -77,13 +72,13 @@ bool SlaveMCInterface_StartMotor(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     bool bRetVal = true;
-    
+
     bool bStart = true;
     if (COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrStartMotor), pHandle->pCONode, &bStart, CO_BYTE, 0) != CO_ERR_NONE)
     {
         bRetVal = false;
     }
-        
+
     return bRetVal;
 }
 
@@ -94,7 +89,7 @@ bool SlaveMCInterface_StopMotor(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     bool bRetVal = true;
-    
+
     bool bStart = false;
     if (COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrStartMotor), pHandle->pCONode, &bStart, CO_BYTE, 0) != CO_ERR_NONE)
     {
@@ -111,7 +106,7 @@ bool SlaveMCInterface_FaultAcknowledged(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     bool bRetVal = true;
-    
+
     CO_CSDO *csdo;
     csdo = COCSdoFind(pHandle->pCONode, 0);
     uint8_t Data = true;
@@ -119,7 +114,7 @@ bool SlaveMCInterface_FaultAcknowledged(SlaveMotorHandle_t * pHandle)
     {
         bRetVal = false;
     }
-    
+
     return bRetVal;
 }
 
@@ -130,7 +125,7 @@ MotorState_t  SlaveMCInterface_GetSTMState(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     MotorState_t bReturnValue = 0;
-    
+
     bReturnValue = pHandle->Feedback.bState;
 
     return bReturnValue;
@@ -175,4 +170,3 @@ int16_t SlaveMCInterface_GetAvrgMecSpeedUnit(SlaveMotorHandle_t * pHandle)
 
     return hReturnValue;
 }
-

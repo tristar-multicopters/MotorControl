@@ -8,20 +8,31 @@
 #include "vc_tasks.h"
 
 #include "comm_config.h"
+#include "vc_config.h"
+
 #include "gnr_main.h"
+
 // CANOpen includes
 #include "co_core.h"
 #include "co_gnr2_specs.h"
 // CAN logger
 #include "can_logger.h"
 
+#include "lcd_apt_comm.h"
+
 
 /************* DEFINES ****************/
 
 #define CAN_LOG_INTERVAL_TICK               25      /* CAN logger task send a new log frame every 25 RTOS ticks */
+#define MAX_NUMBER_MISSED_HEARTBEAT         2       /* Max number of missed CANopen heartbeat from outside ganrunner device.
+                                                        Above that, communication is considered lost. */
 
 
 /********* PUBLIC MEMBERS *************/
+
+uint16_t hCommErrors = COMM_NO_ERROR;  /* This global variable holds all error flags related to communications.
+                                            Should be replaced later by a more elaborate structure. */
+
 // Semaphore for CANOpen timer
 osSemaphoreId_t canTmrSemaphore;
 
@@ -69,42 +80,61 @@ static void UpdateObjectDictionnary(void *p_arg)
     if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
     {
         #if GNR_MASTER
-        /* Update M1 feedback data to CANOpen object dictionnary */
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &hMotorOccuredFaults, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &hMotorCurrentFaults, CO_WORD, 0);
-        
-        /* Update virtual motor 2 structure used by vehicle control layer */
-        SlaveMCInterface_UpdateFeedback(&SlaveM2);
-
-        #else
-        /* Update M2 feedback data to CANOpen object dictionnary */
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &hMotorSpeedMeas, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2)), pNode, &hBusVoltage, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M2)), pNode, &hMotorTemp, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2)), pNode, &hHeatsinkTemp, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &hMotorState, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &hMotorOccuredFaults, CO_WORD, 0);
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &hMotorCurrentFaults, CO_WORD, 0);
-
-        /* Read commands in CANOpen object dictionnary received by RPDO */
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, CO_WORD, 0);
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, CO_BYTE, 0);
-        COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, CO_BYTE, 0);
-
-        /* Execute received commands using motor control api */
-        MCInterface_ExecTorqueRamp(&MCInterface[0], hMotor2TorqRef);
-        bMotor2Start ? MCInterface_StartMotor(&MCInterface[0]) : MCInterface_StopMotor(&MCInterface[0]);
-        if (bMotor2FaultAck)
+        /* Check if no heartbeat was missed from slave  */
+        if (CONmtGetHbEvents(&pNode->Nmt, GNR2_SLAVE_NODE_ID) <= MAX_NUMBER_MISSED_HEARTBEAT)
         {
-            // Reset fault ack after reception
-            bMotor2FaultAck = 0;
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, CO_BYTE, 0);
-            MCInterface_FaultAcknowledged(&MCInterface[0]);
+            /* Update M1 feedback data to CANOpen object dictionnary */
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &hMotorOccuredFaults, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &hMotorCurrentFaults, CO_WORD, 0);
+
+            /* Update virtual motor 2 structure used by vehicle control layer */
+            SlaveMCInterface_UpdateFeedback(&SlaveM2);
+        }
+        else
+        {
+            // Slave not present anymore, trigger vehicle communication fault
+            hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
+            VCSTM_FaultProcessing(VCInterfaceHandle.pStateMachine, VC_SLAVE_COMM_ERROR, 0);
+        }
+        #else
+        /* Check if no heartbeat was missed from master  */
+        if (CONmtGetHbEvents(&pNode->Nmt, GNR2_MASTER_NODE_ID) <= MAX_NUMBER_MISSED_HEARTBEAT)
+        {
+            /* Update M2 feedback data to CANOpen object dictionnary */
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &hMotorSpeedMeas, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2)), pNode, &hBusVoltage, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M2)), pNode, &hMotorTemp, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2)), pNode, &hHeatsinkTemp, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &hMotorState, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &hMotorOccuredFaults, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &hMotorCurrentFaults, CO_WORD, 0);
+
+            /* Read commands in CANOpen object dictionnary received by RPDO */
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, CO_WORD, 0);
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, CO_BYTE, 0);
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, CO_BYTE, 0);
+
+            /* Execute received commands using motor control api */
+            MCInterface_ExecTorqueRamp(&MCInterface[0], hMotor2TorqRef);
+            bMotor2Start ? MCInterface_StartMotor(&MCInterface[0]) : MCInterface_StopMotor(&MCInterface[0]);
+            if (bMotor2FaultAck)
+            {
+                // Reset fault ack after reception
+                bMotor2FaultAck = 0;
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, CO_BYTE, 0);
+                MCInterface_FaultAcknowledged(&MCInterface[0]);
+            }
+        }
+        else
+        {
+            // Master not present anymore, stop motor
+            hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
+            MCInterface_StopMotor(&MCInterface[0]);
         }
         #endif
     }
@@ -118,7 +148,7 @@ static void UpdateObjectDictionnary(void *p_arg)
   * @retval None
   */
 void Comm_BootUp(void)
-{   
+{
     // Enable CAN transceiver by pulling standby_n and enable_n pin high
     struct GPIOConfig PinConfig;
     PinConfig.PinDirection = OUTPUT;
@@ -132,9 +162,9 @@ void Comm_BootUp(void)
     PinConfig.PinOutput    = PUSH_PULL;
     uCAL_GPIO_ReInit(CAN_STANDBY_N_GPIO_PIN, PinConfig);
     uCAL_GPIO_Set(CAN_STANDBY_N_GPIO_PIN);
-    
+
     /* Initialize motor 2 handle to be used by vehicle control layer */
-    SlaveMotorRegisterAddr_t M2RegAddr = 
+    SlaveMotorRegisterAddr_t M2RegAddr =
     {
         .wRegAddrMotorSpeed = CO_DEV(CO_OD_REG_MOTOR_SPEED, M2),
         .wRegAddrBusVoltage = CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2),
@@ -145,7 +175,7 @@ void Comm_BootUp(void)
         .wRegAddrHeatsinkTemp = CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2),
         .wRegAddrStartMotor = CO_DEV(CO_OD_REG_MOTOR_START, M2),
         .wRegAddrFaultAck = CO_DEV(CO_OD_REG_FAULT_ACK, M2),
-        .wRegAddrTorqueRef = CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2),       
+        .wRegAddrTorqueRef = CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2),
     };
     SlaveMCInterface_Init(&SlaveM2, &CONodeGNR, M2RegAddr);
 
@@ -204,7 +234,7 @@ __NO_RETURN void CANOpenTask (void * pvParameter)
     // Initialize canTmrSemaphore to control this task execution
     canTmrSemaphore = osSemaphoreNew(16, 0, &canTmrSemaphoreAttr);
 
-    // Initialize hardware layer and the CANopen stack
+    // Initialize canbus hardware layer and the CANopen stack
 	CONodeInit(&CONodeGNR, &GnR2ModuleSpec);
 
     // Stop execution if an error is detected on GNR2 node

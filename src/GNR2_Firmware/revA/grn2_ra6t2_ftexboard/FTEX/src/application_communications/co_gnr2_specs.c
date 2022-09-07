@@ -14,9 +14,6 @@
 
 // ==================== PRIVATE DEFINES ======================== //
 
-#define GNR2_MASTER_NODE_ID        0x01
-#define GNR2_SLAVE_NODE_ID         0x02
-
 #if GNR_MASTER
 #define GNR2_NODE_ID       GNR2_MASTER_NODE_ID          /* CANopen node ID             */
 #else
@@ -37,7 +34,9 @@
 #define USE_EMCY                0           /* Use emergency frame */
 #define STD_ID_EMCY             0           /* Emergency frame standard ID */
 
-#define HEARTBEAT_PERIOD_MS     250         /* Period of the heartbeat frame */
+#define HEARTBEAT_PRODUCE_PERIOD_MS         250                     /* Period of the heartbeat frame */
+#define HEARTBEAT_CONSUME_PERIOD_MS         500                     /* Max time to wait for receiving next heartbeat */  
+#define HEARTBEAT_CONSUME_NODE_ID           GNR2_SLAVE_NODE_ID      /* Node ID of the monitored heartbeat */
 
 #define USE_RPDO                1           /* Use or not RPDO. 1 for yes, 0 for no. */
 #define STD_ID_RPDO1            0x300        /* Standard ID of RPDO 1 */
@@ -63,7 +62,9 @@
 #define USE_EMCY                0           /* Use emergency frame */
 #define STD_ID_EMCY             0           /* Emergency frame standard ID */
 
-#define HEARTBEAT_PERIOD_MS     250         /* Period of the heartbeat frame */
+#define HEARTBEAT_PRODUCE_PERIOD_MS         250                     /* Period of the heartbeat frame */
+#define HEARTBEAT_CONSUME_PERIOD_MS         500                     /* Max time to wait for receiving next heartbeat */  
+#define HEARTBEAT_CONSUME_NODE_ID           GNR2_MASTER_NODE_ID     /* Node ID of the monitored heartbeat */
 
 #define USE_RPDO                1           /* Use or not RPDO. 1 for yes, 0 for no. */
 #define STD_ID_RPDO1            0x400        /* Standard ID of RPDO 1 */
@@ -86,7 +87,12 @@
 // ==================== PRIVATE VARIABLES ======================== //
 
 /* Allocate global variables for runtime value of objects */
-uint16_t hObjDataHbTime           = HEARTBEAT_PERIOD_MS;
+CO_HBCONS AppHbConsumer_1 = {
+    .Time = HEARTBEAT_CONSUME_PERIOD_MS,
+    .NodeId = HEARTBEAT_CONSUME_NODE_ID,
+};
+
+uint16_t hObjDataProdHbTime       = HEARTBEAT_PRODUCE_PERIOD_MS;
 uint8_t  hObjDataErrorRegister    = 0;
 
 /* Allocate global variables for GNR objects */
@@ -126,7 +132,9 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)CO_COBID_SYNC_STD(GENERATE_SYNC, STD_ID_SYNC)},		// COB-ID SYNC Message
     {CO_KEY(0x1006, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)SYNC_PERIOD_US},                                      // SYNC period
     {CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)CO_COBID_EMCY_STD(USE_EMCY, STD_ID_EMCY)},		    // COB-ID EMCY Message
-    {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataHbTime},				                // Producer Heartbeat Time
+    {CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1},				                        // Consumer Heartbeat max index    
+    {CO_KEY(0x1016, 1,               CO_OBJ____RW), CO_THB_CONS, (uintptr_t)&AppHbConsumer_1},				// Consumer Heartbeat parameters  
+    {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataProdHbTime},				        // Producer Heartbeat Time 
     {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},						                // Identity - Highest Sub Index
     {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},						                // Identity - Vendor ID
     {CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},						                // Identity - Product Code

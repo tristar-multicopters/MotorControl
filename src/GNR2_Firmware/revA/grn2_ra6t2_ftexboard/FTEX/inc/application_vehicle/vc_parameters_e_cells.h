@@ -26,7 +26,7 @@
 
 #define THROTTLE_OFFSET_THROTTLE2TORQUE       4000    /* Offset for throttle to torque linear transformation  */
 #define THROTTLE_SLOPE_THROTTLE2TORQUE        12        /* Slope for throttle to torque linear transformation  */
-#define THROTTLE_DIVISOR_THROTTLE2TORQUE      600        /* Divisor for throttle to torque linear transformation  */
+#define THROTTLE_DIVISOR_THROTTLE2TORQUE      550        /* Divisor for throttle to torque linear transformation  */
 
 #define THROTTLE_DETECTION_THRESHOLD          1000    /* Throttle is considered pressed once it passed this threshold  */
 
