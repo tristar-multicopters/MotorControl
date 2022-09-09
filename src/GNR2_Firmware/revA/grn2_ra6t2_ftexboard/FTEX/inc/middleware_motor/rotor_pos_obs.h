@@ -46,6 +46,10 @@ typedef struct
 	int32_t wEstElSpeedDpp;																/* Estimated speed by the observer, word */
 	int32_t wEstElAngle;																	/* Estimated angle by the observer, word */
 
+    SignalFilteringHandle_t SpeedFilter;
+    float fFilterAlpha;                 // Alpha coefficient for low pass first order butterworth filter
+    float fFilterBeta;                  // Beta coefficient for low pass first order butterworth filter
+    int16_t hFiltElSpeedDpp;
 } RotorPositionObserverHandle_t;
 
 

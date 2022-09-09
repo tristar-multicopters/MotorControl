@@ -1,13 +1,13 @@
 /**
-  * @file    vc_parameters_grizzly.h
-  * @brief   This file contains the parameters needed in order to configure the motor of grizzly bike.
+  * @file    vc_parameters_apollo.h
+  * @brief   This file contains the parameters needed in order to configure the motor of apollo bike.
   *
 */
 
 /* Define to prevent recursive inclusion --- 
 ----------------------------------*/
-#ifndef __VC_PARAMETERS_GRIZZLY_H
-#define __VC_PARAMETERS_GRIZZLY_H
+#ifndef __VC_PARAMETERS_APOLLO_H
+#define __VC_PARAMETERS_APOLLO_H
 
 #include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"
@@ -19,19 +19,21 @@
 #define THROTTLE_FILTER_BETA                  -0.27F   /* Butterworth beta coefficient for throttle filtering */
 
 #define THROTTLE_OFFSET_ADC2THROTTLE          12500    /* Offset for ADC to throttle linear transformation  */
-#define THROTTLE_SLOPE_ADC2THROTTLE           5        /* Slope for ADC to throttle linear transformation  */
-#define THROTTLE_DIVISOR_ADC2THROTTLE         7        /* Divisor for ADC to throttle linear transformation  */
+
+#define THROTTLE_SLOPE_ADC2THROTTLE           100        /* Slope for ADC to throttle linear transformation  */
+#define THROTTLE_DIVISOR_ADC2THROTTLE         69        /* Divisor for ADC to throttle linear transformation  */
+
 
 #define THROTTLE_OFFSET_THROTTLE2TORQUE       4000    /* Offset for throttle to torque linear transformation  */
-#define THROTTLE_SLOPE_THROTTLE2TORQUE        28        /* Slope for throttle to torque linear transformation  */
-#define THROTTLE_DIVISOR_THROTTLE2TORQUE      600        /* Divisor for throttle to torque linear transformation  */
+#define THROTTLE_SLOPE_THROTTLE2TORQUE        12        /* Slope for throttle to torque linear transformation  */
+#define THROTTLE_DIVISOR_THROTTLE2TORQUE      550        /* Divisor for throttle to torque linear transformation  */
 
 #define THROTTLE_DETECTION_THRESHOLD          1000    /* Throttle is considered pressed once it passed this threshold  */
 
 
 /***************** PEDAL TORQUE SENSOR PARAMETERS  ******************************/
 
-#define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient pedal torque sensor filtering */
+#define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient pedal torque sensor filtering  */
 #define PTS_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient pedal torque sensor filtering  */
 
 #define PTS_OFFSET_ADC2PTS                12500    /* Offset for ADC to pedal torque sensor linear transformation  */
@@ -56,9 +58,9 @@
 /***************** POWERTRAIN MANAGEMENT PARAMETERS  ******************************/
 
 #define POWERTRAIN_USE_MOTOR1                             true              /* True if motor1 is used  */
-#define POWERTRAIN_USE_MOTOR2                             false              /* True if motor2 is used  */
+#define POWERTRAIN_USE_MOTOR2                             true              /* True if motor2 is used  */
 #define POWERTRAIN_DEFAULT_MAIN_MOTOR                     M1                /* Default main motor, can be M1 or M2  */
-#define POWERTRAIN_DEFAULT_MODE                           SINGLE_MOTOR      /* Default powertrain mode, can be SINGLE_MOTOR or DUAL_MOTOR  */
+#define POWERTRAIN_DEFAULT_MODE                           DUAL_MOTOR      /* Default powertrain mode, can be SINGLE_MOTOR or DUAL_MOTOR  */
 #define POWERTRAIN_DEFAULT_CONTROL_TYPE                   TORQUE_CTRL        /* Default control type, can be TORQUE_CTRL or SPEED_CTRL  */
 #define POWERTRAIN_M2_TORQUE_INVERSION                    false              /* If true, M2 torque is inverted compared to M1  */
 #define POWERTRAIN_START_THROTTLE_THRESHOLD               1000              /* Throttle value to start powertrain  */
@@ -73,11 +75,10 @@
                                                                               a powertrain restart (OC, SF and SU faults)   */
 #define POWERTRAIN_MAX_MOTOR_TORQUE                       STARTING_TORQUE               /* Maximum motor torque to apply with powertrain management */
 #define POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE              false                              /* Enable dual motor startup when single motor mode is selected */
-#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END           MAX_APPLICATION_SPEED_RPM/2       /* Speed value that dual motor startup strategy stops outputting
+#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END           MAX_APPLICATION_SPEED_RPM/4       /* Speed value that dual motor startup strategy stops outputting
                                                                                                torque */
-#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL      MAX_APPLICATION_SPEED_RPM/4       /* Speed interval value between maximum torque and zero torque,
+#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL      MAX_APPLICATION_SPEED_RPM/8       /* Speed interval value between maximum torque and zero torque,
                                                                                                when using dual motor startup strategy. */
-
 
 #endif                                            
 

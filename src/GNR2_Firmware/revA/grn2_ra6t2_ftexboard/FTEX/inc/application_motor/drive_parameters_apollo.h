@@ -1,12 +1,12 @@
 /**
-  * @file    drive_parameters_e_cells.h
+  * @file    drive_parameters_apollo.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to e_cells motor.
+  *          in order to configure a motor drive. This file is specific to apollo motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_E_CELLS_H
-#define __DRIVE_PARAMETERS_E_CELLS_H
+#ifndef __DRIVE_PARAMETERS_APOLLO_H
+#define __DRIVE_PARAMETERS_APOLLO_H
 
 /************************
  *** Motor Parameters ***
@@ -207,4 +207,4 @@
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA     -5.366197724F /*!< Beta constant to configure butterworth filter for mecanical speed filtering */
 
 
-#endif /*__DRIVE_PARAMETERS_E_CELLS_H*/
+#endif /*__DRIVE_PARAMETERS_APOLLO_H*/

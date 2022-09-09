@@ -145,28 +145,28 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
   {
       .bEnableFoldback = true,
       .FoldbackConfig = TRIM,
-      .hDefaultOutputLimitHigh = STARTING_TORQUE,
+      .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
       .hDefaultOutputLimitLow = 0,
-      .hDecreasingEndValue = MAX_APPLICATION_SPEED_UNIT,
-      .hDecreasingRange = MAX_APPLICATION_SPEED_UNIT/5,
+      .hDecreasingEndValue = FOLDBACK_SPEED_END_VALUE,
+      .hDecreasingRange = FOLDBACK_SPEED_INTERVAL,
   },
   .FoldbackMotorTemperature =
   {
       .bEnableFoldback = false,
       .FoldbackConfig = TRIM,
-      .hDefaultOutputLimitHigh = STARTING_TORQUE,
+      .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
       .hDefaultOutputLimitLow = 0,
-      .hDecreasingEndValue = MOTOR_MAX_TEMPERATURE_C,
-      .hDecreasingRange = MOTOR_MAX_TEMPERATURE_C/3,
+      .hDecreasingEndValue = FOLDBACK_MOTOR_TEMP_END_VALUE,
+      .hDecreasingRange = FOLDBACK_MOTOR_TEMP_INTERVAL,
   },
   .FoldbackHeatsinkTemperature =
   {
       .bEnableFoldback = true,
       .FoldbackConfig = TRIM,
-      .hDefaultOutputLimitHigh = STARTING_TORQUE,
+      .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
       .hDefaultOutputLimitLow = 0,
-      .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C,
-      .hDecreasingRange = 4*(OV_TEMPERATURE_THRESHOLD_C/5),
+      .hDecreasingEndValue = FOLDBACK_HS_TEMP_END_VALUE,
+      .hDecreasingRange = FOLDBACK_HS_TEMP_INTERVAL,
   },
   .FoldbackDynamicMaxTorque = 
   {
@@ -174,7 +174,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .FoldbackConfig = SET_THRESHOLD,
       .hDefaultOutputLimitHigh = STARTING_TORQUE,
       .hDefaultOutputLimitLow =  NOMINAL_TORQUE,
-      .hDecreasingRange = DYNAMICTORQUE_THRESHOLD_SPEED/2,
+      .hDecreasingRange = DYNAMICTORQUE_THRESHOLD_SPEED,
       .hDecreasingEndValue = DYNAMICTORQUE_THRESHOLD_SPEED,
   },
 
@@ -183,8 +183,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
   .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
   .hMaxAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
   .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
-  .hMaxPositiveTorque =				(int16_t)STARTING_TORQUE,
-  .hMinNegativeTorque =				-(int16_t)STARTING_TORQUE,
+  .hMaxPositiveTorque =				(int16_t)NOMINAL_TORQUE,
+  .hMinNegativeTorque =				-(int16_t)NOMINAL_TORQUE,
   .hMaxPositivePower =				(int16_t)MAX_APPLICATION_POSITIVE_POWER,
   .hMinNegativePower =				-(int16_t)MAX_APPLICATION_NEGATIVE_POWER,
   .ModeDefault =					DEFAULT_CONTROL_MODE,
@@ -333,8 +333,8 @@ HallPosSensorHandle_t HallPosSensorM1 =
   .H1PortPin = HALL_POSITION_HU_GPIO_PIN,
   .H2PortPin = HALL_POSITION_HV_GPIO_PIN,
   .H3PortPin = HALL_POSITION_HW_GPIO_PIN,
-  .fFilterAlpha = HALL_FILTER_BUTTERWORTH_ALPHA,
-  .fFilterBeta = HALL_FILTER_BUTTERWORTH_BETA,
+  .fFilterAlpha = MEC_SPEED_FILTER_BUTTERWORTH_ALPHA,
+  .fFilterBeta = MEC_SPEED_FILTER_BUTTERWORTH_BETA,
 };
 
 /**
@@ -414,4 +414,7 @@ RotorPositionObserverHandle_t RotorPosObsM1 =
 
 	.hKdGainDef = ROTOR_POS_OBS_KD,
 	.hKdDivisorPOW2 = (uint16_t) ROTOR_POS_OBS_KDDIV_LOG,
+    
+    .fFilterAlpha = MEC_SPEED_FILTER_BUTTERWORTH_ALPHA,
+    .fFilterBeta = MEC_SPEED_FILTER_BUTTERWORTH_BETA,
 };

@@ -175,7 +175,7 @@ void Comm_BootUp(void)
         .wRegAddrHeatsinkTemp = CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2),
         .wRegAddrStartMotor = CO_DEV(CO_OD_REG_MOTOR_START, M2),
         .wRegAddrFaultAck = CO_DEV(CO_OD_REG_FAULT_ACK, M2),
-        .wRegAddrTorqueRef = CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2),
+        .wRegAddrTorqueRef = CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2),       
     };
     SlaveMCInterface_Init(&SlaveM2, &CONodeGNR, M2RegAddr);
 

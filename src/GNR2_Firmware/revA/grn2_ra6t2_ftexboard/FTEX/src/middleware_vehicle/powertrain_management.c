@@ -434,7 +434,7 @@ bool PWRT_IsPowertrainActive(PWRT_Handle_t * pHandle)
 	}
     else
     {
-        bM1Active = false;
+        bM1Active = true;
     }
 	if (PWRT_IsMotor2Used(pHandle))
 	{
@@ -445,7 +445,7 @@ bool PWRT_IsPowertrainActive(PWRT_Handle_t * pHandle)
 	}
     else
     {
-        bM2Active = false;
+        bM2Active = true;
     }
     
 	return bM1Active & bM2Active;

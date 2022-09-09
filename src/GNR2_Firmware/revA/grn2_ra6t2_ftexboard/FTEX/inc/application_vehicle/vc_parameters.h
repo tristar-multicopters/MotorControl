@@ -25,6 +25,10 @@
 
 #include "vc_parameters_e_cells.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_APOLLO
+
+#include "vc_parameters_apollo.h"
+
 #endif
 
 #endif /*__VC_PARAMETERS_H*/

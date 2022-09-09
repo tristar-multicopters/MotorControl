@@ -1,6 +1,6 @@
 /**
   * @file    vc_parameters_e_cells.h
-  * @brief   This file contains the parameters needed in order to configure the motor of grizzly bike.
+  * @brief   This file contains the parameters needed in order to configure the motor of e-cell bike.
   *
 */
 
@@ -15,8 +15,8 @@
 
 /***************** THROTTLE PARAMETERS  ******************************/
 
-#define THROTTLE_FILTER_ALPHA                 2.27F    /* Butterworth alpha coefficient */
-#define THROTTLE_FILTER_BETA                  -0.27F   /* Butterworth beta coefficient */
+#define THROTTLE_FILTER_ALPHA                 2.27F    /* Butterworth alpha coefficient for throttle filtering */
+#define THROTTLE_FILTER_BETA                  -0.27F   /* Butterworth beta coefficient for throttle filtering */
 
 #define THROTTLE_OFFSET_ADC2THROTTLE          12500    /* Offset for ADC to throttle linear transformation  */
 
@@ -33,8 +33,8 @@
 
 /***************** PEDAL TORQUE SENSOR PARAMETERS  ******************************/
 
-#define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient */
-#define PTS_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient */
+#define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient pedal torque sensor filtering  */
+#define PTS_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient pedal torque sensor filtering  */
 
 #define PTS_OFFSET_ADC2PTS                12500    /* Offset for ADC to pedal torque sensor linear transformation  */
 #define PTS_SLOPE_ADC2PTS                 5        /* Slope for ADC to pedal torque sensor linear transformation  */

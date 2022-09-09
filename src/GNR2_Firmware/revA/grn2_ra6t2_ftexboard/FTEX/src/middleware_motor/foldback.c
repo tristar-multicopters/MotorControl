@@ -80,15 +80,15 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
             wAux = (uint32_t)( ( pHandle->hMaxOutputLimitHigh - pHandle->hDefaultOutputLimitLow )*( hValue - pHandle->hDecreasingEndValue ) );                
             wAux /= (uint32_t)(hStartValue - pHandle->hDecreasingEndValue);
             wAux += (uint32_t) pHandle->hMaxOutputLimitLow;
-            hMaxOutput = -(int16_t)wAux;
+            hMaxOutput = (int16_t)wAux;
         }
         else if (hValue >= hStartValue)
         {
-				hMaxOutput = - pHandle->hMaxOutputLimitHigh;       // Pass higher threshold if input is lower than control range
+				hMaxOutput =  pHandle->hMaxOutputLimitHigh;       // Pass higher threshold if input is lower than control range
         }
         else
         {
-				hMaxOutput = - pHandle->hMaxOutputLimitLow;        // Pass lower threshold if input is higher than control range
+				hMaxOutput =  pHandle->hMaxOutputLimitLow;        // Pass lower threshold if input is higher than control range
         }
     }
 	
@@ -99,20 +99,24 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
 int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariable, int16_t hValue)
 {
 
-    int16_t hOutputVariable = 0;
+    int16_t hMaxOutput,hOutputVariable = 0;
     
 	if (pHandle->bEnableFoldback)
 	{
             if(pHandle->FoldbackConfig == TRIM)  // Test if foldback instance is used to trim the inputs.
             {
-                hOutputVariable =  Foldback_GetMaxOutput(pHandle, hValue);
-                if ( hInputVariable > hOutputVariable )  // If input is greater than Calculated value do nothing as we are already outputting calculated variable
-                {}  // do nothing
-                else if ( hInputVariable < hOutputVariable && pHandle->bIsInverted ) // If input is smaller than Calculated value in negative scale do nothing as we are already outputting calculated variable                
-                {}  // do nothing
+                hMaxOutput =  Foldback_GetMaxOutput(pHandle, hValue);
+                if ( hInputVariable > hMaxOutput )  // If input is greater than maximum possible value 
+                {
+                    hOutputVariable = hMaxOutput; 
+                }  
+                else if ( hInputVariable < - hMaxOutput ) // If input is smaller than maximum possible value               
+                { 
+                    hOutputVariable = - hMaxOutput;
+                } 
                 else 
-                { hOutputVariable = hInputVariable;} // set output as input
-                
+                { 
+                    hOutputVariable = hInputVariable;} // set output as input
             }    
             else                    // Foldback instance is used to calculate dynamic thresholds.
             {
@@ -167,4 +171,5 @@ void Foldback_UpdateMaxValue(Foldback_Handle_t * pHandle, int16_t hMaxValue)
     {
         pHandle->hMaxOutputLimitHigh = hMaxValue; 
     }
+    
 }

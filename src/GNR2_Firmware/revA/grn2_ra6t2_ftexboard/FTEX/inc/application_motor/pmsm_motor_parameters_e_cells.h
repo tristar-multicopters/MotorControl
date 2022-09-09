@@ -1,6 +1,6 @@
 /**
   * @file    pmsm_motor_parameters_e-cells.h
-  * @brief   This file contains the parameters needed in order to configure the motor of e-cells bike.
+  * @brief   This file contains the parameters needed in order to configure the motor of e-cells motor.
   *
 */
 
@@ -28,9 +28,9 @@
 #define NOMINAL_TORQUE     1080  /* Nominal torque to apply to motor in cNm  */
 #define STARTING_TORQUE    1276  /* Maximum starting torque to apply to motor in cNm  */
 #define NOMINAL_PEAK_CURRENT    13000 /* Maximum current amplitude that can be injected
-                                        //    per phase in digital Amps */
+                                          per phase in digital Amps */
 #define MOTOR_MAX_SPEED_RPM     1875 /*!< Maximum rated speed  */
-#define MOTOR_MAGNET_FLUX     0.013 
+#define MOTOR_MAGNET_FLUX     0.013
 #define MOTOR_VOLTAGE_CONSTANT  24.5 /*!< Volts RMS ph-ph /kRPM */
 
 #define ID_DEMAG                -1000 /*!< Demagnetization current */
@@ -41,16 +41,13 @@
    if the corresponding sensor is actually present in the motor         */
 
 /*** Hall sensors ***/
-#define HALL_SENSORS_PLACEMENT  DEGREES_120 /*!<Define here the
-                                                 mechanical position of the sensors
+#define HALL_SENSORS_PLACEMENT  DEGREES_120 /*!< Mechanical position of the sensors
                                                  withreference to an electrical cycle.
                                                  It can be either DEGREES_120 or
                                                  DEGREES_60 */
 
-#define HALL_PHASE_SHIFT        60 /*!< Define here in degrees
-                                                 the electrical phase shift between
-                                                 the low to high transition of
-                                                 signal H1 and the maximum of
-                                                 the Bemf induced on phase A */
+#define HALL_PHASE_SHIFT        60 /*!< Electrical phase shift in degree between the low to high
+                                        transition of signal H1 and the zero crossing of the Bemf induced
+                                        between phase A and B */
 
 #endif

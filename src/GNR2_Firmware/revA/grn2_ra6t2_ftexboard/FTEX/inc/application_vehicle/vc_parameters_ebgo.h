@@ -15,24 +15,24 @@
 
 /***************** THROTTLE PARAMETERS  ******************************/
 
-#define THROTTLE_FILTER_ALPHA                 2.27F    /* Butterworth alpha coefficient */
-#define THROTTLE_FILTER_BETA                  -0.27F   /* Butterworth beta coefficient */
+#define THROTTLE_FILTER_ALPHA                 2.27F    /* Butterworth alpha coefficient for throttle filtering */
+#define THROTTLE_FILTER_BETA                  -0.27F   /* Butterworth beta coefficient for throttle filtering */
 
 #define THROTTLE_OFFSET_ADC2THROTTLE          12500    /* Offset for ADC to throttle linear transformation  */
 #define THROTTLE_SLOPE_ADC2THROTTLE           5        /* Slope for ADC to throttle linear transformation  */
 #define THROTTLE_DIVISOR_ADC2THROTTLE         3        /* Divisor for ADC to throttle linear transformation  */
 
 #define THROTTLE_OFFSET_THROTTLE2TORQUE       4000    /* Offset for throttle to torque linear transformation  */
-#define THROTTLE_SLOPE_THROTTLE2TORQUE        14        /* Slope for throttle to torque linear transformation  */
-#define THROTTLE_DIVISOR_THROTTLE2TORQUE      600        /* Divisor for throttle to torque linear transformation  */
+#define THROTTLE_SLOPE_THROTTLE2TORQUE        12        /* Slope for throttle to torque linear transformation  */
+#define THROTTLE_DIVISOR_THROTTLE2TORQUE      570        /* Divisor for throttle to torque linear transformation  */
 
 #define THROTTLE_DETECTION_THRESHOLD          1000    /* Throttle is considered pressed once it passed this threshold  */
 
 
 /***************** PEDAL TORQUE SENSOR PARAMETERS  ******************************/
 
-#define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient */
-#define PTS_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient */
+#define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient for pedal torque sensor filtering */
+#define PTS_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient pedal torque sensor filtering */
 
 #define PTS_OFFSET_ADC2PTS                12500    /* Offset for ADC to pedal torque sensor linear transformation  */
 #define PTS_SLOPE_ADC2PTS                 5        /* Slope for ADC to pedal torque sensor linear transformation  */
@@ -71,7 +71,7 @@
 #define POWERTRAIN_WHEEL_SPEED_SENSOR_PPR                 2                  /* Number of electrical pulses per wheel rotation */
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT               200                /* Number of task ticks to wait after a fault occurs to attempt
                                                                               a powertrain restart (OC, SF and SU faults)   */
-#define POWERTRAIN_MAX_MOTOR_TORQUE                       NOMINAL_PEAK_TORQUE               /* Maximum motor torque to apply with powertrain management */
+#define POWERTRAIN_MAX_MOTOR_TORQUE                       STARTING_TORQUE               /* Maximum motor torque to apply with powertrain management */
 #define POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE              false                              /* Enable dual motor startup when single motor mode is selected */
 #define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END           MAX_APPLICATION_SPEED_RPM/2       /* Speed value that dual motor startup strategy stops outputting
                                                                                                torque */

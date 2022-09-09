@@ -1,6 +1,6 @@
 /**
   * @file    pmsm_motor_parameters_ebgo.h
-  * @brief   This file contains the parameters needed in order to configure the motor of ebgo bike.
+  * @brief   This file contains the parameters needed in order to configure the motor of ebgo motor.
   *
 */
 
@@ -25,11 +25,11 @@
                                    *Amplifying network gain)/(MCU supply voltage/2)
 */
 
-#define NOMINAL_TORQUE     1453  /* Nominal torque to apply to motor in cNm  */
-#define STARTING_TORQUE    1718  /* Maximum starting torque to apply to motor in cNm  */
-#define NOMINAL_PEAK_CURRENT    11000 /* Maximum current amplitude that can be injected
+#define NOMINAL_TORQUE     1178  /* Nominal torque to apply to motor in cNm  */
+#define STARTING_TORQUE    1300  /* Maximum starting torque to apply to motor in cNm  */
+#define NOMINAL_PEAK_CURRENT    14000 /* Maximum current amplitude that can be injected
                                             per phase in digital Amps */
-#define MOTOR_MAX_SPEED_RPM     2640 /*!< Maximum rated speed  */
+#define MOTOR_MAX_SPEED_RPM     2500//2750 /*!< Maximum rated speed  */
 #define MOTOR_MAGNET_FLUX       0.0195 /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
 #define MOTOR_VOLTAGE_CONSTANT  28.84 /*!< Volts RMS ph-ph /kRPM */
 #define ID_DEMAG                -1000 /*!< Demagnetization current */
@@ -38,17 +38,14 @@
 /***************** MOTOR SENSORS PARAMETERS  ******************************/
 
 /*** Hall sensors ***/
-#define HALL_SENSORS_PLACEMENT  DEGREES_120 /*!<Define here the
-                                                 mechanical position of the sensors
+#define HALL_SENSORS_PLACEMENT  DEGREES_120 /*!< Mechanical position of the sensors
                                                  withreference to an electrical cycle.
                                                  It can be either DEGREES_120 or
                                                  DEGREES_60 */
 
-#define HALL_PHASE_SHIFT        60 /*!< Define here in degrees
-                                                 the electrical phase shift between
-                                                 the low to high transition of
-                                                 signal H1 and the maximum of
-                                                 the Bemf induced on phase A */
+#define HALL_PHASE_SHIFT        60 /*!< Electrical phase shift in degree between the low to high
+                                        transition of signal H1 and the zero crossing of the Bemf induced
+                                        between phase A and B */
 
 																						
 #endif																						

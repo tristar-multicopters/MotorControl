@@ -7,11 +7,11 @@
 #define VEHICLE_EBGO                  1
 #define VEHICLE_GRIZZLY               2
 #define VEHICLE_E_CELLS               3
-
+#define VEHICLE_APOLLO                4
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
-#define GNR_MASTER                    0                   /* If master, controller manages canbus communication with slaves and vehicle control layer.  */
+#define GNR_MASTER                    1                   /* If master, controller manages canbus communication with slaves and vehicle control layer.  */
 #define GNR2_MASTER_NODE_ID           0x01                /* Node-ID of ganrunner master */
 #define GNR2_SLAVE_NODE_ID            0x02                /* Node-ID of ganrunner slave */
 
@@ -19,7 +19,7 @@
 #define DEBUGMODE_MOTOR_CONTROL       0                   /* Disable vehicle control and communications to debug only motor control layer */
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
-#define VEHICLE_SELECTION             VEHICLE_E_CELLS     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_EBGO     /* Vehicle selection to adapt motor/vehicle parameters.
                                                          Will be changed in the future for a more flexible way
                                                          of parametrization. */
 /*

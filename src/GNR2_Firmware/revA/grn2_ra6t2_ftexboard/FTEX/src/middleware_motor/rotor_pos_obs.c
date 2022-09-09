@@ -18,6 +18,11 @@ void RotorPosObs_Init(RotorPositionObserverHandle_t * pHandle)
 	pHandle->hKpGain = pHandle->hKpGainDef;
 	pHandle->hKdGain = pHandle->hKdGainDef;
 	pHandle->hKiGain = pHandle->hKiGainDef;
+    
+    SignalFiltering_Init(&pHandle->SpeedFilter);
+    SignalFiltering_ConfigureButterworthFOLP(&pHandle->SpeedFilter,
+                                                pHandle->fFilterAlpha,
+                                                    pHandle->fFilterBeta);
 	
 	return;
 }
@@ -31,6 +36,8 @@ void RotorPosObs_Clear(RotorPositionObserverHandle_t * pHandle)
 	pHandle->wEstElAngle = pHandle->pHallSensor->Super.hElAngle*INT16_MAX;
 	pHandle->wEstElSpeedDpp = pHandle->pHallSensor->Super.hElSpeedDpp*INT16_MAX;
 	pHandle->wEstMechTorque = 0;
+    
+    SignalFiltering_Clear(&pHandle->SpeedFilter);
 	
 	return;
 }
@@ -88,9 +95,11 @@ bool RotorPosObs_CalcMecSpeedUnit(RotorPositionObserverHandle_t * pHandle, int16
 {
 	bool bIsReliable = SpdPosFdbk_GetReliability(&pHandle->pHallSensor->Super);
 	bIsReliable &= SpdPosFdbk_CalcReliability (&pHandle->Super, pMecSpeedUnit);
+    
+    pHandle->hFiltElSpeedDpp = SignalFiltering_CalcOutputI16(&pHandle->SpeedFilter, pHandle->hEstElSpeedDpp);
 	
     /* Convert el_dpp to MecUnit */
-    *pMecSpeedUnit = (int16_t)(( pHandle->hEstElSpeedDpp * (int32_t)pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT) /
+    *pMecSpeedUnit = (int16_t)(( pHandle->hFiltElSpeedDpp * (int32_t)pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT) /
                                                             ((int32_t) pHandle->Super.DPPConvFactor * (int32_t)pHandle->Super.bElToMecRatio));
 
 	pHandle->Super.hAvrMecSpeedUnit = *pMecSpeedUnit;

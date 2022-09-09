@@ -16,9 +16,7 @@
                                                        before being converted into
                                                        digital value */
 
-/*  ICSs gains in case of isolated current sensors,
-        amplification gain for shunts based sensing */
-#define AMPLIFICATION_GAIN            0.01
+#define AMPLIFICATION_GAIN            0.01   /* V/A of current sensors */
 
 
 /************ Temperature sensing section ***************/

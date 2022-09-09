@@ -324,9 +324,9 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     
     int16_t hOutputTorque, hMaxTorque; 
     hMaxTorque = Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxTorque, NULL,(int16_t) abs(hMeasuredSpeed) );
-    Foldback_UpdateMaxValue(&pHandle->FoldbackMotorSpeed, &hMaxTorque);
-    Foldback_UpdateMaxValue(&pHandle->FoldbackMotorTemperature, &hMaxTorque);
-    Foldback_UpdateMaxValue(&pHandle->FoldbackHeatsinkTemperature, &hMaxTorque);
+    Foldback_UpdateMaxValue(&pHandle->FoldbackMotorSpeed, hMaxTorque);
+    Foldback_UpdateMaxValue(&pHandle->FoldbackMotorTemperature, hMaxTorque);
+    Foldback_UpdateMaxValue(&pHandle->FoldbackHeatsinkTemperature, hMaxTorque);
     
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)(abs(hMeasuredSpeed)));
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);

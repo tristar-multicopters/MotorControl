@@ -24,6 +24,10 @@
 
 #include "drive_parameters_e_cells.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_APOLLO
+
+#include "drive_parameters_apollo.h"
+
 #endif
 
 #endif /*__DRIVE_PARAMETERS_H*/

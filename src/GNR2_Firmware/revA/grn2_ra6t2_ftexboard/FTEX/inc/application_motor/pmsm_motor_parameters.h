@@ -24,6 +24,10 @@
 
 #include "pmsm_motor_parameters_e_cells.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_APOLLO
+
+#include "pmsm_motor_parameters_apollo.h"
+
 #endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/
