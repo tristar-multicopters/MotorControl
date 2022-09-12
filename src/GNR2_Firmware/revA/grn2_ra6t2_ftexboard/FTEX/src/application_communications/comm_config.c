@@ -18,7 +18,7 @@ SlaveMotorHandle_t SlaveM2;
 UART_Handle_t UART0Handle =
 {
     .UARTBaudrate = BAUD115200,
-    .UARTProtocol = UART_DISABLE,
+    .UARTProtocol = UART_LOG_HS,
     .pUARTInstance = &g_uart9,
 };
 

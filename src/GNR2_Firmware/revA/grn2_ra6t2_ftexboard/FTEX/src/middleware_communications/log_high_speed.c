@@ -47,7 +47,7 @@ void LogHS_Init(LogHighSpeed_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Ha
 				
 		//Initial behavior of the logger
 				
-		pHandle->LogHSEnable      = true; // States if the logger is active by default
+       pHandle->LogHSEnable      = true; // States if the logger is active by default
     pHandle->BufferWrapAround = true; // States if the buffer automatically wraps around
       
 }

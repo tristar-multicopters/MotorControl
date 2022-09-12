@@ -24,7 +24,8 @@ class State(Enum):
     WRITE_DATA_IN_CSV  = 4 
 
 
-POSITIVEINT16SIZE = 32767 
+POSITIVEINT16SIZE = 32767
+POSITIVEINT32SIZE = 65535 
 
 global state 
 global DataReq        #number of bytes we want to receive
@@ -257,8 +258,7 @@ def WriteInCSV():
                     nextVal = lowVal + highVal
                         
                 if nextVal > POSITIVEINT16SIZE:    #manually apply the negative values because python int is 32 bits and GNR int is 16 bits
-                            nextVal -= POSITIVEINT16SIZE
-                            nextVal *= -1
+                            nextVal -= POSITIVEINT32SIZE
 
                 row.append(str(nextVal))
 

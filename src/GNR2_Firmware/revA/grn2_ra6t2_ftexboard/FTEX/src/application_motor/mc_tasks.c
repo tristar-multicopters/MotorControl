@@ -552,10 +552,10 @@ uint8_t MC_HighFrequencyTask(void)
 //        BemfObsInputs.Ialfa_beta = FOCVars[M1].Ialphabeta;
 //        BemfObsInputs.Vbus = VbusSensor_GetAvBusVoltageDigital(&(pBusSensorM1->Super));
 //        BemfObsPll_CalcElAngle (&BemfObserverPllM1, &BemfObsInputs);
-//                BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
+//        BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
     }
 
-//		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
+		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
 				
     return bMotorNbr;
 }
