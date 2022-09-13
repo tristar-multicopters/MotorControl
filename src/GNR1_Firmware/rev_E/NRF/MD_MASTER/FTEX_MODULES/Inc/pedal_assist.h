@@ -58,6 +58,8 @@ typedef struct {
 	int16_t	hMaxTorqueRatio;
 	uint16_t	hMaxSpeedRatio;
 	uint8_t bMaxLevel;
+	
+	uint8_t bLevel_Coeff; /*  User Coefficient used to multiply the Torque ramp if needed */
 		
 	uint8_t	bPulseNb;		/* NUMBER_OF_PINS of pulse per rotation */
 	
