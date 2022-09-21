@@ -21,6 +21,26 @@
 #include "pedal_torque_sensor.h"
 #include "wheel_speed_sensor.h"
 
+
+// ============================== Defines =============================== // 
+#define PAS_PERCENTAGE	(uint8_t)100		/* Percentage for PAS use */
+
+// ======================== Configuration enums ======================== // 
+
+typedef enum
+{
+	PAS_LEVEL_0 = 0,
+	PAS_LEVEL_1,
+	PAS_LEVEL_2,
+	PAS_LEVEL_3,
+	PAS_LEVEL_4,
+	PAS_LEVEL_5,
+	PAS_LEVEL_6,
+	PAS_LEVEL_7,
+	PAS_LEVEL_8,
+	PAS_LEVEL_9,
+} PasLevel_t;
+
 typedef enum
 {
     HUB,
@@ -39,6 +59,7 @@ typedef enum
     SPEED_CTRL,
 } CtrlType_t;
 
+// ======================== Configuration structures ======================== // 
 typedef struct
 { 
     bool bUseMotorM1;                    /* To set once, true if motor 1 is used */
@@ -58,10 +79,19 @@ typedef struct
     
     int16_t hPASMaxTorque;               /* PAS Maximum given torque*/
     uint16_t hPASMaxSpeed;               /* PAS maximum given speed */
-    
+		
+    uint8_t bMaxLevel;                   /* PAS maximum given Level */
+    uint8_t bCoeffLevel;                 /*  User Coefficient used to multiply the Torque ramp if needed */
+    int16_t	hMaxTorqueRatio;             /* PAS maximum torque ratio */
+    uint16_t	hMaxSpeedRatio;          /* PAS maximum speed ratio */
+	
+    bool bTorqueSensorUse;               /* Torque sensor use flag */
+	
     uint32_t MotorToHubGearRatio;        /* Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002 */
     uint16_t hFaultManagementTimeout;    /* Number of ticks the state machine should stay on fault state before restart */
-                    
+
+		PasLevel_t bPasLevel;								 /* PAS Level selection*/
+		
 } PWRT_Parameters_t;
 
 typedef struct
@@ -71,15 +101,18 @@ typedef struct
     BRK_Handle_t * pBrake;                        /* Pointer to brake handle */
     MS_Handle_t * pMS;                            /* Pointer to motor selector handle */
     PWREN_Handle_t * pPWREN;                      /* Pointer to power enable pin handle */
-		PedalSpeedSensorHandle_t * pPSS;							/* Pointer to Pedal Speed Sensor handle */
-		PedalTorqSensorHandle_t * pPTS;								/* Pointer to Pedal Torque Sensor handle */	
-    WheelSpeedSensorHandle_t * pWSS;     					/* Pointer to Wheel Speed Sensor handle */
+    PedalSpeedSensorHandle_t * pPSS;              /* Pointer to Pedal Speed Sensor handle */
+    PedalTorqSensorHandle_t * pPTS;               /* Pointer to Pedal Torque Sensor handle */	
+    WheelSpeedSensorHandle_t * pWSS;              /* Pointer to Wheel Speed Sensor handle */
     
-		uint8_t bMainMotor;                           /* Main motor selection. It is updated by user using motor selector switch */
+    uint8_t bMainMotor;                           /* Main motor selection. It is updated by user using motor selector switch */
     int16_t aTorque[2];                           /* Array of torque reference, first element is for M1, second is for M2 */
     int16_t aSpeed[2];                            /* Array of speed reference, first element is for M1, second is for M2 */
+    
+    int16_t hTorqueSelect;                        /* Select torque to feed for motor control */
     uint8_t bCurrentAssistLevel;                  /* Current pedal assist level */
-
+    bool bPASDetected;                            /* Use PAS flag  for detection */
+	
     Foldback_Handle_t DCVoltageFoldback;          /* Foldback handle using DCbus voltage */
     Foldback_Handle_t SpeedFoldbackStartupDualMotor;     /* Foldback handle using speed for dual motor control */
     
@@ -91,6 +124,7 @@ typedef struct
     
 } PWRT_Handle_t;
 
+// ======================== Public Functions ======================== //
 /**
     * @brief  Module initialization, to be called once before using it
     * @param  Powertrain handle
@@ -266,6 +300,62 @@ void PWRT_SetAssistLevel(PWRT_Handle_t * pHandle, uint8_t bLevel);
     * @retval Current pedal assist level in uint8_t format
     */
 uint8_t PWRT_GetAssistLevel(PWRT_Handle_t * pHandle);
+
+/**
+	* @brief  Set PAS level
+	* @param  Powertrain handle
+	* @param  PAS level handle
+	* @retval None
+	*/
+void PWRT_SetAssistLevel(PWRT_Handle_t * pHandle, PasLevel_t bLevel);
+
+/**
+	* @brief  Get PAS level
+	* @param  Powertrain handle
+	* @retval Current Pedal assit level
+	*/
+PasLevel_t PWRT_GetAssistLevel (PWRT_Handle_t * pHandle);
+
+/**
+	* @brief  Set Pedal Assist standard torque based on screen informations
+	* @param  Powertrain handle
+	* @retval pRefTorque in int16
+	*/
+int16_t PWRT_GetPASTorque(PWRT_Handle_t * pHandle);
+
+/**
+	* @brief  Set Pedal Assist standard speed based on screen informations
+	* @param  Powertrain handle
+	* @retval pRefTorque in int16
+	*/
+void PWRT_PASSetMaxSpeed(PWRT_Handle_t * pHandle);
+/**
+	* @brief  Set Pedal Assist torque based on the pedal Torque Sensor
+	* @param  Powertrain handle
+	* @retval pRefTorqueS in int16
+	*/
+int16_t PWRT_GetTorqueFromTS(PWRT_Handle_t * pHandle);
+
+/**
+	* @brief  Check the PAS Presence Flag
+	* @param  Powertrain handle
+	* @retval None
+	*/
+void PWRT_UpdatePASDetection (PWRT_Handle_t * pHandle);
+
+/**
+	* @brief  Return if pedals are moving or not
+	* @param  Powertrain handle
+	* @retval True if pedal movement is detected, false otherwise
+	*/
+bool PWRT_IsPASDetected(PWRT_Handle_t * pHandle);
+
+/**
+	* @brief  Select Control assistance based on Throttle or PAS
+	* @param  Powertrain handle
+	* @retval pHandle->pTorqueSelect in int16                                                                                    
+	*/
+int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle);
 
 
 #endif /*__POWERTRAIN_MANAGEMENT_H*/

@@ -41,7 +41,6 @@ struct {
 
 /************* TASKS ****************/
 
-
 /**
   * @brief  It initializes the vehicle control application. Needs to be called before using
     *                    vehicle control related modules.
@@ -71,6 +70,8 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
     {
         PWRT_UpdatePowertrainPeripherals(pVCI->pPowertrain);
         PWRT_CalcMotorTorqueSpeed(pVCI->pPowertrain);
+        // Check PAS activation based on torque or cadence
+        PWRT_UpdatePASDetection(pVCI->pPowertrain);
         
         #if ENABLE_VC_DAC_DEBUGGING
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);
