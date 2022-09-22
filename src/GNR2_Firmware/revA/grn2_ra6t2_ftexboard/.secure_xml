@@ -22,7 +22,7 @@
     <node id="board.clock.pll.mul" option="board.clock.pll.mul.120"/>
     <node id="board.clock.pll.display" option="board.clock.pll.display.value"/>
     <node id="board.clock.pll2.source" option="board.clock.pll2.source.disabled"/>
-    <node id="board.clock.pll2.div" option="board.clock.pll2.div.1"/>
+    <node id="board.clock.pll2.div" option="board.clock.pll2.div.3"/>
     <node id="board.clock.pll2.mul" option="board.clock.pll2.mul.100"/>
     <node id="board.clock.pll2.display" option="board.clock.pll2.display.value"/>
     <node id="board.clock.clock.source" option="board.clock.clock.source.pll"/>
@@ -38,7 +38,7 @@
     <node id="board.clock.pclkd.div" option="board.clock.pclkd.div.2"/>
     <node id="board.clock.fclk.div" option="board.clock.fclk.div.4"/>
     <node id="board.clock.clkout.div" option="board.clock.clkout.div.1"/>
-    <node id="board.clock.scispiclk.div" option="board.clock.scispiclk.div.2"/>
+    <node id="board.clock.scispiclk.div" option="board.clock.scispiclk.div.8"/>
     <node id="board.clock.canfdclk.div" option="board.clock.canfdclk.div.6"/>
     <node id="board.clock.gptclk.div" option="board.clock.gptclk.div.2"/>
     <node id="board.clock.iicclk.div" option="board.clock.iicclk.div.1"/>
@@ -70,12 +70,12 @@
       <configSetting altId="canfd0.ctx0.pb13" configurationId="canfd0.ctx0" isUsedByDriver="true"/>
       <configSetting altId="dac122.da2.pc04" configurationId="dac122.da2"/>
       <configSetting altId="dac123.da3.pc05" configurationId="dac123.da3"/>
-      <configSetting altId="gpt4.gtioc4a.pe10" configurationId="gpt4.gtioc4a" isUsedByDriver="true"/>
-      <configSetting altId="gpt4.gtioc4b.pe13" configurationId="gpt4.gtioc4b" isUsedByDriver="true"/>
-      <configSetting altId="gpt5.gtioc5a.pe11" configurationId="gpt5.gtioc5a" isUsedByDriver="true"/>
-      <configSetting altId="gpt5.gtioc5b.pe14" configurationId="gpt5.gtioc5b" isUsedByDriver="true"/>
-      <configSetting altId="gpt6.gtioc6a.pe12" configurationId="gpt6.gtioc6a" isUsedByDriver="true"/>
-      <configSetting altId="gpt6.gtioc6b.pe15" configurationId="gpt6.gtioc6b" isUsedByDriver="true"/>
+      <configSetting altId="gpt4.gtioc4a.pe10" configurationId="gpt4.gtioc4a"/>
+      <configSetting altId="gpt4.gtioc4b.pe13" configurationId="gpt4.gtioc4b"/>
+      <configSetting altId="gpt5.gtioc5a.pe11" configurationId="gpt5.gtioc5a"/>
+      <configSetting altId="gpt5.gtioc5b.pe14" configurationId="gpt5.gtioc5b"/>
+      <configSetting altId="gpt6.gtioc6a.pe12" configurationId="gpt6.gtioc6a"/>
+      <configSetting altId="gpt6.gtioc6b.pe15" configurationId="gpt6.gtioc6b"/>
       <configSetting altId="gpt9.gtioc9b.pa10" configurationId="gpt9.gtioc9b" isUsedByDriver="true"/>
       <configSetting altId="gpt_poega.gtetrga.pc14" configurationId="gpt_poega.gtetrga"/>
       <configSetting altId="icu3.irq3_dash_ds.pb05" configurationId="icu3.irq3_dash_ds"/>
@@ -88,10 +88,14 @@
       <configSetting altId="pa09.input" configurationId="pa09"/>
       <configSetting altId="pb04.output.low" configurationId="pb04"/>
       <configSetting altId="pc00.input" configurationId="pc00"/>
+      <configSetting altId="pd00.output.high" configurationId="pd00"/>
       <configSetting altId="pd07.output.low" configurationId="pd07"/>
       <configSetting altId="pd15.input" configurationId="pd15"/>
       <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9"/>
       <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9"/>
+      <configSetting altId="spi1.miso1.pc11" configurationId="spi1.miso1"/>
+      <configSetting altId="spi1.mosi1.pc12" configurationId="spi1.mosi1"/>
+      <configSetting altId="spi1.rspck1.pc10" configurationId="spi1.rspck1"/>
     </pincfg>
   </raPinConfiguration>
 </raConfiguration>

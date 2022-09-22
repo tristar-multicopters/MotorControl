@@ -17,6 +17,11 @@
 #include "co_timer_ra6t2.h"
 #include "board_hardware.h"
 
+#include "uCAL_SPI.h"
+#include "MX25L3233F_driver.h"
+#include "serial_flash.h"
+#include "serial_flash_storage.h"
+
 //============================ DEFINES ============================//
 
 
@@ -27,6 +32,10 @@ extern SlaveMotorHandle_t SlaveM2;
 
 extern APT_Handle_t  LCD_APT_handle;
 extern UART_Handle_t  UART0Handle;
+
+extern SPI_Handle_t	SPI1Handle;
+extern EFlash_Storage_Handle_t EFlash_Storage_Handle;
+
 extern LogHighSpeed_Handle_t LogHS_handle;
 
 #endif /* __COMM_CONFIG_H */

@@ -17,6 +17,7 @@ extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
 extern void ProcessUARTFrames(void * pvParameter);
 extern void CANOpenTask(void * pvParameter);
+extern void Memory_Task (void * pvParameter);
 
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
 
@@ -30,6 +31,7 @@ static bool AGTInit(void);
 static bool UARTInit(void);
 static bool CANInit(void);
 static bool IIRFAInit(void);
+static bool SPIInit(void);
 
 
 //****************** THREAD HANDLES ******************//
@@ -41,6 +43,7 @@ osThreadId_t THR_VC_StateMachine_handle;
 osThreadId_t COMM_Uart_handle;
 osThreadId_t CANOpenTaskHandle;
 osThreadId_t CANRxFrameHandle;
+osThreadId_t MemoryTaskHandle;
 
 //****************** THREAD ATTRIBUTES ******************//
 
@@ -56,6 +59,12 @@ static const osThreadAttr_t ThAtt_MC_MediumFrequencyTask = {
     .name = "MC_MediumFrequencyTask",
     .stack_size = 1024,
     .priority = osPriorityNormal5
+};
+
+static const osThreadAttr_t ThAtt_Memory = {
+    .name = "Memory_Task",
+    .stack_size = 1024,
+    .priority = osPriorityAboveNormal4 // High priority to manage timer 
 };
 
 #if !DEBUGMODE_MOTOR_CONTROL
@@ -92,6 +101,7 @@ static const osThreadAttr_t ThAtt_CANOpen = {
     .priority = osPriorityHigh // High priority to manage timer elapsing asap
 };
 
+
 #endif
 
 /**************************************************************/
@@ -111,6 +121,7 @@ void gnr_main(void)
     AGTInit();
     //UARTInit();
     CANInit();
+		SPIInit();
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
 
@@ -133,6 +144,10 @@ void gnr_main(void)
     MC_SafetyTask_handle            = osThreadNew(startMCSafetyTask,
                                       NULL,
                                       &ThAtt_MC_SafetyTask);
+																			
+		MemoryTaskHandle                = osThreadNew(Memory_Task,
+                                      NULL,
+                                      &ThAtt_Memory); 
 
     #if !DEBUGMODE_MOTOR_CONTROL
     #if GNR_MASTER
@@ -156,8 +171,8 @@ void gnr_main(void)
 
    	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
                                       NULL,
-                                      &ThAtt_UART);
-
+                                      &ThAtt_UART);																	
+																			
     #endif
 
     /* Start RTOS */
@@ -360,3 +375,17 @@ static bool IIRFAInit(void)
 
     return bIsError;
 }
+
+/**
+  * @brief  Function used to Initialize the SPI
+  */
+static bool SPIInit(void)
+{
+    bool bIsError = false;
+
+    // Initialise the SPI_B
+    bIsError |= R_SPI_B_Open(&g_spi1_ctrl, &g_spi1_cfg);
+	
+    return bIsError;
+}
+

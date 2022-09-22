@@ -25,6 +25,10 @@
             [18] = agt_int_isr, /* AGT0 INT (AGT interrupt) */
             [19] = gpt_counter_overflow_isr, /* GPT9 COUNTER OVERFLOW (Overflow) */
             [20] = gpt_capture_b_isr, /* GPT9 CAPTURE COMPARE B (Compare match B) */
+            [21] = spi_b_rxi_isr, /* SPI1 RXI (Receive buffer full) */
+            [22] = spi_b_txi_isr, /* SPI1 TXI (Transmit buffer empty) */
+            [23] = spi_b_tei_isr, /* SPI1 TEI (Transmission complete event) */
+            [24] = spi_b_eri_isr, /* SPI1 ERI (Error) */
         };
         const bsp_interrupt_event_t g_interrupt_event_link_select[BSP_ICU_VECTOR_MAX_ENTRIES] =
         {
@@ -49,5 +53,9 @@
             [18] = BSP_PRV_IELS_ENUM(EVENT_AGT0_INT), /* AGT0 INT (AGT interrupt) */
             [19] = BSP_PRV_IELS_ENUM(EVENT_GPT9_COUNTER_OVERFLOW), /* GPT9 COUNTER OVERFLOW (Overflow) */
             [20] = BSP_PRV_IELS_ENUM(EVENT_GPT9_CAPTURE_COMPARE_B), /* GPT9 CAPTURE COMPARE B (Compare match B) */
+            [21] = BSP_PRV_IELS_ENUM(EVENT_SPI1_RXI), /* SPI1 RXI (Receive buffer full) */
+            [22] = BSP_PRV_IELS_ENUM(EVENT_SPI1_TXI), /* SPI1 TXI (Transmit buffer empty) */
+            [23] = BSP_PRV_IELS_ENUM(EVENT_SPI1_TEI), /* SPI1 TEI (Transmission complete event) */
+            [24] = BSP_PRV_IELS_ENUM(EVENT_SPI1_ERI), /* SPI1 ERI (Error) */
         };
         #endif
