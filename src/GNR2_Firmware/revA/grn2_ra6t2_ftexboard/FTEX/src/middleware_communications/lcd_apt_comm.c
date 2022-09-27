@@ -12,7 +12,7 @@
 
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
-#define APTMAXCURRENT 60  //Should be replaced with a dynamic value
+#define APTMAXCURRENT 75  //Should be replaced with a dynamic value
 
 /**
  *  Function for initializing the LCD module with the APT protocol
@@ -25,8 +25,8 @@ void LCD_APT_init(APT_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handle_t 
     ASSERT(pVCIHandle  != NULL);
     ASSERT(pUARTHandle != NULL);
     
-    pHandle->pVController = pVCIHandle;               // Pointer to VController
-    pHandle->pUART_handle = pUARTHandle;              // Pointer to UART instance  
+    pHandle->pVController = pVCIHandle;        // Pointer to VController
+    pHandle->pUART_handle = pUARTHandle;       // Pointer to UART instance  
     pHandle->pUART_handle->Super = pHandle;    // Initialise the super pointer that the UART needs   
     
     pHandle->pUART_handle->pRxCallback = &LCD_APT_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
@@ -165,22 +165,22 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
              switch(PassLvl)
              {
                  case 0:
-                      //DRVT_SetPASLevel(m_APT_handle.pVController->pPowertrain,PAS_LEVEL_0); //Set pass to 0
+                      PWRT_SetAssistLevel(pHandle->pVController->pPowertrain,PAS_LEVEL_0); //Set pass to 0
                     break;                            
                  case 1:
-                      //DRVT_SetPASLevel(m_APT_handle.pVController->pPowertrain,PAS_LEVEL_1); //Set pass to 1
+                      PWRT_SetAssistLevel(pHandle->pVController->pPowertrain,PAS_LEVEL_1); //Set pass to 1
                     break;    
                  case 3:
-                      //DRVT_SetPASLevel(m_APT_handle.pVController->pPowertrain,PAS_LEVEL_2); //Set pass to 2
+                      PWRT_SetAssistLevel(pHandle->pVController->pPowertrain,PAS_LEVEL_2); //Set pass to 2
                     break;    
                  case 5:
-                      //DRVT_SetPASLevel(m_APT_handle.pVController->pPowertrain,PAS_LEVEL_3); //Set pass to 3
+                      PWRT_SetAssistLevel(pHandle->pVController->pPowertrain,PAS_LEVEL_3); //Set pass to 3
                     break;    
                  case 7:
-                     //DRVT_SetPASLevel(m_APT_handle.pVController->pPowertrain,PAS_LEVEL_4); //Set pass to 4
+                      PWRT_SetAssistLevel(pHandle->pVController->pPowertrain,PAS_LEVEL_4); //Set pass to 4
                     break;                                
                  case 9:
-                     //DRVT_SetPASLevel(m_APT_handle.pVController->pPowertrain,PAS_LEVEL_5); //Set pass to 5
+                      PWRT_SetAssistLevel(pHandle->pVController->pPowertrain,PAS_LEVEL_5); //Set pass to 5
                     break;                
              }
          }            
@@ -196,14 +196,12 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
          replyFrame.Buffer[ 0] = APT_START; //Start
       
          //Add up power from both
-         toSend = 15000;//abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)) + 
-                  //abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2));
-        
+         toSend = abs(pHandle->pVController->pPowertrain->pMDI->pMCI->pFOCVars->Iqdref.q);
                 
          toSend = toSend/(0x7FFF/APTMAXCURRENT); //Conversion from relative current to actual amps
-         toSend = toSend * 2;                    //Covert from amps to 0.1 amps; 
+         toSend = toSend * 2;                    //Covert from amps to 0.5 amps; 
         
-         replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.1 A/unit         
+         replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
 
 //         /* Condition use for wheel speed sensor rpm to send */
 //         if (pHandle->pVController->pPowertrain->sParameters.bUseWheelSpeedSensor)
@@ -233,7 +231,7 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
 //         {    
 //             toSend = 500000/(toSend/60);
 //         }
-         
+         toSend = 200;
          replyFrame.Buffer[ 2] = (toSend & 0x00FF);      //Motor speed Low half 
          replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; //Motor speed High half
       

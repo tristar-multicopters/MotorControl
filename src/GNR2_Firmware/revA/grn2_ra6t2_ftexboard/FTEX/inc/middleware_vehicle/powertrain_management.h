@@ -90,7 +90,7 @@ typedef struct
     uint32_t MotorToHubGearRatio;        /* Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002 */
     uint16_t hFaultManagementTimeout;    /* Number of ticks the state machine should stay on fault state before restart */
 
-		PasLevel_t bPasLevel;								 /* PAS Level selection*/
+		
 		
 } PWRT_Parameters_t;
 
@@ -110,7 +110,7 @@ typedef struct
     int16_t aSpeed[2];                            /* Array of speed reference, first element is for M1, second is for M2 */
     
     int16_t hTorqueSelect;                        /* Select torque to feed for motor control */
-    uint8_t bCurrentAssistLevel;                  /* Current pedal assist level */
+    PasLevel_t bCurrentAssistLevel;				  /* Current pedal assist level */
     bool bPASDetected;                            /* Use PAS flag  for detection */
 	
     Foldback_Handle_t DCVoltageFoldback;          /* Foldback handle using DCbus voltage */
