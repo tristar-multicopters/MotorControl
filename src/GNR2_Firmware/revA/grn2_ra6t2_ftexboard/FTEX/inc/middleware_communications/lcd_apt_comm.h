@@ -11,7 +11,6 @@
 #define __LCD_APT_COMM_H
 
 #include "vc_interface.h"
-#include "powertrain_management.h"
 #include "uCAL_UART.h"
 #include "gnr_main.h"
 

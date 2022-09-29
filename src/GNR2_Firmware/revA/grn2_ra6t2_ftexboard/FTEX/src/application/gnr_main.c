@@ -119,7 +119,7 @@ void gnr_main(void)
     ICUInit();
     ELCInit();
     AGTInit();
-    UARTInit();
+    //UARTInit();
     CANInit();
 		SPIInit();
     IIRFAInit();
@@ -149,9 +149,9 @@ void gnr_main(void)
                                       NULL,
                                       &ThAtt_Memory); 
 
-   #if !DEBUGMODE_MOTOR_CONTROL
+    #if !DEBUGMODE_MOTOR_CONTROL
     #if GNR_MASTER
-     THR_VC_MediumFreq_handle        = osThreadNew(THR_VC_MediumFreq,
+    THR_VC_MediumFreq_handle        = osThreadNew(THR_VC_MediumFreq,
                                       NULL,
                                       &ThAtt_VC_MediumFrequencyTask);
 
