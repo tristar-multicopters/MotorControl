@@ -3403,6 +3403,7 @@ typedef struct
             uint16_t             : 8;
             __IOM uint16_t TRCLR : 1;  /*!< [8..8] Transaction Counter Clear                                          */
             __IOM uint16_t TRENB : 1;  /*!< [9..9] Transaction Counter Enable                                         */
+            uint16_t             : 6;
         } E_b;
     };
 
@@ -9394,15 +9395,16 @@ typedef struct                         /*!< (@ 0x40005000) R_DMAC0 Structure    
 
     union
     {
-        __IOM uint16_t DMCRB;          /*!< (@ 0x0000000C) DMA Block Transfer Count Register                          */
+        __IOM uint32_t DMCRB;           /*!< (@ 0x0000000C) DMA Block Transfer Count Register                          */
 
         struct
         {
-            __IOM uint16_t DMCRB : 16; /*!< [15..0] Specifies the number of block transfer operations or
-                                        *   repeat transfer operations.                                               */
+            __IOM uint32_t DMCRBL : 16; /*!< [15..0] Functions as a number of block, repeat or repeat-block
+                                         *   transfer counter.                                                         */
+            __IOM uint32_t DMCRBH : 16; /*!< [31..16] Specifies the number of block transfer operations or
+                                         *   repeat transfer operations.                                               */
         } DMCRB_b;
     };
-    __IM uint16_t RESERVED;
 
     union
     {
@@ -9419,7 +9421,7 @@ typedef struct                         /*!< (@ 0x40005000) R_DMAC0 Structure    
             __IOM uint16_t MD   : 2;   /*!< [15..14] Transfer Mode Select                                             */
         } DMTMD_b;
     };
-    __IM uint8_t RESERVED1;
+    __IM uint8_t RESERVED;
 
     union
     {
@@ -9455,7 +9457,7 @@ typedef struct                         /*!< (@ 0x40005000) R_DMAC0 Structure    
             __IOM uint16_t SM   : 2;   /*!< [15..14] Source Address Update Mode                                       */
         } DMAMD_b;
     };
-    __IM uint16_t RESERVED2;
+    __IM uint16_t RESERVED1;
 
     union
     {
@@ -9505,7 +9507,7 @@ typedef struct                         /*!< (@ 0x40005000) R_DMAC0 Structure    
             __IM uint8_t ACT   : 1;     /*!< [7..7] DMA Active Flag                                                    */
         } DMSTS_b;
     };
-    __IM uint8_t   RESERVED3;
+    __IM uint8_t   RESERVED2;
     __IOM uint32_t DMSRR;               /*!< (@ 0x00000020) DMA Source Reload Address Register                         */
     __IOM uint32_t DMDRR;               /*!< (@ 0x00000024) DMA Destination Reload Address Register                    */
 
@@ -9545,8 +9547,8 @@ typedef struct                         /*!< (@ 0x40005000) R_DMAC0 Structure    
             uint8_t           : 7;
         } DMBWR_b;
     };
-    __IM uint8_t  RESERVED4;
-    __IM uint16_t RESERVED5;
+    __IM uint8_t  RESERVED3;
+    __IM uint16_t RESERVED4;
 } R_DMAC0_Type;                        /*!< Size = 52 (0x34)                                                          */
 
 /* =========================================================================================================================== */
@@ -14024,8 +14026,14 @@ typedef struct                         /*!< (@ 0x40078000) R_GPT0 Structure     
             __IOM uint32_t CSELCF : 1;   /*!< [21..21] ELC_GPTA Event Source Counter Clear Enable                       */
             __IOM uint32_t CSELCG : 1;   /*!< [22..22] ELC_GPTA Event Source Counter Clear Enable                       */
             __IOM uint32_t CSELCH : 1;   /*!< [23..23] ELC_GPTA Event Source Counter Clear Enable                       */
-            uint32_t              : 7;
-            __IOM uint32_t CCLR   : 1;   /*!< [31..31] Software Source Counter Clear Enable                             */
+            __IOM uint32_t CSCMSC : 3;   /*!< [26..24] Compare Match/Input Capture/Synchronous counter clearing
+                                          *   Source Counter Clear Enable.                                              */
+            __IOM uint32_t CP1CCE : 1;   /*!< [27..27] Complementary PWM mode1 Crest Source Counter Clear
+                                          *   Enable (This bit is only available in GPT324 to GPT329.
+                                          *   In GPT320 to GPT323, this bit is read as 0. The write value
+                                          *   should be 0.)                                                             */
+            uint32_t            : 3;
+            __IOM uint32_t CCLR : 1;     /*!< [31..31] Software Source Counter Clear Enable                             */
         } GTCSR_b;
     };
 
@@ -14254,12 +14262,19 @@ typedef struct                         /*!< (@ 0x40078000) R_GPT0 Structure     
         struct
         {
             __IOM uint32_t GTIOA  : 5; /*!< [4..0] GTIOCA Pin Function Select                                         */
-            uint32_t              : 1;
+            __IOM uint32_t CPSCIR : 1; /*!< [5..5] Complementary PWM Mode Initial Output at Synchronous
+                                        *   Clear Disable.(This bit is only available in GPT324 to
+                                        *   GPT329. In GPT320 to GPT323, this bit is read as 0. The
+                                        *   write value should be 0.)                                                 */
             __IOM uint32_t OADFLT : 1; /*!< [6..6] GTIOCA Pin Output Value Setting at the Count Stop                  */
             __IOM uint32_t OAHLD  : 1; /*!< [7..7] GTIOCA Pin Output Setting at the Start/Stop Count                  */
             __IOM uint32_t OAE    : 1; /*!< [8..8] GTIOCA Pin Output Enable                                           */
             __IOM uint32_t OADF   : 2; /*!< [10..9] GTIOCA Pin Disable Value Setting                                  */
-            uint32_t              : 2;
+            __IOM uint32_t OAEOCD : 1; /*!< [11..11] GTCCRA Compare Match Cycle End Output Invalidate.(This
+                                        *   bit is only available in GPT324 to GPT329. In GPT320 to
+                                        *   GPT323, this bit is read as 0. The write value should be
+                                        *   0.)                                                                       */
+            __IOM uint32_t PSYE   : 1; /*!< [12..12] PWM Synchronous output Enable                                    */
             __IOM uint32_t NFAEN  : 1; /*!< [13..13] Noise Filter A Enable                                            */
             __IOM uint32_t NFCSA  : 2; /*!< [15..14] Noise Filter A Sampling Clock Select                             */
             __IOM uint32_t GTIOB  : 5; /*!< [20..16] GTIOCB Pin Function Select                                       */
@@ -14268,9 +14283,13 @@ typedef struct                         /*!< (@ 0x40078000) R_GPT0 Structure     
             __IOM uint32_t OBHLD  : 1; /*!< [23..23] GTIOCB Pin Output Setting at the Start/Stop Count                */
             __IOM uint32_t OBE    : 1; /*!< [24..24] GTIOCB Pin Output Enable                                         */
             __IOM uint32_t OBDF   : 2; /*!< [26..25] GTIOCB Pin Disable Value Setting                                 */
-            uint32_t              : 2;
-            __IOM uint32_t NFBEN  : 1; /*!< [29..29] Noise Filter B Enable                                            */
-            __IOM uint32_t NFCSB  : 2; /*!< [31..30] Noise Filter B Sampling Clock Select                             */
+            __IOM uint32_t OBEOCD : 1; /*!< [27..27] GTCCRB Compare Match Cycle End Output Invalidate.(This
+                                        *   bit is only available in GPT324 to GPT329. In GPT320 to
+                                        *   GPT323, this bit is read as 0. The write value should be
+                                        *   0.)                                                                       */
+            uint32_t             : 1;
+            __IOM uint32_t NFBEN : 1;  /*!< [29..29] Noise Filter B Enable                                            */
+            __IOM uint32_t NFCSB : 2;  /*!< [31..30] Noise Filter B Sampling Clock Select                             */
         } GTIOR_b;
     };
 
@@ -22786,18 +22805,33 @@ typedef struct                         /*!< (@ 0x4001E000) R_SYSTEM Structure   
 
     union
     {
-        __IOM uint8_t DCDCCTL;         /*!< (@ 0x00000440) DCDC/LDO Control Register                                  */
-
-        struct
+        union
         {
-            __IOM uint8_t DCDCON  : 1; /*!< [0..0] LDO/DCDC on/off Control bit                                        */
-            __IOM uint8_t OCPEN   : 1; /*!< [1..1] DCDC OCP Function Enable bit                                       */
-            uint8_t               : 2;
-            __IOM uint8_t STOPZA  : 1; /*!< [4..4] DCDC IO Buffer Power Control bit                                   */
-            __IOM uint8_t LCBOOST : 1; /*!< [5..5] LDO LCBOOST Mode Control bit                                       */
-            __IOM uint8_t FST     : 1; /*!< [6..6] DCDC Fast Startup                                                  */
-            __IOM uint8_t PD      : 1; /*!< [7..7] DCDC VREF Generate Disable bit                                     */
-        } DCDCCTL_b;
+            __IOM uint8_t DCDCCTL;         /*!< (@ 0x00000440) DCDC/LDO Control Register                                  */
+
+            struct
+            {
+                __IOM uint8_t DCDCON  : 1; /*!< [0..0] LDO/DCDC on/off Control bit                                        */
+                __IOM uint8_t OCPEN   : 1; /*!< [1..1] DCDC OCP Function Enable bit                                       */
+                uint8_t               : 2;
+                __IOM uint8_t STOPZA  : 1; /*!< [4..4] DCDC IO Buffer Power Control bit                                   */
+                __IOM uint8_t LCBOOST : 1; /*!< [5..5] LDO LCBOOST Mode Control bit                                       */
+                __IOM uint8_t FST     : 1; /*!< [6..6] DCDC Fast Startup                                                  */
+                __IOM uint8_t PD      : 1; /*!< [7..7] DCDC VREF Generate Disable bit                                     */
+            } DCDCCTL_b;
+        };
+
+        union
+        {
+            __IOM uint8_t LDOSCR;          /*!< (@ 0x00000440) LDO Stop Control Register                                  */
+
+            struct
+            {
+                __IOM uint8_t LDOSTP0 : 1; /*!< [0..0] LDO0 Stop                                                          */
+                __IOM uint8_t LDOSTP1 : 1; /*!< [1..1] LDO1 Stop                                                          */
+                uint8_t               : 6;
+            } LDOSCR_b;
+        };
     };
 
     union
@@ -22811,7 +22845,20 @@ typedef struct                         /*!< (@ 0x4001E000) R_SYSTEM Structure   
         } VCCSEL_b;
     };
     __IM uint16_t RESERVED50;
-    __IM uint32_t RESERVED51[15];
+
+    union
+    {
+        __IOM uint8_t PL2LDOSCR;         /*!< (@ 0x00000444) PLL2-LDO Stop Control Register                             */
+
+        struct
+        {
+            __IOM uint8_t PL2LDOSTP : 1; /*!< [0..0] LDO0 Stop                                                          */
+            uint8_t                 : 7;
+        } PL2LDOSCR_b;
+    };
+    __IM uint8_t  RESERVED51;
+    __IM uint16_t RESERVED52;
+    __IM uint32_t RESERVED53[14];
 
     union
     {
@@ -22834,8 +22881,8 @@ typedef struct                         /*!< (@ 0x4001E000) R_SYSTEM Structure   
             uint8_t             : 6;
         } SOMCR_b;
     };
-    __IM uint16_t RESERVED52;
-    __IM uint32_t RESERVED53[3];
+    __IM uint16_t RESERVED54;
+    __IM uint32_t RESERVED55[3];
 
     union
     {
@@ -22847,7 +22894,7 @@ typedef struct                         /*!< (@ 0x4001E000) R_SYSTEM Structure   
             uint8_t             : 7;
         } LOCOCR_b;
     };
-    __IM uint8_t RESERVED54;
+    __IM uint8_t RESERVED56;
 
     union
     {
@@ -22862,8 +22909,8 @@ typedef struct                         /*!< (@ 0x4001E000) R_SYSTEM Structure   
                                          *   trimming bits                                                             */
         } LOCOUTCR_b;
     };
-    __IM uint8_t  RESERVED55;
-    __IM uint32_t RESERVED56[7];
+    __IM uint8_t  RESERVED57;
+    __IM uint32_t RESERVED58[7];
 
     union
     {
@@ -22902,7 +22949,7 @@ typedef struct                         /*!< (@ 0x4001E000) R_SYSTEM Structure   
             uint8_t               : 7;
         } VBTCMPCR_b;
     };
-    __IM uint8_t RESERVED57;
+    __IM uint8_t RESERVED59;
 
     union
     {
@@ -22916,7 +22963,7 @@ typedef struct                         /*!< (@ 0x4001E000) R_SYSTEM Structure   
             uint8_t                  : 6;
         } VBTLVDICR_b;
     };
-    __IM uint8_t RESERVED58;
+    __IM uint8_t RESERVED60;
 
     union
     {
@@ -22928,7 +22975,7 @@ typedef struct                         /*!< (@ 0x4001E000) R_SYSTEM Structure   
             uint8_t            : 7;
         } VBTWCTLR_b;
     };
-    __IM uint8_t RESERVED59;
+    __IM uint8_t RESERVED61;
 
     union
     {
@@ -23063,9 +23110,9 @@ typedef struct                         /*!< (@ 0x4001E000) R_SYSTEM Structure   
             uint8_t            : 4;
         } VBTBER_b;
     };
-    __IM uint8_t  RESERVED60;
-    __IM uint16_t RESERVED61;
-    __IM uint32_t RESERVED62[15];
+    __IM uint8_t  RESERVED62;
+    __IM uint16_t RESERVED63;
+    __IM uint32_t RESERVED64[15];
 
     union
     {
@@ -24257,6 +24304,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t CNEN  : 1;  /*!< [8..8] CNEN Single End Receiver Enable                                    */
             uint16_t             : 1;
             __IOM uint16_t SCKE  : 1;  /*!< [10..10] USB Clock Enable                                                 */
+            uint16_t             : 5;
         } SYSCFG_b;
     };
 
@@ -24268,6 +24316,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
         {
             __IOM uint16_t BWAIT : 4;  /*!< [3..0] CPU Bus Access Wait Specification BWAIT waits (BWAIT+2
                                         *   access cycles)                                                            */
+            uint16_t : 12;
         } BUSWAIT_b;
     };
 
@@ -24298,6 +24347,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
         struct
         {
             __IM uint16_t PLLLOCK : 1; /*!< [0..0] PLL Lock Flag                                                      */
+            uint16_t              : 15;
         } PLLSTA_b;
     };
 
@@ -24322,6 +24372,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
                                          *   control keeps the suspended state until the HNP processing
                                          *   ends even though SYSCFG.DPRPU = 0 or SYSCFG.DCFM = 1 is
                                          *   set.                                                                      */
+            uint16_t : 4;
         } DVSTCTR0_b;
     };
     __IM uint16_t RESERVED;
@@ -24333,6 +24384,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
         struct
         {
             __IOM uint16_t UTST : 4;   /*!< [3..0] Test Mode                                                          */
+            uint16_t            : 12;
         } TESTMODE_b;
     };
     __IM uint16_t RESERVED1;
@@ -24574,6 +24626,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t PIPE7BRDYE : 1; /*!< [7..7] BRDY Interrupt Enable for PIPE                                     */
             __IOM uint16_t PIPE8BRDYE : 1; /*!< [8..8] BRDY Interrupt Enable for PIPE                                     */
             __IOM uint16_t PIPE9BRDYE : 1; /*!< [9..9] BRDY Interrupt Enable for PIPE                                     */
+            uint16_t                  : 6;
         } BRDYENB_b;
     };
 
@@ -24593,6 +24646,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t PIPE7NRDYE : 1; /*!< [7..7] NRDY Interrupt Enable for PIPE                                     */
             __IOM uint16_t PIPE8NRDYE : 1; /*!< [8..8] NRDY Interrupt Enable for PIPE                                     */
             __IOM uint16_t PIPE9NRDYE : 1; /*!< [9..9] NRDY Interrupt Enable for PIPE                                     */
+            uint16_t                  : 6;
         } NRDYENB_b;
     };
 
@@ -24612,6 +24666,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t PIPE7BEMPE : 1; /*!< [7..7] BEMP Interrupt Enable for PIPE                                     */
             __IOM uint16_t PIPE8BEMPE : 1; /*!< [8..8] BEMP Interrupt Enable for PIPE                                     */
             __IOM uint16_t PIPE9BEMPE : 1; /*!< [9..9] BEMP Interrupt Enable for PIPE                                     */
+            uint16_t                  : 6;
         } BEMPENB_b;
     };
 
@@ -24627,6 +24682,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t BRDYM    : 1; /*!< [6..6] BRDY Interrupt Status Clear Timing                                 */
             uint16_t                : 1;
             __IOM uint16_t TRNENSEL : 1; /*!< [8..8] Transaction-Enabled Time Select                                    */
+            uint16_t                : 7;
         } SOFCFG_b;
     };
 
@@ -24711,6 +24767,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t PIPE7BRDY : 1; /*!< [7..7] BRDY Interrupt Status for PIPE                                     */
             __IOM uint16_t PIPE8BRDY : 1; /*!< [8..8] BRDY Interrupt Status for PIPE                                     */
             __IOM uint16_t PIPE9BRDY : 1; /*!< [9..9] BRDY Interrupt Status for PIPE                                     */
+            uint16_t                 : 6;
         } BRDYSTS_b;
     };
 
@@ -24730,6 +24787,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t PIPE7NRDY : 1; /*!< [7..7] NRDY Interrupt Status for PIPE                                     */
             __IOM uint16_t PIPE8NRDY : 1; /*!< [8..8] NRDY Interrupt Status for PIPE                                     */
             __IOM uint16_t PIPE9NRDY : 1; /*!< [9..9] NRDY Interrupt Status for PIPE                                     */
+            uint16_t                 : 6;
         } NRDYSTS_b;
     };
 
@@ -24749,6 +24807,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t PIPE7BEMP : 1; /*!< [7..7] BEMP Interrupt Status for PIPE                                     */
             __IOM uint16_t PIPE8BEMP : 1; /*!< [8..8] BEMP Interrupt Status for PIPE                                     */
             __IOM uint16_t PIPE9BEMP : 1; /*!< [9..9] BEMP Interrupt Status for PIPE                                     */
+            uint16_t                 : 6;
         } BEMPSTS_b;
     };
 
@@ -24788,6 +24847,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
                                            *   the SET_ADDRESS request successfully.                                     */
             uint16_t                 : 1;
             __IOM uint16_t STSRECOV0 : 3; /*!< [10..8] Status Recovery                                                   */
+            uint16_t                 : 5;
         } USBADDR_b;
     };
     __IM uint16_t RESERVED9;
@@ -24845,6 +24905,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             uint16_t              : 2;
             __IOM uint16_t SHTNAK : 1; /*!< [7..7] Pipe Disabled at End of Transfer                                   */
             __IOM uint16_t CNTMD  : 1; /*!< [8..8] Continuous Transfer Mode                                           */
+            uint16_t              : 7;
         } DCPCFG_b;
     };
 
@@ -24892,6 +24953,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
         struct
         {
             __IOM uint16_t PIPESEL : 4; /*!< [3..0] Pipe Window Select                                                 */
+            uint16_t               : 12;
         } PIPESEL_b;
     };
     __IM uint16_t RESERVED11;
@@ -24925,6 +24987,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
                                           *   selected pipe (04h to 87h).                                         */
             uint16_t               :  2;
             __IOM uint16_t BUFSIZE :  5; /*!< [14..10] Buffer Size 00h: 64 bytes 01h: 128 bytes : 1Fh: 2 Kbytes   */
+            uint16_t               :  1;
         } PIPEBUF_b;                     /*!< BitSize                                                             */
     };
 
@@ -24955,6 +25018,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
                                         *   frames, which is expressed as nth power of 2.                             */
             uint16_t            : 9;
             __IOM uint16_t IFIS : 1;   /*!< [12..12] Isochronous IN Buffer Flush                                      */
+            uint16_t            : 3;
         } PIPEPERI_b;
     };
 
@@ -24996,6 +25060,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t USBSPD  : 2; /*!< [7..6] Transfer Speed of Communication Target Device                      */
             __IOM uint16_t HUBPORT : 3; /*!< [10..8] Communication Target Connecting Hub Port                          */
             __IOM uint16_t UPPHUB  : 4; /*!< [14..11] Communication Target Connecting Hub Register                     */
+            uint16_t               : 1;
         } DEVADD_b[10];
     };
     __IM uint16_t RESERVED16;
@@ -25009,6 +25074,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
         {
             uint16_t             : 7;
             __IOM uint16_t HWUPM : 1;  /*!< [7..7] Resume Return Mode Setting                                         */
+            uint16_t             : 8;
         } LPCTRL_b;
     };
 
@@ -25020,6 +25086,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
         {
             uint16_t                : 14;
             __IOM uint16_t SUSPENDM : 1; /*!< [14..14] UTMI SuspendM Control                                            */
+            uint16_t                : 1;
         } LPSTS_b;
     };
     __IM uint32_t RESERVED18[15];
@@ -25039,6 +25106,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             uint16_t                : 2;
             __IM uint16_t CHGDETSTS : 1; /*!< [8..8] CHGDET Status                                                      */
             __IM uint16_t PDDETSTS  : 1; /*!< [9..9] PDDET Status                                                       */
+            uint16_t                : 6;
         } BCCTRL_b;
     };
     __IM uint16_t RESERVED19;
@@ -25060,6 +25128,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
                                           *   field in HL1CTRL.                                                         */
             uint16_t               : 2;
             __IOM uint16_t L1EXTMD : 1;  /*!< [14..14] PHY Control Mode at L1 Return                                    */
+            uint16_t               : 1;
         } PL1CTRL1_b;
     };
 
@@ -25072,6 +25141,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             uint16_t               : 8;
             __IOM uint16_t HIRDMON : 4; /*!< [11..8] HIRD Value Monitor                                                */
             __IOM uint16_t RWEMON  : 1; /*!< [12..12] RWE Value Monitor                                                */
+            uint16_t               : 3;
         } PL1CTRL2_b;
     };
 
@@ -25083,6 +25153,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
         {
             __IOM uint16_t L1REQ    : 1; /*!< [0..0] L1 Transition Request                                              */
             __IM uint16_t  L1STATUS : 2; /*!< [2..1] L1 Request Completion Status                                       */
+            uint16_t                : 13;
         } HL1CTRL1_b;
     };
 
@@ -25118,6 +25189,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t HSIUP     :  4; /*!< [11..8]HS Output Level Setting                                               */
             __IOM uint16_t IMPOFFSET :  3; /*!< [14..12]terminating resistance offset value setting.Offset value for
                                             * adjusting the terminating resistance.                                 */
+            uint16_t :  1;
         } PHYTRIM1_b;                      /*!< BitSize                                                               */
     };
 
@@ -25133,6 +25205,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IOM uint16_t PDR      :  2; /*!< [9..8]HS Output Adjustment Function                                         */
             uint16_t                :  2;
             __IOM uint16_t DIS      :  3; /*!< [14..12]Disconnect Detection Level                                            */
+            uint16_t                :  1;
         } PHYTRIM2_b;                     /*!< BitSize                                                               */
     };
     __IM uint32_t RESERVED21[3];
@@ -25152,6 +25225,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             uint32_t               : 1;
             __IM uint32_t DVBSTSHM : 1; /*!< [23..23] VBUS InputIndicates VBUS input signal on the HS side
                                          *   of USB port.                                                              */
+            uint32_t : 8;
         } DPUSR0R_b;
     };
 
@@ -25171,6 +25245,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             __IM uint32_t DOVCBH    : 1; /*!< [21..21] Indication of Return from OVRCURB Interrupt Source               */
             uint32_t                : 1;
             __IM uint32_t DVBSTSH   : 1; /*!< [23..23] Indication of Return from VBUS Interrupt Source                  */
+            uint32_t                : 8;
         } DPUSR1R_b;
     };
 
@@ -25190,6 +25265,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
             uint16_t              : 2;
             __IOM uint16_t DPINTE : 1; /*!< [8..8] DP Interrupt Enable Clear                                          */
             __IOM uint16_t DMINTE : 1; /*!< [9..9] DM Interrupt Enable Clear                                          */
+            uint16_t              : 6;
         } DPUSR2R_b;
     };
 
@@ -25201,6 +25277,7 @@ typedef struct                         /*!< (@ 0x40090000) R_USB_HS0 Structure  
         {
             __IOM uint16_t FIXPHY   : 1; /*!< [0..0] USB Transceiver Control Fix                                        */
             __IOM uint16_t FIXPHYPD : 1; /*!< [1..1] USB Transceiver Control Fix for PLL                                */
+            uint16_t                : 14;
         } DPUSRCR_b;
     };
 } R_USB_HS0_Type;                        /*!< Size = 1032 (0x408)                                                       */
@@ -36725,8 +36802,10 @@ typedef struct                         /*!< (@ 0x90003000) R_TFU Structure      
  #define R_DMAC0_DMCRA_DMCRAL_Pos    (0UL)          /*!< DMCRAL (Bit 0)                                        */
  #define R_DMAC0_DMCRA_DMCRAL_Msk    (0xffffUL)     /*!< DMCRAL (Bitfield-Mask: 0xffff)                        */
 /* =========================================================  DMCRB  ========================================================= */
- #define R_DMAC0_DMCRB_DMCRB_Pos     (0UL)          /*!< DMCRB (Bit 0)                                         */
- #define R_DMAC0_DMCRB_DMCRB_Msk     (0xffffUL)     /*!< DMCRB (Bitfield-Mask: 0xffff)                         */
+ #define R_DMAC0_DMCRB_DMCRBL_Pos    (0UL)          /*!< DMCRBL (Bit 0)                                        */
+ #define R_DMAC0_DMCRB_DMCRBL_Msk    (0xffffUL)     /*!< DMCRBL (Bitfield-Mask: 0xffff)                        */
+ #define R_DMAC0_DMCRB_DMCRBH_Pos    (16UL)         /*!< DMCRBH (Bit 16)                                       */
+ #define R_DMAC0_DMCRB_DMCRBH_Msk    (0xffff0000UL) /*!< DMCRBH (Bitfield-Mask: 0xffff)                        */
 /* =========================================================  DMTMD  ========================================================= */
  #define R_DMAC0_DMTMD_MD_Pos        (14UL)         /*!< MD (Bit 14)                                           */
  #define R_DMAC0_DMTMD_MD_Msk        (0xc000UL)     /*!< MD (Bitfield-Mask: 0x03)                              */
@@ -38657,6 +38736,10 @@ typedef struct                         /*!< (@ 0x90003000) R_TFU Structure      
 /* =========================================================  GTCSR  ========================================================= */
  #define R_GPT0_GTCSR_CCLR_Pos             (31UL)         /*!< CCLR (Bit 31)                                         */
  #define R_GPT0_GTCSR_CCLR_Msk             (0x80000000UL) /*!< CCLR (Bitfield-Mask: 0x01)                            */
+ #define R_GPT0_GTCSR_CP1CCE_Pos           (27UL)         /*!< CP1CCE (Bit 27)                                       */
+ #define R_GPT0_GTCSR_CP1CCE_Msk           (0x8000000UL)  /*!< CP1CCE (Bitfield-Mask: 0x01)                          */
+ #define R_GPT0_GTCSR_CSCMSC_Pos           (24UL)         /*!< CSCMSC (Bit 24)                                       */
+ #define R_GPT0_GTCSR_CSCMSC_Msk           (0x7000000UL)  /*!< CSCMSC (Bitfield-Mask: 0x07)                          */
  #define R_GPT0_GTCSR_CSELC_Pos            (16UL)         /*!< CSELC (Bit 16)                                        */
  #define R_GPT0_GTCSR_CSELC_Msk            (0x10000UL)    /*!< CSELC (Bitfield-Mask: 0x01)                           */
  #define R_GPT0_GTCSR_CSCBFAH_Pos          (15UL)         /*!< CSCBFAH (Bit 15)                                      */
@@ -38804,6 +38887,8 @@ typedef struct                         /*!< (@ 0x90003000) R_TFU Structure      
  #define R_GPT0_GTIOR_NFCSB_Msk            (0xc0000000UL) /*!< NFCSB (Bitfield-Mask: 0x03)                           */
  #define R_GPT0_GTIOR_NFBEN_Pos            (29UL)         /*!< NFBEN (Bit 29)                                        */
  #define R_GPT0_GTIOR_NFBEN_Msk            (0x20000000UL) /*!< NFBEN (Bitfield-Mask: 0x01)                           */
+ #define R_GPT0_GTIOR_OBEOCD_Pos           (27UL)         /*!< OBEOCD (Bit 27)                                       */
+ #define R_GPT0_GTIOR_OBEOCD_Msk           (0x8000000UL)  /*!< OBEOCD (Bitfield-Mask: 0x01)                          */
  #define R_GPT0_GTIOR_OBDF_Pos             (25UL)         /*!< OBDF (Bit 25)                                         */
  #define R_GPT0_GTIOR_OBDF_Msk             (0x6000000UL)  /*!< OBDF (Bitfield-Mask: 0x03)                            */
  #define R_GPT0_GTIOR_OBE_Pos              (24UL)         /*!< OBE (Bit 24)                                          */
@@ -38818,6 +38903,10 @@ typedef struct                         /*!< (@ 0x90003000) R_TFU Structure      
  #define R_GPT0_GTIOR_NFCSA_Msk            (0xc000UL)     /*!< NFCSA (Bitfield-Mask: 0x03)                           */
  #define R_GPT0_GTIOR_NFAEN_Pos            (13UL)         /*!< NFAEN (Bit 13)                                        */
  #define R_GPT0_GTIOR_NFAEN_Msk            (0x2000UL)     /*!< NFAEN (Bitfield-Mask: 0x01)                           */
+ #define R_GPT0_GTIOR_PSYE_Pos             (12UL)         /*!< PSYE (Bit 12)                                         */
+ #define R_GPT0_GTIOR_PSYE_Msk             (0x1000UL)     /*!< PSYE (Bitfield-Mask: 0x01)                            */
+ #define R_GPT0_GTIOR_OAEOCD_Pos           (11UL)         /*!< OAEOCD (Bit 11)                                       */
+ #define R_GPT0_GTIOR_OAEOCD_Msk           (0x800UL)      /*!< OAEOCD (Bitfield-Mask: 0x01)                          */
  #define R_GPT0_GTIOR_OADF_Pos             (9UL)          /*!< OADF (Bit 9)                                          */
  #define R_GPT0_GTIOR_OADF_Msk             (0x600UL)      /*!< OADF (Bitfield-Mask: 0x03)                            */
  #define R_GPT0_GTIOR_OAE_Pos              (8UL)          /*!< OAE (Bit 8)                                           */
@@ -38826,6 +38915,8 @@ typedef struct                         /*!< (@ 0x90003000) R_TFU Structure      
  #define R_GPT0_GTIOR_OAHLD_Msk            (0x80UL)       /*!< OAHLD (Bitfield-Mask: 0x01)                           */
  #define R_GPT0_GTIOR_OADFLT_Pos           (6UL)          /*!< OADFLT (Bit 6)                                        */
  #define R_GPT0_GTIOR_OADFLT_Msk           (0x40UL)       /*!< OADFLT (Bitfield-Mask: 0x01)                          */
+ #define R_GPT0_GTIOR_CPSCIR_Pos           (5UL)          /*!< CPSCIR (Bit 5)                                        */
+ #define R_GPT0_GTIOR_CPSCIR_Msk           (0x20UL)       /*!< CPSCIR (Bitfield-Mask: 0x01)                          */
  #define R_GPT0_GTIOR_GTIOA_Pos            (0UL)          /*!< GTIOA (Bit 0)                                         */
  #define R_GPT0_GTIOR_GTIOA_Msk            (0x1fUL)       /*!< GTIOA (Bitfield-Mask: 0x1f)                           */
 /* ========================================================  GTINTAD  ======================================================== */
@@ -42785,6 +42876,14 @@ typedef struct                         /*!< (@ 0x90003000) R_TFU Structure      
 /* ========================================================  VCCSEL  ========================================================= */
  #define R_SYSTEM_VCCSEL_VCCSEL_Pos                (0UL)          /*!< VCCSEL (Bit 0)                                        */
  #define R_SYSTEM_VCCSEL_VCCSEL_Msk                (0x3UL)        /*!< VCCSEL (Bitfield-Mask: 0x03)                          */
+/* ========================================================  LDOSCR  ========================================================= */
+ #define R_SYSTEM_LDOSCR_LDOSTP0_Pos               (0UL)          /*!< LDOSTP0 (Bit 0)                                       */
+ #define R_SYSTEM_LDOSCR_LDOSTP0_Msk               (0x1UL)        /*!< LDOSTP0 (Bitfield-Mask: 0x01)                         */
+ #define R_SYSTEM_LDOSCR_LDOSTP1_Pos               (1UL)          /*!< LDOSTP1 (Bit 1)                                       */
+ #define R_SYSTEM_LDOSCR_LDOSTP1_Msk               (0x2UL)        /*!< LDOSTP1 (Bitfield-Mask: 0x01)                         */
+/* =======================================================  PL2LDOSCR  ======================================================= */
+ #define R_SYSTEM_PL2LDOSCR_PL2LDOSTP_Pos          (0UL)          /*!< PL2LDOSTP (Bit 0)                                     */
+ #define R_SYSTEM_PL2LDOSCR_PL2LDOSTP_Msk          (0x1UL)        /*!< PL2LDOSTP (Bitfield-Mask: 0x01)                       */
 /* ========================================================  SOSCCR  ========================================================= */
  #define R_SYSTEM_SOSCCR_SOSTP_Pos                 (0UL)          /*!< SOSTP (Bit 0)                                         */
  #define R_SYSTEM_SOSCCR_SOSTP_Msk                 (0x1UL)        /*!< SOSTP (Bitfield-Mask: 0x01)                           */
