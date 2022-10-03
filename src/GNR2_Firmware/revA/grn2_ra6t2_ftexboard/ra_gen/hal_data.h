@@ -12,8 +12,6 @@
 #include "r_can_api.h"
 #include "r_sci_b_uart.h"
             #include "r_uart_api.h"
-#include "r_icu.h"
-#include "r_external_irq_api.h"
 #include "r_iirfa.h"
 #include "r_iir_api.h"
 #include "r_poeg.h"
@@ -88,36 +86,6 @@ extern const timer_cfg_t g_timer0_cfg;
 
 #ifndef HallTimer_IRQHandler
 void HallTimer_IRQHandler(timer_callback_args_t * p_args);
-#endif
-/** External IRQ on ICU Instance. */
-extern const external_irq_instance_t g_external_irq5;
-
-/** Access the ICU instance using these structures when calling API functions directly (::p_api is not used). */
-extern icu_instance_ctrl_t g_external_irq5_ctrl;
-extern const external_irq_cfg_t g_external_irq5_cfg;
-
-#ifndef NULL
-void NULL(external_irq_callback_args_t * p_args);
-#endif
-/** External IRQ on ICU Instance. */
-extern const external_irq_instance_t g_external_irq4;
-
-/** Access the ICU instance using these structures when calling API functions directly (::p_api is not used). */
-extern icu_instance_ctrl_t g_external_irq4_ctrl;
-extern const external_irq_cfg_t g_external_irq4_cfg;
-
-#ifndef NULL
-void NULL(external_irq_callback_args_t * p_args);
-#endif
-/** External IRQ on ICU Instance. */
-extern const external_irq_instance_t g_external_irq3;
-
-/** Access the ICU instance using these structures when calling API functions directly (::p_api is not used). */
-extern icu_instance_ctrl_t g_external_irq3_ctrl;
-extern const external_irq_cfg_t g_external_irq3_cfg;
-
-#ifndef NULL
-void NULL(external_irq_callback_args_t * p_args);
 #endif
 /** IIRFA Instance. */
 extern const iirfa_instance_t g_iirfa1;

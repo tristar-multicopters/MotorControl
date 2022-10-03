@@ -9,7 +9,7 @@
     <option key="#DeviceCommand#" value="R7FA6T2BD"/>
     <option key="#RTOS#" value="_none"/>
     <option key="#pinconfiguration#" value="R7FA6T2BD3CFP.pincfg"/>
-    <option key="#FSPVersion#" value="3.6.0"/>
+    <option key="#FSPVersion#" value="3.8.0"/>
     <option key="#SELECTED_TOOLCHAIN#" value="com.arm.toolchain"/>
   </generalSettings>
   <raClockConfiguration>
@@ -68,8 +68,8 @@
       <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0" isUsedByDriver="true"/>
       <configSetting altId="canfd0.crx0.pb12" configurationId="canfd0.crx0" isUsedByDriver="true"/>
       <configSetting altId="canfd0.ctx0.pb13" configurationId="canfd0.ctx0" isUsedByDriver="true"/>
-      <configSetting altId="dac122.da2.pc04" configurationId="dac122.da2"/>
-      <configSetting altId="dac123.da3.pc05" configurationId="dac123.da3"/>
+      <configSetting altId="dac122.da2.pc04" configurationId="dac122.da2" isUsedByDriver="true"/>
+      <configSetting altId="dac123.da3.pc05" configurationId="dac123.da3" isUsedByDriver="true"/>
       <configSetting altId="gpt4.gtioc4a.pe10" configurationId="gpt4.gtioc4a" isUsedByDriver="true"/>
       <configSetting altId="gpt4.gtioc4b.pe13" configurationId="gpt4.gtioc4b" isUsedByDriver="true"/>
       <configSetting altId="gpt5.gtioc5a.pe11" configurationId="gpt5.gtioc5a" isUsedByDriver="true"/>
@@ -90,8 +90,8 @@
       <configSetting altId="pc00.input" configurationId="pc00"/>
       <configSetting altId="pd07.output.low" configurationId="pd07"/>
       <configSetting altId="pd15.input" configurationId="pd15"/>
-      <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9"/>
-      <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9"/>
+      <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9" isUsedByDriver="true"/>
+      <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9" isUsedByDriver="true"/>
     </pincfg>
   </raPinConfiguration>
 </raConfiguration>

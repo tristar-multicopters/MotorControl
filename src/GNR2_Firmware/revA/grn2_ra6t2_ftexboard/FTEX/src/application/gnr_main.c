@@ -109,7 +109,7 @@ void gnr_main(void)
     ICUInit();
     ELCInit();
     AGTInit();
-    //UARTInit();
+    UARTInit();
     CANInit();
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */

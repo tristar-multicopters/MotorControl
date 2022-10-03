@@ -11,6 +11,7 @@
 #define __LCD_APT_COMM_H
 
 #include "vc_interface.h"
+#include "powertrain_management.h"
 #include "uCAL_UART.h"
 #include "gnr_main.h"
 
@@ -18,6 +19,8 @@
 // Commands
 #define APT_START      0x55  // Fixed value that indicates the start of a frame.
 #define APT_END        0x0D  // Fixed value that indicates the end of a frame.
+
+#define RX_BYTE_BUFFER_SIZE 16
 
 // Display Read Cmd
 // represents the location of where certain informations are in the frame. 
@@ -43,11 +46,15 @@ typedef struct
 
 typedef struct
 {	
-	UART_Handle_t *pUART_handle;    // Pointer to uart									
-	VCI_Handle_t  *pVController;    // Pointer to vehicle
-    APT_frame_t rx_frame; 		   	// Frame for data reception
-	APT_frame_t tx_frame; 		   	// Frame for send response
-    uint8_t RxByte;                 // Used for byte by byte reception
+	UART_Handle_t *pUART_handle;           // Pointer to uart									
+	VCI_Handle_t  *pVController;           // Pointer to vehicle
+    APT_frame_t rx_frame; 		   	       // Frame for data reception
+	APT_frame_t tx_frame; 		   	       // Frame for send response
+    
+    uint8_t RxBuffer[RX_BYTE_BUFFER_SIZE]; // Hold bytes to be process by the APT task function
+    uint8_t RxCount;                       // Counts how many bytes we are holding
+    uint8_t RxByte;                        // Used for byte by byte reception
+    
 }APT_Handle_t;
 
 /********************************* FUNCTIONS *******************************/
@@ -85,6 +92,8 @@ void LCD_APT_RX_IRQ_Handler(void *ppVoidHandle);
  * @return nothing
  */
 void LCD_APT_TX_IRQ_Handler(void *ppVoidHandle);
+
+void LCD_APT_Task(APT_Handle_t *pHandle);
 
 /**@brief Function for decoding a received frame (previously built in the RxCallback function)
  *        according to the APT screen protocol.
