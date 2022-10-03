@@ -11,11 +11,10 @@
 #include "stdbool.h"
 #include "gnr_parameters.h"
 #include "comm_defines.h"
-#include "comm_config.h"
+
 
 extern bool bCANOpenTaskBootUpCompleted;
 
-extern EFlash_Storage_Handle_t EFlash_Storage_Handle;
 /**
   * @brief  Task to managing the CANopen interface
   *         This task updates periodically the GNR2 object dictionary and executes when the
@@ -30,7 +29,6 @@ void CANOpenTask (void * pvParameter);
   */
 void CANLoggerTask (void * pvParameter);
 
-void Memory_Task (void * pvParameter);
 
 void Comm_BootUp(void);
 

@@ -20,7 +20,7 @@
 
 #include "lcd_apt_comm.h"
 // Serial Flash storage
-#include "serial_flash_storage.h"
+//#include "serial_flash_storage.h"
 
 /************* DEFINES ****************/
 
@@ -205,10 +205,10 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 	{
 		osThreadFlagsWait(UART_FLAG, osFlagsWaitAny, osWaitForever);
 
-    switch(UART0Handle.UARTProtocol)
+      switch(UART0Handle.UARTProtocol)
         {
            case UART_APT:
-                LCD_APT_frame_Process(&LCD_APT_handle);
+                LCD_APT_Task(&LCD_APT_handle); //Run the APT task
                 break;
            case UART_LOG_HS:
                 LogHS_ProcessFrame(&LogHS_handle);
@@ -309,7 +309,7 @@ __NO_RETURN void CANLoggerTask (void * pvParameter)
 /**
   Task to handle the received messages anad to send messages through the CAN bus
 */
-__NO_RETURN void Memory_Task (void * pvParameter)
+/*__NO_RETURN void Memory_Task (void * pvParameter)
 {
     UNUSED_PARAMETER(pvParameter);
    
@@ -319,4 +319,4 @@ __NO_RETURN void Memory_Task (void * pvParameter)
     {
         osDelay(1);
     }
-}
+}*/
