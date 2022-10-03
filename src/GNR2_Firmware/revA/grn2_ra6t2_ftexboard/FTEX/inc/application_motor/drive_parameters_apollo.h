@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       1800 /*!< Max speed for the current application in mechanical rpm */
+#define MAX_APPLICATION_SPEED_RPM       380 /*!< Max speed for the current application in mechanical rpm */
 #define MIN_APPLICATION_SPEED_RPM       0 /*!< Min speed for the current application in mechanical rpm */
 #define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
                                                              measurement errors before
@@ -131,7 +131,7 @@
 
 /* Foldbacks */
 #define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM   /* Max speed value (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
-#define FOLDBACK_SPEED_INTERVAL         500                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
+#define FOLDBACK_SPEED_INTERVAL         200                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMPERATURE_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
 #define FOLDBACK_HS_TEMP_INTERVAL       20                         /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
