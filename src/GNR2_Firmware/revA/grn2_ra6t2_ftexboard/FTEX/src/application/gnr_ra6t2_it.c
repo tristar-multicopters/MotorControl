@@ -236,15 +236,3 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
         CAN_SendNextFrame();
     }
 }
-
-/**
-  * @brief  Interrupt routine of SPI communication
-  * @param  p_args: callback function arguments
-*/
-void spi_callback(spi_callback_args_t * p_args)
-{
-	if (SPI_EVENT_TRANSFER_COMPLETE == p_args->event)
-	{
-			SPI1Handle.bSPI_transfer_complete = true;
-	}
-}

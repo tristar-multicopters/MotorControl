@@ -22,27 +22,5 @@ UART_Handle_t UART0Handle =
     .pUARTInstance = &g_uart9,
 };
 
-// Flash Memory uCAL Module handle
-SPI_Handle_t SPI1Handle =
-{
-    .bSPI_transfer_complete = false,
-    .hSPI_FrameLength = 0x01,
-    .pSPI_Instance = &g_spi1_ctrl,
-    .pSPI_BitWidth = SPI_BIT_WIDTH_8_BITS,
-};
-
-// Flash Memory uCAL Module handle
-EFlash_Storage_Handle_t EFlash_Storage_Handle =
-{
-	.eFlashStorage =
-    {
-		.eFlash =
-        {
-         .uCALSPI = &SPI1Handle,
-        }
-    }
-};
-
-//--------------------------------------------------------------------------
 APT_Handle_t LCD_APT_handle;
 LogHighSpeed_Handle_t LogHS_handle;

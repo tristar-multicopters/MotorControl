@@ -19,8 +19,7 @@
 #include "can_logger.h"
 
 #include "lcd_apt_comm.h"
-// Serial Flash storage
-#include "serial_flash_storage.h"
+
 
 /************* DEFINES ****************/
 
@@ -303,20 +302,5 @@ __NO_RETURN void CANLoggerTask (void * pvParameter)
             osDelay(CAN_LOG_INTERVAL_TICK);
             CANLog_SendThrottleBrake(&CoCanDriver, &VCInterfaceHandle); //Send throttle & brake info
         }
-    }
-}
-
-/**
-  Task to handle the received messages anad to send messages through the CAN bus
-*/
-__NO_RETURN void Memory_Task (void * pvParameter)
-{
-    UNUSED_PARAMETER(pvParameter);
-   
-	EFlash_Storage_Handle_t * pEFComm = &EFlash_Storage_Handle;
-	SF_Storage_Init(pEFComm);
-    while(true)
-    {
-        osDelay(1);
     }
 }
