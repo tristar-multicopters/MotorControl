@@ -88,6 +88,31 @@ const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     3000,
 };
 
+#elif VEHICLE_SELECTION == VEHICLE_APOLLO
+
+#define CURRENT_PID_LUT_SPEED_STEP                    200
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             100
+
+const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    300,
+    600
+};
+
+const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    50,
+    200,
+};
+
+const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    300,
+    600,
+};
+
+const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    50,
+    200,
+};
+
 #endif
 
 LookupTableHandle_t LookupTableM1IqKp =

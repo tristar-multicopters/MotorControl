@@ -1338,7 +1338,9 @@
     <symbolicName propertyId="pc05.symbolic_name" value="DEBUG2_DAC"/>
     <symbolicName propertyId="pc14.symbolic_name" value="OCD2_U"/>
     <symbolicName propertyId="pc15.symbolic_name" value="OCD2_V"/>
+    <symbolicName propertyId="pd04.symbolic_name" value="LIGHT_FRONT"/>
     <symbolicName propertyId="pd07.symbolic_name" value="CAN_EN"/>
+    <symbolicName propertyId="pd10.symbolic_name" value="LIGHT_BACK"/>
     <symbolicName propertyId="pd15.symbolic_name" value="M2_SLCT"/>
     <symbolicName propertyId="pe00.symbolic_name" value="STATUS1"/>
     <symbolicName propertyId="pe01.symbolic_name" value="STATUS2"/>
@@ -1445,12 +1447,18 @@
       <configSetting altId="pc06.gpio_mode.gpio_mode_peripheral" configurationId="pc06.gpio_mode"/>
       <configSetting altId="pc14.gpt_poega.gtetrga" configurationId="pc14"/>
       <configSetting altId="pc14.gpio_mode.gpio_mode_peripheral" configurationId="pc14.gpio_mode"/>
+      <configSetting altId="pd04.output.low" configurationId="pd04"/>
+      <configSetting altId="pd04.gpio_speed.gpio_speed_h" configurationId="pd04.gpio_drivecapacity"/>
+      <configSetting altId="pd04.gpio_mode.gpio_mode_out.low" configurationId="pd04.gpio_mode"/>
       <configSetting altId="pd05.sci9.txd9" configurationId="pd05"/>
       <configSetting altId="pd05.gpio_mode.gpio_mode_peripheral" configurationId="pd05.gpio_mode"/>
       <configSetting altId="pd06.sci9.rxd9" configurationId="pd06"/>
       <configSetting altId="pd06.gpio_mode.gpio_mode_peripheral" configurationId="pd06.gpio_mode"/>
       <configSetting altId="pd07.output.low" configurationId="pd07"/>
       <configSetting altId="pd07.gpio_mode.gpio_mode_out.low" configurationId="pd07.gpio_mode"/>
+      <configSetting altId="pd10.output.low" configurationId="pd10"/>
+      <configSetting altId="pd10.gpio_speed.gpio_speed_h" configurationId="pd10.gpio_drivecapacity"/>
+      <configSetting altId="pd10.gpio_mode.gpio_mode_out.low" configurationId="pd10.gpio_mode"/>
       <configSetting altId="pd15.input" configurationId="pd15"/>
       <configSetting altId="pd15.gpio_mode.gpio_mode_in" configurationId="pd15.gpio_mode"/>
       <configSetting altId="pd15.gpio_pupd.gpio_pupd_ip_up" configurationId="pd15.gpio_pupd"/>

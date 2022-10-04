@@ -575,7 +575,11 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 
 	if (BRK_IsPressed(pHandle->pBrake)) // If brake is pressed
 	{
-		bCheckStop4 = true;
+        #if VEHICLE_SELECTION == VEHICLE_APOLLO
+            // do nothing
+        #else
+        bCheckStop4 = true;
+        #endif
 	}
 
 	if (!pHandle->bPASDetected) // If there is no PAS detection
