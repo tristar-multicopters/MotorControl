@@ -9,7 +9,7 @@
 #include "powertrain_management.h"
 
 #define OVERCURRENT_COUNTER 		0
-#define STARTUP_COUNTER					1
+#define STARTUP_COUNTER             1
 #define SPEEDFEEDBACK_COUNTER		2
 
 /* Functions ---------------------------------------------------- */
@@ -29,9 +29,9 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
 		
-	PedalSpdSensor_Init(pHandle->pPSS);
-	PedalTorqSensor_Init(pHandle->pPTS);
-	WheelSpdSensor_Init(pHandle->pWSS);
+    PedalSpdSensor_Init(pHandle->pPSS);
+    PedalTorqSensor_Init(pHandle->pPTS);
+    WheelSpdSensor_Init(pHandle->pWSS);
 	
     Foldback_Init(&pHandle->SpeedFoldbackStartupDualMotor);
 
@@ -40,8 +40,6 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
-    
-    
 }
 
 /**
@@ -63,7 +61,7 @@ void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle)
 	*/
 void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 {
-    ASSERT(pHandle != NULL);
+	ASSERT(pHandle != NULL);
 	bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
     
 	/*bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);*/
@@ -72,7 +70,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 
 	MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
 	int16_t hTorqueRef = 0; 
-    int32_t hSpeedRef = 0;
+	int32_t hSpeedRef = 0;
 	int16_t hAux = 0;
 
 	if (pHandle->pMS->bMSEnable)
@@ -102,10 +100,13 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     pHandle->aSpeed[M1] = 0;
     pHandle->aSpeed[M2] = 0;
 
+	
 	if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
 	{
-		hTorqueRef = Throttle_ThrottleToTorque(pHandle->pThrottle); // Translate throttle value to powertrain target torque value
-        hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on foldback and brake state for example.
+		PedalTorqSensor_CalcAvValue(pHandle->pPTS); // Calculate the pedal assist torque sensor value
+		
+		hTorqueRef = PWRT_CalcSelectedTorque(pHandle); // Compute torque to motor depending on either throttle or PAS
+		hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on foldback and brake state for example.
         
 		if (bIsBrakePressed)
 		{
@@ -136,8 +137,26 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 }
             }
             else
-            {
-                pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
+            {	
+                /* Using PAS */ 
+                if ( PWRT_IsPASDetected(pHandle) && !Throttle_IsThrottleDetected(pHandle->pThrottle) )
+                {
+                    /* Torque sensor enabled */
+                    if (pHandle->sParameters.bTorqueSensorUse)
+                    {
+                        pHandle->aTorque[pHandle->bMainMotor] = hAux;
+                    } 
+                    else
+                    {
+                        hAux = Foldback_ApplyFoldback( &pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1) );
+                        pHandle->aTorque[pHandle->bMainMotor] = hAux;
+                    }
+                }							
+                /* Using throttle */
+                else
+                {
+                    pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
+                } 
             }
 		}
 		else if(pHandle->sParameters.bMode == DUAL_MOTOR)
@@ -187,7 +206,10 @@ void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle)
 	{
 		if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
 		{
-            MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1]);
+        if ( PWRT_IsPASDetected(pHandle) && !Throttle_IsThrottleDetected(pHandle->pThrottle) )
+					MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1]);	
+				else
+					MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1]);
 		}
 		else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
 		{
@@ -516,7 +538,8 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 	bool bCheckStop3 = false;
 	bool bCheckStop4 = false;
 	bool bCheckStop5 = false;
-
+	bool bCheckStop6 = false;
+	
 	int32_t wSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
 	int32_t wSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
 	uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
@@ -552,15 +575,24 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 
 	if (BRK_IsPressed(pHandle->pBrake)) // If brake is pressed
 	{
-		bCheckStop4 = true;
+        #if VEHICLE_SELECTION == VEHICLE_APOLLO
+            // do nothing
+        #else
+        bCheckStop4 = true;
+        #endif
 	}
 
-	if (hThrottleValue < pHandle->sParameters.hStoppingThrottle) // If throttle value is lower than stopping throttle parameter
+	if (!pHandle->bPASDetected) // If there is no PAS detection
 	{
 		bCheckStop5 = true;
 	}
+	
+	if (hThrottleValue < pHandle->sParameters.hStoppingThrottle) // If throttle value is lower than stopping throttle parameter
+	{
+		bCheckStop6 = true;
+	}
 
-	return (bCheckStop1 & bCheckStop2 & bCheckStop5) | bCheckStop3 | bCheckStop4; // Final logic to know if powertrain should be stopped.
+	return (bCheckStop1 & bCheckStop2 & bCheckStop5& bCheckStop6) | bCheckStop3 | bCheckStop4; // Final logic to know if powertrain should be stopped.
 }
 
 /**
@@ -574,20 +606,20 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     /* bCheckStartX variable are starting condition checks.
     By default they are false, but if a specific starting condition is met they may toggle true. */
 	bool bCheckStart1 = false;
-    bool bCheckStart2 = false;
-    bool bCheckStart3 = false;
+	bool bCheckStart2 = false;
+	bool bCheckStart3 = false;
 
 	uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
 
-	if (hThrottleValue > pHandle->sParameters.hStartingThrottle) // If throttle is higher than starting throttle parameter
+	if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->bPASDetected)) // If throttle is higher than starting throttle parameter
 	{
 		bCheckStart1 = true;
 	}
-    if (PWREN_IsPowerEnabled(pHandle->pPWREN)) // If power is enabled through power enable input
+	if (PWREN_IsPowerEnabled(pHandle->pPWREN))// If power is enabled through power enable input
 	{
 		bCheckStart2 = true;
 	}
-    if (!BRK_IsPressed(pHandle->pBrake)) // If brake is pressed
+	if (!BRK_IsPressed(pHandle->pBrake)) // If brake is pressed
 	{
 		bCheckStart3 = true;
 	}
@@ -748,19 +780,6 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 	return bFaultOccured;
 }
 
-
-void PWRT_SetAssistLevel(PWRT_Handle_t * pHandle, uint8_t bLevel)
-{
-    ASSERT(pHandle != NULL);
-	pHandle->bCurrentAssistLevel = bLevel;
-}
-
-uint8_t PWRT_GetAssistLevel (PWRT_Handle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-	return pHandle->bCurrentAssistLevel;
-}
-
 /**
 	* @brief  Get main motor reference torque
 	* @param  Powertrain handle
@@ -849,4 +868,200 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 	return pHandle->sParameters.bUseMotorM2;
 }
 
+/**
+	* @brief  Set PAS level
+	* @param  Powertrain handle
+	* @param  PAS level handle
+	* @retval None
+	*/
+void PWRT_SetAssistLevel(PWRT_Handle_t * pHandle, PasLevel_t bLevel)
+{
+  ASSERT(pHandle != NULL);
+	pHandle->bCurrentAssistLevel = bLevel;
+}
 
+/**
+	* @brief  Get PAS level
+	* @param  Powertrain handle
+	* @retval Current Pedal assit level
+	*/
+PasLevel_t PWRT_GetAssistLevel (PWRT_Handle_t * pHandle)
+{
+  ASSERT(pHandle != NULL);
+	return pHandle->bCurrentAssistLevel;
+}
+
+/**
+	* @brief  Set Pedal Assist standard torque based on screen informations
+	* @param  Powertrain handle
+	* @retval pRefTorque in int16
+	*/
+int16_t PWRT_GetPASTorque(PWRT_Handle_t * pHandle)
+{
+	int16_t hRefTorque;
+	PasLevel_t Got_Level;
+	// Get the used PAS level 
+	Got_Level = PWRT_GetAssistLevel(pHandle);
+	// Calculate the maximum given reference torque per level 
+	hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->sParameters.bMaxLevel) * Got_Level;
+	return hRefTorque;
+}
+
+/**
+	* @brief  Set Pedal Assist standard speed based on screen informations
+	* @param  Powertrain handle
+	* @retval pRefTorque in int16
+	*/
+void PWRT_PASSetMaxSpeed(PWRT_Handle_t * pHandle)
+{
+	uint16_t hMaxSpeedTemp;
+	
+	PasLevel_t Got_Level;
+	Got_Level = PWRT_GetAssistLevel(pHandle);
+	// Calculate the maximum speed for control 
+	hMaxSpeedTemp = (pHandle->sParameters.hMaxSpeedRatio * pHandle->sParameters.hPASMaxSpeed) / PAS_PERCENTAGE;
+	// Set Speed limitation range for motor control
+	Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (hMaxSpeedTemp / pHandle->sParameters.bMaxLevel) * Got_Level);
+	Foldback_SetDecreasingEndValue (&pHandle->SpeedFoldbackStartupDualMotor, (int16_t)(hMaxSpeedTemp / pHandle->sParameters.bMaxLevel) * Got_Level);
+}
+
+/**
+    * @brief  Set Pedal Assist torque based on the pedal Torque Sensor
+    * @param  Powertrain handle
+    * @retval pRefTorqueS in int16
+    */
+int16_t PWRT_GetTorqueFromTS(PWRT_Handle_t * pHandle)
+{
+	int16_t hRefTorqueS, hReadTS, hMaxTorq_Temp;
+	PasLevel_t Got_Level;
+	/* Read the Pedal torque sensor */
+	hReadTS = PedalTorqSensor_ToMotorTorque(pHandle->pPTS);
+	/* Got the PAS from the screen */
+	Got_Level = PWRT_GetAssistLevel(pHandle);
+	/* Add Level cases for a better user feeling */
+	switch(Got_Level)
+	{
+		case PAS_LEVEL_0:
+			hRefTorqueS = 0;
+			break;
+
+		case PAS_LEVEL_1:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_1) / pHandle->sParameters.bMaxLevel;
+			/* Safety for not exceeding the maximum torque value */
+			hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS > hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+
+		case PAS_LEVEL_2:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_2) / pHandle->sParameters.bMaxLevel;
+			/* Safety for not exceeding the maximum torque value */
+			hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS > hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+		case PAS_LEVEL_3:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_3) / pHandle->sParameters.bMaxLevel;
+			/* Safety for not exceeding the maximum torque value */
+			hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS > hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+		case PAS_LEVEL_4:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_4) / pHandle->sParameters.bMaxLevel;
+			/* Safety for not exceeding the maximum torque value */
+			hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS > hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+		
+		case PAS_LEVEL_5:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_5) / pHandle->sParameters.bMaxLevel;
+			/* Convert the PAS torque sensing in motor torque */
+			hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS > hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+		
+		default:
+			hRefTorqueS = 0;
+	}
+	return hRefTorqueS;
+}
+
+/**
+    * @brief  Check the PAS Presence Flag
+    * @param  Powertrain handle
+    * @retval None
+    */
+void PWRT_UpdatePASDetection (PWRT_Handle_t * pHandle) 
+{
+	uint32_t	wSpeedt;
+	uint16_t	hTorqueSens;
+	/* Calculate the offset based on ration percentage */
+	uint16_t  hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+	
+	wSpeedt = PedalSpdSensor_GetPeriodValue(pHandle->pPSS);
+	hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
+
+	if ((pHandle->sParameters.bTorqueSensorUse) && (hTorqueSens > hOffsetTemp) )
+		pHandle->bPASDetected = true;
+	else if (wSpeedt > 0)
+		pHandle->bPASDetected = true;
+	else 
+		pHandle->bPASDetected = false;
+} 
+
+/**
+	* @brief  Return if pedals are moving or not
+	* @param  Powertrain handle
+	* @retval True if pedal movement is detected, false otherwise
+	*/
+bool PWRT_IsPASDetected(PWRT_Handle_t * pHandle) 
+{
+	return pHandle->bPASDetected;
+}
+
+/**
+	* @brief  Select Control assistance based on Throttle or PAS
+	* @param  Powertrain handle
+	* @retval pHandle->pTorqueSelect in int16                                                                                    
+	*/
+int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
+{		
+	/* PAS and Throttle management */
+	if ( PWRT_IsPASDetected(pHandle) && !Throttle_IsThrottleDetected(pHandle->pThrottle))
+	{
+		/* Torque sensor enabled */
+		if (pHandle->sParameters.bTorqueSensorUse)
+		{
+			pHandle->hTorqueSelect = PWRT_GetTorqueFromTS(pHandle);
+		}
+		else
+		{
+			pHandle->hTorqueSelect= PWRT_GetPASTorque(pHandle);
+			PWRT_PASSetMaxSpeed(pHandle); 
+		}
+	}
+	else
+	{		
+		/* Throttle value convert to torque */
+		pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);
+	}
+	return pHandle->hTorqueSelect;
+}

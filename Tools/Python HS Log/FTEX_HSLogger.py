@@ -25,7 +25,7 @@ class State(Enum):
 
 
 POSITIVEINT16SIZE = 32767
-POSITIVEINT32SIZE = 65535 
+POSITIVEINT32SIZE = 65535  
 
 global state 
 global DataReq        #number of bytes we want to receive

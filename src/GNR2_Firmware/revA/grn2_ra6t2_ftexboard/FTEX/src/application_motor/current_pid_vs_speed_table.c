@@ -15,8 +15,8 @@
 
 #if VEHICLE_SELECTION == VEHICLE_GRIZZLY
 
-#define CURRENT_PID_LUT_SPEED_STEP                    400
-#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             200
+#define CURRENT_PID_LUT_SPEED_STEP                    100
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             400
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     300,
@@ -25,7 +25,7 @@ const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     50,
-    1000,
+    200,
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
@@ -35,7 +35,7 @@ const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     50,
-    3000,
+    200,
 };
 
 #elif VEHICLE_SELECTION == VEHICLE_EBGO
@@ -90,27 +90,27 @@ const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 
 #elif VEHICLE_SELECTION == VEHICLE_APOLLO
 
-#define CURRENT_PID_LUT_SPEED_STEP                    700
-#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
+#define CURRENT_PID_LUT_SPEED_STEP                    200
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             100
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     300,
-    300
+    600
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     50,
-    50,
+    200,
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     300,
-    300,
+    600,
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     50,
-    50,
+    200,
 };
 
 #endif

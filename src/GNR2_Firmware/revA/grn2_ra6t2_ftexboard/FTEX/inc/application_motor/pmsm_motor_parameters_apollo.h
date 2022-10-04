@@ -15,8 +15,8 @@
 
 /***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
 #define POLE_PAIR_NUM          15 /* Number of motor pole pairs */
-#define RS                     0.073 /* Stator resistance , ohm*/
-#define LS                     0.000122 /* Stator inductance, H
+#define RS                     0.071 /* Stator resistance , ohm*/
+#define LS                     0.000150 /* Stator inductance, H
                                                  For I-PMSM it is equal to Lq */
 
 /* Transformation of real currents (A) into int16_t format must be done accordingly with
@@ -25,13 +25,13 @@
                                    *Amplifying network gain)/(MCU supply voltage/2)
 */
 
-#define NOMINAL_TORQUE     5664  /* Nominal torque to apply to motor in cNm  */
-#define STARTING_TORQUE    6231  /* Maximum starting torque to apply to motor in cNm  */
-#define NOMINAL_PEAK_CURRENT    11000 /* Maximum current amplitude that can be injected
+#define NOMINAL_TORQUE     6231  /* Nominal torque to apply to motor in cNm  */
+#define STARTING_TORQUE    6800  /* Maximum starting torque to apply to motor in cNm  */
+#define NOMINAL_PEAK_CURRENT    12000 /* Maximum current amplitude that can be injected
                                           per phase in digital Amps */
-#define MOTOR_MAX_SPEED_RPM     350 /*!< Maximum rated speed  */
-#define MOTOR_MAGNET_FLUX     0.05
-#define MOTOR_VOLTAGE_CONSTANT  132 /*!< Volts RMS ph-ph /kRPM */
+#define MOTOR_MAX_SPEED_RPM     600 /*!< Maximum rated speed  */
+#define MOTOR_MAGNET_FLUX     0.050
+#define MOTOR_VOLTAGE_CONSTANT  136 /*!< Volts RMS ph-ph /kRPM */
 
 #define ID_DEMAG                -1000 /*!< Demagnetization current */
 #define MOTOR_MAX_TEMPERATURE_C 70    /* Maximum temperature in degree C */

@@ -965,14 +965,72 @@ int16_t DRVT_GetTorqueFromTS(DRVT_Handle_t * pHandle)
 {
 	int16_t hRefTorqueS, hReadTS, hMaxTorq_Temp;
 	PAS_sLevel Got_Level;
+	/* Read the Pedal torque sensor */
 	hReadTS = TS_ToMotorTorque(pHandle->pPAS->pTorque);
+	/* Got the PAS from the screen */
 	Got_Level = DRVT_GetPASLevel(pHandle);
-	
-	hRefTorqueS = (hReadTS * Got_Level) / pHandle->pPAS->bMaxLevel;
-	hMaxTorq_Temp = (pHandle->pPAS->hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
-	if (hRefTorqueS < hMaxTorq_Temp)
+	/* Add Level cases for a better user feeling */
+	switch(Got_Level)
 	{
-		hRefTorqueS = hMaxTorq_Temp;
+		case PAS_LEVEL_0:
+			hRefTorqueS = 0;
+			break;
+
+		case PAS_LEVEL_1:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->pPAS->bLevel_Coeff * PAS_LEVEL_1) / pHandle->pPAS->bMaxLevel;
+			/* Safety for not exceeding the maximum torque value */
+			hMaxTorq_Temp = (pHandle->pPAS->hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS < hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+
+		case PAS_LEVEL_2:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->pPAS->bLevel_Coeff * PAS_LEVEL_2) / pHandle->pPAS->bMaxLevel;
+			/* Safety for not exceeding the maximum torque value */
+			hMaxTorq_Temp = (pHandle->pPAS->hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS < hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+		case PAS_LEVEL_3:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->pPAS->bLevel_Coeff * PAS_LEVEL_3) / pHandle->pPAS->bMaxLevel;
+			/* Safety for not exceeding the maximum torque value */
+			hMaxTorq_Temp = (pHandle->pPAS->hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS < hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+		case PAS_LEVEL_4:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->pPAS->bLevel_Coeff * PAS_LEVEL_4) / pHandle->pPAS->bMaxLevel;
+			/* Safety for not exceeding the maximum torque value */
+			hMaxTorq_Temp = (pHandle->pPAS->hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS < hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+		
+		case PAS_LEVEL_5:
+			/* Convert the PAS torque sensing in motor torque */
+			hRefTorqueS = (hReadTS * pHandle->pPAS->bLevel_Coeff * PAS_LEVEL_5) / pHandle->pPAS->bMaxLevel;
+			/* Convert the PAS torque sensing in motor torque */
+			hMaxTorq_Temp = (pHandle->pPAS->hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+			if (hRefTorqueS < hMaxTorq_Temp)
+			{
+				hRefTorqueS = hMaxTorq_Temp;
+			}
+			break;
+		
+		default:
+			hRefTorqueS = 0;
 	}
 	return hRefTorqueS;
 }

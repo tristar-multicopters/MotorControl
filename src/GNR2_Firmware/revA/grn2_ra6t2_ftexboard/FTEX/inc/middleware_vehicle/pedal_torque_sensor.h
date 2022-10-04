@@ -19,16 +19,18 @@
 
 typedef struct
 {          
-    float fFilterAlpha;          // Alpha coefficient for low pass first order butterworth filter
-    float fFilterBeta;           // Beta coefficient for low pass first order butterworth filter
+	float fFilterAlpha;          // Alpha coefficient for low pass first order butterworth filter
+	float fFilterBeta;           // Beta coefficient for low pass first order butterworth filter
     
-    uint16_t    hOffsetPTS;  /* Offset of the torque sensor signal when at lowest position */
-    uint8_t     bSlopePTS;   /* Gain factor of ADC value vs torque sensor */
-    uint8_t     bDivisorPTS; /* Scaling factor of ADC value vs torque sensor */
+	uint16_t    hOffsetPTS;  /* Offset of the torque sensor signal when at lowest position */
+	uint8_t     bSlopePTS;   /* Gain factor of ADC value vs torque sensor */
+	uint8_t     bDivisorPTS; /* Scaling factor of ADC value vs torque sensor */
     
-    uint16_t    hOffsetMT;  /* Offset of torque sensor vs torque */
-    int8_t      bSlopeMT;   /* Gain factor of torque sensor vs torque */
-    uint8_t     bDivisorMT; /* Scaling factor of torque sensor vs torque */
+	uint16_t    hOffsetMT;  /* Offset of torque sensor vs torque */
+	int8_t      bSlopeMT;   /* Gain factor of torque sensor vs torque */
+	uint8_t     bDivisorMT; /* Scaling factor of torque sensor vs torque */
+	
+	uint16_t		hMax;				/* torque signal when at maximum position */
 	
 } PTS_Param_t;
 

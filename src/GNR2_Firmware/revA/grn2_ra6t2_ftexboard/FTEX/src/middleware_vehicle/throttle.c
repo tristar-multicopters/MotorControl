@@ -130,17 +130,17 @@ int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
    */
 bool Throttle_IsThrottleDetected (ThrottleHandle_t * pHandle) 
 {
-    ASSERT(pHandle != NULL);
+  ASSERT(pHandle != NULL);
 	uint16_t hThrottle;
 	hThrottle = Throttle_GetAvThrottleValue(pHandle);
 	if (hThrottle <= pHandle->hParameters.hDetectionThreshold)
-    {    
+	{    
 		return false;
-    }    
+	}    
 	else
-    {        
+	{        
 		return true;
-    }   
+	}   
 }
 
 

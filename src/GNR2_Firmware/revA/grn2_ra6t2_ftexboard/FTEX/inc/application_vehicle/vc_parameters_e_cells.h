@@ -35,6 +35,7 @@
 
 #define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient pedal torque sensor filtering  */
 #define PTS_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient pedal torque sensor filtering  */
+#define PTS_MAX_PTSVALUE                  UINT16_MAX	    /* Maximum analog value to reach */
 
 #define PTS_OFFSET_ADC2PTS                12500    /* Offset for ADC to pedal torque sensor linear transformation  */
 #define PTS_SLOPE_ADC2PTS                 5        /* Slope for ADC to pedal torque sensor linear transformation  */
@@ -67,6 +68,13 @@
 #define POWERTRAIN_STOP_THROTTLE_THRESHOLD                100                /* Throttle value to stop powertrain  */
 #define POWERTRAIN_STOP_SPEED_THRESHOLD                   0                  /* Speed value to stop powertrain  */
 #define POWERTRAIN_PAS_MAX_TORQUE                         800               /* Maximum motor torque to apply using pedal assist  */
+
+#define POWERTRAIN_PAS_MAX_LEVEL                          5                 /* Maximum PAS Level given by the screen */	
+#define POWERTRAIN_PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */	
+#define POWERTRAIN_PAS_MAX_TORQUE_RATIO                   80                /* Maximum PAS Torque feed ration in 100% */	
+#define POWERTRAIN_PAS_MAX_SPEED_RATIO                    80                /* Maximum PAS Speed feed ration in 100% */	
+#define POWERTRAIN_PAS_TORQUE_USE                         true              /* PAS based torque sensor use Flag */
+
 #define POWERTRAIN_PAS_MAX_SPEED                          500                /* Maximum motor speed reachable using pedal assist  */
 #define POWERTRAIN_MOTOR_GEARRATIO                        0x000B0005        /* Motor gear ratio, i.e. wheel speed divided by motor speed.
                                                                                 Upper half of 32 bits is numerator, second half is denominator */

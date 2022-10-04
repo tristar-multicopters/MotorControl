@@ -75,16 +75,17 @@ PedalTorqSensorHandle_t PedalTorqueSensor =
     },
     .hParameters =
     {
-		.fFilterAlpha = PTS_FILTER_ALPHA,
-		.fFilterBeta = PTS_FILTER_BETA,
+			.fFilterAlpha = PTS_FILTER_ALPHA,
+			.fFilterBeta = PTS_FILTER_BETA,
 
-        .hOffsetPTS = PTS_OFFSET_ADC2PTS,
-        .bSlopePTS = PTS_SLOPE_ADC2PTS,
-        .bDivisorPTS = PTS_DIVISOR_ADC2PTS,
+			.hOffsetPTS = PTS_OFFSET_ADC2PTS,
+			.bSlopePTS = PTS_SLOPE_ADC2PTS,
+			.bDivisorPTS = PTS_DIVISOR_ADC2PTS,
 
-        .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
-        .bSlopeMT = PTS_SLOPE_PTS2TORQUE,
-        .bDivisorMT = PTS_DIVISOR_PTS2TORQUE,
+			.hOffsetMT = PTS_OFFSET_PTS2TORQUE,
+			.bSlopeMT = PTS_SLOPE_PTS2TORQUE,
+			.bDivisorMT = PTS_DIVISOR_PTS2TORQUE,
+			.hMax = PTS_MAX_PTSVALUE,
     }
 };
 
@@ -152,11 +153,18 @@ PWRT_Handle_t PowertrainHandle =
 	.sParameters.hStartingThrottle = POWERTRAIN_START_THROTTLE_THRESHOLD,
 	.sParameters.hStoppingThrottle = POWERTRAIN_STOP_THROTTLE_THRESHOLD,
 	.sParameters.hStoppingSpeed = POWERTRAIN_STOP_SPEED_THRESHOLD,
+	
 	.sParameters.hPASMaxTorque = POWERTRAIN_PAS_MAX_TORQUE,
 	.sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
+	.sParameters.bMaxLevel = POWERTRAIN_PAS_MAX_LEVEL,
+	.sParameters.bCoeffLevel = POWERTRAIN_PAS_LEVEL_COEFF,
+	.sParameters.hMaxTorqueRatio = POWERTRAIN_PAS_MAX_TORQUE_RATIO,
+	.sParameters.hMaxSpeedRatio = POWERTRAIN_PAS_MAX_SPEED_RATIO,
+	.sParameters.bTorqueSensorUse = POWERTRAIN_PAS_TORQUE_USE,
+	
 	.sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
 	.sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
-    .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
+  .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
         
     .SpeedFoldbackStartupDualMotor =
     {
@@ -176,7 +184,7 @@ PWRT_Handle_t PowertrainHandle =
 	.pPSS = &PedalAssistHandle,
 	.pPTS = &PedalTorqueSensor,
   .pWSS = &WheelSpeedHandle,	
-
+			
 };
 
 VCI_Handle_t VCInterfaceHandle =
