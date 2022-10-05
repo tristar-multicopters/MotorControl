@@ -34,7 +34,9 @@ enum SendDataState
 };   
 
 #define LOGHS_NB_DATA            8 // Number of int16_t data per sample point
-#define LOGHS_NB_SAMPLE_POINT  500 // Number of sample points in the buffer
+#define LOGHS_NB_SAMPLE_POINT  2000 // Number of sample points in the buffer
+#define LOGHS_RESOLUTION        4 // Number of times skip sampling when LogHS_LogMotorVals is called.
+
 
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
@@ -57,7 +59,8 @@ typedef struct
     uint8_t State;               // Used in the data transfer state machine  
     uint8_t ByteCount;           // Counts how many bytes we have received by UART 
     uint32_t LogHSBufferIndex;   // Cursor that indicates where is the current newest log values in the buffer
-    LogBuffer_t *pLogHSBuffer;   // Pointer to the buffer where the data is logged
+    LogBuffer_t *pLogHSBuffer;   // Pointer to the buffer where the data is logged    
+    uint8_t LogHSResolution;     // Specifies that actual recording occurs for every nth call of LogHS_LogMotorValsVarRes function. 
     
 }LogHighSpeed_Handle_t;
 
@@ -119,6 +122,17 @@ void LogHS_SendDataStateMachine(LogHighSpeed_Handle_t *pHandle);
   @return void
 */
 void LogHS_LogMotorVals(LogHighSpeed_Handle_t *pHandle);
+
+
+/**
+  @brief Function that is used to insert motor control data into the logging buffer.
+				 a new data point made up of a data set is inserted in the buffere every nth time
+				 this function is called.
+				 
+  @param Receives LogHS handle
+  @return void
+*/
+void LogHS_LogMotorValsVarRes(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Function that is used to dump the collected data on the UART.

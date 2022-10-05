@@ -11,7 +11,7 @@
 #include "ASSERT_FTEX.h"
 #include <stdlib.h>
 
-
+volatile uint8_t HSLog_ResolutionCounter;
 static LogBuffer_t LogBuffer;
 
 
@@ -40,16 +40,17 @@ void LogHS_Init(LogHighSpeed_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Ha
     pHandle->ByteCount = 0;
     pHandle->State     = 0;
     pHandle->LogHSBufferIndex = 0;   
-	  pHandle->TxComplete     = false; 
+	pHandle->TxComplete     = false; 
     pHandle->DumpInProgress = false;
     pHandle->pLogHSBuffer = &LogBuffer;   
-		
-				
-		//Initial behavior of the logger
-				
-		pHandle->LogHSEnable      = true; // States if the logger is active by default
+					
+    //Initial behavior of the logger				
+    pHandle->LogHSEnable      = true; // States if the logger is active by default
     pHandle->BufferWrapAround = true; // States if the buffer automatically wraps around
-      
+    
+    // Reset resolution counter and initialize n-1 number of calls to skip
+    HSLog_ResolutionCounter = 0;
+    pHandle->LogHSResolution = LOGHS_RESOLUTION;     
 }
 
 /**
@@ -176,42 +177,60 @@ void LogHS_SendDataStateMachine(LogHighSpeed_Handle_t *pHandle)
 */
 void LogHS_LogMotorVals(LogHighSpeed_Handle_t *pHandle)
 {
-	  ASSERT(pHandle != NULL);
+	ASSERT(pHandle != NULL);
 	
-	  pFOCVars_t FOCCopy;
-	  FOCCopy = pHandle->pVController->pPowertrain->pMDI->pMCI->pFOCVars;
+	pFOCVars_t FOCCopy;
+	FOCCopy = pHandle->pVController->pPowertrain->pMDI->pMCI->pFOCVars;
 	  
     ASSERT(pHandle != NULL); 
     if(pHandle->LogHSEnable && pHandle->DumpInProgress == false)
     {
-        //Write these values in the logging array 
-        (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][0] = FOCCopy->Iab.a;    // Current A    
-        (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][1] = FOCCopy->Iab.b;    // Current B
-        (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][2] = FOCCopy->Iqd.d;    // Id actual 
-        (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][3] = FOCCopy->Iqd.q;    // Iq Actual 
-        (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][4] = FOCCopy->Iqdref.d; // Id target 
-        (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][5] = FOCCopy->Iqdref.q; // Iq target 
-        (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][6] = FOCCopy->hElAngle; // Electrical position    
-        (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][7] = (int16_t)pHandle->pVController->pStateMachine->hVFaultOccurred; // Fault    
-   
-        if (pHandle->LogHSBufferIndex >= LOGHS_NB_SAMPLE_POINT-1)
-        {
-            if(pHandle->BufferWrapAround)//Check if we have wrap around enabled
+            //Write these values in the logging array 
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][0] = FOCCopy->Iab.a;    // Current A    
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][1] = FOCCopy->Iab.b;    // Current B
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][2] = FOCCopy->Iqd.d;    // Id actual 
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][3] = FOCCopy->Iqd.q;    // Iq Actual 
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][4] = FOCCopy->Iqdref.d; // Id target 
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][5] = FOCCopy->Iqdref.q; // Iq target 
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][6] = FOCCopy->hElAngle; // Electrical position    
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][7] = (int16_t)pHandle->pVController->pStateMachine->hVFaultOccurred; // Fault    
+
+            if (pHandle->LogHSBufferIndex >= LOGHS_NB_SAMPLE_POINT-1)
             {
-                pHandle->LogHSBufferIndex = 0;
+                if(pHandle->BufferWrapAround)//Check if we have wrap around enabled
+                {
+                    pHandle->LogHSBufferIndex = 0;
+                }
+                else                         //If we dont want wrap around stop the buffer
+                {
+                    LogHS_StopLog(pHandle);
+                }							
             }
-            else                         //If we dont want wrap around stop the buffer
+            else
             {
-                LogHS_StopLog(pHandle);
-            }							
-        }
-        else
-        {
-            pHandle->LogHSBufferIndex ++;
-        }                
+                pHandle->LogHSBufferIndex ++;
+            }               
     }
 }
 
+/**
+  Function that is used to insert motor control data into the logging buffer.
+	a new data point made up of a data set is inserted in the buffere every nth time
+	this function is called.
+*/
+void LogHS_LogMotorValsVarRes(LogHighSpeed_Handle_t *pHandle)
+{
+    ASSERT(pHandle != NULL);
+    if (HSLog_ResolutionCounter >= pHandle->LogHSResolution)  // Log only resolution counter has counted nth time
+    {
+        LogHS_LogMotorVals(pHandle); 
+        HSLog_ResolutionCounter = 0;    // Reset resloution counter
+    }
+    else
+    {
+        HSLog_ResolutionCounter ++;     // Increment resolution counter
+    }             
+}
 /**
   Function that is used to dump the collected data on the UART.
 	this is called once the python script running on a CP has confirmed 
@@ -251,7 +270,8 @@ void LogHS_DumpLog(LogHighSpeed_Handle_t *pHandle)
          }
     
          pHandle->DumpInProgress = false;
-				 LogHS_ResetBuffer(pHandle);
+		 LogHS_ResetBuffer(pHandle);
+         HSLog_ResolutionCounter = 0;
     }     
 }
 
@@ -295,7 +315,7 @@ void LogHS_DumpDataSet(LogHighSpeed_Handle_t *pHandle, uint32_t DataSetIndex)
 */
 void LogHS_StartDumpLog(LogHighSpeed_Handle_t *pHandle)
 {   
-	  ASSERT(pHandle != NULL);
+    ASSERT(pHandle != NULL);
 	
     pHandle->LogHSEnable    = false;
     pHandle->DumpInProgress = true;
