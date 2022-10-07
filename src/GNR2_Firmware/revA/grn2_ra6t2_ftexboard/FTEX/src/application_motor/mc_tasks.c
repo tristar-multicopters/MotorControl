@@ -70,7 +70,7 @@ int16_t hTorqueFinalValueTest = 0;
 #endif
 #if (BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
 int16_t hOpenloopTheta = 0;
-int16_t hOpenloopSpeed = 10;
+int16_t hOpenloopSpeed = -10;
 #endif
 
 /* Private functions ---------------------------------------------------------*/
@@ -255,6 +255,13 @@ void MediumFrequencyTaskM1(void)
     int16_t wAux = 0;
 
 //    (void) BemfObsPll_CalcAvrgMecSpeedUnit(&BemfObserverPllM1, &wAux);
+    #if HSLOG_PROFILE == HSLOG_BUTTON_LOG 
+        if(!uCAL_GPIO_Read(REVERSE_GPIO_PIN))
+        {
+            LogHS_StopLog(&LogHS_handle);
+        }
+    #endif    
+    
     (void) HallPosSensor_CalcAvrgMecSpeedUnit(&HallPosSensorM1, &wAux);
     bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
     MotorPowerQD_CalcElMotorPower(pMotorPower[M1]);
@@ -319,7 +326,12 @@ void MediumFrequencyTaskM1(void)
             MCStateMachine_NextState(&MCStateMachine[M1], M_RUN);
             SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(pSpeedTorqCtrl[M1]); /* Init the reference speed to current speed */
             MCInterface_ExecBufferedCommands(oMCInterface[M1]); /* Exec the speed ramp after changing of the speed sensor */
-            break;
+        
+            #if HSLOG_PROFILE == HSLOG_ZEROSPEED_LOG 
+                LogHS_StartOneShot(&LogHS_handle);
+            #endif
+            
+        break;
 
         case M_RUN:
             #if DEBUGMODE_MOTOR_CONTROL
@@ -633,8 +645,8 @@ inline uint16_t FOC_CurrControllerM1(void)
         }
 
         #if ENABLE_MC_DAC_DEBUGGING
-        R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)HallPosSensorM1.Super.hElAngle + INT16_MAX);
-        R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)RotorPosObsM1.Super.hElAngle + INT16_MAX);
+        R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)FOCVars[M1].Iqd.q + INT16_MAX);
+        R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, (uint16_t)FOCVars[M1].Iqd.d + INT16_MAX);
         #endif
     }
 
