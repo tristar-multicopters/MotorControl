@@ -12,6 +12,7 @@
 #include "md_interface.h"
 #include "throttle.h"
 #include "brake.h"
+#include "lights.h"
 #include "motor_selection.h"
 #include "vc_defines.h"
 #include "foldback.h"
@@ -99,6 +100,8 @@ typedef struct
     MultipleDriveInterfaceHandle_t * pMDI;        /* Pointer to MDI handle */
     ThrottleHandle_t * pThrottle;                 /* Pointer to throttle handle */
     BRK_Handle_t * pBrake;                        /* Pointer to brake handle */
+    Light_Handle_t * pHeadLight;                  /* Pointer to front light handle */
+    Light_Handle_t * pTailLight;                  /* Pointer to rear light handle */
     MS_Handle_t * pMS;                            /* Pointer to motor selector handle */
     PWREN_Handle_t * pPWREN;                      /* Pointer to power enable pin handle */
     PedalSpeedSensorHandle_t * pPSS;              /* Pointer to Pedal Speed Sensor handle */

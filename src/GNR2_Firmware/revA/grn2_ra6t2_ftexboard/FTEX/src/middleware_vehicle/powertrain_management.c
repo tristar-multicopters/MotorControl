@@ -26,6 +26,8 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
     Throttle_Init(pHandle->pThrottle);
     BRK_Init(pHandle->pBrake);
+    Light_Init(pHandle->pHeadLight);
+    Light_Init(pHandle->pTailLight);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
 		

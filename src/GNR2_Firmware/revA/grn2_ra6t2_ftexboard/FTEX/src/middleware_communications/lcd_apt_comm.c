@@ -166,11 +166,12 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
 void LCD_APT_frame_Process(APT_Handle_t *pHandle)
 {
      APT_frame_t replyFrame = {0};
-     int32_t  toSend    = 0;
-     uint32_t Check     = 0;
-     uint32_t GearRatio = 0;
-     uint16_t Merge     = 0;
-     uint8_t  PassLvl   = 0;
+     int32_t  toSend      = 0;
+     uint32_t Check       = 0;
+     uint32_t GearRatio   = 0;
+     uint16_t Merge       = 0;
+     uint8_t  PassLvl     = 0;
+     uint8_t  LightStatus = 0; 
 
     
      //Verification of the checksum
@@ -185,6 +186,20 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
      //Check if the CRC is good
      if(Check == (uint32_t)(pHandle->rx_frame.Buffer[CHECK + 1] + (pHandle->rx_frame.Buffer[CHECK] << 8)))
      {
+         
+         LightStatus = ((pHandle->rx_frame.Buffer[PASS]) & 0x10);
+         
+         if(LightStatus) //Operate the light according to what the screne tells us
+         {
+             Light_Enable(pHandle->pVController->pPowertrain->pHeadLight);  
+             Light_Enable(pHandle->pVController->pPowertrain->pTailLight); 
+         }
+         else
+         {
+             Light_Disable(pHandle->pVController->pPowertrain->pHeadLight); 
+             Light_Disable(pHandle->pVController->pPowertrain->pTailLight);              
+         }   
+         
          //Reading the Pass
          PassLvl = (pHandle->rx_frame.Buffer[PASS] & 0x0F); //Only the 4 LSB contain the pass level
         

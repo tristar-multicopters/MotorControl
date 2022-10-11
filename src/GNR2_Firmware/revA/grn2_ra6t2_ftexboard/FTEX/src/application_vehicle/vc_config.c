@@ -23,13 +23,23 @@ VCSTM_Handle_t VCStateMachineHandle =
 	.hVFaultOccurred = 0
 };
 
-
 BRK_Handle_t BrakeHandle =
 {
 	.wPinNumber = BRAKE_GPIO_PIN,
 	.bIsInvertedLogic = true,
 };
 
+Light_Handle_t HeadLightHandle =
+{
+    .wPinNumber = FRONT_LIGHT_PIN,
+    .bIsInvertedLogic = false,
+};
+
+Light_Handle_t TailLightHandle =
+{
+    .wPinNumber = BACK_LIGHT_PIN,
+    .bIsInvertedLogic = false,      
+};    
 
 /**@brief Throttle initializing Parameters.
  */
@@ -46,14 +56,14 @@ ThrottleHandle_t ThrottleHandle =
 	.hParameters =
 	{
 		.fFilterAlpha = THROTTLE_FILTER_ALPHA,
-		.fFilterBeta = THROTTLE_FILTER_BETA,
+		.fFilterBeta  = THROTTLE_FILTER_BETA,
 
-		.hOffsetThrottle = THROTTLE_OFFSET_ADC2THROTTLE,
-		.bSlopeThrottle = THROTTLE_SLOPE_ADC2THROTTLE,
+		.hOffsetThrottle  = THROTTLE_OFFSET_ADC2THROTTLE,
+		.bSlopeThrottle   = THROTTLE_SLOPE_ADC2THROTTLE,
 		.bDivisorThrottle = THROTTLE_DIVISOR_ADC2THROTTLE,
 
-		.hOffsetTorque = THROTTLE_OFFSET_THROTTLE2TORQUE,
-		.bSlopeTorque = THROTTLE_SLOPE_THROTTLE2TORQUE,
+		.hOffsetTorque  = THROTTLE_OFFSET_THROTTLE2TORQUE,
+		.bSlopeTorque   = THROTTLE_SLOPE_THROTTLE2TORQUE,
 		.bDivisorTorque = THROTTLE_DIVISOR_THROTTLE2TORQUE,
 
 		.hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
@@ -164,7 +174,7 @@ PWRT_Handle_t PowertrainHandle =
 	
 	.sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
 	.sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
-  .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
+    .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
         
     .SpeedFoldbackStartupDualMotor =
     {
@@ -176,14 +186,16 @@ PWRT_Handle_t PowertrainHandle =
         .bEnableFoldback = true,
     },
 
-	.pMDI = &MDInterfaceHandle,
-	.pThrottle = &ThrottleHandle,
-	.pBrake = &BrakeHandle,
-	.pMS = &MotorSelectorHandle,
-	.pPWREN = &PowerEnableHandle,
-	.pPSS = &PedalAssistHandle,
-	.pPTS = &PedalTorqueSensor,
-  .pWSS = &WheelSpeedHandle,	
+    .pMDI = &MDInterfaceHandle,
+    .pThrottle = &ThrottleHandle,
+    .pBrake = &BrakeHandle,
+    .pHeadLight = &HeadLightHandle,
+    .pTailLight = &TailLightHandle,
+    .pMS = &MotorSelectorHandle,
+    .pPWREN = &PowerEnableHandle,
+    .pPSS = &PedalAssistHandle,
+    .pPTS = &PedalTorqueSensor,
+    .pWSS = &WheelSpeedHandle,	
 			
 };
 
