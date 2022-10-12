@@ -147,8 +147,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .FoldbackConfig = TRIM,
       .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
       .hDefaultOutputLimitLow = 0,
-      .hDecreasingEndValue = FOLDBACK_SPEED_END_VALUE,
-      .hDecreasingRange = FOLDBACK_SPEED_INTERVAL,
+      .hDecreasingEndValue = 10 * FOLDBACK_SPEED_END_VALUE,
+      .hDecreasingRange = 10 * FOLDBACK_SPEED_INTERVAL,
   },
   .FoldbackMotorTemperature =
   {
@@ -156,8 +156,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .FoldbackConfig = TRIM,
       .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
       .hDefaultOutputLimitLow = 0,
-      .hDecreasingEndValue = FOLDBACK_MOTOR_TEMP_END_VALUE,
-      .hDecreasingRange = FOLDBACK_MOTOR_TEMP_INTERVAL,
+      .hDecreasingEndValue = 100 * FOLDBACK_MOTOR_TEMP_END_VALUE,
+      .hDecreasingRange = 100 * FOLDBACK_MOTOR_TEMP_INTERVAL,
   },
   .FoldbackHeatsinkTemperature =
   {
@@ -165,8 +165,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .FoldbackConfig = TRIM,
       .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
       .hDefaultOutputLimitLow = 0,
-      .hDecreasingEndValue = FOLDBACK_HS_TEMP_END_VALUE,
-      .hDecreasingRange = FOLDBACK_HS_TEMP_INTERVAL,
+      .hDecreasingEndValue = 100 * FOLDBACK_HS_TEMP_END_VALUE,
+      .hDecreasingRange = 100 * FOLDBACK_HS_TEMP_INTERVAL,
   },
   .FoldbackDynamicMaxTorque = 
   {
@@ -174,8 +174,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .FoldbackConfig = SET_THRESHOLD,
       .hDefaultOutputLimitHigh = STARTING_TORQUE,
       .hDefaultOutputLimitLow =  NOMINAL_TORQUE,
-      .hDecreasingRange = DYNAMICTORQUE_THRESHOLD_SPEED,
-      .hDecreasingEndValue = DYNAMICTORQUE_THRESHOLD_SPEED,
+      .hDecreasingRange = 10 * DYNAMICTORQUE_THRESHOLD_SPEED,
+      .hDecreasingEndValue = 10 * DYNAMICTORQUE_THRESHOLD_SPEED,
   },
 
   .hSTCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,

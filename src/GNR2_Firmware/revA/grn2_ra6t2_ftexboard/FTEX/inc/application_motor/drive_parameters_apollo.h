@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       380 /*!< Max speed for the current application in mechanical rpm */
+#define MAX_APPLICATION_SPEED_RPM       1000 /*!< Max speed for the current application in mechanical rpm */
 #define MIN_APPLICATION_SPEED_RPM       0 /*!< Min speed for the current application in mechanical rpm */
 #define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
                                                              measurement errors before
@@ -26,7 +26,7 @@
                                                            measurements before main sensor
                                                            goes in fault */
 
-#define HALL_AVERAGING_FIFO_DEPTH        10 /*!< depth of the FIFO used to
+#define HALL_AVERAGING_FIFO_DEPTH        6 /*!< depth of the FIFO used to
                                                            average mechanical speed */
 #define HALL_MTPA  true                                 /* Must be set true. TODO: Remove that parameter. */
 /****** State Observer + PLL ****/
@@ -124,14 +124,14 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
-#define MAX_APPLICATION_POSITIVE_POWER  1500    /* Refers to maximum power that drive can push to the motor */
-#define MAX_APPLICATION_NEGATIVE_POWER  1500    /* Refers to maximum power that drive can accept from the motor */
+#define MAX_APPLICATION_POSITIVE_POWER  2500    /* Refers to maximum power that drive can push to the motor */
+#define MAX_APPLICATION_NEGATIVE_POWER  2500    /* Refers to maximum power that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
 
 /* Foldbacks */
 #define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM   /* Max speed value (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
-#define FOLDBACK_SPEED_INTERVAL         200                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
+#define FOLDBACK_SPEED_INTERVAL         400                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMPERATURE_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
 #define FOLDBACK_HS_TEMP_INTERVAL       20                         /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
@@ -143,8 +143,8 @@
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
 
 /*Torque ramp settings */
-#define DEFAULT_TORQUE_SLOPE_UP        4000        /* Slope in cNm per second */
-#define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_UP        80000        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_DOWN      80000        /* Slope in cNm per second */
 #define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */
 
