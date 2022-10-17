@@ -17,11 +17,11 @@
 #include "r_agt.h"
 
 // =============================== Defines ================================== //
-#define RPMCOEFF        60      		// RPM multiplication for r/min
-#define PRECISIONCOEFF	1000				// ms coefficient precision
-#define COEFFREQ        1000000	// Period coeff for usecond division
-#define MICRO_SEC 			1000000 		// us coefficient precision
-#define PERIOD_FACTOR		2						// Period factor
+#define RPMCOEFF        60      // RPM multiplication for r/min
+#define PRECISIONCOEFF	1000    // ms coefficient precision
+#define COEFFREQ        1000000000	// Period coeff for usecond division
+#define MICRO_SEC       1000000 // us coefficient precision
+#define PERIOD_FACTOR   2       // Period factor
 	   
 // =============================== Variables ================================== //
 
@@ -35,17 +35,17 @@ typedef enum
 
 typedef struct
 {
-	  const timer_instance_t* PF_Timer;
+    const timer_instance_t* PF_Timer;
 	
 }  PulseFrequencyParam_t; 
 
 
 typedef struct
 {
-	TimerType_t TimerType;
-  const timer_instance_t* pTimer;
+    TimerType_t TimerType;
+    const timer_instance_t* pTimer;
 	
-  uint32_t wCaptureCount; 		/* timer capture variable */
+    uint32_t wCaptureCount; 		/* timer capture variable */
 	uint32_t wCaptureOverflow; /* timer capture overflow variable */
 	uint32_t wUsPeriod; 			/* timer us Period Detection */
 	

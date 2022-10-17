@@ -10,6 +10,7 @@
 #include "wheel_speed_sensor.h"
 #include "ASSERT_FTEX.h"
 // ==================== Public function prototypes ======================== //
+
 /**
     Wheel Speed Sensor Initialization
 */
@@ -29,8 +30,11 @@ void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle)
 		pHandle->bSlowDetectCount ++;
 		if (pHandle->bSlowDetectCount > pHandle->bSlowDetectCountValue)
 		{
-			PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
-			pHandle->bSlowDetectCount = 0;
+            PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
+            /* Affectation to the wheel speed sensor read value from the gpt counter read*/
+            pHandle->wWheelSpeed_Read = (uint32_t) pHandle->pPulseFrequency->wUsPeriod; 
+            /* Reset the wheel slow loop counter*/
+            pHandle->bSlowDetectCount = 0;
 		}
 	}
 	/* WSS calculate speed in normal mode*/
@@ -55,7 +59,7 @@ uint32_t WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle)
 */
 uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle)
 {
-	pHandle->wWheelSpeedFreq = COEFFREQ / WheelSpdSensor_GetPeriodValue(pHandle);
+	pHandle->wWheelSpeedFreq = COEFFREQ / (WheelSpdSensor_GetPeriodValue(pHandle));
 	return pHandle->wWheelSpeedFreq;
 }
 
@@ -64,7 +68,17 @@ uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle)
 */
 int32_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle)
 {
-	pHandle->wWheelSpeedRpm = (((WheelSpdSensor_GetSpeedFreq(pHandle) / pHandle->bPulsePerRotation)* RPMCOEFF)/PRECISIONCOEFF);
+    uint32_t wSpeedFreq = WheelSpdSensor_GetSpeedFreq(pHandle);
+    
+    if (pHandle->bSpeedslowDetect)
+    {   // Ebgo Wheel Parameters 
+        pHandle->wWheelSpeedRpm = (((wSpeedFreq / pHandle->bPulsePerRotation)* RPMCOEFF) / PRECISIONCOEFF) * pHandle->bSpeedslowDetectCorrection;
+    }  
+    else
+    {   // Grizzly Wheel Parameters
+        pHandle->wWheelSpeedRpm = (((wSpeedFreq / pHandle->bPulsePerRotation)* RPMCOEFF) / PRECISIONCOEFF) * pHandle->bSpeedslowDetectCorrection;
+    }
+	
 	return pHandle->wWheelSpeedRpm;
 }
 

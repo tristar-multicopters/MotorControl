@@ -34,10 +34,14 @@ struct {
 #define DELAY_AFTER_BOOTUP                   500    /* 500 RTOS ticks delay to prevent starting motors just after system bootup */
 #define TASK_VCFASTLOOP_SAMPLE_TIME_TICK     10     /* VC_FastLoop execute every 10 ticks */
 #define TASK_VCSTM_SAMPLE_TIME_TICK          10     /* VC_StateMachine execute every 10 ticks */
+#define TASK_VCSLOWLOOP_SAMPLE_TIME_TICK     50     /* VC_SlowLoop execute every (50*10*0.5 ticks)= 250ms called in the MedFreq Task*/
 #define RETURN_TO_STANDBY_LOOPTICKS          0      // Max number of ticks to stay in run while stop conditions are met
 #define START_MOTORS_LOOPTICKS               2      // Max number of ticks to stay in standby while start conditions are met
 #define START_LOOPTICKS                      500    // Max number of ticks to stay in start state
 #define STOP_LOOPTICKS                       500    // Max number of ticks to stay in stop state
+
+/************* VARIABLES ****************/
+uint16_t TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT = 0;
 
 /************* TASKS ****************/
 
@@ -70,8 +74,20 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
     {
         PWRT_UpdatePowertrainPeripherals(pVCI->pPowertrain);
         PWRT_CalcMotorTorqueSpeed(pVCI->pPowertrain);
-        // Check PAS activation based on torque or cadence
-        PWRT_UpdatePASDetection(pVCI->pPowertrain);
+        
+        // VC_SlowLoop execute in the MediumFreq loop
+        TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT++;
+        if (TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT > TASK_VCSLOWLOOP_SAMPLE_TIME_TICK)
+        {
+            // Check PAS activation based on torque or cadence
+            PWRT_UpdatePASDetection(pVCI->pPowertrain);
+            // Pedal Assist Cadence reading period
+            PedalSpdSensor_CalculateSpeed(pVCI->pPowertrain->pPSS);
+            // Wheel Speed sensor reading period
+            WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pWSS);      
+            //reset the count loop           
+            TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT = NULL;
+        }
         
         #if ENABLE_VC_DAC_DEBUGGING
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);

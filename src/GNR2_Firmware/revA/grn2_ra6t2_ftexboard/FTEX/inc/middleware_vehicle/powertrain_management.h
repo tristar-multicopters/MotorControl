@@ -22,12 +22,17 @@
 #include "pedal_torque_sensor.h"
 #include "wheel_speed_sensor.h"
 
-
 // ============================== Defines =============================== // 
-#define PAS_PERCENTAGE	(uint8_t)100		/* Percentage for PAS use */
+#define PAS_PERCENTAGE	    (uint8_t)100	/* Percentage for PAS use */
+
+#define PAS_LEVEL_SPEED_0   (uint8_t)0      /* Maximum Speed for PAS Level 0 in Km/h */
+#define PAS_LEVEL_SPEED_1   (uint8_t)10     /* Maximum Speed for PAS Level 1 in Km/h */
+#define PAS_LEVEL_SPEED_2   (uint8_t)15     /* Maximum Speed for PAS Level 2 in Km/h */
+#define PAS_LEVEL_SPEED_3   (uint8_t)20     /* Maximum Speed for PAS Level 3 in Km/h */
+#define PAS_LEVEL_SPEED_4   (uint8_t)25     /* Maximum Speed for PAS Level 4 in Km/h */
+#define PAS_LEVEL_SPEED_5   (uint8_t)30     /* Maximum Speed for PAS Level 5 in Km/h */
 
 // ======================== Configuration enums ======================== // 
-
 typedef enum
 {
 	PAS_LEVEL_0 = 0,
@@ -79,19 +84,20 @@ typedef struct
     uint16_t hStoppingSpeed;             /* Minimum speed to stop powertrain */
     
     int16_t hPASMaxTorque;               /* PAS Maximum given torque*/
-    uint16_t hPASMaxSpeed;               /* PAS maximum given speed */
+    uint16_t hPASMaxSpeed;               /* PAS Maximum given speed */
+    uint16_t hPASMaxKmSpeed;              /* PAS Maximum Km/h speed */
 		
     uint8_t bMaxLevel;                   /* PAS maximum given Level */
     uint8_t bCoeffLevel;                 /*  User Coefficient used to multiply the Torque ramp if needed */
     int16_t	hMaxTorqueRatio;             /* PAS maximum torque ratio */
-    uint16_t	hMaxSpeedRatio;          /* PAS maximum speed ratio */
+    uint16_t hMaxSpeedRatio;             /* PAS maximum speed ratio */
 	
     bool bTorqueSensorUse;               /* Torque sensor use flag */
 	
     uint32_t MotorToHubGearRatio;        /* Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002 */
     uint16_t hFaultManagementTimeout;    /* Number of ticks the state machine should stay on fault state before restart */
-
-		PasLevel_t bPasLevel;								 /* PAS Level selection*/
+    
+    uint8_t bPASCountSafe;               /* Counter for safe detection of the PAS after one pedaling*/
 		
 } PWRT_Parameters_t;
 
@@ -113,7 +119,7 @@ typedef struct
     int16_t aSpeed[2];                            /* Array of speed reference, first element is for M1, second is for M2 */
     
     int16_t hTorqueSelect;                        /* Select torque to feed for motor control */
-    uint8_t bCurrentAssistLevel;                  /* Current pedal assist level */
+    PasLevel_t bCurrentAssistLevel;                  /* Current pedal assist level */
     bool bPASDetected;                            /* Use PAS flag  for detection */
 	
     Foldback_Handle_t DCVoltageFoldback;          /* Foldback handle using DCbus voltage */
@@ -325,6 +331,14 @@ PasLevel_t PWRT_GetAssistLevel (PWRT_Handle_t * pHandle);
 	* @retval pRefTorque in int16
 	*/
 int16_t PWRT_GetPASTorque(PWRT_Handle_t * pHandle);
+
+/**
+	* @brief  Set Pedal Assist standard torque based on screen informations
+    *         for Cadence PAS base
+	* @param  Powertrain handle
+	* @retval pRefTorque in int16
+	*/
+int16_t PWRT_GetPASTorqueSpeed(PWRT_Handle_t * pHandle);
 
 /**
 	* @brief  Set Pedal Assist standard speed based on screen informations

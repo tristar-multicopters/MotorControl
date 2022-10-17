@@ -126,7 +126,7 @@ const ioport_pin_cfg_t g_bsp_pin_cfg_data[] = {
     },
     {
         .pin = BSP_IO_PORT_14_PIN_08,
-        .pin_cfg = ((uint32_t) IOPORT_CFG_PERIPHERAL_PIN)
+        .pin_cfg = ((uint32_t) IOPORT_CFG_ANALOG_ENABLE)
     },
     {
         .pin = BSP_IO_PORT_14_PIN_10,

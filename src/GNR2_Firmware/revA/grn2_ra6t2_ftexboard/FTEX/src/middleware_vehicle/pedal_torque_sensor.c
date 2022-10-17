@@ -43,26 +43,40 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
 {
   uint32_t wAux;
   uint16_t hAux;
-	
+  uint16_t hBandwidth;
+    
   /* Use the Read conversion Manager for ADC read*/
   hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
   pHandle->hInstTorque = hAux;
-
-  pHandle->hAvADCValue = SignalFiltering_CalcOutputU16(&pHandle->TorqSensorFilter, hAux);
-
-	/* Compute torque sensor value (between 0 and 65535) */
-	hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 
+  /* Select the filter coefficient based on start or stop condition*/
+  if (pHandle->hInstTorque > pHandle->hAvADCValue)
+    hBandwidth = pHandle->hParameters.hLowPassFilterBW1;
+  else
+    hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
+  /* Check if the variable not exceeding the limit*/
+  if ( hAux != 0xFFFFu )
+  {
+    wAux =  ( uint32_t )( hBandwidth - 1u ); // Affect Bandwidth to the output value
+    wAux *= ( uint32_t ) ( pHandle->hAvADCValue ); // Multiply the Avrg value with the coefficient
+    wAux += hAux;
+    wAux /= ( uint32_t )( hBandwidth );// Devide the output value  with the coefficient for a new avrg value
+    /* Affect the average value to the hAvADCValue */
+    pHandle->hAvADCValue = ( uint16_t ) wAux;
+  }
+  
+  /* Compute torque sensor value (between 0 and 65535) */
+  hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 
 					(pHandle->hAvADCValue - pHandle->hParameters.hOffsetPTS) : 0; //Substraction without overflow
 	
-	wAux = (uint32_t)(pHandle->hParameters.bSlopePTS * hAux);
-	wAux /= pHandle->hParameters.bDivisorPTS;
-	if (wAux > UINT16_MAX) 
+  wAux = (uint32_t)(pHandle->hParameters.bSlopePTS * hAux);
+  wAux /= pHandle->hParameters.bDivisorPTS;
+  if (wAux > UINT16_MAX) 
   {	
 		wAux = UINT16_MAX;
   }
-	hAux = (uint16_t)wAux;
+  hAux = (uint16_t)wAux;
 	
-	pHandle->hAvTorqueValue = hAux;	
+  pHandle->hAvTorqueValue = hAux;	
 }
 
 

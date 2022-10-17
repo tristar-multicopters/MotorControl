@@ -17,20 +17,22 @@
 
 // ================= Structure used to configure a pin ===================== //
 typedef struct {
-	PulseFrequencyHandle_t * pPulseFrequency; /* Pointer to speed handle */
+    
+  PulseFrequencyHandle_t * pPulseFrequency;  /* Pointer to speed handle */
 
-	uint8_t	bPulsePerRotation;	/* Nunber of pulse per rotation */
+  uint8_t	bPulsePerRotation;  /* Nunber of pulse per rotation */
 		
-	uint32_t wWheelSpeed_Read;	/* Wheel Speed Sensor Periode value*/
-  uint32_t wWheelSpeedFreq;   /* Wheel Speed sensor frequency calculated value */
-  int32_t wWheelSpeedRpm;			/* Wheel Speed sensor rotation per minute calculated value */
-
-	bool bSpeedDetected;				/* True if speed is detected */
-	bool bSpeedslowDetect;			/* Use Wheel speed sensor flag  for slow detection */
-
-	uint8_t bSlowDetectCount; 		 /* Wheel speed sensor flag  variable for slow loop detection*/	
-	uint8_t bSlowDetectCountValue; /*Wheel speed sensor flag  last variable count for slow loop detection*/	
+  uint32_t wWheelSpeed_Read;    /* Wheel Speed Sensor Periode value*/
+  uint32_t wWheelSpeedFreq;     /* Wheel Speed sensor frequency calculated value */
+  int32_t wWheelSpeedRpm;       /* Wheel Speed sensor rotation per minute calculated value */
   
+  bool bSpeedDetected;          /* True if speed is detected */
+  bool bSpeedslowDetect;        /* Use Wheel speed sensor flag  for slow detection */
+
+  uint8_t bSlowDetectCount;      /* Wheel speed sensor flag  variable for slow loop detection*/	
+  uint8_t bSlowDetectCountValue; /*Wheel speed sensor flag  last variable count for slow loop detection*/	
+  uint8_t bSpeedslowDetectCorrection; /*Wheel speed /correction factor for slow loop detection on Velec*/
+	
 } WheelSpeedSensorHandle_t;
 
 // ==================== Public function prototypes ========================= //

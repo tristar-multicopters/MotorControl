@@ -35,14 +35,23 @@
 #define PTS_FILTER_BETA                   -0.27F			/* Butterworth beta coefficient pedal torque sensor filtering  */
 #define PTS_MAX_PTSVALUE                  UINT16_MAX	    /* Maximum analog value to reach */
 
-#define PTS_OFFSET_ADC2PTS                13000    /* Offset for ADC to pedal torque sensor linear transformation  */
-#define PTS_SLOPE_ADC2PTS                 5        /* Slope for ADC to pedal torque sensor linear transformation  */
-#define PTS_DIVISOR_ADC2PTS               4        /* Divisor for ADC to pedal torque sensor linear transformation  */
+#define PTS_OFFSET_ADC2PTS                8500    /* Offset for ADC to pedal torque sensor linear transformation  */
+#define PTS_SLOPE_ADC2PTS                 7        /* Slope for ADC to pedal torque sensor linear transformation  */
+#define PTS_DIVISOR_ADC2PTS               6        /* Divisor for ADC to pedal torque sensor linear transformation  */
 
-#define PTS_OFFSET_PTS2TORQUE             30    		/* Offset for pedal torque sensor to torque linear transformation  */
+#define PTS_OFFSET_PTS2TORQUE             20    		/* Offset for pedal torque sensor to torque linear transformation  */
 #define PTS_SLOPE_PTS2TORQUE              7        /* Slope for pedal torque sensor to torque linear transformation  */
 #define PTS_DIVISOR_PTS2TORQUE            255        /* Divisor for pedal torque sensor to torque linear transformation  */
 
+#define PTS_FILTER_BW1                    10        /* BW coefficient for pedal torque sensor avereging */
+#define PTS_FILTER_BW2                    25        /* BW coefficient for pedal torque sensor avereging */
+
+/************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
+
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION 4       /* Wheel speed sensor cycle number for one wheel rotation */
+#define WHEEL_SPEED_SLOW_LOOP_DETECT        false   /* Wheel speed sensor slow detect counter flag activation */
+#define WHEEL_SPEED_SLOW_LOOP_COUNT         1       /* Wheel speed sensor slow detect counter to get 750ms per function call */
+#define WHEEL_SPEED_SENSOR_CORRECTION_FACTOR 1      /* Wheel speed sensor slow detect correction for a signal after two wheel spin detection */    
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
@@ -67,6 +76,7 @@
 #define POWERTRAIN_STOP_SPEED_THRESHOLD                   0	                /* Speed value to stop powertrain  */
 #define POWERTRAIN_PAS_MAX_TORQUE                         1700              /* Maximum motor torque to apply using pedal assist  */
 #define POWERTRAIN_PAS_MAX_SPEED                          1350              /* Maximum motor speed reachable using pedal assist  */
+#define POWERTRAIN_PAS_MAX_KM_SPEED                       33                /* Maximum Bike Speed in Km/h using RPM */
 
 #define POWERTRAIN_PAS_MAX_LEVEL                          5                 /* Maximum PAS Level given by the screen */
 #define POWERTRAIN_PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */
@@ -85,7 +95,11 @@
                                                                                                torque */
 #define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL      MAX_APPLICATION_SPEED_RPM/4       /* Speed interval value between maximum torque and zero torque,
                                                                                                when using dual motor startup strategy. */
-
+#define POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL              MAX_APPLICATION_SPEED_RPM/10      /* Speed interval value between maximum torque and start torque,
+                                                                                               when using single motor startup strategy. */
+#define FOLDBACK_SLOW_START_BANDWIDTH                     250               /* Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control */
+#define FOLDBACK_SLOW_STOP_BANDWIDTH                      50                /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
+#define FOLDBACK_TIMEOUT                                  400               /* Fold Back Timeout for the slow start ramp */
 
 #endif                                            
 

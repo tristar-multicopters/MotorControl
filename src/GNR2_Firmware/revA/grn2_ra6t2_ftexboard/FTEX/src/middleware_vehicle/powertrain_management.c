@@ -42,6 +42,9 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
+    
+    // Enable slow motor Start for Pedal Assist cadence base
+    Foldback_EnableSlowStart(&pHandle->SpeedFoldbackStartupDualMotor);
 }
 
 /**
@@ -150,7 +153,8 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                     } 
                     else
                     {
-                        hAux = Foldback_ApplyFoldback( &pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1) );
+                        hAux = Foldback_ApplyFoldback( &pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1));
+                        hAux = Foldback_ApplySlowStart(&pHandle->SpeedFoldbackStartupDualMotor, hAux);
                         pHandle->aTorque[pHandle->bMainMotor] = hAux;
                     }
                 }							
@@ -879,7 +883,7 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 void PWRT_SetAssistLevel(PWRT_Handle_t * pHandle, PasLevel_t bLevel)
 {
   ASSERT(pHandle != NULL);
-	pHandle->bCurrentAssistLevel = bLevel;
+  pHandle->bCurrentAssistLevel = bLevel;
 }
 
 /**
@@ -890,11 +894,11 @@ void PWRT_SetAssistLevel(PWRT_Handle_t * pHandle, PasLevel_t bLevel)
 PasLevel_t PWRT_GetAssistLevel (PWRT_Handle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-	return pHandle->bCurrentAssistLevel;
+  return pHandle->bCurrentAssistLevel;
 }
 
 /**
-	* @brief  Set Pedal Assist standard torque based on screen informations
+	* @brief  Set Pedal Assist standard torque based on screen informations`
 	* @param  Powertrain handle
 	* @retval pRefTorque in int16
 	*/
@@ -906,7 +910,46 @@ int16_t PWRT_GetPASTorque(PWRT_Handle_t * pHandle)
 	Got_Level = PWRT_GetAssistLevel(pHandle);
 	// Calculate the maximum given reference torque per level 
 	hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->sParameters.bMaxLevel) * Got_Level;
-	return hRefTorque;
+    
+    return hRefTorque;  
+}
+/**
+	* @brief  Set Pedal Assist standard torque based on screen informations`
+    *         for Cadence PAS base
+	* @param  Powertrain handle
+	* @retval pRefTorque in int16
+	*/
+int16_t PWRT_GetPASTorqueSpeed(PWRT_Handle_t * pHandle)
+{
+	int16_t hRefTorque;
+	PasLevel_t Got_Level;
+	// Get the used PAS level 
+	Got_Level = PWRT_GetAssistLevel(pHandle);  
+    switch(Got_Level)
+	{
+		case PAS_LEVEL_0:
+			hRefTorque = 0;
+			break;      
+        case PAS_LEVEL_1:
+            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_3) / PAS_LEVEL_5; // ratio of 3/5 from the max torque based on the feeling of the user
+			break;
+		case PAS_LEVEL_2:
+            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_4) / PAS_LEVEL_6; // ratio of 4/6 from the max torque based on the feeling of the user 
+            break;
+		case PAS_LEVEL_3:
+            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_4) / PAS_LEVEL_5; // ratio of 4/5 from the max torque based on the feeling of the user
+			break;
+		case PAS_LEVEL_4:
+            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_7) / PAS_LEVEL_8; // ratio of 7/8 from the max torque based on the feeling of the user
+			break;
+		case PAS_LEVEL_5:
+            hRefTorque = (pHandle->sParameters.hPASMaxTorque); // ratio of 1 from the max torque based on the feeling of the user
+			break;
+		
+		default:
+            hRefTorque = 0;
+	}  
+    return hRefTorque;
 }
 
 /**
@@ -916,15 +959,45 @@ int16_t PWRT_GetPASTorque(PWRT_Handle_t * pHandle)
 	*/
 void PWRT_PASSetMaxSpeed(PWRT_Handle_t * pHandle)
 {
-	uint16_t hMaxSpeedTemp;
-	
+	uint16_t hKmSpeedTemp;
 	PasLevel_t Got_Level;
 	Got_Level = PWRT_GetAssistLevel(pHandle);
 	// Calculate the maximum speed for control 
-	hMaxSpeedTemp = (pHandle->sParameters.hMaxSpeedRatio * pHandle->sParameters.hPASMaxSpeed) / PAS_PERCENTAGE;
-	// Set Speed limitation range for motor control
-	Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (hMaxSpeedTemp / pHandle->sParameters.bMaxLevel) * Got_Level);
-	Foldback_SetDecreasingEndValue (&pHandle->SpeedFoldbackStartupDualMotor, (int16_t)(hMaxSpeedTemp / pHandle->sParameters.bMaxLevel) * Got_Level);
+	hKmSpeedTemp = ((pHandle->sParameters.hMaxSpeedRatio * pHandle->sParameters.hPASMaxSpeed) / PAS_PERCENTAGE) / pHandle->sParameters.hPASMaxKmSpeed;
+    // Set Speed limitation range for motor control 
+    switch(Got_Level)
+	{
+      case PAS_LEVEL_0:
+        Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+        Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+        break;      
+      case PAS_LEVEL_1:
+        Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_1)));
+        Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_1)));
+        break;
+
+      case PAS_LEVEL_2:
+        Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_2)));
+        Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_2)));
+        break;
+      case PAS_LEVEL_3:
+        Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_3)));
+        Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_3)));
+        break;
+      case PAS_LEVEL_4:
+        Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_4)));
+        Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_4)));
+        break;
+      case PAS_LEVEL_5:
+        Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_5)));
+        Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_5)));
+        break;
+		
+      default:
+        Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+        Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+	}
+    
 }
 
 /**
@@ -1024,9 +1097,20 @@ void PWRT_UpdatePASDetection (PWRT_Handle_t * pHandle)
 	if ((pHandle->sParameters.bTorqueSensorUse) && (hTorqueSens > hOffsetTemp) )
 		pHandle->bPASDetected = true;
 	else if (wSpeedt > 0)
-		pHandle->bPASDetected = true;
-	else 
-		pHandle->bPASDetected = false;
+    {
+        pHandle->sParameters.bPASCountSafe++;
+        if ((pHandle->sParameters.bPASCountSafe > 1))
+        {
+            pHandle->bPASDetected = true;
+            pHandle->sParameters.bPASCountSafe--;
+        }
+
+    }
+    else
+    {
+        pHandle->sParameters.bPASCountSafe = 0;
+        pHandle->bPASDetected = false;
+    }
 } 
 
 /**
@@ -1056,7 +1140,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 		}
 		else
 		{
-			pHandle->hTorqueSelect= PWRT_GetPASTorque(pHandle);
+			pHandle->hTorqueSelect= PWRT_GetPASTorqueSpeed(pHandle);
 			PWRT_PASSetMaxSpeed(pHandle); 
 		}
 	}

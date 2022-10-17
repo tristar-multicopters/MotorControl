@@ -85,17 +85,19 @@ PedalTorqSensorHandle_t PedalTorqueSensor =
     },
     .hParameters =
     {
-			.fFilterAlpha = PTS_FILTER_ALPHA,
-			.fFilterBeta = PTS_FILTER_BETA,
+        .fFilterAlpha = PTS_FILTER_ALPHA,
+        .fFilterBeta = PTS_FILTER_BETA,
 
-			.hOffsetPTS = PTS_OFFSET_ADC2PTS,
-			.bSlopePTS = PTS_SLOPE_ADC2PTS,
-			.bDivisorPTS = PTS_DIVISOR_ADC2PTS,
+        .hOffsetPTS = PTS_OFFSET_ADC2PTS,
+        .bSlopePTS = PTS_SLOPE_ADC2PTS,
+        .bDivisorPTS = PTS_DIVISOR_ADC2PTS,
 
-			.hOffsetMT = PTS_OFFSET_PTS2TORQUE,
-			.bSlopeMT = PTS_SLOPE_PTS2TORQUE,
-			.bDivisorMT = PTS_DIVISOR_PTS2TORQUE,
-			.hMax = PTS_MAX_PTSVALUE,
+        .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
+        .bSlopeMT = PTS_SLOPE_PTS2TORQUE,
+        .bDivisorMT = PTS_DIVISOR_PTS2TORQUE,
+        .hMax = PTS_MAX_PTSVALUE,
+        .hLowPassFilterBW1 = PTS_FILTER_BW1,
+        .hLowPassFilterBW2 = PTS_FILTER_BW2,
     }
 };
 
@@ -131,7 +133,11 @@ PedalSpeedSensorHandle_t PedalAssistHandle = {
 
 WheelSpeedSensorHandle_t WheelSpeedHandle =
 {
-   .pPulseFrequency = &PulseFreqHandleWheel,
+  .pPulseFrequency = &PulseFreqHandleWheel,
+  .bPulsePerRotation = WHEEL_SPEED_SENSOR_NBR_PER_ROTATION,
+  .bSpeedslowDetect = WHEEL_SPEED_SLOW_LOOP_DETECT,
+  .bSlowDetectCountValue = WHEEL_SPEED_SLOW_LOOP_COUNT, 
+  .bSpeedslowDetectCorrection = WHEEL_SPEED_SENSOR_CORRECTION_FACTOR
 };
 
 
@@ -166,6 +172,7 @@ PWRT_Handle_t PowertrainHandle =
 	
 	.sParameters.hPASMaxTorque = POWERTRAIN_PAS_MAX_TORQUE,
 	.sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
+    .sParameters.hPASMaxKmSpeed = POWERTRAIN_PAS_MAX_KM_SPEED,
 	.sParameters.bMaxLevel = POWERTRAIN_PAS_MAX_LEVEL,
 	.sParameters.bCoeffLevel = POWERTRAIN_PAS_LEVEL_COEFF,
 	.sParameters.hMaxTorqueRatio = POWERTRAIN_PAS_MAX_TORQUE_RATIO,
@@ -175,28 +182,31 @@ PWRT_Handle_t PowertrainHandle =
 	.sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
 	.sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
     .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
+    .sParameters.bPASCountSafe = 0,
         
     .SpeedFoldbackStartupDualMotor =
     {
         .hDecreasingEndValue = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END,
         .hDecreasingRange = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL,
+        .hDecreasingInterval = POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL,
         .hDefaultOutputLimitHigh = POWERTRAIN_MAX_MOTOR_TORQUE,
         .hDefaultOutputLimitLow = 0,
         .FoldbackConfig = TRIM,
         .bEnableFoldback = true,
+        .hSlowStartBandwidth = FOLDBACK_SLOW_START_BANDWIDTH,
+        .hSlowStopBandwidth = FOLDBACK_SLOW_STOP_BANDWIDTH,
+        .wSlowStartTimeout =  FOLDBACK_TIMEOUT,
     },
-
-    .pMDI = &MDInterfaceHandle,
-    .pThrottle = &ThrottleHandle,
-    .pBrake = &BrakeHandle,
-    .pHeadLight = &HeadLightHandle,
+	.pMDI = &MDInterfaceHandle,
+	.pThrottle = &ThrottleHandle,
+	.pBrake = &BrakeHandle,
+	.pHeadLight = &HeadLightHandle,
     .pTailLight = &TailLightHandle,
-    .pMS = &MotorSelectorHandle,
-    .pPWREN = &PowerEnableHandle,
-    .pPSS = &PedalAssistHandle,
-    .pPTS = &PedalTorqueSensor,
-    .pWSS = &WheelSpeedHandle,	
-			
+	.pMS = &MotorSelectorHandle,
+	.pPWREN = &PowerEnableHandle,
+	.pPSS = &PedalAssistHandle,
+	.pPTS = &PedalTorqueSensor,
+    .pWSS = &WheelSpeedHandle,		
 };
 
 VCI_Handle_t VCInterfaceHandle =

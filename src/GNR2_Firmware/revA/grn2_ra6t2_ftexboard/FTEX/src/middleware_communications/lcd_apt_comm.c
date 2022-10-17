@@ -246,36 +246,12 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
         
          replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
 
-//         /* Condition use for wheel speed sensor rpm to send */
-//         if (pHandle->pVController->pPowertrain->sParameters.bUseWheelSpeedSensor)
-//         {
-//             toSend = 50;//WSS_GetSpeedRPM(m_APT_handle.pVController->pPowertrain->pWSS);
-//         }
-//         else
-//         {
-//             toSend = 50;//abs(MDI_getSpeed(m_APT_handle.pVController->pPowertrain->pMDI,M1));        
-//    
-//             GearRatio = pHandle->pVController->pPowertrain->sParameters.GearRatio;  //Gear ratio (motor compared to wheel) is split. 
-//                                                                                     //msb 16 bits is the numerator, 
-//                                                                                     //lsb 16 bits is denominator
-//                                                                                     //ex: 3/2 ratio would be 0x00030002                                                                                                                                                                         
-//                                                                                     //default should be 0x00010001 
-//
-//             toSend = (int32_t) (((GearRatio & 0x0000FFFF) * (uint32_t) toSend) / ((GearRatio & 0xFFFF0000) >> 16));
-//         }
-//            
-//         toSend = toSend * 500;       //Converion from RPM to period in ms 
-//                                  
-//         /* Condition use for wheel speed sensor conversion call*/
-//         if (pHandle->pVController->pPowertrain->sParameters.bUseWheelSpeedSensor)
-//         {    
-//             toSend = (500000/(toSend/60)) * pHandle->pVController->pPowertrain->sParameters.bWheelSpreedRatio; //
-//         }
-//         else
-//         {    
-//             toSend = 500000/(toSend/60);
-//         }
-         toSend = 0;
+         /* Condition use for wheel speed sensor rpm to send */
+        toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pWSS); // Getting RPM from Wheel Speed Module
+        toSend = toSend * 500;       //Converion from RPM to period in ms 
+
+        toSend = 500000/(toSend/60);
+     
          replyFrame.Buffer[ 2] = (toSend & 0x00FF);      //Wheel speed Low half 
          replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; //Wheel speed High half
       

@@ -30,7 +30,10 @@ typedef struct
 	int8_t      bSlopeMT;   /* Gain factor of torque sensor vs torque */
 	uint8_t     bDivisorMT; /* Scaling factor of torque sensor vs torque */
 	
-	uint16_t		hMax;				/* torque signal when at maximum position */
+	uint16_t    hMax;       /* torque signal when at maximum position */
+
+	uint16_t 	hLowPassFilterBW1;  /* used to configure the first coefficient software filter bandwidth */
+	uint16_t 	hLowPassFilterBW2;  /* used to configure the second coefficient software filter bandwidth */ 
 	
 } PTS_Param_t;
 

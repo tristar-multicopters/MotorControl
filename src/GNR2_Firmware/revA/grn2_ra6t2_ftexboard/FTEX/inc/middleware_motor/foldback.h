@@ -25,10 +25,17 @@ typedef struct
 {
 	bool bEnableFoldback;               // Check flag if foldback is enabled.
     bool bIsInverted;                   // Check flag if input variables are negative.
+    bool bEnableSlowStart;              // Flag for smooth start using PAS
+    bool bRefreshSlowStart;             // Flag to refresh the smooth start using PAS
+    uint16_t hSlowStartBandwidth;       // Slow start filter bandwidth coefficient for slow ramp to the PAS Control
+    uint16_t hSlowStopBandwidth;        // Slow stop filter bandwidth coefficient for slow ramp to the PAS Control
+    uint32_t wSlowStartTimeout;         // Fold Back slow start timeout   
+    
     FoldbackConfig_t FoldbackConfig;                     // Check flag if the foldback handle is configured to trim the input or set the thresholds. 
     
     int16_t  hDecreasingEndValue;        // Maximum of control variable beyond which input variable is trimmed to lower limit. 
 	uint16_t hDecreasingRange;          // Decreasing range of control variable.
+    int16_t  hDecreasingInterval;       // Range of control variable beyond which input variable is trimmed to lower limit. 
 	int16_t  hMaxOutputLimitHigh;       // Higher threshold of maximum value that input variable can take, this variable changes depending upon operating conditions.
     int16_t  hMaxOutputLimitLow;        // Lower threshold of maximum value that input variable can take, this variable changes depending upon operating conditions.
     uint16_t hDefaultOutputLimitHigh;   // Higher threshold of maximum value that input variable can take.
@@ -73,7 +80,15 @@ void Foldback_SetDecreasingRange(Foldback_Handle_t * pHandle, uint16_t hDecreasi
   * @param  hDecreasingEndValue: End value of decreasing output limit
   * @retval None
   */
-void Foldback_SetDecreasingEndValue(Foldback_Handle_t * pHandle, int16_t hDecreasingEndValue);
+void Foldback_SetDecreasingEndValue(Foldback_Handle_t * pHandle, int16_t hDecreasingRange);
+
+/**
+  * @brief  Function for setting the end value of the control variable based on an interval
+  * @param  pHandle: handler of the current instance of the Foldback component
+  * @param  hDecreasingEndValue: End value of decreasing output limit
+  * @retval None
+  */
+void Foldback_SetDecreasingRangeEndValue(Foldback_Handle_t * pHandle, int16_t hDecreasingRange);
 
 /**
   * @brief  Function for enabling foldback feature
@@ -88,6 +103,21 @@ void Foldback_EnableFoldback(Foldback_Handle_t * pHandle);
   * @retval None
   */
 void Foldback_DisableFoldback(Foldback_Handle_t * pHandle);
+
+/**
+  * @brief  Apply a low pass filter on the torque after for smooth 
+  *         accelearation with Pedal Assist  
+  * @param  Foldback handle and torque value
+  * @retval Torque after passing it through the filter
+  */
+int16_t Foldback_ApplySlowStart(Foldback_Handle_t * pHandle, int16_t hTorque);
+
+/**
+  * @brief  Used to start or refresh a slow start
+  * @param  Foldback handle 
+  * @retval Nothing
+  */
+void Foldback_EnableSlowStart(Foldback_Handle_t * pHandle);
 
 #endif
 
