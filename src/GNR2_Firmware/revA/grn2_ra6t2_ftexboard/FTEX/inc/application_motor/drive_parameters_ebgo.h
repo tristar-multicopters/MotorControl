@@ -96,10 +96,10 @@
                                                            number of PWM cycles */
 /* Gains values for torque and flux control loops */
 #define PID_TORQUE_KP_DEFAULT         300       /* Default gain if adaptative gain feature is not used */
-#define PID_TORQUE_KI_DEFAULT         4000      /* Default gain if adaptative gain feature is not used */
+#define PID_TORQUE_KI_DEFAULT         1000      /* Default gain if adaptative gain feature is not used */
 #define PID_TORQUE_KD_DEFAULT         100       /* Default gain if adaptative gain feature is not used */
 #define PID_FLUX_KP_DEFAULT           100       /* Default gain if adaptative gain feature is not used */
-#define PID_FLUX_KI_DEFAULT           6000      /* Default gain if adaptative gain feature is not used */
+#define PID_FLUX_KI_DEFAULT           1000      /* Default gain if adaptative gain feature is not used */
 #define PID_FLUX_KD_DEFAULT           100       /* Default gain if adaptative gain feature is not used */
 
 /* Torque/Flux control loop gains dividers*/
