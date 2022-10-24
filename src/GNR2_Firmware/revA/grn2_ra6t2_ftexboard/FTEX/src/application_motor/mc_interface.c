@@ -11,6 +11,8 @@
 
 #include "mc_interface.h"
 
+
+
 /* Private macros ------------------------------------------------------------*/
 /**
   * @brief This macro converts the exported enum from the state machine to the corresponding bit field.
@@ -22,12 +24,13 @@
 /*
 * see function definition
 */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars)
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor)
 {
   pHandle->pSTM = pSTM;
   pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
   pHandle->pFOCVars = pFOCVars;
-
+  pHandle->pBusVoltageSensor = pBusVoltageSensor;
+    
   /* Buffer related initialization */
   pHandle->LastCommand = MCI_NOCOMMANDSYET;
   pHandle->hFinalSpeed = 0;
@@ -416,4 +419,23 @@ int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHa
   }
 
   return ((int16_t) wAux1);
+}
+
+/**
+  *  Converts the digital voltage of the bus to a value in volts * 100
+  *  Function has been added to enable the battery monitoring module in 
+  *  vehicle control to have acces to the bus voltage.
+  */
+uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHandle)
+{ 
+    uint32_t VoltageConverted = 0;
+    uint16_t ConversionFactor = 0;
+    
+    ConversionFactor = pHandle->pBusVoltageSensor->hConversionFactor;
+    VoltageConverted = VbusSensor_GetAvBusVoltageDigital(pHandle->pBusVoltageSensor);
+    VoltageConverted = VoltageConverted * ConversionFactor * 100u;
+    VoltageConverted = VoltageConverted/65536u;
+         
+   return (uint16_t) VoltageConverted; // Return voltage * 100 so 49.63 V will be 4963.0
+                                       // This is done to keep precision 
 }

@@ -28,8 +28,10 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     BRK_Init(pHandle->pBrake);
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
+    BatMonitor_Init(pHandle->pBatMonitorHandle, pHandle->pMDI->pMCI);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
+    
 		
     PedalSpdSensor_Init(pHandle->pPSS);
     PedalTorqSensor_Init(pHandle->pPTS);

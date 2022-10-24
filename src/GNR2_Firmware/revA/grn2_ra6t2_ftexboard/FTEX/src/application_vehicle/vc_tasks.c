@@ -13,6 +13,7 @@
 
 #include "gnr_main.h"
 
+uint16_t TEST_SOC;
 
 /************* DEBUG ****************/
 
@@ -84,7 +85,11 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
             // Pedal Assist Cadence reading period
             PedalSpdSensor_CalculateSpeed(pVCI->pPowertrain->pPSS);
             // Wheel Speed sensor reading period
-            WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pWSS);      
+            WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pWSS);
+            
+            // Update the SOC voltage reference
+            BatMonitor_UpdateSOC(pVCI->pPowertrain->pBatMonitorHandle);
+            
             //reset the count loop           
             TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT = NULL;
         }

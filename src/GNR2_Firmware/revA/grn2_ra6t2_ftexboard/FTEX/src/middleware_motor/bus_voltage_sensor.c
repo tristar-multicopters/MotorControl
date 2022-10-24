@@ -18,7 +18,7 @@ uint16_t VbusSensor_GetBusVoltageDigital(BusVoltageSensorHandle_t * pHandle)
 
 uint16_t VbusSensor_GetAvBusVoltageDigital(BusVoltageSensorHandle_t * pHandle)
 {
-  return pHandle->hAvBusVoltageDigital;
+    return pHandle->hAvBusVoltageDigital;
 }
 
 

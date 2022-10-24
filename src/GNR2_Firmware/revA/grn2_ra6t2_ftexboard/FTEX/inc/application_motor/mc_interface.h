@@ -17,7 +17,7 @@ extern "C" {
 #include "mc_type.h"
 #include "mc_state_machine.h"
 #include "speed_torq_ctrl.h"
-
+#include "bus_voltage_sensor.h"
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum
@@ -43,10 +43,11 @@ typedef enum
 
 typedef struct
 {
-  MotorStateMachineHandle_t * pSTM; /*!< State machine object used by MCI.*/
-  SpdTorqCtrlHandle_t * pSpeedTorqCtrl; /*!< Speed and torque controller object used by MCI.*/
-  pFOCVars_t pFOCVars;    /*!< Pointer to FOC vars used by MCI.*/
-  MCInterfaceUserCommands_t LastCommand; /*!< Last command coming from the user.*/
+  MotorStateMachineHandle_t * pSTM;            /*!< State machine object used by MCI.*/
+  SpdTorqCtrlHandle_t * pSpeedTorqCtrl;        /*!< Speed and torque controller object used by MCI.*/
+  pFOCVars_t pFOCVars;                         /*!< Pointer to FOC vars used by MCI.*/
+  BusVoltageSensorHandle_t *pBusVoltageSensor; // Used to raise the bus voltage sensor to the vehicle layer 
+  MCInterfaceUserCommands_t LastCommand;       /*!< Last command coming from the user.*/
   int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
   int16_t hFinalTorque;       /*!< Final torque of last ExecTorqueRamp
                                    command.*/
@@ -71,7 +72,7 @@ typedef struct
   * @param  pFOCVars pointer to FOC vars to be used by MCI.
   * @retval none.
   */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars);
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor);
 
 /**
   * @brief  This is usually a method managed by task. It must be called
@@ -370,6 +371,15 @@ int16_t MCInterface_GetPhaseCurrentAmplitude(MotorControlInterfaceHandle_t * pHa
   */
 int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHandle);
 
+/**
+  * @brief  Converts the digital voltage of the bus to a value in volts * 100
+  *         Function has been added to enable the battery monitoring module in 
+  *         vehicle control to have acces to the bus voltage.
+  *  
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the bus voltage in volts time 100 so 10v would be 1000
+  */
+uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHandle);
 
 #ifdef __cplusplus
 }

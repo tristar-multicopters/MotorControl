@@ -17,6 +17,7 @@
 #include "vc_defines.h"
 #include "foldback.h"
 #include "power_enable.h"
+#include "battery_monitoring.h"
 
 #include "pedal_speed_sensor.h"
 #include "pedal_torque_sensor.h"
@@ -108,6 +109,7 @@ typedef struct
     BRK_Handle_t * pBrake;                        /* Pointer to brake handle */
     Light_Handle_t * pHeadLight;                  /* Pointer to front light handle */
     Light_Handle_t * pTailLight;                  /* Pointer to rear light handle */
+    BatMonitor_Handle_t * pBatMonitorHandle;      /* Pointer to Battery monitor */    
     MS_Handle_t * pMS;                            /* Pointer to motor selector handle */
     PWREN_Handle_t * pPWREN;                      /* Pointer to power enable pin handle */
     PedalSpeedSensorHandle_t * pPSS;              /* Pointer to Pedal Speed Sensor handle */

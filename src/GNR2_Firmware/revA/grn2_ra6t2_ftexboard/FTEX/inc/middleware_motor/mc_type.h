@@ -165,14 +165,14 @@ typedef enum
   */
 typedef struct
 {
-  ab_t Iab;         /**< @brief Stator current on stator reference frame abc */
-  AlphaBeta_t Ialphabeta;  /**< @brief Stator current on stator reference frame alfa-beta*/
-  qd_t IqdHF;       /**< @brief Stator current on stator reference frame alfa-beta*/
-  qd_t Iqd;         /**< @brief Stator current on rotor reference frame qd */
-  qd_t Iqdref;      /**< @brief Stator current on rotor reference frame qd */
+  ab_t Iab;                    /**< @brief Stator current on stator reference frame abc */
+  AlphaBeta_t Ialphabeta;      /**< @brief Stator current on stator reference frame alfa-beta*/
+  qd_t IqdHF;                  /**< @brief Stator current on stator reference frame alfa-beta*/
+  qd_t Iqd;                    /**< @brief Stator current on rotor reference frame qd */
+  qd_t Iqdref;                 /**< @brief Stator current on rotor reference frame qd */
   int16_t UserIdref;           /**< @brief User value for the Idref stator current */
-  qd_t Vqd;         /**< @brief Phase voltage on rotor reference frame qd */
-  AlphaBeta_t Valphabeta;  /**< @brief Phase voltage on stator reference frame alpha-beta*/
+  qd_t Vqd;                    /**< @brief Phase voltage on rotor reference frame qd */
+  AlphaBeta_t Valphabeta;      /**< @brief Phase voltage on stator reference frame alpha-beta*/
   int16_t hTeref;              /**< @brief Reference torque */
   int16_t hElAngle;            /**< @brief Electrical angle used for reference frame transformation  */
   uint16_t hCodeError;         /**< @brief error message */

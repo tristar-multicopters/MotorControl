@@ -101,5 +101,10 @@
 #define FOLDBACK_SLOW_STOP_BANDWIDTH                      50                /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
 #define FOLDBACK_TIMEOUT                                  400               /* Fold Back Timeout for the slow start ramp */
 
+/*********************************Battery Monitoring*******************************/
+
+#define BATTERY_FULL_VOLT    52
+#define BATTERY_EMPTY_VOLT   46
+
 #endif                                            
 

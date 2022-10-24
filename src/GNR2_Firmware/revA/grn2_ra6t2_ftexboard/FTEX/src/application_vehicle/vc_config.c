@@ -41,6 +41,12 @@ Light_Handle_t TailLightHandle =
     .bIsInvertedLogic = false,      
 };    
 
+BatMonitor_Handle_t BatMonitorHandle = 
+{
+    .VBatMin = BATTERY_EMPTY_VOLT,  // Values that represent a fully charged battery and an empty one
+    .VBatMax = BATTERY_FULL_VOLT,   // Set in the VC_parameters_xxxxx.h of each bike
+};
+
 /**@brief Throttle initializing Parameters.
  */
 ThrottleHandle_t ThrottleHandle =
@@ -160,27 +166,27 @@ PWREN_Handle_t PowerEnableHandle =
 
 PWRT_Handle_t PowertrainHandle =
 {
-	.sParameters.bUseMotorM1 = POWERTRAIN_USE_MOTOR1,
-	.sParameters.bUseMotorM2 = POWERTRAIN_USE_MOTOR2,
-	.sParameters.bDefaultMainMotor = POWERTRAIN_DEFAULT_MAIN_MOTOR,
-	.sParameters.bMode = POWERTRAIN_DEFAULT_MODE,
-	.sParameters.bCtrlType = POWERTRAIN_DEFAULT_CONTROL_TYPE,
-	.sParameters.bM2TorqueInversion = POWERTRAIN_M2_TORQUE_INVERSION,
-	.sParameters.hStartingThrottle = POWERTRAIN_START_THROTTLE_THRESHOLD,
-	.sParameters.hStoppingThrottle = POWERTRAIN_STOP_THROTTLE_THRESHOLD,
-	.sParameters.hStoppingSpeed = POWERTRAIN_STOP_SPEED_THRESHOLD,
+    .sParameters.bUseMotorM1 = POWERTRAIN_USE_MOTOR1,
+    .sParameters.bUseMotorM2 = POWERTRAIN_USE_MOTOR2,
+    .sParameters.bDefaultMainMotor = POWERTRAIN_DEFAULT_MAIN_MOTOR,
+    .sParameters.bMode = POWERTRAIN_DEFAULT_MODE,
+    .sParameters.bCtrlType = POWERTRAIN_DEFAULT_CONTROL_TYPE,
+    .sParameters.bM2TorqueInversion = POWERTRAIN_M2_TORQUE_INVERSION,
+    .sParameters.hStartingThrottle = POWERTRAIN_START_THROTTLE_THRESHOLD,
+    .sParameters.hStoppingThrottle = POWERTRAIN_STOP_THROTTLE_THRESHOLD,
+    .sParameters.hStoppingSpeed = POWERTRAIN_STOP_SPEED_THRESHOLD,
 	
-	.sParameters.hPASMaxTorque = POWERTRAIN_PAS_MAX_TORQUE,
-	.sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
+    .sParameters.hPASMaxTorque = POWERTRAIN_PAS_MAX_TORQUE,
+    .sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
     .sParameters.hPASMaxKmSpeed = POWERTRAIN_PAS_MAX_KM_SPEED,
-	.sParameters.bMaxLevel = POWERTRAIN_PAS_MAX_LEVEL,
-	.sParameters.bCoeffLevel = POWERTRAIN_PAS_LEVEL_COEFF,
-	.sParameters.hMaxTorqueRatio = POWERTRAIN_PAS_MAX_TORQUE_RATIO,
-	.sParameters.hMaxSpeedRatio = POWERTRAIN_PAS_MAX_SPEED_RATIO,
-	.sParameters.bTorqueSensorUse = POWERTRAIN_PAS_TORQUE_USE,
+    .sParameters.bMaxLevel = POWERTRAIN_PAS_MAX_LEVEL,
+    .sParameters.bCoeffLevel = POWERTRAIN_PAS_LEVEL_COEFF,
+    .sParameters.hMaxTorqueRatio = POWERTRAIN_PAS_MAX_TORQUE_RATIO,
+    .sParameters.hMaxSpeedRatio = POWERTRAIN_PAS_MAX_SPEED_RATIO,
+    .sParameters.bTorqueSensorUse = POWERTRAIN_PAS_TORQUE_USE,
 	
-	.sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
-	.sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
+    .sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
+    .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
     .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
     .sParameters.bPASCountSafe = 0,
         
@@ -197,15 +203,16 @@ PWRT_Handle_t PowertrainHandle =
         .hSlowStopBandwidth = FOLDBACK_SLOW_STOP_BANDWIDTH,
         .wSlowStartTimeout =  FOLDBACK_TIMEOUT,
     },
-	.pMDI = &MDInterfaceHandle,
-	.pThrottle = &ThrottleHandle,
-	.pBrake = &BrakeHandle,
-	.pHeadLight = &HeadLightHandle,
+    .pMDI = &MDInterfaceHandle,
+    .pThrottle = &ThrottleHandle,
+    .pBrake = &BrakeHandle,
+    .pHeadLight = &HeadLightHandle,
     .pTailLight = &TailLightHandle,
-	.pMS = &MotorSelectorHandle,
-	.pPWREN = &PowerEnableHandle,
-	.pPSS = &PedalAssistHandle,
-	.pPTS = &PedalTorqueSensor,
+    .pBatMonitorHandle = &BatMonitorHandle,
+    .pMS = &MotorSelectorHandle,
+    .pPWREN = &PowerEnableHandle,
+    .pPSS = &PedalAssistHandle,
+    .pPTS = &PedalTorqueSensor,
     .pWSS = &WheelSpeedHandle,		
 };
 

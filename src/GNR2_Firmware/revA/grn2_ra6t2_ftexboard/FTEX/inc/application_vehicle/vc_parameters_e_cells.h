@@ -87,6 +87,10 @@
                                                                                                torque */
 #define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL      MAX_APPLICATION_SPEED_RPM/8       /* Speed interval value between maximum torque and zero torque,
                                                                                                when using dual motor startup strategy. */
+/*********************************Battery Monitoring*******************************/
+
+#define BATTERY_FULL_VOLT    52
+#define BATTERY_EMPTY_VOLT   46
 
 #endif                                            
 
