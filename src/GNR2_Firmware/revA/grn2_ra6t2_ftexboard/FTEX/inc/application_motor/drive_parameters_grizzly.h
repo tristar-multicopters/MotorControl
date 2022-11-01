@@ -14,10 +14,11 @@
 
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
-/*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       1600 /*!< Max speed for the current application in mechanical rpm */
-#define MIN_APPLICATION_SPEED_RPM       0 /*!< Min speed for the current application in mechanical rpm */
-#define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
+/*** Speed measurement settings ***/		/* motorRPM=speed(km/h)*GR*100000/(R*pi*2.54*60)   where R=28 inch and GR=5
+																				   As an example 42Km was 1600 */
+#define MAX_APPLICATION_SPEED_RPM       1325  /*!< Max speed for the current application in mechanical rpm */
+#define MIN_APPLICATION_SPEED_RPM       0     /*!< Min speed for the current application in mechanical rpm */
+#define MEAS_ERRORS_BEFORE_FAULTS       6     /*!< Number of speed
                                                              measurement errors before
                                                              main sensor goes in fault */
 /****** Hall sensors ************/

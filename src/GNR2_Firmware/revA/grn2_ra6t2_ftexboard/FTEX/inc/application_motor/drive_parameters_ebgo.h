@@ -14,10 +14,11 @@
 
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
-/*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       2500//2750 /*!< Max speed for the current application in mechanical rpm */
-#define MIN_APPLICATION_SPEED_RPM       0 /*!< Min speed for the current application in mechanical rpm */
-#define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
+/*** Speed measurement settings ***/		// motorRPM=speed(km/h)*GR*100000/(R*pi*2.54*60)   where R=25 inch and GR=7.86
+#define MAX_APPLICATION_SPEED_RPM       2600   /*!< Max speed for the current application in mechanical rpm */
+                                               /* Old Example 2750 for 38Km/h */
+#define MIN_APPLICATION_SPEED_RPM       0     /*!< Min speed for the current application in mechanical rpm */
+#define MEAS_ERRORS_BEFORE_FAULTS       6     /*!< Number of speed
                                                              measurement errors before
                                                              main sensor goes in fault */                                                           
 /****** Hall sensors ************/
@@ -148,8 +149,8 @@
 /*Torque ramp settings */
 #define DEFAULT_TORQUE_SLOPE_UP        5000        /* Slope in cNm per second */
 #define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
-#define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
-#define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */
+#define DEFAULT_SPEED_SLOPE_UP         500        /* Slope in #SPEED_UNIT per second */
+#define DEFAULT_SPEED_SLOPE_DOWN       500        /* Slope in #SPEED_UNIT per second */
 
 
 /******************************   START-UP PARAMETERS   **********************/

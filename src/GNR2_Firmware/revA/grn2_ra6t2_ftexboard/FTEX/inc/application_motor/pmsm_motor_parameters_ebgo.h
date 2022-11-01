@@ -29,7 +29,8 @@
 #define STARTING_TORQUE    1300  /* Maximum starting torque to apply to motor in cNm  */
 #define NOMINAL_PEAK_CURRENT    14000 /* Maximum current amplitude that can be injected
                                             per phase in digital Amps */
-#define MOTOR_MAX_SPEED_RPM     2500//2750 /*!< Maximum rated speed  */
+#define MOTOR_MAX_SPEED_RPM     2100   /*!< Maximum rated speed  */
+                                       /* Old Example 2750 for 38Km/h */
 #define MOTOR_MAGNET_FLUX       0.0195 /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
 #define MOTOR_VOLTAGE_CONSTANT  28.84 /*!< Volts RMS ph-ph /kRPM */
 #define ID_DEMAG                -1000 /*!< Demagnetization current */
