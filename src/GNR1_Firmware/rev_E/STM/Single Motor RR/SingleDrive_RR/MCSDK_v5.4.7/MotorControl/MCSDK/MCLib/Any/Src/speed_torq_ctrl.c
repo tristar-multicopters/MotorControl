@@ -343,7 +343,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle,
     }
     if (pHandle->pHeatsinkTempSensor != NULL)
     {
-        hMeasuredHeatsinkTemp = NTC_GetAvTemp_C(pHandle->pHeatsinkTempSensor);
+        hMeasuredHeatsinkTemp = NTC_GetAvTemp_C(pHandle->pHeatsinkTempSensor)*100;  // Due to resolution issue in Foldback module, scale it up by *100.
     }
 
     int16_t hOutputTorque, MaxDynamicTorque;
@@ -352,10 +352,9 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpeednTorqCtrlHandle_t * pHandle,
     Foldback_UpdateMaxValue( &pHandle->FoldbackMotorTemperature, MaxDynamicTorque );
     Foldback_UpdateMaxValue( &pHandle->FoldbackHeatsinkTemperature, MaxDynamicTorque );
     
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque, abs(hMeasuredSpeed));
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
-
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque, abs(hMeasuredSpeed)); 
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);     
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);    
     return hOutputTorque;
 }
 

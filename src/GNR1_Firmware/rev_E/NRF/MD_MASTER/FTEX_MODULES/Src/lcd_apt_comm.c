@@ -181,8 +181,8 @@ void LCD_APT_frame_Process(void)
       replyFrame.Buffer[ 0] = APT_START; //Start
 	  
 	  	//Add up power from both
-	  	toSend = abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)) + 
-	             abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2));
+	  	toSend = (abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M1)))*2 + 	// need factor two to fit the new current sensor 
+	             (abs(MDI_getIq(m_APT_handle.pVController->pDrivetrain->pMDI,M2)))*2; 
 		
 				
 		  toSend = toSend/(0x7FFF/APTMAXCURRENT); //Conversion from relative current to actual amps

@@ -195,7 +195,7 @@
 #endif /* 0 */
 #define R_BRAKE_SWITCH_OFF_THRES_V      60
 
-#define OV_TEMPERATURE_THRESHOLD_C      75 /*!< Celsius degrees */
+#define OV_TEMPERATURE_THRESHOLD_C      72  /*!< Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     10 /*!< Celsius degrees */
 
 #define HW_OV_CURRENT_PROT_BYPASS       DISABLE /*!< In case ON_OVER_VOLTAGE

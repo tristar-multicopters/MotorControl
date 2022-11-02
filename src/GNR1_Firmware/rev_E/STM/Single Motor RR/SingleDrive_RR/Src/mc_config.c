@@ -185,8 +185,8 @@ SpeednTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .FoldbackConfig = TRIM,
       .hDefaultOutputLimitHigh = STARTING_TORQUE,
       .hDefaultOutputLimitLow = 0,
-      .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C,
-      .hDecreasingRange = OV_TEMPERATURE_THRESHOLD_C/3,
+      .hDecreasingEndValue = OV_TEMPERATURE_THRESHOLD_C * 100,          // This is due to limitation of Foldback module
+      .hDecreasingRange = (OV_TEMPERATURE_THRESHOLD_C/2) * 100 ,        // This is due to limitation of Foldback module
   },
   .FoldbackMotorPower =
   {
