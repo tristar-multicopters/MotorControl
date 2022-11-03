@@ -71,7 +71,7 @@
 
 #endif
 
-#define MOTOR_MAX_SPEED_RPM     1450 /*!< Maximum rated speed  */
+#define MOTOR_MAX_SPEED_RPM     1325 /*!< Maximum rated speed  */
 #define MOTOR_VOLTAGE_CONSTANT  22.5 /*!< Volts RMS ph-ph /kRPM */
 #define MOTOR_MAGNET_FLUX       0.0175  /* Value of motor flux, derived from tests*/
 #define ID_DEMAG                -5000 /*!< Demagnetization current */
