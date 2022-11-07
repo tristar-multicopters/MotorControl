@@ -145,13 +145,21 @@ VC_State_t VCSTM_FaultProcessing(VCSTM_Handle_t * pHandle, uint16_t hSetErrors, 
   }
   else
   {
-    if ( pHandle->hVFaultNow != VC_NO_FAULTS )
+    // this block is added to ignore the misscommunication error that caused error when juggling trottle to fast
+    if (pHandle->hVFaultNow == VC_START_TIMEOUT)
+    {
+        pHandle->hVFaultNow = VC_NO_FAULTS;
+    }	
+    
+    //handle error
+    else if ( pHandle->hVFaultNow != VC_NO_FAULTS )
     {
       pHandle->bVState = V_FAULT_NOW;
       LocalState = V_FAULT_NOW;
     }
-  }
 
+     //else, if non of considered conditions happened, do nothing, just wait check again if the issue is resolved by another routine
+  }
   return ( LocalState );
 }
 

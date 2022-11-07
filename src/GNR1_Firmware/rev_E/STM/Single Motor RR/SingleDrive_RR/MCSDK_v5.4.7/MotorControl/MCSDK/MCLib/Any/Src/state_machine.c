@@ -278,15 +278,16 @@ __weak State_t STM_FaultProcessing( STM_Handle_t * pHandle, uint16_t hSetErrors,
       LocalState = FAULT_OVER;
     }
   }
-  else
+  // this block changed to fix an unhandled situation that was causing code to get stuck, 
+  else if ( pHandle->hFaultNow != MC_NO_FAULTS )
   {
-    if ( pHandle->hFaultNow != MC_NO_FAULTS )
-    {
-      pHandle->bState = FAULT_NOW;
-      LocalState = FAULT_NOW;
-    }
+    pHandle->bState = FAULT_NOW;
+    LocalState = FAULT_NOW;
   }
-
+  else 
+  {
+    pHandle->hFaultNow = MC_NO_FAULTS;
+  }
   return ( LocalState );
 }
 
