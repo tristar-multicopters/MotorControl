@@ -90,9 +90,23 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
             // Update the SOC voltage reference
             BatMonitor_UpdateSOC(pVCI->pPowertrain->pBatMonitorHandle);
             
+            if (BRK_IsPressed(pVCI->pPowertrain->pBrake))  //Blink the tail light when we brake
+		    {
+                Light_SetBlink(pVCI->pPowertrain->pTailLight,true);  
+		    }
+            else
+            {
+                Light_SetBlink(pVCI->pPowertrain->pTailLight,false);  
+            }    
+
+            
             //reset the count loop           
             TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT = NULL;
         }
+        
+        // Update Light if Blinking
+        Light_Blink(pVCI->pPowertrain->pTailLight);
+        
         
         #if ENABLE_VC_DAC_DEBUGGING
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);

@@ -119,6 +119,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 		{
 			hAux = 0;
 		}
+   
 		if(pHandle->sParameters.bMode == SINGLE_MOTOR)
 		{
             if (pHandle->sParameters.bEnableDualMotorStartup)

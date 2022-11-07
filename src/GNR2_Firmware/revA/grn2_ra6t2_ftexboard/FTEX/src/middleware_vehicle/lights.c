@@ -7,6 +7,7 @@
 #include "lights.h"
 #include "ASSERT_FTEX.h"
 
+
 /* Functions ---------------------------------------------------- */
 
 /**
@@ -33,13 +34,19 @@ void Light_Enable(Light_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    if(pHandle->bIsInvertedLogic) // If the logic is inverted we turn on the light with a 0
-    {
-        uCAL_GPIO_Reset(pHandle->wPinNumber);
-    }
-    else
-    {    
-        uCAL_GPIO_Set(pHandle->wPinNumber);
+    pHandle->bLightIsActive = true;
+    
+    if(!pHandle->bLightIsBlinking) // If we are currently blinking the light we                              
+    {                              // dont want to overwrite that.
+        
+        if(pHandle->bIsInvertedLogic) // If the logic is inverted we turn on the light with a 0
+        {
+            uCAL_GPIO_Reset(pHandle->wPinNumber);
+        }
+        else
+        {    
+            uCAL_GPIO_Set(pHandle->wPinNumber);
+        }
     }
 }
 
@@ -49,6 +56,8 @@ void Light_Enable(Light_Handle_t * pHandle)
 void Light_Disable(Light_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
+
+    pHandle->bLightIsActive = false;
     
     if(pHandle->bIsInvertedLogic) // If the logic is inverted we turn off the light with a 1
     {
@@ -80,3 +89,37 @@ bool Light_GetState(Light_Handle_t * pHandle)
     return(uCAL_GPIO_Read(pHandle->wPinNumber));
 }
 
+/**
+ *  Function being called periodically to handle the blinking of a light
+ */
+void Light_Blink(Light_Handle_t * pHandle)
+{
+    if (pHandle->bLightIsBlinking && pHandle->bLightIsActive)
+    {
+        if(pHandle->BlinkCounter >= pHandle->BlinkPeriode) // If this function has been called enough 
+        {                                                  // so that Blink Counter equals Blink Periode   
+            pHandle->BlinkCounter = 0; // reset the counter
+            Light_Toggle(pHandle);     // Toggle the light
+        }
+        else
+        {
+            pHandle->BlinkCounter ++;
+        }
+    }
+    else if (pHandle->bLightIsActive) //If we arent blinking keep the light state
+    {
+        Light_Enable(pHandle);
+    }
+    else if (!pHandle->bLightIsActive)
+    {
+        Light_Disable(pHandle);
+    }        
+}    
+
+/**
+ *  Function used activate or deactivate the blinking function of a light
+ */
+void Light_SetBlink(Light_Handle_t * pHandle, bool BlinkEnable)
+{
+    pHandle->bLightIsBlinking = BlinkEnable;
+}

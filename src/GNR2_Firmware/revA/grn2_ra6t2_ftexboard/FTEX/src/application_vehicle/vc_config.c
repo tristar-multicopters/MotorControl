@@ -33,12 +33,16 @@ Light_Handle_t HeadLightHandle =
 {
     .wPinNumber = FRONT_LIGHT_PIN,
     .bIsInvertedLogic = false,
+    .bLightIsBlinking = false,
+    .BlinkPeriode     = 0,    
 };
 
 Light_Handle_t TailLightHandle =
 {
     .wPinNumber = BACK_LIGHT_PIN,
-    .bIsInvertedLogic = false,      
+    .bIsInvertedLogic = false,
+    .bLightIsBlinking = false, 
+    .BlinkPeriode     = 50,    
 };    
 
 BatMonitor_Handle_t BatMonitorHandle = 
