@@ -63,7 +63,7 @@ typedef struct
 	uint16_t hStoppingSpeed;			  /* Minimum speed to stop drivetrain */
 	
 	int16_t hPASMaxTorque;					/* PAS Maximum Given Torque*/
-	
+	int16_t hPASMaxTorqueSelect;            /* PAS Hybride Maximum torque */
 	uint16_t hPASMaxSpeed;					/* PAS Maximum Given Speed */
 	
   uint32_t GearRatio;             //Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002

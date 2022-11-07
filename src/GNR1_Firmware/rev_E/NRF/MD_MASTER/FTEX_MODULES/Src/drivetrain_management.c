@@ -36,7 +36,7 @@ void DRVT_Init(DRVT_Handle_t * pHandle)
 	pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
 	pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
 	pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
-
+    FLDBK_EnableSlowStart(pHandle->sSpeedFoldback);
 }
 
 /**
@@ -100,20 +100,24 @@ void DRVT_CalcTorqueSpeed(DRVT_Handle_t * pHandle)
 			/* Using PAS */
 			if ( PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle) )
 			{
-
-            /* Torque sensor enabled */
-            if (pHandle->pPAS->bTorqueSensorUse)
-            {
-                hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor );
-                pHandle->aTorque[pHandle->bMainMotor] = hAux;
-            } 
-            else
-            {
-                hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], hTorqueRef, abs(wSpeedMainMotor) );
-                hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hAux, hTempHeatSnkMainMotor );
-                hAux = FLDBK_ApplySlowStart(&pHandle->sSpeedFoldback[pHandle->bMainMotor], hAux); //Apply the slow start if needed  
-                pHandle->aTorque[pHandle->bMainMotor] = hAux;
-            }
+                /* Torque sensor enabled */
+                if (pHandle->pPAS->bTorqueSensorUse)
+                {
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor );
+                    pHandle->aTorque[pHandle->bMainMotor] = hAux;
+                } 
+                else if (pHandle->pPAS->bHybridSensorUse)
+                {
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hTorqueRef, hTempHeatSnkMainMotor );
+                    pHandle->aTorque[pHandle->bMainMotor] = hAux; 
+                }
+                else
+                {
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], hTorqueRef, abs(wSpeedMainMotor) );
+                    hAux = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], hAux, hTempHeatSnkMainMotor );
+                    hAux = FLDBK_ApplySlowStart(&pHandle->sSpeedFoldback[pHandle->bMainMotor], hAux); //Apply the slow start if needed  
+                    pHandle->aTorque[pHandle->bMainMotor] = hAux;
+                }
 			}
 			/* Using throttle */
 			else
@@ -931,8 +935,7 @@ int16_t DRVT_GetPASTorque(DRVT_Handle_t * pHandle)
 	PAS_sLevel Got_Level;
 	Got_Level = DRVT_GetPASLevel(pHandle);
 	
-	hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->pPAS->bMaxLevel) * Got_Level;
-	
+	hRefTorque = (pHandle->sParameters.hPASMaxTorqueSelect / pHandle->pPAS->bMaxLevel) * Got_Level;
 	return hRefTorque;
 }
 
@@ -1041,7 +1044,9 @@ int16_t DRVT_GetTorqueFromTS(DRVT_Handle_t * pHandle)
 	*/
 int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 {	
-	
+	int16_t htorqueSelect = 0; 
+    int16_t htorqueSens= 0; 
+    int16_t htorqueFinal = 0; 
 	/* PAS and Throttle management */
 	if ( PAS_IsPASDetected(pHandle->pPAS) && !THRO_IsThrottleDetected(pHandle->pThrottle))
 	{
@@ -1050,6 +1055,26 @@ int16_t DRVT_CalcSelectedTorque(DRVT_Handle_t * pHandle)
 		{
             pHandle->hTorqueSelect = DRVT_GetTorqueFromTS(pHandle);
 		}
+        /* Hybrid sensor enabled */
+        else if (pHandle->pPAS->bHybridSensorUse)
+        {
+            int32_t wSpeedMainMotor = MDI_getSpeed(pHandle->pMDI, pHandle->bMainMotor);
+            int16_t hTempHeatSnkMainMotor = MDI_getHeatsinkTemp(pHandle->pMDI, pHandle->bMainMotor);
+            /* PAS process from Cadence and Torque */
+            DRVT_PASSetMaxSpeed(pHandle);
+            htorqueSens = abs (DRVT_GetTorqueFromTS(pHandle));
+            htorqueSelect = DRVT_GetPASTorque(pHandle);
+            
+            htorqueFinal = FLDBK_ApplyTorqueLimitation( &pHandle->sSpeedFoldback[pHandle->bMainMotor], htorqueSelect, abs(wSpeedMainMotor) );
+            htorqueFinal = FLDBK_ApplyTorqueLimitation( &pHandle->sHeatsinkTempFoldback[pHandle->bMainMotor], htorqueFinal, hTempHeatSnkMainMotor );
+            htorqueFinal = abs (FLDBK_ApplySlowStartPAS(&pHandle->sSpeedFoldback[pHandle->bMainMotor], htorqueFinal)); //Apply the slow start if needed                  
+            /* Make a decision by adding the torque or limiting the speed */
+            if (htorqueSens > htorqueFinal)
+                pHandle->hTorqueSelect = -htorqueSens;
+            else
+                pHandle->hTorqueSelect = -(htorqueFinal + htorqueSens);
+        }
+        /* Cadence sensor enabled */
 		else
 		{
             pHandle->hTorqueSelect= DRVT_GetPASTorque(pHandle);

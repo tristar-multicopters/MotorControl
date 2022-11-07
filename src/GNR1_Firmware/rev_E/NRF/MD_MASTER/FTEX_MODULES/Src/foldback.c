@@ -146,7 +146,6 @@ int16_t FLDBK_ApplySlowStart(FLDBK_Handle_t * pHandle, int16_t hTorque)
     
     if (pHandle->bEnableSlowStart) //Check if a slow start was requested or is in progress
     {    
-           
         if(abs(hTorque) >= abs(hAverageTorque)) //Apply the filter only on acceleration
         {
             wTimeCounter ++; 
@@ -158,8 +157,58 @@ int16_t FLDBK_ApplySlowStart(FLDBK_Handle_t * pHandle, int16_t hTorque)
 
             hAverageTorque =  wTemp;
             hTorqueOut = hAverageTorque;            
-        }  
+        }
+        if (abs(hAverageTorque) > (abs(hTorque) - (abs(hTorque)/40)) && abs(hTorque) > abs(hAverageTorque)) // First condition to exit the slow start is that the average torque 
+        {                                                                                                   // is at least 97.5% of the value of the requested torque
+            wTimeCounter = 0; 
+            hAverageTorque = 0;
+            pHandle->bEnableSlowStart = false;            
+        }    
+        else if (wTimeCounter > pHandle->wSlowStartTimeout)          // Timeout condition is there to make sure we cant get stuck in a slow start
+        {
+            wTimeCounter = 0;
+            hAverageTorque = 0; 
+            pHandle->bEnableSlowStart = false;        
+        }              
+    }
+    else
+    {
+      wTimeCounter = 0;
+      hAverageTorque = 0;        
+    }        
+       
+    return hTorqueOut;
+}
 
+
+int16_t FLDBK_ApplySlowStartPAS(FLDBK_Handle_t * pHandle, int16_t hTorque)
+{
+    static uint32_t wTimeCounter;
+    static  int16_t hAverageTorque;
+            int32_t wTemp = 0;
+            int16_t hTorqueOut;
+    
+    hTorqueOut = hTorque;
+    
+    if(pHandle->bRefreshSlowStart) //Used to reset the counter and the
+    {
+       wTimeCounter = 0; 
+       hAverageTorque = 0; 
+       pHandle->bRefreshSlowStart = false; 
+    }    
+    
+    if (pHandle->bEnableSlowStart) //Check if a slow start was requested or is in progress
+    {    
+            wTimeCounter ++; 
+            
+            wTemp =  (pHandle->hSlowStartBandwidthPAS - 1u); //Apply a low pass filter to the torque
+            wTemp *= hAverageTorque;
+            wTemp += hTorque;
+            wTemp /= pHandle->hSlowStartBandwidthPAS ;
+
+            hAverageTorque =  wTemp;
+            hTorqueOut = hAverageTorque;            
+   
         if (abs(hAverageTorque) > (abs(hTorque) - (abs(hTorque)/40)) && abs(hTorque) > abs(hAverageTorque)) // First condition to exit the slow start is that the average torque 
         {                                                                                                   // is at least 97.5% of the value of the requested torque
             wTimeCounter = 0; 

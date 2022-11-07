@@ -102,6 +102,8 @@ void PAS_UpdatePASDetection (PAS_Handle_t * pHandle)
 
 	if ((pHandle->bTorqueSensorUse) && (hTorqueSens > hOffsetTemp) )
 		pHandle->bPASDetected = true;
+    else if ((pHandle->bHybridSensorUse) && (hTorqueSens > hOffsetTemp) )
+		pHandle->bPASDetected = true;
 	else if (wSpeedt > 0)
 		pHandle->bPASDetected = true;
 	else 

@@ -24,6 +24,8 @@ typedef struct
     uint16_t hSlowStartBandwidth;
     uint32_t wSlowStartTimeout;
     
+    uint16_t hSlowStartBandwidthPAS;
+    
 	bool bEnableFoldback;
 	bool bIsInverted;
     bool bEnableSlowStart;
@@ -46,6 +48,10 @@ void FLDBK_SetEndValue (FLDBK_Handle_t * pHandle, uint16_t hIntervalSpeed);
 
 /* Function for applying a low pass filter to the torque after braking or an OC fault*/
 int16_t FLDBK_ApplySlowStart(FLDBK_Handle_t * pHandle, int16_t hTorque);
+
+/* Function for applying a low pass filter to the torque after braking or an OC fault*/
+int16_t FLDBK_ApplySlowStartPAS(FLDBK_Handle_t * pHandle, int16_t hTorque);
+
 
 /* Function used to intiate a slow start */
 void FLDBK_EnableSlowStart(FLDBK_Handle_t * pHandle);

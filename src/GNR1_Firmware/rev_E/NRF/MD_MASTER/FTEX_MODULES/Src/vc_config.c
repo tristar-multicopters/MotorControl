@@ -192,7 +192,7 @@ TS_Handle_t TorqueSensor =
 #if VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.hParam =
 	{	
-		.hLowPassFilterBW1 = 1,
+		.hLowPassFilterBW1 = 5,
 		.hLowPassFilterBW2 = 25,
 		
 		.hOffsetTS = 13000,
@@ -356,10 +356,11 @@ PAS_Handle_t PedalAssistHandle = {
 	#elif VEHICLE_SELECTION == VEHICLE_GRIZZLY
 	.bMaxLevel	=	5,
 	.hMaxTorqueRatio = 99, /* Max torque Percentage ratio for use in % for a total of 100%*/
-	.hMaxSpeedRatio = 50, /* Max Speed Percentage ratio for use in % for a total of 100%*/
+	.hMaxSpeedRatio = 70, /* Max Speed Percentage ratio for use in % for a total of 100%*/
 	.bPulseNb	= 0,	
-	.bTorqueSensorUse = true,
-	.bLevel_Coeff = 1,
+	.bTorqueSensorUse = false,
+    .bHybridSensorUse = true,
+	.bLevel_Coeff = 2, // Coefficient for the ramp upgrade
 	#elif VEHICLE_SELECTION == VEHICLE_GEEBEECARGO
 	.bMaxLevel	=	5,
 	#else
@@ -440,7 +441,8 @@ DRVT_Handle_t DrivetrainHandle =
 	.sParameters.hStoppingThrottle = 500,
 	.sParameters.hStoppingSpeed = 0,
 	.sParameters.hPASMaxTorque = -1700,
-	.sParameters.hPASMaxSpeed = 1350,
+    .sParameters.hPASMaxTorqueSelect = -700,
+	.sParameters.hPASMaxSpeed = 1200,
 	.sParameters.GearRatio = 0x000B0005, //Ratio is 11/5
 	.sParameters.bUseWheelSpeedSensor = true,
 	.sParameters.bWheelSpreedRatio = 2,
@@ -494,20 +496,22 @@ DRVT_Handle_t DrivetrainHandle =
 	{
 		.bEnableFoldback = true,
 		.hStartValue = 200,
-		.hIntervalValue = 200,
+		.hIntervalValue = 300,
 		.hEndValue = 400,
 		.hDefaultMaxTorque = 1000,
         .hSlowStartBandwidth = 12,
+        .hSlowStartBandwidthPAS = 50,
         .wSlowStartTimeout =  400
 	},
 	.sSpeedFoldback[M2] = 
 	{
 		.bEnableFoldback = true,
 		.hStartValue = 200,
-		.hIntervalValue = 200,
+		.hIntervalValue = 300,
 		.hEndValue = 400,
 		.hDefaultMaxTorque = 1000,
         .hSlowStartBandwidth = 12,
+        .hSlowStartBandwidthPAS = 50,
         .wSlowStartTimeout =  400
 	},
 	.sHeatsinkTempFoldback[M1] = 
