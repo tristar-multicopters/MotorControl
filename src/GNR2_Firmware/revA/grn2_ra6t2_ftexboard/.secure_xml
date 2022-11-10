@@ -87,6 +87,7 @@
       <configSetting altId="jtag_fslash_swd.tms.pa13" configurationId="jtag_fslash_swd.tms"/>
       <configSetting altId="pa09.input" configurationId="pa09"/>
       <configSetting altId="pb04.output.low" configurationId="pb04"/>
+      <configSetting altId="pb08.input" configurationId="pb08"/>
       <configSetting altId="pc00.input" configurationId="pc00"/>
       <configSetting altId="pd04.output.low" configurationId="pd04"/>
       <configSetting altId="pd07.output.low" configurationId="pd07"/>

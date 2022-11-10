@@ -21,14 +21,15 @@ uint32_t GetChipID(uint8_t ID_Half);
 
 /* GPIOs ----------------------------------------------*/
 
-#define CAN_STANDBY_N_GPIO_PIN								0xb4
-#define CAN_ENABLE_N_GPIO_PIN								0xd7
-#define BRAKE_GPIO_PIN										0xc0
-#define REVERSE_GPIO_PIN									0x01
-#define M2SELECT_GPIO_PIN									0xa9
-#define M1SELECT_GPIO_PIN									0xdf
-#define PWREN_GPIO_PIN									    0
-#define PWRSTG_ENABLE_GPIO_PIN							    0xe9
+
+#define CAN_STANDBY_N_GPIO_PIN                              0xb4
+#define CAN_ENABLE_N_GPIO_PIN                               0xd7
+#define BRAKE_GPIO_PIN                                      0xc0
+#define REVERSE_GPIO_PIN                                    0x01
+#define M1SELECT_GPIO_PIN                                   0xa9
+#define M2SELECT_GPIO_PIN                                   0xdf
+#define PWREN_GPIO_PIN                                      0xb8
+#define PWRSTG_ENABLE_GPIO_PIN                              0xe9
 
 #define FRONT_LIGHT_PIN                                     0xd4
 #define BACK_LIGHT_PIN                                      0xda

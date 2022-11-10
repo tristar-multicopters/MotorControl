@@ -17,6 +17,7 @@ extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
 extern void ProcessUARTFrames(void * pvParameter);
 extern void CANOpenTask(void * pvParameter);
+extern void PowerOffSequence(void * pvParameter);
 
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
 
@@ -41,6 +42,8 @@ osThreadId_t THR_VC_StateMachine_handle;
 osThreadId_t COMM_Uart_handle;
 osThreadId_t CANOpenTaskHandle;
 osThreadId_t CANRxFrameHandle;
+osThreadId_t PowerOffSequence_handle;
+
 
 //****************** THREAD ATTRIBUTES ******************//
 
@@ -57,6 +60,13 @@ static const osThreadAttr_t ThAtt_MC_MediumFrequencyTask = {
     .stack_size = 1024,
     .priority = osPriorityNormal5
 };
+
+static const osThreadAttr_t ThAtt_PowerOffSequence = {
+	.name = "VC_PowerOffSequence",
+	.stack_size = 512,
+	.priority = osPriorityBelowNormal
+};
+
 
 #if !DEBUGMODE_MOTOR_CONTROL
 #if GNR_MASTER
@@ -133,6 +143,11 @@ void gnr_main(void)
     MC_SafetyTask_handle            = osThreadNew(startMCSafetyTask,
                                       NULL,
                                       &ThAtt_MC_SafetyTask);
+    
+    PowerOffSequence_handle         = osThreadNew(PowerOffSequence, 
+                                      NULL,
+                                      &ThAtt_PowerOffSequence);
+                                
 
     #if !DEBUGMODE_MOTOR_CONTROL
     #if GNR_MASTER

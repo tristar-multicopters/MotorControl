@@ -163,7 +163,6 @@ MS_Handle_t MotorSelectorHandle =
 
 PWREN_Handle_t PowerEnableHandle =
 {
-//	.wPinNumber = PWREN_GPIO_PIN,
 	.bIsInvertedLogic = false,
 	.bUsePowerLock = POWER_ENABLE_ENABLE,
 };

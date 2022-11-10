@@ -4,13 +4,20 @@
   * @author  Jorge Polo, FTEX
   * @brief   This module handles management of the vehicle powertrain
   *
-*/
+  */
+
+
 
 #include "powertrain_management.h"
+#include "board_hardware.h"
+#include "gnr_main.h"
+#include "vc_tasks.h"
 
 #define OVERCURRENT_COUNTER 		0
 #define STARTUP_COUNTER             1
 #define SPEEDFEEDBACK_COUNTER		2
+
+
 
 /* Functions ---------------------------------------------------- */
 
@@ -47,6 +54,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     
     // Enable slow motor Start for Pedal Assist cadence base
     Foldback_EnableSlowStart(&pHandle->SpeedFoldbackStartupDualMotor);
+    
 }
 
 /**
@@ -1154,3 +1162,4 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 	}
 	return pHandle->hTorqueSelect;
 }
+

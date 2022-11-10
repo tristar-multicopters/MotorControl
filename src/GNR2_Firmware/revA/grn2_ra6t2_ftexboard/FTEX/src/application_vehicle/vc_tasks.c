@@ -6,14 +6,16 @@
 
 #include "vc_config.h"
 #include "comm_config.h"
-
 #include "vc_tasks.h"
 #include "mc_tasks.h"
 #include "comm_tasks.h"
 
+#include "mc_interface.h"
+
 #include "gnr_main.h"
 
 uint16_t TEST_SOC;
+
 
 /************* DEBUG ****************/
 
@@ -86,19 +88,21 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
             PedalSpdSensor_CalculateSpeed(pVCI->pPowertrain->pPSS);
             // Wheel Speed sensor reading period
             WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pWSS);
+
+            // Check if we still have power enabled
+            PWREN_MonitorPowerEnable(pVCI->pPowertrain->pPWREN);          
             
             // Update the SOC voltage reference
             BatMonitor_UpdateSOC(pVCI->pPowertrain->pBatMonitorHandle);
             
             if (BRK_IsPressed(pVCI->pPowertrain->pBrake))  //Blink the tail light when we brake
-		    {
+            {
                 Light_SetBlink(pVCI->pPowertrain->pTailLight,true);  
-		    }
+            }
             else
             {
                 Light_SetBlink(pVCI->pPowertrain->pTailLight,false);  
             }    
-
             
             //reset the count loop           
             TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT = NULL;
@@ -286,5 +290,34 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
     
         xLastWakeTime += TASK_VCSTM_SAMPLE_TIME_TICK;
         osDelayUntil(xLastWakeTime);
+    }
+}
+
+
+/*
+   Task takes care of the power down sequence of the controller. 
+   Whatever the source of it may be, this module makes sure the motor is stopped
+   before setting a pin to low to disable the power supply.
+*/
+
+__NO_RETURN void PowerOffSequence (void * pvParameter)
+{
+	UNUSED_PARAMETER(pvParameter);
+    
+    VCI_Handle_t * pVCI = &VCInterfaceHandle;
+    
+    while(true)
+    {
+        osThreadFlagsWait(POWEROFFSEQUENCE_FLAG, osFlagsWaitAny, osWaitForever); // Task is blocked until we have to power down        
+        MCInterface_StopMotor(pVCI->pPowertrain->pMDI->pMCI);
+
+        
+        while(MCInterface_GetSTMState(pVCI->pPowertrain->pMDI->pMCI) == M_IDLE) // Check if the motor control is back to the idle state 
+        {    
+            osDelay(STOP_LOOPTICKS);
+        }
+        
+        PWREN_StopPower(pVCI->pPowertrain->pPWREN); // This should be the last code line to be executed the controller 
+                                                    // is disabling it's 3.3 V power supply      
     }
 }

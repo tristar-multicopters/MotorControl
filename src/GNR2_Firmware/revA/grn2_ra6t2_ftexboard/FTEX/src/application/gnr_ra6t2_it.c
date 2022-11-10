@@ -236,3 +236,4 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
         CAN_SendNextFrame();
     }
 }
+

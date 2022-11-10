@@ -389,7 +389,7 @@
         <RecentFrameAlignment>4096</RecentFrameAlignment>
         <RecentRowIndex>0</RecentRowIndex>
         <RectRecentDocked>
-          <Len>16</Len>
+          <Len>16</Len>=
           <Data>03000000AC0100006D040000FE010000</Data>
         </RectRecentDocked>
         <RectRecentFloat>
@@ -1883,5 +1883,6 @@
       </Doc>
     </MDIGroup>
   </MDIGroups>
+
 
 </ProjectGui>

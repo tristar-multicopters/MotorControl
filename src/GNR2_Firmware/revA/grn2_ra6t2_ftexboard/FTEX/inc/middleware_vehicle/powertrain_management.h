@@ -376,6 +376,13 @@ bool PWRT_IsPASDetected(PWRT_Handle_t * pHandle);
 	*/
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle);
 
+/**
+	* @brief  Periodic check of the powerlock signal
+	* @param  Powertrain handle
+	* @retval None                                                                                  
+	*/
+void PWRT_CheckPwrEnable(PWRT_Handle_t * pHandle);
+
 
 #endif /*__POWERTRAIN_MANAGEMENT_H*/
 
