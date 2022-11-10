@@ -47,6 +47,8 @@ void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle)
       if(pHandle->pNTCLookupTable != NULL)
       {
           LookupTable_Init(pHandle->pNTCLookupTable);
+          
+          pHandle->OutsideTable = &(pHandle->pNTCLookupTable->OutsideTable); // Link the OutsideTable flag
       }
       pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->TempRegConv);  // Need to be register with RegularConvManager
       NTCTempSensor_Clear(pHandle);
@@ -103,7 +105,7 @@ int16_t NTCTempSensor_GetAvTempCelcius(NTCTempSensorHandle_t * pHandle)
   {
       if(pHandle->pNTCLookupTable != NULL)
       {
-          wTemp = LookupTable_CalcOutput(pHandle->pNTCLookupTable, pHandle->hAvTempDigital);
+          wTemp = LookupTable_CalcOutput(pHandle->pNTCLookupTable, pHandle->hAvTempDigital);          
       }
       else
       {
@@ -128,3 +130,4 @@ uint16_t NTCTempSensor_GetFaultState(NTCTempSensorHandle_t * pHandle)
 {
   return pHandle->hFaultState;
 }
+

@@ -56,6 +56,8 @@ typedef struct
 
   LookupTableHandle_t * pNTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
 
+  bool *OutsideTable;  /* Will be set to true if the current temp value is outside the table so it defaults to the nearest value */
+
 } NTCTempSensorHandle_t;
 
 
