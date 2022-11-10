@@ -75,7 +75,7 @@
 #define POWERTRAIN_STOP_SPEED_THRESHOLD                   0                  /* Speed value to stop powertrain  */
 #define POWERTRAIN_PAS_MAX_TORQUE                         1200               /* Maximum motor torque to apply using pedal assist  */
 #define POWERTRAIN_PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
-#define POWERTRAIN_PAS_MAX_KM_SPEED                       33                 /* Maximum Bike Speed in Km/h using RPM */
+#define POWERTRAIN_PAS_MAX_KM_SPEED                       28                 /* Maximum Bike Speed in Km/h using RPM */
 
 
 #define POWERTRAIN_PAS_MAX_LEVEL                          5                 /* Maximum PAS Level given by the screen */
@@ -98,7 +98,7 @@
 #define POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL              MAX_APPLICATION_SPEED_RPM/15      /* Speed interval value between maximum torque and start torque,
                                                                                                when using single motor startup strategy. */
 #define FOLDBACK_SLOW_START_BANDWIDTH                     500               /* Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control */
-#define FOLDBACK_SLOW_STOP_BANDWIDTH                      55                /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
+#define FOLDBACK_SLOW_STOP_BANDWIDTH                      155               /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
 #define FOLDBACK_TIMEOUT                                  400               /* Fold Back Timeout for the slow start ramp */
 
 /*********************************Battery Monitoring*******************************/
