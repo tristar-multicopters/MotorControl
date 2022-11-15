@@ -28,6 +28,10 @@
 
 #include "drive_parameters_apollo.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_WHEEL
+
+#include "drive_parameters_wheel.h"
+
 #endif
 
 #endif /*__DRIVE_PARAMETERS_H*/
