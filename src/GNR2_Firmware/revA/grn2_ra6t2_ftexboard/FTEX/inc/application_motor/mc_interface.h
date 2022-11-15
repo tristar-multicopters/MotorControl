@@ -57,6 +57,7 @@ typedef struct
   MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
   STCModality_t LastModalitySetByUser; /*!< The last STCModality_t set by the
                                              user. */
+   NTCTempSensorHandle_t	*pNTCTempSensor; /*The NTC sensor value to be monitored in vehicle layer*/
 } MotorControlInterfaceHandle_t;
 
 /* Exported functions ------------------------------------------------------- */
@@ -72,7 +73,7 @@ typedef struct
   * @param  pFOCVars pointer to FOC vars to be used by MCI.
   * @retval none.
   */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor);
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, NTCTempSensorHandle_t *pNTCTempSensor);
 
 /**
   * @brief  This is usually a method managed by task. It must be called
@@ -380,6 +381,18 @@ int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHa
   * @retval Value of the bus voltage in volts time 100 so 10v would be 1000
   */
 uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHandle);
+
+//desctribtion alter
+
+/**
+  * @brief  Getting the HeatSink NTC temperature value
+  *  				Function has been added to enable the temperature monitoring module in 
+  *  				vehicle control to have acces to the heatsink temperature.
+	* @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the heatsink temperaure in celsius degree
+  */
+uint16_t MCInterface_GetNTCTemp(MotorControlInterfaceHandle_t * pHandle);
+
 
 #ifdef __cplusplus
 }

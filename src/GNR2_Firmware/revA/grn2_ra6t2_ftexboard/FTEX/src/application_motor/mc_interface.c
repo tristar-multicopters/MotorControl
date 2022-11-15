@@ -24,12 +24,13 @@
 /*
 * see function definition
 */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor)
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, NTCTempSensorHandle_t *pNTCTempSensor)
 {
   pHandle->pSTM = pSTM;
   pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
   pHandle->pFOCVars = pFOCVars;
   pHandle->pBusVoltageSensor = pBusVoltageSensor;
+  pHandle->pNTCTempSensor = pNTCTempSensor;
     
   /* Buffer related initialization */
   pHandle->LastCommand = MCI_NOCOMMANDSYET;
@@ -438,4 +439,15 @@ uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHa
          
    return (uint16_t) VoltageConverted; // Return voltage * 100 so 49.63 V will be 4963.0
                                        // This is done to keep precision 
+}
+
+/**
+  *  Getting the HeatSink NTC temperature value
+  *  Function has been added to enable the temperature monitoring module in 
+  *  vehicle control to have acces to the heatsink temperature.
+  */
+uint16_t MCInterface_GetNTCTemp(MotorControlInterfaceHandle_t * pHandle)
+{
+    uint16_t temp = pHandle->pSpeedTorqCtrl->pHeatsinkTempSensor->hAvTempCelcius;
+   return (uint16_t) temp; // Return temperature value
 }

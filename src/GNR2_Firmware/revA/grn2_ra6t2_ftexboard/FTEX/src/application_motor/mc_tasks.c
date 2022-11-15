@@ -176,7 +176,7 @@ void MC_BootUp(void)
     FOC_Clear(M1);
     FOCVars[M1].bDriveInput = INTERNAL;
     oMCInterface[M1] = & MCInterface[M1];
-    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1],&(pBusSensorM1->Super));
+    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1],&(pBusSensorM1->Super), &TempSensorParamsM1);
     MCTuning[M1].pPIDSpeed = pPIDSpeed[M1];
     MCTuning[M1].pPIDIq = pPIDIq[M1];
     MCTuning[M1].pPIDId = pPIDId[M1];

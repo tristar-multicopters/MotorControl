@@ -176,8 +176,7 @@ void CANLog_SendTemperature(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Hand
     // Prepare Header of CAN message 
     if(bMotorSelection == M1)
     {
-        // TO DO : Add a function in MDI module to get the motor temperature
-        int16_t temperature = 70;
+        uint16_t temperature = MCInterface_GetNTCTemp(pHandle->pPowertrain->pMDI->pMCI);
         msgToSend.Identifier = CAN_ID_TEMPERATURE_M1;
         msgToSend.DLC = 2;
         // Load data buffer
