@@ -20,6 +20,11 @@
 #define APT_START      0x55  // Fixed value that indicates the start of a frame.
 #define APT_END        0x0D  // Fixed value that indicates the end of a frame.
 
+#define PAS_UNCHANGED  0x0A  // Value to idicate there are no change sin the PAS level
+
+#define NUMBER_OF_CRC_BYTES 10  // Value used to tell how many bytes need to be included inside the CRC
+#define BYTE_PER_PAIR        2  // Value that tells how many bytes per pair iside the CRC calculation  
+
 #define RX_BYTE_BUFFER_SIZE 16
 
 // Display Read Cmd
@@ -93,6 +98,13 @@ void LCD_APT_RX_IRQ_Handler(void *ppVoidHandle);
  */
 void LCD_APT_TX_IRQ_Handler(void *ppVoidHandle);
 
+/**@brief Function for handling the regular task to manage the communication with
+ *        an APT screen        
+ *
+ * @param[in] pVoidHandle: a void pointer that contaisn the handle of the 
+ *            APT module instance
+ * @return nothing
+ */
 void LCD_APT_Task(APT_Handle_t *pHandle);
 
 /**@brief Function for decoding a received frame (previously built in the RxCallback function)
@@ -104,5 +116,23 @@ void LCD_APT_Task(APT_Handle_t *pHandle);
  * @return nothing
  */
 void LCD_APT_frame_Process(APT_Handle_t *pHandle);
+
+/**@brief Function used to translate the PAS level received from the APT  
+ *        screen standard to the FTEX standard
+ *
+ * @param[in] pVoidHandle: a void pointer that contaisn the handle of the 
+ *            APT module instance
+ * @return nothing
+ */
+uint8_t LCD_APT_ConvertPASLevelToAPT(PasLevel_t aPAS_Level);
+
+/**@brief Function used to translate the FTEX standard PAS level to the APT  
+ *        screen standard.(is not the same as when we receive a PAS level from the APT screen)
+ *
+ * @param[in] pVoidHandle: a void pointer that contaisn the handle of the 
+ *            APT module instance
+ * @return nothing
+ */
+PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfLevels);
 
 #endif

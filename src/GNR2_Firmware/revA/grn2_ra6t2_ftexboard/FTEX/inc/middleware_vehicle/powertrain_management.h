@@ -46,6 +46,7 @@ typedef enum
 	PAS_LEVEL_7,
 	PAS_LEVEL_8,
 	PAS_LEVEL_9,
+    PAS_LEVEL_WALK,
 } PasLevel_t;
 
 typedef enum
