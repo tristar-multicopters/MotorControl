@@ -81,9 +81,10 @@ ThrottleHandle_t ThrottleHandle =
 };
 
 
+
 /**@brief Pedal torque sensor initializing Parameters.
  */
-PedalTorqSensorHandle_t PedalTorqueSensor =
+PedalTorqSensorHandle_t PedalTorqueSensorHandle =
 {
     .PTSRegConv =
     {
@@ -137,9 +138,10 @@ PulseFrequencyHandle_t PulseFreqHandleWheel =
 
 /**@brief Pedal assist initializing Parameters.
  */
-PedalSpeedSensorHandle_t PedalAssistHandle = {
+PedalSpeedSensorHandle_t PedalSpeedSensorHandle = {
   .pPulseFrequency = &PulseFreqHandlePedal,
 };
+
 
 WheelSpeedSensorHandle_t WheelSpeedHandle =
 {
@@ -167,6 +169,24 @@ PWREN_Handle_t PowerEnableHandle =
 	.bUsePowerLock = POWER_ENABLE_ENABLE,
 };
 
+PAS_Handle_t PedalAssistHandle = 
+{
+    .sParameters.hPASMaxTorque = POWERTRAIN_PAS_MAX_TORQUE,
+    .sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
+    .sParameters.hPASMaxKmSpeed = POWERTRAIN_PAS_MAX_KM_SPEED,
+    .sParameters.bMaxLevel = POWERTRAIN_PAS_MAX_LEVEL,
+    .sParameters.bCoeffLevel = POWERTRAIN_PAS_LEVEL_COEFF,
+    .sParameters.hMaxTorqueRatio = POWERTRAIN_PAS_MAX_TORQUE_RATIO,
+    .sParameters.hMaxSpeedRatio = POWERTRAIN_PAS_MAX_SPEED_RATIO,
+    .sParameters.bTorqueSensorUse = POWERTRAIN_PAS_TORQUE_USE,
+	.sParameters.bPASCountSafe = 0,
+    .pPSS = &PedalSpeedSensorHandle,
+    .pPTS = &PedalTorqueSensorHandle,
+    .pWSS = &WheelSpeedHandle,	
+
+};
+
+
 PWRT_Handle_t PowertrainHandle =
 {
     .sParameters.bUseMotorM1 = POWERTRAIN_USE_MOTOR1,
@@ -179,19 +199,11 @@ PWRT_Handle_t PowertrainHandle =
     .sParameters.hStoppingThrottle = POWERTRAIN_STOP_THROTTLE_THRESHOLD,
     .sParameters.hStoppingSpeed = POWERTRAIN_STOP_SPEED_THRESHOLD,
 	
-    .sParameters.hPASMaxTorque = POWERTRAIN_PAS_MAX_TORQUE,
-    .sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
-    .sParameters.hPASMaxKmSpeed = POWERTRAIN_PAS_MAX_KM_SPEED,
-    .sParameters.bMaxLevel = POWERTRAIN_PAS_MAX_LEVEL,
-    .sParameters.bCoeffLevel = POWERTRAIN_PAS_LEVEL_COEFF,
-    .sParameters.hMaxTorqueRatio = POWERTRAIN_PAS_MAX_TORQUE_RATIO,
-    .sParameters.hMaxSpeedRatio = POWERTRAIN_PAS_MAX_SPEED_RATIO,
-    .sParameters.bTorqueSensorUse = POWERTRAIN_PAS_TORQUE_USE,
-	
+
     .sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
     .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
     .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
-    .sParameters.bPASCountSafe = 0,
+
         
     .SpeedFoldbackStartupDualMotor =
     {
@@ -214,9 +226,7 @@ PWRT_Handle_t PowertrainHandle =
     .pBatMonitorHandle = &BatMonitorHandle,
     .pMS = &MotorSelectorHandle,
     .pPWREN = &PowerEnableHandle,
-    .pPSS = &PedalAssistHandle,
-    .pPTS = &PedalTorqueSensor,
-    .pWSS = &WheelSpeedHandle,		
+    .pPAS = &PedalAssistHandle,	
 };
 
 VCI_Handle_t VCInterfaceHandle =

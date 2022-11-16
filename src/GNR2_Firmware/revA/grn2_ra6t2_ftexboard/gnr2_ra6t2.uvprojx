@@ -738,6 +738,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\battery_monitoring.c</FilePath>
             </File>
+            <File>
+              <FileName>pedal_assist.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\pedal_assist.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

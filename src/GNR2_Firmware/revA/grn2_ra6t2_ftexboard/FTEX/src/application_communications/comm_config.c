@@ -6,7 +6,6 @@
 
 #include "comm_config.h"
 #include "gnr_parameters.h"
-#include "board_hardware.h"
 #include "co_gnr2_specs.h"
 
 // Handle of the CANOpen node

@@ -83,11 +83,11 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         if (TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT > TASK_VCSLOWLOOP_SAMPLE_TIME_TICK)
         {
             // Check PAS activation based on torque or cadence
-            PWRT_UpdatePASDetection(pVCI->pPowertrain);
+            PedalAssist_UpdatePASDetection(pVCI->pPowertrain->pPAS);
             // Pedal Assist Cadence reading period
-            PedalSpdSensor_CalculateSpeed(pVCI->pPowertrain->pPSS);
+            PedalSpdSensor_CalculateSpeed(pVCI->pPowertrain->pPAS->pPSS);
             // Wheel Speed sensor reading period
-            WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pWSS);
+            WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pPAS->pWSS);
 
             // Check if we still have power enabled
             PWREN_MonitorPowerEnable(pVCI->pPowertrain->pPWREN);          

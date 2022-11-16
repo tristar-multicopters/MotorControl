@@ -206,7 +206,7 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
     
           if(PassLvl != PAS_UNCHANGED)
           {                     
-              PWRT_SetAssistLevel(pHandle->pVController->pPowertrain,LCD_APT_ConvertPASLevelFromAPT(PassLvl,pHandle->pVController->pPowertrain->sParameters.bMaxLevel));         
+              PWRT_SetAssistLevel(pHandle->pVController->pPowertrain,LCD_APT_ConvertPASLevelFromAPT(PassLvl,pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel));         
           }                      
         
          //Reading the Speed   limit  TBA
@@ -228,8 +228,8 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
          replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
 
          /* Condition use for wheel speed sensor rpm to send */
-         toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pWSS); // Getting RPM from Wheel Speed Module
-         toSend = toSend * 500;                                                         // Converion from RPM to period in ms 
+         toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
+         toSend = toSend * 500;       //Converion from RPM to period in ms 
 
          toSend = 500000/(toSend/60);
      
