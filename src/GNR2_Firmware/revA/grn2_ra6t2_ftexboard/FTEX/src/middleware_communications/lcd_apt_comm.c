@@ -206,7 +206,7 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
     
           if(PassLvl != PAS_UNCHANGED)
           {                     
-              PWRT_SetAssistLevel(pHandle->pVController->pPowertrain,LCD_APT_ConvertPASLevelFromAPT(PassLvl,pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel));         
+              PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,LCD_APT_ConvertPASLevelFromAPT(PassLvl,pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel));         
           }                      
         
          //Reading the Speed   limit  TBA

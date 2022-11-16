@@ -9,13 +9,11 @@
 
 
 #include "powertrain_management.h"
-#include "board_hardware.h"
-#include "gnr_main.h"
 #include "vc_tasks.h"
 
 #define OVERCURRENT_COUNTER         0
 #define STARTUP_COUNTER             1
-#define SPEEDFEEDBACK_COUNTER        2
+#define SPEEDFEEDBACK_COUNTER       2
 
 
 
