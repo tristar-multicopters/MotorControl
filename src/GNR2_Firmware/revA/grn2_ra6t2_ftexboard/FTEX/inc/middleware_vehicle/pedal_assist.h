@@ -15,14 +15,16 @@
 #include "foldback.h"
 
 // ============================== Defines =============================== // 
-#define PAS_PERCENTAGE        (uint8_t)100    /* Percentage for PAS use */
+#define PAS_PERCENTAGE          (uint8_t)100    /* Percentage for PAS use */
 
-#define PAS_LEVEL_SPEED_0   (uint8_t)0      /* Maximum Speed for PAS Level 0 in Km/h */
-#define PAS_LEVEL_SPEED_1   (uint8_t)10     /* Maximum Speed for PAS Level 1 in Km/h */
-#define PAS_LEVEL_SPEED_2   (uint8_t)15     /* Maximum Speed for PAS Level 2 in Km/h */
-#define PAS_LEVEL_SPEED_3   (uint8_t)20     /* Maximum Speed for PAS Level 3 in Km/h */
-#define PAS_LEVEL_SPEED_4   (uint8_t)25     /* Maximum Speed for PAS Level 4 in Km/h */
-#define PAS_LEVEL_SPEED_5   (uint8_t)30     /* Maximum Speed for PAS Level 5 in Km/h */
+#define PAS_LEVEL_SPEED_0       (uint8_t)0      /* Maximum Speed for PAS Level 0 in Km/h */
+#define PAS_LEVEL_SPEED_1       (uint8_t)10     /* Maximum Speed for PAS Level 1 in Km/h */
+#define PAS_LEVEL_SPEED_2       (uint8_t)15     /* Maximum Speed for PAS Level 2 in Km/h */
+#define PAS_LEVEL_SPEED_3       (uint8_t)20     /* Maximum Speed for PAS Level 3 in Km/h */
+#define PAS_LEVEL_SPEED_4       (uint8_t)25     /* Maximum Speed for PAS Level 4 in Km/h */
+#define PAS_LEVEL_SPEED_5       (uint8_t)30     /* Maximum Speed for PAS Level 5 in Km/h */
+
+#define PAS_LEVEL_SPEED_WALK    (uint8_t)3     /* Maximum Speed for PAS Level 5 in Km/h */
 
 // ======================== Configuration enums ======================== // 
 typedef enum
@@ -48,13 +50,14 @@ typedef struct
     int16_t  hPASMaxTorque;               /* PAS Maximum given torque*/
     uint16_t hPASMaxSpeed;                /* PAS Maximum given speed */
     uint16_t hPASMaxKmSpeed;              /* PAS Maximum Km/h speed */
-        
+    
     uint8_t  bMaxLevel;                   /* PAS maximum given Level */
     uint8_t  bCoeffLevel;                 /*  User Coefficient used to multiply the Torque ramp if needed */
-    int16_t     hMaxTorqueRatio;             /* PAS maximum torque ratio */
+    int16_t  hMaxTorqueRatio;             /* PAS maximum torque ratio */
     uint16_t hMaxSpeedRatio;              /* PAS maximum speed ratio */
     
     bool bTorqueSensorUse;                /* Torque sensor use flag */
+    bool WalkmodeOverThrottle;            /* Flag used to decide if walk mode has higher priority than throttle */
     
     uint8_t bPASCountSafe;                /* Counter for safe detection of the PAS after one pedaling*/
         
@@ -64,7 +67,7 @@ typedef struct
 {
    
     int16_t hTorqueSelect;                        /* Select torque to feed for motor control */
-    PasLevel_t bCurrentAssistLevel;                  /* Current pedal assist level */
+    PasLevel_t bCurrentAssistLevel;               /* Current pedal assist level */
     bool bPASDetected;                            /* Use PAS flag  for detection */
     
     PedalSpeedSensorHandle_t * pPSS;              /* Pointer to Pedal Speed Sensor handle */
@@ -72,7 +75,7 @@ typedef struct
     WheelSpeedSensorHandle_t * pWSS;              /* Pointer to Wheel Speed Sensor handle */
     
     Foldback_Handle_t DCVoltageFoldback;                /* Foldback handle using DCbus voltage */
-    Foldback_Handle_t SpeedFoldbackStartupDualMotor;     /* Foldback handle using speed for dual motor control */
+    Foldback_Handle_t *SpeedFoldbackStartupDualMotorPAS;    /* Foldback handle using speed for dual motor control */
     
     PAS_Parameters_t sParameters;                /* Structure for powertrain parameters */
     
@@ -143,6 +146,8 @@ void PedalAssist_UpdatePASDetection(PAS_Handle_t * pHandle);
     */
 bool PedalAssist_IsPASDetected(PAS_Handle_t * pHandle);
 
+
+bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle);
 
 #endif /*__PEDAL_ASSIST_H*/
 

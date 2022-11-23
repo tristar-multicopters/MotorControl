@@ -169,20 +169,36 @@ PWREN_Handle_t PowerEnableHandle =
 	.bUsePowerLock = POWER_ENABLE_ENABLE,
 };
 
+Foldback_Handle_t SpeedFoldbackStartupDualMotorConfig =
+{
+        .hDecreasingEndValue = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END,
+        .hDecreasingRange = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL,
+        .hDecreasingInterval = POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL,
+        .hDefaultOutputLimitHigh = POWERTRAIN_MAX_MOTOR_TORQUE,
+        .hDefaultOutputLimitLow = 0,
+        .FoldbackConfig = TRIM,
+        .bEnableFoldback = true,
+        .hSlowStartBandwidth = FOLDBACK_SLOW_START_BANDWIDTH,
+        .hSlowStopBandwidth = FOLDBACK_SLOW_STOP_BANDWIDTH,
+        .wSlowStartTimeout =  FOLDBACK_TIMEOUT,
+};
+
 PAS_Handle_t PedalAssistHandle = 
 {
-    .sParameters.hPASMaxTorque = POWERTRAIN_PAS_MAX_TORQUE,
-    .sParameters.hPASMaxSpeed = POWERTRAIN_PAS_MAX_SPEED,
-    .sParameters.hPASMaxKmSpeed = POWERTRAIN_PAS_MAX_KM_SPEED,
-    .sParameters.bMaxLevel = POWERTRAIN_PAS_MAX_LEVEL,
-    .sParameters.bCoeffLevel = POWERTRAIN_PAS_LEVEL_COEFF,
-    .sParameters.hMaxTorqueRatio = POWERTRAIN_PAS_MAX_TORQUE_RATIO,
-    .sParameters.hMaxSpeedRatio = POWERTRAIN_PAS_MAX_SPEED_RATIO,
-    .sParameters.bTorqueSensorUse = POWERTRAIN_PAS_TORQUE_USE,
-	.sParameters.bPASCountSafe = 0,
+    .sParameters.hPASMaxTorque = PAS_MAX_TORQUE,
+    .sParameters.hPASMaxSpeed = PAS_MAX_SPEED,
+    .sParameters.hPASMaxKmSpeed = PAS_MAX_KM_SPEED,
+    .sParameters.bMaxLevel = PAS_MAX_LEVEL,
+    .sParameters.bCoeffLevel = PAS_LEVEL_COEFF,
+    .sParameters.hMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
+    .sParameters.hMaxSpeedRatio = PAS_MAX_SPEED_RATIO,
+    .sParameters.bTorqueSensorUse = PAS_TORQUE_USE,
+	.sParameters.bPASCountSafe = PAS_MIN_PEDAL_COUNT_SAFE,
+    .sParameters.WalkmodeOverThrottle = PAS_WALKMODE_OVER_THROTTLE,
     .pPSS = &PedalSpeedSensorHandle,
     .pPTS = &PedalTorqueSensorHandle,
-    .pWSS = &WheelSpeedHandle,	
+    .pWSS = &WheelSpeedHandle,	   
+    .SpeedFoldbackStartupDualMotorPAS = &SpeedFoldbackStartupDualMotorConfig,
 
 };
 
@@ -205,19 +221,8 @@ PWRT_Handle_t PowertrainHandle =
     .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
 
         
-    .SpeedFoldbackStartupDualMotor =
-    {
-        .hDecreasingEndValue = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END,
-        .hDecreasingRange = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL,
-        .hDecreasingInterval = POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL,
-        .hDefaultOutputLimitHigh = POWERTRAIN_MAX_MOTOR_TORQUE,
-        .hDefaultOutputLimitLow = 0,
-        .FoldbackConfig = TRIM,
-        .bEnableFoldback = true,
-        .hSlowStartBandwidth = FOLDBACK_SLOW_START_BANDWIDTH,
-        .hSlowStopBandwidth = FOLDBACK_SLOW_STOP_BANDWIDTH,
-        .wSlowStartTimeout =  FOLDBACK_TIMEOUT,
-    },
+    .SpeedFoldbackStartupDualMotor = &SpeedFoldbackStartupDualMotorConfig,
+
     .pMDI = &MDInterfaceHandle,
     .pThrottle = &ThrottleHandle,
     .pBrake = &BrakeHandle,

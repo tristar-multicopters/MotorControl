@@ -77,19 +77,22 @@
 #define POWERTRAIN_START_THROTTLE_THRESHOLD               1000              /* Throttle value to start powertrain  */
 #define POWERTRAIN_STOP_THROTTLE_THRESHOLD                100                /* Throttle value to stop powertrain  */
 #define POWERTRAIN_STOP_SPEED_THRESHOLD                   0                  /* Speed value to stop powertrain  */
-#define POWERTRAIN_PAS_MAX_TORQUE                         800               /* Maximum motor torque to apply using pedal assist  */
-#define POWERTRAIN_PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
-#define POWERTRAIN_PAS_MAX_KM_SPEED                       33                 /* Maximum Bike Speed in Km/h using RPM */
 
-#define POWERTRAIN_PAS_MAX_LEVEL                          5                 /* Maximum PAS Level given by the screen */	
-#define POWERTRAIN_PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */	
-#define POWERTRAIN_PAS_MAX_TORQUE_RATIO                   80                /* Maximum PAS Torque feed ration in 100% */	
-#define POWERTRAIN_PAS_MAX_SPEED_RATIO                    80                /* Maximum PAS Speed feed ration in 100% */	
-#define POWERTRAIN_PAS_TORQUE_USE                         false              /* PAS based torque sensor use Flag */
+#define PAS_MAX_TORQUE                         800               /* Maximum motor torque to apply using pedal assist  */
+#define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
+#define PAS_MAX_KM_SPEED                       33                 /* Maximum Bike Speed in Km/h using RPM */
+#define PAS_MAX_LEVEL                          5                 /* Maximum PAS Level given by the screen */	
+#define PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */	
+#define PAS_MAX_TORQUE_RATIO                   80                /* Maximum PAS Torque feed ration in 100% */	
+#define PAS_MAX_SPEED_RATIO                    80                /* Maximum PAS Speed feed ration in 100% */	
+#define PAS_TORQUE_USE                         false              /* PAS based torque sensor use Flag */
+#define PAS_WHEEL_SPEED_SENSOR_PPR                 2                  /* Number of electrical pulses per wheel rotation */
+#define PAS_MIN_PEDAL_COUNT_SAFE               0                 /* Number of pulse per pedal turn do we neeed after initial detection to push power */
+#define PAS_WALKMODE_OVER_THROTTLE             true              /* If set to true walk mode has higher priority than throttle */
 
 #define POWERTRAIN_MOTOR_GEARRATIO                        0x000B0005        /* Motor gear ratio, i.e. wheel speed divided by motor speed.
                                                                                 Upper half of 32 bits is numerator, second half is denominator */
-#define POWERTRAIN_WHEEL_SPEED_SENSOR_PPR                 2                  /* Number of electrical pulses per wheel rotation */
+
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT               200                /* Number of task ticks to wait after a fault occurs to attempt
                                                                               a powertrain restart (OC, SF and SU faults)   */
 #define POWERTRAIN_MAX_MOTOR_TORQUE                       STARTING_TORQUE               /* Maximum motor torque to apply with powertrain management */

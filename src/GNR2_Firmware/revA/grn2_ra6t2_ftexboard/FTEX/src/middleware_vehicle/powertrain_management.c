@@ -38,7 +38,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     PWREN_Init(pHandle->pPWREN);
     PedalAssist_Init(pHandle->pPAS);    
     
-    Foldback_Init(&pHandle->SpeedFoldbackStartupDualMotor);
+    Foldback_Init(pHandle->SpeedFoldbackStartupDualMotor);
 
     pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
     pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
@@ -47,7 +47,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
     
     // Enable slow motor Start for Pedal Assist cadence base
-    Foldback_EnableSlowStart(&pHandle->SpeedFoldbackStartupDualMotor);
+    Foldback_EnableSlowStart(pHandle->SpeedFoldbackStartupDualMotor);
     
 }
 
@@ -131,7 +131,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 if (pHandle->bMainMotor == M1)
                 {
                     pHandle->aTorque[M1] = hAux;
-                    hAux = Foldback_ApplyFoldback(&pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1));
+                    hAux = Foldback_ApplyFoldback(pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1));
                     // Store powertrain target torque value in handle. Invert torque if needed.
                     pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
                 }
@@ -139,7 +139,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 {
                     // Store powertrain target torque value in handle. Invert torque if needed.
                     pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
-                    hAux = Foldback_ApplyFoldback(&pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM2));
+                    hAux = Foldback_ApplyFoldback(pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM2));
                     pHandle->aTorque[M1] = hAux;
                 }
                 else
@@ -148,23 +148,28 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             }
             else
             {    
-                /* Using PAS */ 
-                if ( PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle) )
+                /* Throttle and walk mode always have higher priority over PAS but 
+                   the priority between walk mode and throttle depends on the value 
+                   of the parameter WalkmodeOverThrottle                          */    
+                 
+                /* Using PAS or walk mode */
+                if (((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
+                    (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
                 {
                     /* Torque sensor enabled */
-                    if (pHandle->pPAS->sParameters.bTorqueSensorUse)
+                    if (pHandle->pPAS->sParameters.bTorqueSensorUse && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // Walk mode has priority over PAS
                     {
                         pHandle->aTorque[pHandle->bMainMotor] = hAux;
                     } 
                     else
                     {
-                        hAux = Foldback_ApplyFoldback( &pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1));
-                        hAux = Foldback_ApplySlowStart(&pHandle->SpeedFoldbackStartupDualMotor, hAux);
+                        hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1));
+                        hAux = Foldback_ApplySlowStart(pHandle->SpeedFoldbackStartupDualMotor, hAux);
                         pHandle->aTorque[pHandle->bMainMotor] = hAux;
                     }
                 }                            
                 /* Using throttle */
-                else
+                else 
                 {
                     pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
                 } 
@@ -217,10 +222,7 @@ void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle)
     {
         if (pHandle->sParameters.bCtrlType == TORQUE_CTRL)
         {
-            if ( PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle) )
-                MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1]);    
-            else
-                MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1]);
+            MDI_ExecTorqueRamp(pHandle->pMDI, M1, pHandle->aTorque[M1]);
         }
         else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
         {
@@ -593,7 +595,7 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
         #endif
     }
 
-    if (!pHandle->pPAS->bPASDetected) // If there is no PAS detection
+    if (!pHandle->pPAS->bPASDetected && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If there is no PAS  or walk mode detected
     {
         bCheckStop5 = true;
     }
@@ -622,7 +624,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
 
     uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
 
-    if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected)) // If throttle is higher than starting throttle parameter
+    if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
     {
         bCheckStart1 = true;
     }
@@ -885,12 +887,18 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
     * @retval pHandle->pTorqueSelect in int16                                                                                    
     */
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
-{        
-    /* PAS and Throttle management */
-    if ( PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle))
+{      
+
+    /* Throttle and walk mode always have higher priority over PAS but 
+       the priority between walk mode and throttle depends on the value 
+       of the parameter WalkmodeOverThrottle                          */     
+   
+    /* Using PAS or Walk mode */
+    if ((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
+    (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (pHandle->pPAS->sParameters.WalkmodeOverThrottle || !Throttle_IsThrottleDetected(pHandle->pThrottle))))
     {
         /* Torque sensor enabled */
-        if (pHandle->pPAS->sParameters.bTorqueSensorUse)
+        if (pHandle->pPAS->sParameters.bTorqueSensorUse && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
         }
@@ -900,7 +908,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
             PedalAssist_PASSetMaxSpeed(pHandle->pPAS); 
         }
     }
-    else
+    else /* Using throttle */
     {        
         /* Throttle value convert to torque */
         pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);

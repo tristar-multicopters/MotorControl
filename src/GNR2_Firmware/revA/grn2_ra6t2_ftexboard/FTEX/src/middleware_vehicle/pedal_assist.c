@@ -4,10 +4,8 @@
   *
   */
 
-
 #include "pedal_assist.h"
 #include "ASSERT_FTEX.h"
-
 
 /* Functions ---------------------------------------------------- */
 
@@ -25,7 +23,7 @@ void PedalAssist_Init(PAS_Handle_t * pHandle)
     WheelSpdSensor_Init(pHandle->pWSS);
 	
     // Enable slow motor Start for Pedal Assist cadence base
-    Foldback_EnableSlowStart(&pHandle->SpeedFoldbackStartupDualMotor);
+    Foldback_EnableSlowStart(pHandle->SpeedFoldbackStartupDualMotorPAS);
     
 }
 
@@ -99,7 +97,10 @@ int16_t PedalAssist_GetPASTorqueSpeed(PAS_Handle_t * pHandle)
             break;
         case PAS_LEVEL_5:
             hRefTorque = (pHandle->sParameters.hPASMaxTorque); // ratio of 1 from the max torque based on the feeling of the user
-            break;	
+            break;
+        case PAS_LEVEL_WALK:
+            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_3) / PAS_LEVEL_5; // Initial ratio picked by the team, still not tested by a client
+            break;        
         default:
             hRefTorque = 0;
             break;
@@ -123,32 +124,36 @@ void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
     switch(Got_Level)
     {
         case PAS_LEVEL_0:
-            Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
-            Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
             break;      
         case PAS_LEVEL_1:
-            Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_1)));
-            Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_1)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_1)));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_1)));
             break;
         case PAS_LEVEL_2:
-            Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_2)));
-            Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_2)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_2)));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_2)));
             break;
         case PAS_LEVEL_3:
-            Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_3)));
-            Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_3)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_3)));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_3)));
             break;
         case PAS_LEVEL_4:
-            Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_4)));
-            Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_4)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_4)));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_4)));
             break;
         case PAS_LEVEL_5:
-            Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_5)));
-            Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_5)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_5)));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_5)));
+            break;
+        case PAS_LEVEL_WALK:
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_WALK)));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_WALK)));
             break;
         default:
-            Foldback_SetDecreasingRange (&pHandle->SpeedFoldbackStartupDualMotor, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
-            Foldback_SetDecreasingRangeEndValue (&pHandle->SpeedFoldbackStartupDualMotor,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
             break;
     }
 }
@@ -272,3 +277,19 @@ bool PedalAssist_IsPASDetected(PAS_Handle_t * pHandle)
     return pHandle->bPASDetected;
 }
 
+/**
+    * @brief  Return if walk mode is active
+    * @param  Pedal Assist handle
+    * @retval True if walk mode is detected, false otherwise
+    */
+bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle)
+{
+    if(pHandle->bCurrentAssistLevel == PAS_LEVEL_WALK)
+    {
+        return true;  
+    }
+    else
+    {
+        return false;    
+    }       
+}

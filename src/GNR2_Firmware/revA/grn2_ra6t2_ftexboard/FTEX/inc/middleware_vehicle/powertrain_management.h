@@ -83,8 +83,8 @@ typedef struct
     
     int16_t hTorqueSelect;                        /* Select torque to feed for motor control */
 
-    Foldback_Handle_t DCVoltageFoldback;          /* Foldback handle using DCbus voltage */
-    Foldback_Handle_t SpeedFoldbackStartupDualMotor;     /* Foldback handle using speed for dual motor control */
+    Foldback_Handle_t DCVoltageFoldback;              /* Foldback handle using DCbus voltage */
+    Foldback_Handle_t *SpeedFoldbackStartupDualMotor;  /* Foldback handle using speed for dual motor control */
     
     uint16_t aFaultManagementCounters[3][2];      /* Array of counter before acknowledging motor faults. First dimension is
                                                    fault type in this order: Over current, startup, and speed feedback. 
