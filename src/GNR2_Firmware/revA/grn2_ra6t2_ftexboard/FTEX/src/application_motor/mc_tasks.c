@@ -255,12 +255,12 @@ void MediumFrequencyTaskM1(void)
     int16_t wAux = 0;
 
 //    (void) BemfObsPll_CalcAvrgMecSpeedUnit(&BemfObserverPllM1, &wAux);
-//    #if HSLOG_PROFILE == HSLOG_BUTTON_LOG 
+//     #if HSLOG_PROFILE == HSLOG_BUTTON_LOG 
 //        if(!uCAL_GPIO_Read(REVERSE_GPIO_PIN))
-//        {
+//          {
 //            LogHS_StopLog(&LogHS_handle);
-//        }
-//    #endif    
+//         }
+//       #endif    
     
     (void) HallPosSensor_CalcAvrgMecSpeedUnit(&HallPosSensorM1, &wAux);
     bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
@@ -327,9 +327,9 @@ void MediumFrequencyTaskM1(void)
             SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(pSpeedTorqCtrl[M1]); /* Init the reference speed to current speed */
             MCInterface_ExecBufferedCommands(oMCInterface[M1]); /* Exec the speed ramp after changing of the speed sensor */
         
-//            #if HSLOG_PROFILE == HSLOG_ZEROSPEED_LOG 
-//                LogHS_StartOneShot(&LogHS_handle);
-//            #endif
+            #if HSLOG_PROFILE == HSLOG_ZEROSPEED_LOG 
+                LogHS_StartOneShot(&LogHS_handle);
+            #endif
             
         break;
 
@@ -567,8 +567,8 @@ uint8_t MC_HighFrequencyTask(void)
 //        BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
     }
 
-//		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
-//		LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through   
+//  		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
+	  	LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through   
  
 				
     return bMotorNbr;

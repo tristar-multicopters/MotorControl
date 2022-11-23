@@ -460,9 +460,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_apollo.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_wheel.h</FileName>
+              <FileName>vc_parameters_velec.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\vc_parameters_wheel.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -644,9 +644,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_apollo.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_wheel.h</FileName>
+              <FileName>drive_parameters_velec.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\drive_parameters_wheel.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_velec.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -29,9 +29,15 @@
 
 #include "vc_parameters_apollo.h"
 
+
+#elif VEHICLE_SELECTION == VEHICLE_VELEC
+
+#include "vc_parameters_velec.h"
+
 #elif VEHICLE_SELECTION == VEHICLE_WHEEL
 
 #include "vc_parameters_wheel.h"
+
 
 
 #endif
