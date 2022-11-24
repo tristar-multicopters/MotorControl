@@ -49,6 +49,9 @@ typedef struct
 	uint16_t hAvADCValue;            // It contains latest available average ADC value.
 	uint16_t hAvThrottleValue;       // It contains latest available throttle value.
     
+    bool DisableThrottleOutput;      // Used to prevent the throttle value from requesting power 
+                                     // We still read the throttle but simply set the output as 0
+    
     SignalFilteringHandle_t ThrottleFilter; // Filter structure used to filter out noise.
 	
 	ThrottleParameters_t hParameters;
@@ -105,6 +108,20 @@ int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle);
 	*/
 bool Throttle_IsThrottleDetected(ThrottleHandle_t * pHandle);
 
+/**
+	* @brief  Set the value of the flag to disable throttle output 
+	* @param  pHandle : Pointer on Handle structure of ThrottleSensor component
+	* @retval void
+	*/
+void Throttle_DisableThrottleOutput(ThrottleHandle_t * pHandle);
+
+
+/**
+	* @brief  Reset the value of the flag to disable throttle output 
+	* @param  pHandle : Pointer on Handle structure of ThrottleSensor component
+	* @retval void
+	*/
+void Throttle_EnableThrottleOutput(ThrottleHandle_t * pHandle);
 
 #endif /*__THROTTLE_H*/
 

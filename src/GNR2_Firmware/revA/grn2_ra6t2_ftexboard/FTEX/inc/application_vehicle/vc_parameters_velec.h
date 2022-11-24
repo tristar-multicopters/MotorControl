@@ -73,6 +73,8 @@
 #define POWERTRAIN_START_THROTTLE_THRESHOLD               1000              /* Throttle value to start powertrain  */
 #define POWERTRAIN_STOP_THROTTLE_THRESHOLD                100                /* Throttle value to stop powertrain  */
 #define POWERTRAIN_STOP_SPEED_THRESHOLD                   0                  /* Speed value to stop powertrain  */
+#define POWERTRAIN_DISABLE_THROTTLE_PAS_0                 true              /* If set the tru throttle is disabled when pas level is 0 */
+
 
 #define PAS_MAX_TORQUE                         1200               /* Maximum motor torque to apply using pedal assist  */
 #define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */

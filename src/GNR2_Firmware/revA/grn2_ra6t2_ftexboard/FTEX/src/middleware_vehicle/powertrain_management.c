@@ -888,7 +888,20 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
     */
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 {      
-
+    ASSERT(pHandle != NULL);
+    
+    
+    //Disable the throttle output if we need to when PAS level is 0
+    
+    if(pHandle->sParameters.bPAS0DisableThrottle && PedalAssist_GetAssistLevel(pHandle->pPAS) == 0)
+    {
+        Throttle_DisableThrottleOutput(pHandle->pThrottle);    
+    }
+    else
+    {
+        Throttle_EnableThrottleOutput(pHandle->pThrottle);
+    }
+    
     /* Throttle and walk mode always have higher priority over PAS but 
        the priority between walk mode and throttle depends on the value 
        of the parameter WalkmodeOverThrottle                          */     

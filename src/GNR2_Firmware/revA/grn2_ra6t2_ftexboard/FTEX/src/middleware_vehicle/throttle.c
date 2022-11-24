@@ -17,6 +17,9 @@ void Throttle_Init(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
+    pHandle->DisableThrottleOutput = false;
+    
+    
     SignalFiltering_Init(&pHandle->ThrottleFilter);
     SignalFiltering_ConfigureButterworthFOLP(&pHandle->ThrottleFilter,
                                                 pHandle->hParameters.fFilterAlpha,
@@ -48,27 +51,32 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
 	uint32_t wAux;
     uint16_t hAux;
 	
-	/*
-		Compute averaged raw ADC value (between 0 and 65535)
-	*/
-	hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
-	pHandle->hInstADCValue = hAux;
-    pHandle->hAvADCValue = SignalFiltering_CalcOutputU16(&pHandle->ThrottleFilter, hAux);
     
-	/*
-		Compute throttle value (between 0 and 65535)
-	*/
-	hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetThrottle) ? 
-					(pHandle->hAvADCValue - pHandle->hParameters.hOffsetThrottle) : 0; //Substraction without overflow
-	
-	wAux = (uint32_t)(pHandle->hParameters.bSlopeThrottle * hAux);
-	wAux /= pHandle->hParameters.bDivisorThrottle;
-	if (wAux > UINT16_MAX)
+    if(pHandle->DisableThrottleOutput) // Test if we want to disable the throttle on PAS 0
+    {
+        hAux = 0;  // We are in PAS level 0 so the throttle is disabled
+    } 
+    else
     {    
-		wAux = UINT16_MAX;
-    }   
-	hAux = (uint16_t)wAux;
-	
+        /* Compute averaged raw ADC value (between 0 and 65535) */
+        hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
+        pHandle->hInstADCValue = hAux;
+        pHandle->hAvADCValue = SignalFiltering_CalcOutputU16(&pHandle->ThrottleFilter, hAux);
+        
+        /* Compute throttle value (between 0 and 65535)  */
+        hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetThrottle) ? 
+                        (pHandle->hAvADCValue - pHandle->hParameters.hOffsetThrottle) : 0; //Substraction without overflow
+        
+        wAux = (uint32_t)(pHandle->hParameters.bSlopeThrottle * hAux);
+        wAux /= pHandle->hParameters.bDivisorThrottle;
+        if (wAux > UINT16_MAX)
+        {    
+            wAux = UINT16_MAX;
+        }
+          
+        hAux = (uint16_t)wAux;
+    }
+    
 	pHandle->hAvThrottleValue = hAux;
 }
 
@@ -127,7 +135,7 @@ int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
 
 /**
 	 Return true if throttled is pressed (threshold is passed) 
-   */
+  */
 bool Throttle_IsThrottleDetected (ThrottleHandle_t * pHandle) 
 {
   ASSERT(pHandle != NULL);
@@ -143,4 +151,24 @@ bool Throttle_IsThrottleDetected (ThrottleHandle_t * pHandle)
 	}   
 }
 
+/**
+    Set the value of the flag to disable throttle output 
+  */
+void Throttle_DisableThrottleOutput(ThrottleHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    
+    pHandle->DisableThrottleOutput = true;
 
+}
+
+/**
+    Reset the value of the flag to disable throttle output 
+  */
+void Throttle_EnableThrottleOutput(ThrottleHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    
+    pHandle->DisableThrottleOutput = false;
+
+}

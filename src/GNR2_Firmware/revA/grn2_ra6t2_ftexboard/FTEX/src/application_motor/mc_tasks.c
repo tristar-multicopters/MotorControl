@@ -568,7 +568,7 @@ uint8_t MC_HighFrequencyTask(void)
     }
 
 //  		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
-	  	LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through   
+	  	//LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through   
  
 				
     return bMotorNbr;

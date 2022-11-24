@@ -215,7 +215,8 @@ PWRT_Handle_t PowertrainHandle =
     .sParameters.hStoppingThrottle = POWERTRAIN_STOP_THROTTLE_THRESHOLD,
     .sParameters.hStoppingSpeed = POWERTRAIN_STOP_SPEED_THRESHOLD,
 	
-
+    .sParameters.bPAS0DisableThrottle = POWERTRAIN_DISABLE_THROTTLE_PAS_0,
+    
     .sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
     .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
     .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,

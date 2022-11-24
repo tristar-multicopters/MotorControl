@@ -464,6 +464,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_wheel.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_wheel.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -609,9 +614,14 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_apollo.h</FilePath>
             </File>
             <File>
+              <FileName>pmsm_motor_parameters_velec.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec.h</FilePath>
+            </File>
+            <File>
               <FileName>pmsm_motor_parameters_wheel.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\pmsm_motor_parameters_wheel.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_wheel.h</FilePath>
             </File>
             <File>
               <FileName>power_stage_parameters.h</FileName>
@@ -649,9 +659,9 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_velec.h</FileName>
+              <FileName>drive_parameters_wheel.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_wheel.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -55,6 +55,8 @@ typedef struct
     CtrlType_t bCtrlType;                /* Torque or speed control */
     bool bEnableDualMotorStartup;        /* When in single motor mode, second motor will assist during startup until a certain speed if enabled. */
     
+    bool bPAS0DisableThrottle;           /* Will disable the throttle when we are in PAS level 0 */
+    
     uint16_t hStartingThrottle;          /* Minimum torque to start powertrain */
     uint16_t hStoppingThrottle;          /* Minimum torque to stop powertrain */
     uint16_t hStoppingSpeed;             /* Minimum speed to stop powertrain */
