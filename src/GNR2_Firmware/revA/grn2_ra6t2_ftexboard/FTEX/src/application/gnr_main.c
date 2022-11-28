@@ -8,6 +8,7 @@
 #include "vc_tasks.h"
 #include "mc_tasks.h"
 #include "comm_tasks.h"
+#include "user_ConfigTask.h"
 
 //****************** THREAD EXTERN FUNCTION PROTOTYPES ******************//
 
@@ -131,6 +132,10 @@ void gnr_main(void)
     Comm_BootUp();
 
     SystemCoreClockUpdate(); // Standard ARM function to update clock settings
+	
+    //function used to test mCAL data flash. will be the final function
+	//to control data user configuration.
+    //UserConfigStateMachine();
 
     osKernelInitialize();  // Initialise the kernel
     //EventRecorderInitialize(EventRecordAll,1U); // Initialise the event recorder

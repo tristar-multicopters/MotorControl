@@ -16,6 +16,7 @@
 #include "co_can_ra6t2.h"
 #include "co_timer_ra6t2.h"
 #include "board_hardware.h"
+#include "uCal_DataFlash.h"
 
 //============================ DEFINES ============================//
 
@@ -28,5 +29,6 @@ extern SlaveMotorHandle_t SlaveM2;
 extern APT_Handle_t  LCD_APT_handle;
 extern UART_Handle_t  UART0Handle;
 extern LogHighSpeed_Handle_t LogHS_handle;
+extern DataFlash_Handle_t DataFlashHandle;
 
 #endif /* __COMM_CONFIG_H */

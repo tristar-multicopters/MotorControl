@@ -8,6 +8,32 @@
                      #define ADC_B_TRIGGER_ADC_B1        ADC_B_TRIGGER_SYNC_ELC
                      #define ADC_B_TRIGGER_ADC_B1_B      ADC_B_TRIGGER_SYNC_ELC
 
+flash_hp_instance_ctrl_t g_flash0_ctrl;
+const flash_cfg_t g_flash0_cfg =
+{
+    .data_flash_bgo      = true,
+    .p_callback          = Flash_IRQHandler,
+    .p_context           = NULL,
+#if defined(VECTOR_NUMBER_FCU_FRDYI)
+    .irq                 = VECTOR_NUMBER_FCU_FRDYI,
+#else
+    .irq                 = FSP_INVALID_VECTOR,
+#endif
+#if defined(VECTOR_NUMBER_FCU_FIFERR)
+    .err_irq             = VECTOR_NUMBER_FCU_FIFERR,
+#else
+    .err_irq             = FSP_INVALID_VECTOR,
+#endif
+    .err_ipl             = (15),
+    .ipl                 = (15),
+};
+/* Instance structure to use this module. */
+const flash_instance_t g_flash0 =
+{
+    .p_ctrl        = &g_flash0_ctrl,
+    .p_cfg         = &g_flash0_cfg,
+    .p_api         = &g_flash_on_flash_hp
+};
 gpt_instance_ctrl_t g_timer9_ctrl;
 #if 0
 const gpt_extended_pwm_cfg_t g_timer9_pwm_extend =
