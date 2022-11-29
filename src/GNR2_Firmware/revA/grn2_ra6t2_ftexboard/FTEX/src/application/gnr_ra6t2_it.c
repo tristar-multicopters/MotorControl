@@ -12,7 +12,6 @@
 #include "comm_config.h"
 #include "board_hardware.h"
 #include "comm_tasks.h"
-#include "core_cm33.h"
 
 /**
   * @brief  Interrupt routine of ADC hardware.
@@ -238,20 +237,3 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
     }
 }
 
-/**
-  * @brief  Interrupt routine to handle with BusFault Exception
-    UsageFault Exception and HardFault Exception.
-  * @param  void.
-*/
-void HardFault_Handler(void)
-{
-    //if NDEBUG is defined the
-    //no system reset.
-    #ifdef NDEBUG
-    ASSERT(false);
-    #else
-    //force a software reset
-    NVIC_SystemReset();
-    #endif
-    
-}

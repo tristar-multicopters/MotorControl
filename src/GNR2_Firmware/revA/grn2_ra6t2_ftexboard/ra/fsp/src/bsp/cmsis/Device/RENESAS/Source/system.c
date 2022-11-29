@@ -152,9 +152,6 @@ void SystemInit (void)
 
     /* Set bits 20-23 (CP10 and CP11) to enable FPU. */
     SCB->CPACR = (uint32_t) CP_MASK;
-    
-    //enable usagefault when dividing by zero.
-    SCB->CCR |= 0x10;
 #endif
 
 #if BSP_TZ_SECURE_BUILD
