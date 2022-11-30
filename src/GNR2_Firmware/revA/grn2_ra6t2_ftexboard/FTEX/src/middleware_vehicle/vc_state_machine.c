@@ -1,16 +1,15 @@
 /**
-  * @file    vc_state_machine.c
-  * @author  Sami Bouzid, FTEX
-  * @brief   This file contains all definitions and functions prototypes for the
-  *          Vehicle Control State Machine component.
-  */
+ * @file    vc_state_machine.c
+ * @author  Sami Bouzid, FTEX
+ * @brief   This file contains all definitions and functions prototypes for the
+ *          Vehicle Control State Machine component.
+ */
 
 /* Includes ------------------------------------------------------------------*/
 #include "vc_state_machine.h"
 #include "ASSERT_FTEX.h"
 
-
-void VCSTM_Init(VCSTM_Handle_t * pHandle)
+void VCSTM_Init(VCSTM_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
     pHandle->bVState = V_IDLE;
@@ -18,8 +17,7 @@ void VCSTM_Init(VCSTM_Handle_t * pHandle)
     pHandle->hVFaultOccurred = VC_NO_FAULTS;
 }
 
-
-bool VCSTM_NextState(VCSTM_Handle_t * pHandle, VC_State_t bState)
+bool VCSTM_NextState(VCSTM_Handle_t *pHandle, VC_State_t bState)
 {
     ASSERT(pHandle != NULL);
     bool bChangeState = false;
@@ -29,68 +27,68 @@ bool VCSTM_NextState(VCSTM_Handle_t * pHandle, VC_State_t bState)
     switch (bCurrentState)
     {
     case V_IDLE:
-      if (bState == V_STANDBY)
-      {
-        bNewState = bState;
-        bChangeState = true;
-      }
-      break;
+        if (bState == V_STANDBY)
+        {
+            bNewState = bState;
+            bChangeState = true;
+        }
+        break;
 
     case V_STANDBY:
-      if (bState == V_STANDBY_START)
-      {
-        bNewState = bState;
-        bChangeState = true;
-      }
-      break;
-            
-        case V_STANDBY_START:
-      if (bState == V_START)
-      {
-        bNewState = bState;
-        bChangeState = true;
-      }
-      break;
-            
+        if (bState == V_STANDBY_START)
+        {
+            bNewState = bState;
+            bChangeState = true;
+        }
+        break;
+
+    case V_STANDBY_START:
+        if (bState == V_START)
+        {
+            bNewState = bState;
+            bChangeState = true;
+        }
+        break;
+
     case V_START:
-      if (bState == V_RUN || bState == V_ANY_STOP)
-      {
-        bNewState = bState;
-        bChangeState = true;
-      }
-      break;
+        if (bState == V_RUN || bState == V_ANY_STOP)
+        {
+            bNewState = bState;
+            bChangeState = true;
+        }
+        break;
 
     case V_RUN:
-      if (bState == V_ANY_STOP)
-      {
-        bNewState = bState;
-        bChangeState = true;
-      }
-      break;
-            
+        if (bState == V_ANY_STOP)
+        {
+            bNewState = bState;
+            bChangeState = true;
+        }
+        break;
+
     case V_ANY_STOP:
-      if (bState == V_STOP)
-      {
-        bNewState = bState;
-        bChangeState = true;
-      }
-      break;
-            
+        if (bState == V_STOP)
+        {
+            bNewState = bState;
+            bChangeState = true;
+        }
+        break;
+
     case V_STOP:
-      if (bState == V_IDLE)
-      {
-        bNewState = bState;
-        bChangeState = true;
-      }
-      break;
-            
+        if (bState == V_IDLE)
+        {
+            bNewState = bState;
+            bChangeState = true;
+        }
+        break;
+
     default:
-      break;
+        break;
     }
 
     if (bChangeState)
     {
-    pHandle->bVState = bNewState;
+        pHandle->bVState = bNewState;
     }
     else
     {
@@ -101,12 +99,10 @@ bool VCSTM_NextState(VCSTM_Handle_t * pHandle, VC_State_t bState)
     return (bChangeState);
 }
 
-
-VC_State_t VCSTM_FaultProcessing(VCSTM_Handle_t * pHandle, uint16_t hSetErrors, uint16_t
-                             hResetErrors)
+VC_State_t VCSTM_FaultProcessing(VCSTM_Handle_t *pHandle, uint16_t hSetErrors, uint16_t hResetErrors)
 {
     ASSERT(pHandle != NULL);
-    VC_State_t LocalState =  pHandle->bVState;
+    VC_State_t LocalState = pHandle->bVState;
 
     /* Set current errors */
     pHandle->hVFaultNow = (pHandle->hVFaultNow | hSetErrors) & (~hResetErrors);
@@ -114,49 +110,46 @@ VC_State_t VCSTM_FaultProcessing(VCSTM_Handle_t * pHandle, uint16_t hSetErrors, 
 
     if (LocalState == V_FAULT_NOW)
     {
-    if (pHandle->hVFaultNow == VC_NO_FAULTS)
-    {
-      pHandle->bVState = V_FAULT_OVER;
-      LocalState = V_FAULT_OVER;
-    }
+        if (pHandle->hVFaultNow == VC_NO_FAULTS)
+        {
+            pHandle->bVState = V_FAULT_OVER;
+            LocalState = V_FAULT_OVER;
+        }
     }
     else
     {
-    if (pHandle->hVFaultNow != VC_NO_FAULTS)
-    {
-      pHandle->bVState = V_FAULT_NOW;
-      LocalState = V_FAULT_NOW;
-    }
+        if (pHandle->hVFaultNow != VC_NO_FAULTS)
+        {
+            pHandle->bVState = V_FAULT_NOW;
+            LocalState = V_FAULT_NOW;
+        }
     }
 
     return (LocalState);
 }
 
-
-VC_State_t VCSTM_GetState(VCSTM_Handle_t * pHandle)
+VC_State_t VCSTM_GetState(VCSTM_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
     return (pHandle->bVState);
 }
 
-
-bool VCSTM_FaultAcknowledged(VCSTM_Handle_t * pHandle)
+bool VCSTM_FaultAcknowledged(VCSTM_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
     bool bToBeReturned = false;
 
     if (pHandle->bVState == V_FAULT_OVER)
     {
-    pHandle->bVState = V_IDLE;
-    pHandle->hVFaultOccurred = VC_NO_FAULTS;
-    bToBeReturned = true;
+        pHandle->bVState = V_IDLE;
+        pHandle->hVFaultOccurred = VC_NO_FAULTS;
+        bToBeReturned = true;
     }
 
     return (bToBeReturned);
 }
 
-
-uint32_t VCSTM_GetFaultState(VCSTM_Handle_t * pHandle)
+uint32_t VCSTM_GetFaultState(VCSTM_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
     uint32_t LocalFaultState;
@@ -166,4 +159,3 @@ uint32_t VCSTM_GetFaultState(VCSTM_Handle_t * pHandle)
 
     return LocalFaultState;
 }
-
