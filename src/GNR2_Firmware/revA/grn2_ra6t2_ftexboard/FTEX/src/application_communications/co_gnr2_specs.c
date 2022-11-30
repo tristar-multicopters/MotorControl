@@ -119,15 +119,59 @@ uint8_t  bObjDataMotor1FaultAck             = 0;
 uint8_t  bObjDataMotor2Start                = 0;
 int16_t  hObjDataMotor2TorqRef              = 0;
 uint8_t  bObjDataMotor2FaultAck             = 0;
-
+	
+/* Allocate global variables for GNR-IOT objects */
+int16_t  bObjDataSpeedMeas                  = 0;
+uint8_t  bObjDataSOC                        = 0;
+uint8_t  bObjDataPAS                        = 0;
+uint8_t  bObjDataMaxPAS                     = 0;
+uint16_t hObjDataFwVersion                  = 0;
+uint16_t hObjDataPowerMeas                  = 0;
+uint16_t hObjDataMaxPower                   = 0;
+uint16_t hObjDataErrorState                 = 0;
 uint32_t wObjDataSerialNbL                  = 0;
 uint32_t wObjDataSerialNbH                  = 0;
-uint16_t hObjDataFwVersion                  = 0;
 
 /* define the static object dictionary */
+#if GNR_IOT
 struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     // Mandatory entries
-	{CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},						                            // Device Type
+	  {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},							    // Device Type
+    {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (uintptr_t)&hObjDataErrorRegister},				    // Error Register
+    {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)STD_ID_SYNC},							// COB-ID SYNC Message
+    {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataProdHbTime},							// Producer Heartbeat Time
+    {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},								// Identity - Highest Sub Index
+    {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},								// Identity - Vendor ID
+    {CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},								// Identity - Product Code
+    {CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},								// Identity - Revision Number
+    {CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},								// Identity - Serial Number    
+ 
+    {CO_KEY(0x1200, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},								// SDO Srv Parameter - Highest Sub Index
+    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, CO_COBID_SDO_REQUEST()},						// SDO Srv Parameter - COB-ID Client to Server
+    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, CO_COBID_SDO_RESPONSE()},					// SDO Srv Parameter - COB-ID Server to Client  
+
+    {CO_KEY(0x1280, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)3},								// SDO Client Parameter - Highest Sub Index
+    {CO_KEY(0x1280, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_REQUEST()},						// SDO Client Parameter - COB-ID Client to Server
+    {CO_KEY(0x1280, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_RESPONSE()},					// SDO Client Parameter - COB-ID Server to Client
+    {CO_KEY(0x1280, 3, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)1},								// SDO Client Parameter - Client Node ID    
+    
+    // GNR2-IOT OBJECTS MODULE
+    {CO_KEY(CO_OD_REG_SPEED_MEASURE, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataSpeedMeas},   // Application - Inst Speed
+    {CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_UNSIGNED16  |CO_OBJ____RW), 0, (uintptr_t)&hObjDataPowerMeas},   // Application - Inst Power
+    {CO_KEY(CO_OD_REG_SOC,           0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataSOC},         // Application - State of Charge
+    {CO_KEY(CO_OD_REG_PAS_LEVEL,     0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPAS},	        // Application - PAS Level
+    {CO_KEY(CO_OD_REG_MAX_PAS,       0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataMaxPAS},	    // Application - Max PAS Level
+    {CO_KEY(CO_OD_REG_MAX_POWER,     0, CO_SIGNED16    |CO_OBJ____RW), 0, (uintptr_t)&hObjDataMaxPower},   // Application - Max Power
+    {CO_KEY(CO_OD_REG_ERR_STATE,     0, CO_SIGNED16    |CO_OBJ____RW), 0, (uintptr_t)&hObjDataErrorState},  // Application - Error State
+    {CO_KEY(CO_OD_REG_SERIAL_NB,     0, CO_UNSIGNED32  |CO_OBJ____RW), 0, (uintptr_t)&wObjDataSerialNbH},   // Application - Serial Number High side
+    {CO_KEY(CO_OD_REG_SERIAL_NB,     1, CO_UNSIGNED32  |CO_OBJ____RW), 0, (uintptr_t)&wObjDataSerialNbL},   // Application - Serial Number Low side
+    {CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_UNSIGNED16  |CO_OBJ____RW), 0, (uintptr_t)&hObjDataFwVersion},   // Application - Firmware Version
+    CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
+};
+    #else
+    // Mandatory entries
+struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
+	  {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},						                            // Device Type
     {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (uintptr_t)&hObjDataErrorRegister},				                    // Error Register
     {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)CO_COBID_SYNC_STD(GENERATE_SYNC, STD_ID_SYNC)},		// COB-ID SYNC Message
     {CO_KEY(0x1006, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)SYNC_PERIOD_US},                                      // SYNC period
@@ -257,8 +301,11 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x200E, 1, CO_UNSIGNED32|CO_OBJ____R_), 0, (uintptr_t)&wObjDataSerialNbL},			            // Application - Serial number low side
 
     {CO_KEY(0x200F, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataFwVersion},		                // Application - Firmware version
+		
     CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
 };
+    #endif
+
 
 /* Each software timer needs some memory for managing
  * the lists and states of the timed action events.

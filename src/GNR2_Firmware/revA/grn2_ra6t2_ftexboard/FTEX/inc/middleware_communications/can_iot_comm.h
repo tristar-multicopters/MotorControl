@@ -1,0 +1,130 @@
+/**
+  ******************************************************************************
+  * @file     .h
+  * @author   , FTEX
+  * @brief   High level module that describes 
+  *
+  ******************************************************************************
+*/
+	
+#ifndef __CAN_IOT_COMM_H
+#define __CAN_IOT_COMM_H
+
+#include "vc_interface.h"
+#include "co_can_ra6t2.h"
+#include "vc_parameters.h"
+#include "battery_monitoring.h"
+#include "pedal_assist.h"
+
+// =========================== Defines ==================================== //
+/* Defines */
+#define MAX_POWER           1200                        // Max power value in W
+#define WHEEL_DIAMETER      29.0                        // Hardcoded value for Grizzly wheels diameter in inches
+#define CAN_PI              3.1415927                   // Pi value
+#define KM_TO_INCH          39370.1                     // 1 Km = 39370.1  inches
+#define RPM_TO_KM           (CAN_PI * WHEEL_DIAMETER * 60.0) / KM_TO_INCH // Formula for converting RPM to km/h
+#define SERIAL_NUMBER       "1234FTEX"                  // Dummy serial number
+#define HW_VERSION          0x0104U                     // Dummy hardware version - v1.4
+#define FW_VERSION          0x0405U                     // Dummy firmware version - v1.5
+
+
+/* Errors to send by CanOpen */
+#define MOTOR_OVER_T_FAULT   0x0001
+#define MOTOR_START_U_FAULT  0x0002
+#define MOTOR_OVER_C_FAULT   0x0004
+#define HALL_SENSOR_FAULT    0x0008
+#define WHEEL_SPEED_FAULT    0x0010
+#define CONTROL_OVER_V       0x0020
+#define CONTROL_UNDER_V      0x0040
+#define CONTROL_OVER_T       0x0080
+#define THROTTLE_FAULT       0x0100
+#define PAS_FAULT            0x0200
+
+
+/* Other definitions */
+#define BYTE_1_INDEX         1      /**< Index of Byte 1 of the data frame in a CAN message */
+#define BYTE_4_INDEX         4      /**< Index of Byte 4 of the data frame in a CAN message */
+#define MAX_DATA_IN_INIT     4      /**< Maxime data to send in a reply init                */
+#define MAX_DATA_IN_SEG      8      /**< Maxime data to send in a reply segment             */
+
+// ==================== Public function prototypes ========================= //
+/**
+  @brief   IOT CanOpen Get Speed function
+  @param  VCI_Handle_t handle
+  @return Speed in uint8_t format
+*/
+uint8_t CanIot_GetSpeed (VCI_Handle_t * pHandle);
+
+/**
+  @brief  IOT CanOpen  Get Power function
+  @param  VCI_Handle_t handle
+  @return Power in uint16_t format
+*/
+uint16_t CanIot_GetPower (VCI_Handle_t * pHandle);
+
+/**
+  @brief  IOT CanOpen  Get State of Charge function
+  @param  VCI_Handle_t handle
+  @return State of Charge in uint8_t format
+*/
+uint8_t CanIot_GetSOC (VCI_Handle_t * pHandle);
+
+/**
+  @brief  IOT CanOpen  Get Get PAS function
+  @param  VCI_Handle_t handle
+  @return PAS in uint8_t format
+*/
+uint8_t CanIot_GetPAS (VCI_Handle_t * pHandle);
+
+/**
+  @brief  IOT CanOpen  Get Set PAS function
+  @param  VCI_Handle_t handle
+  @param  Set_PAS in uint8_t format
+  @return None
+*/
+void CanIot_SetPAS (VCI_Handle_t * pHandle, uint8_t Set_PAS);
+
+/**
+  @brief  IOT CanOpen Get Maximum PAS function
+  @param  None
+  @return Maximum PAS in uint8_t format
+*/
+uint8_t CanIot_GetMaxPAS (void);
+
+/**
+  @brief  IOT CanOpen Get MAX Power function
+  @param  None
+  @return Maximum Power in uint8_t format
+*/
+uint16_t CanIot_GetMaxPWR (void);
+
+/**
+  @brief  IOT CanOpen Get Current Faults function
+  @param  VCI_Handle_t handle
+  @return Get Current Faults in uint16_t format
+*/
+uint16_t CanIot_GetCurrentFaults (VCI_Handle_t * pHandle);
+
+/**
+  @brief  IOT CanOpen Get FW Version function
+  @param  None
+  @return Firmware Version in uint16_t format
+*/
+uint16_t CanIot_GetFwVersion(void);
+
+/**
+  @brief  IOT CanOpen Get HW Version function
+  @param  None
+  @return Hardware Version in uint16_t format
+*/
+uint16_t CanIot_GetHwVersion(void);
+
+/**
+  @brief  IOT CanOpen Get Serial Number function
+  @param  None
+  @return Serial Number in uint8_t format
+*/
+uint8_t CanIot_GetSerialNumber(void);
+
+
+#endif /* __CAN_IOT_COMM_H */

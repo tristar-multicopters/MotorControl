@@ -17,6 +17,7 @@
 #include "co_gnr2_specs.h"
 // CAN logger
 #include "can_logger.h"
+#include "can_iot_comm.h"
 
 #include "lcd_apt_comm.h"
 // Serial Flash storage
@@ -60,8 +61,53 @@ osSemaphoreAttr_t canTmrSemaphoreAttr =
 */
 static void UpdateObjectDictionnary(void *p_arg)
 {
+#if GNR_IOT
+	
+	  CO_NODE  *pNode;
+    pNode = (CO_NODE *)p_arg;
+    
+	  VCI_Handle_t * pVCI = &VCInterfaceHandle;
+    // Get Bike Parameters 
+    uint8_t hSpeed          = CanIot_GetSpeed(pVCI);
+    uint16_t hPWR           = CanIot_GetPower(pVCI);
+    uint8_t bSOC            = CanIot_GetSOC(pVCI);
+    uint8_t bPAS            = CanIot_GetPAS(pVCI);
+    uint8_t bMaxPas         = CanIot_GetMaxPAS();  
+    uint16_t hMaxPwr        = CanIot_GetMaxPWR();
+    uint16_t hErrorState    = CanIot_GetCurrentFaults(pVCI);
+    uint16_t hFwVersion     = CanIot_GetFwVersion();
+    // Get Serial Number
+    uint64_t fSerialNbLow   = 0U;
+    uint64_t fSrialNbHigh   = 0U;
+    
+    // Set Bike Parameters
+    CanIot_SetPAS(pVCI,bPAS);
+
+    if (pNode == NULL) 
+    {        
+        return;
+    }
+
+	if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
+    {   
+        /* Write commands in CANOpen object dictionnary received by SDO */
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed, CO_BYTE, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)), pNode, &bSOC, CO_BYTE, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)), pNode, &bPAS, CO_BYTE, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, M1)), pNode, &bMaxPas, CO_BYTE, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)), pNode, &hMaxPwr, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)), pNode, &hErrorState, CO_WORD, 0);
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)), pNode, &fSerialNbLow, CO_LONG, 0); 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)), pNode, &fSrialNbHigh, CO_LONG, 0); 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)), pNode, &hFwVersion, CO_WORD, 0);        
+        /* Read commands in CANOpen object dictionnary received by SDO */
+        //COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)), pNode, &bPAS, CO_BYTE, 0);
+    }
+#else
     CO_NODE  *pNode;
     pNode = (CO_NODE *)p_arg;
+		
     if (pNode == NULL) {return;}
 
     /* Get data from motor control and vehicle control layer */
@@ -139,6 +185,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         }
         #endif
     }
+#endif
 }
 
 /************* TASKS ****************/
@@ -163,7 +210,8 @@ void Comm_BootUp(void)
     PinConfig.PinOutput    = PUSH_PULL;
     uCAL_GPIO_ReInit(CAN_STANDBY_N_GPIO_PIN, PinConfig);
     uCAL_GPIO_Set(CAN_STANDBY_N_GPIO_PIN);
-
+#if GNR_IOT   
+#else
     /* Initialize motor 2 handle to be used by vehicle control layer */
     SlaveMotorRegisterAddr_t M2RegAddr =
     {
@@ -179,7 +227,7 @@ void Comm_BootUp(void)
         .wRegAddrTorqueRef = CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2),       
     };
     SlaveMCInterface_Init(&SlaveM2, &CONodeGNR, M2RegAddr);
-
+#endif
     /* Select UART protocol */
     switch(UART0Handle.UARTProtocol)
 	  {
@@ -244,7 +292,7 @@ __NO_RETURN void CANOpenTask (void * pvParameter)
 			while(1);
 	}
 
-    /* Use CANopen software timer to create a cyclic function
+   /* Use CANopen software timer to create a cyclic function
 	 * call to the callback function 'UpdateObjectDictionnary()' with a period
 	 * of 25ms.
 	 */

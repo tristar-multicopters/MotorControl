@@ -122,7 +122,7 @@ static void CANo_DrvInit(void)
 {
     R_CANFD_ModeTransition(&g_canfd0_ctrl,CAN_OPERATION_MODE_HALT, CAN_TEST_MODE_DISABLED);
     		
-	//osDelay(10); //WTF WHY
+  	//osDelay(10); //WTF WHY
 }
 
 /**
