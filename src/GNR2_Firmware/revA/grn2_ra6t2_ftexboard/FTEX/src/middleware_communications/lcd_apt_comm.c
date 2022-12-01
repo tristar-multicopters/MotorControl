@@ -230,8 +230,14 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
          /* Condition use for wheel speed sensor rpm to send */
          toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
          toSend = toSend * 500;       //Converion from RPM to period in ms 
+         
+         //verify toSend value to avoid a division by zero.
+         if(toSend != 0)
+         {
 
-         toSend = 500000/(toSend/60);
+            toSend = 500000/(toSend/60);
+             
+         }
      
          replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Wheel speed Low half 
          replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; // Wheel speed High half

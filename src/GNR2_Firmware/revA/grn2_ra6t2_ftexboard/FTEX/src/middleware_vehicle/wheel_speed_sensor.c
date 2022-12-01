@@ -59,8 +59,23 @@ uint32_t WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle)
 */
 uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle)
 {
-	pHandle->wWheelSpeedFreq = COEFFREQ / (WheelSpdSensor_GetPeriodValue(pHandle));
-	return pHandle->wWheelSpeedFreq;
+    
+    //receive wheel speed value.
+    uint32_t WheelSpeedRead = WheelSpdSensor_GetPeriodValue(pHandle);
+    
+    //verify if wWheelSpeed_Read value returned by WheelSpdSensor_GetPeriodValue(pHandle)
+    //if not zero.
+    if (WheelSpeedRead != 0)
+    {
+        pHandle->wWheelSpeedFreq = COEFFREQ / (WheelSpeedRead);  
+    }
+    else
+    {
+        pHandle->wWheelSpeedFreq = 0; 
+    }
+    
+    return pHandle->wWheelSpeedFreq;
+    
 }
 
 /**

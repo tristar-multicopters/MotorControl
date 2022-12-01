@@ -58,6 +58,11 @@
 
 #define BSP_TZ_STACK_SEAL_VALUE                       (0xFEF5EDA5)
 
+//set the DIV_0_TRP bit(bit 4) that detect division by 0
+//this bit is inside of Configuration and Control Register
+//CCR.
+#define DIV_0_TRP_MASK                                (0x00000010)
+
 /***********************************************************************************************************************
  * Typedef definitions
  **********************************************************************************************************************/
@@ -152,6 +157,10 @@ void SystemInit (void)
 
     /* Set bits 20-23 (CP10 and CP11) to enable FPU. */
     SCB->CPACR = (uint32_t) CP_MASK;
+    
+    //Enable faulting or halting when the processor 
+    //executes an SDIV or UDIV instruction with a divisor of 0.
+    SCB->CCR |= DIV_0_TRP_MASK;
 #endif
 
 #if BSP_TZ_SECURE_BUILD
