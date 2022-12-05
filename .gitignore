@@ -61,6 +61,7 @@ dkms.conf
 # Keil user project files
 *.uvoptx
 *.uvguix.Andy_B
+*.uvguix.chakroun.jabrane_fte
 *.uvguix
 *.samib
 *.ronak

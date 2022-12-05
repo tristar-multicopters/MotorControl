@@ -33,27 +33,27 @@
 
 /***************** PEDAL TORQUE SENSOR PARAMETERS  ******************************/
 
-#define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient pedal torque sensor filtering  */
-#define PTS_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient pedal torque sensor filtering  */
-#define PTS_MAX_PTSVALUE                  UINT16_MAX	    /* Maximum analog value to reach */
+#define PTS_FILTER_ALPHA                  2.27F    			/* Butterworth alpha coefficient pedal torque sensor filtering  */
+#define PTS_FILTER_BETA                   -0.27F    		/* Butterworth beta coefficient pedal torque sensor filtering  */
+#define PTS_MAX_PTSVALUE                  UINT16_MAX		/* Maximum analog value to reach */
 
-#define PTS_OFFSET_ADC2PTS                12500    /* Offset for ADC to pedal torque sensor linear transformation  */
-#define PTS_SLOPE_ADC2PTS                 5        /* Slope for ADC to pedal torque sensor linear transformation  */
-#define PTS_DIVISOR_ADC2PTS               4        /* Divisor for ADC to pedal torque sensor linear transformation  */
+#define PTS_OFFSET_ADC2PTS                10000   	/* Offset for ADC to pedal torque sensor linear transformation  */
+#define PTS_SLOPE_ADC2PTS                 23        /* Slope for ADC to pedal torque sensor linear transformation  */
+#define PTS_DIVISOR_ADC2PTS               20        /* Divisor for ADC to pedal torque sensor linear transformation  */
 
-#define PTS_OFFSET_PTS2TORQUE             20000    /* Offset for pedal torque sensor to torque linear transformation  */
-#define PTS_SLOPE_PTS2TORQUE              -7        /* Slope for pedal torque sensor to torque linear transformation  */
-#define PTS_DIVISOR_PTS2TORQUE            25        /* Divisor for pedal torque sensor to torque linear transformation  */
+#define PTS_OFFSET_PTS2TORQUE             20    		/* Offset for pedal torque sensor to torque linear transformation  */
+#define PTS_SLOPE_PTS2TORQUE              2        /* Slope for pedal torque sensor to torque linear transformation  */
+#define PTS_DIVISOR_PTS2TORQUE            105     	/* Divisor for pedal torque sensor to torque linear transformation  */
 
 #define PTS_FILTER_BW1                    10        /* BW coefficient for pedal torque sensor avereging */
 #define PTS_FILTER_BW2                    25        /* BW coefficient for pedal torque sensor avereging */
 
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
-#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION 1       /* Wheel speed sensor cycle number for one wheel rotation */
-#define WHEEL_SPEED_SLOW_LOOP_DETECT        false    /* Wheel speed sensor slow detect counter flag activation */
-#define WHEEL_SPEED_SLOW_LOOP_COUNT         3       /* Wheel speed sensor slow detect counter to get 750ms per function call */
-#define WHEEL_SPEED_SENSOR_CORRECTION_FACTOR 2      /* Wheel speed sensor slow detect correction for a signal after two wheel spin detection */    
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION  3			/* Wheel speed sensor cycle number for one wheel rotation */
+#define WHEEL_SPEED_SLOW_LOOP_DETECT         false	/* Wheel speed sensor slow detect counter flag activation */
+#define WHEEL_SPEED_SLOW_LOOP_COUNT          1			/* Wheel speed sensor slow detect counter to get 750ms per function call */
+#define WHEEL_SPEED_SENSOR_CORRECTION_FACTOR 1      /* Wheel speed sensor slow detect correction for a signal after two wheel spin detection */    
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
@@ -67,29 +67,29 @@
 
 /***************** POWERTRAIN MANAGEMENT & PAS PARAMETERS  ******************************/
 
-#define POWERTRAIN_USE_MOTOR1                             true              /* True if motor1 is used  */
-#define POWERTRAIN_USE_MOTOR2                             true              /* True if motor2 is used  */
-#define POWERTRAIN_DEFAULT_MAIN_MOTOR                     M1                /* Default main motor, can be M1 or M2  */
-#define POWERTRAIN_DEFAULT_MODE                           DUAL_MOTOR      /* Default powertrain mode, can be SINGLE_MOTOR or DUAL_MOTOR  */
-#define POWERTRAIN_DEFAULT_CONTROL_TYPE                   TORQUE_CTRL        /* Default control type, can be TORQUE_CTRL or SPEED_CTRL  */
-#define POWERTRAIN_M2_TORQUE_INVERSION                    false              /* If true, M2 torque is inverted compared to M1  */
-#define POWERTRAIN_START_THROTTLE_THRESHOLD               1000              /* Throttle value to start powertrain  */
-#define POWERTRAIN_STOP_THROTTLE_THRESHOLD                100                /* Throttle value to stop powertrain  */
-#define POWERTRAIN_STOP_SPEED_THRESHOLD                   0                  /* Speed value to stop powertrain  */
-#define POWERTRAIN_DISABLE_THROTTLE_PAS_0                 true              /* If set the tru throttle is disabled when pas level is 0 */
+#define POWERTRAIN_USE_MOTOR1                             true					/* True if motor1 is used  */
+#define POWERTRAIN_USE_MOTOR2                             true       		/* True if motor2 is used  */
+#define POWERTRAIN_DEFAULT_MAIN_MOTOR                     M1          	/* Default main motor, can be M1 or M2  */
+#define POWERTRAIN_DEFAULT_MODE                           DUAL_MOTOR		/* Default powertrain mode, can be SINGLE_MOTOR or DUAL_MOTOR  */
+#define POWERTRAIN_DEFAULT_CONTROL_TYPE                   TORQUE_CTRL		/* Default control type, can be TORQUE_CTRL or SPEED_CTRL  */
+#define POWERTRAIN_M2_TORQUE_INVERSION                    false					/* If true, M2 torque is inverted compared to M1  */
+#define POWERTRAIN_START_THROTTLE_THRESHOLD               1000					/* Throttle value to start powertrain  */
+#define POWERTRAIN_STOP_THROTTLE_THRESHOLD                100						/* Throttle value to stop powertrain  */
+#define POWERTRAIN_STOP_SPEED_THRESHOLD                   0							/* Speed value to stop powertrain  */
+#define POWERTRAIN_DISABLE_THROTTLE_PAS_0                 true					/* If set the tru throttle is disabled when pas level is 0 */
 
 
-#define PAS_MAX_TORQUE                         800               /* Maximum motor torque to apply using pedal assist  */
-#define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
-#define PAS_MAX_KM_SPEED                       33                 /* Maximum Bike Speed in Km/h using RPM */
-#define PAS_MAX_LEVEL                          5                 /* Maximum PAS Level given by the screen */	
-#define PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */	
-#define PAS_MAX_TORQUE_RATIO                   80                /* Maximum PAS Torque feed ration in 100% */	
-#define PAS_MAX_SPEED_RATIO                    80                /* Maximum PAS Speed feed ration in 100% */	
-#define PAS_TORQUE_USE                         true              /* PAS based torque sensor use Flag */
-#define PAS_WHEEL_SPEED_SENSOR_PPR                 2                  /* Number of electrical pulses per wheel rotation */
-#define PAS_MIN_PEDAL_COUNT_SAFE               0                 /* Number of pulse per pedal turn do we neeed after initial detection to push power */
-#define PAS_WALKMODE_OVER_THROTTLE             true              /* If set to true walk mode has higher priority than throttle */
+#define PAS_MAX_TORQUE                         STARTING_TORQUE							/* Maximum motor torque to apply using pedal assist  */
+#define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM		/* Maximum motor speed reachable using pedal assist  */
+#define PAS_MAX_KM_SPEED                       33					/* Maximum Bike Speed in Km/h using RPM */
+#define PAS_MAX_LEVEL                          5					/* Maximum PAS Level given by the screen */	
+#define PAS_LEVEL_COEFF                        1 					/* PAS ramp multiplication coefficient for a better user feeling   */	
+#define PAS_MAX_TORQUE_RATIO                   99					/* Maximum PAS Torque feed ration in 100% */	
+#define PAS_MAX_SPEED_RATIO                    99					/* Maximum PAS Speed feed ration in 100% */	
+#define PAS_TORQUE_USE                         true				/* PAS based torque sensor use Flag */
+#define PAS_WHEEL_SPEED_SENSOR_PPR             2					/* Number of electrical pulses per wheel rotation */
+#define PAS_MIN_PEDAL_COUNT_SAFE               0					/* Number of pulse per pedal turn do we neeed after initial detection to push power */
+#define PAS_WALKMODE_OVER_THROTTLE             true				/* If set to true walk mode has higher priority than throttle */
 
 #define POWERTRAIN_MOTOR_GEARRATIO                        0x000B0005        /* Motor gear ratio, i.e. wheel speed divided by motor speed.
                                                                                 Upper half of 32 bits is numerator, second half is denominator */
