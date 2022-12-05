@@ -79,7 +79,7 @@ qd_t FluxWkng_CalcCurrRef(FluxWeakeningHandle_t * pHandle, qd_t Iqdref)
     wIdRef =  pHandle->hDemagCurrent;
   }
 
-  Iqdref.d = (int16_t)wIdRef;
+  Iqdref.d = -(int16_t)wIdRef;
 
   /* New saturation for Iqref */
   wIqSatSq =  pHandle->wNominalSqCurr - wIdRef * wIdRef;

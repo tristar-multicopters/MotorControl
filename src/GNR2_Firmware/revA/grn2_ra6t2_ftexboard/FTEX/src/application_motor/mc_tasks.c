@@ -460,16 +460,18 @@ void FOC_CalcCurrRef(uint8_t bMotor)
     /* If current references iqref and idref are computed internally    */
     if (FOCVars[bMotor].bDriveInput == INTERNAL)
     {
+        
         FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSpeedTorqCtrl[bMotor]);
         FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
         FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
-
-        if (pFieldWeakening[bMotor])
+        
+        if (FLUX_WEAKENING_ENABLE == 1) 
         {
             IqdTmp.q = FOCVars[bMotor].Iqdref.q;
-            IqdTmp.d = FOCVars[bMotor].UserIdref;
-            FOCVars[bMotor].Iqdref = FluxWkng_CalcCurrRef(pFieldWeakening[bMotor], IqdTmp);
+            IqdTmp.d = FOCVars[bMotor].Iqdref.d;
+            FOCVars[bMotor].Iqdref = FluxWkng_CalcCurrRef(pFieldWeakening[bMotor],IqdTmp);
         }
+        
         if (pFeedforward[bMotor])
         {
             Feedforward_VqdffComputation(pFeedforward[bMotor], FOCVars[bMotor].Iqdref, pSpeedTorqCtrl[bMotor]);
