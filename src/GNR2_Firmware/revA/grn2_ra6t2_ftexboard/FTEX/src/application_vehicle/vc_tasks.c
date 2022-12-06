@@ -152,8 +152,13 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
     while (true)
     {    
         #if SWD_CONTROL_ENABLE
+        
+        /* for directly input Torque */
         MDI_ExecTorqueRamp(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hTorqRef);
         MDI_ExecTorqueRamp(pVCI->pPowertrain->pMDI, M2, sDebugVariables.hTorqRef);
+        
+        /* for directly inout Iq and Id */
+        //MDI_SetCurrentReferences(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hIqdRef);
         
         sDebugVariables.bStartM1 ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M1) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M1);
         sDebugVariables.bStartM2 ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M2) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M2);

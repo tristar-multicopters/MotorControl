@@ -477,6 +477,14 @@ void FOC_CalcCurrRef(uint8_t bMotor)
             Feedforward_VqdffComputation(pFeedforward[bMotor], FOCVars[bMotor].Iqdref, pSpeedTorqCtrl[bMotor]);
         }
     }
+
+    /* If current references iqref and idref are computed externaly    */
+    else if (FOCVars[bMotor].bDriveInput == EXTERNAL)	//Added to calculate FlxWeakening parameters in SWD Debug mode
+    {
+        IqdTmp.q = FOCVars[bMotor].Iqdref.q;
+        IqdTmp.d = FOCVars[bMotor].Iqdref.d;
+        FOCVars[bMotor].Iqdref = FluxWkng_CalcCurrRef(pFieldWeakening[bMotor],IqdTmp);
+    }
 }
 
 /**
