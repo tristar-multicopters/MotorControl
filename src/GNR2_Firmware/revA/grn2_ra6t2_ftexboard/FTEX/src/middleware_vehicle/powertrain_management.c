@@ -6,16 +6,12 @@
   *
   */
 
-
-
 #include "powertrain_management.h"
 #include "vc_tasks.h"
 
 #define OVERCURRENT_COUNTER         0
 #define STARTUP_COUNTER             1
 #define SPEEDFEEDBACK_COUNTER       2
-
-
 
 /* Functions ---------------------------------------------------- */
 
@@ -150,17 +146,23 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             {    
                 /* Throttle and walk mode always have higher priority over PAS but 
                    the priority between walk mode and throttle depends on the value 
-                   of the parameter WalkmodeOverThrottle                          */    
+                   of the parameter WalkmodeOverThrottle  */    
                  
                 /* Using PAS or walk mode */
                 if (((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
                     (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
                 {
                     /* Torque sensor enabled */
-                    if (pHandle->pPAS->sParameters.bTorqueSensorUse && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // Walk mode has priority over PAS
+                    if ((pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // Walk mode has priority over PAS
                     {
                         pHandle->aTorque[pHandle->bMainMotor] = hAux;
-                    } 
+                    } 			
+                    /* Hybride sensor enabled */
+                    else if ((pHandle->pPAS->bCurrentPasAlgorithm == HybridSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
+                    {
+                        pHandle->aTorque[pHandle->bMainMotor] = hAux;
+                    }				
+                    /* Cadence sensor enabled */
                     else
                     {
                         hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1));
@@ -889,10 +891,12 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 {      
     ASSERT(pHandle != NULL);
-    
-    
-    //Disable the throttle output if we need to when PAS level is 0
-    
+    /* Hybride PAS Parameters */
+    int16_t htorqueSelect = 0; 
+    int16_t htorqueSens= 0; 
+    int16_t hFinalTorque = 0;
+	
+    /* Disable the throttle output if we need to when PAS level is 0 */
     if(pHandle->sParameters.bPAS0DisableThrottle && PedalAssist_GetAssistLevel(pHandle->pPAS) == 0)
     {
         Throttle_DisableThrottleOutput(pHandle->pThrottle);    
@@ -904,24 +908,57 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     
     /* Throttle and walk mode always have higher priority over PAS but 
        the priority between walk mode and throttle depends on the value 
-       of the parameter WalkmodeOverThrottle                          */     
+       of the parameter WalkmodeOverThrottle */     
    
-    /* Using PAS or Walk mode */
+    /* Using PAS or Walk mode 
+       Conditions are 
+        - PAS Detetect & No throttle 
+        - Walk Mode detected & Walk Mode over Throttle detected | No Throttle detected */
+		
     if ((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
-    (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (pHandle->pPAS->sParameters.WalkmodeOverThrottle || !Throttle_IsThrottleDetected(pHandle->pThrottle))))
+        (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (pHandle->pPAS->sParameters.WalkmodeOverThrottle ||	!Throttle_IsThrottleDetected(pHandle->pThrottle))))
     {
         /* Torque sensor enabled */
-        if (pHandle->pPAS->sParameters.bTorqueSensorUse && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
+        if ((pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
+         }
+				
+        /* Hybride sensor enabled */
+        else if ((pHandle->pPAS->bCurrentPasAlgorithm == HybridSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
+        {
+            /* Call the Main Motor Avg Speed for */
+            int16_t wSpeedMainMotor = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
+					
+            /* Set Cadence Speed */  
+            PedalAssist_PASSetMaxSpeed(pHandle->pPAS); 
+            /* Set Torque Sensor */
+            htorqueSens = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
+            /* Set Motor Torque */
+            htorqueSelect = PedalAssist_GetPASTorqueSpeed(pHandle->pPAS);
+            
+            /* Apply Limitation for the */
+            hFinalTorque = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, htorqueSelect, abs(wSpeedMainMotor) );
+            hFinalTorque = Foldback_ApplySlowStart(pHandle->SpeedFoldbackStartupDualMotor, hFinalTorque); //Apply the slow start if needed    				
+            
+            /* Make a decision by adding the torque or limiting the speed */
+            if (htorqueSens > hFinalTorque)
+                pHandle->hTorqueSelect = htorqueSens;
+            else
+                pHandle->hTorqueSelect = hFinalTorque + htorqueSens;
+				
         }
-        else
+			
+        /* Cadence sensor enabled */
+        else 
         {
             pHandle->hTorqueSelect= PedalAssist_GetPASTorqueSpeed(pHandle->pPAS);
             PedalAssist_PASSetMaxSpeed(pHandle->pPAS); 
         }
     }
-    else /* Using throttle */
+		
+		/* Using throttle */
+    else 
     {        
         /* Throttle value convert to torque */
         pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);

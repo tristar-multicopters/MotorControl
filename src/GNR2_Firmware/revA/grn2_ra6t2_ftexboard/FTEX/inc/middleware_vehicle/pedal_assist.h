@@ -42,6 +42,12 @@ typedef enum
     PAS_LEVEL_WALK,
 } PasLevel_t;
 
+typedef enum
+{
+    TorqueSensorUse = 0,    /* Torque sensor use define */
+    CadenceSensorUse,       /* Cadence sensor use define */
+    HybridSensorUse,        /* Hybride sensor use define */
+}PasAlgorithm_t;
 
 // ======================== Configuration structures ======================== // 
 typedef struct
@@ -56,7 +62,6 @@ typedef struct
     int16_t  hMaxTorqueRatio;             /* PAS maximum torque ratio */
     uint16_t hMaxSpeedRatio;              /* PAS maximum speed ratio */
     
-    bool bTorqueSensorUse;                /* Torque sensor use flag */
     bool WalkmodeOverThrottle;            /* Flag used to decide if walk mode has higher priority than throttle */
     
     uint8_t bPASCountSafe;                /* Counter for safe detection of the PAS after one pedaling*/
@@ -68,6 +73,8 @@ typedef struct
    
     int16_t hTorqueSelect;                        /* Select torque to feed for motor control */
     PasLevel_t bCurrentAssistLevel;               /* Current pedal assist level */
+    PasAlgorithm_t  bCurrentPasAlgorithm;         /* Current PAS used Algorithm */
+    
     bool bPASDetected;                            /* Use PAS flag  for detection */
     
     PedalSpeedSensorHandle_t * pPSS;              /* Pointer to Pedal Speed Sensor handle */

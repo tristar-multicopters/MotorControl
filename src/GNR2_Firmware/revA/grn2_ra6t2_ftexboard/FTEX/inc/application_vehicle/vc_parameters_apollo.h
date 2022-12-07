@@ -87,7 +87,9 @@
 #define PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */	
 #define PAS_MAX_TORQUE_RATIO                   80                /* Maximum PAS Torque feed ration in 100% */	
 #define PAS_MAX_SPEED_RATIO                    80                /* Maximum PAS Speed feed ration in 100% */	
-#define PAS_TORQUE_USE                         false              /* PAS based torque sensor use Flag */
+#define PAS_ALGORITHM                          CadenceSensorUse  /*  TorqueSensorUse = 0,     Torque sensor use define 
+                                                                    CadenceSensorUse = 1,    Cadence sensor use define 
+                                                                    HybridSensorUse = 2,     Hybride sensor use define  */
 #define PAS_WHEEL_SPEED_SENSOR_PPR                 2                  /* Number of electrical pulses per wheel rotation */
 #define PAS_MIN_PEDAL_COUNT_SAFE               0                 /* Number of pulse per pedal turn do we neeed after initial detection to push power */
 #define PAS_WALKMODE_OVER_THROTTLE             true              /* If set to true walk mode has higher priority than throttle */

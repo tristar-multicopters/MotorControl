@@ -78,15 +78,17 @@
 
 #define PAS_MAX_TORQUE                         1200               /* Maximum motor torque to apply using pedal assist  */
 #define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
-#define PAS_MAX_KM_SPEED                       33                 /* Maximum Bike Speed in Km/h using RPM */
-#define PAS_MAX_LEVEL                          5                 /* Maximum PAS Level given by the screen */
-#define PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */
-#define PAS_MAX_TORQUE_RATIO                   99                /* Maximum PAS Torque feed ration in 100% */
+#define PAS_MAX_KM_SPEED                       33               /* Maximum Bike Speed in Km/h using RPM */
+#define PAS_MAX_LEVEL                          5                /* Maximum PAS Level given by the screen */
+#define PAS_LEVEL_COEFF                        1                /* PAS ramp multiplication coefficient for a better user feeling   */
+#define PAS_MAX_TORQUE_RATIO                   99               /* Maximum PAS Torque feed ration in 100% */
 #define PAS_MAX_SPEED_RATIO                    99               /* Maximum PAS Speed feed ration in 100% */
-#define PAS_TORQUE_USE                         false              /* PAS based torque sensor use Flag */
-#define PAS_WHEEL_SPEED_SENSOR_PPR                 2                  /* Number of electrical pulses per wheel rotation */
-#define PAS_MIN_PEDAL_COUNT_SAFE               0                 /* Number of pulse per pedal turn do we neeed after initial detection to push power */
-#define PAS_WALKMODE_OVER_THROTTLE             true              /* If set to true walk mode has higher priority than throttle */
+#define PAS_ALGORITHM                          TorqueSensorUse  /*  TorqueSensorUse = 0,     Torque sensor use define 
+                                                                    CadenceSensorUse = 1,    Cadence sensor use define 
+                                                                    HybridSensorUse = 2,     Hybride sensor use define  */
+#define PAS_WHEEL_SPEED_SENSOR_PPR             2                /* Number of electrical pulses per wheel rotation */
+#define PAS_MIN_PEDAL_COUNT_SAFE               0                /* Number of pulse per pedal turn do we neeed after initial detection to push power */
+#define PAS_WALKMODE_OVER_THROTTLE             true             /* If set to true walk mode has higher priority than throttle */
 
 #define POWERTRAIN_MOTOR_GEARRATIO                        0x000B0005        /* Motor gear ratio, i.e. wheel speed divided by motor speed.
                                                                                 Upper half of 32 bits is numerator, second half is denominator */

@@ -249,8 +249,13 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     wSpeedt = PedalSpdSensor_GetPeriodValue(pHandle->pPSS);
     hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
 
-    if ((pHandle->sParameters.bTorqueSensorUse) && (hTorqueSens > hOffsetTemp) )
+    /* Torque Sensor use and the offset was detected */
+    if ((pHandle->bCurrentPasAlgorithm == TorqueSensorUse) && (hTorqueSens > hOffsetTemp))
         pHandle->bPASDetected = true;
+    /* Hybrid Algorithm use and the offset was detected */
+    else if ((pHandle->bCurrentPasAlgorithm == HybridSensorUse) && (hTorqueSens > hOffsetTemp))
+		pHandle->bPASDetected = true;
+    /* Cadence Sensor use */
     else if (wSpeedt > 0)
     {
         pHandle->sParameters.bPASCountSafe++;

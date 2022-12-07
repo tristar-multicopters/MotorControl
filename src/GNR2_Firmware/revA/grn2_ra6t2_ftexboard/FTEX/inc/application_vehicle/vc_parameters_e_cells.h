@@ -78,7 +78,6 @@
 #define POWERTRAIN_STOP_SPEED_THRESHOLD                   0							/* Speed value to stop powertrain  */
 #define POWERTRAIN_DISABLE_THROTTLE_PAS_0                 true					/* If set the tru throttle is disabled when pas level is 0 */
 
-
 #define PAS_MAX_TORQUE                         STARTING_TORQUE							/* Maximum motor torque to apply using pedal assist  */
 #define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM		/* Maximum motor speed reachable using pedal assist  */
 #define PAS_MAX_KM_SPEED                       33					/* Maximum Bike Speed in Km/h using RPM */
@@ -86,7 +85,9 @@
 #define PAS_LEVEL_COEFF                        1 					/* PAS ramp multiplication coefficient for a better user feeling   */	
 #define PAS_MAX_TORQUE_RATIO                   99					/* Maximum PAS Torque feed ration in 100% */	
 #define PAS_MAX_SPEED_RATIO                    99					/* Maximum PAS Speed feed ration in 100% */	
-#define PAS_TORQUE_USE                         true				/* PAS based torque sensor use Flag */
+#define PAS_ALGORITHM                          HybridSensorUse   /*  TorqueSensorUse = 0,     Torque sensor use define 
+                                                                    CadenceSensorUse = 1,    Cadence sensor use define 
+                                                                    HybridSensorUse = 2,     Hybride sensor use define  */
 #define PAS_WHEEL_SPEED_SENSOR_PPR             2					/* Number of electrical pulses per wheel rotation */
 #define PAS_MIN_PEDAL_COUNT_SAFE               0					/* Number of pulse per pedal turn do we neeed after initial detection to push power */
 #define PAS_WALKMODE_OVER_THROTTLE             true				/* If set to true walk mode has higher priority than throttle */
