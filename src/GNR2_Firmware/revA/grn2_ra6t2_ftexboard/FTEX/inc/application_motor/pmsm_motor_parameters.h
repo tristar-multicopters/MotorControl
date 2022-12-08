@@ -36,6 +36,10 @@
 
 #include "pmsm_motor_parameters_wheel.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_TSUGAWA
+
+#include "pmsm_motor_parameters_tsugawa.h"
+
 
 #endif
 

@@ -36,6 +36,10 @@
 
 #include "drive_parameters_wheel.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_TSUGAWA
+
+#include "drive_parameters_tsugawa.h"
+
 #endif
 
 #endif /*__DRIVE_PARAMETERS_H*/

@@ -38,6 +38,9 @@
 
 #include "vc_parameters_wheel.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_TSUGAWA
+
+#include "vc_parameters_tsugawa.h"
 
 
 #endif

@@ -10,6 +10,7 @@
 #define VEHICLE_APOLLO                4
 #define VEHICLE_VELEC                 5
 #define VEHICLE_WHEEL                 6
+#define VEHICLE_TSUGAWA               7
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */

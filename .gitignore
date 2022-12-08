@@ -95,5 +95,6 @@ RTE_Components.h
 *.secure_azone
 src/GNR2_Firmware/revA/grn2_ra6t2/gnr2_ra6t2_RTX5.uvguix.jorge.polo_ftex
 src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/gnr2_ra6t2.uvguix.behnam.shakibafar_ft
+src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/gnr2_ra6t2.uvguix.amin.zabihinejad_fte
 src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/gnr2_ra6t2.uvprojx
 src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/Objects/gnr2_ra6t2.rpd
