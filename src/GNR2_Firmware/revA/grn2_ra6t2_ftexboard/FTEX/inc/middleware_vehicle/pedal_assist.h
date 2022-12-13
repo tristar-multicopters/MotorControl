@@ -153,8 +153,19 @@ void PedalAssist_UpdatePASDetection(PAS_Handle_t * pHandle);
     */
 bool PedalAssist_IsPASDetected(PAS_Handle_t * pHandle);
 
-
+/**
+    * @brief  Return if walk mode is active
+    * @param  Pedal Assist handle
+    * @retval True if walk mode is detected, false otherwise
+    */
 bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle);
+
+/**
+    * @brief  Reset the PAS Prameters
+    * @param  Pedal Assist handle
+    * @retval None
+    */
+void PedalAssist_ResetParameters (PAS_Handle_t * pHandle);
 
 #endif /*__PEDAL_ASSIST_H*/
 

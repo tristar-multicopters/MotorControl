@@ -298,3 +298,14 @@ bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle)
         return false;    
     }       
 }
+
+/**
+    * @brief  Reset the PAS Prameters
+    * @param  Pedal Assist handle
+    * @retval None
+    */
+void PedalAssist_ResetParameters (PAS_Handle_t * pHandle) 
+{
+    PedalTorqSensor_ResetAvValue(pHandle->pPTS);   
+    PedalSpdSensor_ResetValue(pHandle->pPSS);   
+}

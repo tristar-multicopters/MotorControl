@@ -83,6 +83,13 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle);
 uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle);
 
 /**
+  @brief  Pedal torque Sensor Reset ADC value
+  @param  PedalTorqSensorHandle_t handle
+  @return None
+*/
+void   PedalTorqSensor_ResetAvValue(PedalTorqSensorHandle_t * pHandle);
+
+/**
   @brief  Pedal torque Sensor  Convert Torque sensor data to motor torque
   @param  PedalTorqSensorHandle_t handle
   @return torque reference value in int16 format

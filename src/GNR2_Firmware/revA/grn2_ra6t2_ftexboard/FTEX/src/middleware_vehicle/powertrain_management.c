@@ -116,6 +116,8 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         if (bIsBrakePressed)
         {
             hAux = 0;
+            // Reset All the Pedal Assist Parameters
+            PedalAssist_ResetParameters(pHandle->pPAS);
         }
    
         if(pHandle->sParameters.bMode == SINGLE_MOTOR)
@@ -935,8 +937,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
             /* Set Torque Sensor */
             htorqueSens = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
             /* Set Motor Torque */
-            htorqueSelect = PedalAssist_GetPASTorqueSpeed(pHandle->pPAS);
-            
+            htorqueSelect = PedalAssist_GetPASTorque(pHandle->pPAS);
             /* Apply Limitation for the */
             hFinalTorque = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, htorqueSelect, abs(wSpeedMainMotor) );
             hFinalTorque = Foldback_ApplySlowStart(pHandle->SpeedFoldbackStartupDualMotor, hFinalTorque); //Apply the slow start if needed    				

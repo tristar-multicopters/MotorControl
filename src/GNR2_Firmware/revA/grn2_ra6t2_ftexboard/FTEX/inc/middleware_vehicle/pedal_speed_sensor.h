@@ -50,6 +50,13 @@ void PedalSpdSensor_CalculateSpeed(PedalSpeedSensorHandle_t* pHandle);
 uint32_t PedalSpdSensor_GetPeriodValue(PedalSpeedSensorHandle_t* pHandle);
 
 /**
+  @brief  Function to Reset the Pedal Speed Sensor Periode
+  @param  PedalSpeedSensorHandle_t handle
+  @return None
+*/
+void PedalSpdSensor_ResetValue(PedalSpeedSensorHandle_t* pHandle);
+
+/**
   @brief  Function to Get the Pedal Speed Sensor Frequency
   @param  PedalSpeedSensorHandle_t handle
   @return wPedalSpeedSens_Freq in unit32_t
