@@ -9,6 +9,8 @@
 #include "board_hardware.h"
 #include "vc_parameters.h"
 #include "hal_data.h"
+#include "user_config_task.h"
+
 
 MultipleDriveInterfaceHandle_t MDInterfaceHandle =
 {

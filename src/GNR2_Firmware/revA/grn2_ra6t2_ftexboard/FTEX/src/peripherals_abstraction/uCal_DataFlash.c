@@ -1,5 +1,5 @@
 /**
-*  uCal_DataFlash.c
+*  uCAL_DATAFLASH.c
 *  uController Abstraction Layer for FLASH
 */ 
 
@@ -7,7 +7,7 @@
                Includes                       
 *********************************************/
 
-#include "uCal_DataFlash.h"
+#include "uCAL_DATAFLASH.h"
 #include "ASSERT_FTEX.h"
 
 /*********************************************

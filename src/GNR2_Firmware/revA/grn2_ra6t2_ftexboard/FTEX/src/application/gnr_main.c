@@ -8,7 +8,7 @@
 #include "vc_tasks.h"
 #include "mc_tasks.h"
 #include "comm_tasks.h"
-#include "user_ConfigTask.h"
+#include "user_config_task.h"
 
 //****************** THREAD EXTERN FUNCTION PROTOTYPES ******************//
 
@@ -124,6 +124,10 @@ void gnr_main(void)
     CANInit();
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
+    
+    //fucntion to pass the user configuration read from the memory to
+    //VCInterfaceHandle
+    
 
     MC_BootUp();
     #if GNR_MASTER

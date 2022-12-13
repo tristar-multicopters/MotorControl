@@ -3,9 +3,8 @@
 * @author Bruno Alves
 * @brief  uController Abstraction Layer for Flash memory(data and code).
 *
-* This module is the interface that is used by the entire firmware
-* to interact with the UART. It is the bridge between the Renesas 
-* Serial Communication interface in UART mode and the FTEX firmware. 
+* This module is the interface used to interact with the data flash
+* memory. 
 *
 */
 
