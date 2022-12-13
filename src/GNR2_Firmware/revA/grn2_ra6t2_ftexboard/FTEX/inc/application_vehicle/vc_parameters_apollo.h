@@ -63,7 +63,7 @@
 
 /***************** POWER ENABLE PARAMETERS  ******************************/
 
-#define POWER_ENABLE_ENABLE                false      /* (Sorry for bad name) True if power enable input is used to prevent powertrain start  */
+#define POWER_ENABLE_ENABLE                true      /* (Sorry for bad name) True if power enable input is used to prevent powertrain start  */
 
 
 /***************** POWERTRAIN MANAGEMENT PARAMETERS  ******************************/

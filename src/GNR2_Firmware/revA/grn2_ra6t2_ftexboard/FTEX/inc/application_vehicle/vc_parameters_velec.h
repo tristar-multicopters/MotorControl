@@ -54,7 +54,7 @@
 #define WHEEL_SPEED_SENSOR_CORRECTION_FACTOR 2      /* Wheel speed sensor slow detect correction for a signal after two wheel spin detection */    
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
-#define MOTOR_SELECTOR_ENABLE              false      /* True if active motor can be changed using 3 way switch  */
+#define MOTOR_SELECTOR_ENABLE              true      /* True if active motor can be changed using 3 way switch  */
   
 
 /***************** POWER ENABLE PARAMETERS  ******************************/
