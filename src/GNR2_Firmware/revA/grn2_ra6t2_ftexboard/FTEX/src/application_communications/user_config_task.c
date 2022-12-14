@@ -36,7 +36,7 @@ static User_ConfigData_t userConfigData =
     .dataHeader[0] = ID0_DATA_FLASH,
     .dataHeader[1] = ID1_DATA_FLASH,
     .vehicle = VEHICLE_SELECTION,
-    .PAS_ConfigData.pasAlgorithm = PAS_TORQUE_USE,
+    .PAS_ConfigData.pasAlgorithm = PAS_ALGORITHM,
     .PAS_ConfigData.numberOfPasLevels = PAS_MAX_LEVEL,
     .PAS_ConfigData.pasMaxPower = PAS_MAX_TORQUE_RATIO,
     .PAS_ConfigData.torqueMinimumThreshold = PTS_OFFSET_PTS2TORQUE,
@@ -165,7 +165,7 @@ void updateUserConfigData(void)
 {
     
     //update PAS_TORQUE_USE
-    VCInterfaceHandle.pPowertrain->pPAS->sParameters.bTorqueSensorUse = getPasAlgorithm();
+    VCInterfaceHandle.pPowertrain->pPAS->bCurrentPasAlgorithm = getPasAlgorithm();
     
     //update PAS_MAX_LEVEL
     VCInterfaceHandle.pPowertrain->pPAS->sParameters.bMaxLevel = getNumberPasLevels();
