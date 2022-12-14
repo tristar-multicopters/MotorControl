@@ -90,7 +90,9 @@ extern "C" {
 #define  MC_SPEED_FDBK  (uint16_t)(0x0020u)    /**< @brief Error: Speed feedback.*/
 #define  MC_BREAK_IN  (uint16_t)(0x0040u)      /**< @brief Error: Emergency input (Over current).*/
 #define  MC_SW_ERROR  (uint16_t)(0x0080u)      /**< @brief Software Error.*/
-#define  MC_OCSP  		(uint16_t)(0x0100u)      			/**< @brief Error: Overcurrent software protection.*/
+#define  MC_OCSP  		(uint16_t)(0x0100u)    /**< @brief Error: Overcurrent software protection.*/
+#define  MC_MSRP		(uint16_t)(0x0200u)    /**< @brief Error: Motor Stuck & Reverse Protection.*/
+
 /** @} */
 
 /**

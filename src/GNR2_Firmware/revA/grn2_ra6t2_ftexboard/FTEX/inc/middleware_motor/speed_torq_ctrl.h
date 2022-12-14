@@ -286,14 +286,22 @@ int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
 
 /**
   * @brief  Get Id from provided torque reference.
-  *         To convert current expressed in Amps to current expressed in digit
-  *         is possible to use the formula:
-  *         Current(digit) = [Current(Amp) * 65536 * Rshunt * Aop]  /  Vdd micro
+  *         To check motor speed, if it is zero leave counter to rise value
   * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
   * @param  hTorqueRef: Torque reference in cNm
   * @retval int16_t Id in digital A
   */
 int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef);
+
+/**
+  * @brief  Check if the motor stcuk or not, return the result
+  *         To convert current expressed in Amps to current expressed in digit
+  *         is possible to use the formula:
+  *         Current(digit) = [Current(Amp) * 65536 * Rshunt * Aop]  /  Vdd micro
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @retval uint16_t the fault status
+  */
+uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle);
 
 #ifdef __cplusplus
 }

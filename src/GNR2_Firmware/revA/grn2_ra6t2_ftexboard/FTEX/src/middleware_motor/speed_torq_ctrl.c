@@ -11,9 +11,16 @@
 #include "speed_pos_fdbk.h"
 
 #include "mc_type.h"
-static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
-static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);    
+#include "parameters_conversion.h"
 
+
+#define STUCK_TIMER_MAX_MS      200
+#define STUCK_TIMER_MAX_COUNTS  STUCK_TIMER_MAX_MS * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u
+
+static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+
+uint16_t M_STUCK_timer = 0;
 
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
@@ -313,12 +320,12 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     hMeasuredSpeed = 10 * SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
     if (pHandle->pMotorTempSensor != NULL)
     {
-        hMeasuredMotorTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pMotorTempSensor);
+        hMeasuredMotorTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pMotorTempSensor) * 100;
     }
-    if (pHandle->pHeatsinkTempSensor != NULL)
+    if (pHandle->pMotorTempSensor != NULL)
     {
-        hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor);
-    }   
+        hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor) * 100;
+    }
     
     int16_t hOutputTorque, hMaxTorque; 
     hMaxTorque = Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxTorque, NULL,(int16_t) abs(hMeasuredSpeed) );
@@ -329,6 +336,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)(abs(hMeasuredSpeed)));
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
+
     return hOutputTorque;
 }
 
@@ -398,6 +406,34 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
                 hRetval = (int16_t) wTorqueLimit;
             }
         }
+    }
+    return hRetval;
+}
+
+/*
+    Check if motor is stuck or not
+*/
+uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle)
+{    
+    uint16_t hRetval = MC_NO_FAULTS;
+
+    if (SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD) == 0)
+    {
+        if (M_STUCK_timer < STUCK_TIMER_MAX_COUNTS)
+        {
+            M_STUCK_timer++;
+            hRetval = MC_NO_FAULTS;
+        }
+        else 
+        {
+            M_STUCK_timer = 0;
+            hRetval = MC_MSRP;
+        }
+    }
+    else
+    {
+        M_STUCK_timer = 0;
+        hRetval = MC_NO_FAULTS;
     }
     return hRetval;
 }

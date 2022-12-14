@@ -71,6 +71,4 @@ void MC_DualDriveFIFOUpdate(uint8_t Motor);
   */
 void MC_HardwareFaultTask(void);
 
-
-
 #endif /* __MCTASKS_H */

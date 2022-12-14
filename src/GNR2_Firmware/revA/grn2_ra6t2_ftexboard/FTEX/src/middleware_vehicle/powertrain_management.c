@@ -10,12 +10,11 @@
 #include "vc_tasks.h"
 #include "parameters_conversion.h"
 
-#define OVERCURRENT_COUNTER       0
-#define STARTUP_COUNTER           1
-#define SPEEDFEEDBACK_COUNTER     2
-
+#define OVERCURRENT_COUNTER         0
+#define STARTUP_COUNTER             1
+#define SPEEDFEEDBACK_COUNTER       2
+#define STUCK_REVERSE_COUNTER       3
 #define MAXCURRENT               75
-
 
 uint16_t TestVar;
 /* Functions ---------------------------------------------------- */
@@ -46,6 +45,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
+    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;
     
     // Enable slow motor Start for Pedal Assist cadence base
     Foldback_EnableSlowStart(pHandle->SpeedFoldbackStartupDualMotor);
@@ -726,6 +726,19 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                 // In case of DCbus undervoltage, clear the UV fault
                 hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
             }
+            
+            if (hM1FaultOccurredCode & MC_MSRP)
+            {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
+                if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the MSRP fault
+                    hM1FaultOccurredCode &= ~MC_MSRP;
+                    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0;
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1]++;
+                }
+            }
         }
 
         if (PWRT_IsMotor2Used(pHandle))
@@ -786,6 +799,19 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             {
                 /* In case of DCbus undervoltage... */
                 hM2FaultOccurredCode &= ~MC_UNDER_VOLT;
+            }
+            
+            if (hM2FaultOccurredCode & MC_MSRP)
+            {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
+                if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the MSRP fault
+                    hM2FaultOccurredCode &= ~MC_MSRP;
+                    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2]++;
+                }
             }
         }
     } // End of if (!bFaultNow)

@@ -58,6 +58,7 @@ CircleLimitationHandle_t *pCircleLimitation[NBR_OF_MOTORS];
 FluxWeakeningHandle_t *pFieldWeakening[NBR_OF_MOTORS];
 FeedforwardHandle_t *pFeedforward[NBR_OF_MOTORS];
 
+
 static volatile uint16_t hMFTaskCounterM1 = 0;
 static volatile uint16_t hBootCapDelayCounterM1 = 0;
 static volatile uint16_t hStopPermanencyCounterM1 = 0;
@@ -309,7 +310,6 @@ void MediumFrequencyTaskM1(void)
         if (MCStateMachine_NextState(&MCStateMachine[M1], M_START) == true)
         {
             FOC_Clear(M1);
-
             PWMInsulCurrSensorFdbk_SwitchOnPWM(pPWMCurrFdbk[M1]);
         }
         break;
@@ -321,10 +321,16 @@ void MediumFrequencyTaskM1(void)
     case M_START_RUN:
         FOC_InitAdditionalMethods(M1);
         FOC_CalcCurrRef(M1);
-        MCStateMachine_NextState(&MCStateMachine[M1], M_RUN);
-        SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(pSpeedTorqCtrl[M1]); /* Init the reference speed to current speed */
-        MCInterface_ExecBufferedCommands(oMCInterface[M1]);                /* Exec the speed ramp after changing of the speed sensor */
-
+        if (Check_MotorStuckReverse(pSpeedTorqCtrl[M1]) == MC_NO_FAULTS)        // No Reverse or Stock Error    
+        {
+            MCStateMachine_NextState(&MCStateMachine[M1], M_RUN);
+            SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(pSpeedTorqCtrl[M1]); /* Init the reference speed to current speed */
+            MCInterface_ExecBufferedCommands(oMCInterface[M1]);                /* Exec the speed ramp after changing of the speed sensor */
+        }
+        else 
+        {
+            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+        }
 #if HSLOG_PROFILE == HSLOG_ZEROSPEED_LOG
         LogHS_StartOneShot(&LogHS_handle);
 #endif
@@ -339,9 +345,15 @@ void MediumFrequencyTaskM1(void)
         }
         MCInterface_ExecTorqueRamp(oMCInterface[M1], hTorqueFinalValueTest);
 #endif
-
-        MCInterface_ExecBufferedCommands(oMCInterface[M1]);
-        FOC_CalcCurrRef(M1);
+        if (Check_MotorStuckReverse(pSpeedTorqCtrl[M1]) == MC_NO_FAULTS)        // No Reverse or Stock Error
+        {
+            MCInterface_ExecBufferedCommands(oMCInterface[M1]);
+            FOC_CalcCurrRef(M1);
+        }
+        else
+        {
+            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+        }
 
 #if !(BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
         if (!bIsSpeedReliable)
@@ -781,3 +793,6 @@ __NO_RETURN void startMCSafetyTask(void *pvParameter)
         MC_SafetyTask();
     }
 }
+
+
+

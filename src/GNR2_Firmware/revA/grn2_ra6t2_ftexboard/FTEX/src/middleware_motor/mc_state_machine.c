@@ -231,8 +231,7 @@ MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle,
       pHandle->bState = M_FAULT_NOW;
       LocalState = M_FAULT_NOW;
     }
-  }
-
+  } 
   return (LocalState);
 }
 
