@@ -11,10 +11,8 @@
 #include "speed_pos_fdbk.h"
 
 #include "mc_type.h"
-
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
-static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
-
+static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);    
 
 
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
@@ -315,12 +313,12 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     hMeasuredSpeed = 10 * SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
     if (pHandle->pMotorTempSensor != NULL)
     {
-        hMeasuredMotorTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pMotorTempSensor) * 100;
+        hMeasuredMotorTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pMotorTempSensor);
     }
-    if (pHandle->pMotorTempSensor != NULL)
+    if (pHandle->pHeatsinkTempSensor != NULL)
     {
-        hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor) * 100;
-    }
+        hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor);
+    }   
     
     int16_t hOutputTorque, hMaxTorque; 
     hMaxTorque = Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxTorque, NULL,(int16_t) abs(hMeasuredSpeed) );
@@ -331,7 +329,6 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)(abs(hMeasuredSpeed)));
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
-
     return hOutputTorque;
 }
 

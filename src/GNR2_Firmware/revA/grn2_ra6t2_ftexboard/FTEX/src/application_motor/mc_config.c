@@ -165,8 +165,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .FoldbackConfig = TRIM,
       .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
       .hDefaultOutputLimitLow = 0,
-      .hDecreasingEndValue = 100 * FOLDBACK_HS_TEMP_END_VALUE,
-      .hDecreasingRange = 100 * FOLDBACK_HS_TEMP_INTERVAL,
+      .hDecreasingEndValue = FOLDBACK_HS_TEMP_END_VALUE, 
+      .hDecreasingRange = FOLDBACK_HS_TEMP_INTERVAL,
   },
   .FoldbackDynamicMaxTorque = 
   {
