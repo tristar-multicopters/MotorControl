@@ -19,7 +19,7 @@
 #define GNR2_MASTER_NODE_ID           0x01                /* Node-ID of ganrunner master */
 #define GNR2_SLAVE_NODE_ID            0x02                /* Node-ID of ganrunner slave */
 
-#define SWD_CONTROL_ENABLE            0            /* Enable controlling motor directly from debugging interface with vehicle control layer */
+#define SWD_CONTROL_ENABLE            0                   /* Enable controlling motor directly from debugging interface with vehicle control layer */
 #define DEBUGMODE_MOTOR_CONTROL       0                   /* Disable vehicle control and communications to debug only motor control layer */
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */

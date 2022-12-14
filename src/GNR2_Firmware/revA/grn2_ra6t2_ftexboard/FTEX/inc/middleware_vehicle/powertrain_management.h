@@ -272,6 +272,12 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle);
 	*/
 void PWRT_CheckPwrEnable(PWRT_Handle_t * pHandle);
 
+/**
+    * @brief  Get the total amount of current the vehicle is pushing
+    * @param  Powertrain handle
+    * @retval current in amps uin16_t                                                                                   
+    */
+uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle);
 
 #endif /*__POWERTRAIN_MANAGEMENT_H*/
 
