@@ -8,15 +8,14 @@
 
 #include "powertrain_management.h"
 #include "vc_tasks.h"
-#include "parameters_conversion.h"
 
 #define OVERCURRENT_COUNTER         0
 #define STARTUP_COUNTER             1
 #define SPEEDFEEDBACK_COUNTER       2
 #define STUCK_REVERSE_COUNTER       3
-#define MAXCURRENT               75
 
 uint16_t TestVar;
+
 /* Functions ---------------------------------------------------- */
 
 /**
@@ -74,7 +73,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
     
-    /*bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);*/  //TODO chekc why this was commented
+    /*bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);*/
     int16_t hSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
     int16_t hSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
     
@@ -997,51 +996,4 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     }
     return pHandle->hTorqueSelect;
 }
-
-
-
-
-/**
-    * @brief  Get the total amount of current the vehicle is pushing
-    * @param  Powertrain handle
-    * @retval current in amps uin16_t                                                                                   
-    */
-uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
-{
-    uint16_t TotalMotorCurrent = 0;
-    uint16_t M1Current = 0;
-    uint16_t M2Current = 0; 
-    
-    // Check if M1 is selected
-    if (pHandle->pMS->bMotorSelection == ALL_MOTOR_SELECTED || pHandle->pMS->bMotorSelection == M1_SELECTED)
-    {
-        M1Current = (uint16_t) abs(PWRT_GetTorqueRefM1(pHandle)); // Get the current orque reference for M1
-        
-        M1Current = (M1Current * (uint16_t)GAIN_TORQUE_IQREF);    // Convert it to a IQ current reference
-        if (M1Current > INT16_MAX)
-        {
-            M1Current = INT16_MAX;
-        }
-        
-        M1Current = M1Current/(0x7FFF/MAXCURRENT);  // Convert the Iq refference to an actual current value 
-    }
-    
-    // Check if M2 is selected
-    if(pHandle->pMS->bMotorSelection == ALL_MOTOR_SELECTED || pHandle->pMS->bMotorSelection == M2_SELECTED)
-    {
-        M2Current = (uint16_t) abs(PWRT_GetTorqueRefM2(pHandle)); // Get the current orque reference for M2
-         
-        M2Current = (M2Current * (uint16_t)GAIN_TORQUE_IQREF);    // Convert it to a IQ current reference
-        if (M2Current > INT16_MAX)
-        {
-            M2Current = INT16_MAX;
-        }
-        
-        M2Current = M2Current/(0x7FFF/MAXCURRENT);  // Convert the Iq refference to an actual current value 
-    }
-    TotalMotorCurrent =  M1Current + M2Current;  // Get the sum of the currents form both motors             
-  
-    return  TotalMotorCurrent;   
-}
-
 

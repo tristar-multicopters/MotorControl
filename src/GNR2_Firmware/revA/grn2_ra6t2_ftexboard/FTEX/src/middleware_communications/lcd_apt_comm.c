@@ -12,6 +12,7 @@
 
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
+#define APTMAXCURRENT 75  //Should be replaced with a dynamic value
 
 /**
  *  Function for initializing the LCD module with the APT protocol
@@ -219,7 +220,9 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
          replyFrame.Buffer[ 0] = APT_START; //Start
       
          //Add up power from both
-         toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);
+         toSend = abs(pHandle->pVController->pPowertrain->pMDI->pMCI->pFOCVars->Iqdref.q);
+                
+         toSend = toSend/(0x7FFF/APTMAXCURRENT); //Conversion from relative current to actual amps
          toSend = toSend * 2;                    //Covert from amps to 0.5 amps; 
         
          replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
@@ -231,7 +234,9 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
          //verify toSend value to avoid a division by zero.
          if(toSend != 0)
          {
-            toSend = 500000/(toSend/60);            
+
+            toSend = 500000/(toSend/60);
+             
          }
      
          replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Wheel speed Low half 
