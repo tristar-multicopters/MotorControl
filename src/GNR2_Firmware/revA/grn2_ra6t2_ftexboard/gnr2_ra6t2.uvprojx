@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>5</Optim>
+            <Optim>7</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -338,9 +338,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal</MiscControls>
-              <Define></Define>
+              <Define>LFS_NO_MALLOC,LFS_NO_DEBUG,LFS_NO_ERROR,LFS_NO_WARN</Define>
               <Undefine></Undefine>
-              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\include</IncludePath>
+              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\include;.\libraries\littlefs</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -767,6 +767,16 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Application/Memory</GroupName>
+          <Files>
+            <File>
+              <FileName>serial_flash_storage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_memory\serial_flash_storage.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>Middleware/Vehicle</GroupName>
           <Files>
             <File>
@@ -1173,6 +1183,26 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>Middleware/Memory</GroupName>
+          <Files>
+            <File>
+              <FileName>littlefs_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_memory\littlefs_port.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_memory\serial_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>mx25l3233f_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_memory\mx25l3233f_driver.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>PeripheralAbstractions</GroupName>
           <Files>
             <File>
@@ -1250,6 +1280,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>uCAL_SPI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_SPI.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1380,6 +1415,90 @@
               <FileName>co_timer_ra6t2.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\CANOpenDrivers\co_timer_ra6t2.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Lib/Littlefs</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>2</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>7</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <ClangAsOpt>0</ClangAsOpt>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+          <Files>
+            <File>
+              <FileName>lfs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\libraries\littlefs\lfs.c</FilePath>
+            </File>
+            <File>
+              <FileName>lfs_util.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\libraries\littlefs\lfs_util.c</FilePath>
             </File>
           </Files>
         </Group>

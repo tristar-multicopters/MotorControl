@@ -27,6 +27,10 @@
             [20] = gpt_capture_b_isr, /* GPT9 CAPTURE COMPARE B (Compare match B) */
             [21] = fcu_frdyi_isr, /* FCU FRDYI (Flash ready interrupt) */
             [22] = fcu_fiferr_isr, /* FCU FIFERR (Flash access error interrupt) */
+            [23] = spi_b_rxi_isr, /* SPI1 RXI (Receive buffer full) */
+            [24] = spi_b_txi_isr, /* SPI1 TXI (Transmit buffer empty) */
+            [25] = spi_b_tei_isr, /* SPI1 TEI (Transmission complete event) */
+            [26] = spi_b_eri_isr, /* SPI1 ERI (Error) */
         };
         const bsp_interrupt_event_t g_interrupt_event_link_select[BSP_ICU_VECTOR_MAX_ENTRIES] =
         {
@@ -53,5 +57,9 @@
             [20] = BSP_PRV_IELS_ENUM(EVENT_GPT9_CAPTURE_COMPARE_B), /* GPT9 CAPTURE COMPARE B (Compare match B) */
             [21] = BSP_PRV_IELS_ENUM(EVENT_FCU_FRDYI), /* FCU FRDYI (Flash ready interrupt) */
             [22] = BSP_PRV_IELS_ENUM(EVENT_FCU_FIFERR), /* FCU FIFERR (Flash access error interrupt) */
+            [23] = BSP_PRV_IELS_ENUM(EVENT_SPI1_RXI), /* SPI1 RXI (Receive buffer full) */
+            [24] = BSP_PRV_IELS_ENUM(EVENT_SPI1_TXI), /* SPI1 TXI (Transmit buffer empty) */
+            [25] = BSP_PRV_IELS_ENUM(EVENT_SPI1_TEI), /* SPI1 TEI (Transmission complete event) */
+            [26] = BSP_PRV_IELS_ENUM(EVENT_SPI1_ERI), /* SPI1 ERI (Error) */
         };
         #endif

@@ -101,8 +101,24 @@ const ioport_pin_cfg_t g_bsp_pin_cfg_data[] = {
         .pin_cfg = ((uint32_t) IOPORT_CFG_PERIPHERAL_PIN | (uint32_t) IOPORT_PERIPHERAL_AGT)
     },
     {
+        .pin = BSP_IO_PORT_12_PIN_10,
+        .pin_cfg = ((uint32_t) IOPORT_CFG_PERIPHERAL_PIN | (uint32_t) IOPORT_PERIPHERAL_SPI)
+    },
+    {
+        .pin = BSP_IO_PORT_12_PIN_11,
+        .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_MID | (uint32_t) IOPORT_CFG_PERIPHERAL_PIN | (uint32_t) IOPORT_PERIPHERAL_SPI)
+    },
+    {
+        .pin = BSP_IO_PORT_12_PIN_12,
+        .pin_cfg = ((uint32_t) IOPORT_CFG_DRIVE_MID | (uint32_t) IOPORT_CFG_PERIPHERAL_PIN | (uint32_t) IOPORT_PERIPHERAL_SPI)
+    },
+    {
         .pin = BSP_IO_PORT_12_PIN_14,
         .pin_cfg = ((uint32_t) IOPORT_CFG_PERIPHERAL_PIN | (uint32_t) IOPORT_PERIPHERAL_GPT0)
+    },
+    {
+        .pin = BSP_IO_PORT_13_PIN_00,
+        .pin_cfg = ((uint32_t) IOPORT_CFG_PORT_DIRECTION_OUTPUT | (uint32_t) IOPORT_CFG_PORT_OUTPUT_HIGH)
     },
     {
         .pin = BSP_IO_PORT_13_PIN_04,
@@ -130,7 +146,7 @@ const ioport_pin_cfg_t g_bsp_pin_cfg_data[] = {
     },
     {
         .pin = BSP_IO_PORT_14_PIN_08,
-        .pin_cfg = ((uint32_t) IOPORT_CFG_PERIPHERAL_PIN)
+        .pin_cfg = ((uint32_t) IOPORT_CFG_ANALOG_ENABLE)
     },
     {
         .pin = BSP_IO_PORT_14_PIN_10,

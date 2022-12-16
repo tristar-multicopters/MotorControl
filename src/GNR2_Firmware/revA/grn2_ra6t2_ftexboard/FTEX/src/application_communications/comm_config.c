@@ -8,7 +8,6 @@
 #include "gnr_parameters.h"
 #include "co_gnr2_specs.h"
 
-
 // Handle of the CANOpen node
 CO_NODE CONodeGNR;
 
@@ -22,6 +21,27 @@ UART_Handle_t UART0Handle =
     //.UARTProtocol = UART_LOG_HS,    // for HS Log
     .UARTProtocol = UART_APT,     // for APT  
     .pUARTInstance = &g_uart9,
+};
+
+// SPI communication handle
+SPI_Handle_t SPI1Handle =
+{
+    .bSPI_transfer_complete = false,
+    .hSPI_FrameLength = 0x01,
+    .pSPI_Instance = &g_spi1_ctrl,
+    .pSPI_BitWidth = SPI_BIT_WIDTH_8_BITS,
+};
+
+// Flash Memory uCAL Module handle
+EFlash_Storage_Handle_t EFlash_Storage_Handle =
+{
+    .eFlashStorage =
+    {
+        .eFlash =
+        {
+            .uCALSPI = &SPI1Handle,
+        }
+    }
 };
 
 APT_Handle_t LCD_APT_handle;

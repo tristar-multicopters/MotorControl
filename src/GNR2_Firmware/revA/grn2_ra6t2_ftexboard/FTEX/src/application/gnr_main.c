@@ -32,7 +32,7 @@ static bool AGTInit(void);
 static bool UARTInit(void);
 static bool CANInit(void);
 static bool IIRFAInit(void);
-
+static bool SPIInit(void);
 
 //****************** THREAD HANDLES ******************//
 
@@ -44,7 +44,6 @@ osThreadId_t COMM_Uart_handle;
 osThreadId_t CANOpenTaskHandle;
 osThreadId_t CANRxFrameHandle;
 osThreadId_t PowerOffSequence_handle;
-
 
 //****************** THREAD ATTRIBUTES ******************//
 
@@ -122,6 +121,7 @@ void gnr_main(void)
     AGTInit();
     UARTInit();
     CANInit();
+    SPIInit();
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
     
@@ -156,8 +156,6 @@ void gnr_main(void)
     PowerOffSequence_handle         = osThreadNew(PowerOffSequence, 
                                       NULL,
                                       &ThAtt_PowerOffSequence);
-                                
-
     #if !DEBUGMODE_MOTOR_CONTROL
     #if GNR_MASTER
     THR_VC_MediumFreq_handle        = osThreadNew(THR_VC_MediumFreq,
@@ -177,11 +175,11 @@ void gnr_main(void)
     CANOpenTaskHandle                = osThreadNew(CANOpenTask,
                                       NULL,
                                       &ThAtt_CANOpen);
-
-   	COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
+    
+    COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
                                       NULL,
                                       &ThAtt_UART);
-
+	
     #endif
 
     /* Start RTOS */
@@ -381,6 +379,19 @@ static bool IIRFAInit(void)
 
     bIsError |= R_IIRFA_Open(&g_iirfa0_ctrl, &g_iirfa0_cfg);
     bIsError |= R_IIRFA_Open(&g_iirfa1_ctrl, &g_iirfa1_cfg);
+
+    return bIsError;
+}
+
+/**
+  * @brief  Function used to Initialize the SPI
+  */
+static bool SPIInit(void)
+{
+    bool bIsError = false;
+
+    // Initialise the SPI_B
+    bIsError |= R_SPI_B_Open(&g_spi1_ctrl, &g_spi1_cfg);
 
     return bIsError;
 }

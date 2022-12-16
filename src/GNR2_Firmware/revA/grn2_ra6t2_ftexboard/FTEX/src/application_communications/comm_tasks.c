@@ -21,15 +21,13 @@
 
 #include "lcd_apt_comm.h"
 // Serial Flash storage
-//#include "serial_flash_storage.h"
+#include "serial_flash_storage.h"
 
 /************* DEFINES ****************/
 
 #define CAN_LOG_INTERVAL_TICK               25      /* CAN logger task send a new log frame every 25 RTOS ticks */
 #define MAX_NUMBER_MISSED_HEARTBEAT         2       /* Max number of missed CANopen heartbeat from outside ganrunner device.
                                                         Above that, communication is considered lost. */
-
-
 /********* PUBLIC MEMBERS *************/
 
 uint16_t hCommErrors = COMM_NO_ERROR;  /* This global variable holds all error flags related to communications.
@@ -248,7 +246,6 @@ void Comm_BootUp(void)
 __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 {
 	UNUSED_PARAMETER(pvParameter);
-
 	while(true)
 	{
 		osThreadFlagsWait(UART_FLAG, osFlagsWaitAny, osWaitForever);
@@ -353,18 +350,3 @@ __NO_RETURN void CANLoggerTask (void * pvParameter)
         }
     }
 }
-
-/**
-  Task to handle the received messages anad to send messages through the CAN bus
-*/
-/*__NO_RETURN void Memory_Task (void * pvParameter)
-{
-    UNUSED_PARAMETER(pvParameter);
-   
-	EFlash_Storage_Handle_t * pEFComm = &EFlash_Storage_Handle;
-	SF_Storage_Init(pEFComm);
-    while(true)
-    {
-        osDelay(1);
-    }
-}*/
