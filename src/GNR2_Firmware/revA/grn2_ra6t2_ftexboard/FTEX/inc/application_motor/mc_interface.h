@@ -43,21 +43,29 @@ typedef enum
 
 typedef struct
 {
+  float Gain_Torque_IQRef; 
+
+} ConversionFactors_t; /* Contaisn conversion factors that we want to pass to vehicle control */
+
+typedef struct
+{
   MotorStateMachineHandle_t * pSTM;            /*!< State machine object used by MCI.*/
   SpdTorqCtrlHandle_t * pSpeedTorqCtrl;        /*!< Speed and torque controller object used by MCI.*/
   pFOCVars_t pFOCVars;                         /*!< Pointer to FOC vars used by MCI.*/
   BusVoltageSensorHandle_t *pBusVoltageSensor; // Used to raise the bus voltage sensor to the vehicle layer 
   MCInterfaceUserCommands_t LastCommand;       /*!< Last command coming from the user.*/
+  
   int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
-  int16_t hFinalTorque;       /*!< Final torque of last ExecTorqueRamp
-                                   command.*/
-  qd_t Iqdref;     /*!< Current component of last
+  int16_t hFinalTorque;       /*!< Final torque of last ExecTorqueRamp command.*/
+                                   
+  qd_t Iqdref;                /*!< Current component of last
                                    SetCurrentReferences command.*/
 
   MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
-  STCModality_t LastModalitySetByUser; /*!< The last STCModality_t set by the
-                                             user. */
-   NTCTempSensorHandle_t	*pNTCTempSensor; /*The NTC sensor value to be monitored in vehicle layer*/
+  STCModality_t LastModalitySetByUser;    /*!< The last STCModality_t set by the user. */
+                                             
+  NTCTempSensorHandle_t	*pNTCTempSensor;  /*The NTC sensor value to be monitored in vehicle layer*/
+  ConversionFactors_t MCIConvFactors;     /* Used to sent conversion factors that are in motor control to vehicle control */
 } MotorControlInterfaceHandle_t;
 
 /* Exported functions ------------------------------------------------------- */

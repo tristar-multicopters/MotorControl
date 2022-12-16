@@ -14,6 +14,9 @@
 #define SPEEDFEEDBACK_COUNTER       2
 #define STUCK_REVERSE_COUNTER       3
 
+#define MAXCURRENT                 75 // Used for a generic conversion 
+                                      // from current ref to actual amps
+
 uint16_t TestVar;
 
 /* Functions ---------------------------------------------------- */
@@ -997,3 +1000,44 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     return pHandle->hTorqueSelect;
 }
 
+/**
+    * @brief  Get the total amount of current the vehicle is pushing
+    * @param  Powertrain handle
+    * @retval current in amps uin16_t                                                                                   
+    */
+uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
+{
+    uint16_t TotalMotorCurrent = 0;
+    uint16_t M1Current = 0;
+    uint16_t M2Current = 0; 
+    
+    // Check if M1 is selected
+    if (pHandle->pMS->bMotorSelection == ALL_MOTOR_SELECTED || pHandle->pMS->bMotorSelection == M1_SELECTED)
+    {    
+        M1Current = abs(pHandle->pMDI->pMCI->pFOCVars->Iqdref.q);            
+        M1Current = M1Current/(INT16_MAX/MAXCURRENT);  // Convert the Iq refference to an actual current value           
+    }
+    
+    if (pHandle->pMS->bMotorSelection == ALL_MOTOR_SELECTED) // we assume m1 and m2 are the same
+    {
+        M2Current = M1Current;
+    }
+    
+    // Check if M2 is selected
+    if (pHandle->pMS->bMotorSelection == M2_SELECTED)
+    {
+        M2Current = (uint16_t) abs(pHandle->aTorque[M2]); // Get the current torque reference for M2
+         
+        M2Current = (M2Current * (uint16_t) pHandle->pMDI->pMCI->MCIConvFactors.Gain_Torque_IQRef);    // Convert it to a IQ current reference
+        if (M2Current > INT16_MAX)
+        {
+            M2Current = INT16_MAX;
+        }
+        
+        M2Current = M2Current/(INT16_MAX/MAXCURRENT);  // Convert the Iq refference to an actual current value 
+    }
+    
+    TotalMotorCurrent =  M1Current + M2Current;  // Get the sum of the currents form both motors             
+  
+    return  TotalMotorCurrent;   
+}

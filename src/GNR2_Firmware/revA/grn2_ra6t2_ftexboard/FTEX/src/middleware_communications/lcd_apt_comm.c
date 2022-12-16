@@ -219,10 +219,8 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
     
          replyFrame.Buffer[ 0] = APT_START; //Start
       
-         //Add up power from both
-         toSend = abs(pHandle->pVController->pPowertrain->pMDI->pMCI->pFOCVars->Iqdref.q);
-                
-         toSend = toSend/(0x7FFF/APTMAXCURRENT); //Conversion from relative current to actual amps
+         //Get the amount of amps we are currently pushing 
+         toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);
          toSend = toSend * 2;                    //Covert from amps to 0.5 amps; 
         
          replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.5 A/unit         

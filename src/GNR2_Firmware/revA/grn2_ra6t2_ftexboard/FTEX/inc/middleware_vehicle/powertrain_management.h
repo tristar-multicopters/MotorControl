@@ -82,6 +82,7 @@ typedef struct
     uint8_t bMainMotor;                           /* Main motor selection. It is updated by user using motor selector switch */
     int16_t aTorque[2];                           /* Array of torque reference, first element is for M1, second is for M2 */
     int16_t aSpeed[2];                            /* Array of speed reference, first element is for M1, second is for M2 */
+
     
     int16_t hTorqueSelect;                        /* Select torque to feed for motor control */
 
@@ -272,6 +273,12 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle);
 	*/
 void PWRT_CheckPwrEnable(PWRT_Handle_t * pHandle);
 
+/**
+    * @brief  Get the total amount of current the vehicle is pushing
+    * @param  Powertrain handle
+    * @retval current in amps uin16_t                                                                                   
+    */
+uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle);
 
 #endif /*__POWERTRAIN_MANAGEMENT_H*/
 

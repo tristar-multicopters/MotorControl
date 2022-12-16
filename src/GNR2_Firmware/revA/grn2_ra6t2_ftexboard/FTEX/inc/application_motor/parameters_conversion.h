@@ -4,6 +4,27 @@
   *          of stdlib for the first drive
 */
 
+/*
+ __          __     _____  _   _ _____ _   _  _____ 
+ \ \        / /\   |  __ \| \ | |_   _| \ | |/ ____|
+  \ \  /\  / /  \  | |__) |  \| | | | |  \| | |  __ 
+   \ \/  \/ / /\ \ |  _  /| . ` | | | | . ` | | |_ |
+    \  /\  / ____ \| | \ \| |\  |_| |_| |\  | |__| |
+     \/  \/_/    \_\_|  \_\_| \_|_____|_| \_|\_____|
+                                                    
+ Be VERY careful where you include this .h ESPECIALLY if this is done 
+ outside of motor control. There ha sbeen an instance when going full 
+ throttle and spamming the brake handle causes the motor control loop 
+ is seemingly lost, weird noises can be heard from the motor.
+ 
+ If you need values from this file elsewhere and want to avoid including
+ this file please use a similar solution that was put in place with 
+ 
+ GAIN_TORQUE_IQREF
+ 
+ */                                               
+
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __PARAMETERS_CONVERSION_H
 #define __PARAMETERS_CONVERSION_H

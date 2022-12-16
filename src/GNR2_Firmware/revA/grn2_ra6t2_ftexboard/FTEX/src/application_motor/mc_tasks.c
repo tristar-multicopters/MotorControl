@@ -176,7 +176,14 @@ void MC_BootUp(void)
     FOC_Clear(M1);
     FOCVars[M1].bDriveInput = INTERNAL;
     oMCInterface[M1] = &MCInterface[M1];
+    
+    
     MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1], &(pBusSensorM1->Super), &TempSensorParamsM1);
+    
+    /* Section where we initialise conversion factors that need to be available to vehicle control */
+    oMCInterface[M1]->MCIConvFactors.Gain_Torque_IQRef = GAIN_TORQUE_IQREF;
+    /***********************************************************************************************/
+    
     MCTuning[M1].pPIDSpeed = pPIDSpeed[M1];
     MCTuning[M1].pPIDIq = pPIDIq[M1];
     MCTuning[M1].pPIDId = pPIDId[M1];
