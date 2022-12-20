@@ -247,7 +247,7 @@ void HardFault_Handler(void)
 {
     //if NDEBUG is defined the
     //no system reset.
-    #ifdef NDEBUG
+    #if NDEBUG
     ASSERT(false);
     #else
     //force a software reset
