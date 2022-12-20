@@ -81,13 +81,12 @@ static const osThreadAttr_t ThAtt_VehicleStateMachine = {
     .stack_size = 1024,
     .priority = osPriorityAboveNormal2,
 };
-#if CANLOGGERTASK
+
 static const osThreadAttr_t ThAtt_CANLogger = {
     .name = "CANLoggerTask",
     .stack_size = 512,
     .priority = osPriorityLow
 };
-#endif
 
 #endif
 
@@ -166,13 +165,10 @@ void gnr_main(void)
     THR_VC_StateMachine_handle      = osThreadNew(THR_VC_StateMachine,
                                       NULL,
                                       &ThAtt_VehicleStateMachine);
-                                      
-    #if CANLOGGERTASK
 
     CANOpenTaskHandle               = osThreadNew(CANLoggerTask,
                                       NULL,
-                                      &ThAtt_CANLogger);                 
-    #endif
+                                      &ThAtt_CANLogger);
 
     #endif
 

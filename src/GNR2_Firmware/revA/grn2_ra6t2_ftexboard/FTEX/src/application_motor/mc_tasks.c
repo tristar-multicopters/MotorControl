@@ -328,7 +328,6 @@ void MediumFrequencyTaskM1(void)
     case M_START_RUN:
         FOC_InitAdditionalMethods(M1);
         FOC_CalcCurrRef(M1);
-
         if (Check_MotorStuckReverse(pSpeedTorqCtrl[M1]) == MC_NO_FAULTS)        // No Reverse or Stock Error    
         {
             MCStateMachine_NextState(&MCStateMachine[M1], M_RUN);
@@ -594,12 +593,8 @@ uint8_t MC_HighFrequencyTask(void)
         //        BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
     }
 
-    #if LOGMOTORVALS
-    LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
-    #endif
-    #if LOGMOTORVALSRES
-    LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through
-    #endif
+    //  		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
+    // LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through
 
     return bMotorNbr;
 }
