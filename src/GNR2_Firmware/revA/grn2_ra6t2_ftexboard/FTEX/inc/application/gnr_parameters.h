@@ -26,6 +26,13 @@
 #define VEHICLE_SELECTION             VEHICLE_TSUGAWA     /* Vehicle selection to adapt motor/vehicle parameters.
                                                          Will be changed in the future for a more flexible way
                                                          of parametrization. */
+                                                         
+//define responsible to enable some debug features as:
+//hardware fault catch 
+#define HFAULTDEBUG 0 
+
+//define responsible to enable canloggertask
+#define CANLOGGERTASK 0 
 /*
   Set BYPASS_POSITION_SENSOR to 1 and BYPASS_CURRENT_CONTROL to 1 for simple open loop voltage output.
   Set BYPASS_POSITION_SENSOR to 1 and BYPASS_CURRENT_CONTROL to 0 for simple current control without position sensor.
@@ -37,8 +44,20 @@
 /*______________________________________________________*/
 /*High speed Log Configuration*/
 
-#define HSLOG_ZEROSPEED_LOG 1
-#define HSLOG_BUTTON_LOG 2
+//definition used to enable log function
+//LogHS_StartOneShot(&LogHS_handle);
+#define HSLOG_ZEROSPEED_LOG 0
 
-#define HSLOG_PROFILE HSLOG_ZEROSPEED_LOG 
+//definition used to enable log function
+//LogHS_LogMotorVals(&LogHS_handle);
+#define LOGMOTORVALS 0
+
+//definition used to enable log function
+//LogHS_LogMotorValsVarRes(&LogHS_handle);
+#define LOGMOTORVALSRES 0
+
+////definition used to enable log function
+//LogHS_StopLog(&LogHS_handle);
+#define HSLOG_BUTTON_LOG 0 
+ 
 

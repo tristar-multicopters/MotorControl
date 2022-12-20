@@ -313,6 +313,7 @@ __NO_RETURN void CANOpenTask (void * pvParameter)
     }
 }
 
+#if CANLOGGERTASK
 
 /**
   Task to handle the received messages anad to send messages through the CAN bus
@@ -350,3 +351,7 @@ __NO_RETURN void CANLoggerTask (void * pvParameter)
         }
     }
 }
+
+#endif
+
+

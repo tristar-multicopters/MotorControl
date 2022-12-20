@@ -245,9 +245,9 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
 */
 void HardFault_Handler(void)
 {
-    //if NDEBUG is defined the
+    //if HFAULTDEBUG is defined the
     //no system reset.
-    #ifdef NDEBUG
+    #if HFAULTDEBUG
     ASSERT(false);
     #else
     //force a software reset

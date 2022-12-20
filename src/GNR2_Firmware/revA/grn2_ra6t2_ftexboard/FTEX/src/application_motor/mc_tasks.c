@@ -260,13 +260,14 @@ void MediumFrequencyTaskM1(void)
     MotorState_t StateM1;
     int16_t wAux = 0;
 
-    //    (void) BemfObsPll_CalcAvrgMecSpeedUnit(&BemfObserverPllM1, &wAux);
-    //     #if HSLOG_PROFILE == HSLOG_BUTTON_LOG
-    //        if(!uCAL_GPIO_Read(REVERSE_GPIO_PIN))
-    //          {
-    //            LogHS_StopLog(&LogHS_handle);
-    //         }
-    //       #endif
+    #if HSLOG_BUTTON_LOG
+    (void) BemfObsPll_CalcAvrgMecSpeedUnit(&BemfObserverPllM1, &wAux);
+        
+     if (!uCAL_GPIO_Read(REVERSE_GPIO_PIN))
+     {
+        LogHS_StopLog(&LogHS_handle);
+     }
+    #endif
 
     (void)HallPosSensor_CalcAvrgMecSpeedUnit(&HallPosSensorM1, &wAux);
     bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
@@ -328,6 +329,7 @@ void MediumFrequencyTaskM1(void)
     case M_START_RUN:
         FOC_InitAdditionalMethods(M1);
         FOC_CalcCurrRef(M1);
+
         if (Check_MotorStuckReverse(pSpeedTorqCtrl[M1]) == MC_NO_FAULTS)        // No Reverse or Stock Error    
         {
             MCStateMachine_NextState(&MCStateMachine[M1], M_RUN);
@@ -338,7 +340,7 @@ void MediumFrequencyTaskM1(void)
         {
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }
-#if HSLOG_PROFILE == HSLOG_ZEROSPEED_LOG
+#if HSLOG_ZEROSPEED_LOG
         LogHS_StartOneShot(&LogHS_handle);
 #endif
 
@@ -593,8 +595,12 @@ uint8_t MC_HighFrequencyTask(void)
         //        BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
     }
 
-    //  		LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
-    // LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through
+    #if LOGMOTORVALS
+    LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
+    #endif
+    #if LOGMOTORVALSRES
+    LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through
+    #endif
 
     return bMotorNbr;
 }
