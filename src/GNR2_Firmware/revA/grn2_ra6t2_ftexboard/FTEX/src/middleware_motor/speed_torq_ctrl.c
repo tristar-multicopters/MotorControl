@@ -322,7 +322,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     {
         hMeasuredMotorTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pMotorTempSensor) * 100;
     }
-    if (pHandle->pMotorTempSensor != NULL)
+    if (pHandle->pHeatsinkTempSensor != NULL)
     {
         hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor) * 100;
     }
