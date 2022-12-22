@@ -66,11 +66,11 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
         }
         else if (hValue <= hStartValue)
         {
-				hMaxOutput = pHandle->hMaxOutputLimitHigh;    // Pass higher threshold if input is lower than control range
+            hMaxOutput = pHandle->hMaxOutputLimitHigh;    // Pass higher threshold if input is lower than control range
         }
         else
         {
-				hMaxOutput = pHandle->hMaxOutputLimitLow;     // Pass lower threshold if input is higher than control range
+            hMaxOutput = pHandle->hMaxOutputLimitLow;     // Pass lower threshold if input is higher than control range
         }
     }
     else
@@ -86,11 +86,11 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
         }
         else if (hValue >= hStartValue)
         {
-				hMaxOutput =  pHandle->hMaxOutputLimitHigh;       // Pass higher threshold if input is lower than control range
+            hMaxOutput =  pHandle->hMaxOutputLimitHigh;       // Pass higher threshold if input is lower than control range
         }
         else
         {
-				hMaxOutput =  pHandle->hMaxOutputLimitLow;        // Pass lower threshold if input is higher than control range
+            hMaxOutput =  pHandle->hMaxOutputLimitLow;        // Pass lower threshold if input is higher than control range
         }
     }
 	
@@ -105,30 +105,31 @@ int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariab
     
 	if (pHandle->bEnableFoldback)
 	{
-            if(pHandle->FoldbackConfig == TRIM)  // Test if foldback instance is used to trim the inputs.
+        if(pHandle->FoldbackConfig == TRIM) // Test if foldback instance is used to trim the inputs.
+        {
+            hMaxOutput =  Foldback_GetMaxOutput(pHandle, hValue);
+            if (hInputVariable > hMaxOutput) // If input is greater than maximum possible value 
             {
-                hMaxOutput =  Foldback_GetMaxOutput(pHandle, hValue);
-                if ( hInputVariable > hMaxOutput )  // If input is greater than maximum possible value 
-                {
-                    hOutputVariable = hMaxOutput; 
-                }  
-                else if ( hInputVariable < - hMaxOutput ) // If input is smaller than maximum possible value               
-                { 
-                    hOutputVariable = - hMaxOutput;
-                } 
-                else 
-                { 
-                    hOutputVariable = hInputVariable;} // set output as input
+                hOutputVariable = hMaxOutput; 
+            }
+            else if (hInputVariable < - hMaxOutput) // If input is smaller than maximum possible value               
+            { 
+                hOutputVariable = - hMaxOutput;
+            }
+            else 
+            { 
+                hOutputVariable = hInputVariable;} // set output as input
             }    
-            else                    // Foldback instance is used to calculate dynamic thresholds.
+            else
             {
+                // Foldback instance is used to calculate dynamic thresholds.
                 hOutputVariable = Foldback_GetMaxOutput(pHandle, hValue); 
             }
-	}
-	else
-	{
-		hOutputVariable = hInputVariable;
-	}
+        }
+        else
+        {
+            hOutputVariable = hInputVariable;
+        }
 	return hOutputVariable;
 }
 
@@ -204,9 +205,9 @@ int16_t Foldback_ApplySlowStart(Foldback_Handle_t * pHandle, int16_t hTorque)
 {
     ASSERT(pHandle != NULL); 
     static uint32_t wTimeCounter;
-    static  int16_t hAverageTorque;
-            int32_t wTemp = 0;
-            int16_t hTorqueOut;
+    static int16_t hAverageTorque;
+           int32_t wTemp = 0;
+           int16_t hTorqueOut;
 
     hTorqueOut = hTorque;
     uint16_t hBandwidth;
@@ -219,10 +220,9 @@ int16_t Foldback_ApplySlowStart(Foldback_Handle_t * pHandle, int16_t hTorque)
        pHandle->bRefreshSlowStart = false; 
     }    
 
-    if (pHandle->bEnableSlowStart) //Check if a slow start was requested or is in progress
+    if(pHandle->bEnableSlowStart) //Check if a slow start was requested or is in progress
     {    
-
-        if (abs(hTorque) > abs(hAverageTorque))
+        if(abs(hTorque) > abs(hAverageTorque))
         {
             hBandwidth = pHandle->hSlowStartBandwidth;
         }

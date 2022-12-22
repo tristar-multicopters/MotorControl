@@ -67,10 +67,13 @@ void CANLog_SendStatus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t 
 }
 
 /* Function for sending the bus voltage value*/
-void CANLog_SendVbus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t * pHandle)
+void CANLog_SendVbus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t* pHandle)
 {
-    CO_IF_FRM msgToSend;
     // TO DO: Add a function in the MDI module for getting the Bus voltage
+    (void) pHandle;
+    
+    CO_IF_FRM msgToSend;
+    
     // Prepare Header of CAN message 
     uint8_t bVoltage = 0x64;
     msgToSend.Identifier = CAN_ID_VBUS;
@@ -176,7 +179,16 @@ void CANLog_SendTemperature(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Hand
     // Prepare Header of CAN message 
     if(bMotorSelection == M1)
     {
-        uint16_t temperature = MCInterface_GetNTCTemp(pHandle->pPowertrain->pMDI->pMCI);
+        int16_t temperature = MCInterface_GetNTCTemp(pHandle->pPowertrain->pMDI->pMCI);
+        
+        // todo: support negative temperatures, in case of motor startup in cold weather
+        // adding this assignment for now because MCInterface_GetNTCTemp used to return uint_16 and we must test
+        // again now that it's returning a signed value
+        if (temperature < 0)
+        {
+            temperature = 0;
+        }
+        
         msgToSend.Identifier = CAN_ID_TEMPERATURE_M1;
         msgToSend.DLC = 2;
         // Load data buffer

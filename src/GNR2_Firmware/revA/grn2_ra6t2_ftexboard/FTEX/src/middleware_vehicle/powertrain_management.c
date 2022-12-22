@@ -135,20 +135,23 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 // TODO: Following foldbacks are computed using speed of M1 or M2. Should use vehicle speed instead when it is ready.
                 if (pHandle->bMainMotor == M1)
                 {
+                    int32_t absoluteSpeed = abs(hSpeedM1);
+                    int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
+                    
                     pHandle->aTorque[M1] = hAux;
-                    hAux = Foldback_ApplyFoldback(pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1));
+                    hAux = Foldback_ApplyFoldback(pHandle->SpeedFoldbackStartupDualMotor, hAux, speed);
                     // Store powertrain target torque value in handle. Invert torque if needed.
                     pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
                 }
                 else if (pHandle->bMainMotor == M2)
                 {
+                    int32_t absoluteSpeed = abs(hSpeedM2);
+                    int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
+                    
                     // Store powertrain target torque value in handle. Invert torque if needed.
                     pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
-                    hAux = Foldback_ApplyFoldback(pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM2));
+                    hAux = Foldback_ApplyFoldback(pHandle->SpeedFoldbackStartupDualMotor, hAux, speed);
                     pHandle->aTorque[M1] = hAux;
-                }
-                else
-                {
                 }
             }
             else
@@ -174,7 +177,10 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                     /* Cadence sensor enabled */
                     else
                     {
-                        hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, hAux, abs(hSpeedM1));
+                        int32_t absoluteSpeed = abs(hSpeedM1);
+                        int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
+                    
+                        hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, hAux, speed);
                         hAux = Foldback_ApplySlowStart(pHandle->SpeedFoldbackStartupDualMotor, hAux);
                         pHandle->aTorque[pHandle->bMainMotor] = hAux;
                     }
@@ -971,8 +977,11 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
             htorqueSens = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
             /* Set Motor Torque */
             htorqueSelect = PedalAssist_GetPASTorque(pHandle->pPAS);
-            /* Apply Limitation for the */
-            hFinalTorque = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, htorqueSelect, abs(wSpeedMainMotor) );
+            /* Apply Limitation for the final torque */
+            int32_t temp = abs(wSpeedMainMotor);
+            int16_t absoluteSpeed = (int16_t)temp; // manually cast because abs returns an integer
+            
+            hFinalTorque = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, htorqueSelect, absoluteSpeed);
             hFinalTorque = Foldback_ApplySlowStart(pHandle->SpeedFoldbackStartupDualMotor, hFinalTorque); //Apply the slow start if needed    				
             
             /* Make a decision by adding the torque or limiting the speed */
@@ -1014,8 +1023,12 @@ uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
     // Check if M1 is selected
     if (pHandle->pMS->bMotorSelection == ALL_MOTOR_SELECTED || pHandle->pMS->bMotorSelection == M1_SELECTED)
     {    
-        M1Current = abs(pHandle->pMDI->pMCI->pFOCVars->Iqdref.q);            
-        M1Current = M1Current/(INT16_MAX/MAXCURRENT);  // Convert the Iq refference to an actual current value           
+        int32_t temp = abs(pHandle->pMDI->pMCI->pFOCVars->Iqdref.q);
+        
+        // explicit cast to uint16 because abs returns an integer. Should not be an issue because q is an int16
+        M1Current = (uint16_t)temp;
+        
+        M1Current = M1Current/(INT16_MAX/MAXCURRENT);  // Convert the Iq reference to an actual current value           
     }
     
     if (pHandle->pMS->bMotorSelection == ALL_MOTOR_SELECTED) // we assume m1 and m2 are the same

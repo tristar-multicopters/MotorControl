@@ -7,7 +7,7 @@
                Includes                       
 *********************************************/
 
-#include "uCAL_DATAFLASH.h"
+#include "uCAL_DataFlash.h"
 #include "ASSERT_FTEX.h"
 
 /*********************************************

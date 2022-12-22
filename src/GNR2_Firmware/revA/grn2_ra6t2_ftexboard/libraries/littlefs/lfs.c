@@ -5,9 +5,17 @@
  * Copyright (c) 2017, Arm Limited. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
  */
+ 
+ // disable warnings caused by LittleFileSystem module
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wself-assign"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+ 
 #include "lfs.h"
 #include "lfs_util.h"
-
 
 // some constants used throughout the code
 #define LFS_BLOCK_NULL ((lfs_block_t)-1)
@@ -5817,3 +5825,5 @@ int lfs_migrate(lfs_t *lfs, const struct lfs_config *cfg) {
 }
 #endif
 
+// restore warnings that we had to disable to include LFS
+#pragma clang diagnostic pop

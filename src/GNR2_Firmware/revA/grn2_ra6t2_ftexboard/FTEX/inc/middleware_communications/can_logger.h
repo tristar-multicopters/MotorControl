@@ -41,7 +41,7 @@ void CANLog_SendStatus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t 
 
 /** @brief  Function for sending the bus voltage value
 */
-void CANLog_SendVbus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t * phandle);
+void CANLog_SendVbus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t* pHandle);
 
 /* Function for sending the reference and measured current values */
 /** @brief  Function for sending the current values

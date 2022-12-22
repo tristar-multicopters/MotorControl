@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * @file    mx25l3233f_driver.c
+  * @file    MX25l3233F_driver.c
   * @author  FTEX inc
   * @brief   MX25L3233F driver module to manage the external Flash Memory
   ******************************************************************************
 */
 
 // =============================== Includes ================================= //
-#include "mx25l3233f_driver.h"
+#include "MX25L3233F_driver.h"
 // =============================== Defines ================================= //
 #define CLOCK_FOR_READ	0x55	/* For generate read clock */
 

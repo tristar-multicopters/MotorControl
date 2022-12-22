@@ -333,7 +333,7 @@ __NO_RETURN void CANLoggerTask (void * pvParameter)
             osDelay(CAN_LOG_INTERVAL_TICK);
             CANLog_SendStatus(&CoCanDriver, &VCInterfaceHandle, M2); //Send M2 status
             osDelay(CAN_LOG_INTERVAL_TICK);
-            CANLog_SendVbus(&CoCanDriver, &VCInterfaceHandle); //Send Vbus
+            CANLog_SendVbus(&CoCanDriver,&VCInterfaceHandle); //Send Vbus
             osDelay(CAN_LOG_INTERVAL_TICK);
             CANLog_SendCurrent(&CoCanDriver, &VCInterfaceHandle, M1); //Send currents M1
             osDelay(CAN_LOG_INTERVAL_TICK);

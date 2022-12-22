@@ -14,7 +14,7 @@
 // =============================== Includes ================================= //
 #include <stdint.h>
 #include <cmsis_os2.h>
-#include "mx25l3233f_driver.h"
+#include "MX25L3233F_driver.h"
 
 // =============================== Defines ================================= //
 #define FLASH_OK        0x00

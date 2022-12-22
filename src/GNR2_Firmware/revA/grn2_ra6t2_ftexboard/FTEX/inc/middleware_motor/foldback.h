@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
-
+#include <stdlib.h> // explicitely include stdlib since we're using the abs function
 
 typedef enum    // Enumerated data type to set the configuration of foldback
 {
@@ -23,7 +23,7 @@ typedef enum    // Enumerated data type to set the configuration of foldback
 
 typedef struct
 {
-	bool bEnableFoldback;               // Check flag if foldback is enabled.
+    bool bEnableFoldback;               // Check flag if foldback is enabled.
     bool bIsInverted;                   // Check flag if input variables are negative.
     bool bEnableSlowStart;              // Flag for smooth start using PAS
     bool bRefreshSlowStart;             // Flag to refresh the smooth start using PAS

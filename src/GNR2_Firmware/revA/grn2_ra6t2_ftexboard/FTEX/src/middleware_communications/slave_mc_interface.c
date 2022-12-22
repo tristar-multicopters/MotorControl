@@ -8,13 +8,17 @@
 #include "slave_mc_interface.h"
 #include "ASSERT_FTEX.h"
 
-
-#define SDO_TIMEOUT_FAULT_ACK       200 // 200ms timeout when sending a fault ack SDO
+#define SDO_TIMEOUT_FAULT_ACK_IN_MS 200 // 200ms timeout when sending a fault ack SDO
 
 
 /* The SDO transfer finalization callback when acknowledging a fault */
 void FaultAckDownloadFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
 {
+    // suppress warning about unused variables
+    (void) csdo;
+    (void) index;
+    (void) sub;
+    
     if (code == 0)
     {
         /* SDO completed succesfully */
@@ -110,7 +114,7 @@ bool SlaveMCInterface_FaultAcknowledged(SlaveMotorHandle_t * pHandle)
     CO_CSDO *csdo;
     csdo = COCSdoFind(pHandle->pCONode, 0);
     uint8_t Data = true;
-    if (COCSdoRequestDownload(csdo, pHandle->RegisterAddr.wRegAddrFaultAck, &Data, CO_BYTE, FaultAckDownloadFinishCb, SDO_TIMEOUT_FAULT_ACK) != CO_ERR_NONE)
+    if (COCSdoRequestDownload(csdo, pHandle->RegisterAddr.wRegAddrFaultAck, &Data, CO_BYTE, FaultAckDownloadFinishCb, SDO_TIMEOUT_FAULT_ACK_IN_MS) != CO_ERR_NONE)
     {
         bRetVal = false;
     }

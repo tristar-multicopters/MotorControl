@@ -8,7 +8,12 @@
 #include "vc_tasks.h"
 #include "mc_tasks.h"
 #include "comm_tasks.h"
+
+// disable warning about user_config_task modifying the pragma pack value
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-pack"
 #include "user_config_task.h"
+#pragma clang diagnostic pop
 
 //****************** THREAD EXTERN FUNCTION PROTOTYPES ******************//
 
@@ -24,7 +29,7 @@ extern void PowerOffSequence(void * pvParameter);
 
 static bool ADCInit(void);
 static bool GPTInit(void);
-static bool POEGInit(void);
+// static bool POEGInit(void); //todo: reenable in EGNR-2328
 static bool DACInit(void);
 static bool ICUInit(void);
 static bool ELCInit(void);
@@ -269,9 +274,10 @@ static bool GPTInit(void)
     return bIsError;
 }
 
-/**
-  * @brief  Initialize POEG (Port Output Enable for GPT) hardware
-  */
+/*
+* @brief  Initialize POEG (Port Output Enable for GPT) hardware
+*/
+/* todo: reenable in EGNR-2328
 static bool POEGInit(void)
 {
     bool bIsError = false;
@@ -280,6 +286,7 @@ static bool POEGInit(void)
 
     return bIsError;
 }
+*/
 
 /**
   * @brief  Initialize DAC (Digital Analog Converter) hardware

@@ -100,7 +100,7 @@ extern "C" {
   */
 typedef struct
 {
-  int16_t q;
+  int16_t q; // if this data type changes (eg. change to int32), check everywhere it's called to ensure the casts where it is used are good
   int16_t d;
 } qd_t;
 

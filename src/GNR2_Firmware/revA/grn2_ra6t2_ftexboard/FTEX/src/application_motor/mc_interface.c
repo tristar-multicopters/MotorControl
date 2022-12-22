@@ -446,8 +446,7 @@ uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHa
   *  Function has been added to enable the temperature monitoring module in 
   *  vehicle control to have acces to the heatsink temperature.
   */
-uint16_t MCInterface_GetNTCTemp(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetNTCTemp(MotorControlInterfaceHandle_t * pHandle)
 {
-    uint16_t temp = pHandle->pSpeedTorqCtrl->pHeatsinkTempSensor->hAvTempCelcius;
-   return (uint16_t) temp; // Return temperature value
+    return pHandle->pSpeedTorqCtrl->pHeatsinkTempSensor->hAvTempCelcius;
 }

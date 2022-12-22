@@ -26,7 +26,7 @@ void PWREN_Init(PWREN_Handle_t * pHandle)
     PinConfig.PinPull      = NONE; 
     PinConfig.PinOutput    = PUSH_PULL; 
     
-    uCAL_GPIO_ReInit(PWREN_GPIO_PIN, PinConfig);
+    uCAL_GPIO_ReInit(PWR_ENABLE_GPIO_PIN, PinConfig);
    
     PinConfig.PinDirection = OUTPUT;     //ReInit to ensure this pin has the wanted behavior
     PinConfig.PinPull      = NONE; 
@@ -45,7 +45,7 @@ bool PWREN_IsPowerEnabled(PWREN_Handle_t * pHandle)
     
     if (pHandle->bUsePowerLock)
     {          
-        pHandle->bIsPowerEnabled =  uCAL_GPIO_Read(PWREN_GPIO_PIN) ^ pHandle-> bIsInvertedLogic;
+        pHandle->bIsPowerEnabled = uCAL_GPIO_Read(PWR_ENABLE_GPIO_PIN) ^ pHandle-> bIsInvertedLogic;
         
         return pHandle->bIsPowerEnabled;
     }

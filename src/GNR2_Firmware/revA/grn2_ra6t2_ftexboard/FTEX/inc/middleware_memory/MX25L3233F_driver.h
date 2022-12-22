@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    mx25l3233f_driver.h
+  * @file    MX25l3233F_driver.h
   * @author  FTEX inc
   * @brief   Header for MX25L3233F driver module
   *          This module is the driver for the MX25 SPI External flash

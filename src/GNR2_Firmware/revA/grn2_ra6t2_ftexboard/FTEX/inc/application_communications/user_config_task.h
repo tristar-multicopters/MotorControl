@@ -14,8 +14,14 @@
                Includes                       
 *********************************************/
 
-#include "uCAL_DATAFLASH.h"
+#include "uCAL_DataFlash.h"
+
+// disable warning about user_config_data modifying the pragma pack value
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-pack"
 #include "user_config_data.h"
+#pragma clang diagnostic pop
+
 #include "comm_config.h"
 #include "vc_parameters.h"
 

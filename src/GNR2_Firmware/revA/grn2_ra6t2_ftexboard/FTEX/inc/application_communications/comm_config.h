@@ -16,10 +16,10 @@
 #include "co_can_ra6t2.h"
 #include "co_timer_ra6t2.h"
 #include "board_hardware.h"
-#include "uCAL_DATAFLASH.h"
+#include "uCAL_DataFlash.h"
 
 #include "uCAL_SPI.h"
-#include "mx25l3233f_driver.h"
+#include "MX25L3233F_driver.h"
 #include "serial_flash.h"
 #include "serial_flash_storage.h"
 

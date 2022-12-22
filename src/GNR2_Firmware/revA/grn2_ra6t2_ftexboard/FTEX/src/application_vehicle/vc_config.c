@@ -9,8 +9,12 @@
 #include "board_hardware.h"
 #include "vc_parameters.h"
 #include "hal_data.h"
-#include "user_config_task.h"
 
+// disable warning about user_config_task modifying the pragma pack value
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-pack"
+#include "user_config_task.h"
+#pragma clang diagnostic pop
 
 MultipleDriveInterfaceHandle_t MDInterfaceHandle =
 {

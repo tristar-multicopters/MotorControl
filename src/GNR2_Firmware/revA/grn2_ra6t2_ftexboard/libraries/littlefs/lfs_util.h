@@ -8,6 +8,14 @@
 #ifndef LFS_UTIL_H
 #define LFS_UTIL_H
 
+// disable warnings caused by LittleFileSystem module
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wself-assign"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+
 // Users can override lfs_util.h with their own configuration by defining
 // LFS_CONFIG as a header file to include (-DLFS_CONFIG=lfs_config.h).
 //
@@ -242,4 +250,8 @@ static inline void lfs_free(void *p) {
 #endif
 
 #endif
+
+// restore warnings that we had to disable to include LFS
+#pragma clang diagnostic pop
+
 #endif

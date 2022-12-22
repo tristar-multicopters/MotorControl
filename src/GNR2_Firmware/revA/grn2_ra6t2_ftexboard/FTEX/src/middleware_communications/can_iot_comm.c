@@ -31,7 +31,7 @@ void CanIot_sendLongMsgs(uint8_t * message, uint8_t * dataToSend, uint16_t lengt
 /**
  *  IOT CanOpen Get Speed
  */
-uint8_t CanIot_GetSpeed (VCI_Handle_t * pHandle)
+uint8_t CanIot_GetSpeed(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
     uint8_t hmsgToSend;
@@ -49,21 +49,25 @@ uint8_t CanIot_GetSpeed (VCI_Handle_t * pHandle)
 /**
  *  IOT CanOpen Get Power
  */
-uint16_t CanIot_GetPower (VCI_Handle_t * pHandle)
+uint16_t CanIot_GetPower(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
     uint16_t hmsgToSend;
-    // Get Current from motor drive layer
-    uint8_t Current = abs(pHandle->pPowertrain->pMDI->pMCI->pFOCVars->Iqdref.q);
-    // Get Volatage from motor drive layer
-    uint16_t Voltage = MCInterface_GetBusVoltageInVoltx100(pHandle->pPowertrain->pMDI->pMCI);
-    // Calculate the power
-    uint16_t Power = ((uint16_t)Current * Voltage)/100;
     
-     // Load data buffer
-    hmsgToSend = Power;   
+    // Get Current from motor drive layer
+    int32_t tempVar = abs(pHandle->pPowertrain->pMDI->pMCI->pFOCVars->Iqdref.q);
+    // explicit cast because the abs method returns an integer
+    uint16_t current = (uint16_t)tempVar; 
+    
+    // Get Voltage from motor drive layer
+    uint16_t voltage = MCInterface_GetBusVoltageInVoltx100(pHandle->pPowertrain->pMDI->pMCI);
+    
+    // Calculate the power
+    uint16_t power = ((uint16_t)current * voltage)/100;
+    
+    // Load data buffer
+    hmsgToSend = power;   
     return hmsgToSend;
-
 }
 
 /**

@@ -11,7 +11,6 @@
 
 #include "gnr_parameters.h"
 
-
 #if VEHICLE_SELECTION == VEHICLE_GRIZZLY
 
 #include "pmsm_motor_parameters_grizzly.h"

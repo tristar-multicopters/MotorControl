@@ -7,8 +7,12 @@
 /*********************************************
                 Includes                       
 *********************************************/
-
+// disable warning about user_config_task modifying the pragma pack value
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-pack"
 #include "user_config_task.h"
+#pragma clang diagnostic pop
+
 #include "ASSERT_FTEX.h"
 #include "vc_config.h"
 
@@ -26,9 +30,6 @@
 /*********************************************
                 Private Variables
 *********************************************/
-
-//control typedef enum initialised at 
-static UserConfigStateMachine_t userConfigStateMachine = IDLE;
 
 //struct used to hold the default value of the user configuration.
 static User_ConfigData_t userConfigData = 

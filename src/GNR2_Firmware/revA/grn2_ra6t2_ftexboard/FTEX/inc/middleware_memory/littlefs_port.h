@@ -15,7 +15,7 @@
 #include "stdint.h"
 #include "lfs.h"
 #include "serial_flash.h"
-#include "mx25l3233f_driver.h"
+#include "MX25L3233F_driver.h"
 
 // =============================== Defines ================================= //
 #define LFS_BLOCK_SIZE                  MX25L3233F_SECTOR_4K

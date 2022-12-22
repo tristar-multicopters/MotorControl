@@ -19,8 +19,9 @@
 *********************************************/
 
 //force compiler to use 1 byte packaging
-//avoind padding bytes.
+//avoid padding bytes.
 #pragma pack(1)
+
 //struct used to hold the configuration
 //associated with PAS(pedal Assist System).
 typedef struct 
