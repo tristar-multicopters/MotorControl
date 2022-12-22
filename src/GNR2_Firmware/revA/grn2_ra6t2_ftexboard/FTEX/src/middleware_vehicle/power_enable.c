@@ -15,10 +15,12 @@ extern osThreadId_t PowerOffSequence_handle;
   Function used to initialise the GPIO pins used for the power enable module
 */
 void PWREN_Init(PWREN_Handle_t * pHandle)
-{	
+{    
     ASSERT(pHandle != NULL);
 
     struct GPIOConfig PinConfig;
+    
+    pHandle->bPowerCycle = false;
    
     PinConfig.PinDirection = INPUT;     //ReInit to ensure this pin has the wanted behavior
     PinConfig.PinPull      = NONE; 
@@ -61,10 +63,15 @@ void PWREN_MonitorPowerEnable(PWREN_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    if(!PWREN_IsPowerEnabled(pHandle))
-    {   // If the power is off, start the power off sequence
+    // If the power is off and it was on (falling edge), start the power off sequence
+    if(!PWREN_IsPowerEnabled(pHandle) && pHandle->bPowerCycle)        
+    {   
         osThreadFlagsSet(PowerOffSequence_handle,POWEROFFSEQUENCE_FLAG);
-    }          
+    }
+    else if (PWREN_IsPowerEnabled(pHandle))
+    {
+        pHandle->bPowerCycle = true; // REgister that the power has been turned on
+    }        
 } 
 
 /**
