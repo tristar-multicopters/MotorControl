@@ -85,6 +85,17 @@ static void UpdateObjectDictionnary(void *p_arg)
     {        
         return;
     }
+    
+     #if SUPPORT_SLAVE
+    /* Get data from motor control and vehicle control layer */
+    int16_t hMotorSpeedMeas         = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
+    int16_t hBusVoltage             = 0;
+    int16_t hMotorTemp              = 0;
+    int16_t hHeatsinkTemp           = 0;
+    uint16_t hMotorState            = MCInterface_GetSTMState(&MCInterface[0]);
+    uint16_t hMotorOccuredFaults    = MCInterface_GetOccurredFaults(&MCInterface[0]);
+    uint16_t hMotorCurrentFaults    = MCInterface_GetCurrentFaults(&MCInterface[0]);
+    #endif
 
 	if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
     {   
@@ -101,6 +112,29 @@ static void UpdateObjectDictionnary(void *p_arg)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)), pNode, &hFwVersion, CO_WORD, 0);        
         /* Read commands in CANOpen object dictionnary received by SDO */
         //COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)), pNode, &bPAS, CO_BYTE, 0);
+        #if SUPPORT_SLAVE
+        /* Check if no heartbeat was missed from slave  */
+        if (CONmtGetHbEvents(&pNode->Nmt, GNR2_SLAVE_NODE_ID) <= MAX_NUMBER_MISSED_HEARTBEAT)
+        {
+            /* Update M1 feedback data to CANOpen object dictionnary */
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &hMotorOccuredFaults, CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &hMotorCurrentFaults, CO_WORD, 0);
+
+            /* Update virtual motor 2 structure used by vehicle control layer */
+            SlaveMCInterface_UpdateFeedback(&SlaveM2);
+        }
+        else
+        {
+            // Slave not present anymore, trigger vehicle communication fault
+            hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
+            VCSTM_FaultProcessing(VCInterfaceHandle.pStateMachine, VC_SLAVE_COMM_ERROR, 0);
+        }
+        #endif
     }
 #else
     CO_NODE  *pNode;
@@ -208,8 +242,8 @@ void Comm_BootUp(void)
     PinConfig.PinOutput    = PUSH_PULL;
     uCAL_GPIO_ReInit(CAN_STANDBY_N_GPIO_PIN, PinConfig);
     uCAL_GPIO_Set(CAN_STANDBY_N_GPIO_PIN);
-#if GNR_IOT   
-#else
+
+    #if (!GNR_IOT) | SUPPORT_SLAVE
     /* Initialize motor 2 handle to be used by vehicle control layer */
     SlaveMotorRegisterAddr_t M2RegAddr =
     {
@@ -225,7 +259,8 @@ void Comm_BootUp(void)
         .wRegAddrTorqueRef = CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2),       
     };
     SlaveMCInterface_Init(&SlaveM2, &CONodeGNR, M2RegAddr);
-#endif
+    #endif
+
     /* Select UART protocol */
     switch(UART0Handle.UARTProtocol)
 	  {
@@ -353,5 +388,3 @@ __NO_RETURN void CANLoggerTask (void * pvParameter)
 }
 
 #endif
-
-

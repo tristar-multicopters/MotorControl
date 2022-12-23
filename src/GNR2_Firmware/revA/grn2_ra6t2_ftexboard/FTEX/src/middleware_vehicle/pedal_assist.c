@@ -21,6 +21,11 @@ void PedalAssist_Init(PAS_Handle_t * pHandle)
     PedalSpdSensor_Init(pHandle->pPSS);
     PedalTorqSensor_Init(pHandle->pPTS);
     WheelSpdSensor_Init(pHandle->pWSS);
+    
+    //initalise pass to level 1. This is necessary to 
+    //make the bike run if no screen is present
+    //as on apollo. 
+    pHandle->bCurrentAssistLevel = PAS_LEVEL_1;
 	
     // Enable slow motor Start for Pedal Assist cadence base
     Foldback_EnableSlowStart(pHandle->SpeedFoldbackStartupDualMotorPAS);

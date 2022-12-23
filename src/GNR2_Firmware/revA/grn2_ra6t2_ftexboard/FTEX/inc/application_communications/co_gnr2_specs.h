@@ -20,7 +20,7 @@ extern "C" {
 #include "co_core.h"
 #include "gnr_parameters.h"
 // ================================== PUBLIC DEFINES ================================== //
-#if GNR_IOT
+
 /* Application specific CANopen registers for IOT */
 #define CO_OD_REG_SPEED_MEASURE     0x2000 /**< OD ID for speed measure           >*/
 #define CO_OD_REG_POWER_MEASURE     0x2001 /**< OD ID for power measure           >*/
@@ -32,20 +32,18 @@ extern "C" {
 #define CO_OD_REG_SERIAL_NB         0x2007 /**< OD ID for Serial number           >*/
 #define CO_OD_REG_FW_VERSION        0x2008 /**< OD ID for firmware version        >*/
 
-#else
 /* Application specific CANopen registers for Gnr */
-#define CO_OD_REG_MOTOR_SPEED       0x2000
-#define CO_OD_REG_BUS_VOLTAGE       0x2001
-#define CO_OD_REG_MOTOR_TEMP        0x2002
-#define CO_OD_REG_HEATSINK_TEMP     0x2003
-#define CO_OD_REG_MOTOR_STATE       0x2004
-#define CO_OD_REG_MOTOR_OCC_FAULTS  0x2005
-#define CO_OD_REG_MOTOR_CUR_FAULTS  0x2006
-#define CO_OD_REG_MOTOR_TORQUE_REF  0x2007
-#define CO_OD_REG_MOTOR_START       0x2008
-#define CO_OD_REG_FAULT_ACK         0x2009
+#define CO_OD_REG_MOTOR_SPEED       0x2009
+#define CO_OD_REG_BUS_VOLTAGE       0x200A
+#define CO_OD_REG_MOTOR_TEMP        0x200B
+#define CO_OD_REG_HEATSINK_TEMP     0x200C
+#define CO_OD_REG_MOTOR_STATE       0x200D
+#define CO_OD_REG_MOTOR_OCC_FAULTS  0x200E
+#define CO_OD_REG_MOTOR_CUR_FAULTS  0x200F
+#define CO_OD_REG_MOTOR_TORQUE_REF  0x2010
+#define CO_OD_REG_MOTOR_START       0x2011
+#define CO_OD_REG_FAULT_ACK         0x2012
 
-#endif
 /* Specify the EMCY-IDs for the application */
 enum EMCY_CODES {
 	APP_NO_ERROR = 0,

@@ -14,7 +14,7 @@
 #include "parameters_conversion.h"
 
 
-#define STUCK_TIMER_MAX_MS      200
+#define STUCK_TIMER_MAX_MS      2000  //1 second timeout
 #define STUCK_TIMER_MAX_COUNTS  STUCK_TIMER_MAX_MS * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u
 
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
