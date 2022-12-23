@@ -58,11 +58,11 @@ uint8_t uCAL_SPI_IO_WriteSingleByte(SPI_Handle_t * pHandle, uint8_t byte)
 uint8_t uCAL_SPI_IO_ReadSingleByte(SPI_Handle_t * pHandle)
 {
 	uint8_t data;
-	fsp_err_t err = FSP_SUCCESS;
 	
 	pHandle->bSPI_transfer_complete = false;
-	err= R_SPI_B_Read(pHandle->pSPI_Instance, &data, pHandle->hSPI_FrameLength, pHandle->pSPI_BitWidth);
-	return data;
+	R_SPI_B_Read(pHandle->pSPI_Instance, &data, pHandle->hSPI_FrameLength, pHandle->pSPI_BitWidth);
+    	
+    return data;
 }
 
 /**

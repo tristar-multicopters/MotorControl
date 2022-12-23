@@ -111,7 +111,7 @@ void uCAL_GPIO_Set(uint32_t aGPIO)
     bspPin = uCAL_GPIO_PinNumToBSP(aGPIO); // Convert from FTEX pins to BSP
 	
     R_BSP_PinAccessEnable();
-    R_BSP_PinWrite((bsp_io_port_pin_t) aGPIO,(bsp_io_level_t) 1); // Set the pin
+    R_BSP_PinWrite(bspPin,(bsp_io_level_t) 1); // Set the pin
 }
 
 /**

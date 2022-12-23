@@ -35,6 +35,7 @@ void MotorPowerQD_CalcElMotorPower(MotorPowerQDHandle_t * pHandle)
   wAux3 /= 10;
   wAux3 /= 65536;
     
+  (void) wAux3;  // Void line added to remove warning
   // MotorPowMeas_CalcElMotorPower(&pHandle->Super, (int16_t)wAux3); // TODO
 }
 

@@ -583,4 +583,5 @@ void HallPosSensor_SetMecAngle(HallPosSensorHandle_t * pHandle, int16_t hMecAngl
 	{
 		hMecAngle = 0;
 	}
+    (void) hMecAngle; // Void line added to remove warning
 }
