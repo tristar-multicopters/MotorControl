@@ -823,18 +823,20 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             }
         }
     } // End of if (!bFaultNow)
+    
+    // Verify if all fault occured have been cleared
     if (!hM1FaultOccurredCode)
     {
         //todo: handle result from MDI_FaultAcknowledged below
         MDI_FaultAcknowledged(pHandle->pMDI, M1);
     }
+
     if (!hM2FaultOccurredCode)
     {
         MDI_FaultAcknowledged(pHandle->pMDI, M2);
     }
-    
-    // Verify if all fault occured have been cleared
-    bool bFaultOccured = (hM1FaultOccurredCode | hM2FaultOccurredCode);
+
+    bool bFaultOccured = hM1FaultOccurredCode | hM2FaultOccurredCode;
     return bFaultOccured;
 }
 
