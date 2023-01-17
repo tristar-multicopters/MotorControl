@@ -438,3 +438,11 @@ uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle)
     return hRetval;
 }
 
+/*
+  * Clear  the motor stcuk reverse timer
+*/
+void Clear_MotorStuckReverse()
+{
+    M_STUCK_timer = 0;
+}
+

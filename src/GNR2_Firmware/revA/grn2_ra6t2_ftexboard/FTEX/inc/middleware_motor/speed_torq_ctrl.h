@@ -303,6 +303,14 @@ int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
   */
 uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle);
 
+/**
+  * @brief  Clear  the motor stcuk timer
+  * @param  
+  * @retval 
+  */
+
+void Clear_MotorStuckReverse();
+
 #ifdef __cplusplus
 }
 #endif /* __cpluplus */
