@@ -9,7 +9,7 @@
     <option key="#DeviceCommand#" value="R7FA6T2BD"/>
     <option key="#RTOS#" value="_none"/>
     <option key="#pinconfiguration#" value="R7FA6T2BD3CFP.pincfg"/>
-    <option key="#FSPVersion#" value="3.8.0"/>
+    <option key="#FSPVersion#" value="3.7.0"/>
     <option key="#SELECTED_TOOLCHAIN#" value="com.arm.toolchain"/>
   </generalSettings>
   <raBspConfiguration>
@@ -140,89 +140,93 @@
     <node id="board.clock.iicclk.display" option="board.clock.iicclk.display.value"/>
   </raClockConfiguration>
   <raComponentSelection>
-    <component apiversion="" class="BSP" condition="" group="Board" subgroup="custom" variant="" vendor="Renesas" version="3.8.0">
-      <description>Custom Board Support Files</description>
-      <originalPack>Renesas.RA_board_custom.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="R7FA6T2BD3CFP" vendor="Renesas" version="3.8.0">
-      <description>Board support package for R7FA6T2BD3CFP</description>
-      <originalPack>Renesas.RA_mcu_ra6t2.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="" vendor="Renesas" version="3.8.0">
-      <description>Board support package for RA6T2</description>
-      <originalPack>Renesas.RA_mcu_ra6t2.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="fsp" variant="" vendor="Renesas" version="3.8.0">
-      <description>Board support package for RA6T2 - FSP Data</description>
-      <originalPack>Renesas.RA_mcu_ra6t2.3.8.0.pack</originalPack>
-    </component>
-    <component apiversion="" class="Common" condition="" group="all" subgroup="fsp_common" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="Common" condition="" group="all" subgroup="fsp_common" variant="" vendor="Renesas" version="3.7.0">
       <description>Board Support Package Common Files</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_adc_b" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_adc_b" variant="" vendor="Renesas" version="3.7.0">
       <description>A/D Converter</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_agt" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_agt" variant="" vendor="Renesas" version="3.7.0">
       <description>Asynchronous General Purpose Timer</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_canfd" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_canfd" variant="" vendor="Renesas" version="3.7.0">
       <description>Controller Area Network - Flexible Data</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_dac" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_dac" variant="" vendor="Renesas" version="3.7.0">
       <description>12-bit D/A Converter</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_dtc" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_dtc" variant="" vendor="Renesas" version="3.7.0">
       <description>Data Transfer Controller</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_elc" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_elc" variant="" vendor="Renesas" version="3.7.0">
       <description>Event Link Controller</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_flash_hp" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_flash_hp" variant="" vendor="Renesas" version="3.7.0">
       <description>Flash Memory High Performance</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_gpt" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_gpt" variant="" vendor="Renesas" version="3.7.0">
       <description>General PWM Timer</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_gpt_three_phase" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_gpt_three_phase" variant="" vendor="Renesas" version="3.7.0">
       <description>General PWM Timer Three-Phase Motor Control Driver</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_icu" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_icu" variant="" vendor="Renesas" version="3.7.0">
       <description>External Interrupt</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_iirfa" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_iirfa" variant="" vendor="Renesas" version="3.7.0">
       <description>IIR Filter Accelerator</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_ioport" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_ioport" variant="" vendor="Renesas" version="3.7.0">
       <description>I/O Port</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_poeg" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_poeg" variant="" vendor="Renesas" version="3.7.0">
       <description>Port Output Enable for GPT</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_sci_b_uart" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_sci_b_uart" variant="" vendor="Renesas" version="3.7.0">
       <description>SCI UART</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_spi_b" variant="" vendor="Renesas" version="3.8.0">
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_spi_b" variant="" vendor="Renesas" version="3.7.0">
       <description>Serial Peripheral Interface</description>
-      <originalPack>Renesas.RA.3.8.0.pack</originalPack>
+      <originalPack>Renesas.RA.3.7.0.pack</originalPack>
     </component>
-    <component apiversion="" class="CMSIS" condition="" group="CMSIS5" subgroup="CoreM" variant="" vendor="Arm" version="5.9.0+renesas.0.fsp.3.8.0">
+    <component apiversion="" class="BSP" condition="" group="Board" subgroup="custom" variant="" vendor="Renesas" version="3.7.0">
+      <description>Custom Board Support Files</description>
+      <originalPack>Renesas.RA_board_custom.3.7.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="CMSIS" condition="" group="CMSIS5" subgroup="CoreM" variant="" vendor="Arm" version="5.8.0+renesas.0.fsp.3.7.0">
       <description>Arm CMSIS Version 5 - Core (M)</description>
-      <originalPack>Arm.CMSIS5.5.9.0+renesas.0.fsp.3.8.0.pack</originalPack>
+      <originalPack>Arm.CMSIS5.5.8.0+renesas.0.fsp.3.7.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="R7FA6T2BD3CFP" vendor="Renesas" version="3.7.0">
+      <description>Board support package for R7FA6T2BD3CFP</description>
+      <originalPack>Renesas.RA_mcu_ra6t2.3.7.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="device" variant="" vendor="Renesas" version="3.7.0">
+      <description>Board support package for RA6T2</description>
+      <originalPack>Renesas.RA_mcu_ra6t2.3.7.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="BSP" condition="" group="ra6t2" subgroup="fsp" variant="" vendor="Renesas" version="3.7.0">
+      <description>Board support package for RA6T2 - FSP Data</description>
+      <originalPack>Renesas.RA_mcu_ra6t2.3.7.0.pack</originalPack>
+    </component>
+    <component apiversion="" class="boot" condition="" group="all" subgroup="MCUboot_Image_Utilities" variant="" vendor="Linaro" version="1.8.0+renesas.0.fsp.3.7.0">
+      <description>MCUboot Image Utilities</description>
+      <originalPack>Linaro.MCUboot.1.8.0+renesas.0.fsp.3.7.0.pack</originalPack>
     </component>
   </raComponentSelection>
   <raElcConfiguration>
@@ -1267,6 +1271,7 @@
       <property id="module.driver.transfer.num_blocks" value="0"/>
       <property id="module.driver.transfer.activation_source" value="_disabled"/>
     </module>
+    <module id="module.middleware.mcuboot_image_utilities.1998204525"/>
     <context id="_hal.0">
       <stack module="module.driver.ioport_on_ioport.0"/>
       <stack module="module.driver.three_phase_on_gpt_three_phase.566906103">
@@ -1291,20 +1296,29 @@
       <stack module="module.driver.timer_on_agt.467807930"/>
       <stack module="module.driver.timer_on_agt.1314836952"/>
       <stack module="module.driver.timer_on_gpt.250447184"/>
-      <stack module="module.driver.flash_on_flash_hp.1598203811"/>
       <stack module="module.driver.spi_on_spi_b.813734152">
         <stack module="module.driver.transfer_on_dtc.83774849" requires="module.driver.spi_on_spi_b.requires.transfer_tx"/>
         <stack module="module.driver.transfer_on_dtc.1080883038" requires="module.driver.spi_on_spi_b.requires.transfer_rx"/>
       </stack>
+      <stack module="module.middleware.mcuboot_image_utilities.1998204525">
+        <stack module="module.driver.flash_on_flash_hp.1598203811" requires="module.middleware.mcuboot_image_utilities.requires.flash"/>
+      </stack>
     </context>
     <config id="config.driver.flash_hp">
       <property id="config.driver.flash_hp.param_checking_enable" value="config.flash_hp.param_checking_enable.bsp"/>
-      <property id="config.driver.flash_hp.param_code_flash_programming_enable" value="config.driver.flash_hp.param_code_flash_programming_enable.disabled"/>
+      <property id="config.driver.flash_hp.param_code_flash_programming_enable" value="config.driver.flash_hp.param_code_flash_programming_enable.enabled"/>
       <property id="config.driver.flash_hp.param_data_flash_programming_enable" value="config.driver.flash_hp.param_data_flash_programming_enable.enabled"/>
     </config>
     <config id="config.driver.ioport">
       <property id="config.driver.ioport.checking" value="config.driver.ioport.checking.system"/>
     </config>
+    <config id="config.middleware.mcuboot_image_utilities">
+      <property id="config.middleware.mcuboot_image_utilities.mcuboot_config" value="FTEX/inc/mcuboot_utilities/mcuboot_config/mcuboot_config.h"/>
+      <property id="config.middleware.mcuboot_image_utilities.sysflash" value="FTEX/inc/mcuboot_utilities/sysflash/sysflash.h"/>
+      <property id="config.middleware.mcuboot_image_utilities.mcuboot_logging" value="FTEX/inc/mcuboot_utilities/mcuboot_config/mcuboot_logging.h"/>
+    </config>
+    <config id="config.middleware.mcuboot_image_utilities_mcuboot_config"/>
+    <config id="config.middleware.mcuboot_image_utilities_mcuboot_logging"/>
     <config id="config.driver.poeg">
       <property id="config.driver.poeg.param_checking_enable" value="config.driver.poeg.param_checking_enable.bsp"/>
     </config>

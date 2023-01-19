@@ -23,7 +23,7 @@ extern "C" {
  * printed.
  */
 #ifndef MCUBOOT_LOG_LEVEL
- #define MCUBOOT_LOG_LEVEL           MCUBOOT_LOG_LEVEL_DEBUG
+#define MCUBOOT_LOG_LEVEL           MCUBOOT_LOG_LEVEL_OFF
 #else
  #include <stdio.h>
 #endif

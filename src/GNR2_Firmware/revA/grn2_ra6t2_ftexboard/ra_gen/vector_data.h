@@ -23,12 +23,12 @@
         void canfd_rx_fifo_isr(void);
         void agt_int_isr(void);
         void gpt_capture_b_isr(void);
-        void fcu_frdyi_isr(void);
-        void fcu_fiferr_isr(void);
         void spi_b_rxi_isr(void);
         void spi_b_txi_isr(void);
         void spi_b_tei_isr(void);
         void spi_b_eri_isr(void);
+        void fcu_frdyi_isr(void);
+        void fcu_fiferr_isr(void);
 
         /* Vector table allocations */
         #define VECTOR_NUMBER_GPT4_COUNTER_OVERFLOW ((IRQn_Type) 0) /* GPT4 COUNTER OVERFLOW (Overflow) */
@@ -73,18 +73,18 @@
         #define GPT9_COUNTER_OVERFLOW_IRQn          ((IRQn_Type) 19) /* GPT9 COUNTER OVERFLOW (Overflow) */
         #define VECTOR_NUMBER_GPT9_CAPTURE_COMPARE_B ((IRQn_Type) 20) /* GPT9 CAPTURE COMPARE B (Compare match B) */
         #define GPT9_CAPTURE_COMPARE_B_IRQn          ((IRQn_Type) 20) /* GPT9 CAPTURE COMPARE B (Compare match B) */
-        #define VECTOR_NUMBER_FCU_FRDYI ((IRQn_Type) 21) /* FCU FRDYI (Flash ready interrupt) */
-        #define FCU_FRDYI_IRQn          ((IRQn_Type) 21) /* FCU FRDYI (Flash ready interrupt) */
-        #define VECTOR_NUMBER_FCU_FIFERR ((IRQn_Type) 22) /* FCU FIFERR (Flash access error interrupt) */
-        #define FCU_FIFERR_IRQn          ((IRQn_Type) 22) /* FCU FIFERR (Flash access error interrupt) */
-        #define VECTOR_NUMBER_SPI1_RXI ((IRQn_Type) 23) /* SPI1 RXI (Receive buffer full) */
-        #define SPI1_RXI_IRQn          ((IRQn_Type) 23) /* SPI1 RXI (Receive buffer full) */
-        #define VECTOR_NUMBER_SPI1_TXI ((IRQn_Type) 24) /* SPI1 TXI (Transmit buffer empty) */
-        #define SPI1_TXI_IRQn          ((IRQn_Type) 24) /* SPI1 TXI (Transmit buffer empty) */
-        #define VECTOR_NUMBER_SPI1_TEI ((IRQn_Type) 25) /* SPI1 TEI (Transmission complete event) */
-        #define SPI1_TEI_IRQn          ((IRQn_Type) 25) /* SPI1 TEI (Transmission complete event) */
-        #define VECTOR_NUMBER_SPI1_ERI ((IRQn_Type) 26) /* SPI1 ERI (Error) */
-        #define SPI1_ERI_IRQn          ((IRQn_Type) 26) /* SPI1 ERI (Error) */
+        #define VECTOR_NUMBER_SPI1_RXI ((IRQn_Type) 21) /* SPI1 RXI (Receive buffer full) */
+        #define SPI1_RXI_IRQn          ((IRQn_Type) 21) /* SPI1 RXI (Receive buffer full) */
+        #define VECTOR_NUMBER_SPI1_TXI ((IRQn_Type) 22) /* SPI1 TXI (Transmit buffer empty) */
+        #define SPI1_TXI_IRQn          ((IRQn_Type) 22) /* SPI1 TXI (Transmit buffer empty) */
+        #define VECTOR_NUMBER_SPI1_TEI ((IRQn_Type) 23) /* SPI1 TEI (Transmission complete event) */
+        #define SPI1_TEI_IRQn          ((IRQn_Type) 23) /* SPI1 TEI (Transmission complete event) */
+        #define VECTOR_NUMBER_SPI1_ERI ((IRQn_Type) 24) /* SPI1 ERI (Error) */
+        #define SPI1_ERI_IRQn          ((IRQn_Type) 24) /* SPI1 ERI (Error) */
+        #define VECTOR_NUMBER_FCU_FRDYI ((IRQn_Type) 25) /* FCU FRDYI (Flash ready interrupt) */
+        #define FCU_FRDYI_IRQn          ((IRQn_Type) 25) /* FCU FRDYI (Flash ready interrupt) */
+        #define VECTOR_NUMBER_FCU_FIFERR ((IRQn_Type) 26) /* FCU FIFERR (Flash access error interrupt) */
+        #define FCU_FIFERR_IRQn          ((IRQn_Type) 26) /* FCU FIFERR (Flash access error interrupt) */
         #ifdef __cplusplus
         }
         #endif

@@ -369,7 +369,7 @@
       <property id="config.middleware.mcuboot.downgrade_prevention" value="config.middleware.mcuboot.downgrade_prevention.disabled"/>
       <property id="config.middleware.mcuboot.image_number" value="config.middleware.mcuboot.image_number.1"/>
       <property id="config.middleware.mcuboot.watchdog_feed" value=""/>
-      <property id="config.middleware.mcuboot.flash_area_bootloader_size" value="0x18000"/>
+      <property id="config.middleware.mcuboot.flash_area_bootloader_size" value="0x10000"/>
       <property id="config.middleware.mcuboot.flash_area_bootloader_header_size" value="0x400"/>
       <property id="config.middleware.mcuboot.flash_s_partition_size" value="0x18000"/>
       <property id="config.middleware.mcuboot.scratch_partition_size" value="0x8000"/>
