@@ -41,8 +41,8 @@
 #define PTS_SLOPE_ADC2PTS                 5        /* Slope for ADC to pedal torque sensor linear transformation  */
 #define PTS_DIVISOR_ADC2PTS               4        /* Divisor for ADC to pedal torque sensor linear transformation  */
 
-#define PTS_OFFSET_PTS2TORQUE             20000    /* Offset for pedal torque sensor to torque linear transformation  */
-#define PTS_SLOPE_PTS2TORQUE              -7        /* Slope for pedal torque sensor to torque linear transformation  */
+#define PTS_OFFSET_PTS2TORQUE             30    /* Offset for pedal torque sensor to torque linear transformation  */
+#define PTS_SLOPE_PTS2TORQUE              7        /* Slope for pedal torque sensor to torque linear transformation  */
 #define PTS_DIVISOR_PTS2TORQUE            25        /* Divisor for pedal torque sensor to torque linear transformation  */
 #define PTS_MAX_PTSVALUE                  UINT16_MAX	    /* Maximum analog value to reach */
 

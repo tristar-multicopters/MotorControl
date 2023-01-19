@@ -13,6 +13,34 @@
 
 //define the lenght on bytes of the User_ConfigData_t.
 #define USER_DATA_CONFIG_LENGTH   sizeof(User_ConfigData_t)
+    
+//defines used to access cadenceHybridLeveSpeed[] array
+//each position in the array is associated with a PAS level
+//index 0 PAS level 0 and etc.
+#define PAS_0  0
+#define PAS_1  1
+#define PAS_2  2
+#define PAS_3  3
+#define PAS_4  4
+#define PAS_5  5
+#define PAS_6  6
+#define PAS_7  7
+#define PAS_8  8
+#define PAS_9  9
+
+//defines used to access torqueLevelPower[] array
+//each position in the array is associated with a torque level
+#define TORQUE_LEVEL_0  0
+#define TORQUE_LEVEL_1  1
+#define TORQUE_LEVEL_2  2
+#define TORQUE_LEVEL_3  3
+#define TORQUE_LEVEL_4  4
+#define TORQUE_LEVEL_5  5
+#define TORQUE_LEVEL_6  6
+#define TORQUE_LEVEL_7  7
+#define TORQUE_LEVEL_8  8
+#define TORQUE_LEVEL_9  9
+
 
 /*********************************************
             Data Struct Definition
@@ -31,16 +59,10 @@ typedef struct
     uint8_t pasMaxPower;
     uint8_t torqueMinimumThreshold;
     uint8_t torqueSensorMultiplier;
-    uint8_t cadenceHybridLeve1Speed;
-    uint8_t cadenceHybridLeve2Speed;
-    uint8_t cadenceHybridLeve3Speed;
-    uint8_t cadenceHybridLeve4Speed;
-    uint8_t cadenceHybridLeve5Speed;
-    uint8_t cadenceHybridLeve6Speed;
-    uint8_t cadenceHybridLeve7Speed;
-    uint8_t cadenceHybridLeve8Speed;
-    uint8_t cadenceHybridLeve9Speed;
-    uint8_t cadenceHybridLeve10Speed;
+    uint8_t torqueMaxSpeed;
+    uint8_t cadenceHybridLeveSpeed[10];
+    uint8_t torqueLevelPower[10];
+    
 } PAS_ConfigData_t;
 
 //struct used to hold the configuration

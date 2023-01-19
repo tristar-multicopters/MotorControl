@@ -44,6 +44,94 @@ extern "C" {
 #define CO_OD_REG_MOTOR_START       0x2011
 #define CO_OD_REG_FAULT_ACK         0x2012
 
+/*User Data configuration for Gnr*/
+
+//OD ID used to identify what bike model has
+//the current setup. Example:
+//VELEC
+//GRIZZLY
+//APOLLO
+//...
+//...
+#define CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL             0x2013
+
+//OD ID for informe if user data was upadted or
+//is being upadted.
+//There are two possible values that can be written 
+//on this address:
+//
+//KEY_USER_DATA_CONFIG_BEING_UPDATED   0xD5A3 : indicate memory being upadted
+//KEY_USER_DATA_CONFIG_UPDATED         0xC2E5 : indicate memory was updated
+//
+#define CO_OD_REG_KEY_USER_DATA_CONFIG         0x2014
+
+/********************************************************/
+
+/*Throttle/Pedal Assist CANopen registers for Gnr*/
+//variables that can be used by canopen, using SDO,
+//to configure Throttle/Pedal Assist parameters.
+
+//OD ID for configure PAS algorithm. 
+//Chose what algorithm will be used by the system.
+//PAS algorithm can be:
+//TorqueSensorUse = 0,     Torque sensor use define 
+//CadenceSensorUse = 1,    Cadence sensor use define 
+//HybridSensorUse = 2,     Hybride sensor use define
+#define CO_OD_REG_PAS_ALGORITHM               0x2015   
+
+//OD ID for configure PAS max power.
+//Maximum PAS Torque feed ratio in 100%.
+//The define used by this parameter is:
+//PAS_MAX_TORQUE_RATIO                   99  
+#define CO_OD_REG_PAS_MAX_POWER                0x2016
+
+//OD ID for configure torque Minimum Threshold
+//The define used by this parameter is:
+//PTS_OFFSET_PTS2TORQUE                  20
+#define CO_OD_REG_TORQUE_MINIMUM_THRESHOLD     0x2017
+
+//OD ID for configure torque Sensor Multiplier
+//PAS ramp multiplication coefficient for a better user feeling
+//The define used by this parameter is:
+//PAS_LEVEL_COEFF                         1
+#define CO_OD_REG_TORQUE_SENSOR_MULTIPLIER     0x2018
+
+//OD ID for configure torque Maximum speed
+//The define used by this parameter is:
+//
+#define CO_OD_REG_TORQUE_MAX_SPEED             0x2019
+
+//OD ID for configure Cadence/hybrid level.
+//Maximum Speed for PAS Level x in Km/h
+//The define(s) used by this parameter is:
+//PAS_LEVEL_SPEED_0
+//PAS_LEVEL_SPEED_1
+//PAS_LEVEL_SPEED_2
+//PAS_LEVEL_SPEED_3
+//.....
+//NOTE: this OD ID will have 10 subindexs.
+#define CO_OD_REG_CADENCE_HYBRID_LEVEL         0x201A
+
+//OD ID for configure Troque level Power.
+//The define(s) used by this parameter is:
+//
+//NOTE: this OD ID will have 10 subindexs.
+#define CO_OD_REG_TORQUE_LEVEL_POWER           0x201B
+
+//OD ID for configure Maximum speed.
+//Maximum Bike Speed in Km/h using RPM
+//The define(s) used by this parameter is:
+//PAS_MAX_KM_SPEED
+#define CO_OD_REG_MAX_SPEED                    0x201C
+
+//OD ID for configure walk mode speed.
+//Maximum bike speed when on the walk mode.
+//The define(s) used by this parameter is:
+//PAS_LEVEL_SPEED_WALK
+#define CO_OD_REG_WALK_MODE_SPEED              0x201D
+
+/*******************************************************/
+
 /* Specify the EMCY-IDs for the application */
 enum EMCY_CODES {
 	APP_NO_ERROR = 0,

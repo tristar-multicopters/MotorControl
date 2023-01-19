@@ -8,6 +8,7 @@
 #include "vc_tasks.h"
 #include "mc_tasks.h"
 #include "comm_tasks.h"
+#include "vc_config.h"
 
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
@@ -131,9 +132,12 @@ void gnr_main(void)
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
     
+    //load user config from the data flash.
+    UserConfigTask_InitUserConfigFromDataFlash(&UserConfigHandle,&DataFlashHandle,&VCInterfaceHandle);
+    
     //fucntion to pass the user configuration read from the memory to
     //VCInterfaceHandle
-    
+    UserConfigTask_UpdateUserConfigData(&UserConfigHandle);
 
     MC_BootUp();
     #if GNR_MASTER

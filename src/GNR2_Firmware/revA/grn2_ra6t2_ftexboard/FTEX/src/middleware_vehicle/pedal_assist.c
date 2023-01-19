@@ -6,6 +6,11 @@
 
 #include "pedal_assist.h"
 #include "ASSERT_FTEX.h"
+// disable warning about user_config_task modifying the pragma pack value
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-pack"
+#include "user_config_task.h"
+#pragma clang diagnostic pop
 
 /* Functions ---------------------------------------------------- */
 
@@ -129,36 +134,36 @@ void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
     switch(Got_Level)
     {
         case PAS_LEVEL_0:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_0))));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_0))));
             break;      
         case PAS_LEVEL_1:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_1)));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_1)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_1))));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_1))));
             break;
         case PAS_LEVEL_2:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_2)));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_2)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_2))));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_2))));
             break;
         case PAS_LEVEL_3:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_3)));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_3)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_3))));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_3))));
             break;
         case PAS_LEVEL_4:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_4)));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_4)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_4))));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_4))));
             break;
         case PAS_LEVEL_5:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_5)));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_5)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_5))));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_5))));
             break;
         case PAS_LEVEL_WALK:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_WALK)));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_WALK)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetWalkModeSpeed())));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetWalkModeSpeed())));
             break;
         default:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * PAS_LEVEL_SPEED_0)));
+            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_0))));
+            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_0))));
             break;
     }
 }

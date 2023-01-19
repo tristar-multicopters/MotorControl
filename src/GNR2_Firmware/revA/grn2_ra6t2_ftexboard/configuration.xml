@@ -1208,8 +1208,8 @@
     </module>
     <module id="module.driver.flash_on_flash_hp.1598203811">
       <property id="module.driver.flash.name" value="g_flash0"/>
-      <property id="module.driver.flash.data_flash_bgo" value="module.driver.flash.data_flash_bgo.enabled"/>
-      <property id="module.driver.flash.p_callback" value="Flash_IRQHandler"/>
+      <property id="module.driver.flash.data_flash_bgo" value="module.driver.flash.data_flash_bgo.disabled"/>
+      <property id="module.driver.flash.p_callback" value="NULL"/>
       <property id="module.driver.flash.ipl" value="board.icu.common.irq.priority15"/>
       <property id="module.driver.flash.err_ipl" value="board.icu.common.irq.priority15"/>
     </module>

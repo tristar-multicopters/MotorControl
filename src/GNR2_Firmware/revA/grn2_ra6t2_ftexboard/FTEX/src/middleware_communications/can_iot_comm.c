@@ -9,6 +9,11 @@
 
 #include "can_iot_comm.h"
 #include "ASSERT_FTEX.h"
+// disable warning about user_config_task modifying the pragma pack value
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-pack"
+#include "user_config_task.h"
+#pragma clang diagnostic pop
 // ==================== Public function prototypes ======================== //
 
 /**
@@ -107,7 +112,7 @@ void CanIot_SetPAS (VCI_Handle_t * pHandle, uint8_t Set_PAS)
 uint8_t CanIot_GetMaxPAS (void)
 {
     uint8_t bMaxPas;
-    bMaxPas = PAS_MAX_LEVEL;
+    bMaxPas = UserConfigTask_GetNumberPasLevels();
     return bMaxPas;
 }
 

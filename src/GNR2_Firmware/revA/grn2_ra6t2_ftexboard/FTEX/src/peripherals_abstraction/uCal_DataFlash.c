@@ -7,23 +7,18 @@
                Includes                       
 *********************************************/
 
-#include "uCAL_DataFlash.h"
+#include "uCAL_DATAFLASH.h"
 #include "ASSERT_FTEX.h"
 
 /*********************************************
                 Defines
 *********************************************/
 
-//timeout 
-#define FLASH_TIMEOUT    100000000
-
 /*********************************************
                 Private Variables
 *********************************************/
 
-//variable used to hold values from data flash
-//interruption.
-static uint8_t flashEvent = 0xFF;
+
 
 /*********************************************
                 Public Variables
@@ -36,16 +31,6 @@ static uint8_t flashEvent = 0xFF;
                     Private functions Prototype                          
 *******************************************************************/
 
-/**
-  @brief Function to check interruption response releated to ISR coming
-  from the data flash interruption(erased flash, wrote flash, etc).
-  This function hold the code until interruption event happens.
-  
-  @param uint32_t timeout to be used as precaution if the flash
-         interruption doesn't happened.
-  @return uint8_t returns flashEvent.
-*/
-static uint8_t uCAL_Is_Flash_Busy(uint32_t timeOut);
 
 
 /******************************************************************
@@ -158,16 +143,13 @@ bool uCAL_Data_Flash_Erase(DataFlash_Handle_t * pHandle, uint32_t const blockAdd
 			//Verify if the total number of block to be erase are outside of the data flash.
 			if(blockAddress + (numBlocks - 1)*DATA_FLASH_BLOCK_OFFSET_64BYTES <= DATA_FLASH_LAST_BLOCK_ADDRESS)
 			{
-	
-				//
-				flashEvent = 0xFF;
 				
 				//Open the flash hp instance. */
 				fsp_err_t err = R_FLASH_HP_Erase(pHandle->pFlashInstance->p_ctrl,blockAddress, numBlocks);
   
 				//verify if the blank check commmand was sent and if the memory was
 				//correctly erased.
-				if((FSP_SUCCESS == err) && (uCAL_Is_Flash_Busy(FLASH_TIMEOUT) == FLASH_EVENT_ERASE_COMPLETE))
+				if(FSP_SUCCESS == err)
 				{
                     
                     //
@@ -216,15 +198,12 @@ bool uCAL_Data_Flash_Write(DataFlash_Handle_t * pHandle, uint8_t * data, uint32_
             if(flashAddress + (numBytes - 1) <= DATA_FLASH_END_ADDRESS)
             {
                 
-                //
-                flashEvent = 0xFF;
-                
                 //Write numBytes in the data flash memory. */
                 fsp_err_t err = R_FLASH_HP_Write(pHandle->pFlashInstance->p_ctrl,(uint32_t)data, flashAddress, numBytes);
                 
                 //verify if the blank check commmand was sent and if the memory was
                 //correctly erased.
-                if((FSP_SUCCESS == err) && (uCAL_Is_Flash_Busy(FLASH_TIMEOUT) == FLASH_EVENT_WRITE_COMPLETE))
+                if(FSP_SUCCESS == err)
                 {
                     
                     //
@@ -324,15 +303,12 @@ bool uCAL_Data_Flash_Blank_Check(DataFlash_Handle_t * pHandle, uint32_t const bl
             if(blockAddress + (numBytes - 1) <= DATA_FLASH_LAST_BLOCK_ADDRESS)
             {
                 
-                //Initalise the variable used to get data flash event.
-                flashEvent = 0xFF;
-                
                 //Blanck check the data flash memory.
                 fsp_err_t err = R_FLASH_HP_BlankCheck(pHandle->pFlashInstance->p_ctrl,blockAddress, numBytes,&pHandle->blank_check_result);
                 
                 //verify if the blank check commmand was sent and if the memory was
                 //correctly erased.
-                if((FSP_SUCCESS == err) && (uCAL_Is_Flash_Busy(FLASH_TIMEOUT) == FLASH_EVENT_BLANK))
+                if(FSP_SUCCESS == err)
                 {
                     
                     //
@@ -350,53 +326,6 @@ bool uCAL_Data_Flash_Blank_Check(DataFlash_Handle_t * pHandle, uint32_t const bl
     return false;
 }
 
-/**
-  * @brief  Interrupt routine to flash events, like write finished and etc.
-  * @param  p_args: Flash callback function arguments.
-*/
-void Flash_IRQHandler(flash_callback_args_t * p_args)  
-{
-	
-    //get the event type.
-    flashEvent = p_args->event;
-	
-}
-
 /******************************************************************
                     Private functions                          
 *******************************************************************/
-
-/**
-  @brief Function to check interruption response releated to ISR coming
-  from the data flash interruption(erased flash, wrote flash, etc).
-  This function hold the code until interruption event happens or
-  a timeout happened.
-  
-  @param uint32_t timeout to be used as precaution if the flash
-         interruption doesn't happened.
-  @return uint8_t returns flashEvent.
-*/
-static uint8_t uCAL_Is_Flash_Busy(uint32_t timeOut)
-{
-	
-    //Wait until the current flash operation completes
-    //or break the loop by timeout.
-    for(uint32_t i = 0; i < timeOut; i++)
-    {
-        
-        //different , so interruption event happened
-        //break the loop and return event type.
-        if(flashEvent != 0xFF)
-        {
-            
-            //
-            break;
-            
-        }
-        
-    } 
-    
-    //
-    return flashEvent;
-    
-}

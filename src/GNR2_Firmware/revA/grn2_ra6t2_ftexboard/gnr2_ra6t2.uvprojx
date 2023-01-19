@@ -1231,9 +1231,9 @@
               <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_SPI.c</FilePath>
             </File>
             <File>
-              <FileName>uCAL_DataFlash.c</FileName>
+              <FileName>uCAL_DATAFLASH.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_DataFlash.c</FilePath>
+              <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_DATAFLASH.c</FilePath>
             </File>
           </Files>
         </Group>

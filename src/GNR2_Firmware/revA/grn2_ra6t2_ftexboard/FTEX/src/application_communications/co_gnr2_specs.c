@@ -95,7 +95,7 @@ CO_HBCONS AppHbConsumer_1 = {
 uint16_t hObjDataProdHbTime       = HEARTBEAT_PRODUCE_PERIOD_MS;
 uint8_t  hObjDataErrorRegister    = 0;
 
-/* Allocate global variables for GNR objects */
+/*****Allocate global variables for GNR objects*****/
 int16_t  hObjDataMotor1SpeedMeas            = 0;
 uint16_t hObjDataMotor1BusVoltage           = 0;
 int16_t  hObjDataMotor1Temp                 = 0;
@@ -120,7 +120,7 @@ uint8_t  bObjDataMotor2Start                = 0;
 int16_t  hObjDataMotor2TorqRef              = 0;
 uint8_t  bObjDataMotor2FaultAck             = 0;
 	
-/* Allocate global variables for GNR-IOT objects */
+/*****Allocate global variables for GNR-IOT objects*****/
 int16_t  bObjDataSpeedMeas                  = 0;
 uint8_t  bObjDataSOC                        = 0;
 uint8_t  bObjDataPAS                        = 0;
@@ -131,6 +131,43 @@ uint16_t hObjDataMaxPower                   = 0;
 uint16_t hObjDataErrorState                 = 0;
 uint32_t wObjDataSerialNbL                  = 0;
 uint32_t wObjDataSerialNbH                  = 0;
+
+/*****Allocate global variables for data flash update Gnr objects*****/
+
+//variable associated with CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL .
+uint16_t bObjDataUserDataConfig             = 0;
+
+//variable associated with CO_OD_REG_KEY_USER_DATA_CONFIG.
+uint16_t bObjDataKeyUserDataConfig          = 0;
+
+/*****Allocate global variables for Throttle/Pedal Assist Gnr objects*****/
+
+//variable associated with CO_OD_REG_PAS_ALGORITHM.
+uint8_t bObjDataPasAlgorithm                = 0;
+
+//variable associated with CO_OD_REG_PAS_MAX_POWER.
+uint8_t bObjDataPasMaxPower                 = 0;
+
+//variable associated with CO_OD_REG_TORQUE_MINIMUM_THRESHOLD.
+uint8_t bObjDataTorqueMinimumThreshold      = 0;
+
+//variable associated with CO_OD_REG_TORQUE_SENSOR_MULTIPLIER.
+uint8_t bObjDataTorqueSensorMultiplier      = 0;
+
+//variable associated with CO_OD_REG_TORQUE_MAX_SPEED.
+uint8_t bObjDataTorqueMaxSpeed              = 0;
+
+//variable associated with CO_OD_REG_CADENCE_HYBRID_LEVEL.
+uint8_t bObjDataCadenceHybridLeveSpeed[10]  = {0};
+
+//variable associated with CO_OD_REG_TORQUE_LEVEL_POWER.
+uint8_t bObjDataTorqueLevelPower[10]        = {0};
+
+//variable associated with CO_OD_REG_MAX_SPEED.
+uint8_t bObjDataMaxSpeed                    = 0;
+
+//variable associated with CO_OD_REG_WALK_MODE_SPEED.
+uint8_t bObjDataWalkModeSpeed               = 0;
 
 /* define the static object dictionary */
 #if GNR_IOT
@@ -203,7 +240,7 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)},			    // RPDO1 Mapping - Object 2
     #endif
     
-    // GNR2-IOT OBJECTS MODULE
+    /**********************GNR2-IOT OBJECTS MODULE*******************************************/
     {CO_KEY(CO_OD_REG_SPEED_MEASURE, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataSpeedMeas},   // Application - Inst Speed
     {CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_UNSIGNED16  |CO_OBJ____RW), 0, (uintptr_t)&hObjDataPowerMeas},   // Application - Inst Power
     {CO_KEY(CO_OD_REG_SOC,           0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataSOC},         // Application - State of Charge
@@ -214,10 +251,10 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(CO_OD_REG_SERIAL_NB,     0, CO_UNSIGNED32  |CO_OBJ____RW), 0, (uintptr_t)&wObjDataSerialNbH},   // Application - Serial Number High side
     {CO_KEY(CO_OD_REG_SERIAL_NB,     1, CO_UNSIGNED32  |CO_OBJ____RW), 0, (uintptr_t)&wObjDataSerialNbL},   // Application - Serial Number Low side
     {CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_UNSIGNED16  |CO_OBJ____RW), 0, (uintptr_t)&hObjDataFwVersion},   // Application - Firmware Version
-    
-    //master must to have this variables to exchange information with the slave.
-    #if SUPPORT_SLAVE
-    //GNR2 Objects
+     
+    /************************GNR2 Motor parameters OBJECTS MODULE******************************/
+    //master must to have this variables to exchange information with the slave if
+    //dual motor setup is enabled.
     {CO_KEY(CO_OD_REG_MOTOR_SPEED, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1SpeedMeas},			        // Application - Measured motor speed of master
     {CO_KEY(CO_OD_REG_MOTOR_SPEED, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2SpeedMeas},			        // Application - Measured motor speed of slave 1
 
@@ -247,8 +284,68 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
 
     {CO_KEY(CO_OD_REG_FAULT_ACK, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor1FaultAck},		            // Application - Bit to acknowledge motor fault master
     {CO_KEY(CO_OD_REG_FAULT_ACK, 1, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor2FaultAck},		            // Application - Bit to acknowledge motor fault slave 1
-
-    #endif
+    
+    /***********GNR2 User Data configuration OBJECTS MODULE********************************/
+    
+    //Application - Informe what user data was upadted
+    {CO_KEY(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&bObjDataUserDataConfig},
+    
+    //Application - Informe if user data was upadted or is being upadted.
+    {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&bObjDataKeyUserDataConfig},
+    
+    /************************GNR2-Throttle/Pedal Assist OBJECTS MODULE*************************/ 
+    // Here they are being linked in the OD.
+    // IN the dictionary they are reponsible to hold the configuration
+    // of the Throttle/Pedal Assist parameters.
+    // Theses configuration can be read and write using SDO services.
+    
+    // Application - 
+    // Torque: based on a multiplier of the torque input. 
+    // Cadence: based on pedaling speed.
+    // Hybrid (recommended): Combination of torque + pedaling speed as algorithm inputs for motor assistance.
+    {CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPasAlgorithm},
+    
+    //Application - Percentage of the available max motor power that the PAS algorithm can use. 
+    {CO_KEY(CO_OD_REG_PAS_MAX_POWER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPasMaxPower},
+    
+    //Application - Torque threshold for starting motor assistance from 0 speed. Only relevant for torque/hybrid PAS. 
+    {CO_KEY(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueMinimumThreshold},
+    
+    //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque/hybrid PAS. 
+    {CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueSensorMultiplier},
+    
+    //Application - not defined. to do. 
+    {CO_KEY(CO_OD_REG_TORQUE_MAX_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueMaxSpeed},
+    
+     //Application - The speed up to which this PAS level will give motor assistance. 
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[0]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 1, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[1]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 2, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[2]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 3, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[3]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 4, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[4]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 5, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[5]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 6, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[6]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 7, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[7]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 8, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[8]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 9, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[9]},
+    
+    //Application - The speed up to which this PAS level will give motor assistance. 
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[0]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 1, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[1]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 2, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[2]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 3, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[3]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 4, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[4]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 5, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[5]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 6, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[6]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 7, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[7]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 8, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[8]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 9, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[9]},
+    
+    //Application - The max speed that the throttle will bring the vehicle to. 
+    {CO_KEY(CO_OD_REG_MAX_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataMaxSpeed},
+    
+    //Application - Speed that the walk mode of the vehicle goes up to. 
+    {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataWalkModeSpeed},
     
     CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
 };
@@ -392,6 +489,68 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
 
     {CO_KEY(CO_OD_REG_FAULT_ACK, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor1FaultAck},		            // Application - Bit to acknowledge motor fault master
     {CO_KEY(CO_OD_REG_FAULT_ACK, 1, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor2FaultAck},		            // Application - Bit to acknowledge motor fault slave 1
+
+    /***********GNR2 User Data configuration OBJECTS MODULE********************************/
+    
+    //Application - Informe what user data was upadted
+    {CO_KEY(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&bObjDataUserDataConfig},
+    
+    //Application - Informe if user data was upadted or is being upadted.
+    {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&bObjDataKeyUserDataConfig},
+    
+    /************************GNR2-Throttle/Pedal Assist OBJECTS MODULE*************************/ 
+    // Here they are being linked in the OD.
+    // IN the dictionary they are reponsible to hold the configuration
+    // of the Throttle/Pedal Assist parameters.
+    // Theses configuration can be read and write using SDO services.
+    
+    // Application - 
+    // Torque: based on a multiplier of the torque input. 
+    // Cadence: based on pedaling speed.
+    // Hybrid (recommended): Combination of torque + pedaling speed as algorithm inputs for motor assistance.
+    {CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPasAlgorithm},
+    
+    //Application - Percentage of the available max motor power that the PAS algorithm can use. 
+    {CO_KEY(CO_OD_REG_PAS_MAX_POWER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPasMaxPower},
+    
+    //Application - Torque threshold for starting motor assistance from 0 speed. Only relevant for torque/hybrid PAS. 
+    {CO_KEY(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueMinimumThreshold},
+    
+    //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque/hybrid PAS. 
+    {CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueSensorMultiplier},
+    
+    //Application - not defined. to do. 
+    {CO_KEY(CO_OD_REG_TORQUE_MAX_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueMaxSpeed},
+    
+     //Application - The speed up to which this PAS level will give motor assistance. 
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[0]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 1, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[1]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 2, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[2]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 3, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[3]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 4, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[4]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 5, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[5]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 6, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[6]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 7, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[7]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 8, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[8]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 9, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[9]},
+    
+    //Application - The speed up to which this PAS level will give motor assistance. 
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[0]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 1, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[1]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 2, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[2]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 3, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[3]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 4, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[4]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 5, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[5]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 6, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[6]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 7, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[7]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 8, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[8]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 9, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[9]},
+    
+    //Application - The max speed that the throttle will bring the vehicle to. 
+    {CO_KEY(CO_OD_REG_MAX_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataMaxSpeed},
+    
+    //Application - Speed that the walk mode of the vehicle goes up to. 
+    {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataWalkModeSpeed},
 
     CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
 };
