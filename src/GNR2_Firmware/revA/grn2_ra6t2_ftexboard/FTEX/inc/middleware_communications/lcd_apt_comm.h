@@ -59,6 +59,10 @@ typedef struct
     uint8_t RxBuffer[RX_BYTE_BUFFER_SIZE]; // Hold bytes to be process by the APT task function
     uint8_t RxCount;                       // Counts how many bytes we are holding
     uint8_t RxByte;                        // Used for byte by byte reception
+    uint8_t OldPAS;                        // Used to keep track of the current PAs levle on the screen 
+    
+    bool CanChangePasFlag;                 // Used to tell the screen that PAS has bene changed from the Can interface
+    bool APTChangePasFlag;                 // Used to tell the Can interfacne that the screen changed the PAS    
     
 }APT_Handle_t;
 

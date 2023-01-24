@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * @file    can_iot_comm.c
+  * @file    can_vehicle_interface.c
   * @author  Jabrane Chakroun, FTEX
-  * @brief   High level module that transfer the IOT module needed parameters
-  *          via CanOpen
+  * @brief   High level module that transfer the can module needed parameters
+  *          from the vehicle
   ******************************************************************************
 */
 
-#include "can_iot_comm.h"
+#include "can_vehicle_interface.h"
 #include "ASSERT_FTEX.h"
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
@@ -17,10 +17,10 @@
 // ==================== Public function prototypes ======================== //
 
 /**
-  @brief  IOT CanOpen  Send long messages function
+  @brief  Send long messages function
   @return None
 */
-void CanIot_sendLongMsgs(uint8_t * message, uint8_t * dataToSend, uint16_t length)
+void CanVehiInterface_sendLongMsgs(uint8_t * message, uint8_t * dataToSend, uint16_t length)
 {
     uint8_t * tmp_buffer = 0;
     memcpy(tmp_buffer, dataToSend, length);
@@ -34,9 +34,9 @@ void CanIot_sendLongMsgs(uint8_t * message, uint8_t * dataToSend, uint16_t lengt
 // ==================== Public function prototypes ======================== //
 
 /**
- *  IOT CanOpen Get Speed
+ *  Get vehicle Speed
  */
-uint8_t CanIot_GetSpeed(VCI_Handle_t * pHandle)
+uint8_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
     uint8_t hmsgToSend;
@@ -52,9 +52,9 @@ uint8_t CanIot_GetSpeed(VCI_Handle_t * pHandle)
 }
 
 /**
- *  IOT CanOpen Get Power
+ *  Get vehicle power
  */
-uint16_t CanIot_GetPower(VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
     uint16_t hmsgToSend;
@@ -76,9 +76,9 @@ uint16_t CanIot_GetPower(VCI_Handle_t * pHandle)
 }
 
 /**
- *  IOT CanOpen Get State of Charge
+ *  Get vehicle state of charge
  */
-uint8_t CanIot_GetSOC (VCI_Handle_t * pHandle)
+uint8_t CanVehiInterface_GetVehicleSOC (VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
     uint8_t bSoC;
@@ -87,9 +87,9 @@ uint8_t CanIot_GetSOC (VCI_Handle_t * pHandle)
 }
 
 /**
- *  IOT CanOpen Get PAS
+ *  Get vehicle PAS
  */
-uint8_t CanIot_GetPAS (VCI_Handle_t * pHandle)
+uint8_t CanVehiInterface_GetVehiclePAS (VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
     uint8_t bPas;
@@ -98,18 +98,18 @@ uint8_t CanIot_GetPAS (VCI_Handle_t * pHandle)
 }
 
 /**
- *  IOT CanOpen Set PAS
+ *  Set vehicle PAS
  */
-void CanIot_SetPAS (VCI_Handle_t * pHandle, uint8_t Set_PAS)
+void CanVehiInterface_SetVehiclePAS (VCI_Handle_t * pHandle, uint8_t Set_PAS)
 {
     ASSERT(pHandle!= NULL);
     PedalAssist_SetAssistLevel(pHandle->pPowertrain->pPAS, Set_PAS);
 }
 
 /**
- *  IOT CanOpen Get Maximum PAS
+ *  Get vehicle maximum PAS
  */
-uint8_t CanIot_GetMaxPAS (void)
+uint8_t CanVehiInterface_GetVehicleMaxPAS (void)
 {
     uint8_t bMaxPas;
     bMaxPas = UserConfigTask_GetNumberPasLevels();
@@ -117,9 +117,9 @@ uint8_t CanIot_GetMaxPAS (void)
 }
 
 /**
- *  IOT CanOpen Get MAX Power
+ *  Get vehicle max power
  */
-uint16_t CanIot_GetMaxPWR (void)
+uint16_t CanVehiInterface_GetVehicleMaxPWR (void)
 {
     uint16_t bMaxPWR;
     bMaxPWR = (uint8_t)NOMINAL_TORQUE;
@@ -127,9 +127,9 @@ uint16_t CanIot_GetMaxPWR (void)
 }
 
 /**
- *  IOT CanOpen Get Current Faults
+ *  Get vehicle current faults
  */
-uint16_t CanIot_GetCurrentFaults (VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
     uint16_t hCurrFault;
@@ -175,9 +175,9 @@ uint16_t CanIot_GetCurrentFaults (VCI_Handle_t * pHandle)
 }
 
 /**
- *  Initializes battery monitor module
+ *  Get vehicle firmware version
  */
-uint16_t CanIot_GetFwVersion(void)
+uint16_t CanVehiInterface_GetVehicleFwVersion(void)
 {
     uint16_t hFWVersion;
     hFWVersion = FW_VERSION;
@@ -185,9 +185,9 @@ uint16_t CanIot_GetFwVersion(void)
 }
 
 /**
- *  IOT CanOpen Get Hardware version
+ *  Get vehicle hardware version
  */
-uint16_t CanIot_GetHwVersion(void)
+uint16_t CanVehiInterface_GetVehicleHwVersion(void)
 {
     uint16_t hHWVersion;
     hHWVersion = HW_VERSION;
@@ -195,11 +195,11 @@ uint16_t CanIot_GetHwVersion(void)
 }
 
 /**
- *  IOT CanOpen Get Serial Number
+ *  Get vehicle serial number
  */
-uint8_t CanIot_GetSerialNumber(void)
+uint8_t CanVehiInterface_GetVehicleSerialNumber(void)
 {
     uint8_t msgToSend;
-    CanIot_sendLongMsgs(&msgToSend, (uint8_t *)SERIAL_NUMBER, strlen(SERIAL_NUMBER)/2);
+    CanVehiInterface_sendLongMsgs(&msgToSend, (uint8_t *)SERIAL_NUMBER, strlen(SERIAL_NUMBER)/2);
     return msgToSend;
 }

@@ -1186,9 +1186,9 @@
               <FilePath>.\FTEX\src\middleware_communications\slave_mc_interface.c</FilePath>
             </File>
             <File>
-              <FileName>can_iot_comm.c</FileName>
+              <FileName>can_vehicle_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_communications\can_iot_comm.c</FilePath>
+              <FilePath>.\FTEX\src\middleware_communications\can_vehicle_interface.c</FilePath>
             </File>
           </Files>
         </Group>

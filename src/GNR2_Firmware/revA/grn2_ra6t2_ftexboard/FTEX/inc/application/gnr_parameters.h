@@ -45,7 +45,7 @@
 //check the description above.
 #define GNR_IOT                       1                   /* If IOT, controller manages canbus communication with IOT Module and discard vehicule communication.  */
 #define GNR_MASTER                    1                   /* If master, controller manages canbus communication with slaves and vehicle control layer.  */
-#define SUPPORT_SLAVE                 1                   /* if slaver, enable slaver to send, by TPDO, informationa about him self to the master
+#define SUPPORT_SLAVE                 0                   /* if slaver, enable slaver to send, by TPDO, informationa about him self to the master
                                                              and be controlled by the master.*/
 #define GNR2_MASTER_NODE_ID           0x01                /* Node-ID of ganrunner master */
 #define IOT_NODE_ID                   0x02                /* Node-ID of the IOT module(configured in the IOT firmware)*/ 

@@ -7,8 +7,8 @@
   ******************************************************************************
 */
 	
-#ifndef __CAN_IOT_COMM_H
-#define __CAN_IOT_COMM_H
+#ifndef __CAN_VEHICLE_INTERFACE_H
+#define __CAN_VEHICLE_INTERFACE_H
 
 #include "vc_interface.h"
 #include "co_can_ra6t2.h"
@@ -49,82 +49,82 @@
 
 // ==================== Public function prototypes ========================= //
 /**
-  @brief   IOT CanOpen Get Speed function
+  @brief  Get Speed function
   @param  VCI_Handle_t handle
   @return Speed in uint8_t format
 */
-uint8_t CanIot_GetSpeed (VCI_Handle_t * pHandle);
+uint8_t CanVehiInterface_GetVehicleSpeed (VCI_Handle_t * pHandle);
 
 /**
-  @brief  IOT CanOpen  Get Power function
+  @brief  Get Power function
   @param  VCI_Handle_t handle
   @return Power in uint16_t format
 */
-uint16_t CanIot_GetPower (VCI_Handle_t * pHandle);
+uint16_t CanVehiInterface_GetVehiclePower (VCI_Handle_t * pHandle);
 
 /**
-  @brief  IOT CanOpen  Get State of Charge function
+  @brief  Get State of Charge function
   @param  VCI_Handle_t handle
   @return State of Charge in uint8_t format
 */
-uint8_t CanIot_GetSOC (VCI_Handle_t * pHandle);
+uint8_t CanVehiInterface_GetVehicleSOC (VCI_Handle_t * pHandle);
 
 /**
-  @brief  IOT CanOpen  Get Get PAS function
+  @brief  Get Get PAS function
   @param  VCI_Handle_t handle
   @return PAS in uint8_t format
 */
-uint8_t CanIot_GetPAS (VCI_Handle_t * pHandle);
+uint8_t CanVehiInterface_GetVehiclePAS (VCI_Handle_t * pHandle);
 
 /**
-  @brief  IOT CanOpen  Get Set PAS function
+  @brief  Get Set PAS function
   @param  VCI_Handle_t handle
   @param  Set_PAS in uint8_t format
   @return None
 */
-void CanIot_SetPAS (VCI_Handle_t * pHandle, uint8_t Set_PAS);
+void CanVehiInterface_SetVehiclePAS (VCI_Handle_t * pHandle, uint8_t Set_PAS);
 
 /**
-  @brief  IOT CanOpen Get Maximum PAS function
+  @brief  Get Maximum PAS function
   @param  None
   @return Maximum PAS in uint8_t format
 */
-uint8_t CanIot_GetMaxPAS (void);
+uint8_t CanVehiInterface_GetMaxVehiclePAS (void);
 
 /**
-  @brief  IOT CanOpen Get MAX Power function
+  @brief  Get MAX Power function
   @param  None
   @return Maximum Power in uint8_t format
 */
-uint16_t CanIot_GetMaxPWR (void);
+uint16_t CanVehiInterface_GetVehicleMaxPWR (void);
 
 /**
-  @brief  IOT CanOpen Get Current Faults function
+  @brief  Get Current Faults function
   @param  VCI_Handle_t handle
   @return Get Current Faults in uint16_t format
 */
-uint16_t CanIot_GetCurrentFaults (VCI_Handle_t * pHandle);
+uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle);
 
 /**
-  @brief  IOT CanOpen Get FW Version function
+  @brief  Get FW Version function
   @param  None
   @return Firmware Version in uint16_t format
 */
-uint16_t CanIot_GetFwVersion(void);
+uint16_t CanVehiInterface_GetVehicleFwVersion(void);
 
 /**
-  @brief  IOT CanOpen Get HW Version function
+  @brief  Get HW Version function
   @param  None
   @return Hardware Version in uint16_t format
 */
-uint16_t CanIot_GetHwVersion(void);
+uint16_t CanVehiInterface_GetVehicleHwVersion(void);
 
 /**
-  @brief  IOT CanOpen Get Serial Number function
+  @brief  Get Serial Number function
   @param  None
   @return Serial Number in uint8_t format
 */
-uint8_t CanIot_GetSerialNumber(void);
+uint8_t CanVehiInterface_GetVehicleSerialNumber(void);
 
 
 #endif /* __CAN_IOT_COMM_H */

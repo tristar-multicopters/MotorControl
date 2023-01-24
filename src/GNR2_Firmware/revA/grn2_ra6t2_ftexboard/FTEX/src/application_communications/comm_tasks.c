@@ -17,7 +17,7 @@
 #include "co_gnr2_specs.h"
 // CAN logger
 #include "can_logger.h"
-#include "can_iot_comm.h"
+#include "can_vehicle_interface.h"
 
 #include "lcd_apt_comm.h"
 // Serial Flash storage
@@ -33,7 +33,9 @@
 
 #define CAN_LOG_INTERVAL_TICK               25      /* CAN logger task send a new log frame every 25 RTOS ticks */
 #define MAX_NUMBER_MISSED_HEARTBEAT         2       /* Max number of missed CANopen heartbeat from outside ganrunner device.
-                                                        Above that, communication is considered lost. */
+                                                       Above that, communication is considered lost. */
+#define VEHICLE_PARAM  0
+#define CAN_PARAM      1 
 /********* PUBLIC MEMBERS *************/
 
 uint16_t hCommErrors = COMM_NO_ERROR;  /* This global variable holds all error flags related to communications.
@@ -71,17 +73,27 @@ static void UpdateObjectDictionnary(void *p_arg)
     
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
     // Get Bike Parameters 
-    uint8_t hSpeed          = CanIot_GetSpeed(pVCI);
-    uint16_t hPWR           = CanIot_GetPower(pVCI);
-    uint8_t bSOC            = CanIot_GetSOC(pVCI);
-    uint8_t bPAS            = CanIot_GetPAS(pVCI);  
-    uint16_t hMaxPwr        = CanIot_GetMaxPWR();
+    uint8_t hSpeed[2]; 
+    uint16_t hPWR[2];
+    uint8_t bSOC[2];
+    uint8_t bPAS[2];
+    uint16_t hMaxPwr[2];
+    uint16_t hErrorState[2];
+    uint16_t hFwVersion[2];
+    
+    hSpeed[VEHICLE_PARAM]  = (uint8_t)  CanVehiInterface_GetVehicleSpeed(pVCI);
+    hPWR[VEHICLE_PARAM]    = (uint16_t) CanVehiInterface_GetVehiclePower(pVCI);
+    bSOC[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehicleSOC(pVCI);
+    bPAS[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehiclePAS(pVCI);  
+    hMaxPwr[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleMaxPWR();
+    
     #if GNR_MASTER
-    uint16_t hErrorState    = CanIot_GetCurrentFaults(pVCI);
+        hErrorState[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleCurrentFaults(pVCI);
     #else
-    uint16_t hErrorState = 0x0000;
+        hErrorState[VEHICLE_PARAM] = 0x0000;
     #endif
-    uint16_t hFwVersion     = CanIot_GetFwVersion();
+        hFwVersion[VEHICLE_PARAM]= (uint16_t) CanVehiInterface_GetVehicleFwVersion();
+    
     // Get Serial Number
     uint64_t fSerialNbLow   = 0U;
     uint64_t fSrialNbHigh   = 0U;
@@ -240,25 +252,86 @@ static void UpdateObjectDictionnary(void *p_arg)
         //verifiy if the 
         if((keyUserDataConfig != KEY_USER_DATA_CONFIG_BEING_UPDATED) && (keyUserDataConfig != KEY_USER_DATA_CONFIG_UPDATED))
         {
-         
+            //Get the latest value of these parameters            
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], CO_BYTE, 0);
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], CO_WORD, 0);
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], CO_BYTE, 0);
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], CO_BYTE, 0);
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], CO_WORD, 0);
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], CO_WORD, 0);
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, CO_LONG, 0); 
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSrialNbHigh, CO_LONG, 0); 
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion[CAN_PARAM], CO_WORD, 0);    
+            
+            // Check if there were changes made to a parameter by a can device
+            
+            if(hSpeed[VEHICLE_PARAM] != hSpeed[CAN_PARAM])
+            {
+                 hSpeed[CAN_PARAM] = hSpeed[VEHICLE_PARAM];
+            }                
+            
+            if(hPWR[VEHICLE_PARAM] != hPWR[CAN_PARAM])
+            {
+                 hPWR[CAN_PARAM] = hPWR[VEHICLE_PARAM];
+            }
+            
+            if(bSOC[VEHICLE_PARAM] != bSOC[CAN_PARAM])
+            {
+                 bSOC[CAN_PARAM] = bSOC[VEHICLE_PARAM];   
+            }    
+            
+            if(bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM])
+            { 
+                if(UART0Handle.UARTProtocol == UART_APT && LCD_APT_handle.APTChangePasFlag) // Check if PAS was changed by non-can source                          
+                {    
+                    LCD_APT_handle.APTChangePasFlag = false;
+                    bPAS[CAN_PARAM] = bPAS[VEHICLE_PARAM];  // if it was set the CAN pas as the vehicle pas                                    
+                }
+                else // if it wasnt changed by a non-can then it was changed by a can source
+                {
+                    CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
+                    LCD_APT_handle.CanChangePasFlag = true;
+                }              
+            }
+            else
+            {
+                LCD_APT_handle.APTChangePasFlag = false;
+                LCD_APT_handle.CanChangePasFlag = false; 
+            }    
+            
+            if(hMaxPwr[VEHICLE_PARAM] != hMaxPwr[CAN_PARAM])
+            {
+                // Behavior TBD  
+            }
+
+            if(hErrorState[VEHICLE_PARAM] != hErrorState[CAN_PARAM])
+            {
+                // Behavior TBD 
+            }                
+            
+            if(hFwVersion[VEHICLE_PARAM] != hFwVersion[CAN_PARAM])
+            {
+                // Behavior TBD 
+            }
+            
             /**************Write the repesctive OD ID, updating the OD that us read by the IOT module using SDO.*************/
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed, CO_BYTE, 0);
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR, CO_WORD, 0);
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)), pNode, &bSOC, CO_BYTE, 0);
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)), pNode, &bPAS, CO_BYTE, 0);
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)), pNode, &hMaxPwr, CO_WORD, 0);
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)), pNode, &hErrorState, CO_WORD, 0);
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)), pNode, &fSerialNbLow, CO_LONG, 0); 
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)), pNode, &fSrialNbHigh, CO_LONG, 0); 
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)), pNode, &hFwVersion, CO_WORD, 0);    
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], CO_BYTE, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], CO_BYTE, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], CO_BYTE, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], CO_WORD, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, CO_LONG, 0); 
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSrialNbHigh, CO_LONG, 0); 
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion[CAN_PARAM], CO_WORD, 0);    
         
             /***********************UPdate Throttle/Pedal Assist CANopen OD ID.********************************************/
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)), pNode, &pasAlgorithm, CO_BYTE, 0);
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)), pNode, &maxPAS, CO_BYTE, 0);
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_POWER, 0)), pNode, &pasMaxPower, CO_BYTE, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),            pNode, &pasAlgorithm, CO_BYTE, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)),                  pNode, &maxPAS, CO_BYTE, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_POWER, 0)),            pNode, &pasMaxPower, CO_BYTE, 0);
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0)), pNode, &torqueMinimumThreshold, CO_BYTE, 0);
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, CO_BYTE, 0);
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)), pNode, &torqueMaxSpeed, CO_BYTE, 0);
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)),         pNode, &torqueMaxSpeed, CO_BYTE, 0);
         
             //fill the OD ID to cadenceHybridLeveSpeed and torqueLevelPower with the current values.
             //this OD ID have 10 subindex each.
@@ -310,7 +383,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdateTorqueSensorMultiplier(torqueSensorMultiplier);
                  UserConfigTask_UpdateTorqueMaxSpeed(torqueMaxSpeed);
                  
-                 for(uint8_t n = PAS_0;n <= PAS_9;n++)
+                  for(uint8_t n = PAS_0;n <= PAS_9;n++)
                  {
                  
                     UserConfigTask_UpdateCadenceHybridLeveSpeed(n, cadenceHybridLeveSpeed[n]);

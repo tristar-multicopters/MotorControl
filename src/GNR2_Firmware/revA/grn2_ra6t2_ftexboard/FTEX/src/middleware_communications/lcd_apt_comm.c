@@ -172,7 +172,7 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
      uint16_t Merge       = 0;
      uint8_t  PassLvl     = 0;
      uint8_t  LightStatus = 0;
-     bool ChangePasFlag = false;      
+     
     
      //Verification of the checksum
      for(int i = 0; i < 6; i += 2) //Checksum is the sum of double bytes into a 16 bits
@@ -205,8 +205,10 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
         
     
           if(PassLvl != PAS_UNCHANGED)
-          {                     
+          {                  
               PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,LCD_APT_ConvertPASLevelFromAPT(PassLvl,pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel));         
+              pHandle->OldPAS = PassLvl;
+              pHandle->APTChangePasFlag = true;
           }                      
         
          //Reading the Speed   limit  TBA
@@ -249,9 +251,11 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
          // If we want to change the PAS level we need to change it here
          replyFrame.Buffer[ 7] = PAS_UNCHANGED; // Send 0x0A unless we want to change the PAS on the screen  
          
-         if(ChangePasFlag)
+         if(pHandle->CanChangePasFlag || pHandle->OldPAS != LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)))
          {
-           //change avlue of replyFrame.Buffer[ 7] using LCD_APT_ConvertPASLevelToAPT  
+             pHandle->CanChangePasFlag = false;
+             replyFrame.Buffer[ 7] =  LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)); 
+             pHandle->OldPAS = LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS));
          }
                                        
          replyFrame.Buffer[ 8] = 0x00;
