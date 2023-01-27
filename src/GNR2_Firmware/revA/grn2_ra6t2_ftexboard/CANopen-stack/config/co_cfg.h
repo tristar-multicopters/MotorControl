@@ -41,7 +41,7 @@
 *    will support.
 */
 #ifndef CO_EMCY_N
-#define CO_EMCY_N              8
+#define CO_EMCY_N              32
 #endif
 
 /*! \brief DEFAULT RECEIVE PDO
@@ -50,7 +50,7 @@
 *    will support.
 */
 #ifndef CO_RPDO_N
-#define CO_RPDO_N               1
+#define CO_RPDO_N               4
 #endif
 
 /*! \brief DEFAULT TRANSMIT PDO
@@ -59,7 +59,7 @@
 *    will support.
 */
 #ifndef CO_TPDO_N
-#define CO_TPDO_N               1
+#define CO_TPDO_N               4
 #endif
 
 /*! \brief DEFAULT ENABLE LSS
@@ -69,15 +69,6 @@
 */
 #ifndef USE_LSS
 #define USE_LSS                 0
-#endif
-
-/*! \brief DEFAULT ENABLE PARAMETERS
-*
-*    This configuration define specifies whether parameters will be supported
-*    by the library.
-*/
-#ifndef USE_PARAMS
-#define USE_PARAMS              1
 #endif
 
 /*! \brief DEFAULT ENABLE SDO CLIENT

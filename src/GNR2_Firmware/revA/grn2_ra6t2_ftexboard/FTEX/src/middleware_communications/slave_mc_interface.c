@@ -49,10 +49,10 @@ void SlaveMCInterface_UpdateFeedback(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrState), pHandle->pCONode, &pHandle->Feedback.bState, CO_WORD, 0);
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccuredFaults), pHandle->pCONode, &pHandle->Feedback.hOccuredFaults, CO_WORD, 0);
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrCurrentFaults), pHandle->pCONode, &pHandle->Feedback.hCurrentFaults, CO_WORD, 0);
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrMotorSpeed), pHandle->pCONode, &pHandle->Feedback.hMotorSpeed, CO_WORD, 0);
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrState), pHandle->pCONode, &pHandle->Feedback.bState,  sizeof(uint16_t));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccuredFaults), pHandle->pCONode, &pHandle->Feedback.hOccuredFaults, sizeof(pHandle->Feedback.hOccuredFaults));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrCurrentFaults), pHandle->pCONode, &pHandle->Feedback.hCurrentFaults, sizeof(pHandle->Feedback.hCurrentFaults));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrMotorSpeed), pHandle->pCONode, &pHandle->Feedback.hMotorSpeed, sizeof(pHandle->Feedback.hMotorSpeed));
 }
 
 
@@ -65,7 +65,7 @@ void SlaveMCInterface_ExecTorqueRamp(SlaveMotorHandle_t * pHandle, int16_t hFina
 
     int16_t Tref = hFinalTorque;
 
-    COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrTorqueRef), pHandle->pCONode, &Tref, CO_WORD, 0);
+    COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrTorqueRef), pHandle->pCONode, &Tref, sizeof(Tref));
 }
 
 
@@ -78,7 +78,7 @@ bool SlaveMCInterface_StartMotor(SlaveMotorHandle_t * pHandle)
     bool bRetVal = true;
 
     bool bStart = true;
-    if (COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrStartMotor), pHandle->pCONode, &bStart, CO_BYTE, 0) != CO_ERR_NONE)
+    if (COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrStartMotor), pHandle->pCONode, &bStart, sizeof(bStart)) != CO_ERR_NONE)
     {
         bRetVal = false;
     }
@@ -95,7 +95,7 @@ bool SlaveMCInterface_StopMotor(SlaveMotorHandle_t * pHandle)
     bool bRetVal = true;
 
     bool bStart = false;
-    if (COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrStartMotor), pHandle->pCONode, &bStart, CO_BYTE, 0) != CO_ERR_NONE)
+    if (COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrStartMotor), pHandle->pCONode, &bStart, sizeof(bStart)) != CO_ERR_NONE)
     {
         bRetVal = false;
     }
@@ -114,7 +114,7 @@ bool SlaveMCInterface_FaultAcknowledged(SlaveMotorHandle_t * pHandle)
     CO_CSDO *csdo;
     csdo = COCSdoFind(pHandle->pCONode, 0);
     uint8_t Data = true;
-    if (COCSdoRequestDownload(csdo, pHandle->RegisterAddr.wRegAddrFaultAck, &Data, CO_BYTE, FaultAckDownloadFinishCb, SDO_TIMEOUT_FAULT_ACK_IN_MS) != CO_ERR_NONE)
+    if (COCSdoRequestDownload(csdo, pHandle->RegisterAddr.wRegAddrFaultAck, &Data, sizeof(Data), FaultAckDownloadFinishCb, SDO_TIMEOUT_FAULT_ACK_IN_MS) != CO_ERR_NONE)
     {
         bRetVal = false;
     }

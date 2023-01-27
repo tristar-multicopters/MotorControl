@@ -172,126 +172,129 @@ uint8_t bObjDataWalkModeSpeed               = 0;
 /* define the static object dictionary */
 #if GNR_IOT
 struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
-    // Mandatory entries
-	  {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},							    // Device Type
-    {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (uintptr_t)&hObjDataErrorRegister},				    // Error Register
+    
+    /************************Mandatory entries********************************************/
+    //The device type is a 32bit value, which identifies the CANopen device
+	{CO_KEY(0x1000, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},							  
+    {CO_KEY(0x1001, 0, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&hObjDataErrorRegister},		    // Error Register
     
     //master needs to send a SYNC message to make slave node 
     //respond to the master by TPDO at the very same time.
     //when using the macro CO_COBID_SYNC_STD the GENERATE_SYNC define
     //configured the device to produces SYNC messages.
     #if SUPPORT_SLAVE
-    {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)CO_COBID_SYNC_STD(GENERATE_SYNC, STD_ID_SYNC)},		// COB-ID SYNC Message
+    {CO_KEY(0x1005, 0, CO_OBJ_D___R_), CO_TSYNC_ID, (CO_DATA)CO_COBID_SYNC_STD(GENERATE_SYNC, STD_ID_SYNC)},		// COB-ID SYNC Message
     #else
     //on this case the device is configured to cosumes SYNC message. 
     //but IOT module is not sending SYNC messages.
-    {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)STD_ID_SYNC},							// COB-ID SYNC Message
+    {CO_KEY(0x1005, 0, CO_OBJ_D___R_), CO_TSYNC_ID, (CO_DATA)STD_ID_SYNC},							// COB-ID SYNC Message
     #endif
+    {CO_KEY(0x1006, 0, CO_OBJ_D___R_), CO_TSYNC_CYCLE, (CO_DATA)SYNC_PERIOD_US},                                      // SYNC period
     
-    #if SUPPORT_SLAVE
-    {CO_KEY(0x1006, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)SYNC_PERIOD_US},                                      // SYNC period
     //the idea of this service is to allow onde node to send a fatal error to the rest of the network.
     //but application needs to detect this error and send it. this is not send automatically 
     //by the can layer.
     //on this configuration EMCY message is not enabled.
-    {CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)CO_COBID_EMCY_STD(USE_EMCY, STD_ID_EMCY)},		    // COB-ID EMCY Message
-    {CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1},				                        // Consumer Heartbeat max index    
-    {CO_KEY(0x1016, 1,               CO_OBJ____RW), CO_THB_CONS, (uintptr_t)&AppHbConsumer_1},				// Consumer Heartbeat parameters
-    #endif
+    {CO_KEY(0x1014, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)CO_COBID_EMCY_STD(USE_EMCY, STD_ID_EMCY)},		    // COB-ID EMCY Message
     
-    {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataProdHbTime},							// Producer Heartbeat Time
-    {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},								// Identity - Highest Sub Index
-    {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},								// Identity - Vendor ID
-    {CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},								// Identity - Product Code
-    {CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},								// Identity - Revision Number
-    {CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},								// Identity - Serial Number    
+    #if SUPPORT_SLAVE
+    {CO_KEY(0x1016, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)1},				                        // Consumer Heartbeat max index    
+    {CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)&AppHbConsumer_1},				// Consumer Heartbeat parameters
+    #endif             
+    
+    {CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)&hObjDataProdHbTime},			// Producer Heartbeat Time
+    {CO_KEY(0x1018, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4},								// Identity - Highest Sub Index
+    {CO_KEY(0x1018, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},								// Identity - Vendor ID
+    {CO_KEY(0x1018, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},								// Identity - Product Code
+    {CO_KEY(0x1018, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},								// Identity - Revision Number
+    {CO_KEY(0x1018, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},								// Identity - Serial Number    
  
     //server sdo
-    {CO_KEY(0x1200, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},								// SDO Srv Parameter - Highest Sub Index
-    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, CO_COBID_SDO_REQUEST()},						// SDO Srv Parameter - COB-ID Client to Server
-    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, CO_COBID_SDO_RESPONSE()},					// SDO Srv Parameter - COB-ID Server to Client  
-    
+    {CO_KEY(0x1200, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2},								// SDO Srv Parameter - Highest Sub Index
+    {CO_KEY(0x1200, 1, CO_OBJ_DN__R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},						// SDO Srv Parameter - COB-ID Client to Server
+    {CO_KEY(0x1200, 2, CO_OBJ_DN__R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},					// SDO Srv Parameter - COB-ID Server to Client  
+                       
     // SDO Client - second client to request data from the slaver.
     #if SUPPORT_SLAVE
-    {CO_KEY(0x1280, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)3},						                // SDO Client Parameter - Highest Sub Index
-    {CO_KEY(0x1280, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
-    {CO_KEY(0x1280, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
-    {CO_KEY(0x1280, 3, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)GNR2_SLAVE_NODE_ID},
+    {CO_KEY(0x1280, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)3},						                // SDO Client Parameter - Highest Sub Index
+    {CO_KEY(0x1280, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
+    {CO_KEY(0x1280, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
+    {CO_KEY(0x1280, 3, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)GNR2_SLAVE_NODE_ID},
     
     //necessary to allow master read slaver.
     // RPDO 1
-    {CO_KEY(0x1400, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},						                // RPDO1 Parameter - Highest Sub Index
-    {CO_KEY(0x1400, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_RPDO_STD(USE_RPDO, STD_ID_RPDO1)},			// RPDO1 Parameter - COB-ID RPDO
-    {CO_KEY(0x1400, 2, CO_UNSIGNED8|CO_OBJ_D__R_), 0, RPDO_TRANSMISSION_TYPE},			                    // RPDO1 Parameter - Transmission type
-    {CO_KEY(0x1400, 5, CO_UNSIGNED16|CO_OBJ_D__R_), 0, RPDO_PERIOD_MS},			                            // RPDO1 Parameter - Event period
-    {CO_KEY(0x1600, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},						                // RPDO1 Mapping - Number of mapped object in PDO
-    {CO_KEY(0x1600, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)},			    // RPDO1 Mapping - Object 1
-    {CO_KEY(0x1600, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
-    {CO_KEY(0x1600, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
-    {CO_KEY(0x1600, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)},			    // RPDO1 Mapping - Object 2
+    {CO_KEY(0x1400, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5},						                // RPDO1 Parameter - Highest Sub Index
+    {CO_KEY(0x1400, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, STD_ID_RPDO1)},			// RPDO1 Parameter - COB-ID RPDO
+    {CO_KEY(0x1400, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, RPDO_TRANSMISSION_TYPE},			                    // RPDO1 Parameter - Transmission type
+    {CO_KEY(0x1400, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, RPDO_PERIOD_MS},			                            // RPDO1 Parameter - Event period
+    {CO_KEY(0x1600, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4},						                // RPDO1 Mapping - Number of mapped object in PDO
+    {CO_KEY(0x1600, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)},			    // RPDO1 Mapping - Object 1
+    {CO_KEY(0x1600, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
+    {CO_KEY(0x1600, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
+    {CO_KEY(0x1600, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)},			    // RPDO1 Mapping - Object 2
     // TPDO 1
-    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)6},						                // TPDO1 Parameter - Highest Sub Index
-    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_STD(USE_TPDO, STD_ID_TPDO1)},			// TPDO1 Parameter - COB-ID TPDO
-    {CO_KEY(0x1800, 2, CO_UNSIGNED8|CO_OBJ_D__R_), 0, TPDO_TRANSMISSION_TYPE},			                    // TPDO1 Parameter - Transmission type
-    {CO_KEY(0x1800, 5, CO_UNSIGNED16|CO_OBJ_D__R_), 0, TPDO_PERIOD_MS},			                            // TPDO1 Parameter - Transmission type
-    {CO_KEY(0x1800, 6, CO_UNSIGNED8|CO_OBJ_D__R_), 0, 0},			                                        // TPDO1 Parameter - SYNC start value
-    {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},						                // RPDO1 Mapping - Number of mapped object in PDO
-    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)},			// RPDO1 Mapping - Object 1
-    {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)},			    // RPDO1 Mapping - Object 2
+    {CO_KEY(0x1800, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6},						                // TPDO1 Parameter - Highest Sub Index
+    {CO_KEY(0x1800, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, STD_ID_TPDO1)},			// TPDO1 Parameter - COB-ID TPDO
+    {CO_KEY(0x1800, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, TPDO_TRANSMISSION_TYPE},			                    // TPDO1 Parameter - Transmission type
+    {CO_KEY(0x1800, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, TPDO_PERIOD_MS},			                            // TPDO1 Parameter - Transmission type
+    {CO_KEY(0x1800, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0},			                                        // TPDO1 Parameter - SYNC start value
+    {CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2},						                // RPDO1 Mapping - Number of mapped object in PDO
+    {CO_KEY(0x1A00, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)},			// RPDO1 Mapping - Object 1
+    {CO_KEY(0x1A00, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)},			    // RPDO1 Mapping - Object 2
     #endif
     
     /**********************GNR2-IOT OBJECTS MODULE*******************************************/
-    {CO_KEY(CO_OD_REG_SPEED_MEASURE, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataSpeedMeas},   // Application - Inst Speed
-    {CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_UNSIGNED16  |CO_OBJ____RW), 0, (uintptr_t)&hObjDataPowerMeas},   // Application - Inst Power
-    {CO_KEY(CO_OD_REG_SOC,           0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataSOC},         // Application - State of Charge
-    {CO_KEY(CO_OD_REG_PAS_LEVEL,     0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPAS},	        // Application - PAS Level
-    {CO_KEY(CO_OD_REG_MAX_PAS,       0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataMaxPAS},	    // Application - Max PAS Level
-    {CO_KEY(CO_OD_REG_MAX_POWER,     0, CO_SIGNED16    |CO_OBJ____RW), 0, (uintptr_t)&hObjDataMaxPower},   // Application - Max Power
-    {CO_KEY(CO_OD_REG_ERR_STATE,     0, CO_SIGNED16    |CO_OBJ____RW), 0, (uintptr_t)&hObjDataErrorState},  // Application - Error State
-    {CO_KEY(CO_OD_REG_SERIAL_NB,     0, CO_UNSIGNED32  |CO_OBJ____RW), 0, (uintptr_t)&wObjDataSerialNbH},   // Application - Serial Number High side
-    {CO_KEY(CO_OD_REG_SERIAL_NB,     1, CO_UNSIGNED32  |CO_OBJ____RW), 0, (uintptr_t)&wObjDataSerialNbL},   // Application - Serial Number Low side
-    {CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_UNSIGNED16  |CO_OBJ____RW), 0, (uintptr_t)&hObjDataFwVersion},   // Application - Firmware Version
+    {CO_KEY(CO_OD_REG_SPEED_MEASURE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataSpeedMeas},   // Application - Inst Speed
+    {CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&hObjDataPowerMeas},   // Application - Inst Power
+    {CO_KEY(CO_OD_REG_SOC,           0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataSOC},         // Application - State of Charge
+    {CO_KEY(CO_OD_REG_PAS_LEVEL,     0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPAS},	        // Application - PAS Level
+    {CO_KEY(CO_OD_REG_MAX_PAS,       0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMaxPAS},	    // Application - Max PAS Level
+    {CO_KEY(CO_OD_REG_MAX_POWER,     0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMaxPower},   // Application - Max Power
+    {CO_KEY(CO_OD_REG_ERR_STATE,     0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataErrorState},  // Application - Error State
+    {CO_KEY(CO_OD_REG_SERIAL_NB,     0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&wObjDataSerialNbH},   // Application - Serial Number High side
+    {CO_KEY(CO_OD_REG_SERIAL_NB,     1, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&wObjDataSerialNbL},   // Application - Serial Number Low side
+    {CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&hObjDataFwVersion},   // Application - Firmware Version
      
     /************************GNR2 Motor parameters OBJECTS MODULE******************************/
     //master must to have this variables to exchange information with the slave if
     //dual motor setup is enabled.
-    {CO_KEY(CO_OD_REG_MOTOR_SPEED, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1SpeedMeas},			        // Application - Measured motor speed of master
-    {CO_KEY(CO_OD_REG_MOTOR_SPEED, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2SpeedMeas},			        // Application - Measured motor speed of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_SPEED, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1SpeedMeas},			        // Application - Measured motor speed of master
+    {CO_KEY(CO_OD_REG_MOTOR_SPEED, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2SpeedMeas},			        // Application - Measured motor speed of slave 1
 
-    {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1BusVoltage},			    // Application - Measured bus voltage of master
-    {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2BusVoltage},			    // Application - Measured bus voltage of slave 1
+    {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1BusVoltage},			    // Application - Measured bus voltage of master
+    {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2BusVoltage},			    // Application - Measured bus voltage of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_TEMP, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1Temp},			                // Application - Measured motor Iq of master
-    {CO_KEY(CO_OD_REG_MOTOR_TEMP, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2Temp},			                // Application - Measured motor Iq of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_TEMP, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1Temp},			                // Application - Measured motor Iq of master
+    {CO_KEY(CO_OD_REG_MOTOR_TEMP, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2Temp},			                // Application - Measured motor Iq of slave 1
 
-    {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataHeatsink1Temp},			        // Application - Measured motor Id of master
-    {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataHeatsink2Temp},			        // Application - Measured motor Id of slave 1
+    {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataHeatsink1Temp},			        // Application - Measured motor Id of master
+    {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataHeatsink2Temp},			        // Application - Measured motor Id of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_STATE, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1State},			            // Application - Motor state of master
-    {CO_KEY(CO_OD_REG_MOTOR_STATE, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2State},			            // Application - Motor state of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_STATE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1State},			            // Application - Motor state of master
+    {CO_KEY(CO_OD_REG_MOTOR_STATE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2State},			            // Application - Motor state of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1OccuredFaults},	    // Application - Motor faults of master
-    {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2OccuredFaults},		// Application - Motor faults of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1OccuredFaults},	    // Application - Motor faults of master
+    {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2OccuredFaults},		// Application - Motor faults of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1CurrentFaults},		// Application - Motor faults of master
-    {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2CurrentFaults},		// Application - Motor faults of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1CurrentFaults},		// Application - Motor faults of master
+    {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2CurrentFaults},		// Application - Motor faults of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 0, CO_SIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataMotor1TorqRef},		        // Application - Reference torque to master motor
-    {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 1, CO_SIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataMotor2TorqRef},		        // Application - Reference torque to slave motor 1
+    {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1TorqRef},		        // Application - Reference torque to master motor
+    {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 1, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2TorqRef},		        // Application - Reference torque to slave motor 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_START, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor1Start},		            // Application - Start bit to activate master
-    {CO_KEY(CO_OD_REG_MOTOR_START, 1, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor2Start},		            // Application - Start bit to activate slave motor 1
+    {CO_KEY(CO_OD_REG_MOTOR_START, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor1Start},		            // Application - Start bit to activate master
+    {CO_KEY(CO_OD_REG_MOTOR_START, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor2Start},		            // Application - Start bit to activate slave motor 1
 
-    {CO_KEY(CO_OD_REG_FAULT_ACK, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor1FaultAck},		            // Application - Bit to acknowledge motor fault master
-    {CO_KEY(CO_OD_REG_FAULT_ACK, 1, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor2FaultAck},		            // Application - Bit to acknowledge motor fault slave 1
+    {CO_KEY(CO_OD_REG_FAULT_ACK, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor1FaultAck},		            // Application - Bit to acknowledge motor fault master
+    {CO_KEY(CO_OD_REG_FAULT_ACK, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor2FaultAck},		            // Application - Bit to acknowledge motor fault slave 1
     
     /***********GNR2 User Data configuration OBJECTS MODULE********************************/
     
     //Application - Informe what user data was upadted
-    {CO_KEY(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&bObjDataUserDataConfig},
+    {CO_KEY(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataUserDataConfig},
     
     //Application - Informe if user data was upadted or is being upadted.
-    {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&bObjDataKeyUserDataConfig},
+    {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataKeyUserDataConfig},
     
     /************************GNR2-Throttle/Pedal Assist OBJECTS MODULE*************************/ 
     // Here they are being linked in the OD.
@@ -303,200 +306,200 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     // Torque: based on a multiplier of the torque input. 
     // Cadence: based on pedaling speed.
     // Hybrid (recommended): Combination of torque + pedaling speed as algorithm inputs for motor assistance.
-    {CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPasAlgorithm},
+    {CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithm},
     
     //Application - Percentage of the available max motor power that the PAS algorithm can use. 
-    {CO_KEY(CO_OD_REG_PAS_MAX_POWER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPasMaxPower},
+    {CO_KEY(CO_OD_REG_PAS_MAX_POWER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasMaxPower},
     
     //Application - Torque threshold for starting motor assistance from 0 speed. Only relevant for torque/hybrid PAS. 
-    {CO_KEY(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueMinimumThreshold},
+    {CO_KEY(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueMinimumThreshold},
     
     //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque/hybrid PAS. 
-    {CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueSensorMultiplier},
+    {CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueSensorMultiplier},
     
     //Application - not defined. to do. 
-    {CO_KEY(CO_OD_REG_TORQUE_MAX_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueMaxSpeed},
+    {CO_KEY(CO_OD_REG_TORQUE_MAX_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueMaxSpeed},
     
      //Application - The speed up to which this PAS level will give motor assistance. 
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[0]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 1, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[1]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 2, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[2]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 3, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[3]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 4, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[4]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 5, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[5]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 6, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[6]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 7, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[7]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 8, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[8]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 9, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[9]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[0]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[1]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[2]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[3]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[4]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[5]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[6]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 7, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[7]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[8]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 9, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[9]},
     
     //Application - The speed up to which this PAS level will give motor assistance. 
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[0]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 1, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[1]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 2, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[2]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 3, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[3]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 4, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[4]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 5, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[5]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 6, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[6]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 7, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[7]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 8, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[8]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 9, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[9]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[0]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[1]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[2]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[3]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[4]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[5]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[6]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 7, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[7]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[8]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 9, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[9]},
     
     //Application - The max speed that the throttle will bring the vehicle to. 
-    {CO_KEY(CO_OD_REG_MAX_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataMaxSpeed},
+    {CO_KEY(CO_OD_REG_MAX_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMaxSpeed},
     
     //Application - Speed that the walk mode of the vehicle goes up to. 
-    {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataWalkModeSpeed},
+    {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWalkModeSpeed},
     
-    CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
-};
+    CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
+};  
     #else
     // Mandatory entries
 struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
-	  {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},						                            // Device Type
-    {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (uintptr_t)&hObjDataErrorRegister},				                    // Error Register
-    {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)CO_COBID_SYNC_STD(GENERATE_SYNC, STD_ID_SYNC)},		// COB-ID SYNC Message
-    {CO_KEY(0x1006, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)SYNC_PERIOD_US},                                      // SYNC period
-    {CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)CO_COBID_EMCY_STD(USE_EMCY, STD_ID_EMCY)},		    // COB-ID EMCY Message
-    {CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1},				                        // Consumer Heartbeat max index    
-    {CO_KEY(0x1016, 1,               CO_OBJ____RW), CO_THB_CONS, (uintptr_t)&AppHbConsumer_1},				// Consumer Heartbeat parameters  
-    {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataProdHbTime},				        // Producer Heartbeat Time 
-    {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},						                // Identity - Highest Sub Index
-    {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},						                // Identity - Vendor ID
-    {CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},						                // Identity - Product Code
-    {CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},						                // Identity - Revision Number
-    {CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},						                // Identity - Serial Number
+	{CO_KEY(0x1000, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},						                            // Device Type
+    {CO_KEY(0x1001, 0, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&hObjDataErrorRegister},				                    // Error Register
+    {CO_KEY(0x1005, 0, CO_OBJ_D___R_), CO_TSYNC_ID, (CO_DATA)CO_COBID_SYNC_STD(GENERATE_SYNC, STD_ID_SYNC)},		// COB-ID SYNC Message
+    {CO_KEY(0x1006, 0, CO_OBJ_D___R_), CO_TSYNC_CYCLE, (CO_DATA)SYNC_PERIOD_US},                                      // SYNC period
+    {CO_KEY(0x1014, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)CO_COBID_EMCY_STD(USE_EMCY, STD_ID_EMCY)},		    // COB-ID EMCY Message
+    {CO_KEY(0x1016, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)1},				                        // Consumer Heartbeat max index    
+    {CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)&AppHbConsumer_1},				// Consumer Heartbeat parameters  
+    {CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)&hObjDataProdHbTime},				        // Producer Heartbeat Time 
+    {CO_KEY(0x1018, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4},						                // Identity - Highest Sub Index
+    {CO_KEY(0x1018, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},						                // Identity - Vendor ID
+    {CO_KEY(0x1018, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},						                // Identity - Product Code
+    {CO_KEY(0x1018, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},						                // Identity - Revision Number
+    {CO_KEY(0x1018, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)0},						                // Identity - Serial Number
 
     // SDO Server
-    {CO_KEY(0x1200, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},						                            // SDO Srv Parameter - Highest Sub Index
+    {CO_KEY(0x1200, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2},						                            // SDO Srv Parameter - Highest Sub Index
     #if GNR_MASTER
-    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_REQUEST()},		    // SDO Srv Parameter - COB-ID Client to Server
-    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_RESPONSE()},		// SDO Srv Parameter - COB-ID Server to Client
+    {CO_KEY(0x1200, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},		    // SDO Srv Parameter - COB-ID Client to Server
+    {CO_KEY(0x1200, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},		// SDO Srv Parameter - COB-ID Server to Client
     #else
-    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_STD(USE_SSDO, 0, 0x600+GNR2_SLAVE_NODE_ID)},		                                    // SDO Srv Parameter - COB-ID Client to Server
-    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_STD(USE_SSDO, 0, 0x580+GNR2_SLAVE_NODE_ID)},		                                // SDO Srv Parameter - COB-ID Server to Client
+    {CO_KEY(0x1200, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_STD(USE_SSDO, 0, 0x600+GNR2_SLAVE_NODE_ID)},		                                    // SDO Srv Parameter - COB-ID Client to Server
+    {CO_KEY(0x1200, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_STD(USE_SSDO, 0, 0x580+GNR2_SLAVE_NODE_ID)},		                                // SDO Srv Parameter - COB-ID Server to Client
     #endif
 
     // SDO Client
-    {CO_KEY(0x1280, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)3},						                // SDO Client Parameter - Highest Sub Index
-    {CO_KEY(0x1280, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
-    {CO_KEY(0x1280, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
-    {CO_KEY(0x1280, 3, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)GNR2_SLAVE_NODE_ID},
+    {CO_KEY(0x1280, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)3},						                // SDO Client Parameter - Highest Sub Index
+    {CO_KEY(0x1280, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
+    {CO_KEY(0x1280, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
+    {CO_KEY(0x1280, 3, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)GNR2_SLAVE_NODE_ID},
 
     // RPDO 1
-    {CO_KEY(0x1400, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},						                // RPDO1 Parameter - Highest Sub Index
-    {CO_KEY(0x1400, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_RPDO_STD(USE_RPDO, STD_ID_RPDO1)},			// RPDO1 Parameter - COB-ID RPDO
-    {CO_KEY(0x1400, 2, CO_UNSIGNED8|CO_OBJ_D__R_), 0, RPDO_TRANSMISSION_TYPE},			                    // RPDO1 Parameter - Transmission type
-    {CO_KEY(0x1400, 5, CO_UNSIGNED16|CO_OBJ_D__R_), 0, RPDO_PERIOD_MS},			                            // RPDO1 Parameter - Event period
+    {CO_KEY(0x1400, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5},						                // RPDO1 Parameter - Highest Sub Index
+    {CO_KEY(0x1400, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, STD_ID_RPDO1)},			// RPDO1 Parameter - COB-ID RPDO
+    {CO_KEY(0x1400, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, RPDO_TRANSMISSION_TYPE},			                    // RPDO1 Parameter - Transmission type
+    {CO_KEY(0x1400, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, RPDO_PERIOD_MS},			                            // RPDO1 Parameter - Event period
     #if GNR_MASTER
-    {CO_KEY(0x1600, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},						                // RPDO1 Mapping - Number of mapped object in PDO
-    {CO_KEY(0x1600, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)},			    // RPDO1 Mapping - Object 1
-    {CO_KEY(0x1600, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
-    {CO_KEY(0x1600, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
-    {CO_KEY(0x1600, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)},			    // RPDO1 Mapping - Object 2
+    {CO_KEY(0x1600, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4},						                // RPDO1 Mapping - Number of mapped object in PDO
+    {CO_KEY(0x1600, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)},			    // RPDO1 Mapping - Object 1
+    {CO_KEY(0x1600, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
+    {CO_KEY(0x1600, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
+    {CO_KEY(0x1600, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)},			    // RPDO1 Mapping - Object 2
     #else
-    {CO_KEY(0x1600, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},						                // RPDO1 Mapping - Number of mapped object in PDO
-    {CO_KEY(0x1600, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)},			// RPDO1 Mapping - Object 1
-    {CO_KEY(0x1600, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)},			    // RPDO1 Mapping - Object 2
+    {CO_KEY(0x1600, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2},						                // RPDO1 Mapping - Number of mapped object in PDO
+    {CO_KEY(0x1600, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)},			// RPDO1 Mapping - Object 1
+    {CO_KEY(0x1600, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)},			    // RPDO1 Mapping - Object 2
     #endif
 
 //    // RPDO 2
-//    {CO_KEY(0x1401, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},						                // RPDO1 Parameter - Highest Sub Index
-//    {CO_KEY(0x1401, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_RPDO_STD(USE_RPDO, STD_ID_RPDO2)},			// RPDO1 Parameter - COB-ID RPDO
-//    {CO_KEY(0x1401, 2, CO_UNSIGNED8|CO_OBJ_D__R_), 0, RPDO_TRANSMISSION_TYPE},			                    // RPDO1 Parameter - Transmission type
-//    {CO_KEY(0x1401, 5, CO_UNSIGNED16|CO_OBJ_D__R_), 0, RPDO_PERIOD_MS},			                            // RPDO1 Parameter - Event period
+//    {CO_KEY(0x1401, 0, CO_TUNSIGNED8 |CO_OBJ_D___R_), 0, (CO_DATA)5},						                // RPDO1 Parameter - Highest Sub Index
+//    {CO_KEY(0x1401, 1, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_COBID_RPDO_STD(USE_RPDO, STD_ID_RPDO2)},			// RPDO1 Parameter - COB-ID RPDO
+//    {CO_KEY(0x1401, 2, CO_TUNSIGNED8|CO_OBJ_D___R_), 0, RPDO_TRANSMISSION_TYPE},			                    // RPDO1 Parameter - Transmission type
+//    {CO_KEY(0x1401, 5, CO_TUNSIGNED16|CO_OBJ_D___R_), 0, RPDO_PERIOD_MS},			                            // RPDO1 Parameter - Event period
 //    #if GNR_MASTER
-//    {CO_KEY(0x1601, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},						                // RPDO1 Mapping - Number of mapped object in PDO
-//    {CO_KEY(0x1601, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2000, 1, 16)},			                    // RPDO1 Mapping - Object 1
-//    {CO_KEY(0x1601, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2001, 1, 16)},			                    // RPDO1 Mapping - Object 2
-//    {CO_KEY(0x1601, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2002, 1, 16)},			                    // RPDO1 Mapping - Object 3
-//    {CO_KEY(0x1601, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2003, 1, 16)},			                    // RPDO1 Mapping - Object 4
+//    {CO_KEY(0x1601, 0, CO_TUNSIGNED8 |CO_OBJ_D___R_), 0, (CO_DATA)4},						                // RPDO1 Mapping - Number of mapped object in PDO
+//    {CO_KEY(0x1601, 1, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_LINK(0x2000, 1, 16)},			                    // RPDO1 Mapping - Object 1
+//    {CO_KEY(0x1601, 2, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_LINK(0x2001, 1, 16)},			                    // RPDO1 Mapping - Object 2
+//    {CO_KEY(0x1601, 3, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_LINK(0x2002, 1, 16)},			                    // RPDO1 Mapping - Object 3
+//    {CO_KEY(0x1601, 4, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_LINK(0x2003, 1, 16)},			                    // RPDO1 Mapping - Object 4
 //    #else
-//    {CO_KEY(0x1601, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0},						                // RPDO1 Mapping - Number of mapped object in PDO
+//    {CO_KEY(0x1601, 0, CO_TUNSIGNED8 |CO_OBJ_D___R_), 0, (CO_DATA)0},						                // RPDO1 Mapping - Number of mapped object in PDO
 //    #endif
 
     // TPDO 1
-    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)6},						                // TPDO1 Parameter - Highest Sub Index
-    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_STD(USE_TPDO, STD_ID_TPDO1)},			// TPDO1 Parameter - COB-ID TPDO
-    {CO_KEY(0x1800, 2, CO_UNSIGNED8|CO_OBJ_D__R_), 0, TPDO_TRANSMISSION_TYPE},			                    // TPDO1 Parameter - Transmission type
-    {CO_KEY(0x1800, 5, CO_UNSIGNED16|CO_OBJ_D__R_), 0, TPDO_PERIOD_MS},			                            // TPDO1 Parameter - Transmission type
-    {CO_KEY(0x1800, 6, CO_UNSIGNED8|CO_OBJ_D__R_), 0, 0},			                                        // TPDO1 Parameter - SYNC start value
+    {CO_KEY(0x1800, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6},						                // TPDO1 Parameter - Highest Sub Index
+    {CO_KEY(0x1800, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, STD_ID_TPDO1)},			// TPDO1 Parameter - COB-ID TPDO
+    {CO_KEY(0x1800, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, TPDO_TRANSMISSION_TYPE},			                    // TPDO1 Parameter - Transmission type
+    {CO_KEY(0x1800, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, TPDO_PERIOD_MS},			                            // TPDO1 Parameter - Transmission type
+    {CO_KEY(0x1800, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0},			                                        // TPDO1 Parameter - SYNC start value
     #if GNR_MASTER
-    {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},						                // RPDO1 Mapping - Number of mapped object in PDO
-    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)},			// RPDO1 Mapping - Object 1
-    {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)},			    // RPDO1 Mapping - Object 2
+    {CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2},						                // RPDO1 Mapping - Number of mapped object in PDO
+    {CO_KEY(0x1A00, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)},			// RPDO1 Mapping - Object 1
+    {CO_KEY(0x1A00, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)},			    // RPDO1 Mapping - Object 2
     #else
-    {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},						                // RPDO1 Mapping - Number of mapped object in PDO
-    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)},			    // RPDO1 Mapping - Object 1
-    {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
-    {CO_KEY(0x1A00, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
-    {CO_KEY(0x1A00, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)},			    // RPDO1 Mapping - Object 2
+    {CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4},						                // RPDO1 Mapping - Number of mapped object in PDO
+    {CO_KEY(0x1A00, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)},			    // RPDO1 Mapping - Object 1
+    {CO_KEY(0x1A00, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
+    {CO_KEY(0x1A00, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)},			// RPDO1 Mapping - Object 2
+    {CO_KEY(0x1A00, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)},			    // RPDO1 Mapping - Object 2
     #endif
 
 //    // TPDO 2
-//    {CO_KEY(0x1801, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},						                // TPDO1 Parameter - Highest Sub Index
-//    {CO_KEY(0x1801, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_STD(USE_TPDO, STD_ID_TPDO2)},			// TPDO1 Parameter - COB-ID TPDO
-//    {CO_KEY(0x1801, 2, CO_UNSIGNED8|CO_OBJ_D__R_), 0, TPDO_TRANSMISSION_TYPE},			                    // TPDO1 Parameter - Transmission type
-//    {CO_KEY(0x1801, 5, CO_UNSIGNED16|CO_OBJ_D__R_), 0, TPDO_PERIOD_MS},			                            // TPDO1 Parameter - Transmission type
+//    {CO_KEY(0x1801, 0, CO_TUNSIGNED8 |CO_OBJ_D___R_), 0, (CO_DATA)5},						                // TPDO1 Parameter - Highest Sub Index
+//    {CO_KEY(0x1801, 1, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_COBID_TPDO_STD(USE_TPDO, STD_ID_TPDO2)},			// TPDO1 Parameter - COB-ID TPDO
+//    {CO_KEY(0x1801, 2, CO_TUNSIGNED8|CO_OBJ_D___R_), 0, TPDO_TRANSMISSION_TYPE},			                    // TPDO1 Parameter - Transmission type
+//    {CO_KEY(0x1801, 5, CO_TUNSIGNED16|CO_OBJ_D___R_), 0, TPDO_PERIOD_MS},			                            // TPDO1 Parameter - Transmission type
 //    #if GNR_MASTER
-//    {CO_KEY(0x1A01, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0},						                // RPDO1 Mapping - Number of mapped object in PDO
+//    {CO_KEY(0x1A01, 0, CO_TUNSIGNED8 |CO_OBJ_D___R_), 0, (CO_DATA)0},						                // RPDO1 Mapping - Number of mapped object in PDO
 //    #else
-//    {CO_KEY(0x1A01, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},						                // RPDO1 Mapping - Number of mapped object in PDO
-//    {CO_KEY(0x1A01, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2000, 1, 16)},			                    // RPDO1 Mapping - Object 1
-//    {CO_KEY(0x1A01, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2001, 1, 16)},			                    // RPDO1 Mapping - Object 2
-//    {CO_KEY(0x1A01, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2002, 1, 16)},			                    // RPDO1 Mapping - Object 3
-//    {CO_KEY(0x1A01, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2003, 1, 16)},			                    // RPDO1 Mapping - Object 4
+//    {CO_KEY(0x1A01, 0, CO_TUNSIGNED8 |CO_OBJ_D___R_), 0, (CO_DATA)4},						                // RPDO1 Mapping - Number of mapped object in PDO
+//    {CO_KEY(0x1A01, 1, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_LINK(0x2000, 1, 16)},			                    // RPDO1 Mapping - Object 1
+//    {CO_KEY(0x1A01, 2, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_LINK(0x2001, 1, 16)},			                    // RPDO1 Mapping - Object 2
+//    {CO_KEY(0x1A01, 3, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_LINK(0x2002, 1, 16)},			                    // RPDO1 Mapping - Object 3
+//    {CO_KEY(0x1A01, 4, CO_TUNSIGNED32|CO_OBJ_D___R_), 0, CO_LINK(0x2003, 1, 16)},			                    // RPDO1 Mapping - Object 4
 //    #endif
 
     // GNR2-IOT OBJECTS MODULE
-    {CO_KEY(CO_OD_REG_SPEED_MEASURE, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataSpeedMeas},   // Application - Inst Speed
-    {CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_UNSIGNED16  |CO_OBJ____RW), 0, (uintptr_t)&hObjDataPowerMeas},   // Application - Inst Power
-    {CO_KEY(CO_OD_REG_SOC,           0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataSOC},         // Application - State of Charge
-    {CO_KEY(CO_OD_REG_PAS_LEVEL,     0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPAS},	        // Application - PAS Level
-    {CO_KEY(CO_OD_REG_MAX_PAS,       0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataMaxPAS},	    // Application - Max PAS Level
-    {CO_KEY(CO_OD_REG_MAX_POWER,     0, CO_SIGNED16    |CO_OBJ____RW), 0, (uintptr_t)&hObjDataMaxPower},   // Application - Max Power
-    {CO_KEY(CO_OD_REG_ERR_STATE,     0, CO_SIGNED16    |CO_OBJ____RW), 0, (uintptr_t)&hObjDataErrorState},  // Application - Error State
-    {CO_KEY(CO_OD_REG_SERIAL_NB,     0, CO_UNSIGNED32  |CO_OBJ____RW), 0, (uintptr_t)&wObjDataSerialNbH},   // Application - Serial Number High side
-    {CO_KEY(CO_OD_REG_SERIAL_NB,     1, CO_UNSIGNED32  |CO_OBJ____RW), 0, (uintptr_t)&wObjDataSerialNbL},   // Application - Serial Number Low side
-    {CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_UNSIGNED16  |CO_OBJ____RW), 0, (uintptr_t)&hObjDataFwVersion},   // Application - Firmware Version
+    {CO_KEY(CO_OD_REG_SPEED_MEASURE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataSpeedMeas},   // Application - Inst Speed
+    {CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&hObjDataPowerMeas},   // Application - Inst Power
+    {CO_KEY(CO_OD_REG_SOC,           0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataSOC},         // Application - State of Charge
+    {CO_KEY(CO_OD_REG_PAS_LEVEL,     0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPAS},	        // Application - PAS Level
+    {CO_KEY(CO_OD_REG_MAX_PAS,       0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMaxPAS},	    // Application - Max PAS Level
+    {CO_KEY(CO_OD_REG_MAX_POWER,     0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMaxPower},   // Application - Max Power
+    {CO_KEY(CO_OD_REG_ERR_STATE,     0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataErrorState},  // Application - Error State
+    {CO_KEY(CO_OD_REG_SERIAL_NB,     0, CO_OBJ_____RW), CO_TSIGNED32, (CO_DATA)&wObjDataSerialNbH},   // Application - Serial Number High side
+    {CO_KEY(CO_OD_REG_SERIAL_NB,     1, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&wObjDataSerialNbL},   // Application - Serial Number Low side
+    {CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&hObjDataFwVersion},   // Application - Firmware Version
 
     //GNR2 Objects
-    {CO_KEY(CO_OD_REG_MOTOR_SPEED, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1SpeedMeas},			        // Application - Measured motor speed of master
-    {CO_KEY(CO_OD_REG_MOTOR_SPEED, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2SpeedMeas},			        // Application - Measured motor speed of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_SPEED, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1SpeedMeas},			        // Application - Measured motor speed of master
+    {CO_KEY(CO_OD_REG_MOTOR_SPEED, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2SpeedMeas},			        // Application - Measured motor speed of slave 1
 
-    {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1BusVoltage},			    // Application - Measured bus voltage of master
-    {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2BusVoltage},			    // Application - Measured bus voltage of slave 1
+    {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1BusVoltage},			    // Application - Measured bus voltage of master
+    {CO_KEY(CO_OD_REG_BUS_VOLTAGE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2BusVoltage},			    // Application - Measured bus voltage of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_TEMP, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1Temp},			                // Application - Measured motor Iq of master
-    {CO_KEY(CO_OD_REG_MOTOR_TEMP, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2Temp},			                // Application - Measured motor Iq of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_TEMP, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1Temp},			                // Application - Measured motor Iq of master
+    {CO_KEY(CO_OD_REG_MOTOR_TEMP, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2Temp},			                // Application - Measured motor Iq of slave 1
 
-    {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 0, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataHeatsink1Temp},			        // Application - Measured motor Id of master
-    {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 1, CO_SIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataHeatsink2Temp},			        // Application - Measured motor Id of slave 1
+    {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataHeatsink1Temp},			        // Application - Measured motor Id of master
+    {CO_KEY(CO_OD_REG_HEATSINK_TEMP, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataHeatsink2Temp},			        // Application - Measured motor Id of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_STATE, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1State},			            // Application - Motor state of master
-    {CO_KEY(CO_OD_REG_MOTOR_STATE, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2State},			            // Application - Motor state of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_STATE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1State},			            // Application - Motor state of master
+    {CO_KEY(CO_OD_REG_MOTOR_STATE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2State},			            // Application - Motor state of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1OccuredFaults},	    // Application - Motor faults of master
-    {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2OccuredFaults},		// Application - Motor faults of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1OccuredFaults},	    // Application - Motor faults of master
+    {CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2OccuredFaults},		// Application - Motor faults of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 0, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor1CurrentFaults},		// Application - Motor faults of master
-    {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 1, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&hObjDataMotor2CurrentFaults},		// Application - Motor faults of slave 1
+    {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1CurrentFaults},		// Application - Motor faults of master
+    {CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2CurrentFaults},		// Application - Motor faults of slave 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 0, CO_SIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataMotor1TorqRef},		        // Application - Reference torque to master motor
-    {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 1, CO_SIGNED16|CO_OBJ____RW), 0, (uintptr_t)&hObjDataMotor2TorqRef},		        // Application - Reference torque to slave motor 1
+    {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1TorqRef},		        // Application - Reference torque to master motor
+    {CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 1, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2TorqRef},		        // Application - Reference torque to slave motor 1
 
-    {CO_KEY(CO_OD_REG_MOTOR_START, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor1Start},		            // Application - Start bit to activate master
-    {CO_KEY(CO_OD_REG_MOTOR_START, 1, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor2Start},		            // Application - Start bit to activate slave motor 1
+    {CO_KEY(CO_OD_REG_MOTOR_START, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor1Start},		            // Application - Start bit to activate master
+    {CO_KEY(CO_OD_REG_MOTOR_START, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor2Start},		            // Application - Start bit to activate slave motor 1
 
-    {CO_KEY(CO_OD_REG_FAULT_ACK, 0, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor1FaultAck},		            // Application - Bit to acknowledge motor fault master
-    {CO_KEY(CO_OD_REG_FAULT_ACK, 1, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&bObjDataMotor2FaultAck},		            // Application - Bit to acknowledge motor fault slave 1
+    {CO_KEY(CO_OD_REG_FAULT_ACK, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor1FaultAck},		            // Application - Bit to acknowledge motor fault master
+    {CO_KEY(CO_OD_REG_FAULT_ACK, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor2FaultAck},		            // Application - Bit to acknowledge motor fault slave 1
 
     /***********GNR2 User Data configuration OBJECTS MODULE********************************/
     
     //Application - Informe what user data was upadted
-    {CO_KEY(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&bObjDataUserDataConfig},
+    {CO_KEY(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataUserDataConfig},
     
     //Application - Informe if user data was upadted or is being upadted.
-    {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&bObjDataKeyUserDataConfig},
+    {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataKeyUserDataConfig},
     
     /************************GNR2-Throttle/Pedal Assist OBJECTS MODULE*************************/ 
     // Here they are being linked in the OD.
@@ -508,51 +511,51 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     // Torque: based on a multiplier of the torque input. 
     // Cadence: based on pedaling speed.
     // Hybrid (recommended): Combination of torque + pedaling speed as algorithm inputs for motor assistance.
-    {CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPasAlgorithm},
+    {CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithm},
     
     //Application - Percentage of the available max motor power that the PAS algorithm can use. 
-    {CO_KEY(CO_OD_REG_PAS_MAX_POWER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataPasMaxPower},
+    {CO_KEY(CO_OD_REG_PAS_MAX_POWER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasMaxPower},
     
     //Application - Torque threshold for starting motor assistance from 0 speed. Only relevant for torque/hybrid PAS. 
-    {CO_KEY(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueMinimumThreshold},
+    {CO_KEY(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueMinimumThreshold},
     
     //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque/hybrid PAS. 
-    {CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueSensorMultiplier},
+    {CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueSensorMultiplier},
     
     //Application - not defined. to do. 
-    {CO_KEY(CO_OD_REG_TORQUE_MAX_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueMaxSpeed},
+    {CO_KEY(CO_OD_REG_TORQUE_MAX_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueMaxSpeed},
     
      //Application - The speed up to which this PAS level will give motor assistance. 
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[0]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 1, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[1]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 2, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[2]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 3, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[3]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 4, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[4]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 5, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[5]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 6, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[6]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 7, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[7]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 8, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[8]},
-    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 9, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataCadenceHybridLeveSpeed[9]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[0]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[1]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[2]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[3]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[4]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[5]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[6]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 7, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[7]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[8]},
+    {CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 9, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[9]},
     
     //Application - The speed up to which this PAS level will give motor assistance. 
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[0]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 1, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[1]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 2, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[2]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 3, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[3]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 4, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[4]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 5, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[5]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 6, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[6]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 7, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[7]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 8, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[8]},
-    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 9, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataTorqueLevelPower[9]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[0]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[1]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[2]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[3]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[4]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[5]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[6]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 7, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[7]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[8]},
+    {CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 9, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[9]},
     
     //Application - The max speed that the throttle will bring the vehicle to. 
-    {CO_KEY(CO_OD_REG_MAX_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataMaxSpeed},
+    {CO_KEY(CO_OD_REG_MAX_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMaxSpeed},
     
     //Application - Speed that the walk mode of the vehicle goes up to. 
-    {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_UNSIGNED8   |CO_OBJ____RW), 0, (uintptr_t)&bObjDataWalkModeSpeed},
+    {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWalkModeSpeed},
 
-    CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
+    CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
 };
     #endif
 

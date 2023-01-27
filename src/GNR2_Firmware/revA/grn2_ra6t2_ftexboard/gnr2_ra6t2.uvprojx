@@ -334,13 +334,13 @@
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
-            <v6WtE>1</v6WtE>
+            <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal -Wno-comment</MiscControls>
               <Define>LFS_NO_MALLOC,LFS_NO_DEBUG,LFS_NO_ERROR,LFS_NO_WARN</Define>
               <Undefine></Undefine>
-              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\include;.\libraries\littlefs</IncludePath>
+              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\core;.\CANopen-stack\hal;.\CANopen-stack\object\basic;.\CANopen-stack\object\cia301;.\CANopen-stack\service\cia301;.\CANopen-stack\include;.\libraries\littlefs</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1253,92 +1253,177 @@
             <File>
               <FileName>co_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_core.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_core.c</FilePath>
             </File>
             <File>
               <FileName>co_csdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_csdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_csdo.c</FilePath>
             </File>
             <File>
               <FileName>co_dict.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_dict.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_dict.c</FilePath>
             </File>
             <File>
               <FileName>co_emcy.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_emcy.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_can.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_nvm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_nvm.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_lss.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_lss.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_nmt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_nmt.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_obj.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_obj.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_para.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_para.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_emcy.c</FilePath>
             </File>
             <File>
               <FileName>co_pdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_pdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_pdo.c</FilePath>
             </File>
             <File>
               <FileName>co_ssdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ssdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_ssdo.c</FilePath>
             </File>
             <File>
               <FileName>co_sync.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_sync.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_sync.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_nvm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_nvm.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_nmt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_nmt.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_obj.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_obj.c</FilePath>
             </File>
             <File>
               <FileName>co_tmr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_tmr.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_tmr.c</FilePath>
             </File>
             <File>
               <FileName>co_ver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ver.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_ver.c</FilePath>
             </File>
             <File>
               <FileName>co_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CANopen-stack\config\co_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>co_domain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_domain.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer8.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer8.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer16.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer32.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_string.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_string.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_hist.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_hist.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_cons.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_cons.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_prod.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_prod.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_restore.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_restore.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_store.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_store.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_event.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_map.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_map.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_num.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_num.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_type.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_type.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_cycle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_cycle.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_id.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2829,92 +2914,177 @@
             <File>
               <FileName>co_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_core.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_core.c</FilePath>
             </File>
             <File>
               <FileName>co_csdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_csdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_csdo.c</FilePath>
             </File>
             <File>
               <FileName>co_dict.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_dict.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_dict.c</FilePath>
             </File>
             <File>
               <FileName>co_emcy.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_emcy.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_can.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_nvm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_nvm.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_lss.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_lss.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_nmt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_nmt.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_obj.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_obj.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_para.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_para.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_emcy.c</FilePath>
             </File>
             <File>
               <FileName>co_pdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_pdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_pdo.c</FilePath>
             </File>
             <File>
               <FileName>co_ssdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ssdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_ssdo.c</FilePath>
             </File>
             <File>
               <FileName>co_sync.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_sync.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_sync.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_nvm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_nvm.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_nmt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_nmt.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_obj.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_obj.c</FilePath>
             </File>
             <File>
               <FileName>co_tmr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_tmr.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_tmr.c</FilePath>
             </File>
             <File>
               <FileName>co_ver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ver.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_ver.c</FilePath>
             </File>
             <File>
               <FileName>co_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CANopen-stack\config\co_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>co_domain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_domain.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer8.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer8.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer16.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer32.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_string.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_string.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_hist.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_hist.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_cons.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_cons.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_prod.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_prod.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_restore.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_restore.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_store.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_store.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_event.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_map.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_map.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_num.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_num.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_type.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_type.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_cycle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_cycle.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_id.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4405,92 +4575,177 @@
             <File>
               <FileName>co_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_core.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_core.c</FilePath>
             </File>
             <File>
               <FileName>co_csdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_csdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_csdo.c</FilePath>
             </File>
             <File>
               <FileName>co_dict.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_dict.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_dict.c</FilePath>
             </File>
             <File>
               <FileName>co_emcy.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_emcy.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_can.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_nvm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_nvm.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_lss.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_lss.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_nmt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_nmt.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_obj.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_obj.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_para.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_para.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_emcy.c</FilePath>
             </File>
             <File>
               <FileName>co_pdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_pdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_pdo.c</FilePath>
             </File>
             <File>
               <FileName>co_ssdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ssdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_ssdo.c</FilePath>
             </File>
             <File>
               <FileName>co_sync.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_sync.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_sync.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_nvm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_nvm.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_nmt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_nmt.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_obj.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_obj.c</FilePath>
             </File>
             <File>
               <FileName>co_tmr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_tmr.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_tmr.c</FilePath>
             </File>
             <File>
               <FileName>co_ver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ver.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_ver.c</FilePath>
             </File>
             <File>
               <FileName>co_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CANopen-stack\config\co_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>co_domain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_domain.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer8.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer8.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer16.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer32.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_string.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_string.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_hist.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_hist.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_cons.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_cons.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_prod.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_prod.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_restore.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_restore.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_store.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_store.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_event.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_map.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_map.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_num.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_num.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_type.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_type.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_cycle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_cycle.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_id.c</FilePath>
             </File>
           </Files>
         </Group>
