@@ -30,7 +30,7 @@ extern void PowerOffSequence(void * pvParameter);
 
 static bool ADCInit(void);
 static bool GPTInit(void);
-// static bool POEGInit(void); //todo: reenable in EGNR-2328
+//static bool POEGInit(void); //please read the describtion on function definition before enablenig this
 static bool DACInit(void);
 static bool ICUInit(void);
 static bool ELCInit(void);
@@ -121,7 +121,7 @@ void gnr_main(void)
     /* Hardware initialization */
     ADCInit();
     GPTInit();
-    //POEGInit(); //Disable POEG temporally because it creates issue. Need investigation. Until then, only SOCP protection is used.
+//    POEGInit(); //Read the describtion on the Function before enabling it
     DACInit();
     ICUInit();
     ELCInit();
@@ -280,17 +280,28 @@ static bool GPTInit(void)
 
 /*
 * @brief  Initialize POEG (Port Output Enable for GPT) hardware
-*/
-/* todo: reenable in EGNR-2328
-static bool POEGInit(void)
-{
-    bool bIsError = false;
 
-    bIsError |= R_POEG_Open(g_poeg0.p_ctrl, g_poeg0.p_cfg);
-
-    return bIsError;
-}
+* The POEG is going to stop PWM output right after a falling edge occures on POEG PIN 
+* which is defined on PC14 on this code. Th reason that we a re not going to use 
+* this fuction is that PC14 is connected to OCD2 pin of Current Sensor on PCB
+* which is making alert signal when the current exceeds 82% of max thershold, where we
+* only need to derate power, not shutting down the output.
+* P.S. if for any reason you want to bring this feature back, do these stpe:
+1- uncomment bool POEGInit() decleration in first rows of this file
+2- uncomment following function definition 
+3- Check if the PC14 is still defined as PEOG functionality
+4- Check the PWMBreak1_IRQHandler() which is going to raise the MC_BREAK_IN error
+5- Check the PWRT_MotorFaultManagement() if still includes handeling this error flag
+6- Use the R_POEG_Open() function to bring back the PWM signal after error is handled
 */
+//static bool POEGInit(void)
+//{
+//    bool bIsError = false;
+
+//    bIsError |= R_POEG_Open(g_poeg0.p_ctrl, g_poeg0.p_cfg);
+
+//    return bIsError;
+//}
 
 /**
   * @brief  Initialize DAC (Digital Analog Converter) hardware
