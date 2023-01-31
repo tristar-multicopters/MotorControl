@@ -36,6 +36,7 @@
                                                        Above that, communication is considered lost. */
 #define VEHICLE_PARAM  0
 #define CAN_PARAM      1 
+
 /********* PUBLIC MEMBERS *************/
 
 uint16_t hCommErrors = COMM_NO_ERROR;  /* This global variable holds all error flags related to communications.
@@ -120,6 +121,9 @@ static void UpdateObjectDictionnary(void *p_arg)
                                           
     /***********variable used to get the key code that enable user data configuration to be updated.**************/
     uint16_t keyUserDataConfig = 0;
+                                          
+    //variable used to verify if a firmware update command was received or not.
+    uint16_t FirmwareUpdateCommand = 0;                                           
     
     //
     #if SUPPORT_SLAVE | !GNR_IOT
@@ -151,7 +155,6 @@ static void UpdateObjectDictionnary(void *p_arg)
 
 	if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
     {   
-        
         /* Read commands in CANOpen object dictionnary received by SDO */
         //COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)), pNode, &bPAS, sizeof(uint8_t));
         #if SUPPORT_SLAVE
@@ -246,7 +249,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     //verify if the the node is operational to update the OD.
     if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
     {
-        
         COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_KEY_USER_DATA_CONFIG, 0)), pNode, &keyUserDataConfig, sizeof(uint16_t));
         
         //verifiy if the 
@@ -346,14 +348,18 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
         
+            //Read the OD responsible to hold the firmware update command.
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0)), pNode, &FirmwareUpdateCommand, sizeof(uint16_t));
+            
+            //check if the system was woke up by a firmware command update.
+            PWREN_CheckFirmwareUpdateCommand(VCInterfaceHandle.pPowertrain->pPWREN, FirmwareUpdateCommand);
+
         }
         else
         {
-            
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
              {
-                 
                  /**********read value hold by the OD****************/
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)), pNode, &pasAlgorithm, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)), pNode, &maxPAS, sizeof(uint8_t));
@@ -383,22 +389,18 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdateTorqueSensorMultiplier(torqueSensorMultiplier);
                  UserConfigTask_UpdateTorqueMaxSpeed(torqueMaxSpeed);
                  
-                  for(uint8_t n = PAS_0;n <= PAS_9;n++)
+                 for(uint8_t n = PAS_0;n <= PAS_9;n++)
                  {
-                 
                     UserConfigTask_UpdateCadenceHybridLeveSpeed(n, cadenceHybridLeveSpeed[n]);
-                    UserConfigTask_UpdateTorqueLevelPower(n, torqueLevelPower[n]);
-                     
+                    UserConfigTask_UpdateTorqueLevelPower(n, torqueLevelPower[n]);   
                  }
                  
                  UserConfigTask_UpdateBikeMaxSpeed(maxSpeed);
                  UserConfigTask_UpdateWalkModeSpeed(walkModeSpeed);
                  
                  //write in the data flash and reset the system.
-                 UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle);
-                 
+                 UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle);   
              }
-            
         }
          
     }

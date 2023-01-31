@@ -171,8 +171,12 @@ MS_Handle_t MotorSelectorHandle =
 
 PWREN_Handle_t PowerEnableHandle =
 {
-	.bIsInvertedLogic = false,
+    .bInitalized = false,
 	.bUsePowerLock = POWER_ENABLE_ENABLE,
+    .bIsInvertedLogic = false,
+    .bInitialPowerLockState = false,
+    .bWakeUpSDOCommand = false,
+    .bWakeUpCommandChecked = false,
 };
 
 Foldback_Handle_t SpeedFoldbackStartupDualMotorConfig =

@@ -316,8 +316,8 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         osThreadFlagsWait(POWEROFFSEQUENCE_FLAG, osFlagsWaitAny, osWaitForever); // Task is blocked until we have to power down        
         MCInterface_StopMotor(pVCI->pPowertrain->pMDI->pMCI);
 
-        
-        while(MCInterface_GetSTMState(pVCI->pPowertrain->pMDI->pMCI) == M_IDLE) // Check if the motor control is back to the idle state 
+        //if motor is not in idle state , wait.
+        while(MCInterface_GetSTMState(pVCI->pPowertrain->pMDI->pMCI) != M_IDLE)
         {    
             osDelay(STOP_LOOPTICKS);
         }

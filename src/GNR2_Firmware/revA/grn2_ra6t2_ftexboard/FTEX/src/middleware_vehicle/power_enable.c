@@ -19,8 +19,6 @@ void PWREN_Init(PWREN_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
 
     struct GPIOConfig PinConfig;
-    
-    pHandle->bPowerCycle = false;
    
     PinConfig.PinDirection = INPUT;     //ReInit to ensure this pin has the wanted behavior
     PinConfig.PinPull      = NONE; 
@@ -33,6 +31,18 @@ void PWREN_Init(PWREN_Handle_t * pHandle)
     PinConfig.PinOutput    = PUSH_PULL; 
     
     uCAL_GPIO_ReInit(CAN_STANDBY_N_GPIO_PIN, PinConfig);
+    
+    if(PWREN_IsPowerEnabled(pHandle)) 
+    { 
+        pHandle->bInitialPowerLockState = true;   
+    }
+    else
+    {
+        pHandle->bInitialPowerLockState = false;   
+    }
+    
+    //PWREN struct was initialized.
+    pHandle->bInitalized = true;
 
 }
 
@@ -63,15 +73,20 @@ void PWREN_MonitorPowerEnable(PWREN_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    // If the power is off and it was on (falling edge), start the power off sequence
-    if(!PWREN_IsPowerEnabled(pHandle) && pHandle->bPowerCycle)        
+    // test if display resquested the turn off.
+    if((PWREN_IsPowerEnabled(pHandle) == false) && (pHandle->bInitialPowerLockState == true))        
     {   
         osThreadFlagsSet(PowerOffSequence_handle,POWEROFFSEQUENCE_FLAG);
     }
-    else if (PWREN_IsPowerEnabled(pHandle))
+    
+    //test if was false turn on command received by CAN interface 
+    if((PWREN_IsPowerEnabled(pHandle) == false) &&(pHandle->bWakeUpCommandChecked == true) && (pHandle->bWakeUpSDOCommand == false))
     {
-        pHandle->bPowerCycle = true; // REgister that the power has been turned on
-    }        
+        
+        osThreadFlagsSet(PowerOffSequence_handle,POWEROFFSEQUENCE_FLAG);
+        
+    }
+    
 } 
 
 /**
@@ -82,4 +97,60 @@ void PWREN_StopPower(PWREN_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
 
     uCAL_GPIO_Reset(CAN_STANDBY_N_GPIO_PIN);
+}
+
+/**
+  @brief Function to check if the firmware update command was received.
+  @param PWREN_Handle_t * pHandle pointer to the struct responsible
+         to give access to the flags used to know if the device was turned on
+         by firmware command received by CAN or was a false wake up.
+  @param uint8_t UpdateCommand used to pass the value read from the CAN dictionary 
+         address responsible to hold the firmware update command.
+  @return void
+*/
+void PWREN_CheckFirmwareUpdateCommand(PWREN_Handle_t * pHandle, uint16_t UpdateCommand)
+{
+    
+    ASSERT(pHandle != NULL);
+    
+    //variable used to check the timeout to receive a firmware update command.
+    static uint16_t firmwareUpdateTimeout = 0;   
+
+    //Start to check if the firmware update command was received.\
+    //This command afect the way the PWREM works(power on/off management).
+    //If the PWREN was initialized the firmware update check request can be made.
+    if((VCInterfaceHandle.pPowertrain->pPWREN->bInitalized == true) && (VCInterfaceHandle.pPowertrain->pPWREN->bWakeUpSDOCommand == false))
+    {     
+        //Check if the the device received a wake up command by SDO to start the bootloader mode(firmware update).
+        if(UpdateCommand == FIRMWARE_UPDATE_REQUEST)
+        {
+            //Set the flag to say if the command was received or a timeout happened.
+            //This decision will be made by the PWREN.
+            // bWakeUpSDOCommand == true and bWakeUpSDOCommandChecked == true
+            //means command was received.
+            VCInterfaceHandle.pPowertrain->pPWREN->bWakeUpCommandChecked = true;
+                    
+            //Set the the correspondent flag to indicate that a firmware update request arrived.
+            VCInterfaceHandle.pPowertrain->pPWREN->bWakeUpSDOCommand = true; 
+        }
+                
+        //Check if the device was woken up by the a CAN event.
+        //if was start to count the timeout.                
+        if(VCInterfaceHandle.pPowertrain->pPWREN->bInitialPowerLockState == false)
+        {
+            //
+            firmwareUpdateTimeout++;
+        }
+                
+        //if in 5 seconds the device don't receive a firmware update command, he will set
+        //the flag above.
+        if((firmwareUpdateTimeout > FIRMWAREUPDATE_TIMEOUT) && (VCInterfaceHandle.pPowertrain->pPWREN->bWakeUpCommandChecked == false))
+        {
+            //Set the flag to say if the command was received or a timeout happened.
+            //This decision will be made by the PWREN.
+            // bWakeUpSDOCommand == false and bWakeUpSDOCommandChecked == true
+            //means command was not received.
+            VCInterfaceHandle.pPowertrain->pPWREN->bWakeUpCommandChecked = true;
+        } 
+    }
 }
