@@ -26,10 +26,7 @@ typedef struct
 	uint8_t     bSlopePTS;   /* Gain factor of ADC value vs torque sensor */
 	uint8_t     bDivisorPTS; /* Scaling factor of ADC value vs torque sensor */
     
-    uint16_t    hOffsetMTStartup;  /* Offset of torque sensor vs torque on Startup*/
-    uint16_t    hStartupOffsetMTSpeed; /* Speed under which the startup offset is used in rpm */
-	uint16_t    hOffsetMT;         /* Offset of torque sensor vs torque */
-    
+	uint16_t    hOffsetMT;  /* Offset of torque sensor vs torque */
 	int8_t      bSlopeMT;   /* Gain factor of torque sensor vs torque */
 	uint8_t     bDivisorMT; /* Scaling factor of torque sensor vs torque */
 	

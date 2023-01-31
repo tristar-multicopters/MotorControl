@@ -39,11 +39,7 @@
 #define PTS_SLOPE_ADC2PTS                 7        /* Slope for ADC to pedal torque sensor linear transformation  */
 #define PTS_DIVISOR_ADC2PTS               6        /* Divisor for ADC to pedal torque sensor linear transformation  */
 
-
-#define PTS_OFFSET_PTS2TORQUE_STARTUP     40          /* Offset for pedal torque sensor to torque linear transformation during the startup in %  */
-#define PTS_OFFSET_STARTUP_SPEED           20          /* Speed under which the  Startup pedal torque sensor offset is used in wheel rpm   */
-#define PTS_OFFSET_PTS2TORQUE             10       /* Offset for pedal torque sensor to torque linear transformation  */
-
+#define PTS_OFFSET_PTS2TORQUE             20       /* Offset for pedal torque sensor to torque linear transformation  */
 #define PTS_SLOPE_PTS2TORQUE              7        /* Slope for pedal torque sensor to torque linear transformation  */
 #define PTS_DIVISOR_PTS2TORQUE            255      /* Divisor for pedal torque sensor to torque linear transformation  */
 
@@ -86,7 +82,7 @@
 #define PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */
 #define PAS_MAX_TORQUE_RATIO                   99                /* Maximum PAS Torque feed ration in 100% */
 #define PAS_MAX_SPEED_RATIO                    99               /* Maximum PAS Speed feed ration in 100% */
-#define PAS_ALGORITHM                          TorqueSensorUse /*  TorqueSensorUse = 0,     Torque sensor use define 
+#define PAS_ALGORITHM                          CadenceSensorUse /*  TorqueSensorUse = 0,     Torque sensor use define 
                                                                     CadenceSensorUse = 1,    Cadence sensor use define 
                                                                     HybridSensorUse = 2,     Hybride sensor use define  */
 
@@ -108,7 +104,7 @@
 #define POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL              MAX_APPLICATION_SPEED_RPM/15      /* Speed interval value between maximum torque and start torque,
                                                                                                when using single motor startup strategy. */
 #define FOLDBACK_SLOW_START_BANDWIDTH                     500               /* Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control */
-#define FOLDBACK_SLOW_STOP_BANDWIDTH                      300               /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
+#define FOLDBACK_SLOW_STOP_BANDWIDTH                      155               /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
 #define FOLDBACK_TIMEOUT                                  400               /* Fold Back Timeout for the slow start ramp */
 
 /*********************************Battery Monitoring*******************************/

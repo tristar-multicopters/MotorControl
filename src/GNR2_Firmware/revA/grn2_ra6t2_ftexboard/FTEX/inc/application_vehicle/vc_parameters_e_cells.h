@@ -41,10 +41,7 @@
 #define PTS_SLOPE_ADC2PTS                 23        /* Slope for ADC to pedal torque sensor linear transformation  */
 #define PTS_DIVISOR_ADC2PTS               20        /* Divisor for ADC to pedal torque sensor linear transformation  */
 
-#define PTS_OFFSET_PTS2TORQUE_STARTUP     40          /* Offset for pedal torque sensor to torque linear transformation during the startup in %  */
-#define PTS_OFFSET_STARTUP_SPEED           20          /* Speed under which the  Startup pedal torque sensor offset is used in wheel rpm   */
-#define PTS_OFFSET_PTS2TORQUE             10    		/* Offset for pedal torque sensor to torque linear transformation  */
-
+#define PTS_OFFSET_PTS2TORQUE             30    		/* Offset for pedal torque sensor to torque linear transformation  */
 #define PTS_SLOPE_PTS2TORQUE              2        /* Slope for pedal torque sensor to torque linear transformation  */
 #define PTS_DIVISOR_PTS2TORQUE            105     	/* Divisor for pedal torque sensor to torque linear transformation  */
 

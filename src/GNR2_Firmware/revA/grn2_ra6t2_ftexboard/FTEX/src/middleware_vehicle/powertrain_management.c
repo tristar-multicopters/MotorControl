@@ -17,7 +17,7 @@
 #define MAXCURRENT                 75 // Used for a generic conversion 
                                       // from current ref to actual amps
 
- int16_t TorqueFromPAS;
+uint16_t TestVar;
 
 /* Functions ---------------------------------------------------- */
 
@@ -967,7 +967,6 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         if ((pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
-            TorqueFromPAS = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
          }
 				
         /* Hybride sensor enabled */
