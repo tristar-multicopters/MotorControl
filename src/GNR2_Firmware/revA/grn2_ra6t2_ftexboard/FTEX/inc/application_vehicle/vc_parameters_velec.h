@@ -62,7 +62,7 @@
 
 /***************** POWER ENABLE PARAMETERS  ******************************/
 
-#define POWER_ENABLE_ENABLE                false      /* (Sorry for bad name) True if power enable input is used to prevent powertrain start  */
+#define POWER_ENABLE_ENABLE                true      /* (Sorry for bad name) True if power enable input is used to prevent powertrain start  */
 
 
 /***************** POWERTRAIN MANAGEMENT PARAMETERS  ******************************/
@@ -83,7 +83,7 @@
 #define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
 #define PAS_MAX_KM_SPEED                       28               /* Maximum Bike Speed in Km/h using RPM */
 #define PAS_MAX_LEVEL                          5                /* Maximum PAS Level given by the screen */
-#define PAS_LEVEL_COEFF                        1                /* PAS ramp multiplication coefficient for a better user feeling   */
+#define PAS_LEVEL_COEFF                        2                /* PAS ramp multiplication coefficient for a better user feeling   */
 #define PAS_MAX_TORQUE_RATIO                   99               /* Maximum PAS Torque feed ration in 100% */
 #define PAS_MAX_SPEED_RATIO                    99               /* Maximum PAS Speed feed ration in 100% */
 #define PAS_ALGORITHM                          TorqueSensorUse /*  TorqueSensorUse = 0,     Torque sensor use define 
@@ -108,7 +108,7 @@
 #define POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL              MAX_APPLICATION_SPEED_RPM/15      /* Speed interval value between maximum torque and start torque,
                                                                                                when using single motor startup strategy. */
 #define FOLDBACK_SLOW_START_BANDWIDTH                     500               /* Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control */
-#define FOLDBACK_SLOW_STOP_BANDWIDTH                      155               /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
+#define FOLDBACK_SLOW_STOP_BANDWIDTH                      300               /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
 #define FOLDBACK_TIMEOUT                                  400               /* Fold Back Timeout for the slow start ramp */
 
 /*********************************Battery Monitoring*******************************/
