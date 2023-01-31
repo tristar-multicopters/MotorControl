@@ -35,13 +35,16 @@
 #define PTS_FILTER_BETA                   -0.27F			/* Butterworth beta coefficient pedal torque sensor filtering  */
 #define PTS_MAX_PTSVALUE                  UINT16_MAX	    /* Maximum analog value to reach */
 
-#define PTS_OFFSET_ADC2PTS                8500    /* Offset for ADC to pedal torque sensor linear transformation  */
-#define PTS_SLOPE_ADC2PTS                 7        /* Slope for ADC to pedal torque sensor linear transformation  */
-#define PTS_DIVISOR_ADC2PTS               6        /* Divisor for ADC to pedal torque sensor linear transformation  */
+#define PTS_OFFSET_ADC2PTS                8500      /* Offset for ADC to pedal torque sensor linear transformation  */
+#define PTS_SLOPE_ADC2PTS                 7         /* Slope for ADC to pedal torque sensor linear transformation  */
+#define PTS_DIVISOR_ADC2PTS               6         /* Divisor for ADC to pedal torque sensor linear transformation  */
 
-#define PTS_OFFSET_PTS2TORQUE             20    		/* Offset for pedal torque sensor to torque linear transformation  */
-#define PTS_SLOPE_PTS2TORQUE              7        /* Slope for pedal torque sensor to torque linear transformation  */
-#define PTS_DIVISOR_PTS2TORQUE            255        /* Divisor for pedal torque sensor to torque linear transformation  */
+#define PTS_OFFSET_PTS2TORQUE_STARTUP     40          /* Offset for pedal torque sensor to torque linear transformation during the startup in %  */
+#define PTS_OFFSET_STARTUP_SPEED           20          /* Speed under which the  Startup pedal torque sensor offset is used in wheel rpm   */
+#define PTS_OFFSET_PTS2TORQUE             10        /* Offset for pedal torque sensor to torque linear transformation in %  */
+
+#define PTS_SLOPE_PTS2TORQUE              7         /* Slope for pedal torque sensor to torque linear transformation  */
+#define PTS_DIVISOR_PTS2TORQUE            255       /* Divisor for pedal torque sensor to torque linear transformation  */
 
 #define PTS_FILTER_BW1                    10        /* BW coefficient for pedal torque sensor avereging */
 #define PTS_FILTER_BW2                    25        /* BW coefficient for pedal torque sensor avereging */
@@ -84,7 +87,7 @@
 #define PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */
 #define PAS_MAX_TORQUE_RATIO                   99                /* Maximum PAS Torque feed ration in 100% */
 #define PAS_MAX_SPEED_RATIO                    99                /* Maximum PAS Speed feed ration in 100% */
-#define PAS_ALGORITHM                          HybridSensorUse   /*  TorqueSensorUse = 0,     Torque sensor use define 
+#define PAS_ALGORITHM                          TorqueSensorUse   /*  TorqueSensorUse = 0,     Torque sensor use define 
                                                                     CadenceSensorUse = 1,    Cadence sensor use define 
                                                                     HybridSensorUse = 2,     Hybride sensor use define  */
 #define PAS_WHEEL_SPEED_SENSOR_PPR             2                 /* Number of electrical pulses per wheel rotation */

@@ -191,6 +191,46 @@ uint8_t UserConfigTask_GetPasMaxPower(void);
 void UserConfigTask_UpdatePasMaxPower(uint8_t value);
 
 /**
+  @brief Function to update Torque Minimum Threshold Startup
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Torque Minimum Threshold Startup
+  @return void
+ 
+*/
+uint8_t UserConfigTask_GetTorqueMinimumThresholdStartup(void);
+
+/**
+  @brief Function to get Torque Minimum Threshold Startup
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t a number that represent Torque Minimum Threshold
+  on %(0 until 100).
+*/
+void UserConfigTask_UpdateTorqueMinimumThresholdStartup(uint8_t value);
+
+/**
+  @brief Function to get Startup Offset Minimum Threshold Speed
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t a number that represent Startup Offset Minimum Threshold Speed
+  in RPM.
+*/
+uint8_t UserConfigTask_GetStartupOffsetMinimumThresholdSpeed(void);
+
+/**
+  @brief Function to update Startup Offset Minimum Threshold Speed
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Startup Offset Minimum Threshold Speed
+  @return void
+ 
+*/
+void UserConfigTask_UpdateStartupOffsetMinimumThresholdSpeed(uint8_t value);
+
+/**
   @brief Function to get Torque Minimum Threshold
   read from data flash memory.
   

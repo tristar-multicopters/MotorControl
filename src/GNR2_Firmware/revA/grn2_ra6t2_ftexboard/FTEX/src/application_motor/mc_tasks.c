@@ -270,7 +270,7 @@ void MediumFrequencyTaskM1(void)
     #endif
 
     (void)HallPosSensor_CalcAvrgMecSpeedUnit(&HallPosSensorM1, &wAux);
-    bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
+   bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
     MotorPowerQD_CalcElMotorPower(pMotorPower[M1]);
 #if DYNAMIC_CURRENT_CONTROL_PID
     FOC_UpdatePIDGains(M1);
@@ -367,7 +367,7 @@ void MediumFrequencyTaskM1(void)
 #if !(BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
         if (!bIsSpeedReliable)
         {
-            // MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_SPEED_FDBK, 0);
+            //MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_SPEED_FDBK, 0);
         }
 #endif
         break;

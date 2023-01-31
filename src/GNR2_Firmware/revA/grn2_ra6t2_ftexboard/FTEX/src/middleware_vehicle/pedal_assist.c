@@ -251,10 +251,23 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     */
 void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle) 
 {
-    uint32_t	wSpeedt;
-    uint16_t	hTorqueSens;
+    uint32_t  wSpeedt;
+    uint16_t  hTorqueSens;
+    uint16_t  hOffsetTemp;
+    uint16_t  WheelRPM;
+    
+    WheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
     /* Calculate the offset based on ration percentage */
-    uint16_t  hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+    
+    if(WheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeed) // If going at low speed use the startup offset
+    {
+        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+    }
+    else
+    {
+        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+    }        
+    
 	
     wSpeedt = PedalSpdSensor_GetPeriodValue(pHandle->pPSS);
     hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);

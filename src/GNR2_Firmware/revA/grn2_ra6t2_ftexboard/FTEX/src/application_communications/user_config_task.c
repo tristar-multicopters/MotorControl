@@ -125,7 +125,7 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
         
         //if the data id(header of the user data) or the bike type is are not the same
         //clear data flash memory.
-        if ((ID0_DATA_FLASH != data[0]) || (ID1_DATA_FLASH != data[1]) || (userConfigData.vehicle != VEHICLE_SELECTION))
+        if ((ID0_DATA_FLASH != data[0]) || (ID1_DATA_FLASH != data[1]) || (data[2] != VEHICLE_SELECTION))
         {
             
             //try max three times to erase data flash memory.
@@ -268,6 +268,12 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     //update userConfigData.PAS_ConfigData.pasMaxPower(PAS_MAX_TORQUE_RATIO)
     userConfigHandle->pVController->pPowertrain->pPAS->sParameters.hMaxTorqueRatio = UserConfigTask_GetPasMaxPower();
+
+    //update userConfigData.PAS_ConfigData.torqueMinimumThresholdStartup(PTS_OFFSET_PTS2TORQUE_STARTUP)
+    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hOffsetMTStartup = UserConfigTask_GetTorqueMinimumThresholdStartup();
+
+    //update userConfigData.PAS_ConfigData.startupTorqueMinimumThresholdSpeed(PTS_OFFSET_STARTUP_SPEED)
+    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hStartupOffsetMTSpeed = UserConfigTask_GetStartupOffsetMinimumThresholdSpeed();
     
     //update userConfigData.PAS_ConfigData.torqueMinimumThreshold(PTS_OFFSET_PTS2TORQUE)
     userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hOffsetMT = UserConfigTask_GetTorqueMinimumThreshold();  
@@ -369,6 +375,66 @@ void UserConfigTask_UpdatePasMaxPower(uint8_t value)
     {
         userConfigData.PAS_ConfigData.pasMaxPower = value;    
     }
+}
+
+/**
+  @brief Function to get Torque Minimum Threshold Startup
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t a number that represent Torque Minimum Threshold
+  on %(0 until 100).
+*/
+uint8_t UserConfigTask_GetTorqueMinimumThresholdStartup(void)
+{
+    return userConfigData.PAS_ConfigData.torqueMinimumThresholdStartup;     
+}
+
+/**
+  @brief Function to update Torque Minimum Threshold Startup
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Torque Minimum Threshold Startup
+  @return void
+ 
+*/
+void UserConfigTask_UpdateTorqueMinimumThresholdStartup(uint8_t value)
+{
+    //verify if value is in the range.
+    if((value <= 100) && (value >= 0))
+    {
+        userConfigData.PAS_ConfigData.torqueMinimumThresholdStartup = value;
+    }        
+}
+
+/**
+  @brief Function to get Startup Offset Minimum Threshold Speed
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t a number that represent Startup Offset Minimum Threshold Speed
+  in RPM.
+*/
+uint8_t UserConfigTask_GetStartupOffsetMinimumThresholdSpeed(void)
+{
+    return userConfigData.PAS_ConfigData.startupTorqueMinimumThresholdSpeed; 
+}
+
+/**
+  @brief Function to update Startup Offset Minimum Threshold Speed
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Startup Offset Minimum Threshold Speed
+  @return void
+ 
+*/
+void UserConfigTask_UpdateStartupOffsetMinimumThresholdSpeed(uint8_t value)
+{
+    //verify if value is in the range.
+    if(value >= 0)
+    {
+        userConfigData.PAS_ConfigData.startupTorqueMinimumThresholdSpeed = value;
+    }        
 }
 
 /**

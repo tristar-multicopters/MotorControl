@@ -103,6 +103,8 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t pasAlgorithm = UserConfigTask_GetPasAlgorithm();
     uint8_t maxPAS = UserConfigTask_GetNumberPasLevels();
     uint8_t pasMaxPower = UserConfigTask_GetPasMaxPower();
+    uint8_t torqueMinimumThresholdStartup = UserConfigTask_GetTorqueMinimumThresholdStartup();    
+    uint8_t startupTorqueMinimumThresholdSpeed = UserConfigTask_GetStartupOffsetMinimumThresholdSpeed();
     uint8_t torqueMinimumThreshold = UserConfigTask_GetTorqueMinimumThreshold();
     uint8_t torqueSensorMultiplier = UserConfigTask_GetTorqueSensorMultiplier();
     uint8_t torqueMaxSpeed = UserConfigTask_GetTorqueMaxSpeed();
@@ -385,6 +387,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdataPasAlgorithm(pasAlgorithm);
                  UserConfigTask_UpdateNumberPasLevels(maxPAS);
                  UserConfigTask_UpdatePasMaxPower(pasMaxPower);
+                 UserConfigTask_UpdateTorqueMinimumThresholdStartup(torqueMinimumThresholdStartup);      
+                 UserConfigTask_UpdateStartupOffsetMinimumThresholdSpeed(startupTorqueMinimumThresholdSpeed);
                  UserConfigTask_UpdateTorqueMinimumThreshold(torqueMinimumThreshold);
                  UserConfigTask_UpdateTorqueSensorMultiplier(torqueSensorMultiplier);
                  UserConfigTask_UpdateTorqueMaxSpeed(torqueMaxSpeed);
