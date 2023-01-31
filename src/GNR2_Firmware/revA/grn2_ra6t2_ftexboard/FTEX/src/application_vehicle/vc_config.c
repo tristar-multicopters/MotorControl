@@ -108,8 +108,11 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
         .hOffsetPTS = PTS_OFFSET_ADC2PTS,
         .bSlopePTS = PTS_SLOPE_ADC2PTS,
         .bDivisorPTS = PTS_DIVISOR_ADC2PTS,
-
+        
+        .hOffsetMTStartup      = PTS_OFFSET_PTS2TORQUE_STARTUP,  
+        .hStartupOffsetMTSpeed = PTS_OFFSET_STARTUP_SPEED,
         .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
+
         .bSlopeMT = PTS_SLOPE_PTS2TORQUE,
         .bDivisorMT = PTS_DIVISOR_PTS2TORQUE,
         .hMax = PTS_MAX_PTSVALUE,
