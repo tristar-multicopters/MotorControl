@@ -40,7 +40,7 @@
 #define PTS_DIVISOR_ADC2PTS               6        /* Divisor for ADC to pedal torque sensor linear transformation  */
 
 #define PTS_OFFSET_PTS2TORQUE_STARTUP     40          /* Offset for pedal torque sensor to torque linear transformation during the startup in %  */
-#define PTS_OFFSET_STARTUP_SPEED           20          /* Speed under which the  Startup pedal torque sensor offset is used in wheel rpm   */
+#define PTS_OFFSET_STARTUP_SPEED          20          /* Speed under which the  Startup pedal torque sensor offset is used in wheel rpm   */
 #define PTS_OFFSET_PTS2TORQUE             10       /* Offset for pedal torque sensor to torque linear transformation  */
 
 #define PTS_SLOPE_PTS2TORQUE              7        /* Slope for pedal torque sensor to torque linear transformation  */
@@ -62,7 +62,7 @@
 
 /***************** POWER ENABLE PARAMETERS  ******************************/
 
-#define POWER_ENABLE_ENABLE                false      /* (Sorry for bad name) True if power enable input is used to prevent powertrain start  */
+#define POWER_ENABLE_ENABLE                true      /* (Sorry for bad name) True if power enable input is used to prevent powertrain start  */
 
 
 /***************** POWERTRAIN MANAGEMENT PARAMETERS  ******************************/

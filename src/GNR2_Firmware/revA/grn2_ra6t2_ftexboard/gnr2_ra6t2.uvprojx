@@ -14,14 +14,14 @@
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>R7FA6T2BD3CFP</Device>
+          <Device>R7FA6T2BB3CFP</Device>
           <Vendor>Renesas</Vendor>
           <PackID>Renesas.RA_DFP.3.7.0</PackID>
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
-          <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x040000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2V8M(-S0 -C0 -P0 -FD20000000 -FC2000 -FN3 -FF0RA6T2_512K -FS00 -FL080000 -FF1RA6T2_DATA_C512K -FS18000000 -FL14000 -FF2RA6T2_CONF -FS2100A000 -FL2300 -FP0($$Device:R7FA6T2BD3CFP$Flash\RA6T2_512K.FLM) -FP1($$Device:R7FA6T2BD3CFP$Flash\RA6T2_DATA_C512K.FLM) -FP2($$Device:R7FA6T2BD3CFP$Flash\RA6T2_CONF.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2V8M(-S0 -C0 -P0 -FD20000000 -FC2000 -FN3 -FF0RA6T2_256K -FS00 -FL040000 -FF1RA6T2_DATA_C256K -FS18000000 -FL14000 -FF2RA6T2_CONF -FS2100A000 -FL2300 -FP0($$Device:R7FA6T2BB3CFP$Flash\RA6T2_256K.FLM) -FP1($$Device:R7FA6T2BB3CFP$Flash\RA6T2_DATA_C256K.FLM) -FP2($$Device:R7FA6T2BB3CFP$Flash\RA6T2_CONF.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile></RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -33,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:R7FA6T2BD3CFP$SVD\R7FA6T2BD.svd</SFDFile>
+          <SFDFile>$$Device:R7FA6T2BB3CFP$SVD\R7FA6T2BD.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -252,7 +252,7 @@
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -277,7 +277,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -1728,7 +1728,7 @@
         <TargetCommonOption>
           <Device>R7FA6T2BD3CFP</Device>
           <Vendor>Renesas</Vendor>
-          <PackID>Renesas.RA_DFP.3.7.0</PackID>
+          <PackID>Renesas.RA_DFP.3.8.0</PackID>
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
           <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -3389,7 +3389,7 @@
         <TargetCommonOption>
           <Device>R7FA6T2BD3CFP</Device>
           <Vendor>Renesas</Vendor>
-          <PackID>Renesas.RA_DFP.3.7.0</PackID>
+          <PackID>Renesas.RA_DFP.3.8.0</PackID>
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
           <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -5154,6 +5154,22 @@
         </targetInfos>
       </file>
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
+        <instance index="0">RTE\Device\R7FA6T2BB3CFP\startup_RA.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <targetInfos>
+          <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
+        <instance index="0">RTE\Device\R7FA6T2BB3CFP\system_RA.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <targetInfos>
+          <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0" removed="1">RTE\Device\R7FA6T2BD\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
         <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
@@ -5170,7 +5186,6 @@
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
         <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
         <targetInfos>
-          <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
           <targetInfo excluded="1" name="APP_MAIN (JUST UPLOAD)" versionMatchMode=""/>
         </targetInfos>
@@ -5180,7 +5195,6 @@
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
         <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
         <targetInfos>
-          <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
           <targetInfo excluded="1" name="APP_MAIN (JUST UPLOAD)" versionMatchMode=""/>
         </targetInfos>
