@@ -37,6 +37,7 @@ typedef struct
   int16_t         hDemagCurrent;          /**< Demagnetization current in s16A:
                                                Current(Amp) = [Current(s16A) * Vdd micro]/
                                                [65536 * Rshunt * Aop] */
+  int32_t         wNominalCurr;           /**< Squared motor nominal current in */
   int32_t         wNominalSqCurr;         /**< Squared motor nominal current in (s16A)^2
                                                where:
                                                Current(Amp) = [Current(s16A) * Vdd micro]/

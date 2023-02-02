@@ -91,6 +91,7 @@ FluxWeakeningHandle_t FluxWeakeningM1 =
   .hMaxModule             = MAX_MODULE,
   .hDefaultFwVoltRef       = (int16_t)FW_VOLTAGE_REF,
   .hDemagCurrent          = ID_DEMAG,
+  .wNominalCurr           = (int32_t)NOMINAL_PEAK_CURRENT,
   .wNominalSqCurr         = ((int32_t)NOMINAL_PEAK_CURRENT*(int32_t)NOMINAL_PEAK_CURRENT),
   .hVqdLowPassFilterBw    = M1_VQD_SW_FILTER_BW_FACTOR,
   .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG

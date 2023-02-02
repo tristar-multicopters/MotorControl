@@ -411,6 +411,21 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
 }
 
 /*
+    Apply nominal current limit
+*/
+void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int32_t NominalCurr)
+{
+    if (pHandle->q > NominalCurr)
+    {
+        pHandle->q = (int16_t)NominalCurr;
+    }
+    else if (pHandle->q < -NominalCurr)
+    {
+        pHandle->q = -(int16_t)NominalCurr;
+    }
+}
+
+/*
     Check if motor is stuck or not
 */
 uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle)

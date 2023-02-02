@@ -294,6 +294,14 @@ int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
 int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef);
 
 /**
+  * @brief  Get Id, Iq from provided 
+  *         to limit them to hMaxCurrent
+  * @param  pHandle: handler of the current instance of the FOCVars component
+  * @retval null
+  */
+void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int32_t NominalCurr);
+
+/**
   * @brief  Check if the motor stcuk or not, return the result
   *         To convert current expressed in Amps to current expressed in digit
   *         is possible to use the formula:
