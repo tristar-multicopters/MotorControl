@@ -57,7 +57,7 @@
 #define WHEEL_SPEED_SENSOR_CORRECTION_FACTOR 2      /* Wheel speed sensor slow detect correction for a signal after two wheel spin detection */    
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
-#define MOTOR_SELECTOR_ENABLE              true      /* True if active motor can be changed using 3 way switch  */
+#define MOTOR_SELECTOR_ENABLE              false      /* True if active motor can be changed using 3 way switch  */
   
 
 /***************** POWER ENABLE PARAMETERS  ******************************/
@@ -79,9 +79,9 @@
 #define POWERTRAIN_DISABLE_THROTTLE_PAS_0                 true              /* If set the tru throttle is disabled when pas level is 0 */
 
 
-#define PAS_MAX_TORQUE                         1200               /* Maximum motor torque to apply using pedal assist  */
+#define PAS_MAX_TORQUE                         1400               /* Maximum motor torque to apply using pedal assist  */
 #define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
-#define PAS_MAX_KM_SPEED                       28               /* Maximum Bike Speed in Km/h using RPM */
+#define PAS_MAX_KM_SPEED                       33               /* Maximum Bike Speed in Km/h using RPM */
 #define PAS_MAX_LEVEL                          5                /* Maximum PAS Level given by the screen */
 #define PAS_LEVEL_COEFF                        1                /* PAS ramp multiplication coefficient for a better user feeling   */
 #define PAS_MAX_TORQUE_RATIO                   99               /* Maximum PAS Torque feed ration in 100% */

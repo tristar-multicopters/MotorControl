@@ -128,7 +128,7 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
-#define MAX_APPLICATION_POSITIVE_POWER  5000    /* Refers to maximum power that drive can push to the motor */
+#define MAX_APPLICATION_POSITIVE_POWER  1000    /* Refers to maximum power that drive can push to the motor */
 #define MAX_APPLICATION_NEGATIVE_POWER  5000    /* Refers to maximum power that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
