@@ -27,7 +27,7 @@
 
 #define NOMINAL_TORQUE     6231  /* Nominal torque to apply to motor in cNm  */
 #define STARTING_TORQUE    6800  /* Maximum starting torque to apply to motor in cNm  */
-#define NOMINAL_PEAK_CURRENT    12000 /* Maximum current amplitude that can be injected
+#define NOMINAL_PEAK_CURRENT    13000 /* Maximum current amplitude that can be injected
                                           per phase in digital Amps */
 #define MOTOR_MAX_SPEED_RPM     1000 /*!< Maximum rated speed  */
 #define MOTOR_MAGNET_FLUX     0.050
