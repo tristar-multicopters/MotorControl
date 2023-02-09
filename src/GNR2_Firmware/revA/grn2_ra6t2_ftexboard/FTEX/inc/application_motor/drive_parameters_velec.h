@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/		// motorRPM=speed(km/h)*GR*100000/(R*pi*2.54*60)   where R=25 inch and GR=7.86
-#define MAX_APPLICATION_SPEED_RPM       3000   /*!< Max speed for the current application in mechanical rpm */
+#define MAX_APPLICATION_SPEED_RPM       2600   /*!< Max speed for the current application in mechanical rpm */
                                                /* Old Example 2750 for 38Km/h */
 #define MIN_APPLICATION_SPEED_RPM       0     /*!< Min speed for the current application in mechanical rpm */
 #define MEAS_ERRORS_BEFORE_FAULTS       6     /*!< Number of speed
@@ -128,7 +128,7 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
-#define MAX_APPLICATION_POSITIVE_POWER  1000    /* Refers to maximum power that drive can push to the motor */
+#define MAX_APPLICATION_POSITIVE_POWER  1500    /* Refers to maximum power that drive can push to the motor */
 #define MAX_APPLICATION_NEGATIVE_POWER  5000    /* Refers to maximum power that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
