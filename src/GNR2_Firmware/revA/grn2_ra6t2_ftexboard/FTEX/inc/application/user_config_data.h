@@ -14,6 +14,10 @@
 //define the lenght on bytes of the User_ConfigData_t.
 #define USER_DATA_CONFIG_LENGTH   sizeof(User_ConfigData_t)
     
+//add pad bytes(zeros) to make the define be a multiple of 4(this is necessary to write correctly in 
+//the user data flash). write operation on data flash must be to be multiple of 4.
+#define NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN  (((USER_DATA_CONFIG_LENGTH%4) == (0)) ? (USER_DATA_CONFIG_LENGTH) : (USER_DATA_CONFIG_LENGTH + 4 - (USER_DATA_CONFIG_LENGTH%4)))
+    
 //defines used to access cadenceHybridLeveSpeed[] array
 //each position in the array is associated with a PAS level
 //index 0 PAS level 0 and etc.
@@ -83,6 +87,7 @@ typedef struct
     uint8_t vehicle;
     PAS_ConfigData_t PAS_ConfigData;
     Throttle_ConfigData_t Throttle_ConfigData;
+    uint16_t crc;
 } User_ConfigData_t;
 
 //ends 1 bytes alignment.

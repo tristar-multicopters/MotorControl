@@ -64,6 +64,9 @@
 //in the data flash memory and reset the system.
 #define KEY_USER_DATA_CONFIG_UPDATED         0xC2E5
 
+//CRC-16-CCITT polynom
+#define CCITT_POLYNOM 0x1021
+
 
 /*********************************************
           Data Struct Definition
@@ -373,5 +376,16 @@ uint8_t UserConfigTask_GetWalkModeSpeed(void);
 
 */
 void UserConfigTask_UpdateWalkModeSpeed(uint8_t value);
+
+/**
+  @brief Function used to calculate a CRC 16 type using the same polynom 
+  used by the bluetooth protocol.CCITT 16 bits polynom.
+  
+  @param uint8_t * data pointer to the data buffer where the CRC must be done.
+  @param uint8_t lenght the lenght of the data to be calculated by the CRC algorithm.
+  @return uint16_t return the calculated CRC.
+
+*/
+uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t lenght);
 
 #endif

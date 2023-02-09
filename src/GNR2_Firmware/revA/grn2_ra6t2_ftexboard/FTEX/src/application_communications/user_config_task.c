@@ -63,6 +63,7 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_9] = 0,
     .Throttle_ConfigData.maxSpeed = PAS_MAX_KM_SPEED,
     .Throttle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
+    .crc = 0x0000,
 
 };
 
@@ -71,7 +72,7 @@ static User_ConfigData_t userConfigData =
 //static User_ConfigData_t userConfigData;
 
 //buffer used to 
-static uint8_t data[NUMBER_OF_BYTES_IN_THE_BLOCK];
+static uint8_t data[NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN];
 
 /*********************************************
                 Public Variables
@@ -111,6 +112,9 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
     //when trying to erase data flash memory.
     uint8_t attempts;
     
+    //variable used to receive the crc 
+    uint16_t crc = 0x0000;
+    
     //pass the pointer that control data flash
     userConfigHandle->pDataFlash_Handle = pDataFlashHandle;
     //pass the pointer that control vehicle interface
@@ -120,20 +124,21 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
     
     //try to open flash memory
     if(uCAL_Flash_Open(userConfigHandle->pDataFlash_Handle) == true)
-    {
-        
+    {   
         //get date from data flash memory(backup)
         uCAL_Data_Flash_Read(userConfigHandle->pDataFlash_Handle, data, FLASH_HP_DF_BLOCK_0, USER_DATA_CONFIG_LENGTH);
         
-        //if the data id(header of the user data) or the bike type is are not the same
+        //caclualte the crc to verify integrit of the data excluding crc bytes.
+        crc = UserConfigTask_CalculateCRC(data, USER_DATA_CONFIG_LENGTH - 2);
+        
+        //Check data header, bike type and crc.if they one of them are different 
         //clear data flash memory.
-        if ((ID0_DATA_FLASH != data[0]) || (ID1_DATA_FLASH != data[1]) || (data[2] != VEHICLE_SELECTION))
+        if ((ID0_DATA_FLASH != data[0]) || (ID1_DATA_FLASH != data[1]) || (data[2] != VEHICLE_SELECTION) || 
+           (crc != (uint16_t)((data[USER_DATA_CONFIG_LENGTH - 1] << 8) + data[USER_DATA_CONFIG_LENGTH - 2])))
         {
-            
             //try max three times to erase data flash memory.
             for(attempts = 0; attempts < MAX_ERASE_ATTEMPTS ; attempts++)
             {
-            
                 //erase one block(block 0) of the data flash memory before write on it.
                 //if you need more than 64 to write user configuration we need to
                 //erase more than 1 block.
@@ -143,29 +148,29 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
                 //we are using just 1 block, so just 64 are checked.
                 //to check 2 or more blocks use n*NUMBER_OF_BYTES_IN_THE_BLOCK.
                 if (uCAL_Data_Flash_Blank_Check(userConfigHandle->pDataFlash_Handle, FLASH_HP_DF_BLOCK_0, NUMBER_OF_BYTES_IN_THE_BLOCK) == true)
-                {
-                    
+                { 
                     //if memory was correctly erased break
                     //stop the attempts.
-                    break;
-                
+                    break;               
                 }
-                
             }
             
             //check if the memory was erased in less than three attempts
             //if yes, write the new user configuration on it.
             if (attempts < MAX_ERASE_ATTEMPTS )
             {
+                //caclualte the crc to verify integrit of the data excluding crc bytes.
+                crc = UserConfigTask_CalculateCRC((uint8_t *)&userConfigData, USER_DATA_CONFIG_LENGTH - 2);
+            
+                //get the new crc.
+                userConfigData.crc = crc;
                 
                 //copy all user configuration values to the buffer.
                 memcpy(data,&userConfigData,USER_DATA_CONFIG_LENGTH);
                 
                 //write user configuration that represents USER_DATA_CONFIG_LENGTH bytes.
-                uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_0, USER_DATA_CONFIG_LENGTH);
-                
-            }
-            
+                uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_0, NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN); 
+            }   
         }
         else
         {
@@ -174,7 +179,6 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
            memcpy(&userConfigData,data,USER_DATA_CONFIG_LENGTH); 
             
         }
-        
     }
     
     //Close data flash memory access.
@@ -196,6 +200,9 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
     //variable used to control how my attempts will be done
     //when trying to erase data flash memory.
     uint8_t attempts;
+    
+    //variable used to receive the crc 
+    uint16_t crc = 0x0000;
     
     //try to open flash memory
     if (uCAL_Flash_Open(userConfigHandle->pDataFlash_Handle) == true)
@@ -228,12 +235,18 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
         //if yes, write the new user configuration on it.
         if (attempts < MAX_ERASE_ATTEMPTS )
         {
-                
+            
+            //caclualte the crc to verify integrit of the data excluding crc bytes.
+            crc = UserConfigTask_CalculateCRC((uint8_t *)&userConfigData, USER_DATA_CONFIG_LENGTH - 2);
+            
+            //get the new crc.
+            userConfigData.crc = crc;
+            
             //copy all user configuration values to the buffer.
             memcpy(data,&userConfigData,USER_DATA_CONFIG_LENGTH);
                 
             //write user configuration that represents USER_DATA_CONFIG_LENGTH bytes.
-            uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_0, USER_DATA_CONFIG_LENGTH);
+            uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_0, NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN);
                 
         }
             
@@ -664,4 +677,46 @@ void UserConfigTask_UpdateWalkModeSpeed(uint8_t value)
     {
     userConfigData.Throttle_ConfigData.walkModeSpeed = value;
     }
+}
+
+/**
+  @brief Function used to calculate a CRC 16 type using the same polynom 
+  used by the bluetooth protocol.CCITT 16 bits polynom.
+  
+  @param uint8_t * data pointer to the data buffer where the CRC must be done.
+  @param uint8_t lenght the lenght of the data to be calculated by the CRC algorithm.
+  @return uint16_t return the calculated CRC.
+
+*/
+uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t lenght)
+{   
+    uint8_t i;
+    uint8_t n = 0;
+    uint8_t value;
+    uint16_t crc = 0x0000;
+    //calculate the crc to all buffer lenght
+    while(n < lenght)
+    {
+        //receive the next byte to be processed.
+        value = buffer[n];
+        
+        //loop that implement the crc algorithm to each byte.
+        for (i = 0; i < 8; i++) 
+        {
+            if (((crc & 0x8000) >> 8) ^ (value & 0x80))
+            {
+                crc = (uint16_t)(crc << 1) ^ CCITT_POLYNOM;
+            }
+            else
+            {
+                crc = (uint16_t)(crc << 1);
+            }
+
+            value <<= 1;
+        }
+        //increment the count.
+        n++;
+    }
+  
+	return crc;
 }
