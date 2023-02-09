@@ -413,15 +413,22 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
 /*
     Apply nominal current limit
 */
-void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int32_t NominalCurr)
+void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurrent, int16_t userMaxCurrent)
 {
-    if (pHandle->q > NominalCurr)
+    int16_t hMaxLimit = NominalCurrent;
+    
+    if (userMaxCurrent < NominalCurrent)
     {
-        pHandle->q = (int16_t)NominalCurr;
+        hMaxLimit = userMaxCurrent;
     }
-    else if (pHandle->q < -NominalCurr)
+    
+    if (pHandle->q > hMaxLimit)
     {
-        pHandle->q = -(int16_t)NominalCurr;
+        pHandle->q = hMaxLimit;
+    }
+    else if (pHandle->q < -hMaxLimit)
+    {
+        pHandle->q = -(int16_t)hMaxLimit;
     }
 }
 

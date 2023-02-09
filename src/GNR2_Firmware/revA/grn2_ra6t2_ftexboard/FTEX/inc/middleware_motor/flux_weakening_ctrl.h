@@ -22,7 +22,7 @@ extern "C" {
   */
 typedef struct
 {
-  PIDHandle_t *       pFluxWeakeningPID; /**< PI object used for flux weakening */
+  PIDHandle_t *       pMotorControlPID; /**< PI object used for flux weakening */
   PIDHandle_t *       pSpeedPID;         /**< PI object used for speed control */
   uint16_t        hFwVoltRef;              /**< Voltage reference, tenth of
                                                  percentage points */
@@ -37,11 +37,14 @@ typedef struct
   int16_t         hDemagCurrent;          /**< Demagnetization current in s16A:
                                                Current(Amp) = [Current(s16A) * Vdd micro]/
                                                [65536 * Rshunt * Aop] */
-  int32_t         wNominalCurr;           /**< Squared motor nominal current in */
+  int16_t         wNominalCurr;           /**< Squared motor nominal current in */
   int32_t         wNominalSqCurr;         /**< Squared motor nominal current in (s16A)^2
                                                where:
                                                Current(Amp) = [Current(s16A) * Vdd micro]/
                                                [65536 * Rshunt * Aop] */
+  int16_t         wUsrMaxCurr;             /**< User Defined Maximum Curent comming from APT
+                                               initial value is NominamMaxCurr but Vehicle layer
+                                               can update the value */
   uint16_t        hVqdLowPassFilterBw;    /**< Use this parameter to configure the Vqd
                                                first order software filter bandwidth.
                                                hVqdLowPassFilterBw = FOC_CurrController
@@ -54,7 +57,7 @@ typedef struct
   uint16_t        hVqdLowPassFilterBwLog; /**< hVqdLowPassFilterBw expressed as power of 2.
                                                E.g. if gain divisor is 512 the value
                                                must be 9 because 2^9 = 512 */
-} FluxWeakeningHandle_t;
+} MCConfigHandle_t;
 
 
 /* Exported functions ------------------------------------------------------- */
@@ -64,10 +67,10 @@ typedef struct
   *         once right after object creation.
   * @param  pHandle Flux weakening init strutcture.
   * @param  pPIDSpeed Speed PID structure.
-  * @param  pPIDFluxWeakeningHandle FW PID structure.
+  * @param  pPIDMotorControlHandle FW PID structure.
   * @retval none.
   */
-void FluxWkng_Init(FluxWeakeningHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDFluxWeakeningHandle);
+void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle);
 
 /**
   * @brief  It should be called before each motor restart and clears the Flux
@@ -76,7 +79,7 @@ void FluxWkng_Init(FluxWeakeningHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PID
   * @param  pHandle Flux weakening init strutcture.
   * @retval none
   */
-void FluxWkng_Clear(FluxWeakeningHandle_t * pHandle);
+void FluxWkng_Clear(MCConfigHandle_t * pHandle);
 
 /**
   * @brief  It computes Iqdref according the flux weakening algorithm.  Inputs
@@ -90,7 +93,7 @@ void FluxWkng_Clear(FluxWeakeningHandle_t * pHandle);
   *         manipulated by the flux weakening algorithm.
   * @retval qd_t Computed Iqdref.
   */
-qd_t FluxWkng_CalcCurrRef(FluxWeakeningHandle_t * pHandle, qd_t Iqdref);
+qd_t FluxWkng_CalcCurrRef(MCConfigHandle_t * pHandle, qd_t Iqdref);
 
 /**
   * @brief  It low-pass filters both the Vqd voltage components. Filter
@@ -99,7 +102,7 @@ qd_t FluxWkng_CalcCurrRef(FluxWeakeningHandle_t * pHandle, qd_t Iqdref);
   * @param  Vqd Voltage componets to be averaged.
   * @retval none
   */
-void FluxWkng_DataProcess(FluxWeakeningHandle_t * pHandle, qd_t Vqd);
+void MC_DataProcess(MCConfigHandle_t * pHandle, qd_t Vqd);
 
 /**
   * @brief  Use this method to set a new value for the voltage reference used by
@@ -109,7 +112,7 @@ void FluxWkng_DataProcess(FluxWeakeningHandle_t * pHandle, qd_t Vqd);
   *         points of available voltage.
   * @retval none
   */
-void FluxWkng_SetVref(FluxWeakeningHandle_t * pHandle, uint16_t hNewVref);
+void MC_SetVref(MCConfigHandle_t * pHandle, uint16_t hNewVref);
 
 /**
   * @brief  It returns the present value of target voltage used by flux
@@ -118,7 +121,7 @@ void FluxWkng_SetVref(FluxWeakeningHandle_t * pHandle, uint16_t hNewVref);
   * @retval int16_t Present target voltage value expressed in tenth of
   *         percentage points of available voltage.
   */
-uint16_t FluxWkng_GetVref(FluxWeakeningHandle_t * pHandle);
+uint16_t MC_GetVref(MCConfigHandle_t * pHandle);
 
 /**
   * @brief  It returns the present value of voltage actually used by flux
@@ -128,7 +131,7 @@ uint16_t FluxWkng_GetVref(FluxWeakeningHandle_t * pHandle);
   *         in s16V (0-to-peak), where
   *         PhaseVoltage(V) = [PhaseVoltage(s16A) * Vbus(V)] /[sqrt(3) *32767].
   */
-int16_t FluxWkng_GetAvVAmplitude(FluxWeakeningHandle_t * pHandle);
+int16_t MC_GetAvVAmplitude(MCConfigHandle_t * pHandle);
 
 /**
   * @brief  It returns the measure of present voltage actually used by flux
@@ -137,7 +140,7 @@ int16_t FluxWkng_GetAvVAmplitude(FluxWeakeningHandle_t * pHandle);
   * @retval uint16_t Present averaged phase stator voltage value, expressed in
   *         tenth of percentage points of available voltage.
   */
-uint16_t FluxWkng_GetAvVPercentage(FluxWeakeningHandle_t * pHandle);
+uint16_t MC_GetAvVPercentage(MCConfigHandle_t * pHandle);
 
 
 #ifdef __cplusplus

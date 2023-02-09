@@ -1,6 +1,6 @@
 /**
   * @file    flux_weakening_ctrl.c
-  * @brief   This file provides firmware functions that implement the Flux Weakening
+  * @brief   This file provides firmware functions that implement the Motor Control
   *          Control component of the Motor Control application.
   *
 */
@@ -13,28 +13,28 @@
 #include "pid_regulator.h"
 
 
-void FluxWkng_Init(FluxWeakeningHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDFluxWeakeningHandle)
+void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle)
 {
   pHandle->hFwVoltRef = pHandle->hDefaultFwVoltRef;
 
-  pHandle->pFluxWeakeningPID = pPIDFluxWeakeningHandle;
+  pHandle->pMotorControlPID = pPIDMotorControlHandle;
 
   pHandle->pSpeedPID = pPIDSpeed;
 }
 
 
-void FluxWkng_Clear(FluxWeakeningHandle_t * pHandle)
+void FluxWkng_Clear(MCConfigHandle_t * pHandle)
 {
   qd_t V_null = {(int16_t)0, (int16_t)0};
 
-  PID_SetIntegralTerm(pHandle->pFluxWeakeningPID, (int32_t)0);
+  PID_SetIntegralTerm(pHandle->pMotorControlPID, (int32_t)0);
   pHandle->AvVoltQd = V_null;
   pHandle->AvVoltAmpl = (int16_t)0;
   pHandle->hIdRefOffset = (int16_t)0;
 }
 
 
-qd_t FluxWkng_CalcCurrRef(FluxWeakeningHandle_t * pHandle, qd_t Iqdref)
+qd_t FluxWkng_CalcCurrRef(MCConfigHandle_t * pHandle, qd_t Iqdref)
 {
   int32_t wIdRef, wIqSatSq, wIqSat, wAux1, wAux2;
   uint32_t wVoltLimit_Ref;
@@ -58,7 +58,7 @@ qd_t FluxWkng_CalcCurrRef(FluxWeakeningHandle_t * pHandle, qd_t Iqdref)
     wAux1 = (int32_t)INT16_MAX;
   }
 
-  hId_fw = PI_Controller(pHandle->pFluxWeakeningPID, (int32_t)wVoltLimit_Ref - wAux1);
+  hId_fw = PI_Controller(pHandle->pMotorControlPID, (int32_t)wVoltLimit_Ref - wAux1);
 
   /* If the Id coming from flux weakening algorithm (Id_fw) is positive, keep
   unchanged Idref, otherwise sum it to last Idref available when Id_fw was
@@ -110,7 +110,7 @@ qd_t FluxWkng_CalcCurrRef(FluxWeakeningHandle_t * pHandle, qd_t Iqdref)
 }
 
 
-void FluxWkng_DataProcess(FluxWeakeningHandle_t * pHandle, qd_t Vqd)
+void MC_DataProcess(MCConfigHandle_t * pHandle, qd_t Vqd)
 {
   int32_t wAux;
   int32_t lowPassFilterBW = (int32_t)(pHandle->hVqdLowPassFilterBw) - (int32_t)1 ;
@@ -144,7 +144,7 @@ void FluxWkng_DataProcess(FluxWeakeningHandle_t * pHandle, qd_t Vqd)
 }
 
 
-void FluxWkng_SetVref(FluxWeakeningHandle_t * pHandle, uint16_t hNewVref)
+void MC_SetVref(MCConfigHandle_t * pHandle, uint16_t hNewVref)
 {
   pHandle->hFwVoltRef = hNewVref;
 }
@@ -152,11 +152,11 @@ void FluxWkng_SetVref(FluxWeakeningHandle_t * pHandle, uint16_t hNewVref)
 /**
   * @brief  It returns the present value of target voltage used by flux
   *         weakening algorihtm.
-  * @param  pHandle Flux weakening init strutcture.
+  * @param  pHandle Motor Control init strutcture.
   * @retval int16_t Present target voltage value expressed in tenth of
   *         percentage points of available voltage.
   */
-uint16_t FluxWkng_GetVref(FluxWeakeningHandle_t * pHandle)
+uint16_t MC_GetVref(MCConfigHandle_t * pHandle)
 {
   return (pHandle->hFwVoltRef);
 }
@@ -164,12 +164,12 @@ uint16_t FluxWkng_GetVref(FluxWeakeningHandle_t * pHandle)
 /**
   * @brief  It returns the present value of voltage actually used by flux
   *         weakening algorihtm.
-  * @param  pHandle Flux weakening init strutcture.
+  * @param  pHandle Motor Control init strutcture.
   * @retval int16_t Present averaged phase stator voltage value, expressed
   *         in s16V (0-to-peak), where
   *         PhaseVoltage(V) = [PhaseVoltage(s16A) * Vbus(V)] /[sqrt(3) *32767].
   */
-int16_t FluxWkng_GetAvVAmplitude(FluxWeakeningHandle_t * pHandle)
+int16_t MC_GetAvVAmplitude(MCConfigHandle_t * pHandle)
 {
   return (pHandle->AvVoltAmpl);
 }
@@ -177,11 +177,11 @@ int16_t FluxWkng_GetAvVAmplitude(FluxWeakeningHandle_t * pHandle)
 /**
   * @brief  It returns the measure of present voltage actually used by flux
   *         weakening algorihtm as percentage of available voltage.
-  * @param  pHandle Flux weakening init strutcture.
+  * @param  pHandle Motor Control init strutcture.
   * @retval uint16_t Present averaged phase stator voltage value, expressed in
   *         tenth of percentage points of available voltage.
   */
-uint16_t FluxWkng_GetAvVPercentage(FluxWeakeningHandle_t * pHandle)
+uint16_t MC_GetAvVPercentage(MCConfigHandle_t * pHandle)
 {
   return (uint16_t)((uint32_t)(pHandle->AvVoltAmpl) * 1000u /
                        (uint32_t)(pHandle->hMaxModule));

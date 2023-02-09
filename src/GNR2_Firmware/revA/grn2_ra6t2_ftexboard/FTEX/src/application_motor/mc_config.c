@@ -84,23 +84,24 @@ PIDHandle_t PIDIdHandleM1 =
 };
 
 /**
-  * @brief  FluxWeakeningCtrl component parameters Motor 1
+  * @brief  Motor Cotrol component parameters Motor 1
   */
-FluxWeakeningHandle_t FluxWeakeningM1 =
+MCConfigHandle_t MCConfig =
 {
   .hMaxModule             = MAX_MODULE,
   .hDefaultFwVoltRef       = (int16_t)FW_VOLTAGE_REF,
   .hDemagCurrent          = ID_DEMAG,
   .wNominalCurr           = (int32_t)NOMINAL_PEAK_CURRENT,
   .wNominalSqCurr         = ((int32_t)NOMINAL_PEAK_CURRENT*(int32_t)NOMINAL_PEAK_CURRENT),
+  .wUsrMaxCurr            = NOMINAL_PEAK_CURRENT,                  //initially programmed with Nominal value
   .hVqdLowPassFilterBw    = M1_VQD_SW_FILTER_BW_FACTOR,
   .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG
 };
 
 /**
-  * @brief  PI Flux Weakening control parameters Motor 1
+  * @brief  PI Motor Control control parameters Motor 1
   */
-PIDHandle_t PIDFluxWeakeningHandleM1 =
+PIDHandle_t PIDMotorControlM1 =
 {
   .hDefKpGain          = (int16_t)FW_KP_GAIN,
   .hDefKiGain          = (int16_t)FW_KI_GAIN,

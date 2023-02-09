@@ -299,8 +299,8 @@ int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
   * @param  pHandle: handler of the current instance of the FOCVars component
   * @retval null
   */
-void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int32_t NominalCurr);
-
+  
+void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurr, int16_t UsrMaxCurr);
 /**
   * @brief  Check if the motor stcuk or not, return the result
   *         To convert current expressed in Amps to current expressed in digit

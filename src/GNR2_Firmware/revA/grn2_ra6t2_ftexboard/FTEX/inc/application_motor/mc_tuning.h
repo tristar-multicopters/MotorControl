@@ -37,7 +37,7 @@ typedef struct
   PIDHandle_t * pPIDSpeed;
   PIDHandle_t * pPIDIq;
   PIDHandle_t * pPIDId;
-  PIDHandle_t * pPIDFluxWeakening;
+  PIDHandle_t * pPIDMotorControl;
   PWMCurrFdbkHandle_t * pPWMnCurrFdbk;
   SpdPosFdbkHandle_t * pSpeedSensorMain;
   SpdPosFdbkHandle_t * pSpeedSensorAux;
@@ -47,7 +47,7 @@ typedef struct
   NTCTempSensorHandle_t * pTemperatureSensor;
   BusVoltageSensorHandle_t * pBusVoltageSensor;
   MotorPowerMeasHandle_t * pMotorPower;
-  FluxWeakeningHandle_t  * pFieldWeakening;
+  MCConfigHandle_t  * pFieldWeakening;
   FeedforwardHandle_t  * pFeedforward;
 } MotorControlTuningHandle_t;
 

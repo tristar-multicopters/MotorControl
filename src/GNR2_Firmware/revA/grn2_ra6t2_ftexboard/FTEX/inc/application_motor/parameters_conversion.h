@@ -70,7 +70,8 @@
 /*max phase voltage, 0-peak Volts*/
 #define MAX_VOLTAGE (int16_t)((ADC_REFERENCE_VOLTAGE/SQRT_3)/VBUS_PARTITIONING_FACTOR)
 
-#define MAX_CURRENT (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN))
+/* The maximum current from Current Sensor with AMPLIFICATION_GAIN that we can measure using ADC with ADC_REFERENCE_VOLTAGE */
+#define MAX_MEASURABLE_CURRENT (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN))   
 #define OBS_MINIMUM_SPEED_UNIT    (uint16_t) ((OBS_MINIMUM_SPEED_RPM*SPEED_UNIT)/_RPM)
 
 #define MAX_APPLICATION_SPEED_UNIT ((MAX_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM)
@@ -79,9 +80,9 @@
 /************************* PLL PARAMETERS **************************/
 #define C1 (int32_t)((((int16_t)F1)*RS)/(LS*TF_REGULATION_RATE))
 #define C2 (int32_t) GAIN1
-#define C3 (int32_t)((((int16_t)F1)*MAX_BEMF_VOLTAGE)/(LS*MAX_CURRENT*TF_REGULATION_RATE))
+#define C3 (int32_t)((((int16_t)F1)*MAX_BEMF_VOLTAGE)/(LS*MAX_MEASURABLE_CURRENT*TF_REGULATION_RATE))
 #define C4 (int32_t) GAIN2
-#define C5 (int32_t)((((int16_t)F1)*MAX_VOLTAGE)/(LS*MAX_CURRENT*TF_REGULATION_RATE))
+#define C5 (int32_t)((((int16_t)F1)*MAX_VOLTAGE)/(LS*MAX_MEASURABLE_CURRENT*TF_REGULATION_RATE))
 
 #define PERCENTAGE_FACTOR    (uint16_t)(VARIANCE_THRESHOLD*128u)
 #define HFI_MINIMUM_SPEED    (uint16_t) (HFI_MINIMUM_SPEED_RPM/6u)
@@ -136,7 +137,7 @@
 /*************** Current vs torque ratio ******/
 // #define MOTOR_MAGNET_FLUX              (float) MOTOR_VOLTAGE_CONSTANT*60/(2*POLE_PAIR_NUM*1000*SQRT_3*PI_)     /*!< In weber rms */
 
-#define GAIN_TORQUE_IQREF              (float) (1/(100*3*POLE_PAIR_NUM*MOTOR_MAGNET_FLUX*MAX_CURRENT/(UINT16_MAX))) 
+#define GAIN_TORQUE_IQREF              (float) (1/(100*3*POLE_PAIR_NUM*MOTOR_MAGNET_FLUX*MAX_MEASURABLE_CURRENT/(UINT16_MAX))) 
 #define GAIN_TORQUE_IDREF              0
 
 

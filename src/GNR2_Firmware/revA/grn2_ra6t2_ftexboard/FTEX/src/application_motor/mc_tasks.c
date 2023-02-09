@@ -55,7 +55,7 @@ NTCTempSensorHandle_t *pTemperatureSensor[NBR_OF_MOTORS];
 PWMCurrFdbkHandle_t *pPWMCurrFdbk[NBR_OF_MOTORS];
 MotorPowerQDHandle_t *pMotorPower[NBR_OF_MOTORS];
 CircleLimitationHandle_t *pCircleLimitation[NBR_OF_MOTORS];
-FluxWeakeningHandle_t *pFieldWeakening[NBR_OF_MOTORS];
+MCConfigHandle_t *pFieldWeakening[NBR_OF_MOTORS];
 FeedforwardHandle_t *pFeedforward[NBR_OF_MOTORS];
 
 
@@ -101,7 +101,7 @@ void MC_BootUp(void)
 
     bMCBootCompleted = 0;
     pCircleLimitation[M1] = &CircleLimitationM1;
-    pFieldWeakening[M1] = &FluxWeakeningM1; /* only if M1 has FW */
+    pFieldWeakening[M1] = &MCConfig; /* only if M1 has FW */
     pFeedforward[M1] = &FeedforwardM1;      /* only if M1 has FF */
 
     /**********************************************************/
@@ -160,10 +160,10 @@ void MC_BootUp(void)
     NTCTempSensor_Init(&TempSensorParamsM1);
     pTemperatureSensor[M1] = &TempSensorParamsM1;
     /*******************************************************/
-    /*     Flux weakening component initialization         */
+    /*     Motor Control component initialization         */
     /*******************************************************/
-    PID_Init(&PIDFluxWeakeningHandleM1);
-    FluxWkng_Init(pFieldWeakening[M1], pPIDSpeed[M1], &PIDFluxWeakeningHandleM1);
+    PID_Init(&PIDMotorControlM1);
+    MotorControl_Init(pFieldWeakening[M1], pPIDSpeed[M1], &PIDMotorControlM1);
 
     /*******************************************************/
     /*     Feed forward component initialization           */
@@ -187,7 +187,7 @@ void MC_BootUp(void)
     MCTuning[M1].pPIDSpeed = pPIDSpeed[M1];
     MCTuning[M1].pPIDIq = pPIDIq[M1];
     MCTuning[M1].pPIDId = pPIDId[M1];
-    MCTuning[M1].pPIDFluxWeakening = &PIDFluxWeakeningHandleM1; /* only if M1 has FW */
+    MCTuning[M1].pPIDMotorControl = &PIDMotorControlM1; /* only if M1 has FW */
     MCTuning[M1].pPWMnCurrFdbk = pPWMCurrFdbk[M1];
     MCTuning[M1].pSpeedSensorMain = (SpdPosFdbkHandle_t *)&RotorPosObsM1;
     MCTuning[M1].pSpeedSensorAux = (SpdPosFdbkHandle_t *)&BemfObserverPllM1;
@@ -494,7 +494,7 @@ void FOC_CalcCurrRef(uint8_t bMotor)
         }
         
         /* apply the maximum nominal limitation to the Iq */
-        SpdTorqCtrl_ApplyCurrentLimitation_Iq(&FOCVars[bMotor].Iqdref, FluxWeakeningM1.wNominalCurr);
+        SpdTorqCtrl_ApplyCurrentLimitation_Iq(&FOCVars[bMotor].Iqdref, MCConfig.wNominalCurr, MCConfig.wUsrMaxCurr);
         
         if (pFeedforward[bMotor])
         {
@@ -668,7 +668,7 @@ inline uint16_t FOC_CurrControllerM1(void)
         FOCVars[M1].Iqd = Iqd;
         FOCVars[M1].Valphabeta = Valphabeta;
         FOCVars[M1].hElAngle = hElAngle;
-        FluxWkng_DataProcess(pFieldWeakening[M1], Vqd);
+        MC_DataProcess(pFieldWeakening[M1], Vqd);
         Feedforward_DataProcess(pFeedforward[M1]);
 
         // Check for overcurrent condition (software overcurrent protection)
