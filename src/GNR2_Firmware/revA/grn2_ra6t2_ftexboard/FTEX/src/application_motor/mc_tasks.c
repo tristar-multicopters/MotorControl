@@ -450,7 +450,7 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
 #if VEHICLE_SELECTION == VEHICLE_VELEC    
     if (FOCVars[bMotor].hTeref == 0.0)
     {
-        PID_SetKI(pPIDIq[bMotor], 500);
+        PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
     }
     else
     {

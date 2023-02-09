@@ -20,7 +20,10 @@
 #define MIN_APPLICATION_SPEED_RPM       0     /*!< Min speed for the current application in mechanical rpm */
 #define MEAS_ERRORS_BEFORE_FAULTS       6     /*!< Number of speed
                                                              measurement errors before
-                                                             main sensor goes in fault */                                                           
+                                                             main sensor goes in fault */  
+
+
+#define No_Load_PID_KIq_Gain    500  /* this is the Kiq  when the torque set is very low
 /****** Hall sensors ************/
 #define HALL_MEAS_ERRORS_BEFORE_FAULTS  6 /*!< Number of failed
                                                            derived class specific speed
