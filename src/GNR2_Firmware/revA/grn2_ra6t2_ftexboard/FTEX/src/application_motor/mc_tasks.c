@@ -58,6 +58,7 @@ CircleLimitationHandle_t *pCircleLimitation[NBR_OF_MOTORS];
 MCConfigHandle_t *pFieldWeakening[NBR_OF_MOTORS];
 FeedforwardHandle_t *pFeedforward[NBR_OF_MOTORS];
 
+
 static volatile uint16_t hMFTaskCounterM1 = 0;
 static volatile uint16_t hBootCapDelayCounterM1 = 0;
 static volatile uint16_t hStopPermanencyCounterM1 = 0;
@@ -443,21 +444,7 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
 
     int16_t hM1SpeedUnit = SpdPosFdbk_GetAvrgMecSpeedUnit(SpeedHandle);
 
-/*  The PI controller continues the PWM for few seconds after releasing the Throttle
-    which can be seen when there is no load. So solve, we are updating PI parameters 
-    to perevent such situation. for now only Velec. For other bikes first we should do
-    the tests */
-#if VEHICLE_SELECTION == VEHICLE_VELEC    
-    if (FOCVars[bMotor].hTeref == 0.0)
-    {
-        PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
-    }
-    else
-    {
-        PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
-    }
-#endif    
-    
+
     PID_SetKP(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKp, abs(hM1SpeedUnit)));
     PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
     PID_SetKP(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKp, abs(hM1SpeedUnit)));
