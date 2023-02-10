@@ -121,6 +121,22 @@ void LCD_APT_Task(APT_Handle_t *pHandle);
  */
 void LCD_APT_frame_Process(APT_Handle_t *pHandle);
 
+/**@brief Function used to apply a filter on the speed we send to the screen
+ *        
+ * @param[in] instantaneous speed in RPM
+ *            
+ * @return filtered speed in RPM
+ */
+uint16_t LCD_APT_ApplySpeedFilter(uint16_t aInstantSpeedInRPM);
+
+/**@brief Function used to apply a filter on the power we send to the screen        
+ *
+ * @param[in] instantaneous power in Amps
+ *            
+ * @return filtered power in Amps
+ */
+uint16_t LCD_APT_ApplyPowerFilter(uint16_t aInstantPowerInAmps);
+
 /**@brief Function used to translate the PAS level received from the APT  
  *        screen standard to the FTEX standard
  *

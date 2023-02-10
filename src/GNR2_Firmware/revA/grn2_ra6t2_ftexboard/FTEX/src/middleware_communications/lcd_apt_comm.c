@@ -223,33 +223,38 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
       
          //Get the amount of amps we are currently pushing 
          toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);
-         toSend = toSend * 2;                    //Covert from amps to 0.5 amps; 
+         
+         toSend = LCD_APT_ApplyPowerFilter((uint16_t)toSend);  
+          
+         toSend = toSend * 2; //Covert from amps to 0.5 amps; 
         
-         replyFrame.Buffer[ 1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
+         replyFrame.Buffer[1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
 
          /* Condition use for wheel speed sensor rpm to send */
          toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
-         toSend = toSend * 500;       //Converion from RPM to period in ms 
          
-         //verify toSend value to avoid a division by zero.
-         if(toSend != 0)
+          
+         toSend =  LCD_APT_ApplySpeedFilter((uint16_t) toSend);
+          
+         toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
+         
+         if(toSend != 0) //verify toSend value to avoid a division by zero.
          {
-
-            toSend = 500000/(toSend/60);
-             
+            toSend = 500000/(toSend/60); // Descaling here with the 500000 to return to original unit            
          }
-     
-         replyFrame.Buffer[ 2] = (toSend & 0x00FF);      // Wheel speed Low half 
-         replyFrame.Buffer[ 3] = (toSend & 0xFF00) >> 8; // Wheel speed High half
+            
+         
+         replyFrame.Buffer[2] = (toSend & 0x00FF);      // Wheel speed Low half 
+         replyFrame.Buffer[3] = (toSend & 0xFF00) >> 8; // Wheel speed High half
       
-         replyFrame.Buffer[ 4] = 0x00; // Error Code
+         replyFrame.Buffer[4] = 0x00; // Error Code
       
-         replyFrame.Buffer[ 5] = 0x04; // Brake Code bXXXX 0100 means the motor is working
+         replyFrame.Buffer[5] = 0x04; // Brake Code bXXXX 0100 means the motor is working
                       
-         replyFrame.Buffer[ 6] = 0x00;
+         replyFrame.Buffer[6] = 0x00;
          
          // If we want to change the PAS level we need to change it here
-         replyFrame.Buffer[ 7] = PAS_UNCHANGED; // Send 0x0A unless we want to change the PAS on the screen  
+         replyFrame.Buffer[7] = PAS_UNCHANGED; // Send 0x0A unless we want to change the PAS on the screen  
          
          if(pHandle->CanChangePasFlag || pHandle->OldPAS != LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)))
          {
@@ -258,8 +263,8 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
              pHandle->OldPAS = LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS));
          }
                                        
-         replyFrame.Buffer[ 8] = 0x00;
-         replyFrame.Buffer[ 9] = 0x00;
+         replyFrame.Buffer[8] = 0x00;
+         replyFrame.Buffer[9] = 0x00;
     
          //Calculate checksum
          //Sum of paired bytes
@@ -285,6 +290,33 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
     }// End of CRC check
        
 }
+
+
+/**  
+ *  Function used to apply a filter on the speed we send to the screen 
+ */
+uint16_t LCD_APT_ApplySpeedFilter(uint16_t aInstantSpeedInRPM)
+{
+   static uint16_t SpeedAvg; 
+   uint16_t Bandwidth = 3; //Bandwidth CANNOT be set to 0
+    
+   SpeedAvg = ((Bandwidth-1) * SpeedAvg + aInstantSpeedInRPM)/Bandwidth;
+   
+   return (SpeedAvg); 
+}    
+
+/**  
+ *  Function used to apply a filter on the power we send to the screen 
+ */
+uint16_t LCD_APT_ApplyPowerFilter(uint16_t aInstantPowerInAmps)
+{
+   static uint16_t PowerAvg; 
+   uint16_t Bandwidth = 3; //Bandwidth CANNOT be set to 0
+        
+   PowerAvg = ((Bandwidth-1) * PowerAvg + aInstantPowerInAmps)/Bandwidth;
+   
+   return (PowerAvg); 
+} 
 
 /** Function used to translate the PAS level received from the APT  
  *  screen standard to the FTEX standard
