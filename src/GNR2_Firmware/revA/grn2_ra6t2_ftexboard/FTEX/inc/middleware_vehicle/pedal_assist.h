@@ -146,6 +146,14 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle);
     */
 void PedalAssist_UpdatePASDetection(PAS_Handle_t * pHandle);
 
+
+/**
+    * @brief  Set Pedal Assist standard speed based on screen informations
+    * @param  Pedal Assist handle
+    * @retval pRefTorque in int16
+    */
+void PedalAssist_PASSetMaxSpeed_Standard(PAS_Handle_t * pHandle);
+
 /**
     * @brief  Return if pedals are moving or not
     * @param  Pedal Assist handle

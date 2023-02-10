@@ -123,6 +123,26 @@ int16_t PedalAssist_GetPASTorqueSpeed(PAS_Handle_t * pHandle)
     * @param  Pedal Assist handle
     * @retval pRefTorque in int16
     */
+void PedalAssist_PASSetMaxSpeed_Standard(PAS_Handle_t * pHandle)
+{
+	uint16_t hMaxSpeedTemp;
+	
+    PasLevel_t Got_Level;
+    Got_Level = PedalAssist_GetAssistLevel(pHandle);
+    
+    // Calculate the maximum speed for control   
+	hMaxSpeedTemp = ((pHandle->sParameters.hMaxSpeedRatio * pHandle->sParameters.hPASMaxSpeed) / PAS_PERCENTAGE);
+	// Set the PAS Speed in a standard way without specific range of speed
+	Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t) (hMaxSpeedTemp / pHandle->sParameters.bMaxLevel) * Got_Level);
+	Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS, (int16_t) (hMaxSpeedTemp / pHandle->sParameters.bMaxLevel) * Got_Level);
+
+}
+
+/**
+    * @brief  Set Pedal Assist standard speed based on screen informations
+    * @param  Pedal Assist handle
+    * @retval pRefTorque in int16
+    */
 void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
 {
     uint16_t hKmSpeedTemp;

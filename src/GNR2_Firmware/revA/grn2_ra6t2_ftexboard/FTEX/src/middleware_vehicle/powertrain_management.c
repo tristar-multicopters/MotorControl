@@ -978,15 +978,16 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 					
             /* Set Cadence Speed */  
             PedalAssist_PASSetMaxSpeed(pHandle->pPAS); 
-            /* Set Torque Sensor */
+            /* Get Torque Sensor */
             htorqueSens = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
-            /* Set Motor Torque */
-            htorqueSelect = PedalAssist_GetPASTorque(pHandle->pPAS);
+            /* Get Motor Torque */
+            htorqueSelect = PedalAssist_GetPASTorqueSpeed(pHandle->pPAS);
             /* Apply Limitation for the final torque */
             int32_t temp = abs(wSpeedMainMotor);
             int16_t absoluteSpeed = (int16_t)temp; // manually cast because abs returns an integer
             
             hFinalTorque = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, htorqueSelect, absoluteSpeed);
+
             hFinalTorque = Foldback_ApplySlowStart(pHandle->SpeedFoldbackStartupDualMotor, hFinalTorque); //Apply the slow start if needed    				
             
             /* Make a decision by adding the torque or limiting the speed */

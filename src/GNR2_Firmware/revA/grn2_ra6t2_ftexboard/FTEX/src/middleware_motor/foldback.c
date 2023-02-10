@@ -230,12 +230,18 @@ int16_t Foldback_ApplySlowStart(Foldback_Handle_t * pHandle, int16_t hTorque)
         {
             hBandwidth = pHandle->hSlowStopBandwidth;
         }
-
+            
             wTemp =  (hBandwidth - 1u); //Apply a low pass filter to the torque
             wTemp *= hAverageTorque;
             wTemp += hTorque;
             wTemp /= hBandwidth;
-            hAverageTorque =  (int16_t) wTemp;
+            // Add a foladback filtering check for value under 1
+            if (wTemp<MINIMUMVAL)
+            {
+                wTemp = MINIMUMVAL;
+            }
+
+            hAverageTorque =  (int16_t) wTemp ;
             hTorqueOut = hAverageTorque;            
 
         if (wTimeCounter > pHandle->wSlowStartTimeout)          // Timeout condition is there to make sure we cant get stuck in a slow start

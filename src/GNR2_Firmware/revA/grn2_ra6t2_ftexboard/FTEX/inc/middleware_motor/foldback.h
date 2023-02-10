@@ -15,6 +15,8 @@
 #include <stdbool.h>
 #include <stdlib.h> // explicitely include stdlib since we're using the abs function
 
+#define MINIMUMVAL   1 // Define Minimum Range Value for Filtering as safety
+
 typedef enum    // Enumerated data type to set the configuration of foldback
 {
     TRIM = 0,

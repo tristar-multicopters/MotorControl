@@ -107,8 +107,8 @@
                                                                                                when using dual motor startup strategy. */
 #define POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL              MAX_APPLICATION_SPEED_RPM/15      /* Speed interval value between maximum torque and start torque,
                                                                                                when using single motor startup strategy. */
-#define FOLDBACK_SLOW_START_BANDWIDTH                     500               /* Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control */
-#define FOLDBACK_SLOW_STOP_BANDWIDTH                      150                /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
+#define FOLDBACK_SLOW_START_BANDWIDTH                     950               /* Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control */
+#define FOLDBACK_SLOW_STOP_BANDWIDTH                      50                /* Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control */
 #define FOLDBACK_TIMEOUT                                  400               /* Fold Back Timeout for the slow start ramp */
 
 /*********************************Battery Monitoring*******************************/
