@@ -40,10 +40,6 @@
 
 #include "drive_parameters_tsugawa.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_NIDEC_MID_DRIVE
-
-#include "drive_parameters_nidec_mid_drive.h"
-
 #endif
 
 #endif /*__DRIVE_PARAMETERS_H*/

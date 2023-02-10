@@ -42,10 +42,6 @@
 
 #include "vc_parameters_tsugawa.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_NIDEC_MID_DRIVE
-
-#include "vc_parameters_nidec_mid_drive.h"
-
 
 #endif
 

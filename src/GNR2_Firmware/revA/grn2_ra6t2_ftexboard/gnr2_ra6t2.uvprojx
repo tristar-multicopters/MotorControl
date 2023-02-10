@@ -14,14 +14,14 @@
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
-          <Device>R7FA6T2BD3CFP</Device>
+          <Device>R7FA6T2BB3CFP</Device>
           <Vendor>Renesas</Vendor>
           <PackID>Renesas.RA_DFP.3.7.0</PackID>
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
-          <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x040000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2V8M(-S0 -C0 -P0 -FD20000000 -FC2000 -FN3 -FF0RA6T2_512K -FS00 -FL080000 -FF1RA6T2_DATA_C512K -FS18000000 -FL14000 -FF2RA6T2_CONF -FS2100A000 -FL2300 -FP0($$Device:R7FA6T2BD3CFP$Flash\RA6T2_512K.FLM) -FP1($$Device:R7FA6T2BD3CFP$Flash\RA6T2_DATA_C512K.FLM) -FP2($$Device:R7FA6T2BD3CFP$Flash\RA6T2_CONF.FLM))</FlashDriverDll>
+          <FlashDriverDll>UL2V8M(-S0 -C0 -P0 -FD20000000 -FC2000 -FN3 -FF0RA6T2_256K -FS00 -FL040000 -FF1RA6T2_DATA_C256K -FS18000000 -FL14000 -FF2RA6T2_CONF -FS2100A000 -FL2300 -FP0($$Device:R7FA6T2BB3CFP$Flash\RA6T2_256K.FLM) -FP1($$Device:R7FA6T2BB3CFP$Flash\RA6T2_DATA_C256K.FLM) -FP2($$Device:R7FA6T2BB3CFP$Flash\RA6T2_CONF.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile></RegisterFile>
           <MemoryEnv></MemoryEnv>
@@ -33,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:R7FA6T2BD3CFP$SVD\R7FA6T2BD.svd</SFDFile>
+          <SFDFile>$$Device:R7FA6T2BB3CFP$SVD\R7FA6T2BD.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -252,7 +252,7 @@
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -277,7 +277,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x40000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -340,7 +340,7 @@
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal -Wno-comment</MiscControls>
               <Define>LFS_NO_MALLOC,LFS_NO_DEBUG,LFS_NO_ERROR,LFS_NO_WARN</Define>
               <Undefine></Undefine>
-              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\include;.\libraries\littlefs</IncludePath>
+              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\core;.\CANopen-stack\hal;.\CANopen-stack\object\basic;.\CANopen-stack\object\cia301;.\CANopen-stack\service\cia301;.\CANopen-stack\include;.\libraries\littlefs</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -488,11 +488,6 @@
               <FileName>vc_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_nidec_mid_drive.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\vc_parameters_nidec_mid_drive.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -654,11 +649,6 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_tsugawa.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_nidec_mid_drive.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pmsm_motor_parameters_nidec_mid_drive.h</FilePath>
-            </File>
-            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
@@ -703,11 +693,6 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
             </File>
-            <File>
-              <FileName>drive_parameters_nidec_mid_drive.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\drive_parameters_nidec_mid_drive.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -732,6 +717,57 @@
               <FileName>comm_tasks.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application_communications\comm_tasks.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>1</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>user_config_task.c</FileName>
@@ -833,6 +869,57 @@
               <FileName>power_enable.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\power_enable.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>1</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>powertrain_management.c</FileName>
@@ -1201,9 +1288,9 @@
               <FilePath>.\FTEX\src\middleware_communications\slave_mc_interface.c</FilePath>
             </File>
             <File>
-              <FileName>can_iot_comm.c</FileName>
+              <FileName>can_vehicle_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_communications\can_iot_comm.c</FilePath>
+              <FilePath>.\FTEX\src\middleware_communications\can_vehicle_interface.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1268,92 +1355,177 @@
             <File>
               <FileName>co_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_core.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_core.c</FilePath>
             </File>
             <File>
               <FileName>co_csdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_csdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_csdo.c</FilePath>
             </File>
             <File>
               <FileName>co_dict.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_dict.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_dict.c</FilePath>
             </File>
             <File>
               <FileName>co_emcy.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_emcy.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_can.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_nvm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_nvm.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_lss.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_lss.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_nmt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_nmt.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_obj.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_obj.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_para.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_para.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_emcy.c</FilePath>
             </File>
             <File>
               <FileName>co_pdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_pdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_pdo.c</FilePath>
             </File>
             <File>
               <FileName>co_ssdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ssdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_ssdo.c</FilePath>
             </File>
             <File>
               <FileName>co_sync.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_sync.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_sync.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_nvm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_nvm.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_nmt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_nmt.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_obj.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_obj.c</FilePath>
             </File>
             <File>
               <FileName>co_tmr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_tmr.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_tmr.c</FilePath>
             </File>
             <File>
               <FileName>co_ver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ver.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_ver.c</FilePath>
             </File>
             <File>
               <FileName>co_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CANopen-stack\config\co_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>co_domain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_domain.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer8.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer8.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer16.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer32.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_string.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_string.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_hist.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_hist.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_cons.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_cons.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_prod.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_prod.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_restore.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_restore.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_store.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_store.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_event.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_map.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_map.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_num.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_num.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_type.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_type.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_cycle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_cycle.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_id.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1556,7 +1728,7 @@
         <TargetCommonOption>
           <Device>R7FA6T2BD3CFP</Device>
           <Vendor>Renesas</Vendor>
-          <PackID>Renesas.RA_DFP.3.7.0</PackID>
+          <PackID>Renesas.RA_DFP.4.0.0</PackID>
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
           <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -2029,11 +2201,6 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
             </File>
-            <File>
-              <FileName>vc_parameters_nidec_mid_drive.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\vc_parameters_nidec_mid_drive.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -2194,11 +2361,6 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_tsugawa.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_nidec_mid_drive.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pmsm_motor_parameters_nidec_mid_drive.h</FilePath>
-            </File>
-            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
@@ -2242,11 +2404,6 @@
               <FileName>drive_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_nidec_mid_drive.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\drive_parameters_nidec_mid_drive.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2741,9 +2898,9 @@
               <FilePath>.\FTEX\src\middleware_communications\slave_mc_interface.c</FilePath>
             </File>
             <File>
-              <FileName>can_iot_comm.c</FileName>
+              <FileName>can_vehicle_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_communications\can_iot_comm.c</FilePath>
+              <FilePath>.\FTEX\src\middleware_communications\can_vehicle_interface.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2859,92 +3016,177 @@
             <File>
               <FileName>co_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_core.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_core.c</FilePath>
             </File>
             <File>
               <FileName>co_csdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_csdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_csdo.c</FilePath>
             </File>
             <File>
               <FileName>co_dict.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_dict.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_dict.c</FilePath>
             </File>
             <File>
               <FileName>co_emcy.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_emcy.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_can.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_nvm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_nvm.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_lss.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_lss.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_nmt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_nmt.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_obj.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_obj.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_para.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_para.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_emcy.c</FilePath>
             </File>
             <File>
               <FileName>co_pdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_pdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_pdo.c</FilePath>
             </File>
             <File>
               <FileName>co_ssdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ssdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_ssdo.c</FilePath>
             </File>
             <File>
               <FileName>co_sync.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_sync.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_sync.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_nvm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_nvm.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_nmt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_nmt.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_obj.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_obj.c</FilePath>
             </File>
             <File>
               <FileName>co_tmr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_tmr.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_tmr.c</FilePath>
             </File>
             <File>
               <FileName>co_ver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ver.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_ver.c</FilePath>
             </File>
             <File>
               <FileName>co_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CANopen-stack\config\co_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>co_domain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_domain.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer8.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer8.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer16.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer32.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_string.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_string.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_hist.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_hist.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_cons.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_cons.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_prod.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_prod.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_restore.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_restore.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_store.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_store.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_event.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_map.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_map.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_num.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_num.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_type.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_type.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_cycle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_cycle.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_id.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3147,7 +3389,7 @@
         <TargetCommonOption>
           <Device>R7FA6T2BD3CFP</Device>
           <Vendor>Renesas</Vendor>
-          <PackID>Renesas.RA_DFP.3.7.0</PackID>
+          <PackID>Renesas.RA_DFP.4.0.0</PackID>
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
           <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -3620,11 +3862,6 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
             </File>
-            <File>
-              <FileName>vc_parameters_nidec_mid_drive.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\vc_parameters_nidec_mid_drive.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -3785,11 +4022,6 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_tsugawa.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_nidec_mid_drive.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\pmsm_motor_parameters_nidec_mid_drive.h</FilePath>
-            </File>
-            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
@@ -3833,11 +4065,6 @@
               <FileName>drive_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_nidec_mid_drive.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\drive_parameters_nidec_mid_drive.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4332,9 +4559,9 @@
               <FilePath>.\FTEX\src\middleware_communications\slave_mc_interface.c</FilePath>
             </File>
             <File>
-              <FileName>can_iot_comm.c</FileName>
+              <FileName>can_vehicle_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_communications\can_iot_comm.c</FilePath>
+              <FilePath>.\FTEX\src\middleware_communications\can_vehicle_interface.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4450,92 +4677,177 @@
             <File>
               <FileName>co_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_core.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_core.c</FilePath>
             </File>
             <File>
               <FileName>co_csdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_csdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_csdo.c</FilePath>
             </File>
             <File>
               <FileName>co_dict.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_dict.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_dict.c</FilePath>
             </File>
             <File>
               <FileName>co_emcy.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_emcy.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_can.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_can.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_nvm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_nvm.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_if_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_if_timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_lss.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_lss.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_nmt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_nmt.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_obj.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_obj.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_para.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_para.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_emcy.c</FilePath>
             </File>
             <File>
               <FileName>co_pdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_pdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_pdo.c</FilePath>
             </File>
             <File>
               <FileName>co_ssdo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ssdo.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_ssdo.c</FilePath>
             </File>
             <File>
               <FileName>co_sync.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_sync.c</FilePath>
+              <FilePath>.\CANopen-stack\service\cia301\co_sync.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_nvm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_nvm.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_if_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\hal\co_if_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_nmt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_nmt.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_obj.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\core\co_obj.c</FilePath>
             </File>
             <File>
               <FileName>co_tmr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_tmr.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_tmr.c</FilePath>
             </File>
             <File>
               <FileName>co_ver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CANopen-stack\source\co_ver.c</FilePath>
+              <FilePath>.\CANopen-stack\core\co_ver.c</FilePath>
             </File>
             <File>
               <FileName>co_cfg.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CANopen-stack\config\co_cfg.h</FilePath>
+            </File>
+            <File>
+              <FileName>co_domain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_domain.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer8.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer8.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer16.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_integer32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_integer32.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_string.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\basic\co_string.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_hist.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_hist.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_emcy_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_emcy_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_cons.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_cons.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_hb_prod.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_hb_prod.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_restore.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_restore.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_para_store.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_para_store.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_event.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_map.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_map.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_num.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_num.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_pdo_type.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_pdo_type.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sdo_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sdo_id.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_cycle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_cycle.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_sync_id.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CANopen-stack\object\cia301\co_sync_id.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4842,6 +5154,22 @@
         </targetInfos>
       </file>
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
+        <instance index="0">RTE\Device\R7FA6T2BB3CFP\startup_RA.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <targetInfos>
+          <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
+        <instance index="0">RTE\Device\R7FA6T2BB3CFP\system_RA.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <targetInfos>
+          <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0" removed="1">RTE\Device\R7FA6T2BD\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
         <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
@@ -4856,9 +5184,8 @@
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.1.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.0.0"/>
         <targetInfos>
-          <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
           <targetInfo excluded="1" name="APP_MAIN (JUST UPLOAD)" versionMatchMode=""/>
         </targetInfos>
@@ -4866,9 +5193,8 @@
       <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\system_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.1.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.0.0"/>
         <targetInfos>
-          <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
           <targetInfo excluded="1" name="APP_MAIN (JUST UPLOAD)" versionMatchMode=""/>
         </targetInfos>

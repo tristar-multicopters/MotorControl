@@ -11,7 +11,6 @@
 #define VEHICLE_VELEC                 5
 #define VEHICLE_WHEEL                 6
 #define VEHICLE_TSUGAWA               7
-#define VEHICLE_NIDEC_MID_DRIVE       8
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
@@ -53,13 +52,11 @@
 #define GNR2_SLAVE_NODE_ID            0x03                /* Node-ID of ganrunner slave */
 
 #define SWD_CONTROL_ENABLE            0                  /* Enable controlling motor directly from debugging interface with vehicle control layer */
-
 #define DEBUGMODE_MOTOR_CONTROL       0                   /* Disable vehicle control and communications to debug only motor control layer */
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 
 #define VEHICLE_SELECTION             VEHICLE_VELEC     /* Vehicle selection to adapt motor/vehicle parameters.
-
                                                              Will be changed in the future for a more flexible way
                                                              of parametrization. */
                                                                                                                
@@ -83,7 +80,7 @@
 
 //definition used to enable log function
 //LogHS_StartOneShot(&LogHS_handle);
-#define HSLOG_ZEROSPEED_LOG 1
+#define HSLOG_ZEROSPEED_LOG 0
 
 //definition used to enable log function
 //LogHS_LogMotorVals(&LogHS_handle);
@@ -91,7 +88,7 @@
 
 //definition used to enable log function
 //LogHS_LogMotorValsVarRes(&LogHS_handle);
-#define LOGMOTORVALSRES 1
+#define LOGMOTORVALSRES 0
 
 ////definition used to enable log function
 //LogHS_StopLog(&LogHS_handle);
