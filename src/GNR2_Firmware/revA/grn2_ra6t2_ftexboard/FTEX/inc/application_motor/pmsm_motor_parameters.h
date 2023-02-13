@@ -39,6 +39,9 @@
 
 #include "pmsm_motor_parameters_tsugawa.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_NIDEC
+
+#include "pmsm_motor_parameters_nidec.h"
 
 #endif
 

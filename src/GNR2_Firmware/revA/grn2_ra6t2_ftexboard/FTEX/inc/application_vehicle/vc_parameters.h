@@ -42,6 +42,9 @@
 
 #include "vc_parameters_tsugawa.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_NIDEC
+
+#include "vc_parameters_nidec.h"
 
 #endif
 
