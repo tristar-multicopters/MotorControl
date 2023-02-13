@@ -22,9 +22,9 @@
 #define PAS_LEVEL_SPEED_2       (uint8_t)15     /* Maximum Speed for PAS Level 2 in Km/h */
 #define PAS_LEVEL_SPEED_3       (uint8_t)20     /* Maximum Speed for PAS Level 3 in Km/h */
 #define PAS_LEVEL_SPEED_4       (uint8_t)25     /* Maximum Speed for PAS Level 4 in Km/h */
-#define PAS_LEVEL_SPEED_5       (uint8_t)30     /* Maximum Speed for PAS Level 5 in Km/h */
+#define PAS_LEVEL_SPEED_5       (uint8_t)32     /* Maximum Speed for PAS Level 5 in Km/h */
 
-#define PAS_LEVEL_SPEED_WALK    (uint8_t)3     /* Maximum Speed for PAS Level 5 in Km/h */
+#define PAS_LEVEL_SPEED_WALK    (uint8_t)5     /* Maximum Speed for PAS Level 5 in Km/h */
 
 // ======================== Configuration enums ======================== // 
 typedef enum
