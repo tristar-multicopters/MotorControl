@@ -14,6 +14,10 @@
 #pragma clang diagnostic ignored "-Wpragma-pack"
 #include "user_config_task.h"
 #pragma clang diagnostic pop
+
+ 
+uint8_t wheel_diameter;
+
 // ==================== Public function prototypes ======================== //
 
 /**
@@ -40,10 +44,19 @@ uint8_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
     uint8_t hmsgToSend;
+    float rpm_to_km;
+    
+    if(wheel_diameter <= 0)
+    {
+       wheel_diameter = WHEEL_DIAMETER_DEFAULT; 
+    }  
+        
+    rpm_to_km = (float) (FTEX_PI * wheel_diameter * 60.0) / (float) FTEX_KM_TO_INCH; // Formula for converting RPM to km/h
+    
     // Get the RPM wheel from the wheel speed sensor module
     int16_t RpmSpeed = (int16_t)WheelSpdSensor_GetSpeedRPM(pHandle->pPowertrain->pPAS->pWSS);
     // Convert the measurement in km/h;
-    RpmSpeed = (uint8_t)((float)RpmSpeed*RPM_TO_KM); 
+    RpmSpeed = (uint8_t)((float)RpmSpeed*rpm_to_km); 
 
     // Load data buffer
     hmsgToSend = (uint8_t)RpmSpeed;
@@ -202,4 +215,12 @@ uint8_t CanVehiInterface_GetVehicleSerialNumber(void)
     uint8_t msgToSend;
     CanVehiInterface_sendLongMsgs(&msgToSend, (uint8_t *)SERIAL_NUMBER, strlen(SERIAL_NUMBER)/2);
     return msgToSend;
+}
+
+/**
+ *  Update wheel diamater used to calculate speed
+ */
+void CanVehiInterface_UpdateWheelDiamater(uint8_t aDiameterInInches)
+{
+    wheel_diameter = aDiameterInInches;     
 }

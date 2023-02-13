@@ -15,17 +15,15 @@
 #include "vc_parameters.h"
 #include "battery_monitoring.h"
 #include "pedal_assist.h"
+#include "vc_constants.h"
 
 // =========================== Defines ==================================== //
 /* Defines */
-#define MAX_POWER           1200                        // Max power value in W
-#define WHEEL_DIAMETER      29.0                        // Hardcoded value for Grizzly wheels diameter in inches
-#define CAN_PI              3.1415927                   // Pi value
-#define KM_TO_INCH          39370.1                     // 1 Km = 39370.1  inches
-#define RPM_TO_KM           (CAN_PI * WHEEL_DIAMETER * 60.0) / KM_TO_INCH // Formula for converting RPM to km/h
-#define SERIAL_NUMBER       "1234FTEX"                  // Dummy serial number
-#define HW_VERSION          0x0104U                     // Dummy hardware version - v1.4
-#define FW_VERSION          0x0405U                     // Dummy firmware version - v1.5
+#define MAX_POWER              1200                        // Max power value in W
+#define WHEEL_DIAMETER_DEFAULT 28.0                        // Hardcoded value for Grizzly wheels diameter in inches
+#define SERIAL_NUMBER          "1234FTEX"                  // Dummy serial number
+#define HW_VERSION             0x0104U                     // Dummy hardware version - v1.4
+#define FW_VERSION             0x0405U                     // Dummy firmware version - v1.5
 
 
 /* Errors to send by CanOpen */
@@ -46,6 +44,9 @@
 #define BYTE_4_INDEX         4      /**< Index of Byte 4 of the data frame in a CAN message */
 #define MAX_DATA_IN_INIT     4      /**< Maxime data to send in a reply init                */
 #define MAX_DATA_IN_SEG      8      /**< Maxime data to send in a reply segment             */
+
+
+
 
 // ==================== Public function prototypes ========================= //
 /**
@@ -126,5 +127,11 @@ uint16_t CanVehiInterface_GetVehicleHwVersion(void);
 */
 uint8_t CanVehiInterface_GetVehicleSerialNumber(void);
 
+/**
+  @brief  Update wheel diamater used to calculate speed
+  @param  New value of the wheel diameter in inches
+  @return None
+*/
+void CanVehiInterface_UpdateWheelDiamater(uint8_t aValue);
 
 #endif /* __CAN_IOT_COMM_H */

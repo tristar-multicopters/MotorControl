@@ -181,13 +181,18 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
          Check += Merge;
      }
      
+     if(Check > 0x0000FFFF) // Small patch to accomodate bug in APT screen
+     {
+         Check += 0x0000FFFF & (Check >> 16);      
+     }
+     
      Check = (Check & 0x0000FFFF); //Protection in case of overflow
     
      //Check if the CRC is good
      if(Check == (uint32_t)(pHandle->rx_frame.Buffer[CHECK + 1] + (pHandle->rx_frame.Buffer[CHECK] << 8)))
      {
          
-         LightStatus = ((pHandle->rx_frame.Buffer[PASS]) & 0x10);
+         LightStatus = ((pHandle->rx_frame.Buffer[PAS]) & 0x10);
          
          if(LightStatus) //Operate the light according to what the screne tells us
          {
@@ -201,7 +206,7 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
          }   
          
          //Reading the Pass
-         PassLvl = (pHandle->rx_frame.Buffer[PASS] & 0x0F); //Only the 4 LSB contain the pass level
+         PassLvl = (pHandle->rx_frame.Buffer[PAS] & 0x0F); //Only the 4 LSB contain the pass level
         
     
           if(PassLvl != PAS_UNCHANGED)
@@ -213,8 +218,10 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
         
          //Reading the Speed   limit  TBA
          //Reading the Current limit  TBA        
-         //Reading the Wheel diameter TBA       
-     
+         
+          //Reading and updating the Wheel diameter 
+          pHandle->WheelDiameter = LCD_APT_CalculateWheelDiameter(pHandle->rx_frame.Buffer[WHEELD]);
+          CanVehiInterface_UpdateWheelDiamater(pHandle->WheelDiameter);
     
          //For APT protocol, LSB is sent first for multi-bytes values
          replyFrame.Size = 13;
@@ -445,4 +452,27 @@ PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfL
    }
 
    return PAS_Out;
+}
+
+/** Function used to translate the FTEX standard PAS level to the APT  
+ *  screen standard.(is not the same as when we receive a PAS level from the APT screen)
+ */
+uint8_t LCD_APT_CalculateWheelDiameter(uint16_t aValue)
+{
+   uint8_t WheelDiameter; 
+    
+   if(aValue <= APT_WHEEL_DIAM_INCHES_MAX && aValue > 0)
+   {
+       WheelDiameter = (uint8_t) aValue;
+   } 
+   else if (aValue > APT_WHEEL_CIRCUMFERENCE_MIN)
+   {
+       WheelDiameter = (uint8_t) round(((float) (aValue/FTEX_PI)/ (float) FTEX_INCH_TO_CM)); // Convert from circumference in cm to diamater in inches     
+   }
+   else
+   {
+       WheelDiameter = WHEEL_DIAMETER_DEFAULT;   
+   }   
+
+   return WheelDiameter;
 }

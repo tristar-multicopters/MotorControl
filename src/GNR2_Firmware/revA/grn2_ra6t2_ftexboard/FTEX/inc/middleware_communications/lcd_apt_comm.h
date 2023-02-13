@@ -12,6 +12,8 @@
 
 #include "vc_interface.h"
 #include "powertrain_management.h"
+#include "can_vehicle_interface.h"
+#include "vc_constants.h"
 #include "uCAL_UART.h"
 #include "gnr_main.h"
 
@@ -27,11 +29,14 @@
 
 #define RX_BYTE_BUFFER_SIZE 16
 
+#define APT_WHEEL_DIAM_INCHES_MAX   34 // Max value received from the APT screen that represents a diamater in inches
+#define APT_WHEEL_CIRCUMFERENCE_MIN 50 // Min value received from APT screen that represents a circumference in centimetres
+
 // Display Read Cmd
 // represents the location of where certain informations are in the frame. 
 typedef enum
 {
-    PASS     = 1,
+    PAS     = 1,
     SPEED    = 2,
     CURRENTL = 3,
     WHEELD   = 4, 
@@ -60,6 +65,7 @@ typedef struct
     uint8_t RxCount;                       // Counts how many bytes we are holding
     uint8_t RxByte;                        // Used for byte by byte reception
     uint8_t OldPAS;                        // Used to keep track of the current PAs levle on the screen 
+    uint8_t WheelDiameter;                 // Used to hold the wheel diamater given by the screen
     
     bool CanChangePasFlag;                 // Used to tell the screen that PAS has bene changed from the Can interface
     bool APTChangePasFlag;                 // Used to tell the Can interfacne that the screen changed the PAS    
@@ -154,5 +160,17 @@ uint8_t LCD_APT_ConvertPASLevelToAPT(PasLevel_t aPAS_Level);
  * @return nothing
  */
 PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfLevels);
+
+/**@brief Function used to translate the FTEX standard PAS level to the APT  
+ *        screen standard.(is not the same as when we receive a PAS level from the APT screen)
+ *
+ * @param[in] Value from APT screen if under 35 then value represents a diamater in inches.
+ *            If the value is equal or greater then 50 the value represents the wheel     
+ *            circumference in centimeters. if the value is outisde of the valid ranges then 
+ *            the function will reutnr 28 inch wheel  
+ *
+ * @return the wheel diamater in inches
+ */
+uint8_t LCD_APT_CalculateWheelDiameter(uint16_t aValue);
 
 #endif

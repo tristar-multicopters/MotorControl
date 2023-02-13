@@ -424,6 +424,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\user_config_data.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2136,6 +2141,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\user_config_data.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3796,6 +3806,11 @@
               <FileName>user_config_data.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\user_config_data.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
             </File>
           </Files>
         </Group>
