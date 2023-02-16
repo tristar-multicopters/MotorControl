@@ -80,9 +80,9 @@
 #define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
 
-#define OCSP_SAFETY_MARGIN 	            20000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_SAFETY_MARGIN_amps 	            85	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
-#define OCSP_MAX_CURRENT                20000   /* Max current that can be reached before triggering software overcurrent */
+#define OCSP_MAX_CURRENT_amps                85   /* Max current that can be reached before triggering software overcurrent */
 #define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering */
 #define CURRENT_FILTER_BETA             -0.273F      /* Beta constant used in butterworth filter for current filtering */
 
@@ -131,8 +131,8 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
-#define MAX_APPLICATION_POSITIVE_POWER  1500    /* Refers to maximum power that drive can push to the motor */
-#define MAX_APPLICATION_NEGATIVE_POWER  5000    /* Refers to maximum power that drive can accept from the motor */
+#define MAX_APPLICATION_POSITIVE_POWER  1500    /* Refers to maximum power in watts that drive can push to the motor */
+#define MAX_APPLICATION_NEGATIVE_POWER  1500    /* Refers to maximum power in watts that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   

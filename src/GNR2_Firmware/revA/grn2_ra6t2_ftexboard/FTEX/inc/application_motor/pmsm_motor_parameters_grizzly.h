@@ -12,27 +12,26 @@
 /************************
  *** Motor Parameters ***
  ************************/
-
-/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
+                                                 
+ /***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
 #define POLE_PAIR_NUM          10 /* Number of motor pole pairs */
 #define RS                     0.071 /* Stator resistance , ohm*/
-#define LS                     0.000150 /* Stator inductance, H
-                                                 For I-PMSM it is equal to Lq */
+#define LS                     0.00015 /* Stator inductance, H   For I-PMSM it is equal to Lq */
+#define MOTOR_MAGNET_FLUX       0.0175  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
+#define MOTOR_VOLTAGE_CONSTANT  22.5   /*!< Volts RMS ph-ph /kRPM */
 
-/* Transformation of real currents (A) into int16_t format must be done accordingly with
-   formula:
-   Phase current (int16_t 0-to-peak) = (Phase current (A 0-to-peak)* 32767 * Rshunt *
-                                   *Amplifying network gain)/(MCU supply voltage/2)
-*/
 
-#define NOMINAL_TORQUE     1453  /* Nominal torque to apply to motor in cNm  */
-#define STARTING_TORQUE    1718  /* Maximum starting torque to apply to motor in cNm  */
-#define NOMINAL_PEAK_CURRENT    13000 /* Maximum current amplitude that can be injected
-                                            per phase in digital Amps */
+#define PEAK_CURRENT_amps       55      /* peak current in amps     */
+#define NOMINAL_TORQUE          (1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)    /* Nominal torque to apply to motor in cNm   
+                                                                                                 Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps */
+#define STARTING_TORQUE         1500    /* Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes*/
+
+
+                                           
+                                            
 #define MOTOR_MAX_SPEED_RPM     1200 /*!< Maximum rated speed  */
-#define MOTOR_MAGNET_FLUX       0.0175 
-#define MOTOR_VOLTAGE_CONSTANT  22.5 /*!< Volts RMS ph-ph /kRPM */
-#define ID_DEMAG                -1000 /*!< Demagnetization current */
+
+#define ID_DEMAG_amps                -5 /*!< Demagnetization current */
 #define MOTOR_MAX_TEMPERATURE_C 70    /* Maximum temperature in degree C */
 #define FLUX_WEAKENING_ENABLE   0       /* 0=disable 1=enable flux weakening , 
 

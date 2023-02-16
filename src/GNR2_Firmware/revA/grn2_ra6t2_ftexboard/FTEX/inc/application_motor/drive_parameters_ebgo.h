@@ -17,6 +17,8 @@
 /*** Speed measurement settings ***/		// motorRPM=speed(km/h)*GR*100000/(R*pi*2.54*60)   where R=25 inch and GR=7.86
 #define MAX_APPLICATION_SPEED_RPM       2600   /*!< Max speed for the current application in mechanical rpm */
                                                /* Old Example 2750 for 38Km/h */
+                                               
+                                               
 #define MIN_APPLICATION_SPEED_RPM       0     /*!< Min speed for the current application in mechanical rpm */
 #define MEAS_ERRORS_BEFORE_FAULTS       6     /*!< Number of speed
                                                              measurement errors before
@@ -77,9 +79,9 @@
 #define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
 
-#define OCSP_SAFETY_MARGIN 	            20000	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_SAFETY_MARGIN_amps 	            85	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
-#define OCSP_MAX_CURRENT                20000   /* Max current that can be reached before triggering software overcurrent */
+#define OCSP_MAX_CURRENT_amps                85   /* Max current that can be reached before triggering software overcurrent */
 #define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering */
 #define CURRENT_FILTER_BETA             -0.273F      /* Beta constant used in butterworth filter for current filtering */
 
@@ -87,7 +89,7 @@
 /**************************    DRIVE SETTINGS SECTION   **********************/
 /* PWM generation and current reading */
 
-#define PWM_FREQUENCY   20000           /* PWM switching frequency */
+#define PWM_FREQUENCY   20000           /* PWM switching frequency  in Hz*/
 #define PWM_FREQ_SCALING 1              /* Not used, set to one. */
 
 #define SW_DEADTIME_NS                   250 /*!< Dead-time to be inserted by FW */
@@ -128,8 +130,8 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
-#define MAX_APPLICATION_POSITIVE_POWER  5000    /* Refers to maximum power that drive can push to the motor */
-#define MAX_APPLICATION_NEGATIVE_POWER  5000    /* Refers to maximum power that drive can accept from the motor */
+#define MAX_APPLICATION_POSITIVE_POWER  1500    /* Refers to maximum power in Watts that drive can push to the motor */
+#define MAX_APPLICATION_NEGATIVE_POWER  5000    /* Refers to maximum power in watts that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   
