@@ -132,6 +132,21 @@ uint16_t hObjDataErrorState                 = 0;
 uint32_t wObjDataSerialNbL                  = 0;
 uint32_t wObjDataSerialNbH                  = 0;
 
+/***************************************************************/
+
+//array that will be linked with domain object below.
+uint8_t firmwareUpdateBuffer[FIRMWAREUPDATE_MEMORYSIZE];
+
+//Declare and initialize a struct that holds a variable to 
+//keep more than 4 bytes at the same index and subindex.
+//This is the way to have one variable in the object dictionary 
+//with more than 4 bytes.
+CO_OBJ_DOM firmwareUpdateDomainObj = {
+  0,                              /* variable for read position     */
+  FIRMWAREUPDATE_MEMORYSIZE,      /* size of domain memory          */
+  &firmwareUpdateBuffer[0]        /* start address of domain memory */
+};
+
 /*****Allocate global variables for data flash update Gnr objects*****/
 
 //variable associated with CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL .
@@ -350,6 +365,9 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     //Application - Speed that the walk mode of the vehicle goes up to. 
     {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWalkModeSpeed},
     
+    //Application - Memory used by the firmware update procedure to receive and hold new firmwares bytes.
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TDOMAIN, (CO_DATA)(&firmwareUpdateDomainObj)},
+    
     CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
 };  
     #else
@@ -554,6 +572,9 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     
     //Application - Speed that the walk mode of the vehicle goes up to. 
     {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWalkModeSpeed},
+    
+    //Application - Memory used by the firmware update procedure to receive and hold new firmwares bytes.
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TDOMAIN, (CO_DATA)(&firmwareUpdateDomainObj)},
 
     CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
 };

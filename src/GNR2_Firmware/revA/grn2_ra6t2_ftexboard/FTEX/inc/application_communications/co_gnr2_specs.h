@@ -21,6 +21,12 @@ extern "C" {
 #include "gnr_parameters.h"
 // ================================== PUBLIC DEFINES ================================== //
 
+/************************************************************************************/
+
+//define used to determine the maximum number of bytes used by the variable
+//responsible to receive the package of bytes during a firmware update.
+#define FIRMWAREUPDATE_MEMORYSIZE 64
+
 /* Application specific CANopen registers for IOT */
 #define CO_OD_REG_SPEED_MEASURE     0x2000 /**< OD ID for speed measure           >*/
 #define CO_OD_REG_POWER_MEASURE     0x2001 /**< OD ID for power measure           >*/
@@ -130,6 +136,14 @@ extern "C" {
 //PAS_LEVEL_SPEED_WALK
 #define CO_OD_REG_WALK_MODE_SPEED              0x201D
 
+/*define the OD ID of a Domain object*/
+//this domain object will be used to 
+//receive during a firmware update .
+//the GNR doesn't have enough memory to receive
+//all bytes and needs to receive some bytes(more than 4)
+//and write them into the external memory.
+#define CO_OD_REG_FIRMWAREUPDATE_MEMORY        0x201E
+
 /*******************************************************/
 
 /* Specify the EMCY-IDs for the application */
@@ -152,6 +166,8 @@ enum EMCY_CODES {
 // ================================== PUBLIC SYMBOLS ================================== //
 
 extern struct CO_NODE_SPEC_T GnR2ModuleSpec;
+
+extern CO_OBJ_DOM firmwareUpdateDomainObj;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

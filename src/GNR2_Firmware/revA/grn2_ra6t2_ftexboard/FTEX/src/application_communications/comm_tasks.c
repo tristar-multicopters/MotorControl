@@ -147,6 +147,10 @@ static void UpdateObjectDictionnary(void *p_arg)
     
     // Set Bike Parameters
     //CanIot_SetPAS(pVCI,bPAS); this doesn't make sense.
+    
+    //variable use to get a copy of the some bytes of the new firmware received on
+    //the domain object by SDO download.
+    static uint8_t firmwareUpdatePack[16];
 
     if (pNode == NULL) 
     {        
@@ -341,10 +345,8 @@ static void UpdateObjectDictionnary(void *p_arg)
             //this OD ID have 10 subindex each.
             for(uint8_t n = PAS_0;n <= PAS_9;n++)
             {
-        
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceHybridLeveSpeed[n], sizeof(uint8_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_LEVEL_POWER, n)), pNode, &torqueLevelPower[n], sizeof(uint8_t));
-            
             }
         
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));
@@ -355,7 +357,22 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             //check if the system was woke up by a firmware command update.
             PWREN_CheckFirmwareUpdateCommand(VCInterfaceHandle.pPowertrain->pPWREN, FirmwareUpdateCommand);
+            
+            //the only way to know if a device wrote on the domain object is checking the next free address 
+            //of the domain object. this value will depende of how many bytes IOT will write in the domain obj.
+            if(pVCI->pFirmwareUpdateDomainObj->Offset == 0x10)
+            {
+                //to allow another device to read the data was written is neccessary
+                //to make the domain object to point again to the beginning.
+                pVCI->pFirmwareUpdateDomainObj->Offset = 0x00;
+            
+                //read bytes received on the domain object used to the firmware update.
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0)), pNode, &firmwareUpdatePack, sizeof(firmwareUpdatePack));
 
+                //when reading a domain object the offset will be increment proportinal to the numbef of bytes read.
+                //so it's necessary to initialize to allow other device to read the data.
+                pVCI->pFirmwareUpdateDomainObj->Offset = 0x00;  
+            }       
         }
         else
         {
@@ -372,10 +389,8 @@ static void UpdateObjectDictionnary(void *p_arg)
         
                  for(uint8_t n = PAS_0;n <= PAS_9;n++)
                  {
-        
                     COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceHybridLeveSpeed[n], sizeof(uint8_t));
                     COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_LEVEL_POWER, n)), pNode, &torqueLevelPower[n], sizeof(uint8_t));
-            
                  }
         
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));

@@ -13,6 +13,7 @@
 typedef struct {
 	PWRT_Handle_t * pPowertrain;
 	VCSTM_Handle_t * pStateMachine;
+    CO_OBJ_DOM * pFirmwareUpdateDomainObj;
 } VCI_Handle_t;
 
 // Register tables

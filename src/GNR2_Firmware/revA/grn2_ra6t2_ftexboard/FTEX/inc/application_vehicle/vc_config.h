@@ -10,6 +10,7 @@
 #define __VC_CONFIG_H
 
 #include "vc_interface.h"
+#include "co_gnr2_specs.h"
 
 
 extern VCI_Handle_t VCInterfaceHandle;
