@@ -14,6 +14,7 @@ extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
 #define APTMAXCURRENT 75  //Should be replaced with a dynamic value
 
+
 /**
  *  Function for initializing the LCD module with the APT protocol
  *  It links its own custom interrupt routines with the UART callbacks using
@@ -31,6 +32,8 @@ void LCD_APT_init(APT_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handle_t 
     
     pHandle->pUART_handle->pRxCallback = &LCD_APT_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LCD_APT_TX_IRQ_Handler; 
+    
+    LCD_APT_ClearAllErrors(pHandle);    
     
     uCAL_UART_Init(pHandle->pUART_handle);  // Initialise the UART module with the baudrate that APT screen needs  
     uCAL_UART_Receive(pHandle->pUART_handle, &(pHandle->RxByte), sizeof(pHandle->RxByte));  // Start the first reception   
@@ -239,10 +242,9 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
 
          /* Condition use for wheel speed sensor rpm to send */
          toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
-         
-          
+                   
          toSend =  LCD_APT_ApplySpeedFilter((uint16_t) toSend);
-          
+                  
          toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
          
          if(toSend != 0) //verify toSend value to avoid a division by zero.
@@ -254,7 +256,7 @@ void LCD_APT_frame_Process(APT_Handle_t *pHandle)
          replyFrame.Buffer[2] = (toSend & 0x00FF);      // Wheel speed Low half 
          replyFrame.Buffer[3] = (toSend & 0xFF00) >> 8; // Wheel speed High half
       
-         replyFrame.Buffer[4] = 0x00; // Error Code
+         replyFrame.Buffer[4] = (uint8_t) LCD_APT_CycleError(pHandle); // Error Code
       
          replyFrame.Buffer[5] = 0x04; // Brake Code bXXXX 0100 means the motor is working
                       
@@ -476,3 +478,136 @@ uint8_t LCD_APT_CalculateWheelDiameter(uint16_t aValue)
 
    return WheelDiameter;
 }
+
+/**
+ *  Function used to raise a specific error on the screen, cannot raise the same error twice. 
+ */
+void LCD_APT_RaiseError(APT_Handle_t *pHandle, APT_ErrorCodes_t aError)
+{
+    bool ErrorAlreadyRaised = false;
+    
+    for (uint16_t u = 0; u < APT_ERROR_BUFFER_SIZE; u ++) // Check if the error is already raised
+    {
+       if (pHandle->ErrorCodes[u] == aError)
+       {
+           ErrorAlreadyRaised = true; 
+       }
+    }    
+    
+    if (ErrorAlreadyRaised == false) // If the error is already raised there is not point in raising it again
+    {        
+        if (pHandle->NumberErrors < APT_ERROR_BUFFER_SIZE) // If the error buffer isn't full 
+        {
+            pHandle->NumberErrors ++; // increment the counter
+        }
+        else // If its full erase the oldlest error and add the new one
+        {
+            for (uint16_t i = 0; i < APT_ERROR_BUFFER_SIZE - 1 ; i ++) // Shift the other ones to make room at the end of the buffer
+            {
+                pHandle->ErrorCodes[i] = pHandle->ErrorCodes[i + 1];        
+            }                        
+        }
+    
+        pHandle->ErrorCodes[pHandle->NumberErrors-1] = aError; //Add the new error
+    }
+}
+
+/**
+ *  Function used to clear a specific error on the screen.
+ */
+void LCD_APT_ClearError(APT_Handle_t *pHandle, APT_ErrorCodes_t aError)
+{
+    bool ErrorFound = false;
+    bool ErrorCleared = false;
+    
+    for (uint16_t i = 0; i < pHandle->NumberErrors; i++) // Cycle through the buffer once we find the error 
+    {                                                     // shift the others to ensure there is no empty spot 
+                                                         // in the middle of the buffer.
+    
+        if (pHandle->ErrorCodes[i] == aError) // Is this error raised in the buffer ?
+        {
+            ErrorFound = true;  
+        }            
+        
+        if (ErrorFound) // If the error is present in the buffer
+        {
+            if (i < pHandle->NumberErrors - 1) // Making sure we are not on the last error present in the buffer
+            {
+                pHandle->ErrorCodes[i] = pHandle->ErrorCodes[i+1]; // If not shift the other errors to ensure
+            }                                                      // we don't have an empty spot in the buffer
+            else // If we are on the last error just clear it
+            {
+                pHandle->ErrorCodes[i] = NO_ERROR;
+                ErrorCleared = true;                
+            }                 
+        }      
+    }
+    
+    if (ErrorCleared) // If an error was cleared reflect the change in the error counter
+    {
+        pHandle->NumberErrors --;
+    }
+}
+
+/**
+ *  Function used to clear all of the errors present in the buffer
+ */
+void LCD_APT_ClearAllErrors(APT_Handle_t *pHandle)
+{
+    for (uint16_t i = 0; i < pHandle->NumberErrors; i++)
+    {
+       pHandle->ErrorCodes[i] = NO_ERROR; // Clear all of the raised errors
+    }
+    
+    pHandle->NumberErrors = 0; // Reset the error counter
+    
+}   
+
+
+/** Function used to cycle the next error to show on the screen 
+ *  The speed at which the error cylce is define by a constant in the function
+ */
+APT_ErrorCodes_t LCD_APT_CycleError(APT_Handle_t *pHandle)
+{
+    const  uint8_t CycleLenght = 6; // Number of cycles that we show an error before switching
+                                    // A cycle is about 150 ms 
+    
+    static uint8_t CycleTracking;   // Keeps track how many cycles has the current error been shown for
+    
+    
+    static  uint16_t ShownErrorIndex;
+    static APT_ErrorCodes_t ErrorShown; 
+    
+    
+    if (CycleTracking >= CycleLenght) // Check if we need to cycle to show the next error
+    {
+        CycleTracking = 0;
+        
+        if (pHandle->NumberErrors <= 0) // If the error(s) got cleared since the last cycle
+        {
+            ErrorShown = NO_ERROR;     // Show no error  
+            ShownErrorIndex = 0;
+        }       
+        else 
+        {    
+            if (ShownErrorIndex >= pHandle->NumberErrors - 1) // reset the cycle if we have shown all of them
+            {
+                ShownErrorIndex = 0;        
+            }   
+            else   // If not incremente the index to shw the next error in line
+            {
+                ShownErrorIndex ++;                        
+            }
+        
+            ErrorShown = pHandle->ErrorCodes[ShownErrorIndex];
+        }
+    }
+    else
+    {
+        CycleTracking ++; 
+        
+    }        
+   
+    return ErrorShown;
+}
+

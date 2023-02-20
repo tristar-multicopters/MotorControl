@@ -32,6 +32,7 @@
 #define APT_WHEEL_DIAM_INCHES_MAX   34 // Max value received from the APT screen that represents a diamater in inches
 #define APT_WHEEL_CIRCUMFERENCE_MIN 50 // Min value received from APT screen that represents a circumference in centimetres
 
+#define APT_ERROR_BUFFER_SIZE        5
 // Display Read Cmd
 // represents the location of where certain informations are in the frame. 
 typedef enum
@@ -44,7 +45,22 @@ typedef enum
     CHECK    = 6 
 }APT_Receive_t;
  
+typedef enum
+{
+    // APT defined errors
+    NO_ERROR           = 0x00, // No error
+    COMM_ERROR         = 0x01, // Check the cable connection
+    CONTROL_PROTEC     = 0x02, // Check three-phase power line
+    THREE_PHASE_ERROR  = 0x03, // Check three-phase power line connection
+    BAT_LOW            = 0x04, // Battery low
+    BRAKE_ERROR        = 0x05, // Check the brake connection
+    TURN_ERROR         = 0x06, // Check turn to connect
+    HALL_ERROR         = 0x07, // Check the hall connection
+    // Custom FTEX errors
+    // From 0x08 to 0x9F EXCLUDING 0x30
 
+}APT_ErrorCodes_t;
+    
 #define APT_MAX_BUFF_SIZE 13  // Max size for frame buffer.
 
 typedef struct
@@ -60,6 +76,9 @@ typedef struct
 	VCI_Handle_t  *pVController;           // Pointer to vehicle
     APT_frame_t rx_frame; 		   	       // Frame for data reception
 	APT_frame_t tx_frame; 		   	       // Frame for send response
+    
+    APT_ErrorCodes_t ErrorCodes[APT_ERROR_BUFFER_SIZE];
+    uint16_t NumberErrors;
     
     uint8_t RxBuffer[RX_BYTE_BUFFER_SIZE]; // Hold bytes to be process by the APT task function
     uint8_t RxCount;                       // Counts how many bytes we are holding
@@ -89,7 +108,7 @@ void LCD_APT_init(APT_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handle_t 
  *        unblocks a comm task to process the frame.
  *        it is based on a byte by byte reception 
  *  
- * @param pVoidHandle: a void pointer that contaisn the handle of the 
+ * @param pVoidHandle: a void pointer that contains the handle of the 
  *        APT module instance
  *        
  * @return nothing
@@ -101,7 +120,7 @@ void LCD_APT_RX_IRQ_Handler(void *ppVoidHandle);
  *        sends the response made byt the frame process function.  
  *        It is based on a byte by byte transmission. 
  *  
- * @param pVoidHandle: a void pointer that contaisn the handle of the 
+ * @param pVoidHandle: a void pointer that contains the handle of the 
  *        APT module instance
  *        
  * @return nothing
@@ -111,8 +130,8 @@ void LCD_APT_TX_IRQ_Handler(void *ppVoidHandle);
 /**@brief Function for handling the regular task to manage the communication with
  *        an APT screen        
  *
- * @param[in] pVoidHandle: a void pointer that contaisn the handle of the 
- *            APT module instance
+ * @param[in] pHandle: handle for APT module instance
+ *            
  * @return nothing
  */
 void LCD_APT_Task(APT_Handle_t *pHandle);
@@ -121,8 +140,8 @@ void LCD_APT_Task(APT_Handle_t *pHandle);
  *        according to the APT screen protocol.
  *        This is executed in a comm task that gets unblocked when a complete frame is received.
  *
- * @param[in] pVoidHandle: a void pointer that contaisn the handle of the 
- *            APT module instance
+ * @param[in] pHandle: handle for APT module instance 
+ *            
  * @return nothing
  */
 void LCD_APT_frame_Process(APT_Handle_t *pHandle);
@@ -146,18 +165,18 @@ uint16_t LCD_APT_ApplyPowerFilter(uint16_t aInstantPowerInAmps);
 /**@brief Function used to translate the PAS level received from the APT  
  *        screen standard to the FTEX standard
  *
- * @param[in] pVoidHandle: a void pointer that contaisn the handle of the 
- *            APT module instance
- * @return nothing
+ * @param[in] FTEX Standard PAS level 
+ *            
+ * @return APT standard PAS level
  */
 uint8_t LCD_APT_ConvertPASLevelToAPT(PasLevel_t aPAS_Level);
 
 /**@brief Function used to translate the FTEX standard PAS level to the APT  
  *        screen standard.(is not the same as when we receive a PAS level from the APT screen)
  *
- * @param[in] pVoidHandle: a void pointer that contaisn the handle of the 
- *            APT module instance
- * @return nothing
+ * @param[in] APT standard PAS level and Number of PAS levels
+ *            
+ * @return FTEX Standard PAS level
  */
 PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfLevels);
 
@@ -172,5 +191,44 @@ PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfL
  * @return the wheel diamater in inches
  */
 uint8_t LCD_APT_CalculateWheelDiameter(uint16_t aValue);
+
+/**@brief Function used to raise a specific error on the screen, cannot raise the same error twice. 
+ *        
+ *
+ * @param[in] pHandle: handle for APT module instance, an APT error code 
+ *                 
+ * @return nothing
+ */
+void LCD_APT_RaiseError(APT_Handle_t *pHandle, APT_ErrorCodes_t aError);
+
+/**@brief Function used to clear a specific error on the screen.
+ *        
+ *
+ * @param[in] pHandle: handle for APT module instance, an APT error code 
+ *                 
+ *
+ * @return nothing
+ */
+void LCD_APT_ClearError(APT_Handle_t *pHandle, APT_ErrorCodes_t aError);
+
+/**@brief Function used to clear all of the errors present in the buffer
+ *        
+ *
+ * @param[in] pHandle: handle for APT module instance
+ *                
+ *
+ * @return nothing
+ */
+void LCD_APT_ClearAllErrors(APT_Handle_t *pHandle);
+
+/**@brief Function used to cycle the next error to show on the screen 
+ *        The speed at which the error cylce is define by a constant in the function
+ *
+ * @param[in] pHandle: handle for APT module instance
+ *                 
+ *
+ * @return the error code that should be sent to the screen 
+ */
+APT_ErrorCodes_t LCD_APT_CycleError(APT_Handle_t *pHandle);
 
 #endif
