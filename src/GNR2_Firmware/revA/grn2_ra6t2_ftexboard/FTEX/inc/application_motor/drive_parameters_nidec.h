@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/		// motorRPM=speed(km/h)*GR*100000/(R*pi*2.54*60)   where R=25 inch and GR=7.86
-#define MAX_APPLICATION_SPEED_RPM       2600   /*!< Max speed for the current application in mechanical rpm */
+#define MAX_APPLICATION_SPEED_RPM       3600   /*!< Max speed for the current application in mechanical rpm */
                                                /* Old Example 2750 for 38Km/h */
 #define MIN_APPLICATION_SPEED_RPM       0     /*!< Min speed for the current application in mechanical rpm */
 #define MEAS_ERRORS_BEFORE_FAULTS       6     /*!< Number of speed
@@ -31,9 +31,9 @@
                                                            goes in fault */
 
 #define HALL_AVERAGING_FIFO_DEPTH        8 /*!< depth of the FIFO used to
-                                                           average mechanical speed */
+                                                average mechanical speed */
 
-#define HALL_MTPA  true                                 /* Must be set true. TODO: Remove that parameter. */
+#define HALL_MTPA  true                       /* Must be set true. TODO: Remove that parameter. */
 /****** State Observer + PLL ****/
 #define VARIANCE_THRESHOLD              0.062 /*!<Maximum accepted
                                                             variance on speed
@@ -150,10 +150,10 @@
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
 
 /*Torque ramp settings */
-#define DEFAULT_TORQUE_SLOPE_UP        500        /* Slope in cNm per second */
-#define DEFAULT_TORQUE_SLOPE_DOWN      500        /* Slope in cNm per second */
-#define DEFAULT_SPEED_SLOPE_UP         500        /* Slope in #SPEED_UNIT per second */
-#define DEFAULT_SPEED_SLOPE_DOWN       500        /* Slope in #SPEED_UNIT per second */
+#define DEFAULT_TORQUE_SLOPE_UP        2500        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_DOWN      2500        /* Slope in cNm per second */
+#define DEFAULT_SPEED_SLOPE_UP         2500        /* Slope in #SPEED_UNIT per second */
+#define DEFAULT_SPEED_SLOPE_DOWN       2500        /* Slope in #SPEED_UNIT per second */
 
 
 /******************************   START-UP PARAMETERS   **********************/
