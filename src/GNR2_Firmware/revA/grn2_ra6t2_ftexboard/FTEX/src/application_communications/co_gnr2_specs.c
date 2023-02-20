@@ -22,7 +22,7 @@
 
 #define GNR2_BAUDRATE      500000u             /* CAN baudrate                */
 #define GNR2_TMR_N         16u                 /* Number of software timers   */
-#define GNR2_TICKS_PER_SEC 2000u               /* Timer clock frequency in Hz */
+#define GNR2_TICKS_PER_SEC 1000u               /* Timer clock frequency in Hz */
 #define GNR2_OBJ_N         128u                /* Object dictionary max size  */
 
 #if GNR_MASTER

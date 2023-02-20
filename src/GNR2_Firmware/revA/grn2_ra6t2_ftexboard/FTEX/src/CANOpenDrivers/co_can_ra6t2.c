@@ -65,10 +65,13 @@ static void    CANo_DrvClose  (void);
 
 #define CAN_TX_BUFFER_LENGTH   32  //Maximum number of CAN frame in TX buffer
 
-can_frame_t TxFrameBuffer[CAN_TX_BUFFER_LENGTH];
-uint32_t wBufferCurrentPosition = 0;
-uint32_t wBufferProjectedPosition = 0;
-
+static can_frame_t TxFrameBuffer[CAN_TX_BUFFER_LENGTH];
+//tail of the circular buffer
+static uint32_t wBufferCurrentPosition = 0;
+//head of the circular buffer.
+static uint32_t wBufferProjectedPosition = 0;
+//flag to indicate if the circular buffer is full or empty.
+static bool TxFrameBufferFull = false;
 
 // ================================== Public Variables ================================== //
 
@@ -137,30 +140,22 @@ static void CANo_DrvEnable(uint32_t baudrate)
 }
 
 /**
-  Function used to Send messages through the CAN interface
+  @brief Function used to add a new message on the next free position of the 
+         circular buffer and send it after.
+  @param CO_IF_FRM *frm type, which represents a CAN frame.
+  @return int16_t - 1 if buffer is full or 0 if success.
 */
 static int16_t CANo_DrvSend(CO_IF_FRM *frm)
 {    
-    uint32_t pos = wBufferProjectedPosition;
-    
-    // Increment projected position
-    if (pos == CAN_TX_BUFFER_LENGTH-1)
+    //verify if the circular buffer is full.
+    //if it's full, a new message can't be 
+    //written and buffer must be emptied.
+    if (TxFrameBufferFull == true)
     {
-        pos = 0;
-    }
-    else
-    {
-        pos++;
+        return -1;
     }
     
-    if (pos == wBufferCurrentPosition)
-    {
-        // Buffer is full
-        return (-1);
-    }
-
-    wBufferProjectedPosition = pos;
-    
+    //feed the can frame with the basic configuration.
 	can_frame_t tx_frame =
 	{
 		.id = frm->Identifier,
@@ -168,10 +163,32 @@ static int16_t CANo_DrvSend(CO_IF_FRM *frm)
 		.type = CAN_FRAME_TYPE_DATA,
 		.data_length_code = frm->DLC
 	};
+    
+    //copy the data payload to the can frame to be sent.
     memcpy(tx_frame.data, frm->Data, 8);
     
+    //copy the can frame to the next free position of the buffer.
     TxFrameBuffer[wBufferProjectedPosition] = tx_frame;
     
+    //move to the next position
+    wBufferProjectedPosition++;
+    
+    //verify if the next position if outside of the buffer size.
+    //if yes, back to the beginning of the buffer.(circular buffer).
+    if (wBufferProjectedPosition > CAN_TX_BUFFER_LENGTH-1)
+    {
+        wBufferProjectedPosition = 0;
+    }
+    
+    //verify if buffer is full and if yes set the buffer full
+    //flag to true.
+    if (wBufferProjectedPosition == wBufferCurrentPosition)
+    {
+        TxFrameBufferFull = true;
+    }
+    
+    //try to send(remove from the buffer) the next CAN message
+    //in the circular buffer.
     CAN_SendNextFrame();
     
 	return (0);
@@ -214,25 +231,35 @@ static void CANo_DrvClose(void)
 }
 
 // ================================== Public Functions Definitions ================================== //
-
+/**
+  @brief Function used to send(remove from the buffer) a message on the next free position of the 
+         circular buffer.
+  @return void
+*/
 void CAN_SendNextFrame(void)
 {
-    if (wBufferCurrentPosition != wBufferProjectedPosition)
+    //verify if there is a not send message to be sent.
+    if ((wBufferCurrentPosition != wBufferProjectedPosition) || (TxFrameBufferFull))
     {
-        if (R_CANFD_Write(&g_canfd0_ctrl, CANFD_TX_MB_0, &TxFrameBuffer[wBufferCurrentPosition]) == FSP_ERR_CAN_TRANSMIT_NOT_READY)
+        //try to send a message. if message was sent correctly move to the next position in the circular buffer
+        //and verify if it's empty or not.
+        if (R_CANFD_Write(&g_canfd0_ctrl, CANFD_TX_MB_0, &TxFrameBuffer[wBufferCurrentPosition]) ==  FSP_SUCCESS)
         {
+            //move to the next postion(tail)
+            wBufferCurrentPosition++;
             
-        }
-        else
-        {
-            // Increment current position
-            if (wBufferCurrentPosition == CAN_TX_BUFFER_LENGTH-1)
+            //verify if the next position if outside of the buffer size.
+            //if yes, back to the beginning of the buffer.(circular buffer).
+            if (wBufferCurrentPosition > CAN_TX_BUFFER_LENGTH-1)
             {
                 wBufferCurrentPosition = 0;
             }
-            else
+            
+            //verify if buffer is empty(tail == head) and if yes set the buffer full
+            //flag to false.
+            if(wBufferCurrentPosition == wBufferProjectedPosition)
             {
-                wBufferCurrentPosition++;
+                TxFrameBufferFull = false;
             }
         }
     }

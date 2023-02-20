@@ -234,8 +234,12 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
         }
 
         COTimerCallback(&CONodeGNR.Tmr);
-        CAN_SendNextFrame();
     }
+    
+    //added in this place to empty the buffer as quickly as possible.
+    //if the tx can buffer is empty, nothing will happen.
+    //here this function will called on each 0.5ms.
+    CAN_SendNextFrame();
 }
 
 /**
