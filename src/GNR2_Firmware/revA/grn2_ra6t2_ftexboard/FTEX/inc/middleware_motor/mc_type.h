@@ -92,7 +92,6 @@ extern "C" {
 #define  MC_SW_ERROR  (uint16_t)(0x0080u)      /**< @brief Software Error.*/
 #define  MC_OCSP  		(uint16_t)(0x0100u)    /**< @brief Error: Overcurrent software protection.*/
 #define  MC_MSRP		(uint16_t)(0x0200u)    /**< @brief Error: Motor Stuck & Reverse Protection.*/
-
 /** @} */
 
 /**
@@ -182,6 +181,18 @@ typedef struct
                                  *         #INTERNAL or #EXTERNAL*/
 } FOCVars_t, *pFOCVars_t;
 
+/**
+  * @brief  This structure is used to handle an instance of the
+  *         OverCurrentDetection_t component.
+  */
+typedef struct
+{
+    bool bIsOverCurrentDetected;      /*< Status of OCD2 pin which connected to OCD2 of current sensot*/
+    uint16_t OverCurrentStatus;
+    float OCDPowerDeratingSlope;
+    float OCDPowerDearatingGain;
+    uint16_t OCDTimeInterval;
+} HWOverCurrentDetection_t;
 
 /** @name Utility macros definitions */
 /** @{ */

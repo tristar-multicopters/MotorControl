@@ -4,7 +4,7 @@
 */
 
 /* Includes ------------------------------------------------------------------*/
-#include "gnr_main.h"
+#include "gnr_main.h" 
 #include "mc_config.h"
 #include "mc_tasks.h"
 #include "vc_config.h"
@@ -13,6 +13,7 @@
 #include "board_hardware.h"
 #include "comm_tasks.h"
 #include "core_cm33.h"
+#include "mc_tasks.h"
 
 /**
   * @brief  Interrupt routine of ADC hardware.
@@ -60,10 +61,14 @@ void PWMBreak1_IRQHandler(poeg_callback_args_t * p_args)
 {
     if(NULL != p_args)
     {
+#if HARDWARE_OCD == OCD_PWM_OFF
         /* Stop POEG module so it does not reenter the interrupt twice */
-        R_POEG_Close((PWM_POEG0_HANDLE_ADDRESS)->p_ctrl);
+        R_POEG_Reset((PWM_POEG0_HANDLE_ADDRESS)->p_ctrl);
         /* Run motor control PWM break routine */
         PWMInsulCurrSensorFdbk_BRK_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
+        
+#endif
+        
     }
 }
 

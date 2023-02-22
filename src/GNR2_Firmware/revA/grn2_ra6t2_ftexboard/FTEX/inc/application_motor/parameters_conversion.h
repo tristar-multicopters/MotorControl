@@ -85,6 +85,19 @@
 #define MAX_APPLICATION_SPEED_UNIT ((MAX_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM)
 #define MIN_APPLICATION_SPEED_UNIT ((MIN_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM)
 
+/************************* OCD Power Derating factors **************************/
+
+#define OCD_DISABLE                     0
+#define OCD_POWER_DERATING              1
+#define OCD_PWM_OFF                     2
+#define HARDWARE_OCD    OCD_DISABLE     /* OCD_POWER_DERATING to derate final torque in Interval (configuration is following) */
+                                        /* OCD_PWM_OFF to completley disable PWM using PEOG in timer0 */
+                                        /* OCD_DISABLED to disable any Hardware OverCurrent handling */
+
+#define OCD_POWER_DERATING_SLOPE    0.8f    // the factor we multiply to the Maximum Torque at OCD occurance
+#define OCD_TIME_INTERVAL_MS        50      // the time interval of multipying derating factor of OCD is still occured
+#define OCD_TIME_INTERVAL_COUNTS    (uint16_t)OCD_TIME_INTERVAL_MS * (uint16_t)SPEED_LOOP_FREQUENCY_HZ/1000u - 1u
+
 /************************* PLL PARAMETERS **************************/
 #define C1 (int32_t)((((int16_t)F1)*RS)/(LS*TF_REGULATION_RATE))
 #define C2 (int32_t) GAIN1

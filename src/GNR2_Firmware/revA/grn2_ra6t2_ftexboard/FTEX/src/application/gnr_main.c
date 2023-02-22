@@ -30,7 +30,10 @@ extern void PowerOffSequence(void * pvParameter);
 
 static bool ADCInit(void);
 static bool GPTInit(void);
-//static bool POEGInit(void); //please read the describtion on function definition before enablenig this
+
+#if HARDWARE_OCD == OCD_PWM_OFF
+static bool POEGInit(void); //please read the describtion on function definition before enablenig this
+#endif
 static bool DACInit(void);
 static bool ICUInit(void);
 static bool ELCInit(void);
@@ -121,7 +124,9 @@ void gnr_main(void)
     /* Hardware initialization */
     ADCInit();
     GPTInit();
-//    POEGInit(); //Read the describtion on the Function before enabling it
+#if HARDWARE_OCD == OCD_PWM_OFF
+    POEGInit(); //Read the describtion on the Function before enabling it
+#endif
     DACInit();
     ICUInit();
     ELCInit();
@@ -294,14 +299,15 @@ static bool GPTInit(void)
 5- Check the PWRT_MotorFaultManagement() if still includes handeling this error flag
 6- Use the R_POEG_Open() function to bring back the PWM signal after error is handled
 */
-//static bool POEGInit(void)
-//{
-//    bool bIsError = false;
 
-//    bIsError |= R_POEG_Open(g_poeg0.p_ctrl, g_poeg0.p_cfg);
-
-//    return bIsError;
-//}
+#if HARDWARE_OCD == OCD_PWM_OFF
+static bool POEGInit(void)
+{
+    bool bIsError = false;
+    bIsError |= R_POEG_Open(g_poeg0.p_ctrl, g_poeg0.p_cfg);
+    return bIsError;
+}
+#endif
 
 /**
   * @brief  Initialize DAC (Digital Analog Converter) hardware

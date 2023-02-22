@@ -50,7 +50,7 @@ uint32_t GetChipID(uint8_t ID_Half);
 #define SOCP_IA_IIRFA_HANDLE_ADDRESS                        &g_iirfa0
 #define SOCP_IB_IIRFA_HANDLE_ADDRESS                        &g_iirfa1
 
-
+#define CURRENT_SENSOR_OCD2                                 0xce
 /* DAC for debugging ---------------------------------------------*/
 #define DEBUG1_DAC_HANDLE_ADDRESS                           &g_dac2
 #define DEBUG2_DAC_HANDLE_ADDRESS                           &g_dac3

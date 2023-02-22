@@ -19,8 +19,8 @@
 
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
-
 uint16_t M_STUCK_timer = 0;
+uint16_t OCD_timer = 0;
 
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
@@ -31,7 +31,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     pHandle->pHeatsinkTempSensor = pTempSensorHS;
     pHandle->pMotorTempSensor = pTempSensorMotor;
     pHandle->Mode = pHandle->ModeDefault;
-
+  
     if (pTempSensorHS == NULL)
     {
         Foldback_DisableFoldback(&pHandle->FoldbackHeatsinkTemperature);
@@ -40,11 +40,17 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     {
         Foldback_DisableFoldback(&pHandle->FoldbackMotorTemperature);
     }
-
+   
     pHandle->TorqueRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     RampMngr_Init(&pHandle->TorqueRampMngr);
     RampMngr_Init(&pHandle->SpeedRampMngr);
+    
+#if HARDWARE_OCD == OCD_POWER_DERATING
+    OCD2_Init(&pHandle->OCD2_Handle);
+#else
+    //do nothing here
+#endif
     
     Foldback_Init(&pHandle->FoldbackDynamicMaxTorque);
     Foldback_Init(&pHandle->FoldbackHeatsinkTemperature);
@@ -244,9 +250,16 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
         pHandle->hCurrentSpeedRef = hTargetSpeed;
     }
 
+#if HARDWARE_OCD == OCD_POWER_DERATING
+    //Here the OCD2 (PC14) is checked to see Over Current feedback is received from current sesnor
+    hTorqueReference = SpdTorqCtrl_ApplyIncrementalPowerDerating(pHandle, hTorqueReference);
+#else
+    // nothing to do here
+
+#endif
+    
     return hTorqueReference;
 }
-
 
 uint16_t SpdTorqCtrl_GetMaxAppPositiveMecSpeedUnit(SpdTorqCtrlHandle_t * pHandle)
 {
@@ -313,6 +326,7 @@ void SpdTorqCtrl_SetSpeedRampSlope(SpdTorqCtrlHandle_t * pHandle, uint32_t wSlop
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
 {
     ASSERT(pHandle != NULL);
+    
     int16_t hMeasuredSpeed = 0;
     int16_t hMeasuredMotorTemp = 0;
     int16_t hMeasuredHeatsinkTemp = 0;
@@ -343,6 +357,8 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
 
 int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef)
 {
+    ASSERT(pHandle != NULL); 
+
     float fTemp;
 
     fTemp = (float) (hTorqueRef * pHandle->fGainTorqueIqref);
@@ -380,6 +396,8 @@ int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
 */
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
 {
+    ASSERT(pHandle != NULL); 
+    
     int32_t wTorqueLimit = 0;
     int16_t hMeasuredSpeedTenthRadPerSec = 0;
     int16_t hMeasuredSpeedUnit = 0;
@@ -415,6 +433,7 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
 */
 void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurrent, int16_t userMaxCurrent)
 {
+    ASSERT(pHandle != NULL); 
     int16_t hMaxLimit = NominalCurrent;
     
     if (userMaxCurrent < NominalCurrent)
@@ -432,11 +451,46 @@ void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurren
     }
 }
 
+
+/*
+    If Over Current Detected flag is raised, this function decreses torq until flag clear
+*/
+int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
+{
+    ASSERT(pHandle != NULL); 
+    
+    float hNewTorque = hInputTorque;
+    int16_t hRetval = 0;
+        
+    if (OCD2_IsEnabled(&pHandle->OCD2_Handle))
+    {
+        pHandle->HWOverCurrentDetection.bIsOverCurrentDetected = true;
+        
+        if (OCD_timer < pHandle->HWOverCurrentDetection.OCDTimeInterval)
+        {
+            OCD_timer++;
+        }
+        else
+        {
+            pHandle->HWOverCurrentDetection.OCDPowerDearatingGain *= pHandle->HWOverCurrentDetection.OCDPowerDeratingSlope;
+            OCD_timer = 0;
+        }
+    }
+    else 
+    {
+        OCD_timer = 0;
+    }
+    hRetval = (int16_t)(hNewTorque * pHandle->HWOverCurrentDetection.OCDPowerDearatingGain);
+    return hRetval;
+}
+
 /*
     Check if motor is stuck or not
 */
 uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle)
 {    
+    ASSERT(pHandle != NULL); 
+    
     uint16_t hRetval = MC_NO_FAULTS;
 
     if (SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD) == 0)

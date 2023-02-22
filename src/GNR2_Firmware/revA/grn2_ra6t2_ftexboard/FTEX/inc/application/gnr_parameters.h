@@ -93,4 +93,3 @@
 ////definition used to enable log function
 //LogHS_StopLog(&LogHS_handle);
 #define HSLOG_BUTTON_LOG 0 
-

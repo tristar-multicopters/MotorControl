@@ -10,7 +10,7 @@
       <TargetName>APP_DEBUG (Standard)</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
+      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -1179,6 +1179,11 @@
               <FileName>mc_type.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+            </File>
+            <File>
+              <FileName>HardwareOverCurrentDetection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\HardwareOverCurrentDetection.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2809,6 +2814,11 @@
               <FileName>mc_type.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+            </File>
+            <File>
+              <FileName>HardwareOverCurrentDetection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\HardwareOverCurrentDetection.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4490,6 +4500,11 @@
               <FileName>mc_type.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+            </File>
+            <File>
+              <FileName>HardwareOverCurrentDetection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\HardwareOverCurrentDetection.c</FilePath>
             </File>
           </Files>
         </Group>

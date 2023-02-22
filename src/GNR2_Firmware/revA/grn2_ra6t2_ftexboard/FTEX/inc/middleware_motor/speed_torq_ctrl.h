@@ -20,9 +20,10 @@ extern "C" {
 #include "ramp_mngr.h"
 #include "foldback.h"
 #include "ntc_temperature_sensor.h"
+#include "HardwareOverCurrentDetection.h"
+
 
 /* Exported types ------------------------------------------------------------*/
-
 /**
   * @brief  Speed & Torque Control parameters definition
   */
@@ -53,7 +54,8 @@ typedef struct
                                      regulation.*/
     NTCTempSensorHandle_t * pHeatsinkTempSensor; /* Temperature sensor used to monitor heatsink temperature */
     NTCTempSensorHandle_t * pMotorTempSensor; /* Temperature sensor used to monitor motor temperature */
-
+    OCD2_Handle_t    OCD2_Handle;
+    HWOverCurrentDetection_t HWOverCurrentDetection; /*< Status of OCD2 pin which connected to OCD2 of current sensot*/    
     uint16_t hSTCFrequencyHz;             /*!< Frequency on which the user updates
                                              the torque reference calling
                                              SpdTorqCtrl_CalcTorqueReference method
@@ -88,7 +90,6 @@ typedef struct
     float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
     
 } SpdTorqCtrlHandle_t;
-
 
 
 /**
@@ -299,8 +300,15 @@ int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
   * @param  pHandle: handler of the current instance of the FOCVars component
   * @retval null
   */
-  
 void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurr, int16_t UsrMaxCurr);
+
+/**
+  * @brief  Clear  the motor stcuk timer
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @retval 
+  */
+int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+
 /**
   * @brief  Check if the motor stcuk or not, return the result
   *         To convert current expressed in Amps to current expressed in digit

@@ -257,8 +257,6 @@ bool MCStateMachine_FaultAcknowledged(MotorStateMachineHandle_t * pHandle)
   return (bToBeReturned);
 }
 
-
-
 uint32_t MCStateMachine_GetFaultState(MotorStateMachineHandle_t * pHandle)
 {
   uint32_t LocalFaultState;

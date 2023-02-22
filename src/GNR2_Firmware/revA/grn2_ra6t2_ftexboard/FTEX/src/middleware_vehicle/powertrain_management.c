@@ -9,15 +9,15 @@
 #include "powertrain_management.h"
 #include "vc_tasks.h"
 
-#define OVERCURRENT_COUNTER         0
-#define STARTUP_COUNTER             1
-#define SPEEDFEEDBACK_COUNTER       2
-#define STUCK_REVERSE_COUNTER       3
+#define OVERCURRENT_COUNTER             0
+#define STARTUP_COUNTER                 1
+#define SPEEDFEEDBACK_COUNTER           2
+#define STUCK_REVERSE_COUNTER           3
 
 #define MAXCURRENT                 75 // Used for a generic conversion 
                                       // from current ref to actual amps
-
- int16_t TorqueFromPAS;
+bool isPWMCleared;
+int16_t TorqueFromPAS;
 
 /* Functions ---------------------------------------------------- */
 
@@ -682,6 +682,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                 {// If the timer has timeout, clear the OC fault
                     hM1FaultOccurredCode &= ~MC_BREAK_IN;
                     hM1FaultOccurredCode &= ~MC_OCSP;
+                    hM1FaultOccurredCode &= ~MC_FOC_DURATION;
                     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
                 }
                 else
