@@ -450,16 +450,27 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
 #if VEHICLE_SELECTION == VEHICLE_VELEC    
     if (FOCVars[bMotor].hTeref == 0.0)
     {
-        PID_SetKI(pPIDIq[bMotor], 500);
+        PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
     }
     else
     {
         PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
     }
-#endif    
+#endif
+#if VEHICLE_SELECTION == VEHICLE_TSUGAWA    
+    if (FOCVars[bMotor].hTeref == 0.0)
+    {
+        PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
+        
+    }
+    else
+    {
+        PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
+    }
+#endif  
     
     PID_SetKP(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKp, abs(hM1SpeedUnit)));
-    PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
+    //PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
     PID_SetKP(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKp, abs(hM1SpeedUnit)));
     PID_SetKI(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKi, abs(hM1SpeedUnit)));
 }
