@@ -35,7 +35,7 @@ typedef struct
     
     FoldbackConfig_t FoldbackConfig;                     // Check flag if the foldback handle is configured to trim the input or set the thresholds. 
     
-    int16_t  hDecreasingEndValue;        // Maximum of control variable beyond which input variable is trimmed to lower limit. 
+    int32_t  hDecreasingEndValue;        // Maximum of control variable beyond which input variable is trimmed to lower limit. 
 	uint16_t hDecreasingRange;          // Decreasing range of control variable.
     int16_t  hDecreasingInterval;       // Range of control variable beyond which input variable is trimmed to lower limit. 
 	int16_t  hMaxOutputLimitHigh;       // Higher threshold of maximum value that input variable can take, this variable changes depending upon operating conditions.

@@ -73,12 +73,12 @@
 /* The maximum current from Current Sensor with AMPLIFICATION_GAIN that we can measure using ADC with ADC_REFERENCE_VOLTAGE */
 #define current_correction_factor   0.85  /* correction factor for the current sensor range */
 #define MAX_MEASURABLE_CURRENT  (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN)* current_correction_factor)  
-#define NOMINAL_PEAK_CURRENT    (PEAK_CURRENT_amps * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Maximum current amplitude that can be injected per phase in digital Amps */
-#define ID_DEMAG        (ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
+#define NOMINAL_PEAK_CURRENT    (uint16_t)(PEAK_CURRENT_amps * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Maximum current amplitude that can be injected per phase in digital Amps */
+#define ID_DEMAG        (uint16_t)(ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
 
-#define OCSP_SAFETY_MARGIN 	            (OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_SAFETY_MARGIN 	            (uint16_t)(OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
-#define OCSP_MAX_CURRENT                (OCSP_MAX_CURRENT_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Max current that can be reached before triggering software overcurrent */
+#define OCSP_MAX_CURRENT                (uint16_t)(OCSP_MAX_CURRENT_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Max current that can be reached before triggering software overcurrent */
 
 #define OBS_MINIMUM_SPEED_UNIT    (uint16_t) ((OBS_MINIMUM_SPEED_RPM*SPEED_UNIT)/_RPM)
 

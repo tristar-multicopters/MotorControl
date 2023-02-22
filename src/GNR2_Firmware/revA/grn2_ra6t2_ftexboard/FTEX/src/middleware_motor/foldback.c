@@ -32,7 +32,7 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
 {
     ASSERT(pHandle != NULL); 
 	int16_t hMaxOutput = 0;
-    int16_t hStartValue;
+    int32_t hStartValue;
     uint32_t wAux;
     
     if (!pHandle->bIsInverted)

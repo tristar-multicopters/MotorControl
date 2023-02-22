@@ -14,14 +14,14 @@
  ************************/
  /***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
 #define POLE_PAIR_NUM          15 /* Number of motor pole pairs */
-#define RS                     0.071 /* Stator resistance , ohm*/
-#define LS                     0.00015 /* Stator inductance, H   For I-PMSM it is equal to Lq */
-#define MOTOR_MAGNET_FLUX       0.05  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
+#define RS                     0.071f /* Stator resistance , ohm*/
+#define LS                     0.00015f /* Stator inductance, H   For I-PMSM it is equal to Lq */
+#define MOTOR_MAGNET_FLUX       0.05f  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
 #define MOTOR_VOLTAGE_CONSTANT  136   /*!< Volts RMS ph-ph /kRPM */
 
 
 #define PEAK_CURRENT_amps       55      /* peak current in amps     */
-#define NOMINAL_TORQUE          (1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)    /* Nominal torque to apply to motor in cNm   
+#define NOMINAL_TORQUE          (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)    /* Nominal torque to apply to motor in cNm   
                                                                                                  Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps */
 #define STARTING_TORQUE         6500    /* Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes*/
 
