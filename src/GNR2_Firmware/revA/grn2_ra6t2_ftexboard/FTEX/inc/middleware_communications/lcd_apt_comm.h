@@ -144,7 +144,7 @@ void LCD_APT_Task(APT_Handle_t *pHandle);
  *            
  * @return nothing
  */
-void LCD_APT_frame_Process(APT_Handle_t *pHandle);
+void LCD_APT_ProcessFrame(APT_Handle_t *pHandle);
 
 /**@brief Function used to apply a filter on the speed we send to the screen
  *        

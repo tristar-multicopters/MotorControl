@@ -33,8 +33,12 @@ void LCD_APT_init(APT_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handle_t 
     pHandle->pUART_handle->pRxCallback = &LCD_APT_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LCD_APT_TX_IRQ_Handler; 
     
+
+    pHandle->pUART_handle->UARTBaudrate = BAUD9600;
+
     LCD_APT_ClearAllErrors(pHandle);    
     
+    pHandle->pUART_handle->UARTBaudrate = BAUD9600;
     uCAL_UART_Init(pHandle->pUART_handle);  // Initialise the UART module with the baudrate that APT screen needs  
     uCAL_UART_Receive(pHandle->pUART_handle, &(pHandle->RxByte), sizeof(pHandle->RxByte));  // Start the first reception   
 }
@@ -147,7 +151,7 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
             {
                 pHandle->rx_frame.Buffer[ByteCount] = NextByte;
                 
-                LCD_APT_frame_Process(pHandle); //We have received a full frame so do the frame processing
+                LCD_APT_ProcessFrame(pHandle); //We have received a full frame so do the frame processing
             }
             pHandle->rx_frame.ByteCnt = 0;
         }
@@ -166,7 +170,7 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
  *  This is executed in a comm task that gets unblocked when a complete frame is received.
  *
  */
-void LCD_APT_frame_Process(APT_Handle_t *pHandle)
+void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 {
      APT_frame_t replyFrame = {0};
      

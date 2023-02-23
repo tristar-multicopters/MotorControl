@@ -290,16 +290,20 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             if(bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM])
             { 
-                if(UART0Handle.UARTProtocol == UART_APT && LCD_APT_handle.APTChangePasFlag) // Check if PAS was changed by non-can source                          
-                {    
-                    LCD_APT_handle.APTChangePasFlag = false;
-                    bPAS[CAN_PARAM] = bPAS[VEHICLE_PARAM];  // if it was set the CAN pas as the vehicle pas                                    
-                }
-                else // if it wasnt changed by a non-can then it was changed by a can source
-                {
-                    CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
-                    LCD_APT_handle.CanChangePasFlag = true;
-                }              
+
+                if(UART0Handle.UARTProtocol == UART_APT)
+                {   
+                    if (LCD_APT_handle.APTChangePasFlag) // Check if PAS was changed by non-can source                          
+                    {    
+                        LCD_APT_handle.APTChangePasFlag = false;
+                        bPAS[CAN_PARAM] = bPAS[VEHICLE_PARAM];  // if it was set the CAN pas as the vehicle pas                                    
+                    }
+                    else // if it wasnt changed by a non-can then it was changed by a can source
+                    {
+                        CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
+                        LCD_APT_handle.CanChangePasFlag = true;
+                    }
+                }                    
             }
             else
             {
@@ -476,6 +480,9 @@ void Comm_BootUp(void)
     	case UART_APT:
             LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
     		break;
+        case UART_KD718:
+            LCD_KD718_init(&LCD_KD718_handle, &VCInterfaceHandle, &UART0Handle);
+            break;
     	case UART_DISABLE:
             break;
         default:
@@ -496,6 +503,9 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
            case UART_APT:
                 LCD_APT_Task(&LCD_APT_handle); //Run the APT task
                 break;
+           case UART_KD718:
+                LCD_KD718_Task(&LCD_KD718_handle); //Run the KD718 task
+                break;               
            case UART_LOG_HS:
                 LogHS_ProcessFrame(&LogHS_handle);
                 break;

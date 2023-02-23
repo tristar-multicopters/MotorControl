@@ -109,7 +109,7 @@ int16_t PedalAssist_GetPASTorqueSpeed(PAS_Handle_t * pHandle)
             hRefTorque = (pHandle->sParameters.hPASMaxTorque); // ratio of 1 from the max torque based on the feeling of the user
             break;
         case PAS_LEVEL_WALK:
-            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_3) / PAS_LEVEL_5; // Initial ratio picked by the team, still not tested by a client
+            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_7) / PAS_LEVEL_8; // Initial ratio picked by the team, still not tested by a client
             break;        
         default:
             hRefTorque = 0;

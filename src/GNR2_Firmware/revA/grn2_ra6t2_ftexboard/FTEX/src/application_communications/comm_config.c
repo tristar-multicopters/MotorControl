@@ -15,11 +15,10 @@ CO_NODE CONodeGNR;
 SlaveMotorHandle_t SlaveM2;
 
 UART_Handle_t UART0Handle =
-{
-    //.UARTBaudrate = BAUD115200,   //for HS Log
-    .UARTBaudrate = BAUD9600,       // for APT
-    //.UARTProtocol = UART_LOG_HS,    // for HS Log
-    .UARTProtocol = UART_APT,     // for APT  
+{   
+    //.UARTProtocol = UART_LOG_HS,  // for HS Log
+    .UARTProtocol = UART_APT,     // for APT
+    //.UARTProtocol = UART_KD718,   // for KD718  
     .pUARTInstance = &g_uart9,
 };
 
@@ -46,6 +45,7 @@ EFlash_Storage_Handle_t EFlash_Storage_Handle =
 
 APT_Handle_t LCD_APT_handle;
 LogHighSpeed_Handle_t LogHS_handle;
+KD718_Handle_t LCD_KD718_handle;
 
 //Handle to control the data flash initialisation 
 DataFlash_Handle_t DataFlashHandle =

@@ -29,11 +29,9 @@ typedef enum  // Used to select the UART baudrate
 
 typedef enum
 {
-  	UART_DISABLE,
-	UART_EVIONICS,
-	UART_BAFANG,
-	UART_FTEX,
-	UART_APT, 
+    UART_DISABLE,
+    UART_APT,
+    UART_KD718,    
     UART_LOG_HS 
 
 } uCAL_Protocol_t;
@@ -55,7 +53,7 @@ UART_Handle_t;
 
 /**
   @brief Function used to initialise the UART using the renesas API
-	
+    
   @param Receives UART baud rate and handle
   @return void
 */
@@ -63,7 +61,7 @@ void uCAL_UART_Init(UART_Handle_t *pHandle);
 
 /**
   @brief Function used to set the UART baud rate using the renesas API
-	
+    
   @param Receives UART baud rate
   @return void
 */
@@ -71,7 +69,7 @@ void uCAL_UART_SetBaudRate(UART_Handle_t *pHandle);
 
 /**
   @brief Function used to transmit data via UART from a specific buffer
-	
+    
   @param Buffer pointer and size
   @return void
 */
@@ -79,7 +77,7 @@ void uCAL_UART_Transmit(UART_Handle_t *pHandle, uint8_t *Buffer, uint32_t Buffer
 
 /**
   @brief Function used to receive data via UART in a specific buffer
-	
+    
   @param Buffer pointer and size
   @return void
 */

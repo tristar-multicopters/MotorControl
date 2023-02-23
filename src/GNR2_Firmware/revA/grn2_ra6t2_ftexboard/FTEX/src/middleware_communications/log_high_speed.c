@@ -34,6 +34,7 @@ void LogHS_Init(LogHighSpeed_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Ha
     pHandle->pUART_handle->pRxCallback = &LogHS_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LogHS_TX_IRQ_Handler; 
     
+    pHandle->pUART_handle->UARTBaudrate = BAUD115200;
     uCAL_UART_Init(pHandle->pUART_handle);  // Initialise the UART module with the baudrate that we need.  
     uCAL_UART_Receive(pHandle->pUART_handle, &(pHandle->RxByte), sizeof(pHandle->RxByte));  // Start the first reception   
    

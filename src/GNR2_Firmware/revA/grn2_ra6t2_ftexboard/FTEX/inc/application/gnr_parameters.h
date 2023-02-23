@@ -43,7 +43,7 @@
 //
 //to know how to use the three define bellow, please 
 //check the description above.
-#define GNR_IOT                       1                   /* If IOT, controller manages canbus communication with IOT Module and discard vehicule communication.  */
+#define GNR_IOT                       0                   /* If IOT, controller manages canbus communication with IOT Module and discard vehicule communication.  */
 #define GNR_MASTER                    1                   /* If master, controller manages canbus communication with slaves and vehicle control layer.  */
 #define SUPPORT_SLAVE                 0                   /* if slaver, enable slaver to send, by TPDO, informationa about him self to the master
                                                              and be controlled by the master.*/
@@ -56,7 +56,7 @@
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 
-#define VEHICLE_SELECTION             VEHICLE_VELEC     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters
                                                              Will be changed in the future for a more flexible way
                                                              of parametrization. */
                                                                                                                
