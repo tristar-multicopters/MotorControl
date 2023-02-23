@@ -12,9 +12,6 @@
 
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
-#define APTMAXCURRENT 75  //Should be replaced with a dynamic value
-
-
 /**
  *  Function for initializing the LCD module with the APT protocol
  *  It links its own custom interrupt routines with the UART callbacks using
@@ -172,133 +169,142 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
  */
 void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 {
-     APT_frame_t replyFrame = {0};
+    APT_frame_t replyFrame = {0};
      
-     int32_t  toSend      = 0;
-     uint32_t Check       = 0;
-     uint16_t Merge       = 0;
-     uint8_t  PassLvl     = 0;
-     uint8_t  LightStatus = 0;
+    int32_t  toSend      = 0;
+    uint32_t Check       = 0;
+    uint16_t Merge       = 0;
+    uint8_t  PassLvl     = 0;
+    uint8_t  LightStatus = 0;
      
     
-     //Verification of the checksum
-     for(int i = 0; i < 6; i += 2) //Checksum is the sum of double bytes into a 16 bits
-     {                             //Single bytes need to be paired into a single 16 bits before being summed    
-         Merge = (uint16_t) (pHandle->rx_frame.Buffer[i] << 8) +  pHandle->rx_frame.Buffer[i+1];
-         Check += Merge;
-     }
+    //Verification of the checksum
+    for(int i = 0; i < 6; i += 2) //Checksum is the sum of double bytes into a 16 bits
+    {                             //Single bytes need to be paired into a single 16 bits before being summed    
+        Merge = (uint16_t) (pHandle->rx_frame.Buffer[i] << 8) +  pHandle->rx_frame.Buffer[i+1];
+        Check += Merge;
+    }
      
-     if(Check > 0x0000FFFF) // Small patch to accomodate bug in APT screen
-     {
-         Check += 0x0000FFFF & (Check >> 16);      
-     }
+    if(Check > 0x0000FFFF) // Small patch to accomodate bug in APT screen
+    {
+        Check += 0x0000FFFF & (Check >> 16);      
+    }
      
-     Check = (Check & 0x0000FFFF); //Protection in case of overflow
+    Check = (Check & 0x0000FFFF); //Protection in case of overflow
     
-     //Check if the CRC is good
-     if(Check == (uint32_t)(pHandle->rx_frame.Buffer[CHECK + 1] + (pHandle->rx_frame.Buffer[CHECK] << 8)))
-     {
+    //Check if the CRC is good
+    if(Check == (uint32_t)(pHandle->rx_frame.Buffer[CHECK + 1] + (pHandle->rx_frame.Buffer[CHECK] << 8)))
+    {
          
-         LightStatus = ((pHandle->rx_frame.Buffer[PAS]) & 0x10);
+        LightStatus = ((pHandle->rx_frame.Buffer[PAS]) & 0x10);
          
-         if(LightStatus) //Operate the light according to what the screne tells us
-         {
-             Light_Enable(pHandle->pVController->pPowertrain->pHeadLight);  
-             Light_Enable(pHandle->pVController->pPowertrain->pTailLight); 
-         }
-         else
-         {
-             Light_Disable(pHandle->pVController->pPowertrain->pHeadLight); 
-             Light_Disable(pHandle->pVController->pPowertrain->pTailLight);              
-         }   
+        if(LightStatus) //Operate the light according to what the screne tells us
+        {
+            Light_Enable(pHandle->pVController->pPowertrain->pHeadLight);  
+            Light_Enable(pHandle->pVController->pPowertrain->pTailLight); 
+        }
+        else
+        {
+            Light_Disable(pHandle->pVController->pPowertrain->pHeadLight); 
+            Light_Disable(pHandle->pVController->pPowertrain->pTailLight);              
+        }   
          
-         //Reading the Pass
-         PassLvl = (pHandle->rx_frame.Buffer[PAS] & 0x0F); //Only the 4 LSB contain the pass level
+        //Reading the Pass
+        PassLvl = (pHandle->rx_frame.Buffer[PAS] & 0x0F); //Only the 4 LSB contain the pass level
         
     
-          if(PassLvl != PAS_UNCHANGED)
-          {                  
-              PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,LCD_APT_ConvertPASLevelFromAPT(PassLvl,pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel));         
-              pHandle->OldPAS = PassLvl;
-              pHandle->APTChangePasFlag = true;
-          }                      
+        if(PassLvl != PAS_UNCHANGED)
+        {                  
+            PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,LCD_APT_ConvertPASLevelFromAPT(PassLvl,pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel));         
+            pHandle->OldPAS = PassLvl;
+            pHandle->APTChangePasFlag = true;
+        }                      
         
-         //Reading the Speed   limit  TBA
-         //Reading the Current limit  TBA        
+        //Reading the Speed   limit  TBA
+        
+        #ifdef SCREENPOWERCONTROL
+        
+        // Reading the Current limit          
+        uint16_t CurrentLimit;
+        CurrentLimit = pHandle->rx_frame.Buffer[CURRENTL];
+        
+        PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);
+        
+        #endif
          
-          //Reading and updating the Wheel diameter 
-          pHandle->WheelDiameter = LCD_APT_CalculateWheelDiameter(pHandle->rx_frame.Buffer[WHEELD]);
-          CanVehiInterface_UpdateWheelDiamater(pHandle->WheelDiameter);
+        //Reading and updating the Wheel diameter 
+        pHandle->WheelDiameter = LCD_APT_CalculateWheelDiameter(pHandle->rx_frame.Buffer[WHEELD]);
+        CanVehiInterface_UpdateWheelDiamater(pHandle->WheelDiameter);
     
-         //For APT protocol, LSB is sent first for multi-bytes values
-         replyFrame.Size = 13;
+        //For APT protocol, LSB is sent first for multi-bytes values
+        replyFrame.Size = 13;
     
-         replyFrame.Buffer[ 0] = APT_START; //Start
+        replyFrame.Buffer[ 0] = APT_START; //Start
       
-         //Get the amount of amps we are currently pushing 
-         toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);
+        //Get the amount of amps we are currently pushing 
+        toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);
          
-         toSend = LCD_APT_ApplyPowerFilter((uint16_t)toSend);  
+        toSend = LCD_APT_ApplyPowerFilter((uint16_t)toSend);  
           
-         toSend = toSend * 2; //Covert from amps to 0.5 amps; 
+        toSend = toSend * 2; //Covert from amps to 0.5 amps; 
         
-         replyFrame.Buffer[1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
+        replyFrame.Buffer[1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
 
-         /* Condition use for wheel speed sensor rpm to send */
-         toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
+        /* Condition use for wheel speed sensor rpm to send */
+        toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
                    
-         toSend =  LCD_APT_ApplySpeedFilter((uint16_t) toSend);
+        toSend =  LCD_APT_ApplySpeedFilter((uint16_t) toSend);
                   
-         toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
+        toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
          
-         if(toSend != 0) //verify toSend value to avoid a division by zero.
-         {
+        if(toSend != 0) //verify toSend value to avoid a division by zero.
+        {
             toSend = 500000/(toSend/60); // Descaling here with the 500000 to return to original unit            
-         }
+        }
             
          
-         replyFrame.Buffer[2] = (toSend & 0x00FF);      // Wheel speed Low half 
-         replyFrame.Buffer[3] = (toSend & 0xFF00) >> 8; // Wheel speed High half
+        replyFrame.Buffer[2] = (toSend & 0x00FF);      // Wheel speed Low half 
+        replyFrame.Buffer[3] = (toSend & 0xFF00) >> 8; // Wheel speed High half
       
-         replyFrame.Buffer[4] = (uint8_t) LCD_APT_CycleError(pHandle); // Error Code
+        replyFrame.Buffer[4] = (uint8_t) LCD_APT_CycleError(pHandle); // Error Code
       
-         replyFrame.Buffer[5] = 0x04; // Brake Code bXXXX 0100 means the motor is working
+        replyFrame.Buffer[5] = 0x04; // Brake Code bXXXX 0100 means the motor is working
                       
-         replyFrame.Buffer[6] = 0x00;
+        replyFrame.Buffer[6] = 0x00;
          
-         // If we want to change the PAS level we need to change it here
-         replyFrame.Buffer[7] = PAS_UNCHANGED; // Send 0x0A unless we want to change the PAS on the screen  
+        // If we want to change the PAS level we need to change it here
+        replyFrame.Buffer[7] = PAS_UNCHANGED; // Send 0x0A unless we want to change the PAS on the screen  
          
-         if(pHandle->CanChangePasFlag || pHandle->OldPAS != LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)))
-         {
+        if(pHandle->CanChangePasFlag || pHandle->OldPAS != LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)))
+        {
              pHandle->CanChangePasFlag = false;
              replyFrame.Buffer[ 7] =  LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)); 
              pHandle->OldPAS = LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS));
-         }
+        }
                                        
-         replyFrame.Buffer[8] = 0x00;
-         replyFrame.Buffer[9] = 0x00;
+        replyFrame.Buffer[8] = 0x00;
+        replyFrame.Buffer[9] = 0x00;
     
-         //Calculate checksum
-         //Sum of paired bytes
-         Merge = 0;
-         Check = 0;
-         for(uint16_t i = 0; i < NUMBER_OF_CRC_BYTES; i += BYTE_PER_PAIR)
-         {
+        //Calculate checksum
+        //Sum of paired bytes
+        Merge = 0;
+        Check = 0;
+        for(uint16_t i = 0; i < NUMBER_OF_CRC_BYTES; i += BYTE_PER_PAIR)
+        {
              Merge = (uint16_t) (replyFrame.Buffer[i+1] << 8) + replyFrame.Buffer[i];
              Check += Merge;
-         }
+        }
         
-         replyFrame.Buffer[10] =  (0x000000FF & Check);       // Checksum Low  Half
-         replyFrame.Buffer[11] = ((0x0000FF00 & Check) >> 8); // Checksum High Half    
+        replyFrame.Buffer[10] =  (0x000000FF & Check);       // Checksum Low  Half
+        replyFrame.Buffer[11] = ((0x0000FF00 & Check) >> 8); // Checksum High Half    
             
-         replyFrame.Buffer[12] = APT_END; // End
+        replyFrame.Buffer[12] = APT_END; // End
             
-         replyFrame.ByteCnt = 0;   
+        replyFrame.ByteCnt = 0;   
         
-         pHandle->tx_frame = replyFrame; 
+        pHandle->tx_frame = replyFrame; 
              
-         LCD_APT_TX_IRQ_Handler((void *) pHandle); // Start the transmission of the answer frame
+        LCD_APT_TX_IRQ_Handler((void *) pHandle); // Start the transmission of the answer frame
             
     }// End of CRC check
        

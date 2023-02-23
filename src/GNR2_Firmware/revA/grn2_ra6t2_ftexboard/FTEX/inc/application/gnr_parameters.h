@@ -56,7 +56,8 @@
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 
-#define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters
+#define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters.
+
                                                              Will be changed in the future for a more flexible way
                                                              of parametrization. */
                                                                                                                
@@ -66,6 +67,10 @@
 
 //define responsible to enable canloggertask
 #define CANLOGGERTASK 0 
+
+//define to allow screne to change power
+//#define SCREENPOWERCONTROL 0 
+
 
 /*
   Set BYPASS_POSITION_SENSOR to 1 and BYPASS_CURRENT_CONTROL to 1 for simple open loop voltage output.

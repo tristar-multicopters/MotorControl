@@ -15,6 +15,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
+#include "flux_weakening_ctrl.h"
 #include "mc_state_machine.h"
 #include "speed_torq_ctrl.h"
 #include "bus_voltage_sensor.h"
@@ -43,7 +44,8 @@ typedef enum
 
 typedef struct
 {
-  float Gain_Torque_IQRef; 
+  float Gain_Torque_IQRef;
+  float MaxMeasurableCurrent;    
 
 } ConversionFactors_t; /* Contaisn conversion factors that we want to pass to vehicle control */
 
@@ -54,7 +56,8 @@ typedef struct
   pFOCVars_t pFOCVars;                         /*!< Pointer to FOC vars used by MCI.*/
   BusVoltageSensorHandle_t *pBusVoltageSensor; // Used to raise the bus voltage sensor to the vehicle layer 
   MCInterfaceUserCommands_t LastCommand;       /*!< Last command coming from the user.*/
-  
+  MCConfigHandle_t          *pMCConfig;
+    
   int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
   int16_t hFinalTorque;       /*!< Final torque of last ExecTorqueRamp command.*/
                                    
@@ -81,7 +84,7 @@ typedef struct
   * @param  pFOCVars pointer to FOC vars to be used by MCI.
   * @retval none.
   */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, NTCTempSensorHandle_t *pNTCTempSensor);
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, NTCTempSensorHandle_t *pNTCTempSensor, MCConfigHandle_t *pMCConfig);
 
 /**
   * @brief  This is usually a method managed by task. It must be called
@@ -400,6 +403,28 @@ uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHa
   * @retval Value of the heatsink temperaure in celsius degree
   */
 int16_t MCInterface_GetNTCTemp(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the Max safe current from motor control.
+  * @param  pHandle : handle of the MCI interface 
+  * @retval the maximum current in amps
+  */
+int16_t MCInterface_GetMaxCurrent(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the maximum ongoing current,
+  * @param  pHandle : handle of the MCI interface
+  * @retval the value in amps
+  */
+int16_t MCInterface_GetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Set the maximum ongoing current, 
+  * @param  pHandle : handle of the MCI interface
+  * @retval nothing
+  */
+void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, int16_t aCurrent);
+
 
 
 #ifdef __cplusplus

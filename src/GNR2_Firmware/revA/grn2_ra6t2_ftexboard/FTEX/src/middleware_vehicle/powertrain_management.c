@@ -17,15 +17,15 @@
 #define MAXCURRENT                 75 // Used for a generic conversion 
                                       // from current ref to actual amps
 bool isPWMCleared;
-int16_t TorqueFromPAS;
+
 
 /* Functions ---------------------------------------------------- */
 
 /**
-    * @brief  Module initialization, to be called once before using it
-    * @param  Powertrain handle
-    * @retval None
-    */
+  * @brief  Module initialization, to be called once before using it
+  * @param  Powertrain handle
+  * @retval None
+  */
 void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1, SlaveMotorHandle_t * pSlaveM2)
 {
     ASSERT(pHandle != NULL);
@@ -55,10 +55,10 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
 }
 
 /**
-    * @brief  Update current value of powertrain peripherals, such as throttle. To be called periodically.
-    * @param  Powertrain handle
-    * @retval None
-    */
+  * @brief  Update current value of powertrain peripherals, such as throttle. To be called periodically.
+  * @param  Powertrain handle
+  * @retval None
+  */
 void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -67,10 +67,10 @@ void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Compute target torque and speed to be applied to each motors and store value into powertrain handle.
-    * @param  Powertrain handle
-    * @retval None
-    */
+  * @brief  Compute target torque and speed to be applied to each motors and store value into powertrain handle.
+  * @param  Powertrain handle
+  * @retval None
+  */
 void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -228,10 +228,10 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Send torque and/or speed ramp commands to motors
-    * @param  Powertrain handle
-    * @retval None
-    */
+  * @brief  Send torque and/or speed ramp commands to motors
+  * @param  Powertrain handle
+  * @retval None
+  */
 void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -257,10 +257,10 @@ void PWRT_ApplyMotorRamps(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Send command to start motors
-    * @param  Powertrain handle
-    * @retval None
-    */
+  * @brief  Send command to start motors
+  * @param  Powertrain handle
+  * @retval None
+  */
 void PWRT_StartMotors(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -275,10 +275,10 @@ void PWRT_StartMotors(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Send command to stop motors
-    * @param  Powertrain handle
-    * @retval None
-    */
+  * @brief  Send command to stop motors
+  * @param  Powertrain handle
+  * @retval None
+  */
 void PWRT_StopMotors(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -293,10 +293,10 @@ void PWRT_StopMotors(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check for motor faults during standby state
-    * @param  Powertrain handle
-    * @retval Vehicle fault code
-    */
+  * @brief  Check for motor faults during standby state
+  * @param  Powertrain handle
+  * @retval Vehicle fault code
+  */
 uint16_t PWRT_StandbyStateCheck(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -339,10 +339,10 @@ uint16_t PWRT_StandbyStateCheck(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check for motor faults during start state
-    * @param  Powertrain handle
-    * @retval Vehicle fault code
-    */
+  * @brief  Check for motor faults during start state
+  * @param  Powertrain handle
+  * @retval Vehicle fault code
+  */
 uint16_t PWRT_StartStateCheck(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -381,10 +381,10 @@ uint16_t PWRT_StartStateCheck(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check for motor faults during run state
-    * @param  Powertrain handle
-    * @retval Vehicle fault code
-    */
+  * @brief  Check for motor faults during run state
+  * @param  Powertrain handle
+  * @retval Vehicle fault code
+  */
 uint16_t PWRT_RunStateCheck(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -425,10 +425,10 @@ uint16_t PWRT_RunStateCheck(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check for motor faults during stop state
-    * @param  Powertrain handle
-    * @retval Vehicle fault code
-    */
+  * @brief  Check for motor faults during stop state
+  * @param  Powertrain handle
+  * @retval Vehicle fault code
+  */
 uint16_t PWRT_StopStateCheck(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -467,10 +467,10 @@ uint16_t PWRT_StopStateCheck(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check if powertrain is active (e.g. motors are in running state)
-    * @param  Powertrain handle
-    * @retval Returns true if powertrain is active
-    */
+  * @brief  Check if powertrain is active (e.g. motors are in running state)
+  * @param  Powertrain handle
+  * @retval Returns true if powertrain is active
+  */
 bool PWRT_IsPowertrainActive(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -504,10 +504,10 @@ bool PWRT_IsPowertrainActive(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check if powertrain is stopped (e.g. motors are in idle state)
-    * @param  Powertrain handle
-    * @retval Returns true if powertrain is stopped
-    */
+  * @brief  Check if powertrain is stopped (e.g. motors are in idle state)
+  * @param  Powertrain handle
+  * @retval Returns true if powertrain is stopped
+  */
 bool PWRT_IsPowertrainStopped(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -554,10 +554,10 @@ bool PWRT_IsPowertrainStopped(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check if conditions to stop powertrain are met
-    * @param  Powertrain handle
-    * @retval Returns true if powertrain conditions to stop are met, false otherwise
-    */
+  * @brief  Check if conditions to stop powertrain are met
+  * @param  Powertrain handle
+  * @retval Returns true if powertrain conditions to stop are met, false otherwise
+  */
 bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -626,10 +626,10 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check if conditions to start powertrain are met
-    * @param  Powertrain handle
-    * @retval Returns true if powertrain can be started
-    */
+  * @brief  Check if conditions to start powertrain are met
+  * @param  Powertrain handle
+  * @retval Returns true if powertrain can be started
+  */
 bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -657,10 +657,10 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Manage motor faults. Check if faults are still present and send motor fault acknowledge when faults are gone.
-    * @param  Powertrain handle
-    * @retval Returns true if a motor fault is still active, false if no more fault is present.
-    */
+  * @brief  Manage motor faults. Check if faults are still present and send motor fault acknowledge when faults are gone.
+  * @param  Powertrain handle
+  * @retval Returns true if a motor fault is still active, false if no more fault is present.
+  */
 bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -842,10 +842,10 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Get main motor reference torque
-    * @param  Powertrain handle
-    * @retval Returns main motor reference torque
-    */
+  * @brief  Get main motor reference torque
+  * @param  Powertrain handle
+  * @retval Returns main motor reference torque
+  */
 int16_t PWRT_GetTorqueRefMainMotor(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -853,10 +853,10 @@ int16_t PWRT_GetTorqueRefMainMotor(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Get motor 1 reference torque
-    * @param  Powertrain handle
-    * @retval Returns motor 1 reference torque
-    */
+  * @brief  Get motor 1 reference torque
+  * @param  Powertrain handle
+  * @retval Returns motor 1 reference torque
+  */
 int16_t PWRT_GetTorqueRefM1(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -864,10 +864,10 @@ int16_t PWRT_GetTorqueRefM1(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Get motor 2 reference torque
-    * @param  Powertrain handle
-    * @retval Returns motor 2 reference torque
-    */
+  * @brief  Get motor 2 reference torque
+  * @param  Powertrain handle
+  * @retval Returns motor 2 reference torque
+  */
 int16_t PWRT_GetTorqueRefM2(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -875,10 +875,10 @@ int16_t PWRT_GetTorqueRefM2(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Get main motor speed reference
-    * @param  Powertrain handle
-    * @retval Returns main motor speed reference
-    */
+  * @brief  Get main motor speed reference
+  * @param  Powertrain handle
+  * @retval Returns main motor speed reference
+  */
 int32_t PWRT_GetSpeedRefMainMotor(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -886,10 +886,10 @@ int32_t PWRT_GetSpeedRefMainMotor(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Get motor 1 speed reference
-    * @param  Powertrain handle
-    * @retval Returns motor 1 speed reference
-    */
+  * @brief  Get motor 1 speed reference
+  * @param  Powertrain handle
+  * @retval Returns motor 1 speed reference
+  */
 int32_t PWRT_GetSpeedRefM1(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -897,10 +897,10 @@ int32_t PWRT_GetSpeedRefM1(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Get motor 2 speed reference
-    * @param  Powertrain handle
-    * @retval Returns motor 2 speed reference
-    */
+  * @brief  Get motor 2 speed reference
+  * @param  Powertrain handle
+  * @retval Returns motor 2 speed reference
+  */
 int32_t PWRT_GetSpeedRefM2(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -908,10 +908,10 @@ int32_t PWRT_GetSpeedRefM2(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check if motor 1 is used
-    * @param  Powertrain handle
-    * @retval Returns true if motor 1 is used
-    */
+  * @brief  Check if motor 1 is used
+  * @param  Powertrain handle
+  * @retval Returns true if motor 1 is used
+  */
 bool PWRT_IsMotor1Used(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -919,10 +919,10 @@ bool PWRT_IsMotor1Used(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check if motor 2 is used
-    * @param  Powertrain handle
-    * @retval Returns true if motor 2 is used
-    */
+  * @brief  Check if motor 2 is used
+  * @param  Powertrain handle
+  * @retval Returns true if motor 2 is used
+  */
 bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -930,10 +930,10 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Select Control assistance based on Throttle or PAS
-    * @param  Powertrain handle
-    * @retval pHandle->pTorqueSelect in int16                                                                                    
-    */
+  * @brief  Select Control assistance based on Throttle or PAS
+  * @param  Powertrain handle
+  * @retval pHandle->pTorqueSelect in int16                                                                                    
+  */
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 {      
     ASSERT(pHandle != NULL);
@@ -968,7 +968,6 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         if ((pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
-            TorqueFromPAS = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
          }
 				
         /* Hybride sensor enabled */
@@ -1017,12 +1016,12 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Get the total amount of current the vehicle is pushing
-    * @param  Powertrain handle
-    * @retval current in amps uin16_t                                                                                   
-    */
+  * @brief  Get the total amount of current the vehicle is pushing
+  * @param  Powertrain handle
+  * @retval current in amps uin16_t                                                                                   
+  */
 uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
-{
+{    
     uint16_t TotalMotorCurrent = 0;
     uint16_t M1Current = 0;
     uint16_t M2Current = 0; 
@@ -1060,4 +1059,57 @@ uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
     TotalMotorCurrent =  M1Current + M2Current;  // Get the sum of the currents form both motors             
   
     return  TotalMotorCurrent;   
+}
+
+/**
+  * Get the max safe current we can push                                                                                  
+  */
+uint16_t PWRT_GetMaxSafeCurrent(PWRT_Handle_t * pHandle)
+{   
+    uint16_t CurrentInAMPS;
+    
+    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MCInterface_GetMaxCurrent(pHandle->pMDI->pMCI));
+    
+    return  CurrentInAMPS;
+}
+
+/**
+  * Get the ongoing max current we can push                                                                                   
+  */
+uint16_t PWRT_GetOngoingMaxCurrent(PWRT_Handle_t * pHandle)
+{
+    uint16_t CurrentInAMPS;
+    
+    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MCInterface_GetOngoingMaxCurrent(pHandle->pMDI->pMCI));
+    
+    return  CurrentInAMPS;    
+}
+
+/**
+  * Set the ongoing max current we want to push                                                                                 
+  */
+void PWRT_SetOngoingMaxCurrent(PWRT_Handle_t * pHandle, uint16_t aCurrent)
+{
+    uint16_t DigitalConv;
+    
+    DigitalConv = PWRT_ConvertAMPSToDigitalCurrent(pHandle, aCurrent);   
+    
+    MCInterface_SetOngoingMaxCurrent(pHandle->pMDI->pMCI,(int16_t) DigitalConv);
+    
+}
+
+/**
+  * Convert a digital current to a current in AMPs                                                                                   
+  */
+uint16_t PWRT_ConvertDigitalCurrentToAMPS(PWRT_Handle_t * pHandle, uint16_t aDigitalCurrent)
+{
+    return  (uint16_t) round(aDigitalCurrent / (65535/(pHandle->pMDI->pMCI->MCIConvFactors.MaxMeasurableCurrent * 2)));
+}
+
+/**
+  * Convert a current in AMPs to a digital current                                                                                   
+  */
+uint16_t PWRT_ConvertAMPSToDigitalCurrent(PWRT_Handle_t * pHandle, uint16_t aAMPSCurrent)
+{
+    return  (uint16_t) round(aAMPSCurrent * (65535/(pHandle->pMDI->pMCI->MCIConvFactors.MaxMeasurableCurrent * 2)));
 }

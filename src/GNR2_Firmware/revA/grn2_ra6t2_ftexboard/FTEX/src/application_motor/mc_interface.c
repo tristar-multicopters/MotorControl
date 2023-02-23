@@ -8,7 +8,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "mc_math.h"
 #include "speed_torq_ctrl.h"
-
 #include "mc_interface.h"
 
 
@@ -24,13 +23,14 @@
 /*
 * see function definition
 */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, NTCTempSensorHandle_t *pNTCTempSensor)
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, NTCTempSensorHandle_t *pNTCTempSensor, MCConfigHandle_t *pMCConfig)
 {
   pHandle->pSTM = pSTM;
   pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
   pHandle->pFOCVars = pFOCVars;
   pHandle->pBusVoltageSensor = pBusVoltageSensor;
   pHandle->pNTCTempSensor = pNTCTempSensor;
+  pHandle->pMCConfig = pMCConfig;
     
   /* Buffer related initialization */
   pHandle->LastCommand = MCI_NOCOMMANDSYET;
@@ -449,4 +449,28 @@ uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHa
 int16_t MCInterface_GetNTCTemp(MotorControlInterfaceHandle_t * pHandle)
 {
     return pHandle->pSpeedTorqCtrl->pHeatsinkTempSensor->hAvTempCelcius;
+}
+
+/**
+  *  Get the Max safe current from motor control.
+  */
+int16_t MCInterface_GetMaxCurrent(MotorControlInterfaceHandle_t * pHandle)
+{
+    return pHandle->pMCConfig->wNominalCurr;
+}
+
+/**
+  *  Get the maximum ongoing current,
+  */
+int16_t MCInterface_GetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle)
+{
+    return pHandle->pMCConfig->wUsrMaxCurr;
+}
+
+/**
+  *  Set the maximum ongoing current, 
+  */
+void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, int16_t aCurrent)
+{
+    pHandle->pMCConfig->wUsrMaxCurr = aCurrent;
 }
