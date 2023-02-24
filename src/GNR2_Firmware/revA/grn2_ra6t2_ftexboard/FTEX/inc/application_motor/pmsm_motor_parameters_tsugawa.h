@@ -42,7 +42,7 @@
                                                  It can be either DEGREES_120 or
                                                  DEGREES_60 */
 
-#define HALL_PHASE_SHIFT        240 /*!< Electrical phase shift in degree between the low to high
+#define HALL_PHASE_SHIFT        60 /*!< Electrical phase shift in degree between the low to high
                                         transition of signal H1 and the zero crossing of the Bemf induced
                                         between phase A and B */
 

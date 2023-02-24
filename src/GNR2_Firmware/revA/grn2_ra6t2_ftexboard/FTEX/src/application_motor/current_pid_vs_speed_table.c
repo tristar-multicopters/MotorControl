@@ -168,12 +168,12 @@ const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 };
 #elif VEHICLE_SELECTION == VEHICLE_TSUGAWA
 
-#define CURRENT_PID_LUT_SPEED_STEP                    300
-#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             100
+#define CURRENT_PID_LUT_SPEED_STEP                    700
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    2500,
-    2500,
+    3000,
+    3000,
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
@@ -184,13 +184,13 @@ const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    2000,
-    2000,	
+    1500,
+    1500,	
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    200,	 /* old PI = 50 parameter tunning for Vibration */
-    200,	 /* old PI = 50 parameter tunning for Vibration */
+    800,	 /* old PI = 50 parameter tunning for Vibration */
+    800,	 /* old PI = 50 parameter tunning for Vibration */
 };
 
 #elif VEHICLE_SELECTION == VEHICLE_NIDEC
