@@ -33,17 +33,17 @@
 
 #define PTS_FILTER_ALPHA                  2.27F    /* Butterworth alpha coefficient for pedal torque sensor filtering */
 #define PTS_FILTER_BETA                   -0.27F    /* Butterworth beta coefficient pedal torque sensor filtering */
-#define PTS_MAX_PTSVALUE                  UINT16_MAX	    /* Maximum analog value to reach */
+#define PTS_MAX_PTSVALUE                  40000	    /* Maximum analog value to reach */
 
-#define PTS_OFFSET_ADC2PTS                8500     /* Offset for ADC to pedal torque sensor linear transformation  */
-#define PTS_SLOPE_ADC2PTS                 7        /* Slope for ADC to pedal torque sensor linear transformation  */
+#define PTS_OFFSET_ADC2PTS                9600     /* Offset for ADC to pedal torque sensor linear transformation  */
+#define PTS_SLOPE_ADC2PTS                 8        /* Slope for ADC to pedal torque sensor linear transformation  */
 #define PTS_DIVISOR_ADC2PTS               6        /* Divisor for ADC to pedal torque sensor linear transformation  */
 
 #define PTS_OFFSET_PTS2TORQUE_STARTUP     40          /* Offset for pedal torque sensor to torque linear transformation during the startup in %  */
 #define PTS_OFFSET_STARTUP_SPEED          20          /* Speed under which the  Startup pedal torque sensor offset is used in wheel rpm   */
 #define PTS_OFFSET_PTS2TORQUE             10       /* Offset for pedal torque sensor to torque linear transformation  */
 
-#define PTS_SLOPE_PTS2TORQUE              7        /* Slope for pedal torque sensor to torque linear transformation  */
+#define PTS_SLOPE_PTS2TORQUE              6        /* Slope for pedal torque sensor to torque linear transformation  */
 #define PTS_DIVISOR_PTS2TORQUE            255      /* Divisor for pedal torque sensor to torque linear transformation  */
 
 #define PTS_FILTER_BW1                    10        /* BW coefficient for pedal torque sensor avereging */
@@ -79,7 +79,7 @@
 #define POWERTRAIN_DISABLE_THROTTLE_PAS_0                 true              /* If set the tru throttle is disabled when pas level is 0 */
 
 
-#define PAS_MAX_TORQUE                         1050               /* Maximum motor torque to apply using pedal assist  */
+#define PAS_MAX_TORQUE                         NOMINAL_TORQUE                              /* Maximum motor torque to apply using pedal assist  */
 #define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
 #define PAS_MAX_KM_SPEED                       33               /* Maximum Bike Speed in Km/h using RPM */
 #define PAS_MAX_LEVEL                          5                /* Maximum PAS Level given by the screen */
