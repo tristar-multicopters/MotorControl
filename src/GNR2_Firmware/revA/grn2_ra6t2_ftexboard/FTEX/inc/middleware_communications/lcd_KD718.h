@@ -25,11 +25,14 @@
 #define READ_COMMAND  0x11
 #define WRITE_COMMAND 0x16
 
+#define DEFAULT_ECOMODE_POWER   53 //Default value of power allowed in eco mode in %
+
 // Display Write Sub Cmd
 typedef enum
 {
    W_PAS       = 0x0B,
-   W_LIGHTS    = 0x1A,   
+   W_LIGHTS    = 0x1A,
+   W_PWRMODE   = 0x0C,    
 }
 KD718_WriteType_t;
 
@@ -71,6 +74,9 @@ typedef struct
     uint8_t RxCount;                       // Counts how many bytes we are holding
     uint8_t RxByte;                        // Used for byte by byte reception
     uint8_t WheelDiameter;                 // Used to hold the wheel diamater given by the screen
+    
+    bool EcoMode;                          // Used to enable and disable Eco mode 
+    uint16_t EcoModePowerPerCent;          // Used to set what % of power is allowed in eco mode
          
 }KD718_Handle_t;
 
@@ -113,8 +119,8 @@ void LCD_KD718_TX_IRQ_Handler(void *ppVoidHandle);
 /**@brief Function for handling the regular task to manage the communication with
  *        an KD718 screen        
  *
- * @param[in] pVoidHandle: a void pointer that contains the handle of the 
- *            KD718 module instance
+ * @param[in] pHandle: handle for KD718 module instance 
+ *            
  * @return nothing
  */
 void LCD_KD718_Task(KD718_Handle_t *pHandle);
@@ -123,8 +129,8 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle);
  *        according to the KD718 screen protocol.
  *        This is executed in a comm task that gets unblocked when a complete frame is received.
  *
- * @param[in] pVoidHandle: a void pointer that contains the handle of the 
- *            KD718 module instance
+ * @param[in] pHandle: handle for KD718 module instance
+ *           
  * @return nothing
  */
 void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle);
@@ -148,19 +154,34 @@ uint16_t LCD_KD718_ApplyPowerFilter(uint16_t aInstantPowerInAmps);
 /**@brief Function used to translate the PAS level received from the KD718  
  *        screen standard to the FTEX standard
  *
- * @param[in] pVoidHandle: a void pointer that contaisn the handle of the 
- *            KD718 module instance
- * @return nothing
+ * @param[in] A FTEX PAS level 
+ *
+ * @return a KD718 PAS level
  */
 uint8_t LCD_KD718_ConvertPASLevelToKD718(PasLevel_t aPAS_Level);
 
 /**@brief Function used to translate the FTEX standard PAS level to the KD718  
  *        screen standard.(is not the same as when we receive a PAS level from the KD718 screen)
  *
- * @param[in] pVoidHandle: a void pointer that contaisn the handle of the 
- *            KD718 module instance
+ * @param[in] 
  * @return nothing
  */
 PasLevel_t LCD_KD718_ConvertPASLevelFromKD718(uint8_t aPAS_Level, uint8_t aNumberOfLevels);
+
+/**@brief Function used to enable Eco mode and change the max current fo the vehicle 
+ *        
+ * @param[in] pHandle: handle for KD718 module instance
+ *
+ * @return nothing
+ */
+void LCD_KD718_EnableEcoMode(KD718_Handle_t *pHandle);
+
+/**@brief Function used to disable Eco mode and change the max current fo the vehicle  
+ *    
+ * @param[in] pHandle: handle for KD718 module instance
+ *            
+ * @return nothing
+ */
+void LCD_KD718_DisableEcoMode(KD718_Handle_t *pHandle);
 
 #endif

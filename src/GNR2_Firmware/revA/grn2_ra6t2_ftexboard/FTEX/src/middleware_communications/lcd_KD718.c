@@ -25,7 +25,10 @@ void LCD_KD718_init(KD718_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handl
     
     pHandle->pVController = pVCIHandle;        // Pointer to VController
     pHandle->pUART_handle = pUARTHandle;       // Pointer to UART instance  
-    pHandle->pUART_handle->Super = pHandle;    // Initialise the super pointer that the UART needs   
+    pHandle->pUART_handle->Super = pHandle;    // Initialise the super pointer that the UART needs 
+
+    pHandle->EcoMode = false;
+    pHandle->EcoModePowerPerCent = DEFAULT_ECOMODE_POWER;    
     
     pHandle->pUART_handle->pRxCallback = &LCD_KD718_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LCD_KD718_TX_IRQ_Handler; 
@@ -93,7 +96,7 @@ void LCD_KD718_TX_IRQ_Handler(void *pVoidHandle)
  */
 void LCD_KD718_Task(KD718_Handle_t *pHandle)
 {
-   
+    ASSERT(pHandle != NULL);  
     uint8_t ByteCount = pHandle->rx_frame.ByteCnt;
     uint8_t NextByte;    
     uint8_t BytesReceived[16];
@@ -152,7 +155,7 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle)
             }
             else if (pHandle->rx_frame.Buffer[0] == WRITE_COMMAND) // Is it a write cmd
             {
-                if (pHandle->rx_frame.Buffer[1] == W_PAS) // Is it writiing a PAS level
+                if (pHandle->rx_frame.Buffer[1] == W_PAS || pHandle->rx_frame.Buffer[1] == W_PWRMODE) // Is it writiing a PAS level or Power mode
                 {
                     if (ByteCount == 1) // If we are receiving a PAS level we know the frame lenght 
                     {    
@@ -210,6 +213,7 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle)
  */
 void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
 {
+    ASSERT(pHandle != NULL);
     KD718_frame_t replyFrame = {0};    
     int32_t  toSend      = 0;
              
@@ -315,6 +319,40 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                     Light_Disable(pHandle->pVController->pPowertrain->pTailLight);              
                 }  
                 
+              break;
+            case W_PWRMODE:
+                
+            #ifdef SCREENPOWERCONTROL // Safety to control if the screen is allowed to change the power of the vehicle
+                CRC = 0;                           // This frame has a CRC so check it
+                CRC += pHandle->rx_frame.Buffer[0];
+                CRC += pHandle->rx_frame.Buffer[1];
+                CRC += pHandle->rx_frame.Buffer[2];
+            
+                if (CRC == pHandle->rx_frame.Buffer[3]) // If the CRC is good update the new PAS level
+                { 
+                    if (pHandle->rx_frame.Buffer[2] == 0x02 || pHandle->rx_frame.Buffer[2] == 0x04)
+                    {
+                        replyFrame.ByteCnt = 4;       // Filling the acknowledge frame
+                        replyFrame.Buffer[0] = 0x16;
+                        replyFrame.Buffer[1] = 0x0C;
+                        
+                        if (pHandle->rx_frame.Buffer[2] == 0x02)
+                        {
+                            replyFrame.Buffer[2] = 0x02;  // Value expected when we acknowledge Eco mode change
+                            
+                            LCD_KD718_EnableEcoMode(pHandle);                            
+                        }
+                        else
+                        {
+                            replyFrame.Buffer[2] = 0x04;  // Value expected when we acknowledge Sport mode change
+                            
+                            LCD_KD718_DisableEcoMode(pHandle);
+                        }
+                        // Calculating the CRC for the acknowledge frame                       
+                        replyFrame.Buffer[3] = 0x00FF & (replyFrame.Buffer[0] + replyFrame.Buffer[1] + replyFrame.Buffer[2]);                    
+                    }                    
+                }                    
+            #endif
               break;
           default:
               break;
@@ -432,4 +470,49 @@ PasLevel_t LCD_KD718_ConvertPASLevelFromKD718(uint8_t aPAS_Level, uint8_t aNumbe
    }
 
    return PAS_Out;
+}
+
+
+
+
+
+/** 
+ *  Function used to enable Eco mode and change the max current fo the vehicle      
+ */
+void LCD_KD718_EnableEcoMode(KD718_Handle_t *pHandle)
+{    
+    ASSERT(pHandle != NULL);
+    
+    if (!pHandle->EcoMode) // Make sure ecomode isn't already enabled 
+    {   
+        uint16_t VehicleMaxCurrent;
+        uint16_t VehicleMaxSafeCurrent;
+        
+        pHandle->EcoMode = true; // Update the variable state
+
+        VehicleMaxSafeCurrent = PWRT_GetMaxSafeCurrent(pHandle->pVController->pPowertrain); // Get the maximum safe current
+        
+        VehicleMaxCurrent = (VehicleMaxSafeCurrent * pHandle->EcoModePowerPerCent) / 100; // Apply the Eco mode reduction
+                
+        PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain,VehicleMaxCurrent); // Apply the new max ongoing current
+    }
+}
+
+/**  
+ *  Function used to disable Eco mode and change the max current fo the vehicle   
+ */
+void LCD_KD718_DisableEcoMode(KD718_Handle_t *pHandle)
+{
+    ASSERT(pHandle     != NULL);
+    
+    if (pHandle->EcoMode) // Make sure ecomode is currently enabled
+    {
+        uint16_t VehicleMaxSafeCurrent;
+        
+        pHandle->EcoMode = false; // Update the variable state
+        
+        VehicleMaxSafeCurrent = PWRT_GetMaxSafeCurrent(pHandle->pVController->pPowertrain);  // Get the maximum safe current
+        
+        PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain,VehicleMaxSafeCurrent); // Apply the new max ongoing current   
+    }
 }
