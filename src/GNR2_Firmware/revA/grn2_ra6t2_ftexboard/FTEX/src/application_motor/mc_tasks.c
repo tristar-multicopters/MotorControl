@@ -449,7 +449,7 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
     to perevent such situation. for now only Velec. For other bikes first we should do
     the tests */
   
-  PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
+  
   
 #if VEHICLE_SELECTION == VEHICLE_VELEC    
     if (FOCVars[bMotor].hTeref == 0.0)
@@ -473,7 +473,8 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
     }
 #endif  
     
-    PID_SetKP(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKp, abs(hM1SpeedUnit)));  
+    PID_SetKP(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKp, abs(hM1SpeedUnit)));
+    PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));    
     PID_SetKP(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKp, abs(hM1SpeedUnit)));
     PID_SetKI(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKi, abs(hM1SpeedUnit)));
 }
