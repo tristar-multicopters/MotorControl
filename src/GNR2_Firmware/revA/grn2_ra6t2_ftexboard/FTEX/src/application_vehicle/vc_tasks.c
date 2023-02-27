@@ -314,13 +314,23 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
     while(true)
     {
         osThreadFlagsWait(POWEROFFSEQUENCE_FLAG, osFlagsWaitAny, osWaitForever); // Task is blocked until we have to power down        
-        MCInterface_StopMotor(pVCI->pPowertrain->pMDI->pMCI);
-
+        MDI_StopMotor(pVCI->pPowertrain->pMDI,M1);
         //if motor is not in idle state , wait.
         while(MCInterface_GetSTMState(pVCI->pPowertrain->pMDI->pMCI) != M_IDLE)
         {    
             osDelay(STOP_LOOPTICKS);
         }
+  
+#if SUPPORT_SLAVE == 1
+        MDI_StopMotor(pVCI->pPowertrain->pMDI,M2);
+        while (MDI_GetSTMState(pVCI->pPowertrain->pMDI,M2) != M_IDLE)
+        {
+            osDelay(STOP_LOOPTICKS);
+        }
+        // TO DO
+        // a sequence is needed to TURN OFF the slave. If not, the slave continues sending messages on CAN and prevents Master to turn off
+        // reporrted bug on the Jira: https://tristarmulticopters.atlassian.net/browse/EGNR-2531
+#endif
         
         PWREN_StopPower(pVCI->pPowertrain->pPWREN); // This should be the last code line to be executed the controller 
                                                     // is disabling it's 3.3 V power supply      

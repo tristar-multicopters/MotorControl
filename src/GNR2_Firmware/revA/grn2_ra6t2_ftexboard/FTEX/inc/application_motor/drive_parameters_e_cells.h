@@ -134,7 +134,7 @@
 #define FOLDBACK_SPEED_INTERVAL         500                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMPERATURE_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
-#define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMPERATURE_HYSTERESIS_C                         /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
+#define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMPERATURE_HYSTERESIS_C /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
 
 #define FOLDBACK_MOTOR_TEMP_END_VALUE   70                          /* Max temperature value (degree C) of the decreasing torque ramp to limit motor temperature */
 #define FOLDBACK_MOTOR_TEMP_INTERVAL    20                         /* Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature */
