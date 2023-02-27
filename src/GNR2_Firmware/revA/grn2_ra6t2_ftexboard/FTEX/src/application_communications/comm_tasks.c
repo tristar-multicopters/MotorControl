@@ -290,7 +290,6 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             if(bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM])
             { 
-
                 if(UART0Handle.UARTProtocol == UART_APT)
                 {   
                     if (LCD_APT_handle.APTChangePasFlag) // Check if PAS was changed by non-can source                          
@@ -305,11 +304,6 @@ static void UpdateObjectDictionnary(void *p_arg)
                     }
                 }                    
             }
-            else
-            {
-                LCD_APT_handle.APTChangePasFlag = false;
-                LCD_APT_handle.CanChangePasFlag = false; 
-            }    
             
             if(hMaxPwr[VEHICLE_PARAM] != hMaxPwr[CAN_PARAM])
             {
