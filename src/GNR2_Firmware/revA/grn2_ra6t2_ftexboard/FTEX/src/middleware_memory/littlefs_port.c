@@ -9,10 +9,6 @@
 // =============================== Includes ================================= //
 #include "littlefs_port.h"
 
-// =============================== Variables ================================= //
-
-EFlash_Handle_t * LfsHandle;
-
 // ==================== Public function prototypes ======================== //
 
 /**
@@ -31,7 +27,7 @@ int lfs_read(const struct lfs_config *c, lfs_block_t block,
 	else
     {   
         // Link the serial flash memory read data to the file system
-		err = Serial_Flash_ReadData(LfsHandle, addresse, buffer, size);
+		err = Serial_Flash_ReadData(&EFlash_Storage_Handle.eFlashStorage, addresse, buffer, size);
 		if(err == FLASH_ERROR)
 		{
 			return LFS_ERR_INVAL;
@@ -60,7 +56,7 @@ int lfs_prog(const struct lfs_config *c, lfs_block_t block,
 	else
 	{
         // Link the serial flash memory write data to the file system
-		err = Serial_Flash_WriteData(LfsHandle, addresse, (uint8_t*)buffer, size);
+		err = Serial_Flash_WriteData(&EFlash_Storage_Handle.eFlashStorage, addresse, (uint8_t*)buffer, size);
 		if( err == FLASH_ERROR )
 		{
 			return LFS_ERR_INVAL;
@@ -91,7 +87,7 @@ int lfs_erase(const struct lfs_config *c, lfs_block_t block)
 	else
 	{
         // Link the serial flash memory erase data to the file system
-		err = Serial_Flash_EraseSector(LfsHandle, block);
+		err = Serial_Flash_EraseSector(&EFlash_Storage_Handle.eFlashStorage, block);
 		if (err == FLASH_ERROR)
 		{
 			return LFS_ERR_INVAL;

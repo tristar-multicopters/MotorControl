@@ -137,6 +137,9 @@ void gnr_main(void)
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
     
+    // Bootloader app to marks the image with index 0 in the primary slot as confirmed
+    boot_set_confirmed();
+
     //load user config from the data flash.
     UserConfigTask_InitUserConfigFromDataFlash(&UserConfigHandle,&DataFlashHandle,&VCInterfaceHandle);
     

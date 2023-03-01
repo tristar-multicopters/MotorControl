@@ -34,7 +34,7 @@ SPI_Handle_t SPI1Handle =
 // Flash Memory uCAL Module handle
 EFlash_Storage_Handle_t EFlash_Storage_Handle =
 {
-    .eFlashStorage =
+    .eFlashStorage = 
     {
         .eFlash =
         {
