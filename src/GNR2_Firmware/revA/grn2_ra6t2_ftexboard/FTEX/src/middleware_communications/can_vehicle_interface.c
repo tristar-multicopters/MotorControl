@@ -73,15 +73,13 @@ uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle)
     uint16_t hmsgToSend;
     
     // Get Current from motor drive layer
-    int32_t tempVar = abs(pHandle->pPowertrain->pMDI->pMCI->pFOCVars->Iqdref.q);
-    // explicit cast because the abs method returns an integer
-    uint16_t current = (uint16_t)tempVar; 
+    uint16_t current = PWRT_ConvertDigitalCurrentToAMPS(pHandle->pPowertrain, (uint16_t) pHandle->pPowertrain->pMDI->pMCI->pFOCVars->Iqdref.q);   
     
     // Get Voltage from motor drive layer
-    uint16_t voltage = MCInterface_GetBusVoltageInVoltx100(pHandle->pPowertrain->pMDI->pMCI);
+    uint16_t voltage = MCInterface_GetBusVoltageInVoltx100(pHandle->pPowertrain->pMDI->pMCI)/100;
     
     // Calculate the power
-    uint16_t power = ((uint16_t)current * voltage)/100;
+    uint16_t power = current * voltage;
     
     // Load data buffer
     hmsgToSend = power;   
@@ -132,10 +130,10 @@ uint8_t CanVehiInterface_GetVehicleMaxPAS (void)
 /**
  *  Get vehicle max power
  */
-uint16_t CanVehiInterface_GetVehicleMaxPWR (void)
+uint16_t CanVehiInterface_GetVehicleMaxPWR (VCI_Handle_t * pHandle)
 {
     uint16_t bMaxPWR;
-    bMaxPWR = (uint8_t)NOMINAL_TORQUE;
+    bMaxPWR = (MCInterface_GetBusVoltageInVoltx100(pHandle->pPowertrain->pMDI->pMCI)/100) * PWRT_GetOngoingMaxCurrent(pHandle->pPowertrain);
     return bMaxPWR;
 }
 

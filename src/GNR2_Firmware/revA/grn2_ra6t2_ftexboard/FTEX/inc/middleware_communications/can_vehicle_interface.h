@@ -97,7 +97,7 @@ uint8_t CanVehiInterface_GetMaxVehiclePAS (void);
   @param  None
   @return Maximum Power in uint8_t format
 */
-uint16_t CanVehiInterface_GetVehicleMaxPWR (void);
+uint16_t CanVehiInterface_GetVehicleMaxPWR (VCI_Handle_t * pHandle);
 
 /**
   @brief  Get Current Faults function

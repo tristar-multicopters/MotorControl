@@ -86,7 +86,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     hPWR[VEHICLE_PARAM]    = (uint16_t) CanVehiInterface_GetVehiclePower(pVCI);
     bSOC[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehicleSOC(pVCI);
     bPAS[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehiclePAS(pVCI);  
-    hMaxPwr[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleMaxPWR();
+    hMaxPwr[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleMaxPWR(pVCI);
     
     #if GNR_MASTER
         hErrorState[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleCurrentFaults(pVCI);
@@ -307,7 +307,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             if(hMaxPwr[VEHICLE_PARAM] != hMaxPwr[CAN_PARAM])
             {
-                // Behavior TBD  
+                hMaxPwr[CAN_PARAM] = hMaxPwr[VEHICLE_PARAM];
             }
 
             if(hErrorState[VEHICLE_PARAM] != hErrorState[CAN_PARAM])
