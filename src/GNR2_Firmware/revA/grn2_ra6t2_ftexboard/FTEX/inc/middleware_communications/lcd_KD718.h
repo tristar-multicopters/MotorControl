@@ -13,6 +13,7 @@
 #include "vc_interface.h"
 #include "powertrain_management.h"
 #include "can_vehicle_interface.h"
+#include "vc_errors_management.h"
 #include "vc_constants.h"
 #include "uCAL_UART.h"
 #include "gnr_main.h"
@@ -35,6 +36,27 @@ typedef enum
    W_PWRMODE   = 0x0C,    
 }
 KD718_WriteType_t;
+
+typedef enum
+{
+    // KD718 defined errors
+    KD718_NORMAL_STATUS          = 0x01, 
+    KD718_BRAKE_ENGAGED          = 0x03, 
+    KD718_THROTTLE_STUCK         = 0x04, 
+    KD718_THROTTLE_FAULT         = 0x05, 
+    KD718_LOW_VOLTAGE_           = 0x06, 
+    KD718_HIGH_VOLTAGE           = 0x07, 
+    KD718_HALL_SIGNAL_FAULT      = 0x08, 
+    KD718_MOTOR_PHASE_FAULT      = 0x09, 
+    KD718_OVER_TEMP              = 0x10,
+    KD718_TEMP_SENSOR_FAULT      = 0x11,
+    KD718_CURRENT_SENSOR_FAULT   = 0x12,
+    KD718_SPEED_SENSOR_FAULT     = 0x21,
+    KD718_HDQ_COMM_FAYLT         = 0x22,
+    KD718_HEADLIGHT_FAULT        = 0x23,
+    KD718_HEADLIGHT_SENSOR_FAULT = 0x24,   
+}KD718_ErrorCodes_t;
+
 
 // Display Read Sub Cmd
 typedef enum
@@ -183,5 +205,13 @@ void LCD_KD718_EnableEcoMode(KD718_Handle_t *pHandle);
  * @return nothing
  */
 void LCD_KD718_DisableEcoMode(KD718_Handle_t *pHandle);
+
+/**@brief Function used to convert from standard FTEX error codes to KD718 error codes 
+ *    
+ * @param[in] an error to convert
+ *            
+ * @return the converted error
+ */
+uint8_t LCD_KD718_ErrorConversionFTEXToKD718(uint8_t aError);
 
 #endif

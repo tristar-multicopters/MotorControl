@@ -499,6 +499,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_errors_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_vehicle\vc_errors_management.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2291,6 +2296,11 @@
               <FileName>vc_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_errors_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_vehicle\vc_errors_management.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4085,6 +4095,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_errors_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_vehicle\vc_errors_management.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -5525,7 +5540,7 @@
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
@@ -5535,7 +5550,7 @@
       <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\system_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>

@@ -13,6 +13,7 @@
 #include "vc_interface.h"
 #include "powertrain_management.h"
 #include "can_vehicle_interface.h"
+#include "vc_errors_management.h"
 #include "vc_constants.h"
 #include "uCAL_UART.h"
 #include "gnr_main.h"
@@ -32,12 +33,12 @@
 #define APT_WHEEL_DIAM_INCHES_MAX   34 // Max value received from the APT screen that represents a diamater in inches
 #define APT_WHEEL_CIRCUMFERENCE_MIN 50 // Min value received from APT screen that represents a circumference in centimetres
 
-#define APT_ERROR_BUFFER_SIZE        5
+
 // Display Read Cmd
 // represents the location of where certain informations are in the frame. 
 typedef enum
 {
-    PAS     = 1,
+    PAS      = 1,
     SPEED    = 2,
     CURRENTL = 3,
     WHEELD   = 4, 
@@ -48,14 +49,14 @@ typedef enum
 typedef enum
 {
     // APT defined errors
-    NO_ERROR           = 0x00, // No error
-    COMM_ERROR         = 0x01, // Check the cable connection
-    CONTROL_PROTEC     = 0x02, // Check three-phase power line
-    THREE_PHASE_ERROR  = 0x03, // Check three-phase power line connection
-    BAT_LOW            = 0x04, // Battery low
-    BRAKE_ERROR        = 0x05, // Check the brake connection
-    TURN_ERROR         = 0x06, // Check turn to connect
-    HALL_ERROR         = 0x07, // Check the hall connection
+    APT_NO_ERROR           = 0x00, // No error
+    APT_COMM_ERROR         = 0x01, // Check the cable connection
+    APT_CONTROL_PROTEC     = 0x02, // Check three-phase power line
+    APT_THREE_PHASE_ERROR  = 0x03, // Check three-phase power line connection
+    APT_BAT_LOW            = 0x04, // Battery low
+    APT_BRAKE_ERROR        = 0x05, // Check the brake connection
+    APT_TURN_ERROR         = 0x06, // Check turn to connect
+    APT_HALL_ERROR         = 0x07, // Check the hall connection
     // Custom FTEX errors
     // From 0x08 to 0x9F EXCLUDING 0x30
 
@@ -75,10 +76,7 @@ typedef struct
 	UART_Handle_t *pUART_handle;           // Pointer to uart									
 	VCI_Handle_t  *pVController;           // Pointer to vehicle
     APT_frame_t rx_frame; 		   	       // Frame for data reception
-	APT_frame_t tx_frame; 		   	       // Frame for send response
-    
-    APT_ErrorCodes_t ErrorCodes[APT_ERROR_BUFFER_SIZE];
-    uint16_t NumberErrors;
+    APT_frame_t tx_frame; 		   	       // Frame for send response    
     
     uint8_t RxBuffer[RX_BYTE_BUFFER_SIZE]; // Hold bytes to be process by the APT task function
     uint8_t RxCount;                       // Counts how many bytes we are holding
@@ -192,43 +190,13 @@ PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfL
  */
 uint8_t LCD_APT_CalculateWheelDiameter(uint16_t aValue);
 
-/**@brief Function used to raise a specific error on the screen, cannot raise the same error twice. 
- *        
- *
- * @param[in] pHandle: handle for APT module instance, an APT error code 
- *                 
- * @return nothing
+/**@brief Function used to convert from standard FTEX error codes to APT error codes 
+ *    
+ * @param[in] an error to convert
+ *            
+ * @return the converted error
  */
-void LCD_APT_RaiseError(APT_Handle_t *pHandle, APT_ErrorCodes_t aError);
+uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError);
 
-/**@brief Function used to clear a specific error on the screen.
- *        
- *
- * @param[in] pHandle: handle for APT module instance, an APT error code 
- *                 
- *
- * @return nothing
- */
-void LCD_APT_ClearError(APT_Handle_t *pHandle, APT_ErrorCodes_t aError);
-
-/**@brief Function used to clear all of the errors present in the buffer
- *        
- *
- * @param[in] pHandle: handle for APT module instance
- *                
- *
- * @return nothing
- */
-void LCD_APT_ClearAllErrors(APT_Handle_t *pHandle);
-
-/**@brief Function used to cycle the next error to show on the screen 
- *        The speed at which the error cylce is define by a constant in the function
- *
- * @param[in] pHandle: handle for APT module instance
- *                 
- *
- * @return the error code that should be sent to the screen 
- */
-APT_ErrorCodes_t LCD_APT_CycleError(APT_Handle_t *pHandle);
 
 #endif

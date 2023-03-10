@@ -32,6 +32,8 @@ void LCD_KD718_init(KD718_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handl
     
     pHandle->pUART_handle->pRxCallback = &LCD_KD718_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LCD_KD718_TX_IRQ_Handler; 
+        
+    VC_Errors_SetCycleLenght(0);
     
     pHandle->pUART_handle->UARTBaudrate = BAUD1200;
     uCAL_UART_Init(pHandle->pUART_handle);  // Initialise the UART module with the baudrate that KD718 screen needs  
@@ -215,8 +217,10 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
     KD718_frame_t replyFrame = {0};    
-    int32_t  toSend      = 0;
-             
+    int32_t toSend      = 0;
+    uint8_t Status_to_Send = 0;
+
+  
     if(pHandle->rx_frame.Buffer[0] == READ_COMMAND)
     {
         switch(pHandle->rx_frame.Buffer[1])
@@ -227,9 +231,10 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                 replyFrame.Buffer[1] = 0x40;
                 replyFrame.Buffer[2] = 0xD0;
               break;
-            case R_STATUS:
+            case R_STATUS:            
                 replyFrame.Size = 1;
-                replyFrame.Buffer[0] = 0x01; // Status is normal
+                Status_to_Send = LCD_KD718_ErrorConversionFTEXToKD718(VC_Errors_CycleError());            
+                replyFrame.Buffer[0] = Status_to_Send;               
               break;
             case R_PWN:
                 replyFrame.Size = 1;
@@ -372,6 +377,7 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
 uint8_t LCD_KD718_ConvertPASLevelToKD718(PasLevel_t aPAS_Level)
 {
    uint8_t PAS_Out = PAS_LEVEL_0; 
+    
    switch(aPAS_Level)
    {
        case PAS_LEVEL_0: //This function is a place holer, will have to be readjusted when controler can set PAS on KD718
@@ -472,10 +478,6 @@ PasLevel_t LCD_KD718_ConvertPASLevelFromKD718(uint8_t aPAS_Level, uint8_t aNumbe
    return PAS_Out;
 }
 
-
-
-
-
 /** 
  *  Function used to enable Eco mode and change the max current fo the vehicle      
  */
@@ -503,7 +505,7 @@ void LCD_KD718_EnableEcoMode(KD718_Handle_t *pHandle)
  */
 void LCD_KD718_DisableEcoMode(KD718_Handle_t *pHandle)
 {
-    ASSERT(pHandle     != NULL);
+    ASSERT(pHandle != NULL);
     
     if (pHandle->EcoMode) // Make sure ecomode is currently enabled
     {
@@ -515,4 +517,54 @@ void LCD_KD718_DisableEcoMode(KD718_Handle_t *pHandle)
         
         PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain,VehicleMaxSafeCurrent); // Apply the new max ongoing current   
     }
+}
+
+/**
+ * Function used to convert from standard FTEX error codes to KD718 error codes     
+ */
+uint8_t LCD_KD718_ErrorConversionFTEXToKD718(uint8_t aError)
+{
+    uint8_t ConvertedError;
+    switch(aError)
+    {
+        case NO_ERROR:
+            ConvertedError = KD718_NORMAL_STATUS; 
+          break;
+        case THROTTLE_STUCK:
+            ConvertedError = KD718_THROTTLE_STUCK;
+          break;  
+        case UV_PROTECTION:
+            ConvertedError = KD718_LOW_VOLTAGE_;
+          break;
+        case OV_PROTECTION:
+            ConvertedError = KD718_HIGH_VOLTAGE;
+          break;
+        case MOTOR_HALL_ERROR:
+            ConvertedError = KD718_HALL_SIGNAL_FAULT;
+          break;
+        case MOTOR_PHASE_ERROR:
+            ConvertedError = KD718_MOTOR_PHASE_FAULT;
+          break;        
+        case OT_PROTECTION:
+            ConvertedError = KD718_OVER_TEMP;
+            break;
+        case IOT_COMM_ERROR: // Generic comm error
+        case DUAL_COMM_ERROR:    
+            ConvertedError = KD718_HDQ_COMM_FAYLT;
+            break;
+        case UNMAPPED_ERROR: // KD718 error that we con't currently support
+            ConvertedError = KD718_THROTTLE_FAULT;
+            ConvertedError = KD718_BRAKE_ENGAGED;
+            ConvertedError = KD718_TEMP_SENSOR_FAULT;
+            ConvertedError = KD718_CURRENT_SENSOR_FAULT;
+            ConvertedError = KD718_SPEED_SENSOR_FAULT;
+            ConvertedError = KD718_HEADLIGHT_FAULT;
+            ConvertedError = KD718_HEADLIGHT_SENSOR_FAULT;
+            break;
+        default: // 
+            ConvertedError = KD718_NORMAL_STATUS; 
+          break; 
+    }
+    
+    return ConvertedError;
 }
