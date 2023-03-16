@@ -981,6 +981,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\pedal_assist.c</FilePath>
             </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\delay.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2779,6 +2784,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\pedal_assist.c</FilePath>
             </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\delay.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4576,6 +4586,11 @@
               <FileName>pedal_assist.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\pedal_assist.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\delay.c</FilePath>
             </File>
           </Files>
         </Group>

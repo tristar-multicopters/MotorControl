@@ -1,6 +1,5 @@
 /**
   * @file    throttle.h
-  * @author  Sami Bouzid, FTEX
   * @brief   This module handles throttle management
   *
   */
@@ -12,6 +11,8 @@
 #include "regular_conversion_manager.h"
 #include <math.h>
 #include "signal_filtering.h"
+#include "delay.h"
+#include "vc_errors_management.h"
 
 /**
   * @brief ThrottleParameters_t structure used for storing throttle user parameters
@@ -52,9 +53,13 @@ typedef struct
     bool DisableThrottleOutput;      // Used to prevent the throttle value from requesting power 
                                      // We still read the throttle but simply set the output as 0
     
+    bool SafeStart;                  // Stuck throttle check on start
+        
     SignalFilteringHandle_t ThrottleFilter; // Filter structure used to filter out noise.
 	
 	ThrottleParameters_t hParameters;
+    
+    Delay_Handle_t * pThrottleStuckDelay;
 	
 } ThrottleHandle_t;
 
@@ -64,7 +69,7 @@ typedef struct
  * @param pHandle : Pointer on Handle structure of ThrottleSensor component
  * @param pPWMnCurrentSensor : Handle on the PWMC component to be used for regular conversions
  */
-void Throttle_Init(ThrottleHandle_t * pHandle);
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay);
 
 /**
  * @brief Initializes internal average throttle computed value

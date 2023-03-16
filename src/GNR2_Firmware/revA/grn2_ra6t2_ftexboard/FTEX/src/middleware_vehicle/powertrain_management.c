@@ -26,12 +26,18 @@ bool isPWMCleared;
   * @param  Powertrain handle
   * @retval None
   */
-void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1, SlaveMotorHandle_t * pSlaveM2)
+void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1, SlaveMotorHandle_t * pSlaveM2, Delay_Handle_t pDelayArray[])
 {
     ASSERT(pHandle != NULL);
     
+    
+    static Delay_Handle_t ThrottleDelay; 
+    
+    ThrottleDelay = pDelayArray[THROTTLE_DELAY];
+    
+    
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
-    Throttle_Init(pHandle->pThrottle);
+    Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
     BRK_Init(pHandle->pBrake);
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);

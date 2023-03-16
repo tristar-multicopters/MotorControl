@@ -1,6 +1,5 @@
 /**
   * @file    throttle.c
-  * @author  Sami Bouzid, FTEX
   * @brief   This module handles throttle management
   *
 */
@@ -13,17 +12,26 @@
 /**
    Initializes throttle sensing conversions
  */
-void Throttle_Init(ThrottleHandle_t * pHandle)
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay)
 {
     ASSERT(pHandle != NULL);
     
     pHandle->DisableThrottleOutput = false;
+        
+    pHandle->pThrottleStuckDelay = pThrottleStuckDelay;
+      
+    ASSERT(pHandle->pThrottleStuckDelay->DelayInitialized); // Delay sohuld be initialized in the task to specify at which 
+                                                            // frequence the update delay function will eb called
     
+    Delay_SetTime(pHandle->pThrottleStuckDelay, 5, SEC); // Set a 5 seconds delay to detect a stuck throttle
+    Delay_Reset(pHandle->pThrottleStuckDelay);           // Make sure the counter is reset 
     
     SignalFiltering_Init(&pHandle->ThrottleFilter);
     SignalFiltering_ConfigureButterworthFOLP(&pHandle->ThrottleFilter,
                                                 pHandle->hParameters.fFilterAlpha,
                                                     pHandle->hParameters.fFilterBeta);
+    
+    pHandle->SafeStart = false;
     
 	/* Need to be register with RegularConvManager */
 	pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
@@ -40,6 +48,7 @@ void Throttle_Clear(ThrottleHandle_t * pHandle)
     pHandle->hAvThrottleValue = 0u;
 }
 
+static uint16_t SafeStartCounter = 0;
 /**
     Performs the throttle sensing average computation after an ADC conversion.
 	Compute torque value in u16 (0 at minimum throttle and 65535 when max throttle).
@@ -50,7 +59,7 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
     ASSERT(pHandle != NULL);
 	uint32_t wAux;
     uint16_t hAux;
-	
+	static bool ThrottleStuck = false;
     
     if(pHandle->DisableThrottleOutput) // Test if we want to disable the throttle on PAS 0
     {
@@ -78,6 +87,42 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
     }
     
 	pHandle->hAvThrottleValue = hAux;
+    
+    // Throttle stuck on startup verification
+    if(!pHandle->SafeStart && !pHandle->DisableThrottleOutput) 
+    {   
+        if(!Throttle_IsThrottleDetected(pHandle)) // If we haven't done the safe start and throttle is not detected 
+        { 
+            SafeStartCounter ++; // Increase the counter
+
+            if(SafeStartCounter >= 20) // If we haven't receive a throttle for the 20th time in a row consider the safe start done
+            {
+                pHandle->SafeStart = true;
+                VC_Errors_ClearError(THROTTLE_STUCK); // Clear this error in case it was falsly flagged as stuck (user kept throttle at max on boot)
+                Delay_Reset(pHandle->pThrottleStuckDelay);
+            }
+            else
+            {
+                pHandle->hAvThrottleValue = 0; // If we still aren't done with the safe start make sure we aren't requesting power
+            }            
+        }
+        else     // Throttle is detected 
+        {
+            SafeStartCounter = 0;
+            pHandle->hAvThrottleValue = 0; // Make sure we don't send power
+            
+            if(!ThrottleStuck)
+            {
+                if(Delay_Update(pHandle->pThrottleStuckDelay)) // Increase the counter for the error delay and check if the delay has been reached
+                {
+                    VC_Errors_RaiseError(THROTTLE_STUCK);
+                    ThrottleStuck = true;
+                }
+            }
+        }    
+    }
+    
+    
 }
 
 

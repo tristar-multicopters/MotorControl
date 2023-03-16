@@ -41,6 +41,11 @@ typedef enum
     SPEED_CTRL,
 } CtrlType_t;
 
+typedef enum 
+{
+  THROTTLE_DELAY = 0,
+} PowertrainDelays_t;
+
 // ======================== Configuration structures ======================== // 
 typedef struct
 { 
@@ -104,7 +109,7 @@ typedef struct
   *    @param     Motor control interface handle for M1
   * @retval None
   */
-void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1, SlaveMotorHandle_t * pSlaveM2);
+void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1, SlaveMotorHandle_t * pSlaveM2, Delay_Handle_t pDelayArray[]);
 
 /**
   * @brief  Update current value of powertrain peripherals, such as throttle. To be called periodically.
