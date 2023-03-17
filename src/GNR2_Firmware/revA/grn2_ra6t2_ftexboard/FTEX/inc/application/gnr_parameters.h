@@ -56,10 +56,9 @@
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 
-
-#define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters.
-                                                             Will be changed in the future for a more flexible way
-                                                             of parametrization. */
+#define VEHICLE_SELECTION             VEHICLE_E_CELLS     /* Vehicle selection to adapt motor/vehicle parameters.
+                                                           Will be changed in the future for a more flexible way
+                                                           of parametrization. */
                                                                                                                
 //define responsible to enable some debug features as:
 //hardware fault catch 

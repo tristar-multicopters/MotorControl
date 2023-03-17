@@ -90,7 +90,7 @@
 #define OCD_DISABLE                     0
 #define OCD_POWER_DERATING              1
 #define OCD_PWM_OFF                     2
-#define HARDWARE_OCD    OCD_DISABLE     /* OCD_POWER_DERATING to derate final torque in Interval (configuration is following) */
+#define HARDWARE_OCD    OCD_PWM_OFF     /* OCD_POWER_DERATING to derate final torque in Interval (configuration is following) */
                                         /* OCD_PWM_OFF to completley disable PWM using PEOG in timer0 */
                                         /* OCD_DISABLED to disable any Hardware OverCurrent handling */
 
