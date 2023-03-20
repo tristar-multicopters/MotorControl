@@ -341,7 +341,7 @@ extern "C" {
             #define BSP_CFG_ROM_REG_BPS_SEL2 (0xFFFFFFFFU)
 #endif
 #ifndef BSP_CLOCK_CFG_MAIN_OSC_WAIT
-            #define BSP_CLOCK_CFG_MAIN_OSC_WAIT (9)
+            #define BSP_CLOCK_CFG_MAIN_OSC_WAIT (5)
 #endif
 
 #ifdef __cplusplus
