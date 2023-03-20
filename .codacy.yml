@@ -1,0 +1,16 @@
+---
+exclude_paths:
+  - "**.md"
+  - "docs/**"
+  - "prototypes/**"
+  - "tools/**"
+  - "src/GNR1_Firmware/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_devboard/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard_bootloader/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/CANopen-stack/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/scripts/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/libraries/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/ra/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/ra_cfg/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/ra_gen/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/RTE/**"
