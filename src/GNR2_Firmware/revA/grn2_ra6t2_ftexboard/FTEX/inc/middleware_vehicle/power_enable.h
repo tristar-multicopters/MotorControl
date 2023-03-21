@@ -16,7 +16,7 @@
                                      // TODO move to a dedicated flag file
 
 // value used to check if a firmware update request was made by SDO service.
-#define FIRMWARE_UPDATE_REQUEST  0x2BE5
+#define FIRMWARE_UPDATE_REQUEST  0x01
 
 //timeout to wait for the firmware update command.
 //Timeout == (FIRMWAREUPDATE_TIMEOUT*25ms) seconds. 
@@ -76,7 +76,7 @@ void PWREN_StopPower(PWREN_Handle_t * pHandle);
          address responsible to hold the firmware update command.
   @return void
 */
-void PWREN_CheckFirmwareUpdateCommand(PWREN_Handle_t * pHandle, uint16_t UpdateCommand);
+void PWREN_CheckFirmwareUpdateCommand(PWREN_Handle_t * pHandle, uint8_t UpdateCommand);
 
 #endif /*__POWER_ENABLE_H*/
 

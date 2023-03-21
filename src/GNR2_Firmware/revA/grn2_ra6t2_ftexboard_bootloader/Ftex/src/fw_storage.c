@@ -17,7 +17,7 @@
 
 lfs_t      lfs; /* LittleFS Object */
 lfs_file_t file; /* File Object used by LittlsFS */
-#define DFU_FILE_NAME       "dfu_file.pack"
+#define DFU_FILE_NAME       "DFU_File.pack"
 
 static uint8_t lfs_file_buffer[LFS_CACHE_SIZE];  /* Static file buffer used by the LittlsFS library */ 
 static uint8_t lfs_read_buffer[LFS_CACHE_SIZE];  /* Static read buffer used by the LittlsFS library */

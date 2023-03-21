@@ -34,25 +34,25 @@ const struct lfs_file_config lfs_file_cfg = {
 
 /* configuration of the LittleFS filesystem is provided by this struct */
 const struct lfs_config lfs_cfg = {
-	// block device operations
-	.read  = lfs_read,
-	.prog  = lfs_prog,
-	.erase = lfs_erase,
-	.sync  = lfs_sync,
+    // block device operations
+    .read  = lfs_read,
+    .prog  = lfs_prog,
+    .erase = lfs_erase,
+    .sync  = lfs_sync,
 
-	// block device configuration
-	.read_size = LFS_READ_SIZE,
-	.prog_size = LFS_PROG_SIZE,
-	.block_size = LFS_BLOCK_SIZE,
-	.block_count = LFS_BLOCK_COUNT,
-	.cache_size = LFS_CACHE_SIZE,
-	.lookahead_size = LFS_LOOKAHEAD_SIZE,
-	.block_cycles = LFS_BLOCK_CYCLES,
+    // block device configuration
+    .read_size = LFS_READ_SIZE,
+    .prog_size = LFS_PROG_SIZE,
+    .block_size = LFS_BLOCK_SIZE,
+    .block_count = LFS_BLOCK_COUNT,
+    .cache_size = LFS_CACHE_SIZE,
+    .lookahead_size = LFS_LOOKAHEAD_SIZE,
+    .block_cycles = LFS_BLOCK_CYCLES,
 
-	// buffers
-	.read_buffer = &lfs_read_buffer,
-	.prog_buffer = &lfs_prog_buffer,
-	.lookahead_buffer = &lfs_lookahead_buffer,
+    // buffers
+    .read_buffer = &lfs_read_buffer,
+    .prog_buffer = &lfs_prog_buffer,
+    .lookahead_buffer = &lfs_lookahead_buffer,
 };
 
 /* Firmware Storage Variables */
@@ -73,42 +73,42 @@ OTA_Header_t hdr = {0};
 */
 uint8_t SF_Storage_Init(EFlash_Storage_Handle_t * pHandle)
 {
-	int err;
+    int err;
     // Check the external Flash state
-	if(m_state == STORAGE_IDLE)
-	{
-		return EXIT_SUCCESS;
-	}
+    if(m_state == STORAGE_IDLE)
+    {
+        return EXIT_SUCCESS;
+    }
     // Initialize the external Flash / File system
-	if(Serial_Flash_Init(&pHandle->eFlashStorage) != FLASH_OK)
-	{
-		return EXIT_FAILURE;
-	}
-	else
+    if(Serial_Flash_Init(&pHandle->eFlashStorage) != FLASH_OK)
+    {
+        return EXIT_FAILURE;
+    }
+    else
     {
         // Mount the file system 
-		err = lfs_mount( &lfs, &lfs_cfg );
-		if(err != LFS_ERR_OK)
-		{
+        err = lfs_mount( &lfs, &lfs_cfg );
+        if(err != LFS_ERR_OK)
+        {
             // Erase the external flash if the file is not mounted
-			Serial_Flash_EraseChip(&pHandle->eFlashStorage);
-			// Format the external flash if the file is not mounted
-			err = lfs_format(&lfs, &lfs_cfg);
-			if(err != LFS_ERR_OK)
-			{
-				return FLASH_ERROR;
-			}
-			// Mount the file system 
-			err = lfs_mount(&lfs, &lfs_cfg);
-			if( err != LFS_ERR_OK )
-			{
+            Serial_Flash_EraseChip(&pHandle->eFlashStorage);
+            // Format the external flash if the file is not mounted
+            err = lfs_format(&lfs, &lfs_cfg);
+            if(err != LFS_ERR_OK)
+            {
+                return FLASH_ERROR;
+            }
+            // Mount the file system 
+            err = lfs_mount(&lfs, &lfs_cfg);
+            if( err != LFS_ERR_OK )
+            {
                 // Return error for file system fail
-				return FLASH_ERROR;
-			}
-		}		
-		m_state = STORAGE_IDLE;
-		return EXIT_SUCCESS;
-	}		
+                return FLASH_ERROR;
+            }
+        }		
+        m_state = STORAGE_IDLE;
+        return EXIT_SUCCESS;
+    }		
 }
 
 /**
@@ -116,27 +116,27 @@ uint8_t SF_Storage_Init(EFlash_Storage_Handle_t * pHandle)
 */
 uint8_t SF_Storage_Deinit()
 {
-	int err;
-	
-	if(m_state == STORAGE_UNINIT)
-	{
-		return EXIT_SUCCESS;
-	}
-	
-	if(m_state != STORAGE_IDLE)
-	{
-		return EXIT_FAILURE;
-	}
-	else
-	{
-		err = lfs_unmount(&lfs);
-		if(err != LFS_ERR_OK)
-		{
-			return EXIT_FAILURE;
-		}		
-		m_state = STORAGE_UNINIT;
-		return EXIT_SUCCESS;
-	}	
+    int err;
+    
+    if(m_state == STORAGE_UNINIT)
+    {
+        return EXIT_SUCCESS;
+    }
+    
+    if(m_state != STORAGE_IDLE)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        err = lfs_unmount(&lfs);
+        if(err != LFS_ERR_OK)
+        {
+            return EXIT_FAILURE;
+        }		
+        m_state = STORAGE_UNINIT;
+        return EXIT_SUCCESS;
+    }	
 }
 
 /**
@@ -144,25 +144,25 @@ uint8_t SF_Storage_Deinit()
 */
 uint8_t SF_Storage_StartPackWrite()
 {
-	int err;
+    int err;
+    
+    if(m_state != STORAGE_IDLE)
+    {
+        return EXIT_FAILURE;
+    }
 	
-	if(m_state != STORAGE_IDLE)
-	{
-		return EXIT_FAILURE;
-	}
-	
-	/* Open and Overwrite Firmware Pack File */
-	err = lfs_file_opencfg(&lfs, &file, DFU_FILE_NAME, LFS_O_RDWR | LFS_O_CREAT, &lfs_file_cfg);
-	
-	if(err != LFS_ERR_OK)
-	{
-		return EXIT_FAILURE;
-	}
-	else
-	{
-		m_state = STORAGE_PACK_WRITE;
-		return EXIT_SUCCESS;
-	}
+    /* Open and Overwrite Firmware Pack File */
+    err = lfs_file_opencfg(&lfs, &file, DFU_FILE_NAME, LFS_O_RDWR | LFS_O_CREAT, &lfs_file_cfg);
+    
+    if(err != LFS_ERR_OK)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        m_state = STORAGE_PACK_WRITE;
+        return EXIT_SUCCESS;
+    }
 }
 
 /**
@@ -170,23 +170,23 @@ uint8_t SF_Storage_StartPackWrite()
 */
 uint8_t SF_Storage_PutPackChunk(uint8_t* data, uint8_t size)
 {
-	int err;
+    int err;
 	
-	if(m_state != STORAGE_PACK_WRITE)
-	{
-		return EXIT_FAILURE;
-	}
-	/* Write FW Pack file */
-	err = lfs_file_write(&lfs, &file, data, size);
+    if(m_state != STORAGE_PACK_WRITE)
+    {
+        return EXIT_FAILURE;
+    }
+    /* Write FW Pack file */
+    err = lfs_file_write(&lfs, &file, data, size);
 	
-	if(err != size)
-	{
-		return EXIT_FAILURE;
-	}
-	else
-	{
-		return EXIT_SUCCESS;
-	}
+    if(err != size)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        return EXIT_SUCCESS;
+    }
 }
 
 /**
@@ -194,25 +194,25 @@ uint8_t SF_Storage_PutPackChunk(uint8_t* data, uint8_t size)
 */
 uint8_t SF_Storage_FinalizePackWrite()
 {
-	int err;
+    int err;
 	
-	if(m_state != STORAGE_PACK_WRITE)
-	{
-		return EXIT_FAILURE;
-	}
+    if(m_state != STORAGE_PACK_WRITE)
+    {
+        return EXIT_FAILURE;
+    }
 	
-	/* Close FW Pack file */
-	err = lfs_file_close(&lfs, &file);
+    /* Close FW Pack file */
+    err = lfs_file_close(&lfs, &file);
 	
-	if(err != LFS_ERR_OK)
-	{
-		return EXIT_FAILURE;
-	}
-	else
-	{
-		m_state = STORAGE_IDLE;
-		return EXIT_SUCCESS;
-	}
+    if(err != LFS_ERR_OK)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        m_state = STORAGE_IDLE;
+        return EXIT_SUCCESS;
+    }
 }
 
 /**
@@ -220,43 +220,43 @@ uint8_t SF_Storage_FinalizePackWrite()
 */
 uint8_t SF_Storage_StartPackRead()
 {
-	int err;
+    int err;
 	
-	if(m_state != STORAGE_IDLE)
-	{
-		return EXIT_FAILURE;
-	}
+    if(m_state != STORAGE_IDLE)
+    {
+        return EXIT_FAILURE;
+    }
 	
-	w_FilePosition = 0;
-	/* Open File system for reading */
-	err = lfs_file_opencfg(&lfs, &file, DFU_FILE_NAME, LFS_O_RDONLY, &lfs_file_cfg);
-	if(err != LFS_ERR_OK)
-	{
-		return EXIT_FAILURE;
-	}
-	/* Read file using lfs read */
-	err = lfs_file_read(&lfs, &file, hdr.Header, HEADER_SIZE);
+    w_FilePosition = 0;
+    /* Open File system for reading */
+    err = lfs_file_opencfg(&lfs, &file, DFU_FILE_NAME, LFS_O_RDONLY, &lfs_file_cfg);
+    if(err != LFS_ERR_OK)
+    {
+        return EXIT_FAILURE;
+    }
+    /* Read file using lfs read */
+    err = lfs_file_read(&lfs, &file, hdr.Header, HEADER_SIZE);
 	
-	if(err != HEADER_SIZE)
-	{
-		return EXIT_FAILURE;
-	}
-	else
-	{
-		w_PackSize = hdr.data.BLE_FwSize + hdr.data.REN_FwSize + hdr.data.GNR_FwSize + HEADER_SIZE;
+    if(err != HEADER_SIZE)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        w_PackSize = hdr.data.BLE_FwSize + hdr.data.REN_FwSize + hdr.data.GNR_FwSize + HEADER_SIZE;
 		
-		m_state = STORAGE_PACK_READ;
-	}
+        m_state = STORAGE_PACK_READ;
+    }
 	
-	err = lfs_file_rewind(&lfs, &file);
-	if(err != LFS_ERR_OK)
-	{
-		return EXIT_FAILURE;
-	}
-	else
-	{		
-		return EXIT_SUCCESS;
-	}
+    err = lfs_file_rewind(&lfs, &file);
+    if(err != LFS_ERR_OK)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {		
+        return EXIT_SUCCESS;
+    }
 }
 
 /**
@@ -264,35 +264,35 @@ uint8_t SF_Storage_StartPackRead()
 */
 uint8_t SF_Storage_GetPackChunk( uint8_t* data, uint8_t n )
 {
-	int err;
+    int err;
 	
-	if(m_state != STORAGE_PACK_READ)
-	{
-		return 0;
-	}
+    if(m_state != STORAGE_PACK_READ)
+    {
+        return 0;
+    }
 	
-	volatile uint32_t remaining_data = w_PackSize - w_FilePosition;
-	if(remaining_data == 0)
-	{
-		return 0;
-	}
+    volatile uint32_t remaining_data = w_PackSize - w_FilePosition;
+    if(remaining_data == 0)
+    {
+        return 0;
+    }
 	
-	if(remaining_data < n)
-	{
-		n = (uint8_t) remaining_data;
-	}
+    if(remaining_data < n)
+    {
+        n = (uint8_t) remaining_data;
+    }
 	
-	err = lfs_file_read(&lfs, &file, data, n);
+    err = lfs_file_read(&lfs, &file, data, n);
 	
-	if(err != n)
-	{
-		return EXIT_FAILURE;
-	}
-	else
-	{
-		w_FilePosition += n;
-		return n;
-	}
+    if(err != n)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        w_FilePosition += n;
+        return n;
+    }
 }
 
 /**
@@ -300,43 +300,244 @@ uint8_t SF_Storage_GetPackChunk( uint8_t* data, uint8_t n )
 */
 uint8_t SF_Storage_FinalizePackRead(void)
 {
-	int err;
+    int err;
 	
-	if( m_state != STORAGE_PACK_READ)
-	{
-		return EXIT_FAILURE;
-	}
-	m_state = STORAGE_IDLE;
+    if( m_state != STORAGE_PACK_READ)
+    {
+        return EXIT_FAILURE;
+    }
+    m_state = STORAGE_IDLE;
 	
-	err = lfs_file_close(&lfs, &file);
+    err = lfs_file_close(&lfs, &file);
 	
-	if(err != LFS_ERR_OK)
-	{
-		return EXIT_FAILURE;
-	}
-	else
-	{
-		return EXIT_SUCCESS;
-	}
+    if(err != LFS_ERR_OK)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        return EXIT_SUCCESS;
+    }
 }
 
 /**
    Erase DFU File  
 */
-uint8_t SF_Storage_Erase()
+int SF_Storage_Erase()
 {
-	int err;
+    int err = EXIT_SUCCESS;
 	
-	if( m_state != STORAGE_IDLE)
-	{
-		return EXIT_FAILURE;
-	}
+    if( m_state != STORAGE_IDLE)
+    {
+        return EXIT_FAILURE;
+    }
 	
-	err = lfs_remove(&lfs, DFU_FILE_NAME);
-	if(err != LFS_ERR_OK)
-	{
-		return EXIT_FAILURE;
-	}
+    err = lfs_remove(&lfs, DFU_FILE_NAME);
+    if(err != LFS_ERR_OK)
+    {
+        return err;
+    }
 	
-	return EXIT_SUCCESS;
+    return err;
+}
+
+/**
+   Return the current position fo the file.
+   used only on ready only mode.
+*/
+int32_t SF_STORAGE_GetCurrentFilePosition()
+{
+    int32_t err;
+	
+    //used  on STORAGE_PACK_READ or write
+    if((m_state != STORAGE_PACK_READ) && (m_state != STORAGE_PACK_WRITE))
+    {
+        return EXIT_FAILURE;
+    }
+    
+    //Returns the position of the file, or a negative error code on failure.
+    err = lfs_file_tell(&lfs, &file);
+    
+    //
+    if(err < 0)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        return (int32_t)err;
+    }
+}
+
+/**
+   Read n data from the file on STORAGE_PACK_WRITE(read and write)from the 
+   position.
+*/
+uint8_t SF_Storage_Read(uint8_t* data, uint8_t n , int position, bool beginning)
+{
+    int err;
+	
+    //used only on STORAGE_PACK_READ.
+    if(m_state != STORAGE_PACK_READ)
+    {
+        return EXIT_FAILURE;
+    }
+	
+    //verify of shoud start read from the beginning.
+    if (beginning == true)
+    {
+        //poin the file system to the begining of the file.
+        err = lfs_file_rewind(&lfs, &file);
+        if(err != LFS_ERR_OK)
+        {
+            return EXIT_FAILURE;
+        }
+    }
+    else
+    {
+        //Change the position of the file to the to position
+        //if the new position is negative, position change failled.
+        if (lfs_file_seek(&lfs, &file, position, LFS_SEEK_SET) < 0)
+        {
+            return EXIT_FAILURE;
+        }
+    }
+	
+    //read n bytes from teh file to the data array.
+    err = lfs_file_read(&lfs, &file, data, n);
+    if(err != LFS_ERR_OK)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {		
+        return EXIT_SUCCESS;
+    }
+}
+
+/**
+   Open the DFU file on read only mode.
+*/
+uint8_t SF_Storage_OpenRead(void)
+{
+    int err;
+	
+    //file system on idle mode.
+    if(m_state != STORAGE_IDLE)
+    {
+        return EXIT_FAILURE;
+    }
+    
+    /* Open File system for reading */
+    err = lfs_file_opencfg(&lfs, &file, DFU_FILE_NAME, LFS_O_RDONLY, &lfs_file_cfg);
+    if(err != LFS_ERR_OK)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        m_state = STORAGE_PACK_READ;
+    }
+    
+    return EXIT_SUCCESS;
+}
+
+/**
+   Close file that was on read onmy mode.
+*/
+uint8_t SF_Storage_CloseRead(void)
+{
+    int err;
+	
+    if( m_state != STORAGE_PACK_READ)
+    {
+        return EXIT_FAILURE;
+    }
+    m_state = STORAGE_IDLE;
+	
+    err = lfs_file_close(&lfs, &file);
+	
+    if(err != LFS_ERR_OK)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        return EXIT_SUCCESS;
+    }
+}
+
+/**
+   Get the size file. File must to be open.
+   Used only on read only mode.
+*/
+int32_t SF_Storage_GetSize(void)
+{
+    
+    int32_t err;
+	
+    if( m_state != STORAGE_PACK_READ)
+    {
+        return EXIT_FAILURE;
+    }
+    
+    err = lfs_file_size(&lfs, &file);
+	
+    if(err < 0)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        return err;
+    }
+}
+
+/**
+   Move to the end of the current file.
+   Used on write mode only.
+*/
+uint8_t SF_Storage_MovetoTheEndOfFile(void)
+{
+    int32_t err;
+	
+    if( m_state != STORAGE_PACK_WRITE)
+    {
+        return EXIT_FAILURE;
+    }
+    
+    //move to the end of the file.
+    err = lfs_file_seek(&lfs, &file, 0, LFS_SEEK_END);
+    
+    //verify fail
+    if (err < 0)
+    {
+        return EXIT_FAILURE;
+    }
+    else
+    {
+        return EXIT_SUCCESS;
+    } 
+}
+
+/**
+   Read n data from the file on STORAGE_PACK_WRITE(read and write)from the 
+   position.
+*/
+uint8_t SF_Storage_SetPosition(int32_t position)
+{
+    //used  on STORAGE_PACK_READ or write
+    if((m_state != STORAGE_PACK_READ) && (m_state != STORAGE_PACK_WRITE))
+    {
+        return EXIT_FAILURE;
+    }
+	
+    //Change the position of the file to the to position
+    //if the new position is negative, position change failled.
+    if (lfs_file_seek(&lfs, &file, position, LFS_SEEK_SET) < 0)
+    {
+        return EXIT_FAILURE;
+    }
+	
+    return EXIT_SUCCESS;
 }

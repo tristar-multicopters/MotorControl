@@ -9,6 +9,7 @@
 #include "mc_tasks.h"
 #include "comm_tasks.h"
 #include "vc_config.h"
+#include "firmware_update.h"
 
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
@@ -23,7 +24,6 @@ extern void startMCMediumFrequencyTask(void * pvParameter);
 extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
 extern void ProcessUARTFrames(void * pvParameter);
-extern void CANOpenTask(void * pvParameter);
 extern void PowerOffSequence(void * pvParameter);
 
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
@@ -106,12 +106,6 @@ static const osThreadAttr_t ThAtt_UART = {
 	.priority = osPriorityBelowNormal
 };
 
-static const osThreadAttr_t ThAtt_CANOpen = {
-    .name = "CANOpenTask",
-    .stack_size = 1024,
-    .priority = osPriorityHigh // High priority to manage timer elapsing asap
-};
-
 #endif
 
 /**************************************************************/
@@ -137,6 +131,9 @@ void gnr_main(void)
     IIRFAInit();
     /* At this point, hardware should be ready to be used by application systems */
     
+    //Initialize external flash memory used on DFU process.
+    FirmwareUpdate_SerialFlashMemoryInit();
+    
     // Bootloader app to marks the image with index 0 in the primary slot as confirmed
     boot_set_confirmed();
 
@@ -152,56 +149,75 @@ void gnr_main(void)
     VC_BootUp();
     #endif
     Comm_BootUp();
+    
+    //Initialize the CAN OPEN ID/object dictionary.
+    CANOpenTask();
 
     SystemCoreClockUpdate(); // Standard ARM function to update clock settings
-	
-    //function used to test mCAL data flash. will be the final function
-	//to control data user configuration.
-    //UserConfigStateMachine();
+    // Initialise the kernel
+    ASSERT(osKernelInitialize() == osOK);
 
-    osKernelInitialize();  // Initialise the kernel
     //EventRecorderInitialize(EventRecordAll,1U); // Initialise the event recorder
 
     /* Create the threads */
     MC_MediumFrequencyTask_handle   = osThreadNew(startMCMediumFrequencyTask,
                                       NULL,
                                       &ThAtt_MC_MediumFrequencyTask);
+              
+    //verify if the task was correctly created.              
+    ASSERT(MC_MediumFrequencyTask_handle != NULL);
 
     MC_SafetyTask_handle            = osThreadNew(startMCSafetyTask,
                                       NULL,
                                       &ThAtt_MC_SafetyTask);
+                                      
+    //verify if the task was correctly created.              
+    ASSERT(MC_SafetyTask_handle != NULL);
     
     PowerOffSequence_handle         = osThreadNew(PowerOffSequence, 
                                       NULL,
                                       &ThAtt_PowerOffSequence);
+    
+    //verify if the task was correctly created.              
+    ASSERT(PowerOffSequence_handle != NULL);
+    
     #if !DEBUGMODE_MOTOR_CONTROL
     #if GNR_MASTER
     THR_VC_MediumFreq_handle        = osThreadNew(THR_VC_MediumFreq,
                                       NULL,
                                       &ThAtt_VC_MediumFrequencyTask);
+                                      
+    //verify if the task was correctly created.              
+    ASSERT(THR_VC_MediumFreq_handle != NULL);
 
     THR_VC_StateMachine_handle      = osThreadNew(THR_VC_StateMachine,
                                       NULL,
                                       &ThAtt_VehicleStateMachine);
                                       
+    //verify if the task was correctly created.              
+    ASSERT(THR_VC_StateMachine_handle != NULL);
+                                      
     #if CANLOGGERTASK
 
     CANOpenTaskHandle               = osThreadNew(CANLoggerTask,
                                       NULL,
-                                      &ThAtt_CANLogger);                 
+                                      &ThAtt_CANLogger);  
+    
+    //verify if the task was correctly created.              
+    ASSERT(CANOpenTaskHandle != NULL);
     #endif
 
     #endif
-
-    CANOpenTaskHandle                = osThreadNew(CANOpenTask,
-                                      NULL,
-                                      &ThAtt_CANOpen);
     
     COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
                                       NULL,
                                       &ThAtt_UART);
+                                      
+    //verify if the task was correctly created.              
+    ASSERT(COMM_Uart_handle != NULL);
 	
     #endif
+
 
     /* Start RTOS */
     if (osKernelGetState() == osKernelReady)

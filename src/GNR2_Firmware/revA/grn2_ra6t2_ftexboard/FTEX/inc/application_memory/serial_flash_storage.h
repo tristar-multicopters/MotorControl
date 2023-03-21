@@ -119,6 +119,59 @@ uint8_t SF_Storage_FinalizePackRead(void);
 * @param  None
 * @retval File erased without issues or Could not erase file
 */
-uint8_t SF_Storage_Erase();
+int SF_Storage_Erase();
 
+/**
+*  @brief Return the current position fo the file.
+*  @param  None
+*  @retval file position.
+*/
+int32_t SF_STORAGE_GetCurrentFilePosition();
+
+/**
+* @brief  Read n data from the file on STORAGE_PACK_WRITE(read and write)from the 
+          position.
+* @param  data  pointer to the array of data to write
+* @param  number of bytes to be read.
+* @param  position where data will be read.
+* @param  true if the data wuill be read from the beginning or false if not.
+* @retval the number of character effectively read from file
+*/
+uint8_t SF_Storage_Read(uint8_t* data, uint8_t n , int position, bool beginning);
+
+/**
+* @brief  Open File on read only mode.
+* @param  None
+* @retval File Opened without error or Could not open file
+*/
+uint8_t SF_Storage_OpenRead(void);
+
+/**
+* @brief  Close File that was on read only mode.
+* @param  None
+* @retval File Close without error or Could not close file
+*/
+uint8_t SF_Storage_CloseRead(void);
+
+/**
+* @brief  Get the size file. File must to be open.
+          Used only on read only mode.
+* @param  None
+* @retval Return size file or a negative number to indicate an error.
+*/
+int32_t SF_Storage_GetSize(void);
+
+/**
+* @brief  Move to teh end of the current file.
+          Used only on read only mode.
+* @param  None
+* @retval Return sucess or fail.
+*/
+uint8_t SF_Storage_MovetoTheEndOfFile(void);
+
+/**
+   Read n data from the file on STORAGE_PACK_WRITE(read and write)from the 
+   position.
+*/
+uint8_t SF_Storage_SetPosition(int32_t position);
 #endif // __SERIAL_FLASH_STORAGE_H

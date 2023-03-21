@@ -15,6 +15,8 @@
 #include "core_cm33.h"
 #include "mc_tasks.h"
 
+#include "firmware_update.h"
+
 /**
   * @brief  Interrupt routine of ADC hardware.
   * @param  p_args: ADC callback function arguments.
@@ -198,10 +200,23 @@ void CANFD_IRQhandler(can_callback_args_t *p_args)
     {
         case CAN_EVENT_RX_COMPLETE:    /* Receive complete event. */
         {
+            //verify if the node id was initialized.
+            if (bCANOpenTaskBootUpCompleted == true)
+            {
+                //function used to process each CAN frame received.
+                //this a CANOPEN function.
+                CONodeProcess(&CONodeGNR);
+                
+                //check if a new data frame(from the firmware update) was received.
+                FirmwareUpdate_CheckDataFrame(&VCInterfaceHandle);
+                
+            }
             break;
         }
         case CAN_EVENT_TX_COMPLETE:    /* Transmit complete event. */
         {
+            //must be called here to try to empty the CAN circular buffer as
+            //quickly as possible.
             CAN_SendNextFrame();
             break;
         }
@@ -222,24 +237,19 @@ void CANFD_IRQhandler(can_callback_args_t *p_args)
 }
 /**
   * @brief  Interrupt routine of timer used for CANOpen Stack
-  * @param  p_args: UART callback function arguments.
+            interruption period is 0.5 ms.
+  * @param  p_args: timer callback function arguments.
 */
 void CANTimer_IRQHandler(timer_callback_args_t * p_args)
 {
-    if( p_args->event == TIMER_EVENT_CYCLE_END)
-    {
-        can_info_t CANinfo;
-        R_CANFD_InfoGet(&g_canfd0_ctrl, &CANinfo);
-        if (CANinfo.rx_mb_status != 0) // New message received
-        {
-            if (bCANOpenTaskBootUpCompleted == true)
-            {
-                CONodeProcess(&CONodeGNR);
-            }
-        }
-
-        COTimerCallback(&CONodeGNR.Tmr);
-    }
+    //The function used decouple the generation of the periodic time base and the timed action processing.
+    COTmrProcess(&CONodeGNR.Tmr);
+    
+    //callback function to process time interruption
+    COTimerCallback(&CONodeGNR.Tmr);
+    
+    //call function responsible to handle the firmware update.
+    FirmwareUpdate_Control (&CONodeGNR, &VCInterfaceHandle);
     
     //added in this place to empty the buffer as quickly as possible.
     //if the tx can buffer is empty, nothing will happen.

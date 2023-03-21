@@ -108,7 +108,7 @@ void PWREN_StopPower(PWREN_Handle_t * pHandle)
          address responsible to hold the firmware update command.
   @return void
 */
-void PWREN_CheckFirmwareUpdateCommand(PWREN_Handle_t * pHandle, uint16_t UpdateCommand)
+void PWREN_CheckFirmwareUpdateCommand(PWREN_Handle_t * pHandle, uint8_t UpdateCommand)
 {
     
     ASSERT(pHandle != NULL);

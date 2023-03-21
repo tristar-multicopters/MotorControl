@@ -15,7 +15,7 @@ def _get_version_from_tag():
     if (result.stdout):
         return (result.stdout)
     else:
-        return ('1.0.1')
+        return ('1.1.2')
 
 '''
 Creates the versioning builder which can fill in the version info into a template.
@@ -32,9 +32,9 @@ if os.path.exists('../../../.git'):
     version = _get_version_from_tag()
 else:
     git_revision = ''
-    version = '1.0.1'
+    version = '1.1.2'
     
-bash_cmd ="python ./imgtool.py sign -v 1.0.0 --header-size 0x400 --align 8 --max-align 8 --slot-size 0x28000 --max-sectors 2 --pad --pad-header ../Objects/gnr2_ra6t2.hex ../output/gnr2_ra6t2_Signed.hex"
+bash_cmd ="python ./imgtool.py sign -v 1.1.2 --header-size 0x400 --align 8 --max-align 8 --slot-size 0x28000 --max-sectors 2 --pad --pad-header ../Objects/gnr2_ra6t2.hex ../output/gnr2_ra6t2_Signed.hex"
 print(bash_cmd)
 process =subprocess.run(bash_cmd.split(), stdout=subprocess.PIPE,
            stderr=subprocess.DEVNULL, universal_newlines=True)

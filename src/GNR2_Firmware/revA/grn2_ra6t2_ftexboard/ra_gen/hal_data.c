@@ -153,10 +153,10 @@ const spi_cfg_t g_spi1_cfg =
     .eri_irq             = FSP_INVALID_VECTOR,
 #endif
 
-    .rxi_ipl             = (12),
-    .txi_ipl             = (12),
-    .tei_ipl             = (12),
-    .eri_ipl             = (12),
+    .rxi_ipl             = (0),
+    .txi_ipl             = (0),
+    .tei_ipl             = (0),
+    .eri_ipl             = (0),
 
     .operating_mode      = SPI_MODE_MASTER,
 
@@ -348,7 +348,7 @@ const timer_cfg_t g_timer_a1_cfg =
     .p_context           = &NULL,
 #endif
     .p_extend            = &g_timer_a1_extend,
-    .cycle_end_ipl       = (12),
+    .cycle_end_ipl       = (9),
 #if defined(VECTOR_NUMBER_AGT1_INT)
     .cycle_end_irq       = VECTOR_NUMBER_AGT1_INT,
 #else
@@ -415,7 +415,7 @@ canfd_global_cfg_t g_canfd_global_cfg =
 canfd_extended_cfg_t g_canfd0_extended_cfg =
 {
     .p_afl              = CANFD_FilterListArray,
-    .txmb_txi_enable    = ((1ULL << 0) |  0ULL),
+    .txmb_txi_enable    = ((1ULL << 0) | (1ULL << 1) | (1ULL << 2) | (1ULL << 3) |  0ULL),
     .error_interrupts   = ( 0U),
 #if BSP_FEATURE_CANFD_FD_SUPPORT
     .p_data_timing      = &g_canfd0_data_timing_cfg,

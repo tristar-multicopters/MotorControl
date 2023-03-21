@@ -42,23 +42,12 @@
 uint16_t hCommErrors = COMM_NO_ERROR;  /* This global variable holds all error flags related to communications.
                                             Should be replaced later by a more elaborate structure. */
 
-// Semaphore for CANOpen timer
-osSemaphoreId_t canTmrSemaphore;
-
 bool bCANOpenTaskBootUpCompleted = false;
 
 
 /********* PRIVATE MEMBERS *************/
 
 extern osThreadId_t CANOpenTaskHandle;
-// Attributes for the canTmrSemaphore
-osSemaphoreAttr_t canTmrSemaphoreAttr =
-{
-    "CAN_Tmr_Semaphore",   		//< name of the semaphore
-    0, 							//< attribute bits (none)
-    NULL,       				//< memory for control block
-    0   						//< size of provided memory for control block
-};
 
 /********* PRIVATE FUNCTIONS *************/
 
@@ -125,7 +114,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint16_t keyUserDataConfig = 0;
                                           
     //variable used to verify if a firmware update command was received or not.
-    uint16_t FirmwareUpdateCommand = 0;                                           
+    uint8_t FirmwareUpdateCommand = 0;                                           
     
     //
     #if SUPPORT_SLAVE | !GNR_IOT
@@ -147,10 +136,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     
     // Set Bike Parameters
     //CanIot_SetPAS(pVCI,bPAS); this doesn't make sense.
-    
-    //variable use to get a copy of the some bytes of the new firmware received on
-    //the domain object by SDO download.
-    static uint8_t firmwareUpdatePack[16];
 
     if (pNode == NULL) 
     {        
@@ -257,7 +242,8 @@ static void UpdateObjectDictionnary(void *p_arg)
     {
         COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_KEY_USER_DATA_CONFIG, 0)), pNode, &keyUserDataConfig, sizeof(uint16_t));
         
-        //verifiy if the 
+        //verifiy if a user parameter update was requested. if yes, the object dictionary, associated with measured variables,
+        //will not be updated from the vc layer.
         if((keyUserDataConfig != KEY_USER_DATA_CONFIG_BEING_UPDATED) && (keyUserDataConfig != KEY_USER_DATA_CONFIG_UPDATED))
         {
             //Get the latest value of these parameters            
@@ -351,26 +337,11 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
         
             //Read the OD responsible to hold the firmware update command.
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0)), pNode, &FirmwareUpdateCommand, sizeof(uint16_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0)), pNode, &FirmwareUpdateCommand, sizeof(uint8_t));
             
-            //check if the system was woke up by a firmware command update.
+            //check if the system was woke up by a firmware command update or not.
             PWREN_CheckFirmwareUpdateCommand(VCInterfaceHandle.pPowertrain->pPWREN, FirmwareUpdateCommand);
-            
-            //the only way to know if a device wrote on the domain object is checking the next free address 
-            //of the domain object. this value will depende of how many bytes IOT will write in the domain obj.
-            if(pVCI->pFirmwareUpdateDomainObj->Offset == 0x10)
-            {
-                //to allow another device to read the data was written is neccessary
-                //to make the domain object to point again to the beginning.
-                pVCI->pFirmwareUpdateDomainObj->Offset = 0x00;
-            
-                //read bytes received on the domain object used to the firmware update.
-                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0)), pNode, &firmwareUpdatePack, sizeof(firmwareUpdatePack));
-
-                //when reading a domain object the offset will be increment proportinal to the numbef of bytes read.
-                //so it's necessary to initialize to allow other device to read the data.
-                pVCI->pFirmwareUpdateDomainObj->Offset = 0x00;  
-            }       
+           
         }
         else
         {
@@ -511,20 +482,10 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 
 
 /**
-  Task to manage CANOpen protocol
+  Function to configure and initialize the CANOPEN node.
 */
-__NO_RETURN void CANOpenTask (void * pvParameter)
+void CANOpenTask (void)
 {
-    UNUSED_PARAMETER(pvParameter);
-
-    #if GNR_MASTER
-    #else
-    osDelay(100);
-    #endif
-
-    // Initialize canTmrSemaphore to control this task execution
-    canTmrSemaphore = osSemaphoreNew(16, 0, &canTmrSemaphoreAttr);
-
     // Initialize canbus hardware layer and the CANopen stack
 	CONodeInit(&CONodeGNR, &GnR2ModuleSpec);
 
@@ -548,14 +509,8 @@ __NO_RETURN void CANOpenTask (void * pvParameter)
 	CONodeStart(&CONodeGNR);
 	CONmtSetMode(&CONodeGNR.Nmt, CO_OPERATIONAL);
 
+    //CANOPEN node running.
     bCANOpenTaskBootUpCompleted = true;
-
-    while(true)
-    {
-        // This task unblocks when a CANOpen timer elapses
-        osSemaphoreAcquire(canTmrSemaphore, osWaitForever);
-        COTmrProcess(&CONodeGNR.Tmr);
-    }
 }
 
 #if CANLOGGERTASK
@@ -592,7 +547,10 @@ __NO_RETURN void CANLoggerTask (void * pvParameter)
             osDelay(CAN_LOG_INTERVAL_TICK);
             CANLog_SendTemperature(&CoCanDriver, &VCInterfaceHandle, M2); //Send temperature M2
             osDelay(CAN_LOG_INTERVAL_TICK);
-            CANLog_SendThrottleBrake(&CoCanDriver, &VCInterfaceHandle); //Send throttle & brake info
+            CANLog_SendThrottleBrake(&CoCanDriver, &VCInterfaceHandle); //Send throttle & brake info*/
+            //call teh function responsible to handle the firmware update.
+            FirmwareUpdate_Control (&CONodeGNR, &VCInterfaceHandle);
+            osDelay(10);
         }
     }
 }

@@ -8,6 +8,7 @@
 
 #include "powertrain_management.h"
 #include "vc_tasks.h"
+#include "firmware_update.h"
 
 #define OVERCURRENT_COUNTER             0
 #define STARTUP_COUNTER                 1
@@ -627,6 +628,15 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
     {
         bCheckStop6 = true;
     }
+    
+    #if VEHICLE_SELECTION != VEHICLE_APOLLO
+    //if a firmware update is running stop motors using the break flag.
+    //doing this to avoid create a new variable and use more ram memory.
+    if(FirmwareUpdate_Running())
+    {
+        bCheckStop4 = true;
+    }
+    #endif
 
     return (bCheckStop1 & bCheckStop2 & bCheckStop5& bCheckStop6) | bCheckStop3 | bCheckStop4; // Final logic to know if powertrain should be stopped.
 }
@@ -647,10 +657,18 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
 
     uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
 
+    //check if a firmware update is going. firmware update true block start condition.
     if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
     {
         bCheckStart1 = true;
     }
+    
+    //if a firmware update is running stop motors to start.
+    if(FirmwareUpdate_Running())
+    {
+        bCheckStart1 = false;
+    }
+    
     if (PWREN_IsPowerEnabled(pHandle->pPWREN))// If power is enabled through power enable input
     {
         bCheckStart2 = true;

@@ -63,7 +63,7 @@ static void    CANo_DrvClose  (void);
 
 // ================================== Private variables ====================== //
 
-#define CAN_TX_BUFFER_LENGTH   32  //Maximum number of CAN frame in TX buffer
+#define CAN_TX_BUFFER_LENGTH   10  //Maximum number of CAN frame in TX buffer
 
 static can_frame_t TxFrameBuffer[CAN_TX_BUFFER_LENGTH];
 //tail of the circular buffer

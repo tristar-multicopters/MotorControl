@@ -616,8 +616,7 @@ boot_set_pending(int permanent)
  *
  * @return                  0 on success; nonzero on failure.
  */
-int
-boot_set_confirmed_multi(int image_index)
+int boot_set_confirmed_multi(int image_index)
 {
     const struct flash_area *fap = NULL;
     struct boot_swap_state state_primary_slot;
@@ -673,8 +672,7 @@ done:
  *
  * @return                  0 on success; nonzero on failure.
  */
-int
-boot_set_confirmed(void)
+int boot_set_confirmed(void)
 {
     return boot_set_confirmed_multi(0);
 }

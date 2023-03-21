@@ -161,12 +161,13 @@ static void CANo_TIM_Stop(void)
 */
 void COTimerCallback(CO_TMR *tmr)
 {
-    if(COTimerCounter >= (COTimerPeriod-1))
+    //verify if the period time out.
+    if (COTimerCounter >= (COTimerPeriod-1))
     {
-        if(COTmrService(tmr))
-        {
-            osSemaphoreRelease(canTmrSemaphore);
-        }
+        //call 
+        COTmrService(tmr);
+        
+        //initialize the counter
         COTimerCounter = 0;
 	}
     else

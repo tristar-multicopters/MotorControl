@@ -110,43 +110,51 @@ int FW_CheckUpdate(void)
     const struct flash_area *fap;
     struct image_header img_h;
     struct image_header img_h_2;
-    
     uint32_t GanPower_fw_version;
-    
     FW_ReadVersion_FirstImage(fap, &img_h);     // We must check if the current image is lower version
     FW_ReadVersion_SecondImage(fap, &img_h_2);  // We must check if the back image is lower version or equal (could be one taht has been rejected)
-    
     if(FW_Storage_StartPackRead())
-    { 
+    {
         return VERSION_OK;
     }
-    
     GanPower_fw_version = FW_Storage_GetGNR_FWVersion();
-    
     MSG_LOG_DBG("Dfu pack ren version : %u.%u.%u\r\n",(uint8_t) GanPower_fw_version,(uint8_t) (GanPower_fw_version >>8),(uint16_t) (GanPower_fw_version >> 16));
-    if(img_h.ih_ver.iv_major == 0xff && GanPower_fw_version != 0x0000)
-    {   /* If not image in the first slot */
-        return UPDATE_REQUIRED;
-    }
-    /* Must be the same Major version */
-    if(img_h.ih_ver.iv_major != (uint8_t) (GanPower_fw_version))            
-    {
-        return VERSION_OK;
-    }
-    
-    /* can be a newer minor version */
-    if((img_h.ih_ver.iv_minor >= (uint8_t) ((GanPower_fw_version >> 8) & 0x0f)) 
-        || ((img_h_2.ih_ver.iv_minor >= (uint8_t) ((GanPower_fw_version >> 8) & 0x0f)) && img_h_2.ih_ver.iv_minor != 0xff))
-    {    
-        return VERSION_OK;
-    }
-    /* Must be a newer revision version for both slot (otherwise we can have a cycling update of an rejected version)*/
-    else if((img_h.ih_ver.iv_revision >= (uint16_t) ((GanPower_fw_version >> 16))) 
-            || (img_h_2.ih_ver.iv_revision >= (uint16_t) ((GanPower_fw_version >> 16)) && img_h_2.ih_ver.iv_revision != 0xff))
-    {
-        return VERSION_OK;
-    }    
-    return UPDATE_REQUIRED;
+	
+    // If no image in the first slot, download one from flash
+	if(img_h.ih_ver.iv_major == 0xff && GanPower_fw_version != 0x0000){
+			return UPDATE_REQUIRED;
+	}
+	
+	// Must be the same Major version, otherwise launch the current one
+	if(img_h.ih_ver.iv_major != (uint8_t) (GanPower_fw_version ))			
+	{
+		return VERSION_OK;
+	}
+	// if already in second slot ignore it (has been revoked by mcuboot)
+	if((img_h_2.ih_ver.iv_minor == (uint8_t) (GanPower_fw_version >> 8)) && (img_h_2.ih_ver.iv_revision == (uint16_t) (GanPower_fw_version >> 16)) )
+	{
+		return VERSION_OK;
+	}
+	
+	if((img_h.ih_ver.iv_minor > (uint8_t) ((GanPower_fw_version >> 8))))
+	{	
+		// if a lower minor version, don' take it
+		return VERSION_OK;
+	}
+	else if((img_h.ih_ver.iv_minor < (uint8_t) ((GanPower_fw_version >> 8))))
+	{	
+			// if a upper minor version take it
+		return UPDATE_REQUIRED;
+	}
+	else if(img_h.ih_ver.iv_revision >= (uint16_t) ((GanPower_fw_version >> 16)))
+	{
+	// else check the revision cause it's the same minor
+		return VERSION_OK;
+	}	
+	else
+	{
+		return UPDATE_REQUIRED;
+	}
 }
 
 /**

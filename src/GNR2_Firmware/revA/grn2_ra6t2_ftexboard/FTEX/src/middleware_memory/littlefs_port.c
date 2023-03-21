@@ -8,6 +8,7 @@
 */
 // =============================== Includes ================================= //
 #include "littlefs_port.h"
+// =============================== Variables ================================= //
 
 // ==================== Public function prototypes ======================== //
 
@@ -18,6 +19,8 @@ int lfs_read(const struct lfs_config *c, lfs_block_t block,
             lfs_off_t off, void *buffer, lfs_size_t size)
 {
 	uint8_t err;
+    
+     
     // define the adress of reading
 	uint32_t addresse = block * c->block_size + off;
 	if(block > c->block_count)

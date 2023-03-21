@@ -20,11 +20,13 @@ uint8_t Serial_Flash_Init(EFlash_Handle_t * pHandle)
 	
     if (MX25L3233F_ResetEnable(&pHandle->eFlash) != MX25L3233F_OK) 
         return FLASH_ERROR;
-    osDelay(1);
+    
+    R_BSP_SoftwareDelay(1, BSP_DELAY_UNITS_MILLISECONDS);
     
     if (MX25L3233F_ResetMemory(&pHandle->eFlash) != MX25L3233F_OK) 
         return FLASH_ERROR;
-    osDelay(1);
+    
+    R_BSP_SoftwareDelay(1, BSP_DELAY_UNITS_MILLISECONDS);
 
     Serial_Flash_ReadID(pHandle, flash_id);
 	

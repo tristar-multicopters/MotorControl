@@ -25,7 +25,7 @@ extern "C" {
 
 //define used to determine the maximum number of bytes used by the variable
 //responsible to receive the package of bytes during a firmware update.
-#define FIRMWAREUPDATE_MEMORYSIZE 64
+#define FIRMWAREUPDATE_MEMORYSIZE 134
 
 /* Application specific CANopen registers for IOT */
 #define CO_OD_REG_SPEED_MEASURE     0x2000 /**< OD ID for speed measure           >*/
@@ -50,16 +50,16 @@ extern "C" {
 #define CO_OD_REG_MOTOR_START       0x2011
 #define CO_OD_REG_FAULT_ACK         0x2012
 
-/*User Data configuration for Gnr*/
+/*used by Power off sequency.*********/
 
-//OD ID used to identify what bike model has
-//the current setup. Example:
-//VELEC
-//GRIZZLY
-//APOLLO
-//...
-//...
-#define CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL             0x2013
+//OD ID used to informe if the device is going to
+//tunr off or not.
+//IOT module must read this register periodocally(lessn than 1 second)
+//to know if the device will turn off or not.
+//
+#define CO_OD_REG_DEVICE_TURNNING_OFF          0x2013
+
+/*User Data configuration for Gnr*/
 
 //OD ID for informe if user data was upadted or
 //is being upadted.
@@ -136,13 +136,18 @@ extern "C" {
 //PAS_LEVEL_SPEED_WALK
 #define CO_OD_REG_WALK_MODE_SPEED              0x201D
 
-/*define the OD ID of a Domain object*/
-//this domain object will be used to 
-//receive during a firmware update .
+//this OD ID will be used to 
+//receive data and commands during a firmware update.
 //the GNR doesn't have enough memory to receive
 //all bytes and needs to receive some bytes(more than 4)
 //and write them into the external memory.
-#define CO_OD_REG_FIRMWAREUPDATE_MEMORY        0x201E
+//this object has 3 subindex 
+// 0 -> used to receive command from the IOT module to control the DFU process.
+// 1 -> used to inform about the ongoing state of the DFU process and report any error.
+// 2 -> used to receive the data frame(part of the firware file).
+// 3 -> used to inform IOT the last received data frame.
+#define CO_OD_REG_FIRMWAREUPDATE_MEMORY        0x3000
+
 
 /*******************************************************/
 
@@ -167,7 +172,7 @@ enum EMCY_CODES {
 
 extern struct CO_NODE_SPEC_T GnR2ModuleSpec;
 
-extern CO_OBJ_DOM firmwareUpdateDomainObj;
+extern CO_OBJ_DOM bObjFirmwareUpdateDomain;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

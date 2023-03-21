@@ -252,5 +252,5 @@ VCI_Handle_t VCInterfaceHandle =
 {
 	.pStateMachine = &VCStateMachineHandle,
 	.pPowertrain = &PowertrainHandle,
-    .pFirmwareUpdateDomainObj = &firmwareUpdateDomainObj,
+    .pFirmwareUpdateDomainObj = &bObjFirmwareUpdateDomain,
 };

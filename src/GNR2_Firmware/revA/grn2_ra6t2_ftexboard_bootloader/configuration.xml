@@ -433,9 +433,16 @@
       <configSetting altId="pc12.gpio_mode.gpio_mode_peripheral" configurationId="pc12.gpio_mode"/>
       <configSetting altId="pd00.output.high" configurationId="pd00"/>
       <configSetting altId="pd00.gpio_mode.gpio_mode_out.high" configurationId="pd00.gpio_mode"/>
+      <configSetting altId="pd05.sci9.txd9" configurationId="pd05"/>
+      <configSetting altId="pd05.gpio_mode.gpio_mode_peripheral" configurationId="pd05.gpio_mode"/>
+      <configSetting altId="pd06.sci9.rxd9" configurationId="pd06"/>
+      <configSetting altId="pd06.gpio_mode.gpio_mode_peripheral" configurationId="pd06.gpio_mode"/>
       <configSetting altId="sci1.mode.asynchronous.free" configurationId="sci1.mode"/>
       <configSetting altId="sci1.rxd1.pa11" configurationId="sci1.rxd1"/>
       <configSetting altId="sci1.txd1.pa12" configurationId="sci1.txd1"/>
+      <configSetting altId="sci9.mode.asynchronous.free" configurationId="sci9.mode"/>
+      <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9"/>
+      <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9"/>
       <configSetting altId="spi1.miso1.pc11" configurationId="spi1.miso1"/>
       <configSetting altId="spi1.mode.enabled.b" configurationId="spi1.mode"/>
       <configSetting altId="spi1.mosi1.pc12" configurationId="spi1.mosi1"/>

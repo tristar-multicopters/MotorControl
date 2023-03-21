@@ -22,7 +22,7 @@
 
 #define GNR2_BAUDRATE      500000u             /* CAN baudrate                */
 #define GNR2_TMR_N         16u                 /* Number of software timers   */
-#define GNR2_TICKS_PER_SEC 1000u               /* Timer clock frequency in Hz */
+#define GNR2_TICKS_PER_SEC 2000u               /* Timer clock frequency in Hz */
 #define GNR2_OBJ_N         128u                /* Object dictionary max size  */
 
 #if GNR_MASTER
@@ -134,22 +134,9 @@ uint32_t wObjDataSerialNbH                  = 0;
 
 /***************************************************************/
 
-//array that will be linked with domain object below.
-uint8_t firmwareUpdateBuffer[FIRMWAREUPDATE_MEMORYSIZE];
-
-//Declare and initialize a struct that holds a variable to 
-//keep more than 4 bytes at the same index and subindex.
-//This is the way to have one variable in the object dictionary 
-//with more than 4 bytes.
-CO_OBJ_DOM firmwareUpdateDomainObj = {
-  0,                              /* variable for read position     */
-  FIRMWAREUPDATE_MEMORYSIZE,      /* size of domain memory          */
-  &firmwareUpdateBuffer[0]        /* start address of domain memory */
-};
-
 /*****Allocate global variables for data flash update Gnr objects*****/
 
-//variable associated with CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL .
+//variable associated with CO_OD_REG_DEVICE_TURNNING_OFF .
 uint16_t bObjDataUserDataConfig             = 0;
 
 //variable associated with CO_OD_REG_KEY_USER_DATA_CONFIG.
@@ -183,6 +170,29 @@ uint8_t bObjDataMaxSpeed                    = 0;
 
 //variable associated with CO_OD_REG_WALK_MODE_SPEED.
 uint8_t bObjDataWalkModeSpeed               = 0;
+
+//variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
+uint8_t bObjOtaCommand = 0;
+
+//variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 1
+uint8_t bObjOtaStatus = 0;
+
+//variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 3
+uint16_t bObjOtaFrameCount = 0;
+
+//array that will be linked with domain object below.
+uint8_t bObjfirmwareUpdateBuffer[FIRMWAREUPDATE_MEMORYSIZE];
+
+//variable of domain type associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 2
+//Declare and initialize a struct that holds a array used 
+//to receive the firmware data frame(134 bytes) at the same index and subindex.
+//This is the way to have one variable in the object dictionary 
+//with more than 4 bytes.
+CO_OBJ_DOM bObjFirmwareUpdateDomain = {
+  0,                              /* variable for read position     */
+  FIRMWAREUPDATE_MEMORYSIZE,      /* size of domain memory          */
+  &bObjfirmwareUpdateBuffer[0]        /* start address of domain memory */
+};
 
 /* define the static object dictionary */
 #if GNR_IOT
@@ -306,7 +316,7 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     /***********GNR2 User Data configuration OBJECTS MODULE********************************/
     
     //Application - Informe what user data was upadted
-    {CO_KEY(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataUserDataConfig},
+    {CO_KEY(CO_OD_REG_DEVICE_TURNNING_OFF, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataUserDataConfig},
     
     //Application - Informe if user data was upadted or is being upadted.
     {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataKeyUserDataConfig},
@@ -365,8 +375,15 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     //Application - Speed that the walk mode of the vehicle goes up to. 
     {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWalkModeSpeed},
     
-    //Application - Memory used by the firmware update procedure to receive and hold new firmwares bytes.
-    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TDOMAIN, (CO_DATA)(&firmwareUpdateDomainObj)},
+    //Application - Used to control the firmware update procedure.
+    //subindex 0 is used to receive command from the IOT module to control the DFU process.
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(&bObjOtaCommand)},
+    //Used to inform about the ongoing state of the DFU process and report any error.
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 1, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)(&bObjOtaStatus)},
+    //Used to receive the data frame(part of the firware file).
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 2, CO_OBJ_____RW), CO_TDOMAIN, (CO_DATA)(&bObjFirmwareUpdateDomain)},
+    //Used to inform the number of the last data frame received.
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 3, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)(&bObjOtaFrameCount)},
     
     CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
 };  
@@ -514,7 +531,7 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     /***********GNR2 User Data configuration OBJECTS MODULE********************************/
     
     //Application - Informe what user data was upadted
-    {CO_KEY(CO_OD_REG_USER_DATA_CONFIG_BIKE_MODEL, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataUserDataConfig},
+    {CO_KEY(CO_OD_REG_DEVICE_TURNNING_OFF, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataUserDataConfig},
     
     //Application - Informe if user data was upadted or is being upadted.
     {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataKeyUserDataConfig},
@@ -573,8 +590,15 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     //Application - Speed that the walk mode of the vehicle goes up to. 
     {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWalkModeSpeed},
     
-    //Application - Memory used by the firmware update procedure to receive and hold new firmwares bytes.
-    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TDOMAIN, (CO_DATA)(&firmwareUpdateDomainObj)},
+    //Application - Used to control the firmware update procedure.
+    //subindex 0 is used to receive command from the IOT module to control the DFU process.
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(&bObjOtaCommand)},
+    //Used to inform about the ongoing state of the DFU process and report any error.
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 1, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)(&bObjOtaStatus)},
+    //Used to receive the data frame(part of the firware file).
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 2, CO_OBJ_____RW), CO_TDOMAIN, (CO_DATA)(&bObjFirmwareUpdateDomain)},
+    //Used to inform the number of the last data frame received.
+    {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 3, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)(&bObjOtaFrameCount)},
 
     CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
 };
@@ -589,7 +613,7 @@ static CO_TMR_MEM TmrMem[GNR2_TMR_N];
 /* Each SDO server needs memory for the segmented or
  * block transfer requests.
  */
-static uint8_t SdoSrvMem[CO_SSDO_N * CO_SDO_BUF_BYTE];
+static uint8_t SdoSrvMem[CO_SSDO_N][CO_SDO_BUF_BYTE];
 
 /* Select the drivers for your application. For possible
  * selections, see the directory /drivers. In this example
@@ -630,5 +654,5 @@ struct CO_NODE_SPEC_T GnR2ModuleSpec = {
     GNR2_TMR_N,               /* number of timer memory blocks  */
     GNR2_TICKS_PER_SEC,       /* timer clock frequency in Hz    */
     &CoGnrDriver,             /* select drivers for application */
-    &SdoSrvMem[0]             /* SDO Transfer Buffer Memory     */
+    (uint8_t*)&SdoSrvMem[0]             /* SDO Transfer Buffer Memory     */
 };

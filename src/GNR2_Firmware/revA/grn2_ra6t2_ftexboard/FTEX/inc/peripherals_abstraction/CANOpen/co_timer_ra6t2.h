@@ -43,7 +43,6 @@ extern "C" {
 void COTimerCallback(CO_TMR *tmr);
 /* Get external entities */
 extern const CO_IF_TIMER_DRV CoTimerDriver;
-extern osSemaphoreId_t canTmrSemaphore;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
