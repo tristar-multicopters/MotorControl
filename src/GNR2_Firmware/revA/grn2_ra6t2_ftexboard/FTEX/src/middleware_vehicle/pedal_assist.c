@@ -12,6 +12,9 @@
 #include "user_config_task.h"
 #pragma clang diagnostic pop
 
+/* Variables ---------------------------------------------------- */
+
+uint8_t bPASCounterAct = 0; // Slow cadence PAS activation loop couter
 /* Functions ---------------------------------------------------- */
 
 /**
@@ -301,6 +304,8 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     /* Cadence Sensor use */
     else if (wSpeedt > 0)
     {
+        /* Add security layer to miss the first PAS detect if there is any issue 
+           with the pedal */
         pHandle->sParameters.bPASCountSafe++;
         if ((pHandle->sParameters.bPASCountSafe > 1))
         {
@@ -314,6 +319,38 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
         pHandle->bPASDetected = false;
     }
 } 
+
+/**
+    * @brief  Check the PAS Presence Flag for slow PAS detection sensors
+    * @param  Pedal Assist handle
+    * @retval None
+    */
+void PedalAssist_UpdatePASDetectionCall(PAS_Handle_t * pHandle) 
+{
+    // Check if the PAS presence is detected
+    if ( PedalAssist_IsPASDetected(pHandle))
+    {
+        bPASCounterAct ++;
+        // For Slow PAS sensor on cadence check
+        if (bPASCounterAct > pHandle->sParameters.bPASCountActivation && (pHandle->bCurrentPasAlgorithm == CadenceSensorUse))
+        {
+            PedalAssist_UpdatePASDetection (pHandle);
+            bPASCounterAct = 0;
+        }
+        // For normal use with hybrid or Torque sensor
+        if ((pHandle->bCurrentPasAlgorithm == TorqueSensorUse) || (pHandle->bCurrentPasAlgorithm ==HybridSensorUse))
+        {
+            PedalAssist_UpdatePASDetection (pHandle);
+        }
+                   
+    }
+    // If the PAS presence is not detected the safe coefficient for PAS Safe detection remain
+    else 
+    {
+        PedalAssist_UpdatePASDetection (pHandle); 
+        bPASCounterAct = 0;
+    }
+}
 
 /**
     * @brief  Return if pedals are moving or not

@@ -188,7 +188,6 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                         int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
                     
                         hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackStartupDualMotor, hAux, speed);
-                        hAux = Foldback_ApplySlowStart(pHandle->SpeedFoldbackStartupDualMotor, hAux);
                         pHandle->aTorque[pHandle->bMainMotor] = hAux;
                     }
                 }                            

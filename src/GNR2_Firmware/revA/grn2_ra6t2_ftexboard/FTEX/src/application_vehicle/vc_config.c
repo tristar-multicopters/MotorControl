@@ -206,6 +206,7 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.hMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
     .sParameters.hMaxSpeedRatio = PAS_MAX_SPEED_RATIO,
 	.sParameters.bPASCountSafe = PAS_MIN_PEDAL_COUNT_SAFE,
+    .sParameters.bPASCountActivation = PAS_SLOW_PEDAL_COUNT,
     .sParameters.WalkmodeOverThrottle = PAS_WALKMODE_OVER_THROTTLE,
     .bCurrentPasAlgorithm = PAS_ALGORITHM,
     .pPSS = &PedalSpeedSensorHandle,

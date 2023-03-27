@@ -65,7 +65,7 @@ typedef struct
     bool WalkmodeOverThrottle;            /* Flag used to decide if walk mode has higher priority than throttle */
     
     uint8_t bPASCountSafe;                /* Counter for safe detection of the PAS after one pedaling*/
-        
+    uint8_t bPASCountActivation;          /* Counter for slow PAS detection over than 700ms periode */        
 } PAS_Parameters_t;
 
 typedef struct
@@ -146,6 +146,12 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle);
     */
 void PedalAssist_UpdatePASDetection(PAS_Handle_t * pHandle);
 
+/**
+    * @brief  Check the PAS Presence Flag for slow PAS detection sensors
+    * @param  Pedal Assist handle
+    * @retval None
+    */
+void PedalAssist_UpdatePASDetectionCall(PAS_Handle_t * pHandle);
 
 /**
     * @brief  Set Pedal Assist standard speed based on screen informations
