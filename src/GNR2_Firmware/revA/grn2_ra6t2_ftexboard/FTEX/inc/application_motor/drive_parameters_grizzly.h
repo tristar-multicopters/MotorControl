@@ -149,7 +149,7 @@
 
 /*Torque ramp settings */
 #define DEFAULT_TORQUE_SLOPE_UP        3500        /* Slope in cNm per second */
-#define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_DOWN      5000        /* Slope in cNm per second */
 #define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */
 

@@ -19,12 +19,12 @@
 #define LS                     0.0001f /* Stator inductance, H   For I-PMSM it is equal to Lq */
 #define MOTOR_MAGNET_FLUX       0.022f  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
 #define MOTOR_VOLTAGE_CONSTANT  32f   /*!< Volts RMS ph-ph /kRPM */
-
+#define ST_Torque_Coef          1.2f       /* this coeficient always keeps the starting torque higher than the nominal torque */
 
 #define PEAK_CURRENT_amps       55      /* peak current in amps     */
 #define NOMINAL_TORQUE          (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)    /* Nominal torque to apply to motor in cNm   
                                                                                                  Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps */
-#define STARTING_TORQUE         1500    /* Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes*/
+#define STARTING_TORQUE         (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef)    /* Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes*/
 
 
 #define MOTOR_MAX_SPEED_RPM     2100   /*!< Maximum rated speed  */

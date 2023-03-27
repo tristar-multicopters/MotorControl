@@ -18,24 +18,24 @@
 #define CURRENT_PID_LUT_SPEED_STEP                    100
 #define CURRENT_PID_LUT_SPEED_FIRST_VALUE             400
 
-const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
-    600
+const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {  /* all PID gains are computed by Autotune */
+    216,   
+    216
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    50,
-    200,
+    60,
+    60,
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
-    600,
+    216,
+    216,
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    50,
-    200,
+    60,
+    60,
 };
 
 #elif VEHICLE_SELECTION == VEHICLE_EBGO
