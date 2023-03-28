@@ -20,22 +20,22 @@
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {  /* all PID gains are computed by Autotune */
     216,   
-    216
+    600
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     60,
-    60,
+    200,
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     216,
-    216,
+    600,
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     60,
-    60,
+    200,
 };
 
 #elif VEHICLE_SELECTION == VEHICLE_EBGO
