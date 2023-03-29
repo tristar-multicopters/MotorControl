@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 volatile uint8_t HSLog_ResolutionCounter;
-static LogBuffer_t LogBuffer;
+
 
 
 /**
@@ -22,7 +22,8 @@ static LogBuffer_t LogBuffer;
 */
 void LogHS_Init(LogHighSpeed_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handle_t *pUARTHandle)
 {
-          
+    static LogBuffer_t LogBuffer;      
+    
     ASSERT(pHandle     != NULL);
     ASSERT(pVCIHandle  != NULL);
     ASSERT(pUARTHandle != NULL);
