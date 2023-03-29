@@ -84,6 +84,9 @@
 /*Used to enable High speed Log Configuration*/
 
 //definition used to enable log function
+
+#define USE_HSLOG 0 // Define to 1 to enable HS logger
+
 //LogHS_StartOneShot(&LogHS_handle);
 #define HSLOG_ZEROSPEED_LOG 0
 

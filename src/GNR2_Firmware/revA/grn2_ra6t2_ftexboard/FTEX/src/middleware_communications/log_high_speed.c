@@ -10,6 +10,8 @@
 #include "log_high_speed.h"
 #include "ASSERT_FTEX.h"
 #include <stdlib.h>
+#include "gnr_parameters.h"
+
 
 volatile uint8_t HSLog_ResolutionCounter;
 
@@ -21,13 +23,15 @@ volatile uint8_t HSLog_ResolutionCounter;
   VCI handle is used to access the information that needs to be logged
 */
 void LogHS_Init(LogHighSpeed_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handle_t *pUARTHandle)
-{
-    static LogBuffer_t LogBuffer;      
-    
+{    
+
     ASSERT(pHandle     != NULL);
     ASSERT(pVCIHandle  != NULL);
     ASSERT(pUARTHandle != NULL);
-	
+    
+    #if USE_HSLOG
+	static LogBuffer_t LogBuffer;   
+    
     pHandle->pVController = pVCIHandle;               // Pointer to VController
     pHandle->pUART_handle = pUARTHandle;              // Pointer to UART instance  
     pHandle->pUART_handle->Super = pHandle;    // Initialise the super pointer that the UART needs   
@@ -52,7 +56,8 @@ void LogHS_Init(LogHighSpeed_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Ha
     
     // Reset resolution counter and initialize n-1 number of calls to skip
     HSLog_ResolutionCounter = 0;
-    pHandle->LogHSResolution = LOGHS_RESOLUTION;     
+    pHandle->LogHSResolution = LOGHS_RESOLUTION;  
+    #endif    
 }
 
 /**
