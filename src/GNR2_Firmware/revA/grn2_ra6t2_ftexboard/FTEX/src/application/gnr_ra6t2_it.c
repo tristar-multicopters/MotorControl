@@ -200,8 +200,8 @@ void CANFD_IRQhandler(can_callback_args_t *p_args)
     {
         case CAN_EVENT_RX_COMPLETE:    /* Receive complete event. */
         {
-            //verify if the node id was initialized.
-            if (bCANOpenTaskBootUpCompleted == true)
+            //verify if the node id was initialized and system is ready to can open.
+            if (PWREN_GetSystemReadyFlag(VCInterfaceHandle.pPowertrain->pPWREN) == true)
             {
                 //function used to process each CAN frame received.
                 //this a CANOPEN function.
@@ -242,19 +242,29 @@ void CANFD_IRQhandler(can_callback_args_t *p_args)
 */
 void CANTimer_IRQHandler(timer_callback_args_t * p_args)
 {
-    //The function used decouple the generation of the periodic time base and the timed action processing.
-    COTmrProcess(&CONodeGNR.Tmr);
+    UNUSED_PARAMETER(p_args);
     
-    //callback function to process time interruption
-    COTimerCallback(&CONodeGNR.Tmr);
+    //check if the system flag was set to start process CANOPEN msgs.
+    if(PWREN_GetSystemReadyFlag(VCInterfaceHandle.pPowertrain->pPWREN) == true)
+    {
+        //The function used decouple the generation of the periodic time base and the timed action processing.
+        COTmrProcess(&CONodeGNR.Tmr);
     
-    //call function responsible to handle the firmware update.
-    FirmwareUpdate_Control (&CONodeGNR, &VCInterfaceHandle);
+        //callback function to process time interruption
+        COTimerCallback(&CONodeGNR.Tmr);
     
-    //added in this place to empty the buffer as quickly as possible.
-    //if the tx can buffer is empty, nothing will happen.
-    //here this function will called on each 0.5ms.
-    CAN_SendNextFrame();
+        //call function responsible to handle the firmware update.
+        FirmwareUpdate_Control (&CONodeGNR, &VCInterfaceHandle);
+    
+        //added in this place to empty the buffer as quickly as possible.
+        //if the tx can buffer is empty, nothing will happen.
+        //here this function will called on each 0.5ms.
+        CAN_SendNextFrame();
+    }
+    
+    //check if is system is ready or not to use CANOPEN communication
+    //and normal power off sequency,
+    PWREN_ManageSystemReadyFlag(&CONodeGNR, VCInterfaceHandle.pPowertrain->pPWREN);
 }
 
 /**

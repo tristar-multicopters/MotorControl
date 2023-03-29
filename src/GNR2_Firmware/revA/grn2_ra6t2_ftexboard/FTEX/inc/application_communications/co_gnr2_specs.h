@@ -27,6 +27,10 @@ extern "C" {
 //responsible to receive the package of bytes during a firmware update.
 #define FIRMWAREUPDATE_MEMORYSIZE 134
 
+//define the sdo client number to be used by the sdo services.
+#define SDOCLIENTINDEX_SLAVE        0x00
+#define SDOCLIENTINDEX_IOT          0x01
+
 /* Application specific CANopen registers for IOT */
 #define CO_OD_REG_SPEED_MEASURE     0x2000 /**< OD ID for speed measure           >*/
 #define CO_OD_REG_POWER_MEASURE     0x2001 /**< OD ID for power measure           >*/
@@ -52,10 +56,11 @@ extern "C" {
 
 /*used by Power off sequency.*********/
 
-//OD ID used to informe if the device is going to
+//OD ID used to let the slave to know if the device is going to
 //tunr off or not.
-//IOT module must read this register periodocally(lessn than 1 second)
-//to know if the device will turn off or not.
+//IOT module must implement the same address on your side and 
+//read this register periodocally(less than 1 second)
+//to know if the master will turn off or not.
 //
 #define CO_OD_REG_DEVICE_TURNNING_OFF          0x2013
 

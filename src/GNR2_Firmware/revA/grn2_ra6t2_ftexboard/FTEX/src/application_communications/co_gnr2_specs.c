@@ -137,7 +137,7 @@ uint32_t wObjDataSerialNbH                  = 0;
 /*****Allocate global variables for data flash update Gnr objects*****/
 
 //variable associated with CO_OD_REG_DEVICE_TURNNING_OFF .
-uint16_t bObjDataUserDataConfig             = 0;
+uint8_t bObjDataDeviceTurnningOff           = 0;
 
 //variable associated with CO_OD_REG_KEY_USER_DATA_CONFIG.
 uint16_t bObjDataKeyUserDataConfig          = 0;
@@ -207,7 +207,7 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     //respond to the master by TPDO at the very same time.
     //when using the macro CO_COBID_SYNC_STD the GENERATE_SYNC define
     //configured the device to produces SYNC messages.
-    #if SUPPORT_SLAVE
+    #if SUPPORT_SLAVE_ON_IOT
     {CO_KEY(0x1005, 0, CO_OBJ_D___R_), CO_TSYNC_ID, (CO_DATA)CO_COBID_SYNC_STD(GENERATE_SYNC, STD_ID_SYNC)},		// COB-ID SYNC Message
     #else
     //on this case the device is configured to cosumes SYNC message. 
@@ -222,7 +222,7 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     //on this configuration EMCY message is not enabled.
     {CO_KEY(0x1014, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)CO_COBID_EMCY_STD(USE_EMCY, STD_ID_EMCY)},		    // COB-ID EMCY Message
     
-    #if SUPPORT_SLAVE
+    #if SUPPORT_SLAVE_ON_IOT
     {CO_KEY(0x1016, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)1},				                        // Consumer Heartbeat max index    
     {CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)&AppHbConsumer_1},				// Consumer Heartbeat parameters
     #endif             
@@ -239,13 +239,19 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x1200, 1, CO_OBJ_DN__R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},						// SDO Srv Parameter - COB-ID Client to Server
     {CO_KEY(0x1200, 2, CO_OBJ_DN__R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},					// SDO Srv Parameter - COB-ID Server to Client  
                        
-    // SDO Client - second client to request data from the slaver.
-    #if SUPPORT_SLAVE
+    // SDO Client - first client to request data from the slaver.
     {CO_KEY(0x1280, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)3},						                // SDO Client Parameter - Highest Sub Index
     {CO_KEY(0x1280, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
     {CO_KEY(0x1280, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
     {CO_KEY(0x1280, 3, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)GNR2_SLAVE_NODE_ID},
     
+    // SDO Client - second client to request data from the IOT.
+    {CO_KEY(0x1281, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)3},						                // SDO Client Parameter - Highest Sub Index
+    {CO_KEY(0x1281, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
+    {CO_KEY(0x1281, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
+    {CO_KEY(0x1281, 3, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)IOT_NODE_ID},
+    
+    #if SUPPORT_SLAVE_ON_IOT
     //necessary to allow master read slaver.
     // RPDO 1
     {CO_KEY(0x1400, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5},						                // RPDO1 Parameter - Highest Sub Index
@@ -267,6 +273,8 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x1A00, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)},			// RPDO1 Mapping - Object 1
     {CO_KEY(0x1A00, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)},			    // RPDO1 Mapping - Object 2
     #endif
+    
+    
     
     /**********************GNR2-IOT OBJECTS MODULE*******************************************/
     {CO_KEY(CO_OD_REG_SPEED_MEASURE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataSpeedMeas},   // Application - Inst Speed
@@ -316,7 +324,7 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     /***********GNR2 User Data configuration OBJECTS MODULE********************************/
     
     //Application - Informe what user data was upadted
-    {CO_KEY(CO_OD_REG_DEVICE_TURNNING_OFF, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataUserDataConfig},
+    {CO_KEY(CO_OD_REG_DEVICE_TURNNING_OFF, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataDeviceTurnningOff},
     
     //Application - Informe if user data was upadted or is being upadted.
     {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataKeyUserDataConfig},
@@ -409,16 +417,19 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     #if GNR_MASTER
     {CO_KEY(0x1200, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},		    // SDO Srv Parameter - COB-ID Client to Server
     {CO_KEY(0x1200, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},		// SDO Srv Parameter - COB-ID Server to Client
+  
     #else
     {CO_KEY(0x1200, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_STD(USE_SSDO, 0, 0x600+GNR2_SLAVE_NODE_ID)},		                                    // SDO Srv Parameter - COB-ID Client to Server
     {CO_KEY(0x1200, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_STD(USE_SSDO, 0, 0x580+GNR2_SLAVE_NODE_ID)},		                                // SDO Srv Parameter - COB-ID Server to Client
     #endif
 
+    #if GNR_MASTER
     // SDO Client
     {CO_KEY(0x1280, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)3},						                // SDO Client Parameter - Highest Sub Index
     {CO_KEY(0x1280, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
     {CO_KEY(0x1280, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
     {CO_KEY(0x1280, 3, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)GNR2_SLAVE_NODE_ID},
+    #endif
 
     // RPDO 1
     {CO_KEY(0x1400, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5},						                // RPDO1 Parameter - Highest Sub Index
@@ -531,7 +542,7 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     /***********GNR2 User Data configuration OBJECTS MODULE********************************/
     
     //Application - Informe what user data was upadted
-    {CO_KEY(CO_OD_REG_DEVICE_TURNNING_OFF, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataUserDataConfig},
+    {CO_KEY(CO_OD_REG_DEVICE_TURNNING_OFF, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataDeviceTurnningOff},
     
     //Application - Informe if user data was upadted or is being upadted.
     {CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataKeyUserDataConfig},

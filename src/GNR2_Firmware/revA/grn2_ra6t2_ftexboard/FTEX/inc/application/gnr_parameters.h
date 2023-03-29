@@ -20,32 +20,32 @@
 //if master == 1 and iot == 1 and dual motor is present
 //support slave must be set to 1.
 //if iot == 0 support slave state don't care.
-//This means that firmware will ignore SUPPORT_SLAVE 
+//This means that firmware will ignore SUPPORT_SLAVE_ON_IOT 
 //and can be configured as before.
 //Some examples:
 //
 //GNR_IOT 0, GNR_MASTER 1 -> configure gnr to be a master
 //that can communicate with a slave if he is present.
-//on this setup SUPPORT_SLAVE value doesn't make any
+//on this setup SUPPORT_SLAVE_ON_IOT value doesn't make any
 //difference. This is the way our system was working.
 //
 //GNR_IOT 0, GNR_MASTER 0 -> configure gnr to be a slave.
-//on this setup SUPPORT_SLAVE value doesn't make any
+//on this setup SUPPORT_SLAVE_ON_IOT value doesn't make any
 //difference. This is the way our system was working.
 //
-//GNR_IOT 1, GNR_MASTER 1, SUPPORT_SLAVE 1-> configure gnr 
+//GNR_IOT 1, GNR_MASTER 1, SUPPORT_SLAVE_ON_IOT 1-> configure gnr 
 //to be a master that can communicate with iot module and
 //a slave if they are present.
 //
-//GNR_IOT 1, GNR_MASTER 1, SUPPORT_SLAVE 0-> configure gnr 
+//GNR_IOT 1, GNR_MASTER 1, SUPPORT_SLAVE_ON_IOT 0-> configure gnr 
 //to be a master that can communicate with only with a IOT module
 //if iot is present.
 //
 //to know how to use the three define bellow, please 
 //check the description above.
 #define GNR_IOT                       1                   /* If IOT, controller manages canbus communication with IOT Module and discard vehicule communication.  */
-#define GNR_MASTER                    1                   /* If master, controller manages canbus communication with slaves and vehicle control layer.  */
-#define SUPPORT_SLAVE                 0                   /* if slaver, enable slaver to send, by TPDO, informationa about him self to the master
+#define GNR_MASTER                    1                  /* If master, controller manages canbus communication with slaves and vehicle control layer.  */
+#define SUPPORT_SLAVE_ON_IOT          0                   /* if slaver, enable slaver to send, by TPDO, informationa about him self to the master
                                                              and be controlled by the master.*/
 #define GNR2_MASTER_NODE_ID           0x01                /* Node-ID of ganrunner master */
 #define IOT_NODE_ID                   0x02                /* Node-ID of the IOT module(configured in the IOT firmware)*/ 
@@ -57,7 +57,6 @@
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 
 #define VEHICLE_SELECTION             VEHICLE_VELEC     /* Vehicle selection to adapt motor/vehicle parameters.
-
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                                                                                

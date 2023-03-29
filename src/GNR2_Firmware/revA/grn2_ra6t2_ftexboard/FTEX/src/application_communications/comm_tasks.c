@@ -117,7 +117,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t FirmwareUpdateCommand = 0;                                           
     
     //
-    #if SUPPORT_SLAVE | !GNR_IOT
+    #if SUPPORT_SLAVE_ON_IOT | !GNR_IOT
     /* Get data from motor control and vehicle control layer */
     int16_t hMotorSpeedMeas         = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
     int16_t hBusVoltage             = 0;
@@ -148,7 +148,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     {   
         /* Read commands in CANOpen object dictionnary received by SDO */
         //COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)), pNode, &bPAS, sizeof(uint8_t));
-        #if SUPPORT_SLAVE
+        #if SUPPORT_SLAVE_ON_IOT
         /* Check if no heartbeat was missed from slave  */
         if (CONmtGetHbEvents(&pNode->Nmt, GNR2_SLAVE_NODE_ID) <= MAX_NUMBER_MISSED_HEARTBEAT)
         {
@@ -341,6 +341,12 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             //check if the system was woke up by a firmware command update or not.
             PWREN_CheckFirmwareUpdateCommand(VCInterfaceHandle.pPowertrain->pPWREN, FirmwareUpdateCommand);
+            
+            //only master can send msgs to IOT module.
+            #if GNR_MASTER && GNR_IOT
+            //fucntion used to inform IOT module that the GNR if on.
+            PWREN_SetIotSystemIsOn(pNode, VCInterfaceHandle.pPowertrain->pPWREN);
+            #endif
            
         }
         else
@@ -418,7 +424,7 @@ void Comm_BootUp(void)
     uCAL_GPIO_ReInit(CAN_STANDBY_N_GPIO_PIN, PinConfig);
     uCAL_GPIO_Set(CAN_STANDBY_N_GPIO_PIN);
 
-    #if (!GNR_IOT) | SUPPORT_SLAVE
+    #if (!GNR_IOT) | SUPPORT_SLAVE_ON_IOT
     /* Initialize motor 2 handle to be used by vehicle control layer */
     SlaveMotorRegisterAddr_t M2RegAddr =
     {
@@ -502,15 +508,6 @@ void CANOpenTask (void)
     uint32_t ticks;
 	ticks = COTmrGetTicks(&CONodeGNR.Tmr, 25U, (uint32_t)CO_TMR_UNIT_1MS);
 	COTmrCreate(&CONodeGNR.Tmr, 0, ticks, UpdateObjectDictionnary, &CONodeGNR);
-
-    /* Start the CANopen node and set it automatically to
-	 * NMT mode: 'OPERATIONAL'.
-	 */
-	CONodeStart(&CONodeGNR);
-	CONmtSetMode(&CONodeGNR.Nmt, CO_OPERATIONAL);
-
-    //CANOPEN node running.
-    bCANOpenTaskBootUpCompleted = true;
 }
 
 #if CANLOGGERTASK
@@ -548,10 +545,6 @@ __NO_RETURN void CANLoggerTask (void * pvParameter)
             CANLog_SendTemperature(&CoCanDriver, &VCInterfaceHandle, M2); //Send temperature M2
             osDelay(CAN_LOG_INTERVAL_TICK);
             CANLog_SendThrottleBrake(&CoCanDriver, &VCInterfaceHandle); //Send throttle & brake info*/
-            //call teh function responsible to handle the firmware update.
-            FirmwareUpdate_Control (&CONodeGNR, &VCInterfaceHandle);
-            osDelay(10);
-        }
     }
 }
 

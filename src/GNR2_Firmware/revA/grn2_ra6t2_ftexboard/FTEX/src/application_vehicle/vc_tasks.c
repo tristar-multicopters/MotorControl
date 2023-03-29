@@ -323,8 +323,10 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         {    
             osDelay(STOP_LOOPTICKS);
         }
-  
-#if SUPPORT_SLAVE == 1
+
+//is we have dual motor configuration, send a command to stop the slaver motor
+//and wait until motor stops to run.
+#if (SUPPORT_SLAVE_ON_IOT == 1 && GNR_IOT == 1)|| (GNR_MASTER == 1 && GNR_IOT == 0)
         MDI_StopMotor(pVCI->pPowertrain->pMDI,M2);
         while (MDI_GetSTMState(pVCI->pPowertrain->pMDI,M2) != M_IDLE)
         {
@@ -334,8 +336,24 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         // a sequence is needed to TURN OFF the slave. If not, the slave continues sending messages on CAN and prevents Master to turn off
         // reporrted bug on the Jira: https://tristarmulticopters.atlassian.net/browse/EGNR-2531
 #endif
+        //set the going off flag to indicate the system is going turn off.
+        PWREN_SetGoingOffFlag(pVCI->pPowertrain->pPWREN);
         
-        PWREN_StopPower(pVCI->pPowertrain->pPWREN); // This should be the last code line to be executed the controller 
-                                                    // is disabling it's 3.3 V power supply      
+        //while to wait until the turn off sequency to be finished.
+        while(1)
+        {
+            //if system is ready to a normal power off sequency(stop IOT and turn off slave).
+            //if they are present.
+            if(PWREN_GetSystemReadyFlag(VCInterfaceHandle.pPowertrain->pPWREN) == true)
+            {
+                //Call the function responsible to manage the power off 
+                PWREN_TurnOffSystem(&CONodeGNR, pVCI->pPowertrain->pPWREN);
+            }
+            else
+            {
+                //turn off himself 
+                PWREN_StopPower(pVCI->pPowertrain->pPWREN);
+            }
+        }
     }
 }

@@ -632,9 +632,8 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
     }
     
     #if VEHICLE_SELECTION != VEHICLE_APOLLO
-    //if a firmware update is running stop motors using the break flag.
-    //doing this to avoid create a new variable and use more ram memory.
-    if(FirmwareUpdate_Running())
+    //if a firmware update is running or device is going off stop motors to start.
+    if(FirmwareUpdate_Running() || PWREN_GetGoingOffFlag(pHandle->pPWREN))
     {
         bCheckStop4 = true;
     }
@@ -665,8 +664,8 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
         bCheckStart1 = true;
     }
     
-    //if a firmware update is running stop motors to start.
-    if(FirmwareUpdate_Running())
+    //if a firmware update is running or device is going off stop motors to start.
+    if(FirmwareUpdate_Running() || PWREN_GetGoingOffFlag(pHandle->pPWREN))
     {
         bCheckStart1 = false;
     }

@@ -16,7 +16,6 @@
 #include "ASSERT_FTEX.h"
 #include "vc_config.h"
 #include "co_gnr2_specs.h"
-#include "vc_config.h"
 #include "serial_flash_storage.h"
 #include "lfs.h"
 #include "comm_config.h"

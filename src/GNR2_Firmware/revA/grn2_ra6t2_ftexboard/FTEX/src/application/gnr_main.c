@@ -25,6 +25,9 @@ extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
 extern void ProcessUARTFrames(void * pvParameter);
 extern void PowerOffSequence(void * pvParameter);
+#if !GNR_MASTER
+extern void PWREN_TurnoffSlaveTask (void * pvParameter);
+#endif
 
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
 
@@ -53,6 +56,9 @@ osThreadId_t COMM_Uart_handle;
 osThreadId_t CANOpenTaskHandle;
 osThreadId_t CANRxFrameHandle;
 osThreadId_t PowerOffSequence_handle;
+#if !GNR_MASTER
+osThreadId_t PWREN_TurnoffSlave_handle;
+#endif
 
 //****************** THREAD ATTRIBUTES ******************//
 
@@ -106,6 +112,14 @@ static const osThreadAttr_t ThAtt_UART = {
 	.priority = osPriorityBelowNormal
 };
 
+#endif
+
+#if !GNR_MASTER
+static const osThreadAttr_t ThAtt_PWREN_TurnoffSlaveTask = {
+    .name = "PWREN_TurnoffSlaveTask",
+    .stack_size = 512,
+    .priority = osPriorityLow
+};
 #endif
 
 /**************************************************************/
@@ -216,6 +230,16 @@ void gnr_main(void)
     //verify if the task was correctly created.              
     ASSERT(COMM_Uart_handle != NULL);
 	
+    #endif
+    
+    #if !GNR_MASTER
+    //Create a nerw task.
+    PWREN_TurnoffSlave_handle       = osThreadNew(PWREN_TurnoffSlaveTask, 
+                                      &CONodeGNR,
+                                      &ThAtt_PWREN_TurnoffSlaveTask);
+    
+    //verify if the task was correctly created.              
+    ASSERT(PWREN_TurnoffSlave_handle != NULL);
     #endif
 
 

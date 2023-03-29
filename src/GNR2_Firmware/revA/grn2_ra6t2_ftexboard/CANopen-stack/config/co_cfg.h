@@ -32,7 +32,7 @@
 *    will support.
 */
 #ifndef CO_CSDO_N
-#define CO_CSDO_N               1
+#define CO_CSDO_N               2
 #endif
 
 /*! \brief DEFAULT EMERGENCY CODES

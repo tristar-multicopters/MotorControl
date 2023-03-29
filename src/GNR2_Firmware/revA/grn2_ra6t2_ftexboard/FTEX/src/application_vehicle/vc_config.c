@@ -180,6 +180,11 @@ PWREN_Handle_t PowerEnableHandle =
     .bInitialPowerLockState = false,
     .bWakeUpSDOCommand = false,
     .bWakeUpCommandChecked = false,
+    .bIotStoped = false,
+    .bSlaveOff = false,
+    .bGoingOff = false,
+    .bSdoResponseReceived = false,
+    .bSystemReady = false,
 };
 
 Foldback_Handle_t SpeedFoldbackStartupDualMotorConfig =
