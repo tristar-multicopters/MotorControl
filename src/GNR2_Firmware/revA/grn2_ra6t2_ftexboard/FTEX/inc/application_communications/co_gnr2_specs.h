@@ -141,6 +141,19 @@ extern "C" {
 //PAS_LEVEL_SPEED_WALK
 #define CO_OD_REG_WALK_MODE_SPEED              0x201D
 
+// OD ID to set the wheel diamater in inches
+
+#define CO_OD_REG_WHEELS_DIAMETER              0x201F
+
+
+
+// OD ID to operate the front light (0 Off, 1 On)
+#define CO_OD_REG_VEHICLE_FRONT_LIGHT          0x2021
+
+
+// OD ID to operate the rear light (0 Off, 1 On)
+#define CO_OD_REG_VEHICLE_REAR_LIGHT           0x2022
+
 //this OD ID will be used to 
 //receive data and commands during a firmware update.
 //the GNR doesn't have enough memory to receive

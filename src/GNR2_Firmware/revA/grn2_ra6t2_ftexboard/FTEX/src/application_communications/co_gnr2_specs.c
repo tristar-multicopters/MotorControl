@@ -171,6 +171,15 @@ uint8_t bObjDataMaxSpeed                    = 0;
 //variable associated with CO_OD_REG_WALK_MODE_SPEED.
 uint8_t bObjDataWalkModeSpeed               = 0;
 
+//variable associated with CO_OD_REG_WHEELS_DIAMETER
+uint8_t bObjDataWheelDiamater               = 0;
+
+//variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT
+uint8_t bObjDataFrontLightState             = 0;
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT
+uint8_t bObjDataRearLightState              = 0;
+
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
 
@@ -382,6 +391,13 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     
     //Application - Speed that the walk mode of the vehicle goes up to. 
     {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWalkModeSpeed},
+    
+    
+    {CO_KEY(CO_OD_REG_WHEELS_DIAMETER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWheelDiamater},    
+    
+    {CO_KEY(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataFrontLightState},
+    
+    {CO_KEY(CO_OD_REG_VEHICLE_REAR_LIGHT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataRearLightState},
     
     //Application - Used to control the firmware update procedure.
     //subindex 0 is used to receive command from the IOT module to control the DFU process.

@@ -233,7 +233,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
          
         //Reading and updating the Wheel diameter 
         pHandle->WheelDiameter = LCD_APT_CalculateWheelDiameter(pHandle->rx_frame.Buffer[WHEELD]);
-        CanVehiInterface_UpdateWheelDiamater(pHandle->WheelDiameter);
+        CanVehiInterface_UpdateWheelDiameter(pHandle->WheelDiameter);
     
         //For APT protocol, LSB is sent first for multi-bytes values
         replyFrame.Size = 13;

@@ -215,10 +215,70 @@ uint8_t CanVehiInterface_GetVehicleSerialNumber(void)
     return msgToSend;
 }
 
+
+/**
+ *  Get the wheel diamater used to calculate speed
+ */
+uint8_t CanVehiInterface_GetWheelDiameter(void)
+{
+   return wheel_diameter;
+}
+
 /**
  *  Update wheel diamater used to calculate speed
  */
-void CanVehiInterface_UpdateWheelDiamater(uint8_t aDiameterInInches)
+void CanVehiInterface_UpdateWheelDiameter(uint8_t aDiameterInInches)
 {
     wheel_diameter = aDiameterInInches;     
+}
+
+/**
+  Get the current state of the front light 
+*/
+uint8_t CanVehiInterface_GetFrontLightState(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle!= NULL);
+    return (uint8_t) Light_GetState(pHandle->pPowertrain->pHeadLight);
+}
+
+/**
+  Change the current state of the front light 
+*/
+void CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aState)
+{
+    ASSERT(pHandle!= NULL);
+    if(aState == true)
+    {        
+        Light_Enable(pHandle->pPowertrain->pHeadLight);
+    }
+    else
+    {
+        Light_Disable(pHandle->pPowertrain->pHeadLight);
+    }        
+}
+
+/**
+  Get the current state of the rear light 
+*/
+uint8_t CanVehiInterface_GetRearLightState(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle!= NULL);
+    return (uint8_t) Light_GetState(pHandle->pPowertrain->pTailLight);
+}
+
+/**
+  Change the current state of the rear light 
+*/
+void CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aState)
+{
+    ASSERT(pHandle!= NULL);
+    if(aState)
+    {        
+        Light_Enable(pHandle->pPowertrain->pTailLight);
+    }
+    else
+    {
+        Light_Disable(pHandle->pPowertrain->pTailLight);
+    }
+    
 }

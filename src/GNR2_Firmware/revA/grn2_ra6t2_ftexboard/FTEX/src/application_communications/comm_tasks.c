@@ -63,11 +63,14 @@ static void UpdateObjectDictionnary(void *p_arg)
     
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
     // Get Bike Parameters 
-    uint8_t hSpeed[2]; 
+    uint8_t  hSpeed[2]; 
     uint16_t hPWR[2];
-    uint8_t bSOC[2];
-    uint8_t bPAS[2];
+    uint8_t  bSOC[2];
+    uint8_t  bPAS[2];
     uint16_t hMaxPwr[2];
+    uint8_t  hWheelDiameter[2];
+    uint8_t  hFrontLightState[2];
+    uint8_t  hRearLightState[2];
     uint16_t hErrorState[2];
     uint16_t hFwVersion[2];
     
@@ -76,6 +79,10 @@ static void UpdateObjectDictionnary(void *p_arg)
     bSOC[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehicleSOC(pVCI);
     bPAS[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehiclePAS(pVCI);  
     hMaxPwr[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleMaxPWR(pVCI);
+    
+    hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
+    hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
+    hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
     
     #if GNR_MASTER
         hErrorState[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleCurrentFaults(pVCI);
@@ -253,8 +260,14 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint16_t));
+            
+            
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)),     pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),     pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
+            
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(uint32_t)); 
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSrialNbHigh, sizeof(uint32_t)); 
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSrialNbHigh, sizeof(uint32_t));            
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion[CAN_PARAM], sizeof(uint16_t));    
             
             // Check if there were changes made to a parameter by a can device
@@ -290,6 +303,24 @@ static void UpdateObjectDictionnary(void *p_arg)
                     }
                 }                    
             }
+            
+            // If the whele diameter in the OBJ dict and vehicle don't match, update the on in the vehicle
+            if(hWheelDiameter[VEHICLE_PARAM] != hWheelDiameter[CAN_PARAM])
+            {
+                CanVehiInterface_UpdateWheelDiameter(hWheelDiameter[CAN_PARAM]);            
+            }
+            
+            // If the light status in OBJ dict and vehicle don't match, update the one in the vehicle
+            if(hFrontLightState[VEHICLE_PARAM] != hFrontLightState[CAN_PARAM])
+            {
+                CanVehiInterface_ChangeFrontLightState(&VCInterfaceHandle,hFrontLightState[CAN_PARAM]);            
+            }
+            if(hRearLightState[VEHICLE_PARAM] != hRearLightState[CAN_PARAM])
+            {
+                CanVehiInterface_ChangeRearLightState(&VCInterfaceHandle,hRearLightState[CAN_PARAM]);            
+            }
+            
+            
             
             if(hMaxPwr[VEHICLE_PARAM] != hMaxPwr[CAN_PARAM])
             {
