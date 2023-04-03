@@ -313,11 +313,13 @@ static void UpdateObjectDictionnary(void *p_arg)
             // If the light status in OBJ dict and vehicle don't match, update the one in the vehicle
             if(hFrontLightState[VEHICLE_PARAM] != hFrontLightState[CAN_PARAM])
             {
-                CanVehiInterface_ChangeFrontLightState(&VCInterfaceHandle,hFrontLightState[CAN_PARAM]);            
+                // Keep this commented until CAN screens options has been added
+                //CanVehiInterface_ChangeFrontLightState(&VCInterfaceHandle,hFrontLightState[CAN_PARAM]);            
             }
             if(hRearLightState[VEHICLE_PARAM] != hRearLightState[CAN_PARAM])
             {
-                CanVehiInterface_ChangeRearLightState(&VCInterfaceHandle,hRearLightState[CAN_PARAM]);            
+                // Keep this commented until CAN screens options has been added
+                //CanVehiInterface_ChangeRearLightState(&VCInterfaceHandle,hRearLightState[CAN_PARAM]);            
             }
             
             
