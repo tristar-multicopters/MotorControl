@@ -520,7 +520,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
           break;        
         default: // If it's not a standard APT error just consider it a custom error or a debugging error
             
-            if(aError > 0x9F && aError != 0x30) // For custom errors we need a value less or equal to 0x9F but that isn't 0x30,  
+            if(aError < 0x9F && aError != 0x30) // For custom errors we need a value less or equal to 0x9F but that isn't 0x30,  
             {
                 ConvertedError = aError;
             }
