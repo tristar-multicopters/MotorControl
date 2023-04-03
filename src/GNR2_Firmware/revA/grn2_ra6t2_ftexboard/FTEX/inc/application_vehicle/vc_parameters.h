@@ -46,6 +46,10 @@
 
 #include "vc_parameters_nidec.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_QUIETKAT
+
+#include "vc_parameters_quietkat.h"
+
 #endif
 
 #endif /*__VC_PARAMETERS_H*/

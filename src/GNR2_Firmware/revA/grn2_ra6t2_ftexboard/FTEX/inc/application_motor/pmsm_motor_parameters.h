@@ -43,6 +43,10 @@
 
 #include "pmsm_motor_parameters_nidec.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_QUIETKAT
+
+#include "pmsm_motor_parameters_quietkat.h"
+
 #endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/

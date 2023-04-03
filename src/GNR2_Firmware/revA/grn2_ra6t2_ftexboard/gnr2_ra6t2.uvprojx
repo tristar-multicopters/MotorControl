@@ -455,6 +455,11 @@
               <FilePath>.\FTEX\src\application_vehicle\vc_tasks.c</FilePath>
             </File>
             <File>
+              <FileName>vc_errors_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_vehicle\vc_errors_management.c</FilePath>
+            </File>
+            <File>
               <FileName>vc_defines.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_defines.h</FilePath>
@@ -505,9 +510,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
             </File>
             <File>
-              <FileName>vc_errors_management.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_vehicle\vc_errors_management.c</FilePath>
+              <FileName>vc_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -722,6 +727,16 @@
               <FileName>drive_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2301,6 +2316,11 @@
               <FilePath>.\FTEX\src\application_vehicle\vc_tasks.c</FilePath>
             </File>
             <File>
+              <FileName>vc_errors_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_vehicle\vc_errors_management.c</FilePath>
+            </File>
+            <File>
               <FileName>vc_defines.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_defines.h</FilePath>
@@ -2351,9 +2371,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
             </File>
             <File>
-              <FileName>vc_errors_management.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_vehicle\vc_errors_management.c</FilePath>
+              <FileName>vc_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2568,6 +2588,16 @@
               <FileName>drive_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4114,6 +4144,11 @@
               <FilePath>.\FTEX\src\application_vehicle\vc_tasks.c</FilePath>
             </File>
             <File>
+              <FileName>vc_errors_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_vehicle\vc_errors_management.c</FilePath>
+            </File>
+            <File>
               <FileName>vc_defines.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_defines.h</FilePath>
@@ -4164,9 +4199,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
             </File>
             <File>
-              <FileName>vc_errors_management.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_vehicle\vc_errors_management.c</FilePath>
+              <FileName>vc_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4381,6 +4416,16 @@
               <FileName>drive_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
             </File>
           </Files>
         </Group>
