@@ -244,9 +244,6 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
 {
     UNUSED_PARAMETER(p_args);
 
-    //The function used decouple the generation of the periodic time base and the timed action processing.
-    COTmrProcess(&CONodeGNR.Tmr);
-
     //check if the system flag was set to start process CANOPEN msgs.
     if(PWREN_GetSystemReadyFlag(VCInterfaceHandle.pPowertrain->pPWREN) == true)
     {
