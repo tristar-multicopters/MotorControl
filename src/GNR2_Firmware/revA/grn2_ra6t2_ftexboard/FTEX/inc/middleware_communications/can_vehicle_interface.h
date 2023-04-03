@@ -20,7 +20,6 @@
 // =========================== Defines ==================================== //
 /* Defines */
 #define MAX_POWER              1200                        // Max power value in W
-#define WHEEL_DIAMETER_DEFAULT 28.0                        // Hardcoded value for Grizzly wheels diameter in inches
 #define SERIAL_NUMBER          "1234FTEX"                  // Dummy serial number
 #define HW_VERSION             0x0104U                     // Dummy hardware version - v1.4
 #define FW_VERSION             0x0405U                     // Dummy firmware version - v1.5
@@ -45,17 +44,7 @@
 #define MAX_DATA_IN_INIT     4      /**< Maxime data to send in a reply init                */
 #define MAX_DATA_IN_SEG      8      /**< Maxime data to send in a reply segment             */
 
-
-
-
 // ==================== Public function prototypes ========================= //
-/**
-  @brief  Get Speed function
-  @param  VCI_Handle_t handle
-  @return Speed in uint8_t format
-*/
-uint8_t CanVehiInterface_GetVehicleSpeed (VCI_Handle_t * pHandle);
-
 /**
   @brief  Get Power function
   @param  VCI_Handle_t handle
@@ -127,10 +116,9 @@ uint16_t CanVehiInterface_GetVehicleHwVersion(void);
 */
 uint8_t CanVehiInterface_GetVehicleSerialNumber(void);
 
-
 /**
   @brief  Get the wheel diamater used to calculate speed
-  @param  None
+  @param  void
   @return Diameter in inches
 */
 uint8_t CanVehiInterface_GetWheelDiameter(void);
@@ -141,6 +129,13 @@ uint8_t CanVehiInterface_GetWheelDiameter(void);
   @return None
 */
 void CanVehiInterface_UpdateWheelDiameter(uint8_t aValue);
+
+/**
+  @brief  Get Speed function
+  @param  VCI_Handle_t handle
+  @return Speed in uint8_t format
+*/
+uint16_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle);
 
 /**
   @brief  Get the current state of the front light 
@@ -169,6 +164,5 @@ uint8_t CanVehiInterface_GetRearLightState(VCI_Handle_t * pHandle);
   @return void
 */
 void CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aState);
-
 
 #endif /* __CAN_IOT_COMM_H */

@@ -1,9 +1,8 @@
 /**
   * @file    brake.c
-  * @author  Sami Bouzid, FTEX
   * @brief   This module handles brake sensor management
   *
-*/
+  */
 
 #include "brake.h"
 #include "ASSERT_FTEX.h"

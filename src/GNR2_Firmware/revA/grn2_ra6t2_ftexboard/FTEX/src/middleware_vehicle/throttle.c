@@ -28,14 +28,17 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     
     SignalFiltering_Init(&pHandle->ThrottleFilter);
     SignalFiltering_ConfigureButterworthFOLP(&pHandle->ThrottleFilter,
-                                                pHandle->hParameters.fFilterAlpha,
-                                                    pHandle->hParameters.fFilterBeta);
+                                              pHandle->hParameters.fFilterAlpha,
+                                              pHandle->hParameters.fFilterBeta);
     
     pHandle->SafeStart = false;
+    Foldback_Init(pHandle->SpeedFoldbackVehicleThrottle);
     
-	/* Need to be register with RegularConvManager */
-	pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
-	Throttle_Clear(pHandle);
+    Throttle_SetMaxSpeed(pHandle,pHandle->hParameters.DefaultMaxThrottleSpeedRPM);
+    
+    /* Need to be register with RegularConvManager */
+    pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
+    Throttle_Clear(pHandle);
 }
 
 /**
@@ -44,21 +47,22 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
 void Throttle_Clear(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-	pHandle->hAvADCValue = 0u;
+    pHandle->hAvADCValue = 0u;
     pHandle->hAvThrottleValue = 0u;
 }
 
 static uint16_t SafeStartCounter = 0;
 /**
     Performs the throttle sensing average computation after an ADC conversion.
-	Compute torque value in u16 (0 at minimum throttle and 65535 when max throttle).
-	Need to be called periodically.
+    Compute torque value in u16 (0 at minimum throttle and 65535 when max throttle).
+    Need to be called periodically.
   */
 void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-	uint32_t wAux;
+    uint32_t wAux;
     uint16_t hAux;
+
 	static bool ThrottleStuck = false;
     
     if(pHandle->DisableThrottleOutput) // Test if we want to disable the throttle on PAS 0
@@ -125,7 +129,6 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
     
 }
 
-
 /**
    Returns latest averaged throttle measured expressed in u16
   */
@@ -141,29 +144,29 @@ uint16_t Throttle_GetAvThrottleValue(ThrottleHandle_t * pHandle)
 int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-	int32_t wAux;
-	
-	/*
-		Compute torque value (between -32768 and 32767)
-	*/
-	wAux = pHandle->hAvThrottleValue - pHandle->hParameters.hOffsetTorque;
-	if (wAux < 0)
-    {
-		wAux = 0;
-	}
+    int32_t wAux;
     
-	wAux = (int32_t)(pHandle->hParameters.bSlopeTorque * wAux);
-	wAux /= pHandle->hParameters.bDivisorTorque;
-	
+    /*
+        Compute torque value (between -32768 and 32767)
+    */
+    wAux = pHandle->hAvThrottleValue - pHandle->hParameters.hOffsetTorque;
+    if (wAux < 0)
+    {
+        wAux = 0;
+    }
+    
+    wAux = (int32_t)(pHandle->hParameters.bSlopeTorque * wAux);
+    wAux /= pHandle->hParameters.bDivisorTorque;
+    
     if (wAux > INT16_MAX)
     {    
-		wAux = INT16_MAX;
+        wAux = INT16_MAX;
     }    
-	else if (wAux < INT16_MIN)
+    else if (wAux < INT16_MIN)
     {    
-		wAux = INT16_MIN;
-	}		
-	return (int16_t) wAux;
+        wAux = INT16_MIN;
+    }        
+    return (int16_t) wAux;
 }
 
 /**
@@ -172,28 +175,29 @@ int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
 int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-	// todo: implementation
-	
-	// return dummy value so compiler doesn't complain
-	return -1;
+    // todo: implementation
+    
+    // return dummy value so compiler doesn't complain
+    return -1;
 }
 
 /**
-	 Return true if throttled is pressed (threshold is passed) 
+     Return true if throttled is pressed (threshold is passed) 
   */
 bool Throttle_IsThrottleDetected (ThrottleHandle_t * pHandle) 
 {
-  ASSERT(pHandle != NULL);
-	uint16_t hThrottle;
-	hThrottle = Throttle_GetAvThrottleValue(pHandle);
-	if (hThrottle <= pHandle->hParameters.hDetectionThreshold)
-	{    
-		return false;
-	}    
-	else
-	{        
-		return true;
-	}   
+    ASSERT(pHandle != NULL);
+    uint16_t hThrottle;
+
+    hThrottle = Throttle_GetAvThrottleValue(pHandle);
+    if (hThrottle <= pHandle->hParameters.hDetectionThreshold)
+    {    
+        return false;
+    }    
+    else
+    {        
+        return true;
+    }   
 }
 
 /**
@@ -204,7 +208,6 @@ void Throttle_DisableThrottleOutput(ThrottleHandle_t * pHandle)
     ASSERT(pHandle != NULL);
     
     pHandle->DisableThrottleOutput = true;
-
 }
 
 /**
@@ -215,5 +218,28 @@ void Throttle_EnableThrottleOutput(ThrottleHandle_t * pHandle)
     ASSERT(pHandle != NULL);
     
     pHandle->DisableThrottleOutput = false;
+}
 
+/**
+    Set the max speed in RPM that you can reach with throttle 
+  */
+void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM)
+{     
+    ASSERT(pHandle != NULL);
+     
+    ASSERT(pHandle->hParameters.ThrottleDecreasingRange > 0);
+    
+    Foldback_SetDecreasingRange (pHandle->SpeedFoldbackVehicleThrottle,pHandle->hParameters.ThrottleDecreasingRange);
+
+    if (aMaxSpeedRPM < pHandle->hParameters.MaxSafeThrottleSpeedRPM)
+    {
+        ASSERT(((int16_t) aMaxSpeedRPM) > 0); // Make sure the cast doesn't result in a negative value
+        
+        Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackVehicleThrottle, (int16_t) aMaxSpeedRPM); // 240 == 32 km/h  74 = 10 km/h   
+    }
+    else
+    {
+        Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackVehicleThrottle, (int16_t) pHandle->hParameters.MaxSafeThrottleSpeedRPM);
+    }        
+     
 }

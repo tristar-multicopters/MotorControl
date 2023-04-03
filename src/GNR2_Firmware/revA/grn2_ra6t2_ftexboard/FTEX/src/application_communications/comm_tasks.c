@@ -9,7 +9,7 @@
 
 #include "comm_config.h"
 #include "vc_config.h"
-
+#include "Utilities.h"
 #include "gnr_main.h"
 
 // CANOpen includes
@@ -74,6 +74,11 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint16_t hErrorState[2];
     uint16_t hFwVersion[2];
     
+    ASSERT(pVCI != NULL);
+    ASSERT(pVCI->pPowertrain != NULL);
+    ASSERT(pVCI->pPowertrain->pPAS != NULL);
+    ASSERT(pVCI->pPowertrain->pPAS->pWSS != NULL);
+    
     hSpeed[VEHICLE_PARAM]  = (uint8_t)  CanVehiInterface_GetVehicleSpeed(pVCI);
     hPWR[VEHICLE_PARAM]    = (uint16_t) CanVehiInterface_GetVehiclePower(pVCI);
     bSOC[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehicleSOC(pVCI);
@@ -96,19 +101,20 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint32_t fSrialNbHigh   = 0U;
     
     /***************Throttle/Pedal Assist variables******************************/
-    uint8_t pasAlgorithm = UserConfigTask_GetPasAlgorithm();
-    uint8_t maxPAS = UserConfigTask_GetNumberPasLevels();
-    uint8_t pasMaxPower = UserConfigTask_GetPasMaxPower();
-    uint8_t torqueMinimumThresholdStartup = UserConfigTask_GetTorqueMinimumThresholdStartup();    
+    uint8_t pasAlgorithm                       = UserConfigTask_GetPasAlgorithm();
+    uint8_t maxPAS                             = UserConfigTask_GetNumberPasLevels();
+    uint8_t pasMaxPower                        = UserConfigTask_GetPasMaxPower();
+    uint8_t torqueMinimumThresholdStartup      = UserConfigTask_GetTorqueMinimumThresholdStartup();    
     uint8_t startupTorqueMinimumThresholdSpeed = UserConfigTask_GetStartupOffsetMinimumThresholdSpeed();
-    uint8_t torqueMinimumThreshold = UserConfigTask_GetTorqueMinimumThreshold();
-    uint8_t torqueSensorMultiplier = UserConfigTask_GetTorqueSensorMultiplier();
-    uint8_t torqueMaxSpeed = UserConfigTask_GetTorqueMaxSpeed();
-    uint8_t cadenceHybridLeveSpeed[10] = {UserConfigTask_GetCadenceHybridLeveSpeed(PAS_0),UserConfigTask_GetCadenceHybridLeveSpeed(PAS_1),
-                                          UserConfigTask_GetCadenceHybridLeveSpeed(PAS_2),UserConfigTask_GetCadenceHybridLeveSpeed(PAS_3),
-                                          UserConfigTask_GetCadenceHybridLeveSpeed(PAS_4),UserConfigTask_GetCadenceHybridLeveSpeed(PAS_5),
-                                          UserConfigTask_GetCadenceHybridLeveSpeed(PAS_6),UserConfigTask_GetCadenceHybridLeveSpeed(PAS_7),
-                                          UserConfigTask_GetCadenceHybridLeveSpeed(PAS_8),UserConfigTask_GetCadenceHybridLeveSpeed(PAS_9)};
+    uint8_t torqueMinimumThreshold             = UserConfigTask_GetTorqueMinimumThreshold();
+    uint8_t torqueSensorMultiplier             = UserConfigTask_GetTorqueSensorMultiplier();
+    uint8_t torqueMaxSpeed                     = UserConfigTask_GetTorqueMaxSpeed();
+    
+    uint8_t cadenceHybridLeveSpeed[10] = {UserConfigTask_GetCadenceHybridLevelSpeed(PAS_0),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_1),
+                                          UserConfigTask_GetCadenceHybridLevelSpeed(PAS_2),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_3),
+                                          UserConfigTask_GetCadenceHybridLevelSpeed(PAS_4),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_5),
+                                          UserConfigTask_GetCadenceHybridLevelSpeed(PAS_6),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_7),
+                                          UserConfigTask_GetCadenceHybridLevelSpeed(PAS_8),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_9)};
     uint8_t torqueLevelPower[10] =       {UserConfigTask_GetTorqueLevelPower(PAS_0),UserConfigTask_GetTorqueLevelPower(PAS_1),
                                           UserConfigTask_GetTorqueLevelPower(PAS_2),UserConfigTask_GetTorqueLevelPower(PAS_3),
                                           UserConfigTask_GetTorqueLevelPower(PAS_4),UserConfigTask_GetTorqueLevelPower(PAS_5),

@@ -125,11 +125,11 @@ int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariab
                 // Foldback instance is used to calculate dynamic thresholds.
                 hOutputVariable = Foldback_GetMaxOutput(pHandle, hValue); 
             }
-        }
-        else
-        {
-            hOutputVariable = hInputVariable;
-        }
+    }
+    else
+    {
+        hOutputVariable = hInputVariable;
+    }
 	return hOutputVariable;
 }
 

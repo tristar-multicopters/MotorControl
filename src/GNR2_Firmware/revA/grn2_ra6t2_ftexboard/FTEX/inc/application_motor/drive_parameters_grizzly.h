@@ -16,7 +16,7 @@
 
 /*** Speed measurement settings ***/		/* motorRPM=speed(km/h)*GR*100000/(R*pi*2.54*60)   where R=28 inch and GR=5
 																				   As an example 42Km was 1600 */
-#define MAX_APPLICATION_SPEED_RPM       1325  /*!< Max speed for the current application in mechanical rpm */
+#define MAX_APPLICATION_SPEED_RPM       2000  // 32 km/h with load = 1325  /*!< Max speed for the current application in mechanical rpm */
 #define MIN_APPLICATION_SPEED_RPM       0     /*!< Min speed for the current application in mechanical rpm */
 #define MEAS_ERRORS_BEFORE_FAULTS       6     /*!< Number of speed
                                                              measurement errors before
@@ -136,7 +136,7 @@
 
 /* Foldbacks */
 #define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM   /* Max speed value (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
-#define FOLDBACK_SPEED_INTERVAL         500                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
+#define FOLDBACK_SPEED_INTERVAL         0 //500 Removed to let VC control top speed /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMPERATURE_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
 #define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMPERATURE_HYSTERESIS_C                         /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */

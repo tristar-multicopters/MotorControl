@@ -9,14 +9,12 @@
 
 #include "can_vehicle_interface.h"
 #include "ASSERT_FTEX.h"
+#include "Utilities.h"
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpragma-pack"
 #include "user_config_task.h"
 #pragma clang diagnostic pop
-
- 
-uint8_t wheel_diameter;
 
 // ==================== Public function prototypes ======================== //
 
@@ -36,33 +34,6 @@ void CanVehiInterface_sendLongMsgs(uint8_t * message, uint8_t * dataToSend, uint
     }
 }
 // ==================== Public function prototypes ======================== //
-
-/**
- *  Get vehicle Speed
- */
-uint8_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle)
-{
-    ASSERT(pHandle!= NULL);
-    uint8_t hmsgToSend;
-    float rpm_to_km;
-    
-    if(wheel_diameter <= 0)
-    {
-       wheel_diameter = WHEEL_DIAMETER_DEFAULT; 
-    }  
-        
-    rpm_to_km = (float) (FTEX_PI * wheel_diameter * 60.0) / (float) FTEX_KM_TO_INCH; // Formula for converting RPM to km/h
-    
-    // Get the RPM wheel from the wheel speed sensor module
-    int16_t RpmSpeed = (int16_t)WheelSpdSensor_GetSpeedRPM(pHandle->pPowertrain->pPAS->pWSS);
-    // Convert the measurement in km/h;
-    RpmSpeed = (uint8_t)((float)RpmSpeed*rpm_to_km); 
-
-    // Load data buffer
-    hmsgToSend = (uint8_t)RpmSpeed;
-
-    return hmsgToSend;
-}
 
 /**
  *  Get vehicle power
@@ -215,22 +186,42 @@ uint8_t CanVehiInterface_GetVehicleSerialNumber(void)
     return msgToSend;
 }
 
-
 /**
  *  Get the wheel diamater used to calculate speed
  */
 uint8_t CanVehiInterface_GetWheelDiameter(void)
 {
-   return wheel_diameter;
+   return Wheel_GetWheelDiameter();
 }
 
 /**
- *  Update wheel diamater used to calculate speed
- */
+    Update wheel diameter used to calculate speed
+*/
 void CanVehiInterface_UpdateWheelDiameter(uint8_t aDiameterInInches)
 {
-    wheel_diameter = aDiameterInInches;     
+    if (10 < aDiameterInInches && aDiameterInInches < 40) // Temporary safety net until CAN screen integration is complete
+    {
+        Wheel_SetWheelDiameter(aDiameterInInches);
+    }        
 }
+
+/**
+ *  Get vehicle Speed
+ */
+uint16_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pPowertrain != NULL);
+    ASSERT(pHandle->pPowertrain->pPAS != NULL);
+    ASSERT(pHandle->pPowertrain->pPAS->pWSS != NULL);
+    
+    uint16_t hmsgToSend;
+
+    hmsgToSend = Wheel_GetVehicleSpeedFromWSS(pHandle->pPowertrain->pPAS->pWSS);
+
+    return hmsgToSend;
+}
+
 
 /**
   Get the current state of the front light 

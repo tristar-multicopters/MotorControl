@@ -81,7 +81,7 @@ uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle)
 /**
     Wheel Speed Sensor retrun RPM in tr/min
 */
-int32_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle)
+uint16_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle)
 {
     uint32_t wSpeedFreq = WheelSpdSensor_GetSpeedFreq(pHandle);
     
@@ -94,17 +94,17 @@ int32_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle)
         pHandle->wWheelSpeedRpm = (((wSpeedFreq / pHandle->bPulsePerRotation)* RPMCOEFF) / PRECISIONCOEFF) * pHandle->bSpeedslowDetectCorrection;
     }
 	
-	return pHandle->wWheelSpeedRpm;
+	return (uint16_t) pHandle->wWheelSpeedRpm;
 }
 
 /**
     Wheel Speed Sensor Detection
 */
-void WheelSpdSensor_UpdateWSSDetection (WheelSpeedSensorHandle_t * pHandle) 
+void WheelSpdSensor_UpdateWSSDetection(WheelSpeedSensorHandle_t * pHandle) 
 {
 	int32_t	wWheelSpeed;
 	
-	wWheelSpeed = WheelSpdSensor_GetSpeedRPM (pHandle);
+	wWheelSpeed = WheelSpdSensor_GetSpeedRPM(pHandle);
 
 	if (wWheelSpeed > 0)
 	{
@@ -114,7 +114,7 @@ void WheelSpdSensor_UpdateWSSDetection (WheelSpeedSensorHandle_t * pHandle)
 	{
 		pHandle->bSpeedDetected = false;
 	}
-}    
+}
 
 /**
     Wheel Speed Sensor Get Detection flag

@@ -17,6 +17,7 @@
 #include "vc_constants.h"
 #include "uCAL_UART.h"
 #include "gnr_main.h"
+#include "vc_constants.h"
 
 /**************************** DEFINITIONS AND STRUCTS ****************************/
 // Commands
@@ -82,7 +83,6 @@ typedef struct
     uint8_t RxCount;                       // Counts how many bytes we are holding
     uint8_t RxByte;                        // Used for byte by byte reception
     uint8_t OldPAS;                        // Used to keep track of the current PAs levle on the screen 
-    uint8_t WheelDiameter;                 // Used to hold the wheel diamater given by the screen
     
     bool CanChangePasFlag;                 // Used to tell the screen that PAS has bene changed from the Can interface
     bool APTChangePasFlag;                 // Used to tell the Can interfacne that the screen changed the PAS    

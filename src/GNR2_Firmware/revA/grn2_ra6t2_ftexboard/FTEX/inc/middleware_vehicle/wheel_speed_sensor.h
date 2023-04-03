@@ -70,7 +70,7 @@ uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle);
   @param  WheelSpeedSensorHandle_t handle
   @return Speed in rpm
 */
-int32_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle);
+uint16_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle);
 
 /**
   @brief  Function to check if speed is detected

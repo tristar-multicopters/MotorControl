@@ -549,7 +549,7 @@ void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value)
           range bewteen 0-40.
 
 */
-uint8_t UserConfigTask_GetCadenceHybridLeveSpeed(uint8_t pasLevel)
+uint8_t UserConfigTask_GetCadenceHybridLevelSpeed(uint8_t pasLevel)
 {
     //
     if (pasLevel < 10)

@@ -12,10 +12,26 @@
 #include "user_config_task.h"
 #pragma clang diagnostic pop
 
+// todo: move those hardcoded levels to a configurable field
+const int16_t PASTorqueRatiosInPercentage[6] = 
+{
+    0,  // PAS 0 has a ratio of 0%
+    60, // PAS 1 has a ratio of 60% (3/5)
+    67, // PAS 2 has a ratio of 67% (4/6)
+    80, // PAS 3 has a ratio of 80% (4/5)
+    88, // PAS 4 has a ratio of 88% (7/8)
+    100 // PAS 5 has a ratio of 100%
+};
+const int16_t walkModeTorqueRatio = 88; // walkmode has a ratio of 88%
+
 /* Variables ---------------------------------------------------- */
 
 uint8_t bPASCounterAct = 0; // Slow cadence PAS activation loop couter
+
 /* Functions ---------------------------------------------------- */
+
+// Internal utility function to verify that the assist level we got is within the supported range
+void AssertIsValidLevel(PasLevel_t level);
 
 /**
     * @brief  Module initialization, to be called once before using it
@@ -36,7 +52,7 @@ void PedalAssist_Init(PAS_Handle_t * pHandle)
     pHandle->bCurrentAssistLevel = PAS_LEVEL_1;
 	
     // Enable slow motor Start for Pedal Assist cadence base
-    Foldback_EnableSlowStart(pHandle->SpeedFoldbackStartupDualMotorPAS);
+    Foldback_EnableSlowStart(pHandle->SpeedFoldbackVehiclePAS);
     
 }
 
@@ -49,6 +65,7 @@ void PedalAssist_Init(PAS_Handle_t * pHandle)
 void PedalAssist_SetAssistLevel(PAS_Handle_t * pHandle, PasLevel_t bLevel)
 {
     ASSERT(pHandle != NULL);
+    AssertIsValidLevel(bLevel);
     pHandle->bCurrentAssistLevel = bLevel;
 }
 
@@ -87,58 +104,23 @@ int16_t PedalAssist_GetPASTorque(PAS_Handle_t * pHandle)
     */
 int16_t PedalAssist_GetPASTorqueSpeed(PAS_Handle_t * pHandle)
 {
-    int16_t hRefTorque;
-    PasLevel_t Got_Level;
-    // Get the used PAS level 
-    Got_Level = PedalAssist_GetAssistLevel(pHandle);  
-    switch(Got_Level)
+    int16_t PASRatio = 0;
+    PasLevel_t currentLevel = PedalAssist_GetAssistLevel(pHandle); 
+
+    // assert we're within range so that the array below doesn't go out of bounds
+    AssertIsValidLevel(currentLevel);
+    if (currentLevel == PAS_LEVEL_WALK)
     {
-        case PAS_LEVEL_0:
-            hRefTorque = 0;
-            break;      
-        case PAS_LEVEL_1:
-            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_3) / PAS_LEVEL_5; // ratio of 3/5 from the max torque based on the feeling of the user
-            break;
-        case PAS_LEVEL_2:
-            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_4) / PAS_LEVEL_6; // ratio of 4/6 from the max torque based on the feeling of the user 
-            break;
-        case PAS_LEVEL_3:
-            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_4) / PAS_LEVEL_5; // ratio of 4/5 from the max torque based on the feeling of the user
-            break;
-        case PAS_LEVEL_4:
-            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_7) / PAS_LEVEL_8; // ratio of 7/8 from the max torque based on the feeling of the user
-            break;
-        case PAS_LEVEL_5:
-            hRefTorque = (pHandle->sParameters.hPASMaxTorque); // ratio of 1 from the max torque based on the feeling of the user
-            break;
-        case PAS_LEVEL_WALK:
-            hRefTorque = (pHandle->sParameters.hPASMaxTorque * PAS_LEVEL_7) / PAS_LEVEL_8; // Initial ratio picked by the team, still not tested by a client
-            break;        
-        default:
-            hRefTorque = 0;
-            break;
-    }  
-    return hRefTorque;
-}
-
-/**
-    * @brief  Set Pedal Assist standard speed based on screen informations
-    * @param  Pedal Assist handle
-    * @retval pRefTorque in int16
-    */
-void PedalAssist_PASSetMaxSpeed_Standard(PAS_Handle_t * pHandle)
-{
-	uint16_t hMaxSpeedTemp;
-	
-    PasLevel_t Got_Level;
-    Got_Level = PedalAssist_GetAssistLevel(pHandle);
+        PASRatio = walkModeTorqueRatio;
+    }
+    else
+    {
+        // The pedal_assist module only supports 5 PAS levels at the moment
+        PASRatio = PASTorqueRatiosInPercentage[currentLevel];
+    }
     
-    // Calculate the maximum speed for control   
-	hMaxSpeedTemp = ((pHandle->sParameters.hMaxSpeedRatio * pHandle->sParameters.hPASMaxSpeed) / PAS_PERCENTAGE);
-	// Set the PAS Speed in a standard way without specific range of speed
-	Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t) (hMaxSpeedTemp / pHandle->sParameters.bMaxLevel) * Got_Level);
-	Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS, (int16_t) (hMaxSpeedTemp / pHandle->sParameters.bMaxLevel) * Got_Level);
-
+    // compute the torque using the ratio from the PAS level
+    return (pHandle->sParameters.hPASMaxTorque * PASRatio)/100;
 }
 
 /**
@@ -149,46 +131,29 @@ void PedalAssist_PASSetMaxSpeed_Standard(PAS_Handle_t * pHandle)
 void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
 {
     uint16_t hKmSpeedTemp;
-    PasLevel_t Got_Level;
-    Got_Level = PedalAssist_GetAssistLevel(pHandle);
+    PasLevel_t currentLevel = PedalAssist_GetAssistLevel(pHandle);
+    
+    // assert we're within range so that the code below doesn't go out of bounds
+    AssertIsValidLevel(currentLevel);
+    
     // Calculate the maximum speed for control 
     hKmSpeedTemp = ((pHandle->sParameters.hMaxSpeedRatio * pHandle->sParameters.hPASMaxSpeed) / PAS_PERCENTAGE) / pHandle->sParameters.hPASMaxKmSpeed;
-    // Set Speed limitation range for motor control 
-    switch(Got_Level)
+    
+    // Get the userconfig speed
+    uint8_t userConfigSpeed = 0;
+    if (currentLevel == PAS_LEVEL_WALK)
     {
-        case PAS_LEVEL_0:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_0))));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_0))));
-            break;      
-        case PAS_LEVEL_1:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_1))));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_1))));
-            break;
-        case PAS_LEVEL_2:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_2))));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_2))));
-            break;
-        case PAS_LEVEL_3:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_3))));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_3))));
-            break;
-        case PAS_LEVEL_4:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_4))));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_4))));
-            break;
-        case PAS_LEVEL_5:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_5))));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_5))));
-            break;
-        case PAS_LEVEL_WALK:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetWalkModeSpeed())));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetWalkModeSpeed())));
-            break;
-        default:
-            Foldback_SetDecreasingRange (pHandle->SpeedFoldbackStartupDualMotorPAS, (uint16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_0))));
-            Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackStartupDualMotorPAS,(int16_t)(round (hKmSpeedTemp * UserConfigTask_GetCadenceHybridLeveSpeed(PAS_0))));
-            break;
+        userConfigSpeed = UserConfigTask_GetWalkModeSpeed();
     }
+    else
+    {
+        userConfigSpeed = UserConfigTask_GetCadenceHybridLevelSpeed(currentLevel);
+    }
+    
+    // set the foldbacks
+    uint16_t speed = (uint16_t)(round (hKmSpeedTemp * userConfigSpeed));
+    Foldback_SetDecreasingRange(pHandle->SpeedFoldbackVehiclePAS, speed);
+    Foldback_SetDecreasingRangeEndValue(pHandle->SpeedFoldbackVehiclePAS,(int16_t)(speed));
 }
 
 /**
@@ -199,71 +164,28 @@ void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
 int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
 {
     int16_t hRefTorqueS, hReadTS, hMaxTorq_Temp;
-    PasLevel_t Got_Level;
     /* Read the Pedal torque sensor */
     hReadTS = PedalTorqSensor_ToMotorTorque(pHandle->pPTS);
     /* Got the PAS from the screen */
-    Got_Level = PedalAssist_GetAssistLevel(pHandle);
-    /* Add Level cases for a better user feeling */
-    switch(Got_Level)
+    PasLevel_t currentLevel = PedalAssist_GetAssistLevel(pHandle);
+    
+    AssertIsValidLevel(currentLevel);
+    
+    if (currentLevel == PAS_LEVEL_WALK || currentLevel == PAS_LEVEL_0)
     {
-        case PAS_LEVEL_0:
-            hRefTorqueS = 0;
-            break;
-        case PAS_LEVEL_1:
-            /* Convert the PAS torque sensing in motor torque */
-            hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_1) / pHandle->sParameters.bMaxLevel;
-            /* Safety for not exceeding the maximum torque value */
-            hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
-            if (hRefTorqueS > hMaxTorq_Temp)
-            {
-                hRefTorqueS = hMaxTorq_Temp;
-            }
-            break;
-        case PAS_LEVEL_2:
-            /* Convert the PAS torque sensing in motor torque */
-            hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_2) / pHandle->sParameters.bMaxLevel;
-            /* Safety for not exceeding the maximum torque value */
-            hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
-            if (hRefTorqueS > hMaxTorq_Temp)
-            {
-                hRefTorqueS = hMaxTorq_Temp;
-            }
-            break;
-        case PAS_LEVEL_3:
-            /* Convert the PAS torque sensing in motor torque */
-            hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_3) / pHandle->sParameters.bMaxLevel;
-            /* Safety for not exceeding the maximum torque value */
-            hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
-            if (hRefTorqueS > hMaxTorq_Temp)
-            {
-                hRefTorqueS = hMaxTorq_Temp;
-            }
-            break;
-        case PAS_LEVEL_4:
-            /* Convert the PAS torque sensing in motor torque */
-            hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_4) / pHandle->sParameters.bMaxLevel;
-            /* Safety for not exceeding the maximum torque value */
-            hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
-            if (hRefTorqueS > hMaxTorq_Temp)
-            {
-                hRefTorqueS = hMaxTorq_Temp;
-            }
-            break;		
-        case PAS_LEVEL_5:
-            /* Convert the PAS torque sensing in motor torque */
-            hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * PAS_LEVEL_5) / pHandle->sParameters.bMaxLevel;
-            /* Convert the PAS torque sensing in motor torque */
-            hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
-            if (hRefTorqueS > hMaxTorq_Temp)
-            {
-                hRefTorqueS = hMaxTorq_Temp;
-            }
-            break;
-        default:
-            hRefTorqueS = 0;
-            break;
+        return 0;
     }
+    
+    // Convert the PAS torque sensing in motor torque
+    hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * currentLevel) / pHandle->sParameters.bMaxLevel;
+    
+    // Safety for not exceeding the maximum torque value 
+    hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+    if (hRefTorqueS > hMaxTorq_Temp)
+    {
+        hRefTorqueS = hMaxTorq_Temp;
+    }
+
     return hRefTorqueS;
 }
 
@@ -277,12 +199,12 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     uint32_t  wSpeedt;
     uint16_t  hTorqueSens;
     uint16_t  hOffsetTemp;
-    uint16_t  WheelRPM;
+    uint16_t  hWheelRPM;
     
-    WheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
+    hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
     /* Calculate the offset based on ration percentage */
     
-    if(WheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeed) // If going at low speed use the startup offset
+    if(hWheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeed) // If going at low speed use the startup offset
     {
         hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
     }
@@ -297,10 +219,14 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
 
     /* Torque Sensor use and the offset was detected */
     if ((pHandle->bCurrentPasAlgorithm == TorqueSensorUse) && (hTorqueSens > hOffsetTemp))
+    {
         pHandle->bPASDetected = true;
+    }
     /* Hybrid Algorithm use and the offset was detected */
     else if ((pHandle->bCurrentPasAlgorithm == HybridSensorUse) && (hTorqueSens > hOffsetTemp))
+    {
 		pHandle->bPASDetected = true;
+    }
     /* Cadence Sensor use */
     else if (wSpeedt > 0)
     {
@@ -388,4 +314,23 @@ void PedalAssist_ResetParameters (PAS_Handle_t * pHandle)
 {
     PedalTorqSensor_ResetAvValue(pHandle->pPTS);   
     PedalSpdSensor_ResetValue(pHandle->pPSS);   
+}
+
+// Internal utility function to verify that the assist level we got is within the supported range
+void AssertIsValidLevel(PasLevel_t level)
+{    
+    if (level == PAS_LEVEL_WALK)
+    {
+        // valid
+        return;
+    }
+    
+    if (level >= PAS_LEVEL_0 && level <= PAS_LEVEL_5)
+    {
+        // valid
+        return;
+    }
+    
+    // invalid
+    ASSERT(false);
 }

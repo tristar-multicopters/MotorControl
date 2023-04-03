@@ -15,7 +15,7 @@
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
 /*** Speed measurement settings ***/		// motorRPM=speed(km/h)*GR*100000/(R*pi*2.54*60)   where R=25 inch and GR=7.86
-#define MAX_APPLICATION_SPEED_RPM       2600   /*!< Max speed for the current application in mechanical rpm */
+#define MAX_APPLICATION_SPEED_RPM       2750 //2600   /*!< Max speed for the current application in mechanical rpm */
                                                /* Old Example 2750 for 38Km/h */
                                                
                                                
@@ -137,7 +137,7 @@
   
 /* Foldbacks */
 #define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM   /* Max speed value (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
-#define FOLDBACK_SPEED_INTERVAL         750                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
+#define FOLDBACK_SPEED_INTERVAL         0 //750 Removed to let VC control top speed  /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMPERATURE_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
 #define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMPERATURE_HYSTERESIS_C  /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */

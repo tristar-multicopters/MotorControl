@@ -10,6 +10,11 @@
 #include "lcd_apt_comm.h"
 #include "ASSERT_FTEX.h"
 
+#include <stdint.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h> 
+
 
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
@@ -166,6 +171,7 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
  *  This is executed in a comm task that gets unblocked when a complete frame is received.
  *
  */
+    uint16_t  SpeedLimit  = 0;
 void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 {
     APT_frame_t replyFrame = {0};
@@ -175,6 +181,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
     uint16_t Merge       = 0;
     uint8_t  PassLvl     = 0;
     uint8_t  LightStatus = 0;
+  
      
     
     //Verification of the checksum
@@ -218,8 +225,13 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
             pHandle->APTChangePasFlag = true;
         }                      
 
+        //Reading the Speed limit
+        SpeedLimit = pHandle->rx_frame.Buffer[SPEED];        
         
-        //Reading the Speed   limit  TBA
+        SpeedLimit = Wheel_GetWheelRpmFromSpeed(SpeedLimit);
+        
+        Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit);
+        
         
         #ifdef SCREENPOWERCONTROL
         
@@ -230,10 +242,10 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);
         
         #endif
-         
-        //Reading and updating the Wheel diameter 
-        pHandle->WheelDiameter = LCD_APT_CalculateWheelDiameter(pHandle->rx_frame.Buffer[WHEELD]);
-        CanVehiInterface_UpdateWheelDiameter(pHandle->WheelDiameter);
+
+        //Reading and updating the wheel diameter 
+        uint8_t diameterFromScreen = LCD_APT_CalculateWheelDiameter(pHandle->rx_frame.Buffer[WHEELD]);
+        Wheel_SetWheelDiameter(diameterFromScreen);
     
         //For APT protocol, LSB is sent first for multi-bytes values
         replyFrame.Size = 13;
@@ -256,7 +268,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
                   
         toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
          
-        if(toSend != 0) //verify toSend value to avoid a division by zero.
+        if(toSend != 0) //verify toSend value to avoid a divisiyeon by zero.
         {
             toSend = 500000/(toSend/60); // Descaling here with the 500000 to return to original unit            
         }
@@ -466,27 +478,25 @@ PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfL
    return PAS_Out;
 }
 
-/** Function used to translate the FTEX standard PAS level to the APT  
- *  screen standard.(is not the same as when we receive a PAS level from the APT screen)
- */
+// get the value we got from the APT screen for the wheel size and convert to wheel diameter if need be
 uint8_t LCD_APT_CalculateWheelDiameter(uint16_t aValue)
 {
-   uint8_t WheelDiameter; 
+   uint8_t wheelDiameter; 
     
    if(aValue <= APT_WHEEL_DIAM_INCHES_MAX && aValue > 0)
    {
-       WheelDiameter = (uint8_t) aValue;
+       wheelDiameter = (uint8_t) aValue;
    } 
    else if (aValue > APT_WHEEL_CIRCUMFERENCE_MIN)
    {
-       WheelDiameter = (uint8_t) round(((float) (aValue/FTEX_PI)/ (float) FTEX_INCH_TO_CM)); // Convert from circumference in cm to diamater in inches     
+       wheelDiameter = (uint8_t) round(((float) (aValue/FTEX_PI)/ (float) FTEX_INCH_TO_CM)); // Convert from circumference in cm to diamater in inches     
    }
    else
    {
-       WheelDiameter = WHEEL_DIAMETER_DEFAULT;   
+       wheelDiameter = WHEEL_DIAMETER_DEFAULT;   
    }   
 
-   return WheelDiameter;
+   return wheelDiameter;
 }
 
 /**

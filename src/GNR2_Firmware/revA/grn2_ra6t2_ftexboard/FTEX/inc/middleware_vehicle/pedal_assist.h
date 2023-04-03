@@ -82,7 +82,7 @@ typedef struct
     WheelSpeedSensorHandle_t * pWSS;              /* Pointer to Wheel Speed Sensor handle */
     
     Foldback_Handle_t DCVoltageFoldback;                /* Foldback handle using DCbus voltage */
-    Foldback_Handle_t *SpeedFoldbackStartupDualMotorPAS;    /* Foldback handle using speed for dual motor control */
+    Foldback_Handle_t *SpeedFoldbackVehiclePAS;    /* Foldback handle using speed for dual motor control */
     
     PAS_Parameters_t sParameters;                /* Structure for powertrain parameters */
     
