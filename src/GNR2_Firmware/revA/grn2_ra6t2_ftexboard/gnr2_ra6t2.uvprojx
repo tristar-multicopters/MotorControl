@@ -429,21 +429,6 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
             </File>
-            <File>
-              <FileName>Utilities.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\Utilities.h</FilePath>
-            </File>
-            <File>
-              <FileName>Utilities.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\Utilities.c</FilePath>
-            </File>
-            <File>
-              <FileName>watchdog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1892,7 +1877,7 @@
         <TargetCommonOption>
           <Device>R7FA6T2BD3CFP</Device>
           <Vendor>Renesas</Vendor>
-          <PackID>Renesas.RA_DFP.3.8.0</PackID>
+          <PackID>Renesas.RA_DFP.3.7.0</PackID>
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
           <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -2304,21 +2289,6 @@
               <FileName>vc_constants.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
-              <FileName>Utilities.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\Utilities.h</FilePath>
-            </File>
-            <File>
-              <FileName>Utilities.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\Utilities.c</FilePath>
-            </File>
-            <File>
-              <FileName>watchdog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3735,7 +3705,7 @@
         <TargetCommonOption>
           <Device>R7FA6T2BD3CFP</Device>
           <Vendor>Renesas</Vendor>
-          <PackID>Renesas.RA_DFP.3.8.0</PackID>
+          <PackID>Renesas.RA_DFP.3.7.0</PackID>
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
           <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -4147,21 +4117,6 @@
               <FileName>vc_constants.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
-              <FileName>Utilities.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\Utilities.h</FilePath>
-            </File>
-            <File>
-              <FileName>Utilities.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\Utilities.c</FilePath>
-            </File>
-            <File>
-              <FileName>watchdog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
             </File>
           </Files>
         </Group>
