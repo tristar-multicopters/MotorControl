@@ -5667,7 +5667,7 @@
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
           <targetInfo excluded="1" name="APP_UPLOAD (JUST UPLOAD)" versionMatchMode=""/>
@@ -5676,7 +5676,7 @@
       <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\system_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
           <targetInfo excluded="1" name="APP_UPLOAD (JUST UPLOAD)" versionMatchMode=""/>
