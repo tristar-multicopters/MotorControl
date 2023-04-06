@@ -12,31 +12,39 @@
 #ifndef __PEDAL_TORQUE_SENSOR_H
 #define __PEDAL_TORQUE_SENSOR_H
 
+// ============================ Includes ================================= //
 
 #include "regular_conversion_manager.h"
+#include "vc_errors_management.h"
 #include "signal_filtering.h"
+#include "delay.h"
 
+// ============================= Defines ================================= //
+
+#define SCOUNT           (uint16_t)1000 /* Number of read cycle for PTS check stuck */
+#define PTS_DETECT_THSLD (uint16_t)1000 /* Minimum Pedal torque sensior at which the PTS is detected*/
+// ======================= Public strutures ============================= //
 
 typedef struct
 {          
-	float fFilterAlpha;          // Alpha coefficient for low pass first order butterworth filter
-	float fFilterBeta;           // Beta coefficient for low pass first order butterworth filter
+	float fFilterAlpha;     /* Alpha coefficient for low pass first order butterworth filter */
+	float fFilterBeta;      /* Beta coefficient for low pass first order butterworth filter */
     
-	uint16_t    hOffsetPTS;  /* Offset of the torque sensor signal when at lowest position */
-	uint8_t     bSlopePTS;   /* Gain factor of ADC value vs torque sensor */
-	uint8_t     bDivisorPTS; /* Scaling factor of ADC value vs torque sensor */
+	uint16_t    hOffsetPTS;     /* Offset of the torque sensor signal when at lowest position */
+	uint8_t     bSlopePTS;      /* Gain factor of ADC value vs torque sensor */
+	uint8_t     bDivisorPTS;    /* Scaling factor of ADC value vs torque sensor */
     
-    uint16_t    hOffsetMTStartup;  /* Offset of torque sensor vs torque on Startup*/
-    uint16_t    hStartupOffsetMTSpeed; /* Speed under which the startup offset is used in rpm */
-	uint16_t    hOffsetMT;         /* Offset of torque sensor vs torque */
+    uint16_t    hOffsetMTStartup;       /* Offset of torque sensor vs torque on Startup*/
+    uint16_t    hStartupOffsetMTSpeed;  /* Speed under which the startup offset is used in rpm */
+    uint16_t    hOffsetMT;              /* Offset of torque sensor vs torque */
     
-	int8_t      bSlopeMT;   /* Gain factor of torque sensor vs torque */
-	uint8_t     bDivisorMT; /* Scaling factor of torque sensor vs torque */
+    int8_t      bSlopeMT;       /* Gain factor of torque sensor vs torque */
+    uint8_t     bDivisorMT;     /* Scaling factor of torque sensor vs torque */
 	
-	uint16_t    hMax;       /* torque signal when at maximum position */
-
-	uint16_t 	hLowPassFilterBW1;  /* used to configure the first coefficient software filter bandwidth */
-	uint16_t 	hLowPassFilterBW2;  /* used to configure the second coefficient software filter bandwidth */ 
+    uint16_t    hMax;           /* torque signal when at maximum position */
+    
+    uint16_t    hLowPassFilterBW1;      /* used to configure the first coefficient software filter bandwidth */
+    uint16_t    hLowPassFilterBW2;      /* used to configure the second coefficient software filter bandwidth */ 
 	
 } PTS_Param_t;
 
@@ -44,26 +52,32 @@ typedef struct
 typedef struct
 {
     RegConv_t   PTSRegConv;
-    uint8_t     bConvHandle;            /* handle to the regular conversion */
-
-    uint16_t    hInstTorque;            /* It contains latest available instantaneous torque
-										   This parameter is expressed in u16 */
-    uint16_t    hAvADCValue;            /* It contains latest available average ADC value */
-    uint16_t    hAvTorqueValue;         /* It contains latest available average torque */
     
-    SignalFilteringHandle_t TorqSensorFilter; // Filter structure used to filter out noise.
+    bool        bSafeStart;         /* Stuck Pedal Torque Sensor check on start */
+    
+    uint8_t     bConvHandle;        /* handle to the regular conversion */
+
+    uint16_t    hInstTorque;        /* It contains latest available instantaneous torque
+										This parameter is expressed in u16 */
+    uint16_t    hAvADCValue;        /* It contains latest available average ADC value */
+    uint16_t    hAvTorqueValue;     /* It contains latest available average torque */
+    
+    SignalFilteringHandle_t TorqSensorFilter; /* Filter structure used to filter out noise */
+    
+    Delay_Handle_t * pPTSstuckDelay;    /* Pedal torque sensor stuck delay used during init */
 
     PTS_Param_t hParameters;
     
 } PedalTorqSensorHandle_t;
+
 // ==================== Public function prototypes ========================= //
 
 /**
   @brief  Pedal torque Sensor conversion Initialization
-  @param  PedalTorqSensorHandle_t handle
+  @param  PedalTorqSensorHandle_t handle & Delay_Handle_t pPTSstuckDelay
   @return None
 */
-void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle);
+void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay);
 /**
   @brief  Pedal torque Sensor ADC hardware values clear
   @param  PedalTorqSensorHandle_t handle
@@ -98,5 +112,10 @@ void   PedalTorqSensor_ResetAvValue(PedalTorqSensorHandle_t * pHandle);
   @return torque reference value in int16 format
 */
 int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle);
+
+/**
+	 Return true if the Pedal Torque sensor is pressed (threshold is passed) 
+  */
+bool PedalTorqSensor_IsDetected (PedalTorqSensorHandle_t * pHandle);
 
 #endif

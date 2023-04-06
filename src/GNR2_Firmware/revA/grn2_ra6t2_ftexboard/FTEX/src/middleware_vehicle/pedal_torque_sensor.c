@@ -10,14 +10,33 @@
 #include "pedal_torque_sensor.h"
 #include "ASSERT_FTEX.h"
 
+
+// ============================= Variables ================================ //
+static uint16_t hSafeStartCounter = 0;
+static bool PTSsensorStuck = false;
+
 // ==================== Public function prototypes ======================== //
 
 
 /**
 	Pedal torque Sensor conversion Initialization
 */
-void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle)
+void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
 {	
+    
+    ASSERT(pHandle != NULL);
+   
+    pHandle->bSafeStart = false;
+        
+    pHandle->pPTSstuckDelay = pPTSstuckDelay;
+      
+    ASSERT(pHandle->pPTSstuckDelay->DelayInitialized); /* Delay sohuld be initialized in the task to specify at which 
+                                                          frequence the update delay function will be called */
+    
+    Delay_SetTime(pHandle->pPTSstuckDelay, 5, SEC); /* Set a 5 seconds delay to detect a stuck Pedal Torque Sensor */
+    Delay_Reset(pHandle->pPTSstuckDelay);           /* Make sure the counter is reset */
+    
+
     SignalFiltering_Init(&pHandle->TorqSensorFilter);
     SignalFiltering_ConfigureButterworthFOLP(&pHandle->TorqSensorFilter,
                                                 pHandle->hParameters.fFilterAlpha,
@@ -41,42 +60,81 @@ void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle)
 */
 void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
 {
-  uint32_t wAux;
-  uint16_t hAux;
-  uint16_t hBandwidth;
-    
-  /* Use the Read conversion Manager for ADC read*/
-  hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
-  pHandle->hInstTorque = hAux;
-  /* Select the filter coefficient based on start or stop condition*/
-  if (pHandle->hInstTorque > pHandle->hAvADCValue)
-    hBandwidth = pHandle->hParameters.hLowPassFilterBW1;
-  else
-    hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
-  /* Check if the variable not exceeding the limit*/
-  if ( hAux != 0xFFFFu )
-  {
-    wAux =  ( uint32_t )( hBandwidth - 1u ); // Affect Bandwidth to the output value
-    wAux *= ( uint32_t ) ( pHandle->hAvADCValue ); // Multiply the Avrg value with the coefficient
-    wAux += hAux;
-    wAux /= ( uint32_t )( hBandwidth );// Devide the output value  with the coefficient for a new avrg value
-    /* Affect the average value to the hAvADCValue */
-    pHandle->hAvADCValue = ( uint16_t ) wAux;
-  }
-  
-  /* Compute torque sensor value (between 0 and 65535) */
-  hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 
-					(pHandle->hAvADCValue - pHandle->hParameters.hOffsetPTS) : 0; //Substraction without overflow
-	
-  wAux = (uint32_t)(pHandle->hParameters.bSlopePTS * hAux);
-  wAux /= pHandle->hParameters.bDivisorPTS;
-  if (wAux > UINT16_MAX) 
-  {	
-		wAux = UINT16_MAX;
-  }
-  hAux = (uint16_t)wAux;
-	
-  pHandle->hAvTorqueValue = hAux;	
+    uint32_t wAux;
+    uint16_t hAux;
+    uint16_t hBandwidth;
+
+    /* Use the Read conversion Manager for ADC read*/
+    hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
+    pHandle->hInstTorque = hAux;
+    /* Select the filter coefficient based on start or stop condition*/
+    if (pHandle->hInstTorque > pHandle->hAvADCValue)
+        hBandwidth = pHandle->hParameters.hLowPassFilterBW1;
+    else
+        hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
+    /* Check if the variable not exceeding the limit*/
+    if ( hAux != 0xFFFFu )
+    {
+        wAux =  ( uint32_t )( hBandwidth - 1u ); // Affect Bandwidth to the output value
+        wAux *= ( uint32_t ) ( pHandle->hAvADCValue ); // Multiply the Avrg value with the coefficient
+        wAux += hAux;
+        wAux /= ( uint32_t )( hBandwidth );// Devide the output value  with the coefficient for a new avrg value
+        /* Affect the average value to the hAvADCValue */
+        pHandle->hAvADCValue = ( uint16_t ) wAux;
+    }
+
+    /* Compute torque sensor value (between 0 and 65535) */
+    hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 
+    (pHandle->hAvADCValue - pHandle->hParameters.hOffsetPTS) : 0; //Substraction without overflow
+
+    wAux = (uint32_t)(pHandle->hParameters.bSlopePTS * hAux);
+    wAux /= pHandle->hParameters.bDivisorPTS;
+    if (wAux > UINT16_MAX) 
+    {	
+        wAux = UINT16_MAX;
+    }
+        hAux = (uint16_t)wAux;
+
+    pHandle->hAvTorqueValue = hAux;	
+
+    /* Pedal Torque Sensor stuck on startup verification */
+    if(!pHandle->bSafeStart) 
+    {   
+        /* Pedal Torque Sensor is not Detected */
+        if(!PedalTorqSensor_IsDetected(pHandle)) 
+        { 
+            hSafeStartCounter ++; 
+            /* Launch Safe Start after a delay counter */
+            if(hSafeStartCounter >= SCOUNT) 
+            {   
+                pHandle->bSafeStart = true;
+                /* Clear this error in case it was falsly flagged as stuck (user kept pedal pushing at max on boot) */
+                VC_Errors_ClearError(THROTTLE_STUCK); // Temperory using Throttle stuck as error
+                Delay_Reset(pHandle->pPTSstuckDelay);
+            }
+            else
+            {
+                /* Push zero torque while no safe start */
+                pHandle->hAvTorqueValue = 0; 
+            }            
+        }
+        /* Pedal Torque Sensor is detected */
+        else     
+        {
+            hSafeStartCounter = 0;
+            pHandle->hAvTorqueValue = 0; 
+
+            if(!PTSsensorStuck)
+            {
+                /* Increase the counter for the error delay and check if the delay has been reached */
+                if(Delay_Update(pHandle->pPTSstuckDelay)) 
+                {
+                VC_Errors_RaiseError(THROTTLE_STUCK); // Temperory using Throttle stuck as error
+                PTSsensorStuck = true;
+                }
+            }
+        }    
+    }
 }
 
 
@@ -106,7 +164,7 @@ int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle)
 	/* Compute torque value (between -32768 and 32767) */
 	tAux = (int32_t)(pHandle->hAvTorqueValue - pHandle->hParameters.hOffsetMT);
 	if (tAux < 0)
-  {
+    {
 		tAux = 0;
 	}
   /* Use slope factor to translate the torque speed sensor to a motor torque */
@@ -115,12 +173,30 @@ int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle)
 	
 	/* Data limitation secure if there is any exceed */
 	if (tAux > INT16_MAX)
-  {
+    {
 		tAux = INT16_MAX;
-  }
-  else if (tAux < INT16_MIN)
+    }
+    else if (tAux < INT16_MIN)
 	{
         tAux = INT16_MIN;
 	}
 	return (int16_t)tAux;
+}
+
+/**
+    Return true if the Pedal Torque sensor is pressed (threshold is passed) 
+  */
+bool PedalTorqSensor_IsDetected (PedalTorqSensorHandle_t * pHandle) 
+{
+    ASSERT(pHandle != NULL);
+    uint16_t hTorqueSens;
+    hTorqueSens = PedalTorqSensor_GetAvValue(pHandle);
+    if (hTorqueSens <= PTS_DETECT_THSLD)
+    {    
+        return false;
+    }    
+    else
+	{        
+        return true;
+	}   
 }

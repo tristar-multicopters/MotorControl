@@ -35,16 +35,17 @@ void AssertIsValidLevel(PasLevel_t level);
 
 /**
     * @brief  Module initialization, to be called once before using it
-    * @param  Pedal Assist handle
+    * @param  Pedal Assist handle & Delay Handle
     * @retval None
     */
-void PedalAssist_Init(PAS_Handle_t * pHandle)
+void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
 {
     ASSERT(pHandle != NULL);
-    		
+
     PedalSpdSensor_Init(pHandle->pPSS);
-    PedalTorqSensor_Init(pHandle->pPTS);
     WheelSpdSensor_Init(pHandle->pWSS);
+    PedalTorqSensor_Init(pHandle->pPTS, pPTSstuckDelay);
+    
     
     //initalise pass to level 1. This is necessary to 
     //make the bike run if no screen is present

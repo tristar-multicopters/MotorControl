@@ -55,10 +55,10 @@ void VC_BootUp(void)
 {    
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     
-    Delay_Handle_t DelayArray[1];
+    Delay_Handle_t DelayArray[2];
     
     Delay_Init(&DelayArray[THROTTLE_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // Initialising the time base for the throttle stuck delay
-    
+    Delay_Init(&DelayArray[PTS_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // // Initialize the time base for the Pedal Torque sensor stuck delay
     
     /* Initialize vehicle controller state machine and powertrain components */
     VCSTM_Init(pVCI->pStateMachine);

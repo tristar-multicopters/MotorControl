@@ -1,26 +1,31 @@
 /**
   * @file    powertrain_management.c
-  * @author  Sami Bouzid, FTEX
-  * @author  Jorge Polo, FTEX
+  * @author  FTEX
   * @brief   This module handles management of the vehicle powertrain
   *
   */
 
+// ============================= Includes ================================ //
 #include "powertrain_management.h"
 #include "vc_tasks.h"
 #include "firmware_update.h"
 
-#define OVERCURRENT_COUNTER             0
-#define STARTUP_COUNTER                 1
-#define SPEEDFEEDBACK_COUNTER           2
-#define STUCK_REVERSE_COUNTER           3
+// ============================= Defines ================================ //
+#define OVERCURRENT_COUNTER         0
+#define STARTUP_COUNTER             1
+#define SPEEDFEEDBACK_COUNTER       2
+#define STUCK_REVERSE_COUNTER       3
 
-#define MAXCURRENT                 75 // Used for a generic conversion 
-                                      // from current ref to actual amps
+#define MAXCURRENT                  75 /* Used for a generic conversion 
+                                          from current ref to actual amps */
+// ============================= Variables ================================ //
+                                  
 bool isPWMCleared;
 
+static Delay_Handle_t ThrottleDelay; /* Delay for Throttle stuck check while initialization*/
+static Delay_Handle_t PTSensorDelay; /* Delay for Pedal Torque sensor stuck check while initialization*/
 
-/* Functions ---------------------------------------------------- */
+// ==================== Public function prototypes ======================== //
 
 /**
   * @brief  Module initialization, to be called once before using it
@@ -29,14 +34,12 @@ bool isPWMCleared;
   */
 void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1, SlaveMotorHandle_t * pSlaveM2, Delay_Handle_t pDelayArray[])
 {
-    ASSERT(pHandle != NULL);
+    ASSERT(pHandle != NULL);     
     
-    
-    static Delay_Handle_t ThrottleDelay; 
-    
+    // Initialize Delays for stuck conditions
     ThrottleDelay = pDelayArray[THROTTLE_DELAY];
-    
-    
+    PTSensorDelay = pDelayArray[PTS_DELAY];
+    // Initilaize peripherals
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
     Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
     BRK_Init(pHandle->pBrake);
@@ -45,7 +48,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     BatMonitor_Init(pHandle->pBatMonitorHandle, pHandle->pMDI->pMCI);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
-    PedalAssist_Init(pHandle->pPAS); 
+    PedalAssist_Init(pHandle->pPAS, &PTSensorDelay);    
     
     Wheel_Init(WHEEL_DIAMETER_DEFAULT);    // To update to a define
     

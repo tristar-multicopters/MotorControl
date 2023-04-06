@@ -54,6 +54,7 @@
 #define PTS_FILTER_BW1                    10        /* BW coefficient for pedal torque sensor avereging */
 #define PTS_FILTER_BW2                    25        /* BW coefficient for pedal torque sensor avereging */
 
+
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
 #define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION 1       /* Wheel speed sensor cycle number for one wheel rotation */

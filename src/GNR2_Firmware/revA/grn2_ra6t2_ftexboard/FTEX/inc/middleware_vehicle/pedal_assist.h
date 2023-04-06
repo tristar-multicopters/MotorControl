@@ -91,10 +91,10 @@ typedef struct
 // ======================== Public Functions ======================== //
 /**
     * @brief  Module initialization, to be called once before using it
-    * @param  Pedal Assist handle
+    * @param  Pedal Assist handle & Delay Handle
     * @retval None
     */
-void PedalAssist_Init(PAS_Handle_t * pHandle);
+void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay);
 
 /**
     * @brief  Set pedal assist level
