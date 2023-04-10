@@ -14,6 +14,11 @@
 #define REFRESH_DELAY_MS 500
 
 /**
+  * @brief  Function used to Initialize the Watchdog
+  */
+bool WatchdogInit(void);
+
+/**
  * @brief Manually refreshes the watchdog
  * @param void
  * @return void

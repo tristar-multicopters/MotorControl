@@ -11,7 +11,18 @@
 extern osThreadId_t Watchdog_handle;
 
 
-
+/**
+  * @brief  Function used to Initialize the Watchdog
+  */
+bool WatchdogInit(void)
+{
+    uint8_t uIsError = false;
+    uIsError |= R_WDT_Open(&g_wdt0_ctrl, &g_wdt0_cfg);
+    
+    ASSERT(FSP_SUCCESS == uIsError);
+    
+    return (bool) uIsError;
+}
 
 /**
   Task that periodically refreshs the watchdog

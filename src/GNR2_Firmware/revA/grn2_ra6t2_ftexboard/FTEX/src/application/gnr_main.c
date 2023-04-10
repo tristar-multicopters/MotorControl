@@ -10,6 +10,7 @@
 #include "comm_tasks.h"
 #include "vc_config.h"
 #include "firmware_update.h"
+#include "watchdog.h"
 
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
@@ -47,7 +48,6 @@ static bool UARTInit(void);
 static bool CANInit(void);
 static bool IIRFAInit(void);
 static bool SPIInit(void);
-static bool WatchdogInit(void);
 
 //****************** THREAD HANDLES ******************//
 
@@ -491,16 +491,5 @@ static bool SPIInit(void)
     return bIsError;
 }
 
-/**
-  * @brief  Function used to Initialize the Watchdog
-  */
-static bool WatchdogInit(void)
-{
-    uint8_t uIsError = false;
-    uIsError |= R_WDT_Open(&g_wdt0_ctrl, &g_wdt0_cfg);
-    
-    ASSERT(FSP_SUCCESS == uIsError);
-    
-    return (bool) uIsError;
-}
+
 
