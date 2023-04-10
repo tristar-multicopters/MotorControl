@@ -245,6 +245,33 @@ const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     3000,
 };
 
+#elif VEHICLE_SELECTION == VEHICLE_RBS_MB
+
+#define CURRENT_PID_LUT_SPEED_STEP                    700
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
+
+const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    272,
+    272,
+};
+
+const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+
+    20,   /* old PI = 50 parameter tunning for Vibration */ 
+    20,   /* old PI = 50 parameter tunning for Vibration */
+
+};
+
+const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    183,
+    183,	
+};
+
+const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    20,	 /* old PI = 50 parameter tunning for Vibration */
+    20,	 /* old PI = 50 parameter tunning for Vibration */
+};
+
 #endif
 
 LookupTableHandle_t LookupTableM1IqKp =

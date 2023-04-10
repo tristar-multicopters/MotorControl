@@ -50,6 +50,10 @@
 
 #include "vc_parameters_quietkat.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_RBS_MB
+
+#include "vc_parameters_rbs_mb.h"
+
 #endif
 
 #endif /*__VC_PARAMETERS_H*/

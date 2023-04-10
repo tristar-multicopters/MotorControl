@@ -47,6 +47,10 @@
 
 #include "pmsm_motor_parameters_quietkat.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_RBS_MB
+
+#include "pmsm_motor_parameters_rbs_mb.h"
+
 #endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/

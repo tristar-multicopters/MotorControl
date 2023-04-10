@@ -47,6 +47,11 @@
 #elif VEHICLE_SELECTION == VEHICLE_QUIETKAT
 
 #include "drive_parameters_quietkat.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_RBS_MB
+
+#include "drive_parameters_rbs_mb.h"
+
 #endif
 
 #endif /*__DRIVE_PARAMETERS_H*/
