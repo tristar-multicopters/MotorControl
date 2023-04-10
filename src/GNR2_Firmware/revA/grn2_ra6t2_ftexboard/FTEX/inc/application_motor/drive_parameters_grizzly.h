@@ -148,7 +148,7 @@
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
 
 /*Torque ramp settings */
-#define DEFAULT_TORQUE_SLOPE_UP        3500        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_UP        2700        /* Slope in cNm per second */
 #define DEFAULT_TORQUE_SLOPE_DOWN      5000        /* Slope in cNm per second */
 #define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */
