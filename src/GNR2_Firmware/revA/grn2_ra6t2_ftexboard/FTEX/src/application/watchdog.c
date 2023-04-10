@@ -25,9 +25,12 @@ __NO_RETURN void Watchdog (void * pvParameter)
     
     while(1)
     {
+        //Read the current count value of the WDT
         ASSERT(R_WDT_CounterGet(&g_wdt0_ctrl,&WatchdogCount) == FSP_SUCCESS);
 
-        
+        //used to refresh the wdt count. avoid wdt reset
+        //wdt was configured to reset in 2.2 seconds.
+        //must to be refreshed before 2.2 seconds.
         R_WDT_Refresh(&g_wdt0_ctrl);
         
         osDelay(REFRESH_DELAY_MS); // Delay between refresh of watchdog
