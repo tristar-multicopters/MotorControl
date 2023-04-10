@@ -176,6 +176,14 @@ void PWREN_TurnOffSystem(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
     //Declare a pointer to parent CANopen node
     static CO_CSDO *csdo = NULL;
     
+    //check if the display was turnned on again
+    //if yes, stop the turn off sequency reseting
+    //the device.
+    if (PWREN_IsPowerEnabled(pHandle)) 
+    { 
+        NVIC_SystemReset();   
+    }
+    
     //state machine used to control the power off sequency of the system(iot+slvave+master).
     switch(PWREN_PowerOffSequencyState)
     {
@@ -436,6 +444,21 @@ void PWREN_TurnOffSystem(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
         
             //turn off himself 
             PWREN_StopPower(pHandle);
+        
+            //rtos delay
+            //if after this delay the device still on
+            //power off sequency was not done correctly
+            //and the device must do a software reset.
+            //*sometimes this happene because the canstdby
+            //signal, controlled by the PWREN_StopPower() 
+            //function, turn off the power management modulo
+            //and microcontroller still on and the screen turn it
+            //on. THis situation let the device inside of the 
+            //power off task, blocking a lot of resources.
+            osDelay(POWEROFF_ERRORTIMEOUT_MS);
+        
+            //if device still on, reset the system.
+            NVIC_SystemReset();
         break;   
     }
 }

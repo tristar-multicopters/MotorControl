@@ -38,6 +38,11 @@
 //define power sequency wait time. use to wait all node be turnned off.
 #define POWEROFF_WAITTIME      100
 
+//define used as time error on the power off sequency.
+//device can't be on after this timeout.
+//400 ms.
+#define POWEROFF_ERRORTIMEOUT_MS          400
+
 //define the system ready timeout(1500ms).
 #define SYSTEMREADY_TIMEOUT   3000
 
