@@ -22,7 +22,7 @@ const int16_t PASTorqueRatiosInPercentage[6] =
     88, // PAS 4 has a ratio of 88% (7/8)
     100 // PAS 5 has a ratio of 100%
 };
-const int16_t walkModeTorqueRatio = 88; // walkmode has a ratio of 88%
+const int16_t walkModeTorqueRatio = 70; // walkmode has a ratio of 70%
 
 /* Variables ---------------------------------------------------- */
 

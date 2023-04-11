@@ -176,18 +176,29 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 if (((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
                     (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
                 {
+                    /* Used for Walk Mode */
+                    if (PedalAssist_IsWalkModeDetected(pHandle->pPAS))
+                    {
+                        int32_t absoluteSpeed = abs(hSpeedM1);
+                        int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
+                    
+                        hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
+                        //Apply the slow start for wlak mode
+                        hAux = Foldback_ApplySlowStart(pHandle->SpeedFoldbackVehicle, hAux);
+                        pHandle->aTorque[pHandle->bMainMotor] = hAux;
+                    }                    
                     /* Torque sensor enabled */
-                    if ((pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // Walk mode has priority over PAS
+                    else if (pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse) // Walk mode has priority over PAS
                     {
                         pHandle->aTorque[pHandle->bMainMotor] = hAux;
                     }             
                     /* Hybride sensor enabled */
-                    else if ((pHandle->pPAS->bCurrentPasAlgorithm == HybridSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
+                    else if (pHandle->pPAS->bCurrentPasAlgorithm == HybridSensorUse)
                     {
                         pHandle->aTorque[pHandle->bMainMotor] = hAux;
                     }                
                     /* Cadence sensor enabled */
-                    else
+                    else if (pHandle->pPAS->bCurrentPasAlgorithm == CadenceSensorUse)
                     {
                         int32_t absoluteSpeed = abs(hSpeedM1);
                         int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?

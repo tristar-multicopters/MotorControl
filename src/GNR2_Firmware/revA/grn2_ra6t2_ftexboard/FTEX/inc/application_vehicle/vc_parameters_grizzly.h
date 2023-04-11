@@ -88,7 +88,7 @@
 
 #define PAS_MAX_TORQUE                         STARTING_TORQUE              /* Maximum motor torque to apply using pedal assist  */
 #define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
-#define PAS_MAX_KM_SPEED                       32                /* Maximum Bike Speed in Km/h using RPM */
+#define PAS_MAX_KM_SPEED                       62                /* Maximum Bike Speed in Km/h using RPM */
 #define PAS_MAX_LEVEL                          5                 /* Maximum PAS Level given by the screen */
 #define PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */
 #define PAS_MAX_TORQUE_RATIO                   99                /* Maximum PAS Torque feed ration in 100% */
