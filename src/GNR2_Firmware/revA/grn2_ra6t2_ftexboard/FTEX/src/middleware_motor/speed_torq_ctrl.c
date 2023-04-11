@@ -16,6 +16,7 @@
 
 #define STUCK_TIMER_MAX_MS      2000  //1 second timeout
 #define STUCK_TIMER_MAX_COUNTS  STUCK_TIMER_MAX_MS * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u
+#define STUCK_MIN_TORQUE       200
 
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
@@ -493,7 +494,7 @@ uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle)
     
     uint16_t hRetval = MC_NO_FAULTS;
 
-    if (SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD) == 0)
+    if (SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD) == 0 && pHandle->hFinalTorqueRef > STUCK_MIN_TORQUE)
     {
         if (M_STUCK_timer < STUCK_TIMER_MAX_COUNTS)
         {
