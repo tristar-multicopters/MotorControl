@@ -64,7 +64,7 @@
       <property id="config.bsp.fsp.PBPS.PBPS0" value=""/>
       <property id="config.bsp.fsp.hoco_fll" value="config.bsp.fsp.hoco_fll.disabled"/>
       <property id="config.bsp.fsp.tfu_mathlib" value="config.bsp.fsp.tfu_mathlib.enabled"/>
-      <property id="config.bsp.common.main_osc_wait" value="config.bsp.common.main_osc_wait.wait_8163"/>
+      <property id="config.bsp.common.main_osc_wait" value="config.bsp.common.main_osc_wait.wait_547"/>
       <property id="config.bsp.fsp.mcu.adc.max_freq_hz" value="50000000"/>
       <property id="config.bsp.fsp.mcu.sci_b_uart.max_baud" value="20000000"/>
       <property id="config.bsp.fsp.mcu.sci_b_uart.ctspen_channels" value="0x021F"/>

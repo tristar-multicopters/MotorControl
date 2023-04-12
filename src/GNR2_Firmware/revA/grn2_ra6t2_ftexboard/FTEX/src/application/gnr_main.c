@@ -10,7 +10,6 @@
 #include "comm_tasks.h"
 #include "vc_config.h"
 #include "firmware_update.h"
-#include "watchdog.h"
 
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
@@ -26,8 +25,6 @@ extern void THR_VC_MediumFreq(void * pvParameter);
 extern void THR_VC_StateMachine(void * pvParameter);
 extern void ProcessUARTFrames(void * pvParameter);
 extern void PowerOffSequence(void * pvParameter);
-extern void Watchdog(void * pvParameter);
-
 #if !GNR_MASTER
 extern void PWREN_TurnoffSlaveTask (void * pvParameter);
 #endif
@@ -59,8 +56,6 @@ osThreadId_t COMM_Uart_handle;
 osThreadId_t CANOpenTaskHandle;
 osThreadId_t CANRxFrameHandle;
 osThreadId_t PowerOffSequence_handle;
-osThreadId_t Watchdog_handle;
-
 #if !GNR_MASTER
 osThreadId_t PWREN_TurnoffSlave_handle;
 #endif
@@ -117,12 +112,6 @@ static const osThreadAttr_t ThAtt_UART = {
 	.priority = osPriorityBelowNormal
 };
 
-static const osThreadAttr_t ThAtt_Watchdog = {
-	.name = "TSK_Watchdog",
-	.stack_size = 256,
-	.priority = osPriorityLow2
-};
-
 #endif
 
 #if !GNR_MASTER
@@ -154,8 +143,6 @@ void gnr_main(void)
     CANInit();
     SPIInit();
     IIRFAInit();
-    WatchdogInit();
-    
     /* At this point, hardware should be ready to be used by application systems */
     
     //Initialize external flash memory used on DFU process.
@@ -243,13 +230,6 @@ void gnr_main(void)
     //verify if the task was correctly created.              
     ASSERT(COMM_Uart_handle != NULL);
 	
-    
-    Watchdog_handle                 = osThreadNew(Watchdog,
-                                      NULL,
-                                      &ThAtt_Watchdog);
-    //verify if the task was correctly created.              
-    ASSERT(Watchdog_handle != NULL);
-    
     #endif
     
     #if !GNR_MASTER
@@ -490,6 +470,3 @@ static bool SPIInit(void)
 
     return bIsError;
 }
-
-
-
