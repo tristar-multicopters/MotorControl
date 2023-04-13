@@ -21,21 +21,39 @@
 /**************************** DEFINITIONS AND STRUCTS ****************************/
 #define KD718_RX_BYTE_BUFFER_SIZE 8
 
-
 // Commands
 #define READ_COMMAND  0x11
 #define WRITE_COMMAND 0x16
 
 #define DEFAULT_ECOMODE_POWER   53 //Default value of power allowed in eco mode in %
+#define KD718_MAX_BUFF_SIZE 8  // Max size for frame buffer.
 
 // Display Write Sub Cmd
 typedef enum
 {
-   W_PAS       = 0x0B,
-   W_LIGHTS    = 0x1A,
-   W_PWRMODE   = 0x0C,    
+   W_PAS         = 0x0B,
+   W_PWRMODE     = 0x0C,
+   W_LIGHTS      = 0x1A,
+   W_SPEED_LIMIT = 0x1F,    
 }
 KD718_WriteType_t;
+
+// Display Read Sub Cmd
+typedef enum
+{
+    R_PROTOCOL        = 0x90,
+    R_STATUS          = 0x08,
+    R_PWN             = 0x06,
+    R_MOTOR_COMU      = 0x07, 
+    R_VOLTAGE         = 0x01,
+    R_CURRENT         = 0x0A,
+    R_MODE            = 0x0B,
+    R_THROTTLE_TARGET = 0x0E,
+    R_BRAKE_STATE     = 0x0F,
+    R_ACC_PULSE_NB    = 0x10,
+    R_SPD_HALL_CYCLE  = 0x1D,
+    R_SPEED           = 0x20,    
+}KD718_ReadType_t;
 
 typedef enum
 {
@@ -57,26 +75,6 @@ typedef enum
     KD718_HEADLIGHT_SENSOR_FAULT = 0x24,   
 }KD718_ErrorCodes_t;
 
-
-// Display Read Sub Cmd
-typedef enum
-{
-    R_PROTOCOL        = 0x90,
-    R_STATUS          = 0x08,
-    R_PWN             = 0x06,
-    R_MOTOR_COMU      = 0x07, 
-    R_VOLTAGE         = 0x01,
-    R_CURRENT         = 0x0A,
-    R_MODE            = 0x0B,
-    R_THROTTLE_TARGET = 0x0E,
-    R_BRAKE_STATE     = 0x0F,
-    R_ACC_PULSE_NB    = 0x10,
-    R_SPD_HALL_CYCLE  = 0x1D,
-    R_SPEED           = 0x20,    
-}KD718_ReadType_t;
- 
-
-#define KD718_MAX_BUFF_SIZE 8  // Max size for frame buffer.
 
 typedef struct
 {                         

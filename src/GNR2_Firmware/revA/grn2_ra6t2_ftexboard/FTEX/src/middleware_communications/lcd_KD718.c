@@ -144,7 +144,7 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle)
             
             if (pHandle->rx_frame.Buffer[0] == READ_COMMAND) // Do we all the bytes for this frame ?
             {
-                if(NbBytePerFrame == ByteCount + 1)
+                if (NbBytePerFrame == ByteCount + 1)
                 {
                     pHandle->rx_frame.ByteCnt = 0;
                     LCD_KD718_ProcessFrame(pHandle); 
@@ -152,16 +152,27 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle)
                 else
                 {
                     pHandle->rx_frame.ByteCnt ++;
-                }
-              
+                }              
             }
             else if (pHandle->rx_frame.Buffer[0] == WRITE_COMMAND) // Is it a write cmd
             {
-                if (pHandle->rx_frame.Buffer[1] == W_PAS || pHandle->rx_frame.Buffer[1] == W_PWRMODE) // Is it writiing a PAS level or Power mode
+                if (pHandle->rx_frame.Buffer[1] == W_PAS    || pHandle->rx_frame.Buffer[1] == W_PWRMODE || 
+                    pHandle->rx_frame.Buffer[1] == W_LIGHTS || pHandle->rx_frame.Buffer[1] == W_SPEED_LIMIT) // Is it writiing a PAS level or Power mode
                 {
-                    if (ByteCount == 1) // If we are receiving a PAS level we know the frame lenght 
-                    {    
-                        NbBytePerFrame = 4;  
+                    if (ByteCount == 1) 
+                    {   
+                        if (pHandle->rx_frame.Buffer[1] == W_PAS || pHandle->rx_frame.Buffer[1] == W_PWRMODE)
+                        {
+                            NbBytePerFrame = 4; // If we are receiving a PAS level  or power mode, frame lenght is 4 
+                        }
+                        else if (pHandle->rx_frame.Buffer[1] == W_LIGHTS)
+                        {
+                            NbBytePerFrame = 3; // If we are receiving lights state, frame lenght is 3   
+                        }
+                        else if (pHandle->rx_frame.Buffer[1] == W_SPEED_LIMIT)
+                        {
+                            NbBytePerFrame = 5; // If we are receiving speed limit and wheel diam, frame lenght is 5
+                        }                                                                                                                         
                     }                   
                     else if (NbBytePerFrame == ByteCount + 1)
                     {
@@ -169,20 +180,6 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle)
                         LCD_KD718_ProcessFrame(pHandle);
                     }
                    
-                    pHandle->rx_frame.ByteCnt ++;
-                }
-                else if (pHandle->rx_frame.Buffer[1] == W_LIGHTS)
-                {
-                    if (ByteCount == 1) // If we are receiving lights command we know the frame lenght 
-                    {
-                        NbBytePerFrame = 3;  
-                    }                   
-                    else if (NbBytePerFrame == ByteCount + 1)
-                    {
-                        pHandle->rx_frame.ByteCnt = 0;
-                        LCD_KD718_ProcessFrame(pHandle);
-                    }
-                    
                     pHandle->rx_frame.ByteCnt ++;
                 }
                 else // Trash the frame for unkown write sub command
@@ -359,6 +356,22 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                 }                    
             #endif
               break;
+            case W_SPEED_LIMIT:
+                CRC = 0;   // This frame has a CRC so check it
+                CRC += pHandle->rx_frame.Buffer[0];
+                CRC += pHandle->rx_frame.Buffer[1];
+                CRC += pHandle->rx_frame.Buffer[2];
+                CRC += pHandle->rx_frame.Buffer[3];
+                 
+                if (CRC == pHandle->rx_frame.Buffer[4]) // If the CRC is good update the new Speed limit
+                { 
+                    uint16_t SpeedLimit = 0;
+                    SpeedLimit += (pHandle->rx_frame.Buffer[2] << 8);
+                    SpeedLimit +=  pHandle->rx_frame.Buffer[3];
+                    
+                    Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit);                
+                }
+              break;                
           default:
               break;
         }
