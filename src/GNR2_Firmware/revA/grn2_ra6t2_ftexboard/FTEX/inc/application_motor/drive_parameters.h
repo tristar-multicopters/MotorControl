@@ -52,6 +52,10 @@
 
 #include "drive_parameters_rbs_mb.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_URBAN
+
+#include "drive_parameters_urban.h"
+
 #endif
 
 #endif /*__DRIVE_PARAMETERS_H*/

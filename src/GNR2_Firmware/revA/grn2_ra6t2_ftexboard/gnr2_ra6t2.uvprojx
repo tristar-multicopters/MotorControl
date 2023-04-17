@@ -514,6 +514,16 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_urban.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_urban.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_rbs_mb.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_rbs_mb.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -679,6 +689,21 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_tsugawa.h</FilePath>
             </File>
             <File>
+              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_urban.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_urban.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_rbs_mb.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
@@ -734,9 +759,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
+              <FileName>drive_parameters_urban.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_urban.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_rbs_mb.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_rbs_mb.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2380,6 +2410,16 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_urban.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_urban.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_rbs_mb.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_rbs_mb.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2545,6 +2585,21 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_tsugawa.h</FilePath>
             </File>
             <File>
+              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_urban.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_urban.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_rbs_mb.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
@@ -2600,9 +2655,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
+              <FileName>drive_parameters_urban.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_urban.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_rbs_mb.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_rbs_mb.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4213,6 +4273,16 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_urban.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_urban.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_rbs_mb.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_rbs_mb.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4378,6 +4448,21 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_tsugawa.h</FilePath>
             </File>
             <File>
+              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_urban.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_urban.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_rbs_mb.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
@@ -4433,9 +4518,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
+              <FileName>drive_parameters_urban.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_urban.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_rbs_mb.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_rbs_mb.h</FilePath>
             </File>
           </Files>
         </Group>

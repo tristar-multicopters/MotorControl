@@ -51,6 +51,10 @@
 
 #include "pmsm_motor_parameters_rbs_mb.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_URBAN
+
+#include "pmsm_motor_parameters_urban.h"
+
 #endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/

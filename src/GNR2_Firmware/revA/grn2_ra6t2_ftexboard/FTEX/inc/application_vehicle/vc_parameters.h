@@ -54,6 +54,10 @@
 
 #include "vc_parameters_rbs_mb.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_URBAN
+
+#include "vc_parameters_urban.h"
+
 #endif
 
 #endif /*__VC_PARAMETERS_H*/
