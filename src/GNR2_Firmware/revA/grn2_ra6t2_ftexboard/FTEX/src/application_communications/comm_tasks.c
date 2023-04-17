@@ -85,11 +85,11 @@ static void UpdateObjectDictionnary(void *p_arg)
     bPAS[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehiclePAS(pVCI);  
     hMaxPwr[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleMaxPWR(pVCI);
     
-    hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
     hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
     hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
     
     #if GNR_MASTER
+        hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
         hErrorState[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleCurrentFaults(pVCI);
     #else
         hErrorState[VEHICLE_PARAM] = 0x0000;
@@ -311,10 +311,12 @@ static void UpdateObjectDictionnary(void *p_arg)
             }
             
             // If the whele diameter in the OBJ dict and vehicle don't match, update the on in the vehicle
+            #if GNR_MASTER
             if(hWheelDiameter[VEHICLE_PARAM] != hWheelDiameter[CAN_PARAM])
             {
                 CanVehiInterface_UpdateWheelDiameter(hWheelDiameter[CAN_PARAM]);            
             }
+            #endif
             
             // If the light status in OBJ dict and vehicle don't match, update the one in the vehicle
             if(hFrontLightState[VEHICLE_PARAM] != hFrontLightState[CAN_PARAM])
