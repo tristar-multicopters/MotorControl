@@ -59,7 +59,8 @@
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 
-#define VEHICLE_SELECTION             VEHICLE_URBAN     /* Vehicle selection to adapt motor/vehicle parameters.
+
+#define VEHICLE_SELECTION             VEHICLE_VELEC     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                                                                                
