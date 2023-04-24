@@ -156,12 +156,12 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle)
             }
             else if (pHandle->rx_frame.Buffer[0] == WRITE_COMMAND) // Is it a write cmd
             {
-                if ((pHandle->rx_frame.Buffer[1] == W_PAS)    || (pHandle->rx_frame.Buffer[1] == W_PWRMODE) || 
-                    (pHandle->rx_frame.Buffer[1] == W_LIGHTS) || (pHandle->rx_frame.Buffer[1] == W_SPEED_LIMIT)) // Is it writiing a PAS level or Power mode
+                if (pHandle->rx_frame.Buffer[1] == W_PAS    || pHandle->rx_frame.Buffer[1] == W_PWRMODE || 
+                    pHandle->rx_frame.Buffer[1] == W_LIGHTS || pHandle->rx_frame.Buffer[1] == W_SPEED_LIMIT) // Is it writiing a PAS level or Power mode
                 {
                     if (ByteCount == 1) 
                     {   
-                        if ((pHandle->rx_frame.Buffer[1] == W_PAS) || (pHandle->rx_frame.Buffer[1] == W_PWRMODE))
+                        if (pHandle->rx_frame.Buffer[1] == W_PAS || pHandle->rx_frame.Buffer[1] == W_PWRMODE)
                         {
                             NbBytePerFrame = 4; // If we are receiving a PAS level  or power mode, frame lenght is 4 
                         }

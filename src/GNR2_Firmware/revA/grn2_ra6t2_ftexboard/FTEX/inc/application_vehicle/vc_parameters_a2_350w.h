@@ -1,13 +1,13 @@
 /**
-  * @file    vc_parameters_rbs_mb.h
-  * @brief   This file contains the parameters needed in order to configure the motor of RBS Mountain bike.
+  * @file    vc_parameters_a2_350w.h
+  * @brief   This file contains the parameters needed in order to configure the motor of velec a2 350W bike.
   *
 */
 
 /* Define to prevent recursive inclusion --- 
 ----------------------------------*/
-#ifndef __VC_PARAMETERS_RBS_MB_H
-#define __VC_PARAMETERS_RBS_MB_H
+#ifndef __VC_PARAMETERS_A2_350W_H
+#define __VC_PARAMETERS_A2_350W_H
 
 #include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"
@@ -88,12 +88,12 @@
 
 #define PAS_MAX_TORQUE                         STARTING_TORQUE              /* Maximum motor torque to apply using pedal assist  */
 #define PAS_MAX_SPEED                          MAX_APPLICATION_SPEED_RPM     /* Maximum motor speed reachable using pedal assist  */
-#define PAS_MAX_KM_SPEED                       32                /* Maximum Bike Speed in Km/h using RPM */
+#define PAS_MAX_KM_SPEED                       62                /* Maximum Bike Speed in Km/h using RPM */
 #define PAS_MAX_LEVEL                          5                 /* Maximum PAS Level given by the screen */
 #define PAS_LEVEL_COEFF                        1                 /* PAS ramp multiplication coefficient for a better user feeling   */
 #define PAS_MAX_TORQUE_RATIO                   99                /* Maximum PAS Torque feed ration in 100% */
 #define PAS_MAX_SPEED_RATIO                    99                /* Maximum PAS Speed feed ration in 100% */
-#define PAS_ALGORITHM                          TorqueSensorUse   /*  TorqueSensorUse = 0,     Torque sensor use define 
+#define PAS_ALGORITHM                          CadenceSensorUse   /*  TorqueSensorUse = 0,     Torque sensor use define 
 
                                                                     CadenceSensorUse = 1,    Cadence sensor use define 
                                                                     HybridSensorUse = 2,     Hybride sensor use define  */
@@ -121,8 +121,8 @@
 
 /*********************************Battery Monitoring*******************************/
 
-#define BATTERY_FULL_VOLT    52
-#define BATTERY_EMPTY_VOLT   46
+#define BATTERY_FULL_VOLT    40
+#define BATTERY_EMPTY_VOLT   32
 
 #endif                                            
 

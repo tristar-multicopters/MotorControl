@@ -1,7 +1,7 @@
 /**
   * @file    drive_parameters_rbs_mb.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to RBS Mountain bike motor.
+  *          in order to configure a motor drive. This file is specific to RBS Mountain bike 750W motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -14,16 +14,13 @@
 
 /******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
 
-/*** Speed measurement settings ***/		// motorRPM=speed(km/h)*GR*100000/(R*pi*2.54*60)   where R=25 inch and GR=7.86
-#define MAX_APPLICATION_SPEED_RPM       4000 //2600   /*!< Max speed for the current application in mechanical rpm */
-                                               /* Old Example 2750 for 38Km/h */
+/*** Speed measurement settings ***/		/* motorRPM=speed(km/h)*GR*100000/(R*pi*2.54*60)   where R=28 inch and GR=5
+																				   As an example 42Km was 1600 */
+#define MAX_APPLICATION_SPEED_RPM       2000  // 32 km/h with load = 1325  /*!< Max speed for the current application in mechanical rpm */
 #define MIN_APPLICATION_SPEED_RPM       0     /*!< Min speed for the current application in mechanical rpm */
 #define MEAS_ERRORS_BEFORE_FAULTS       6     /*!< Number of speed
                                                              measurement errors before
-                                                             main sensor goes in fault */ 
-
-#define No_Load_PID_KIq_Gain    500  /* this is the Kiq  when the torque set is very low
-                                                             main sensor goes in fault */                                                           
+                                                             main sensor goes in fault */
 /****** Hall sensors ************/
 #define HALL_MEAS_ERRORS_BEFORE_FAULTS  6 /*!< Number of failed
                                                            derived class specific speed
@@ -32,8 +29,7 @@
 
 #define HALL_AVERAGING_FIFO_DEPTH        8 /*!< depth of the FIFO used to
                                                            average mechanical speed */
-
-#define HALL_MTPA  true                                 /* Must be set true. TODO: Remove that parameter. */
+#define HALL_MTPA  true                 /* Must be set true. TODO: Remove that parameter. */
 /****** State Observer + PLL ****/
 #define VARIANCE_THRESHOLD              0.062 /*!<Maximum accepted
                                                             variance on speed
@@ -77,15 +73,17 @@
 #define UD_VOLTAGE_THRESHOLD_V          24 /*!< Under-voltage threshold */
 
 
+
 #define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
 
 #define OCSP_SAFETY_MARGIN_amps 	            85	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
 #define OCSP_MAX_CURRENT_amps                85   /* Max current that can be reached before triggering software overcurrent */
-#define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering */
-#define CURRENT_FILTER_BETA             -0.273F      /* Beta constant used in butterworth filter for current filtering */
-
+#define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering.
+                                                        Only used for protection purpose, not control. */
+#define CURRENT_FILTER_BETA             -0.273F      /* Beta constant used in butterworth filter for current filtering.
+                                                         Only used for protection purpose, not control. */
 
 /**************************    DRIVE SETTINGS SECTION   **********************/
 /* PWM generation and current reading */
@@ -99,20 +97,20 @@
 #define REGULATION_EXECUTION_RATE     1    /*!< FOC execution rate in
                                                            number of PWM cycles */
 /* Gains values for torque and flux control loops */
-#define PID_TORQUE_KP_DEFAULT         300       /* Default gain if adaptative gain feature is not used */
-#define PID_TORQUE_KI_DEFAULT         1000      /* Default gain if adaptative gain feature is not used */
-#define PID_TORQUE_KD_DEFAULT         100       /* Default gain if adaptative gain feature is not used */
-#define PID_FLUX_KP_DEFAULT           100       /* Default gain if adaptative gain feature is not used */
-#define PID_FLUX_KI_DEFAULT           1000      /* Default gain if adaptative gain feature is not used */
-#define PID_FLUX_KD_DEFAULT           100       /* Default gain if adaptative gain feature is not used */
+#define PID_TORQUE_KP_DEFAULT         300       /* Current control default gain if adaptative gain feature is not used */
+#define PID_TORQUE_KI_DEFAULT         50      /* Current control default gain if adaptative gain feature is not used */
+#define PID_TORQUE_KD_DEFAULT         100       /* Current control default gain if adaptative gain feature is not used */
+#define PID_FLUX_KP_DEFAULT           300       /* Current control default gain if adaptative gain feature is not used */
+#define PID_FLUX_KI_DEFAULT           50      /* Current control default gain if adaptative gain feature is not used */
+#define PID_FLUX_KD_DEFAULT           100       /* Current control default gain if adaptative gain feature is not used */
 
 /* Torque/Flux control loop gains dividers*/
-#define TF_KPDIV                      4096          /* Gain divider, to allow decimal value */
-#define TF_KIDIV                      16384         /* Gain divider, to allow decimal value */
-#define TF_KDDIV                      8192          /* Gain divider, to allow decimal value */o
-#define TF_KPDIV_LOG                  LOG2(4096)    /* Gain divider, to allow decimal value */
-#define TF_KIDIV_LOG                  LOG2(16384)   /* Gain divider, to allow decimal value */
-#define TF_KDDIV_LOG                  LOG2(8192)    /* Gain divider, to allow decimal value */
+#define TF_KPDIV                      4096          /* Current control gain divider, to allow decimal value */
+#define TF_KIDIV                      16384         /* Current control gain divider, to allow decimal value */
+#define TF_KDDIV                      8192          /* Current control gain divider, to allow decimal value */
+#define TF_KPDIV_LOG                  LOG2(4096)    /* Current control gain divider log2, to allow decimal value */
+#define TF_KIDIV_LOG                  LOG2(16384)   /* Current control gain divider log2, to allow decimal value */
+#define TF_KDDIV_LOG                  LOG2(8192)    /* Current control gain divider log2, to allow decimal value */
 
 /* Speed control loop */
 #define SPEED_LOOP_FREQUENCY_HZ       1000 /*!<Execution rate of speed
@@ -135,13 +133,13 @@
 #define MAX_APPLICATION_NEGATIVE_POWER  1100    /* Refers to maximum power in watts that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
-  
+
 /* Foldbacks */
 #define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM   /* Max speed value (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
-#define FOLDBACK_SPEED_INTERVAL         0//750 Removed to let VC control top speed /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
+#define FOLDBACK_SPEED_INTERVAL         0 //500 Removed to let VC control top speed /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMPERATURE_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
-#define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMPERATURE_HYSTERESIS_C  /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
+#define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMPERATURE_HYSTERESIS_C                         /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
 
 #define FOLDBACK_MOTOR_TEMP_END_VALUE   70                          /* Max temperature value (degree C) of the decreasing torque ramp to limit motor temperature */
 #define FOLDBACK_MOTOR_TEMP_INTERVAL    20                         /* Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature */
@@ -150,10 +148,10 @@
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
 
 /*Torque ramp settings */
-#define DEFAULT_TORQUE_SLOPE_UP        5000        /* Slope in cNm per second */
-#define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
-#define DEFAULT_SPEED_SLOPE_UP         500        /* Slope in #SPEED_UNIT per second */
-#define DEFAULT_SPEED_SLOPE_DOWN       500        /* Slope in #SPEED_UNIT per second */
+#define DEFAULT_TORQUE_SLOPE_UP        2700        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_DOWN      5000        /* Slope in cNm per second */
+#define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
+#define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */
 
 
 /******************************   START-UP PARAMETERS   **********************/
@@ -211,8 +209,8 @@
 #define ROTOR_POS_OBS_KIDIV_LOG         LOG2(256)   /* Rotor position observer gain divider log2, to allow decimal value */
 #define ROTOR_POS_OBS_KDDIV_LOG         LOG2(1)     /* Rotor position observer gain divider log2, to allow decimal value */
 
-#define MEC_SPEED_FILTER_BUTTERWORTH_ALPHA     16.91F /*!< Alpha constant to configure butterworth filter for mecanical speed filtering */
-#define MEC_SPEED_FILTER_BUTTERWORTH_BETA     -14.91F /*!< Beta constant to configure butterworth filter for mecanical speed filtering */
+#define MEC_SPEED_FILTER_BUTTERWORTH_ALPHA     7.366197724F /*!< Alpha constant to configure butterworth filter for mecanical speed filtering */
+#define MEC_SPEED_FILTER_BUTTERWORTH_BETA     -5.366197724F /*!< Beta constant to configure butterworth filter for mecanical speed filtering */
 
 
-#endif /*__DRIVE_PARAMETERS_VELEC_H*/
+#endif /*__DRIVE_PARAMETERS_GRIZZLY_H*/
