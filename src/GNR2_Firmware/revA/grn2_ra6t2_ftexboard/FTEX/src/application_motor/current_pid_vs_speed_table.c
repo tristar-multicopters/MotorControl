@@ -272,57 +272,33 @@ const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     20,	 /* old PI = 50 parameter tunning for Vibration */
 };
 
-#elif VEHICLE_SELECTION == VEHICLE_URBAN
+
+#elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
 
 #define CURRENT_PID_LUT_SPEED_STEP                    700
 #define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    171,
-    171,
-};
+    145,
+    145,
 
-const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    48,   /* old PI = 50 parameter tunning for Vibration */ 
-    48,   /* old PI = 50 parameter tunning for Vibration */
-
-};
-
-const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    154,
-    154,	
-};
-
-const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    43,	 /* old PI = 50 parameter tunning for Vibration */
-    43,	 /* old PI = 50 parameter tunning for Vibration */
-};
-
-#elif VEHICLE_SELECTION == VEHICLE_A2_350W
-
-#define CURRENT_PID_LUT_SPEED_STEP                    700
-#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
-
-const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    225,
-    225,
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 
-    63,   /* old PI = 50 parameter tunning for Vibration */ 
-    63,   /* old PI = 50 parameter tunning for Vibration */
+    40,   /* old PI = 50 parameter tunning for Vibration */ 
+    40,   /* old PI = 50 parameter tunning for Vibration */
 
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    163,
-    163,	
+    115,
+    115,	
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    47,	 /* old PI = 50 parameter tunning for Vibration */
-    47,	 /* old PI = 50 parameter tunning for Vibration */
+    32,	 /* old PI = 50 parameter tunning for Vibration */
+    32,	 /* old PI = 50 parameter tunning for Vibration */
 };
 
 #endif

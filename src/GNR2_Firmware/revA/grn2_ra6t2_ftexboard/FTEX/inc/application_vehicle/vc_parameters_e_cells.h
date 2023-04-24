@@ -93,7 +93,7 @@
 #define PAS_LEVEL_COEFF                        1 					/* PAS ramp multiplication coefficient for a better user feeling   */	
 #define PAS_MAX_TORQUE_RATIO                   99					/* Maximum PAS Torque feed ration in 100% */	
 #define PAS_MAX_SPEED_RATIO                    99					/* Maximum PAS Speed feed ration in 100% */	
-#define PAS_ALGORITHM                          HybridSensorUse   /*  TorqueSensorUse = 0,     Torque sensor use define 
+#define PAS_ALGORITHM                          TorqueSensorUse   /*  TorqueSensorUse = 0,     Torque sensor use define 
                                                                     CadenceSensorUse = 1,    Cadence sensor use define 
                                                                     HybridSensorUse = 2,     Hybride sensor use define  */
 #define PAS_WHEEL_SPEED_SENSOR_PPR             2					/* Number of electrical pulses per wheel rotation */
@@ -107,7 +107,7 @@
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT               200                /* Number of task ticks to wait after a fault occurs to attempt
                                                                               a powertrain restart (OC, SF and SU faults)   */
 #define POWERTRAIN_MAX_MOTOR_TORQUE                       STARTING_TORQUE               /* Maximum motor torque to apply with powertrain management */
-#define POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE              true                              /* Enable dual motor startup when single motor mode is selected */
+#define POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE              false                              /* Enable dual motor startup when single motor mode is selected */
 #define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END           MAX_APPLICATION_SPEED_RPM/4       /* Speed value that dual motor startup strategy stops outputting
                                                                                                torque */
 #define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL      MAX_APPLICATION_SPEED_RPM/8       /* Speed interval value between maximum torque and zero torque,

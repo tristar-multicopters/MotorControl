@@ -175,13 +175,12 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
 void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 {
     APT_frame_t replyFrame = {0};
-    uint16_t SpeedLimit  = 0; 
     int32_t  toSend      = 0;
     uint32_t Check       = 0;
     uint16_t Merge       = 0;
     uint8_t  PassLvl     = 0;
     uint8_t  LightStatus = 0;
-  
+    uint16_t SpeedLimit;
      
     
     //Verification of the checksum

@@ -210,10 +210,41 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 }                            
                 /* Using throttle */
                 else 
-                {
-                    int16_t WSpeedRPM = (int16_t) pHandle->pPAS->pWSS->wWheelSpeedRpm;                    
-                    hAux = Foldback_ApplyFoldback(pHandle->pThrottle->SpeedFoldbackVehicleThrottle, hAux, WSpeedRPM);
+                {   static bool MajorOverSpeed = false;
+                    int16_t NewMaxPower = 0;
+                    int32_t TopSpeed = 0;
+                    int16_t WSpeedRPM = (int16_t) pHandle->pPAS->pWSS->wWheelSpeedRpm;
+                                                                    
+                   
+                    // Get the current top speed in RPM
+                    TopSpeed = (pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDecreasingEndValue);
                     
+                    
+                    if (WSpeedRPM > (TopSpeed + THROTTLR_MAJOR_OVER_SPEED_INTERVAL_RPM))
+                    {
+                        MajorOverSpeed = true;   
+                    }                    
+                    
+                    if ((WSpeedRPM > (TopSpeed - THROTTLE_STABLE_SPEED_INTERVAL_RPM)) && (MajorOverSpeed == true)) // If we are close to reach the top speed
+                    {                   
+                        // Reduce max allowed power           
+                        NewMaxPower = (int16_t) ((pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh * THROTTLE_STABLE_SPEED_POWER_PERCENT)/100); 
+                        
+                    }
+                    else if (WSpeedRPM > (TopSpeed - pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDecreasingInterval))
+                    {
+                        MajorOverSpeed = false;
+                        NewMaxPower = (int16_t) ((pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh * 75)/100); 
+                    }
+                    else // If not then let the foldback use the default max power
+                    {
+                        MajorOverSpeed = false;                     
+                        NewMaxPower = (int16_t) (pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh);                          
+                    }    
+                    
+                    Foldback_UpdateMaxValue(pHandle->pThrottle->SpeedFoldbackVehicleThrottle,NewMaxPower);
+                    
+                    hAux = Foldback_ApplyFoldback(pHandle->pThrottle->SpeedFoldbackVehicleThrottle, hAux, WSpeedRPM);
                     pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
                 } 
             }

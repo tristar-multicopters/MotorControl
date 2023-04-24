@@ -1,12 +1,12 @@
 /**
-  * @file    drive_parameters_a2_350w.h
+  * @file    drive_parameters_velec_citi.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to velec A2 motor.
+  *          in order to configure a motor drive. This file is specific to velec  citi 500w motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_A2_350W_H
-#define __DRIVE_PARAMETERS_A2_350W_H
+#ifndef __DRIVE_PARAMETERS_VELEC_CITI_500W_H
+#define __DRIVE_PARAMETERS_VELEC_CITI_500W_H
 
 /************************
  *** Motor Parameters ***
@@ -215,4 +215,4 @@
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA     -14.91F /*!< Beta constant to configure butterworth filter for mecanical speed filtering */
 
 
-#endif /*__DRIVE_PARAMETERS_VELEC_H*/
+#endif /*__DRIVE_PARAMETERS_VELEC_CITI_H*/

@@ -1,6 +1,6 @@
 /**
   * @file    vc_parameters_rbs_mb.h
-  * @brief   This file contains the parameters needed in order to configure the motor of RBS Mountain bike.
+  * @brief   This file contains the parameters needed in order to configure the motor of RBS mountain bike.
   *
 */
 
@@ -28,8 +28,8 @@
 
 #define THROTTLE_DETECTION_THRESHOLD          1000    /* Throttle is considered pressed once it passed this threshold  */
 
-#define THROTTLE_MAX_SAFE_SPEED_RPM            285   // Max Wheel RPM that is safe when using the motor (aprox 38 km/h)
-#define THROTTLE_DEFAULT_MAX_SPEED_RPM         240   // Default top spee din wheel RPM (aprox 32 km/h)
+#define THROTTLE_MAX_SAFE_SPEED_RPM            1000   // Max Wheel RPM that is safe when using the motor (aprox 38 km/h)
+#define THROTTLE_DEFAULT_MAX_SPEED_RPM         1000   // Default top spee din wheel RPM (aprox 32 km/h)
 
 #define THROTTLE_SPEED_DECREASING_RANGE         55   // Number of RPM before the desired speed at which we should start removing power
                                                      // Should be aroud 200 for light bikes and 55 for heavy bikes

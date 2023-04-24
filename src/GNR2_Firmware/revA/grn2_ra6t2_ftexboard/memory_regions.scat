@@ -7,9 +7,9 @@
                 #define DATA_FLASH_START  0x08000000
                 #define DATA_FLASH_LENGTH 0x4000
                 #define OPTION_SETTING_START  0x0100A100
-                #define OPTION_SETTING_LENGTH 0x0
+                #define OPTION_SETTING_LENGTH 0x100
                 #define OPTION_SETTING_S_START  0x0100A200
-                #define OPTION_SETTING_S_LENGTH 0x0
+                #define OPTION_SETTING_S_LENGTH 0x100
                 #define ID_CODE_START  0x00000000
                 #define ID_CODE_LENGTH 0x0
                 #define SDRAM_START  0x90000000

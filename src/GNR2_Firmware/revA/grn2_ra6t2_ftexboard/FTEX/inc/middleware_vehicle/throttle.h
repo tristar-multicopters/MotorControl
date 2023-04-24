@@ -15,6 +15,11 @@
 #include "delay.h"
 #include "vc_errors_management.h"
 
+
+#define THROTTLE_STABLE_SPEED_INTERVAL_RPM     70   // Interval of RPM at which we apply the power restriction to stabilize the speed 
+#define THROTTLE_STABLE_SPEED_POWER_PERCENT     8   // Amount of power allowed to be used when the stabilisation interval is reached in %
+#define THROTTLR_MAJOR_OVER_SPEED_INTERVAL_RPM 22   // How many RPM over max speed is considered Major over speed       
+
 /**
   * @brief ThrottleParameters_t structure used for storing throttle user parameters
   */
