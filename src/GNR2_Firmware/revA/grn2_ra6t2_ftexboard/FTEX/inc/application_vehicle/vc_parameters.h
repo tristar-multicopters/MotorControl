@@ -54,9 +54,9 @@
 
 #include "vc_parameters_rbs_mb.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_URBAN
+#elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
 
-#include "vc_parameters_urban.h"
+#include "vc_parameters_velec_citi_500w.h"
 
 #endif
 

@@ -515,14 +515,15 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_rbs_mb.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
+
             </File>
           </Files>
         </Group>
@@ -694,14 +695,14 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>pmsm_motor_parameters_rbs_mb.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
             </File>
             <File>
               <FileName>power_stage_parameters.h</FileName>
@@ -759,14 +760,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters_rbs_mb.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1912,7 +1913,8 @@
         <TargetCommonOption>
           <Device>R7FA6T2BD3CFP</Device>
           <Vendor>Renesas</Vendor>
-          <PackID>Renesas.RA_DFP.3.8.0</PackID>
+          <PackID>Renesas.RA_DFP.4.0.0</PackID>
+
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
           <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -2411,14 +2413,14 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_rbs_mb.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2590,14 +2592,15 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>pmsm_motor_parameters_rbs_mb.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
+
             </File>
             <File>
               <FileName>power_stage_parameters.h</FileName>
@@ -2655,14 +2658,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters_rbs_mb.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3775,7 +3778,7 @@
         <TargetCommonOption>
           <Device>R7FA6T2BD3CFP</Device>
           <Vendor>Renesas</Vendor>
-          <PackID>Renesas.RA_DFP.3.8.0</PackID>
+          <PackID>Renesas.RA_DFP.4.0.0</PackID>
           <PackURL>https://www2.renesas.eu/Keil_MDK_Packs/</PackURL>
           <Cpu>IRAM(0x20000000,0x010000) IROM(0x00000000,0x080000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -4274,14 +4277,14 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_rbs_mb.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4453,14 +4456,14 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>pmsm_motor_parameters_rbs_mb.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
             </File>
             <File>
               <FileName>power_stage_parameters.h</FileName>
@@ -4518,14 +4521,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters_rbs_mb.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_rbs_mb.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -5772,7 +5775,7 @@
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.0.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
           <targetInfo excluded="1" name="APP_UPLOAD (JUST UPLOAD)" versionMatchMode=""/>
@@ -5781,7 +5784,7 @@
       <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\system_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.0.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
           <targetInfo excluded="1" name="APP_UPLOAD (JUST UPLOAD)" versionMatchMode=""/>

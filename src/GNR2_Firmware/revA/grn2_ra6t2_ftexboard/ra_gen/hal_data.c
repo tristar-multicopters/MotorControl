@@ -232,13 +232,13 @@ const gpt_extended_cfg_t g_timer9_extend =
     .gtiocb = { .output_enabled = false,
                 .stop_level     = GPT_PIN_LEVEL_LOW
               },
-    .start_source        = (gpt_source_t) (GPT_SOURCE_GTIOCB_RISING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
-    .stop_source         = (gpt_source_t) (GPT_SOURCE_GTIOCB_FALLING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
-    .clear_source        = (gpt_source_t) (GPT_SOURCE_GTIOCB_RISING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
+    .start_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .stop_source         = (gpt_source_t) ( GPT_SOURCE_NONE),
+    .clear_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
     .count_up_source     = (gpt_source_t) ( GPT_SOURCE_NONE),
     .count_down_source   = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
-    .capture_b_source    = (gpt_source_t) (GPT_SOURCE_GTIOCB_FALLING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
+    .capture_b_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_ipl       = (BSP_IRQ_DISABLED),
     .capture_b_ipl       = (12),
 #if defined(VECTOR_NUMBER_GPT9_CAPTURE_COMPARE_A)
@@ -435,7 +435,7 @@ canfd_global_cfg_t g_canfd_global_cfg =
 canfd_extended_cfg_t g_canfd0_extended_cfg =
 {
     .p_afl              = CANFD_FilterListArray,
-    .txmb_txi_enable    = ((1ULL << 0) | (1ULL << 1) | (1ULL << 2) | (1ULL << 3) |  0ULL),
+    .txmb_txi_enable    = ( 0ULL),
     .error_interrupts   = ( 0U),
 #if BSP_FEATURE_CANFD_FD_SUPPORT
     .p_data_timing      = &g_canfd0_data_timing_cfg,
@@ -591,10 +591,10 @@ const gpt_extended_cfg_t g_timer0_extend =
               },
     .start_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
     .stop_source         = (gpt_source_t) ( GPT_SOURCE_NONE),
-    .clear_source        = (gpt_source_t) (GPT_SOURCE_GPT_H | GPT_SOURCE_GPT_G | GPT_SOURCE_GPT_F |  GPT_SOURCE_NONE),
+    .clear_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
     .count_up_source     = (gpt_source_t) ( GPT_SOURCE_NONE),
     .count_down_source   = (gpt_source_t) ( GPT_SOURCE_NONE),
-    .capture_a_source    = (gpt_source_t) (GPT_SOURCE_GPT_H | GPT_SOURCE_GPT_G | GPT_SOURCE_GPT_F |  GPT_SOURCE_NONE),
+    .capture_a_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_b_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_ipl       = (5),
     .capture_b_ipl       = (BSP_IRQ_DISABLED),
@@ -717,7 +717,7 @@ const poeg_instance_t g_poeg1 =
 poeg_instance_ctrl_t g_poeg0_ctrl;
 const poeg_cfg_t g_poeg0_cfg =
 {
-    .trigger             = (poeg_trigger_t) (POEG_TRIGGER_PIN |  POEG_TRIGGER_SOFTWARE),
+    .trigger             = (poeg_trigger_t) ( POEG_TRIGGER_SOFTWARE),
     .polarity            = POEG_GTETRG_POLARITY_ACTIVE_LOW,
     .noise_filter        = POEG_GTETRG_NOISE_FILTER_PCLKB_DIV_32,
     .channel             = 0,
