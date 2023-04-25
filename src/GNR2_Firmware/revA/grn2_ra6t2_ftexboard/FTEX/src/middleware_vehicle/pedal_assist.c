@@ -50,7 +50,7 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
     //initalise pass to level 1. This is necessary to 
     //make the bike run if no screen is present
     //as on apollo. 
-    pHandle->bCurrentAssistLevel = PAS_LEVEL_1;
+    pHandle->bCurrentAssistLevel = DEFAULT_PAS_LEVEL;
 	
     // Enable slow motor Start for Pedal Assist cadence base
     Foldback_EnableSlowStart(pHandle->SpeedFoldbackVehiclePAS);

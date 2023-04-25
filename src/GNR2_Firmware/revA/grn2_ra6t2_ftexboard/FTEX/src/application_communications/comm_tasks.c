@@ -292,23 +292,26 @@ static void UpdateObjectDictionnary(void *p_arg)
             {
                  bSOC[CAN_PARAM] = bSOC[VEHICLE_PARAM];   
             }    
+            bool WriteOBJDict = false;
             
             if(bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM])
             { 
                 if(UART0Handle.UARTProtocol == UART_APT)
                 {   
+                    WriteOBJDict = true;                    
                     if (LCD_APT_handle.APTChangePasFlag) // Check if PAS was changed by non-can source                          
                     {    
                         LCD_APT_handle.APTChangePasFlag = false;
                         bPAS[CAN_PARAM] = bPAS[VEHICLE_PARAM];  // if it was set the CAN pas as the vehicle pas                                    
                     }
                     else // if it wasnt changed by a non-can then it was changed by a can source
-                    {
+                    {                       
                         CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
                         LCD_APT_handle.CanChangePasFlag = true;
                     }
                 }                    
             }
+
             
             // If the whele diameter in the OBJ dict and vehicle don't match, update the on in the vehicle
             #if GNR_MASTER
@@ -351,7 +354,12 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
+            
+            if (WriteOBJDict)
+            {    
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
+            }
+            
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow)); 

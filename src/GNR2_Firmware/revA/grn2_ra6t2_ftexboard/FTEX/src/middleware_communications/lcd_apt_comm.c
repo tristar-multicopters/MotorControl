@@ -171,14 +171,14 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
  *  This is executed in a comm task that gets unblocked when a complete frame is received.
  *
  */
-    
+   
 void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 {
     APT_frame_t replyFrame = {0};
     int32_t  toSend      = 0;
     uint32_t Check       = 0;
     uint16_t Merge       = 0;
-    uint8_t  PassLvl     = 0;
+    uint8_t  PassLvl     = 0; 
     uint8_t  LightStatus = 0;
     uint16_t SpeedLimit;
      
@@ -217,12 +217,16 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         //Reading the Pass
         PassLvl = (pHandle->rx_frame.Buffer[PAS] & 0x0F); //Only the 4 LSB contain the pass level
     
-        if(PassLvl != PAS_UNCHANGED && PassLvl != pHandle->OldPAS)
+        if(PassLvl != PAS_UNCHANGED && PassLvl != pHandle->OldPAS && !pHandle->PASChangeTransition)
         {                  
             PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,LCD_APT_ConvertPASLevelFromAPT(PassLvl,pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel));         
             pHandle->OldPAS = PassLvl;
             pHandle->APTChangePasFlag = true;
-        }                      
+        }
+        else if ((pHandle->PASChangeTransition) && (PassLvl == PAS_UNCHANGED)) // The PAS value being sent byt the screen isnt reliable when we ask it to change the level
+        {                                                                    // So we wait for it to tell us that PAS is unchanged so we know it is now stable.
+            pHandle->PASChangeTransition = false;  
+        }            
 
         //Reading the Speed limit
         SpeedLimit = pHandle->rx_frame.Buffer[SPEED];        
@@ -289,6 +293,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         if (pHandle->CanChangePasFlag)
         {
              pHandle->CanChangePasFlag = false;
+             pHandle->PASChangeTransition = true; // Make sure we wait for the transition after we send the command
              replyFrame.Buffer[7] =  LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)); 
              pHandle->OldPAS = LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS));
         }

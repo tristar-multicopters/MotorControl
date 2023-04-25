@@ -85,6 +85,7 @@ typedef struct
     uint8_t OldPAS;                        // Used to keep track of the current PAs levle on the screen 
     
     bool CanChangePasFlag;                 // Used to tell the screen that PAS has bene changed from the Can interface
+    bool PASChangeTransition;              // Used to ignore the PAS value being sent by the screen when we have a PAS trasition
     bool APTChangePasFlag;                 // Used to tell the Can interfacne that the screen changed the PAS    
     
 }APT_Handle_t;

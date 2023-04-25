@@ -7,6 +7,7 @@
 
 #include "co_gnr2_specs.h"
 #include "gnr_parameters.h"
+#include "pedal_assist.h"
 
 #include "co_can_ra6t2.h"           /* CAN driver                  */
 #include "co_timer_ra6t2.h"         /* Timer driver                */
@@ -123,7 +124,7 @@ uint8_t  bObjDataMotor2FaultAck             = 0;
 /*****Allocate global variables for GNR-IOT objects*****/
 int16_t  bObjDataSpeedMeas                  = 0;
 uint8_t  bObjDataSOC                        = 0;
-uint8_t  bObjDataPAS                        = 0;
+uint8_t  bObjDataPAS                        = DEFAULT_PAS_LEVEL; // The default PAS level should be 1
 uint8_t  bObjDataMaxPAS                     = 0;
 uint16_t hObjDataFwVersion                  = 0;
 uint16_t hObjDataPowerMeas                  = 0;

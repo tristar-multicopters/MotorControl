@@ -43,6 +43,9 @@ typedef enum
     PAS_LEVEL_WALK,
 } PasLevel_t;
 
+
+#define DEFAULT_PAS_LEVEL PAS_LEVEL_1
+
 typedef enum
 {
     TorqueSensorUse = 0,    /* Torque sensor use define */
