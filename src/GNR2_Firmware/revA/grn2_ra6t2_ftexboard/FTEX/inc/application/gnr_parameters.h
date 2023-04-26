@@ -14,8 +14,7 @@
 #define VEHICLE_NIDEC                 8
 #define VEHICLE_QUIETKAT              9
 #define VEHICLE_RBS_MB                10
-#define VEHICLE_VELEC_CITI_500W       12 
-
+#define VEHICLE_URBAN                 11
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 
@@ -60,7 +59,8 @@
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 
-#define VEHICLE_SELECTION             VEHICLE_VELEC_CITI_500W     /* Vehicle selection to adapt motor/vehicle parameters.
+
+#define VEHICLE_SELECTION             VEHICLE_VELEC     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                                                                                

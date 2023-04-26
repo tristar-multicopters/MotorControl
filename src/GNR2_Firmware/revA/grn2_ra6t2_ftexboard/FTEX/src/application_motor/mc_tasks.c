@@ -451,16 +451,7 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
   
   
   
-#if VEHICLE_SELECTION == VEHICLE_VELEC    
-    if (FOCVars[bMotor].hTeref == 0.0)
-    {
-        PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
-    }
-    else
-    {
-        PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
-    }
-#endif
+
 #if VEHICLE_SELECTION == VEHICLE_TSUGAWA    
     if (FOCVars[bMotor].hTeref == 0.0)
     {
@@ -477,6 +468,18 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
     PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));    
     PID_SetKP(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKp, abs(hM1SpeedUnit)));
     PID_SetKI(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKi, abs(hM1SpeedUnit)));
+    
+    #if VEHICLE_SELECTION == VEHICLE_VELEC    
+    // this PID update is for correct IqKI for imidietly stop when release trottle
+    if (FOCVars[bMotor].hTeref == 0.0)
+    {
+        PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
+    }
+    else
+    {
+        PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
+    }
+#endif
 }
 
 /**

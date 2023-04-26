@@ -1,10 +1,10 @@
 /**
   * @file    pmsm_motor_parameters_rbs_mb.h
-  * @brief   This file contains the parameters needed in order to configure the motor of rbs mountain bike 750w motor.
+  * @brief   This file contains the parameters needed in order to configure the motor of RBS Mountain 750W motor.
   *
 */
 
-/* Define to prevent recursive inclusion --- 
+/* Define to prevent recursive inclusion ---
 ----------------------------------*/
 #ifndef __PMSM_MOTOR_PARAMETERS_RBS_MB_H
 #define __PMSM_MOTOR_PARAMETERS_RBS_MB_H
@@ -12,14 +12,14 @@
 /************************
  *** Motor Parameters ***
  ************************/
-
+                                                 
  /***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
 #define POLE_PAIR_NUM          8 /* Number of motor pole pairs */
-#define RS                     0.1f /* Stator resistance , ohm*/
-#define LS                     0.000235f /* Stator inductance, H   For I-PMSM it is equal to Lq */
+#define RS                     0.071f /* Stator resistance , ohm*/
+#define LS                     0.00015f /* Stator inductance, H   For I-PMSM it is equal to Lq */
 #define MOTOR_MAGNET_FLUX       0.013f  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
-#define MOTOR_VOLTAGE_CONSTANT  28.84f   /*!< Volts RMS ph-ph /kRPM */
-#define ST_Torque_Coef          1.2f       /* this coeficient always keeps the starting torque higher than the nominal torque */
+#define MOTOR_VOLTAGE_CONSTANT  22.5f   /*!< Volts RMS ph-ph /kRPM */
+#define ST_Torque_Coef          1.2f       /* this coeficient always keeps the starting torque higher than the nominal torque    ***/
 
 #define PEAK_CURRENT_amps       55      /* peak current in amps     */
 #define NOMINAL_TORQUE          (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)    /* Nominal torque to apply to motor in cNm   
@@ -27,15 +27,17 @@
 #define STARTING_TORQUE         (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef)    /* Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes*/
 
 
- 
-#define MOTOR_MAX_SPEED_RPM     2100   /*!< Maximum rated speed  */
-                                       /* Old Example 2750 for 38Km/h */
+                                           
+                                            
+#define MOTOR_MAX_SPEED_RPM     1200 /*!< Maximum rated speed  */
 
 #define ID_DEMAG_amps                -5 /*!< Demagnetization current */
 #define MOTOR_MAX_TEMPERATURE_C 70    /* Maximum temperature in degree C */
 #define FLUX_WEAKENING_ENABLE   0       /* 0=disable 1=enable flux weakening , 
 
 /***************** MOTOR SENSORS PARAMETERS  ******************************/
+/* Motor sensors parameters are always generated but really meaningful only
+   if the corresponding sensor is actually present in the motor         */
 
 /*** Hall sensors ***/
 #define HALL_SENSORS_PLACEMENT  DEGREES_120 /*!< Mechanical position of the sensors
@@ -47,6 +49,4 @@
                                         transition of signal H1 and the zero crossing of the Bemf induced
                                         between phase A and B */
 
-																						
-#endif																						
-
+#endif

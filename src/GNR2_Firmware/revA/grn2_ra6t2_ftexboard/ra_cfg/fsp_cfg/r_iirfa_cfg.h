@@ -10,7 +10,7 @@ extern "C" {
 #define IIRFA_CFG_LOOP_USE_POLLING        (1)
 #define IIRFA_CFG_ECC_SUPPORT             (1)
 #define IIRFA_CFG_ROUNDING_MODE           (0)
-            
+                        
 
 #ifdef __cplusplus
 }
