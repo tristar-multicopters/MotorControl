@@ -1,13 +1,13 @@
 /**
-  * @file    pmsm_motor_parameters_rbs_mb.h
-  * @brief   This file contains the parameters needed in order to configure the motor of rbs mountain bike 750w motor.
+  * @file    pmsm_motor_parameters_velec_citi_500w.h
+  * @brief   This file contains the parameters needed in order to configure the motor of velec citi 500w motor.
   *
 */
 
 /* Define to prevent recursive inclusion --- 
 ----------------------------------*/
-#ifndef __PMSM_MOTOR_PARAMETERS_RBS_MB_H
-#define __PMSM_MOTOR_PARAMETERS_RBS_MB_H
+#ifndef __PMSM_MOTOR_PARAMETERS_VELEC_CITI_500W_H
+#define __PMSM_MOTOR_PARAMETERS_VELEC_CITI_500W_H
 
 /************************
  *** Motor Parameters ***
@@ -17,7 +17,7 @@
 #define POLE_PAIR_NUM          8 /* Number of motor pole pairs */
 #define RS                     0.1f /* Stator resistance , ohm*/
 #define LS                     0.000235f /* Stator inductance, H   For I-PMSM it is equal to Lq */
-#define MOTOR_MAGNET_FLUX       0.013f  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
+#define MOTOR_MAGNET_FLUX       0.0195f  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
 #define MOTOR_VOLTAGE_CONSTANT  28.84f   /*!< Volts RMS ph-ph /kRPM */
 #define ST_Torque_Coef          1.2f       /* this coeficient always keeps the starting torque higher than the nominal torque */
 
