@@ -14,3 +14,4 @@ exclude_paths:
   - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/ra_cfg/**"
   - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/ra_gen/**"
   - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard/RTE/**"
+  - "src/GNR2_Firmware/revA/grn2_ra6t2_ftexboard_testing/**"
