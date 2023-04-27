@@ -29,7 +29,6 @@
 
 #include "vc_parameters_apollo.h"
 
-
 #elif VEHICLE_SELECTION == VEHICLE_VELEC
 
 #include "vc_parameters_velec.h"
@@ -57,6 +56,14 @@
 #elif VEHICLE_SELECTION == VEHICLE_URBAN
 
 #include "vc_parameters_urban.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
+
+#include "vc_parameters_velec_citi_500w.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_A2_350W 
+
+#include "vc_parameters_a2_350w.h"
 
 #endif
 

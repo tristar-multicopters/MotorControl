@@ -15,6 +15,9 @@
 #define VEHICLE_QUIETKAT              9
 #define VEHICLE_RBS_MB                10
 #define VEHICLE_URBAN                 11
+#define VEHICLE_VELEC_CITI_500W       12 
+#define VEHICLE_A2_350W               13
+
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 

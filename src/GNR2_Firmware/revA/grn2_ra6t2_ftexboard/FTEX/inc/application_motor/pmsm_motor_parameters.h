@@ -55,6 +55,14 @@
 
 #include "pmsm_motor_parameters_urban.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
+
+#include "pmsm_motor_parameters_velec_citi_500w.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_A2_350W
+
+#include "pmsm_motor_parameters_a2_350w.h"
+
 #endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/

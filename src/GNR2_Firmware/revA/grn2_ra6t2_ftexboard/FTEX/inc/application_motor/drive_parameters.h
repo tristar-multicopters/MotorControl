@@ -56,6 +56,14 @@
 
 #include "drive_parameters_urban.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
+
+#include "drive_parameters_velec_citi_500w.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_A2_350W
+
+#include "drive_parameters_a2_350w.h"
+
 #endif
 
 #endif /*__DRIVE_PARAMETERS_H*/
