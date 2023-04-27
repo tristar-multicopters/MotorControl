@@ -18,7 +18,7 @@
 #define RS                     0.1f /* Stator resistance , ohm*/
 #define LS                     0.0001f /* Stator inductance, H   For I-PMSM it is equal to Lq */
 #define MOTOR_MAGNET_FLUX       0.022f  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
-#define MOTOR_VOLTAGE_CONSTANT  32f   /*!< Volts RMS ph-ph /kRPM */
+#define MOTOR_VOLTAGE_CONSTANT  32.0f   /*!< Volts RMS ph-ph /kRPM */
 #define ST_Torque_Coef          1.2f       /* this coeficient always keeps the starting torque higher than the nominal torque */
 
 #define PEAK_CURRENT_amps       55      /* peak current in amps     */
