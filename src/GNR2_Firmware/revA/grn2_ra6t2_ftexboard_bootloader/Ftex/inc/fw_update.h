@@ -37,12 +37,12 @@ int FW_UpdateProccess();
 int FW_CheckUpdate(void);
 
 /**
-  * @brief  Erase the second image
+  * @brief  Erase the first image
   * @param  None
   * @retval FLASH_OK (0x00) if no update required, else 
   *         return FLASH_ERROR (0x01).
   */
-int  FW_EraseSecondImage(void);
+int  FW_EraseFirstImage(void);
 	
 /**
   * @brief  Update the second image with the external flash
@@ -50,7 +50,7 @@ int  FW_EraseSecondImage(void);
   * @retval FLASH_OK (0x00) if no update required, else 
   *         return FLASH_ERROR (0x01).
   */
-int  FW_WriteSecondImage(void);
+int  FW_WriteFirstImage(void);
 
 
 #endif /* __FW_UPDATE_H */

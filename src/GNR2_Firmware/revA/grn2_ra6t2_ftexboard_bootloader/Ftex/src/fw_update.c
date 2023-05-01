@@ -87,8 +87,8 @@ int FW_UpdateProccess()
         /* Check if an update is required */
         if(FW_CheckUpdate() == UPDATE_REQUIRED)
         {        
-            FW_EraseSecondImage();// Clear the "new app" memory region
-            FW_WriteSecondImage();// Write the new app from the external flash into the second memory region
+            FW_EraseFirstImage();// Clear the "new app" memory region
+            FW_WriteFirstImage();// Write the new app from the external flash into the first memory region
         }
         else
         {
@@ -158,14 +158,14 @@ int FW_CheckUpdate(void)
 }
 
 /**
-    Erase second image
+    Erase first image
 */
-int  FW_EraseSecondImage(void)
+int  FW_EraseFirstImage(void)
 {
     const struct flash_area *fap;
     int rc;
 
-    rc = flash_area_open(FLASH_AREA_IMAGE_SECONDARY(0), &fap);
+    rc = flash_area_open(FLASH_AREA_IMAGE_PRIMARY(0), &fap);
     if (rc != 0) 
     {
         return FLASH_ERROR;
@@ -185,7 +185,7 @@ int FW_Write(uint8_t *pData,uint32_t address,uint32_t size)
     const struct flash_area *fap;
     int rc;
     
-    rc = flash_area_open(FLASH_AREA_IMAGE_SECONDARY(0), &fap);
+    rc = flash_area_open(FLASH_AREA_IMAGE_PRIMARY(0), &fap);
     if (rc != 0) 
     {
         return FLASH_ERROR;
@@ -198,9 +198,9 @@ int FW_Write(uint8_t *pData,uint32_t address,uint32_t size)
 
 
 /**
-    read the external flash and write chunk of data by chunk of data in the secondary image
+    read the external flash and write chunk of data by chunk of data in the first image
 */
-int  FW_WriteSecondImage(void)
+int  FW_WriteFirstImage(void)
 {
     uint32_t internal_address;
     uint8_t data_read_len;
