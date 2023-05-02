@@ -27,9 +27,9 @@
 
 #include "pmsm_motor_parameters_apollo.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_VELEC
+#elif VEHICLE_SELECTION == VEHICLE_R48_750W
 
-#include "pmsm_motor_parameters_velec.h"
+#include "pmsm_motor_parameters_r48_750w.h"
 
 #elif VEHICLE_SELECTION == VEHICLE_WHEEL
 

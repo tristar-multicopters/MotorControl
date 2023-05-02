@@ -1,13 +1,13 @@
 /**
-  * @file    pmsm_motor_parameters_velec.h
-  * @brief   This file contains the parameters needed in order to configure the motor of velec motor.
+  * @file    pmsm_motor_parameters_r48_750w.h
+  * @brief   This file contains the parameters needed in order to configure the motor of velec R48 750W motor.
   *
 */
 
 /* Define to prevent recursive inclusion --- 
 ----------------------------------*/
-#ifndef __PMSM_MOTOR_PARAMETERS_VELEC_H
-#define __PMSM_MOTOR_PARAMETERS_VELEC_H
+#ifndef __PMSM_MOTOR_PARAMETERS_R48_750W_H
+#define __PMSM_MOTOR_PARAMETERS_R48_750W_H
 
 /************************
  *** Motor Parameters ***

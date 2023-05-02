@@ -1,13 +1,13 @@
 /**
-  * @file    vc_parameters_velec.h
-  * @brief   This file contains the parameters needed in order to configure the motor of velec bike.
+  * @file    vc_parameters_r48_750w.h
+  * @brief   This file contains the parameters needed in order to configure the motor of VEHICLE_R48_750W bike.
   *
 */
 
 /* Define to prevent recursive inclusion --- 
 ----------------------------------*/
-#ifndef __VC_PARAMETERS_VELEC_H
-#define __VC_PARAMETERS_VELEC_H
+#ifndef __VC_PARAMETERS_R48_750W_H
+#define __VC_PARAMETERS_R48_750W_H
 
 #include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"

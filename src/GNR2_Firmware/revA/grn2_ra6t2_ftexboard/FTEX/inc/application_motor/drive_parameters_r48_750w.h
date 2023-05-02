@@ -1,12 +1,12 @@
 /**
-  * @file    drive_parameters_velec.h
+  * @file    drive_parameters_R48_750W.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to velec motor.
+  *          in order to configure a motor drive. This file is specific to velec r48 750W motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_VELEC_H
-#define __DRIVE_PARAMETERS_VELEC_H
+#ifndef __DRIVE_PARAMETERS_R48_750W_H
+#define __DRIVE_PARAMETERS_R48_750W_H
 
 /************************
  *** Motor Parameters ***
