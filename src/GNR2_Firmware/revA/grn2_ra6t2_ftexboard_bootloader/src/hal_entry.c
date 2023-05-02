@@ -7,6 +7,7 @@
 #include "uCAL_SPI.h"
 #include "fw_update.h"
 #include "uart_debug.h"
+#include "watchdog.h"
 
 
 FSP_CPP_HEADER
@@ -37,9 +38,14 @@ void MCuboot_QuickSetup(void)
 /* Initialize Custom Crypto (Protected Mode) driver. */
     assert(FSP_SUCCESS == R_SCE_Open(&sce_ctrl, &sce_cfg));
 #endif
-
+    //first kick to reset WDT timeout.
+    Watchdog_Refresh();
     /* Start the firmware update process */
 	FW_UpdateProccess();
+    
+    //kick to reset WDT timeout.
+    Watchdog_Refresh();
+    
     /* Verify the boot image and get its location. */
     struct boot_rsp rsp;
     assert(0 == boot_go(&rsp));
@@ -54,6 +60,10 @@ void MCuboot_QuickSetup(void)
  **********************************************************************************************************************/
 void hal_entry(void)
 {
+    //wait to stabilaze wdt clock.
+    R_BSP_SoftwareDelay(STABILIZATION_CLOCK_TIME_TO_WDT_MS, BSP_DELAY_UNITS_MILLISECONDS);
+    //Initialize WDT(timeout set to 2.2 seconds).
+    WatchdogInit();
     /* Initialize the UART module. */
     uCAL_UART_Init();
     /* Initialize the SPI module. */

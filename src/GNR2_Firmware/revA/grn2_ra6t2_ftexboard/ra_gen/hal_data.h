@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include "bsp_api.h"
 #include "common_data.h"
-#include "r_wdt.h"
-#include "r_wdt_api.h"
 #include "r_flash_hp.h"
 #include "r_flash_api.h"
 #include "bootutil/bootutil.h"
@@ -31,16 +29,6 @@
 #include "r_gpt_three_phase.h"
             #include "r_three_phase_api.h"
 FSP_HEADER
-/** WDT on WDT Instance. */
-extern const wdt_instance_t g_wdt0;
-
-/** Access the WDT instance using these structures when calling API functions directly (::p_api is not used). */
-extern wdt_instance_ctrl_t g_wdt0_ctrl;
-extern const wdt_cfg_t g_wdt0_cfg;
-
-#ifndef NULL
-void NULL(wdt_callback_args_t * p_args);
-#endif
 /* Flash on Flash HP Instance */
 extern const flash_instance_t g_flash0;
 

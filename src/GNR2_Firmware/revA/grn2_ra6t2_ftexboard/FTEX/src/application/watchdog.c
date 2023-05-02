@@ -12,39 +12,21 @@ extern osThreadId_t Watchdog_handle;
 
 
 /**
-  * @brief  Function used to Initialize the Watchdog
-  */
-bool WatchdogInit(void)
-{
-    uint8_t uIsError = false;
-    uIsError |= R_WDT_Open(&g_wdt0_ctrl, &g_wdt0_cfg);
-    
-    ASSERT(FSP_SUCCESS == uIsError);
-    
-    return (bool) uIsError;
-}
-
-/**
   Task that periodically refreshs the watchdog
   (very low priority task)
  */
 __NO_RETURN void Watchdog (void * pvParameter)
 {
     UNUSED_PARAMETER(pvParameter); 
-    uint32_t WatchdogCount;
-    
-    //initialize the wdt.
-    WatchdogInit();
-    
+
     while(1)
     {
-        //Read the current count value of the WDT
-        ASSERT(R_WDT_CounterGet(&g_wdt0_ctrl,&WatchdogCount) == FSP_SUCCESS);
-
         //used to refresh the wdt count. avoid wdt reset
         //wdt was configured to reset in 2.2 seconds.
         //must to be refreshed before 2.2 seconds.
-        R_WDT_Refresh(&g_wdt0_ctrl);
+        //this must be uncommented when bootloader+main will be 
+        //flashed.
+        //Watchdog_Refresh();
         
         osDelay(REFRESH_DELAY_MS); // Delay between refresh of watchdog
     }   
@@ -55,5 +37,6 @@ __NO_RETURN void Watchdog (void * pvParameter)
  */
 void Watchdog_Refresh(void)
 {
-    R_WDT_Refresh(&g_wdt0_ctrl);
+    R_WDT->WDTRR = WDT_REFRESH_STEP_1;
+    R_WDT->WDTRR = WDT_REFRESH_STEP_2;
 }

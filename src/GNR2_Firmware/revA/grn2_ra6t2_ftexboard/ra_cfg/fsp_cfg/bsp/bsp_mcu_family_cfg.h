@@ -119,7 +119,7 @@ extern "C" {
 #endif
 #ifndef BSP_TZ_CFG_PSARE
 #define BSP_TZ_CFG_PSARE (\
-            (((1 > 0) ? 0U : 1U) << 0) /* WDT */ | \
+            (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 0) /* WDT */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 1) /* IWDT */ | \
             (((RA_NOT_DEFINED > 0) ? 0U : 1U) << 4) /* KINT */ | \
             0xffffffec) /* Unused */

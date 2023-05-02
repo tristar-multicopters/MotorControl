@@ -14,6 +14,7 @@
 #include "uCAL_SPI.h"
 #include "fw_storage.h"
 #include "fw_update.h"
+#include "watchdog.h"
 
 #include "sysflash.h"
 #include "bootutil/bootutil.h"
@@ -87,8 +88,17 @@ int FW_UpdateProccess()
         /* Check if an update is required */
         if(FW_CheckUpdate() == UPDATE_REQUIRED)
         {        
-            FW_EraseFirstImage();// Clear the "new app" memory region
-            FW_WriteFirstImage();// Write the new app from the external flash into the first memory region
+            //kick to reset WDT timeout.
+            Watchdog_Refresh();
+            
+            // Clear the "new app" memory region
+            FW_EraseFirstImage();
+            
+            //kick to reset WDT timeout.
+            Watchdog_Refresh();
+            
+            // Write the new app from the external flash into the first memory region
+            FW_WriteFirstImage();
         }
         else
         {
