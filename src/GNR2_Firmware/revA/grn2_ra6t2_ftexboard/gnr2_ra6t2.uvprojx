@@ -10,7 +10,7 @@
       <TargetName>APP_DEBUG (Standard)</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
+      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -524,6 +524,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -767,6 +772,16 @@
               <FileName>pmsm_motor_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_r48_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2420,6 +2435,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2663,6 +2683,16 @@
               <FileName>pmsm_motor_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_r48_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4283,6 +4313,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4526,6 +4561,16 @@
               <FileName>pmsm_motor_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_r48_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -5744,7 +5789,7 @@
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BB3CFP\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.1.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_UPLOAD (JUST UPLOAD)"/>
@@ -5753,7 +5798,7 @@
       <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BB3CFP\system_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.1.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_UPLOAD (JUST UPLOAD)"/>
@@ -5774,7 +5819,7 @@
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.1.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
         </targetInfos>
@@ -5782,7 +5827,7 @@
       <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\system_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.8.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.1.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
         </targetInfos>
