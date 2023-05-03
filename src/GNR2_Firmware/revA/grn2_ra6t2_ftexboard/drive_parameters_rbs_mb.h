@@ -1,12 +1,12 @@
 /**
-  * @file    drive_parameters_velec_citi.h
+  * @file    drive_parameters_rbs_mb.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to velec  citi 500w motor.
+  *          in order to configure a motor drive. This file is specific to velec motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_VELEC_CITI_500W_H
-#define __DRIVE_PARAMETERS_VELEC_CITI_500W_H
+#ifndef __DRIVE_PARAMETERS_RBS_MB_H
+#define __DRIVE_PARAMETERS_RBS_MB_H
 
 /************************
  *** Motor Parameters ***
@@ -131,8 +131,8 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
-#define MAX_APPLICATION_POSITIVE_POWER  900    /* Refers to maximum power in watts that drive can push to the motor */
-#define MAX_APPLICATION_NEGATIVE_POWER  900    /* Refers to maximum power in watts that drive can accept from the motor */
+#define MAX_APPLICATION_POSITIVE_POWER  1100    /* Refers to maximum power in watts that drive can push to the motor */
+#define MAX_APPLICATION_NEGATIVE_POWER  1100    /* Refers to maximum power in watts that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   
@@ -215,4 +215,4 @@
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA     -14.91F /*!< Beta constant to configure butterworth filter for mecanical speed filtering */
 
 
-#endif /*__DRIVE_PARAMETERS_VELEC_CITI_H*/
+#endif /*__DRIVE_PARAMETERS_VELEC_H*/

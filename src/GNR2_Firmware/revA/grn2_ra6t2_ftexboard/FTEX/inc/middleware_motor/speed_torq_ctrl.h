@@ -24,6 +24,17 @@ extern "C" {
 
 
 /* Exported types ------------------------------------------------------------*/
+typedef struct
+{
+    uint16_t  hDynamicMaxTorque;     /* new maximum power based on foldback function */
+    uint16_t  hDynamicMaxPower;     /* new maximum power based on foldback function */
+    uint16_t  hOverMaxPowerTimer;    /** timer to count time elapsed with power more that MAX */
+    uint16_t  hBelowMaxPowerTimer;   /** timer to count time elapsed with power less that MAX */
+    uint16_t  hOverMaxPowerTimeout;  /** timeout for hOverMaxPowerTimeout */
+    uint16_t  hBelowMaxPowerTimeout; /** timeout for hBelowMaxPowerTimeout */
+} DynamicPowerHandle_t;
+
+
 /**
   * @brief  Speed & Torque Control parameters definition
   */
@@ -35,9 +46,14 @@ typedef struct
     Foldback_Handle_t FoldbackMotorSpeed;               /* Foldback structure used to limit maximum motor speed */
     Foldback_Handle_t FoldbackMotorTemperature;         /* Foldback structure used to limit maximum motor temperature */
     Foldback_Handle_t FoldbackHeatsinkTemperature;      /* Foldback structure used to limit maximum heatsink temperature */
+    Foldback_Handle_t FoldbackDynamicMaxPower;         /* Foldback structure used to limit maximum Power after a period of time */
+
     
     Foldback_Handle_t FoldbackDynamicMaxTorque;      /* Foldback structure used to limit maximum Torque to other foldbacks */   
 
+    
+    DynamicPowerHandle_t   DynamicPowerHandle;
+    
     int16_t hCurrentTorqueRef;
     int16_t hCurrentSpeedRef;
 
@@ -90,6 +106,11 @@ typedef struct
     float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
     
 } SpdTorqCtrlHandle_t;
+
+
+
+
+
 
 
 /**

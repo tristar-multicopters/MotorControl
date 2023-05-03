@@ -56,6 +56,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     Foldback_Init(&pHandle->FoldbackDynamicMaxTorque);
     Foldback_Init(&pHandle->FoldbackHeatsinkTemperature);
     Foldback_Init(&pHandle->FoldbackMotorSpeed);
+    Foldback_Init(&pHandle->FoldbackDynamicMaxPower);
     Foldback_Init(&pHandle->FoldbackMotorTemperature);
     
 }
@@ -341,7 +342,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     {
         hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor) * 100;
     }
-    
+
     int16_t hOutputTorque, hMaxTorque; 
     hMaxTorque = Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxTorque, NULL,(int16_t) abs(hMeasuredSpeed) );
     Foldback_UpdateMaxValue(&pHandle->FoldbackMotorSpeed, hMaxTorque);
@@ -407,11 +408,32 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     hMeasuredSpeedUnit = SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
     hMeasuredSpeedTenthRadPerSec = (int16_t)((10*hMeasuredSpeedUnit*2*3.1416F)/SPEED_UNIT);
 
+    // Check if requested torque is more/equal to latest calculated torque, then start foldback
+    if (hInputTorque >= pHandle->DynamicPowerHandle.hDynamicMaxTorque)
+    {
+        //start timer to count on max torque elapsed timer
+        pHandle->DynamicPowerHandle.hOverMaxPowerTimer++;
+    }
+    else if (pHandle->DynamicPowerHandle.hOverMaxPowerTimer > 0)
+    {
+        pHandle->DynamicPowerHandle.hBelowMaxPowerTimer++;
+        if (pHandle->DynamicPowerHandle.hBelowMaxPowerTimer > pHandle->DynamicPowerHandle.hBelowMaxPowerTimeout)
+        {
+            // clear timers and put max power back to the default defined value
+            pHandle->DynamicPowerHandle.hOverMaxPowerTimer = 0;
+            pHandle->DynamicPowerHandle.hBelowMaxPowerTimer = 0;
+            pHandle->DynamicPowerHandle.hDynamicMaxPower = pHandle->hMaxPositivePower;
+        }
+    }
+    // Limit MAX POWER by the foldback to prevent BMS shutdown
+    Foldback_UpdateMaxValue(&pHandle->FoldbackDynamicMaxPower, MAX_APPLICATION_POSITIVE_POWER);        // this foldback limits MAX POWER after a while
+    pHandle->DynamicPowerHandle.hDynamicMaxPower = (uint16_t)Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower, (int16_t)pHandle->DynamicPowerHandle.hOverMaxPowerTimer);    
+
     if (hMeasuredSpeedUnit != 0)
     {
         if (hInputTorque > 0)
         {
-            wTorqueLimit = 1000*pHandle->hMaxPositivePower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            wTorqueLimit = 1000*pHandle->DynamicPowerHandle.hDynamicMaxPower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
             if (hInputTorque > wTorqueLimit)
             {
                 hRetval = (int16_t) wTorqueLimit;
@@ -426,6 +448,9 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
             }
         }
     }
+    // update hDynamicMaxTorque with latest calculated torque
+    pHandle->DynamicPowerHandle.hDynamicMaxTorque = (uint16_t)hRetval;
+    
     return hRetval;
 }
 

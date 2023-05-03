@@ -170,6 +170,15 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .hDecreasingEndValue = 100 * FOLDBACK_HS_TEMP_END_VALUE, 
       .hDecreasingRange = 100 * FOLDBACK_HS_TEMP_INTERVAL,
   },
+  .FoldbackDynamicMaxPower =
+  {
+      .bEnableFoldback = ENABLE_MAX_POWER_LIMIT,
+      .FoldbackConfig = TRIM,
+      .hDefaultOutputLimitHigh = MAX_APPLICATION_POSITIVE_POWER,
+      .hDefaultOutputLimitLow = MAX_BMS_POSITIVE_POWER,
+      .hDecreasingEndValue = MAX_TIME_BMS_TOLERANT,
+      .hDecreasingRange = MAX_POWER_LIMIT_TIMEOUT ,
+  },
   .FoldbackDynamicMaxTorque = 
   {
       .bEnableFoldback = true,
@@ -192,6 +201,16 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
       .bIsOverCurrentDetected = false,
       .OverCurrentStatus = HARDWARE_OCD
   },
+  .DynamicPowerHandle =
+  {
+      .hDynamicMaxTorque = NOMINAL_TORQUE,
+      .hDynamicMaxPower = MAX_APPLICATION_POSITIVE_POWER,
+      .hBelowMaxPowerTimeout = MAX_POWER_RECOVER_TIMEOUT,  
+      .hOverMaxPowerTimeout = 0,    // since using foldback this parameter is not needed
+      .hBelowMaxPowerTimer = 0,
+      .hOverMaxPowerTimer = 0    
+  },
+  
   .hSTCFrequencyHz =           		MEDIUM_FREQUENCY_TASK_RATE,
   .hMaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
   .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),

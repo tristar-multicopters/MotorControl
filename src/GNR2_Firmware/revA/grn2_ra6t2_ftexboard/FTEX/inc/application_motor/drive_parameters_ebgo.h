@@ -154,7 +154,12 @@
 #define DEFAULT_SPEED_SLOPE_UP         500        /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       500        /* Slope in #SPEED_UNIT per second */
 
-
+/* Dynamic maximum power foldback settings */
+#define ENABLE_MAX_POWER_LIMIT          false        /* to enable or disable the foldback */
+#define MAX_BMS_POSITIVE_POWER          500         /* Maximum Power at the end point of foldback */
+#define MAX_TIME_BMS_TOLERANT           20000       /* milliseconds - time of foldback end point */
+#define MAX_POWER_LIMIT_TIMEOUT         10000       /* milliseconds - timeout before start derating */
+#define MAX_POWER_RECOVER_TIMEOUT       80          /* milliseconds - timeout before reset maximum power to default value */
 /******************************   START-UP PARAMETERS   **********************/
 
 /* Observer start-up output conditions  */
