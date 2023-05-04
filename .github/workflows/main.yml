@@ -1,0 +1,18 @@
+name: GNR2 CI jobs
+
+on:
+  pull_request:
+    branches:
+    - main
+    
+jobs:
+  runGNR2Build:
+    name: Job to build GNR2 firmware
+    runs-on: windows-latest
+    steps:
+      - name: Print status
+        run: echo "running the CI script!"
+        shell: cmd
+      - name: Run the build
+        run: ./.github/scripts/runBuild.ps1
+        shell: powershell
