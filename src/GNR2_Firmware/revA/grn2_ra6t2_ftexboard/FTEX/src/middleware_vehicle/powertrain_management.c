@@ -660,18 +660,6 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
         bCheckStop3 = true;
     }
 
-    // Instead of stopping vehicle on Brake situation, we only need to make sure that applying zero toque to the motor
-    // Stopping Vehicle and then the Motor Controller when it is still spins causing unknow status for the driver when trying to put torq on motor
-    /*
-    if (BRK_IsPressed(pHandle->pBrake)) // If brake is pressed
-    {
-        #if VEHICLE_SELECTION == VEHICLE_APOLLO
-            // do nothing
-        #else
-        bCheckStop4 = true;
-        #endif
-    }
-*/
     if (!pHandle->pPAS->bPASDetected && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If there is no PAS  or walk mode detected
     {
         bCheckStop5 = true;
@@ -681,14 +669,6 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
     {
         bCheckStop6 = true;
     }
-    
-    #if VEHICLE_SELECTION != VEHICLE_APOLLO
-    //if a firmware update is running or device is going off stop motors to start.
-    if(FirmwareUpdate_Running() || PWREN_GetGoingOffFlag(pHandle->pPWREN))
-    {
-        bCheckStop4 = true;
-    }
-    #endif
 
     return (bCheckStop1 & bCheckStop2 & bCheckStop5& bCheckStop6) | bCheckStop3 | bCheckStop4; // Final logic to know if powertrain should be stopped.
 }

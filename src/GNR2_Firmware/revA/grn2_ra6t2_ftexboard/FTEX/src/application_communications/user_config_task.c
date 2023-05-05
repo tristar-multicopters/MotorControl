@@ -39,7 +39,7 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.torqueMinimumThresholdStartup = PTS_OFFSET_PTS2TORQUE_STARTUP,
     .PAS_ConfigData.startupTorqueMinimumThresholdSpeed = PTS_OFFSET_STARTUP_SPEED,
     .PAS_ConfigData.torqueMinimumThreshold = PTS_OFFSET_PTS2TORQUE,
-    .PAS_ConfigData.torqueSensorMultiplier = PAS_LEVEL_COEFF,
+    .PAS_ConfigData.torqueSensorMultiplier = PAS_TORQUE_GAIN,
     .PAS_ConfigData.torqueMaxSpeed = 0,
     .PAS_ConfigData.cadenceHybridLeveSpeed[PAS_0] = PAS_LEVEL_SPEED_0,
     .PAS_ConfigData.cadenceHybridLeveSpeed[PAS_1] = PAS_LEVEL_SPEED_1,
@@ -293,8 +293,8 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     //update userConfigData.PAS_ConfigData.torqueMinimumThreshold(PTS_OFFSET_PTS2TORQUE)
     userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hOffsetMT = UserConfigTask_GetTorqueMinimumThreshold();  
 
-    //update PAS_ConfigData.torqueSensorMultiplier(PAS_LEVEL_COEFF)    
-    userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bCoeffLevel = UserConfigTask_GetTorqueSensorMultiplier();
+    //update PAS_ConfigData.torqueSensorMultiplier(PAS_TORQUE_GAIN)    
+    userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bTorqueGain = UserConfigTask_GetTorqueSensorMultiplier();
     
     //update PAS_ConfigData.torqueMaxSpeed(will be defined).
     

@@ -178,7 +178,8 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     }
     
     // Convert the PAS torque sensing in motor torque
-    hRefTorqueS = (hReadTS * pHandle->sParameters.bCoeffLevel * currentLevel) / pHandle->sParameters.bMaxLevel;
+    hRefTorqueS = ((hReadTS * pHandle->sParameters.bTorqueGain)/PAS_PERCENTAGE);
+    hRefTorqueS = (hRefTorqueS * currentLevel) / pHandle->sParameters.bMaxLevel;
     
     // Safety for not exceeding the maximum torque value 
     hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;

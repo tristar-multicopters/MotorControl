@@ -4,19 +4,17 @@
 */
 
 #define VEHICLE_DEFAULT               0
-#define VEHICLE_EBGO                  1
-#define VEHICLE_GRIZZLY               2
-#define VEHICLE_E_CELLS               3
-#define VEHICLE_APOLLO                4
-#define VEHICLE_R48_750W              5
-#define VEHICLE_WHEEL                 6
-#define VEHICLE_TSUGAWA               7
-#define VEHICLE_NIDEC                 8
-#define VEHICLE_QUIETKAT              9
-#define VEHICLE_RBS_MB                10
-#define VEHICLE_URBAN                 11
-#define VEHICLE_VELEC_CITI_500W       12 
-#define VEHICLE_A2_350W               13
+#define VEHICLE_GRIZZLY               1
+#define VEHICLE_E_CELLS               2
+#define VEHICLE_R48_750W              3
+#define VEHICLE_WHEEL                 4
+#define VEHICLE_TSUGAWA               5
+#define VEHICLE_NIDEC                 6
+#define VEHICLE_QUIETKAT              7
+#define VEHICLE_RBS_MB                8
+#define VEHICLE_URBAN                 9
+#define VEHICLE_VELEC_CITI_500W       10 
+#define VEHICLE_A2_350W               11
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
@@ -63,7 +61,7 @@
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 
 
-#define VEHICLE_SELECTION             VEHICLE_A2_350W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_GRIZZLY     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                                                                                

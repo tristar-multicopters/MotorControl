@@ -76,18 +76,15 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
         .fFilterBeta = PTS_FILTER_BETA,
 
         .hOffsetPTS = PTS_OFFSET_ADC2PTS,
-        .bSlopePTS = PTS_SLOPE_ADC2PTS,
-        .bDivisorPTS = PTS_DIVISOR_ADC2PTS,
         
         .hOffsetMTStartup      = PTS_OFFSET_PTS2TORQUE_STARTUP,  
         .hStartupOffsetMTSpeed = PTS_OFFSET_STARTUP_SPEED,
         .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
-
-        .bSlopeMT = PTS_SLOPE_PTS2TORQUE,
-        .bDivisorMT = PTS_DIVISOR_PTS2TORQUE,
+       
         .hMax = PTS_MAX_PTSVALUE,
         .hLowPassFilterBW1 = PTS_FILTER_BW1,
         .hLowPassFilterBW2 = PTS_FILTER_BW2,
+        .PasMaxOutputTorque = PAS_MAX_TORQUE,
     }
 };
 
@@ -192,7 +189,7 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.hPASMaxSpeed = PAS_MAX_SPEED,
     .sParameters.hPASMaxKmSpeed = PAS_MAX_KM_SPEED,
     .sParameters.bMaxLevel = PAS_MAX_LEVEL,
-    .sParameters.bCoeffLevel = PAS_LEVEL_COEFF,
+    .sParameters.bTorqueGain = PAS_TORQUE_GAIN,
     .sParameters.hMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
     .sParameters.hMaxSpeedRatio = PAS_MAX_SPEED_RATIO,
     .sParameters.bPASCountSafe = PAS_MIN_PEDAL_COUNT_SAFE,
@@ -225,12 +222,10 @@ ThrottleHandle_t ThrottleHandle =
         .fFilterBeta  = THROTTLE_FILTER_BETA,
 
         .hOffsetThrottle  = THROTTLE_OFFSET_ADC2THROTTLE,
-        .bSlopeThrottle   = THROTTLE_SLOPE_ADC2THROTTLE,
-        .bDivisorThrottle = THROTTLE_DIVISOR_ADC2THROTTLE,
-
+        
+        .hMaxThrottle = THROTTLE_MAX_ADC2THROTTLE,
+        
         .hOffsetTorque  = THROTTLE_OFFSET_THROTTLE2TORQUE,
-        .bSlopeTorque   = THROTTLE_SLOPE_THROTTLE2TORQUE,
-        .bDivisorTorque = THROTTLE_DIVISOR_THROTTLE2TORQUE,
 
         .hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
         

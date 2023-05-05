@@ -2,7 +2,7 @@
   * @file    throttle.c
   * @brief   This module handles throttle management
   *
-*/
+  */
 
 #include "throttle.h"
 #include "ASSERT_FTEX.h"
@@ -39,6 +39,8 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     /* Need to be register with RegularConvManager */
     pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
     Throttle_Clear(pHandle);
+    
+    Throttle_ComputeSlopes(pHandle); // Used to calculate values to calibrate ADC value to a standard value
 }
 
 /**
@@ -56,13 +58,13 @@ static uint16_t SafeStartCounter = 0;
     Performs the throttle sensing average computation after an ADC conversion.
     Compute torque value in u16 (0 at minimum throttle and 65535 when max throttle).
     Need to be called periodically.
-  */
+*/
 void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     uint32_t wAux;
     uint16_t hAux;
-
+    
 	static bool ThrottleStuck = false;
     
     if(pHandle->DisableThrottleOutput) // Test if we want to disable the throttle on PAS 0
@@ -77,14 +79,20 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
         pHandle->hAvADCValue = SignalFiltering_CalcOutputU16(&pHandle->ThrottleFilter, hAux);
         
         /* Compute throttle value (between 0 and 65535)  */
-        hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetThrottle) ? 
-                        (pHandle->hAvADCValue - pHandle->hParameters.hOffsetThrottle) : 0; //Substraction without overflow
-        
+        if (pHandle->hAvADCValue > pHandle->hParameters.hOffsetThrottle)
+        {
+            hAux = (pHandle->hAvADCValue - pHandle->hParameters.hOffsetThrottle); 
+        }
+        else
+        {
+            hAux = 0; 
+        }    
+                                
         wAux = (uint32_t)(pHandle->hParameters.bSlopeThrottle * hAux);
-        wAux /= pHandle->hParameters.bDivisorThrottle;
-        if (wAux > UINT16_MAX)
+        wAux /= (uint32_t) pHandle->hParameters.bDivisorThrottle;
+        if (wAux > INT16_MAX)
         {    
-            wAux = UINT16_MAX;
+            wAux = INT16_MAX;
         }
           
         hAux = (uint16_t)wAux;
@@ -147,7 +155,7 @@ int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
     int32_t wAux;
     
     /*
-        Compute torque value (between -32768 and 32767)
+        Compute torque value (between 0 and 65535)
     */
     wAux = pHandle->hAvThrottleValue - pHandle->hParameters.hOffsetTorque;
     if (wAux < 0)
@@ -158,6 +166,7 @@ int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
     wAux = (int32_t)(pHandle->hParameters.bSlopeTorque * wAux);
     wAux /= pHandle->hParameters.bDivisorTorque;
     
+    
     if (wAux > INT16_MAX)
     {    
         wAux = INT16_MAX;
@@ -165,8 +174,9 @@ int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
     else if (wAux < INT16_MIN)
     {    
         wAux = INT16_MIN;
-    }        
-    return (int16_t) wAux;
+    }
+    
+    return (int16_t) wAux;    
 }
 
 /**
@@ -242,4 +252,33 @@ void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM)
         Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackVehicleThrottle, (int16_t) pHandle->hParameters.MaxSafeThrottleSpeedRPM);
     }        
      
+}
+
+/**
+    Compute slopes for throttle module
+  */
+void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle)
+{
+   float ADCSlope = 0;
+   float Throttle2Torq = 0; 
+    
+   ADCSlope = (pHandle->hParameters.hMaxThrottle - pHandle->hParameters.hOffsetThrottle); // Calculate the size of usable values received as an input
+   
+   ASSERT(ADCSlope >= 1); 
+   ADCSlope =  INT16_MAX/ADCSlope;       // Calculate the gain needed to scale that value to a 0-int16(32767)
+   ADCSlope *= THROTTLE_SLOPE_FACTOR;    // Multiply by the factor to create the numerator of a fraction 
+   
+   pHandle->hParameters.bSlopeThrottle   = (int16_t) round(ADCSlope);    // Save the numerator
+   pHandle->hParameters.bDivisorThrottle = THROTTLE_SLOPE_FACTOR;        // and denominator
+    
+    
+   Throttle2Torq =  INT16_MAX - pHandle->hParameters.hOffsetTorque; // Calculate the size of usable values received as an input
+   
+   ASSERT(Throttle2Torq >= 1); 
+   Throttle2Torq =  pHandle->SpeedFoldbackVehicleThrottle->hMaxOutputLimitHigh/Throttle2Torq;    // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
+   Throttle2Torq *= THROTTLE_SLOPE_FACTOR;                                                       // Multiply by the factor to create the numerator of a fraction 
+   
+   pHandle->hParameters.bSlopeTorque   = (int16_t) round(Throttle2Torq);    // Save the numerator
+   pHandle->hParameters.bDivisorTorque = THROTTLE_SLOPE_FACTOR;             // and denominator 
+    
 }

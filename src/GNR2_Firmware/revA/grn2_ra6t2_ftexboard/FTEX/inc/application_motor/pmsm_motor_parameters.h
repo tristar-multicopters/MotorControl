@@ -15,17 +15,9 @@
 
 #include "pmsm_motor_parameters_grizzly.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_EBGO
-
-#include "pmsm_motor_parameters_ebgo.h"
-
 #elif VEHICLE_SELECTION == VEHICLE_E_CELLS
 
 #include "pmsm_motor_parameters_e_cells.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_APOLLO
-
-#include "pmsm_motor_parameters_apollo.h"
 
 #elif VEHICLE_SELECTION == VEHICLE_R48_750W
 

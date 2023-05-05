@@ -16,17 +16,9 @@
 
 #include "drive_parameters_grizzly.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_EBGO
-
-#include "drive_parameters_ebgo.h"
-
 #elif VEHICLE_SELECTION == VEHICLE_E_CELLS
 
 #include "drive_parameters_e_cells.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_APOLLO
-
-#include "drive_parameters_apollo.h"
 
 #elif VEHICLE_SELECTION == VEHICLE_R48_750W
 

@@ -5,7 +5,7 @@
   * @brief   This file defines the handles, constants and function prototypes 
   *          used in higher level modules for pedal torque sensor
   *
-	******************************************************************************
+    ******************************************************************************
 */
 
 
@@ -22,30 +22,35 @@
 // ============================= Defines ================================= //
 
 #define SCOUNT           (uint16_t)1000 /* Number of read cycle for PTS check stuck */
-#define PTS_DETECT_THSLD (uint16_t)1000 /* Minimum Pedal torque sensior at which the PTS is detected*/
+#define PTS_DETECT_THSLD (uint16_t)11000 /* Minimum Pedal torque sensior at which the PTS is detected*/
+
+#define PTS_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
+                                 // If factor == 100 then 1.25f would make a 125/100 fraction 
+
 // ======================= Public strutures ============================= //
 
 typedef struct
 {          
-	float fFilterAlpha;     /* Alpha coefficient for low pass first order butterworth filter */
-	float fFilterBeta;      /* Beta coefficient for low pass first order butterworth filter */
+    float fFilterAlpha;     /* Alpha coefficient for low pass first order butterworth filter */
+    float fFilterBeta;      /* Beta coefficient for low pass first order butterworth filter */
     
-	uint16_t    hOffsetPTS;     /* Offset of the torque sensor signal when at lowest position */
-	uint8_t     bSlopePTS;      /* Gain factor of ADC value vs torque sensor */
-	uint8_t     bDivisorPTS;    /* Scaling factor of ADC value vs torque sensor */
+    uint16_t    hOffsetPTS;     /* Offset of the torque sensor signal when at lowest position */
+    uint16_t    bSlopePTS;      /* Gain factor of ADC value vs torque sensor */
+    uint16_t    bDivisorPTS;    /* Scaling factor of ADC value vs torque sensor */
     
     uint16_t    hOffsetMTStartup;       /* Offset of torque sensor vs torque on Startup*/
     uint16_t    hStartupOffsetMTSpeed;  /* Speed under which the startup offset is used in rpm */
     uint16_t    hOffsetMT;              /* Offset of torque sensor vs torque */
     
-    int8_t      bSlopeMT;       /* Gain factor of torque sensor vs torque */
-    uint8_t     bDivisorMT;     /* Scaling factor of torque sensor vs torque */
-	
-    uint16_t    hMax;           /* torque signal when at maximum position */
+    int16_t     bSlopeMT;       /* Gain factor of torque sensor vs torque */
+    int16_t     bDivisorMT;     /* Scaling factor of torque sensor vs torque */
+    
+    uint16_t    hMax;               /* torque signal when at maximum position */
+    uint16_t    PasMaxOutputTorque; /* max motor torque that PAS is allowed to use */
     
     uint16_t    hLowPassFilterBW1;      /* used to configure the first coefficient software filter bandwidth */
     uint16_t    hLowPassFilterBW2;      /* used to configure the second coefficient software filter bandwidth */ 
-	
+        
 } PTS_Param_t;
 
 
@@ -58,7 +63,7 @@ typedef struct
     uint8_t     bConvHandle;        /* handle to the regular conversion */
 
     uint16_t    hInstTorque;        /* It contains latest available instantaneous torque
-										This parameter is expressed in u16 */
+                                        This parameter is expressed in u16 */
     uint16_t    hAvADCValue;        /* It contains latest available average ADC value */
     uint16_t    hAvTorqueValue;     /* It contains latest available average torque */
     
@@ -114,8 +119,15 @@ void   PedalTorqSensor_ResetAvValue(PedalTorqSensorHandle_t * pHandle);
 int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle);
 
 /**
-	 Return true if the Pedal Torque sensor is pressed (threshold is passed) 
+     Return true if the Pedal Torque sensor is pressed (threshold is passed) 
   */
 bool PedalTorqSensor_IsDetected (PedalTorqSensorHandle_t * pHandle);
+
+/**
+  @brief  Compute slope for torque sensor module
+  @param  PedalTorqSensorHandle_t handle
+  @return void
+*/
+void PedalTorqSensor_ComputeSlopes(PedalTorqSensorHandle_t * pHandle);
 
 #endif

@@ -20,18 +20,22 @@
 #define THROTTLE_STABLE_SPEED_POWER_PERCENT     8   // Amount of power allowed to be used when the stabilisation interval is reached in %
 #define THROTTLR_MAJOR_OVER_SPEED_INTERVAL_RPM 22   // How many RPM over max speed is considered Major over speed       
 
+#define THROTTLE_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
+                                      // If factor == 100 then 1.25f would make a 125/100 fraction 
+
 /**
   * @brief ThrottleParameters_t structure used for storing throttle user parameters
   */
 typedef struct
 {              
     uint16_t hOffsetThrottle;           // Offset of ADC value vs throttle
-    uint16_t bSlopeThrottle;            // Gain factor of ADC value vs throttle
-    uint16_t bDivisorThrottle;          // Scaling factor of ADC value vs throttle   
+    int16_t  bSlopeThrottle;            // Gain factor of ADC value vs throttle
+    int16_t  bDivisorThrottle;          // Scaling factor of ADC value vs throttle   
+    uint16_t hMaxThrottle;
     
     uint16_t hOffsetTorque;             // Offset of throttle vs torque 
     int16_t bSlopeTorque;               // Gain factor of throttle vs torque   
-    uint16_t bDivisorTorque;            // Scaling factor of throttle vs torque   
+    int16_t bDivisorTorque;             // Scaling factor of throttle vs torque   
     
     uint16_t hOffsetSpeed;              // Offset of throttle vs speed 
     int16_t bSlopeSpeed;                // Gain factor of throttle vs speed   
@@ -148,6 +152,13 @@ void Throttle_EnableThrottleOutput(ThrottleHandle_t * pHandle);
     * @retval void
     */
 void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM);
+
+/**
+  * @brief  Compute slopes for throttle module
+  * @param  pHandle : Pointer on Handle of the throttle
+  * @retval void
+  */
+void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle);
 
 #endif /*__THROTTLE_H*/
 

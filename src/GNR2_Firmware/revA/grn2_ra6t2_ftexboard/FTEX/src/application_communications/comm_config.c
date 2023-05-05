@@ -17,8 +17,8 @@ SlaveMotorHandle_t SlaveM2;
 UART_Handle_t UART0Handle =
 {   
     //.UARTProtocol = UART_LOG_HS,  // for HS Log
-    .UARTProtocol = UART_APT,     // for APT
-    //.UARTProtocol = UART_KD718,   // for KD718  
+    //.UARTProtocol = UART_APT,     // for APT
+    .UARTProtocol = UART_KD718,   // for KD718  
     .pUARTInstance = &g_uart9,
 };
 
