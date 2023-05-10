@@ -21,19 +21,10 @@ extern "C" {
 #include "foldback.h"
 #include "ntc_temperature_sensor.h"
 #include "HardwareOverCurrentDetection.h"
+#include "dynamic_power.h"
 
 
 /* Exported types ------------------------------------------------------------*/
-typedef struct
-{
-    uint16_t  hDynamicMaxTorque;     /* new maximum power based on foldback function */
-    uint16_t  hDynamicMaxPower;     /* new maximum power based on foldback function */
-    uint16_t  hOverMaxPowerTimer;    /** timer to count time elapsed with power more that MAX */
-    uint16_t  hBelowMaxPowerTimer;   /** timer to count time elapsed with power less that MAX */
-    uint16_t  hOverMaxPowerTimeout;  /** timeout for hOverMaxPowerTimeout */
-    uint16_t  hBelowMaxPowerTimeout; /** timeout for hBelowMaxPowerTimeout */
-} DynamicPowerHandle_t;
-
 
 /**
   * @brief  Speed & Torque Control parameters definition
@@ -51,7 +42,6 @@ typedef struct
     
     Foldback_Handle_t FoldbackDynamicMaxTorque;      /* Foldback structure used to limit maximum Torque to other foldbacks */   
 
-    
     DynamicPowerHandle_t   DynamicPowerHandle;
     
     int16_t hCurrentTorqueRef;
@@ -72,35 +62,40 @@ typedef struct
     NTCTempSensorHandle_t * pMotorTempSensor; /* Temperature sensor used to monitor motor temperature */
     OCD2_Handle_t    OCD2_Handle;
     HWOverCurrentDetection_t HWOverCurrentDetection; /*< Status of OCD2 pin which connected to OCD2 of current sensot*/    
-    uint16_t hSTCFrequencyHz;             /*!< Frequency on which the user updates
+    uint16_t hSTCFrequencyHz;               /*!< Frequency on which the user updates
                                              the torque reference calling
                                              SpdTorqCtrl_CalcTorqueReference method
                                              expressed in Hz */
-    uint16_t hMaxAppPositiveMecSpeedUnit; /*!< Application maximum positive value
+    uint16_t hBusVoltage;                   /* the Bus Voltage coming from Voltage Sensor
+                                             in voltage unit                                            */    
+    uint16_t hMaxBusCurrent;                /*!< Application maximum Current
+                                             of the rotor mechanical speed. Expressed in Amps 
+                                             */    
+    uint16_t hMaxAppPositiveMecSpeedUnit;   /*!< Application maximum positive value
                                              of the rotor mechanical speed. Expressed in
                                              the unit defined by #SPEED_UNIT.*/
-    uint16_t hMinAppPositiveMecSpeedUnit; /*!< Application minimum positive value
+    uint16_t hMinAppPositiveMecSpeedUnit;   /*!< Application minimum positive value
                                              of the rotor mechanical speed. Expressed in
                                              the unit defined by #SPEED_UNIT.*/
-    int16_t hMaxAppNegativeMecSpeedUnit;  /*!< Application maximum negative value
+    int16_t hMaxAppNegativeMecSpeedUnit;    /*!< Application maximum negative value
                                              of the rotor mechanical speed. Expressed in
                                              the unit defined by #SPEED_UNIT.*/
-    int16_t hMinAppNegativeMecSpeedUnit;  /*!< Application minimum negative value
+    int16_t hMinAppNegativeMecSpeedUnit;    /*!< Application minimum negative value
                                              of the rotor mechanical speed. Expressed in
                                              the unit defined by #SPEED_UNIT.*/
-    uint16_t hMaxPositiveTorque;          /*!< Maximum positive value of motor
+    uint16_t hMaxPositiveTorque;            /*!< Maximum positive value of motor
                                              torque in cNm.*/
-    int16_t  hMinNegativeTorque;           /*!< Minimum negative value of motor
+    int16_t  hMinNegativeTorque;            /*!< Minimum negative value of motor
                                              torque in cNm.*/                         
     uint16_t hMaxPositivePower;             /*!< Maximum positive value of motor
                                              power in W.*/
     int16_t hMinNegativePower;              /*!< Minimum negative value of motor
                                              power in W.*/
-    STCModality_t ModeDefault;          /*!< Default STC modality.*/
-    uint32_t wTorqueSlopePerSecondUp;     /*!< Slope in cNm per second when ramping up torque. */
-    uint32_t wTorqueSlopePerSecondDown;   /*!< Slope in cNm per second when ramping down torque. */
-    uint32_t wSpeedSlopePerSecondUp;      /*!< Slope in #SPEED_UNIT per second when ramping up speed. */
-    uint32_t wSpeedSlopePerSecondDown;    /*!< Slope in #SPEED_UNIT per second when ramping down speed. */
+    STCModality_t ModeDefault;              /*!< Default STC modality.*/
+    uint32_t wTorqueSlopePerSecondUp;       /*!< Slope in cNm per second when ramping up torque. */
+    uint32_t wTorqueSlopePerSecondDown;     /*!< Slope in cNm per second when ramping down torque. */
+    uint32_t wSpeedSlopePerSecondUp;        /*!< Slope in #SPEED_UNIT per second when ramping up speed. */
+    uint32_t wSpeedSlopePerSecondDown;      /*!< Slope in #SPEED_UNIT per second when ramping down speed. */
 
     float fGainTorqueIqref;            /* Gain (G) between Iqref in digital amps and torque reference in cNm. Iqref = Torq * G/D  */
     float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
@@ -329,6 +324,13 @@ void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurr, 
   * @retval 
   */
 int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+
+/**
+  * @brief  Sets Motor Max Power based if it is defined to be based on Battery SoC
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @retval 
+  */
+void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle);
 
 /**
   * @brief  Check if the motor stcuk or not, return the result

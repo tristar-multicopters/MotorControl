@@ -128,8 +128,13 @@
 
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
+#define MAX_CURRENT_LIMIT               1           /* to calculate maximum poweer based on maximum current and Battery S0C */
+#define MAX_POWER_LIMIT                 2           /* to use  MAX_APPLICATION_POSITIVE_POWER as the reference for Maximum power*/
+#define POWER_LIMIT_REF                 MAX_POWER_LIMIT   /* defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+                                        as the reference for maximum power limitation*/
 #define MAX_APPLICATION_POSITIVE_POWER  1500    /* Refers to maximum power in watts that drive can push to the motor */
 #define MAX_APPLICATION_NEGATIVE_POWER  1500    /* Refers to maximum power in watts that drive can accept from the motor */
+#define MAX_APPLICATION_CURRENT         30      /* Refers to maximum current in amps that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   

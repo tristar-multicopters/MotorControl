@@ -516,6 +516,10 @@ void FOC_CalcCurrRef(uint8_t bMotor)
 {
     qd_t IqdTmp;
 
+    /* update Max Power based on DC Voltage */
+    pSpeedTorqCtrl[bMotor]->hBusVoltage = VbusSensor_GetAvBusVoltageVolt(pMotorPower[bMotor]->pVBS);
+    MC_AdaptiveMaxPower(pSpeedTorqCtrl[bMotor]);    
+    
     /* If current references iqref and idref are computed internally    */
     if (FOCVars[bMotor].bDriveInput == INTERNAL)
     {

@@ -18,6 +18,12 @@
 #define STUCK_TIMER_MAX_COUNTS  STUCK_TIMER_MAX_MS * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u
 #define STUCK_MIN_TORQUE       200
 
+    int16_t hTorqueReference1 = 0;
+
+    int16_t hTorqueReference2 = 0;
+    int16_t hTorqueReference3 = 0;
+
+
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 uint16_t M_STUCK_timer = 0;
@@ -46,6 +52,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     RampMngr_Init(&pHandle->TorqueRampMngr);
     RampMngr_Init(&pHandle->SpeedRampMngr);
+    DynamicPower_Init(&pHandle->DynamicPowerHandle);
     
 #if HARDWARE_OCD == OCD_POWER_DERATING
     OCD2_Init(&pHandle->OCD2_Handle);
@@ -224,8 +231,8 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
-        hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
         hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
+        hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
     }
@@ -245,8 +252,8 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
             RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTorqueReference, pHandle->wTorqueSlopePerSecondDown); // Setup torque ramp going down
         }
         hTorqueReference = (int16_t) RampMngr_Calc(&pHandle->TorqueRampMngr); // Apply torque ramp
-        hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
         hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
+        hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
         pHandle->hCurrentSpeedRef = hTargetSpeed;
@@ -408,25 +415,9 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     hMeasuredSpeedUnit = SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
     hMeasuredSpeedTenthRadPerSec = (int16_t)((10*hMeasuredSpeedUnit*2*3.1416F)/SPEED_UNIT);
 
-    // Check if requested torque is more/equal to latest calculated torque, then start foldback
-    if (hInputTorque >= pHandle->DynamicPowerHandle.hDynamicMaxTorque)
-    {
-        //start timer to count on max torque elapsed timer
-        pHandle->DynamicPowerHandle.hOverMaxPowerTimer++;
-    }
-    else if (pHandle->DynamicPowerHandle.hOverMaxPowerTimer > 0)
-    {
-        pHandle->DynamicPowerHandle.hBelowMaxPowerTimer++;
-        if (pHandle->DynamicPowerHandle.hBelowMaxPowerTimer > pHandle->DynamicPowerHandle.hBelowMaxPowerTimeout)
-        {
-            // clear timers and put max power back to the default defined value
-            pHandle->DynamicPowerHandle.hOverMaxPowerTimer = 0;
-            pHandle->DynamicPowerHandle.hBelowMaxPowerTimer = 0;
-            pHandle->DynamicPowerHandle.hDynamicMaxPower = pHandle->hMaxPositivePower;
-        }
-    }
+
     // Limit MAX POWER by the foldback to prevent BMS shutdown
-    Foldback_UpdateMaxValue(&pHandle->FoldbackDynamicMaxPower, MAX_APPLICATION_POSITIVE_POWER);        // this foldback limits MAX POWER after a while
+    Foldback_UpdateMaxValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower);        // this foldback limits MAX POWER after a while
     pHandle->DynamicPowerHandle.hDynamicMaxPower = (uint16_t)Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower, (int16_t)pHandle->DynamicPowerHandle.hOverMaxPowerTimer);    
 
     if (hMeasuredSpeedUnit != 0)
@@ -436,7 +427,25 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
             wTorqueLimit = 1000*pHandle->DynamicPowerHandle.hDynamicMaxPower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
             if (hInputTorque > wTorqueLimit)
             {
+                //limit the toque and start timer to count on max torque elapsed timer used by foldback to reduce power after a while
                 hRetval = (int16_t) wTorqueLimit;
+                /* Check if timer is not exceeds the end of foldback */
+                if (pHandle->DynamicPowerHandle.hOverMaxPowerTimer < pHandle->FoldbackDynamicMaxPower.hDecreasingEndValue)
+                {
+                    pHandle->DynamicPowerHandle.hOverMaxPowerTimer++;
+                }
+            }
+            else
+            {
+                // if the power is less that dynamic maximum power for a short time, then reset dynamic max power to positive max power
+                pHandle->DynamicPowerHandle.hBelowMaxPowerTimer++;
+                if (pHandle->DynamicPowerHandle.hBelowMaxPowerTimer > pHandle->DynamicPowerHandle.hBelowMaxPowerTimeout)
+                {
+                    // clear timers and put max power back to the default defined value
+                    pHandle->DynamicPowerHandle.hOverMaxPowerTimer = 0;
+                    pHandle->DynamicPowerHandle.hBelowMaxPowerTimer = 0;
+                    pHandle->DynamicPowerHandle.hDynamicMaxPower = pHandle->hMaxPositivePower;
+                }
             }
         }
         else
@@ -448,8 +457,7 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
             }
         }
     }
-    // update hDynamicMaxTorque with latest calculated torque
-    pHandle->DynamicPowerHandle.hDynamicMaxTorque = (uint16_t)hRetval;
+    
     
     return hRetval;
 }
@@ -508,6 +516,15 @@ int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle,
     }
     hRetval = (int16_t)(hNewTorque * pHandle->HWOverCurrentDetection.OCDPowerDearatingGain);
     return hRetval;
+}
+
+void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle)
+{
+    #if POWER_LIMIT_REF == MAX_CURRENT_LIMIT
+    pHandle->hMaxPositivePower = pHandle->hMaxBusCurrent * pHandle->hBusVoltage;
+    #else
+        //do nothing - keep it at maximum defined level 
+    #endif
 }
 
 /*
