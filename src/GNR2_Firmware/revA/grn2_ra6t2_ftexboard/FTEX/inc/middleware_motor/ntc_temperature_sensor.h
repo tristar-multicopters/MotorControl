@@ -13,6 +13,7 @@
 
 #include "lookup_table.h"
 
+extern const uint8_t MIMIMUM_NTC_FREEZING;
 
 typedef struct
 {

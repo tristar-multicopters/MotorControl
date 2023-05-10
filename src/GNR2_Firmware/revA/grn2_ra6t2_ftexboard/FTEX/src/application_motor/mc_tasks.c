@@ -340,6 +340,7 @@ void MediumFrequencyTaskM1(void)
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }
 #endif
+        
 #if HSLOG_ZEROSPEED_LOG
         LogHS_StartOneShot(&LogHS_handle);
 #endif
@@ -363,6 +364,11 @@ void MediumFrequencyTaskM1(void)
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }            
 #endif
+        
+        if (pSpeedTorqCtrl[M1]->pHeatsinkTempSensor->hAvTempDigital < MIMIMUM_NTC_FREEZING)
+        {
+            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_NTCERR, 0);    //Report the Fault and change bstate to FaultNow
+        }
 
 #if !(BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
         if (!bIsSpeedReliable)

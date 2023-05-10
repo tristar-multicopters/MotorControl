@@ -6,6 +6,15 @@
 
 #include "ntc_temperature_sensor.h"
 
+/* global Variables -----------------------------------------------------------*/
+
+/* the minimum acceptable value for NTC - any lower value means 
+sensor is disconnected or temeprature is very low
+outuput voltage of 10K (resisotr on PCB) || 200K (NTC at -40degrees) on 3.3V = 0.157
+So, 200 assumed with a safeguard as the minimum acceptable digital value for NTC*/
+const uint8_t MIMIMUM_NTC_FREEZING = 200;
+// ========================================================================= //
+
 /* Private function prototypes -----------------------------------------------*/
 uint16_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle);
 

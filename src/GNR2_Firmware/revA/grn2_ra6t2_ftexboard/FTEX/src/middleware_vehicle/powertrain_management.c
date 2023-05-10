@@ -804,6 +804,12 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                     pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1]++;
                 }
             }
+            
+            if (hM1FaultOccurredCode & MC_NTCERR)
+            {
+                hM1FaultOccurredCode &= ~MC_NTCERR;
+            }
+
         }
 
         if (PWRT_IsMotor2Used(pHandle))
@@ -878,6 +884,12 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                     pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2]++;
                 }
             }
+            
+            if (hM2FaultOccurredCode & MC_NTCERR)
+            {
+                hM2FaultOccurredCode &= ~MC_NTCERR;
+            }
+
         }
     } // End of if (!bFaultNow)
     

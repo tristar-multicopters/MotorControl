@@ -80,18 +80,19 @@ extern "C" {
 
 /** @name Fault source error codes */
 /** @{ */
-#define  MC_NO_ERROR  (uint16_t)(0x0000u)      /**< @brief No error.*/
-#define  MC_NO_FAULTS  (uint16_t)(0x0000u)     /**< @brief No error.*/
-#define  MC_FOC_DURATION  (uint16_t)(0x0001u)  /**< @brief Error: FOC rate to high.*/
-#define  MC_OVER_VOLT  (uint16_t)(0x0002u)     /**< @brief Error: Software over voltage.*/
-#define  MC_UNDER_VOLT  (uint16_t)(0x0004u)    /**< @brief Error: Software under voltage.*/
-#define  MC_OVER_TEMP  (uint16_t)(0x0008u)     /**< @brief Error: Software over temperature.*/
-#define  MC_START_UP  (uint16_t)(0x0010u)      /**< @brief Error: Startup failed.*/
-#define  MC_SPEED_FDBK  (uint16_t)(0x0020u)    /**< @brief Error: Speed feedback.*/
-#define  MC_BREAK_IN  (uint16_t)(0x0040u)      /**< @brief Error: Emergency input (Over current).*/
-#define  MC_SW_ERROR  (uint16_t)(0x0080u)      /**< @brief Software Error.*/
-#define  MC_OCSP  		(uint16_t)(0x0100u)    /**< @brief Error: Overcurrent software protection.*/
-#define  MC_MSRP		(uint16_t)(0x0200u)    /**< @brief Error: Motor Stuck & Reverse Protection.*/
+#define  MC_NO_ERROR        (uint16_t)(0x0000u)     /**< @brief No error.*/
+#define  MC_NO_FAULTS       (uint16_t)(0x0000u)     /**< @brief No error.*/
+#define  MC_FOC_DURATION    (uint16_t)(0x0001u)     /**< @brief Error: FOC rate to high.*/
+#define  MC_OVER_VOLT       (uint16_t)(0x0002u)     /**< @brief Error: Software over voltage.*/
+#define  MC_UNDER_VOLT      (uint16_t)(0x0004u)     /**< @brief Error: Software under voltage.*/
+#define  MC_OVER_TEMP       (uint16_t)(0x0008u)     /**< @brief Error: Software over temperature.*/
+#define  MC_START_UP        (uint16_t)(0x0010u)     /**< @brief Error: Startup failed.*/
+#define  MC_SPEED_FDBK      (uint16_t)(0x0020u)     /**< @brief Error: Speed feedback.*/
+#define  MC_BREAK_IN        (uint16_t)(0x0040u)     /**< @brief Error: Emergency input (Over current).*/
+#define  MC_SW_ERROR        (uint16_t)(0x0080u)     /**< @brief Software Error.*/
+#define  MC_OCSP            (uint16_t)(0x0100u)     /**< @brief Error: Overcurrent software protection.*/
+#define  MC_MSRP            (uint16_t)(0x0200u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
+#define  MC_NTCERR          (uint16_t)(0x0400u)     /**< @brief Error: NTC disconnection or Freezing protection.*/
 /** @} */
 
 /**
