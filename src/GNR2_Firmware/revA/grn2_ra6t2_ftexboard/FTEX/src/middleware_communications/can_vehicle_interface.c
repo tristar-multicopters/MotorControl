@@ -24,7 +24,11 @@
 */
 void CanVehiInterface_sendLongMsgs(uint8_t * message, uint8_t * dataToSend, uint16_t length)
 {
-    uint8_t * tmp_buffer = 0;
+    uint8_t BufferInit[MAX_DATA_IN_INIT];
+    uint8_t * tmp_buffer;
+    
+    tmp_buffer = BufferInit;
+    
     memcpy(tmp_buffer, dataToSend, length);
     
     for(int i = 0; i < MAX_DATA_IN_INIT; i++)

@@ -7,7 +7,7 @@
 */
 
 #include "pulse_frequency.h"
-
+#include "ASSERT_FTEX.h"
 
 // =============================== Defines ================================== //
 #define RESET_VALUE     (0x00)      // Reset value for the get info function
@@ -23,6 +23,7 @@ timer_info_t info = {.clock_frequency = RESET_VALUE, .count_direction = RESET_VA
 */
 bool PulseFrequency_Init(PulseFrequencyHandle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
     bool bIsError = false;
     switch (pHandle->TimerType)
     {
@@ -36,6 +37,7 @@ bool PulseFrequency_Init(PulseFrequencyHandle_t * pHandle)
         break;
 
         default:
+            ASSERT(false);
         break;
     }
     return bIsError;
@@ -49,6 +51,8 @@ bool PulseFrequency_Init(PulseFrequencyHandle_t * pHandle)
 */
 bool PulseFrequency_Deinitialisation(PulseFrequencyHandle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
+    
     bool bIsError = false;
     switch (pHandle->TimerType)
     {
@@ -60,8 +64,8 @@ bool PulseFrequency_Deinitialisation(PulseFrequencyHandle_t * pHandle)
         // Deinitializes the AGT timer module and applies configurations
         bIsError |= R_AGT_Stop(pHandle->PulseFreqParam.PF_Timer->p_ctrl);
         break;
-
         default:
+            ASSERT(false);
         break;
     }
     return bIsError;
@@ -75,6 +79,8 @@ bool PulseFrequency_Deinitialisation(PulseFrequencyHandle_t * pHandle)
 */
 bool PulseFrequency_Enable(PulseFrequencyHandle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
+    
     bool bIsError = false;
     switch (pHandle->TimerType)
     {
@@ -86,8 +92,8 @@ bool PulseFrequency_Enable(PulseFrequencyHandle_t * pHandle)
         // Enable the AGT timer module and applies configurations
         bIsError |= R_AGT_Enable(pHandle->PulseFreqParam.PF_Timer->p_ctrl);
         break;
-
         default:
+            ASSERT(false);
         break;
     }
 
@@ -102,6 +108,8 @@ bool PulseFrequency_Enable(PulseFrequencyHandle_t * pHandle)
 */
 bool PulseFrequency_Disable(PulseFrequencyHandle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
+    
     bool bIsError = false;
     switch (pHandle->TimerType)
     {
@@ -113,15 +121,22 @@ bool PulseFrequency_Disable(PulseFrequencyHandle_t * pHandle)
         // Disable the AGT timer module and applies configurations
         bIsError |= R_AGT_Disable(pHandle->PulseFreqParam.PF_Timer->p_ctrl);
         break;
-
         default:
+            ASSERT(false);
         break;
     }
     return bIsError;
 }
 
+/**
+  @brief  Function used to get the info of the timer
+  @param  PulseFrequencyHandle_t handle
+  @return bIsError in boolean
+*/
 bool PulseFrequency_GetTimerInfo(PulseFrequencyHandle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
+    
     bool bIsError = false;
     /* Get the period count and clock frequency */
     bIsError =R_GPT_InfoGet(pHandle->PulseFreqParam.PF_Timer->p_ctrl, &info);
@@ -135,6 +150,8 @@ bool PulseFrequency_GetTimerInfo(PulseFrequencyHandle_t * pHandle)
 */
 void PulseFrequency_ReadInputCapture (PulseFrequencyHandle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
+    
     float pulse_time;
     switch (pHandle->TimerType)
     {
@@ -186,7 +203,8 @@ void PulseFrequency_ReadInputCapture (PulseFrequencyHandle_t * pHandle)
             }
             break;		
         default:
-        break;
+            ASSERT(false);
+            break;
     }
 }
 
@@ -195,6 +213,8 @@ void PulseFrequency_ReadInputCapture (PulseFrequencyHandle_t * pHandle)
 */
 uint32_t PulseFrequency_GetPeriod(PulseFrequencyHandle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
+    
     switch (pHandle->TimerType)
     {
         case GPT_TIMER:
@@ -205,9 +225,9 @@ uint32_t PulseFrequency_GetPeriod(PulseFrequencyHandle_t * pHandle)
             /* return the Period */
             return pHandle->wCaptureCount;	
             break;
-		
         default:
-        break;
+            ASSERT(false);
+            break;
 	}
 }
 
@@ -216,6 +236,8 @@ uint32_t PulseFrequency_GetPeriod(PulseFrequencyHandle_t * pHandle)
 */
 void PulseFrequency_IsrCallUpdate(PulseFrequencyHandle_t * pHandle ,uint32_t wCapture)
 {
+    ASSERT(pHandle != NULL);
+    
     switch (pHandle->TimerType)
     {
         case GPT_TIMER:
@@ -230,8 +252,8 @@ void PulseFrequency_IsrCallUpdate(PulseFrequencyHandle_t * pHandle ,uint32_t wCa
             /* Set start measurement */
             pHandle->start_measurement = true;	
             break;
-		
         default:
+            ASSERT(false);
         break;
     }
 }
@@ -241,6 +263,8 @@ void PulseFrequency_IsrCallUpdate(PulseFrequencyHandle_t * pHandle ,uint32_t wCa
 */
 void PulseFrequency_ISROverflowUpdate(PulseFrequencyHandle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
+    
     switch (pHandle->TimerType)
     {
         case GPT_TIMER:
@@ -251,8 +275,8 @@ void PulseFrequency_ISROverflowUpdate(PulseFrequencyHandle_t * pHandle)
             /* Update the overflow variable for the AGT Timer */
             pHandle->wCaptureOverflow ++;	
             break;
-		
         default:
+            ASSERT(false);
         break;
     }
 }
