@@ -13,6 +13,13 @@
 #include "drive_parameters.h"
 
 
+/******************* SCREEN SELECTION  *******************************/
+#define SCREEN_PROTOCOL    UART_KD718       
+                                              // UART_DISABLE,
+                                              // UART_APT,
+                                              // UART_KD718,    
+                                              // UART_LOG_HS 
+                                              
 /***************** THROTTLE PARAMETERS  ******************************/
 
 #define THROTTLE_FILTER_ALPHA                 2.27F    // Butterworth alpha coefficient for throttle filtering
@@ -42,9 +49,6 @@
 #define PTS_OFFSET_PTS2TORQUE_STARTUP    40    // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED         20    // Speed under which the  Startup pedal torque sensor offset is used in wheel rpm
 #define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in %
-
-//#define PTS_SLOPE_PTS2TORQUE              7    // Slope for pedal torque sensor to torque linear transformation 
-//#define PTS_DIVISOR_PTS2TORQUE          255    // Divisor for pedal torque sensor to torque linear transformation 
 
 #define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging
 #define PTS_FILTER_BW2                   25    // BW coefficient for pedal torque sensor avereging
