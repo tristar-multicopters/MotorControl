@@ -275,7 +275,7 @@ void HardFault_Handler(void)
 {
     //if HFAULTDEBUG is defined the
     //no system reset.
-    #if HFAULTDEBUG
+    #ifdef HFAULTDEBUG
     ASSERT(false);
     #else
     //force a software reset

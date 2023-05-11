@@ -559,7 +559,7 @@ void CANOpenTask (void)
 	COTmrCreate(&CONodeGNR.Tmr, 0, ticks, UpdateObjectDictionnary, &CONodeGNR);
 }
 
-#if CANLOGGERTASK
+#ifdef CANLOGGERTASK
 
 /**
   Task to handle the received messages anad to send messages through the CAN bus
@@ -594,6 +594,7 @@ __NO_RETURN void CANLoggerTask (void * pvParameter)
             CANLog_SendTemperature(&CoCanDriver, &VCInterfaceHandle, M2); //Send temperature M2
             osDelay(CAN_LOG_INTERVAL_TICK);
             CANLog_SendThrottleBrake(&CoCanDriver, &VCInterfaceHandle); //Send throttle & brake info*/
+        }    
     }
 }
 

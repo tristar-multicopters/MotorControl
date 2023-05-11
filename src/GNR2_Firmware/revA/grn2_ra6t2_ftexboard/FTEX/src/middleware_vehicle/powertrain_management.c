@@ -210,7 +210,10 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 }                            
                 /* Using throttle */
                 else 
-                {   static bool MajorOverSpeed = false;
+                {   
+                    #ifdef THROTTLE_SPEED_CTRL
+                    
+                    static bool MajorOverSpeed = false;
                     int16_t NewMaxPower = 0;
                     int32_t TopSpeed = 0;
                     int16_t WSpeedRPM = (int16_t) pHandle->pPAS->pWSS->wWheelSpeedRpm;
@@ -245,6 +248,9 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                     Foldback_UpdateMaxValue(pHandle->pThrottle->SpeedFoldbackVehicleThrottle,NewMaxPower);
                     
                     hAux = Foldback_ApplyFoldback(pHandle->pThrottle->SpeedFoldbackVehicleThrottle, hAux, WSpeedRPM);
+                    
+                    #endif
+                    
                     pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
                 } 
             }

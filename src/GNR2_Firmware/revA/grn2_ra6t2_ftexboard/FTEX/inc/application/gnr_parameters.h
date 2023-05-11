@@ -67,13 +67,16 @@
                                                                                                                
 //define responsible to enable some debug features as:
 //hardware fault catch 
-#define HFAULTDEBUG 0 
+//#define HFAULTDEBUG
 
 //define responsible to enable canloggertask
-#define CANLOGGERTASK 0 
+//#define CANLOGGERTASK
+
+//define responsible to enable or disable throttle speed control
+#define THROTTLE_SPEED_CTRL
 
 //define to allow screne to change power
-//#define SCREENPOWERCONTROL 0 
+//#define SCREENPOWERCONTROL 
 
 
 /*
