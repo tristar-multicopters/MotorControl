@@ -104,8 +104,17 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
     /* Pedal Torque Sensor stuck on startup verification */
     if (!pHandle->bSafeStart) 
     {   
+        uint16_t TorqueSens;
+        uint32_t OffsetSafe;
+        
+        TorqueSens = PedalTorqSensor_GetAvValue(pHandle);
+        
+        // We include the startup threshold to check if throttle is detected
+        // Be cause it is in % 
+        OffsetSafe = (UINT16_MAX * pHandle->hParameters.hOffsetMTStartup)/PTS_PERCENTAGE;
+        
         /* Pedal Torque Sensor is not Detected */
-        if (!PedalTorqSensor_IsDetected(pHandle)) 
+        if (TorqueSens < OffsetSafe) 
         { 
             hSafeStartCounter ++; 
             /* Launch Safe Start after a delay counter */
@@ -201,7 +210,7 @@ bool PedalTorqSensor_IsDetected (PedalTorqSensorHandle_t * pHandle)
     ASSERT(pHandle != NULL);
     uint16_t hTorqueSens;
     hTorqueSens = PedalTorqSensor_GetAvValue(pHandle);
-    if (hTorqueSens <= PTS_DETECT_THSLD)
+    if (hTorqueSens <= pHandle->hParameters.hOffsetPTS)
     {    
         return false;
     }    

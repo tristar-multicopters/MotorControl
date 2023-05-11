@@ -22,10 +22,11 @@
 // ============================= Defines ================================= //
 
 #define SCOUNT           (uint16_t)1000 /* Number of read cycle for PTS check stuck */
-#define PTS_DETECT_THSLD (uint16_t)11000 /* Minimum Pedal torque sensior at which the PTS is detected*/
 
 #define PTS_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
                                  // If factor == 100 then 1.25f would make a 125/100 fraction 
+                                 
+#define PTS_PERCENTAGE    (uint8_t)100    /* Percentage for PTS use */
 
 // ======================= Public strutures ============================= //
 

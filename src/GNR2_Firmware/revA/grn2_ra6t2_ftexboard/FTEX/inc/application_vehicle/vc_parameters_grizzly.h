@@ -44,7 +44,7 @@
 #define PTS_FILTER_BETA              -0.27F    // Butterworth beta coefficient pedal torque sensor filtering
 #define PTS_MAX_PTSVALUE         UINT16_MAX    // Maximum analog value to reach
 
-#define PTS_OFFSET_ADC2PTS             8500    // Offset for ADC to pedal torque sensor linear transformation
+#define PTS_OFFSET_ADC2PTS             9000    // Offset for ADC to pedal torque sensor linear transformation
 
 #define PTS_OFFSET_PTS2TORQUE_STARTUP    40    // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED         20    // Speed under which the  Startup pedal torque sensor offset is used in wheel rpm
