@@ -155,6 +155,11 @@ static void UpdateObjectDictionnary(void *p_arg)
         return;
     }
     
+    //Call function responsible to detect the presence of the master of or slave
+    //on a dual motor.
+    //This function send sdo donwload to master/slave each 250 ms.
+    VCFaultManagment_MasterSlaveDetection(pNode,VCInterfaceHandle.pPowertrain->pPWREN);
+    
     #if GNR_IOT
 
 	if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
@@ -163,7 +168,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         //COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)), pNode, &bPAS, sizeof(uint8_t));
         #if SUPPORT_SLAVE_ON_IOT
         /* Check if no heartbeat was missed from slave  */
-        if (CONmtGetHbEvents(&pNode->Nmt, GNR2_SLAVE_NODE_ID) <= MAX_NUMBER_MISSED_HEARTBEAT)
+        if (!VCFaultManagment_MasterSlaveCommunicationLost())
         {
             /* Update M1 feedback data to CANOpen object dictionnary */
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(hMotorSpeedMeas));
@@ -176,12 +181,24 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             /* Update virtual motor 2 structure used by vehicle control layer */
             SlaveMCInterface_UpdateFeedback(&SlaveM2);
+            
+            //clear heart beat flag error is was not cleared yet.
+            if (hCommErrors & MASTER_SLAVE_NO_HEARTBEAT)
+            {
+                // Slave is present, clear vehicle communication fault
+                hCommErrors &= ~MASTER_SLAVE_NO_HEARTBEAT;
+            }
         }
         else
         {
-            // Slave not present anymore, trigger vehicle communication fault
-            hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
-            VCSTM_FaultProcessing(VCInterfaceHandle.pStateMachine, VC_SLAVE_COMM_ERROR, 0);
+            //verify if the error was already set or not.
+            //if yes, doesn't set it again.
+            if (!(hCommErrors & MASTER_SLAVE_NO_HEARTBEAT))
+            {
+                // Slave not present anymore, trigger vehicle communication fault
+                hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
+                VCSTM_FaultProcessing(VCInterfaceHandle.pStateMachine, VC_SLAVE_COMM_ERROR, 0);
+            }
         }
         #endif
     }
@@ -191,7 +208,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     {
         #if GNR_MASTER
         /* Check if no heartbeat was missed from slave  */
-        if (CONmtGetHbEvents(&pNode->Nmt, GNR2_SLAVE_NODE_ID) <= MAX_NUMBER_MISSED_HEARTBEAT)
+        if (!VCFaultManagment_MasterSlaveCommunicationLost())
         {
             /* Update M1 feedback data to CANOpen object dictionnary */
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
@@ -204,16 +221,28 @@ static void UpdateObjectDictionnary(void *p_arg)
 
             /* Update virtual motor 2 structure used by vehicle control layer */
             SlaveMCInterface_UpdateFeedback(&SlaveM2);
+            
+            //clear heart beat flag error is was not cleared yet.
+            if (hCommErrors & MASTER_SLAVE_NO_HEARTBEAT)
+            {
+                // Slave is present, clear vehicle communication fault
+                hCommErrors &= ~MASTER_SLAVE_NO_HEARTBEAT;
+            }
         }
         else
         {
-            // Slave not present anymore, trigger vehicle communication fault
-            hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
-            VCSTM_FaultProcessing(VCInterfaceHandle.pStateMachine, VC_SLAVE_COMM_ERROR, 0);
+            //verify if the error was already set or not.
+            //if yes, doesn't set it again.
+            if (!(hCommErrors & MASTER_SLAVE_NO_HEARTBEAT))
+            {
+                // Slave not present anymore, trigger vehicle communication fault
+                hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
+                VCSTM_FaultProcessing(VCInterfaceHandle.pStateMachine, VC_SLAVE_COMM_ERROR, 0);
+            }
         }
         #else
         /* Check if no heartbeat was missed from master  */
-        if (CONmtGetHbEvents(&pNode->Nmt, GNR2_MASTER_NODE_ID) <= MAX_NUMBER_MISSED_HEARTBEAT)
+        if (!VCFaultManagment_MasterSlaveCommunicationLost())
         {
             /* Update M2 feedback data to CANOpen object dictionnary */
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
@@ -239,12 +268,24 @@ static void UpdateObjectDictionnary(void *p_arg)
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
                 MCInterface_FaultAcknowledged(&MCInterface[0]);
             }
+            
+            //clear heart beat flag error is was not cleared yet.
+            if (hCommErrors & MASTER_SLAVE_NO_HEARTBEAT)
+            {
+                // Slave is present, clear vehicle communication fault
+                hCommErrors &= ~MASTER_SLAVE_NO_HEARTBEAT;
+            }
         }
         else
         {
-            // Master not present anymore, stop motor
-            hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
-            MCInterface_StopMotor(&MCInterface[0]);
+            //verify if the error was already set or not.
+            //if yes, doesn't set it again.
+            if (!(hCommErrors & MASTER_SLAVE_NO_HEARTBEAT))
+            {
+                // Master not present anymore, stop motor
+                hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
+                MCInterface_StopMotor(&MCInterface[0]);
+            }
         }
         #endif
     }

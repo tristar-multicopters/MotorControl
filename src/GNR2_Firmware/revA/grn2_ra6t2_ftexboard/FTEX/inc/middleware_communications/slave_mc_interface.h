@@ -11,6 +11,13 @@
 
 #include "mc_interface.h"
 #include "co_core.h"
+#include "vc_state_machine.h"
+#include "gnr_parameters.h"
+
+/************* DEFINES ****************/
+
+
+/**************************************/
 
 
 /*
@@ -149,8 +156,5 @@ uint16_t SlaveMCInterface_GetCurrentFaults(SlaveMotorHandle_t * pHandle);
   * @param  pHandle Pointer on the component instance to work on.
   */
 int16_t SlaveMCInterface_GetAvrgMecSpeedUnit(SlaveMotorHandle_t * pHandle);
-
-
-
 
 #endif /* __SLAVE_MC_INTERFACE_H */

@@ -1046,6 +1046,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\delay.c</FilePath>
             </File>
+            <File>
+              <FileName>vc_fault_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\vc_fault_management.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2947,6 +2952,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\delay.c</FilePath>
             </File>
+            <File>
+              <FileName>vc_fault_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\vc_fault_management.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4814,6 +4824,11 @@
               <FileName>delay.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>vc_fault_management.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\vc_fault_management.c</FilePath>
             </File>
           </Files>
         </Group>

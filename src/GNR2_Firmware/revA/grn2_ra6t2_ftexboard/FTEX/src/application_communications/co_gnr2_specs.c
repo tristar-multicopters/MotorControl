@@ -181,6 +181,9 @@ uint8_t bObjDataFrontLightState             = 0;
 //variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT
 uint8_t bObjDataRearLightState              = 0;
 
+//variable associated with CO_OD_REG_MASTER_SLAVE_PRESENT
+uint8_t bObjDataMasterSlavePresent = 0;
+
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
 
@@ -400,6 +403,9 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     
     {CO_KEY(CO_OD_REG_VEHICLE_REAR_LIGHT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataRearLightState},
     
+    //User to master and/or slave write showing it is present(no lost on master/slave communication).
+    {CO_KEY(CO_OD_REG_MASTER_SLAVE_PRESENT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMasterSlavePresent},
+    
     //Application - Used to control the firmware update procedure.
     //subindex 0 is used to receive command from the IOT module to control the DFU process.
     {CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(&bObjOtaCommand)},
@@ -432,8 +438,11 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     // SDO Server
     {CO_KEY(0x1200, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2},						                            // SDO Srv Parameter - Highest Sub Index
     #if GNR_MASTER
-    {CO_KEY(0x1200, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},		    // SDO Srv Parameter - COB-ID Client to Server
-    {CO_KEY(0x1200, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},		// SDO Srv Parameter - COB-ID Server to Client
+    //server using ID 0x01 must use CO_OBJ_DN__R_ setup, whwre __N____ means
+    //Consider Node-Id. Servers using ID 0x2 or more can be configured using
+    //CO_OBJ_D___R_.
+    {CO_KEY(0x1200, 1, CO_OBJ_DN__R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},		    // SDO Srv Parameter - COB-ID Client to Server
+    {CO_KEY(0x1200, 2, CO_OBJ_DN__R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},		// SDO Srv Parameter - COB-ID Server to Client
   
     #else
     {CO_KEY(0x1200, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_STD(USE_SSDO, 0, 0x600+GNR2_SLAVE_NODE_ID)},		                                    // SDO Srv Parameter - COB-ID Client to Server
@@ -446,6 +455,12 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     {CO_KEY(0x1280, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
     {CO_KEY(0x1280, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
     {CO_KEY(0x1280, 3, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)GNR2_SLAVE_NODE_ID},
+    #else
+    // SDO Client
+    {CO_KEY(0x1280, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)3},						                // SDO Client Parameter - Highest Sub Index
+    {CO_KEY(0x1280, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()},			                    // SDO Client Parameter - COB-ID Client to Server
+    {CO_KEY(0x1280, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()},			                // SDO Client Parameter - COB-ID Server to Client
+    {CO_KEY(0x1280, 3, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)GNR2_MASTER_NODE_ID},
     #endif
 
     // RPDO 1
@@ -617,6 +632,9 @@ struct CO_OBJ_T GNR2_OD[GNR2_OBJ_N] = {
     
     //Application - Speed that the walk mode of the vehicle goes up to. 
     {CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWalkModeSpeed},
+    
+    //User to master and/or slave write showing it is present(no lost on master/slave communication).
+    {CO_KEY(CO_OD_REG_MASTER_SLAVE_PRESENT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMasterSlavePresent},
     
     //Application - Used to control the firmware update procedure.
     //subindex 0 is used to receive command from the IOT module to control the DFU process.

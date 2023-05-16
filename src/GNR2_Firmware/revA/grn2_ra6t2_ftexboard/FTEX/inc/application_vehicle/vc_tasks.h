@@ -8,7 +8,7 @@
 #ifndef __VC_TASKS_H
 #define __VC_TASKS_H
 
-
+#include "vc_fault_management.h"
 
 void VC_BootUp(void);
 

@@ -10,7 +10,6 @@
 
 #define SDO_TIMEOUT_FAULT_ACK_IN_MS 200 // 200ms timeout when sending a fault ack SDO
 
-
 /* The SDO transfer finalization callback when acknowledging a fault */
 void FaultAckDownloadFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
 {

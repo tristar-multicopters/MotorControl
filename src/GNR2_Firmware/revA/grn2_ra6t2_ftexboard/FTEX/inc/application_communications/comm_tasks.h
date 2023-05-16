@@ -12,6 +12,12 @@
 #include "gnr_parameters.h"
 #include "comm_defines.h"
 #include "firmware_update.h"
+#include "vc_fault_management.h"
+
+/************* DEFINES ****************/
+
+
+/**************************************/
 
 
 extern bool bCANOpenTaskBootUpCompleted;
@@ -30,6 +36,5 @@ void CANLoggerTask (void * pvParameter);
 
 
 void Comm_BootUp(void);
-
 
 #endif /* __COMM_TASKS_H */

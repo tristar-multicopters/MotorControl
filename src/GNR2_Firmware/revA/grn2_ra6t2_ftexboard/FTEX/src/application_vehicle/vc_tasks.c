@@ -14,6 +14,8 @@
 
 #include "gnr_main.h"
 
+//#include "slave_mc_interface.h"
+
 
 /************* DEBUG ****************/
 
@@ -283,6 +285,9 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
                             VCSTM_FaultProcessing(pVCI->pStateMachine, 0, VC_M1_FAULTS); // Remove VC_M1_FAULTS flag
                             VCSTM_FaultProcessing(pVCI->pStateMachine, 0, VC_M2_FAULTS); // Remove VC_M2_FAULTS flag
                         }
+                        
+                        //try to clear VC faults.
+                        VCFaultManagment_Processing(pVCI->pStateMachine, &CONodeGNR);
                     }
                     break;
                     

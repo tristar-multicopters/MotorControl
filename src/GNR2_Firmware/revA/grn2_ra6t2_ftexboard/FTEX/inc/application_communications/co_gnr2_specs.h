@@ -29,6 +29,7 @@ extern "C" {
 
 //define the sdo client number to be used by the sdo services.
 #define SDOCLIENTINDEX_SLAVE        0x00
+#define SDOCLIENTINDEX_MASTER       0x00
 #define SDOCLIENTINDEX_IOT          0x01
 
 /* Application specific CANopen registers for IOT */
@@ -153,6 +154,13 @@ extern "C" {
 
 // OD ID to operate the rear light (0 Off, 1 On)
 #define CO_OD_REG_VEHICLE_REAR_LIGHT           0x2022
+
+// OD ID used on dual motor to detect if the GNR master/slave
+//communication still on.
+//Doesn't matter the value write on this address, important
+//is the response from CANOPEN layer to informing the other
+//side(master or slave) received the sdo download command.
+#define CO_OD_REG_MASTER_SLAVE_PRESENT  0x2023
 
 //this OD ID will be used to 
 //receive data and commands during a firmware update.
