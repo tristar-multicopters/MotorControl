@@ -156,9 +156,9 @@ PWREN_Handle_t PowerEnableHandle =
 
 Foldback_Handle_t SpeedFoldbackVehicleConfig =
 {
-    .hDecreasingEndValue = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END,
-    .hDecreasingRange = POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL,
-    .hDecreasingInterval = POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL,
+    .hDecreasingEndValue = POWERTRAIN_FOLDBACK_SPEED_END,
+    .hDecreasingRange = POWERTRAIN_FOLDBACK_SPEED_RANGE,
+    .hDecreasingInterval = POWERTRAIN_FOLDBACK_SPEED_INTERVAL,
     .hDefaultOutputLimitHigh = POWERTRAIN_MAX_MOTOR_TORQUE,
     .hDefaultOutputLimitLow = 0,
     .FoldbackConfig = TRIM,
@@ -251,8 +251,6 @@ PWRT_Handle_t PowertrainHandle =
     
     .sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
     .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
-    .sParameters.bEnableDualMotorStartup = POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE,
-
         
     .SpeedFoldbackVehicle = &SpeedFoldbackVehicleConfig,
 

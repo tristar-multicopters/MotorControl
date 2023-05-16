@@ -90,7 +90,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     
     /*bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);*/
     int16_t hSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
-    int16_t hSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
+    //int16_t hSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
     
     MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
     int16_t hTorqueRef = 0; 
@@ -138,132 +138,91 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             // Reset All the Pedal Assist Parameters
             PedalAssist_ResetParameters(pHandle->pPAS);
         }
-   
-        if(pHandle->sParameters.bMode == SINGLE_MOTOR)
+            
+ 
+        /* Throttle and walk mode always have higher priority over PAS but 
+              the priority between walk mode and throttle depends on the value 
+              of the parameter WalkmodeOverThrottle  */    
+                 
+            /* Using PAS or walk mode */
+        if (((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
+             (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
         {
-            if (pHandle->sParameters.bEnableDualMotorStartup)
-            {
-                // Execute dual motor startup strategy...
-                // TODO: Following foldbacks are computed using speed of M1 or M2. Should use vehicle speed instead when it is ready.
-                if (pHandle->bMainMotor == M1)
-                {
+            /* Used for Walk Mode */
+            if (PedalAssist_IsWalkModeDetected(pHandle->pPAS) )
+            {     
+                if(pHandle->bMainMotor != M2)
+                {                    
                     int32_t absoluteSpeed = abs(hSpeedM1);
                     int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
                     
-                    pHandle->aTorque[M1] = hAux;
-                    hAux = Foldback_ApplyFoldback(pHandle->SpeedFoldbackVehicle, hAux, speed);
-                    // Store powertrain target torque value in handle. Invert torque if needed.
-                    pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
+                    hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
+                    //Apply the slow start for walk mode
+                    hAux = Foldback_ApplySlowStart(pHandle->SpeedFoldbackVehicle, hAux);
                 }
-                else if (pHandle->bMainMotor == M2)
+                else // We cant use M2 for walk mode because we don't know it's motor speed
                 {
-                    int32_t absoluteSpeed = abs(hSpeedM2);
-                    int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
-                    
-                    // Store powertrain target torque value in handle. Invert torque if needed.
-                    pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
-                    hAux = Foldback_ApplyFoldback(pHandle->SpeedFoldbackVehicle, hAux, speed);
-                    pHandle->aTorque[M1] = hAux;
+                    hAux = 0;                
                 }
-            }
-            else
-            {    
-                /* Throttle and walk mode always have higher priority over PAS but 
-                   the priority between walk mode and throttle depends on the value 
-                   of the parameter WalkmodeOverThrottle  */    
-                 
-                /* Using PAS or walk mode */
-                if (((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
-                    (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
-                {
-                    /* Used for Walk Mode */
-                    if (PedalAssist_IsWalkModeDetected(pHandle->pPAS))
-                    {
-                        int32_t absoluteSpeed = abs(hSpeedM1);
-                        int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
-                    
-                        hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
-                        //Apply the slow start for wlak mode
-                        hAux = Foldback_ApplySlowStart(pHandle->SpeedFoldbackVehicle, hAux);
-                        pHandle->aTorque[pHandle->bMainMotor] = hAux;
-                    }                    
-                    /* Torque sensor enabled */
-                    else if (pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse) // Walk mode has priority over PAS
-                    {
-                        pHandle->aTorque[pHandle->bMainMotor] = hAux;
-                    }             
-                    /* Hybride sensor enabled */
-                    else if (pHandle->pPAS->bCurrentPasAlgorithm == HybridSensorUse)
-                    {
-                        pHandle->aTorque[pHandle->bMainMotor] = hAux;
-                    }                
-                    /* Cadence sensor enabled */
-                    else if (pHandle->pPAS->bCurrentPasAlgorithm == CadenceSensorUse)
-                    {
-                        int32_t absoluteSpeed = abs(hSpeedM1);
-                        int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
-                    
-                        hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
+            }                                   
+            /* Cadence sensor enabled */
+            else if (pHandle->pPAS->bCurrentPasAlgorithm == CadenceSensorUse)
+            {
+                int32_t absoluteSpeed = abs(hSpeedM1);
+                int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
+                
+                hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
 
-                        pHandle->aTorque[pHandle->bMainMotor] = hAux;
-                    }
-                }                            
-                /* Using throttle */
-                else 
-                {   
-                    #ifdef THROTTLE_SPEED_CTRL
-                    
-                    static bool MajorOverSpeed = false;
-                    int16_t NewMaxPower = 0;
-                    int32_t TopSpeed = 0;
-                    int16_t WSpeedRPM = (int16_t) pHandle->pPAS->pWSS->wWheelSpeedRpm;
-                                                                    
-                   
-                    // Get the current top speed in RPM
-                    TopSpeed = (pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDecreasingEndValue);
-                    
-                    
-                    if (WSpeedRPM > (TopSpeed + THROTTLR_MAJOR_OVER_SPEED_INTERVAL_RPM))
-                    {
-                        MajorOverSpeed = true;   
-                    }                    
-                    
-                    if ((WSpeedRPM > (TopSpeed - THROTTLE_STABLE_SPEED_INTERVAL_RPM)) && (MajorOverSpeed == true)) // If we are close to reach the top speed
-                    {                   
-                        // Reduce max allowed power           
-                        NewMaxPower = (int16_t) ((pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh * THROTTLE_STABLE_SPEED_POWER_PERCENT)/100); 
-                        
-                    }
-                    else if (WSpeedRPM > (TopSpeed - pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDecreasingInterval))
-                    {
-                        MajorOverSpeed = false;
-                        NewMaxPower = (int16_t) ((pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh * 75)/100); 
-                    }
-                    else // If not then let the foldback use the default max power
-                    {
-                        MajorOverSpeed = false;                     
-                        NewMaxPower = (int16_t) (pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh);                          
-                    }    
-                    
-                    Foldback_UpdateMaxValue(pHandle->pThrottle->SpeedFoldbackVehicleThrottle,NewMaxPower);
-                    
-                    hAux = Foldback_ApplyFoldback(pHandle->pThrottle->SpeedFoldbackVehicleThrottle, hAux, WSpeedRPM);
-                    
-                    #endif
-                    
-                    pHandle->aTorque[pHandle->bMainMotor] = hAux; // Store powertrain target torque value in handle
-                } 
             }
-        }
-        else if(pHandle->sParameters.bMode == DUAL_MOTOR)
+        }                            
+        /* Using throttle */
+        else 
+        {  
+            #ifdef THROTTLE_SPEED_CTRL
+            static bool MajorOverSpeed = false;
+            int16_t NewMaxPower = 0;
+            int32_t TopSpeed = 0;
+            int16_t WSpeedRPM = (int16_t) pHandle->pPAS->pWSS->wWheelSpeedRpm;
+                                                                                      
+            // Get the current top speed in RPM
+            TopSpeed = (pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDecreasingEndValue);
+                            
+            if (WSpeedRPM > (TopSpeed + THROTTLR_MAJOR_OVER_SPEED_INTERVAL_RPM))
+            {
+                MajorOverSpeed = true;   
+            }                    
+                    
+            if ((WSpeedRPM > (TopSpeed - THROTTLE_STABLE_SPEED_INTERVAL_RPM)) && (MajorOverSpeed == true)) // If we are close to reach the top speed
+            {                   
+                // Reduce max allowed power           
+                NewMaxPower = (int16_t) ((pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh * THROTTLE_STABLE_SPEED_POWER_PERCENT)/100); 
+                        
+            }
+            else if (WSpeedRPM > (TopSpeed - pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDecreasingInterval))
+            {
+                MajorOverSpeed = false;
+                NewMaxPower = (int16_t) ((pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh * 75)/100); 
+            }
+            else // If not then let the foldback use the default max power
+            {
+                MajorOverSpeed = false;                     
+                NewMaxPower = (int16_t) (pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh);                          
+            }    
+                    
+            Foldback_UpdateMaxValue(pHandle->pThrottle->SpeedFoldbackVehicleThrottle,NewMaxPower);
+                   
+            hAux = Foldback_ApplyFoldback(pHandle->pThrottle->SpeedFoldbackVehicleThrottle, hAux, WSpeedRPM);
+            #endif       
+        } 
+            
+        // Store powertrain target torque value in handle
+        pHandle->aTorque[pHandle->bMainMotor] = hAux;
+        
+        if(pHandle->sParameters.bMode == DUAL_MOTOR)
         {
-            // Apply same torque to both motors...
-            pHandle->aTorque[M1] = hAux;
+            // Apply same torque to both motors..
             // Store powertrain target torque value in handle. Invert torque if needed.
             pHandle->aTorque[M2] = pHandle->sParameters.bM2TorqueInversion ? -hAux : hAux;
-        }
-        else
-        {
         }
     }
     else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
@@ -284,9 +243,6 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             pHandle->aSpeed[M1] = (int16_t) hSpeedRef;
             pHandle->aSpeed[M2] = (int16_t) hSpeedRef;
         }
-    }
-    else
-    {
     }
 }
 
@@ -1042,8 +998,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         if ((pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
-         }
-                
+         }                
         /* Hybride sensor enabled */
         else if ((pHandle->pPAS->bCurrentPasAlgorithm == HybridSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {

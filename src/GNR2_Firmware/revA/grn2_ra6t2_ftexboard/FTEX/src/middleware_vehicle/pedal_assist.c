@@ -112,7 +112,7 @@ int16_t PedalAssist_GetPASTorqueSpeed(PAS_Handle_t * pHandle)
     AssertIsValidLevel(currentLevel);
     if (currentLevel == PAS_LEVEL_WALK)
     {
-        PASRatio = walkModeTorqueRatio;
+        PASRatio = walkModeTorqueRatio;        
     }
     else
     {

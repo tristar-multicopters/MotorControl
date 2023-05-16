@@ -25,9 +25,9 @@
 #define THROTTLE_FILTER_BETA                 -0.27F    // Butterworth beta coefficient for throttle filtering
 
 #define THROTTLE_OFFSET_ADC2THROTTLE          12500    // Offset for ADC to throttle linear transformation
-#define THROTTLE_MAX_ADC2THROTTLE             53200    // Maximum value reachable by the throttle adc value 
+#define THROTTLE_MAX_ADC2THROTTLE             56000    // Maximum value reachable by the throttle adc value 
 
-#define THROTTLE_OFFSET_THROTTLE2TORQUE        4000    // Offset for throttle to torque linear transformation
+#define THROTTLE_OFFSET_THROTTLE2TORQUE           1    // Offset for throttle to torque linear transformation
 
 #define THROTTLE_DETECTION_THRESHOLD           1000    // Throttle is considered pressed once it passed this threshold
 
@@ -55,9 +55,9 @@
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
 #define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION      1    // Wheel speed sensor cycle number for one wheel rotation
-#define WHEEL_SPEED_SLOW_LOOP_COUNT              3    // Wheel speed sensor slow detect counter to get 750ms per function call
+#define WHEEL_SPEED_SLOW_LOOP_COUNT              4    // Wheel speed sensor slow detect counter to get 750ms per function call
 #define WHEEL_SPEED_SENSOR_CORRECTION_FACTOR     2    // Wheel speed sensor slow detect correction for a signal after two wheel spin detection
-#define WHEEL_SPEED_SLOW_LOOP_DETECT         false    // Wheel speed sensor slow detect counter flag activation
+#define WHEEL_SPEED_SLOW_LOOP_DETECT          true    // Wheel speed sensor slow detect counter flag activation
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
@@ -83,12 +83,12 @@
 
 #define PAS_MAX_TORQUE                  STARTING_TORQUE    // Maximum motor torque to apply using pedal assist
 #define PAS_MAX_SPEED         MAX_APPLICATION_SPEED_RPM    // Maximum motor speed reachable using pedal assist
-#define PAS_MAX_KM_SPEED                             33    // Maximum Bike Speed in Km/h using RPM
+#define PAS_MAX_KM_SPEED                             66    // Maximum Bike Speed in Km/h using RPM
 #define PAS_MAX_LEVEL                                 5    // Maximum PAS Level given by the screen   
 #define PAS_TORQUE_GAIN                             100    // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power) 
 #define PAS_MAX_TORQUE_RATIO                         99    // Maximum PAS Torque feed ration in 100%    
 #define PAS_MAX_SPEED_RATIO                          99    // Maximum PAS Speed feed ration in 100%   
-#define PAS_ALGORITHM                   HybridSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
+#define PAS_ALGORITHM                  CadenceSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
                                                               CadenceSensorUse = 1, Cadence sensor use define 
                                                               HybridSensorUse  = 2, Hybride sensor use define */
 
@@ -104,15 +104,13 @@
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT              200    /* Number of task ticks to wait after a fault occurs to 
                                                                    attempt a powertrain restart (OC, SF and SU faults)   */
 
-#define POWERTRAIN_MAX_MOTOR_TORQUE                       STARTING_TORQUE    // Maximum motor torque to apply with powertrain management
+#define POWERTRAIN_MAX_MOTOR_TORQUE                       STARTING_TORQUE    // Maximum motor torque to apply with powertrain management 
 
-#define POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE                        false    // Enable dual motor startup when single motor mode is selected 
-
-#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END           MAX_APPLICATION_SPEED_RPM/4    /* Speed value that dual motor startup strategy stops outputting
+#define POWERTRAIN_FOLDBACK_SPEED_END                     MAX_APPLICATION_SPEED_RPM/4    /* Speed value that dual motor startup strategy stops outputting
                                                                                             torque */
-#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL      MAX_APPLICATION_SPEED_RPM/8    /* Speed interval value between maximum torque and zero torque,
+#define POWERTRAIN_FOLDBACK_SPEED_RANGE                   MAX_APPLICATION_SPEED_RPM/8    /* Speed interval value between maximum torque and zero torque,
                                                                                             when using dual motor startup strategy. */
-#define POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL              MAX_APPLICATION_SPEED_RPM/15   /* Speed interval value between maximum torque and start torque,
+#define POWERTRAIN_FOLDBACK_SPEED_INTERVAL                MAX_APPLICATION_SPEED_RPM/15   /* Speed interval value between maximum torque and start torque,
                                                                                             when using single motor startup strategy. */
 
 #define FOLDBACK_SLOW_START_BANDWIDTH                     500    // Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control

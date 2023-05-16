@@ -61,7 +61,6 @@ typedef struct
     PowertrainMode_t bMode;              /* Single or dual motor. It is updated by user using motor selector switch */
     uint8_t bDefaultMainMotor;           /* Default main motor selection */
     CtrlType_t bCtrlType;                /* Torque or speed control */
-    bool bEnableDualMotorStartup;        /* When in single motor mode, second motor will assist during startup until a certain speed if enabled. */
     
     bool bPAS0DisableThrottle;           /* Will disable the throttle when we are in PAS level 0 */
     

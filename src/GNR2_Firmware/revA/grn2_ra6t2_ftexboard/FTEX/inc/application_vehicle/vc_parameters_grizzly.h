@@ -106,14 +106,12 @@
                                                                    attempt a powertrain restart (OC, SF and SU faults)   */
 
 #define POWERTRAIN_MAX_MOTOR_TORQUE                       STARTING_TORQUE    // Maximum motor torque to apply with powertrain management
-
-#define POWERTRAIN_DUAL_MOTOR_STARTUP_ENABLE                        false    // Enable dual motor startup when single motor mode is selected
     
-#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_END           MAX_APPLICATION_SPEED_RPM/2    /* Speed value that dual motor startup strategy stops outputting
+#define POWERTRAIN_FOLDBACK_SPEED_END                     MAX_APPLICATION_SPEED_RPM/2    /* Speed value that dual motor startup strategy stops outputting
                                                                                             torque */
-#define POWERTRAIN_DUAL_MOTOR_STARTUP_SPEED_INTERVAL      MAX_APPLICATION_SPEED_RPM/4    /* Speed interval value between maximum torque and zero torque,
+#define POWERTRAIN_FOLDBACK_SPEED_RANGE                   MAX_APPLICATION_SPEED_RPM/4    /* Speed interval value between maximum torque and zero torque,
                                                                                             when using dual motor startup strategy. */
-#define POWERTRAIN_DUAL_MOTOR_SPEED_INTERVAL              MAX_APPLICATION_SPEED_RPM/15   /* Speed interval value between maximum torque and start torque,
+#define POWERTRAIN_FOLDBACK_SPEED_INTERVAL                MAX_APPLICATION_SPEED_RPM/15   /* Speed interval value between maximum torque and start torque,
                                                                                             when using single motor startup strategy. */
 
 #define FOLDBACK_SLOW_START_BANDWIDTH                     450    // Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control
