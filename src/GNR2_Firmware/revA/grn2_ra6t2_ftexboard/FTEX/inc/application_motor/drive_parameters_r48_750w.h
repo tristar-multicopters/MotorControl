@@ -74,7 +74,7 @@
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
 
 #define OV_VOLTAGE_THRESHOLD_V          75 /*!< Over-voltage threshold */
-#define UD_VOLTAGE_THRESHOLD_V          24 /*!< Under-voltage threshold */
+#define UD_VOLTAGE_THRESHOLD_V          34 /*!< Under-voltage threshold - 34V is lowest acceptable value to generate Power Lock signal*/
 
 
 #define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */

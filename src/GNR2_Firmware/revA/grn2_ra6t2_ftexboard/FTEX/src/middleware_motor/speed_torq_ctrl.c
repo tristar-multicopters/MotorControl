@@ -518,11 +518,15 @@ int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle,
     return hRetval;
 }
 
+/*
+    calculate and update Max Positive Power based on Bus Voltage in CURRENT LIMIT mode
+*/
 void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle)
 {
     #if POWER_LIMIT_REF == MAX_CURRENT_LIMIT
     pHandle->hMaxPositivePower = pHandle->hMaxBusCurrent * pHandle->hBusVoltage;
     #else
+        UNUSED_PARAMETER(pHandle);
         //do nothing - keep it at maximum defined level 
     #endif
 }

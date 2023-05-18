@@ -69,7 +69,7 @@
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
 
 #define OV_VOLTAGE_THRESHOLD_V          70 /*!< Over-voltage threshold */
-#define UD_VOLTAGE_THRESHOLD_V          24 /*!< Under-voltage threshold */
+#define UD_VOLTAGE_THRESHOLD_V          36 /*!< Under-voltage threshold - experimental value that prevents BMS shutdowns on dead battery */
 
 #define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
