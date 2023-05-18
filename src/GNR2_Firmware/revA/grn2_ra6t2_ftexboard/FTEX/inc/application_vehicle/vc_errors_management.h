@@ -25,6 +25,8 @@ typedef enum
     MOTOR_PHASE_ERROR = 0x06, // Motor phase wiring is faulty
     IOT_COMM_ERROR    = 0x07, // Controller loses communication with IOT module
     DUAL_COMM_ERROR   = 0x08, // Master lost comm with slave or slave lost comm with master
+    OVER_CURRENT      = 0x09, // Over Current protection - HW & SW
+    NTC_ERR           = 0x0A, // NTC Disconnected or Freezed
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
 ErrorCodes_t; 

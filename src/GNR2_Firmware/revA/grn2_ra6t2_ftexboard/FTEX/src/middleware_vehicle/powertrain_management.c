@@ -10,6 +10,7 @@
 #include "vc_tasks.h"
 #include "firmware_update.h"
 
+#include "vc_errors_management.h"
 // ============================= Defines ================================ //
 #define OVERCURRENT_COUNTER         0
 #define STARTUP_COUNTER             1
@@ -687,10 +688,32 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
     uint16_t hM2FaultNowCode = MDI_GetCurrentFaults(pHandle->pMDI, M2);
     uint16_t hM2FaultOccurredCode = MDI_GetOccurredFaults(pHandle->pMDI, M2);
 
-    bool bFaultNow = hM1FaultNowCode | hM2FaultNowCode;
+    uint16_t bFaultNow = hM1FaultNowCode | hM2FaultNowCode;
 
-    //If there's no current motor errors
-    if (!bFaultNow)
+    if (bFaultNow != MC_NO_ERROR)      // Rasie Motor current error to the LCD
+    {
+        if (((bFaultNow & MC_BREAK_IN) | (bFaultNow & MC_OCSP)) != MC_NO_ERROR )
+        {
+            VC_Errors_RaiseError(OVER_CURRENT);
+        }
+        if ((bFaultNow & MC_OVER_TEMP) != MC_NO_ERROR)
+        {
+            VC_Errors_RaiseError(OT_PROTECTION);
+        }
+        if ((bFaultNow & MC_OVER_VOLT)!= MC_NO_ERROR)
+        {
+            VC_Errors_RaiseError(OV_PROTECTION);
+        }
+        if ((bFaultNow & MC_UNDER_VOLT)!= MC_NO_ERROR)
+        {
+            VC_Errors_RaiseError(UV_PROTECTION);
+        }
+        if ((bFaultNow & MC_NTCERR)!= MC_NO_ERROR)
+        {
+            VC_Errors_RaiseError(NTC_ERR);
+        }
+    }
+    else            // Try to clear occured error if Motor does not have any error
     {
         if (PWRT_IsMotor1Used(pHandle))
         {// If there's an over current (OC) that has occurred but has already been cleared
@@ -702,6 +725,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                     hM1FaultOccurredCode &= ~MC_OCSP;
                     hM1FaultOccurredCode &= ~MC_FOC_DURATION;
                     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
+                    VC_Errors_ClearError(OVER_CURRENT);     
                 }
                 else
                 {//Increase the counter one more tick
@@ -714,7 +738,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                 if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
                 {// If the timer has timeout, clear the SF fault
                     hM1FaultOccurredCode &= ~MC_SPEED_FDBK;
-                    pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0;
+                    pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0;                    
                 }
                 else
                 {//Increase the counter one more tick
@@ -740,18 +764,21 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             {
                 // In case of overtemperature, clear the OT fault
                 hM1FaultOccurredCode &= ~MC_OVER_TEMP;
+                VC_Errors_ClearError(OT_PROTECTION);
             }
 
             if (hM1FaultOccurredCode & MC_OVER_VOLT)
             {
                 // In case of DCbus overvoltage, clear the OV fault
                 hM1FaultOccurredCode &= ~MC_OVER_VOLT;
+                VC_Errors_ClearError(OV_PROTECTION);
             }
 
             if (hM1FaultOccurredCode & MC_UNDER_VOLT)
             {
                 // In case of DCbus undervoltage, clear the UV fault
                 hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
+                VC_Errors_ClearError(UV_PROTECTION);
             }
             
             if (hM1FaultOccurredCode & MC_MSRP)
@@ -770,6 +797,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             if (hM1FaultOccurredCode & MC_NTCERR)
             {
                 hM1FaultOccurredCode &= ~MC_NTCERR;
+                VC_Errors_ClearError(NTC_ERR);
             }
 
         }
@@ -783,6 +811,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                     hM2FaultOccurredCode &= ~MC_BREAK_IN;
                     hM2FaultOccurredCode &= ~MC_OCSP;
                     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
+                    VC_Errors_ClearError(OVER_CURRENT);
                 }
                 else
                 {//Increase the counter one more tick
@@ -820,18 +849,22 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             {
                 /* In case of overtemperature... */
                 hM2FaultOccurredCode &= ~MC_OVER_TEMP;
+                VC_Errors_ClearError(OT_PROTECTION);
             }
 
             if (hM2FaultOccurredCode & MC_OVER_VOLT)
             {
                 /* In case of DCbus overvoltage... */
                 hM2FaultOccurredCode &= ~MC_OVER_VOLT;
+                VC_Errors_ClearError(OV_PROTECTION);
             }
 
             if (hM2FaultOccurredCode & MC_UNDER_VOLT)
             {
                 /* In case of DCbus undervoltage... */
                 hM2FaultOccurredCode &= ~MC_UNDER_VOLT;
+                VC_Errors_ClearError(UV_PROTECTION);
+
             }
             
             if (hM2FaultOccurredCode & MC_MSRP)
@@ -850,6 +883,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             if (hM2FaultOccurredCode & MC_NTCERR)
             {
                 hM2FaultOccurredCode &= ~MC_NTCERR;
+                VC_Errors_ClearError(NTC_ERR);
             }
 
         }
