@@ -67,9 +67,13 @@ typedef struct
     uint16_t hMaxSpeedRatio;              /* PAS maximum speed ratio */
     
     bool WalkmodeOverThrottle;            /* Flag used to decide if walk mode has higher priority than throttle */
+    bool UseCadenceSpeedLimit;               /* Flag used to decide if we should have speed limitation on PAS */             
     
     uint8_t bPASCountSafe;                /* Counter for safe detection of the PAS after one pedaling*/
-    uint8_t bPASCountActivation;          /* Counter for slow PAS detection over than 700ms periode */        
+    uint8_t bPASCountActivation;          /* Counter for slow PAS detection over than 700ms periode */
+
+    int16_t PASTorqueRatiosInPercentage[6]; // Torque ratio in % for each level   
+    int16_t walkModeTorqueRatio;            // Torque ratio in % for walk mode
 } PAS_Parameters_t;
 
 typedef struct

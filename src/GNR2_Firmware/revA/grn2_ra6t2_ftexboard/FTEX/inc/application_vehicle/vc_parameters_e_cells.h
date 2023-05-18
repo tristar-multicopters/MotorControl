@@ -91,8 +91,16 @@
 #define PAS_ALGORITHM                   TorqueSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
                                                               CadenceSensorUse = 1, Cadence sensor use define 
                                                               HybridSensorUse  = 2, Hybride sensor use define */
+#define PAS_CADENCE_USE_SPEED_LIMIT                true    // Decides if we have a speed limit on pas cadence
+    
+#define PAS_0_POWER_PERCENT      0    // PAS 0 has a ratio of   0%
+#define PAS_1_POWER_PERCENT     60    // PAS 1 has a ratio of  60% (3/5)
+#define PAS_2_POWER_PERCENT     67    // PAS 2 has a ratio of  67% (4/6)
+#define PAS_3_POWER_PERCENT     80    // PAS 3 has a ratio of  80% (4/5)
+#define PAS_4_POWER_PERCENT     88    // PAS 4 has a ratio of  88% (7/8)
+#define PAS_5_POWER_PERCENT    100    // PAS 5 has a ratio of 100%
+#define PAS_WALK_POWER_PERCENT  70    // PAS walk has a ratio of 70%
 
-#define PAS_WHEEL_SPEED_SENSOR_PPR                2    // Number of electrical pulses per wheel rotation 
 #define PAS_MIN_PEDAL_COUNT_SAFE                  0    // Number of pulse per pedal turn do we neeed after initial detection to push power
 #define PAS_SLOW_PEDAL_COUNT                      1    // Loop wait counter to update the PAS detection function
 #define PAS_WALKMODE_OVER_THROTTLE             true    // If set to true walk mode has higher priority than throttle

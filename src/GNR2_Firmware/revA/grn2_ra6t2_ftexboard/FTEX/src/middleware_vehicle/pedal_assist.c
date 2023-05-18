@@ -12,18 +12,6 @@
 #include "user_config_task.h"
 #pragma clang diagnostic pop
 
-// todo: move those hardcoded levels to a configurable field
-const int16_t PASTorqueRatiosInPercentage[6] = 
-{
-    0,  // PAS 0 has a ratio of 0%
-    60, // PAS 1 has a ratio of 60% (3/5)
-    67, // PAS 2 has a ratio of 67% (4/6)
-    80, // PAS 3 has a ratio of 80% (4/5)
-    88, // PAS 4 has a ratio of 88% (7/8)
-    100 // PAS 5 has a ratio of 100%
-};
-const int16_t walkModeTorqueRatio = 70; // walkmode has a ratio of 70%
-
 /* Variables ---------------------------------------------------- */
 
 uint8_t bPASCounterAct = 0; // Slow cadence PAS activation loop couter
@@ -112,12 +100,12 @@ int16_t PedalAssist_GetPASTorqueSpeed(PAS_Handle_t * pHandle)
     AssertIsValidLevel(currentLevel);
     if (currentLevel == PAS_LEVEL_WALK)
     {
-        PASRatio = walkModeTorqueRatio;        
+        PASRatio = pHandle->sParameters.walkModeTorqueRatio;        
     }
     else
     {
         // The pedal_assist module only supports 5 PAS levels at the moment
-        PASRatio = PASTorqueRatiosInPercentage[currentLevel];
+        PASRatio = pHandle->sParameters.PASTorqueRatiosInPercentage[currentLevel];
     }
     
     // compute the torque using the ratio from the PAS level
@@ -202,6 +190,7 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     uint16_t  hTorqueSens;
     uint16_t  hOffsetTemp;
     uint16_t  hWheelRPM;
+    static uint16_t PulseCounter = 0;
     
     hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
     /* Calculate the offset based on ration percentage */
@@ -234,16 +223,17 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     {
         /* Add security layer to miss the first PAS detect if there is any issue 
            with the pedal */
-        pHandle->sParameters.bPASCountSafe++;
-        if ((pHandle->sParameters.bPASCountSafe > 1))
+        
+        PulseCounter++;
+        if ((PulseCounter >pHandle->sParameters.bPASCountSafe ))
         {
             pHandle->bPASDetected = true;
-            pHandle->sParameters.bPASCountSafe--;
+            PulseCounter--;
         }
     }
     else
     {
-        pHandle->sParameters.bPASCountSafe = 0;
+        PulseCounter = 0;
         pHandle->bPASDetected = false;
     }
 } 

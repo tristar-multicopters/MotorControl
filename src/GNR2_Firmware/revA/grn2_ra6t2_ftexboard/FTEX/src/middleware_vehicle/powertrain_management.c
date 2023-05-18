@@ -167,8 +167,8 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 }
             }                                   
             /* Cadence sensor enabled */
-            else if (pHandle->pPAS->bCurrentPasAlgorithm == CadenceSensorUse)
-            {
+            else if ((pHandle->pPAS->bCurrentPasAlgorithm == CadenceSensorUse) && (pHandle->pPAS->sParameters.UseCadenceSpeedLimit))
+            {  
                 int32_t absoluteSpeed = abs(hSpeedM1);
                 int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
                 
