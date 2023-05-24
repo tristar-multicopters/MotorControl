@@ -9,9 +9,9 @@
 #include "serial_communication.h"
 
 /* Temporary buffer to save data from receive buffer for further processing */
-uint8_t g_temp_buffer[DATA_LENGTH] = {RESET_VALUE};
+uint8_t bRecivedFrame[DATA_LENGTH] = {RESET_VALUE};
 
-/* Counter to update g_temp_buffer index */
+/* Counter to update bRecivedFrame index */
 volatile uint8_t g_counter_var = RESET_VALUE;
 
 /* Flag to check whether data is received or not */
@@ -100,7 +100,7 @@ void UART_IRQHandler(uart_callback_args_t * p_args)
     /* Logged the event in global variable */
     g_uart_event = (uint8_t)p_args->event;
 
-    /* Reset g_temp_buffer index if it exceeds than buffer size */
+    /* Reset bRecivedFrame index if it exceeds than buffer size */
     if(DATA_LENGTH == g_counter_var)
     {
         g_counter_var = RESET_VALUE;
@@ -120,7 +120,7 @@ void UART_IRQHandler(uart_callback_args_t * p_args)
             /* Read all data provided by user until enter button is pressed */
             default:
             {
-                g_temp_buffer[g_counter_var++] = (uint8_t ) p_args->data;
+                bRecivedFrame[g_counter_var++] = (uint8_t ) p_args->data;
                 break;
             }
         }

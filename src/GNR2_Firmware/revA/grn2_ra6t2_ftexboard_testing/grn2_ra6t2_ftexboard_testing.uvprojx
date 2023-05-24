@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>7</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -405,9 +405,19 @@
               <FilePath>.\FTEX\src\Application\external_flash_storage.c</FilePath>
             </File>
             <File>
+              <FileName>internal_memory_storage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\Application\internal_memory_storage.c</FilePath>
+            </File>
+            <File>
               <FileName>serial_process.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\Application\serial_process.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial_response.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\Application\serial_response.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -433,6 +443,11 @@
               <FileName>external_memory_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\Middleware\external_memory_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>internal_memory.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\Middleware\internal_memory.c</FilePath>
             </File>
           </Files>
         </Group>
