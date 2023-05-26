@@ -150,6 +150,13 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
     }
 }
 
+/**
+    Pedal torque Sensor return Averadge ADC value after Filtering
+*/
+uint16_t PedalTorqSensor_GetAvPedalValue(PedalTorqSensorHandle_t * pHandle)
+{
+    return pHandle->hAvADCValue;
+}
 
 /**
     Pedal torque Sensor return ADC value

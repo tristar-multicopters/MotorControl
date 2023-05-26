@@ -75,6 +75,15 @@ void uCAL_GPIO_ReInit(uint32_t aGPIO, struct GPIOConfig aPinConfig)
     {
 	    R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.NCODR = 1; // Setting pin as OpenDrain
     }	 
+    
+    //Use to keep compability between bike models. One of the pins used on rev c to motor
+    //selection can used to as a analog input to read torque sensor. This pin is configurated
+    //on hal(FSA tool) to be analog input, but if bike model support cadence only 
+    //and is dual motor, this pin needs to be configured as digital input.
+    //the next line clear analog configuration on the pin.
+    #if (BOARD_VERSION == REV_C_VERSION && VEHICLE_SELECTION == VEHICLE_QUIETKAT)
+    R_PFS->PORT[bspPin >> 8].PIN[bspPin & BSP_IO_PRV_8BIT_MASK].PmnPFS_b.ASEL = 0;
+    #endif
 }
 
 /**

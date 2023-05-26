@@ -26,6 +26,12 @@ void MS_Init(MS_Handle_t * pHandle)
     uCAL_GPIO_ReInit(pHandle->wM2SelectPinNumber, PinConfig);
 }
 
+/**
+ * @brief Function used to read motor selection signals, using
+ *        pins 
+ *
+ *  @p pHandle : Pointer on Handle structure of TD_Handle_t component
+ */
 MotorSelection_t MS_CheckSelection(MS_Handle_t* pHandle)
 {
 	ASSERT(pHandle != NULL);
@@ -33,9 +39,11 @@ MotorSelection_t MS_CheckSelection(MS_Handle_t* pHandle)
 	{
 		bool bM1Select = uCAL_GPIO_Read(pHandle->wM1SelectPinNumber);
 		bool bM2Select = uCAL_GPIO_Read(pHandle->wM2SelectPinNumber);
-		bool bBothSelect = bM1Select && bM2Select;
+		bool bBothSelect = bM1Select || bM2Select;
 		
-		if (bBothSelect)
+        //false(signal 0 on both pins) means switch is at middle
+        //position and all motors need to be used.
+		if (bBothSelect == false)
 		{
 			pHandle->bMotorSelection = ALL_MOTOR_SELECTED;
 		}

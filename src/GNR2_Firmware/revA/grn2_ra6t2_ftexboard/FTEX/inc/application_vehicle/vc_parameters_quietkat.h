@@ -49,7 +49,7 @@
 #define PTS_OFFSET_STARTUP_SPEED         20    // Speed under which the  Startup pedal torque sensor offset is used in wheel rpm
 #define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in %
 
-#define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW1                   25    // BW coefficient for pedal torque sensor avereging
 #define PTS_FILTER_BW2                   25    // BW coefficient for pedal torque sensor avereging
 
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
@@ -102,7 +102,7 @@
 #define PAS_WALK_POWER_PERCENT  70    // PAS walk has a ratio of 70%
 
 #define PAS_MIN_PEDAL_COUNT_SAFE                  3    // Number of pulse per pedal turn do we neeed after initial detection to push power
-#define PAS_SLOW_PEDAL_COUNT                      1    // Loop wait counter to update the PAS detection function
+#define PAS_SLOW_PEDAL_COUNT                      2    // Loop wait counter to update the PAS detection function
 #define PAS_WALKMODE_OVER_THROTTLE             true    // If set to true walk mode has higher priority than throttle
 
 #define POWERTRAIN_MOTOR_GEARRATIO                0x000B0005    /* Motor gear ratio, i.e. wheel speed divided by motor speed.

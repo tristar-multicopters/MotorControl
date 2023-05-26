@@ -15,7 +15,6 @@
 #include <stdbool.h>
 #include <stdlib.h> 
 
-
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
 /**
@@ -280,9 +279,8 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         replyFrame.Buffer[2] = (toSend & 0x00FF);      // Wheel speed Low half 
         replyFrame.Buffer[3] = (toSend & 0xFF00) >> 8; // Wheel speed High half
         
+        replyFrame.Buffer[4] = LCD_APT_ErrorConversionFTEXToAPT(VC_Errors_CycleError()); // Error Code      
         
-        replyFrame.Buffer[4] = LCD_APT_ErrorConversionFTEXToAPT(VC_Errors_CycleError()); // Error Code
-      
         replyFrame.Buffer[5] = 0x04; // Brake Code bXXXX 0100 means the motor is working
                       
         replyFrame.Buffer[6] = 0x00;

@@ -16,6 +16,14 @@
 /* Board specific functions ---------------------------------*/
 uint32_t GetChipID(uint8_t ID_Half);
 
+/**************Board version****************************/
+//necessary to keep compability between rev b and rev c.
+#define REV_A_VERSION 0x00
+#define REV_B_VERSION 0x01
+#define REV_C_VERSION 0x02
+
+#define BOARD_VERSION REV_C_VERSION
+
 /* GPIOs ----------------------------------------------*/
 // note: these are similar to the pins defined in bsp_pin_cfg, except with a bit shifting.
 // uCal_GPIO method uCAL_GPIO_PinNumToBSP converts back to smart configurator "standard"
@@ -23,8 +31,21 @@ uint32_t GetChipID(uint8_t ID_Half);
 #define CAN_ENABLE_N_GPIO_PIN                               0xd7
 #define BRAKE_GPIO_PIN                                      0xc0
 #define REVERSE_GPIO_PIN                                    0x01
+//used as output to seletec can res on rev c
+//CAN_RES must to be output 0 to use can resistence terminiation.
 #define M1SELECT_GPIO_PIN                                   0xa9
+//analog 4 on pcb
+#define M1SELECT_REV_C_GPIO_PIN                             0xa8
+//not used on revc.
 #define M2SELECT_GPIO_PIN                                   0xdf
+//analog 3 on pcb.
+#define M2SELECT_REV_C_GPIO_PIN                             0xe9
+//used to can resistence selection on rev c. 
+//there is a conflict between rev b and c about this pin.
+//this pin still configuared as digital input pull up on rev c
+//but it needs to be change to digital output to control
+//CAN resistencia on or off.
+#define CAN_RES_SELECT_GPIO_PIN                             0xa9
 #define PWR_ENABLE_GPIO_PIN                                 0xb8
 #define PWRSTG_ENABLE_GPIO_PIN                              0xe9
 #define FRONT_LIGHT_PIN                                     0xd4

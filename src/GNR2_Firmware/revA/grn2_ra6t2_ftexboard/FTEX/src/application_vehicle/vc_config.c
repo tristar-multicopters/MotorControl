@@ -131,8 +131,17 @@ WheelSpeedSensorHandle_t WheelSpeedHandle =
 
 MS_Handle_t MotorSelectorHandle =
 {
+    #if (BOARD_VERSION == REV_C_VERSION && VEHICLE_SELECTION == VEHICLE_QUIETKAT)
+    
+    .wM1SelectPinNumber = M1SELECT_REV_C_GPIO_PIN,
+    .wM2SelectPinNumber = M2SELECT_REV_C_GPIO_PIN,
+    
+    #else
+    
     .wM1SelectPinNumber = M1SELECT_GPIO_PIN,
     .wM2SelectPinNumber = M2SELECT_GPIO_PIN,
+    
+    #endif
 
     .bIsInvertedLogic = false,
     .bMSEnable = MOTOR_SELECTOR_ENABLE,

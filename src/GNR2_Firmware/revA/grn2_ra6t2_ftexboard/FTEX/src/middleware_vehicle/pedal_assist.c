@@ -186,8 +186,8 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     */
 void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle) 
 {
-    uint32_t  wSpeedt;
     uint16_t  hTorqueSens;
+    uint16_t  hTorquePedalSens;
     uint16_t  hOffsetTemp;
     uint16_t  hWheelRPM;
     static uint16_t PulseCounter = 0;
@@ -204,9 +204,10 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
         hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
     }        
     
-	
-    wSpeedt = PedalSpdSensor_GetPeriodValue(pHandle->pPSS);
     hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
+    
+    /* Call Averadge Pedal torque sensor return */
+    hTorquePedalSens = PedalTorqSensor_GetAvPedalValue (pHandle->pPTS); 
 
     /* Torque Sensor use and the offset was detected */
     if ((pHandle->bCurrentPasAlgorithm == TorqueSensorUse) && (hTorqueSens > hOffsetTemp))
@@ -218,12 +219,24 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     {
 		pHandle->bPASDetected = true;
     }
-    /* Cadence Sensor use */
-    else if (wSpeedt > 0)
+    
+    /* --------------------------------------------------------------------- */
+    /* --------------------------------- Attention ------------------------- */
+    /* --------------------------------------------------------------------- */
+    /*     Cadence Sensor use converted to Analog Input Value. The Signal 
+     *     detection will be captured in special range of an ADC Value                                                 
+          
+     *     For a filter sum of 25 scale the Value will be in range of 3500 
+     *     in slow pedalling loop for a stable high pedaling value of 9000
+           
+     *     Normal pedaling values are 1000 in down front to 22000 in high 
+     *     front for 20% pulse duration of the hall periode
+     */
+    /* --------------------------------------------------------------------- */       
+    else if ((hTorquePedalSens > LADCRANGE) && (hTorquePedalSens < HADCRANGE))
     {
         /* Add security layer to miss the first PAS detect if there is any issue 
            with the pedal */
-        
         PulseCounter++;
         if ((PulseCounter >pHandle->sParameters.bPASCountSafe ))
         {

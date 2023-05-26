@@ -405,6 +405,11 @@
               <FilePath>.\FTEX\src\application\gnr_ra6t2_it.c</FilePath>
             </File>
             <File>
+              <FileName>watchdog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
+            </File>
+            <File>
               <FileName>ASSERT_FTEX.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\ASSERT_FTEX.c</FilePath>
@@ -428,11 +433,6 @@
               <FileName>vc_constants.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
-              <FileName>watchdog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2311,6 +2311,11 @@
               <FilePath>.\FTEX\src\application\gnr_ra6t2_it.c</FilePath>
             </File>
             <File>
+              <FileName>watchdog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
+            </File>
+            <File>
               <FileName>ASSERT_FTEX.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\ASSERT_FTEX.c</FilePath>
@@ -2334,11 +2339,6 @@
               <FileName>vc_constants.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
-              <FileName>watchdog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4184,6 +4184,11 @@
               <FilePath>.\FTEX\src\application\gnr_ra6t2_it.c</FilePath>
             </File>
             <File>
+              <FileName>watchdog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
+            </File>
+            <File>
               <FileName>ASSERT_FTEX.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\ASSERT_FTEX.c</FilePath>
@@ -4207,11 +4212,6 @@
               <FileName>vc_constants.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
-              <FileName>watchdog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
             </File>
           </Files>
         </Group>

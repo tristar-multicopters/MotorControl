@@ -27,6 +27,10 @@
 
 #define PAS_LEVEL_SPEED_WALK    (uint8_t)4     /* Maximum Speed for PAS Level 5 in Km/h */
 
+
+#define LADCRANGE               (uint16_t)3000     /* Minumum Average captured ADC value for Pedal Torque Sensor presence */
+#define HADCRANGE               (uint16_t)10000    /* Maximum Average captured ADC value for Pedal Torque Sensor presence */
+
 // ======================== Configuration enums ======================== // 
 typedef enum
 {

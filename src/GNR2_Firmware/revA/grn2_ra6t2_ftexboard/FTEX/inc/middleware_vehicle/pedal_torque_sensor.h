@@ -99,6 +99,13 @@ void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle);
 void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle);
 
 /**
+  @brief  Pedal torque Sensor return Averadge ADC value after Filtering
+  @param  PedalTorqSensorHandle_t handle
+  @return Averadge pedal torque sensor value in uint16_t format
+*/
+uint16_t PedalTorqSensor_GetAvPedalValue(PedalTorqSensorHandle_t * pHandle);
+
+/**
   @brief  Pedal torque Sensor return ADC value
   @param  PedalTorqSensorHandle_t handle
   @return hAvTorqueValue in uin16_t format
@@ -120,8 +127,10 @@ void   PedalTorqSensor_ResetAvValue(PedalTorqSensorHandle_t * pHandle);
 int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle);
 
 /**
-     Return true if the Pedal Torque sensor is pressed (threshold is passed) 
-  */
+  @brief  Pedal Torque sensor detection return
+  @param  PedalTorqSensorHandle_t handle
+  @return Return true if the Pedal Torque sensor is pressed (threshold is passed) 
+*/
 bool PedalTorqSensor_IsDetected (PedalTorqSensorHandle_t * pHandle);
 
 /**
@@ -130,5 +139,6 @@ bool PedalTorqSensor_IsDetected (PedalTorqSensorHandle_t * pHandle);
   @return void
 */
 void PedalTorqSensor_ComputeSlopes(PedalTorqSensorHandle_t * pHandle);
+
 
 #endif
