@@ -16,13 +16,13 @@
 #define STARTUP_COUNTER             1
 #define SPEEDFEEDBACK_COUNTER       2
 #define STUCK_REVERSE_COUNTER       3
+#define UNDERVOLTAGE_COUNTER         4
 
 #define MAXCURRENT                  75 /* Used for a generic conversion 
                                           from current ref to actual amps */
 // ============================= Variables ================================ //
                                   
 bool isPWMCleared;
-
 static Delay_Handle_t ThrottleDelay; /* Delay for Throttle stuck check while initialization*/
 static Delay_Handle_t PTSensorDelay; /* Delay for Pedal Torque sensor stuck check while initialization*/
 
@@ -776,9 +776,17 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 
             if (hM1FaultOccurredCode & MC_UNDER_VOLT)
             {
-                // In case of DCbus undervoltage, clear the UV fault
-                hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
-                VC_Errors_ClearError(UV_PROTECTION);
+                if(pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+                {
+                    // If the timer has timeout, clear the UV fault
+                    hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
+                    pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1] = 0;
+                    VC_Errors_ClearError(UV_PROTECTION);     
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1]++;
+                }
             }
             
             if (hM1FaultOccurredCode & MC_MSRP)
@@ -861,10 +869,17 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 
             if (hM2FaultOccurredCode & MC_UNDER_VOLT)
             {
-                /* In case of DCbus undervoltage... */
-                hM2FaultOccurredCode &= ~MC_UNDER_VOLT;
-                VC_Errors_ClearError(UV_PROTECTION);
-
+                if(pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+                {
+                    // If the timer has timeout, clear the UV fault
+                    hM2FaultOccurredCode &= ~MC_UNDER_VOLT;
+                    pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2] = 0;
+                    VC_Errors_ClearError(UV_PROTECTION);     
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2]++;
+                }
             }
             
             if (hM2FaultOccurredCode & MC_MSRP)
