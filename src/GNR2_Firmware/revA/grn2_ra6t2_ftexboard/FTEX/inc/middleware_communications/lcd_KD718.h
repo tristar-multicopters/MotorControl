@@ -62,7 +62,7 @@ typedef enum
     KD718_BRAKE_ENGAGED          = 0x03, 
     KD718_THROTTLE_STUCK         = 0x04, 
     KD718_THROTTLE_FAULT         = 0x05, 
-    KD718_LOW_VOLTAGE_           = 0x06, 
+    KD718_LOW_VOLTAGE            = 0x06, 
     KD718_HIGH_VOLTAGE           = 0x07, 
     KD718_HALL_SIGNAL_FAULT      = 0x08, 
     KD718_MOTOR_PHASE_FAULT      = 0x09, 

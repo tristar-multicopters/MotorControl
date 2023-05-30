@@ -5,6 +5,7 @@
 */
 
 #include "battery_monitoring.h"
+#include "vc_errors_management.h"
 #include "ASSERT_FTEX.h"
  
 
@@ -15,11 +16,13 @@
  */
 void BatMonitor_Init(BatMonitor_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMCI)
 {	
-    ASSERT(pHandle != NULL); 
+    ASSERT(pHandle != NULL);
+    ASSERT(pMCI != NULL);    
     pHandle->pMCI = pMCI;
     pHandle->ValCount    = 0;
     pHandle->StartupDone = false;
     pHandle->VBatAvg     = 0;    
+    pHandle->LowBattery  = false;
 }
 
 /**
@@ -74,7 +77,7 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle)
     uint16_t NewSOC = 0;
     uint32_t VoltPercent = 0;
     
-    VoltPercent = (pHandle->VBatMax * 100u) - (pHandle->VBatMin * 100u); // Values are * 100 to uoscale the calculation
+    VoltPercent = (pHandle->VBatMax * 100u) - (pHandle->VBatMin * 100u); // Values are * 100 to upscale the calculation
                                                                          // So we have better accuracy
     VoltPercent =  VoltPercent/100u; // Calculate how many volts correpsond to 1 % charge
     
@@ -127,8 +130,33 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle)
  */
 void BatMonitor_UpdateSOC(BatMonitor_Handle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
+    
     BatMonitor_UpdateAvg(pHandle);
     BatMonitor_ComputeSOC(pHandle);
+    
+    // If the SOC is below the threshold 
+    if ((pHandle->SOC <= pHandle->LowBatSOC) && (pHandle->LowBattery == false))
+    {
+        pHandle->LowBattery = true; // update the flag
+        
+    }
+    // If the SOC is above the recharge threshold 
+    else if((pHandle->SOC >= pHandle->RechargedBatSOC) && (pHandle->LowBattery == true))
+    {
+        
+        pHandle->LowBattery = false; // update the flag
+    }
+
+    
+    if(pHandle->LowBattery == true) // If we have a low battery
+    {
+        VC_Errors_RaiseError(BATT_LOW); // raise the flag
+    }
+    else // If not
+    {
+        VC_Errors_ClearError(BATT_LOW); // clear the flag
+    }        
 }
 
 /**
@@ -136,6 +164,15 @@ void BatMonitor_UpdateSOC(BatMonitor_Handle_t * pHandle)
  */
 uint16_t BatMonitor_GetSOC(BatMonitor_Handle_t * pHandle)
 {
-  return pHandle->SOC;
+    ASSERT(pHandle != NULL);
+    return pHandle->SOC;
 }
 
+/**
+ *  Get the low battery flag
+ */
+uint16_t BatMonitor_GetLowBatFlag(BatMonitor_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->LowBattery;
+}

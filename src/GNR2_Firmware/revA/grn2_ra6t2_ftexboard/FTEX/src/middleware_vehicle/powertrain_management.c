@@ -618,8 +618,8 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
         bCheckStop2 = true;
     }
 
-    if (!PWREN_IsPowerEnabled(pHandle->pPWREN)) // If power is enabled through power enable input
-    {
+    if (!PWREN_IsPowerEnabled(pHandle->pPWREN) || BatMonitor_GetLowBatFlag(pHandle->pBatMonitorHandle)) // If power is not enabled through power enable input
+    {                                                                                                   // Or the low battery flag is raised
         bCheckStop3 = true;
     }
 
@@ -664,8 +664,8 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
         bCheckStart1 = false;
     }
     
-    if (PWREN_IsPowerEnabled(pHandle->pPWREN))// If power is enabled through power enable input
-    {
+    if (PWREN_IsPowerEnabled(pHandle->pPWREN) && !BatMonitor_GetLowBatFlag(pHandle->pBatMonitorHandle)) // If power is enabled through power enable input
+    {                                                                                                   // And the low battery flag isn't raised  
         bCheckStart2 = true;
     }
     if (!BRK_IsPressed(pHandle->pBrake)) // If brake is pressed

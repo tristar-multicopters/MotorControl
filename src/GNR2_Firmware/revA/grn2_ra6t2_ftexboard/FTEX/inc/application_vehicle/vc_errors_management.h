@@ -11,7 +11,7 @@
 #include "gnr_main.h"
 
 
-#define ERROR_BUFFER_SIZE      5
+#define ERROR_BUFFER_SIZE     20
 #define DEFAULT_CYCLE_LENGHT   6 
 
 typedef enum
@@ -27,6 +27,7 @@ typedef enum
     DUAL_COMM_ERROR   = 0x08, // Master lost comm with slave or slave lost comm with master
     OVER_CURRENT      = 0x09, // Over Current protection - HW & SW
     NTC_ERR           = 0x0A, // NTC Disconnected or Freezed
+    BATT_LOW          = 0x0B, // Battery is low
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
 ErrorCodes_t; 

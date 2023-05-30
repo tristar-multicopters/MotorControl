@@ -524,11 +524,13 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
         case MOTOR_PHASE_ERROR:
             ConvertedError = APT_THREE_PHASE_ERROR;
           break;
-         case MOTOR_HALL_ERROR:
+        case MOTOR_HALL_ERROR:
             ConvertedError = APT_HALL_ERROR;
           break;
-        case UNMAPPED_ERROR: // Errors that APT has but that we currently don't flag
+        case BATT_LOW:
             ConvertedError = APT_BAT_LOW;
+          break;         
+        case UNMAPPED_ERROR: // Errors that APT has but that we currently don't flag            
             ConvertedError = APT_BRAKE_ERROR;
             ConvertedError = APT_TURN_ERROR;
           break;        

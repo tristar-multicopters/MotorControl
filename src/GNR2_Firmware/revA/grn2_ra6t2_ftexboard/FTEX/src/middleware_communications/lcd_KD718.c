@@ -547,7 +547,8 @@ uint8_t LCD_KD718_ErrorConversionFTEXToKD718(uint8_t aError)
             ConvertedError = KD718_THROTTLE_STUCK;
           break;  
         case UV_PROTECTION:
-            ConvertedError = KD718_LOW_VOLTAGE_;
+        case BATT_LOW:    
+            ConvertedError = KD718_LOW_VOLTAGE;
           break;
         case OV_PROTECTION:
             ConvertedError = KD718_HIGH_VOLTAGE;

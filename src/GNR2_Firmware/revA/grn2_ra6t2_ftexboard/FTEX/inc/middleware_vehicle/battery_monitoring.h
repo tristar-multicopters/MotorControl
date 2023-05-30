@@ -20,9 +20,9 @@
   */
 typedef struct
 {          
-  uint16_t VBatMin; // Value in volts/100 that the battery has when it's empty
-  uint16_t VBatMax; // Value in volts/100 that the battery has when it's fully charged
-  uint16_t VBatAvg; // Value in volts/100 of the average voltage present in the battery.  
+  uint16_t VBatMin; // Value in volts that the battery has when it's empty
+  uint16_t VBatMax; // Value in volts that the battery has when it's fully charged
+  uint16_t VBatAvg; // Value in volts of the average voltage present in the battery.  
   
   MotorControlInterfaceHandle_t * pMCI;  
     
@@ -31,6 +31,10 @@ typedef struct
   uint16_t Transition_count;          // Used to determin when the SOC changes
   uint16_t SOC;                       // Contains the state of charge of the battery
   bool StartupDone;                   // Tells us if we have read less than NB_SAMPLES_4_AVG values
+  
+  bool LowBattery;                    // Flag that when set to true indicates a low battery    
+  uint16_t LowBatSOC;                 // Tells us the value of SOC that when reached means we have a low battery
+  uint16_t RechargedBatSOC;           // Tells us the upper SOC value where the low battery flag should be cleared                 
     
 } BatMonitor_Handle_t;
 
@@ -60,12 +64,17 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle);
  */
 void BatMonitor_UpdateSOC(BatMonitor_Handle_t * pHandle);
 
-
 /**
  * @brief Get the current SOC value
  * @param pHandle : Pointer on Handle structure of the battery monitoring module
  */
 uint16_t BatMonitor_GetSOC(BatMonitor_Handle_t * pHandle);
+
+/**
+ *  @brief Get the low battery flag
+ *  @param pHandle : Pointer on Handle structure of the battery monitoring module
+ */
+uint16_t BatMonitor_GetLowBatFlag(BatMonitor_Handle_t * pHandle);
 
 #endif /*__BAT_MONITOR_H*/
 
