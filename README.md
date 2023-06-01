@@ -18,6 +18,12 @@ The 1 reason is our MCUboot, from Renesas FSP, doesn't work on version 3.8.0 and
 require a lot of changes.
 Version 3.7.0 has averything we need to continue our developement.
 
+# ARM Compiler
+The ARM compiler is version locked to V6.18.
+Find a copy and instructions here:
+https://tristarmulticopters.atlassian.net/wiki/spaces/ERR/pages/596410394/Software+environment+Configuration
+
+# Renesas Advanced Smart Configurator
 You'll need this specific Renesas Advanced Smart Configurator
 https://github.com/renesas/fsp/releases/download/v3.7.0/setup_fsp_v3_7_0_rasc_v2022-04.exe
 
