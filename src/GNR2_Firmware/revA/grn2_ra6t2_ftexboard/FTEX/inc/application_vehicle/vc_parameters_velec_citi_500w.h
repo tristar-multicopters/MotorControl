@@ -27,7 +27,7 @@
 #define THROTTLE_OFFSET_ADC2THROTTLE          12500    // Offset for ADC to throttle linear transformation
 #define THROTTLE_MAX_ADC2THROTTLE             53200    // Maximum value reachable by the throttle adc value 
 
-#define THROTTLE_OFFSET_THROTTLE2TORQUE        4000    // Offset for throttle to torque linear transformation
+#define THROTTLE_OFFSET_THROTTLE2TORQUE           1    // Offset for throttle to torque linear transformation
 
 #define THROTTLE_DETECTION_THRESHOLD           1000    // Throttle is considered pressed once it passed this threshold
 
@@ -41,9 +41,9 @@
 
 #define PTS_FILTER_ALPHA              2.27F    // Butterworth alpha coefficient pedal torque sensor filtering
 #define PTS_FILTER_BETA              -0.27F    // Butterworth beta coefficient pedal torque sensor filtering
-#define PTS_MAX_PTSVALUE         UINT16_MAX	   // Maximum analog value to reach
+#define PTS_MAX_PTSVALUE              35000	   // Maximum analog value to reach
 
-#define PTS_OFFSET_ADC2PTS             8500    // Offset for ADC to pedal torque sensor linear transformation
+#define PTS_OFFSET_ADC2PTS            10300    // Offset for ADC to pedal torque sensor linear transformation
 
 #define PTS_OFFSET_PTS2TORQUE_STARTUP    40    // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED         20    // Speed under which the  Startup pedal torque sensor offset is used in wheel rpm
@@ -88,7 +88,7 @@
 #define PAS_TORQUE_GAIN                             100    // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                         99    // Maximum PAS Torque feed ration in 100%
 #define PAS_MAX_SPEED_RATIO                          99    // Maximum PAS Speed feed ration in 100%
-#define PAS_ALGORITHM                   CadenceSensorUse   /* TorqueSensorUse  = 0, Torque sensor use define 
+#define PAS_ALGORITHM                   TorqueSensorUse   /* TorqueSensorUse  = 0, Torque sensor use define 
                                                               CadenceSensorUse = 1, Cadence sensor use define 
                                                               HybridSensorUse  = 2, Hybride sensor use define */
 #define PAS_CADENCE_USE_SPEED_LIMIT                true    // Decides if we have a speed limit on pas cadence
@@ -101,7 +101,7 @@
 #define PAS_5_POWER_PERCENT    100    // PAS 5 has a ratio of 100%
 #define PAS_WALK_POWER_PERCENT  70    // PAS walk has a ratio of 70%
 
-#define PAS_MIN_PEDAL_COUNT_SAFE                  0    // Number of pulse per pedal turn do we neeed after initial detection to push power
+#define PAS_MIN_PEDAL_COUNT_SAFE                  2    // Number of pulse per pedal turn do we neeed after initial detection to push power
 #define PAS_SLOW_PEDAL_COUNT                      4    // Loop wait counter to update the PAS detection function
 #define PAS_WALKMODE_OVER_THROTTLE             true    // If set to true walk mode has higher priority than throttle
 
@@ -112,7 +112,7 @@
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT              200    /* Number of task ticks to wait after a fault occurs to
                                                                    attempt a powertrain restart (OC, SF and SU faults)   */
 
-#define POWERTRAIN_MAX_MOTOR_TORQUE                       STARTING_TORQUE    // Maximum motor torque to apply with powertrain management
+#define POWERTRAIN_MAX_MOTOR_TORQUE                       NOMINAL_TORQUE    // Maximum motor torque to apply with powertrain management
     
 #define POWERTRAIN_FOLDBACK_SPEED_END                     MAX_APPLICATION_SPEED_RPM/2    /* Speed value that dual motor startup strategy stops outputting
                                                                                             torque */
@@ -127,10 +127,10 @@
 
 /*********************************Battery Monitoring*******************************/
 
-#define BATTERY_FULL_VOLT    52
-#define BATTERY_EMPTY_VOLT   46
+#define BATTERY_FULL_VOLT    42
+#define BATTERY_EMPTY_VOLT   30
 
-#define BATTERY_SOC_LOW_PERCENT   15   // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
+#define BATTERY_SOC_LOW_PERCENT    1   // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
 #define BATTERY_SOC_OK_PERCENT    25   // Battery SOC in % for which we clear the battery low flag
                                             
 #endif                                            
