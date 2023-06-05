@@ -102,7 +102,7 @@
 #define PAS_5_POWER_PERCENT    100    // PAS 5 has a ratio of 100%
 #define PAS_WALK_POWER_PERCENT  70    // PAS walk has a ratio of 70%
 
-#define PAS_MIN_PEDAL_COUNT_SAFE                  0    // Number of pulse per pedal turn do we neeed after initial detection to push power
+#define PAS_MIN_PEDAL_COUNT_SAFE                  2    // Number of pulse per pedal turn do we neeed after initial detection to push power
 #define PAS_SLOW_PEDAL_COUNT                      1    // Loop wait counter to update the PAS detection function
 #define PAS_WALKMODE_OVER_THROTTLE             true    // If set to true walk mode has higher priority than throttle
 
@@ -126,8 +126,14 @@
 #define FOLDBACK_SLOW_STOP_BANDWIDTH                       50    // Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control
 #define FOLDBACK_TIMEOUT                                  400    // Fold Back Timeout for the slow start ramp
 
-/*********************************Battery Monitoring*******************************/
 
+#define POWERTRAIN_HEADLIGHT_LOCKED         false    // Parameter that decides if the user can change the state of the headlight      
+#define POWERTRAIN_HEADLIGHT_DEFAULT        false    // Parameter that sets the default headlight state when the bike is powered on
+
+#define POWERTRAIN_TAILLIGHT_LOCKED         false    // Parameter that decide sif the user can change the state of the tail light 
+#define POWERTRAIN_TAILLIGHT_DEFAULT        false    // Parameter that sets the default tail light state when the bike is powered on
+    
+/*********************************Battery Monitoring*******************************/
 #define BATTERY_FULL_VOLT    52
 #define BATTERY_EMPTY_VOLT   46
 

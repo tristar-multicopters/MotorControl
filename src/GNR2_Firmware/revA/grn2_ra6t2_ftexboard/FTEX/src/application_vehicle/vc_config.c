@@ -40,7 +40,9 @@ Light_Handle_t HeadLightHandle =
     .wPinNumber = FRONT_LIGHT_PIN,
     .bIsInvertedLogic = false,
     .bLightIsBlinking = false,
-    .BlinkPeriode     = 0,    
+    .BlinkPeriode     = 0,
+    .bLightStateLocked = POWERTRAIN_HEADLIGHT_LOCKED,
+    .bDefaultLightState = POWERTRAIN_HEADLIGHT_DEFAULT,     
 };
 
 Light_Handle_t TailLightHandle =
@@ -48,7 +50,9 @@ Light_Handle_t TailLightHandle =
     .wPinNumber = BACK_LIGHT_PIN,
     .bIsInvertedLogic = false,
     .bLightIsBlinking = false, 
-    .BlinkPeriode     = 50,    
+    .BlinkPeriode     = 50,
+    .bLightStateLocked = POWERTRAIN_TAILLIGHT_LOCKED,
+    .bDefaultLightState = POWERTRAIN_TAILLIGHT_DEFAULT,   
 };    
 
 BatMonitor_Handle_t BatMonitorHandle = 

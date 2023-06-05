@@ -26,6 +26,10 @@ typedef struct
 	
     bool bLightIsBlinking;  // Shows if the light should be blinking
     bool bLightIsActive;    // Shows if the light should be on or off
+    
+    bool bLightStateLocked; // Shows if the light state can be changed externaly
+    bool bDefaultLightState;// Shows the stae of the light that is desired when the bike is turned on    
+    
     bool bIsInvertedLogic;  // States if the logic is inverted 
 	                        // That would mean you would turn the light on with a 0 and off with a 1
 } Light_Handle_t;
@@ -35,6 +39,18 @@ typedef struct
  * @param pHandle : handle of the light
  */
 void Light_Init(Light_Handle_t * pHandle);
+
+/**
+ * @brief Sets the desired value of the light when the bike is powered on 
+ * @param pHandle : handle of the light
+ */
+void Light_PowerOnSequence(Light_Handle_t * pHandle);
+
+/**
+ * @brief Turns off the light when the bike is powered off 
+ * @param pHandle : handle of the light
+ */
+void Light_PowerOffSequence(Light_Handle_t * pHandle);
 
 /**
  * @brief Activates the light
@@ -47,12 +63,6 @@ void Light_Enable(Light_Handle_t * pHandle);
  * @param pHandle : handle of the light
  */
 void Light_Disable(Light_Handle_t * pHandle);
-
-/**
- * @brief Toggles the light
- * @param pHandle : handle of the light
- */
-void Light_Toggle(Light_Handle_t * pHandle);
 
 /**
  * @brief Check if the light is activated or not

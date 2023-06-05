@@ -328,7 +328,10 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         {    
             osDelay(STOP_LOOPTICKS);
         }
-
+        
+        Light_PowerOffSequence(pVCI->pPowertrain->pHeadLight); // Make sure we turn off the lights before powering down
+        Light_PowerOffSequence(pVCI->pPowertrain->pTailLight);
+        
 //is we have dual motor configuration, send a command to stop the slaver motor
 //and wait until motor stops to run.
 #if (SUPPORT_SLAVE_ON_IOT == 1 && GNR_IOT == 1)|| (GNR_MASTER == 1 && GNR_IOT == 0)

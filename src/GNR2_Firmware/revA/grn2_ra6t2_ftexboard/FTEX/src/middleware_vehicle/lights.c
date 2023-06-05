@@ -7,6 +7,54 @@
 #include "lights.h"
 #include "ASSERT_FTEX.h"
 
+void Light_SetLight(Light_Handle_t * pHandle);
+void Light_ResetLight(Light_Handle_t * pHandle);
+void Light_Toggle(Light_Handle_t * pHandle);
+
+/* Private Functions -------------------------------------------- */
+
+/**
+ * @brief Turns on the light
+ * @param pHandle : handle of the light
+ */
+void Light_SetLight(Light_Handle_t * pHandle)
+{
+    if (pHandle->bIsInvertedLogic) // If the logic is inverted we turn on the light with a 0
+    {
+        uCAL_GPIO_Reset(pHandle->wPinNumber);
+    }
+    else
+    {    
+        uCAL_GPIO_Set(pHandle->wPinNumber);
+    }
+}
+
+/**
+ * @brief Turns off the light
+ * @param pHandle : handle of the light
+ */
+void Light_ResetLight(Light_Handle_t * pHandle)
+{
+    if (pHandle->bIsInvertedLogic) // If the logic is inverted we turn off the light with a 1
+    {
+        uCAL_GPIO_Set(pHandle->wPinNumber);
+    }
+    else
+    {     
+        uCAL_GPIO_Reset(pHandle->wPinNumber);
+    }   
+}
+
+/**
+ * @brief Toggles the light
+ * @param pHandle : handle of the light
+ */
+void Light_Toggle(Light_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    
+    uCAL_GPIO_Toggle(pHandle->wPinNumber);
+}
 
 /* Functions ---------------------------------------------------- */
 
@@ -23,8 +71,23 @@ void Light_Init(Light_Handle_t * pHandle)
     PinConfig.PinOutput    = PUSH_PULL; 
     
     uCAL_GPIO_ReInit(pHandle->wPinNumber, PinConfig);
-    
-    Light_Disable(pHandle); // We make sure the lights are off on start up
+}
+
+
+/**
+ *  Sets the desired value of the light when the bike is powered on 
+ */
+void Light_PowerOnSequence(Light_Handle_t * pHandle)
+{
+    pHandle->bLightIsActive = pHandle->bDefaultLightState;
+}
+
+/**
+ *  Turns off the light when the bike is powered off 
+ */
+void Light_PowerOffSequence(Light_Handle_t * pHandle)
+{
+    pHandle->bLightIsActive = false;
 }
 
 /**
@@ -34,18 +97,13 @@ void Light_Enable(Light_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    pHandle->bLightIsActive = true;
+    if (!pHandle->bLightStateLocked) // If the lights are not locked to prevent a change
+    {    
+        pHandle->bLightIsActive = true;
     
-    if(!pHandle->bLightIsBlinking) // If we are currently blinking the light we                              
-    {                              // dont want to overwrite that.
-        
-        if(pHandle->bIsInvertedLogic) // If the logic is inverted we turn on the light with a 0
-        {
-            uCAL_GPIO_Reset(pHandle->wPinNumber);
-        }
-        else
-        {    
-            uCAL_GPIO_Set(pHandle->wPinNumber);
+        if (!pHandle->bLightIsBlinking) // If we are currently blinking the light we                              
+        {                               // dont want to overwrite that.
+            Light_SetLight(pHandle);
         }
     }
 }
@@ -56,27 +114,13 @@ void Light_Enable(Light_Handle_t * pHandle)
 void Light_Disable(Light_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-
-    pHandle->bLightIsActive = false;
     
-    if(pHandle->bIsInvertedLogic) // If the logic is inverted we turn off the light with a 1
-    {
-        uCAL_GPIO_Set(pHandle->wPinNumber);
-    }
-    else
-    {     
-        uCAL_GPIO_Reset(pHandle->wPinNumber);
-    }
-}
-
-/**
- *  Toggle the light
- */
-void Light_Toggle(Light_Handle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
+    if (!pHandle->bLightStateLocked) // If the lights are not locked to prevent a change
+    { 
+        pHandle->bLightIsActive = false;
     
-    uCAL_GPIO_Toggle(pHandle->wPinNumber);
+        Light_ResetLight(pHandle);
+    }
 }
 
 /**
@@ -96,7 +140,7 @@ void Light_Blink(Light_Handle_t * pHandle)
 {
     if (pHandle->bLightIsBlinking && pHandle->bLightIsActive)
     {
-        if(pHandle->BlinkCounter >= pHandle->BlinkPeriode) // If this function has been called enough 
+        if (pHandle->BlinkCounter >= pHandle->BlinkPeriode) // If this function has been called enough 
         {                                                  // so that Blink Counter equals Blink Periode   
             pHandle->BlinkCounter = 0; // reset the counter
             Light_Toggle(pHandle);     // Toggle the light
@@ -108,11 +152,11 @@ void Light_Blink(Light_Handle_t * pHandle)
     }
     else if (pHandle->bLightIsActive) //If we arent blinking keep the light state
     {
-        Light_Enable(pHandle);
+        Light_SetLight(pHandle);
     }
     else if (!pHandle->bLightIsActive)
     {
-        Light_Disable(pHandle);
+        Light_ResetLight(pHandle);
     }        
 }    
 

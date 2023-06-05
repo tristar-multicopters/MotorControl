@@ -125,8 +125,14 @@
 #define FOLDBACK_SLOW_STOP_BANDWIDTH                      155    // Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control
 #define FOLDBACK_TIMEOUT                                  400    // Fold Back Timeout for the slow start ramp
 
-/*********************************Battery Monitoring*******************************/
 
+#define POWERTRAIN_HEADLIGHT_LOCKED         false    // Parameter that decides if the user can change the state of the headlight      
+#define POWERTRAIN_HEADLIGHT_DEFAULT        false    // Parameter that sets the default headlight state when the bike is powered on
+
+#define POWERTRAIN_TAILLIGHT_LOCKED         false    // Parameter that decide sif the user can change the state of the tail light 
+#define POWERTRAIN_TAILLIGHT_DEFAULT        false    // Parameter that sets the default tail light state when the bike is powered on
+
+/*********************************Battery Monitoring*******************************/
 #define BATTERY_FULL_VOLT    42
 #define BATTERY_EMPTY_VOLT   30
 

@@ -44,11 +44,11 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
     Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
     BRK_Init(pHandle->pBrake);
-    Light_Init(pHandle->pHeadLight);
-    Light_Init(pHandle->pTailLight);
     BatMonitor_Init(pHandle->pBatMonitorHandle, pHandle->pMDI->pMCI);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
+    Light_Init(pHandle->pHeadLight);
+    Light_Init(pHandle->pTailLight);
     PedalAssist_Init(pHandle->pPAS, &PTSensorDelay);    
     
     Wheel_Init(WHEEL_DIAMETER_DEFAULT);    // To update to a define
@@ -64,6 +64,12 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     
     // Enable slow motor Start for Pedal Assist cadence base
     Foldback_EnableSlowStart(pHandle->SpeedFoldbackVehicle);
+    
+    if (pHandle->pPWREN->bInitialPowerLockState == true) // If we have bene powered on by the screen
+    {
+        Light_PowerOnSequence(pHandle->pHeadLight); // Setup the lights with their default values
+        Light_PowerOnSequence(pHandle->pTailLight);
+    }
     
 }
 

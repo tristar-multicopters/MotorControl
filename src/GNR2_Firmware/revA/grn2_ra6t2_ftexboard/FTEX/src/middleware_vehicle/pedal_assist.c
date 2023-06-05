@@ -225,7 +225,7 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
            with the pedal */
         
         PulseCounter++;
-        if ((PulseCounter >pHandle->sParameters.bPASCountSafe ))
+        if ((PulseCounter > pHandle->sParameters.bPASCountSafe))
         {
             pHandle->bPASDetected = true;
             PulseCounter--;
