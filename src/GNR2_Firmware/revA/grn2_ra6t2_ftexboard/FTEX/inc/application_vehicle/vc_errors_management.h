@@ -28,6 +28,10 @@ typedef enum
     OVER_CURRENT      = 0x09, // Over Current protection - HW & SW
     NTC_ERR           = 0x0A, // NTC Disconnected or Freezed
     BATT_LOW          = 0x0B, // Battery is low
+    PAS_BOOT_ERROR    = 0x0C, // Peddle Assist error
+    CONTROLLER_ERROR  = 0x0D, // Controller in unrecoverable state
+    BRAKE_ERROR       = 0x0E, // Brake cutoff sensor abnormal
+    MOTOR_OT_PROTECT  = 0x0F, // Motor is overheating
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
 ErrorCodes_t; 

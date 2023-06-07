@@ -11,6 +11,12 @@
 
 #include "stdbool.h"
 #include "uCAL_GPIO.h"
+#include "vc_errors_management.h"
+#include "delay.h"
+
+// ============================= Defines ================================= //
+
+#define SCOUNT           (uint16_t)1000 /* Number of read cycle for brake check stuck */
 
 /**
   * @brief Brake_Handle_t structure used for brake sensing
@@ -24,13 +30,18 @@ typedef struct
     bool bIsInvertedLogic;  // States if the logic is inverted 
 	                        // If set to true then a 1 would mean that the brake isnt 
                             // pressed and a 0 would mean it is pressed
+    bool bEngagedOnStart; // Is the brake live on boot 
+    bool bSafeStart;      // brake value has been measured safely
+
+    Delay_Handle_t * pBrakeStuckDelay;
+
 } BRK_Handle_t;
 
 /**
  * @brief Initializes Brake module pin
  * @param pHandle : Pointer on Handle structure of Brake module
  */
-void BRK_Init(BRK_Handle_t * pHandle);
+void BRK_Init(BRK_Handle_t * pHandle, Delay_Handle_t * pBrakeDelay);
 
 /**
  * @brief Checks if the brake is pressed

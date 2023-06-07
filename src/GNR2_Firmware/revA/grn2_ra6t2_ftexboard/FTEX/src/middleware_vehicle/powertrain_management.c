@@ -25,6 +25,7 @@
 bool isPWMCleared;
 static Delay_Handle_t ThrottleDelay; /* Delay for Throttle stuck check while initialization*/
 static Delay_Handle_t PTSensorDelay; /* Delay for Pedal Torque sensor stuck check while initialization*/
+static Delay_Handle_t brakeDelay; /* Delay for Brake sensor stuck check while initialization*/
 
 // ==================== Public function prototypes ======================== //
 
@@ -40,6 +41,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     // Initialize Delays for stuck conditions
     ThrottleDelay = pDelayArray[THROTTLE_DELAY];
     PTSensorDelay = pDelayArray[PTS_DELAY];
+    brakeDelay = pDelayArray[BRAKE_DELAY];
     // Initilaize peripherals
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
     Throttle_Init(pHandle->pThrottle,&ThrottleDelay);

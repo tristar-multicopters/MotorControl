@@ -46,7 +46,8 @@ typedef enum
 typedef enum 
 {
   THROTTLE_DELAY = 0,
-  PTS_DELAY ,
+  PTS_DELAY,
+  BRAKE_DELAY,
 } PowertrainDelays_t;
 
 // ======================== Configuration structures ======================== // 
