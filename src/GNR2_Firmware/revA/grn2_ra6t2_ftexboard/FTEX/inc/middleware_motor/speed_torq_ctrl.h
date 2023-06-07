@@ -70,7 +70,10 @@ typedef struct
                                              in voltage unit                                            */    
     uint16_t hMaxBusCurrent;                /*!< Application maximum Current
                                              of the rotor mechanical speed. Expressed in Amps 
-                                             */    
+                                             */
+    uint16_t hBatteryLowVoltage;            /* Application maximum voltage that the MC layer can 
+                                              operate with maximum torque
+                                              */
     uint16_t hMaxAppPositiveMecSpeedUnit;   /*!< Application maximum positive value
                                              of the rotor mechanical speed. Expressed in
                                              the unit defined by #SPEED_UNIT.*/
