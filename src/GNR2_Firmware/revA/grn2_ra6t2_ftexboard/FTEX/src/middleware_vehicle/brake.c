@@ -7,12 +7,16 @@
 #include "brake.h"
 #include "ASSERT_FTEX.h"
 
+// ============================= Variables ================================ //
+static uint16_t hSafeCounter = 0;
+static bool brakeStuck = false;
+
 /* Functions ---------------------------------------------------- */
 
 /**
  *  Initializes brake sensor module
  */
-void BRK_Init(BRK_Handle_t * pHandle)
+void BRK_Init(BRK_Handle_t * pHandle, Delay_Handle_t * pBrakeDelay)
 {	
     ASSERT(pHandle != NULL); 
     struct GPIOConfig PinConfig;
@@ -22,6 +26,13 @@ void BRK_Init(BRK_Handle_t * pHandle)
     PinConfig.PinOutput    = PUSH_PULL; 
     
     uCAL_GPIO_ReInit(pHandle->wPinNumber, PinConfig);
+
+    pHandle->pBrakeStuckDelay = pBrakeDelay;
+      
+    ASSERT(pHandle->pBrakeStuckDelay->DelayInitialized); // Delay should be initialized in the task to specify at which 
+                                                            // frequence the update delay function will eb called
+    Delay_SetTime(pHandle->pBrakeStuckDelay, 5, SEC); // Set a 5 seconds delay to detect a stuck throttle
+    Delay_Reset(pHandle->pBrakeStuckDelay);           // Make sure the counter is reset 
 }
 
 /**
@@ -30,8 +41,35 @@ void BRK_Init(BRK_Handle_t * pHandle)
 bool BRK_IsPressed(BRK_Handle_t * pHandle)
 {
 	ASSERT(pHandle != NULL); 
+
     bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
-	pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
+    pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
+
+    if(!pHandle->bIsPressed){
+        hSafeCounter++;
+        /* Launch Safe Start after a delay counter */
+        if (hSafeCounter >= SCOUNT) 
+        {   
+            pHandle->bSafeStart = true;
+            /* Clear this error in case it was falsly flagged as stuck (user brakes held at max on boot) */
+            VC_Errors_ClearError(BRAKE_ERROR); // Temperory using Throttle stuck as error
+            Delay_Reset(pHandle->pBrakeStuckDelay);
+        }
+    }
+    /* Pedal Torque Sensor is detected */
+    else     
+    {
+        hSafeCounter = 0;
+        if (!brakeStuck)
+        {
+            /* Increase the counter for the error delay and check if the delay has been reached */
+            if (Delay_Update(pHandle->pBrakeStuckDelay) == true) 
+            {
+                VC_Errors_RaiseError(BRAKE_ERROR); // Temperory using Throttle stuck as error
+                brakeStuck = true;
+            }
+        }
+    }    
 	
 	return pHandle->bIsPressed;
 }

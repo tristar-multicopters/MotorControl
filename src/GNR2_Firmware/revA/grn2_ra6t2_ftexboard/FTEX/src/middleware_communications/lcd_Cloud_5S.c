@@ -505,7 +505,7 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
         case UV_PROTECTION:
             ConvertedError = CLOUD_5S_UVP;
             break;
-        case BRAKE_CUTOFF:
+        case BRAKE_ERROR:
             ConvertedError = CLOUD_5S_BRAKE_ERROR;
             break;
         case MOTOR_HALL_ERROR:

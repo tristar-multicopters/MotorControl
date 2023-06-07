@@ -30,7 +30,7 @@ typedef enum
     BATT_LOW          = 0x0B, // Battery is low
     PAS_BOOT_ERROR    = 0x0C, // Peddle Assist error
     CONTROLLER_ERROR  = 0x0D, // Controller in unrecoverable state
-    BRAKE_CUTOFF      = 0x0E, // Brake cutoff sensor abnormal
+    BRAKE_ERROR       = 0x0E, // Brake cutoff sensor abnormal
     MOTOR_OT_PROTECT  = 0x0F, // Motor is overheating
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
