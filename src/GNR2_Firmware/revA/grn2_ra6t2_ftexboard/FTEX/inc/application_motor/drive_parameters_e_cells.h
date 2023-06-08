@@ -148,11 +148,8 @@
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
 
 /*Torque ramp settings */
-#if GNR_MASTER == 1
-    #define DEFAULT_TORQUE_SLOPE_UP        5000        /* Slope in cNm per second */
-#elif GNR_MASTER == 0
-    #define DEFAULT_TORQUE_SLOPE_UP        3000        /* Slope in cNm per second - the  value is less in comparison to the master because the slave should be able to compensate delay of CAN with its own slope*/
-#endif
+#define MASTER_DEFAULT_TORQUE_SLOPE_UP       5000        /* Slope in cNm per second */
+#define SLAVE_DEFAULT_TORQUE_SLOPE_UP        3000        /* Slope in cNm per second - the  value is less in comparison to the master because the slave should be able to compensate delay of CAN with its own slope*/
 #define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
 #define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */

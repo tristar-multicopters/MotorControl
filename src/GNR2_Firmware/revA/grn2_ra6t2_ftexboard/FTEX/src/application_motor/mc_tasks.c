@@ -22,6 +22,7 @@
 #include "mc_tasks.h"
 #include "parameters_conversion.h"
 #include "gnr_parameters.h"
+#include "vc_autodetermination.h"
 
 /* Private define ------------------------------------------------------------*/
 
@@ -118,6 +119,18 @@ void MC_BootUp(void)
     /******************************************************/
     /*     Main speed sensor component initialization     */
     /******************************************************/
+    #if VEHICLE_SELECTION == VEHICLE_QUIETKAT || VEHICLE_SELECTION == VEHICLE_E_CELLS
+    //used to update wTorqueSlopePerSecondUp with the correct
+    //value, based on the auto master/slave detection.
+    if (VcAutodeter_GetGnrState())
+    {
+        SpeednTorqCtrlM1.wTorqueSlopePerSecondUp = MASTER_DEFAULT_TORQUE_SLOPE_UP;
+    }
+    else
+    {
+        SpeednTorqCtrlM1.wTorqueSlopePerSecondUp = SLAVE_DEFAULT_TORQUE_SLOPE_UP;
+    }
+    #endif
     pSpeedTorqCtrl[M1] = &SpeednTorqCtrlM1;
     HallPosSensor_Init(&HallPosSensorM1);
     RotorPosObs_Init(&RotorPosObsM1);

@@ -18,6 +18,8 @@
 #include "user_config_task.h"
 #pragma clang diagnostic pop
 
+#include "vc_autodetermination.h"
+
 //****************** THREAD EXTERN FUNCTION PROTOTYPES ******************//
 
 extern void startMCSafetyTask(void * pvParameter);
@@ -28,9 +30,8 @@ extern void ProcessUARTFrames(void * pvParameter);
 extern void PowerOffSequence(void * pvParameter);
 extern void Watchdog(void * pvParameter);
 
-#if !GNR_MASTER
 extern void PWREN_TurnoffSlaveTask (void * pvParameter);
-#endif
+
 
 //****************** LOCAL FUNCTION PROTOTYPES ******************//
 
@@ -61,9 +62,8 @@ osThreadId_t CANRxFrameHandle;
 osThreadId_t PowerOffSequence_handle;
 osThreadId_t Watchdog_handle;
 
-#if !GNR_MASTER
+
 osThreadId_t PWREN_TurnoffSlave_handle;
-#endif
 
 //****************** THREAD ATTRIBUTES ******************//
 
@@ -89,7 +89,6 @@ static const osThreadAttr_t ThAtt_PowerOffSequence = {
 
 
 #if !DEBUGMODE_MOTOR_CONTROL
-#if GNR_MASTER
 static const osThreadAttr_t ThAtt_VC_MediumFrequencyTask = {
     .name = "VC_MediumFrequencyTask",
     .stack_size = 1024,
@@ -109,8 +108,6 @@ static const osThreadAttr_t ThAtt_CANLogger = {
 };
 #endif
 
-#endif
-
 static const osThreadAttr_t ThAtt_UART = {
 	.name = "TSK_UART",
 	.stack_size = 512,
@@ -125,13 +122,12 @@ static const osThreadAttr_t ThAtt_Watchdog = {
 
 #endif
 
-#if !GNR_MASTER
 static const osThreadAttr_t ThAtt_PWREN_TurnoffSlaveTask = {
     .name = "PWREN_TurnoffSlaveTask",
     .stack_size = 512,
     .priority = osPriorityLow
 };
-#endif
+
 
 /**************************************************************/
 
@@ -157,6 +153,9 @@ void gnr_main(void)
 
     /* At this point, hardware should be ready to be used by application systems */
     
+    //initialize master/slave autodetermination
+    VcAutodeter_MasterSlaveDetection(VCInterfaceHandle.pPowertrain->pPWREN);
+    
     //Initialize external flash memory used on DFU process.
     FirmwareUpdate_SerialFlashMemoryInit();
     
@@ -171,9 +170,14 @@ void gnr_main(void)
     UserConfigTask_UpdateUserConfigData(&UserConfigHandle);
 
     MC_BootUp();
-    #if GNR_MASTER
-    VC_BootUp();
-    #endif
+    
+    //if GRN is set to be master
+    //call VC_BootUp.
+    if (VcAutodeter_GetGnrState())
+    {
+        VC_BootUp();
+    }
+    
     Comm_BootUp();
     
     //Initialize the CAN OPEN ID/object dictionary.
@@ -208,32 +212,34 @@ void gnr_main(void)
     ASSERT(PowerOffSequence_handle != NULL);
     
     #if !DEBUGMODE_MOTOR_CONTROL
-    #if GNR_MASTER
-    THR_VC_MediumFreq_handle        = osThreadNew(THR_VC_MediumFreq,
-                                      NULL,
-                                      &ThAtt_VC_MediumFrequencyTask);
+    //if is a master on canopen, add threads below.
+    if (VcAutodeter_GetGnrState())
+    {
+        THR_VC_MediumFreq_handle        = osThreadNew(THR_VC_MediumFreq,
+                                        NULL,
+                                        &ThAtt_VC_MediumFrequencyTask);
                                       
-    //verify if the task was correctly created.              
-    ASSERT(THR_VC_MediumFreq_handle != NULL);
+        //verify if the task was correctly created.              
+        ASSERT(THR_VC_MediumFreq_handle != NULL);
 
-    THR_VC_StateMachine_handle      = osThreadNew(THR_VC_StateMachine,
-                                      NULL,
-                                      &ThAtt_VehicleStateMachine);
+        THR_VC_StateMachine_handle      = osThreadNew(THR_VC_StateMachine,
+                                        NULL,
+                                        &ThAtt_VehicleStateMachine);
                                       
-    //verify if the task was correctly created.              
-    ASSERT(THR_VC_StateMachine_handle != NULL);
+        //verify if the task was correctly created.              
+        ASSERT(THR_VC_StateMachine_handle != NULL);
                                       
-    #ifdef CANLOGGERTASK
+        #ifdef CANLOGGERTASK
 
-    CANOpenTaskHandle               = osThreadNew(CANLoggerTask,
-                                      NULL,
-                                      &ThAtt_CANLogger);  
+        CANOpenTaskHandle               = osThreadNew(CANLoggerTask,
+                                        NULL,
+                                        &ThAtt_CANLogger);  
     
-    //verify if the task was correctly created.              
-    ASSERT(CANOpenTaskHandle != NULL);
-    #endif
+        //verify if the task was correctly created.              
+        ASSERT(CANOpenTaskHandle != NULL);
+        #endif
 
-    #endif
+    }
     
     COMM_Uart_handle                = osThreadNew(ProcessUARTFrames,
                                       NULL,
@@ -250,15 +256,17 @@ void gnr_main(void)
 	
     #endif
     
-    #if !GNR_MASTER
-    //Create a nerw task.
-    PWREN_TurnoffSlave_handle       = osThreadNew(PWREN_TurnoffSlaveTask, 
-                                      &CONodeGNR,
-                                      &ThAtt_PWREN_TurnoffSlaveTask);
+    //if is a slave add the task below.
+    if (!VcAutodeter_GetGnrState())
+    {
+        //Create a nerw task.
+        PWREN_TurnoffSlave_handle       = osThreadNew(PWREN_TurnoffSlaveTask, 
+                                        &CONodeGNR,
+                                        &ThAtt_PWREN_TurnoffSlaveTask);
     
-    //verify if the task was correctly created.              
-    ASSERT(PWREN_TurnoffSlave_handle != NULL);
-    #endif
+        //verify if the task was correctly created.              
+        ASSERT(PWREN_TurnoffSlave_handle != NULL);
+    }
 
 
     /* Start RTOS */

@@ -66,16 +66,20 @@ void VCFaultManagment_MasterSlaveDetection(CO_NODE  *pNode, PWREN_Handle_t * pHa
     //If master , it must write on slave, if slave it msut write on master.
     //Before read or write something on one server is necessary to get
     //server address(ID).
-    #if (GNR_IOT && SUPPORT_SLAVE_ON_IOT) || (!GNR_IOT && GNR_MASTER)
-    //get the corresponding CO_CSDO object(server id).
-    csdo = COCSdoFind(pNode, SDOCLIENTINDEX_SLAVE);
-    #else
-        //verify if the GNR is slave.
-        #if (!GNR_IOT && !GNR_MASTER)
+    if ((GNR_IOT && SUPPORT_SLAVE_ON_IOT) || (!GNR_IOT && VcAutodeter_GetGnrState()))
+    {
         //get the corresponding CO_CSDO object(server id).
-        csdo = COCSdoFind(pNode, SDOCLIENTINDEX_MASTER);
-        #endif
-    #endif
+        csdo = COCSdoFind(pNode, SDOCLIENTINDEX_SLAVE);
+    }
+    else
+    {
+        //verify if the GNR is slave.
+        if ((!GNR_IOT && !VcAutodeter_GetGnrState()))
+        {
+            //get the corresponding CO_CSDO object(server id).
+            csdo = COCSdoFind(pNode, SDOCLIENTINDEX_MASTER);
+        }
+    }
     
     //check if csdo object is not NULL and if GNR is going on turn process.
     //this check if necessary to verify if the system is on single or dual motor.
@@ -189,11 +193,21 @@ void VCFaultManagment_Processing(VCSTM_Handle_t *pHandle, CO_NODE  *pNode)
     //slaver.
     if (pHandle->hVFaultNow & VC_SLAVE_COMM_ERROR)
     {           
-        //check if VC_SLAVE_COMM_ERROR was clean.
-        if (!VCFaultManagment_MasterSlaveCommunicationLost())
+        //check if master slave communication is back.
+        if (VCFaultManagment_GetMasterSlaveDetectionFlag())
         { 
             //clear slave lost communication error. 
             VCSTM_FaultProcessing(pHandle, 0, VC_SLAVE_COMM_ERROR);
         }
     }   
+}
+
+/**
+  @brief Function used return the value of the MasterSlaveDetectionFlag.
+  @return true is master slave communication is on, false if is off.     
+*/
+bool VCFaultManagment_GetMasterSlaveDetectionFlag(void)
+{
+    
+    return MasterSlaveDetectionFlag;
 }

@@ -200,6 +200,14 @@ extern struct CO_NODE_SPEC_T GnR2ModuleSpec;
 
 extern CO_OBJ_DOM bObjFirmwareUpdateDomain;
 
+/**
+  @brief Function used to config the OD as master or slave.
+  @param deviceState true to setup as master, false to setup as slave.
+  @retval none
+ */
+void CO_Gnr2OdSetupt(bool deviceState);
+
+
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif

@@ -9,6 +9,9 @@
 #include "board_hardware.h"
 #include "gnr_main.h"
 #include "firmware_update.h"
+#include "vc_autodetermination.h"
+#include "vc_fault_management.h"
+
 
 extern osThreadId_t PowerOffSequence_handle;
 
@@ -196,47 +199,48 @@ void PWREN_TurnOffSystem(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
             {
                 //if the device is a master + iot move to the state PWREN_STOPIOT
                 //to stop IOT.
-                #if (GNR_IOT == 1 && GNR_MASTER == 1)
-                //move to PWREN_STOPIOT state to say to IOT module that the device is
-                //going turn off.
-                PWREN_PowerOffSequencyState = PWREN_STOPIOT;
+                if (GNR_IOT == 1 && VcAutodeter_GetGnrState() == true)
+                {
+                    //move to PWREN_STOPIOT state to say to IOT module that the device is
+                    //going turn off.
+                    PWREN_PowerOffSequencyState = PWREN_STOPIOT;
                 
-                //prepare a value to confirm to IOT/Slave that the master is going turn off.
-                pHandle->bSdoData = 0x01;
+                    //prepare a value to confirm to IOT/Slave that the master is going turn off.
+                    pHandle->bSdoData = 0x01;
                 
-                //Initialize the number of attempts.
-                pHandle->bSdoAttempts = 0;
+                    //Initialize the number of attempts.
+                    pHandle->bSdoAttempts = 0;
                 
-                //set to false before send the sdo download command.
-                pHandle->bIotStoped = false;
+                    //set to false before send the sdo download command.
+                    pHandle->bIotStoped = false;
                 
-                //get the corresponding CO_CSDO object.
-                csdo = COCSdoFind(pNode, SDOCLIENTINDEX_IOT);
+                    //get the corresponding CO_CSDO object.
+                    csdo = COCSdoFind(pNode, SDOCLIENTINDEX_IOT);
     
-                //verify if the SDO client is missing.
-                ASSERT(csdo != NULL);
+                    //verify if the SDO client is missing.
+                    ASSERT(csdo != NULL);
+                }
+                else
+                {
+                    //move to PWREN_TURNOFFSLAVE state to say to slave module that the device is
+                    //going turn off and slave must turn off yourself too.
+                    PWREN_PowerOffSequencyState = PWREN_TURNOFFSLAVE;
                 
-                #else
-                //move to PWREN_TURNOFFSLAVE state to say to slave module that the device is
-                //going turn off and slave must turn off yourself too.
-                PWREN_PowerOffSequencyState = PWREN_TURNOFFSLAVE;
+                    //prepare a value to confirm to IOT/Slave that the master is going turn off.
+                    pHandle->bSdoData = 0x01;
                 
-                //prepare a value to confirm to IOT/Slave that the master is going turn off.
-                pHandle->bSdoData = 0x01;
+                    //Initialize the number of attempts.
+                    pHandle->bSdoAttempts = 0;
                 
-                //Initialize the number of attempts.
-                pHandle->bSdoAttempts = 0;
+                    //set to false before send the sdo download command.
+                    pHandle->bSlaveOff = false;
                 
-                //set to false before send the sdo download command.
-                pHandle->bSlaveOff = false;
-                
-                //get the corresponding CO_CSDO object.
-                csdo = COCSdoFind(pNode, SDOCLIENTINDEX_SLAVE);
+                    //get the corresponding CO_CSDO object.
+                    csdo = COCSdoFind(pNode, SDOCLIENTINDEX_SLAVE);
     
-                //verify if the SDO client is missing.
-                ASSERT(csdo != NULL);
-                
-                #endif
+                    //verify if the SDO client is missing.
+                    ASSERT(csdo != NULL);
+                }
             }
         break;
         
@@ -436,29 +440,14 @@ void PWREN_TurnOffSystem(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
             //stop the node to stops CANOPEN msg on the can bus.
             CONodeStop(pNode);
         
-            //wait 100 ms before turn off the device.
+            //wait 200 ms before turn off the device.
             //thsi give sometime to IOT and SLAVE
             //process the turn off sequency and avoid
             //new CANOPEN msgs.
-            osDelay(POWEROFF_WAITTIME);
+            osDelay(2*POWEROFF_WAITTIME);
         
             //turn off himself 
             PWREN_StopPower(pHandle);
-        
-            //rtos delay
-            //if after this delay the device still on
-            //power off sequency was not done correctly
-            //and the device must do a software reset.
-            //*sometimes this happene because the canstdby
-            //signal, controlled by the PWREN_StopPower() 
-            //function, turn off the power management modulo
-            //and microcontroller still on and the screen turn it
-            //on. THis situation let the device inside of the 
-            //power off task, blocking a lot of resources.
-            osDelay(POWEROFF_ERRORTIMEOUT_MS);
-        
-            //if device still on, reset the system.
-            NVIC_SystemReset();
         break;   
     }
 }
@@ -571,38 +560,63 @@ void PWREN_ManageSystemReadyFlag(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
     ASSERT(pNode != NULL);
     
     //slave is not using bInitalized, only master.
-    #if GNR_MASTER
-    //wait for the pwr enable initialization
-    //if the pwr lock signal was checked 
-    //start the timeout count to set the
-    //flag system ready.
-    if ((pHandle->bInitalized == true) && ( pHandle->bSystemReady == false))
+    if (VcAutodeter_GetGnrState())
     {
-    #else
-    if (pHandle->bSystemReady == false)
-    {
-    #endif
-        //increment system ready timeout.
-        pHandle->bSytemReadyTimeout++;
+        //wait for the pwr enable initialization
+        //if the pwr lock signal was checked 
+        //start the timeout count to set the
+        //flag system ready.
+        if ((pHandle->bInitalized == true) && ( pHandle->bSystemReady == false))
+        {
+            //increment system ready timeout.
+            pHandle->bSytemReadyTimeout++;
         
-        //cehck if timeout
-        if (pHandle->bSytemReadyTimeout > SYSTEMREADY_TIMEOUT)
-        {   
-            //Start the CANopen node and set it automatically to
-            //NMT mode: 'OPERATIONAL'.
-            CONodeStart(pNode);
-            CONmtSetMode(&pNode->Nmt, CO_OPERATIONAL);
+            //cehck if timeout
+            if (pHandle->bSytemReadyTimeout > SYSTEMREADY_TIMEOUT_500MS)
+            {   
+                //Start the CANopen node and set it automatically to
+                //NMT mode: 'OPERATIONAL'.
+                CONodeStart(pNode);
+                CONmtSetMode(&pNode->Nmt, CO_OPERATIONAL);
             
-            //set the system ready flag.
-            pHandle->bSystemReady = true;
+                //set the system ready flag.
+                pHandle->bSystemReady = true;
             
-            //initiliaze the timeout variable to be used on
-            //PWREN_SetIotSystemIsOn(this function will be called
-            //only when PWREN_ManageSystemReadyFlag has finished).
-            //doing this to save RAM memory.
-            pHandle->bSytemReadyTimeout = 0;
+                //initiliaze the timeout variable to be used on
+                //PWREN_SetIotSystemIsOn(this function will be called
+                //only when PWREN_ManageSystemReadyFlag has finished).
+                //doing this to save RAM memory.
+                pHandle->bSytemReadyTimeout = 0;
+            }
         }
-    } 
+    }
+    else
+    {
+        if (pHandle->bSystemReady == false)
+        {
+
+            //increment system ready timeout.
+            pHandle->bSytemReadyTimeout++;
+        
+            //cehck if timeout
+            if (pHandle->bSytemReadyTimeout > SYSTEMREADY_TIMEOUT_500MS)
+            {   
+                //Start the CANopen node and set it automatically to
+                //NMT mode: 'OPERATIONAL'.
+                CONodeStart(pNode);
+                CONmtSetMode(&pNode->Nmt, CO_OPERATIONAL);
+            
+                //set the system ready flag.
+                pHandle->bSystemReady = true;
+            
+                //initiliaze the timeout variable to be used on
+                //PWREN_SetIotSystemIsOn(this function will be called
+                //only when PWREN_ManageSystemReadyFlag has finished).
+                //doing this to save RAM memory.
+                pHandle->bSytemReadyTimeout = 0;
+            }
+        } 
+    }
 }
 
 /**
@@ -689,7 +703,88 @@ void GnrOn_CallbackSDODownloadFinish(CO_CSDO *csdo, uint16_t index, uint8_t sub,
     UNUSED_PARAMETER(code);
 }
 
-#if !GNR_MASTER
+
+/**
+  Function used verify if the power signal is present when 
+*/
+bool PWREN_PWRDetected(PWREN_Handle_t * pHandle)
+{    
+    ASSERT(pHandle != NULL);
+
+    struct GPIOConfig PinConfig;
+   
+    //configure device pin to read pwr lock signal.
+    PinConfig.PinDirection = INPUT;     //ReInit to ensure this pin has the wanted behavior
+    PinConfig.PinPull      = NONE; 
+    PinConfig.PinOutput    = PUSH_PULL; 
+    
+    uCAL_GPIO_ReInit(PWR_ENABLE_GPIO_PIN, PinConfig);
+    
+    //check if pwr lock signal is acitve(1).
+    if (PWREN_IsPowerEnabled(pHandle)) 
+    { 
+        return true;  
+    }
+    
+    //
+    return false;
+}
+
+/**
+  @brief Function used to turn off the system without
+         passed to the normal state machine when the master is not
+         detected. This function only turn off the system if in the
+         first 1000 ms of the system, the device is slave and it doesn't
+         detect the master. This is necessary to auto master slave
+         determination.
+  @param CO_NODE  *pNode pointer to the CAN node used on the CANOPEN communication.
+  @param PWREN_Handle_t * pHandle pointer to the struct responsible
+         to give access to the flags used to know if the device was turned on
+         by firmware command received by CAN or was a false wake up.
+  @return void
+*/
+void PWREN_TurnoffWhenMasterIsNotDetected(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
+{
+    static uint16_t timeout = 0;
+    static bool masterPresent = false;
+    
+    //if the system is read(canopen is on, the device is a slave and master was not detected, start to count
+    //until the max timeout to turn off or continue to work.    
+    if ((pHandle->bSystemReady == true) && (VcAutodeter_GetGnrState() == false) && (masterPresent == false))
+    {
+        //check if master was detected.
+        if (VCFaultManagment_GetMasterSlaveDetectionFlag() == false)
+        {
+            //increment timeout.
+            timeout++;
+            
+            //if timeout expires, turn off the device.
+            if ( timeout >= MASTERNOTDETECTED_TIMEOUT_500MS)
+            {
+                //set turning off flag.
+                //used to let other functions know the system is going off.
+                PWREN_SetGoingOffFlag(pHandle);
+                
+                //stop the node to stops CANOPEN msg on the can bus.
+                CONodeStop(pNode);
+                
+                //wait 100 ms before turn off the device.
+                //thsi give sometime to IOT and SLAVE
+                //process the turn off sequency and avoid
+                //new CANOPEN msgs.
+                osDelay(POWEROFF_WAITTIME);
+                
+                //turn off himself 
+                PWREN_StopPower(pHandle);
+            }
+        }
+        else
+        {
+            //set master present, inform system master was detected.
+            masterPresent = true;
+        }
+    }
+}
 
 /**
   @brief Task used to allow a slave device turn off himself.
@@ -714,9 +809,16 @@ __NO_RETURN void PWREN_TurnoffSlaveTask (void * pvParameter)
         //and send by a master device.
         if (turnningOff > 0)
         {
-            //small delay(75ms) to give time to the slave answer back 
-            osDelay(SDO_TIMEOUT*3);
+            //set turning off flag.
+            //used to let other functions know the system is going off.
+            PWREN_SetGoingOffFlag(VCInterfaceHandle.pPowertrain->pPWREN);
             
+            //wait 100 ms before turn off the device.
+            //thsi give sometime to IOT and SLAVE
+            //process the turn off sequency and avoid
+            //new CANOPEN msgs.
+            osDelay(POWEROFF_WAITTIME);
+                
             //stop the node to stops CANOPEN msg on the can bus.
             CONodeStop(pNode);
         
@@ -725,5 +827,3 @@ __NO_RETURN void PWREN_TurnoffSlaveTask (void * pvParameter)
         }
     }
 }
-
-#endif

@@ -1,7 +1,7 @@
 /**
-* @file   firmware_update.h
+* @file   vc_faut_management.h
 * @author Bruno Alves
-* @brief  Application layer used to handle DFU process.
+* @brief  Application layer used to handle vc faults.
 *
 *
 */
@@ -17,6 +17,7 @@
 #include "co_gnr2_specs.h"
 #include "vc_state_machine.h"
 #include "power_enable.h"
+#include "vc_autodetermination.h"
 
 /*********************************************
                 Defines
@@ -78,5 +79,11 @@ bool VCFaultManagment_MasterSlaveCommunicationLost(void);
   @return void.
 */
 void VCFaultManagment_Processing(VCSTM_Handle_t *pHandle, CO_NODE  *pNode);
+
+/**
+  @brief Function used return the value of the MasterSlaveDetectionFlag.
+  @return true is master slave communication is on, false if is off.     
+*/
+bool VCFaultManagment_GetMasterSlaveDetectionFlag(void);
 
 #endif
