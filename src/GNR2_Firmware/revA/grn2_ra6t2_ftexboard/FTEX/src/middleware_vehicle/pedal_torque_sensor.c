@@ -114,7 +114,7 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
         
         // We include the startup threshold to check if throttle is detected
         // Be cause it is in % 
-        OffsetSafe = (UINT16_MAX * pHandle->hParameters.hOffsetMTStartup)/PTS_PERCENTAGE;
+        OffsetSafe = (UINT16_MAX * pHandle->hParameters.hOffsetMT)/PTS_PERCENTAGE;
         
         /* Pedal Torque Sensor is not Detected */
         if (TorqueSens < OffsetSafe) 
@@ -125,7 +125,7 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
             {   
                 pHandle->bSafeStart = true;
                 /* Clear this error in case it was falsly flagged as stuck (user kept pedal pushing at max on boot) */
-                VC_Errors_ClearError(THROTTLE_STUCK); // Temperory using Throttle stuck as error
+                VC_Errors_ClearError(PAS_BOOT_ERROR); // Temperory using Throttle stuck as error
                 Delay_Reset(pHandle->pPTSstuckDelay);
             }
             else
@@ -145,7 +145,7 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
                 /* Increase the counter for the error delay and check if the delay has been reached */
                 if (Delay_Update(pHandle->pPTSstuckDelay)) 
                 {
-                    VC_Errors_RaiseError(THROTTLE_STUCK); // Temperory using Throttle stuck as error
+                    VC_Errors_RaiseError(PAS_BOOT_ERROR); // Temperory using Throttle stuck as error
                     PTSsensorStuck = true;
                 }
             }
