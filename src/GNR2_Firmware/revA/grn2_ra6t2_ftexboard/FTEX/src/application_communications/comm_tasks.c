@@ -244,6 +244,9 @@ static void UpdateObjectDictionnary(void *p_arg)
         /* Check if no heartbeat was missed from master  */
         if (!VCFaultManagment_MasterSlaveCommunicationLost())
         {
+            //going in a critical section, disable interruptions to avoid race condition.
+            //canbus rx can write on the same variables. 
+            __disable_irq();
             /* Update M2 feedback data to CANOpen object dictionnary */
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2)), pNode, &hBusVoltage, sizeof(uint16_t));
@@ -257,6 +260,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, sizeof(uint16_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
+            __enable_irq();
 
             /* Execute received commands using motor control api */
             MCInterface_ExecTorqueRamp(&MCInterface[0], hMotor2TorqRef);
@@ -265,7 +269,9 @@ static void UpdateObjectDictionnary(void *p_arg)
             {
                 // Reset fault ack after reception
                 bMotor2FaultAck = 0;
+                //critical section
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
+                //end critical section
                 MCInterface_FaultAcknowledged(&MCInterface[0]);
             }
             
@@ -300,6 +306,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         //will not be updated from the vc layer.
         if((keyUserDataConfig != KEY_USER_DATA_CONFIG_BEING_UPDATED) && (keyUserDataConfig != KEY_USER_DATA_CONFIG_UPDATED))
         {
+            //going in a critical section
             //Get the latest value of these parameters            
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
@@ -316,7 +323,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(uint32_t)); 
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSrialNbHigh, sizeof(uint32_t));            
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion[CAN_PARAM], sizeof(uint16_t));    
-            
+            //end critical section.
             // Check if there were changes made to a parameter by a can device
             
             if(hSpeed[VEHICLE_PARAM] != hSpeed[CAN_PARAM])
@@ -391,6 +398,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                 // Behavior TBD 
             }
             
+            //going in a critical section
             /**************Write the repesctive OD ID, updating the OD that us read by the IOT module using SDO.*************/
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
@@ -428,7 +436,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         
             //Read the OD responsible to hold the firmware update command.
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0)), pNode, &FirmwareUpdateCommand, sizeof(uint8_t));
-            
+            //end critical section.
             //check if the system was woke up by a firmware command update or not.
             PWREN_CheckFirmwareUpdateCommand(VCInterfaceHandle.pPowertrain->pPWREN, FirmwareUpdateCommand);
             
@@ -444,6 +452,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
              {
+                 //going in a critical section
                  /**********read value hold by the OD****************/
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)), pNode, &pasAlgorithm, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)), pNode, &maxPAS, sizeof(uint8_t));
@@ -461,6 +470,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
             
+                 
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
                  //upadat Throttle/Pedal Assist variables that will be write into the user data flash.
@@ -481,9 +491,11 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  UserConfigTask_UpdateBikeMaxSpeed(maxSpeed);
                  UserConfigTask_UpdateWalkModeSpeed(walkModeSpeed);
+                 //end critical section.
                  
                  //write in the data flash and reset the system.
-                 UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle);   
+                 UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle); 
+                 
              }
         }
          

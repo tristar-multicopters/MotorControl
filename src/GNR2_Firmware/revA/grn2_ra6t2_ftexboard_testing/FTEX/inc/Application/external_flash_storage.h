@@ -8,13 +8,11 @@
   ******************************************************************************
 */
 
-#ifndef __EXTERNAL_FLASH_STORAGE_H
-#define __EXTERNAL_FLASH_STORAGE_H
+#ifndef __INTERNAL_FLASH_STORAGE_H
+#define __INTERNAL_FLASH_STORAGE_H
 
 // =============================== Includes ================================= //
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdlib.h>
+
 
 // ==================== Public function prototypes ========================= //
 

@@ -122,25 +122,25 @@ const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 #define CURRENT_PID_LUT_SPEED_FIRST_VALUE             100
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    2500,
-    2500,
+    3500,
+    3500,
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 
-    20,   /* old PI = 50 parameter tunning for Vibration */ 
-    20,   /* old PI = 50 parameter tunning for Vibration */
+    500,   /* old PI = 50 parameter tunning for Vibration */ 
+    500,   /* old PI = 50 parameter tunning for Vibration */
 
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    2000,
-    2000,	
+    2500,
+    2500,	
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    200,	 /* old PI = 50 parameter tunning for Vibration */
-    200,	 /* old PI = 50 parameter tunning for Vibration */
+    500,	 /* old PI = 50 parameter tunning for Vibration */
+    500,	 /* old PI = 50 parameter tunning for Vibration */
 };
 
 #elif VEHICLE_SELECTION == VEHICLE_NIDEC

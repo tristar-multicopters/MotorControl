@@ -21,7 +21,7 @@
 #define MOTOR_VOLTAGE_CONSTANT  18.4f   /*!< Volts RMS ph-ph /kRPM */
 #define ST_Torque_Coef          1.2f       /* this coeficient always keeps the starting torque higher than the nominal torque */
 
-#define PEAK_CURRENT_amps       55      /* peak current in amps     */
+#define PEAK_CURRENT_amps       50      /* peak current in amps     */
 #define NOMINAL_TORQUE          (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)    /* Nominal torque to apply to motor in cNm   
                                                                                                  Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps */
 #define STARTING_TORQUE         (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef)    /* Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes*/
@@ -42,7 +42,7 @@
                                                  It can be either DEGREES_120 or
                                                  DEGREES_60 */
 
-#define HALL_PHASE_SHIFT        240 /*!< Electrical phase shift in degree between the low to high
+#define HALL_PHASE_SHIFT        20 /*!< Electrical phase shift in degree between the low to high
                                         transition of signal H1 and the zero crossing of the Bemf induced
                                         between phase A and B */
 

@@ -704,10 +704,11 @@ __NO_RETURN void PWREN_TurnoffSlaveTask (void * pvParameter)
     {
         //
         uint8_t turnningOff = 0;
-    
+        //critical section
         //Read the OD responsible to hold the firmware update command.
         COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_DEVICE_TURNNING_OFF, 0)), pNode, &turnningOff, sizeof(uint8_t));
-    
+        //end critical section;
+        
         //test if a turn off command was received
         //this command is write in the OD of teh device 
         //and send by a master device.

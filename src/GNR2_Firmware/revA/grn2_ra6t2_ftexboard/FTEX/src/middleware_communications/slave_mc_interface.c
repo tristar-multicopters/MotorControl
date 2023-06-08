@@ -48,10 +48,13 @@ void SlaveMCInterface_UpdateFeedback(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 
+    //going in a critical section, disable interruptions to avoid race condition.
+    __disable_irq();
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrState), pHandle->pCONode, &pHandle->Feedback.bState,  sizeof(uint16_t));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccuredFaults), pHandle->pCONode, &pHandle->Feedback.hOccuredFaults, sizeof(pHandle->Feedback.hOccuredFaults));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrCurrentFaults), pHandle->pCONode, &pHandle->Feedback.hCurrentFaults, sizeof(pHandle->Feedback.hCurrentFaults));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrMotorSpeed), pHandle->pCONode, &pHandle->Feedback.hMotorSpeed, sizeof(pHandle->Feedback.hMotorSpeed));
+    __enable_irq();
 }
 
 
@@ -64,8 +67,11 @@ void SlaveMCInterface_ExecTorqueRamp(SlaveMotorHandle_t * pHandle, int16_t hFina
 
     int16_t Tref = hFinalTorque;
 
+    //going in a critical section, disable interruptions to avoid race condition.
+    __disable_irq();
     COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrTorqueRef), pHandle->pCONode, &Tref, sizeof(Tref));
-}
+    __enable_irq();
+}  
 
 
 /*
@@ -77,10 +83,13 @@ bool SlaveMCInterface_StartMotor(SlaveMotorHandle_t * pHandle)
     bool bRetVal = true;
 
     bool bStart = true;
+    //going in a critical section, disable interruptions to avoid race condition.
+    __disable_irq();
     if (COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrStartMotor), pHandle->pCONode, &bStart, sizeof(bStart)) != CO_ERR_NONE)
     {
         bRetVal = false;
     }
+    __enable_irq();
 
     return bRetVal;
 }
@@ -94,10 +103,13 @@ bool SlaveMCInterface_StopMotor(SlaveMotorHandle_t * pHandle)
     bool bRetVal = true;
 
     bool bStart = false;
+    //going in a critical section, disable interruptions to avoid race condition.
+    __disable_irq();
     if (COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrStartMotor), pHandle->pCONode, &bStart, sizeof(bStart)) != CO_ERR_NONE)
     {
         bRetVal = false;
     }
+    __enable_irq();
 
     return bRetVal;
 }

@@ -31,8 +31,8 @@
 
 #define THROTTLE_DETECTION_THRESHOLD           1000    // Throttle is considered pressed once it passed this threshold
 
-#define THROTTLE_MAX_SAFE_SPEED_RPM             285    // Max Wheel RPM that is safe when using the motor (aprox 38 km/h)
-#define THROTTLE_DEFAULT_MAX_SPEED_RPM          240    // Default top spee din wheel RPM (aprox 32 km/h)
+#define THROTTLE_MAX_SAFE_SPEED_RPM             650    // Max Wheel RPM that is safe when using the motor (aprox 38 km/h)
+#define THROTTLE_DEFAULT_MAX_SPEED_RPM          600    // Default top spee din wheel RPM (aprox 32 km/h)
 
 #define THROTTLE_SPEED_DECREASING_RANGE         200    // Number of RPM before the desired speed at which we should start removing power
                                                        // Should be aroud 200 for light bikes and 55 for heavy bikes
@@ -129,6 +129,9 @@
 
 #define BATTERY_FULL_VOLT    52
 #define BATTERY_EMPTY_VOLT   46
-                                            
+
+#define BATTERY_SOC_LOW_PERCENT   15   // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
+#define BATTERY_SOC_OK_PERCENT    25   // Battery SOC in % for which we clear the battery low flag
+
 #endif                                            
 
