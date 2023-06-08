@@ -138,7 +138,7 @@
                                         as the reference for maximum power limitation*/
 #define MAX_APPLICATION_POSITIVE_POWER  1100    /* Refers to maximum power in watts that drive can push to the motor */
 #define MAX_APPLICATION_NEGATIVE_POWER  1100    /* Refers to maximum power in watts that drive can accept from the motor */
-#define MAX_APPLICATION_CURRENT         22      /* Refers to maximum current in amps that drive can accept from the motor */
+#define MAX_APPLICATION_CURRENT         22      /* Refers to maximum battery current in amps that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
 

@@ -149,25 +149,25 @@ const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 #define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
-    300,
+    150,
+    150,
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 
-    20,   /* old PI = 50 parameter tunning for Vibration */ 
-    20,   /* old PI = 50 parameter tunning for Vibration */
+    10,   /* old PI = 50 parameter tunning for Vibration */ 
+    10,   /* old PI = 50 parameter tunning for Vibration */
 
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
-    300,	
+    150,
+    150,	
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    20,	 /* old PI = 50 parameter tunning for Vibration */
-    20,	 /* old PI = 50 parameter tunning for Vibration */
+    10,	 /* old PI = 50 parameter tunning for Vibration */
+    10,	 /* old PI = 50 parameter tunning for Vibration */
 };
 
 #elif VEHICLE_SELECTION == VEHICLE_QUIETKAT
