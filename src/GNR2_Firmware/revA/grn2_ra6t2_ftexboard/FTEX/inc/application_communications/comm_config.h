@@ -11,8 +11,9 @@
 
 #include "vc_interface.h"
 #include "uCAL_UART.h"
-#include "lcd_apt_comm.h"
+#include "lcd_apt.h"
 #include "lcd_KD718.h"
+#include "lcd_Cloud_5S.h"
 #include "log_high_speed.h"
 #include "co_can_ra6t2.h"
 #include "co_timer_ra6t2.h"
@@ -34,6 +35,7 @@ extern SlaveMotorHandle_t SlaveM2;
 
 extern APT_Handle_t  LCD_APT_handle;
 extern KD718_Handle_t LCD_KD718_handle;
+extern Cloud_5S_Handle_t LCD_Cloud_5S_handle;
 extern UART_Handle_t  UART0Handle;
 extern LogHighSpeed_Handle_t LogHS_handle;
 extern DataFlash_Handle_t DataFlashHandle;

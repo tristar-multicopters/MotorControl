@@ -49,7 +49,6 @@ typedef struct
     uint16_t MaxSafeThrottleSpeedRPM;   // Maximum RPM speed that is safe for the bike
     uint16_t DefaultMaxThrottleSpeedRPM;// Maximum RPM speed that is considered safe 
     uint16_t ThrottleDecreasingRange;    
-    
 } ThrottleParameters_t;
 
 /**
@@ -61,11 +60,14 @@ typedef struct
     uint8_t     bConvHandle;         // Handle to the regular conversion
   
     uint16_t hInstADCValue;          // It contains latest available instantaneous ADC value.
+    uint16_t hExtLatestVal;          // Contains the latest external throttle value 
     uint16_t hAvADCValue;            // It contains latest available average ADC value.
     uint16_t hAvThrottleValue;       // It contains latest available throttle value.
     
     bool DisableThrottleOutput;      // Used to prevent the throttle value from requesting power 
                                      // We still read the throttle but simply set the output as 0
+    
+    bool extThrottleEnable;          // If this variable is true this means we should ignore adc values and only use throttle injected from a function call
     
     bool SafeStart;                  // Stuck throttle check on start
         
@@ -95,69 +97,85 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
 void Throttle_Clear(ThrottleHandle_t * pHandle);
 
 /**
-  * @brief Performs the throttle sensing average computation after an ADC conversion.
-                     Compute torque value in u16 (0 at minimum throttle and 65535 when max throttle).
-                     Need to be called periodically.
-  * @param  pHandle : Pointer on Handle of the throttle
-  * @retval void
-  */
+ * @brief Performs the throttle sensing average computation after an ADC conversion.
+ *                  Compute torque value in u16 (0 at minimum throttle and 65535 when max throttle).
+ *                  Need to be called periodically.
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
 void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle);
 
 /**
-  * @brief  Returns latest averaged throttle measured expressed in u16
-  * @param  pHandle : Pointer on Handle of the throttle
-  * @retval AverageThrottle : Current averaged throttle measured (in u16)
-  */
+ * @brief  Returns latest averaged throttle measured expressed in u16
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval AverageThrottle : Current averaged throttle measured (in u16)
+ */
 uint16_t Throttle_GetAvThrottleValue(ThrottleHandle_t * pHandle);
 
 /**
-  * @brief  Compute motor torque reference value from current throttle value stored in the handle 
-  * @param  pHandle : Pointer on Handle of the throttle
-  * @retval torque reference in int16
-  */
+ * @brief  Compute motor torque reference value from current throttle value stored in the handle 
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval torque reference in int16
+ */
 int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle);
 
 /**
-  * @brief  Compute motor speed reference value from current throttle value stored in the handle 
-  * @param  pHandle : Pointer on Handle of the throttle
-  * @retval speed reference (todo: unit)
-  */
+ * @brief  Compute motor speed reference value from current throttle value stored in the handle 
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval speed reference (todo: unit)
+ */
 int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle);
 
 /**
-    * @brief  Return true if throttled is pressed (threshold is passed) 
-    * @param  pHandle : Pointer on Handle of the throttle
-    * @retval True if throttle is pressed, false otherwise
-    */
+ * @brief  Return true if throttled is pressed (threshold is passed) 
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval True if throttle is pressed, false otherwise
+ */
 bool Throttle_IsThrottleDetected(ThrottleHandle_t * pHandle);
 
 /**
-    * @brief  Set the value of the flag to disable throttle output 
-    * @param  pHandle : Pointer on Handle of the throttle
-    * @retval void
-    */
+ * @brief  Set the value of the flag to disable throttle output 
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
 void Throttle_DisableThrottleOutput(ThrottleHandle_t * pHandle);
 
 
 /**
-    * @brief  Reset the value of the flag to disable throttle output 
-    * @param  pHandle : Pointer on Handle of the throttle
-    * @retval void
-    */
+ * @brief  Reset the value of the flag to disable throttle output 
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
 void Throttle_EnableThrottleOutput(ThrottleHandle_t * pHandle);
 
 /**
-    * @brief  Set the max speed in RPM that you can reach with throttle 
-    * @param  pHandle : Pointer on Handle of the throttle, aMaxSpeedRPM a maximumu speed in wheel RPM
-    * @retval void
-    */
+ * @brief  Set the max speed in RPM that you can reach with throttle 
+ * @param  pHandle : Pointer on Handle of the throttle, aMaxSpeedRPM a maximumu speed in wheel RPM
+ * @retval void
+ */
 void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM);
 
 /**
-  * @brief  Compute slopes for throttle module
-  * @param  pHandle : Pointer on Handle of the throttle
-  * @retval void
-  */
+ * @brief  Setup the throttle module to accept an external throttle as the input
+ * @param  pHandle : Pointer on Handle of the throttle, aMaxValue is the maximum value the throttle can send
+ *         aOffset is the value of the throttle when it is in it's resting position 
+ * 
+ * @retval void
+ */
+void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue, uint16_t aOffset);
+
+/**
+ * @brief  Used to update the value of the throttle, the source of the external throttle should call this function
+ * @param  pHandle : Pointer on Handle of the throttle, aNewVal the newest throttle value.
+ * @retval void
+ */
+void Throttle_UpdateExternal(ThrottleHandle_t * pHandle, uint16_t aNewVal);
+
+/**
+ * @brief  Compute slopes for throttle module
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
 void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle);
 
 #endif /*__THROTTLE_H*/

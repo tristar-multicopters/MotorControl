@@ -42,8 +42,10 @@ EFlash_Storage_Handle_t EFlash_Storage_Handle =
 };
 
 APT_Handle_t LCD_APT_handle;
-LogHighSpeed_Handle_t LogHS_handle;
 KD718_Handle_t LCD_KD718_handle;
+Cloud_5S_Handle_t LCD_Cloud_5S_handle;
+LogHighSpeed_Handle_t LogHS_handle;
+
 
 //Handle to control the data flash initialisation 
 DataFlash_Handle_t DataFlashHandle =

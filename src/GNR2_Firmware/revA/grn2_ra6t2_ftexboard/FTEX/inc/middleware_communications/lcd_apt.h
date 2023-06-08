@@ -1,14 +1,14 @@
 /**
   ******************************************************************************
-  * @file    lcd_apt_comm.h
+  * @file    lcd_apt.h
   * @author  Andy Beaudoin, FTEX
   * @brief   High level module that describes APT LCD communication protocol.
   *
   ******************************************************************************
 */
 	
-#ifndef __LCD_APT_COMM_H
-#define __LCD_APT_COMM_H
+#ifndef __LCD_APT_H
+#define __LCD_APT_H
 
 #include "vc_interface.h"
 #include "powertrain_management.h"
@@ -112,7 +112,7 @@ void LCD_APT_init(APT_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handle_t 
  *        
  * @return nothing
  */
-void LCD_APT_RX_IRQ_Handler(void *ppVoidHandle);
+void LCD_APT_RX_IRQ_Handler(void *pVoidHandle);
 
 /**@brief Function for sending a frame specific to the APT protocol
  *        once a frame has been received and processed this function
@@ -124,7 +124,7 @@ void LCD_APT_RX_IRQ_Handler(void *ppVoidHandle);
  *        
  * @return nothing
  */
-void LCD_APT_TX_IRQ_Handler(void *ppVoidHandle);
+void LCD_APT_TX_IRQ_Handler(void *pVoidHandle);
 
 /**@brief Function for handling the regular task to manage the communication with
  *        an APT screen        

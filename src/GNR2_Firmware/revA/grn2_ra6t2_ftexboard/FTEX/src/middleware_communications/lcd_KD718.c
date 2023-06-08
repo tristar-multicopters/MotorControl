@@ -364,12 +364,14 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                 CRC += pHandle->rx_frame.Buffer[3];
                  
                 if (CRC == pHandle->rx_frame.Buffer[4]) // If the CRC is good update the new Speed limit
-                { 
+                {
+                    #if DYNAMIC_SPEED_LIMITATION
                     uint16_t SpeedLimit = 0;
                     SpeedLimit += (pHandle->rx_frame.Buffer[2] << 8);
                     SpeedLimit +=  pHandle->rx_frame.Buffer[3];
                     
-                    Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit);                
+                    Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit); 
+                    #endif                     
                 }
               break;                
           default:

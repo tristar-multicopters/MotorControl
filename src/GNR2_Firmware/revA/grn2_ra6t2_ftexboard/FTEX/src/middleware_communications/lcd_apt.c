@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * @file    lcd_apt_comm.c
+  * @file    lcd_apt.c
   * @author  Andy Beaudoin, FTEX
   * @brief   High level module that describes APT LCD communication protocol
   *
   ******************************************************************************
 */
     
-#include "lcd_apt_comm.h"
+#include "lcd_apt.h"
 #include "ASSERT_FTEX.h"
 
 #include <stdint.h>
@@ -180,7 +180,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
     uint16_t Merge       = 0;
     uint8_t  PassLvl     = 0; 
     uint8_t  LightStatus = 0;
-    uint16_t SpeedLimit;
+   
      
     
     //Verification of the checksum
@@ -224,17 +224,21 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
             pHandle->APTChangePasFlag = true;
         }
         else if ((pHandle->PASChangeTransition) && (PassLvl == PAS_UNCHANGED)) // The PAS value being sent byt the screen isnt reliable when we ask it to change the level
-        {                                                                    // So we wait for it to tell us that PAS is unchanged so we know it is now stable.
+        {                                                                      // So we wait for it to tell us that PAS is unchanged so we know it is now stable.
             pHandle->PASChangeTransition = false;  
-        }            
+        }  
+        
+        #if DYNAMIC_SPEED_LIMITATION   
 
+        uint16_t SpeedLimit;
         //Reading the Speed limit
         SpeedLimit = pHandle->rx_frame.Buffer[SPEED];        
         
         SpeedLimit = Wheel_GetWheelRpmFromSpeed(SpeedLimit);
         
+                   
         Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit);
-        
+        #endif 
         
         #ifdef SCREENPOWERCONTROL
         

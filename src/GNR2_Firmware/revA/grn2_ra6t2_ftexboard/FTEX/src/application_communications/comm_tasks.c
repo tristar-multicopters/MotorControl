@@ -19,7 +19,7 @@
 #include "can_logger.h"
 #include "can_vehicle_interface.h"
 
-#include "lcd_apt_comm.h"
+#include "lcd_apt.h"
 // Serial Flash storage
 #include "serial_flash_storage.h"
 
@@ -535,8 +535,7 @@ void Comm_BootUp(void)
     /* Select UART protocol */
     switch(UART0Handle.UARTProtocol)
 	  {
-        case UART_LOG_HS:
-            LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
+
             break;
     	case UART_APT:
             LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
@@ -544,6 +543,11 @@ void Comm_BootUp(void)
         case UART_KD718:
             LCD_KD718_init(&LCD_KD718_handle, &VCInterfaceHandle, &UART0Handle);
             break;
+        case UART_CLOUD_5S:
+            LCD_Cloud_5S_init(&LCD_Cloud_5S_handle, &VCInterfaceHandle, &UART0Handle);
+            break; 
+        case UART_LOG_HS:
+            LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
     	case UART_DISABLE:
             break;
         default:
@@ -566,6 +570,9 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
                 break;
            case UART_KD718:
                 LCD_KD718_Task(&LCD_KD718_handle); //Run the KD718 task
+                break;
+           case UART_CLOUD_5S:
+                LCD_Cloud_5S_Task(&LCD_Cloud_5S_handle); //Run the Cloud 5S task
                 break;               
            case UART_LOG_HS:
                 LogHS_ProcessFrame(&LogHS_handle);

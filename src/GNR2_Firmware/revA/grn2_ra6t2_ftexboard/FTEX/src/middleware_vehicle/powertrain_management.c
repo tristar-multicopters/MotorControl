@@ -18,8 +18,8 @@
 #define STUCK_REVERSE_COUNTER       3
 #define UNDERVOLTAGE_COUNTER         4
 
-#define MAXCURRENT                  75 /* Used for a generic conversion 
-                                          from current ref to actual amps */
+#define MAXCURRENT                  MAX_MEASURABLE_CURRENT /* Used for a generic conversion 
+                                                              from current ref to actual amps */
 // ============================= Variables ================================ //
                                   
 bool isPWMCleared;
@@ -1119,7 +1119,7 @@ uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
         // explicit cast to uint16 because abs returns an integer. Should not be an issue because q is an int16
         M1Current = (uint16_t)temp;
         
-        M1Current = M1Current/(INT16_MAX/MAXCURRENT);  // Convert the Iq reference to an actual current value           
+        M1Current = M1Current/(uint16_t)round((INT16_MAX/MAXCURRENT));  // Convert the Iq reference to an actual current value           
     }
     
     if (pHandle->pMS->bMotorSelection == ALL_MOTOR_SELECTED) // we assume m1 and m2 are the same
@@ -1138,7 +1138,7 @@ uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
             M2Current = INT16_MAX;
         }
         
-        M2Current = M2Current/(INT16_MAX/MAXCURRENT);  // Convert the Iq refference to an actual current value 
+        M2Current = M2Current/(uint16_t)round((INT16_MAX/MAXCURRENT));  // Convert the Iq refference to an actual current value 
     }
     
     TotalMotorCurrent =  M1Current + M2Current;  // Get the sum of the currents form both motors             

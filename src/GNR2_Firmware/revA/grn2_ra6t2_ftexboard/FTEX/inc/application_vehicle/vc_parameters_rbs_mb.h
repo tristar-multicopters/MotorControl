@@ -16,7 +16,8 @@
 #define SCREEN_PROTOCOL    UART_KD718       
                                               // UART_DISABLE,
                                               // UART_APT,
-                                              // UART_KD718,    
+                                              // UART_KD718,
+                                              // UART_CLOUD_5S,                                              
                                               // UART_LOG_HS 
                                               
 /***************** THROTTLE PARAMETERS  ******************************/
@@ -104,6 +105,8 @@
 #define PAS_MIN_PEDAL_COUNT_SAFE                  2    // Number of pulse per pedal turn do we neeed after initial detection to push power
 #define PAS_SLOW_PEDAL_COUNT                      1    // Loop wait counter to update the PAS detection function
 #define PAS_WALKMODE_OVER_THROTTLE             true    // If set to true walk mode has higher priority than throttle
+
+#define DYNAMIC_SPEED_LIMITATION              false    // Indicates if the the top speed change be changed dynamically or is fixed to the default value
 
 #define POWERTRAIN_MOTOR_GEARRATIO                0x000B0005    /* Motor gear ratio, i.e. wheel speed divided by motor speed.
                                                                    Upper half of 32 bits is numerator, 

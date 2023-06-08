@@ -16,7 +16,8 @@
 #define SCREEN_PROTOCOL    UART_APT       
                                               // UART_DISABLE,
                                               // UART_APT,
-                                              // UART_KD718,    
+                                              // UART_KD718,
+                                              // UART_CLOUD_5S,                                              
                                               // UART_LOG_HS 
                                               
 /***************** THROTTLE PARAMETERS  ******************************/
@@ -47,7 +48,7 @@
 
 #define PTS_OFFSET_PTS2TORQUE_STARTUP    40    // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED         20    // Speed under which the  Startup pedal torque sensor offset is used in wheel rpm
-#define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in %
+#define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in % 
 
 #define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging
 #define PTS_FILTER_BW2                   25    // BW coefficient for pedal torque sensor avereging
@@ -104,6 +105,8 @@
 #define PAS_MIN_PEDAL_COUNT_SAFE                  2    // Number of pulse per pedal turn do we neeed after initial detection to push power
 #define PAS_SLOW_PEDAL_COUNT                      1    // Loop wait counter to update the PAS detection function
 #define PAS_WALKMODE_OVER_THROTTLE             true    // If set to true walk mode has higher priority than throttle
+
+#define DYNAMIC_SPEED_LIMITATION              false    // Indicates if the the top speed change be changed dynamically or is fixed to the default value
 
 #define POWERTRAIN_MOTOR_GEARRATIO                0x000B0005    /* Motor gear ratio, i.e. wheel speed divided by motor speed.
                                                                    Upper half of 32 bits is numerator, 

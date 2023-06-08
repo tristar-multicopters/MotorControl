@@ -31,7 +31,8 @@ typedef enum
 {
     UART_DISABLE,
     UART_APT,
-    UART_KD718,    
+    UART_KD718,
+    UART_CLOUD_5S,    
     UART_LOG_HS 
 
 } uCAL_Protocol_t;

@@ -17,7 +17,8 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     ASSERT(pHandle != NULL);
     
     pHandle->DisableThrottleOutput = false;
-        
+    pHandle->extThrottleEnable = false;    
+    
     pHandle->pThrottleStuckDelay = pThrottleStuckDelay;
       
     ASSERT(pHandle->pThrottleStuckDelay->DelayInitialized); // Delay sohuld be initialized in the task to specify at which 
@@ -58,7 +59,7 @@ static uint16_t SafeStartCounter = 0;
     Performs the throttle sensing average computation after an ADC conversion.
     Compute torque value in u16 (0 at minimum throttle and 65535 when max throttle).
     Need to be called periodically.
-*/
+ */
 void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -71,7 +72,7 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
     {
         hAux = 0;  // We are in PAS level 0 so the throttle is disabled
     } 
-    else
+    else if(pHandle->extThrottleEnable == false)
     {    
         /* Compute averaged raw ADC value (between 0 and 65535) */
         hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
@@ -96,6 +97,30 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
         }
           
         hAux = (uint16_t)wAux;
+    }
+    else /*if (pHandle->extThrottleEnable == true)*/
+    {
+        /* Compute averaged external ADC value */
+        hAux = pHandle->hExtLatestVal;
+        
+        /* Compute throttle value (between 0 and 65535)  */
+        if (hAux > pHandle->hParameters.hOffsetThrottle)
+        {
+            hAux = (hAux - pHandle->hParameters.hOffsetThrottle); 
+        }
+        else
+        {
+            hAux = 0; 
+        }    
+                                
+        wAux = (uint32_t)(pHandle->hParameters.bSlopeThrottle * hAux);
+        wAux /= (uint32_t) pHandle->hParameters.bDivisorThrottle;
+        if (wAux > INT16_MAX)
+        {    
+            wAux = INT16_MAX;
+        }
+          
+        hAux = (uint16_t)wAux;    
     }
     
 	pHandle->hAvThrottleValue = hAux;
@@ -139,7 +164,7 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
 
 /**
    Returns latest averaged throttle measured expressed in u16
-  */
+ */
 uint16_t Throttle_GetAvThrottleValue(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -147,8 +172,8 @@ uint16_t Throttle_GetAvThrottleValue(ThrottleHandle_t * pHandle)
 }
 
 /**
-    Compute motor torque reference value from current throttle value stored in the handle 
-  */
+   Compute motor torque reference value from current throttle value stored in the handle 
+ */
 int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -180,8 +205,8 @@ int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
 }
 
 /**
-    Compute motor speed reference value from current throttle value stored in the handle 
-  */
+   Compute motor speed reference value from current throttle value stored in the handle 
+ */
 int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -192,8 +217,8 @@ int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
 }
 
 /**
-     Return true if throttled is pressed (threshold is passed) 
-  */
+   Return true if throttled is pressed (threshold is passed) 
+ */
 bool Throttle_IsThrottleDetected (ThrottleHandle_t * pHandle) 
 {
     ASSERT(pHandle != NULL);
@@ -211,8 +236,8 @@ bool Throttle_IsThrottleDetected (ThrottleHandle_t * pHandle)
 }
 
 /**
-    Set the value of the flag to disable throttle output 
-  */
+   Set the value of the flag to disable throttle output 
+ */
 void Throttle_DisableThrottleOutput(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -221,8 +246,8 @@ void Throttle_DisableThrottleOutput(ThrottleHandle_t * pHandle)
 }
 
 /**
-    Reset the value of the flag to disable throttle output 
-  */
+   Reset the value of the flag to disable throttle output 
+ */
 void Throttle_EnableThrottleOutput(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -231,32 +256,56 @@ void Throttle_EnableThrottleOutput(ThrottleHandle_t * pHandle)
 }
 
 /**
-    Set the max speed in RPM that you can reach with throttle 
-  */
+   Set the max speed in RPM that you can reach with throttle 
+ */
 void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM)
 {     
     ASSERT(pHandle != NULL);
-     
-    ASSERT(pHandle->hParameters.ThrottleDecreasingRange > 0);
     
+    ASSERT(pHandle->hParameters.ThrottleDecreasingRange > 0);
+        
     Foldback_SetDecreasingRange (pHandle->SpeedFoldbackVehicleThrottle,pHandle->hParameters.ThrottleDecreasingRange);
 
     if (aMaxSpeedRPM < pHandle->hParameters.MaxSafeThrottleSpeedRPM)
     {
-        ASSERT(((int16_t) aMaxSpeedRPM) > 0); // Make sure the cast doesn't result in a negative value
+        ASSERT(((int16_t) aMaxSpeedRPM) >= 0); // Make sure the cast doesn't result in a negative value
         
         Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackVehicleThrottle, (int16_t) aMaxSpeedRPM); // 240 == 32 km/h  74 = 10 km/h   
     }
     else
     {
         Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackVehicleThrottle, (int16_t) pHandle->hParameters.MaxSafeThrottleSpeedRPM);
-    }        
-     
+    }
+
+}
+/**
+   Setup the throttle module to accept an external throttle as the input
+ */
+void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue,uint16_t aOffset)
+{
+   ASSERT(pHandle != NULL);
+   ASSERT(aMaxValue > 0);
+   ASSERT(aMaxValue > aOffset);
+    
+   pHandle->extThrottleEnable = true;
+    
+   pHandle->hParameters.hMaxThrottle = aMaxValue;
+   pHandle->hParameters.hOffsetThrottle = aOffset; 
+   Throttle_ComputeSlopes(pHandle); 
+    
 }
 
 /**
-    Compute slopes for throttle module
-  */
+   Used to update the value of the throttle, the source of the external throttle should call this function 
+ */
+void Throttle_UpdateExternal(ThrottleHandle_t * pHandle, uint16_t aNewVal)
+{
+   pHandle->hExtLatestVal = aNewVal;
+}
+
+/**
+   Compute slopes for throttle module
+ */
 void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle)
 {
    float ADCSlope = 0;
