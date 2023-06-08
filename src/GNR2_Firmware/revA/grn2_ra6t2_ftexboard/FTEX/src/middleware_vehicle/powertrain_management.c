@@ -41,6 +41,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     ThrottleDelay = pDelayArray[THROTTLE_DELAY];
     PTSensorDelay = pDelayArray[PTS_DELAY];
     // Initilaize peripherals
+    Wheel_Init(WHEEL_DIAMETER_DEFAULT);
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
     Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
     BRK_Init(pHandle->pBrake);
@@ -50,9 +51,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
     PedalAssist_Init(pHandle->pPAS, &PTSensorDelay);    
-    
-    Wheel_Init(WHEEL_DIAMETER_DEFAULT);    // To update to a define
-    
+        
     Foldback_Init(pHandle->SpeedFoldbackVehicle);
 
     pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
@@ -139,6 +138,18 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         hTorqueRef = PWRT_CalcSelectedTorque(pHandle); // Compute torque to motor depending on either throttle or PAS
         hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on foldback and brake state for example.
         
+        if(pHandle->sParameters.bTopSpeedPowerCutoffEnable == true)
+        {
+            uint16_t Vehicle_Speed = Wheel_GetVehicleSpeedFromWSS(pHandle->pPAS->pWSS);
+                        
+            if(Vehicle_Speed >= pHandle->sParameters.TopSpeedKMHCutoff)
+            {
+                hAux = 0;
+                // Reset All the Pedal Assist Parameters
+                PedalAssist_ResetParameters(pHandle->pPAS);
+            }
+        }    
+                
         if (bIsBrakePressed)
         {
             hAux = 0;
@@ -146,7 +157,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             PedalAssist_ResetParameters(pHandle->pPAS);
         }
             
- 
+         
         /* Throttle and walk mode always have higher priority over PAS but 
               the priority between walk mode and throttle depends on the value 
               of the parameter WalkmodeOverThrottle  */    

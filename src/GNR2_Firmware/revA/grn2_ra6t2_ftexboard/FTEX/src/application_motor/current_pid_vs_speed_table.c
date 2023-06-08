@@ -289,8 +289,8 @@ const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 
-    63,   /* old PI = 50 parameter tunning for Vibration */ 
-    63,   /* old PI = 50 parameter tunning for Vibration */
+    20,   /* old PI = 50 parameter tunning for Vibration */ 
+    20,   /* old PI = 50 parameter tunning for Vibration */
 
 };
 
@@ -300,8 +300,8 @@ const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    47,	 /* old PI = 50 parameter tunning for Vibration */
-    47,	 /* old PI = 50 parameter tunning for Vibration */
+    20,	 /* old PI = 50 parameter tunning for Vibration */
+    20,	 /* old PI = 50 parameter tunning for Vibration */
 };
 
 #elif VEHICLE_SELECTION == VEHICLE_UTK_350W 

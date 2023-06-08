@@ -5,6 +5,7 @@
   */
 
 #include "throttle.h"
+#include "wheel.h"
 #include "ASSERT_FTEX.h"
 
 /* Functions ---------------------------------------------------- */
@@ -34,6 +35,9 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     
     pHandle->SafeStart = false;
     Foldback_Init(pHandle->SpeedFoldbackVehicleThrottle);
+    
+    pHandle->hParameters.DefaultMaxThrottleSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.DefaultMaxThrottleSpeedKMH);
+    pHandle->hParameters.MaxSafeThrottleSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.MaxSafeThrottleSpeedKMH);
     
     Throttle_SetMaxSpeed(pHandle,pHandle->hParameters.DefaultMaxThrottleSpeedRPM);
     

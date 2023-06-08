@@ -46,8 +46,12 @@ typedef struct
     
     uint16_t hDetectionThreshold;       // Minimum throttle at which throttle is detected
     
+    uint16_t MaxSafeThrottleSpeedKMH;   // Maximum KM/H speed that is safe for the bike
+    uint16_t DefaultMaxThrottleSpeedKMH;// Maximum KM/H speed that is considered safe 
+    
     uint16_t MaxSafeThrottleSpeedRPM;   // Maximum RPM speed that is safe for the bike
-    uint16_t DefaultMaxThrottleSpeedRPM;// Maximum RPM speed that is considered safe 
+    uint16_t DefaultMaxThrottleSpeedRPM;// Maximum RPM speed that is considered safe
+    
     uint16_t ThrottleDecreasingRange;    
 } ThrottleParameters_t;
 

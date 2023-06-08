@@ -32,8 +32,8 @@
 
 #define THROTTLE_DETECTION_THRESHOLD           1000    // Throttle is considered pressed once it passed this threshold
 
-#define THROTTLE_MAX_SAFE_SPEED_RPM             285    // Max Wheel RPM that is safe when using the motor (aprox 38 km/h)
-#define THROTTLE_DEFAULT_MAX_SPEED_RPM          240    // Default top spee din wheel RPM (aprox 32 km/h)
+#define THROTTLE_MAX_SAFE_SPEED_KMH              40    // Max speed in Km/h that is safe when using the motor
+#define THROTTLE_DEFAULT_MAX_SPEED_KMH           32    // Default top speed in km/h
 
 #define THROTTLE_SPEED_DECREASING_RANGE         200    // Number of RPM before the desired speed at which we should start removing power
                                                        // Should be aroud 200 for light bikes and 55 for heavy bikes
@@ -47,7 +47,7 @@
 #define PTS_OFFSET_ADC2PTS            10000    // Offset for ADC to pedal torque sensor linear transformation
 
 #define PTS_OFFSET_PTS2TORQUE_STARTUP    40    // Offset for pedal torque sensor to torque linear transformation during the startup in %
-#define PTS_OFFSET_STARTUP_SPEED         20    // Speed under which the  Startup pedal torque sensor offset is used in wheel rpm
+#define PTS_OFFSET_STARTUP_SPEED_KMH      3    // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in %
 
 #define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging

@@ -138,9 +138,9 @@
 #define MAX_POWER_LIMIT                 2           /* to use  MAX_APPLICATION_POSITIVE_POWER as the reference for Maximum power*/
 #define POWER_LIMIT_REF                 MAX_POWER_LIMIT     /* defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
                                                             as the reference for maximum power limitation*/
-#define MAX_APPLICATION_POSITIVE_POWER  1100    /* Refers to maximum power in watts that drive can push to the motor */
-#define MAX_APPLICATION_NEGATIVE_POWER  1100    /* Refers to maximum power in watts that drive can accept from the motor */
-#define MAX_APPLICATION_CURRENT         22      /* Refers to maximum battery current in amps that drive can accept from the motor */
+#define MAX_APPLICATION_POSITIVE_POWER  700    /* Refers to maximum power in watts that drive can push to the motor */
+#define MAX_APPLICATION_NEGATIVE_POWER  700    /* Refers to maximum power in watts that drive can accept from the motor */
+#define MAX_APPLICATION_CURRENT         22      /* Refers to maximum current in amps that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   
@@ -158,7 +158,7 @@
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
 
 /*Torque ramp settings */
-#define DEFAULT_TORQUE_SLOPE_UP        5000        /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_UP        3000        /* Slope in cNm per second */
 #define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
 #define DEFAULT_SPEED_SLOPE_UP         500        /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       500        /* Slope in #SPEED_UNIT per second */

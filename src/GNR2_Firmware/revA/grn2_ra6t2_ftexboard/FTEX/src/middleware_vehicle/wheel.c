@@ -7,9 +7,15 @@
 #include "wheel.h"
 #include "vc_constants.h"
 #include "ASSERT_FTEX.h"
+#include "vc_parameters.h"
 
 // Internal variable used to store the wheel diameter
+#ifdef DEFAULT_WHEEL_DIAMETER_OVERRIDE
+static uint8_t WheelDiameter = DEFAULT_WHEEL_DIAMETER_OVERRIDE;
+#else
 static uint8_t WheelDiameter = WHEEL_DIAMETER_DEFAULT;
+#endif
+
 // Is the module initialized
 static bool IsInitialized = false;
 // Formula to convert RPM to KM using the wheel diameter

@@ -63,6 +63,8 @@ typedef struct
     CtrlType_t bCtrlType;                /* Torque or speed control */
     
     bool bPAS0DisableThrottle;           /* Will disable the throttle when we are in PAS level 0 */
+    bool bTopSpeedPowerCutoffEnable;     /* Will determine if we cut the power at a certain speed */
+    uint16_t TopSpeedKMHCutoff;          /* Specifys at which speed we need to have a complete power cut off */
     
     uint16_t hStartingThrottle;          /* Minimum torque to start powertrain */
     uint16_t hStoppingThrottle;          /* Minimum torque to stop powertrain */

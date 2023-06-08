@@ -19,7 +19,8 @@
                                               // UART_KD718,
                                               // UART_CLOUD_5S,                                              
                                               // UART_LOG_HS 
-                                              
+
+#define VEHICLE_SPEED_KMH_POWER_CUTOFF     32 // Speed at which we cut the power no matter what
 /***************** THROTTLE PARAMETERS  ******************************/
 
 #define THROTTLE_FILTER_ALPHA                 2.27F    // Butterworth alpha coefficient for throttle filtering
@@ -32,8 +33,8 @@
 
 #define THROTTLE_DETECTION_THRESHOLD           1000    // Throttle is considered pressed once it passed this threshold
 
-#define THROTTLE_MAX_SAFE_SPEED_RPM             285    // Max Wheel RPM that is safe when using the motor (aprox 38 km/h)
-#define THROTTLE_DEFAULT_MAX_SPEED_RPM          240    // Default top spee din wheel RPM (aprox 32 km/h)
+#define THROTTLE_MAX_SAFE_SPEED_KMH              40    // Max speed in Km/h that is safe when using the motor
+#define THROTTLE_DEFAULT_MAX_SPEED_KMH           32    // Default top speed in km/h
 
 #define THROTTLE_SPEED_DECREASING_RANGE         200    // Number of RPM before the desired speed at which we should start removing power
                                                        // Should be aroud 200 for light bikes and 55 for heavy bikes
@@ -42,12 +43,12 @@
 
 #define PTS_FILTER_ALPHA              2.27F    // Butterworth alpha coefficient pedal torque sensor filtering
 #define PTS_FILTER_BETA              -0.27F    // Butterworth beta coefficient pedal torque sensor filtering
-#define PTS_MAX_PTSVALUE         UINT16_MAX	   // Maximum analog value to reach
+#define PTS_MAX_PTSVALUE              40000	   // Maximum analog value to reach
 
-#define PTS_OFFSET_ADC2PTS             8500    // Offset for ADC to pedal torque sensor linear transformation
+#define PTS_OFFSET_ADC2PTS            10200    // Offset for ADC to pedal torque sensor linear transformation
 
-#define PTS_OFFSET_PTS2TORQUE_STARTUP    40    // Offset for pedal torque sensor to torque linear transformation during the startup in %
-#define PTS_OFFSET_STARTUP_SPEED         20    // Speed under which the  Startup pedal torque sensor offset is used in wheel rpm
+#define PTS_OFFSET_PTS2TORQUE_STARTUP    80    // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_STARTUP_SPEED_KMH      3    // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in %
 
 #define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging
@@ -59,7 +60,9 @@
 #define WHEEL_SPEED_SLOW_LOOP_COUNT              3    // Wheel speed sensor slow detect counter to get 750ms per function call
 #define WHEEL_SPEED_SENSOR_CORRECTION_FACTOR     2    // Wheel speed sensor slow detect correction for a signal after two wheel spin detection
 #define WHEEL_SPEED_SLOW_LOOP_DETECT          true    // Wheel speed sensor slow detect counter flag activation
-    
+
+#define DEFAULT_WHEEL_DIAMETER_OVERRIDE    26  // Overrides the default wheel diameter value 
+
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
 #define MOTOR_SELECTOR_ENABLE     false    // True if active motor can be changed using 3 way switch
@@ -89,7 +92,7 @@
 #define PAS_TORQUE_GAIN                             100    // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                         99    // Maximum PAS Torque feed ration in 100%
 #define PAS_MAX_SPEED_RATIO                          99    // Maximum PAS Speed feed ration in 100%
-#define PAS_ALGORITHM                  CadenceSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
+#define PAS_ALGORITHM                   TorqueSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
                                                               CadenceSensorUse = 1, Cadence sensor use define 
                                                               HybridSensorUse  = 2, Hybride sensor use define */
 #define PAS_CADENCE_USE_SPEED_LIMIT                true    // Decides if we have a speed limit on pas cadence
@@ -129,15 +132,15 @@
 #define FOLDBACK_TIMEOUT                                  400    // Fold Back Timeout for the slow start ramp
 
 
-#define POWERTRAIN_HEADLIGHT_LOCKED         false    // Parameter that decides if the user can change the state of the headlight      
+#define POWERTRAIN_HEADLIGHT_LOCKED          true    // Parameter that decides if the user can change the state of the headlight      
 #define POWERTRAIN_HEADLIGHT_DEFAULT        false    // Parameter that sets the default headlight state when the bike is powered on
 
-#define POWERTRAIN_TAILLIGHT_LOCKED         false    // Parameter that decide sif the user can change the state of the tail light 
-#define POWERTRAIN_TAILLIGHT_DEFAULT        false    // Parameter that sets the default tail light state when the bike is powered on
+#define POWERTRAIN_TAILLIGHT_LOCKED          true    // Parameter that decide sif the user can change the state of the tail light 
+#define POWERTRAIN_TAILLIGHT_DEFAULT         true    // Parameter that sets the default tail light state when the bike is powered on
 
 /*********************************Battery Monitoring*******************************/
-#define BATTERY_FULL_VOLT    52
-#define BATTERY_EMPTY_VOLT   46
+#define BATTERY_FULL_VOLT    42
+#define BATTERY_EMPTY_VOLT   32
 
 #define BATTERY_SOC_LOW_PERCENT   15   // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
 #define BATTERY_SOC_OK_PERCENT    25   // Battery SOC in % for which we clear the battery low flag

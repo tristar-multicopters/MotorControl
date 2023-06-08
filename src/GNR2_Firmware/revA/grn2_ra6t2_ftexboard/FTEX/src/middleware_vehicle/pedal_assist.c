@@ -190,27 +190,63 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     uint16_t  hTorqueSens;
     uint16_t  hOffsetTemp;
     uint16_t  hWheelRPM;
+    uint16_t  hTorquePASThreshold;
     static uint16_t PulseCounter = 0;
+    bool CalculateAverage = false;
+    
     
     hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
     /* Calculate the offset based on ration percentage */
     
-    if(hWheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeed) // If going at low speed use the startup offset
-    {
-        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+    if(hWheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset
+    {     
+        CalculateAverage = true;  // Make sure we calculated the average to check for the threshold       
+        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;        
     }
     else
     {
+        CalculateAverage = false; // No need for the average      
         hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
     }        
     
 	
     wSpeedt = PedalSpdSensor_GetPeriodValue(pHandle->pPSS);
     hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
-
-    /* Torque Sensor use and the offset was detected */
-    if ((pHandle->bCurrentPasAlgorithm == TorqueSensorUse) && (hTorqueSens > hOffsetTemp))
+   
+    static uint16_t hThresholdCheckAvg[TORQUE_THRESHOLD_AVG_NB];
+    static uint8_t AvgIndex = 0; 
+    uint32_t wThresholdAvg = 0;
+    
+    if(CalculateAverage) // If we need to calculate the average
     {
+        hThresholdCheckAvg[AvgIndex] = hTorqueSens;
+    
+        if(AvgIndex >= TORQUE_THRESHOLD_AVG_NB - 1)
+        {
+            AvgIndex = 0;
+        }    
+        else
+        {
+            AvgIndex ++;
+        }
+    
+        for(int i = 0; i < TORQUE_THRESHOLD_AVG_NB; i ++)
+        {
+            wThresholdAvg += hThresholdCheckAvg[i];
+        }
+    
+        wThresholdAvg /= TORQUE_THRESHOLD_AVG_NB;
+        
+        hTorquePASThreshold = (uint16_t) wThresholdAvg;
+    }
+    else // if there is no need for an average
+    {
+        hTorquePASThreshold = hTorqueSens;
+    }
+    
+    /* Torque Sensor use and the offset was detected */
+    if ((pHandle->bCurrentPasAlgorithm == TorqueSensorUse) && (hTorquePASThreshold > hOffsetTemp))
+    {      
         pHandle->bPASDetected = true;
     }
     /* Hybrid Algorithm use and the offset was detected */

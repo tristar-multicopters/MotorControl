@@ -8,6 +8,7 @@
 */
 
 #include "pedal_torque_sensor.h"
+#include "wheel.h"
 #include "ASSERT_FTEX.h"
 
 
@@ -45,6 +46,8 @@ void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pP
     PedalTorqSensor_Clear(pHandle);
     
     PedalTorqSensor_ComputeSlopes(pHandle);
+    
+    pHandle->hParameters.hStartupOffsetMTSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.hStartupOffsetMTSpeedKMH);
 }
 
 

@@ -37,7 +37,7 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.numberOfPasLevels = PAS_MAX_LEVEL,
     .PAS_ConfigData.pasMaxPower = PAS_MAX_TORQUE_RATIO,
     .PAS_ConfigData.torqueMinimumThresholdStartup = PTS_OFFSET_PTS2TORQUE_STARTUP,
-    .PAS_ConfigData.startupTorqueMinimumThresholdSpeed = PTS_OFFSET_STARTUP_SPEED,
+    .PAS_ConfigData.startupTorqueMinimumThresholdSpeed = PTS_OFFSET_STARTUP_SPEED_KMH,
     .PAS_ConfigData.torqueMinimumThreshold = PTS_OFFSET_PTS2TORQUE,
     .PAS_ConfigData.torqueSensorMultiplier = PAS_TORQUE_GAIN,
     .PAS_ConfigData.torqueMaxSpeed = 0,
@@ -287,8 +287,8 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     //update userConfigData.PAS_ConfigData.torqueMinimumThresholdStartup(PTS_OFFSET_PTS2TORQUE_STARTUP)
     userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hOffsetMTStartup = UserConfigTask_GetTorqueMinimumThresholdStartup();
 
-    //update userConfigData.PAS_ConfigData.startupTorqueMinimumThresholdSpeed(PTS_OFFSET_STARTUP_SPEED)
-    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hStartupOffsetMTSpeed = UserConfigTask_GetStartupOffsetMinimumThresholdSpeed();
+    //update userConfigData.PAS_ConfigData.startupTorqueMinimumThresholdSpeed(PTS_OFFSET_STARTUP_SPEED_KMH)
+    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hStartupOffsetMTSpeedKMH = UserConfigTask_GetStartupOffsetMinimumThresholdSpeed();
     
     //update userConfigData.PAS_ConfigData.torqueMinimumThreshold(PTS_OFFSET_PTS2TORQUE)
     userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hOffsetMT = UserConfigTask_GetTorqueMinimumThreshold();  

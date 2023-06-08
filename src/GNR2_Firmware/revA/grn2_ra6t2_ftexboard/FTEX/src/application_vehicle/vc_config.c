@@ -84,7 +84,7 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
         .hOffsetPTS = PTS_OFFSET_ADC2PTS,
         
         .hOffsetMTStartup      = PTS_OFFSET_PTS2TORQUE_STARTUP,  
-        .hStartupOffsetMTSpeed = PTS_OFFSET_STARTUP_SPEED,
+        .hStartupOffsetMTSpeedKMH = PTS_OFFSET_STARTUP_SPEED_KMH,
         .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
        
         .hMax = PTS_MAX_PTSVALUE,
@@ -178,7 +178,7 @@ Foldback_Handle_t SpeedFoldbackThrottle =
 {
     .hDecreasingEndValue = 300, 
     .hDecreasingRange    = 300,
-    .hDecreasingInterval = 15, 
+    .hDecreasingInterval = 30, 
     .hDefaultOutputLimitHigh = POWERTRAIN_MAX_MOTOR_TORQUE,
     .hDefaultOutputLimitLow = 0,
     .FoldbackConfig = TRIM,
@@ -243,8 +243,8 @@ ThrottleHandle_t ThrottleHandle =
 
         .hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
         
-        .MaxSafeThrottleSpeedRPM    = THROTTLE_MAX_SAFE_SPEED_RPM,
-        .DefaultMaxThrottleSpeedRPM = THROTTLE_DEFAULT_MAX_SPEED_RPM,
+        .MaxSafeThrottleSpeedKMH    = THROTTLE_MAX_SAFE_SPEED_KMH,
+        .DefaultMaxThrottleSpeedKMH = THROTTLE_DEFAULT_MAX_SPEED_KMH,
         .ThrottleDecreasingRange    = THROTTLE_SPEED_DECREASING_RANGE,        
     }
 };
@@ -265,7 +265,16 @@ PWRT_Handle_t PowertrainHandle =
     
     .sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
     .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
-        
+    
+#ifdef VEHICLE_SPEED_KMH_POWER_CUTOFF
+    .sParameters.bTopSpeedPowerCutoffEnable = true,
+    .sParameters.TopSpeedKMHCutoff = VEHICLE_SPEED_KMH_POWER_CUTOFF,
+#else
+    .sParameters.bTopSpeedPowerCutoffEnable = false,
+    .sParameters.TopSpeedKMHCutoff = 100,   // we set this to an unachievable speed to ensure 
+                                            // if it is accidently used it will not limit the power      
+#endif    
+    
     .SpeedFoldbackVehicle = &SpeedFoldbackVehicleConfig,
 
     .pMDI = &MDInterfaceHandle,
