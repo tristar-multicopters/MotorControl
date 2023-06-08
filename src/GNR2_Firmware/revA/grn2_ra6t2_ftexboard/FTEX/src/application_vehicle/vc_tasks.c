@@ -78,6 +78,13 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     
     uint32_t xLastWakeTime = osKernelGetTickCount();
+    
+    if (pVCI->pPowertrain->pPWREN->bInitialPowerLockState == true) // If we have bene powered on by the screen
+    {
+        Light_PowerOnSequence(pVCI->pPowertrain->pHeadLight); // Setup the lights with their default values
+        Light_PowerOnSequence(pVCI->pPowertrain->pTailLight);
+    }
+    
     while (true)
     {
         PWRT_UpdatePowertrainPeripherals(pVCI->pPowertrain);

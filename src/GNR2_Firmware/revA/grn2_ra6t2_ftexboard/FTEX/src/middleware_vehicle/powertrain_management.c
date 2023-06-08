@@ -63,13 +63,6 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     
     // Enable slow motor Start for Pedal Assist cadence base
     Foldback_EnableSlowStart(pHandle->SpeedFoldbackVehicle);
-    
-    if (pHandle->pPWREN->bInitialPowerLockState == true) // If we have bene powered on by the screen
-    {
-        Light_PowerOnSequence(pHandle->pHeadLight); // Setup the lights with their default values
-        Light_PowerOnSequence(pHandle->pTailLight);
-    }
-    
 }
 
 /**
