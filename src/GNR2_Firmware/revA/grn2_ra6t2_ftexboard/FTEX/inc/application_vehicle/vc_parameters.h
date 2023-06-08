@@ -57,6 +57,10 @@
 
 #include "vc_parameters_a2_350w.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_UTK_350W 
+
+#include "vc_parameters_utk_350w.h"
+
 #endif
 
 #endif /*__VC_PARAMETERS_H*/

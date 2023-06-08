@@ -56,6 +56,10 @@
 
 #include "drive_parameters_a2_350w.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_UTK_350W 
+
+#include "drive_parameters_utk_350w.h"
+
 #endif
 
 #endif /*__DRIVE_PARAMETERS_H*/

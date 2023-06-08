@@ -524,6 +524,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_utk_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -704,6 +709,11 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_a2_350w.h</FilePath>
             </File>
             <File>
+              <FileName>pmsm_motor_parameters_utk_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_utk_350w.h</FilePath>
+            </File>
+            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
@@ -767,6 +777,11 @@
               <FileName>drive_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_utk_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2486,6 +2501,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_utk_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2666,6 +2686,11 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_a2_350w.h</FilePath>
             </File>
             <File>
+              <FileName>pmsm_motor_parameters_utk_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_utk_350w.h</FilePath>
+            </File>
+            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
@@ -2729,6 +2754,11 @@
               <FileName>drive_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_utk_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4313,6 +4343,11 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
             </File>
+            <File>
+              <FileName>vc_parameters_utk_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4493,6 +4528,11 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_a2_350w.h</FilePath>
             </File>
             <File>
+              <FileName>pmsm_motor_parameters_utk_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_utk_350w.h</FilePath>
+            </File>
+            <File>
               <FileName>power_stage_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
@@ -4556,6 +4596,11 @@
               <FileName>drive_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_utk_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -15,7 +15,7 @@
 #define VEHICLE_URBAN                 9
 #define VEHICLE_VELEC_CITI_500W       10 
 #define VEHICLE_A2_350W               11
-
+#define VEHICLE_UTK_350W              12
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 
