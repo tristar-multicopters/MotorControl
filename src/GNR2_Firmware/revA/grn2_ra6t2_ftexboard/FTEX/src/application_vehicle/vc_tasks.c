@@ -299,7 +299,9 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
                     break;
             
             default:
-                break;
+                /* Raise a software error */
+                VCSTM_FaultProcessing(pVCI->pStateMachine, VC_SW_ERROR, 0u);
+            break;
         }
         #endif
     
