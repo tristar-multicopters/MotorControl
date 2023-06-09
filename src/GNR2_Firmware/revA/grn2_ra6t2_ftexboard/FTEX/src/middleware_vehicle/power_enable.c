@@ -12,6 +12,7 @@
 
 extern osThreadId_t PowerOffSequence_handle;
 
+static bool iotDisconnected = false;
 static PWREN_PowerOffSequencyState_t PWREN_PowerOffSequencyState = PWREN_IDLE;
 
 /**
@@ -686,7 +687,15 @@ void GnrOn_CallbackSDODownloadFinish(CO_CSDO *csdo, uint16_t index, uint8_t sub,
     UNUSED_PARAMETER(csdo);
     UNUSED_PARAMETER(index);
     UNUSED_PARAMETER(sub);
-    UNUSED_PARAMETER(code);
+    if(code != 0)
+    {
+        iotDisconnected = true;
+        VC_Errors_RaiseError(IOT_COMM_ERROR);
+    }
+    else if(iotDisconnected)
+    {
+        VC_Errors_ClearError(IOT_COMM_ERROR);
+    }
 }
 
 #if !GNR_MASTER
