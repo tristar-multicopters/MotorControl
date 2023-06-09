@@ -62,7 +62,7 @@
 
 
 
-#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_UTK_350W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                                                                                
@@ -74,7 +74,7 @@
 //#define CANLOGGERTASK
 
 //define responsible to enable or disable throttle speed control
-#define THROTTLE_SPEED_CTRL
+//#define THROTTLE_SPEED_CTRL
 
 //define to allow screne to change power
 //#define SCREENPOWERCONTROL 

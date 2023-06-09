@@ -91,7 +91,7 @@
 #define PAS_ALGORITHM                  CadenceSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
                                                               CadenceSensorUse = 1, Cadence sensor use define 
                                                               HybridSensorUse  = 2, Hybride sensor use define  */
-#define PAS_CADENCE_USE_SPEED_LIMIT                true    // Decides if we have a speed limit on pas cadence
+#define PAS_CADENCE_USE_SPEED_LIMIT                false    // Decides if we have a speed limit on pas cadence
     
 #define PAS_0_POWER_PERCENT      0    // PAS 0 has a ratio of   0%
 #define PAS_1_POWER_PERCENT     60    // PAS 1 has a ratio of  60% (3/5)

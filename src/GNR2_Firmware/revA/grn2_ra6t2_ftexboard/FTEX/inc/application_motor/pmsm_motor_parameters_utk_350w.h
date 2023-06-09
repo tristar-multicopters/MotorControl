@@ -17,7 +17,7 @@
 #define POLE_PAIR_NUM          8 /* Number of motor pole pairs */
 #define RS                     0.1f /* Stator resistance , ohm*/
 #define LS                     0.000235f /* Stator inductance, H   For I-PMSM it is equal to Lq */
-#define MOTOR_MAGNET_FLUX       0.0195f  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
+#define MOTOR_MAGNET_FLUX       0.01f  /* Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests */
 #define MOTOR_VOLTAGE_CONSTANT  28.84f   /*!< Volts RMS ph-ph /kRPM */
 #define ST_Torque_Coef          1.2f       /* this coeficient always keeps the starting torque higher than the nominal torque */
 
