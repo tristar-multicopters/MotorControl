@@ -486,33 +486,59 @@ PasLevel_t LCD_Cloud_5S_ConvertPASLevelFromCloud_5S(uint8_t aPAS_Level, uint8_t 
  */
 uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
 {    
-    uint8_t ConvertedError;
+    //Initialized to no error to avoid a warning here
+    uint8_t ConvertedError = CLOUD_5S_NO_ERROR;
     switch(aError)
     {
         case NO_ERROR:
-           ConvertedError = CLOUD_5S_NO_ERROR; 
-          break;
+            ConvertedError = CLOUD_5S_NO_ERROR; 
+            break;
+        case PAS_BOOT_ERROR:
+            ConvertedError = CLOUD_5S_PAS_BOOT_ERROR; 
+            break;
+        case CONTROLLER_ERROR:
+            ConvertedError = CLOUD_5S_PAS_BOOT_ERROR; 
+            break;
+        case MOTOR_PHASE_ERROR:
+            ConvertedError = CLOUD_5S_PHASE_ERROR; 
+            break;
         case UV_PROTECTION:
             ConvertedError = CLOUD_5S_UVP;
-          break;
+            break;
+        case BRAKE_CUTOFF:
+            ConvertedError = CLOUD_5S_BRAKE_ERROR;
+            break;
+        case MOTOR_HALL_ERROR:
+            ConvertedError = CLOUD_5S_HALL_ERROR;
+            break;
         case THROTTLE_STUCK:
             ConvertedError = CLOUD_5S_THROTTLE_ERROR;
-          break;            
-        case MOTOR_PHASE_ERROR:
-            ConvertedError = CLOUD_5S_PHASE_ERROR;
-          break;
-         case MOTOR_HALL_ERROR:
-            ConvertedError = CLOUD_5S_HALL_ERROR;
-          break;
+            break;            
+        case UT_PROTECTION:
+            ConvertedError = CLOUD_5S_UT_ERROR;
+            break;            
+        case OT_PROTECTION:
+            ConvertedError = CLOUD_5S_OT_ERROR;
+            break;            
+        case IOT_COMM_ERROR:
+            ConvertedError = CLOUD_5S_IOT_COMM_ERROR;
+            break;            
+        case MOTOR_OT_PROTECT:
+            ConvertedError = CLOUD_5S_MOT_ERROR;
+            break;            
+        case OV_PROTECTION:
+            ConvertedError = CLOUD_5S_OV_ERROR;
+            break;            
+        case BATT_LOW:
+            ConvertedError = CLOUD_5S_LOW_BAT;
+            break;            
         case UNMAPPED_ERROR: // Errors that Cloud 5S has but that we currently don't flag
-            ConvertedError = CLOUD_5S_CURRENT_ERROR;
-            ConvertedError = CLOUD_5S_BRAKE_ERROR;
-          break;        
+            break;        
         default: // Cloud drive doesn't supports sending other error codes
             ConvertedError = CLOUD_5S_NO_ERROR;         
-          break;
+            break;
     }
-    
+
     return ConvertedError;
 }
 

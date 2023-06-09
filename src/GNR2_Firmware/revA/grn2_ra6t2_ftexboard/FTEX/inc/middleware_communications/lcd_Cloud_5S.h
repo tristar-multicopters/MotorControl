@@ -45,12 +45,21 @@ typedef enum
 {
     // Cloud 5S errors codes defined errors
     CLOUD_5S_NO_ERROR       = 0x00, // No error
-    CLOUD_5S_PHASE_ERROR    = 0x03, // PHase loss
+    CLOUD_5S_PAS_BOOT_ERROR = 0x01, // PAS boot anamoly
+    CLOUD_5S_CNTL_ERROR     = 0x02, // Controller anamolies
+    CLOUD_5S_PHASE_ERROR    = 0x03, // Phase loss
     CLOUD_5S_UVP            = 0x04, // Under voltage
     CLOUD_5S_BRAKE_ERROR    = 0x05, // Brake abnormal 
     CLOUD_5S_HALL_ERROR     = 0x06, // motor hall abnormal
     CLOUD_5S_THROTTLE_ERROR = 0x07, // throttle abnormal
-    CLOUD_5S_CURRENT_ERROR  = 0x08, // current abnormal
+    CLOUD_5S_UT_ERROR       = 0x08, // controller undertemperature error
+    CLOUD_5S_OT_ERROR       = 0x09, // controller overtemperature error
+    CLOUD_5S_IOT_COMM_ERROR = 0x0A, // iot communication error
+    CLOUD_5S_MOT_ERROR      = 0x0B, // controller overtemperature error
+    CLOUD_5S_OV_ERROR       = 0x0C, // DC bus goes over the safe voltage operating range of the controller
+    CLOUD_5S_LOW_BAT        = 0x0D, // low battery error
+    CLOUD_5S_RESERVED       = 0x0F, // Cloud drive's internal code
+
 }Cloud_5S_ErrorCodes_t;
     
 typedef struct
