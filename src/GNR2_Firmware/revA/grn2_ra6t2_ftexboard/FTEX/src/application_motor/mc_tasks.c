@@ -475,7 +475,7 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
     PID_SetKP(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKp, abs(hM1SpeedUnit)));
     PID_SetKI(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKi, abs(hM1SpeedUnit)));
     
-    #if VEHICLE_SELECTION == VEHICLE_VELEC    
+    #if VEHICLE_SELECTION == VEHICLE_R48_750W    
     // this PID update is for correct IqKI for imidietly stop when release trottle
     if (FOCVars[bMotor].hTeref == 0.0)
     {
