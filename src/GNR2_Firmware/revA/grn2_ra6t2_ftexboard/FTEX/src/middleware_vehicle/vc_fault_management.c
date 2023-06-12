@@ -185,6 +185,15 @@ void VCFaultManagment_Processing(VCSTM_Handle_t *pHandle, CO_NODE  *pNode)
         VCSTM_FaultProcessing(pHandle, 0, VC_START_TIMEOUT);
     }
     
+    //verify what kind of fault was triggered.
+    if (pHandle->hVFaultNow & VC_STOP_TIMEOUT)
+    {
+        //clear VC_START_TIMEOUT error.     
+        //the idea is clear start timeout fault and make the
+        //system back to idle state again and try to run again.
+        VCSTM_FaultProcessing(pHandle, 0, VC_STOP_TIMEOUT);
+    }
+    
     //verify if was a lost of communication with
     //slaver.
     if (pHandle->hVFaultNow & VC_SLAVE_COMM_ERROR)
@@ -195,5 +204,32 @@ void VCFaultManagment_Processing(VCSTM_Handle_t *pHandle, CO_NODE  *pNode)
             //clear slave lost communication error. 
             VCSTM_FaultProcessing(pHandle, 0, VC_SLAVE_COMM_ERROR);
         }
-    }   
+    } 
+
+    //verify if a VC_SW_ERROR fault was set.
+    //this type of error can be cleared inside 
+    //of vc faut now state.
+    if (pHandle->hVFaultNow & VC_SW_ERROR)
+    {           
+        //clear VC_SW_ERROR error. 
+        VCSTM_FaultProcessing(pHandle, 0, VC_SW_ERROR);
+    }  
+
+    //verify if a VC_M1_UNEXPECTED_BEHAVIOR fault was set.
+    //this type of error can be cleared inside 
+    //of vc faut now state.
+    if (pHandle->hVFaultNow & VC_M1_UNEXPECTED_BEHAVIOR)
+    {           
+        //clear VC_M1_UNEXPECTED_BEHAVIOR error. 
+        VCSTM_FaultProcessing(pHandle, 0, VC_M1_UNEXPECTED_BEHAVIOR);
+    } 
+
+    //verify if a VC_M2_UNEXPECTED_BEHAVIOR fault was set.
+    //this type of error can be cleared inside 
+    //of vc faut now state.
+    if (pHandle->hVFaultNow & VC_M2_UNEXPECTED_BEHAVIOR)
+    {           
+        //clear VC_M2_UNEXPECTED_BEHAVIOR error. 
+        VCSTM_FaultProcessing(pHandle, 0, VC_M2_UNEXPECTED_BEHAVIOR);
+    }  
 }
