@@ -18,6 +18,14 @@ extern osThreadId_t PowerOffSequence_handle;
 static PWREN_PowerOffSequencyState_t PWREN_PowerOffSequencyState = PWREN_IDLE;
 
 /**
+ *@brief Function used to get the flag that indicate if
+ *       a PDO message was received. THis indicate that 
+ *       master and slave communication is on.
+ *@return void
+*/
+extern bool COPGetPdoReceivedFlag(void);
+
+/**
   Function used to initialise the GPIO pins used for the power enable module
 */
 void PWREN_Init(PWREN_Handle_t * pHandle)
@@ -753,7 +761,7 @@ void PWREN_TurnoffWhenMasterIsNotDetected(CO_NODE  *pNode, PWREN_Handle_t * pHan
     if ((pHandle->bSystemReady == true) && (VcAutodeter_GetGnrState() == false) && (masterPresent == false))
     {
         //check if master was detected.
-        if (VCFaultManagment_GetMasterSlaveDetectionFlag() == false)
+        if (COPGetPdoReceivedFlag() == false)
         {
             //increment timeout.
             timeout++;
