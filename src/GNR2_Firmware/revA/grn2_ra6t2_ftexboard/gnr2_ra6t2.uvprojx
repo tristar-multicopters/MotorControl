@@ -470,19 +470,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_grizzly.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_grizzly.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_wheel.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_wheel.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_tsugawa.h</FileName>
@@ -498,16 +488,6 @@
               <FileName>vc_parameters_quietkat.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_urban.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_rbs_mb.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_rbs_mb.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_r48_750w.h</FileName>
@@ -659,19 +639,9 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_grizzly.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_grizzly.h</FilePath>
-            </File>
-            <File>
               <FileName>pmsm_motor_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_wheel.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_wheel.h</FilePath>
             </File>
             <File>
               <FileName>pmsm_motor_parameters_nidec.h</FileName>
@@ -694,19 +664,9 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_rbs_mb.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_rbs_mb.h</FilePath>
             </File>
             <File>
               <FileName>pmsm_motor_parameters_a2_350w.h</FileName>
@@ -739,16 +699,6 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_grizzly.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_grizzly.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_wheel.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_wheel.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
@@ -762,16 +712,6 @@
               <FileName>drive_parameters_quietkat.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_urban.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_rbs_mb.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_rbs_mb.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_r48_750w.h</FileName>
@@ -2467,19 +2407,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_grizzly.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_grizzly.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_wheel.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_wheel.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_tsugawa.h</FileName>
@@ -2495,16 +2425,6 @@
               <FileName>vc_parameters_quietkat.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_urban.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_rbs_mb.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_rbs_mb.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_r48_750w.h</FileName>
@@ -2656,19 +2576,9 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_grizzly.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_grizzly.h</FilePath>
-            </File>
-            <File>
               <FileName>pmsm_motor_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_wheel.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_wheel.h</FilePath>
             </File>
             <File>
               <FileName>pmsm_motor_parameters_nidec.h</FileName>
@@ -2691,19 +2601,9 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_rbs_mb.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_rbs_mb.h</FilePath>
             </File>
             <File>
               <FileName>pmsm_motor_parameters_a2_350w.h</FileName>
@@ -2736,16 +2636,6 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_grizzly.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_grizzly.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_wheel.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_wheel.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
@@ -2759,16 +2649,6 @@
               <FileName>drive_parameters_quietkat.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_urban.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_rbs_mb.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_rbs_mb.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_r48_750w.h</FileName>
@@ -4329,19 +4209,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_grizzly.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_grizzly.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_wheel.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_wheel.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_tsugawa.h</FileName>
@@ -4357,16 +4227,6 @@
               <FileName>vc_parameters_quietkat.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_quietkat.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_urban.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_rbs_mb.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_rbs_mb.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_r48_750w.h</FileName>
@@ -4518,19 +4378,9 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_grizzly.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_grizzly.h</FilePath>
-            </File>
-            <File>
               <FileName>pmsm_motor_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_wheel.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_wheel.h</FilePath>
             </File>
             <File>
               <FileName>pmsm_motor_parameters_nidec.h</FileName>
@@ -4553,19 +4403,9 @@
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
             </File>
             <File>
-              <FileName>pmsm_motor_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_urban.h</FilePath>
-            </File>
-            <File>
               <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_rbs_mb.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_rbs_mb.h</FilePath>
             </File>
             <File>
               <FileName>pmsm_motor_parameters_a2_350w.h</FileName>
@@ -4598,16 +4438,6 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_grizzly.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_grizzly.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_wheel.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_wheel.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
@@ -4621,16 +4451,6 @@
               <FileName>drive_parameters_quietkat.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_urban.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_urban.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_rbs_mb.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_rbs_mb.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_r48_750w.h</FileName>

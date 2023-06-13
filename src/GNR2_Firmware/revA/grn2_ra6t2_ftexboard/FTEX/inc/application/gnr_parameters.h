@@ -4,19 +4,15 @@
 */
 
 #define VEHICLE_DEFAULT               0
-#define VEHICLE_GRIZZLY               1
-#define VEHICLE_E_CELLS               2
-#define VEHICLE_R48_750W              3
-#define VEHICLE_WHEEL                 4
-#define VEHICLE_TSUGAWA               5
-#define VEHICLE_NIDEC                 6
-#define VEHICLE_QUIETKAT              7
-#define VEHICLE_RBS_MB                8
-#define VEHICLE_URBAN                 9
-#define VEHICLE_VELEC_CITI_500W       10 
-#define VEHICLE_A2_350W               11
-#define VEHICLE_UTK_350W              12
-#define VEHICLE_A2_500W               13
+#define VEHICLE_E_CELLS               1
+#define VEHICLE_R48_750W              2
+#define VEHICLE_TSUGAWA               3
+#define VEHICLE_NIDEC                 4
+#define VEHICLE_QUIETKAT              5
+#define VEHICLE_VELEC_CITI_500W       6 
+#define VEHICLE_A2_350W               7
+#define VEHICLE_UTK_350W              8
+#define VEHICLE_A2_500W               9
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 
