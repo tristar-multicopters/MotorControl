@@ -23,6 +23,10 @@
 void COTmrLock  (void);
 void COTmrUnlock(void);
 
+//variable used to indicate a continue communication
+//between master and slave using a PDO service.
+static bool PdoReceivedFlag = false;
+
 /******************************************************************************
 * MANDATORY CALLBACK FUNCTIONS
 ******************************************************************************/
@@ -168,7 +172,11 @@ WEAK
 int16_t COPdoReceive(CO_IF_FRM *frm)
 {
     (void)frm;
-
+    
+    //when a RPDO is received, set flag to true.
+    //master and slave receive PDO services.
+    PdoReceivedFlag = true;
+    
     /* Optional: place here some code, which is called
      * right after receiving a PDO. You may adjust
      * the given CAN frame which is written into the
@@ -228,3 +236,27 @@ void COTpdoReadData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
      * needs a mapped values with a size larger than 4 byte.
      */
 }
+
+/**
+ *@brief Function used to get the flag that indicate if
+ *       a PDO message was received. THis indicate that 
+ *       master and slave communication is on. 
+ *       PdoReceivedFlag is set to false, to wait for a
+ *       new PDO receive interruption set it to true.
+ *@return bool return PdoReceivedFlag value.
+*/
+bool COPGetPdoReceivedFlag(void)
+{
+    //if pdo msg was received
+    //clear PdoReceivedFlag.
+    if (PdoReceivedFlag == true)
+    {
+        PdoReceivedFlag = false;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+

@@ -155,11 +155,6 @@ static void UpdateObjectDictionnary(void *p_arg)
         return;
     }
     
-    //Call function responsible to detect the presence of the master of or slave
-    //on a dual motor.
-    //This function send sdo donwload to master/slave each 250 ms.
-    VCFaultManagment_MasterSlaveDetection(pNode,VCInterfaceHandle.pPowertrain->pPWREN);
-    
     #if GNR_IOT
 
 	if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)

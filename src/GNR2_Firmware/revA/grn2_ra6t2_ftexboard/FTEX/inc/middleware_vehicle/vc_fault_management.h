@@ -41,26 +41,6 @@
 
 
 // ==================== Public function prototypes ========================= //
-/**
- *@brief Function used to set the presence of the device, master or slave.
- *       It send a sdo download command and if the other side responde a flag
- *       is set to indicate that command was received.
- *       No sdo response, clear the correspondent flag(MasterSlaveDetectionFlag).
- *@param pNode Pointer on the CANOpen node to operate on.
- *@param void.
-*/
-void VCFaultManagment_MasterSlaveDetection(CO_NODE  *pNode, PWREN_Handle_t * pHandle);
-
-/**
-  @brief SDO transfer finalization callback function used when
-         sending sdodownload command to master/slave module.
-  @param CO_CSDO *csdo Pointer to SDO client object
-  @param uint16_t index address of the sdo service.
-  @param uint8_t sub subindex number of the sdo service.
-  @param uint32_t code error code from the SDO service.
-  @return void
-*/
-void MasterSlaveDetection_CallbackSDODownloadFinish(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
 
 /**
   @brief Function used to detect if slave or master are not present anymore.
