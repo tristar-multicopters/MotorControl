@@ -1,7 +1,7 @@
 /**
-* @file   firmware_update.h
+* @file   vc_faut_management.h
 * @author Bruno Alves
-* @brief  Application layer used to handle DFU process.
+* @brief  Application layer used to handle vc faults.
 *
 *
 */
@@ -17,6 +17,7 @@
 #include "co_gnr2_specs.h"
 #include "vc_state_machine.h"
 #include "power_enable.h"
+#include "vc_autodetermination.h"
 
 /*********************************************
                 Defines

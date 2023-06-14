@@ -16,8 +16,6 @@
 #include "co_core.h"
 #include "co_gnr2_specs.h"
 
-//#include "comm_config.h"
-
 #define POWEROFFSEQUENCE_FLAG  0x13  // OS flag used to block the power enable task
                                      // TODO move to a dedicated flag file
 
@@ -43,11 +41,15 @@
 //400 ms.
 #define POWEROFF_ERRORTIMEOUT_MS          400
 
-//define the system ready timeout(1500ms).
-#define SYSTEMREADY_TIMEOUT   3000
+//define the system ready timeout(500ms).
+#define SYSTEMREADY_TIMEOUT_500MS   1000
 
 //define IOT sdo donwload msg period(1000ms).
 #define IOTMSG_PERIOD         40
+
+//define turn off timeout(500ms) when master is not 
+//detected at the beginning.
+#define MASTERNOTDETECTED_TIMEOUT_500MS 1000
 
 typedef struct
 {          
@@ -219,6 +221,30 @@ bool PWREN_GetSystemReadyFlag(PWREN_Handle_t * pHandle);
   @return void
 */
 void GnrOn_CallbackSDODownloadFinish(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
+
+/**
+  @brief Function used verify if the power signal is present.
+  @param PWREN_Handle_t * pHandle pointer to the struct responsible
+         to give access to the flags used to know if the device was turned on
+         by firmware command received by CAN or was a false wake up.
+  @return bool return signal is present(true) or not(false).
+*/
+bool PWREN_PWRDetected(PWREN_Handle_t * pHandle);
+
+/**
+  @brief Function used to turn off the system without
+         passed to the normal state machine when the master is not
+         detected. This function only turn off the system if in the
+         first 1000 ms of the system, the device is slave and it doesn't
+         detect the master. This is necessary to auto master slave
+         determination.
+  @param CO_NODE  *pNode pointer to the CAN node used on the CANOPEN communication.
+  @param PWREN_Handle_t * pHandle pointer to the struct responsible
+         to give access to the flags used to know if the device was turned on
+         by firmware command received by CAN or was a false wake up.
+  @return void
+*/
+void PWREN_TurnoffWhenMasterIsNotDetected(CO_NODE  *pNode, PWREN_Handle_t * pHandle);
 
 #endif /*__POWER_ENABLE_H*/
 

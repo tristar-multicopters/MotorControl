@@ -264,6 +264,10 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
     //check if is system is ready or not to use CANOPEN communication
     //and normal power off sequency,
     PWREN_ManageSystemReadyFlag(&CONodeGNR, VCInterfaceHandle.pPowertrain->pPWREN);
+    
+    //try to detect master at the first 1000 ms. if not detected, turn off because 
+    //was a wrong turn on.
+    PWREN_TurnoffWhenMasterIsNotDetected(&CONodeGNR, VCInterfaceHandle.pPowertrain->pPWREN);
 }
 
 /**

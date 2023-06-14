@@ -14,7 +14,8 @@
 
 #include "gnr_main.h"
 
-//#include "slave_mc_interface.h"
+#include "vc_autodetermination.h"
+
 
 
 /************* DEBUG ****************/
@@ -337,22 +338,18 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         {    
             osDelay(STOP_LOOPTICKS);
         }
-        
-        Light_PowerOffSequence(pVCI->pPowertrain->pHeadLight); // Make sure we turn off the lights before powering down
-        Light_PowerOffSequence(pVCI->pPowertrain->pTailLight);
-        
-//is we have dual motor configuration, send a command to stop the slaver motor
-//and wait until motor stops to run.
-#if (SUPPORT_SLAVE_ON_IOT == 1 && GNR_IOT == 1)|| (GNR_MASTER == 1 && GNR_IOT == 0)
-        MDI_StopMotor(pVCI->pPowertrain->pMDI,M2);
-        while (MDI_GetSTMState(pVCI->pPowertrain->pMDI,M2) != M_IDLE)
+
+        //is we have dual motor configuration, send a command to stop the slaver motor
+        //and wait until motor stops to run.
+        if ((SUPPORT_SLAVE_ON_IOT == 1 && GNR_IOT == 1)|| (VcAutodeter_GetGnrState() == true && GNR_IOT == 0))
         {
-            osDelay(STOP_LOOPTICKS);
+            MDI_StopMotor(pVCI->pPowertrain->pMDI,M2);
+            while (MDI_GetSTMState(pVCI->pPowertrain->pMDI,M2) != M_IDLE)
+            {
+                osDelay(STOP_LOOPTICKS);
+            }
         }
-        // TO DO
-        // a sequence is needed to TURN OFF the slave. If not, the slave continues sending messages on CAN and prevents Master to turn off
-        // reporrted bug on the Jira: https://tristarmulticopters.atlassian.net/browse/EGNR-2531
-#endif
+        
         //set the going off flag to indicate the system is going turn off.
         PWREN_SetGoingOffFlag(pVCI->pPowertrain->pPWREN);
         

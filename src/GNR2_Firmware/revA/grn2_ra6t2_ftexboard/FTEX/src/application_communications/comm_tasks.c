@@ -88,12 +88,16 @@ static void UpdateObjectDictionnary(void *p_arg)
     hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
     hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
     
-    #if GNR_MASTER
+    //only master can access theses parameters.
+    if (VcAutodeter_GetGnrState())
+    {
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
         hErrorState[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleCurrentFaults(pVCI);
-    #else
+    }
+    else
+    {
         hErrorState[VEHICLE_PARAM] = 0x0000;
-    #endif
+    }
         hFwVersion[VEHICLE_PARAM]= (uint16_t) CanVehiInterface_GetVehicleFwVersion();
     
     // Get Serial Number
@@ -141,11 +145,9 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint16_t hMotorCurrentFaults    = MCInterface_GetCurrentFaults(&MCInterface[0]);
     #endif
     
-    #if !GNR_MASTER
     int16_t hMotor2TorqRef      = 0;
     uint8_t bMotor2Start        = 0;
     uint8_t bMotor2FaultAck     = 0;
-    #endif
     
     // Set Bike Parameters
     //CanIot_SetPAS(pVCI,bPAS); this doesn't make sense.
@@ -201,88 +203,93 @@ static void UpdateObjectDictionnary(void *p_arg)
 
     if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
     {
-        #if GNR_MASTER
-        /* Check if no heartbeat was missed from slave  */
-        if (!VCFaultManagment_MasterSlaveCommunicationLost())
+        if (VcAutodeter_GetGnrState())
         {
-            /* Update M1 feedback data to CANOpen object dictionnary */
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &hMotorOccuredFaults, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &hMotorCurrentFaults, sizeof(uint16_t));
-
-            /* Update virtual motor 2 structure used by vehicle control layer */
-            SlaveMCInterface_UpdateFeedback(&SlaveM2);
-            
-            //clear heart beat flag error is was not cleared yet.
-            if (hCommErrors & MASTER_SLAVE_NO_HEARTBEAT)
+            /* Check if no heartbeat was missed from slave  */
+            if (!VCFaultManagment_MasterSlaveCommunicationLost())
             {
-                // Slave is present, clear vehicle communication fault
-                hCommErrors &= ~MASTER_SLAVE_NO_HEARTBEAT;
+                /* Update M1 feedback data to CANOpen object dictionnary */
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &hMotorOccuredFaults, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &hMotorCurrentFaults, sizeof(uint16_t));
+
+                /* Update virtual motor 2 structure used by vehicle control layer */
+                SlaveMCInterface_UpdateFeedback(&SlaveM2);
+            
+                //clear heart beat flag error is was not cleared yet.
+                if (hCommErrors & MASTER_SLAVE_NO_HEARTBEAT)
+                {
+                    // Slave is present, clear vehicle communication fault
+                    hCommErrors &= ~MASTER_SLAVE_NO_HEARTBEAT;
+                }
+            }
+            else
+            {
+                //verify if the error was already set or not.
+                //if yes, doesn't set it again.
+                if (!(hCommErrors & MASTER_SLAVE_NO_HEARTBEAT))
+                {
+                    // Slave not present anymore, trigger vehicle communication fault
+                    hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
+                    VCSTM_FaultProcessing(VCInterfaceHandle.pStateMachine, VC_SLAVE_COMM_ERROR, 0);
+                }
             }
         }
         else
         {
-            //verify if the error was already set or not.
-            //if yes, doesn't set it again.
-            if (!(hCommErrors & MASTER_SLAVE_NO_HEARTBEAT))
+            /* Check if no heartbeat was missed from master  */
+            if (!VCFaultManagment_MasterSlaveCommunicationLost())
             {
-                // Slave not present anymore, trigger vehicle communication fault
-                hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
-                VCSTM_FaultProcessing(VCInterfaceHandle.pStateMachine, VC_SLAVE_COMM_ERROR, 0);
-            }
-        }
-        #else
-        /* Check if no heartbeat was missed from master  */
-        if (!VCFaultManagment_MasterSlaveCommunicationLost())
-        {
-            /* Update M2 feedback data to CANOpen object dictionnary */
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2)), pNode, &hBusVoltage, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M2)), pNode, &hMotorTemp, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2)), pNode, &hHeatsinkTemp, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &hMotorState, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &hMotorOccuredFaults, sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &hMotorCurrentFaults, sizeof(uint16_t));
+                /* Update M2 feedback data to CANOpen object dictionnary */
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M2)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2)), pNode, &hBusVoltage, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M2)), pNode, &hMotorTemp, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2)), pNode, &hHeatsinkTemp, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &hMotorState, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &hMotorOccuredFaults, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &hMotorCurrentFaults, sizeof(uint16_t));
 
-            /* Read commands in CANOpen object dictionnary received by RPDO */
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, sizeof(uint16_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
-
-            /* Execute received commands using motor control api */
-            MCInterface_ExecTorqueRamp(&MCInterface[0], hMotor2TorqRef);
-            bMotor2Start ? MCInterface_StartMotor(&MCInterface[0]) : MCInterface_StopMotor(&MCInterface[0]);
-            if (bMotor2FaultAck)
-            {
-                // Reset fault ack after reception
-                bMotor2FaultAck = 0;
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
-                MCInterface_FaultAcknowledged(&MCInterface[0]);
-            }
+                /* Read commands in CANOpen object dictionnary received by RPDO */
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, sizeof(uint16_t));
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, sizeof(uint8_t));
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
+                
+                /* Execute received commands using motor control api */
+                MCInterface_ExecTorqueRamp(&MCInterface[0], hMotor2TorqRef);
+                bMotor2Start ? MCInterface_StartMotor(&MCInterface[0]) : MCInterface_StopMotor(&MCInterface[0]);
+                if (bMotor2FaultAck)
+                {
+                    // Reset fault ack after reception
+                    bMotor2FaultAck = 0;
+                    //critical section
+                    COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
+                    //end critical section
+                    MCInterface_FaultAcknowledged(&MCInterface[0]);
+                }
             
-            //clear heart beat flag error is was not cleared yet.
-            if (hCommErrors & MASTER_SLAVE_NO_HEARTBEAT)
+                //clear heart beat flag error is was not cleared yet.
+                if (hCommErrors & MASTER_SLAVE_NO_HEARTBEAT)
+                {
+                    // Slave is present, clear vehicle communication fault
+                    hCommErrors &= ~MASTER_SLAVE_NO_HEARTBEAT;
+                }
+            }
+            else
             {
-                // Slave is present, clear vehicle communication fault
-                hCommErrors &= ~MASTER_SLAVE_NO_HEARTBEAT;
+                //verify if the error was already set or not.
+                //if yes, doesn't set it again.
+                if (!(hCommErrors & MASTER_SLAVE_NO_HEARTBEAT))
+                {
+                    // Master not present anymore, stop motor
+                    hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
+                    MCInterface_StopMotor(&MCInterface[0]);
+                }
             }
         }
-        else
-        {
-            //verify if the error was already set or not.
-            //if yes, doesn't set it again.
-            if (!(hCommErrors & MASTER_SLAVE_NO_HEARTBEAT))
-            {
-                // Master not present anymore, stop motor
-                hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
-                MCInterface_StopMotor(&MCInterface[0]);
-            }
-        }
-        #endif
     }
     #endif
 
@@ -350,12 +357,13 @@ static void UpdateObjectDictionnary(void *p_arg)
 
             
             // If the whele diameter in the OBJ dict and vehicle don't match, update the on in the vehicle
-            #if GNR_MASTER
-            if(hWheelDiameter[VEHICLE_PARAM] != hWheelDiameter[CAN_PARAM])
+            if (VcAutodeter_GetGnrState())
             {
-                CanVehiInterface_UpdateWheelDiameter(hWheelDiameter[CAN_PARAM]);            
+                if(hWheelDiameter[VEHICLE_PARAM] != hWheelDiameter[CAN_PARAM])
+                {
+                    CanVehiInterface_UpdateWheelDiameter(hWheelDiameter[CAN_PARAM]);            
+                }
             }
-            #endif
             
             // If the light status in OBJ dict and vehicle don't match, update the one in the vehicle
             if(hFrontLightState[VEHICLE_PARAM] != hFrontLightState[CAN_PARAM])
@@ -428,10 +436,11 @@ static void UpdateObjectDictionnary(void *p_arg)
             PWREN_CheckFirmwareUpdateCommand(VCInterfaceHandle.pPowertrain->pPWREN, FirmwareUpdateCommand);
             
             //only master can send msgs to IOT module.
-            #if GNR_MASTER && GNR_IOT
-            //fucntion used to inform IOT module that the GNR if on.
-            PWREN_SetIotSystemIsOn(pNode, VCInterfaceHandle.pPowertrain->pPWREN);
-            #endif
+            if (VcAutodeter_GetGnrState() && GNR_IOT)
+            {
+                //fucntion used to inform IOT module that the GNR if on.
+                PWREN_SetIotSystemIsOn(pNode, VCInterfaceHandle.pPowertrain->pPWREN);
+            }
            
         }
         else
@@ -584,6 +593,10 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 */
 void CANOpenTask (void)
 {
+
+    //setup can OD and node ID.
+    CO_Gnr2OdSetupt(VcAutodeter_GetGnrState());
+
     // Initialize canbus hardware layer and the CANopen stack
 	CONodeInit(&CONodeGNR, &GnR2ModuleSpec);
 
@@ -601,6 +614,7 @@ void CANOpenTask (void)
 	ticks = COTmrGetTicks(&CONodeGNR.Tmr, 25U, (uint32_t)CO_TMR_UNIT_1MS);
 	COTmrCreate(&CONodeGNR.Tmr, 0, ticks, UpdateObjectDictionnary, &CONodeGNR);
 }
+
 
 #ifdef CANLOGGERTASK
 
