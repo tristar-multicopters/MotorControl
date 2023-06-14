@@ -510,31 +510,58 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
     switch(aError)
     {
         case NO_ERROR:
-           ConvertedError = APT_NO_ERROR; 
-          break;;
-        case 0x02:
-            ConvertedError = APT_CONTROL_PROTEC;
-          break;
+            ConvertedError = APT_NO_ERROR; 
+            break;
+        case THROTTLE_STUCK:
+            ConvertedError = APT_THROTTLE;
+            break;
+        case OV_PROTECTION:
+            ConvertedError = APT_OV_PROTECTION;
+            break;
+        case UV_PROTECTION:
+            ConvertedError = APT_UV_PROTECTION;
+            break;
+        case OT_PROTECTION:
+            ConvertedError = APT_OT_PROTECTION;
+            break;
+        case UT_PROTECTION:
+            ConvertedError = APT_UT_PROTECTION;
+            break;
         case IOT_COMM_ERROR: // Both theses errors transflat eto a generic comm error
         case DUAL_COMM_ERROR:    
             ConvertedError = APT_COMM_ERROR;
-          break;      
+            break;      
         case MOTOR_PHASE_ERROR:
             ConvertedError = APT_THREE_PHASE_ERROR;
-          break;
+            break;
         case MOTOR_HALL_ERROR:
             ConvertedError = APT_HALL_ERROR;
-          break;
+            break;
+        case OVER_CURRENT:
+            ConvertedError = APT_OVER_CURRENT;
+            break;         
         case BATT_LOW:
             ConvertedError = APT_BAT_LOW;
-          break;         
-        case UNMAPPED_ERROR: // Errors that APT has but that we currently don't flag            
+            break;         
+        case PAS_BOOT_ERROR:
+            ConvertedError = APT_PAS_BOOT_ERR;
+            break;         
+        case CONTROLLER_ERROR:
+            ConvertedError = APT_CONTROLLER_ERR;
+            break;         
+        case BRAKE_ERROR:
             ConvertedError = APT_BRAKE_ERROR;
+            break;         
+        case MOTOR_OT_PROTECT:
+            ConvertedError = APT_MOTOR_OT_PROTECT;
+            break;         
+        case UNMAPPED_ERROR: // Errors that APT has but that we currently don't flag            
             ConvertedError = APT_TURN_ERROR;
-          break;        
+            ConvertedError = APT_CONTROL_PROTEC;
+            break;        
         default: // If it's not a standard APT error just consider it a custom error or a debugging error
             
-            if(aError > 0x9F && aError != 0x30) // For custom errors we need a value less or equal to 0x9F but that isn't 0x30,  
+            if(aError < 0x9F && aError != 0x30) // For custom errors we need a value less or equal to 0x9F but that isn't 0x30,  
             {
                 ConvertedError = aError;
             }

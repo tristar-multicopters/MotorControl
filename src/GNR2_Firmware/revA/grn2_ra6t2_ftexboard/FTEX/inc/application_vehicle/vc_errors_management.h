@@ -26,7 +26,7 @@ typedef enum
     IOT_COMM_ERROR    = 0x07, // Controller loses communication with IOT module
     DUAL_COMM_ERROR   = 0x08, // Master lost comm with slave or slave lost comm with master
     OVER_CURRENT      = 0x09, // Over Current protection - HW & SW
-    NTC_ERR           = 0x0A, // NTC Disconnected or Freezed
+    UT_PROTECTION     = 0x0A, // NTC Disconnected or Freezed
     BATT_LOW          = 0x0B, // Battery is low
     PAS_BOOT_ERROR    = 0x0C, // Peddle Assist error
     CONTROLLER_ERROR  = 0x0D, // Controller in unrecoverable state

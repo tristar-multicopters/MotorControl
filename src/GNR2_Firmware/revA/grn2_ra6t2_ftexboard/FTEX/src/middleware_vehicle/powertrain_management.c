@@ -45,7 +45,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     // Initilaize peripherals
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
     Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
-    BRK_Init(pHandle->pBrake);
+    BRK_Init(pHandle->pBrake,&brakeDelay);
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
     BatMonitor_Init(pHandle->pBatMonitorHandle, pHandle->pMDI->pMCI);
@@ -712,7 +712,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         }
         if ((bFaultNow & MC_NTCERR)!= MC_NO_ERROR)
         {
-            VC_Errors_RaiseError(NTC_ERR);
+            VC_Errors_RaiseError(UT_PROTECTION);
         }
     }
     else            // Try to clear occured error if Motor does not have any error
@@ -806,7 +806,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             if (hM1FaultOccurredCode & MC_NTCERR)
             {
                 hM1FaultOccurredCode &= ~MC_NTCERR;
-                VC_Errors_ClearError(NTC_ERR);
+                VC_Errors_ClearError(UT_PROTECTION);
             }
             
             if ((hM1FaultOccurredCode & MC_FOC_DURATION) != 0)
@@ -904,7 +904,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             if (hM2FaultOccurredCode & MC_NTCERR)
             {
                 hM2FaultOccurredCode &= ~MC_NTCERR;
-                VC_Errors_ClearError(NTC_ERR);
+                VC_Errors_ClearError(UT_PROTECTION);
             }
             
             if ((hM2FaultOccurredCode & MC_FOC_DURATION) != 0)
