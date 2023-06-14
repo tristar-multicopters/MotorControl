@@ -23,6 +23,7 @@ extern osThreadId_t PowerOffSequence_handle;
 */
 extern bool COPGetPdoReceivedFlag(void);
 
+static uint8_t iotTimeoutCount = 0;
 static bool iotDisconnected = false;
 static PWREN_PowerOffSequencyState_t PWREN_PowerOffSequencyState = PWREN_IDLE;
 
@@ -709,14 +710,23 @@ void GnrOn_CallbackSDODownloadFinish(CO_CSDO *csdo, uint16_t index, uint8_t sub,
     UNUSED_PARAMETER(csdo);
     UNUSED_PARAMETER(index);
     UNUSED_PARAMETER(sub);
-    if(code != 0)
+    if((code != 0) && !iotDisconnected) // Make sure disconnect hasn't already flagged before starting flag process
     {
-        iotDisconnected = true;
-        VC_Errors_RaiseError(IOT_COMM_ERROR);
+        iotTimeoutCount++;
+        if(iotTimeoutCount >= IOT_RESPONSE_FAIL_DISCONNECT_LIMIT)
+        {
+            iotDisconnected = true;
+            VC_Errors_RaiseError(IOT_COMM_ERROR);
+        }            
     }
-    else if(iotDisconnected)
+    else 
     {
-        VC_Errors_ClearError(IOT_COMM_ERROR);
+        iotTimeoutCount = 0;
+        if((code == 0) && iotDisconnected)
+        {
+            iotDisconnected = false;
+            VC_Errors_ClearError(IOT_COMM_ERROR);
+        }
     }
 }
 

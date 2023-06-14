@@ -51,6 +51,9 @@
 //detected at the beginning.
 #define MASTERNOTDETECTED_TIMEOUT_500MS 1000
 
+//define how many times in a row a failed response is considered a disconnect.
+#define IOT_RESPONSE_FAIL_DISCONNECT_LIMIT 3
+
 typedef struct
 {          
     bool bInitalized;       /* Tells use if the PWREN struct was initialized or not.*/
