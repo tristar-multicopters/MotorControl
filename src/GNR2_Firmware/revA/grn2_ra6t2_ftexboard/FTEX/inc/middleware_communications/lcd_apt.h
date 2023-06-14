@@ -56,8 +56,19 @@ typedef enum
     APT_THREE_PHASE_ERROR  = 0x03, // Check three-phase power line connection
     APT_BAT_LOW            = 0x04, // Battery low
     APT_BRAKE_ERROR        = 0x05, // Check the brake connection
-    APT_TURN_ERROR         = 0x06, // Check turn to connect
+    APT_THROTTLE           = 0x06, // Throttle is stuck
     APT_HALL_ERROR         = 0x07, // Check the hall connection
+    APT_UV_PROTECTION      = 0x08, // Undervoltage
+    APT_OV_PROTECTION      = 0x09, // Overvoltage
+    APT_OT_PROTECTION      = 0x0A, // Controller overtemperature
+    APT_OVER_CURRENT       = 0x0B, // Controller over current
+    APT_UT_PROTECTION      = 0x0C, // under temperature
+    APT_PAS_BOOT_ERR       = 0x0D, // PAS anamoly
+    APT_CONTROLLER_ERR     = 0x0E, // Controller anamoly, unknown state
+    APT_MOTOR_OT_PROTECT   = 0x0F, // Motor over temperature
+    APT_TURN_ERROR         = 0x10, // Check turn to connect
+    APT_DUAL_COMM_ERROR    = 0x11, // Check the cable connection
+
     // Custom FTEX errors
     // From 0x08 to 0x9F EXCLUDING 0x30
 
