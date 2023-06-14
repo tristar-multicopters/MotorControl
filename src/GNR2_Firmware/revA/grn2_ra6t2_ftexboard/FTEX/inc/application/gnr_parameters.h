@@ -16,6 +16,7 @@
 #define VEHICLE_VELEC_CITI_500W       10 
 #define VEHICLE_A2_350W               11
 #define VEHICLE_UTK_350W              12
+#define VEHICLE_A2_500W               13
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 
@@ -62,7 +63,7 @@
 
 
 
-#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_A2_500W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                                                                                

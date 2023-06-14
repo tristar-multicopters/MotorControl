@@ -59,6 +59,10 @@
 
 #include "pmsm_motor_parameters_utk_350w.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_A2_500W 
+
+#include "pmsm_motor_parameters_a2_500w.h"
+
 #endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/
