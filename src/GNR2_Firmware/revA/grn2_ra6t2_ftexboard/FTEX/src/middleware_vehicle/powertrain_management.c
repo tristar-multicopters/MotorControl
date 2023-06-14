@@ -735,7 +735,6 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                 {// If the timer has timeout, clear the OC fault
                     hM1FaultOccurredCode &= ~MC_BREAK_IN;
                     hM1FaultOccurredCode &= ~MC_OCSP;
-                    hM1FaultOccurredCode &= ~MC_FOC_DURATION;
                     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
                     VC_Errors_ClearError(OVER_CURRENT);     
                 }
@@ -818,6 +817,11 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             {
                 hM1FaultOccurredCode &= ~MC_NTCERR;
                 VC_Errors_ClearError(UT_PROTECTION);
+            }
+            
+            if ((hM1FaultOccurredCode & MC_FOC_DURATION) != 0)
+            {
+                hM1FaultOccurredCode &= ~MC_FOC_DURATION;
             }
 
         }
@@ -912,7 +916,11 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                 hM2FaultOccurredCode &= ~MC_NTCERR;
                 VC_Errors_ClearError(UT_PROTECTION);
             }
-
+            
+            if ((hM2FaultOccurredCode & MC_FOC_DURATION) != 0)
+            {
+                hM2FaultOccurredCode &= ~MC_FOC_DURATION;
+            }
         }
     } // End of if (!bFaultNow)
     
