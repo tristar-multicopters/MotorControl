@@ -214,10 +214,29 @@ int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
 int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    // todo: implementation
+    int32_t wAux;
     
-    // return dummy value so compiler doesn't complain
-    return -1;
+    /*
+        Compute speed value (between -32768 and 32767)
+    */
+    wAux = pHandle->hAvThrottleValue - pHandle->hParameters.hOffsetSpeed;
+    if (wAux < 0)
+    {
+        wAux = 0;
+    }
+    
+    wAux = (int32_t)(pHandle->hParameters.bSlopeSpeed * wAux);
+    wAux /= pHandle->hParameters.bDivisorSpeed;
+    
+    if (wAux > INT16_MAX)
+    {    
+        wAux = INT16_MAX;
+    }    
+    else if (wAux < INT16_MIN)
+    {    
+        wAux = INT16_MIN;
+    }        
+    return (int16_t) wAux;
 }
 
 /**

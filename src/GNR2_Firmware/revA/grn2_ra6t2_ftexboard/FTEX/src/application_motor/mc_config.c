@@ -28,19 +28,19 @@ MotorPowerQDHandle_t *pPQD_MotorPowMeasM1 = &PQDMotorPowMeasM1;
   */
 PIDHandle_t PIDSpeedHandleM1 =
 {
-    .hDefKpGain          = (int16_t)PID_SPEED_KP_DEFAULT,
-    .hDefKiGain          = (int16_t)PID_SPEED_KI_DEFAULT,
-    .wUpperIntegralLimit = (int32_t)SPD_CTRL_MAX_TORQUE * (int32_t)SP_KIDIV,
-    .wLowerIntegralLimit = -(int32_t)SPD_CTRL_MAX_TORQUE * (int32_t)SP_KIDIV,
-    .hUpperOutputLimit       = (int16_t)SPD_CTRL_MAX_TORQUE,
-    .hLowerOutputLimit       = -(int16_t)SPD_CTRL_MAX_TORQUE,
-    .hKpDivisor          = (uint16_t)SP_KPDIV,
-    .hKiDivisor          = (uint16_t)SP_KIDIV,
-    .hKpDivisorPOW2      = (uint16_t)SP_KPDIV_LOG,
-    .hKiDivisorPOW2      = (uint16_t)SP_KIDIV_LOG,
-    .hDefKdGain           = 0x0000U,
-    .hKdDivisor           = 0x0000U,
-    .hKdDivisorPOW2       = 0x0000U,
+  .hDefKpGain           = (int16_t)PID_SPEED_KP_DEFAULT,
+  .hDefKiGain           = (int16_t)PID_SPEED_KI_DEFAULT,
+  .wUpperIntegralLimit  = (int32_t)NOMINAL_TORQUE,
+  .wLowerIntegralLimit  = 0, //-(int32_t)SPD_CTRL_MAX_TORQUE * (int32_t)SP_KIDIV,
+  .hUpperOutputLimit    = (int16_t)NOMINAL_TORQUE,
+  .hLowerOutputLimit    = 0, // -(int16_t)SPD_CTRL_MAX_TORQUE,
+  .hKpDivisor           = (uint16_t)SP_KPDIV,
+  .hKiDivisor           = (uint16_t)SP_KIDIV,
+  .hKpDivisorPOW2       = (uint16_t)SP_KPDIV_LOG,
+  .hKiDivisorPOW2       = (uint16_t)SP_KIDIV_LOG,
+  .hDefKdGain           = 0x0000U,
+  .hKdDivisor           = 0x0000U,
+  .hKdDivisorPOW2       = 0x0000U,
 };
 
 /**
@@ -215,8 +215,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     .hBatteryLowVoltage =           (uint16_t)(LOW_BATTERY_VOLTAGE_THRESHOLD), 
     .hMaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
     .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-    .hMaxAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
-    .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
+    .hMaxAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
+    .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
     .hMaxPositiveTorque =           (int16_t)NOMINAL_TORQUE,
     .hMinNegativeTorque =           -(int16_t)NOMINAL_TORQUE,
     .hMaxPositivePower =            (int16_t)MAX_APPLICATION_POSITIVE_POWER,

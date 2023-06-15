@@ -30,7 +30,7 @@
 #define THROTTLE_OFFSET_ADC2THROTTLE          11800    // Offset for ADC to throttle linear transformation
 #define THROTTLE_MAX_ADC2THROTTLE             55800    // Maximum value reachable by the throttle adc value
 
-#define THROTTLE_OFFSET_THROTTLE2TORQUE           1    // Offset for throttle to torque linear transformation
+#define THROTTLE_OFFSET_THROTTLE2TORQUE           1    // Offset for throttle to torque linear transformation  */
 
 #define THROTTLE_DETECTION_THRESHOLD           1000    // Throttle is considered pressed once it passed this threshold
 
@@ -39,7 +39,6 @@
 
 #define THROTTLE_SPEED_DECREASING_RANGE         200    // Number of RPM before the desired speed at which we should start removing power
                                                        // Should be aroud 200 for light bikes and 55 for heavy bikes
-
 /***************** PEDAL TORQUE SENSOR PARAMETERS  ******************************/
 
 #define PTS_FILTER_ALPHA              2.27F    // Butterworth alpha coefficient pedal torque sensor filtering

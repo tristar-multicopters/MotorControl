@@ -116,8 +116,8 @@
 #define SPEED_LOOP_FREQUENCY_HZ       1000 /*!<Execution rate of speed
                                                       regulation loop (Hz) */
 
-#define PID_SPEED_KP_DEFAULT          100           /* Default gain speed control loop */
-#define PID_SPEED_KI_DEFAULT          10            /* Default gain speed control loop */
+#define PID_SPEED_KP_DEFAULT          400           /* Default gain speed control loop */
+#define PID_SPEED_KI_DEFAULT          40            /* Default gain speed control loop */
 #define PID_SPEED_KD_DEFAULT          0             /* Default gain speed control loop */
 /* Speed PID parameter dividers */
 #define SP_KPDIV                      256           /* Speed control gain divider, to allow decimal value */
@@ -158,8 +158,8 @@
 /*Torque ramp settings */
 #define DEFAULT_TORQUE_SLOPE_UP        2700        /* Slope in cNm per second */
 #define DEFAULT_TORQUE_SLOPE_DOWN      5000        /* Slope in cNm per second */
-#define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
-#define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */
+#define DEFAULT_SPEED_SLOPE_UP         2000         /* Slope in #SPEED_UNIT per second */
+#define DEFAULT_SPEED_SLOPE_DOWN       4000         /* Slope in #SPEED_UNIT per second */
 
 /* Dynamic maximum power foldback settings */
 #define ENABLE_MAX_POWER_LIMIT          false        /* to enable or disable the foldback */

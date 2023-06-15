@@ -29,6 +29,7 @@ struct {
     bool bStartM1;
     bool bStartM2;
     bool FaultAck;
+    STCModality_t Mode;
 } sDebugVariables;
 #endif
 
@@ -125,7 +126,6 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         // Update Light if Blinking
         Light_Blink(pVCI->pPowertrain->pTailLight);
         
-        
         #if ENABLE_VC_DAC_DEBUGGING
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);
         R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hAvADCValue);
@@ -154,6 +154,7 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
     sDebugVariables.hIqdRef.q = 0;
     sDebugVariables.hIqdRef.d = 0;
     sDebugVariables.hSpeedRef = 0;
+    sDebugVariables.Mode = STC_TORQUE_MODE;
     #else
     uint32_t wCounter;
     uint16_t hVehicleFault;
@@ -167,11 +168,18 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
     {    
         #if SWD_CONTROL_ENABLE
         
-        /* for directly input Torque */
-        MDI_ExecTorqueRamp(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hTorqRef);
-        MDI_ExecTorqueRamp(pVCI->pPowertrain->pMDI, M2, sDebugVariables.hTorqRef);
+        if (sDebugVariables.Mode == STC_TORQUE_MODE)
+        {
+            MDI_ExecTorqueRamp(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hTorqRef);
+            MDI_ExecTorqueRamp(pVCI->pPowertrain->pMDI, M2, sDebugVariables.hTorqRef);
+        }
+        else
+        {
+            MDI_ExecSpeedRamp(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hSpeedRef);
+            MDI_ExecSpeedRamp(pVCI->pPowertrain->pMDI, M2, sDebugVariables.hSpeedRef);
+        }
         
-        /* for directly inout Iq and Id */
+        /* To directly control Iq and Id */
         //MDI_SetCurrentReferences(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hIqdRef);
         
         sDebugVariables.bStartM1 ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M1) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M1);

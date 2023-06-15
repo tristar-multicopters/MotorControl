@@ -95,7 +95,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     
     MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
     int16_t hTorqueRef = 0; 
-    int32_t hSpeedRef = 0;
+    int16_t hSpeedRef = 0;
     int16_t hAux = 0;
 
     if (pHandle->pMS->bMSEnable)
@@ -246,15 +246,17 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         {
             hSpeedRef = 0;
         }
-
-        if(pHandle->sParameters.bMode == SINGLE_MOTOR)
+        else
         {
-            pHandle->aSpeed[pHandle->bMainMotor] = (int16_t) hSpeedRef;
-        }
-        if(pHandle->sParameters.bMode == DUAL_MOTOR)
-        {
-            pHandle->aSpeed[M1] = (int16_t) hSpeedRef;
-            pHandle->aSpeed[M2] = (int16_t) hSpeedRef;
+            if(pHandle->sParameters.bMode == SINGLE_MOTOR)
+            {
+                pHandle->aSpeed[pHandle->bMainMotor] = (int16_t) hSpeedRef;
+            }
+            if(pHandle->sParameters.bMode == DUAL_MOTOR)
+            {
+                pHandle->aSpeed[M1] = (int16_t) hSpeedRef;
+                pHandle->aSpeed[M2] = (int16_t) hSpeedRef;
+            }
         }
     }
 }

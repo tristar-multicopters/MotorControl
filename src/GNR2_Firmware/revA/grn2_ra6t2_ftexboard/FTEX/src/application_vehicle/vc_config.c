@@ -16,6 +16,17 @@
 #include "user_config_task.h"
 #pragma clang diagnostic pop
 
+
+/*  these are just temporal definitiions needed by speed control te be tested with throttle
+    since we have no clear plan for using speed control with trottle at the moment,
+    and to prevent any exception (dividing by zero) or error, the definitions kept here alive
+    until someone update the code with clear and clean revise  */
+
+#define THROTTLE_OFFSET_THROTTLE2SPEED         1 //400  is tested value for R48 // Offset for throttle to speed linear transformation 
+#define THROTTLE_SLOPE_THROTTLE2SPEED          1 //20   is tested value for R48 // Slope for throttle to speed linear transformation
+#define THROTTLE_DIVISOR_THROTTLE2SPEED        1 //140  is tested value for R48 // Divisor for throttle to speed linear transformation
+/* end of temperory defined values */
+
 MultipleDriveInterfaceHandle_t MDInterfaceHandle =
 {
     0
@@ -240,6 +251,10 @@ ThrottleHandle_t ThrottleHandle =
         .hMaxThrottle = THROTTLE_MAX_ADC2THROTTLE,
         
         .hOffsetTorque  = THROTTLE_OFFSET_THROTTLE2TORQUE,
+        
+        .hOffsetSpeed  = THROTTLE_OFFSET_THROTTLE2SPEED,
+        .bSlopeSpeed   = THROTTLE_SLOPE_THROTTLE2SPEED,
+        .bDivisorSpeed = THROTTLE_DIVISOR_THROTTLE2SPEED,
 
         .hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
         
