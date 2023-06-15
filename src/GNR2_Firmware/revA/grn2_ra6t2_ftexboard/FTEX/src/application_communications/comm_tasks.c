@@ -436,12 +436,14 @@ static void UpdateObjectDictionnary(void *p_arg)
             PWREN_CheckFirmwareUpdateCommand(VCInterfaceHandle.pPowertrain->pPWREN, FirmwareUpdateCommand);
             
             //only master can send msgs to IOT module.
-            if (VcAutodeter_GetGnrState() && GNR_IOT)
+            //but not all bikes have IOT, so a third check if necessary
+            //using the function Comm_CheckIotUsage. This fucntion return 
+            //true if the selected model must have this IOT functionality.
+            if (VcAutodeter_GetGnrState() && GNR_IOT && (Comm_CheckIotUsage()))
             {
                 //fucntion used to inform IOT module that the GNR if on.
                 PWREN_SetIotSystemIsOn(pNode, VCInterfaceHandle.pPowertrain->pPWREN);
             }
-           
         }
         else
         {
@@ -613,6 +615,25 @@ void CANOpenTask (void)
     uint32_t ticks;
 	ticks = COTmrGetTicks(&CONodeGNR.Tmr, 25U, (uint32_t)CO_TMR_UNIT_1MS);
 	COTmrCreate(&CONodeGNR.Tmr, 0, ticks, UpdateObjectDictionnary, &CONodeGNR);
+}
+
+/**
+  Function to decide if some IOT functions must be used or
+  not to some bike models.
+*/
+bool Comm_CheckIotUsage(void)
+{
+    //if any of the vehicle tested below
+    //return false to indicate that vehicle doesn't need
+    //a specific functionality from IOT setup.
+    if ((VEHICLE_SELECTION == VEHICLE_NIDEC))
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }   
 }
 
 

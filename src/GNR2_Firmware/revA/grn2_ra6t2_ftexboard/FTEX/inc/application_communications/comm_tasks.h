@@ -37,4 +37,11 @@ void CANLoggerTask (void * pvParameter);
 
 void Comm_BootUp(void);
 
+/**
+  * @briefFunction to decide if some IOT functions must be used or
+  * not to some bike models.
+  * @retval none
+*/
+bool Comm_CheckIotUsage(void);
+
 #endif /* __COMM_TASKS_H */
