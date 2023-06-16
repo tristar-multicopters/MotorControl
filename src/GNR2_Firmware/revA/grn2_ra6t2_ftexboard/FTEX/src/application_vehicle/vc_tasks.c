@@ -37,9 +37,9 @@ struct {
 /************* DEFINES ****************/
 
 #define DELAY_AFTER_BOOTUP                   500    /* 500 RTOS ticks delay to prevent starting motors just after system bootup */
-#define TASK_VCFASTLOOP_SAMPLE_TIME_TICK     10     /* VC_FastLoop execute every 10 ticks */
-#define TASK_VCSTM_SAMPLE_TIME_TICK          10     /* VC_StateMachine execute every 10 ticks */
-#define TASK_VCSLOWLOOP_SAMPLE_TIME_TICK     50     /* VC_SlowLoop execute every (50*10*0.5 ticks)= 250ms called in the MedFreq Task*/
+#define TASK_VCFASTLOOP_SAMPLE_TIME_TICK     10     /* VC_FastLoop execute every (10*0.5us ticks) = 5ms */
+#define TASK_VCSTM_SAMPLE_TIME_TICK          10     /* VC_StateMachine execute every (10*0.5us ticks) = 5ms */
+#define TASK_VCSLOWLOOP_SAMPLE_TIME_TICK     50     /* VC_SlowLoop execute every (50*10*0.5us ticks)= 250ms called in the MedFreq Task*/
 #define RETURN_TO_STANDBY_LOOPTICKS          0      // Max number of ticks to stay in run while stop conditions are met
 #define START_MOTORS_LOOPTICKS               2      // Max number of ticks to stay in standby while start conditions are met
 #define START_LOOPTICKS                      500    // Max number of ticks to stay in start state

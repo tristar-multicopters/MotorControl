@@ -107,7 +107,7 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
         { 
             SafeStartCounter ++; // Increase the counter
 
-            if(SafeStartCounter >= 20) // If we haven't receive a throttle for the 20th time in a row consider the safe start done
+            if(SafeStartCounter >= SAFE_THROTTLE_COUNT_100MS) // If we haven't receive a throttle for the 20th time in a row consider the safe start done
             {
                 pHandle->SafeStart = true;
                 VC_Errors_ClearError(THROTTLE_STUCK); // Clear this error in case it was falsly flagged as stuck (user kept throttle at max on boot)

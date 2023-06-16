@@ -16,7 +16,10 @@
 
 // ============================= Defines ================================= //
 
-#define SCOUNT           (uint16_t)1000 /* Number of read cycle for brake check stuck */
+#define SAFE_BRAKE_COUNT_5000MS           (uint16_t)2000 /* Brake is checked in many places. 
+                                                  It's called roughly 103 times every 255ms
+                                                  Waiting 5 seconds to check the error
+                                                  this will allow the user time to start riding */
 
 /**
   * @brief Brake_Handle_t structure used for brake sensing
