@@ -21,7 +21,8 @@
 
 // ============================= Defines ================================= //
 
-#define SCOUNT           (uint16_t)1000 /* Number of read cycle for PTS check stuck */
+#define SAFE_TORQUE_COUNT_5000MS           (uint16_t)1000 /* Called every 5ms, 1000*5ms = 5s
+                                                          stabilize time for the torque sensor */
 
 #define PTS_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
                                  // If factor == 100 then 1.25f would make a 125/100 fraction 

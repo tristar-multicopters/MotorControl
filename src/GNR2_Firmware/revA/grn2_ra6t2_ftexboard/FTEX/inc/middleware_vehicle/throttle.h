@@ -22,6 +22,7 @@
 
 #define THROTTLE_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
                                       // If factor == 100 then 1.25f would make a 125/100 fraction 
+#define SAFE_THROTTLE_COUNT_100MS 20 // Called every 5ms, 20*5 = 100ms, which is throttle settle time
 
 /**
   * @brief ThrottleParameters_t structure used for storing throttle user parameters

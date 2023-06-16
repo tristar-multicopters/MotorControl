@@ -45,31 +45,33 @@ bool BRK_IsPressed(BRK_Handle_t * pHandle)
     bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
     pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
 
-    if(!pHandle->bIsPressed){
-        hSafeCounter++;
-        /* Launch Safe Start after a delay counter */
-        if (hSafeCounter >= SCOUNT) 
-        {   
-            pHandle->bSafeStart = true;
-            /* Clear this error in case it was falsly flagged as stuck (user brakes held at max on boot) */
-            VC_Errors_ClearError(BRAKE_ERROR); // Temperory using Throttle stuck as error
-            Delay_Reset(pHandle->pBrakeStuckDelay);
-        }
-    }
-    /* Pedal Torque Sensor is detected */
-    else     
-    {
-        hSafeCounter = 0;
-        if (!brakeStuck)
-        {
-            /* Increase the counter for the error delay and check if the delay has been reached */
-            if (Delay_Update(pHandle->pBrakeStuckDelay) == true) 
-            {
-                VC_Errors_RaiseError(BRAKE_ERROR); // Temperory using Throttle stuck as error
-                brakeStuck = true;
+    if(!pHandle->bSafeStart){
+        if(!pHandle->bIsPressed){
+            hSafeCounter++;
+            /* Launch Safe Start after a delay counter */
+            if (hSafeCounter >= SAFE_BRAKE_COUNT_5000MS) 
+            {   
+                pHandle->bSafeStart = true;
+                /* Clear this error in case it was falsly flagged as stuck (user brakes held at max on boot) */
+                VC_Errors_ClearError(BRAKE_ERROR); 
+                Delay_Reset(pHandle->pBrakeStuckDelay);
             }
         }
-    }    
+        /* Brake Sensor is detected */
+        else     
+        {
+            hSafeCounter = 0;
+            if (!brakeStuck)
+            {
+                /* Increase the counter for the error delay and check if the delay has been reached */
+                if (Delay_Update(pHandle->pBrakeStuckDelay) == true) 
+                {
+                    VC_Errors_RaiseError(BRAKE_ERROR);
+                    brakeStuck = true;
+                }
+            }
+        }            
+    }
 	
 	return pHandle->bIsPressed;
 }

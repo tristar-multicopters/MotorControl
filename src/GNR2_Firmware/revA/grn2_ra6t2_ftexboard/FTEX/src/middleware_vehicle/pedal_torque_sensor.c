@@ -121,7 +121,7 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
         { 
             hSafeStartCounter ++; 
             /* Launch Safe Start after a delay counter */
-            if (hSafeStartCounter >= SCOUNT) 
+            if (hSafeStartCounter >= SAFE_TORQUE_COUNT_5000MS) 
             {   
                 pHandle->bSafeStart = true;
                 /* Clear this error in case it was falsly flagged as stuck (user kept pedal pushing at max on boot) */
