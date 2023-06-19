@@ -789,8 +789,8 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             }
             
             if (hM1FaultOccurredCode & MC_MSRP)
-            {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
-                if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+            {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared 
+                if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] >= (pHandle->sParameters.hFaultManagementTimeout * 4))  //delay for this error is 4 time more than other errors
                 {// If the timer has timeout, clear the MSRP fault
                     hM1FaultOccurredCode &= ~MC_MSRP;
                     pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0;
@@ -888,7 +888,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             
             if (hM2FaultOccurredCode & MC_MSRP)
             {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
-                if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+                if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] >= (pHandle->sParameters.hFaultManagementTimeout * 4))  //delay for this error is 4 time more than other errors
                 {// If the timer has timeout, clear the MSRP fault
                     hM2FaultOccurredCode &= ~MC_MSRP;
                     pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;

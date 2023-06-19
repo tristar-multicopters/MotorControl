@@ -13,16 +13,12 @@
 #include "mc_type.h"
 #include "parameters_conversion.h"
 
-
-#define STUCK_TIMER_MAX_MS      2000  //1 second timeout
-#define STUCK_TIMER_MAX_COUNTS  STUCK_TIMER_MAX_MS * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u
-#define STUCK_MIN_TORQUE       200
-
-    int16_t hTorqueReference1 = 0;
-
-    int16_t hTorqueReference2 = 0;
-    int16_t hTorqueReference3 = 0;
-
+// TODO: improve namig + move  these definitions to somewhere esle
+#define STUCK_TIMER_MAX_MS                  2000  //1 second timeout
+#define STUCK_TIMER_MAX_COUNTS              STUCK_TIMER_MAX_MS * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u
+#define STUCK_TIMER_MAX_COUNTS_LOWBATTERY   100
+#define STUCK_MIN_TORQUE                    200
+#define STUCK_MIN_BUS_VOLTAGE               42
 
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
@@ -154,32 +150,10 @@ bool SpdTorqCtrl_ExecRamp(SpdTorqCtrlHandle_t * pHandle, int16_t hTargetFinal)
             hTargetFinalSat = (int16_t) pHandle->hMaxAppPositiveMecSpeedUnit;
             AllowedRange = false;
         }
-        else if (hTargetFinal < pHandle->hMinAppNegativeMecSpeedUnit)
+        if (hTargetFinal < pHandle->hMinAppNegativeMecSpeedUnit)
         {
             AllowedRange = false;
             hTargetFinalSat = (int16_t) pHandle->hMinAppNegativeMecSpeedUnit;
-        }
-        else if ((int32_t)hTargetFinal < (int32_t)pHandle->hMinAppPositiveMecSpeedUnit)
-        {
-            if (hTargetFinal > pHandle->hMaxAppNegativeMecSpeedUnit)
-            {
-                if (hTargetFinal >= 0)
-                {
-                    hTargetFinalSat = (int16_t) pHandle->hMinAppPositiveMecSpeedUnit;
-                    AllowedRange = false;
-                }
-            }
-        }
-        else if ((int32_t)hTargetFinal > (int32_t)pHandle->hMaxAppNegativeMecSpeedUnit)
-        {
-            if (hTargetFinal > pHandle->hMinAppPositiveMecSpeedUnit)
-            {
-                if (hTargetFinal < 0)
-                {
-                    hTargetFinalSat = (int16_t) pHandle->hMaxAppNegativeMecSpeedUnit;
-                    AllowedRange = false;
-                }
-            }
         }
     }
 
@@ -198,7 +172,7 @@ bool SpdTorqCtrl_ExecRamp(SpdTorqCtrlHandle_t * pHandle, int16_t hTargetFinal)
     else
     {
         pHandle->hFinalSpeedRef = hTargetFinalSat; // Store final speed value in handle
-        if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
+        if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(&pHandle->SpeedRampMngr)))
         {
             RampMngr_ExecRamp(&pHandle->SpeedRampMngr, hTargetFinalSat, pHandle->wSpeedSlopePerSecondUp); // Setup speed ramp going up
         }
@@ -238,11 +212,21 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
     }
     else
     {
-        hTargetSpeed = (int16_t) RampMngr_Calc(&pHandle->SpeedRampMngr);
+        hTargetSpeed = pHandle->hFinalSpeedRef;
+        /*  the Ramp Manager bypassed in speed control because of an error caused by it
+            Having two ramp manager (one for torque and one for speed over each other
+            is not needed, so the bug 
+            replace above line with below one to bring it back                           */
+        /*  hTargetSpeed = (int16_t) RampMngr_Calc(&pHandle->SpeedRampMngr);             */
+        
         /* Run the speed control loop */
-        hMeasuredSpeed = SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
+        hMeasuredSpeed = -SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD); // Speed is somehow negative when applying positive torque, need to figure out why.
         hError = hTargetSpeed - hMeasuredSpeed; // Compute speed error
         hTorqueReference = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute final torque value with PI controller
+        if (hTorqueReference < 0)
+        {
+            hTorqueReference = 0; // Hard-coded protection against regen during speed control. Todo: Make it more flexible.
+        }
         if (abs(hTorqueReference) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
         {
             RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTorqueReference, pHandle->wTorqueSlopePerSecondUp); // Setup torque ramp going up
@@ -552,16 +536,27 @@ uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle)
 
     if (SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD) == 0 && pHandle->hFinalTorqueRef > STUCK_MIN_TORQUE)
     {
+        // strt a timer to count time motor got stuck
         if (M_STUCK_timer < STUCK_TIMER_MAX_COUNTS)
         {
             M_STUCK_timer++;
             hRetval = MC_NO_FAULTS;
         }
+        //if stuck time is more that threshold, rasie error and cut the power
         else 
         {
             M_STUCK_timer = 0;
             hRetval = MC_MSRP;
         }
+        #if VEHICLE_SELECTION == VEHICLE_QUIETKAT
+        // this part checks if the battery SoC is low, rasies sooner to prevent unknown motor issue that causes controller burn
+        // for now, only spotted on QiuetKat, more tests are needed for other bikes
+        if (pHandle->hBusVoltage < STUCK_MIN_BUS_VOLTAGE && M_STUCK_timer > STUCK_TIMER_MAX_COUNTS_LOWBATTERY)
+        {
+            M_STUCK_timer = 0;
+            hRetval = MC_MSRP;
+        }
+        #endif
     }
     else
     {
