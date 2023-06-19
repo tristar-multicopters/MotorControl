@@ -81,6 +81,11 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle)
                                                                          // So we have better accuracy
     VoltPercent =  VoltPercent/100u; // Calculate how many volts correpsond to 1 % charge
     
+    if(pHandle->VBatAvg < (pHandle->VBatMin * 100))
+    {
+        pHandle->VBatAvg = pHandle->VBatMin;   
+    }   
+    
     NewSOC = ((pHandle->VBatAvg) - (pHandle->VBatMin * 100u))/VoltPercent; //Calculate the SOC
     
     // We need to get a new SOC value that is consistent enough
@@ -89,10 +94,7 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle)
     if(NewSOC != pHandle->SOC)
     {
         pHandle->Transition_count ++; // Everytime we get a new value increment by 1,
-                                       
-                                      
-                                      
-                                       
+                                                                                                                                                          
         if((pHandle->Transition_count == (NB_SAMPLES_4_AVG * 10)) || pHandle->StartupDone == false)
         {
            pHandle->Transition_count = 0;// once the counter reaches NB_SAMPLES_4_AVG * 10 we consider the new SOC 
@@ -105,7 +107,6 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle)
        if(pHandle->Transition_count - NB_SAMPLES_4_AVG/4 > 0) // everytime we dont get a new value decrement by NB_SAMPLES_4_AVG/4
        {
           pHandle->Transition_count = pHandle->Transition_count - NB_SAMPLES_4_AVG/4;
-       
        }
        else
        {
@@ -113,14 +114,14 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle)
        }     
     }
     
-    if(pHandle->SOC > 100u) //Basic check just to make sure value is always 10%-100%
+    if(pHandle->SOC > 100u) //Basic check just to make sure value is always 0%-100%
     {
         pHandle->SOC = 100u;    
     }
-    else if (pHandle->SOC < 10u)
+    else if (pHandle->SOC <= 0u)
     {
-        pHandle->SOC = 10u; 
-    } 
+        pHandle->SOC = 0u; 
+    }
     
 }
 
