@@ -82,12 +82,8 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
     
     uint32_t xLastWakeTime = osKernelGetTickCount();
     
-    if (pVCI->pPowertrain->pPWREN->bInitialPowerLockState == true) // If we have bene powered on by the screen
-    {
-        Light_PowerOnSequence(pVCI->pPowertrain->pHeadLight); // Setup the lights with their default values
-        Light_PowerOnSequence(pVCI->pPowertrain->pTailLight);
-    }
-    
+    static bool bLightInitalised = false;
+        
     while (true)
     {
         PWRT_UpdatePowertrainPeripherals(pVCI->pPowertrain);
@@ -97,6 +93,14 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT++;
         if (TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT > TASK_VCSLOWLOOP_SAMPLE_TIME_TICK)
         {
+            
+            if ((pVCI->pPowertrain->pPWREN->bIsPowerEnabled == true) && (bLightInitalised == false)) // If we have bene powered on by the screen
+            {
+                Light_PowerOnSequence(pVCI->pPowertrain->pHeadLight); // Setup the lights with their default values
+                Light_PowerOnSequence(pVCI->pPowertrain->pTailLight);
+                bLightInitalised = true;
+            }
+            
             // Check PAS activation based on torque or cadence
             PedalAssist_UpdatePASDetectionCall(pVCI->pPowertrain->pPAS);
             // Pedal Assist Cadence reading period
