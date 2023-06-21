@@ -1240,6 +1240,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
             </File>
+            <File>
+              <FileName>stuck_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3177,6 +3182,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
             </File>
+            <File>
+              <FileName>stuck_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4978,6 +4988,11 @@
               <FileName>dynamic_power.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
+            </File>
+            <File>
+              <FileName>stuck_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
             </File>
           </Files>
         </Group>

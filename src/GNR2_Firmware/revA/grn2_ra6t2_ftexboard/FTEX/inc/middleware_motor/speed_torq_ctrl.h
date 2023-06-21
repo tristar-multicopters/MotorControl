@@ -22,6 +22,7 @@ extern "C" {
 #include "ntc_temperature_sensor.h"
 #include "HardwareOverCurrentDetection.h"
 #include "dynamic_power.h"
+#include "stuck_protection.h"
 
 
 /* Exported types ------------------------------------------------------------*/
@@ -50,18 +51,18 @@ typedef struct
     int16_t hFinalTorqueRef;
     int16_t hFinalSpeedRef;
 
-    STCModality_t Mode;   /*!< Modality of STC. It can be one of these two
-                               settings: STC_TORQUE_MODE to enable the
-                               Torque mode or STC_SPEED_MODE to enable the
-                               Speed mode.*/
-    PIDHandle_t * pPISpeed;   /*!< The regulator used to perform the speed
+    STCModality_t                   Mode;        /*!< Modality of STC. It can be one of these two
+                                                settings: STC_TORQUE_MODE to enable the
+                                                Torque mode or STC_SPEED_MODE to enable the Speed mode.*/
+    PIDHandle_t                     * pPISpeed;   /*!< The regulator used to perform the speed
                                      control loop.*/
-    SpdPosFdbkHandle_t * pSPD;/*!< The speed sensor used to perform the speed
+    SpdPosFdbkHandle_t              * pSPD;/*!< The speed sensor used to perform the speed
                                      regulation.*/
-    NTCTempSensorHandle_t * pHeatsinkTempSensor; /* Temperature sensor used to monitor heatsink temperature */
-    NTCTempSensorHandle_t * pMotorTempSensor; /* Temperature sensor used to monitor motor temperature */
-    OCD2_Handle_t    OCD2_Handle;
-    HWOverCurrentDetection_t HWOverCurrentDetection; /*< Status of OCD2 pin which connected to OCD2 of current sensot*/    
+    NTCTempSensorHandle_t           * pHeatsinkTempSensor; /* Temperature sensor used to monitor heatsink temperature */
+    NTCTempSensorHandle_t           * pMotorTempSensor; /* Temperature sensor used to monitor motor temperature */
+    OCD2_Handle_t                   OCD2_Handle;
+    HWOverCurrentDetection_t        HWOverCurrentDetection; /*< Status of OCD2 pin which connected to OCD2 of current sensot*/    
+    StuckProtection_t               StuckProtection; /* parameters of Stcuk Protection */
     uint16_t hSTCFrequencyHz;               /*!< Frequency on which the user updates
                                              the torque reference calling
                                              SpdTorqCtrl_CalcTorqueReference method
@@ -334,24 +335,6 @@ int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle,
   * @retval 
   */
 void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle);
-
-/**
-  * @brief  Check if the motor stcuk or not, return the result
-  *         To convert current expressed in Amps to current expressed in digit
-  *         is possible to use the formula:
-  *         Current(digit) = [Current(Amp) * 65536 * Rshunt * Aop]  /  Vdd micro
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval uint16_t the fault status
-  */
-uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle);
-
-/**
-  * @brief  Clear  the motor stcuk timer
-  * @param  
-  * @retval 
-  */
-
-void Clear_MotorStuckReverse();
 
 #ifdef __cplusplus
 }

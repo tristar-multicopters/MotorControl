@@ -13,11 +13,6 @@
 #include "mc_type.h"
 #include "parameters_conversion.h"
 
-
-#define STUCK_TIMER_MAX_MS      2000  //1 second timeout
-#define STUCK_TIMER_MAX_COUNTS  STUCK_TIMER_MAX_MS * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u
-#define STUCK_MIN_TORQUE       200
-
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 uint16_t M_STUCK_timer = 0;
@@ -47,6 +42,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     RampMngr_Init(&pHandle->TorqueRampMngr);
     RampMngr_Init(&pHandle->SpeedRampMngr);
     DynamicPower_Init(&pHandle->DynamicPowerHandle);
+    StuckProtection_Init(&pHandle->StuckProtection);
     
 #if HARDWARE_OCD == OCD_POWER_DERATING
     OCD2_Init(&pHandle->OCD2_Handle);
@@ -521,42 +517,4 @@ void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle)
         UNUSED_PARAMETER(pHandle);
         //do nothing - keep it at maximum defined level 
     #endif
-}
-
-/*
-    Check if motor is stuck or not
-*/
-uint16_t Check_MotorStuckReverse(SpdTorqCtrlHandle_t * pHandle)
-{    
-    ASSERT(pHandle != NULL); 
-    
-    uint16_t hRetval = MC_NO_FAULTS;
-
-    if (SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD) == 0 && pHandle->hFinalTorqueRef > STUCK_MIN_TORQUE)
-    {
-        if (M_STUCK_timer < STUCK_TIMER_MAX_COUNTS)
-        {
-            M_STUCK_timer++;
-            hRetval = MC_NO_FAULTS;
-        }
-        else 
-        {
-            M_STUCK_timer = 0;
-            hRetval = MC_MSRP;
-        }
-    }
-    else
-    {
-        M_STUCK_timer = 0;
-        hRetval = MC_NO_FAULTS;
-    }
-    return hRetval;
-}
-
-/*
-  * Clear  the motor stcuk reverse timer
-*/
-void Clear_MotorStuckReverse()
-{
-    M_STUCK_timer = 0;
-}
+}  

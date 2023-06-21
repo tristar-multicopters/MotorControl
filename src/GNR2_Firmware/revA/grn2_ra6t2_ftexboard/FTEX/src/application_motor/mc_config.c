@@ -209,7 +209,13 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
         .hBelowMaxPowerTimer = 0,
         .hOverMaxPowerTimer = 0    
     },
-  
+    .StuckProtection =
+    {
+        .timeout_general = STUCK_TIMER_MAX_COUNTS,
+        .timeout_low_battery = STUCK_TIMER_MAX_COUNTS_LOWBATTERY,
+        .min_torque = STUCK_MIN_TORQUE,
+        .low_battery_voltage = STUCK_LOW_VOLTAGE_THRESHOLD
+    },  
     .hSTCFrequencyHz =              MEDIUM_FREQUENCY_TASK_RATE,
     .hMaxBusCurrent =               (uint16_t)(MAX_APPLICATION_CURRENT),
     .hBatteryLowVoltage =           (uint16_t)(LOW_BATTERY_VOLTAGE_THRESHOLD), 

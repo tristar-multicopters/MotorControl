@@ -348,7 +348,9 @@ void MediumFrequencyTaskM1(void)
         SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(pSpeedTorqCtrl[M1]); /* Init the reference speed to current speed */
         MCInterface_ExecBufferedCommands(oMCInterface[M1]);                /* Exec the speed ramp after changing of the speed sensor */
 #if !(BYPASS_POSITION_SENSOR)
-        if (Check_MotorStuckReverse(pSpeedTorqCtrl[M1]) != MC_NO_FAULTS)  
+        if (Check_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
+                                    pSpeedTorqCtrl[M1]->hBusVoltage, pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit)
+                                    != MC_NO_FAULTS)
         {
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }
@@ -372,8 +374,10 @@ void MediumFrequencyTaskM1(void)
         FOC_CalcCurrRef(M1);
 
 #if !(BYPASS_POSITION_SENSOR)    
-        if (Check_MotorStuckReverse(pSpeedTorqCtrl[M1]) != MC_NO_FAULTS)        // No Reverse or Stock Error
-        {   
+        if (Check_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
+                                    pSpeedTorqCtrl[M1]->hBusVoltage, pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit)
+                                    != MC_NO_FAULTS)  
+        { 
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }            
 #endif

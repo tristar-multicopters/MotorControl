@@ -50,4 +50,13 @@
 
 #endif
 
+
+/******** STUCK PROTECTION SETTING SECTION ********/
+
+#define STUCK_TIMER_MAX_TICKS               2000                                                                // protection timeout in MC Layer ticks  
+#define STUCK_TIMER_MAX_COUNTS              STUCK_TIMER_MAX_TICKS * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u          // protection timeout
+#define STUCK_MIN_TORQUE                    200                                                                 // minimum torque that can cause the protection to get activated
+#define STUCK_LOW_VOLTAGE_THRESHOLD         42                                                                  // this parameter is used to reduce protection timeout when battery SoC is low
+#define STUCK_TIMER_MAX_COUNTS_LOWBATTERY   (STUCK_TIMER_MAX_TICKS/10) * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u     // the protection timeout battery SoC is detected as low
+
 #endif /*__DRIVE_PARAMETERS_H*/

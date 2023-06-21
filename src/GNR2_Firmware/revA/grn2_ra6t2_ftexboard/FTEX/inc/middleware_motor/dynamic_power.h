@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    ramp_mngr.h
+  * @file    dynamic_power.h
   * @author  Behnam Shakibafar, FTEX inc
   * @brief   This file contains all definitions and functions prototypes for the
   *          Dynamic Power component of the Motor Control application.
