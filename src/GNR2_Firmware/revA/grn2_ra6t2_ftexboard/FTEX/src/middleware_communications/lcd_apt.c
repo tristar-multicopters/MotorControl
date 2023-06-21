@@ -55,7 +55,7 @@ void LCD_APT_RX_IRQ_Handler(void *pVoidHandle)
     ASSERT(pVoidHandle != NULL);    
     APT_Handle_t *pHandle = pVoidHandle;  // Convert the void handle pointer to a handle pointer
     
-    if(pHandle->RxCount >= RX_BYTE_BUFFER_SIZE) //Overflow safety
+    if (pHandle->RxCount >= RX_BYTE_BUFFER_SIZE) //Overflow safety
     {
        pHandle->RxCount = 0;
     }
@@ -78,10 +78,10 @@ void LCD_APT_TX_IRQ_Handler(void *pVoidHandle)
 {
     ASSERT(pVoidHandle != NULL);    
     APT_Handle_t *pHandle = pVoidHandle;  
-   
+
     uint8_t tx_data;
 
-    if(pHandle->tx_frame.ByteCnt < pHandle->tx_frame.Size) // Do we hav bytes to send ?
+    if (pHandle->tx_frame.ByteCnt < pHandle->tx_frame.Size) // Do we hav bytes to send ?
     {
         tx_data = pHandle->tx_frame.Buffer[pHandle->tx_frame.ByteCnt];
         pHandle->tx_frame.ByteCnt ++;
@@ -121,9 +121,9 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
     {
         NextByte = BytesReceived[i];
         
-        if(ByteCount == 0) // Each case represents the number of the byte received in a frame.                    
+        if (ByteCount == 0) // Each case represents the number of the byte received in a frame.                    
         {
-             if(NextByte == APT_START) // Is it the proper start byte ?
+             if (NextByte == APT_START) // Is it the proper start byte ?
              {
                  pHandle->rx_frame.Buffer[ByteCount] = NextByte;
                  pHandle->rx_frame.ByteCnt ++;                 
@@ -134,7 +134,7 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
              }
              
         }
-        else if(ByteCount > 0 && ByteCount < 8)
+        else if (ByteCount > 0 && ByteCount < 8)
         {
             // Byte 1 to byte 7 contain various information
             // They dont need to be checked because as long as 
@@ -145,10 +145,10 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
             pHandle->rx_frame.ByteCnt ++;
                 
         }
-        else if(ByteCount == 8) // Every frame has a lenght of 9 bytes (0-8)
+        else if (ByteCount == 8) // Every frame has a lenght of 9 bytes (0-8)
         {
                                         
-            if(NextByte == APT_END) // Is it the proper end byte ?
+            if (NextByte == APT_END) // Is it the proper end byte ?
             {
                 pHandle->rx_frame.Buffer[ByteCount] = NextByte;
                 
@@ -171,14 +171,16 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
  *  This is executed in a comm task that gets unblocked when a complete frame is received.
  *
  */
-   
+
+static uint8_t framesSinceSync = 0; // Count frames since the last pas sync to the screen to send repeatedly.
+
 void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 {
     APT_frame_t replyFrame = {0};
     int32_t  toSend      = 0;
     uint32_t Check       = 0;
     uint16_t Merge       = 0;
-    uint8_t  PassLvl     = 0; 
+    uint8_t  pasLvl; 
     uint8_t  LightStatus = 0;
    
      
@@ -190,7 +192,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         Check += Merge;
     }
      
-    if(Check > 0x0000FFFF) // Small patch to accomodate bug in APT screen
+    if (Check > 0x0000FFFF) // Small patch to accomodate bug in APT screen
     {
         Check += 0x0000FFFF & (Check >> 16);      
     }
@@ -198,12 +200,12 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
     Check = (Check & 0x0000FFFF); //Protection in case of overflow
     
     //Check if the CRC is good
-    if(Check == (uint32_t)(pHandle->rx_frame.Buffer[CHECK + 1] + (pHandle->rx_frame.Buffer[CHECK] << 8)))
+    if (Check == (uint32_t)(pHandle->rx_frame.Buffer[CHECK + 1] + (pHandle->rx_frame.Buffer[CHECK] << 8)))
     {
          
         LightStatus = ((pHandle->rx_frame.Buffer[PAS]) & 0x10);
          
-        if(LightStatus) //Operate the light according to what the screne tells us
+        if (LightStatus) //Operate the light according to what the screne tells us
         {
             Light_Enable(pHandle->pVController->pPowertrain->pHeadLight);  
             Light_Enable(pHandle->pVController->pPowertrain->pTailLight); 
@@ -215,19 +217,36 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         }   
          
         //Reading the Pass
-        PassLvl = (pHandle->rx_frame.Buffer[PAS] & 0x0F); //Only the 4 LSB contain the pass level
-    
-        if(PassLvl != PAS_UNCHANGED && PassLvl != pHandle->OldPAS && !pHandle->PASChangeTransition)
-        {                  
-            PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,LCD_APT_ConvertPASLevelFromAPT(PassLvl,pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel));         
-            pHandle->OldPAS = PassLvl;
-            pHandle->APTChangePasFlag = true;
+        pasLvl = (pHandle->rx_frame.Buffer[PAS] & 0x0F); //Only the 4 LSB contain the pass level
+        uint8_t maxLevels = pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel;
+        uint8_t currentPas = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
+        uint8_t standardizedPas = LCD_APT_ConvertPASLevelFromAPT(pasLvl,maxLevels);
+
+        // Checking if the PAS from the APT has given a rational value
+        bool isPasSane = true;
+        if ((pasLvl != PAS_UNCHANGED) && (currentPas != (standardizedPas + 1)) && (currentPas != (standardizedPas - 1)))
+        {
+           isPasSane = false;
         }
-        else if ((pHandle->PASChangeTransition) && (PassLvl == PAS_UNCHANGED)) // The PAS value being sent byt the screen isnt reliable when we ask it to change the level
-        {                                                                      // So we wait for it to tell us that PAS is unchanged so we know it is now stable.
-            pHandle->PASChangeTransition = false;  
-        }  
-        
+
+        if (pHandle->APTStabilizing && (pasLvl == PAS_UNCHANGED))
+        {
+            pHandle->APTStabilizing = false;
+            pHandle->OldPAS = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
+        }
+        // The PAS value being sent by the screen is the old PAS value for a while
+        // So we wait for it to tell us that PAS has finished changing so we know it is now stable.
+        if (isPasSane)
+        {
+            if (!pHandle->APTChangePasFlag && (pasLvl != PAS_UNCHANGED) && (standardizedPas != pHandle->OldPAS))
+            {                  
+                PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,standardizedPas);         
+                pHandle->APTChangePasFlag = true;
+                pHandle->APTStabilizing = true;
+                framesSinceSync = 0;
+            }            
+        }
+
         #if DYNAMIC_SPEED_LIMITATION   
 
         uint16_t SpeedLimit;
@@ -275,7 +294,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
                   
         toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
          
-        if(toSend != 0) //verify toSend value to avoid a divisiyeon by zero.
+        if (toSend != 0) //verify toSend value to avoid a divisiyeon by zero.
         {
             toSend = 500000/(toSend/60); // Descaling here with the 500000 to return to original unit            
         }
@@ -294,14 +313,18 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         // If we want to change the PAS level we need to change it here
         replyFrame.Buffer[7] = PAS_UNCHANGED; // Send 0x0A unless we want to change the PAS on the screen  
          
-        if (pHandle->CanChangePasFlag)
+        if (!pHandle->APTChangePasFlag && (pasLvl == PAS_UNCHANGED) && !pHandle->APTStabilizing && (framesSinceSync >= MINIMUM_FRAMES_TO_SYNC_PAS))
         {
-             pHandle->CanChangePasFlag = false;
-             pHandle->PASChangeTransition = true; // Make sure we wait for the transition after we send the command
-             replyFrame.Buffer[7] =  LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)); 
-             pHandle->OldPAS = LCD_APT_ConvertPASLevelToAPT(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS));
+            currentPas = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
+            framesSinceSync = 0;
+            replyFrame.Buffer[7] = currentPas;
+            pHandle->OldPAS = currentPas;
         }
-                                       
+        else
+        {
+            framesSinceSync++;
+        }
+                               
         replyFrame.Buffer[8] = 0x00;
         replyFrame.Buffer[9] = 0x00;
     
@@ -360,49 +383,70 @@ uint16_t LCD_APT_ApplyPowerFilter(uint16_t aInstantPowerInAmps)
 /** Function used to translate the PAS level received from the APT  
  *  screen standard to the FTEX standard
  */
-uint8_t LCD_APT_ConvertPASLevelToAPT(PasLevel_t aPAS_Level)
+uint8_t LCD_APT_ConvertPASLevelToAPT(PasLevel_t aPAS_Level, uint8_t maxLevel)
 {
    uint8_t PAS_Out = PAS_LEVEL_0; 
    switch(aPAS_Level)
    {
-       case PAS_LEVEL_0:
-           PAS_Out = 0x0;
-           break;
-       case PAS_LEVEL_1:
-           PAS_Out = 0x1;
-           break;
-       case PAS_LEVEL_2:
-           PAS_Out = 0x2;
-           break;
-       case PAS_LEVEL_3:
-           PAS_Out = 0x3;
-           break;
-       case PAS_LEVEL_4:
-           PAS_Out = 0x4;
-           break;
-       case PAS_LEVEL_5:
-           PAS_Out = 0x5;
-           break;
-       case PAS_LEVEL_6:
-           PAS_Out = 0x6;
-           break;
-       case PAS_LEVEL_7:
-           PAS_Out = 0x7;
-           break;
-       case PAS_LEVEL_8:
-           PAS_Out = 0x8;
-           break;
-       case PAS_LEVEL_9:
-           PAS_Out = 0x9;
-           break;
-       case PAS_LEVEL_WALK: // For now we cant control walk mode
-       default:  
-           PAS_Out = 0x0;           
-           break;
-       
-   }
-   return PAS_Out;
+        case PAS_LEVEL_0:
+            PAS_Out = 0x0;
+            break;
+        case PAS_LEVEL_1:
+            PAS_Out = 0x1;
+            break;
+        case PAS_LEVEL_2:
+            if (maxLevel == 5)
+            {
+                PAS_Out = 0x03;
+                break;
+            }
+            PAS_Out = 0x2;
+            break;
+        case PAS_LEVEL_3:
+            if (maxLevel == 5)
+            {
+                PAS_Out = 0x05;
+                break;
+            }
+            PAS_Out = 0x3;
+            break;
+        case PAS_LEVEL_4:
+            if (maxLevel == 5)
+            {
+                PAS_Out = 0x07;
+                break;
+            }
+            PAS_Out = 0x4;
+            break;
+        case PAS_LEVEL_5:
+            if (maxLevel == 5)
+            {
+                PAS_Out = 0x09;
+                break;
+            }
+            PAS_Out = 0x5;
+            break;
+        case PAS_LEVEL_6:
+            PAS_Out = 0x6;
+            break;
+        case PAS_LEVEL_7:
+            PAS_Out = 0x7;
+            break;
+        case PAS_LEVEL_8:
+            PAS_Out = 0x8;
+            break;
+        case PAS_LEVEL_9:
+            PAS_Out = 0x9;
+            break;
+        case PAS_LEVEL_WALK: // For now we cant control walk mode
+        default:  
+            PAS_Out = 0x0;           
+            break;
+
+    }
+    return PAS_Out;
 }
+
 
 /** Function used to translate the FTEX standard PAS level to the APT  
  *  screen standard.(is not the same as when we receive a PAS level from the APT screen)
@@ -413,75 +457,78 @@ PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfL
    
     bool ExtendedPASLevels;
     
-   if (aNumberOfLevels == 5)  // Check if we need to use the 5 PAS config
-   {
-       ExtendedPASLevels = false;
-   }    
-   else if (aNumberOfLevels == 9) // Or the 9 PAS config
-   {
-       ExtendedPASLevels = true; 
-   }       
-   else
-   {
-       ASSERT(false); // Number of PAS levels not compatible with APT screen  
-   }       
+    if (aNumberOfLevels == 5)  // Check if we need to use the 5 PAS config
+    {
+        ExtendedPASLevels = false;
+    }    
+    else if (aNumberOfLevels == 9) // Or the 9 PAS config
+    {
+        ExtendedPASLevels = true; 
+    }       
+    else
+    {
+        ASSERT(false); // Number of PAS levels not compatible with APT screen  
+    }       
    
-   //PAS level from APT 0x02,0x04,0x06,0x08 are only for 9 PAS levels mode
-   
-   switch(aPAS_Level)
-   {
-       case 0x0:
-           PAS_Out = PAS_LEVEL_0;
-           break;
-       case 0x1:
-           PAS_Out = PAS_LEVEL_1;
-           break;
-       case 0x2:
-           if(ExtendedPASLevels)
-               PAS_Out = PAS_LEVEL_2;    
-       case 0x3:
-           if(ExtendedPASLevels)
-               PAS_Out = PAS_LEVEL_3;
-           else
-               PAS_Out = PAS_LEVEL_2;
-           break;
-       case 0x4:
+    //PAS level from APT 0x02,0x04,0x06,0x08 are only for 9 PAS levels mode
+
+    switch(aPAS_Level)
+    {
+        case 0x0:
+            PAS_Out = PAS_LEVEL_0;
+            break;
+        case 0x1:
+            PAS_Out = PAS_LEVEL_1;
+            break;
+        case 0x2:
             if (ExtendedPASLevels)
-               PAS_Out = PAS_LEVEL_4;
-           break;           
-       case 0x5:
-           if (ExtendedPASLevels)
-               PAS_Out = PAS_LEVEL_5; 
-           else    
-               PAS_Out = PAS_LEVEL_3;
-           break;
-       case 0x6:
-           if (ExtendedPASLevels)
-               PAS_Out = PAS_LEVEL_6;            
-           break;           
-       case 0x7:
-           if(ExtendedPASLevels)
-               PAS_Out = PAS_LEVEL_7;
-           else           
-               PAS_Out = PAS_LEVEL_4;
-           break;
-       case 0x8:
-           if (ExtendedPASLevels)
-               PAS_Out = PAS_LEVEL_8; 
-       case 0x9:
-           if (ExtendedPASLevels)
-               PAS_Out = PAS_LEVEL_9; 
-           else    
-               PAS_Out = PAS_LEVEL_5;
-           break;
-       case 0xF:
-           PAS_Out = PAS_LEVEL_WALK;
-           break;
-       default:
-           PAS_Out = PAS_LEVEL_0;
-           break;
-       
-   }
+                PAS_Out = PAS_LEVEL_2;    
+            break;
+        case 0x3:
+            if (ExtendedPASLevels)
+                PAS_Out = PAS_LEVEL_3;
+            else
+                PAS_Out = PAS_LEVEL_2;
+            break;
+        case 0x4:
+            if (ExtendedPASLevels)
+                PAS_Out = PAS_LEVEL_4;
+            break;           
+        case 0x5:
+            if (ExtendedPASLevels)
+                PAS_Out = PAS_LEVEL_5; 
+            else    
+                PAS_Out = PAS_LEVEL_3;
+            break;
+        case 0x6:
+            if (ExtendedPASLevels)
+                PAS_Out = PAS_LEVEL_6;            
+            break;           
+        case 0x7:
+            if (ExtendedPASLevels)
+                PAS_Out = PAS_LEVEL_7;
+            else           
+                PAS_Out = PAS_LEVEL_4;
+            break;
+        case 0x8:
+            if (ExtendedPASLevels)
+                PAS_Out = PAS_LEVEL_8; 
+        case 0x9:
+            if (ExtendedPASLevels)
+                PAS_Out = PAS_LEVEL_9; 
+            else    
+                PAS_Out = PAS_LEVEL_5;
+            break;
+        case 0xF:
+            PAS_Out = PAS_LEVEL_WALK;
+            break;
+        case 0xA:
+            PAS_Out = PAS_UNCHANGED;
+            break;
+        default:
+            PAS_Out = PAS_LEVEL_0;
+            break;
+    }
 
    return PAS_Out;
 }
@@ -491,7 +538,7 @@ uint8_t LCD_APT_CalculateWheelDiameter(uint16_t aValue)
 {
    uint8_t wheelDiameter; 
     
-   if(aValue <= APT_WHEEL_DIAM_INCHES_MAX && aValue > 0)
+   if (aValue <= APT_WHEEL_DIAM_INCHES_MAX && aValue > 0)
    {
        wheelDiameter = (uint8_t) aValue;
    } 
@@ -567,7 +614,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             break;        
         default: // If it's not a standard APT error just consider it a custom error or a debugging error
             
-            if(aError < 0x9F && aError != 0x30) // For custom errors we need a value less or equal to 0x9F but that isn't 0x30,  
+            if (aError < 0x9F && aError != 0x30) // For custom errors we need a value less or equal to 0x9F but that isn't 0x30,  
             {
                 ConvertedError = aError;
             }

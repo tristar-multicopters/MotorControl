@@ -34,6 +34,7 @@
 #define APT_WHEEL_DIAM_INCHES_MAX   34 // Max value received from the APT screen that represents a diamater in inches
 #define APT_WHEEL_CIRCUMFERENCE_MIN 50 // Min value received from APT screen that represents a circumference in centimetres
 
+#define MINIMUM_FRAMES_TO_SYNC_PAS 3 // Syncing frames the minimum amount without making the APT screen upset
 
 // Display Read Cmd
 // represents the location of where certain informations are in the frame. 
@@ -85,19 +86,18 @@ typedef struct
 
 typedef struct
 {	
-	UART_Handle_t *pUART_handle;           // Pointer to uart									
-	VCI_Handle_t  *pVController;           // Pointer to vehicle
+    UART_Handle_t *pUART_handle;           // Pointer to uart									
+    VCI_Handle_t  *pVController;           // Pointer to vehicle
     APT_frame_t rx_frame; 		   	       // Frame for data reception
     APT_frame_t tx_frame; 		   	       // Frame for send response    
-    
+
     uint8_t RxBuffer[RX_BYTE_BUFFER_SIZE]; // Hold bytes to be process by the APT task function
     uint8_t RxCount;                       // Counts how many bytes we are holding
     uint8_t RxByte;                        // Used for byte by byte reception
-    uint8_t OldPAS;                        // Used to keep track of the current PAs levle on the screen 
-    
-    bool CanChangePasFlag;                 // Used to tell the screen that PAS has bene changed from the Can interface
-    bool PASChangeTransition;              // Used to ignore the PAS value being sent by the screen when we have a PAS trasition
+    uint8_t OldPAS;                        // Used to keep track of the current PAs levle on the screen
+
     bool APTChangePasFlag;                 // Used to tell the Can interfacne that the screen changed the PAS    
+    bool APTStabilizing;                   // Used while the APT values are inconsistent
     
 }APT_Handle_t;
 
@@ -172,14 +172,15 @@ uint16_t LCD_APT_ApplySpeedFilter(uint16_t aInstantSpeedInRPM);
  */
 uint16_t LCD_APT_ApplyPowerFilter(uint16_t aInstantPowerInAmps);
 
-/**@brief Function used to translate the PAS level received from the APT  
- *        screen standard to the FTEX standard
+/**@brief Function used to translate the PAS level standard of FTEX to 
+ *        the APT screen values 
  *
  * @param[in] FTEX Standard PAS level 
+ * @param maxLevel: total number of pas supported
  *            
  * @return APT standard PAS level
  */
-uint8_t LCD_APT_ConvertPASLevelToAPT(PasLevel_t aPAS_Level);
+uint8_t LCD_APT_ConvertPASLevelToAPT(PasLevel_t aPAS_Level, uint8_t maxLevel);
 
 /**@brief Function used to translate the FTEX standard PAS level to the APT  
  *        screen standard.(is not the same as when we receive a PAS level from the APT screen)
@@ -190,8 +191,7 @@ uint8_t LCD_APT_ConvertPASLevelToAPT(PasLevel_t aPAS_Level);
  */
 PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfLevels);
 
-/**@brief Function used to translate the FTEX standard PAS level to the APT  
- *        screen standard.(is not the same as when we receive a PAS level from the APT screen)
+/**@brief Function used to interpret wheel size given by the APT screen
  *
  * @param[in] Value from APT screen if under 35 then value represents a diamater in inches.
  *            If the value is equal or greater then 50 the value represents the wheel     

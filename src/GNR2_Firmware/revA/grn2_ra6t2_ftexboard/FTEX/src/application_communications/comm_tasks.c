@@ -342,20 +342,19 @@ static void UpdateObjectDictionnary(void *p_arg)
             }    
             bool WriteOBJDict = false;
             
-            if(bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM])
-            { 
-                if(UART0Handle.UARTProtocol == UART_APT)
-                {   
-                    WriteOBJDict = true;                    
+            if(UART0Handle.UARTProtocol == UART_APT)
+            {   
+                if((bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM]) || !LCD_APT_handle.APTStabilizing)
+                {
+                    WriteOBJDict = true; 
                     if (LCD_APT_handle.APTChangePasFlag) // Check if PAS was changed by non-can source                          
                     {    
-                        LCD_APT_handle.APTChangePasFlag = false;
                         bPAS[CAN_PARAM] = bPAS[VEHICLE_PARAM];  // if it was set the CAN pas as the vehicle pas                                    
+                        LCD_APT_handle.APTChangePasFlag = false;
                     }
                     else // if it wasnt changed by a non-can then it was changed by a can source
-                    {                       
+                    {   
                         CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
-                        LCD_APT_handle.CanChangePasFlag = true;
                     }
                 }                    
             }
