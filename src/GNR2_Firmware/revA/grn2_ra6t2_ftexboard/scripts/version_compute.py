@@ -24,7 +24,7 @@ It also saves some version info already in the environment so the builder can tr
 that info and build again when needed.
 '''
 
-if os.path.exists('../../../.git'):
+if os.path.exists('../../../../../.git'):
     git_revision = subprocess.run(['git', 'rev-parse', 'HEAD'], stdout=subprocess.PIPE,
             universal_newlines=True).stdout.rstrip()
     i = int(git_revision[0:8], 16)
@@ -34,7 +34,7 @@ else:
     git_revision = ''
     version = '1.1.2'
     
-bash_cmd ="python ./imgtool.py sign -v 1.0.0 --header-size 0x400 --align 8 --max-align 8 --slot-size 0x28000 --max-sectors 2 --pad --pad-header ../Objects/gnr2_ra6t2.hex ../output/gnr2_ra6t2_Signed.hex"
+bash_cmd ="python ./imgtool.py sign -v "+version+" --header-size 0x400 --align 8 --max-align 8 --slot-size 0x28000 --max-sectors 2 --pad --pad-header ../Objects/gnr2_ra6t2.hex ../output/gnr2_ra6t2_Signed.hex"
 print(bash_cmd)
 process =subprocess.run(bash_cmd.split(), stdout=subprocess.PIPE,
            stderr=subprocess.DEVNULL, universal_newlines=True)
