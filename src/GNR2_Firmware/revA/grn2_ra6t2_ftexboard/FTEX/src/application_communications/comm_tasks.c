@@ -145,9 +145,14 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint16_t hMotorCurrentFaults    = MCInterface_GetCurrentFaults(&MCInterface[0]);
     #endif
     
+    //theses variables are only used
+    //when device is on slave configuration
+    //This means IOT == 0
+    #if !GNR_IOT
     int16_t hMotor2TorqRef      = 0;
     uint8_t bMotor2Start        = 0;
     uint8_t bMotor2FaultAck     = 0;
+    #endif
     
     // Set Bike Parameters
     //CanIot_SetPAS(pVCI,bPAS); this doesn't make sense.
