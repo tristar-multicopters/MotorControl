@@ -448,11 +448,11 @@ void PWREN_TurnOffSystem(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
             //stop the node to stops CANOPEN msg on the can bus.
             CONodeStop(pNode);
         
-            //wait 200 ms before turn off the device.
+            //wait 350 ms before turn off the device.
             //thsi give sometime to IOT and SLAVE
             //process the turn off sequency and avoid
             //new CANOPEN msgs.
-            osDelay(2*POWEROFF_WAITTIME);
+            osDelay(7*POWEROFF_WAITTIME_50MS);
         
             //turn off himself 
             PWREN_StopPower(pHandle);
@@ -580,7 +580,7 @@ void PWREN_ManageSystemReadyFlag(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
             pHandle->bSytemReadyTimeout++;
         
             //cehck if timeout
-            if (pHandle->bSytemReadyTimeout > SYSTEMREADY_TIMEOUT_500MS)
+            if (pHandle->bSytemReadyTimeout > SYSTEMREADY_TIMEOUT_250MS)
             {   
                 //Start the CANopen node and set it automatically to
                 //NMT mode: 'OPERATIONAL'.
@@ -607,7 +607,7 @@ void PWREN_ManageSystemReadyFlag(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
             pHandle->bSytemReadyTimeout++;
         
             //cehck if timeout
-            if (pHandle->bSytemReadyTimeout > SYSTEMREADY_TIMEOUT_500MS)
+            if (pHandle->bSytemReadyTimeout > SYSTEMREADY_TIMEOUT_250MS)
             {   
                 //Start the CANopen node and set it automatically to
                 //NMT mode: 'OPERATIONAL'.
@@ -755,6 +755,9 @@ void PWREN_TurnoffWhenMasterIsNotDetected(CO_NODE  *pNode, PWREN_Handle_t * pHan
 {
     static uint16_t timeout = 0;
     static bool masterPresent = false;
+    //
+    uint8_t turnningOff = 1;
+ 
     
     //if the system is read(canopen is on, the device is a slave and master was not detected, start to count
     //until the max timeout to turn off or continue to work.    
@@ -768,22 +771,16 @@ void PWREN_TurnoffWhenMasterIsNotDetected(CO_NODE  *pNode, PWREN_Handle_t * pHan
             
             //if timeout expires, turn off the device.
             if ( timeout >= MASTERNOTDETECTED_TIMEOUT_500MS)
-            {
-                //set turning off flag.
-                //used to let other functions know the system is going off.
-                PWREN_SetGoingOffFlag(pHandle);
+            {          
+                //critical section
+                //Write the OD responsible to turn off the GNR.
+                //This enable PWREN_TurnoffSlaveTask tur off the system.
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_DEVICE_TURNNING_OFF, 0)), pNode, &turnningOff, sizeof(uint8_t));
+                //end critical section;
                 
-                //stop the node to stops CANOPEN msg on the can bus.
-                CONodeStop(pNode);
-                
-                //wait 100 ms before turn off the device.
-                //thsi give sometime to IOT and SLAVE
-                //process the turn off sequency and avoid
-                //new CANOPEN msgs.
-                osDelay(POWEROFF_WAITTIME);
-                
-                //turn off himself 
-                PWREN_StopPower(pHandle);
+                //set master present to stop timeout count and the device to enter
+                //in this part of the code again.
+                masterPresent = true;
             }
         }
         else
@@ -821,11 +818,11 @@ __NO_RETURN void PWREN_TurnoffSlaveTask (void * pvParameter)
             //used to let other functions know the system is going off.
             PWREN_SetGoingOffFlag(VCInterfaceHandle.pPowertrain->pPWREN);
             
-            //wait 100 ms before turn off the device.
+            //wait 250 ms before turn off the device.
             //thsi give sometime to IOT and SLAVE
             //process the turn off sequency and avoid
             //new CANOPEN msgs.
-            osDelay(POWEROFF_WAITTIME);
+            osDelay(5*POWEROFF_WAITTIME_50MS);
                 
             //stop the node to stops CANOPEN msg on the can bus.
             CONodeStop(pNode);
