@@ -59,4 +59,6 @@
 #define STUCK_LOW_VOLTAGE_THRESHOLD         42                                                                  // this parameter is used to reduce protection timeout when battery SoC is low
 #define STUCK_TIMER_MAX_COUNTS_LOWBATTERY   (STUCK_TIMER_MAX_TICKS/10) * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u     // the protection timeout battery SoC is detected as low
 
+
+#define VIBRATION_PATTERN                   0xAAAA   // = 0b1010101010101010 which is 8 time of direction change
 #endif /*__DRIVE_PARAMETERS_H*/

@@ -679,7 +679,14 @@ uint8_t MC_HighFrequencyTask(void)
 
     HallPosSensor_CalcElAngle(&HallPosSensorM1);
     RotorPosObs_CalcElAngle(&RotorPosObsM1, 0);
-
+    
+    /* here the code is checking last 16 records of direction, 
+    if all last 16 records show vibration, then rasie the stuck protection error */
+    if ((HallPosSensorM1.wDirectionChangePattern & 0xFFFF) == VIBRATION_PATTERN)
+    {
+        MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+    }
+    
     hFOCreturn = FOC_CurrControllerM1();
     if (hFOCreturn == MC_FOC_DURATION)
     {

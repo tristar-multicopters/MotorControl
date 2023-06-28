@@ -274,11 +274,13 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
                 if (bPrevHallState == STATE_4)
                 {
                     pHandle->bDirection = POSITIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1) | 1; //shift left with 1  to record POSITIVE direction in the history
                     pHandle->hMeasuredElAngle = pHandle->hPhaseShift;
                 }
                 else if (bPrevHallState == STATE_1)
                 {
                     pHandle->bDirection = NEGATIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1); //shift left with 0 to record NEGATIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift + S16_60_PHASE_SHIFT);
                 }
                 else
@@ -291,11 +293,13 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
                 if (bPrevHallState == STATE_5)
                 {
                     pHandle->bDirection = POSITIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1) | 1; //shift left with 1  to record POSITIVE direction in the history 
                     pHandle->hMeasuredElAngle = pHandle->hPhaseShift + S16_60_PHASE_SHIFT;
                 }
                 else if (bPrevHallState == STATE_3)
                 {
                     pHandle->bDirection = NEGATIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1); //shift left with 0 to record NEGATIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift + S16_120_PHASE_SHIFT);
                 }
                 else
@@ -308,11 +312,13 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
                 if (bPrevHallState == STATE_1)
                 {
                     pHandle->bDirection = POSITIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1) | 1; //shift left with 1  to record POSITIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift + S16_120_PHASE_SHIFT);
                 }
                 else if (bPrevHallState == STATE_2)
                 {
                     pHandle->bDirection = NEGATIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1); //shift left with 0 to record NEGATIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift + S16_120_PHASE_SHIFT + S16_60_PHASE_SHIFT);
                 }
                 else
@@ -325,11 +331,13 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
                 if (bPrevHallState == STATE_3)
                 {
                     pHandle->bDirection = POSITIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1) | 1; //shift left with 1  to record POSITIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift + S16_120_PHASE_SHIFT + S16_60_PHASE_SHIFT);//
                 }
                 else if (bPrevHallState == STATE_6)
                 {
                     pHandle->bDirection = NEGATIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1); //shift left with 0 to record NEGATIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift - S16_120_PHASE_SHIFT);
                 }
                 else
@@ -342,11 +350,13 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
                 if (bPrevHallState == STATE_2)
                 {
                     pHandle->bDirection = POSITIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1) | 1; //shift left with 1  to record POSITIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift - S16_120_PHASE_SHIFT);
                 }
                 else if (bPrevHallState == STATE_4)
                 {
                     pHandle->bDirection = NEGATIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1); //shift left with 0 to record NEGATIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift - S16_60_PHASE_SHIFT);
                 }
                 else
@@ -359,11 +369,13 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
                 if (bPrevHallState == STATE_6)
                 {
                     pHandle->bDirection = POSITIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1) | 1; //shift left with 1  to record POSITIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift - S16_60_PHASE_SHIFT);//
                 }
                 else if (bPrevHallState == STATE_5)
                 {
                     pHandle->bDirection = NEGATIVE;
+                    pHandle->wDirectionChangePattern = (pHandle->wDirectionChangePattern << 1); //shift left with 0 to record NEGATIVE direction in the history
                     pHandle->hMeasuredElAngle = (int16_t)(pHandle->hPhaseShift);
                 }
                 else
