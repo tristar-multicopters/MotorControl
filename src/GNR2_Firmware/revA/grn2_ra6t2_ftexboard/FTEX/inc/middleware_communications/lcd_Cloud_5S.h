@@ -82,8 +82,9 @@ typedef struct
     uint8_t OldPAS;                         // Used to keep track of the current Pas levle on the screen 
     uint8_t WheelDiameter;                  // Used to hold the wheel diamater given by the screen
      
-    //bool CanChangePasFlag;                 // Used to tell the screen that PAS has bene changed from the Can interface
-    //bool Cloud_5SChangePasFlag;            // Used to tell the Can interfacne that the screen changed the PAS    
+    bool cloud5SChangePasFlag;              // Used to tell the Can interfacne that the screen changed the PAS    
+    bool isScreenSlave;                     // Listening to the screen for pas changes, unless the app changes it
+                                            // At that point the screen will become slave to the controller until it's updated.
     
 }Cloud_5S_Handle_t;
 

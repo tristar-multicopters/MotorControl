@@ -358,6 +358,24 @@ static void UpdateObjectDictionnary(void *p_arg)
                     }
                 }                    
             }
+            else if(UART0Handle.UARTProtocol == UART_CLOUD_5S)
+            {
+                if(bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM])
+                {
+                    WriteOBJDict = true; 
+                    if (LCD_Cloud_5S_handle.cloud5SChangePasFlag == true) // Check if PAS was changed by non-can source                          
+                    {    
+                        bPAS[CAN_PARAM] = bPAS[VEHICLE_PARAM];  // if it was set the CAN pas as the vehicle pas                                    
+                        LCD_Cloud_5S_handle.cloud5SChangePasFlag = false;
+                    }
+                    else // if it wasnt changed by a non-can then it was changed by a can source
+                    {   
+                        LCD_Cloud_5S_handle.isScreenSlave = true;
+                        CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
+                    }
+                }                    
+            
+            }
 
             
             // If the whele diameter in the OBJ dict and vehicle don't match, update the on in the vehicle

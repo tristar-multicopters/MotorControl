@@ -37,6 +37,7 @@ void LCD_Cloud_5S_init(Cloud_5S_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART
     ASSERT(pHandle     != NULL);
     ASSERT(pVCIHandle  != NULL);
     ASSERT(pUARTHandle != NULL);
+    pHandle->isScreenSlave = true;  // Start as a slave to force pas to start at 1 on boot.
     
     pHandle->pVController = pVCIHandle;        // Pointer to VController
     pHandle->pUART_handle = pUARTHandle;       // Pointer to UART instance  
@@ -65,7 +66,7 @@ void LCD_Cloud_5S_RX_IRQ_Handler(void *pVoidHandle)
     ASSERT(pVoidHandle != NULL);    
     Cloud_5S_Handle_t *pHandle = pVoidHandle;  // Convert the void handle pointer to a handle pointer
     
-    if(pHandle->RxCount >= CLOUD_RX_BUFFER_SIZE) //Overflow safety
+    if (pHandle->RxCount >= CLOUD_RX_BUFFER_SIZE) //Overflow safety
     {
        pHandle->RxCount = 0;
     }
@@ -90,7 +91,7 @@ void LCD_Cloud_5S_TX_IRQ_Handler(void *pVoidHandle)
    
     uint8_t tx_data;
 
-    if(pHandle->tx_frame.ByteCnt < pHandle->tx_frame.Size) // Do we hav bytes to send ?
+    if (pHandle->tx_frame.ByteCnt < pHandle->tx_frame.Size) // Do we hav bytes to send ?
     {
         tx_data = pHandle->tx_frame.Buffer[pHandle->tx_frame.ByteCnt];
         pHandle->tx_frame.ByteCnt ++;
@@ -130,10 +131,10 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
     {
         NextByte = BytesReceived[i];
         
-        if(ByteCount == 0) // Each case represents the number of the byte received in a frame.                    
+        if (ByteCount == 0) // Each case represents the number of the byte received in a frame.                    
         {
              
-             if(NextByte == CLOUD_START) // Is it the proper start byte ?
+             if (NextByte == CLOUD_START) // Is it the proper start byte ?
              {
                  pHandle->rx_frame.Buffer[ByteCount] = NextByte;
                  pHandle->rx_frame.ByteCnt ++;                 
@@ -143,9 +144,9 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
                  pHandle->rx_frame.ByteCnt = 0;
              }           
         }
-        else if(ByteCount == 1)
+        else if (ByteCount == 1)
         {
-             if(NextByte == CLOUD_SLAVE_ID) // Is it the proper address ?
+             if (NextByte == CLOUD_SLAVE_ID) // Is it the proper address ?
              {
                  pHandle->rx_frame.Buffer[ByteCount] = NextByte;
                  pHandle->rx_frame.ByteCnt ++;                 
@@ -155,11 +156,11 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
                  pHandle->rx_frame.ByteCnt = 0;
              }
         }
-        else if(ByteCount == 2)
+        else if (ByteCount == 2)
         {
              if ((NextByte == CLOUD_RUNTIME) || (NextByte == CLOUD_SYSTEM)) // is it a valid command
              {
-                 if(NextByte == CLOUD_RUNTIME)
+                 if (NextByte == CLOUD_RUNTIME)
                  {
                      pHandle->rx_frame.Size = CLOUD_RUNTIME_FRAME_LENGTH;    
                  }
@@ -177,7 +178,7 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
              }    
  
         }
-        else if((ByteCount > 2) && (ByteCount < (pHandle->rx_frame.Size - 1)))
+        else if ((ByteCount > 2) && (ByteCount < (pHandle->rx_frame.Size - 1)))
         {   
             // From byte 2 to the seconde to last byte
             // They dont need to be checked because as long as 
@@ -188,10 +189,10 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
             pHandle->rx_frame.ByteCnt ++;
                 
         }
-        else if(ByteCount == (pHandle->rx_frame.Size - 1)) // 
+        else if (ByteCount == (pHandle->rx_frame.Size - 1)) // 
         {
                                         
-            if(NextByte == CLOUD_END_CODE_2) // Is it the proper end byte ?
+            if (NextByte == CLOUD_END_CODE_2) // Is it the proper end byte ?
             {
                 pHandle->rx_frame.Buffer[ByteCount] = NextByte;
                 
@@ -222,7 +223,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     int32_t  toSend         = 0;
     uint16_t  SpeedLimit    = 0;
     uint8_t  WheelDiameter  = 0;    
-    uint8_t  PassLvl        = 0;
+    uint8_t  pasLevel;
     uint8_t  LightStatus    = 0;
     uint8_t  HandshakeIndex = 0; 
     uint8_t  Check1         = 0;
@@ -232,15 +233,15 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     
     
     //Check if the CRC is good
-    if((Check1 == (pHandle->rx_frame.Buffer[pHandle->rx_frame.Size - 4])) && 
+    if ((Check1 == (pHandle->rx_frame.Buffer[pHandle->rx_frame.Size - 4])) && 
        (Check2 == (pHandle->rx_frame.Buffer[pHandle->rx_frame.Size - 3])))
     {
-        if(pHandle->pVController->pPowertrain->pThrottle->extThrottleEnable == false)
+        if (pHandle->pVController->pPowertrain->pThrottle->extThrottleEnable == false)
         {
             Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76);
         }
         
-        if(pHandle->rx_frame.Buffer[2] == CLOUD_SYSTEM) // Check if its a system frame
+        if (pHandle->rx_frame.Buffer[2] == CLOUD_SYSTEM) // Check if its a system frame
         {
             //pHandle->rx_frame.Buffer[3] // data lenght
             //pHandle->rx_frame.Buffer[4] // assistance sensor    
@@ -304,9 +305,20 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             
             uint8_t PasMaxLevel = pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel;   
             
-            PassLvl = pHandle->rx_frame.Buffer[4]; // PAS level
-            PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,LCD_Cloud_5S_ConvertPASLevelFromCloud_5S(PassLvl,PasMaxLevel)); 
-            
+            pasLevel = LCD_Cloud_5S_ConvertPASLevelFromCloud_5S(pHandle->rx_frame.Buffer[4],PasMaxLevel); // PAS level
+            uint8_t currentPAS = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
+            // Screen is set to slave when there's a new pas level from the app
+            // Therefore we skip setting the Cloud Drive PAS to our PAS because 
+            // we will be updating the Cloud Drive right after parsing this message
+            // Otherwise check if the pas has changed to update the app and set the new pas
+            if (!pHandle->isScreenSlave)
+            {
+                if (pasLevel != currentPAS)
+                {
+                    PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,pasLevel); 
+                    pHandle->cloud5SChangePasFlag = true;            
+                }
+            }
             
             LightStatus = (pHandle->rx_frame.Buffer[5]) & 0x80; // bit7: headlight. 0: light off, 1: light on
          
@@ -347,7 +359,9 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             replyFrame.Buffer[2] = CLOUD_RUNTIME;
             replyFrame.Buffer[3] = 5; // Data lenght of this frame
             replyFrame.Buffer[4] = LCD_Cloud_5S_ConvertPASLevelToCloud_5S(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)); // PAS 
-           
+            if (pHandle->isScreenSlave == true)
+                pHandle->isScreenSlave = false;
+
             toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);             
             toSend = LCD_Cloud_5S_ApplyPowerFilter((uint16_t)toSend);  
           
@@ -360,12 +374,12 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
                   
             toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
          
-            if(toSend != 0) //verify toSend value to avoid a division by zero.
+            if (toSend != 0) //verify toSend value to avoid a division by zero.
             {
                 toSend = 500000/(toSend/60); // Descaling here with the 500000 to return to original unit            
             }
             
-            if(toSend <= 80) // if the wheel isn't spinning or we get an unrealistic speed (0ver 100 km/h)
+            if (toSend <= 80) // if the wheel isn't spinning or we get an unrealistic speed (0ver 100 km/h)
             {
                 toSend = CLOUD_DEFAULT_SPEED_PERIOD; // Send the default value
             }
