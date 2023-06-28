@@ -112,6 +112,47 @@
     #define PAS_T_9_POWER_PERCENT      0 
 #endif
 
+// PAS Torque sesnor parameters as default values
+
+#ifndef PTS_FILTER_ALPHA
+    #define PTS_FILTER_ALPHA              2.27F    // Butterworth alpha coefficient pedal torque sensor filtering
+#endif
+
+#ifndef PTS_FILTER_BETA
+    #define PTS_FILTER_BETA              -0.27F    // Butterworth beta coefficient pedal torque sensor filtering
+#endif
+
+#ifndef PTS_MAX_PTSVALUE
+    #define PTS_MAX_PTSVALUE         UINT16_MAX    // Maximum analog value to reach
+#endif
+
+#ifndef PTS_OFFSET_ADC2PTS
+    #define PTS_OFFSET_ADC2PTS            10000    // Offset for ADC to pedal torque sensor linear transformation
+#endif
+
+#ifndef PTS_OFFSET_PTS2TORQUE_STARTUP
+    #define PTS_OFFSET_PTS2TORQUE_STARTUP    40    // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#endif
+
+#ifndef PTS_OFFSET_STARTUP_SPEED_KMH
+    #define PTS_OFFSET_STARTUP_SPEED_KMH      3    // Speed under which the Startup pedal torque sensor offset is used in km/h
+#endif
+
+#ifndef PTS_OFFSET_PTS2TORQUE
+    #define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in %
+#endif
+
+#ifndef PTS_OFFSET_PTS2TORQUE_SAFETY
+    #define PTS_OFFSET_PTS2TORQUE_SAFETY     40    // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
+#endif
+
+#ifndef PTS_FILTER_BW1
+    #define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging
+#endif
+
+#ifndef PTS_FILTER_BW2
+    #define PTS_FILTER_BW2                   25    // BW coefficient for pedal torque sensor avereging
+#endif
 
 #endif /*__VC_PARAMETERS_H*/
 
