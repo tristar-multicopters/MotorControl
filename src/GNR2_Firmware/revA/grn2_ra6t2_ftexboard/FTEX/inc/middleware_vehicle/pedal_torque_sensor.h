@@ -44,6 +44,7 @@ typedef struct
     uint16_t    hStartupOffsetMTSpeedRPM;  /* Speed under which the startup offset is used in rpm */
     uint16_t    hStartupOffsetMTSpeedKMH;  /* Speed under which the startup offset is used in Kmh */
     uint16_t    hOffsetMT;                 /* Offset of torque sensor vs torque */
+    uint16_t    hOffsetMTSafety;           /* Offset of torque sensor vs torque used for safety check */ 
     
     int16_t     bSlopeMT;       /* Gain factor of torque sensor vs torque */
     int16_t     bDivisorMT;     /* Scaling factor of torque sensor vs torque */

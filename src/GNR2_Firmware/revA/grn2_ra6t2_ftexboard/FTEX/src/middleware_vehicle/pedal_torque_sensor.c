@@ -114,7 +114,7 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
         
         // We include the startup threshold to check if throttle is detected
         // Be cause it is in % 
-        OffsetSafe = (UINT16_MAX * pHandle->hParameters.hOffsetMT)/PTS_PERCENTAGE;
+        OffsetSafe = (UINT16_MAX * pHandle->hParameters.hOffsetMTSafety)/PTS_PERCENTAGE;
         
         /* Pedal Torque Sensor is not Detected */
         if (TorqueSens < OffsetSafe) 
