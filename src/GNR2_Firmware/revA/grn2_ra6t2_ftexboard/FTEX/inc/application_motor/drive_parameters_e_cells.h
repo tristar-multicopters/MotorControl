@@ -69,7 +69,8 @@
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
 
 #define OV_VOLTAGE_THRESHOLD_V          70 /*!< Over-voltage threshold */
-#define UD_VOLTAGE_THRESHOLD_V          32 /*!< Under-voltage threshold */
+//*** the under voltage value set to high for safety until tune it later with main batteries in hand
+#define UD_VOLTAGE_THRESHOLD_V          44 /*!< Under-voltage threshold */ 
 
 #define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
 #define OV_TEMPERATURE_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
@@ -125,7 +126,8 @@
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
 #define LOW_BATTERY_TORQUE              150         /* Maximum torque allowed in low SoC of battery */
-#define LOW_BATTERY_VOLTAGE_THRESHOLD   35          /* the threshold of battery voltage before limit torque */
+//*** the low voltage threshold value set to high for safety until tune it later with main batteries in hand
+#define LOW_BATTERY_VOLTAGE_THRESHOLD   44          /* the threshold of battery voltage before limit torque */
 
 #define MAX_CURRENT_LIMIT               1           /* to calculate maximum poweer based on maximum current and Battery S0C */
 #define MAX_POWER_LIMIT                 2           /* to use  MAX_APPLICATION_POSITIVE_POWER as the reference for Maximum power*/
