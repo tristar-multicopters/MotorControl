@@ -76,7 +76,6 @@
 #define POWERTRAIN_USE_MOTOR2                     false    // True if motor2 is used
 #define POWERTRAIN_DEFAULT_MAIN_MOTOR                M1    // Default main motor, can be M1 or M2
 #define POWERTRAIN_DEFAULT_MODE            SINGLE_MOTOR    // Default powertrain mode, can be SINGLE_MOTOR or DUAL_MOTOR
-#define POWERTRAIN_DEFAULT_CONTROL_TYPE     TORQUE_CTRL    // Default control type, can be TORQUE_CTRL or SPEED_CTRL
 #define POWERTRAIN_M2_TORQUE_INVERSION            false    // If true, M2 torque is inverted compared to M1
 #define POWERTRAIN_START_THROTTLE_THRESHOLD        1000    // Throttle value to start powertrain
 #define POWERTRAIN_STOP_THROTTLE_THRESHOLD          100    // Throttle value to stop powertrain
@@ -91,7 +90,7 @@
 #define PAS_TORQUE_GAIN                             100    // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                         99    // Maximum PAS Torque feed ration in 100%
 #define PAS_MAX_SPEED_RATIO                          99    // Maximum PAS Speed feed ration in 100%
-#define PAS_ALGORITHM                   TorqueSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
+#define PAS_ALGORITHM                   CadenceSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
                                                               CadenceSensorUse = 1, Cadence sensor use define 
                                                               HybridSensorUse  = 2, Hybride sensor use define  */
 #define PAS_CADENCE_USE_SPEED_LIMIT                true    // Decides if we have a speed limit on pas cadence

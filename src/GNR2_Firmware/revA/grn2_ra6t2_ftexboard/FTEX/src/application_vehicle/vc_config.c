@@ -21,10 +21,16 @@
     since we have no clear plan for using speed control with trottle at the moment,
     and to prevent any exception (dividing by zero) or error, the definitions kept here alive
     until someone update the code with clear and clean revise  */
-
-#define THROTTLE_OFFSET_THROTTLE2SPEED         1 //400  is tested value for R48 // Offset for throttle to speed linear transformation 
-#define THROTTLE_SLOPE_THROTTLE2SPEED          1 //20   is tested value for R48 // Slope for throttle to speed linear transformation
-#define THROTTLE_DIVISOR_THROTTLE2SPEED        1 //140  is tested value for R48 // Divisor for throttle to speed linear transformation
+#if POWERTRAIN_DEFAULT_CONTROL_TYPE == SPEED_CTRL
+        #define THROTTLE_OFFSET_THROTTLE2SPEED         400 //400  is tested value for R48 // Offset for throttle to speed linear transformation 
+        #define THROTTLE_SLOPE_THROTTLE2SPEED          20 //20   is tested value for R48 // Slope for throttle to speed linear transformation
+        #define THROTTLE_DIVISOR_THROTTLE2SPEED        140 //140  is tested value for R48 // Divisor for throttle to speed linear transformation
+#elif  POWERTRAIN_DEFAULT_CONTROL_TYPE == TORQUE_CTRL
+        #define THROTTLE_OFFSET_THROTTLE2SPEED         1 //400  is tested value for R48 // Offset for throttle to speed linear transformation 
+        #define THROTTLE_SLOPE_THROTTLE2SPEED          1 //20   is tested value for R48 // Slope for throttle to speed linear transformation
+        #define THROTTLE_DIVISOR_THROTTLE2SPEED        1 //140  is tested value for R48 // Divisor for throttle to speed linear transformation
+#endif
+        
 /* end of temperory defined values */
 
 MultipleDriveInterfaceHandle_t MDInterfaceHandle =

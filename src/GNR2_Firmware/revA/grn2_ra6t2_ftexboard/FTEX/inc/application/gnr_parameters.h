@@ -59,7 +59,7 @@
 
 
 
-#define VEHICLE_SELECTION             VEHICLE_A2_500W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                                                                                
@@ -76,6 +76,7 @@
 //define to allow screne to change power
 //#define SCREENPOWERCONTROL 
 
+#define POWERTRAIN_DEFAULT_CONTROL_TYPE         TORQUE_CTRL    // Default control type, can be TORQUE_CTRL or SPEED_CTRL
 
 /*
   Set BYPASS_POSITION_SENSOR to 1 and BYPASS_CURRENT_CONTROL to 1 for simple open loop voltage output.
