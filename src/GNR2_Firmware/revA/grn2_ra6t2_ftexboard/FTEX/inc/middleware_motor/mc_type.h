@@ -93,6 +93,7 @@ extern "C" {
 #define  MC_OCSP            (uint16_t)(0x0100u)     /**< @brief Error: Overcurrent software protection.*/
 #define  MC_MSRP            (uint16_t)(0x0200u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
 #define  MC_NTCERR          (uint16_t)(0x0400u)     /**< @brief Error: NTC disconnection or Freezing protection.*/
+#define  MC_HALL_DISC       (uint16_t)(0x0800u)     /**< @brief ERROR: disconnected Hall sensor detection */
 /** @} */
 
 /**

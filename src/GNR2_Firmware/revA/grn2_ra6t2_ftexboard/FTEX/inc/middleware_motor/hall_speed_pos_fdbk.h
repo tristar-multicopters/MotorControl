@@ -222,6 +222,12 @@ bool HallPosSensor_CalcAvrgMecSpeedUnit(HallPosSensorHandle_t * pHandle, int16_t
   */
 void HallPosSensor_SetMecAngle(HallPosSensorHandle_t * pHandle, int16_t hMecAngle);
 
+/**
+  * @brief  Check if the Hall sesnor state is STATE_7 which shows that sesnors are disconnected
+  * @param  pHandle pointer on related component instance
+  * @retval true for error, false for no error
+  */
+bool HallSensor_IsDisconnected(HallPosSensorHandle_t * pHandle);
 
 
 #endif /*__HALL_SPEEDNPOSFDBK_H*/

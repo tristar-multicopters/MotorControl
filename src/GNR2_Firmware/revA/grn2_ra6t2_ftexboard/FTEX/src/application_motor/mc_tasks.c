@@ -680,6 +680,12 @@ uint8_t MC_HighFrequencyTask(void)
     HallPosSensor_CalcElAngle(&HallPosSensorM1);
     RotorPosObs_CalcElAngle(&RotorPosObsM1, 0);
     
+    // Check if the Hall Sensors are disconneted and raise the error
+    if (HallSensor_IsDisconnected(&HallPosSensorM1) == true)
+    {
+        MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_HALL_DISC, 0);
+    }
+    
     /* here the code is checking last 16 records of direction, 
     if all last 16 records show vibration, then rasie the stuck protection error */
     if ((HallPosSensorM1.wDirectionChangePattern & 0xFFFF) == VIBRATION_PATTERN)
@@ -698,7 +704,7 @@ uint8_t MC_HighFrequencyTask(void)
         //        BemfObsInputs.Vbus = VbusSensor_GetAvBusVoltageDigital(&(pBusSensorM1->Super));
         //        BemfObsPll_CalcElAngle (&BemfObserverPllM1, &BemfObsInputs);
         //        BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
-    }
+    }      
 
     #if LOGMOTORVALS
     LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through

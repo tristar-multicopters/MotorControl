@@ -27,6 +27,9 @@
 #define STATE_6 (uint8_t)6
 #define STATE_7 (uint8_t)7
 
+#define ALL_HALL_ONE    STATE_7
+#define ALL_HALL_ZERO   STATE_0
+
 #define NEGATIVE          (int8_t)-1
 #define POSITIVE          (int8_t)1
 
@@ -596,4 +599,18 @@ void HallPosSensor_SetMecAngle(HallPosSensorHandle_t * pHandle, int16_t hMecAngl
 		hMecAngle = 0;
 	}
     (void) hMecAngle; // Void line added to remove warning
+}
+
+/**
+* Check if the Hall sesnor state is ALL_HALL_ONE or ALL_HALL_ZERO which shows 
+  sesnors are disconnected or something is wrong in the connetion respectly
+*/
+bool HallSensor_IsDisconnected(HallPosSensorHandle_t * pHandle)
+{
+    bool retval = false;
+    if ((pHandle->bHallState == ALL_HALL_ONE) || (pHandle->bHallState == ALL_HALL_ZERO))
+    {
+        retval = true; // in case of error
+    }
+    return retval;
 }

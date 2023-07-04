@@ -726,6 +726,10 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         {
             VC_Errors_RaiseError(UT_PROTECTION);
         }
+        if ((bFaultNow & MC_HALL_DISC)!= MC_NO_ERROR)
+        {
+            VC_Errors_RaiseError(MOTOR_HALL_ERROR);
+        }
     }
     else            // Try to clear occured error if Motor does not have any error
     {
@@ -825,6 +829,11 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             {
                 hM1FaultOccurredCode &= ~MC_FOC_DURATION;
             }
+            
+            if ((hM1FaultOccurredCode & MC_HALL_DISC) != 0)
+            {
+                hM1FaultOccurredCode &= ~MC_HALL_DISC;
+            }
 
         }
 
@@ -922,6 +931,11 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             if ((hM2FaultOccurredCode & MC_FOC_DURATION) != 0)
             {
                 hM2FaultOccurredCode &= ~MC_FOC_DURATION;
+            }
+            
+            if ((hM2FaultOccurredCode & MC_HALL_DISC) != 0)
+            {
+                hM2FaultOccurredCode &= ~MC_HALL_DISC;
             }
         }
     } // End of if (!bFaultNow)
