@@ -48,9 +48,35 @@ void MCuboot_QuickSetup(void)
     
     /* Verify the boot image and get its location. */
     struct boot_rsp rsp;
-    assert(0 == boot_go(&rsp));
+    
+    //get valid or invalid bank information
+    //this function must return zero if 
+    //a valid image was found and a no-zero
+    //value if not.
+    int bootValidBank = boot_go(&rsp);
+    
+    //if a not valid firmware is in the flash bank.
+    //erase it and reset the system.
+    //this situation can happned if a power off
+    //happned when making a copy from the external
+    //memory to the microcontroller memory.
+    //our function only verify if we have the valid version
+    //in the firmware signature, but bootValidBank,from mcuboot, 
+    //verify if the image is corrupted or not.
+    if ((0 != bootValidBank) && (FW_FirmVersionDetected()))
+    {
+        //Clear the "new app" memory region
+        //corrupted firmware.
+        FW_EraseFirstImage();
+    }
+    
+    //asset to reset the system if
+    //a corrupted or a empty bank was found.
+    assert(bootValidBank == 0);
 
-    /* Enter the application. */
+    ///Enter in the application
+    //only if a valid(not corrupted) firmware
+    //was detected.
     RM_MCUBOOT_PORT_BootApp(&rsp);
 }
 

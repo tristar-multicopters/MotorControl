@@ -24,6 +24,9 @@ static FirmwareUpdateStateMachine_t FirmwareUpdateStateMachine = CHECK_START;
 static FirmwareUpdateControl_t FirmwareUpdateControl = {.otaCommand = NO_COMMAND,.otaStatus = NO_ERROS,.updating = false,
                                                         .firstDataFrameReceived = false,.frameCount = 0,.frameControl = 0,
                                                         .serialFlashInit = false,.dataFrameReceived = false};
+
+//variable used to hold the crc value calculated on the fly(streaming).
+static uint32_t crcState = (uint32_t)~0L;                                                        
 /*********************************************
                 Public Variables
 *********************************************/
@@ -50,7 +53,13 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
     //check if the pointer is null
     ASSERT(pNode != NULL);
     
-    //flag used to informe if the received data frame was corrupted or not.
+    //variable used on the crc calcule.
+    uint8_t n;
+    
+    //Variable used to receive the calculated crc.
+    uint32_t crc32 = 0;
+    
+    //flag used to inform if the received data frame was corrupted or not.
     static bool dataFrameCorrupted = false;
     
     //variable used to count the maximum numbers of retrys.
@@ -66,14 +75,11 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
     //verify if all bytes of the data frame was received.
     if (FirmwareUpdateControl.dataFrameReceived == true)//pVCI->pFirmwareUpdateDomainObj->Offset >= NUMBER_OF_DATA_FRAME_BYTES)
     {
-        //
+        //clear data frame received flag to wait for a new data frame.
         FirmwareUpdateControl.dataFrameReceived = false;
         
-        //calculate crc to received data frame.
-        FirmwareUpdateControl.crc = crc8(FirmwareUpdateControl.data, FirmwareUpdateControl.data[DATAFRAME_SIZE]);
-        
-        //check crc of the data frame.
-        //must be implemented on the future.
+        //calculate crc to received data frame on whole frame. DATAFRAME_SIZE is not fixed, but DATAFRAME_HEADERSIZE is.
+        FirmwareUpdateControl.crc = crc8(FirmwareUpdateControl.data, FirmwareUpdateControl.data[DATAFRAME_SIZE] + DATAFRAME_HEADERSIZE);
         
         //data frame is not corrupted.
         dataFrameCorrupted = false;
@@ -82,7 +88,7 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
         //if yes, check the frame number and type.
         //if not, set status variable to TRANSFER_CORRUPTED_FRAME.
         //and move to 
-        if (FirmwareUpdateControl.data[PREAMB] == PREAMBULE_BYTE)// and crc ok)
+        if ((FirmwareUpdateControl.data[PREAMB] == PREAMBULE_BYTE) && (FirmwareUpdateControl.data[FirmwareUpdateControl.data[DATAFRAME_SIZE] + DATAFRAME_HEADERSIZE] == FirmwareUpdateControl.crc))
         {
             //get frame control value from the data frame received.
             tempFrameCount = (uint16_t)((FirmwareUpdateControl.data[FRAMECOUNT_MSB] << 8) + FirmwareUpdateControl.data[FRAMECOUNT_LSB]);
@@ -110,6 +116,13 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
                     //write the data frame payload received in the external flash memory.
                     if(SF_Storage_PutPackChunk(&FirmwareUpdateControl.data[DATAPAYLOAD_START], FirmwareUpdateControl.frameDataSize) == EXIT_SUCCESS)
                     {
+                        //calculate crc 32 on the fly for the data payload of the received data frame.
+                        for (n = 0; n < FirmwareUpdateControl.frameDataSize; n++)
+                        {
+                            //Calculate frimware CRC32 on the fly.
+                            FirmwareUpdate_Crc32Update(FirmwareUpdateControl.data[DATAPAYLOAD_START + n]);
+                        }
+                            
                         //data payload was correctly wrote in the external memory.
                         FirmwareUpdateControl.serialFlashReponse = EXIT_SUCCESS;
   
@@ -149,6 +162,13 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
                         //write the data frame payload received in the external flash memory.
                         if (SF_Storage_PutPackChunk(&FirmwareUpdateControl.data[DATAPAYLOAD_START], FirmwareUpdateControl.frameDataSize) == EXIT_SUCCESS)
                         {
+                            //calculate crc 32 on the fly for the data payload of the received data frame.
+                            for (n = 0; n < FirmwareUpdateControl.frameDataSize; n++)
+                            {
+                                //Calculate frimware CRC32 on the fly.
+                                FirmwareUpdate_Crc32Update(FirmwareUpdateControl.data[DATAPAYLOAD_START + n]);
+                            }
+                            
                             //data payload was correctly wrote in the external memory.
                             FirmwareUpdateControl.serialFlashReponse = EXIT_SUCCESS;
                         }
@@ -167,6 +187,15 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
                         //check if is the last data frame.
                         if ((FirmwareUpdateControl.frameControl == LAST_FRAME) && (FirmwareUpdateControl.serialFlashReponse == EXIT_SUCCESS))
                         {
+                            //Get crc 32 result.
+                            crc32 = FirmwareUpdate_Crc32Result();
+                            
+                            //Copy crc32 from variable to buffer to be written at the end of firmware file.
+                            memcpy(FirmwareUpdateControl.data,&crc32,sizeof(crc32));
+                            
+                            //Write crc32 at the end of firmware file.
+                            SF_Storage_PutPackChunk(FirmwareUpdateControl.data, sizeof(uint32_t));
+                            
                             //informr the IOT that file transfer was finished.
                             FirmwareUpdateControl.otaStatus = FILE_TRANSFER_COMPLETED;
                             
@@ -278,20 +307,30 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
         //state to check if a PREPARE_FILE_TRANSFER command was received.
         case CHECK_START:
             
-            //Read the OD responsible to hold the firmware update command on subindex 0.
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0)), pNode, &FirmwareUpdateControl.otaCommand, sizeof(FirmwareUpdateControl.otaCommand));
-        
+            //allowed to start a DFU if the battery charge is above the DFU_MINIMUMBATERRY_CHARGE.
+            //this blocks only the start check. this means if DFU was started before the battery drops
+            //below DFU_MINIMUMBATERRY_CHARGE the device will continues on the DFU procedure.
+            if (BatMonitor_GetSOC(VCInterfaceHandle.pPowertrain->pBatMonitorHandle) >= DFU_MINIMUMBATERRY_CHARGE)
+            {
+                //Read the OD responsible to hold the firmware update command on subindex 0.
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0)), pNode, &FirmwareUpdateControl.otaCommand, sizeof(FirmwareUpdateControl.otaCommand));
+            }
+            
             //check if a PREPARE_FILE_TRANSFER command was received.
             //if was, move to the next state to prepare the system to the firmware update.
             if (FirmwareUpdateControl.otaCommand == PREPARE_FILE_TRANSFER)
             {
+                //Initialize the varible responsible to hold crc 32 value 
+                //calculated on the fly.
+                FirmwareUpdate_Crc32Reset();
+                
                 //inform system that a firmware update will start.
                 FirmwareUpdateControl.updating = true;
                 
                 //clear flag responsible to indicate the first data frame was received.
                 FirmwareUpdateControl.firstDataFrameReceived = false;
                 
-                //initialize the number of the received dara frame.
+                //initialize the number of the received data frame.
                 FirmwareUpdateControl.frameCount = 0;
                 
                 //set first frame received.
@@ -559,4 +598,36 @@ uint8_t crc8(const void* vptr, int len)
     }
 
     return crc;
+}
+
+/**********************************************************************************************************************
+ * @brief Reset crcState variable to 0xFFFFFFFF
+ **********************************************************************************************************************/
+void FirmwareUpdate_Crc32Reset(void) 
+{
+    crcState = (uint32_t)~0L;
+}
+
+/**********************************************************************************************************************
+ * @brief Calculate CRC-32 using polynomial x32 + x26 + x23 + x22 + x16 + x12 + x11 + x10 + x8 + x7 + x5 + x4 + x2 + x1 + 1
+ **********************************************************************************************************************/
+void FirmwareUpdate_Crc32Update(const uint8_t data) 
+{
+    //
+    uint8_t tableIndex = 0;
+    
+    //Calculate crc32 on the fly.
+    tableIndex = (uint8_t)(crcState ^ (data >> (0 * 4)));
+    crcState = FLASH_READ_DWORD(crc32_table + (tableIndex & 0x0f)) ^ (crcState >> 4);
+    tableIndex = (uint8_t)(crcState ^ (data >> (1 * 4)));
+    crcState = FLASH_READ_DWORD(crc32_table + (tableIndex & 0x0f)) ^ (crcState >> 4);
+}
+
+/**********************************************************************************************************************
+ * @brief Return crc 32 value.
+ *        This operation is done using a separate function because we are calculating the CRC on the fly
+ **********************************************************************************************************************/
+uint32_t FirmwareUpdate_Crc32Result(void) 
+{
+    return ~crcState;
 }

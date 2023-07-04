@@ -67,7 +67,7 @@ extern "C" {
 
 /*User Data configuration for Gnr*/
 
-//OD ID for informe if user data was upadted or
+//OD ID for inform if user data was upadted or
 //is being upadted.
 //There are two possible values that can be written 
 //on this address:

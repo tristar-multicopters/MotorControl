@@ -96,4 +96,40 @@ uint32_t FW_Storage_GetGNR_FWVersion(void);
 */
 uint32_t FW_Storage_GetGNR_FWSize(void);
 
+/**
+* @brief Function used to set the file position to the beginning.
+* @retval true if the file was set correctly, false if not.
+*/
+uint8_t FW_Storage_SetFileToBeginning(void);
+
+/**
+* @brief function used to read size bytes from the *file
+         read from the beginning of the file and moves
+         size bytes to next position when one read is
+         executed.
+         To use this function m_file_position variable 
+         must be initalized to zero before start the first 
+         read.
+* @param  data  pointer to the array of data to write
+* @param  size  number of bytes to write
+* @retval the number of character effectively written into file
+*/
+int16_t FW_Storage_ReadBytesFromFile(uint8_t* data, uint8_t size);
+
+/**
+* @brief function used to read size bytes from the *file.
+* @param  data  pointer to the array of data to write
+* @param  size  number of bytes to write
+* @retval the number of character effectively written into file
+*/
+int16_t FW_Storage_ReadBytes(uint8_t* data, uint8_t size);
+
+/**
+* @brief Function used to set the file position to the beginning
+         of the GNR firmware at the external memory
+         and initialize the variable m_file_position to zero.
+* @retval none.
+*/
+void FW_Storage_SetFileToGnrFirmw(void);
+
 #endif /* __FW_STORAGE_H */

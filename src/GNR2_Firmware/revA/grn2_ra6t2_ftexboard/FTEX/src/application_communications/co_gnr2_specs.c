@@ -598,12 +598,12 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         
         /***********GNR2 User Data configuration OBJECTS MODULE********************************/
     
-        //Application - Informe what user data was upadted
+        //Application - Inform what user data was upadted
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_DEVICE_TURNNING_OFF, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataDeviceTurnningOff};
         //move to next OD index
         index++;
         
-        //Application - Informe if user data was upadted or is being upadted.
+        //Application - Inform if user data was upadted or is being upadted.
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataKeyUserDataConfig};
         //move to next OD index
         index++;
@@ -1066,12 +1066,12 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         
         /***********GNR2 User Data configuration OBJECTS MODULE********************************/
     
-        //Application - Informe what user data was upadted
+        //Application - Inform what user data was upadted
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_DEVICE_TURNNING_OFF, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataDeviceTurnningOff};
         //move to next OD index
         index++;
         
-        //Application - Informe if user data was upadted or is being upadted.
+        //Application - Inform if user data was upadted or is being upadted.
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataKeyUserDataConfig};
         //move to next OD index
         index++;
@@ -1545,12 +1545,12 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         
         /***********GNR2 User Data configuration OBJECTS MODULE********************************/
     
-        //Application - Informe what user data was upadted
+        //Application - Inform what user data was upadted
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_DEVICE_TURNNING_OFF, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataDeviceTurnningOff};
         //move to next OD index
         index++;
         
-        //Application - Informe if user data was upadted or is being upadted.
+        //Application - Inform if user data was upadted or is being upadted.
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_KEY_USER_DATA_CONFIG, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataKeyUserDataConfig};
         //move to next OD index
         index++;

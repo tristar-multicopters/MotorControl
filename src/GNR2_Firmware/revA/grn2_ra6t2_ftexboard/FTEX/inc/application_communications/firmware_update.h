@@ -84,11 +84,22 @@
 //define the position, in the data frame, of the beginning of the data payload.
 #define DATAPAYLOAD_START               0x05
 
+//define the postion, in the data frame, of the CRC byte.
+#define DATAFRAME_CRC                   2
+
 //define the data frame header size
 #define DATAFRAME_HEADERSIZE            0x05
 
 //define data frame crc size
 #define DATAFRAME_CRCSIZE               0x01
+
+//define the minimum battery charge, on %,
+//where the device can start a DFU.
+#define DFU_MINIMUMBATERRY_CHARGE       25
+
+/************** CRC32 Macros ******************/
+//
+#define FLASH_READ_DWORD(x) (*(uint32_t*)(x))
 
 /*********************************************
           Data Struct Definition
@@ -122,10 +133,11 @@ typedef struct
     uint8_t serialFlashReponse;//used to now if a flash operation failled or not.
     bool dataFrameReceived;//flag used to indicate if a new data frame was received.
     uint8_t crc;//used to CRC check from the data frame.
+    uint32_t crc32;
     
 }FirmwareUpdateControl_t;
 
-//constante table used to calculate the crc
+//constant table used to calculate the crc
 static unsigned char const crc8_table[] = {
 	0x00,0x07,0x0e,0x09,0x1c,0x1b,0x12,0x15,
 	0x38,0x3f,0x36,0x31,0x24,0x23,0x2a,0x2d,
@@ -159,6 +171,14 @@ static unsigned char const crc8_table[] = {
 	0x96,0x91,0x98,0x9f,0x8a,0x8d,0x84,0x83,
 	0xde,0xd9,0xd0,0xd7,0xc2,0xc5,0xcc,0xcb,
 	0xe6,0xe1,0xe8,0xef,0xfa,0xfd,0xf4,0xf3
+};
+
+//constant table used to calculate the crc32.
+static const uint32_t crc32_table[] = {
+    0x00000000, 0x1db71064, 0x3b6e20c8, 0x26d930ac,
+    0x76dc4190, 0x6b6b51f4, 0x4db26158, 0x5005713c,
+    0xedb88320, 0xf00f9344, 0xd6d6a3e8, 0xcb61b38c,
+    0x9b64c2b0, 0x86d3d2d4, 0xa00ae278, 0xbdbdf21c
 };
 
 //========================= EXTERN TYPES ==========================//
@@ -207,5 +227,23 @@ void FirmwareUpdate_CheckDataFrame(VCI_Handle_t * pVCI);
  * @return  uint8_t 		return the crc8 of the array given in parameter
  **********************************************************************************************************************/
 uint8_t crc8(const void* vptr, int len);
+
+/**********************************************************************************************************************
+ * @brief Reset crcState variable to 0xFFFFFFFF
+ **********************************************************************************************************************/
+void FirmwareUpdate_Crc32Reset(void) ;
+
+/**********************************************************************************************************************
+ * @brief Calculate CRC-32 using polynomial x32 + x26 + x23 + x22 + x16 + x12 + x11 + x10 + x8 + x7 + x5 + x4 + x2 + x1 + 1
+ * @param const uint8_t data Data over which the crc is computed
+ **********************************************************************************************************************/
+void FirmwareUpdate_Crc32Update(const uint8_t data);
+
+/**********************************************************************************************************************
+ * @brief Return crc 32 value.
+ *        This operation is done using a separate function because we are calculating the CRC on the fly
+ * @return  uint32_t return the crc32 calculated value.
+ **********************************************************************************************************************/
+uint32_t FirmwareUpdate_Crc32Result(void);
 
 #endif
