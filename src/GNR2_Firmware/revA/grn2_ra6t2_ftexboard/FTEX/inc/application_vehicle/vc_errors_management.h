@@ -11,8 +11,10 @@
 #include "gnr_main.h"
 
 
-#define ERROR_BUFFER_SIZE     20
-#define DEFAULT_CYCLE_LENGHT   6 
+#define ERROR_BUFFER_SIZE       20
+#define DEFAULT_CYCLE_LENGTH    6 
+#define DEFAULT_HOLD_FRAMES     40
+#define HOLD_UNTIL_CLEARED       0
 
 typedef enum
 {
@@ -38,9 +40,10 @@ ErrorCodes_t;
 
 typedef struct
 {
-    ErrorCodes_t ErrorCodes[ERROR_BUFFER_SIZE];
-    uint16_t NumberErrors;
-    uint16_t Cycle_Lenght;
+    ErrorCodes_t errorCodes[ERROR_BUFFER_SIZE];
+    uint16_t errorHoldFrames[ERROR_BUFFER_SIZE]; // 0 means indefinitely.
+    uint16_t errorCount;
+    uint16_t cycleLength;
 
 }VC_Errors_Handle_t;
 
@@ -50,10 +53,11 @@ typedef struct
  *        
  *
  * @param[in] pHandle: handle for APT module instance, an APT error code 
+ * @param errorHoldFrames: amount of frames to hold the error, 0 means indefinitely
  *                 
  * @return nothing
  */
-void VC_Errors_RaiseError(ErrorCodes_t aError);
+void VC_Errors_RaiseError(ErrorCodes_t aError, uint16_t errorHoldFrames);
 
 /**@brief Function used to clear a specific error on the screen.
  *        
@@ -93,7 +97,7 @@ ErrorCodes_t VC_Errors_CycleError(void);
  *
  * @return nothing
  */
-void VC_Errors_SetCycleLenght(uint8_t aCycle);
+void VC_Errors_SetCycleLength(uint8_t aCycle);
 
 #endif /* __VC_ERRORS_MANAGEMENT_H */
 

@@ -82,7 +82,7 @@ bool BRK_IsPressedSafety(BRK_Handle_t * pHandle)
                 /* Increase the counter for the error delay and check if the delay has been reached */
                 if (Delay_Update(pHandle->pBrakeStuckDelay) == true) 
                 {
-                    VC_Errors_RaiseError(BRAKE_ERROR);
+                    VC_Errors_RaiseError(BRAKE_ERROR, HOLD_UNTIL_CLEARED);
                     brakeStuck = true;
                 }
             }

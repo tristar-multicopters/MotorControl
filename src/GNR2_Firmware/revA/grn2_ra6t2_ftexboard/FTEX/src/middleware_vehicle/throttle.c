@@ -157,7 +157,7 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
             {
                 if(Delay_Update(pHandle->pThrottleStuckDelay)) // Increase the counter for the error delay and check if the delay has been reached
                 {
-                    VC_Errors_RaiseError(THROTTLE_STUCK);
+                    VC_Errors_RaiseError(THROTTLE_STUCK, HOLD_UNTIL_CLEARED);
                     ThrottleStuck = true;
                 }
             }

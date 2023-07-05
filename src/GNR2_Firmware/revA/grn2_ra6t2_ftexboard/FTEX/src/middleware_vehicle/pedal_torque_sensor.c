@@ -127,8 +127,8 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
             {   
                 pHandle->bSafeStart = true;
                 /* Clear this error in case it was falsly flagged as stuck (user kept pedal pushing at max on boot) */
-                VC_Errors_ClearError(PAS_BOOT_ERROR); // Temperory using Throttle stuck as error 
-                Delay_Reset(pHandle->pPTSstuckDelay);               
+                VC_Errors_ClearError(PAS_BOOT_ERROR);
+                Delay_Reset(pHandle->pPTSstuckDelay);
             }
             else
             {
@@ -147,7 +147,7 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
                 /* Increase the counter for the error delay and check if the delay has been reached */
                 if (Delay_Update(pHandle->pPTSstuckDelay)) 
                 {
-                    VC_Errors_RaiseError(PAS_BOOT_ERROR); // Temperory using Throttle stuck as error
+                    VC_Errors_RaiseError(PAS_BOOT_ERROR, HOLD_UNTIL_CLEARED); 
                     PTSsensorStuck = true;
                 }
             }

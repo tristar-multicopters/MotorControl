@@ -37,7 +37,7 @@ void LCD_APT_init(APT_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handle_t 
     pHandle->pUART_handle->pTxCallback = &LCD_APT_TX_IRQ_Handler; 
         
     
-    VC_Errors_SetCycleLenght(6);
+    VC_Errors_SetCycleLength(6);
     
     pHandle->pUART_handle->UARTBaudrate = BAUD9600;
     uCAL_UART_Init(pHandle->pUART_handle);  // Initialise the UART module with the baudrate that APT screen needs  

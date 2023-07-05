@@ -716,7 +716,7 @@ void GnrOn_CallbackSDODownloadFinish(CO_CSDO *csdo, uint16_t index, uint8_t sub,
         if(iotTimeoutCount >= IOT_RESPONSE_FAIL_DISCONNECT_LIMIT)
         {
             iotDisconnected = true;
-            VC_Errors_RaiseError(IOT_COMM_ERROR);
+            VC_Errors_RaiseError(IOT_COMM_ERROR, HOLD_UNTIL_CLEARED);
         }            
     }
     else 

@@ -48,7 +48,7 @@ void LCD_Cloud_5S_init(Cloud_5S_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART
             
     Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76);
     
-    VC_Errors_SetCycleLenght(8); // To adjust
+    VC_Errors_SetCycleLength(8); // To adjust
     
     pHandle->pUART_handle->UARTBaudrate = BAUD9600;
     uCAL_UART_Init(pHandle->pUART_handle);  // Initialise the UART module with the baudrate that APT screen needs  

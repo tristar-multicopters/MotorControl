@@ -33,7 +33,7 @@ void LCD_KD718_init(KD718_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Handl
     pHandle->pUART_handle->pRxCallback = &LCD_KD718_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LCD_KD718_TX_IRQ_Handler; 
         
-    VC_Errors_SetCycleLenght(0);
+    VC_Errors_SetCycleLength(0);
     
     pHandle->pUART_handle->UARTBaudrate = BAUD1200;
     uCAL_UART_Init(pHandle->pUART_handle);  // Initialise the UART module with the baudrate that KD718 screen needs  

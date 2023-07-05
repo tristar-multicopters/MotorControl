@@ -152,7 +152,7 @@ void BatMonitor_UpdateSOC(BatMonitor_Handle_t * pHandle)
     
     if(pHandle->LowBattery == true) // If we have a low battery
     {
-        VC_Errors_RaiseError(BATT_LOW); // raise the flag
+        VC_Errors_RaiseError(BATT_LOW, HOLD_UNTIL_CLEARED); // raise the flag
     }
     else // If not
     {
