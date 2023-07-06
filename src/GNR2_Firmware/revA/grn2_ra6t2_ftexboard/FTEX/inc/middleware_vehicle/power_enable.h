@@ -34,15 +34,15 @@
 #define SDODOWNLOAD_MAXATTEMPTS  2
 
 //define power sequency wait time. use to wait all node be turnned off.
-#define POWEROFF_WAITTIME      100
+#define POWEROFF_WAITTIME_50MS      100
 
 //define used as time error on the power off sequency.
 //device can't be on after this timeout.
 //400 ms.
 #define POWEROFF_ERRORTIMEOUT_MS          400
 
-//define the system ready timeout(500ms).
-#define SYSTEMREADY_TIMEOUT_500MS   1000
+//define the system ready timeout(250ms).
+#define SYSTEMREADY_TIMEOUT_250MS   500
 
 //define IOT sdo donwload msg period(1000ms).
 #define IOTMSG_PERIOD         40

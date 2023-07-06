@@ -31,7 +31,9 @@
 #define USE_EMCY                0           /* Use emergency frame */
 #define STD_ID_EMCY             0           /* Emergency frame standard ID */
 
-#define HEARTBEAT_PRODUCE_PERIOD_MS         250                     /* Period of the heartbeat frame */
+//increased heartbeat period on produced side
+//to syncronize power off sequency.
+#define HEARTBEAT_PRODUCE_PERIOD_MS         2500                     /* Period of the heartbeat frame */
 #define HEARTBEAT_CONSUME_PERIOD_MS         500                     /* Max time to wait for receiving next heartbeat */  
 
 #define USE_RPDO                1           /* Use or not RPDO. 1 for yes, 0 for no. */
@@ -295,22 +297,7 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         //Add COB-ID EMCY Message
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1014, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)CO_COBID_EMCY_STD(USE_EMCY, STD_ID_EMCY)};		    
         //move to next OD index
-        index++;
-        
-        #if SUPPORT_SLAVE_ON_IOT
-        // Consumer Heartbeat max index    
-        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1016, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)1};
-        //move to next OD index
-        index++;
-        
-         //If device is the master, the consumer node will be GNR2_SLAVE_NODE_ID.
-        AppHbConsumer_1.NodeId = GNR2_SLAVE_NODE_ID;
-        
-        // Consumer Heartbeat parameters        
-        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)&AppHbConsumer_1};
-        //move to next OD index
-        index++;        
-        #endif             
+        index++;      
         
         // Producer Heartbeat Time
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)&hObjDataProdHbTime};
@@ -783,20 +770,7 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         //Add COB-ID EMCY Message
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1014, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)CO_COBID_EMCY_STD(USE_EMCY, STD_ID_EMCY)};		    
         //move to next OD index
-        index++;
-        
-        // Consumer Heartbeat max index    
-        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1016, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)1};
-        //move to next OD index
-        index++;
-        
-        //If device is the master, the consumer node will be GNR2_SLAVE_NODE_ID.
-        AppHbConsumer_1.NodeId = GNR2_SLAVE_NODE_ID;
-        
-        // Consumer Heartbeat parameters        
-        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)&AppHbConsumer_1};
-        //move to next OD index
-        index++;                   
+        index++;     
         
         // Producer Heartbeat Time
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)&hObjDataProdHbTime};
@@ -1262,19 +1236,6 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1014, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)CO_COBID_EMCY_STD(USE_EMCY, STD_ID_EMCY)};		    
         //move to next OD index
         index++;
-        
-        // Consumer Heartbeat max index    
-        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1016, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)1};
-        //move to next OD index
-        index++;
-        
-        //If device is the master, the consumer node will be GNR2_SLAVE_NODE_ID.
-        AppHbConsumer_1.NodeId = GNR2_MASTER_NODE_ID;
-        
-        // Consumer Heartbeat parameters        
-        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)&AppHbConsumer_1};
-        //move to next OD index
-        index++;                   
         
         // Producer Heartbeat Time
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)&hObjDataProdHbTime};
