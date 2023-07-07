@@ -139,6 +139,7 @@ void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
         userConfigSpeed = UserConfigTask_GetCadenceHybridLevelSpeed(currentLevel);
     }
     
+    pHandle->sParameters.hPASMaxRPMSpeed =  Wheel_GetWheelRpmFromSpeed(userConfigSpeed);
     // set the foldbacks
     uint16_t speed = (uint16_t)(round (hKmSpeedTemp * userConfigSpeed));
     Foldback_SetDecreasingRange(pHandle->SpeedFoldbackVehiclePAS, speed);

@@ -249,14 +249,15 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 
         #if DYNAMIC_SPEED_LIMITATION   
 
-        uint16_t SpeedLimit;
+        uint16_t speedLimit;
         //Reading the Speed limit
-        SpeedLimit = pHandle->rx_frame.Buffer[SPEED];        
+        speedLimit = pHandle->rx_frame.Buffer[SPEED];        
         
-        SpeedLimit = Wheel_GetWheelRpmFromSpeed(SpeedLimit);
+        speedLimit = Wheel_GetWheelRpmFromSpeed(speedLimit);
         
-                   
-        Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit);
+        // setting the max RPMs for any speed limits
+        Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,speedLimit);
+        PWRT_SetNewTopRPMSpeed(pHandle->pVController->pPowertrain, speedLimit);
         #endif 
         
         #ifdef SCREENPOWERCONTROL

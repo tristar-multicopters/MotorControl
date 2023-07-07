@@ -64,6 +64,7 @@ typedef struct
     int16_t  hPASMaxTorque;                 // PAS Maximum given torque
     uint16_t hPASMaxSpeed;                  // PAS Maximum given speed
     uint16_t hPASMaxKmSpeed;                // PAS Maximum Km/h speed
+    uint16_t hPASMaxRPMSpeed;               // PAS Maximum RPM speed
     
     uint8_t  bMaxLevel;                     // PAS maximum given Level
     uint8_t  bTorqueGain;                   // User gain used to affect the torque ramp in %

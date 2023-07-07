@@ -185,9 +185,8 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             {  
                 int32_t absoluteSpeed = abs(hSpeedM1);
                 int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
-                
-                hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
 
+                hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
             }
             
             #if VEHICLE_SELECTION == VEHICLE_NIDEC
@@ -260,7 +259,16 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             hAux = Foldback_ApplyFoldback(pHandle->pThrottle->SpeedFoldbackVehicleThrottle, hAux, WSpeedRPM);
             #endif       
         } 
-            
+        
+
+        int16_t WSpeedRPM = (int16_t) pHandle->pPAS->pWSS->wWheelSpeedRpm;
+        // checking if there's a max speed and if we're exceeding those RPM's already set motor torque to zero.
+        if (((pHandle->sParameters.topRPMSpeedGoal != 0) && (WSpeedRPM > pHandle->sParameters.topRPMSpeedGoal)) 
+            || ((pHandle->pPAS->sParameters.hPASMaxRPMSpeed != 0)  && !Throttle_IsThrottleDetected(pHandle->pThrottle) && (WSpeedRPM > pHandle->pPAS->sParameters.hPASMaxRPMSpeed)))
+        {
+            hAux = 0;
+        }
+
         // Store powertrain target torque value in handle
         pHandle->aTorque[pHandle->bMainMotor] = hAux;
         
@@ -1258,4 +1266,13 @@ uint16_t PWRT_ConvertDigitalCurrentToAMPS(PWRT_Handle_t * pHandle, uint16_t aDig
 uint16_t PWRT_ConvertAMPSToDigitalCurrent(PWRT_Handle_t * pHandle, uint16_t aAMPSCurrent)
 {
     return  (uint16_t) round(aAMPSCurrent * (65535/(pHandle->pMDI->pMCI->MCIConvFactors.MaxMeasurableCurrent * 2)));
+}
+
+/**
+  * Setting a new top speed cutoff
+  */
+bool PWRT_SetNewTopRPMSpeed(PWRT_Handle_t * pHandle, uint16_t topRPMSpeed){
+    pHandle->sParameters.topRPMSpeedGoal = (int16_t) topRPMSpeed;
+
+    return true;
 }

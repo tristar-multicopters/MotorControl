@@ -66,12 +66,13 @@ typedef struct
     bool bPAS0DisableThrottle;           /* Will disable the throttle when we are in PAS level 0 */
     bool bTopSpeedPowerCutoffEnable;     /* Will determine if we cut the power at a certain speed */
     uint16_t TopSpeedKMHCutoff;          /* Specifys at which speed we need to have a complete power cut off */
+    int16_t topRPMSpeedGoal;             /* Specifies the current maximum intended speed */
     
     uint16_t hStartingThrottle;          /* Minimum torque to start powertrain */
     uint16_t hStoppingThrottle;          /* Minimum torque to stop powertrain */
     uint16_t hStoppingSpeed;             /* Minimum speed to stop powertrain */
     
-	uint32_t MotorToHubGearRatio;        /* Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002 */
+    uint32_t MotorToHubGearRatio;        /* Gear ratio of the motor Top 16 bits is numerator bottom 16 bits is denominator of ratio ex 3/2 would be 0x0003 0002 */
     uint16_t hFaultManagementTimeout;    /* Number of ticks the state machine should stay on fault state before restart */
 		
 } PWRT_Parameters_t;
@@ -324,6 +325,14 @@ uint16_t PWRT_ConvertDigitalCurrentToAMPS(PWRT_Handle_t * pHandle, uint16_t aDig
   * @retval digital current uin16_t                                                                                   
   */
 uint16_t PWRT_ConvertAMPSToDigitalCurrent(PWRT_Handle_t * pHandle, uint16_t aAMPSCurrent);
+
+/**
+  * @brief  Setting a new top speed cutoff
+  * @param  Powertrain handle
+  * @param  New top speed
+  * @retval if successfully changed                                                                                 
+  */
+bool PWRT_SetNewTopRPMSpeed(PWRT_Handle_t * pHandle, uint16_t topRPMSpeed);
 
 #endif /*__POWERTRAIN_MANAGEMENT_H*/
 

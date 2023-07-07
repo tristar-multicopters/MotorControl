@@ -195,6 +195,7 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.hPASMaxTorque = PAS_MAX_TORQUE,
     .sParameters.hPASMaxSpeed = PAS_MAX_SPEED,
     .sParameters.hPASMaxKmSpeed = PAS_MAX_KM_SPEED,
+    .sParameters.hPASMaxRPMSpeed = 0,
     .sParameters.bMaxLevel = PAS_MAX_LEVEL,
     .sParameters.bTorqueGain = PAS_TORQUE_GAIN,
     .sParameters.hMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
@@ -292,6 +293,7 @@ PWRT_Handle_t PowertrainHandle =
     .sParameters.TopSpeedKMHCutoff = 100,   // we set this to an unachievable speed to ensure 
                                             // if it is accidently used it will not limit the power      
 #endif    
+    .sParameters.topRPMSpeedGoal = 0,
     
     .SpeedFoldbackVehicle = &SpeedFoldbackVehicleConfig,
 

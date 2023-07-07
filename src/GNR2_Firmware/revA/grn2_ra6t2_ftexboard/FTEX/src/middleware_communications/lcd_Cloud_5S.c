@@ -221,7 +221,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     replyFrame.Size = 13;
     
     int32_t  toSend         = 0;
-    uint16_t  SpeedLimit    = 0;
+    uint16_t  speedLimit    = 0;
     uint8_t  WheelDiameter  = 0;    
     uint8_t  pasLevel;
     uint8_t  LightStatus    = 0;
@@ -254,12 +254,14 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             HandshakeIndex = pHandle->rx_frame.Buffer[9]; // handshake byte     
             
             //Reading the Speed limit
-            SpeedLimit = pHandle->rx_frame.Buffer[10]; // speed limit       
+            speedLimit = pHandle->rx_frame.Buffer[10]; // speed limit       
         
-            SpeedLimit = Wheel_GetWheelRpmFromSpeed(SpeedLimit);
-            
+            speedLimit = Wheel_GetWheelRpmFromSpeed(speedLimit);
+
             #if DYNAMIC_SPEED_LIMITATION
-            Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit);        
+            // setting the max RPMs for any speed limits
+            Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,speedLimit);        
+            PWRT_SetNewTopRPMSpeed(pHandle->pVController->pPowertrain, speedLimit);
             #endif    
            
             #ifdef SCREENPOWERCONTROL
