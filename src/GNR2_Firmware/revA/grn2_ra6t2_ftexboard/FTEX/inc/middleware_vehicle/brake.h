@@ -16,7 +16,7 @@
 
 // ============================= Defines ================================= //
 
-#define SAFE_BRAKE_COUNT_5000MS           (uint16_t)2000 /* Brake is checked in many places. 
+#define SAFE_BRAKE_COUNT_100MS           (uint16_t)40 /* Brake is checked in many places. 
                                                   It's called roughly 103 times every 255ms
                                                   Waiting 5 seconds to check the error
                                                   this will allow the user time to start riding */

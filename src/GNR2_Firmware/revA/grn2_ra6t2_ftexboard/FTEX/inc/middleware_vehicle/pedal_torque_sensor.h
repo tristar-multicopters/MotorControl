@@ -21,7 +21,7 @@
 
 // ============================= Defines ================================= //
 
-#define SAFE_TORQUE_COUNT_5000MS           (uint16_t)1000 /* Called every 5ms, 1000*5ms = 5s
+#define SAFE_TORQUE_COUNT_100MS           (uint16_t)20    /* Called every 5ms, 20*5ms = 100s
                                                           stabilize time for the torque sensor */
 
 #define PTS_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction

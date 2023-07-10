@@ -140,12 +140,13 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
             {
                 pHandle->SafeStart = true;
                 VC_Errors_ClearError(THROTTLE_STUCK); // Clear this error in case it was falsly flagged as stuck (user kept throttle at max on boot)
-                Delay_Reset(pHandle->pThrottleStuckDelay);
             }
             else
             {
                 pHandle->hAvThrottleValue = 0; // If we still aren't done with the safe start make sure we aren't requesting power
-            }            
+            } 
+            
+            Delay_Reset(pHandle->pThrottleStuckDelay);              
         }
         else     // Throttle is detected 
         {

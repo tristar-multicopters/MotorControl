@@ -16,25 +16,25 @@
 #if VEHICLE_SELECTION == VEHICLE_E_CELLS
 
 #define CURRENT_PID_LUT_SPEED_STEP                    700
-#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             150
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             250
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    90,
+    300,
     300
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    27,
+    15,
     200,
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    87,
+    300,
     300,
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    26,
+    10,
     200,
 };
 

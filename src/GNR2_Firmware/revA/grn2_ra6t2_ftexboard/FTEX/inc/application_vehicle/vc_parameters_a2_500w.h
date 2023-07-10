@@ -95,13 +95,15 @@
                                                               HybridSensorUse  = 2, Hybride sensor use define */
 #define PAS_CADENCE_USE_SPEED_LIMIT                true    // Decides if we have a speed limit on pas cadence
     
-#define PAS_0_POWER_PERCENT      0    // PAS 0 has a ratio of   0%
-#define PAS_1_POWER_PERCENT     60    // PAS 1 has a ratio of  60% (3/5)
-#define PAS_2_POWER_PERCENT     67    // PAS 2 has a ratio of  67% (4/6)
-#define PAS_3_POWER_PERCENT     80    // PAS 3 has a ratio of  80% (4/5)
-#define PAS_4_POWER_PERCENT     88    // PAS 4 has a ratio of  88% (7/8)
-#define PAS_5_POWER_PERCENT    100    // PAS 5 has a ratio of 100%
-#define PAS_WALK_POWER_PERCENT  70    // PAS walk has a ratio of 70%
+// PAS C (Cadence) power per level setting in %
+#define PAS_C_0_POWER_PERCENT      0    
+#define PAS_C_1_POWER_PERCENT     60    
+#define PAS_C_2_POWER_PERCENT     67   
+#define PAS_C_3_POWER_PERCENT     80   
+#define PAS_C_4_POWER_PERCENT     88   
+#define PAS_C_5_POWER_PERCENT    100  
+
+#define PAS_WALK_POWER_PERCENT    70    // PAS walk has a ratio of 70%
 
 #define PAS_MIN_PEDAL_COUNT_SAFE                  2    // Number of pulse per pedal turn do we neeed after initial detection to push power
 #define PAS_SLOW_PEDAL_COUNT                      4    // Loop wait counter to update the PAS detection function
@@ -141,7 +143,7 @@
 #define BATTERY_EMPTY_VOLT   32
 
 
-#define BATTERY_SOC_LOW_PERCENT    1   // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
+#define BATTERY_SOC_LOW_PERCENT    1   // Battery SOC in % for which we set the battery low flag (stops powertrain from pushing power)
 #define BATTERY_SOC_OK_PERCENT    25   // Battery SOC in % for which we clear the battery low flag
                                             
 #endif                                            

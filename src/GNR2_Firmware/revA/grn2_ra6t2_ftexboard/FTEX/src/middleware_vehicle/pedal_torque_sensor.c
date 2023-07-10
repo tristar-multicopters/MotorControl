@@ -11,6 +11,8 @@
 #include "wheel.h"
 #include "ASSERT_FTEX.h"
 
+#include "gnr_parameters.h"
+
 
 // ============================= Variables ================================ //
 static uint16_t hSafeStartCounter = 0;
@@ -27,7 +29,7 @@ void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pP
     
     ASSERT(pHandle != NULL);
    
-    pHandle->bSafeStart = false;
+    pHandle->bSafeStart = false; 
         
     pHandle->pPTSstuckDelay = pPTSstuckDelay;
       
@@ -121,18 +123,18 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
         { 
             hSafeStartCounter ++; 
             /* Launch Safe Start after a delay counter */
-            if (hSafeStartCounter >= SAFE_TORQUE_COUNT_5000MS) 
+            if (hSafeStartCounter >= SAFE_TORQUE_COUNT_100MS) 
             {   
                 pHandle->bSafeStart = true;
                 /* Clear this error in case it was falsly flagged as stuck (user kept pedal pushing at max on boot) */
-                VC_Errors_ClearError(PAS_BOOT_ERROR); // Temperory using Throttle stuck as error
-                Delay_Reset(pHandle->pPTSstuckDelay);
+                VC_Errors_ClearError(PAS_BOOT_ERROR); // Temperory using Throttle stuck as error 
+                Delay_Reset(pHandle->pPTSstuckDelay);               
             }
             else
             {
                 /* Push zero torque while no safe start */
                 pHandle->hAvTorqueValue = 0; 
-            }            
+            }                     
         }
         /* Pedal Torque Sensor is detected */
         else     

@@ -49,13 +49,14 @@ bool BRK_IsPressed(BRK_Handle_t * pHandle)
         if(!pHandle->bIsPressed){
             hSafeCounter++;
             /* Launch Safe Start after a delay counter */
-            if (hSafeCounter >= SAFE_BRAKE_COUNT_5000MS) 
+            if (hSafeCounter >= SAFE_BRAKE_COUNT_100MS) 
             {   
                 pHandle->bSafeStart = true;
                 /* Clear this error in case it was falsly flagged as stuck (user brakes held at max on boot) */
-                VC_Errors_ClearError(BRAKE_ERROR); 
-                Delay_Reset(pHandle->pBrakeStuckDelay);
+                VC_Errors_ClearError(BRAKE_ERROR);                 
             }
+            
+            Delay_Reset(pHandle->pBrakeStuckDelay);
         }
         /* Brake Sensor is detected */
         else     

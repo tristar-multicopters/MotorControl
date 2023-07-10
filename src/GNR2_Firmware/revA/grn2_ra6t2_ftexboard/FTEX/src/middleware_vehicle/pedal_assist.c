@@ -76,14 +76,14 @@ PasLevel_t PedalAssist_GetAssistLevel(PAS_Handle_t * pHandle)
     */
 int16_t PedalAssist_GetPASTorque(PAS_Handle_t * pHandle)
 {
-    int16_t hRefTorque;
+    int32_t hRefTorque;
     PasLevel_t Got_Level;
     // Get the used PAS level 
     Got_Level = PedalAssist_GetAssistLevel(pHandle);
     // Calculate the maximum given reference torque per level 
-    hRefTorque = (pHandle->sParameters.hPASMaxTorque / pHandle->sParameters.bMaxLevel) * Got_Level;
+    hRefTorque = (pHandle->sParameters.hPASMaxTorque/PAS_PERCENTAGE) * pHandle->sParameters.PASTTorqRatiosInPercentage[Got_Level];
    
-    return hRefTorque;  
+    return (int16_t) hRefTorque;  
 }
 /**
     * @brief  Set Pedal Assist standard torque based on screen informations`
@@ -105,7 +105,7 @@ int16_t PedalAssist_GetPASTorqueSpeed(PAS_Handle_t * pHandle)
     else
     {
         // The pedal_assist module only supports 5 PAS levels at the moment
-        PASRatio = pHandle->sParameters.PASTorqueRatiosInPercentage[currentLevel];
+        PASRatio = pHandle->sParameters.PASCTorqRatiosInPercentage[currentLevel];
     }
     
     // compute the torque using the ratio from the PAS level
@@ -152,7 +152,7 @@ void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
     */
 int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
 {
-    int16_t hRefTorqueS, hReadTS, hMaxTorq_Temp;
+    int16_t hRefTorqueS, hReadTS, hMaxTorq_Temp, hMaxLevelTorq_Temp;
     /* Read the Pedal torque sensor */
     hReadTS = PedalTorqSensor_ToMotorTorque(pHandle->pPTS);
     /* Got the PAS from the screen */
@@ -167,8 +167,17 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     
     // Convert the PAS torque sensing in motor torque
     hRefTorqueS = ((hReadTS * pHandle->sParameters.bTorqueGain)/PAS_PERCENTAGE);
-    hRefTorqueS = (hRefTorqueS * currentLevel) / pHandle->sParameters.bMaxLevel;
     
+    hRefTorqueS = (hRefTorqueS/PAS_PERCENTAGE) * pHandle->sParameters.PASTTorqRatiosInPercentage[pHandle->bCurrentAssistLevel];
+    
+    
+   // Safety for not exceeding the maximum torque value for a specific pas level
+    hMaxLevelTorq_Temp = (pHandle->sParameters.PASTTorqRatiosInPercentage[pHandle->bCurrentAssistLevel] * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+    if (hRefTorqueS > hMaxLevelTorq_Temp)
+    {
+        hRefTorqueS = hMaxLevelTorq_Temp;
+    }
+        
     // Safety for not exceeding the maximum torque value 
     hMaxTorq_Temp = (pHandle->sParameters.hMaxTorqueRatio * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
     if (hRefTorqueS > hMaxTorq_Temp)
@@ -353,7 +362,7 @@ void AssertIsValidLevel(PasLevel_t level)
         return;
     }
     
-    if (level >= PAS_LEVEL_0 && level <= PAS_LEVEL_5)
+    if ((level >= PAS_LEVEL_0) && (level <= PAS_LEVEL_9))
     {
         // valid
         return;

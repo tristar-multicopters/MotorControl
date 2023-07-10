@@ -25,10 +25,10 @@
 #define THROTTLE_FILTER_ALPHA                 2.27F    // Butterworth alpha coefficient for throttle filtering
 #define THROTTLE_FILTER_BETA                 -0.27F    // Butterworth beta coefficient for throttle filtering
 
-#define THROTTLE_OFFSET_ADC2THROTTLE          12500    // Offset for ADC to throttle linear transformation
-#define THROTTLE_MAX_ADC2THROTTLE             53200    // Maximum value reachable by the throttle adc value 
+#define THROTTLE_OFFSET_ADC2THROTTLE          11700    // Offset for ADC to throttle linear transformation
+#define THROTTLE_MAX_ADC2THROTTLE             55000    // Maximum value reachable by the throttle adc value 
 
-#define THROTTLE_OFFSET_THROTTLE2TORQUE        4000    // Offset for throttle to torque linear transformation
+#define THROTTLE_OFFSET_THROTTLE2TORQUE           1    // Offset for throttle to torque linear transformation
 
 #define THROTTLE_DETECTION_THRESHOLD           1000    // Throttle is considered pressed once it passed this threshold
 
@@ -42,21 +42,21 @@
 
 #define PTS_FILTER_ALPHA              2.27F    // Butterworth alpha coefficient pedal torque sensor filtering
 #define PTS_FILTER_BETA              -0.27F    // Butterworth beta coefficient pedal torque sensor filtering
-#define PTS_MAX_PTSVALUE         UINT16_MAX    // Maximum analog value to reach
+#define PTS_MAX_PTSVALUE              42000    // Maximum analog value to reach
 
 #define PTS_OFFSET_ADC2PTS            10000    // Offset for ADC to pedal torque sensor linear transformation
 
-#define PTS_OFFSET_PTS2TORQUE_STARTUP    40    // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_PTS2TORQUE_STARTUP    70    // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED_KMH      3    // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY     40    // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
-#define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging
-#define PTS_FILTER_BW2                   25    // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW1                   45    // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW2                   50    // BW coefficient for pedal torque sensor avereging
 
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
-#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION      3    // Wheel speed sensor cycle number for one wheel rotation
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION      4    // Wheel speed sensor cycle number for one wheel rotation
 #define WHEEL_SPEED_SLOW_LOOP_COUNT              1    // Wheel speed sensor slow detect counter to get 750ms per function call
 #define WHEEL_SPEED_SENSOR_CORRECTION_FACTOR     1    // Wheel speed sensor slow detect correction for a signal after two wheel spin detection 
 #define WHEEL_SPEED_SLOW_LOOP_DETECT         false    // Wheel speed sensor slow detect counter flag activation
@@ -84,23 +84,37 @@
 
 #define PAS_MAX_TORQUE                  STARTING_TORQUE    // Maximum motor torque to apply using pedal assist
 #define PAS_MAX_SPEED         MAX_APPLICATION_SPEED_RPM    // Maximum motor speed reachable using pedal assist
-#define PAS_MAX_KM_SPEED                             33    // Maximum Bike Speed in Km/h using RPM
-#define PAS_MAX_LEVEL                                 5    // Maximum PAS Level given by the screen    
-#define PAS_TORQUE_GAIN                             100    // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
-#define PAS_MAX_TORQUE_RATIO                         99    // Maximum PAS Torque feed ration in 100%   
-#define PAS_MAX_SPEED_RATIO                          99    // Maximum PAS Speed feed ration in 100%   
+#define PAS_MAX_KM_SPEED                             90    // Maximum Bike Speed in Km/h using RPM
+#define PAS_MAX_LEVEL                                 9    // Maximum PAS Level given by the screen    
+#define PAS_TORQUE_GAIN                             200    // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
+#define PAS_MAX_TORQUE_RATIO                        100    // Maximum PAS Torque feed ration in 100%   
+#define PAS_MAX_SPEED_RATIO                         100    // Maximum PAS Speed feed ration in 100%   
 #define PAS_ALGORITHM                   TorqueSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
                                                               CadenceSensorUse = 1, Cadence sensor use define 
                                                               HybridSensorUse  = 2, Hybride sensor use define */
 #define PAS_CADENCE_USE_SPEED_LIMIT                true    // Decides if we have a speed limit on pas cadence
-    
-#define PAS_0_POWER_PERCENT      0    // PAS 0 has a ratio of   0%
-#define PAS_1_POWER_PERCENT     60    // PAS 1 has a ratio of  60% (3/5)
-#define PAS_2_POWER_PERCENT     67    // PAS 2 has a ratio of  67% (4/6)
-#define PAS_3_POWER_PERCENT     80    // PAS 3 has a ratio of  80% (4/5)
-#define PAS_4_POWER_PERCENT     88    // PAS 4 has a ratio of  88% (7/8)
-#define PAS_5_POWER_PERCENT    100    // PAS 5 has a ratio of 100%
-#define PAS_WALK_POWER_PERCENT  70    // PAS walk has a ratio of 70%
+
+// PAS C (Cadence) power per level setting in %
+#define PAS_C_0_POWER_PERCENT      0    
+#define PAS_C_1_POWER_PERCENT     60   
+#define PAS_C_2_POWER_PERCENT     67   
+#define PAS_C_3_POWER_PERCENT     80    
+#define PAS_C_4_POWER_PERCENT     88   
+#define PAS_C_5_POWER_PERCENT    100    
+
+#define PAS_WALK_POWER_PERCENT    70    // PAS walk has a ratio of 70%
+
+// PAS T (Torque sensor) power per level setting in %
+#define PAS_T_0_POWER_PERCENT      0 
+#define PAS_T_1_POWER_PERCENT     30
+#define PAS_T_2_POWER_PERCENT     39
+#define PAS_T_3_POWER_PERCENT     47
+#define PAS_T_4_POWER_PERCENT     56
+#define PAS_T_5_POWER_PERCENT     65 
+#define PAS_T_6_POWER_PERCENT     74
+#define PAS_T_7_POWER_PERCENT     83
+#define PAS_T_8_POWER_PERCENT     91 
+#define PAS_T_9_POWER_PERCENT    100 
 
 #define PAS_MIN_PEDAL_COUNT_SAFE                  2    // Number of pulse per pedal turn do we neeed after initial detection to push power
 #define PAS_SLOW_PEDAL_COUNT                      1    // Loop wait counter to update the PAS detection function
@@ -139,7 +153,7 @@
 #define BATTERY_FULL_VOLT    52
 #define BATTERY_EMPTY_VOLT   46
 
-#define BATTERY_SOC_LOW_PERCENT   15   // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
+#define BATTERY_SOC_LOW_PERCENT    5   // Battery SOC in % for which we set the battery low flag (stops powertrain from pushing power)
 #define BATTERY_SOC_OK_PERCENT    25   // Battery SOC in % for which we clear the battery low flag
 
 #endif                                            
