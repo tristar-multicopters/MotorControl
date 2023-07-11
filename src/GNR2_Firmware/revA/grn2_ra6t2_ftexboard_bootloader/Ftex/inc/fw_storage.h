@@ -27,19 +27,32 @@ typedef enum {
 	STORAGE_PACK_READ   // Reading the firmware pack receive
 } storage_state_t;
 
+//struct used to receive hardware model,bike model and
+//revision model.
+typedef union {
+    struct 
+    {	
+        uint8_t hardware;
+        uint8_t bikeModel;
+        uint16_t revision;
+    };
+    uint32_t vers_concat;
+} version_t;
+
+// Structure of the DFU File header, used to easyli parse if from a raw memory bulk read.
 typedef union {
 	struct {
-		uint32_t Pack_FwVersion;
-		uint32_t BLE_FwVersion;
-		uint32_t REN_FwVersion;
-		uint32_t GNR_FwVersion;
-		uint32_t BLE_FwSize;
-		uint32_t REN_FwSize;
-		uint32_t GNR_FwSize;
-		uint8_t Pack_EncKey[32];
-		uint8_t BLE_EncKey[32];
-		uint8_t REN_EncKey[32];
-		uint8_t GNR_EncKey[32];
+		version_t pack_fw_version;
+		version_t ble_fw_version;
+		version_t ren_fw_version;
+		version_t gnr_fw_version;
+		uint32_t ble_fw_size;
+		uint32_t ren_fw_size;
+		uint32_t gnr_fw_size;
+		uint8_t pack_enc_key[32];
+		uint8_t ble_enc_key[32];
+		uint8_t ren_enc_key[32];
+		uint8_t gnr_enc_key[32];
 	} data;
 	uint8_t Header[HEADER_SIZE];
 } OTA_Header_t;
@@ -87,14 +100,14 @@ uint8_t FW_Storage_FinalizePackRead();
 * @param  None
 * @retval None
 */
-uint32_t FW_Storage_GetGNR_FWVersion(void);
+uint32_t FW_Storage_GetPack_FWVersion(void);
 
 /**
 * @brief  Firmware storage get fw size
 * @param  None
 * @retval None    
 */
-uint32_t FW_Storage_GetGNR_FWSize(void);
+uint32_t FW_Storage_GetPack_FWSize(void);
 
 /**
 * @brief Function used to set the file position to the beginning.

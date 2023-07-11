@@ -160,14 +160,14 @@ uint8_t FW_Storage_StartPackRead()
     }
     else
     {
-        m_pack_size = hdr.data.GNR_FwSize + HEADER_SIZE;
+        m_pack_size = hdr.data.gnr_fw_size + HEADER_SIZE;
         m_state = STORAGE_PACK_READ;
         
         //get DFU pack size(STM32 + renesas + GNR)
-        m_dfu_pack_size = hdr.data.BLE_FwSize + hdr.data.REN_FwSize + hdr.data.GNR_FwSize + HEADER_SIZE;
+        m_dfu_pack_size = hdr.data.ble_fw_size + hdr.data.ren_fw_size + hdr.data.gnr_fw_size + HEADER_SIZE;
         
         //set the file position to where the GNR firmware begin.
-        lfs_file_seek(&lfs, &file, hdr.data.REN_FwSize + hdr.data.BLE_FwSize + HEADER_SIZE, LFS_SEEK_SET);
+        lfs_file_seek(&lfs, &file, hdr.data.ren_fw_size + hdr.data.ble_fw_size + HEADER_SIZE, LFS_SEEK_SET);
         return EXIT_SUCCESS;
     }
 }
@@ -234,17 +234,17 @@ uint8_t FW_Storage_FinalizePackRead()
 /**
     Firmware storage get fw version
 */
-uint32_t FW_Storage_GetGNR_FWVersion(void)
+uint32_t FW_Storage_GetPack_FWVersion(void)
 {
-    return(hdr.data.GNR_FwVersion);
+    return(hdr.data.pack_fw_version.vers_concat);
 }
 
 /**
     Firmware storage get fw size
 */
-uint32_t FW_Storage_GetGNR_FWSize(void)
+uint32_t FW_Storage_GetPack_FWSize(void)
 {
-    return(hdr.data.GNR_FwSize);
+    return(hdr.data.gnr_fw_size);
 }
 
 /**
@@ -364,6 +364,6 @@ void FW_Storage_SetFileToGnrFirmw(void)
     m_file_position = 0;
     
     //set the file position to where the GNR firmware begin.
-    lfs_file_seek(&lfs, &file, hdr.data.REN_FwSize + hdr.data.BLE_FwSize + HEADER_SIZE, LFS_SEEK_SET);
+    lfs_file_seek(&lfs, &file, hdr.data.ren_fw_size + hdr.data.ble_fw_size + HEADER_SIZE, LFS_SEEK_SET);
 }
 

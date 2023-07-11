@@ -144,10 +144,13 @@ int FW_CheckUpdate(void)
 {
     const struct flash_area *fap;
     struct image_header img_h;
-    struct image_header img_h_2;
-    uint32_t GanPower_fw_version;
+    
+    //struct used to hold firmwares 
+    //version.
+    version_t dfu_pack;
+    version_t version_img_1;
+    
     FW_ReadVersion_FirstImage(fap, &img_h);     // We must check if the current image is lower version
-    FW_ReadVersion_SecondImage(fap, &img_h_2);  // We must check if the back image is lower version or equal (could be one taht has been rejected)
     
     //try to open file to get dfu pack 
     //information. If file can't be openned
@@ -157,15 +160,16 @@ int FW_CheckUpdate(void)
         return VERSION_OK;
     }
     
-    GanPower_fw_version = FW_Storage_GetGNR_FWVersion();
-    MSG_LOG_DBG("Dfu pack ren version : %u.%u.%u\r\n",(uint8_t) GanPower_fw_version,(uint8_t) (GanPower_fw_version >>8),(uint16_t) (GanPower_fw_version >> 16));
+    // WE USE THE BUILD_REVISION TO STORE THE DFU PACK
+    version_img_1.vers_concat = img_h.ih_ver.iv_build_num;
+	dfu_pack.vers_concat = FW_Storage_GetPack_FWVersion();
 	
     //Verify if there is a firmware in the microcontroller flash memory.
     //if is true, set the firmVersionDetected.
     //this flag is necessary to be used to detect a corrupted firmware flashed in the
     //microcontroller.
     //Major, minor and version are checked.
-    if((img_h.ih_ver.iv_major != 0x00) && (img_h.ih_ver.iv_major != 0xFF) && (img_h.ih_ver.iv_minor != 0xFF) && (img_h.ih_ver.iv_revision != 0xFFFF))			
+    if((version_img_1.hardware != 0x00) && (version_img_1.hardware != 0xFF) && (version_img_1.bikeModel != 0xFF) && (version_img_1.revision != 0xFFFF))			
     {
         //one firmware was detected in the microcontroller flash memory.
         firmVersionDetected = true;
@@ -174,36 +178,25 @@ int FW_CheckUpdate(void)
     //if the code arrive here is because the external memory has
     //a dfu file.
     // If no image in the first slot, download one from flash
-    if(img_h.ih_ver.iv_major == 0xff && GanPower_fw_version != 0x0000)
+    if(version_img_1.vers_concat == 0xffffffff && dfu_pack.vers_concat != 0x0000)
     {
         return UPDATE_REQUIRED;
     }
 	
-    // Must be the same Major version, otherwise launch the current one
-    if(img_h.ih_ver.iv_major != (uint8_t) (GanPower_fw_version ))
+    // Must be the same Major version(hardware version), otherwise launch the current one
+    if(version_img_1.hardware != dfu_pack.hardware)
     {
         return VERSION_OK;
     }
     
-    // if already in second slot ignore it (has been revoked by mcuboot)
-    if((img_h_2.ih_ver.iv_minor == (uint8_t) (GanPower_fw_version >> 8)) && (img_h_2.ih_ver.iv_revision == (uint16_t) (GanPower_fw_version >> 16)) )
+    // if not the same bike model don't update and keep the current one
+    if(version_img_1.bikeModel != dfu_pack.bikeModel)
+    {	
+        return VERSION_OK;
+    }
+    else if(version_img_1.revision >= dfu_pack.revision)
     {
-        return VERSION_OK;
-    }
-    
-    if((img_h.ih_ver.iv_minor > (uint8_t) ((GanPower_fw_version >> 8))))
-    {	
-        // if a lower minor version, don' take it
-        return VERSION_OK;
-    }
-    else if((img_h.ih_ver.iv_minor < (uint8_t) ((GanPower_fw_version >> 8))))
-    {	
-        // if a upper minor version take it
-        return UPDATE_REQUIRED;
-    }
-    else if(img_h.ih_ver.iv_revision >= (uint16_t) ((GanPower_fw_version >> 16)))
-    {   
-        // else check the revision cause it's the same minor
+        // If not a newere version don't upgrade
         return VERSION_OK;
     }	
     else
