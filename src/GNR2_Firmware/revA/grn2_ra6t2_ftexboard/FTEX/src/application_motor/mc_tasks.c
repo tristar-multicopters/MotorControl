@@ -40,6 +40,7 @@
 #define STOPPERMANENCY_TICKS2 (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS2) / 1000)
 #define VBUS_TEMP_ERR_MASK (uint16_t) ~(0 | MC_NO_ERROR)
 
+
 /* Private variables----------------------------------------------------------*/
 FOCVars_t FOCVars[NBR_OF_MOTORS];
 MotorControlInterfaceHandle_t *oMCInterface[NBR_OF_MOTORS];
@@ -86,6 +87,9 @@ bool ChargeBootCapDelayHasElapsedM1(void);
 void SetStopPermanencyTimeM1(uint16_t hTickCount);
 bool StopPermanencyTimeHasElapsedM1(void);
 void SafetyTask_PWMOFF(uint8_t motor);
+void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle);
+bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed);
+
 
 /**
  * @brief It initializes the whole MC core according to user defined
@@ -372,6 +376,11 @@ void MediumFrequencyTaskM1(void)
 #endif
         MCInterface_ExecBufferedCommands(oMCInterface[M1]);
         FOC_CalcCurrRef(M1);
+        if(IsPhaseCableDisconnected(MCInterface->pFOCVars, MCInterface->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit) == true)
+        {
+            // raise MC_PHASE_DISC error if the ratio of measured Iqd and reference Iq is not reasoble
+            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_PHASE_DISC, 0);    //Report the Fault and change bstate to FaultNow
+        }
 
 #if !(BYPASS_POSITION_SENSOR)    
         if (Check_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
@@ -744,7 +753,6 @@ inline uint16_t FOC_CurrControllerM1(void)
 #endif
 
     PWMCurrFdbk_GetPhaseCurrents(pPWMCurrFdbk[M1], &Iab);
-
     MotorState_t StateM1;
     StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
     if (StateM1 == M_RUN || StateM1 == M_ANY_STOP)
@@ -916,4 +924,80 @@ __NO_RETURN void startMCSafetyTask(void *pvParameter)
 
         MC_SafetyTask();
     }
+}
+
+
+/**
+ * @brief  Calculate the moving average value of last CURRENT_AVG_WIN_SIZE current samples
+ * @param  pHandle pointer on the handle structure of the PWMC instance
+ * @retval None
+**/
+void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle)
+{
+    static uint8_t AvgIndex = 0;
+    static qd_t Iqd_samples[CURRENT_AVG_WIN_SIZE];    
+    int32_t sumIq = 0, sumId = 0; 
+    
+    // write latest CURRENT value on the last updated value in array
+    Iqd_samples[AvgIndex]= pHandle->Iqd;
+    
+    // update AvgIndex to the next last updated value
+    if (AvgIndex >= (CURRENT_AVG_WIN_SIZE - 1))
+    {
+        AvgIndex = 0;
+    }
+    else
+    {
+        AvgIndex++;
+    }
+    
+    // calculate the average
+    for (uint8_t i = 0; i < CURRENT_AVG_WIN_SIZE; i++ )
+    {
+        sumIq += Iqd_samples[i].q;
+        sumId += Iqd_samples[i].d;
+    }
+    pHandle->Iqd_avg.q = (int16_t)(sumIq / CURRENT_AVG_WIN_SIZE);   
+    pHandle->Iqd_avg.d = (int16_t)(sumId / CURRENT_AVG_WIN_SIZE);
+}
+
+/**
+ * @brief  Checks if the value of IQ measured is smaller than one PHASE_WIRE_DISCONNECT_RATIO of Iqref
+ * @param  pHandle pointer on the handle structure of the FOCVars
+ * @retval bool: true if diconnection detected,
+**/
+
+bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed)
+{
+    static uint16_t timer;
+    bool retVal = false;
+    PWMCurrFdbk_IqdMovingAverage(pHandle);
+    if ((abs(pHandle->Iqdref.q) > PHASE_WIRE_DISCONNECT_THRESHOLD) && (abs(MechSpeed) == 0))
+    {
+        uint16_t MeanSquare = (uint16_t)sqrt((pHandle->Iqd_avg.q ^ 2) + (pHandle->Iqd_avg.d ^2));
+        if (MeanSquare < (abs(pHandle->Iqdref.q) / PHASE_WIRE_DISCONNECT_RATIO))
+        {
+            timer++;
+        }
+        else
+        {
+            timer = 0;
+        }
+        
+        if (timer > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
+        {
+            retVal = true;
+            timer = 0;
+        }
+        else
+        {
+            retVal = false;
+        }
+    }
+    else 
+    {
+        timer = 0;
+        retVal = false;
+    }
+    return retVal;
 }
