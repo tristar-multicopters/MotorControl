@@ -16,8 +16,7 @@
 #define STARTUP_COUNTER             1
 #define SPEEDFEEDBACK_COUNTER       2
 #define STUCK_REVERSE_COUNTER       3
-#define UNDERVOLTAGE_COUNTER        4
-#define MOTOR_ERROR_TYPE_COUNT      7
+#define UNDERVOLTAGE_COUNTER         4
 
 #define MAXCURRENT                  MAX_MEASURABLE_CURRENT /* Used for a generic conversion 
                                                               from current ref to actual amps */
@@ -27,11 +26,6 @@ bool isPWMCleared;
 static Delay_Handle_t ThrottleDelay; /* Delay for Throttle stuck check while initialization*/
 static Delay_Handle_t PTSensorDelay; /* Delay for Pedal Torque sensor stuck check while initialization*/
 static Delay_Handle_t brakeDelay; /* Delay for Brake sensor stuck check while initialization*/
-static Delay_Handle_t motorErrorDelay; /* Delay to hold motor errors for display on screen */
-static uint8_t motorErrorArray[MOTOR_ERROR_TYPE_COUNT];
-static uint8_t motorErrors = 0;
-
-void updateMotorErrors(ErrorCodes_t code);
 
 // ==================== Public function prototypes ======================== //
 
@@ -48,10 +42,6 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     ThrottleDelay = pDelayArray[THROTTLE_DELAY];
     PTSensorDelay = pDelayArray[PTS_DELAY];
     brakeDelay = pDelayArray[BRAKE_DELAY];
-    motorErrorDelay = pDelayArray[MOTORERR_DELAY];
-    Delay_SetTime(&motorErrorDelay, 5, SEC); // Set a 5 seconds delay to keep errors
-    Delay_Reset(&motorErrorDelay);           // Make sure the counter is reset 
-
     // Initilaize peripherals
     Wheel_Init(WHEEL_DIAMETER_DEFAULT);
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
@@ -87,19 +77,6 @@ void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     /* Update throttle sensor handle */
     Throttle_CalcAvThrottleValue(pHandle->pThrottle);
-
-    if (motorErrors != 0)
-    {
-        //Check for clearing motor errors
-        if (Delay_Update(&motorErrorDelay) == true) 
-        {
-            for (uint8_t i = 0; i<motorErrors; i++)
-            {
-                VC_Errors_ClearError(motorErrorArray[i]);
-            }
-            motorErrors = 0;
-        }        
-    }
 }
 
 /**
@@ -712,25 +689,6 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     return bCheckStart1 & bCheckStart2 & bCheckStart3; // Final logic to know if powertrain should be started.
 }
 
-void updateMotorErrors(ErrorCodes_t code)
-{
-    for(uint8_t i = 0; i<motorErrors; i++)
-    {
-        if (motorErrorArray[i] == code)
-        {
-            return;
-        }
-    }
-    VC_Errors_RaiseError(code);
-    // This array should only be full if a new error is added without increasing the limit
-    if(motorErrors < MOTOR_ERROR_TYPE_COUNT) // each item is 1 byte, so size of gives entry count
-    {
-        motorErrorArray[motorErrors] = code;
-        motorErrors++;            
-    }
-}
-
-
 /**
   * @brief  Manage motor faults. Check if faults are still present and send motor fault acknowledge when faults are gone.
   * @param  Powertrain handle
@@ -739,241 +697,249 @@ void updateMotorErrors(ErrorCodes_t code)
 bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
+    uint16_t hM1FaultNowCode = MDI_GetCurrentFaults(pHandle->pMDI, M1);
     uint16_t hM1FaultOccurredCode = MDI_GetOccurredFaults(pHandle->pMDI, M1);
+    uint16_t hM2FaultNowCode = MDI_GetCurrentFaults(pHandle->pMDI, M2);
     uint16_t hM2FaultOccurredCode = MDI_GetOccurredFaults(pHandle->pMDI, M2);
 
-    uint16_t hFaultOccurred = hM1FaultOccurredCode | hM2FaultOccurredCode;
+    uint16_t bFaultNow = hM1FaultNowCode | hM2FaultNowCode;
 
-    if (hFaultOccurred != MC_NO_ERROR)      // Rasie Motor current error to the LCD
+    if (bFaultNow != MC_NO_ERROR)      // Rasie Motor current error to the LCD
     {
-        Delay_Reset(&motorErrorDelay);
-        if (((hFaultOccurred & MC_BREAK_IN) | (hFaultOccurred & MC_OCSP)) != MC_NO_ERROR )
+        if (((bFaultNow & MC_BREAK_IN) | (bFaultNow & MC_OCSP)) != MC_NO_ERROR )
         {
-            updateMotorErrors(OVER_CURRENT);
+            VC_Errors_RaiseError(OVER_CURRENT);
         }
-        if ((hFaultOccurred & MC_OVER_TEMP) != MC_NO_ERROR)
+        if ((bFaultNow & MC_OVER_TEMP) != MC_NO_ERROR)
         {
-            updateMotorErrors(OT_PROTECTION);
+            VC_Errors_RaiseError(OT_PROTECTION);
         }
-        if ((hFaultOccurred & MC_OVER_VOLT)!= MC_NO_ERROR)
+        if ((bFaultNow & MC_OVER_VOLT)!= MC_NO_ERROR)
         {
-            updateMotorErrors(OV_PROTECTION);
+            VC_Errors_RaiseError(OV_PROTECTION);
         }
-        if ((hFaultOccurred & MC_UNDER_VOLT)!= MC_NO_ERROR)
+        if ((bFaultNow & MC_UNDER_VOLT)!= MC_NO_ERROR)
         {
-            updateMotorErrors(UV_PROTECTION);
+            VC_Errors_RaiseError(UV_PROTECTION);
         }
-        if ((hFaultOccurred & MC_NTCERR)!= MC_NO_ERROR)
+        if ((bFaultNow & MC_NTCERR)!= MC_NO_ERROR)
         {
-            updateMotorErrors(UT_PROTECTION);
+            VC_Errors_RaiseError(UT_PROTECTION);
         }
-        if ((hFaultOccurred & MC_HALL_DISC)!= MC_NO_ERROR)
+        if ((bFaultNow & MC_HALL_DISC)!= MC_NO_ERROR)
         {
-            updateMotorErrors(MOTOR_HALL_ERROR);
-        }
-        if ((hFaultOccurred & MC_PHASE_DISC)!= MC_NO_ERROR)
-        {
-            VC_Errors_RaiseError(MOTOR_PHASE_ERROR);
+            VC_Errors_RaiseError(MOTOR_HALL_ERROR);
         }
     }
+    else            // Try to clear occured error if Motor does not have any error
+    {
+        if (PWRT_IsMotor1Used(pHandle))
+        {// If there's an over current (OC) that has occurred but has already been cleared
+            if ((hM1FaultOccurredCode & MC_BREAK_IN) | (hM1FaultOccurredCode & MC_OCSP))
+            {
+                if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the OC fault
+                    hM1FaultOccurredCode &= ~MC_BREAK_IN;
+                    hM1FaultOccurredCode &= ~MC_OCSP;
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
+                    VC_Errors_ClearError(OVER_CURRENT);     
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
+                }
+            }
+
+            if (hM1FaultOccurredCode & MC_SPEED_FDBK)
+            {// If there's a speed feedback (SF) that has occurred but has already been cleared
+                if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the SF fault
+                    hM1FaultOccurredCode &= ~MC_SPEED_FDBK;
+                    pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0;                    
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1]++;
+                }
+            }
+
+            if (hM1FaultOccurredCode & MC_START_UP)
+            {
+                /* In case of motor startup failure... */
+                if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the SF fault
+                    hM1FaultOccurredCode &= ~MC_START_UP;
+                    pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0;
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1]++;
+                }
+            }
+
+            if (hM1FaultOccurredCode & MC_OVER_TEMP)
+            {
+                // In case of overtemperature, clear the OT fault
+                hM1FaultOccurredCode &= ~MC_OVER_TEMP;
+                VC_Errors_ClearError(OT_PROTECTION);
+            }
+
+            if (hM1FaultOccurredCode & MC_OVER_VOLT)
+            {
+                // In case of DCbus overvoltage, clear the OV fault
+                hM1FaultOccurredCode &= ~MC_OVER_VOLT;
+                VC_Errors_ClearError(OV_PROTECTION);
+            }
+
+            if (hM1FaultOccurredCode & MC_UNDER_VOLT)
+            {
+                if(pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+                {
+                    // If the timer has timeout, clear the UV fault
+                    hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
+                    pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1] = 0;
+                    VC_Errors_ClearError(UV_PROTECTION);     
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1]++;
+                }
+            }
+            
+            if (hM1FaultOccurredCode & MC_MSRP)
+            {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
+                if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the MSRP fault
+                    hM1FaultOccurredCode &= ~MC_MSRP;
+                    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0;
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1]++;
+                }
+            }
+            
+            if (hM1FaultOccurredCode & MC_NTCERR)
+            {
+                hM1FaultOccurredCode &= ~MC_NTCERR;
+                VC_Errors_ClearError(UT_PROTECTION);
+            }
+            
+            if ((hM1FaultOccurredCode & MC_FOC_DURATION) != 0)
+            {
+                hM1FaultOccurredCode &= ~MC_FOC_DURATION;
+            }
+            
+            if ((hM1FaultOccurredCode & MC_HALL_DISC) != 0)
+            {
+                hM1FaultOccurredCode &= ~MC_HALL_DISC;
+            }
+
+        }
+
+        if (PWRT_IsMotor2Used(pHandle))
+        {
+            if ((hM2FaultOccurredCode & MC_BREAK_IN) || (hM2FaultOccurredCode & MC_OCSP))
+            {
+                if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the OC fault
+                    hM2FaultOccurredCode &= ~MC_BREAK_IN;
+                    hM2FaultOccurredCode &= ~MC_OCSP;
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
+                    VC_Errors_ClearError(OVER_CURRENT);
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2]++;
+                }
+            }
+
+            if (hM2FaultOccurredCode & MC_SPEED_FDBK)
+            {// If there's a speed feedback (SF) that has occurred but has already been cleared
+                if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the SF fault
+                    hM2FaultOccurredCode &= ~MC_SPEED_FDBK;
+                    pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2]++;
+                }
+            }
+
+            if (hM2FaultOccurredCode & MC_START_UP)
+            {// If there's a start-up (SU) that has occurred but has already been cleared
+                if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the SF fault
+                    hM2FaultOccurredCode &= ~MC_START_UP;
+                    pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2]++;
+                }
+            }
+
+            if (hM2FaultOccurredCode & MC_OVER_TEMP)
+            {
+                /* In case of overtemperature... */
+                hM2FaultOccurredCode &= ~MC_OVER_TEMP;
+                VC_Errors_ClearError(OT_PROTECTION);
+            }
+
+            if (hM2FaultOccurredCode & MC_OVER_VOLT)
+            {
+                /* In case of DCbus overvoltage... */
+                hM2FaultOccurredCode &= ~MC_OVER_VOLT;
+                VC_Errors_ClearError(OV_PROTECTION);
+            }
+
+            if (hM2FaultOccurredCode & MC_UNDER_VOLT)
+            {
+                if(pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+                {
+                    // If the timer has timeout, clear the UV fault
+                    hM2FaultOccurredCode &= ~MC_UNDER_VOLT;
+                    pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2] = 0;
+                    VC_Errors_ClearError(UV_PROTECTION);     
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2]++;
+                }
+            }
+            
+            if (hM2FaultOccurredCode & MC_MSRP)
+            {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
+                if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the MSRP fault
+                    hM2FaultOccurredCode &= ~MC_MSRP;
+                    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2]++;
+                }
+            }
+            
+            if (hM2FaultOccurredCode & MC_NTCERR)
+            {
+                hM2FaultOccurredCode &= ~MC_NTCERR;
+                VC_Errors_ClearError(UT_PROTECTION);
+            }
+            
+            if ((hM2FaultOccurredCode & MC_FOC_DURATION) != 0)
+            {
+                hM2FaultOccurredCode &= ~MC_FOC_DURATION;
+            }
+            
+            if ((hM2FaultOccurredCode & MC_HALL_DISC) != 0)
+            {
+                hM2FaultOccurredCode &= ~MC_HALL_DISC;
+            }
+        }
+    } // End of if (!bFaultNow)
     
-    if (PWRT_IsMotor1Used(pHandle))
-    {// If there's an over current (OC) that has occurred but has already been cleared
-        if ((hM1FaultOccurredCode & MC_BREAK_IN) | (hM1FaultOccurredCode & MC_OCSP))
-        {
-            if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the OC fault
-                hM1FaultOccurredCode &= ~MC_BREAK_IN;
-                hM1FaultOccurredCode &= ~MC_OCSP;
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
-                VC_Errors_ClearError(OVER_CURRENT);     
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
-            }
-        }
-
-        if (hM1FaultOccurredCode & MC_SPEED_FDBK)
-        {// If there's a speed feedback (SF) that has occurred but has already been cleared
-            if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the SF fault
-                hM1FaultOccurredCode &= ~MC_SPEED_FDBK;
-                pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0;                    
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1]++;
-            }
-        }
-
-        if (hM1FaultOccurredCode & MC_START_UP)
-        {
-            /* In case of motor startup failure... */
-            if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the SF fault
-                hM1FaultOccurredCode &= ~MC_START_UP;
-                pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1]++;
-            }
-        }
-
-        if (hM1FaultOccurredCode & MC_OVER_TEMP)
-        {
-            // In case of overtemperature, clear the OT fault
-            hM1FaultOccurredCode &= ~MC_OVER_TEMP;
-        }
-
-        if (hM1FaultOccurredCode & MC_OVER_VOLT)
-        {
-            // In case of DCbus overvoltage, clear the OV fault
-            hM1FaultOccurredCode &= ~MC_OVER_VOLT;
-        }
-
-        if (hM1FaultOccurredCode & MC_UNDER_VOLT)
-        {
-            if(pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-            {
-                // If the timer has timeout, clear the UV fault
-                hM1FaultOccurredCode &= ~MC_UNDER_VOLT;
-                pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1]++;
-            }
-        }
-
-        if (hM1FaultOccurredCode & MC_MSRP)
-        {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
-            if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the MSRP fault
-                hM1FaultOccurredCode &= ~MC_MSRP;
-                pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1]++;
-            }
-        }
-
-        if (hM1FaultOccurredCode & MC_NTCERR)
-        {
-            hM1FaultOccurredCode &= ~MC_NTCERR;
-        }
-
-        if ((hM1FaultOccurredCode & MC_FOC_DURATION) != 0)
-        {
-            hM1FaultOccurredCode &= ~MC_FOC_DURATION;
-        }
-
-        if ((hM1FaultOccurredCode & MC_HALL_DISC) != 0)
-        {
-            hM1FaultOccurredCode &= ~MC_HALL_DISC;
-        }
-
-    }
-
-    if (PWRT_IsMotor2Used(pHandle))
-    {
-        if ((hM2FaultOccurredCode & MC_BREAK_IN) || (hM2FaultOccurredCode & MC_OCSP))
-        {
-            if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the OC fault
-                hM2FaultOccurredCode &= ~MC_BREAK_IN;
-                hM2FaultOccurredCode &= ~MC_OCSP;
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2]++;
-            }
-        }
-
-        if (hM2FaultOccurredCode & MC_SPEED_FDBK)
-        {// If there's a speed feedback (SF) that has occurred but has already been cleared
-            if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the SF fault
-                hM2FaultOccurredCode &= ~MC_SPEED_FDBK;
-                pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2]++;
-            }
-        }
-
-        if (hM2FaultOccurredCode & MC_START_UP)
-        {// If there's a start-up (SU) that has occurred but has already been cleared
-            if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the SF fault
-                hM2FaultOccurredCode &= ~MC_START_UP;
-                pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2]++;
-            }
-        }
-
-        if (hM2FaultOccurredCode & MC_OVER_TEMP)
-        {
-            /* In case of overtemperature... */
-            hM2FaultOccurredCode &= ~MC_OVER_TEMP;
-        }
-
-        if (hM2FaultOccurredCode & MC_OVER_VOLT)
-        {
-            /* In case of DCbus overvoltage... */
-            hM2FaultOccurredCode &= ~MC_OVER_VOLT;
-        }
-
-        if (hM2FaultOccurredCode & MC_UNDER_VOLT)
-        {
-            if(pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {
-                // If the timer has timeout, clear the UV fault
-                hM2FaultOccurredCode &= ~MC_UNDER_VOLT;
-                pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2]++;
-            }
-        }
-
-        if (hM2FaultOccurredCode & MC_MSRP)
-        {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
-            if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the MSRP fault
-                hM2FaultOccurredCode &= ~MC_MSRP;
-                pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2]++;
-            }
-        }
-
-        if (hM2FaultOccurredCode & MC_NTCERR)
-        {
-            hM2FaultOccurredCode &= ~MC_NTCERR;
-        }
-
-        if ((hM2FaultOccurredCode & MC_FOC_DURATION) != 0)
-        {
-            hM2FaultOccurredCode &= ~MC_FOC_DURATION;
-        }
-
-        if ((hM2FaultOccurredCode & MC_HALL_DISC) != 0)
-        {
-            hM2FaultOccurredCode &= ~MC_HALL_DISC;
-        }
-    }
-
     // Verify if all fault occured have been cleared
     if (!hM1FaultOccurredCode)
     {

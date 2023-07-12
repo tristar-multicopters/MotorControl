@@ -59,12 +59,11 @@ void VC_BootUp(void)
 {    
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     
-    Delay_Handle_t DelayArray[4];
+    Delay_Handle_t DelayArray[3];
     
     Delay_Init(&DelayArray[THROTTLE_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // Initialising the time base for the throttle stuck delay
     Delay_Init(&DelayArray[PTS_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // // Initialize the time base for the Pedal Torque sensor stuck delay
     Delay_Init(&DelayArray[BRAKE_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // // Initialize the time base for the brake sensor stuck delay
-    Delay_Init(&DelayArray[MOTORERR_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // // Initialize the time base for the motor errors
     
     /* Initialize vehicle controller state machine and powertrain components */
     VCSTM_Init(pVCI->pStateMachine);
@@ -130,7 +129,7 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         
         // Update Light if Blinking
         Light_Blink(pVCI->pPowertrain->pTailLight);
-
+        
         #if ENABLE_VC_DAC_DEBUGGING
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);
         R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hAvADCValue);

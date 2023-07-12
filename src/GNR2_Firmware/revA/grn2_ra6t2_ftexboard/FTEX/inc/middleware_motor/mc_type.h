@@ -94,7 +94,6 @@ extern "C" {
 #define  MC_MSRP            (uint16_t)(0x0200u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
 #define  MC_NTCERR          (uint16_t)(0x0400u)     /**< @brief Error: NTC disconnection or Freezing protection.*/
 #define  MC_HALL_DISC       (uint16_t)(0x0800u)     /**< @brief ERROR: disconnected Hall sensor detection */
-#define  MC_PHASE_DISC      (uint16_t)(0x1000u)     /**< @brief ERROR: disconnected Hall sensor detection */
 /** @} */
 
 /**
@@ -173,7 +172,6 @@ typedef struct
   AlphaBeta_t Ialphabeta;      /**< @brief Stator current on stator reference frame alfa-beta*/
   qd_t IqdHF;                  /**< @brief Stator current on stator reference frame alfa-beta*/
   qd_t Iqd;                    /**< @brief Stator current on rotor reference frame qd */
-  qd_t Iqd_avg;                /**< @brief Stator current on rotor reference frame qd */   
   qd_t Iqdref;                 /**< @brief Stator current on rotor reference frame qd */
   int16_t UserIdref;           /**< @brief User value for the Idref stator current */
   qd_t Vqd;                    /**< @brief Phase voltage on rotor reference frame qd */
