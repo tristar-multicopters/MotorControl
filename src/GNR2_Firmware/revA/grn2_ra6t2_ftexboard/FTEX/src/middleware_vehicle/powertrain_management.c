@@ -110,7 +110,7 @@ void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle)
 void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    bool bIsBrakePressed = BRK_IsPressed(pHandle->pBrake);
+    bool bIsBrakePressed = BRK_IsPressedSafety(pHandle->pBrake);
     
     /*bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);*/
     int16_t hSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);

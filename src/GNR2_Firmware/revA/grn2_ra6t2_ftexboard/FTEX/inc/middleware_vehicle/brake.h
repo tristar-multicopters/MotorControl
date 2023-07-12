@@ -16,10 +16,7 @@
 
 // ============================= Defines ================================= //
 
-#define SAFE_BRAKE_COUNT_100MS           (uint16_t)40 /* Brake is checked in many places. 
-                                                  It's called roughly 103 times every 255ms
-                                                  Waiting 5 seconds to check the error
-                                                  this will allow the user time to start riding */
+#define SAFE_BRAKE_COUNT_100MS           (uint16_t)20 // Called every 5ms, 20*5 = 100ms, which is throttle settle time
 
 /**
   * @brief Brake_Handle_t structure used for brake sensing
@@ -53,6 +50,14 @@ void BRK_Init(BRK_Handle_t * pHandle, Delay_Handle_t * pBrakeDelay);
  */
 bool BRK_IsPressed(BRK_Handle_t * pHandle);
 
+/**
+ * @brief Checks if the brake is pressed and if it's stuck
+ *        MUST ONLY BE CALLED IN ONE PLACE
+ *
+ * @param pHandle : Pointer on Handle structure of Brake module
+ * @return state of the brake
+ */
+bool BRK_IsPressedSafety(BRK_Handle_t * pHandle);
 
 #endif /*__BRAKE_H*/
 

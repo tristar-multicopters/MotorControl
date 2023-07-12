@@ -43,6 +43,21 @@ bool BRK_IsPressed(BRK_Handle_t * pHandle)
 	ASSERT(pHandle != NULL); 
 
     bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
+    
+    pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
+	
+	return pHandle->bIsPressed;
+}
+
+/**
+ *  MUST ONLY BE CALLED IN ONE PLACE
+ *  Returns state of the brake and checks for stuck brake
+ */
+bool BRK_IsPressedSafety(BRK_Handle_t * pHandle)
+{
+	ASSERT(pHandle != NULL); 
+
+    bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
     pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
 
     if(!pHandle->bSafeStart){
@@ -76,4 +91,3 @@ bool BRK_IsPressed(BRK_Handle_t * pHandle)
 	
 	return pHandle->bIsPressed;
 }
-
