@@ -19,6 +19,7 @@
 #pragma clang diagnostic pop
 
 #include "vc_autodetermination.h"
+#include "gnr_information.h"
 
 //****************** THREAD EXTERN FUNCTION PROTOTYPES ******************//
 
@@ -168,6 +169,9 @@ void gnr_main(void)
     //fucntion to pass the user configuration read from the memory to
     //VCInterfaceHandle
     UserConfigTask_UpdateUserConfigData(&UserConfigHandle);
+    
+    //get all information from the GNR controller, as serial number, firmware and dfu pack version.
+    GnrInfo_Read(&DataFlashHandle);  
 
     MC_BootUp();
     

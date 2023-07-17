@@ -98,11 +98,15 @@ static void UpdateObjectDictionnary(void *p_arg)
     {
         hErrorState[VEHICLE_PARAM] = 0x0000;
     }
-        hFwVersion[VEHICLE_PARAM]= (uint16_t) CanVehiInterface_GetVehicleFwVersion();
+        
+    hFwVersion[VEHICLE_PARAM]= (uint16_t) CanVehiInterface_GetVehicleFwVersion();
     
-    // Get Serial Number
-    uint32_t fSerialNbLow   = 0U;
-    uint32_t fSrialNbHigh   = 0U;
+    //get the serial number
+    uint64_t fserialNumber = GnrInfo_GetSerialNumber();
+    
+    //transfer the serial number to the variables used by the CAN OD.
+    uint32_t fSerialNbLow   = (uint32_t)(fserialNumber);
+    uint32_t fSerialNbHigh   = (uint32_t)(fserialNumber >> 32);
     
     /***************Throttle/Pedal Assist variables******************************/
     uint8_t pasAlgorithm                       = UserConfigTask_GetPasAlgorithm();
@@ -319,9 +323,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)),     pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),     pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
-            
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(uint32_t)); 
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSrialNbHigh, sizeof(uint32_t));            
+             
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion[CAN_PARAM], sizeof(uint16_t));    
             
             // Check if there were changes made to a parameter by a can device
@@ -429,7 +431,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow)); 
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSrialNbHigh,  sizeof(fSrialNbHigh)); 
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSerialNbHigh,  sizeof(fSerialNbHigh)); 
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion[CAN_PARAM], sizeof(uint16_t));    
         
             /***********************UPdate Throttle/Pedal Assist CANopen OD ID.********************************************/

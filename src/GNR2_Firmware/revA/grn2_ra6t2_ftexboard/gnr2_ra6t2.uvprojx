@@ -875,6 +875,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>gnr_information.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_communications\gnr_information.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2817,6 +2822,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application_communications\firmware_update.c</FilePath>
             </File>
+            <File>
+              <FileName>gnr_information.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_communications\gnr_information.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4623,6 +4633,11 @@
               <FileName>firmware_update.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application_communications\firmware_update.c</FilePath>
+            </File>
+            <File>
+              <FileName>gnr_information.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_communications\gnr_information.c</FilePath>
             </File>
           </Files>
         </Group>

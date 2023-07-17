@@ -13,6 +13,7 @@
 #include "comm_defines.h"
 #include "firmware_update.h"
 #include "vc_fault_management.h"
+#include "gnr_information.h"
 
 /************* DEFINES ****************/
 
