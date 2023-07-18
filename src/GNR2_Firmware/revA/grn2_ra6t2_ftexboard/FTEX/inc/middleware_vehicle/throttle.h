@@ -51,7 +51,7 @@ typedef struct
     uint16_t DefaultMaxThrottleSpeedKMH;// Maximum KM/H speed that is considered safe 
     
     uint16_t MaxSafeThrottleSpeedRPM;   // Maximum RPM speed that is safe for the bike
-    uint16_t DefaultMaxThrottleSpeedRPM;// Maximum RPM speed that is considered safe
+    uint16_t MaxThrottleSpeedRPM;// Maximum RPM speed that is considered safe
     
     uint16_t ThrottleDecreasingRange;    
 } ThrottleParameters_t;
@@ -92,7 +92,7 @@ typedef struct
  * @param  pHandle : Pointer on Handle of the throttle
  * @retval void
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay);
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay,  uint32_t MotorToHubGearRatio);
 
 /**
  * @brief Initializes internal average throttle computed value
@@ -129,7 +129,7 @@ int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle);
  * @param  pHandle : Pointer on Handle of the throttle
  * @retval speed reference (todo: unit)
  */
-int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle);
+uint16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle);
 
 /**
  * @brief  Return true if throttled is pressed (threshold is passed) 
@@ -167,7 +167,7 @@ void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM);
  * 
  * @retval void
  */
-void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue, uint16_t aOffset);
+void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue, uint16_t aOffset, uint32_t MotorToHubGearRatio);
 
 /**
  * @brief  Used to update the value of the throttle, the source of the external throttle should call this function
@@ -181,7 +181,7 @@ void Throttle_UpdateExternal(ThrottleHandle_t * pHandle, uint16_t aNewVal);
  * @param  pHandle : Pointer on Handle of the throttle
  * @retval void
  */
-void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle);
+void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle, uint16_t MotorToHubGearRatio);
 
 #endif /*__THROTTLE_H*/
 

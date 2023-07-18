@@ -46,7 +46,7 @@ void LCD_Cloud_5S_init(Cloud_5S_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART
     pHandle->pUART_handle->pRxCallback = &LCD_Cloud_5S_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LCD_Cloud_5S_TX_IRQ_Handler; 
             
-    Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76);
+    Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76, pHandle->pVController->pPowertrain->sParameters.MotorToHubGearRatio);
     
     VC_Errors_SetCycleLength(8); // To adjust
     
@@ -238,7 +238,8 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     {
         if (pHandle->pVController->pPowertrain->pThrottle->extThrottleEnable == false)
         {
-            Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76);
+            Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76, pHandle->pVController->pPowertrain->sParameters.MotorToHubGearRatio);
+
         }
         
         if (pHandle->rx_frame.Buffer[2] == CLOUD_SYSTEM) // Check if its a system frame

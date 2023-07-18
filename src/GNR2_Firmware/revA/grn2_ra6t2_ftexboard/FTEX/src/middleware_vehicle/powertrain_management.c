@@ -47,7 +47,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     // Initilaize peripherals
     Wheel_Init(WHEEL_DIAMETER_DEFAULT);
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
-    Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
+    Throttle_Init(pHandle->pThrottle,&ThrottleDelay, pHandle->sParameters.MotorToHubGearRatio);
     BRK_Init(pHandle->pBrake, &brakeDelay);
     BatMonitor_Init(pHandle->pBatMonitorHandle, pHandle->pMDI->pMCI);
     MS_Init(pHandle->pMS);
@@ -97,7 +97,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     
     MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
     int16_t hTorqueRef = 0; 
-    int16_t hSpeedRef = 0;
+    uint16_t hSpeedRef = 0;
     int16_t hAux = 0;
 
     if (pHandle->pMS->bMSEnable)
@@ -242,8 +242,16 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     }
     else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
     {
-        /* SPEED CONTROL NOT IMPLEMENTED YET. JUST PLACEHOLDER CODE */
         hSpeedRef = Throttle_ThrottleToSpeed(pHandle->pThrottle);
+        uint16_t MotorSpeedRPM = pHandle->pThrottle->hParameters.MaxThrottleSpeedRPM * (pHandle->sParameters.MotorToHubGearRatio >> 16);
+        
+        // Check if the calculated speed is more than maximum allowed Speed set by LCD
+        if (hSpeedRef > MotorSpeedRPM)
+        {
+            hSpeedRef = MotorSpeedRPM;
+        }
+        
+        // set speed zero if brake is pressed
         if (bIsBrakePressed)
         {
             hSpeedRef = 0;

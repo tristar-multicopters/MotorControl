@@ -15,24 +15,7 @@
 #pragma clang diagnostic ignored "-Wpragma-pack"
 #include "user_config_task.h"
 #pragma clang diagnostic pop
-
-
-/*  these are just temporal definitiions needed by speed control te be tested with throttle
-    since we have no clear plan for using speed control with trottle at the moment,
-    and to prevent any exception (dividing by zero) or error, the definitions kept here alive
-    until someone update the code with clear and clean revise  */
-#if POWERTRAIN_DEFAULT_CONTROL_TYPE == SPEED_CTRL
-        #define THROTTLE_OFFSET_THROTTLE2SPEED         400 //400  is tested value for R48 // Offset for throttle to speed linear transformation 
-        #define THROTTLE_SLOPE_THROTTLE2SPEED          20 //20   is tested value for R48 // Slope for throttle to speed linear transformation
-        #define THROTTLE_DIVISOR_THROTTLE2SPEED        140 //140  is tested value for R48 // Divisor for throttle to speed linear transformation
-#elif  POWERTRAIN_DEFAULT_CONTROL_TYPE == TORQUE_CTRL
-        #define THROTTLE_OFFSET_THROTTLE2SPEED         1 //400  is tested value for R48 // Offset for throttle to speed linear transformation 
-        #define THROTTLE_SLOPE_THROTTLE2SPEED          1 //20   is tested value for R48 // Slope for throttle to speed linear transformation
-        #define THROTTLE_DIVISOR_THROTTLE2SPEED        1 //140  is tested value for R48 // Divisor for throttle to speed linear transformation
-#endif
         
-/* end of temperory defined values */
-
 MultipleDriveInterfaceHandle_t MDInterfaceHandle =
 {
     0
@@ -275,14 +258,12 @@ ThrottleHandle_t ThrottleHandle =
         .hOffsetTorque  = THROTTLE_OFFSET_THROTTLE2TORQUE,
         
         .hOffsetSpeed  = THROTTLE_OFFSET_THROTTLE2SPEED,
-        .bSlopeSpeed   = THROTTLE_SLOPE_THROTTLE2SPEED,
-        .bDivisorSpeed = THROTTLE_DIVISOR_THROTTLE2SPEED,
 
         .hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
         
         .MaxSafeThrottleSpeedKMH    = THROTTLE_MAX_SAFE_SPEED_KMH,
         .DefaultMaxThrottleSpeedKMH = THROTTLE_DEFAULT_MAX_SPEED_KMH,
-        .ThrottleDecreasingRange    = THROTTLE_SPEED_DECREASING_RANGE,        
+        .ThrottleDecreasingRange    = THROTTLE_SPEED_DECREASING_RANGE,
     }
 };
 

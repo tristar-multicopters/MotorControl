@@ -29,6 +29,7 @@
 #define THROTTLE_MAX_ADC2THROTTLE             56000    // Maximum value reachable by the throttle adc value 
 
 #define THROTTLE_OFFSET_THROTTLE2TORQUE           1    // Offset for throttle to torque linear transformation
+#define THROTTLE_OFFSET_THROTTLE2SPEED         400 // Offset for throttle to speed linear transformation 
 
 #define THROTTLE_DETECTION_THRESHOLD           1000    // Throttle is considered pressed once it passed this threshold
 
@@ -110,7 +111,7 @@
 
 #define DYNAMIC_SPEED_LIMITATION              false    // Indicates if the the top speed change be changed dynamically or is fixed to the default value
 
-#define POWERTRAIN_MOTOR_GEARRATIO                0x000B0005    /* Motor gear ratio, i.e. wheel speed divided by motor speed.
+#define POWERTRAIN_MOTOR_GEARRATIO                0x00050000    /* Motor gear ratio, i.e. wheel speed divided by motor speed.
                                                                    Upper half of 32 bits is numerator, 
                                                                    second half is denominator */
 

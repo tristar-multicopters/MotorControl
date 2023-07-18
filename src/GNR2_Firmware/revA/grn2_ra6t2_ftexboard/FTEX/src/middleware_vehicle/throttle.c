@@ -7,16 +7,13 @@
 #include "throttle.h"
 #include "wheel.h"
 #include "ASSERT_FTEX.h"
-
 /* Functions ---------------------------------------------------- */
-
 /**
    Initializes throttle sensing conversions
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay)
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay,  uint32_t MotorToHubGearRatio)
 {
     ASSERT(pHandle != NULL);
-    
     pHandle->DisableThrottleOutput = false;
     pHandle->extThrottleEnable = false;    
     
@@ -36,16 +33,16 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     pHandle->SafeStart = false;
     Foldback_Init(pHandle->SpeedFoldbackVehicleThrottle);
     
-    pHandle->hParameters.DefaultMaxThrottleSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.DefaultMaxThrottleSpeedKMH);
+    pHandle->hParameters.MaxThrottleSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.DefaultMaxThrottleSpeedKMH);
     pHandle->hParameters.MaxSafeThrottleSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.MaxSafeThrottleSpeedKMH);
     
-    Throttle_SetMaxSpeed(pHandle,pHandle->hParameters.DefaultMaxThrottleSpeedRPM);
+    Throttle_SetMaxSpeed(pHandle,pHandle->hParameters.MaxThrottleSpeedRPM);
     
     /* Need to be register with RegularConvManager */
     pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
     Throttle_Clear(pHandle);
-    
-    Throttle_ComputeSlopes(pHandle); // Used to calculate values to calibrate ADC value to a standard value
+    uint16_t GearRatio = (uint16_t)(MotorToHubGearRatio >> 16);
+    Throttle_ComputeSlopes(pHandle, GearRatio); // Used to calculate values to calibrate ADC value to a standard value
 }
 
 /**
@@ -212,7 +209,7 @@ int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
 /**
    Compute motor speed reference value from current throttle value stored in the handle 
  */
-int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
+uint16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     int32_t wAux;
@@ -226,6 +223,10 @@ int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
         wAux = 0;
     }
     
+    /* here the final MOTOR RPM calculated based on slope and divisor.
+       note,  this is different from WHEEL RPM 
+       MOTOR RPM = WHEEL RPM * GEAR RATIO
+    */
     wAux = (int32_t)(pHandle->hParameters.bSlopeSpeed * wAux);
     wAux /= pHandle->hParameters.bDivisorSpeed;
     
@@ -237,7 +238,7 @@ int16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
     {    
         wAux = INT16_MIN;
     }        
-    return (int16_t) wAux;
+    return (uint16_t) wAux;
 }
 
 /**
@@ -286,6 +287,8 @@ void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM)
 {     
     ASSERT(pHandle != NULL);
     
+    pHandle->hParameters.MaxThrottleSpeedRPM = aMaxSpeedRPM;
+    
     ASSERT(pHandle->hParameters.ThrottleDecreasingRange > 0);
         
     Foldback_SetDecreasingRange (pHandle->SpeedFoldbackVehicleThrottle,pHandle->hParameters.ThrottleDecreasingRange);
@@ -305,7 +308,7 @@ void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM)
 /**
    Setup the throttle module to accept an external throttle as the input
  */
-void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue,uint16_t aOffset)
+void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue,uint16_t aOffset, uint32_t MotorToHubGearRatio)
 {
    ASSERT(pHandle != NULL);
    ASSERT(aMaxValue > 0);
@@ -315,7 +318,9 @@ void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue,uint1
     
    pHandle->hParameters.hMaxThrottle = aMaxValue;
    pHandle->hParameters.hOffsetThrottle = aOffset; 
-   Throttle_ComputeSlopes(pHandle); 
+   
+   uint16_t GearRatio = (uint16_t)(MotorToHubGearRatio >> 16);
+   Throttle_ComputeSlopes(pHandle, GearRatio); 
     
 }
 
@@ -330,10 +335,11 @@ void Throttle_UpdateExternal(ThrottleHandle_t * pHandle, uint16_t aNewVal)
 /**
    Compute slopes for throttle module
  */
-void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle)
+void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle, uint16_t GearRatio)
 {
    float ADCSlope = 0;
    float Throttle2Torq = 0; 
+   float Throttle2Speed = 0;
     
    ADCSlope = (pHandle->hParameters.hMaxThrottle - pHandle->hParameters.hOffsetThrottle); // Calculate the size of usable values received as an input
    
@@ -344,7 +350,7 @@ void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle)
    pHandle->hParameters.bSlopeThrottle   = (int16_t) round(ADCSlope);    // Save the numerator
    pHandle->hParameters.bDivisorThrottle = THROTTLE_SLOPE_FACTOR;        // and denominator
     
-    
+   // calculate the Slope for Torque 
    Throttle2Torq =  INT16_MAX - pHandle->hParameters.hOffsetTorque; // Calculate the size of usable values received as an input
    
    ASSERT(Throttle2Torq >= 1); 
@@ -354,4 +360,14 @@ void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle)
    pHandle->hParameters.bSlopeTorque   = (int16_t) round(Throttle2Torq);    // Save the numerator
    pHandle->hParameters.bDivisorTorque = THROTTLE_SLOPE_FACTOR;             // and denominator 
     
+   // calculate the Slope for Speed 
+   Throttle2Speed = INT16_MAX - pHandle->hParameters.hOffsetSpeed;                  // Calculate the size of usable values received as an input
+   
+   ASSERT(Throttle2Speed >= 1); 
+   Throttle2Speed =  pHandle->hParameters.MaxSafeThrottleSpeedRPM/Throttle2Speed;   // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
+   Throttle2Speed = Throttle2Speed * GearRatio;                                     // Consider the gear to hub ratio to obtain the motor speed
+   Throttle2Speed *= THROTTLE_SLOPE_FACTOR;                                         // Multiply by the factor to create the numerator of a fraction 
+    
+   pHandle->hParameters.bSlopeSpeed   = (int16_t) round(Throttle2Speed);            // Save the numerator
+   pHandle->hParameters.bDivisorSpeed = THROTTLE_SLOPE_FACTOR;                      // and denominator 
 }
