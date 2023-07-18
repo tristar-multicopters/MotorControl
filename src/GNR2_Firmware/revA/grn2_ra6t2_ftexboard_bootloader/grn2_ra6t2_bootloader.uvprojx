@@ -135,7 +135,7 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>-1</DriverSelection>
+            <DriverSelection>4102</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
@@ -341,7 +341,7 @@
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal</MiscControls>
               <Define>LFS_READONLY,LFS_NO_MALLOC,LFS_NO_DEBUG,LFS_NO_ERROR,LFS_NO_WARN</Define>
               <Undefine></Undefine>
-              <IncludePath>.\Ftex\inc;.\Libraries\littlefs</IncludePath>
+              <IncludePath>.\Ftex\inc;.\Libraries\littlefs;.\Ftex\inc\peripherals_abstraction;.\Ftex\inc\application</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -419,6 +419,16 @@
               <FileName>watchdog.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Ftex\src\watchdog.c</FilePath>
+            </File>
+            <File>
+              <FileName>fw_version.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Ftex\src\application\fw_version.c</FilePath>
+            </File>
+            <File>
+              <FileName>ASSERT_FTEX.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Ftex\src\application\ASSERT_FTEX.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -543,6 +553,16 @@
               <FileName>memory_regions.scat</FileName>
               <FileType>2</FileType>
               <FilePath>.\memory_regions.scat</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Peripherals_Abstraction</GroupName>
+          <Files>
+            <File>
+              <FileName>uCAL_DATAFLASH.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Ftex\src\peripherals_abstraction\uCAL_DATAFLASH.c</FilePath>
             </File>
           </Files>
         </Group>

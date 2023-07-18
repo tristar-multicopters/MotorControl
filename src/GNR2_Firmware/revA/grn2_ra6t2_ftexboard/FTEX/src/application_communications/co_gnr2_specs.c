@@ -104,7 +104,7 @@ int16_t  bObjDataSpeedMeas                  = 0;
 uint8_t  bObjDataSOC                        = 0;
 uint8_t  bObjDataPAS                        = DEFAULT_PAS_LEVEL; // The default PAS level should be 1
 uint8_t  bObjDataMaxPAS                     = 0;
-uint16_t hObjDataFwVersion                  = 0;
+uint32_t hObjDataFwVersion                  = 0;
 uint16_t hObjDataPowerMeas                  = 0;
 uint16_t hObjDataMaxPower                   = 0;
 uint16_t hObjDataErrorState                 = 0;
@@ -486,7 +486,7 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         //move to next OD index
         index++;
         // Application - Firmware Version
-        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&hObjDataFwVersion};   
+        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&hObjDataFwVersion};   
         //move to next OD index
         index++;
         
@@ -941,7 +941,7 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         //move to next OD index
         index++;
         // Application - Firmware Version
-        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&hObjDataFwVersion};   
+        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&hObjDataFwVersion};   
         //move to next OD index
         index++;
         
@@ -1407,7 +1407,7 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         //move to next OD index
         index++;
         // Application - Firmware Version
-        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&hObjDataFwVersion};   
+        GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&hObjDataFwVersion};   
         //move to next OD index
         index++;
         

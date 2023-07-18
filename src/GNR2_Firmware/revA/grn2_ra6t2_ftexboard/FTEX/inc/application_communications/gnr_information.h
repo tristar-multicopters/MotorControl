@@ -24,6 +24,9 @@
 //define the lenght on bytes of the GNR serial number.
 #define GNR_INFO_SERIAL_LENGTH     13 
 
+//define the lenght on bytes of the GNR serial number.
+#define GNR_DFUPACK_VERSION_LENGTH  4 
+
 /*********************************************
           Data Struct Definition
 *********************************************/
@@ -33,6 +36,7 @@
 //in the data flash.
 typedef struct 
 {
+    uint8_t  Gnr_DfuPackVersion[4];
     uint8_t  Gnr_serialNumber[13];
     DataFlash_Handle_t *pDataFlash_Handle;
     
@@ -59,5 +63,12 @@ void GnrInfo_Read(DataFlash_Handle_t * pDataFlashHandle);
 * @return uint64_t GNR serial number.
 */
 uint64_t GnrInfo_GetSerialNumber(void);
+
+/**
+* @brief Function used to read GNR dfu pack version from the data flash. 
+* @param none
+* @return uint32_t GNR dfu pack version.
+*/
+uint32_t  GnrInfo_GetDFuPackVersion(void);
 
 #endif

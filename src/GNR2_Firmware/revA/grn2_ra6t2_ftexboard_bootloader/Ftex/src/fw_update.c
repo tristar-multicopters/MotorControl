@@ -177,8 +177,9 @@ int FW_CheckUpdate(void)
     
     //if the code arrive here is because the external memory has
     //a dfu file.
-    // If no image in the first slot, download one from flash
-    if(version_img_1.vers_concat == 0xffffffff && dfu_pack.vers_concat != 0x0000)
+    //check if dfu pack version of the firmware == 0xfffffff, mcu flash memory is empty.
+    //check if dfu pack version of dfu pack file is empty or corroupted(0x00000000).
+    if(version_img_1.vers_concat == 0xffffffff && dfu_pack.vers_concat != 0x00000000 && dfu_pack.vers_concat != 0xFFFFFFFF)
     {
         return UPDATE_REQUIRED;
     }

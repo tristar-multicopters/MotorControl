@@ -8,6 +8,7 @@
 #include "fw_update.h"
 #include "uart_debug.h"
 #include "watchdog.h"
+#include "fw_version.h"
 
 
 FSP_CPP_HEADER
@@ -40,6 +41,7 @@ void MCuboot_QuickSetup(void)
 #endif
     //first kick to reset WDT timeout.
     Watchdog_Refresh();
+    
     /* Start the firmware update process */
 	FW_UpdateProccess();
     
@@ -73,6 +75,11 @@ void MCuboot_QuickSetup(void)
     //asset to reset the system if
     //a corrupted or a empty bank was found.
     assert(bootValidBank == 0);
+    
+    //read and update dfu pack version into
+    //data flash if necessary(a new version 
+    //was flashed in the mcu memory.)
+    Fw_ReadFwVersionFlash();
 
     ///Enter in the application
     //only if a valid(not corrupted) firmware

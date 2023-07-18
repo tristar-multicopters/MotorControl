@@ -34,7 +34,7 @@ static GnrInfoHandle_t GnrInfoHandle;
 // ==================== Public Functions ======================== //
 /**
 * @brief Function used to read GNR serial number from the data flash.
-*        GNR information is kept in the FLASH_HP_DF_BLOCK_2 address.
+*        GNR information is kept in the FLASH_HP_DF_BLOCK_2 and 3.
 *        This is the 3 block of the data flash.
 */
 void GnrInfo_Read(DataFlash_Handle_t * pDataFlashHandle)
@@ -49,7 +49,10 @@ void GnrInfo_Read(DataFlash_Handle_t * pDataFlashHandle)
     if(uCAL_Flash_Open(GnrInfoHandle.pDataFlash_Handle) == true)
     {   
         //get GNR serial number from data flash memory, on the block FLASH_HP_DF_BLOCK_2.
-        uCAL_Data_Flash_Read(GnrInfoHandle.pDataFlash_Handle, GnrInfoHandle.Gnr_serialNumber, FLASH_HP_DF_BLOCK_2, GNR_INFO_SERIAL_LENGTH);   
+        uCAL_Data_Flash_Read(GnrInfoHandle.pDataFlash_Handle, GnrInfoHandle.Gnr_serialNumber, FLASH_HP_DF_BLOCK_2, GNR_INFO_SERIAL_LENGTH);
+        
+        //get GNR dfu pac version from data flash memory, on the block FLASH_HP_DF_BLOCK_3.
+        uCAL_Data_Flash_Read(GnrInfoHandle.pDataFlash_Handle, GnrInfoHandle.Gnr_DfuPackVersion, FLASH_HP_DF_BLOCK_3, GNR_DFUPACK_VERSION_LENGTH);
     }
     
     //Close data flash memory access.
@@ -80,4 +83,25 @@ uint64_t  GnrInfo_GetSerialNumber(void)
     }
     
     return serialNumber;   
+}
+
+/**
+* @brief Function used to read GNR dfu pack version from the data flash.  
+*/
+uint32_t  GnrInfo_GetDFuPackVersion(void)
+{
+    uint32_t dfuPackVersion = 0;
+    uint8_t m = 0;
+    
+    //copy dfu pack version byte by byte to the variable.
+    for(short int n = 3; n >= 0; n--)
+    {
+        //move byte by byte from the array the variable.
+        dfuPackVersion = dfuPackVersion | ((uint32_t)GnrInfoHandle.Gnr_DfuPackVersion[n] << (m*8));
+        
+        //increment to the next shift.
+        m++;
+    }
+    
+    return dfuPackVersion;   
 }
