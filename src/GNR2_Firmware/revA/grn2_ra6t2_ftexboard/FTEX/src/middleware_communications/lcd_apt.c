@@ -621,7 +621,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             else
             {
                 ConvertedError = 0x9F;
-            }    
+            }  
           break; 
     }
     

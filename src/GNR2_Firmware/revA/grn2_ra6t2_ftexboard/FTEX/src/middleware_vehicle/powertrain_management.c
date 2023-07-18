@@ -189,6 +189,37 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
 
             }
+            
+            #if VEHICLE_SELECTION == VEHICLE_NIDEC
+            else if (pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse)
+            {
+                static int16_t PowerAvg = 0;                
+                                   
+                int16_t BandwidthUp = 35; //Bandwidth CANNOT be set to 0
+                int16_t BandwidthDown = 75;    
+                int16_t Bandwidth = 0;
+                
+                    
+                if(abs(PowerAvg - hAux) > (pHandle->pPAS->sParameters.hPASMaxTorque/25)) // Sudden acceleration or decelration ? 
+                {                                                                      
+                    BandwidthUp = 60;
+                    BandwidthDown = 30;                    
+                }
+                
+                if(hAux >= PowerAvg)
+                {
+                    Bandwidth = BandwidthUp;
+                }
+                else
+                {                    
+                    Bandwidth = BandwidthDown;
+                }
+                
+                PowerAvg = ((Bandwidth-1) * PowerAvg + hAux)/Bandwidth;
+                                        
+                hAux = PowerAvg;
+            }
+            #endif
         }                            
         /* Using throttle */
         else 
