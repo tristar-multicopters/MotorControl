@@ -746,36 +746,34 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
 bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint16_t hM1FaultNowCode = MDI_GetCurrentFaults(pHandle->pMDI, M1);
     uint16_t hM1FaultOccurredCode = MDI_GetOccurredFaults(pHandle->pMDI, M1);
-    uint16_t hM2FaultNowCode = MDI_GetCurrentFaults(pHandle->pMDI, M2);
     uint16_t hM2FaultOccurredCode = MDI_GetOccurredFaults(pHandle->pMDI, M2);
 
-    uint16_t bFaultNow = hM1FaultNowCode | hM2FaultNowCode;
+    uint16_t hFaultOccurred = hM1FaultOccurredCode | hM2FaultOccurredCode;
 
-    if (bFaultNow != MC_NO_ERROR)      // Rasie Motor current error to the LCD
+    if (hFaultOccurred != MC_NO_ERROR)      // Rasie Motor current error to the LCD
     {
-        if (((bFaultNow & MC_BREAK_IN) | (bFaultNow & MC_OCSP)) != MC_NO_ERROR )
+        if (((hFaultOccurred & MC_BREAK_IN) | (hFaultOccurred & MC_OCSP)) != MC_NO_ERROR )
         {
             VC_Errors_RaiseError(OVER_CURRENT, HOLD_UNTIL_CLEARED);
         }
-        if ((bFaultNow & MC_OVER_TEMP) != MC_NO_ERROR)
+        if ((hFaultOccurred & MC_OVER_TEMP) != MC_NO_ERROR)
         {
             VC_Errors_RaiseError(OT_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
-        if ((bFaultNow & MC_OVER_VOLT)!= MC_NO_ERROR)
+        if ((hFaultOccurred & MC_OVER_VOLT)!= MC_NO_ERROR)
         {
             VC_Errors_RaiseError(OV_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
-        if ((bFaultNow & MC_UNDER_VOLT)!= MC_NO_ERROR)
+        if ((hFaultOccurred & MC_UNDER_VOLT)!= MC_NO_ERROR)
         {
             VC_Errors_RaiseError(UV_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
-        if ((bFaultNow & MC_NTCERR)!= MC_NO_ERROR)
+        if ((hFaultOccurred & MC_NTCERR)!= MC_NO_ERROR)
         {
             VC_Errors_RaiseError(UT_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
-        if ((bFaultNow & MC_HALL_DISC)!= MC_NO_ERROR)
+        if ((hFaultOccurred & MC_HALL_DISC)!= MC_NO_ERROR)
         {
             VC_Errors_RaiseError(MOTOR_HALL_ERROR, HOLD_UNTIL_CLEARED);
         }
@@ -878,6 +876,12 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             VC_Errors_ClearError(MOTOR_HALL_ERROR);
         }
 
+        if ((hM1FaultOccurredCode & MC_PHASE_DISC) != 0)
+        {
+            hM1FaultOccurredCode &= ~MC_PHASE_DISC;
+            VC_Errors_ClearError(MOTOR_PHASE_ERROR);
+        }
+
     }
 
     if (PWRT_IsMotor2Used(pHandle))
@@ -909,7 +913,31 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                 pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2]++;
             }
         }
+        if (hM2FaultOccurredCode & MC_SPEED_FDBK)
+        {// If there's a speed feedback (SF) that has occurred but has already been cleared
+            if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+            {// If the timer has timeout, clear the SF fault
+                hM2FaultOccurredCode &= ~MC_SPEED_FDBK;
+                pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
+            }
+            else
+            {//Increase the counter one more tick
+                pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2]++;
+            }
+        }
 
+        if (hM2FaultOccurredCode & MC_START_UP)
+        {// If there's a start-up (SU) that has occurred but has already been cleared
+            if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+            {// If the timer has timeout, clear the SF fault
+                hM2FaultOccurredCode &= ~MC_START_UP;
+                pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
+            }
+            else
+            {//Increase the counter one more tick
+                pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2]++;
+            }
+        }
         if (hM2FaultOccurredCode & MC_START_UP)
         {// If there's a start-up (SU) that has occurred but has already been cleared
             if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
@@ -976,6 +1004,12 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         {
             hM2FaultOccurredCode &= ~MC_HALL_DISC;
             VC_Errors_ClearError(MOTOR_HALL_ERROR);
+        }
+
+        if ((hM2FaultOccurredCode & MC_PHASE_DISC) != 0)
+        {
+            hM2FaultOccurredCode &= ~MC_PHASE_DISC;
+            VC_Errors_ClearError(MOTOR_PHASE_ERROR);
         }
     }
 

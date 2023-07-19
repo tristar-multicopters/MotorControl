@@ -608,7 +608,7 @@ void HallPosSensor_SetMecAngle(HallPosSensorHandle_t * pHandle, int16_t hMecAngl
 bool HallSensor_IsDisconnected(HallPosSensorHandle_t * pHandle)
 {
     bool retval = false;
-    if ((pHandle->bHallState == ALL_HALL_ONE) || (pHandle->bHallState == ALL_HALL_ZERO))
+    if (pHandle->bHallState == ALL_HALL_ONE)
     {
         retval = true; // in case of error
     }
