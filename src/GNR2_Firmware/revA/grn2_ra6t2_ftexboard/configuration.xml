@@ -1572,6 +1572,7 @@
       <configSetting altId="pd04.gpio_speed.gpio_speed_h" configurationId="pd04.gpio_drivecapacity"/>
       <configSetting altId="pd04.gpio_mode.gpio_mode_out.low" configurationId="pd04.gpio_mode"/>
       <configSetting altId="pd05.sci9.txd9" configurationId="pd05"/>
+      <configSetting altId="pd05.gpio_speed.gpio_speed_h" configurationId="pd05.gpio_drivecapacity"/>
       <configSetting altId="pd05.gpio_mode.gpio_mode_peripheral" configurationId="pd05.gpio_mode"/>
       <configSetting altId="pd06.sci9.rxd9" configurationId="pd06"/>
       <configSetting altId="pd06.gpio_mode.gpio_mode_peripheral" configurationId="pd06.gpio_mode"/>
