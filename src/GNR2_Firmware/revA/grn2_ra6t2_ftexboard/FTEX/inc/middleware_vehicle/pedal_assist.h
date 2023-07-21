@@ -30,7 +30,7 @@
 
 #define PAS_LEVEL_SPEED_WALK    (uint8_t)4     /* Maximum Speed for PAS Level walk in Km/h */
 
-#define TORQUE_THRESHOLD_AVG_NB   5  /* Number of values we use to do an average to check for Torque PAS threshold */ 
+#define TORQUE_THRESHOLD_AVG_NB   10  /* Number of values we use to do an average to check for Torque PAS threshold */ 
 
 // ======================== Configuration enums ======================== // 
 typedef enum

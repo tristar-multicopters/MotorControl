@@ -13,7 +13,7 @@
 #include "drive_parameters.h"
 
 /******************* SCREEN SELECTION  *******************************/
-#define SCREEN_PROTOCOL    UART_APT       
+#define SCREEN_PROTOCOL    UART_CLOUD_5S       
                                               // UART_DISABLE,
                                               // UART_APT,
                                               // UART_KD718,
@@ -48,13 +48,13 @@
 
 #define PTS_OFFSET_ADC2PTS            10200    // Offset for ADC to pedal torque sensor linear transformation
 
-#define PTS_OFFSET_PTS2TORQUE_STARTUP    80    // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_PTS2TORQUE_STARTUP    90    // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED_KMH      3    // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY     40    // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
-#define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging
-#define PTS_FILTER_BW2                   25    // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW1                   40    // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW2                   60    // BW coefficient for pedal torque sensor avereging
 
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
@@ -88,10 +88,10 @@
 #define PAS_MAX_SPEED                              3000    // Maximum motor speed reachable using pedal assist
 #define PAS_MAX_KM_SPEED                             42    // Maximum Bike Speed in Km/h using RPM
 #define PAS_MAX_LEVEL                                 5    // Maximum PAS Level given by the screen
-#define PAS_TORQUE_GAIN                             100    // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
-#define PAS_MAX_TORQUE_RATIO                         99    // Maximum PAS Torque feed ration in 100%
-#define PAS_MAX_SPEED_RATIO                          99    // Maximum PAS Speed feed ration in 100%
-#define PAS_ALGORITHM                   CadenceSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
+#define PAS_TORQUE_GAIN                             125    // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
+#define PAS_MAX_TORQUE_RATIO                        100    // Maximum PAS Torque feed ration in 100%
+#define PAS_MAX_SPEED_RATIO                         100    // Maximum PAS Speed feed ration in 100%
+#define PAS_ALGORITHM                   TorqueSensorUse    /* TorqueSensorUse  = 0, Torque sensor use define 
                                                               CadenceSensorUse = 1, Cadence sensor use define 
                                                               HybridSensorUse  = 2, Hybride sensor use define  */
 #define PAS_CADENCE_USE_SPEED_LIMIT                true    // Decides if we have a speed limit on pas cadence
@@ -103,6 +103,13 @@
 #define PAS_C_3_POWER_PERCENT     80    
 #define PAS_C_4_POWER_PERCENT     88   
 #define PAS_C_5_POWER_PERCENT    100  
+
+#define PAS_T_0_POWER_PERCENT      0
+#define PAS_T_1_POWER_PERCENT     20
+#define PAS_T_2_POWER_PERCENT     35
+#define PAS_T_3_POWER_PERCENT     50
+#define PAS_T_4_POWER_PERCENT     75
+#define PAS_T_5_POWER_PERCENT    100 
 
 #define PAS_WALK_POWER_PERCENT    70    // PAS walk has a ratio of 70%
 

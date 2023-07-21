@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 
-#define LOGENABLE 1 //To be moved to the apropriate location when the CAN logger module is implemented
+#define LOGENABLE 1 //todo: To be moved to the apropriate location when the CAN logger module is implemented
 
 /**
   DO NOT DIRECLY CALL THIS FUNCTION
