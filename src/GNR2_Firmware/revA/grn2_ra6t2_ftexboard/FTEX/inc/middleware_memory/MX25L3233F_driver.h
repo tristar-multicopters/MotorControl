@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include "uCAL_SPI.h"
 #include <cmsis_os2.h>
+#include "watchdog.h"
 
 // =============================== Defines ================================= //
 
