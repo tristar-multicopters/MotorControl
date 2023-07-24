@@ -514,6 +514,7 @@ PasLevel_t LCD_APT_ConvertPASLevelFromAPT(uint8_t aPAS_Level, uint8_t aNumberOfL
         case 0x8:
             if (ExtendedPASLevels)
                 PAS_Out = PAS_LEVEL_8; 
+            break;
         case 0x9:
             if (ExtendedPASLevels)
                 PAS_Out = PAS_LEVEL_9; 
