@@ -17,7 +17,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 uint16_t M_STUCK_timer = 0;
 uint16_t OCD_timer = 0;
-
+    
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
 {
@@ -221,6 +221,8 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
         {
             hTorqueReference = 0; // Hard-coded protection against regen during speed control. Todo: Make it more flexible.
         }
+        
+        // ramp manager for smooth Torque 
         if (abs(hTorqueReference) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
         {
             RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTorqueReference, pHandle->wTorqueSlopePerSecondUp); // Setup torque ramp going up
@@ -230,8 +232,14 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
             RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTorqueReference, pHandle->wTorqueSlopePerSecondDown); // Setup torque ramp going down
         }
         hTorqueReference = (int16_t) RampMngr_Calc(&pHandle->TorqueRampMngr); // Apply torque ramp
+        
         hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
-        hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
+
+        if (hTargetSpeed == 0)
+        {
+            pHandle->pPISpeed->wIntegralTerm = 0;   // reset integral term when target speed is zero tp prevent accumulation error
+        } 
+        
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
         pHandle->hCurrentSpeedRef = hTargetSpeed;

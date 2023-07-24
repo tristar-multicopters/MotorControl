@@ -142,6 +142,8 @@ void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
     pHandle->sParameters.hPASMaxRPMSpeed =  Wheel_GetWheelRpmFromSpeed(userConfigSpeed);
     // set the foldbacks
     uint16_t speed = (uint16_t)(round (hKmSpeedTemp * userConfigSpeed));
+    pHandle->hPASSelectedSpeed = speed;         // update selected speed in PAS Handle
+    
     Foldback_SetDecreasingRange(pHandle->SpeedFoldbackVehiclePAS, speed);
     Foldback_SetDecreasingRangeEndValue(pHandle->SpeedFoldbackVehiclePAS,(int16_t)(speed));
 }

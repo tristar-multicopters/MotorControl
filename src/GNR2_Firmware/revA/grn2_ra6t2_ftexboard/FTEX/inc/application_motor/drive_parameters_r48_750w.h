@@ -118,15 +118,15 @@
 #define SPEED_LOOP_FREQUENCY_HZ       1000 /*!<Execution rate of speed
                                                       regulation loop (Hz) */
 
-#define PID_SPEED_KP_DEFAULT          80           /* Default gain speed control loop */
-#define PID_SPEED_KI_DEFAULT          1            /* Default gain speed control loop */
+#define PID_SPEED_KP_DEFAULT          40           /* Default gain speed control loop */
+#define PID_SPEED_KI_DEFAULT          4            /* Default gain speed control loop */
 #define PID_SPEED_KD_DEFAULT          0             /* Default gain speed control loop */
 /* Speed PID parameter dividers */
 #define SP_KPDIV                      256           /* Speed control gain divider, to allow decimal value */
-#define SP_KIDIV                      16384         /* Speed control gain divider, to allow decimal value */
+#define SP_KIDIV                      4096         /* Speed control gain divider, to allow decimal value */
 #define SP_KDDIV                      16            /* Speed control gain divider, to allow decimal value */
 #define SP_KPDIV_LOG                  LOG2(256)     /* Speed control gain divider log2, to allow decimal value */
-#define SP_KIDIV_LOG                  LOG2(16384)   /* Speed control gain divider log2, to allow decimal value */
+#define SP_KIDIV_LOG                  LOG2(4096)   /* Speed control gain divider log2, to allow decimal value */
 #define SP_KDDIV_LOG                  LOG2(16)      /* Speed control gain divider log2, to allow decimal value */
 
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */

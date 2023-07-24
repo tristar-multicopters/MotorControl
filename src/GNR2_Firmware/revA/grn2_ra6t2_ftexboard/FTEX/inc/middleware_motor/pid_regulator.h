@@ -25,8 +25,8 @@ typedef struct PID_Handle
   int32_t   wLowerIntegralLimit;  /**< Lower limit used to saturate the integral
                                        term given by Ki / Ki divisor * integral of
                                        process variable error */
-  int16_t   hUpperOutputLimit;    /**< Upper limit used to saturate the PI output */
-  int16_t   hLowerOutputLimit;    /**< Lower limit used to saturate the PI output */
+  int32_t   hUpperOutputLimit;    /**< Upper limit used to saturate the PI output */
+  int32_t   hLowerOutputLimit;    /**< Lower limit used to saturate the PI output */
   uint16_t  hKpDivisor;           /**< Kp gain divisor, used in conjuction with
                                        Kp gain allows obtaining fractional values.
                                        If FULL_MISRA_C_COMPLIANCY is not defined

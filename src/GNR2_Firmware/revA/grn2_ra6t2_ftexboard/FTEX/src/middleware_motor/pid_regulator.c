@@ -157,8 +157,8 @@ int16_t PI_Controller(PIDHandle_t * pHandle, int32_t wProcessVarError)
 {
   int32_t wProportional_Term, wIntegral_Term, wOutput_32, wIntegral_sum_temp;
   int32_t wDischarge = 0;
-  int16_t hUpperOutputLimit = pHandle->hUpperOutputLimit;
-  int16_t hLowerOutputLimit = pHandle->hLowerOutputLimit;
+  int32_t hUpperOutputLimit = pHandle->hUpperOutputLimit;
+  int32_t hLowerOutputLimit = pHandle->hLowerOutputLimit;
 
   /* Proportional term computation*/
   wProportional_Term = pHandle->hKpGain * wProcessVarError;

@@ -281,10 +281,22 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     }
     else if (pHandle->sParameters.bCtrlType == SPEED_CTRL)
     {
+        
+        // get speed value from Throttle
         hSpeedRef = Throttle_ThrottleToSpeed(pHandle->pThrottle);
-        uint16_t MotorSpeedRPM = pHandle->pThrottle->hParameters.MaxThrottleSpeedRPM * (pHandle->sParameters.MotorToHubGearRatio >> 16);
+        
+        // check if PAS detected and Throttle not detected
+        if (PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) 
+        {
+            // get speed value from PAS
+            uint16_t gearRatio = (uint16_t)(pHandle->sParameters.MotorToHubGearRatio >> 16);
+            uint16_t PASRequestedSpeed = (uint16_t)(UserConfigTask_GetCadenceHybridLevelSpeed(pHandle->pPAS->bCurrentAssistLevel)-1);
+            
+            hSpeedRef = gearRatio * Wheel_GetWheelRpmFromSpeed(PASRequestedSpeed);
+        }
         
         // Check if the calculated speed is more than maximum allowed Speed set by LCD
+        uint16_t MotorSpeedRPM = pHandle->pThrottle->hParameters.MaxThrottleSpeedRPM * (pHandle->sParameters.MotorToHubGearRatio >> 16);
         if (hSpeedRef > MotorSpeedRPM)
         {
             hSpeedRef = MotorSpeedRPM;

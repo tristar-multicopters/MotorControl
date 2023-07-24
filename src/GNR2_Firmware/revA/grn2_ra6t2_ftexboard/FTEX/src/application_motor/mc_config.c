@@ -30,9 +30,9 @@ PIDHandle_t PIDSpeedHandleM1 =
 {
   .hDefKpGain           = (int16_t)PID_SPEED_KP_DEFAULT,
   .hDefKiGain           = (int16_t)PID_SPEED_KI_DEFAULT,
-  .wUpperIntegralLimit  = (int32_t)NOMINAL_TORQUE,
+  .wUpperIntegralLimit  = (int32_t)SPDCTRL_UPPER_INTEGRAL_LIMIT,
   .wLowerIntegralLimit  = 0, //-(int32_t)SPD_CTRL_MAX_TORQUE * (int32_t)SP_KIDIV,
-  .hUpperOutputLimit    = (int16_t)NOMINAL_TORQUE,
+  .hUpperOutputLimit    = (int32_t)SPDCTRL_UPPER_INTEGRAL_LIMIT,
   .hLowerOutputLimit    = 0, // -(int16_t)SPD_CTRL_MAX_TORQUE,
   .hKpDivisor           = (uint16_t)SP_KPDIV,
   .hKiDivisor           = (uint16_t)SP_KIDIV,

@@ -88,6 +88,8 @@ typedef struct
     int16_t hTorqueSelect;                        // Select torque to feed for motor control
     PasLevel_t bCurrentAssistLevel;               // Current pedal assist level
     PasAlgorithm_t  bCurrentPasAlgorithm;         // Current PAS used Algorithm
+    uint16_t hPASSelectedSpeed;                   // current PAS speed selected by user 
+
     
     bool bPASDetected;                            // Use PAS flag  for detection
     
