@@ -224,6 +224,13 @@ MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle);
 uint16_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle);
 
 /**
+  * @brief It returns a 16 bit fields containing information about warnings.
+  * @param pHandle Pointer on the component instance to work on.
+  * @retval uint16_t  16 bit fields with information about the warnings
+  */
+uint16_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle);
+
+/**
   * @brief It returns a 16 bit fields containing information about faults
   *        currently present.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink

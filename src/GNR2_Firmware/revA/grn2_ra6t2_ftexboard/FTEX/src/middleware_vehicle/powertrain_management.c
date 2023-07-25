@@ -781,14 +781,6 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         {
             VC_Errors_RaiseError(UV_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
-        if ((hFaultOccurred & MC_NTCERR)!= MC_NO_ERROR)
-        {
-            VC_Errors_RaiseError(UT_PROTECTION, DEFAULT_HOLD_FRAMES);
-        }
-        if ((hFaultOccurred & MC_HALL_DISC)!= MC_NO_ERROR)
-        {
-            VC_Errors_RaiseError(MOTOR_HALL_ERROR, HOLD_UNTIL_CLEARED);
-        }
     }
     if (PWRT_IsMotor1Used(pHandle))
     {// If there's an over current (OC) that has occurred but has already been cleared
@@ -881,19 +873,6 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         {
             hM1FaultOccurredCode &= ~MC_FOC_DURATION;
         }
-
-        if ((hM1FaultOccurredCode & MC_HALL_DISC) != 0)
-        {
-            hM1FaultOccurredCode &= ~MC_HALL_DISC;
-            VC_Errors_ClearError(MOTOR_HALL_ERROR);
-        }
-
-        if ((hM1FaultOccurredCode & MC_PHASE_DISC) != 0)
-        {
-            hM1FaultOccurredCode &= ~MC_PHASE_DISC;
-            VC_Errors_ClearError(MOTOR_PHASE_ERROR);
-        }
-
     }
 
     if (PWRT_IsMotor2Used(pHandle))
@@ -913,18 +892,6 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             }
         }
 
-        if (hM2FaultOccurredCode & MC_SPEED_FDBK)
-        {// If there's a speed feedback (SF) that has occurred but has already been cleared
-            if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the SF fault
-                hM2FaultOccurredCode &= ~MC_SPEED_FDBK;
-                pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2]++;
-            }
-        }
         if (hM2FaultOccurredCode & MC_SPEED_FDBK)
         {// If there's a speed feedback (SF) that has occurred but has already been cleared
             if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
@@ -1011,18 +978,6 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         {
             hM2FaultOccurredCode &= ~MC_FOC_DURATION;
         }
-
-        if ((hM2FaultOccurredCode & MC_HALL_DISC) != 0)
-        {
-            hM2FaultOccurredCode &= ~MC_HALL_DISC;
-            VC_Errors_ClearError(MOTOR_HALL_ERROR);
-        }
-
-        if ((hM2FaultOccurredCode & MC_PHASE_DISC) != 0)
-        {
-            hM2FaultOccurredCode &= ~MC_PHASE_DISC;
-            VC_Errors_ClearError(MOTOR_PHASE_ERROR);
-        }
     }
 
     // Verify if all fault occured have been cleared
@@ -1039,6 +994,35 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 
     bool bFaultOccured = hM1FaultOccurredCode | hM2FaultOccurredCode;
     return bFaultOccured;
+}
+
+/**
+  * @brief  Manage motor faults. Check if faults are still present and send motor fault acknowledge when faults are gone.
+  * @param  Powertrain handle
+  * @retval Returns true if a motor fault is still active, false if no more fault is present.
+  */
+void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    uint16_t hWarningOccurred = MDI_GetOccuredWarnings(pHandle->pMDI, M1);
+    
+    if ((hWarningOccurred & MC_PHASE_DISC) != MC_NO_ERROR )
+    {
+        VC_Errors_RaiseError(MOTOR_PHASE_ERROR, HOLD_UNTIL_CLEARED);
+    }
+    else
+    {
+        VC_Errors_ClearError(MOTOR_PHASE_ERROR);
+    }
+    
+    if ((hWarningOccurred & MC_HALL_DISC) != MC_NO_ERROR )
+    {
+        VC_Errors_RaiseError(MOTOR_HALL_ERROR, HOLD_UNTIL_CLEARED);
+    }
+    else
+    {
+        VC_Errors_ClearError(MOTOR_HALL_ERROR);
+    }
 }
 
 /**
@@ -1317,7 +1301,8 @@ uint16_t PWRT_ConvertAMPSToDigitalCurrent(PWRT_Handle_t * pHandle, uint16_t aAMP
 /**
   * Setting a new top speed cutoff
   */
-bool PWRT_SetNewTopRPMSpeed(PWRT_Handle_t * pHandle, uint16_t topRPMSpeed){
+bool PWRT_SetNewTopRPMSpeed(PWRT_Handle_t * pHandle, uint16_t topRPMSpeed)
+{
     pHandle->sParameters.topRPMSpeedGoal = (int16_t) topRPMSpeed;
 
     return true;

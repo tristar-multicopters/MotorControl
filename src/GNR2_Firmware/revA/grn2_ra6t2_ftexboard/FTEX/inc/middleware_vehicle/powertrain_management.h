@@ -216,6 +216,13 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle);
 bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle);
 
 /**
+  * @brief  Manage motor warnings.
+  * @param  Powertrain handle
+  * @retval none.
+  */
+void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle);
+
+/**
   * @brief  Get main motor reference torque
   * @param  Powertrain handle
   * @retval Returns main motor reference torque

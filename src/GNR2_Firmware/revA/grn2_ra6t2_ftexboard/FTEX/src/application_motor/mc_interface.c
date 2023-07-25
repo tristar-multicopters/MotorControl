@@ -192,6 +192,14 @@ uint16_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
+uint16_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle)
+{
+  return (uint16_t)(MCStateMachine_GetWarningState(pHandle->pSTM));
+}
+
+/*
+* see function definition
+*/
 uint16_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle)
 {
   return (uint16_t)(MCStateMachine_GetFaultState(pHandle->pSTM) >> 16);

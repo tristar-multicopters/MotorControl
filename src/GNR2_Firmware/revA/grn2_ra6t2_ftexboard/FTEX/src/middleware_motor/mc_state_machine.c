@@ -235,13 +235,15 @@ MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle,
   return (LocalState);
 }
 
+void MCStateMachine_WarningHandling(MotorStateMachineHandle_t * pHandle, uint16_t hSetWarnings, uint16_t  hResetWarnings)
+{
+    pHandle->hWarnings = (pHandle->hWarnings | hSetWarnings) & (~hResetWarnings);    
+}
 
 MotorState_t MCStateMachine_GetState(MotorStateMachineHandle_t * pHandle)
 {
   return (pHandle->bState);
 }
-
-
 
 bool MCStateMachine_FaultAcknowledged(MotorStateMachineHandle_t * pHandle)
 {
@@ -266,3 +268,14 @@ uint32_t MCStateMachine_GetFaultState(MotorStateMachineHandle_t * pHandle)
 
   return LocalFaultState;
 }
+
+uint32_t MCStateMachine_GetWarningState(MotorStateMachineHandle_t * pHandle)
+{
+  uint32_t LocalWarningState;
+
+  LocalWarningState = (uint32_t)(pHandle->hWarnings);
+    
+  return LocalWarningState;
+}
+
+

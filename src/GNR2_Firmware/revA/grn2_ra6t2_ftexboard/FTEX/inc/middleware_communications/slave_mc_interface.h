@@ -28,6 +28,7 @@ typedef struct
     MotorState_t bState;
     uint16_t hOccuredFaults;
     uint16_t hCurrentFaults;
+    uint16_t hWarnings;
     int16_t hMotorSpeed;
     int16_t hMotorTemp;
     int16_t hHeatsinkTemp;
@@ -137,6 +138,17 @@ MotorState_t  SlaveMCInterface_GetSTMState(SlaveMotorHandle_t * pHandle);
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
 uint16_t SlaveMCInterface_GetOccurredFaults(SlaveMotorHandle_t * pHandle);
+
+/**
+  * @brief It returns a 16 bit fields containing information about warnings
+  *        historically occurred 
+  * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
+  * @param pHandle Pointer on the component instance to work on.
+  * @retval uint16_t  16 bit fields with information about the faults
+  *         historically occurred
+  * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
+  */
+uint16_t SlaveMCInterface_GetOccurredWarnings(SlaveMotorHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about faults

@@ -51,6 +51,7 @@ void SlaveMCInterface_UpdateFeedback(SlaveMotorHandle_t * pHandle)
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrState), pHandle->pCONode, &pHandle->Feedback.bState,  sizeof(uint16_t));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccuredFaults), pHandle->pCONode, &pHandle->Feedback.hOccuredFaults, sizeof(pHandle->Feedback.hOccuredFaults));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrCurrentFaults), pHandle->pCONode, &pHandle->Feedback.hCurrentFaults, sizeof(pHandle->Feedback.hCurrentFaults));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrCurrentFaults), pHandle->pCONode, &pHandle->Feedback.hWarnings, sizeof(pHandle->Feedback.hWarnings));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrMotorSpeed), pHandle->pCONode, &pHandle->Feedback.hMotorSpeed, sizeof(pHandle->Feedback.hMotorSpeed));
 }
 
@@ -143,6 +144,19 @@ uint16_t SlaveMCInterface_GetOccurredFaults(SlaveMotorHandle_t * pHandle)
     uint16_t hReturnValue = 0;
 
     hReturnValue = pHandle->Feedback.hOccuredFaults;
+
+    return hReturnValue;
+}
+
+/*
+* see function definition
+*/
+uint16_t SlaveMCInterface_GetOccurredWarnings(SlaveMotorHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    uint16_t hReturnValue = 0;
+
+    hReturnValue = pHandle->Feedback.hWarnings;
 
     return hReturnValue;
 }

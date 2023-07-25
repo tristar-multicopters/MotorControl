@@ -194,6 +194,29 @@ uint16_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t
 /*
 * see function definition
 */
+uint16_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+{
+    ASSERT(pHandle != NULL);
+    uint16_t hReturnValue = 0;
+
+    switch (bMotor)
+    {
+        case M1:
+            hReturnValue = MCInterface_GetOccurredWarning(pHandle->pMCI);
+            break;
+        case M2:
+            hReturnValue = SlaveMCInterface_GetOccurredWarnings(pHandle->pSlaveM2);
+            break;
+        default:
+            break;
+    }
+
+    return hReturnValue;
+}
+
+/*
+* see function definition
+*/
 uint16_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);

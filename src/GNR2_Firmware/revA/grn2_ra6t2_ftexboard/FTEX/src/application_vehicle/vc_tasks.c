@@ -198,6 +198,8 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
         
         #else
         StateVC = VCSTM_GetState(pVCI->pStateMachine);
+        PWRT_MotorWarningManagement(pVCI->pPowertrain);
+
         switch (StateVC)
         {
             case V_IDLE:

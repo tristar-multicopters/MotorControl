@@ -379,7 +379,11 @@ void MediumFrequencyTaskM1(void)
         if(IsPhaseCableDisconnected(MCInterface->pFOCVars, MCInterface->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit) == true)
         {
             // raise MC_PHASE_DISC error if the ratio of measured Iqd and reference Iq is not reasoble
-            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_PHASE_DISC, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_PHASE_DISC, 0);    //Report the Fault and change bstate to FaultNow
+        }
+        else
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_PHASE_DISC);    //Report the Fault and change bstate to FaultNow
         }
 
 #if !(BYPASS_POSITION_SENSOR)    
@@ -692,7 +696,11 @@ uint8_t MC_HighFrequencyTask(void)
     // Check if the Hall Sensors are disconneted and raise the error
     if (HallSensor_IsDisconnected(&HallPosSensorM1) == true)
     {
-        MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_HALL_DISC, 0);
+        MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_HALL_DISC, 0);
+    }
+    else
+    {
+        MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_HALL_DISC);
     }
     
     /* here the code is checking last 16 records of direction, 
@@ -969,34 +977,36 @@ void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle)
 
 bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed)
 {
-    static uint16_t timer;
     bool retVal = false;
     PWMCurrFdbk_IqdMovingAverage(pHandle);
     if ((abs(pHandle->Iqdref.q) > PHASE_WIRE_DISCONNECT_THRESHOLD) && (abs(MechSpeed) == 0))
     {
+        static uint16_t timer_DISC, timer_CONN;
         uint16_t MeanSquare = (uint16_t)sqrt((pHandle->Iqd_avg.q ^ 2) + (pHandle->Iqd_avg.d ^2));
         if (MeanSquare < (abs(pHandle->Iqdref.q) / PHASE_WIRE_DISCONNECT_RATIO))
         {
-            timer++;
+            timer_DISC++;
+            timer_CONN = 0;
         }
         else
         {
-            timer = 0;
+            timer_DISC = 0;
+            timer_CONN++;
         }
         
-        if (timer > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
+        if (timer_DISC > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
         {
             retVal = true;
-            timer = 0;
+            timer_CONN = 0;
         }
-        else
+        else if (timer_CONN > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
         {
+            timer_DISC = 0;
             retVal = false;
         }
     }
     else 
     {
-        timer = 0;
         retVal = false;
     }
     return retVal;

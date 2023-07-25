@@ -78,7 +78,7 @@ extern "C" {
 #define M_NONE  (uint8_t)(0xFF) /*!< None motor.*/
 /** @} */
 
-/** @name Fault source error codes */
+/** @name Fault and Warnings source codes */
 /** @{ */
 #define  MC_NO_ERROR        (uint16_t)(0x0000u)     /**< @brief No error.*/
 #define  MC_NO_FAULTS       (uint16_t)(0x0000u)     /**< @brief No error.*/
@@ -93,8 +93,8 @@ extern "C" {
 #define  MC_OCSP            (uint16_t)(0x0100u)     /**< @brief Error: Overcurrent software protection.*/
 #define  MC_MSRP            (uint16_t)(0x0200u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
 #define  MC_NTCERR          (uint16_t)(0x0400u)     /**< @brief Error: NTC disconnection or Freezing protection.*/
-#define  MC_HALL_DISC       (uint16_t)(0x0800u)     /**< @brief ERROR: disconnected Hall sensor detection */
-#define  MC_PHASE_DISC      (uint16_t)(0x1000u)     /**< @brief ERROR: disconnected Phase cable detection */
+#define  MC_HALL_DISC       (uint16_t)(0x0800u)     /**< @brief WARNING: disconnected Hall sensor detection */
+#define  MC_PHASE_DISC      (uint16_t)(0x1000u)     /**< @brief WARNING: disconnected Phase cable detection */
 /** @} */
 
 /**

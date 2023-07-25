@@ -112,13 +112,14 @@ typedef enum
   */
 typedef struct
 {
-  MotorState_t   bState;          /*!< Variable containing state machine current
+  MotorState_t   bState;     /*!< Variable containing state machine current
                                     state */
   uint16_t  hFaultNow;       /*!< Bit fields variable containing faults
                                     currently present */
   uint16_t  hFaultOccurred;  /*!< Bit fields variable containing faults
                                     historically occurred since the state
                                     machine has been moved to FAULT_NOW state */
+  uint16_t  hWarnings;        /*!< containing warning that raised by MC Layer */
 } MotorStateMachineHandle_t;
 
 
@@ -162,6 +163,17 @@ MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle,
                              hResetErrors);
 
 /**
+  * @brief It clocks both HW and SW warning processing
+  *        machine accordingly with hSetWarnings, hResetWarnings and present state.
+  *        Refer to MotorState_t description for more information about fault states.
+  * @param pHanlde pointer of type  MotorStateMachineHandle_t
+  * @param hSetWarnings Bit field reporting warnings currently present
+  * @param hResetWarnings Bit field reporting warnings to be cleared
+  * @retval none.
+  */
+void MCStateMachine_WarningHandling(MotorStateMachineHandle_t * pHandle, uint16_t hSetWarnings, uint16_t  hResetWarnings);
+
+/**
   * @brief  Returns the current state machine state
   * @param  pHanlde pointer of type  MotorStateMachineHandle_t
   * @retval MotorState_t Current state machine state
@@ -192,6 +204,14 @@ bool MCStateMachine_FaultAcknowledged(MotorStateMachineHandle_t * pHandle);
   *         FAULT_NOW state
   */
 uint32_t MCStateMachine_GetFaultState(MotorStateMachineHandle_t * pHandle);
+
+/**
+  * @brief It returns a 16 bit fields containing information about warnings
+  *        currently present 
+  * @param pHanlde pointer of type  MotorStateMachineHandle_t.
+  * @retval uint32_t  a 16 bit field that shoing occured warning
+  */
+uint32_t MCStateMachine_GetWarningState(MotorStateMachineHandle_t * pHandle);
 
 
 #ifdef __cplusplus
