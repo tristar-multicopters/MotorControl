@@ -43,8 +43,8 @@
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
 
-#define PTS_OFFSET_PTS2TORQUE_STARTUP       90              // Offset for pedal torque sensor to torque linear transformation during the startup in %
-#define PTS_OFFSET_STARTUP_SPEED_KMH        3               // Speed under which the Startup pedal torque sensor offset is used in km/h
+#define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_STARTUP_SPEED_KMH         3              // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE               10              // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
@@ -78,8 +78,8 @@
 #define PAS_T_0_POWER_PERCENT               0
 #define PAS_T_1_POWER_PERCENT               20
 #define PAS_T_2_POWER_PERCENT               35
-#define PAS_T_3_POWER_PERCENT               50
-#define PAS_T_4_POWER_PERCENT               75
+#define PAS_T_3_POWER_PERCENT               45
+#define PAS_T_4_POWER_PERCENT               70
 #define PAS_T_5_POWER_PERCENT               100 
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
