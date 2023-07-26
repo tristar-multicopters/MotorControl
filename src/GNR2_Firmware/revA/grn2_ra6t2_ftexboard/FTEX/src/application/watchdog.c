@@ -21,12 +21,15 @@ __NO_RETURN void Watchdog (void * pvParameter)
 
     while(1)
     {
+        //enable wdt kick to avoid wdt reset
+        #if FIRMWARE_RELEASE
         //used to refresh the wdt count. avoid wdt reset
         //wdt was configured to reset in 2.2 seconds.
         //must to be refreshed before 2.2 seconds.
         //this must be uncommented when bootloader+main will be 
         //flashed.
-        //Watchdog_Refresh();
+        Watchdog_Refresh();
+        #endif
         
         osDelay(REFRESH_DELAY_MS); // Delay between refresh of watchdog
     }   

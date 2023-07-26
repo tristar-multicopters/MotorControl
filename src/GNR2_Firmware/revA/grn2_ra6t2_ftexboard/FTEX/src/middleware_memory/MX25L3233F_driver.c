@@ -48,11 +48,24 @@ int32_t MX25L3233F_AutoPollingMemReady(MX25_Handle_t *pHandle, uint32_t Timeout)
     /*!< Send "RDID " instruction */
     uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, MX25L3233F_READ_STATUS_REG_CMD);
 
-    Time = osKernelGetTickCount();
+    //initialize timecount.
+    Time = 0;
   
-    while(osKernelGetTickCount() - Time < Timeout)
+    while(Time < Timeout)
     {
+        //enable wdt kick to avoid wdt reset
+        #if FIRMWARE_RELEASE
+        //must be enabled before production
+        Watchdog_Refresh();
+        #endif
+        
         if((uCAL_SPI_IO_WriteByte(pHandle->uCALSPI,CLOCK_FOR_READ) & MX25L3233F_SR_WIP) == 0) goto MX25L3233F_AutoPollingMemReady_OK;
+        
+        //add a delay of 1000us to timeout count
+        R_BSP_SoftwareDelay(1000, BSP_DELAY_UNITS_MICROSECONDS);
+        
+        //increment timeout counter.
+        Time++;
     }
   
     ret = MX25L3233F_ERROR_AUTOPOLLING;

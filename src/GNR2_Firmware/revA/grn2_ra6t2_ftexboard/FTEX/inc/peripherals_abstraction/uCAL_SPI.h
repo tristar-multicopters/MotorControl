@@ -18,6 +18,9 @@
 // =============================== Defines ================================= //
 #define SPI_TRANSFER_SIZE			16
 
+//max timeout to wait a spi response on us.
+#define SPI_INTERRUPTION_TIMEOUT_500US    500
+
 // ================= Structure used to configure a pin ===================== //
 typedef struct
 {
@@ -30,6 +33,7 @@ typedef struct
     uint8_t rx_buffer[SPI_TRANSFER_SIZE];
 	
     volatile bool bSPI_transfer_complete;
+    volatile bool bSPI_transfer_failed;
 } SPI_Handle_t;
 
 // ==================== Public function prototypes ========================= //
@@ -69,5 +73,12 @@ void uCAL_SPI_Disable(void);
   * @return None
   */
 void uCAL_SPI_Enable(void);
+
+/**
+  * @brief Function used get the flag that indicate if the spi operation failed.
+  * @param  SPI_Handle_t handle
+  * @return bool true if spi operation failed, false if not.
+*/
+bool uCAL_SPI_IO_GetSpiFailedFlag(SPI_Handle_t * pHandle);
 
 #endif	/*__UCAL_SPI_H*/

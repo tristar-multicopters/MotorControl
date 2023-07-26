@@ -68,6 +68,10 @@ uint8_t uCAL_SPI_IO_WriteSingleByte(uint8_t byte)
 void uCAL_SPI_CS_HIGH(void)
 {
 	R_IOPORT_PinWrite(&g_ioport_ctrl, SPI_CS, BSP_IO_LEVEL_HIGH);
+    
+    //add a delay of 100us to give enough time to the CS live
+    //goes high.
+    R_BSP_SoftwareDelay(200, BSP_DELAY_UNITS_MICROSECONDS);
 }
 
 /**
@@ -76,4 +80,8 @@ void uCAL_SPI_CS_HIGH(void)
 void uCAL_SPI_CS_LOW(void)
 {
 	R_IOPORT_PinWrite(&g_ioport_ctrl, SPI_CS, BSP_IO_LEVEL_LOW);
+    
+    //add a delay of 100us to give enough time to the CS live
+    //goes high.
+    R_BSP_SoftwareDelay(100, BSP_DELAY_UNITS_MICROSECONDS);
 }

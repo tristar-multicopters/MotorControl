@@ -25,19 +25,35 @@ void uCAL_SPI_Init(SPI_Handle_t *pHandle)
 */
 uint8_t uCAL_SPI_IO_WriteByte(SPI_Handle_t * pHandle, uint8_t byte)
 {
-	fsp_err_t err = FSP_SUCCESS;
+    fsp_err_t err = FSP_SUCCESS;
+    uint16_t spiInterrupTimeOut = 0;
 	
-	pHandle->bSPI_transfer_complete = false;
-	err = R_SPI_B_WriteRead(pHandle->pSPI_Instance, &byte, pHandle->rx_buffer, pHandle->hSPI_FrameLength, pHandle->pSPI_BitWidth);
+    pHandle->bSPI_transfer_complete = false;
+    pHandle->bSPI_transfer_failed = false;
+    err = R_SPI_B_WriteRead(pHandle->pSPI_Instance, &byte, pHandle->rx_buffer, pHandle->hSPI_FrameLength, pHandle->pSPI_BitWidth);
 
-	assert(FSP_SUCCESS == err);
+    assert(FSP_SUCCESS == err);
 	
-	/* Wait for SPI_EVENT_TRANSFER_COMPLETE callback event. */
-	while (false == pHandle->bSPI_transfer_complete)
-	{
-		err = false;
-	}	
-	return pHandle->rx_buffer[0];
+    /* Wait for SPI_EVENT_TRANSFER_COMPLETE callback event. */
+    while (false == pHandle->bSPI_transfer_complete)
+    {
+        //delay 1us to count timeout.
+        R_BSP_SoftwareDelay(1, BSP_DELAY_UNITS_MICROSECONDS);
+        
+        //increment the timeout.
+        spiInterrupTimeOut++;
+        
+        //wait max 500us to spi interruption
+        if (spiInterrupTimeOut >= SPI_INTERRUPTION_TIMEOUT_500US)
+        {
+            //set the fail flag to true.
+            pHandle->bSPI_transfer_failed = true;
+            
+            //break the loop
+            break;
+        }
+    }	
+    return pHandle->rx_buffer[0];
 }
 
 /**
@@ -71,6 +87,10 @@ uint8_t uCAL_SPI_IO_ReadSingleByte(SPI_Handle_t * pHandle)
 void uCAL_SPI_Disable(void)
 {
 	R_IOPORT_PinWrite(&g_ioport_ctrl, SPI_CS, BSP_IO_LEVEL_HIGH);
+    
+    //add a delay of 100us to give enough time to the CS live
+    //goes high.
+    R_BSP_SoftwareDelay(100, BSP_DELAY_UNITS_MICROSECONDS);
 }
 
 /**
@@ -79,4 +99,16 @@ void uCAL_SPI_Disable(void)
 void uCAL_SPI_Enable(void)
 {
 	R_IOPORT_PinWrite(&g_ioport_ctrl, SPI_CS, BSP_IO_LEVEL_LOW);
+    
+    //add a delay of 200us to give enough time to the CS live
+    //goes high.
+    R_BSP_SoftwareDelay(200, BSP_DELAY_UNITS_MICROSECONDS);
+}
+
+/**
+	Function used get the flag that indicate if the spi operation failed.
+*/
+bool uCAL_SPI_IO_GetSpiFailedFlag(SPI_Handle_t * pHandle)
+{
+    return  pHandle->bSPI_transfer_failed;
 }

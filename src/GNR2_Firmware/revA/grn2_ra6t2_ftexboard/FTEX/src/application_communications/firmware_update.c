@@ -114,7 +114,8 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
                     FirmwareUpdateControl.frameDataSize = FirmwareUpdateControl.data[DATAFRAME_SIZE];
                         
                     //write the data frame payload received in the external flash memory.
-                    if(SF_Storage_PutPackChunk(&FirmwareUpdateControl.data[DATAPAYLOAD_START], FirmwareUpdateControl.frameDataSize) == EXIT_SUCCESS)
+                    if((SF_Storage_PutPackChunk(&FirmwareUpdateControl.data[DATAPAYLOAD_START], FirmwareUpdateControl.frameDataSize) == EXIT_SUCCESS) &&
+                        (uCAL_SPI_IO_GetSpiFailedFlag(&SPI1Handle) == false))
                     {
                         //calculate crc 32 on the fly for the data payload of the received data frame.
                         for (n = 0; n < FirmwareUpdateControl.frameDataSize; n++)
@@ -160,7 +161,8 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
                         FirmwareUpdateControl.frameDataSize = FirmwareUpdateControl.data[DATAFRAME_SIZE];
                         
                         //write the data frame payload received in the external flash memory.
-                        if (SF_Storage_PutPackChunk(&FirmwareUpdateControl.data[DATAPAYLOAD_START], FirmwareUpdateControl.frameDataSize) == EXIT_SUCCESS)
+                        if ((SF_Storage_PutPackChunk(&FirmwareUpdateControl.data[DATAPAYLOAD_START], FirmwareUpdateControl.frameDataSize) == EXIT_SUCCESS)
+                            && (uCAL_SPI_IO_GetSpiFailedFlag(&SPI1Handle) == false))
                         {
                             //calculate crc 32 on the fly for the data payload of the received data frame.
                             for (n = 0; n < FirmwareUpdateControl.frameDataSize; n++)
@@ -405,6 +407,10 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
                     
                 //initializa external flash memory response.
                 FirmwareUpdateControl.serialFlashReponse = EXIT_FAILURE;
+                
+                //close uart to reduce the volume of data stored in the FIFO queue buffer(RTOS).
+                //GNR will lost the communication with the display.
+                R_SCI_B_UART_Close(&g_uart9_ctrl);
             }
             else
             {

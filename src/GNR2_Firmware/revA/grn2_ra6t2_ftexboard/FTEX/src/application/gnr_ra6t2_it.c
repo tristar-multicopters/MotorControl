@@ -293,8 +293,8 @@ void HardFault_Handler(void)
 */
 void spi_callback(spi_callback_args_t * p_args)
 {
-	if (SPI_EVENT_TRANSFER_COMPLETE == p_args->event)
-	{
-			SPI1Handle.bSPI_transfer_complete = true;
-	}
+    if (SPI_EVENT_TRANSFER_COMPLETE == p_args->event)
+    {
+        SPI1Handle.bSPI_transfer_complete = true;
+    }
 }

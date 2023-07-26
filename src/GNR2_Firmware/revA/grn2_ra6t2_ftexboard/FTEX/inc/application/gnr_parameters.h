@@ -57,7 +57,10 @@
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 
-
+//used to enable importants features
+//used on the final version of the firmware,
+//as WDT and etc.
+#define FIRMWARE_RELEASE              0
 
 #define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
