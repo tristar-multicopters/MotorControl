@@ -99,7 +99,9 @@ extern "C" {
 
 //OD ID for configure torque Minimum Threshold
 //The define used by this parameter is:
-//PTS_OFFSET_PTS2TORQUE                  20
+//PTS_OFFSET_PTS2TORQUE                 
+//PTS_OFFSET_PTS2TORQUE_STARTUP
+//PTS_OFFSET_STARTUP_SPEED_KMH
 #define CO_OD_REG_TORQUE_MINIMUM_THRESHOLD     0x2017
 
 //OD ID for configure torque Sensor Multiplier

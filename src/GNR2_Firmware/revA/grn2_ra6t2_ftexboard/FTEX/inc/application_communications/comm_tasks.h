@@ -15,13 +15,17 @@
 #include "vc_fault_management.h"
 #include "gnr_information.h"
 
-/************* DEFINES ****************/
-
-
 /**************************************/
 
-
 extern bool bCANOpenTaskBootUpCompleted;
+
+
+/**
+  * @brief  It initializes the vehicle control application. Needs to be called before using
+  *	        vehicle control related modules.
+  * @retval None
+  */
+void Comm_BootUp(void);
 
 /**
   * @brief  Function to configure and initialize the CANOPEN node.
@@ -30,19 +34,22 @@ extern bool bCANOpenTaskBootUpCompleted;
 void CANOpenTask (void);
 
 /**
-  * @brief  Task to send vehicle information on CANbus for data logging.
-  * @retval None
-  */
-void CANLoggerTask (void * pvParameter);
-
-
-void Comm_BootUp(void);
-
-/**
-  * @briefFunction to decide if some IOT functions must be used or
+  * @brief Function to decide if some IOT functions must be used or
   * not to some bike models.
   * @retval none
 */
 bool Comm_CheckIotUsage(void);
+
+/**
+  * @brief Initialises the object dictionairy with the user config values
+  * @retval none
+  */
+void Comm_InitODWithUserConfig(CO_NODE *pNode);
+
+/**
+  * @brief  Task to send vehicle information on CANbus for data logging.
+  * @retval None
+  */
+void CANLoggerTask (void * pvParameter);
 
 #endif /* __COMM_TASKS_H */

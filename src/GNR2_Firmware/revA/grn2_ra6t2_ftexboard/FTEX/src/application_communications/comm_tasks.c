@@ -72,7 +72,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t  hFrontLightState[2];
     uint8_t  hRearLightState[2];
     uint16_t hErrorState[2];
-    uint32_t hFwVersion;
     
     ASSERT(pVCI != NULL);
     ASSERT(pVCI->pPowertrain != NULL);
@@ -99,38 +98,23 @@ static void UpdateObjectDictionnary(void *p_arg)
         hErrorState[VEHICLE_PARAM] = 0x0000;
     }
     
-    //get dfu pack version
-    hFwVersion = GnrInfo_GetDFuPackVersion();
     
-    //get the serial number
-    uint64_t fserialNumber = GnrInfo_GetSerialNumber();
-    
-    //transfer the serial number to the variables used by the CAN OD.
-    uint32_t fSerialNbLow   = (uint32_t)(fserialNumber);
-    uint32_t fSerialNbHigh   = (uint32_t)(fserialNumber >> 32);
+ 
     
     /***************Throttle/Pedal Assist variables******************************/
-    uint8_t pasAlgorithm                       = UserConfigTask_GetPasAlgorithm();
-    uint8_t maxPAS                             = UserConfigTask_GetNumberPasLevels();
-    uint8_t pasMaxPower                        = UserConfigTask_GetPasMaxPower();
-    uint8_t torqueMinimumThresholdStartup      = UserConfigTask_GetTorqueMinimumThresholdStartup();    
-    uint8_t startupTorqueMinimumThresholdSpeed = UserConfigTask_GetStartupOffsetMinimumThresholdSpeed();
-    uint8_t torqueMinimumThreshold             = UserConfigTask_GetTorqueMinimumThreshold();
-    uint8_t torqueSensorMultiplier             = UserConfigTask_GetTorqueSensorMultiplier();
-    uint8_t torqueMaxSpeed                     = UserConfigTask_GetTorqueMaxSpeed();
+    uint8_t pasAlgorithm;
+    uint8_t maxPAS;
+    uint8_t pasMaxPower;
+    uint8_t torqueMinimumThresholdStartup;    
+    uint8_t startupTorqueMinimumThresholdSpeed;
+    uint8_t torqueMinimumThreshold;
+    uint8_t torqueSensorMultiplier;
+    uint8_t torqueMaxSpeed;
     
-    uint8_t cadenceHybridLeveSpeed[10] = {UserConfigTask_GetCadenceHybridLevelSpeed(PAS_0),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_1),
-                                          UserConfigTask_GetCadenceHybridLevelSpeed(PAS_2),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_3),
-                                          UserConfigTask_GetCadenceHybridLevelSpeed(PAS_4),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_5),
-                                          UserConfigTask_GetCadenceHybridLevelSpeed(PAS_6),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_7),
-                                          UserConfigTask_GetCadenceHybridLevelSpeed(PAS_8),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_9)};
-    uint8_t torqueLevelPower[10] =       {UserConfigTask_GetTorqueLevelPower(PAS_0),UserConfigTask_GetTorqueLevelPower(PAS_1),
-                                          UserConfigTask_GetTorqueLevelPower(PAS_2),UserConfigTask_GetTorqueLevelPower(PAS_3),
-                                          UserConfigTask_GetTorqueLevelPower(PAS_4),UserConfigTask_GetTorqueLevelPower(PAS_5),
-                                          UserConfigTask_GetTorqueLevelPower(PAS_6),UserConfigTask_GetTorqueLevelPower(PAS_7),
-                                          UserConfigTask_GetTorqueLevelPower(PAS_8),UserConfigTask_GetTorqueLevelPower(PAS_9)};
-    uint8_t maxSpeed = UserConfigTask_GetBikeMaxSpeed();
-    uint8_t walkModeSpeed = UserConfigTask_GetWalkModeSpeed();
+    uint8_t cadenceHybridLeveSpeed[10];
+    uint8_t torqueLevelPower[10];
+    uint8_t maxSpeed;
+    uint8_t walkModeSpeed;
                                           
     /***********variable used to get the key code that enable user data configuration to be updated.**************/
     uint16_t keyUserDataConfig = 0;
@@ -159,18 +143,17 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t bMotor2FaultAck     = 0;
     #endif
     
-    // Set Bike Parameters
-    //CanIot_SetPAS(pVCI,bPAS); this doesn't make sense.
-
     if (pNode == NULL) 
     {        
         return;
     }
     
+    Comm_InitODWithUserConfig(pNode);
+    
     #if GNR_IOT
 
 	if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
-    {   
+    {                  
         /* Read commands in CANOpen object dictionnary received by SDO */
         //COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)), pNode, &bPAS, sizeof(uint8_t));
         #if SUPPORT_SLAVE_ON_IOT
@@ -424,29 +407,8 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow)); 
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSerialNbHigh,  sizeof(fSerialNbHigh)); 
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion, sizeof(uint32_t));    
-        
-            /***********************UPdate Throttle/Pedal Assist CANopen OD ID.********************************************/
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),            pNode, &pasAlgorithm, sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)),                  pNode, &maxPAS, sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_POWER, 0)),            pNode, &pasMaxPower, sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0)), pNode, &torqueMinimumThreshold, sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)),         pNode, &torqueMaxSpeed, sizeof(uint8_t));
-        
-            //fill the OD ID to cadenceHybridLeveSpeed and torqueLevelPower with the current values.
-            //this OD ID have 10 subindex each.
-            for(uint8_t n = PAS_0;n <= PAS_9;n++)
-            {
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceHybridLeveSpeed[n], sizeof(uint8_t));
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_LEVEL_POWER, n)), pNode, &torqueLevelPower[n], sizeof(uint8_t));
-            }
-        
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
-        
+            
+                    
             //Read the OD responsible to hold the firmware update command.
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0)), pNode, &FirmwareUpdateCommand, sizeof(uint8_t));
             
@@ -473,6 +435,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)), pNode, &maxPAS, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_POWER, 0)), pNode, &pasMaxPower, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0)), pNode, &torqueMinimumThreshold, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 1)), pNode, &torqueMinimumThresholdStartup, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 2)), pNode, &startupTorqueMinimumThresholdSpeed, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)), pNode, &torqueMaxSpeed, sizeof(uint8_t));
         
@@ -518,9 +482,8 @@ static void UpdateObjectDictionnary(void *p_arg)
 /************* TASKS ****************/
 
 /**
-  * @brief  It initializes the vehicle control application. Needs to be called before using
-	*		vehicle control related modules.
-  * @retval None
+  *  It initializes the vehicle control application. Needs to be called before using
+  *	 vehicle control related modules.
   */
 void Comm_BootUp(void)
 {
@@ -559,7 +522,6 @@ void Comm_BootUp(void)
     /* Select UART protocol */
     switch(UART0Handle.UARTProtocol)
 	  {
-
             break;
     	case UART_APT:
             LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
@@ -611,7 +573,7 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 /**
   Function to configure and initialize the CANOPEN node.
 */
-void CANOpenTask (void)
+void CANOpenTask(void)
 {
 
     //setup can OD and node ID.
@@ -652,6 +614,81 @@ bool Comm_CheckIotUsage(void)
     {
         return true;
     }   
+}
+
+/**
+  * Initialises the object dictionairy with the user config values
+  */
+void Comm_InitODWithUserConfig(CO_NODE *pNode)
+{
+   static bool bHasInit = false;
+
+   if(!bHasInit && CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
+   {
+        bHasInit = true;
+       
+        uint32_t hFwVersion;       
+    
+        //get dfu pack version
+        hFwVersion = GnrInfo_GetDFuPackVersion();
+    
+        //get the serial number
+        uint64_t fserialNumber = GnrInfo_GetSerialNumber();
+    
+        //transfer the serial number to the variables used by the CAN OD.
+        uint32_t fSerialNbLow   = (uint32_t)(fserialNumber);
+        uint32_t fSerialNbHigh   = (uint32_t)(fserialNumber >> 32);
+    
+     
+        /***************Throttle/Pedal Assist variables******************************/
+        uint8_t pasAlgorithm                       = UserConfigTask_GetPasAlgorithm();
+        uint8_t maxPAS                             = UserConfigTask_GetNumberPasLevels();
+        uint8_t pasMaxPower                        = UserConfigTask_GetPasMaxPower();
+        uint8_t torqueMinimumThresholdStartup      = UserConfigTask_GetTorqueMinimumThresholdStartup();    
+        uint8_t startupTorqueMinimumThresholdSpeed = UserConfigTask_GetStartupOffsetMinimumThresholdSpeed();
+        uint8_t torqueMinimumThreshold             = UserConfigTask_GetTorqueMinimumThreshold();
+        uint8_t torqueSensorMultiplier             = UserConfigTask_GetTorqueSensorMultiplier();
+        uint8_t torqueMaxSpeed                     = UserConfigTask_GetTorqueMaxSpeed();
+    
+        uint8_t cadenceHybridLeveSpeed[10] = {UserConfigTask_GetCadenceHybridLevelSpeed(PAS_0),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_1),
+                                              UserConfigTask_GetCadenceHybridLevelSpeed(PAS_2),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_3),
+                                              UserConfigTask_GetCadenceHybridLevelSpeed(PAS_4),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_5),
+                                              UserConfigTask_GetCadenceHybridLevelSpeed(PAS_6),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_7),
+                                              UserConfigTask_GetCadenceHybridLevelSpeed(PAS_8),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_9)};
+        uint8_t torqueLevelPower[10] =       {UserConfigTask_GetTorqueLevelPower(PAS_0),UserConfigTask_GetTorqueLevelPower(PAS_1),
+                                              UserConfigTask_GetTorqueLevelPower(PAS_2),UserConfigTask_GetTorqueLevelPower(PAS_3),
+                                              UserConfigTask_GetTorqueLevelPower(PAS_4),UserConfigTask_GetTorqueLevelPower(PAS_5),
+                                              UserConfigTask_GetTorqueLevelPower(PAS_6),UserConfigTask_GetTorqueLevelPower(PAS_7),
+                                              UserConfigTask_GetTorqueLevelPower(PAS_8),UserConfigTask_GetTorqueLevelPower(PAS_9)};
+        uint8_t maxSpeed = UserConfigTask_GetBikeMaxSpeed();
+        uint8_t walkModeSpeed = UserConfigTask_GetWalkModeSpeed(); 
+   
+   
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow));     
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSerialNbHigh,  sizeof(fSerialNbHigh));  
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion, sizeof(uint32_t));           
+        
+        /***********************UPdate Throttle/Pedal Assist CANopen OD ID.********************************************/
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),            pNode, &pasAlgorithm, sizeof(uint8_t));      
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)),                  pNode, &maxPAS, sizeof(uint8_t));            
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_POWER, 0)),            pNode, &pasMaxPower, sizeof(uint8_t));             
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0)), pNode, &torqueMinimumThreshold, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 1)), pNode, &torqueMinimumThresholdStartup, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 2)), pNode, &startupTorqueMinimumThresholdSpeed, sizeof(uint8_t));                                              
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, sizeof(uint8_t));    
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)),         pNode, &torqueMaxSpeed, sizeof(uint8_t));            
+        
+        //fill the OD ID to cadenceHybridLeveSpeed and torqueLevelPower with the current values.
+        //this OD ID have 10 subindex each.
+        for(uint8_t n = PAS_0;n <= PAS_9;n++)                                                                                                      
+        {
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceHybridLeveSpeed[n], sizeof(uint8_t)); 
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_LEVEL_POWER, n)), pNode, &torqueLevelPower[n], sizeof(uint8_t));          
+        }
+        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));                                 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));                       
+   }           
 }
 
 
