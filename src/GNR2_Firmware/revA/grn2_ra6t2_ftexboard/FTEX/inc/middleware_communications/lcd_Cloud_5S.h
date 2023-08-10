@@ -37,7 +37,10 @@
 
 #define CLOUD_RX_BUFFER_SIZE 32
 
-#define CLOUD_DEFAULT_SPEED_PERIOD 4000 // when the wheel isn't spinning this is the value sent to the display              
+#define CLOUD_DEFAULT_SPEED_PERIOD 4000 // when the wheel isn't spinning this is the value sent to the display    
+
+#define CLOUD_X_THROTTLE_MAX     190    // Maximum value for clouddrive external throttle
+#define CLOUD_X_THROTTLE_OFFSET   76    // Offset value for clouddrive external throttle
 // Display Read Cmd
 // represents the location of where certain informations are in the frame. 
  

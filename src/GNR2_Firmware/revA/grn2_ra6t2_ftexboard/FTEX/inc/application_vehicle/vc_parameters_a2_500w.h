@@ -25,17 +25,11 @@
 #include "throttle_sensors/vc_velec_throttle.h"
 
 /***************** THROTTLE FEEL PARAMETERS  ******************************/
-
 #define THROTTLE_OFFSET_THROTTLE2TORQUE     1               // Offset for throttle to torque linear transformation
-#define THROTTLE_OFFSET_THROTTLE2SPEED      400             // Offset for throttle to speed linear transformation 
+#define THROTTLE_OFFSET_THROTTLE2SPEED      1             // Offset for throttle to speed linear transformation 
 
 #define THROTTLE_DETECTION_THRESHOLD        1000            // Throttle is considered pressed once it passed this threshold
 
-#define THROTTLE_MAX_SAFE_SPEED_KMH         40              // Max speed in Km/h that is safe when using the motor
-#define THROTTLE_DEFAULT_MAX_SPEED_KMH      32              // Default top speed in km/h
-
-#define THROTTLE_SPEED_DECREASING_RANGE     200             // Number of RPM before the desired speed at which we should start removing power
-                                                            // Should be aroud 200 for light bikes and 55 for heavy bikes
 /***************** PEDAL SENSOR SELECTION  ******************************/
 
 #include "pedal_sensors/t47_autorq.h"
@@ -53,19 +47,12 @@
 #define PTS_FILTER_BW2                      25              // BW coefficient for pedal torque sensor avereging
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
-
 #define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
-#define PAS_MAX_SPEED                       3000            // Maximum motor speed reachable using pedal assist
-#define PAS_MAX_KM_SPEED                    42              // Maximum Bike Speed in Km/h using RPM
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
 #define PAS_TORQUE_GAIN                     100             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
-#define PAS_MAX_TORQUE_RATIO                99              // Maximum PAS Torque feed ration in 100%
-#define PAS_MAX_SPEED_RATIO                 99              // Maximum PAS Speed feed ration in 100%
-#define PAS_ALGORITHM                       TorqueSensorUse   
-                                                            /*  TorqueSensorUse  = 0, Torque sensor use define 
-                                                                CadenceSensorUse = 1, Cadence sensor use define 
-                                                                HybridSensorUse  = 2, Hybride sensor use define */
-#define PAS_CADENCE_USE_SPEED_LIMIT         true            // Decides if we have a speed limit on pas cadence
+#define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
+#define PAS_ALGORITHM                       TorqueSensorUse /* TorqueSensorUse  = 0, Torque sensor use define 
+                                                               CadenceSensorUse = 1, Cadence sensor use define */
     
 #define PAS_C_0_POWER_PERCENT               0               // PAS 0 has a ratio of   0%
 #define PAS_C_1_POWER_PERCENT               60              // PAS 1 has a ratio of  60% (3/5)
@@ -108,14 +95,7 @@
 #define POWERTRAIN_STOP_SPEED_THRESHOLD     0               // Speed value to stop powertrain
 #define POWERTRAIN_DISABLE_THROTTLE_PAS_0   true            // If set the tru throttle is disabled when pas level is 0
 
-
-// These two defines can conflict if the dynamic speed exceeds 32, however they can work together to respect the legal limit regardless of the screen settings 
-#define VEHICLE_SPEED_KMH_POWER_CUTOFF      32              // Speed at which we cut the power no matter what
 #define DYNAMIC_SPEED_LIMITATION            false           // Indicates if the the top speed change be changed dynamically or is fixed to the default value
-
-#define POWERTRAIN_MOTOR_GEARRATIO          0x000B0005      /*  Motor gear ratio, i.e. wheel speed divided by motor speed.
-                                                                Upper half of 32 bits is numerator, 
-                                                                second half is denominator */
 
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT 200             /*  Number of task ticks to wait after a fault occurs to
                                                                 attempt a powertrain restart (OC, SF and SU faults)   */

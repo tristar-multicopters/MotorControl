@@ -73,9 +73,6 @@
 //define responsible to enable canloggertask
 //#define CANLOGGERTASK
 
-//define responsible to enable or disable throttle speed control
-//#define THROTTLE_SPEED_CTRL
-
 //define to allow screne to change power
 //#define SCREENPOWERCONTROL 
 

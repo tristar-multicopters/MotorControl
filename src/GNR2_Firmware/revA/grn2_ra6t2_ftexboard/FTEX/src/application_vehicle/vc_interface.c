@@ -50,7 +50,6 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
 		case REG_MAXSPEED_PAS:
 			break;
 		case REG_FLDB_END_VOLTAGE:
-			value = pHandle->pPowertrain->DCVoltageFoldback.hDecreasingEndValue;
 			break;
 		case REG_FLDB_START_VOLTAGE:
 			break;
@@ -642,7 +641,6 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
 		case REG_MAXSPEED_PAS:
 			break;
 		case REG_FLDB_END_VOLTAGE:
-			pHandle->pPowertrain->DCVoltageFoldback.hDecreasingEndValue = (int16_t) value;
 			break;
 		case REG_FLDB_START_VOLTAGE:
 			break;

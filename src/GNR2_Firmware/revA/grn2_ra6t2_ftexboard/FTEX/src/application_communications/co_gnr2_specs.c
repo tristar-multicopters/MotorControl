@@ -610,7 +610,6 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         // Application - 
         // Torque: based on a multiplier of the torque input. 
         // Cadence: based on pedaling speed.
-        // Hybrid (recommended): Combination of torque + pedaling speed as algorithm inputs for motor assistance.
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithm};
         //move to next OD index
         index++;
@@ -1075,7 +1074,6 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         // Application - 
         // Torque: based on a multiplier of the torque input. 
         // Cadence: based on pedaling speed.
-        // Hybrid (recommended): Combination of torque + pedaling speed as algorithm inputs for motor assistance.
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithm};
         //move to next OD index
         index++;
@@ -1551,7 +1549,6 @@ void CO_Gnr2OdSetupt(bool deviceFunction)
         // Application - 
         // Torque: based on a multiplier of the torque input. 
         // Cadence: based on pedaling speed.
-        // Hybrid (recommended): Combination of torque + pedaling speed as algorithm inputs for motor assistance.
         GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithm};
         //move to next OD index
         index++;

@@ -18,7 +18,7 @@
 //the user data flash). write operation on data flash must be to be multiple of 4.
 #define NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN  (((USER_DATA_CONFIG_LENGTH%4) == (0)) ? (USER_DATA_CONFIG_LENGTH) : (USER_DATA_CONFIG_LENGTH + 4 - (USER_DATA_CONFIG_LENGTH%4)))
     
-//defines used to access cadenceHybridLeveSpeed[] array
+//defines used to access cadenceLevelSpeed[] array
 //each position in the array is associated with a PAS level
 //index 0 PAS level 0 and etc.
 #define PAS_0  0
@@ -66,7 +66,7 @@ typedef struct
     uint8_t torqueMinimumThreshold;
     uint8_t torqueSensorMultiplier;
     uint8_t torqueMaxSpeed;
-    uint8_t cadenceHybridLeveSpeed[10];
+    uint8_t cadenceLevelSpeed[10];
     uint8_t torqueLevelPower[10];
     
 } PAS_ConfigData_t;

@@ -11,7 +11,7 @@
 /**
    Initializes throttle sensing conversions
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay,  uint32_t MotorToHubGearRatio)
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay)
 {
     ASSERT(pHandle != NULL);
     pHandle->DisableThrottleOutput = false;
@@ -31,18 +31,14 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
                                               pHandle->hParameters.fFilterBeta);
     
     pHandle->SafeStart = false;
-    Foldback_Init(pHandle->SpeedFoldbackVehicleThrottle);
     
-    pHandle->hParameters.MaxThrottleSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.DefaultMaxThrottleSpeedKMH);
-    pHandle->hParameters.MaxSafeThrottleSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.MaxSafeThrottleSpeedKMH);
     
-    Throttle_SetMaxSpeed(pHandle,pHandle->hParameters.MaxThrottleSpeedRPM);
+    pHandle->hParameters.MaxThrottleSpeedKMH = pHandle->hParameters.DefaultMaxThrottleSpeedKMH; 
     
     /* Need to be register with RegularConvManager */
     pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
     Throttle_Clear(pHandle);
-    uint16_t GearRatio = (uint16_t)(MotorToHubGearRatio >> 16);
-    Throttle_ComputeSlopes(pHandle, GearRatio); // Used to calculate values to calibrate ADC value to a standard value
+    Throttle_ComputeSlopes(pHandle); // Used to calculate values to calibrate ADC value to a standard value
 }
 
 /**
@@ -223,10 +219,6 @@ uint16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
         wAux = 0;
     }
     
-    /* here the final MOTOR RPM calculated based on slope and divisor.
-       note,  this is different from WHEEL RPM 
-       MOTOR RPM = WHEEL RPM * GEAR RATIO
-    */
     wAux = (int32_t)(pHandle->hParameters.bSlopeSpeed * wAux);
     wAux /= pHandle->hParameters.bDivisorSpeed;
     
@@ -281,34 +273,9 @@ void Throttle_EnableThrottleOutput(ThrottleHandle_t * pHandle)
 }
 
 /**
-   Set the max speed in RPM that you can reach with throttle 
- */
-void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM)
-{     
-    ASSERT(pHandle != NULL);
-    
-    pHandle->hParameters.MaxThrottleSpeedRPM = aMaxSpeedRPM;
-    
-    ASSERT(pHandle->hParameters.ThrottleDecreasingRange > 0);
-        
-    Foldback_SetDecreasingRange (pHandle->SpeedFoldbackVehicleThrottle,pHandle->hParameters.ThrottleDecreasingRange);
-
-    if (aMaxSpeedRPM < pHandle->hParameters.MaxSafeThrottleSpeedRPM)
-    {
-        ASSERT(((int16_t) aMaxSpeedRPM) >= 0); // Make sure the cast doesn't result in a negative value
-        
-        Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackVehicleThrottle, (int16_t) aMaxSpeedRPM); // 240 == 32 km/h  74 = 10 km/h   
-    }
-    else
-    {
-        Foldback_SetDecreasingRangeEndValue (pHandle->SpeedFoldbackVehicleThrottle, (int16_t) pHandle->hParameters.MaxSafeThrottleSpeedRPM);
-    }
-
-}
-/**
    Setup the throttle module to accept an external throttle as the input
  */
-void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue,uint16_t aOffset, uint32_t MotorToHubGearRatio)
+void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue,uint16_t aOffset)
 {
    ASSERT(pHandle != NULL);
    ASSERT(aMaxValue > 0);
@@ -318,9 +285,8 @@ void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue,uint1
     
    pHandle->hParameters.hMaxThrottle = aMaxValue;
    pHandle->hParameters.hOffsetThrottle = aOffset; 
-   
-   uint16_t GearRatio = (uint16_t)(MotorToHubGearRatio >> 16);
-   Throttle_ComputeSlopes(pHandle, GearRatio); 
+
+   Throttle_ComputeSlopes(pHandle); 
     
 }
 
@@ -329,14 +295,34 @@ void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue,uint1
  */
 void Throttle_UpdateExternal(ThrottleHandle_t * pHandle, uint16_t aNewVal)
 {
+   ASSERT(pHandle != NULL);
    pHandle->hExtLatestVal = aNewVal;
+}
+
+/**
+ * Set the max speed in KmH that you can reach with throttle 
+ */
+void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeed)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->hParameters.MaxThrottleSpeedKMH = aMaxSpeed;
+}
+
+/**
+ * Get the max speed in KmH that you can reach with throttle 
+ */
+uint16_t Throttle_GetMaxSpeed(ThrottleHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->hParameters.MaxThrottleSpeedKMH;    
 }
 
 /**
    Compute slopes for throttle module
  */
-void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle, uint16_t GearRatio)
+void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle)
 {
+   ASSERT(pHandle != NULL);
    float ADCSlope = 0;
    float Throttle2Torq = 0; 
    float Throttle2Speed = 0;
@@ -354,7 +340,7 @@ void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle, uint16_t GearRatio)
    Throttle2Torq =  INT16_MAX - pHandle->hParameters.hOffsetTorque; // Calculate the size of usable values received as an input
    
    ASSERT(Throttle2Torq >= 1); 
-   Throttle2Torq =  pHandle->SpeedFoldbackVehicleThrottle->hMaxOutputLimitHigh/Throttle2Torq;    // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
+   Throttle2Torq =  pHandle->hParameters.ThrottleMaxTorque/Throttle2Torq;    // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
    Throttle2Torq *= THROTTLE_SLOPE_FACTOR;                                                       // Multiply by the factor to create the numerator of a fraction 
    
    pHandle->hParameters.bSlopeTorque   = (int16_t) round(Throttle2Torq);    // Save the numerator
@@ -364,8 +350,7 @@ void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle, uint16_t GearRatio)
    Throttle2Speed = INT16_MAX - pHandle->hParameters.hOffsetSpeed;                  // Calculate the size of usable values received as an input
    
    ASSERT(Throttle2Speed >= 1); 
-   Throttle2Speed =  pHandle->hParameters.MaxSafeThrottleSpeedRPM/Throttle2Speed;   // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
-   Throttle2Speed = Throttle2Speed * GearRatio;                                     // Consider the gear to hub ratio to obtain the motor speed
+   Throttle2Speed =  pHandle->hParameters.MaxThrottleSpeedKMH/Throttle2Speed;   // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
    Throttle2Speed *= THROTTLE_SLOPE_FACTOR;                                         // Multiply by the factor to create the numerator of a fraction 
     
    pHandle->hParameters.bSlopeSpeed   = (int16_t) round(Throttle2Speed);            // Save the numerator

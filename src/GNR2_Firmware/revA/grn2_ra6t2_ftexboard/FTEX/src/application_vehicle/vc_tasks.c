@@ -179,7 +179,7 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
         }
         else
         {
-            MDI_ExecSpeedRamp(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hSpeedRef);
+            MDI_ExecSpeedRamp(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hSpeedRef); // SpeedRef is in KmH
             MDI_ExecSpeedRamp(pVCI->pPowertrain->pMDI, M2, sDebugVariables.hSpeedRef);
         }
         

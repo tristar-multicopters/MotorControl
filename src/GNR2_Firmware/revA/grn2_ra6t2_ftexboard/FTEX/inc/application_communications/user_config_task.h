@@ -294,7 +294,7 @@ uint8_t UserConfigTask_GetTorqueMaxSpeed(void);
 void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value);
 
 /**
-  @brief Function to get cadence Hybrid Leve Speed
+  @brief Function to get cadence Level Speed
   read from data flash memory.
   
   @param void
@@ -302,17 +302,17 @@ void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value);
           range bewteen 0-40.
 
 */
-uint8_t UserConfigTask_GetCadenceHybridLevelSpeed(uint8_t pasLevel);
+uint8_t UserConfigTask_GetCadenceLevelSpeed(uint8_t pasLevel);
 
 /**
-  @brief Function to update cadence Hybrid Leve Speed value
+  @brief Function to update cadence Level Speed value
   read from data flash memory.
   
   @param uint8_t value to be passed into the
   @return void
 
 */
-void UserConfigTask_UpdateCadenceHybridLeveSpeed(uint8_t pasLevel, uint8_t value);
+void UserConfigTask_UpdateCadenceLevelSpeed(uint8_t pasLevel, uint8_t value);
 
 /**
   @brief Function to get torqueLevelPower

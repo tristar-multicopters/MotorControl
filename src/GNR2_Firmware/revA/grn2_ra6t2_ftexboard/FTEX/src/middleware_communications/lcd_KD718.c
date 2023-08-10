@@ -370,9 +370,11 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                     SpeedLimit += (pHandle->rx_frame.Buffer[2] << 8);
                     SpeedLimit +=  pHandle->rx_frame.Buffer[3];
                     
-                    // setting the max RPMs for any speed limits
+                    SpeedLimit = Wheel_GetSpeedFromWheelRpm(SpeedLimit);
+                    
+                    // setting the max for any speed limits
                     Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit); 
-                    PWRT_SetNewTopRPMSpeed(pHandle->pVController->pPowertrain, SpeedLimit);
+                    PedalAssist_SetTorquePASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,SpeedLimit); 
                     #endif                     
                 }
               break;                

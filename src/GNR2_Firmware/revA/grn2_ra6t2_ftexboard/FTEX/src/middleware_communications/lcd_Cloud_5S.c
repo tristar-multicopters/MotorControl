@@ -46,7 +46,7 @@ void LCD_Cloud_5S_init(Cloud_5S_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART
     pHandle->pUART_handle->pRxCallback = &LCD_Cloud_5S_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LCD_Cloud_5S_TX_IRQ_Handler; 
             
-    Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76, pHandle->pVController->pPowertrain->sParameters.MotorToHubGearRatio);
+    Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,CLOUD_X_THROTTLE_MAX,CLOUD_X_THROTTLE_OFFSET);
     
     VC_Errors_SetCycleLength(8); // To adjust
     
@@ -221,7 +221,6 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     replyFrame.Size = 13;
     
     int32_t  toSend         = 0;
-    uint16_t  speedLimit    = 0;
     uint8_t  WheelDiameter  = 0;    
     uint8_t  pasLevel;
     uint8_t  LightStatus    = 0;
@@ -238,8 +237,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     {
         if (pHandle->pVController->pPowertrain->pThrottle->extThrottleEnable == false)
         {
-            Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76, pHandle->pVController->pPowertrain->sParameters.MotorToHubGearRatio);
-
+            Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76);
         }
         
         if (pHandle->rx_frame.Buffer[2] == CLOUD_SYSTEM) // Check if its a system frame
@@ -253,27 +251,25 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             
             HandshakeIndex = pHandle->rx_frame.Buffer[9]; // handshake byte     
             
+            #if DYNAMIC_SPEED_LIMITATION
+            uint16_t  speedLimit    = 0;
             //Reading the Speed limit
             speedLimit = pHandle->rx_frame.Buffer[10]; // speed limit       
-        
-            speedLimit = Wheel_GetWheelRpmFromSpeed(speedLimit);
-
-            #if DYNAMIC_SPEED_LIMITATION
+            
             // setting the max RPMs for any speed limits
             Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,speedLimit);        
-            PWRT_SetNewTopRPMSpeed(pHandle->pVController->pPowertrain, speedLimit);
+            PedalAssist_SetTorquePASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,speedLimit);
+            
             #endif    
            
-            #ifdef SCREENPOWERCONTROL
-        
+            #ifdef SCREENPOWERCONTROL        
             // Reading the Current limit          
             uint16_t CurrentLimit;
             CurrentLimit = pHandle->rx_frame.Buffer[11];  // current limit
             
             CurrentLimit /=2; // Transform from 0.5 amps perunit to 1 amps per unit 
             
-            PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);
-        
+            PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);        
             #endif
            
             WheelDiameter = Cloud_5S_WheelDiameterInch[pHandle->rx_frame.Buffer[12]]; // wheel diameter 

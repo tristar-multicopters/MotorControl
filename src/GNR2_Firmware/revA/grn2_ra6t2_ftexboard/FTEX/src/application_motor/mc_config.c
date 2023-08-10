@@ -95,7 +95,7 @@ MCConfigHandle_t MCConfig =
     .wNominalSqCurr         = ((int32_t)NOMINAL_PEAK_CURRENT*(int32_t)NOMINAL_PEAK_CURRENT),
     .wUsrMaxCurr            = NOMINAL_PEAK_CURRENT,                  //initially programmed with Nominal value
     .hVqdLowPassFilterBw    = M1_VQD_SW_FILTER_BW_FACTOR,
-    .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG
+    .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG,           
 };
 
 /**
@@ -234,6 +234,25 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     .wSpeedSlopePerSecondDown =     DEFAULT_SPEED_SLOPE_DOWN,
     .fGainTorqueIqref =             GAIN_TORQUE_IQREF,
     .fGainTorqueIdref =             GAIN_TORQUE_IDREF,
+    .fGearRatio =                   MOTOR_GEAR_RATIO,  
+    .bEnableSpdLimitControl = ENABLE_SPEED_LIMIT_CONTROL,
+    .hSpdLimit = MAX_APPLICATION_SPEED_UNIT,
+    .PISpeedLimit =
+    {
+      .hDefKpGain           = (int16_t)PID_SPEEDLIMIT_KP_DEFAULT,
+      .hDefKiGain           = (int16_t)PID_SPEEDLIMIT_KI_DEFAULT,
+      .wUpperIntegralLimit  = STARTING_TORQUE * SP_KIDIV,
+      .wLowerIntegralLimit  = 0,
+      .hUpperOutputLimit    = STARTING_TORQUE,
+      .hLowerOutputLimit    = 0,
+      .hKpDivisor           = (uint16_t)SP_KPDIV,
+      .hKiDivisor           = (uint16_t)SP_KIDIV,
+      .hKpDivisorPOW2       = (uint16_t)SP_KPDIV_LOG,
+      .hKiDivisorPOW2       = (uint16_t)SP_KIDIV_LOG,
+      .hDefKdGain           = 0x0000U,
+      .hKdDivisor           = 0x0000U,
+      .hKdDivisorPOW2       = 0x0000U,
+    },
 };
 
 /**

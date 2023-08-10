@@ -13,6 +13,8 @@
 #include "slave_mc_interface.h"
 
 
+#define MDI_PERCENT 100 // Used to apply a % based gain
+
 /*
 *  Structure used to hold all motor controller instances (M1, M2, M3, ...).
 */
@@ -357,5 +359,14 @@ int16_t MDI_GetPhaseVoltageAmplitude(MultipleDriveInterfaceHandle_t * pHandle, u
   */
 void MDI_Clear_Iqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
+/**
+  * @brief  Function sets the torque control speed limit does the conversion from desired 
+  *         wheel speed in kmH to motor rpm.Is also the wrapper for the function SpdTorqCtrl_SetSpeedLimit
+  * @param  pHandle Pointer on the component instance to work on.
+  * @param  speedKMH is the desired speed 
+  * @param  speedKMH is the gain that ahs to be appllied in %
+  * @retval none
+  */
+void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t speedKMH, uint16_t gain);
 
 #endif /* __MD_INTERFACE_H */
