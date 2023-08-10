@@ -575,15 +575,15 @@
       <property id="module.driver.adc.virtual_channel_6_add_average_count" value="module.driver.adc.virtual_channel_6_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_6_limit_clip_table_id" value="module.driver.adc.virtual_channel_6_limit_clip_table_id.disabled"/>
       <property id="module.driver.adc.virtual_channel_6_resolution_format" value="module.driver.adc.virtual_channel_6_resolution_format.16_bit_data_format"/>
-      <property id="module.driver.adc.virtual_channel_7_scan_group" value="module.driver.adc.virtual_channel_7_scan_group.none"/>
-      <property id="module.driver.adc.virtual_channel_7_channel_select" value="module.driver.adc.virtual_channel_7_channel_select.an000"/>
+      <property id="module.driver.adc.virtual_channel_7_scan_group" value="module.driver.adc.virtual_channel_7_scan_group.scan_group_1"/>
+      <property id="module.driver.adc.virtual_channel_7_channel_select" value="module.driver.adc.virtual_channel_7_channel_select.an021"/>
       <property id="module.driver.adc.virtual_channel_7_sampling_table_id" value="module.driver.adc.virtual_channel_7_sampling_table_id.sampling_state_entry_0"/>
       <property id="module.driver.adc.virtual_channel_7_gain_table" value="module.driver.adc.virtual_channel_7_gain_table.disabled"/>
       <property id="module.driver.adc.virtual_channel_7_offset_table" value="module.driver.adc.virtual_channel_7_offset_table.disabled"/>
       <property id="module.driver.adc.virtual_channel_7_add_average_mode" value="module.driver.adc.virtual_channel_7_add_average_mode.disabled"/>
       <property id="module.driver.adc.virtual_channel_7_add_average_count" value="module.driver.adc.virtual_channel_7_add_average_count.1_time_conversion"/>
       <property id="module.driver.adc.virtual_channel_7_limit_clip_table_id" value="module.driver.adc.virtual_channel_7_limit_clip_table_id.disabled"/>
-      <property id="module.driver.adc.virtual_channel_7_resolution_format" value="module.driver.adc.virtual_channel_7_resolution_format.12_bit_data_format"/>
+      <property id="module.driver.adc.virtual_channel_7_resolution_format" value="module.driver.adc.virtual_channel_7_resolution_format.16_bit_data_format"/>
       <property id="module.driver.adc.virtual_channel_8_scan_group" value="module.driver.adc.virtual_channel_8_scan_group.none"/>
       <property id="module.driver.adc.virtual_channel_8_channel_select" value="module.driver.adc.virtual_channel_8_channel_select.an000"/>
       <property id="module.driver.adc.virtual_channel_8_sampling_table_id" value="module.driver.adc.virtual_channel_8_sampling_table_id.sampling_state_entry_0"/>
@@ -1467,6 +1467,7 @@
       <configSetting altId="adc12.an008.pb00" configurationId="adc12.an008"/>
       <configSetting altId="adc12.an009.pb01" configurationId="adc12.an009"/>
       <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
+      <configSetting altId="adc12.an021.pe09" configurationId="adc12.an021"/>
       <configSetting altId="adc12.mode.custom.free" configurationId="adc12.mode"/>
       <configSetting altId="agt0.agtio0.pa08" configurationId="agt0.agtio0"/>
       <configSetting altId="agt0.agto0.pc06" configurationId="agt0.agto0"/>
@@ -1586,6 +1587,8 @@
       <configSetting altId="pd15.gpio_pupd.gpio_pupd_ip_up" configurationId="pd15.gpio_pupd"/>
       <configSetting altId="pe08.adc12.an020" configurationId="pe08"/>
       <configSetting altId="pe08.gpio_mode.gpio_mode_an" configurationId="pe08.gpio_mode"/>
+      <configSetting altId="pe09.adc12.an021" configurationId="pe09"/>
+      <configSetting altId="pe09.gpio_mode.gpio_mode_an" configurationId="pe09.gpio_mode"/>
       <configSetting altId="pe10.gpt4.gtioc4a" configurationId="pe10"/>
       <configSetting altId="pe10.gpio_mode.gpio_mode_peripheral" configurationId="pe10.gpio_mode"/>
       <configSetting altId="pe11.gpt5.gtioc5a" configurationId="pe11"/>

@@ -59,6 +59,7 @@ uint32_t GetChipID(uint8_t ID_Half);
 /* ADC Regular conversion manager ---------------------------------------------*/
 #define BUS_VOLTAGE_ANALOG_CHANNEL                          ADC_CHANNEL_6
 #define HEATSINK_TEMP_ANALOG_CHANNEL                        ADC_CHANNEL_8
+#define MOTOR_TEMP_ANALOG_CHANNEL                           ADC_CHANNEL_21
 #define THROTTLE_ANALOG_CHANNEL                             ADC_CHANNEL_9
 #define PEDAL_TORQUE_SENSOR_ANALOG_CHANNEL                  ADC_CHANNEL_20
 
