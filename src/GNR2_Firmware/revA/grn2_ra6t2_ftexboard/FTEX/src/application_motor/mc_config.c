@@ -154,7 +154,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     },
         .FoldbackMotorTemperature =
     {
-        .bEnableFoldback = true,
+        .bEnableFoldback = false,
         .FoldbackConfig = TRIM,
         .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
         .hDefaultOutputLimitLow = 0,
@@ -381,7 +381,24 @@ HallPosSensorHandle_t HallPosSensorM1 =
 /**
   * temperature sensor parameters Motor 1
   */
-NTCTempSensorHandle_t TempSensorParamsM1 =
+NTCTempSensorHandle_t TempSensorMotorM1 =
+{
+    .bSensorType = REAL_SENSOR,
+    .TempRegConv =
+    {
+        .hChannel = MOTOR_TEMP_ANALOG_CHANNEL,
+    },
+    .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
+    .hOverTempThreshold      = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C),
+    .hOverTempDeactThreshold = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C - OV_TEMP_MOTOR_HYSTERESIS_C),
+
+    .pNTCLookupTable = &MotorNTCLookupTable,
+};
+
+/**
+  * temperature sensor parameters Inverter 1
+  */
+NTCTempSensorHandle_t TempSensorInverterM1 =
 {
     .bSensorType = REAL_SENSOR,
     .TempRegConv =
@@ -389,13 +406,10 @@ NTCTempSensorHandle_t TempSensorParamsM1 =
         .hChannel = HEATSINK_TEMP_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
-    .hOverTempThreshold      = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d),
-    .hOverTempDeactThreshold = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d - OV_TEMPERATURE_HYSTERESIS_d),
-    .hSensitivity            = (uint16_t)(ADC_REFERENCE_VOLTAGE/dV_dT),
-    .wV0                     = (uint16_t)(V0_V *65536/ ADC_REFERENCE_VOLTAGE),
-    .hT0                     = T0_C,
+    .hOverTempThreshold      = (int16_t)(OV_TEMP_INVERTER_THRESHOLD_C),
+    .hOverTempDeactThreshold = (int16_t)(OV_TEMP_INVERTER_THRESHOLD_C - OV_TEMP_INVERTER_HYSTERESIS_C),
 
-    .pNTCLookupTable = &NTCLookupTable,
+    .pNTCLookupTable = &InverterNTCLookupTable,
 };
 
 /* Bus voltage sensor value filter buffer */

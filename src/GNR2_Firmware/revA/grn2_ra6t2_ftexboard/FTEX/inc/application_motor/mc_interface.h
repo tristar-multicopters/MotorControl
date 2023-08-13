@@ -403,13 +403,18 @@ uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHa
 //desctribtion alter
 
 /**
-  * @brief  Getting the HeatSink NTC temperature value
-  *  				Function has been added to enable the temperature monitoring module in 
-  *  				vehicle control to have acces to the heatsink temperature.
+  * @brief  Getting the inverter NTC temperature value
   * @param  pHandle Pointer on the component instance to work on.
-  * @retval Value of the heatsink temperaure in celsius degree
+  * @retval Value of the heatsink temperature in celsius degree
   */
-int16_t MCInterface_GetNTCTemp(MotorControlInterfaceHandle_t * pHandle);
+int16_t MCInterface_GetInverterTemp(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Getting the Motor NTC temperature value
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the motor temperature in celsius degree
+  */
+int16_t MCInterface_GetMotorTemp(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  Get the Max safe current from motor control.

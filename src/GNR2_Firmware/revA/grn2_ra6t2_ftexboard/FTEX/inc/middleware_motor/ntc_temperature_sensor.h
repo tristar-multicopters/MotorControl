@@ -38,20 +38,9 @@ typedef struct
                                     hLowPassFilterBw = NTC_CalcBusReading
                                     call rate [Hz]/ FilterBandwidth[Hz] */
   uint16_t hOverTempThreshold; /**< Represents the over voltage protection intervention threshold.
-                                    This parameter is expressed in u16Celsius through formula:
-                                    hOverTempThreshold =
-                                    (V0[V]+dV/dT[V/°C]*(OverTempThreshold[°C] - T0[°C]))* 65536 / MCU supply voltage */
+                                    This parameter is expressed in degC */
   uint16_t hOverTempDeactThreshold; /**< Temperature threshold below which an active over temperature fault is cleared.
-                                         This parameter is expressed in u16Celsius through formula:
-                                         hOverTempDeactThreshold =
-                                         (V0[V]+dV/dT[V/°C]*(OverTempDeactThresh[°C] - T0[°C]))* 65536 / MCU supply voltage*/
-  int16_t hSensitivity;        /**< NTC sensitivity
-                                    This parameter is equal to MCU supply voltage [V] / dV/dT [V/°C] */
-  uint32_t wV0;                /**< V0 voltage constant value used to convert the temperature into Volts.
-                                    This parameter is equal V0*65536/MCU supply
-                                    Used in through formula: V[V]=V0+dV/dT[V/°C]*(T-T0)[°C] */
-  uint16_t hT0;                /**< T0 temperature constant value used to convert the temperature into Volts
-                                    Used in through formula: V[V]=V0+dV/dT[V/°C]*(T-T0)[°C] */
+                                         This parameter is expressed in degC */
   uint8_t bConvHandle;            /*!< handle to the regular conversion */
 
 

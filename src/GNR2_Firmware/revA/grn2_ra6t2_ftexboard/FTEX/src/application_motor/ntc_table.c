@@ -14,7 +14,6 @@
                                                          //*16 is the factor on tics conversion due variable casting
 
 
-
 const int32_t NTCTemperatureTable[NTC_LUT_SIZE] =        //revised the function to calculate temperature values after the NTC test.
 {
     7,                                                   //Added few values to check the behaviour for low temperature values.
@@ -50,10 +49,19 @@ const int32_t NTCTemperatureTable[NTC_LUT_SIZE] =        //revised the function 
     129,
 };
 
-LookupTableHandle_t NTCLookupTable =
+LookupTableHandle_t InverterNTCLookupTable =
  {
     .hXDataStep = NTC_LUT_DIGITAL_STEP,
     .wXDataFirstValue = NTC_LUT_DIGITAL_FIRST_VALUE,
     .hTableLength = NTC_LUT_SIZE,
     .pOutputTable = NTCTemperatureTable,
 };
+ 
+LookupTableHandle_t MotorNTCLookupTable =
+ {
+    .hXDataStep = NTC_LUT_DIGITAL_STEP,
+    .wXDataFirstValue = NTC_LUT_DIGITAL_FIRST_VALUE,
+    .hTableLength = NTC_LUT_SIZE,
+    .pOutputTable = NTCTemperatureTable,
+};
+ 

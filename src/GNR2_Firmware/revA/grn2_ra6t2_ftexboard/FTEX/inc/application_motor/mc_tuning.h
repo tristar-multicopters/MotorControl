@@ -44,7 +44,8 @@ typedef struct
   VirtualSpeedSensor_Handle_t * pSpeedSensorVirtual;
   SpdTorqCtrlHandle_t * pSpeednTorqueCtrl;
   MotorStateMachineHandle_t * pStateMachine;
-  NTCTempSensorHandle_t * pTemperatureSensor;
+  NTCTempSensorHandle_t * pTemperatureSensorInverter;
+  NTCTempSensorHandle_t * pTemperatureSensorMotor;
   BusVoltageSensorHandle_t * pBusVoltageSensor;
   MotorPowerMeasHandle_t * pMotorPower;
   MCConfigHandle_t  * pFieldWeakening;
