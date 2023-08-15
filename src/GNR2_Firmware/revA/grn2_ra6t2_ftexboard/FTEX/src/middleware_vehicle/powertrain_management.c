@@ -773,9 +773,13 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         {
             VC_Errors_RaiseError(OVER_CURRENT, HOLD_UNTIL_CLEARED);
         }
-        if ((hFaultOccurred & MC_OVER_TEMP) != MC_NO_ERROR)
+        if ((hFaultOccurred & MC_OVER_TEMP_CONTROLLER) != MC_NO_ERROR)
         {
             VC_Errors_RaiseError(OT_PROTECTION, DEFAULT_HOLD_FRAMES);
+        }
+        if ((hFaultOccurred & MC_OVER_TEMP_MOTOR) != MC_NO_ERROR)
+        {
+            VC_Errors_RaiseError(MOTOR_OT_PROTECT, DEFAULT_HOLD_FRAMES);
         }
         if ((hFaultOccurred & MC_OVER_VOLT)!= MC_NO_ERROR)
         {
@@ -829,10 +833,16 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             }
         }
 
-        if (hM1FaultOccurredCode & MC_OVER_TEMP)
+        if (hM1FaultOccurredCode & MC_OVER_TEMP_CONTROLLER)
         {
-            // In case of overtemperature, clear the OT fault
-            hM1FaultOccurredCode &= ~MC_OVER_TEMP;
+            // In case of controller overtemperature, clear the OT fault
+            hM1FaultOccurredCode &= ~MC_OVER_TEMP_CONTROLLER;
+        }
+        
+        if (hM1FaultOccurredCode & MC_OVER_TEMP_MOTOR)
+        {
+            // In case of motor overtemperature, clear the OT fault
+            hM1FaultOccurredCode &= ~MC_OVER_TEMP_MOTOR;
         }
 
         if (hM1FaultOccurredCode & MC_OVER_VOLT)
@@ -934,10 +944,16 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             }
         }
 
-        if (hM2FaultOccurredCode & MC_OVER_TEMP)
+        if (hM2FaultOccurredCode & MC_OVER_TEMP_CONTROLLER)
         {
-            /* In case of overtemperature... */
-            hM2FaultOccurredCode &= ~MC_OVER_TEMP;
+            /* In case of controller overtemperature... */
+            hM2FaultOccurredCode &= ~MC_OVER_TEMP_CONTROLLER;
+        }
+        
+        if (hM2FaultOccurredCode & MC_OVER_TEMP_MOTOR)
+        {
+            /* In case of motor overtemperature... */
+            hM2FaultOccurredCode &= ~MC_OVER_TEMP_MOTOR;
         }
 
         if (hM2FaultOccurredCode & MC_OVER_VOLT)

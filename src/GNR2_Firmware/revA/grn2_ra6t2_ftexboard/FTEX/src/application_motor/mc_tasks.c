@@ -841,7 +841,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
 
     if (NTCTempSensor_CalcAvTemp(pTemperatureSensorInverter[bMotor]))
     {
-        CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_INVERTER;
+        CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_CONTROLLER;
     }
     if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]))
     {

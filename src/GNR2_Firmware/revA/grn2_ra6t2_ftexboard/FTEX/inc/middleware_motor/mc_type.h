@@ -85,7 +85,7 @@ extern "C" {
 #define  MC_FOC_DURATION        (uint16_t)(0x0001u)     /**< @brief Error: FOC rate to high.*/
 #define  MC_OVER_VOLT           (uint16_t)(0x0002u)     /**< @brief Error: Software over voltage.*/
 #define  MC_UNDER_VOLT          (uint16_t)(0x0004u)     /**< @brief Error: Software under voltage.*/
-#define  MC_OVER_TEMP_INVERTER  (uint16_t)(0x0008u)     /**< @brief Error: Software over temperature for inverter.*/
+#define  MC_OVER_TEMP_CONTROLLER  (uint16_t)(0x0008u)     /**< @brief Error: Software over temperature for inverter.*/
 #define  MC_START_UP            (uint16_t)(0x0010u)     /**< @brief Error: Startup failed.*/
 #define  MC_SPEED_FDBK          (uint16_t)(0x0020u)     /**< @brief Error: Speed feedback.*/
 #define  MC_BREAK_IN            (uint16_t)(0x0040u)     /**< @brief Error: Emergency input (Over current).*/

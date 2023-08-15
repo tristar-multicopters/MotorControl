@@ -127,9 +127,9 @@ uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
     if(hCurrFault != MC_NO_ERROR)
     {
         // Motor over temperature fault
-        if(hCurrFault & MC_OVER_TEMP)
+        if(hCurrFault & MC_OVER_TEMP_CONTROLLER)
         {
-            stateToSend |= MOTOR_OVER_T_FAULT;
+            stateToSend |= CONTROLLER_OVER_T_FAULT;
         }
         // Motor start up fault
         if(hCurrFault & MC_START_UP)
