@@ -367,6 +367,10 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         //set the going off flag to indicate the system is going turn off.
         PWREN_SetGoingOffFlag(pVCI->pPowertrain->pPWREN);
         
+        //set the lights to the desired state when the controller is off
+        Light_PowerOffSequence(pVCI->pPowertrain->pHeadLight);
+        Light_PowerOffSequence(pVCI->pPowertrain->pTailLight);
+        
         //while to wait until the turn off sequency to be finished.
         while(1)
         {
