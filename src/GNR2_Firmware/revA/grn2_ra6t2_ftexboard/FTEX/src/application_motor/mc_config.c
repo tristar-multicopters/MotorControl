@@ -154,7 +154,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     },
         .FoldbackMotorTemperature =
     {
-        .bEnableFoldback = false,
+        .bEnableFoldback = true,
         .FoldbackConfig = TRIM,
         .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
         .hDefaultOutputLimitLow = 0,
