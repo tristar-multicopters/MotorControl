@@ -11,7 +11,7 @@
                   Defines
 *********************************************/
 
-//define the lenght on bytes of the User_ConfigData_t.
+//define the length on bytes of the User_ConfigData_t.
 #define USER_DATA_CONFIG_LENGTH   sizeof(User_ConfigData_t)
     
 //add pad bytes(zeros) to make the define be a multiple of 4(this is necessary to write correctly in 

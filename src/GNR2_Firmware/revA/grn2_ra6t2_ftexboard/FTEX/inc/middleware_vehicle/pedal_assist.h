@@ -189,5 +189,12 @@ bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle);
     */
 void PedalAssist_ResetParameters (PAS_Handle_t * pHandle);
 
+/**
+    * @brief  Reset the PAS algorithm
+    * @param  Pedal Assist handle, new pas algorithm
+    * @retval None
+    */
+void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
+
 #endif /*__PEDAL_ASSIST_H*/
 

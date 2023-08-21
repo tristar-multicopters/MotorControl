@@ -145,7 +145,7 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
             pHandle->rx_frame.ByteCnt ++;
                 
         }
-        else if (ByteCount == 8) // Every frame has a lenght of 9 bytes (0-8)
+        else if (ByteCount == 8) // Every frame has a length of 9 bytes (0-8)
         {
                                         
             if (NextByte == APT_END) // Is it the proper end byte ?

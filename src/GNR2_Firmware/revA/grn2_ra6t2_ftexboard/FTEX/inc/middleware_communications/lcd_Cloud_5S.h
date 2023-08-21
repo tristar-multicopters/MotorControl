@@ -33,6 +33,12 @@
 #define CLOUD_END_CODE_1  0x0D     // Frame always had these two end code
 #define CLOUD_END_CODE_2  0x0A
 
+#define CLOUD_ASSIST_TYPE 0x80     // Masked used to obtain the assistance type (torque/cadence)
+
+#define CLOUD_TORQ_ASSIST_TYPE  0x80  // Torque PAS assist type
+ 
+#define CLOUD_CADE_ASSIST_TYPE  0x00  // Cadence PAS assist type
+
 #define CLOUD_POST_CRC_BYTE_NB 4 //Specify how many bytes at the end of the frame need to be excluded from CRC calculation
 
 #define CLOUD_RX_BUFFER_SIZE 32

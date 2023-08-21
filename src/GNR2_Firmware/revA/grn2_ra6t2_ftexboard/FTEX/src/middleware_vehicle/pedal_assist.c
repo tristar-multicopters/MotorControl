@@ -54,7 +54,7 @@ void PedalAssist_SetAssistLevel(PAS_Handle_t * pHandle, PasLevel_t bLevel)
 /**
     * @brief  Get PAS level
     * @param  Pedal Assist handle
-    * @retval Current Pedal assit level
+    * @retval Current Pedal assist level
     */
 PasLevel_t PedalAssist_GetAssistLevel(PAS_Handle_t * pHandle)
 {
@@ -114,7 +114,7 @@ int16_t PedalAssist_GetPASCadenceMotorTorque(PAS_Handle_t * pHandle)
     */
 void PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle)
 {
-    ASSERT(pHandle != NULL);
+    ASSERT(pHandle != NULL);   
     PasLevel_t currentLevel = PedalAssist_GetAssistLevel(pHandle);
     
     // assert we're within range so that the code below doesn't go out of bounds
@@ -385,3 +385,16 @@ void AssertIsValidLevel(PasLevel_t level)
     // invalid
     ASSERT(false);
 }
+
+/**
+    * @brief  Reset the PAS algorithm
+    * @param  Pedal Assist handle, new pas algorithm
+    * @retval None
+    */
+void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo)
+{
+    ASSERT(pHandle != NULL);
+    
+    pHandle->bCurrentPasAlgorithm = aPASAlgo;
+}
+

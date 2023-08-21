@@ -21,10 +21,10 @@
 /*********************************************
                 Defines
 *********************************************/
-//define the lenght on bytes of the GNR serial number.
+//define the length on bytes of the GNR serial number.
 #define GNR_INFO_SERIAL_LENGTH     13 
 
-//define the lenght on bytes of the GNR serial number.
+//define the length on bytes of the GNR serial number.
 #define GNR_DFUPACK_VERSION_LENGTH  4 
 
 /*********************************************

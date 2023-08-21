@@ -93,6 +93,15 @@ void CanVehiInterface_SetVehiclePAS (VCI_Handle_t * pHandle, uint8_t Set_PAS)
 }
 
 /**
+   Get Get PAS Algorithm 
+*/
+uint8_t CanVehiInterface_GetVehiclePASAlgorithm (VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle!= NULL);
+    return pHandle->pPowertrain->pPAS->bCurrentPasAlgorithm;    
+}
+
+/**
  *  Get vehicle maximum PAS
  */
 uint8_t CanVehiInterface_GetVehicleMaxPAS (void)

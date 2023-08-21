@@ -215,10 +215,12 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
  *  This is executed in a comm task that gets unblocked when a complete frame is received.
  *
  */ 
+uint8_t CruiseCtrlState = 0;
+
 void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
 {
     Cloud_5S_frame_t replyFrame = {0};
-    replyFrame.Size = 13;
+    replyFrame.Size = 14;
     
     int32_t  toSend         = 0;
     uint8_t  WheelDiameter  = 0;    
@@ -227,7 +229,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     uint8_t  HandshakeIndex = 0; 
     uint8_t  Check1         = 0;
     uint8_t  Check2         = 0; 
-      
+    uint8_t  AssistType;  
     LCD_Cloud_5S_ComputeChecksum(pHandle->rx_frame,&Check1,&Check2);
     
     
@@ -242,8 +244,27 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
         
         if (pHandle->rx_frame.Buffer[2] == CLOUD_SYSTEM) // Check if its a system frame
         {
-            //pHandle->rx_frame.Buffer[3] // data lenght
-            //pHandle->rx_frame.Buffer[4] // assistance sensor    
+            //pHandle->rx_frame.Buffer[3] // data length
+            AssistType = pHandle->rx_frame.Buffer[4]; /* assistance sensor bit7: Assistance signal type selection, 0-Cadence, 1-Torque
+                                                                           bit6: 0-Assistance signal is positive, 1-Assistance signal is negative
+                                                                           bit5-0: (Assistance signal will be effective after passing through how many magnets), 0~31, usually
+                                                                                   is no less than 2.*/ 
+
+            AssistType = AssistType & CLOUD_ASSIST_TYPE; // Extract only the assistance type from the byte
+            
+            if(AssistType == CLOUD_TORQ_ASSIST_TYPE) // Check if we want torque or cadence PAS and apply the change to the module
+            {
+                PedalAssist_SetPASAlgorithm(pHandle->pVController->pPowertrain->pPAS, TorqueSensorUse);
+            }
+            else if (AssistType == CLOUD_CADE_ASSIST_TYPE)
+            {
+                PedalAssist_SetPASAlgorithm(pHandle->pVController->pPowertrain->pPAS, CadenceSensorUse);
+            }
+            else
+            {
+                ASSERT(false); // unexpected AssistType
+            }            
+            
             //pHandle->rx_frame.Buffer[5] // assitance sensor type
             //pHandle->rx_frame.Buffer[6] // Magnets/ low speed behavior
             //pHandle->rx_frame.Buffer[7] // System undervoltage value
@@ -283,20 +304,21 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             replyFrame.Buffer[0] = CLOUD_START;
             replyFrame.Buffer[1] = CLOUD_SLAVE_ID;
             replyFrame.Buffer[2] = CLOUD_SYSTEM;
-            replyFrame.Buffer[3] = 5; // Data lenght of this frame
+            replyFrame.Buffer[3] = 6; // Data length of this frame
             replyFrame.Buffer[4] = 0;
             replyFrame.Buffer[5] = 0;
             replyFrame.Buffer[6] = 0;
             replyFrame.Buffer[7] = Cloud_HandshakeRef[HandshakeIndex];
             replyFrame.Buffer[8] = 0;
-           
+            replyFrame.Buffer[9] = 0;
+            
             LCD_Cloud_5S_ComputeChecksum(replyFrame,&Check1,&Check2); 
            
-            replyFrame.Buffer[9] = Check1;
-            replyFrame.Buffer[10] = Check2;
+            replyFrame.Buffer[10] = Check1;
+            replyFrame.Buffer[11] = Check2;
            
-            replyFrame.Buffer[11] = CLOUD_END_CODE_1;
-            replyFrame.Buffer[12] = CLOUD_END_CODE_2;          
+            replyFrame.Buffer[12] = CLOUD_END_CODE_1;
+            replyFrame.Buffer[13] = CLOUD_END_CODE_2;          
                        
         }
         else //If its not a system frame it must be a runtime frame
@@ -332,13 +354,17 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
                 Light_Disable(pHandle->pVController->pPowertrain->pTailLight);              
             }
             
+            
+            CruiseCtrlState = (((pHandle->rx_frame.Buffer[5]) & 0x40) >> 6); // bit6: Cruise, 0 = Off 1 = On
+            
+            
             if (((pHandle->rx_frame.Buffer[5]) & 0x10) > 0)  //  bit4: walk function. 0: no, 1: yes 
             {
                 PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS, PAS_LEVEL_WALK);            
             }   
             
             uint8_t LatestThrottle = 0;                
-                                         /* bit6: reserved
+                                         /* 
                                             bit5: battery capacity. 0: normal, 1: low
                                             bit3: reserved
                                             bit2: reserved
@@ -348,7 +374,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             Throttle_UpdateExternal(pHandle->pVController->pPowertrain->pThrottle,LatestThrottle);
             
                                          /* Throttle value 0V-5V corresponds to 255 data, normal voltage range is 0.8V-4.1V, 
-                                            the throttle¡¯s default working voltage is 1.3V-3.5V. Send 51 when voltage is 0.8-1.3V, 
+                                            the throttleÂ¡Â¯s default working voltage is 1.3V-3.5V. Send 51 when voltage is 0.8-1.3V, 
                                             send data 76-190 when voltage is 1.3-3.5V, 
                                             send maximum data 190 when voltage is 3.5-4.1,
                                             send 51 and throttle error together when voltage is more than 4.1V */
@@ -356,7 +382,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             replyFrame.Buffer[0] = CLOUD_START;
             replyFrame.Buffer[1] = CLOUD_SLAVE_ID;
             replyFrame.Buffer[2] = CLOUD_RUNTIME;
-            replyFrame.Buffer[3] = 5; // Data lenght of this frame
+            replyFrame.Buffer[3] = 6; // Data length of this frame
             replyFrame.Buffer[4] = LCD_Cloud_5S_ConvertPASLevelToCloud_5S(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)); // PAS 
             if (pHandle->isScreenSlave == true)
                 pHandle->isScreenSlave = false;
@@ -388,14 +414,15 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
              
            
             replyFrame.Buffer[8] = LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(VC_Errors_CycleError()); // Error code
-           
+            replyFrame.Buffer[9] = CruiseCtrlState; //Cruise control status
+            
             LCD_Cloud_5S_ComputeChecksum(replyFrame,&Check1,&Check2); 
            
-            replyFrame.Buffer[9] = Check1;
-            replyFrame.Buffer[10] = Check2;
+            replyFrame.Buffer[10] = Check1;
+            replyFrame.Buffer[11] = Check2;
            
-            replyFrame.Buffer[11] = CLOUD_END_CODE_1;
-            replyFrame.Buffer[12] = CLOUD_END_CODE_2;                                
+            replyFrame.Buffer[12] = CLOUD_END_CODE_1;
+            replyFrame.Buffer[13] = CLOUD_END_CODE_2;                                
         }
 
         replyFrame.ByteCnt = 0;   
@@ -559,11 +586,11 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
 /**
  * Function used to compute the checksum values to verify frames    
  */
+
 void LCD_Cloud_5S_ComputeChecksum(Cloud_5S_frame_t aFrame, uint8_t *pCheck1, uint8_t *pCheck2)
 {
     uint8_t FrameSize = aFrame.Size;
     uint16_t CheckCalc = 0;
-    
     //Verification of the checksum
     for(int i = 1; i < FrameSize - CLOUD_POST_CRC_BYTE_NB; i ++) //Checksum is the sum of all bytes except for: start code, end code and checksum bytes
     {                              

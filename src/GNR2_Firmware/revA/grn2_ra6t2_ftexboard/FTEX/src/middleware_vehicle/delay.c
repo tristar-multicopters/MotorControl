@@ -58,7 +58,7 @@ void Delay_Reset(Delay_Handle_t * pHandle)
 }
 
 /**
- *  Set the time lenght of the delay
+ *  Set the time length of the delay
  */
 void Delay_SetTime(Delay_Handle_t * pHandle, uint32_t aDelay, DelayUnits_t aDelayUnits)
 {

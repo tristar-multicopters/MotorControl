@@ -683,18 +683,18 @@ void UserConfigTask_UpdateWalkModeSpeed(uint8_t value)
   used by the bluetooth protocol.CCITT 16 bits polynom.
   
   @param uint8_t * data pointer to the data buffer where the CRC must be done.
-  @param uint8_t lenght the lenght of the data to be calculated by the CRC algorithm.
+  @param uint8_t length the length of the data to be calculated by the CRC algorithm.
   @return uint16_t return the calculated CRC.
 
 */
-uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t lenght)
+uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length)
 {   
     uint8_t i;
     uint8_t n = 0;
     uint8_t value;
     uint16_t crc = 0x0000;
-    //calculate the crc to all buffer lenght
-    while(n < lenght)
+    //calculate the crc to all buffer length
+    while(n < length)
     {
         //receive the next byte to be processed.
         value = buffer[n];

@@ -163,15 +163,15 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle)
                     {   
                         if ((pHandle->rx_frame.Buffer[1] == W_PAS) || (pHandle->rx_frame.Buffer[1] == W_PWRMODE))
                         {
-                            NbBytePerFrame = 4; // If we are receiving a PAS level  or power mode, frame lenght is 4 
+                            NbBytePerFrame = 4; // If we are receiving a PAS level  or power mode, frame length is 4 
                         }
                         else if (pHandle->rx_frame.Buffer[1] == W_LIGHTS)
                         {
-                            NbBytePerFrame = 3; // If we are receiving lights state, frame lenght is 3   
+                            NbBytePerFrame = 3; // If we are receiving lights state, frame length is 3   
                         }
                         else if (pHandle->rx_frame.Buffer[1] == W_SPEED_LIMIT)
                         {
-                            NbBytePerFrame = 5; // If we are receiving speed limit and wheel diam, frame lenght is 5
+                            NbBytePerFrame = 5; // If we are receiving speed limit and wheel diam, frame length is 5
                         }                                                                                                                         
                     }                   
                     else if (NbBytePerFrame == ByteCount + 1)
