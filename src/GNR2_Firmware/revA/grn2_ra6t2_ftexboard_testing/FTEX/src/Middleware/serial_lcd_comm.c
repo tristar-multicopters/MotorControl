@@ -1,37 +1,38 @@
 /**
   ******************************************************************************
-  * @file    serial_communication.c
+  * @file    serial_lcd_comm.c
   * @brief   This file contain the Serial Communication bsp driver.
   ******************************************************************************
 */
 
 // =============================== Includes ================================ //
+#include "serial_lcd_comm.h"
 #include "serial_communication.h"
 
 /* Temporary buffer to save data from receive buffer for further processing */
-uint8_t bRecivedFrame[DATA_LENGTH] = {RESET_VALUE};
+uint8_t bRecFrame[DATA_LENGTH] = {RESET_VALUE};
 
 /* Counter to update bRecivedFrame index */
-volatile uint8_t g_counter_var = RESET_VALUE;
+volatile uint8_t bCounter = RESET_VALUE;
 
 /* Flag to check whether data is received or not */
-volatile uint8_t g_data_received_flag = false;
+volatile uint8_t bData_ReceivedFlag = false;
 
 /* Flag for user callback */
-volatile uint8_t g_uart_event = RESET_VALUE;
-// ==================== Public function prototypes ======================== //
+volatile uint8_t bUartEvent = RESET_VALUE;
 
+// ==================== Public function prototypes ======================== //
 /**
   * @brief  Initialize  UART
   * @param  None
   * @return Upon successful open and start of timer
   */
-fsp_err_t Init_uart(void)
+fsp_err_t Init_uart_lcd(void)
 {
     fsp_err_t  bIsError = FSP_SUCCESS;
 
     // Initialise the UART 
-    bIsError |= R_SCI_B_UART_Open(&g_uart1_ctrl, &g_uart1_cfg);
+    bIsError |= R_SCI_B_UART_Open(&g_uart9_ctrl, &g_uart9_cfg);
 
     return bIsError;
 }
@@ -41,12 +42,12 @@ fsp_err_t Init_uart(void)
   * @param  None
   * @return Upon successful open and start of timer
   */
-fsp_err_t Deinit_uart(void)
+fsp_err_t Deinit_uart_lcd(void)
 {
     fsp_err_t  bIsError = FSP_SUCCESS;
 
     /* Close module */
-    bIsError |= R_SCI_B_UART_Close (&g_uart1_ctrl);
+    bIsError |= R_SCI_B_UART_Close (&g_uart9_ctrl);
     
     return bIsError;
 }
@@ -57,7 +58,7 @@ fsp_err_t Deinit_uart(void)
   * @return Upon success or Upon event failure
   */
 
-fsp_err_t UART_SerialPrint(uint8_t *p_msg)
+fsp_err_t UART_SerialPrint_lcd(uint8_t *p_msg)
 {
     fsp_err_t bIsError   = FSP_SUCCESS;
     uint8_t msg_len = RESET_VALUE;
@@ -68,17 +69,17 @@ fsp_err_t UART_SerialPrint(uint8_t *p_msg)
     msg_len = ((uint8_t)(strlen(p_temp_ptr)));
 
     /* Reset callback capture variable */
-    g_uart_event = RESET_VALUE;
+    bUartEvent = RESET_VALUE;
 
     /* Writing to terminal */
-    bIsError = R_SCI_B_UART_Write (&g_uart1_ctrl, p_msg, msg_len);
+    bIsError = R_SCI_B_UART_Write (&g_uart9_ctrl, p_msg, msg_len);
 
 
     /* Check for event transfer complete */
-    while ((UART_EVENT_TX_COMPLETE != g_uart_event) && (--local_timeout))
+    while ((UART_EVENT_TX_COMPLETE != bUartEvent) && (--local_timeout))
     {
         /* Check if any error event occurred */
-        if (UART_ERROR_EVENTS == g_uart_event)
+        if (UART_ERROR_EVENTS == bUartEvent)
         {
             return FSP_ERR_TRANSFER_ABORTED;
         }
@@ -95,15 +96,15 @@ fsp_err_t UART_SerialPrint(uint8_t *p_msg)
   * @param  p_args: UART callback function arguments.
   * @return None
   */
-void UART_IRQHandler(uart_callback_args_t * p_args)
+void UART_IRQHandler9(uart_callback_args_t * p_args)
 {
     /* Logged the event in global variable */
-    g_uart_event = (uint8_t)p_args->event;
+    bUartEvent = (uint8_t)p_args->event;
 
     /* Reset bRecivedFrame index if it exceeds than buffer size */
-    if(DATA_LENGTH == g_counter_var)
+    if(DATA_LENGTH == bCounter)
     {
-        g_counter_var = RESET_VALUE;
+        bCounter = RESET_VALUE;
     }
 
     if(UART_EVENT_RX_CHAR == p_args->event)
@@ -113,17 +114,34 @@ void UART_IRQHandler(uart_callback_args_t * p_args)
             /* If Enter is pressed by user, set flag to process the data */
             case CARRIAGE_ASCII:
             {
-                g_counter_var = RESET_VALUE;
-                g_data_received_flag  = true;
+                bCounter = RESET_VALUE;
+                bData_ReceivedFlag  = true;
                 break;
             }
             /* Read all data provided by user until enter button is pressed */
             default:
             {
-                bRecivedFrame[g_counter_var++] = (uint8_t ) p_args->data;
+                bRecFrame[bCounter++] = (uint8_t ) p_args->data;
                 break;
             }
         }
     }
 }
 
+/**
+  * @brief  Verifyinh the send and received buffer while testing
+  * @param  None
+  * @return Success or Fail return
+  */
+bool UART_SerialPrint_lcd_Verify(void)
+{
+    // Send serial test in loop
+    UART_SerialPrint_lcd((uint8_t *)TestingFrame);
+    R_BSP_SoftwareDelay (100,BSP_DELAY_UNITS_MICROSECONDS);
+    for(int i = 0; i < 11; i++ )
+    {
+        if (TestingFrame[i]!=bRecFrame[i])
+            return false;
+    }
+    return true;
+}

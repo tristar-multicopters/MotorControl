@@ -17,6 +17,7 @@ void Test_Main(void)
 {
     /* Initialization */
     Init_uart();
+    Init_uart_lcd();
     Init_spi();
     /* Start task */
     while (true)
@@ -24,5 +25,4 @@ void Test_Main(void)
         /* Main process Testing */
         SerialProcess_Main();
     }
-    
 }

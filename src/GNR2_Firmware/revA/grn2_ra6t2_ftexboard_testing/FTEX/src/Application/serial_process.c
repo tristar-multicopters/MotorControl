@@ -12,6 +12,7 @@
 // ========================== Public Variables ============================ //
 
 extern uint8_t bRecivedFrame[DATA_LENGTH];
+extern uint8_t bRecFrame[DATA_LENGTH];
 extern volatile uint8_t g_data_received_flag;
 data rxData;
 
@@ -31,6 +32,19 @@ void SerialProcess_CleanFrame()
     }
 }
 
+/**
+  * @brief  Clean received data frame of LCD Serial
+  * @param  None
+  * @return None
+  */
+void SerialProcessLCD_CleanFrame()
+{
+    // Clear the received data frame
+    for (uint8_t i = 0; i<DATA_LENGTH; i++)
+    {
+        bRecFrame[i]=0;
+    }
+}
 /**
   * @brief  Get Message Length  
   * @param  None
@@ -125,6 +139,9 @@ bool SerialProcess_TypeCommand_Valid()
                 case TEST_FLASH :
                     return true;
                     break;
+                case TEST_LCD_UART :
+                    return true;
+                    break;
 				default :
 					return false;
                     break;	
@@ -161,7 +178,7 @@ uint8_t SerialProcess_ConfirmationByte(uint8_t Temp_Frame[], uint8_t Temp_Frame_
 	for (int i=0; i < Temp_Frame_Size; i++ ) // before we add -1 if we have problem to reverify //
 		{
 			Sum_Byte = Sum_Byte + Temp_Frame[i];
-			// Add delay for safety
+			R_BSP_SoftwareDelay (10,BSP_DELAY_UNITS_MICROSECONDS);
 		}
 		Sum_Byte = Sum_Byte % 256;
 		// Add delay for safety
@@ -217,7 +234,24 @@ void SerialProcess_ExecuteCommand ()
                 case TEST_FLASH :
                 {      
                     if (SF_format() == true)
+                    {
                         Serial_Acknowledge(TEST_FLASH);
+                        UART_SerialPrint((uint8_t *)"FFORMAT");
+                        SerialProcess_CleanFrame();
+                    }
+                    else
+                        Serial_Error(FRAME_ERR);   
+				}
+                break;
+                /* Check Serial Screen UART */
+                case TEST_LCD_UART :
+                {      
+                    if ( UART_SerialPrint_lcd_Verify())
+                    {
+                        Serial_Acknowledge(TEST_LCD_UART);
+                        UART_SerialPrint((uint8_t *)"SSerial");
+                        SerialProcessLCD_CleanFrame();
+                    }
                     else
                         Serial_Error(FRAME_ERR);   
 				}
@@ -267,14 +301,16 @@ void SerialProcess_Main()
 		{
             SerialProcess_ExecuteCommand();
 			g_data_received_flag = false;
-            // Add Delay TODO
+            R_BSP_SoftwareDelay (100,BSP_DELAY_UNITS_MICROSECONDS);
+
 		}
 		else
 		{
             SerialProcess_CleanFrame();
 			g_data_received_flag = false;
 			Serial_Error(FRAME_ERR);
-            // Add Delay TODO
+            R_BSP_SoftwareDelay (100,BSP_DELAY_UNITS_MICROSECONDS);
+
         }
 	}
 }

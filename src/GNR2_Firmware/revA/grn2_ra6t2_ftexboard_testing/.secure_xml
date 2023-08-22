@@ -64,6 +64,8 @@
       <configSetting altId="pd00.output.high" configurationId="pd00"/>
       <configSetting altId="sci1.rxd1.pa11" configurationId="sci1.rxd1" isUsedByDriver="true"/>
       <configSetting altId="sci1.txd1.pa12" configurationId="sci1.txd1" isUsedByDriver="true"/>
+      <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9" isUsedByDriver="true"/>
+      <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9" isUsedByDriver="true"/>
       <configSetting altId="spi1.miso1.pc11" configurationId="spi1.miso1" isUsedByDriver="true"/>
       <configSetting altId="spi1.mosi1.pc12" configurationId="spi1.mosi1" isUsedByDriver="true"/>
       <configSetting altId="spi1.rspck1.pc10" configurationId="spi1.rspck1" isUsedByDriver="true"/>

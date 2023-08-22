@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include "bsp_api.h"
 #include "common_data.h"
+#include "r_sci_b_uart.h"
+#include "r_uart_api.h"
 #include "r_flash_hp.h"
 #include "r_flash_api.h"
 #include "r_agt.h"
@@ -11,9 +13,18 @@
 #include "r_dtc.h"
 #include "r_transfer_api.h"
 #include "r_spi_b.h"
-#include "r_sci_b_uart.h"
-            #include "r_uart_api.h"
 FSP_HEADER
+/** UART on SCI Instance. */
+extern const uart_instance_t      g_uart9;
+
+/** Access the UART instance using these structures when calling API functions directly (::p_api is not used). */
+extern sci_b_uart_instance_ctrl_t     g_uart9_ctrl;
+extern const uart_cfg_t g_uart9_cfg;
+extern const sci_b_uart_extended_cfg_t g_uart9_cfg_extend;
+
+#ifndef UART_IRQHandler9
+void UART_IRQHandler9(uart_callback_args_t * p_args);
+#endif
 /* Flash on Flash HP Instance */
 extern const flash_instance_t g_flash0;
 
