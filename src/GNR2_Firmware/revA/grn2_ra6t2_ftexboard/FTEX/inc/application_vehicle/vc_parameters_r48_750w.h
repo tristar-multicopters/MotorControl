@@ -42,7 +42,7 @@
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
 #define PTS_FILTER_BW1                      40              // BW coefficient for pedal torque sensor avereging
-#define PTS_FILTER_BW2                      60              // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW2                      90              // BW coefficient for pedal torque sensor avereging
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
