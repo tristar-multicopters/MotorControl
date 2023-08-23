@@ -67,7 +67,11 @@ typedef struct
     bool extThrottleEnable;          // If this variable is true this means we should ignore adc values and only use throttle injected from a function call
     
     bool SafeStart;                  // Stuck throttle check on start
-        
+    
+    bool CruiseControlEnable;        // Used to control cruise control 
+    bool ForceDisengage;             // What ever the screen tells us we force the cruise control to disengage
+    int16_t CruiseControlTorqueAvg;  // Used to filter torque value when cruise control is engaged
+    
     SignalFilteringHandle_t ThrottleFilter; // Filter structure used to filter out noise.
     
     ThrottleParameters_t hParameters;
@@ -179,6 +183,56 @@ void Throttle_UpdateExternal(ThrottleHandle_t * pHandle, uint16_t aNewVal);
  * @retval void
  */
 void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle);
+
+/**
+ * @brief  Return the cruise control state
+ * @param  pHandle : Pointer on Handle of the throttle,
+ * @retval bool state of the cruise control (1:Engaged, 0:Disengaged)
+ */ 
+bool Throttle_GetCruiseControlState(ThrottleHandle_t * pHandle);
+    
+/**
+ * @brief  Engage the cruise control feature
+ * @param  pHandle : Pointer on Handle of the throttle, desired speed for cruise control
+ * @retval void
+ */
+void Throttle_EngageCruiseControl(ThrottleHandle_t * pHandle, uint8_t aSpeed);
+
+/**
+ * @brief  Disengage the cruise control feature
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle);
+
+/**
+ * @brief  Function used to apply a filter on the Torque when engaging Cruise control
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+int16_t Throttle_ApplyCruiseFilter(ThrottleHandle_t * pHandle, int16_t aTorque);
+
+ /**
+ * @brief  Force the disengage the cruise control feature
+ *         No matter what the screen tells the controller
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+void Throttle_ForceDisengageCruiseControl(ThrottleHandle_t * pHandle);
+
+/**
+ * @brief  Get the state of the force disengage flag
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+bool Throttle_GetForceDisengageState(ThrottleHandle_t * pHandle);
+
+/**
+ * @brief  Clear the flag when the forced disengage is complete
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+void Throttle_ClearForceDisengage(ThrottleHandle_t * pHandle);
 
 #endif /*__THROTTLE_H*/
 

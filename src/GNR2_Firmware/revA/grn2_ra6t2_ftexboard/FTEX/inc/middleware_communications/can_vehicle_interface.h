@@ -60,14 +60,14 @@ uint16_t CanVehiInterface_GetVehiclePower (VCI_Handle_t * pHandle);
 uint8_t CanVehiInterface_GetVehicleSOC (VCI_Handle_t * pHandle);
 
 /**
-  @brief  Get Get PAS function
+  @brief  Get PAS function
   @param  VCI_Handle_t handle
   @return PAS in uint8_t format
 */
 uint8_t CanVehiInterface_GetVehiclePAS (VCI_Handle_t * pHandle);
 
 /**
-  @brief  Get Set PAS function
+  @brief  Set PAS function
   @param  VCI_Handle_t handle
   @param  Set_PAS in uint8_t format
   @return None
@@ -75,7 +75,7 @@ uint8_t CanVehiInterface_GetVehiclePAS (VCI_Handle_t * pHandle);
 void CanVehiInterface_SetVehiclePAS (VCI_Handle_t * pHandle, uint8_t Set_PAS);
 
 /**
-  @brief  Get Get PAS Algorithm function
+  @brief  Get PAS Algorithm function
   @param  VCI_Handle_t handle
   @return PAS algorithm, in uint8_t format
 */

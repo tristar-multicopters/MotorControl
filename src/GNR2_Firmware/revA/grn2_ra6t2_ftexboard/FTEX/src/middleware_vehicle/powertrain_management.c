@@ -129,6 +129,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             hAux = 0;
             // Reset All the Pedal Assist Parameters
             PedalAssist_ResetParameters(pHandle->pPAS);
+            Throttle_ForceDisengageCruiseControl(pHandle->pThrottle);
         }
                      
         /* Throttle and walk mode always have higher priority over PAS but 
@@ -138,9 +139,8 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             /* Using PAS or walk mode */
         if (((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
              (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
-        {                             
+        {             
             uint16_t TopSpeed = 0;
-            
             PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS); // Make sure we have the most up-to-date desired top speed
             
             TopSpeed = PedalAssist_GetPASMaxSpeed(pHandle->pPAS);
@@ -180,6 +180,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         else if(Throttle_IsThrottleDetected(pHandle->pThrottle))
         {
             uint16_t TopSpeed = 0;
+                          
             TopSpeed = Throttle_GetMaxSpeed(pHandle->pThrottle);   // Get the current desired top speed for throttle
             PWRT_SetNewTopSpeed(pHandle,TopSpeed);                 // Tell motor control what is our desired top speed 
         }   

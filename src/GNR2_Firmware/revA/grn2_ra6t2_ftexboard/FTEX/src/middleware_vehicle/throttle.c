@@ -32,6 +32,9 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     
     pHandle->SafeStart = false;
     
+    pHandle->CruiseControlEnable = false;
+    pHandle->ForceDisengage = false;
+    pHandle->CruiseControlTorqueAvg = 0;
     
     pHandle->hParameters.MaxThrottleSpeedKMH = pHandle->hParameters.DefaultMaxThrottleSpeedKMH; 
     
@@ -199,6 +202,13 @@ int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)
         wAux = INT16_MIN;
     }
     
+    if(pHandle->CruiseControlEnable == true)
+    {
+        wAux = INT16_MAX;
+        
+        wAux = Throttle_ApplyCruiseFilter(pHandle,(int16_t)wAux);
+    }
+                
     return (int16_t) wAux;    
 }
 
@@ -242,7 +252,7 @@ bool Throttle_IsThrottleDetected (ThrottleHandle_t * pHandle)
     uint16_t hThrottle;
 
     hThrottle = Throttle_GetAvThrottleValue(pHandle);
-    if (hThrottle <= pHandle->hParameters.hDetectionThreshold)
+    if ((hThrottle <= pHandle->hParameters.hDetectionThreshold) && (Throttle_GetCruiseControlState(pHandle) != true))
     {    
         return false;
     }    
@@ -337,22 +347,126 @@ void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle)
    pHandle->hParameters.bDivisorThrottle = THROTTLE_SLOPE_FACTOR;        // and denominator
     
    // calculate the Slope for Torque 
-   Throttle2Torq =  INT16_MAX - pHandle->hParameters.hOffsetTorque; // Calculate the size of usable values received as an input
+   Throttle2Torq =  INT16_MAX - pHandle->hParameters.hOffsetTorque;         // Calculate the size of usable values received as an input
    
    ASSERT(Throttle2Torq >= 1); 
-   Throttle2Torq =  pHandle->hParameters.ThrottleMaxTorque/Throttle2Torq;    // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
-   Throttle2Torq *= THROTTLE_SLOPE_FACTOR;                                                       // Multiply by the factor to create the numerator of a fraction 
+   Throttle2Torq =  pHandle->hParameters.ThrottleMaxTorque/Throttle2Torq;   // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
+   Throttle2Torq *= THROTTLE_SLOPE_FACTOR;                                  // Multiply by the factor to create the numerator of a fraction 
    
    pHandle->hParameters.bSlopeTorque   = (int16_t) round(Throttle2Torq);    // Save the numerator
    pHandle->hParameters.bDivisorTorque = THROTTLE_SLOPE_FACTOR;             // and denominator 
     
    // calculate the Slope for Speed 
-   Throttle2Speed = INT16_MAX - pHandle->hParameters.hOffsetSpeed;                  // Calculate the size of usable values received as an input
+   Throttle2Speed = INT16_MAX - pHandle->hParameters.hOffsetSpeed;              // Calculate the size of usable values received as an input
    
    ASSERT(Throttle2Speed >= 1); 
    Throttle2Speed =  pHandle->hParameters.MaxThrottleSpeedKMH/Throttle2Speed;   // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
-   Throttle2Speed *= THROTTLE_SLOPE_FACTOR;                                         // Multiply by the factor to create the numerator of a fraction 
+   Throttle2Speed *= THROTTLE_SLOPE_FACTOR;                                     // Multiply by the factor to create the numerator of a fraction 
     
-   pHandle->hParameters.bSlopeSpeed   = (int16_t) round(Throttle2Speed);            // Save the numerator
-   pHandle->hParameters.bDivisorSpeed = THROTTLE_SLOPE_FACTOR;                      // and denominator 
+   pHandle->hParameters.bSlopeSpeed   = (int16_t) round(Throttle2Speed);        // Save the numerator
+   pHandle->hParameters.bDivisorSpeed = THROTTLE_SLOPE_FACTOR;                  // and denominator 
+}
+
+
+/**
+   Return the cruise control state
+ */
+bool Throttle_GetCruiseControlState(ThrottleHandle_t * pHandle)
+{
+     ASSERT(pHandle != NULL);
+    
+     return pHandle->CruiseControlEnable;
+}
+
+/**
+   Engage the cruise control feature
+ */
+void Throttle_EngageCruiseControl(ThrottleHandle_t * pHandle, uint8_t aSpeed)
+{
+     ASSERT(pHandle != NULL);
+    
+     if(pHandle->CruiseControlEnable == false)
+     {   
+        pHandle->CruiseControlTorqueAvg = Throttle_ThrottleToTorque(pHandle);         
+        pHandle->CruiseControlEnable = true; 
+        Throttle_SetMaxSpeed(pHandle,aSpeed);
+     }
+}
+
+/**
+   Disengage the cruise control feature
+ */
+void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle)
+{
+     ASSERT(pHandle != NULL);
+     
+     if(pHandle->CruiseControlEnable == true)
+     {
+        pHandle->CruiseControlEnable = false; 
+        pHandle->CruiseControlTorqueAvg = 0; 
+        Throttle_SetMaxSpeed(pHandle,pHandle->hParameters.DefaultMaxThrottleSpeedKMH);
+     }
+}
+
+/**  
+ *  Function used to apply a filter on the Torque when engaging Cruise control
+ */
+int16_t Throttle_ApplyCruiseFilter(ThrottleHandle_t * pHandle, int16_t aTorque)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(aTorque >= 0);
+    
+    const int16_t MaxTorquePerStep = 50; // This represent how much torque we add at every step
+    static uint8_t SkipCounter = 0; 
+    int16_t TorqueOut = 0;
+       
+    if(SkipCounter >= 25) // THis represent how spaced appart are the ramp up in throttle torque
+    {
+        SkipCounter = 0;        
+        if(aTorque > (int32_t)(pHandle->CruiseControlTorqueAvg + MaxTorquePerStep))
+        { 
+            TorqueOut = (pHandle->CruiseControlTorqueAvg + MaxTorquePerStep);
+        }       
+        else
+        {
+            TorqueOut = aTorque;
+        }
+    }
+    else
+    {
+        SkipCounter ++;
+        TorqueOut = pHandle->CruiseControlTorqueAvg;
+    }    
+   
+    pHandle->CruiseControlTorqueAvg = TorqueOut;
+   
+    return TorqueOut;
+}
+
+/**
+ *  Force the disengage the cruise control feature
+ *  No matter what the screen tells the controller
+ */
+void Throttle_ForceDisengageCruiseControl(ThrottleHandle_t * pHandle)
+{
+     ASSERT(pHandle != NULL);
+     
+     pHandle->ForceDisengage = true;
+     Throttle_DisengageCruiseControl(pHandle); 
+}
+
+/**
+ *  Get the state of the force disengage flag
+ */
+bool Throttle_GetForceDisengageState(ThrottleHandle_t * pHandle)
+{
+   return pHandle->ForceDisengage;   
+} 
+
+/**
+ *  Clear the flag when the forced disengage is complete
+ */
+void Throttle_ClearForceDisengage(ThrottleHandle_t * pHandle)
+{
+      pHandle->ForceDisengage = false;
 }

@@ -19,9 +19,9 @@
 // ==================== Public function prototypes ======================== //
 
 /**
-  @brief  Send long messages function
-  @return None
-*/
+ *  @brief  Send long messages function
+ *  @return None
+ */
 void CanVehiInterface_sendLongMsgs(uint8_t * message, uint8_t * dataToSend, uint16_t length)
 {
     uint8_t BufferInit[MAX_DATA_IN_INIT];
@@ -93,8 +93,8 @@ void CanVehiInterface_SetVehiclePAS (VCI_Handle_t * pHandle, uint8_t Set_PAS)
 }
 
 /**
-   Get Get PAS Algorithm 
-*/
+ *  Get PAS Algorithm 
+ */
 uint8_t CanVehiInterface_GetVehiclePASAlgorithm (VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
@@ -208,8 +208,8 @@ uint8_t CanVehiInterface_GetWheelDiameter(void)
 }
 
 /**
-    Update wheel diameter used to calculate speed
-*/
+ *  Update wheel diameter used to calculate speed
+ */
 void CanVehiInterface_UpdateWheelDiameter(uint8_t aDiameterInInches)
 {
     if (10 < aDiameterInInches && aDiameterInInches < 40) // Temporary safety net until CAN screen integration is complete
@@ -237,8 +237,8 @@ uint16_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle)
 
 
 /**
-  Get the current state of the front light 
-*/
+ *  Get the current state of the front light 
+ */
 uint8_t CanVehiInterface_GetFrontLightState(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
@@ -246,8 +246,8 @@ uint8_t CanVehiInterface_GetFrontLightState(VCI_Handle_t * pHandle)
 }
 
 /**
-  Change the current state of the front light 
-*/
+ *  Change the current state of the front light 
+ */
 void CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aState)
 {
     ASSERT(pHandle!= NULL);
@@ -262,8 +262,8 @@ void CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aSta
 }
 
 /**
-  Get the current state of the rear light 
-*/
+ *  Get the current state of the rear light 
+ */
 uint8_t CanVehiInterface_GetRearLightState(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
@@ -271,8 +271,8 @@ uint8_t CanVehiInterface_GetRearLightState(VCI_Handle_t * pHandle)
 }
 
 /**
-  Change the current state of the rear light 
-*/
+ *  Change the current state of the rear light 
+ */
 void CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aState)
 {
     ASSERT(pHandle!= NULL);

@@ -47,6 +47,9 @@
 
 #define CLOUD_X_THROTTLE_MAX     190    // Maximum value for clouddrive external throttle
 #define CLOUD_X_THROTTLE_OFFSET   76    // Offset value for clouddrive external throttle
+
+#define CLOUD_CC_ON      0x80   // Value that tells the screen that the cruise contorl is on
+#define CLOUD_CC_OFF     0x00   // Value that tells the screen that the cruise contorl is off
 // Display Read Cmd
 // represents the location of where certain informations are in the frame. 
  
