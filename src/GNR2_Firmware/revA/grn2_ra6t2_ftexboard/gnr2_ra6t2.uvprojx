@@ -10,7 +10,7 @@
       <TargetName>APP_DEBUG (Standard)</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6180000::V6.18::.\ARMC</pCCUsed>
+      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -425,11 +425,6 @@
               <FilePath>.\FTEX\inc\application\user_config_data.h</FilePath>
             </File>
             <File>
-              <FileName>vc_constants.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
               <FileName>watchdog.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
@@ -439,6 +434,11 @@
         <Group>
           <GroupName>Application/Vehicle</GroupName>
           <Files>
+            <File>
+              <FileName>vc_constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
+            </File>
             <File>
               <FileName>vc_config.c</FileName>
               <FileType>1</FileType>
@@ -2487,11 +2487,6 @@
               <FilePath>.\FTEX\inc\application\user_config_data.h</FilePath>
             </File>
             <File>
-              <FileName>vc_constants.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
               <FileName>watchdog.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
@@ -2501,6 +2496,11 @@
         <Group>
           <GroupName>Application/Vehicle</GroupName>
           <Files>
+            <File>
+              <FileName>vc_constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
+            </File>
             <File>
               <FileName>vc_config.c</FileName>
               <FileType>1</FileType>
@@ -4414,11 +4414,6 @@
               <FilePath>.\FTEX\inc\application\user_config_data.h</FilePath>
             </File>
             <File>
-              <FileName>vc_constants.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
               <FileName>watchdog.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
@@ -4428,6 +4423,11 @@
         <Group>
           <GroupName>Application/Vehicle</GroupName>
           <Files>
+            <File>
+              <FileName>vc_constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
+            </File>
             <File>
               <FileName>vc_config.c</FileName>
               <FileType>1</FileType>
@@ -6038,7 +6038,7 @@
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BB3CFP\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.5.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_UPLOAD (JUST UPLOAD)"/>
@@ -6047,7 +6047,7 @@
       <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BB3CFP\system_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.5.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_DEBUG (Standard)"/>
           <targetInfo excluded="1" name="APP_UPLOAD (JUST UPLOAD)"/>
@@ -6068,7 +6068,7 @@
       <file attr="config" category="sourceC" name="Files\startup_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\startup_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.5.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
         </targetInfos>
@@ -6076,7 +6076,7 @@
       <file attr="config" category="sourceC" name="Files\system_RA.c" version="1.0.0">
         <instance index="0">RTE\Device\R7FA6T2BD3CFP\system_RA.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Renesas" Cversion="1.0.0" condition="RA Device"/>
-        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="3.7.0"/>
+        <package name="RA_DFP" schemaVersion="1.7.2" url="https://www2.renesas.eu/Keil_MDK_Packs/" vendor="Renesas" version="4.5.0"/>
         <targetInfos>
           <targetInfo excluded="1" name="APP_MAIN (JUST BUILD)" versionMatchMode=""/>
         </targetInfos>

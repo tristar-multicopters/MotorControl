@@ -14,7 +14,7 @@
                                                          //*16 is the factor on tics conversion due variable casting
 
 
-const int32_t NTCTemperatureTable[NTC_LUT_SIZE] =        //revised the function to calculate temperature values after the NTC test.
+const int32_t NTCInverterTemperatureTable[NTC_LUT_SIZE] =        //revised the function to calculate temperature values of the inverter after the NTC test.
 {
     7,                                                   //Added few values to check the behaviour for low temperature values.
     9,            
@@ -49,12 +49,48 @@ const int32_t NTCTemperatureTable[NTC_LUT_SIZE] =        //revised the function 
     129,
 };
 
+const int32_t NTCMotorTemperatureTable[NTC_LUT_SIZE] =        //function to calculate temperature values of the motor, values are currently inaccuarte
+{
+    129,                                                 
+    103,
+    89,
+    80,
+    73,
+    68,
+    63,
+    59,
+    55,
+    52,
+    49,
+    46,
+    44,
+    41,
+    39,
+    37,
+    35,
+    33,
+    31,
+    29,
+    27,
+    25,
+    23,
+    21,
+    19,
+    17,
+    15,
+    13,
+    11,
+    9,
+    7,
+};
+
+
 LookupTableHandle_t InverterNTCLookupTable =
  {
     .hXDataStep = NTC_LUT_DIGITAL_STEP,
     .wXDataFirstValue = NTC_LUT_DIGITAL_FIRST_VALUE,
     .hTableLength = NTC_LUT_SIZE,
-    .pOutputTable = NTCTemperatureTable,
+    .pOutputTable = NTCInverterTemperatureTable,
 };
  
 LookupTableHandle_t MotorNTCLookupTable =
@@ -62,6 +98,6 @@ LookupTableHandle_t MotorNTCLookupTable =
     .hXDataStep = NTC_LUT_DIGITAL_STEP,
     .wXDataFirstValue = NTC_LUT_DIGITAL_FIRST_VALUE,
     .hTableLength = NTC_LUT_SIZE,
-    .pOutputTable = NTCTemperatureTable,
+    .pOutputTable = NTCMotorTemperatureTable,
 };
  
