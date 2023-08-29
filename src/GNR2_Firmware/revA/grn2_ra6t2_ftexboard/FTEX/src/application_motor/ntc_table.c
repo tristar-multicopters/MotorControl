@@ -8,13 +8,19 @@
 
 #include "ntc_table.h"
 
-#define NTC_LUT_SIZE                        31           // the number of correlation elements on this table
-#define NTC_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
-#define NTC_LUT_DIGITAL_FIRST_VALUE         16000        //1000 is the first value considered in the table that has a temperature correlation (7 degree C).
+#define NTC_INVERTER_LUT_SIZE                        31           // the number of correlation elements on this table
+#define NTC_INVERTER_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
+#define NTC_INVERTER_LUT_DIGITAL_FIRST_VALUE         16000        //1000 is the first value considered in the table that has a temperature correlation (7 degree C).
+                                                         //*16 is the factor on tics conversion due variable casting
+
+#define NTC_MOTOR_LUT_SIZE                        36           // the number of correlation elements on this table
+#define NTC_MOTOR_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
+#define NTC_MOTOR_LUT_DIGITAL_FIRST_VALUE         4000        //250 is the first value considered in the table that has a temperature correlation (144 degree C).
                                                          //*16 is the factor on tics conversion due variable casting
 
 
-const int32_t NTCInverterTemperatureTable[NTC_LUT_SIZE] =        //revised the function to calculate temperature values of the inverter after the NTC test.
+
+const int32_t NTCInverterTemperatureTable[NTC_INVERTER_LUT_SIZE] =        //revised the function to calculate temperature values of the inverter after the NTC test.
 {
     7,                                                   //Added few values to check the behaviour for low temperature values.
     9,            
@@ -49,55 +55,60 @@ const int32_t NTCInverterTemperatureTable[NTC_LUT_SIZE] =        //revised the f
     129,
 };
 
-const int32_t NTCMotorTemperatureTable[NTC_LUT_SIZE] =        //function to calculate temperature values of the motor, values are currently inaccuarte
+const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor, values are currently inaccuarte
 {
-    129,                                                 
-    103,
-    89,
-    80,
-    73,
-    68,
-    63,
-    59,
-    55,
-    52,
-    49,
-    46,
-    44,
-    41,
-    39,
-    37,
-    35,
-    33,
-    31,
-    29,
-    27,
-    25,
-    23,
-    21,
-    19,
-    17,
-    15,
-    13,
-    11,
-    9,
-    7,
+    144,
+		104,
+		90,
+		81,
+		73,
+		67,
+		62,
+		58,
+		54,
+		50,
+		47,
+		44,
+		41,
+		38,
+		35,
+		33,
+		30,
+		28,
+		26,
+		23,
+		21,
+		19,
+		17,
+		14,
+		12,
+		10,
+		7,
+		5,
+		2,
+		0,
+		-3,
+		-6,
+		-9,
+		-13,
+		-17,
+		-22,
 };
 
 
 LookupTableHandle_t InverterNTCLookupTable =
  {
-    .hXDataStep = NTC_LUT_DIGITAL_STEP,
-    .wXDataFirstValue = NTC_LUT_DIGITAL_FIRST_VALUE,
-    .hTableLength = NTC_LUT_SIZE,
+    .hXDataStep = NTC_INVERTER_LUT_DIGITAL_STEP,
+    .wXDataFirstValue = NTC_INVERTER_LUT_DIGITAL_FIRST_VALUE,
+    .hTableLength = NTC_INVERTER_LUT_SIZE,
     .pOutputTable = NTCInverterTemperatureTable,
 };
  
 LookupTableHandle_t MotorNTCLookupTable =
  {
-    .hXDataStep = NTC_LUT_DIGITAL_STEP,
-    .wXDataFirstValue = NTC_LUT_DIGITAL_FIRST_VALUE,
-    .hTableLength = NTC_LUT_SIZE,
+    .hXDataStep = NTC_MOTOR_LUT_DIGITAL_STEP,
+    .wXDataFirstValue = NTC_MOTOR_LUT_DIGITAL_FIRST_VALUE,
+    .hTableLength = NTC_MOTOR_LUT_SIZE,
     .pOutputTable = NTCMotorTemperatureTable,
 };
  
