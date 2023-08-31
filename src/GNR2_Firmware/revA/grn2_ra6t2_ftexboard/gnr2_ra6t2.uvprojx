@@ -89,7 +89,7 @@
             <nStopA1X>2</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>0</SelectedForBatchBuild>
+          <SelectedForBatchBuild>1</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -620,9 +620,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\pathfinder_battery.h</FilePath>
             </File>
             <File>
-              <FileName>t47_autorq.h</FileName>
+              <FileName>duratorq_autorq.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\t47_autorq.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\duratorq_autorq.h</FilePath>
             </File>
             <File>
               <FileName>e_cell_52v_battery.h</FileName>
@@ -2151,7 +2151,7 @@
             <nStopA1X>0</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>0</SelectedForBatchBuild>
+          <SelectedForBatchBuild>1</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -2682,9 +2682,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\pathfinder_battery.h</FilePath>
             </File>
             <File>
-              <FileName>t47_autorq.h</FileName>
+              <FileName>duratorq_autorq.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\t47_autorq.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\duratorq_autorq.h</FilePath>
             </File>
             <File>
               <FileName>e_cell_52v_battery.h</FileName>
@@ -4609,9 +4609,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\pathfinder_battery.h</FilePath>
             </File>
             <File>
-              <FileName>t47_autorq.h</FileName>
+              <FileName>duratorq_autorq.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\t47_autorq.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\duratorq_autorq.h</FilePath>
             </File>
             <File>
               <FileName>e_cell_52v_battery.h</FileName>

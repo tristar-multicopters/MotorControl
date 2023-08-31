@@ -33,7 +33,7 @@
 
 /***************** PEDAL SENSOR SELECTION  ******************************/
 
-#include "pedal_sensors/t47_autorq.h"
+#include "pedal_sensors/duratorq_autorq.h"
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
 #define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // Offset for pedal torque sensor to torque linear transformation during the startup in %

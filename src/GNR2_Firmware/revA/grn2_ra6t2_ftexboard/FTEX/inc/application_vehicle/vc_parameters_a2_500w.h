@@ -32,7 +32,7 @@
 
 /***************** PEDAL SENSOR SELECTION  ******************************/
 
-#include "pedal_sensors/t47_autorq.h"
+#include "pedal_sensors/duratorq_autorq.h"
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
 
