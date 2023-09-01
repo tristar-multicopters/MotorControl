@@ -33,11 +33,23 @@
 #define CLOUD_END_CODE_1  0x0D     // Frame always had these two end code
 #define CLOUD_END_CODE_2  0x0A
 
+#define CLOUD_ASSIST_TYPE 0x80     // Masked used to obtain the assistance type (torque/cadence)
+
+#define CLOUD_TORQ_ASSIST_TYPE  0x80  // Torque PAS assist type
+ 
+#define CLOUD_CADE_ASSIST_TYPE  0x00  // Cadence PAS assist type
+
 #define CLOUD_POST_CRC_BYTE_NB 4 //Specify how many bytes at the end of the frame need to be excluded from CRC calculation
 
 #define CLOUD_RX_BUFFER_SIZE 32
 
-#define CLOUD_DEFAULT_SPEED_PERIOD 4000 // when the wheel isn't spinning this is the value sent to the display              
+#define CLOUD_DEFAULT_SPEED_PERIOD 4000 // when the wheel isn't spinning this is the value sent to the display    
+
+#define CLOUD_X_THROTTLE_MAX     190    // Maximum value for clouddrive external throttle
+#define CLOUD_X_THROTTLE_OFFSET   76    // Offset value for clouddrive external throttle
+
+#define CLOUD_CC_ON      0x80   // Value that tells the screen that the cruise contorl is on
+#define CLOUD_CC_OFF     0x00   // Value that tells the screen that the cruise contorl is off
 // Display Read Cmd
 // represents the location of where certain informations are in the frame. 
  

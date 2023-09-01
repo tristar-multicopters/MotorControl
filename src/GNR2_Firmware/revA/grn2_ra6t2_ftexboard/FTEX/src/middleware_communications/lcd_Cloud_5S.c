@@ -46,7 +46,7 @@ void LCD_Cloud_5S_init(Cloud_5S_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART
     pHandle->pUART_handle->pRxCallback = &LCD_Cloud_5S_RX_IRQ_Handler;   // Link the interrupts from the UART instance to this module
     pHandle->pUART_handle->pTxCallback = &LCD_Cloud_5S_TX_IRQ_Handler; 
             
-    Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76, pHandle->pVController->pPowertrain->sParameters.MotorToHubGearRatio);
+    Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,CLOUD_X_THROTTLE_MAX,CLOUD_X_THROTTLE_OFFSET);
     
     VC_Errors_SetCycleLength(8); // To adjust
     
@@ -215,20 +215,27 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
  *  This is executed in a comm task that gets unblocked when a complete frame is received.
  *
  */ 
+
 void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
 {
     Cloud_5S_frame_t replyFrame = {0};
-    replyFrame.Size = 13;
+    replyFrame.Size = 14;
     
     int32_t  toSend         = 0;
-    uint16_t  speedLimit    = 0;
     uint8_t  WheelDiameter  = 0;    
     uint8_t  pasLevel;
     uint8_t  LightStatus    = 0;
     uint8_t  HandshakeIndex = 0; 
     uint8_t  Check1         = 0;
     uint8_t  Check2         = 0; 
-      
+    uint8_t  AssistType; 
+    uint8_t  CruiseCtrlState;
+    
+    ThrottleHandle_t *pThrottleHandle = (pHandle->pVController->pPowertrain->pThrottle);
+    
+    PAS_Handle_t *pPASHandle = (pHandle->pVController->pPowertrain->pPAS);
+    
+    
     LCD_Cloud_5S_ComputeChecksum(pHandle->rx_frame,&Check1,&Check2);
     
     
@@ -236,16 +243,34 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     if ((Check1 == (pHandle->rx_frame.Buffer[pHandle->rx_frame.Size - 4])) && 
        (Check2 == (pHandle->rx_frame.Buffer[pHandle->rx_frame.Size - 3])))
     {
-        if (pHandle->pVController->pPowertrain->pThrottle->extThrottleEnable == false)
+        if (pThrottleHandle->extThrottleEnable == false)
         {
-            Throttle_SetupExternal(pHandle->pVController->pPowertrain->pThrottle,190,76, pHandle->pVController->pPowertrain->sParameters.MotorToHubGearRatio);
-
+            Throttle_SetupExternal(pThrottleHandle,190,76);
         }
         
         if (pHandle->rx_frame.Buffer[2] == CLOUD_SYSTEM) // Check if its a system frame
         {
-            //pHandle->rx_frame.Buffer[3] // data lenght
-            //pHandle->rx_frame.Buffer[4] // assistance sensor    
+            //pHandle->rx_frame.Buffer[3] // data length
+            AssistType = pHandle->rx_frame.Buffer[4]; /* assistance sensor bit7: Assistance signal type selection, 0-Cadence, 1-Torque
+                                                                           bit6: 0-Assistance signal is positive, 1-Assistance signal is negative
+                                                                           bit5-0: (Assistance signal will be effective after passing through how many magnets), 0~31, usually
+                                                                                   is no less than 2.*/ 
+
+            AssistType = AssistType & CLOUD_ASSIST_TYPE; // Extract only the assistance type from the byte
+            
+            if(AssistType == CLOUD_TORQ_ASSIST_TYPE) // Check if we want torque or cadence PAS and apply the change to the module
+            {
+                PedalAssist_SetPASAlgorithm(pPASHandle, TorqueSensorUse);
+            }
+            else if (AssistType == CLOUD_CADE_ASSIST_TYPE)
+            {
+                PedalAssist_SetPASAlgorithm(pPASHandle, CadenceSensorUse);
+            }
+            else
+            {
+                ASSERT(false); // unexpected AssistType
+            }            
+            
             //pHandle->rx_frame.Buffer[5] // assitance sensor type
             //pHandle->rx_frame.Buffer[6] // Magnets/ low speed behavior
             //pHandle->rx_frame.Buffer[7] // System undervoltage value
@@ -253,63 +278,59 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             
             HandshakeIndex = pHandle->rx_frame.Buffer[9]; // handshake byte     
             
+            #if DYNAMIC_SPEED_LIMITATION
+            uint16_t  speedLimit    = 0;
             //Reading the Speed limit
             speedLimit = pHandle->rx_frame.Buffer[10]; // speed limit       
-        
-            speedLimit = Wheel_GetWheelRpmFromSpeed(speedLimit);
-
-            #if DYNAMIC_SPEED_LIMITATION
+            
             // setting the max RPMs for any speed limits
-            Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,speedLimit);        
-            PWRT_SetNewTopRPMSpeed(pHandle->pVController->pPowertrain, speedLimit);
+            Throttle_SetMaxSpeed(pThrottleHandle,speedLimit);        
+            PedalAssist_SetTorquePASMaxSpeed(pPASHandle,speedLimit);
+            
             #endif    
            
-            #ifdef SCREENPOWERCONTROL
-        
+            #ifdef SCREENPOWERCONTROL        
             // Reading the Current limit          
             uint16_t CurrentLimit;
             CurrentLimit = pHandle->rx_frame.Buffer[11];  // current limit
             
             CurrentLimit /=2; // Transform from 0.5 amps perunit to 1 amps per unit 
             
-            PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);
-        
+            PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);        
             #endif
            
             WheelDiameter = Cloud_5S_WheelDiameterInch[pHandle->rx_frame.Buffer[12]]; // wheel diameter 
-                                                                                      /* current behavior, screen alwasy sends 700C as wheel diameter 
-                                                                                         value is only update when settings are openned, 
-                                                                                         if you change the value and reboot screen only 700C is sent 
-                                                                                         until you open the settings menu */
+                                                                                    
             
             Wheel_SetWheelDiameter(WheelDiameter);
             
             replyFrame.Buffer[0] = CLOUD_START;
             replyFrame.Buffer[1] = CLOUD_SLAVE_ID;
             replyFrame.Buffer[2] = CLOUD_SYSTEM;
-            replyFrame.Buffer[3] = 5; // Data lenght of this frame
+            replyFrame.Buffer[3] = 6; // Data length of this frame
             replyFrame.Buffer[4] = 0;
             replyFrame.Buffer[5] = 0;
             replyFrame.Buffer[6] = 0;
             replyFrame.Buffer[7] = Cloud_HandshakeRef[HandshakeIndex];
             replyFrame.Buffer[8] = 0;
-           
+            replyFrame.Buffer[9] = 0;
+            
             LCD_Cloud_5S_ComputeChecksum(replyFrame,&Check1,&Check2); 
            
-            replyFrame.Buffer[9] = Check1;
-            replyFrame.Buffer[10] = Check2;
+            replyFrame.Buffer[10] = Check1;
+            replyFrame.Buffer[11] = Check2;
            
-            replyFrame.Buffer[11] = CLOUD_END_CODE_1;
-            replyFrame.Buffer[12] = CLOUD_END_CODE_2;          
+            replyFrame.Buffer[12] = CLOUD_END_CODE_1;
+            replyFrame.Buffer[13] = CLOUD_END_CODE_2;          
                        
         }
         else //If its not a system frame it must be a runtime frame
         {
             
-            uint8_t PasMaxLevel = pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel;   
+            uint8_t PasMaxLevel = pPASHandle->sParameters.bMaxLevel;   
             
             pasLevel = LCD_Cloud_5S_ConvertPASLevelFromCloud_5S(pHandle->rx_frame.Buffer[4],PasMaxLevel); // PAS level
-            uint8_t currentPAS = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
+            uint8_t currentPAS = PedalAssist_GetAssistLevel(pPASHandle);
             // Screen is set to slave when there's a new pas level from the app
             // Therefore we skip setting the Cloud Drive PAS to our PAS because 
             // we will be updating the Cloud Drive right after parsing this message
@@ -318,7 +339,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             {
                 if (pasLevel != currentPAS)
                 {
-                    PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,pasLevel); 
+                    PedalAssist_SetAssistLevel(pPASHandle,pasLevel); 
                     pHandle->cloud5SChangePasFlag = true;            
                 }
             }
@@ -336,23 +357,43 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
                 Light_Disable(pHandle->pVController->pPowertrain->pTailLight);              
             }
             
+            
+            CruiseCtrlState = (((pHandle->rx_frame.Buffer[5]) & 0x40) >> 5); // bit6: Cruise, 0 = Off 1 = On
+            
+;
+            
+            
+            if((CruiseCtrlState > 0) && (Throttle_GetForceDisengageState(pThrottleHandle) == false))
+            {
+                uint8_t CurrentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pPASHandle->pWSS));
+                Throttle_EngageCruiseControl(pThrottleHandle,CurrentSpeed);
+            }    
+            else
+            {
+                Throttle_DisengageCruiseControl(pThrottleHandle);
+                if(CruiseCtrlState == 0)
+                {    
+                    Throttle_ClearForceDisengage(pThrottleHandle); 
+                }                    
+            }    
+            
             if (((pHandle->rx_frame.Buffer[5]) & 0x10) > 0)  //  bit4: walk function. 0: no, 1: yes 
             {
-                PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS, PAS_LEVEL_WALK);            
+                PedalAssist_SetAssistLevel(pPASHandle, PAS_LEVEL_WALK);            
             }   
             
             uint8_t LatestThrottle = 0;                
-                                         /* bit6: reserved
+                                         /* 
                                             bit5: battery capacity. 0: normal, 1: low
                                             bit3: reserved
                                             bit2: reserved
                                             bit1: reserved
                                             bit0: over speed. 0: normal speed, 1: over speed */
             LatestThrottle = pHandle->rx_frame.Buffer[6]; 
-            Throttle_UpdateExternal(pHandle->pVController->pPowertrain->pThrottle,LatestThrottle);
+            Throttle_UpdateExternal(pThrottleHandle,LatestThrottle);
             
                                          /* Throttle value 0V-5V corresponds to 255 data, normal voltage range is 0.8V-4.1V, 
-                                            the throttle¡¯s default working voltage is 1.3V-3.5V. Send 51 when voltage is 0.8-1.3V, 
+                                            the throttleÂ¡Â¯s default working voltage is 1.3V-3.5V. Send 51 when voltage is 0.8-1.3V, 
                                             send data 76-190 when voltage is 1.3-3.5V, 
                                             send maximum data 190 when voltage is 3.5-4.1,
                                             send 51 and throttle error together when voltage is more than 4.1V */
@@ -360,8 +401,8 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             replyFrame.Buffer[0] = CLOUD_START;
             replyFrame.Buffer[1] = CLOUD_SLAVE_ID;
             replyFrame.Buffer[2] = CLOUD_RUNTIME;
-            replyFrame.Buffer[3] = 5; // Data lenght of this frame
-            replyFrame.Buffer[4] = LCD_Cloud_5S_ConvertPASLevelToCloud_5S(PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS)); // PAS 
+            replyFrame.Buffer[3] = 6; // Data length of this frame
+            replyFrame.Buffer[4] = LCD_Cloud_5S_ConvertPASLevelToCloud_5S(PedalAssist_GetAssistLevel(pPASHandle)); // PAS 
             if (pHandle->isScreenSlave == true)
                 pHandle->isScreenSlave = false;
 
@@ -373,11 +414,11 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             replyFrame.Buffer[5] = (toSend & 0x000000FF); //Power 0.5 A/unit maxed out at 80 = 0x50 (40 amps)
            
             /* Condition use for wheel speed sensor rpm to send */
-            toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
+            toSend = WheelSpdSensor_GetSpeedRPM(pPASHandle->pWSS); // Getting RPM from Wheel Speed Module
                   
             toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
          
-            if (toSend != 0) //verify toSend value to avoid a division by zero.
+            if ((toSend != 0) && ((toSend/60) != 0)) //verify toSend value to avoid a division by zero.
             {
                 toSend = 500000/(toSend/60); // Descaling here with the 500000 to return to original unit            
             }
@@ -392,14 +433,25 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
              
            
             replyFrame.Buffer[8] = LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(VC_Errors_CycleError()); // Error code
-           
+            
+            if((Throttle_GetCruiseControlState(pThrottleHandle) == true)     // If cruise contorl is still active and the                 
+            && (Throttle_GetForceDisengageState(pThrottleHandle) == false))  // controller doesn't want to for a disengage
+            {
+                replyFrame.Buffer[9] = CLOUD_CC_ON; //Cruise control status set to on 
+            }
+            else
+            {
+                replyFrame.Buffer[9] = CLOUD_CC_OFF; //Cruise control status set to off
+            }
+            
+            
             LCD_Cloud_5S_ComputeChecksum(replyFrame,&Check1,&Check2); 
            
-            replyFrame.Buffer[9] = Check1;
-            replyFrame.Buffer[10] = Check2;
+            replyFrame.Buffer[10] = Check1;
+            replyFrame.Buffer[11] = Check2;
            
-            replyFrame.Buffer[11] = CLOUD_END_CODE_1;
-            replyFrame.Buffer[12] = CLOUD_END_CODE_2;                                
+            replyFrame.Buffer[12] = CLOUD_END_CODE_1;
+            replyFrame.Buffer[13] = CLOUD_END_CODE_2;                                
         }
 
         replyFrame.ByteCnt = 0;   
@@ -539,7 +591,7 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
             break;            
         case IOT_COMM_ERROR:
             ConvertedError = CLOUD_5S_IOT_COMM_ERROR;
-            break;            
+            break;   
         case MOTOR_OT_PROTECT:
             ConvertedError = CLOUD_5S_MOT_ERROR;
             break;            
@@ -563,11 +615,11 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
 /**
  * Function used to compute the checksum values to verify frames    
  */
+
 void LCD_Cloud_5S_ComputeChecksum(Cloud_5S_frame_t aFrame, uint8_t *pCheck1, uint8_t *pCheck2)
 {
     uint8_t FrameSize = aFrame.Size;
     uint16_t CheckCalc = 0;
-    
     //Verification of the checksum
     for(int i = 1; i < FrameSize - CLOUD_POST_CRC_BYTE_NB; i ++) //Checksum is the sum of all bytes except for: start code, end code and checksum bytes
     {                              

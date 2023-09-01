@@ -11,15 +11,9 @@
 #include "regular_conversion_manager.h"
 #include <math.h>
 #include "signal_filtering.h"
-#include "foldback.h"
 #include "delay.h"
 #include "vc_errors_management.h"
-
-
-#define THROTTLE_STABLE_SPEED_INTERVAL_RPM     70   // Interval of RPM at which we apply the power restriction to stabilize the speed 
-#define THROTTLE_STABLE_SPEED_POWER_PERCENT     8   // Amount of power allowed to be used when the stabilisation interval is reached in %
-#define THROTTLR_MAJOR_OVER_SPEED_INTERVAL_RPM 22   // How many RPM over max speed is considered Major over speed       
-
+    
 #define THROTTLE_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
                                       // If factor == 100 then 1.25f would make a 125/100 fraction 
 #define SAFE_THROTTLE_COUNT_100MS 20 // Called every 5ms, 20*5 = 100ms, which is throttle settle time
@@ -47,13 +41,11 @@ typedef struct
     
     uint16_t hDetectionThreshold;       // Minimum throttle at which throttle is detected
     
-    uint16_t MaxSafeThrottleSpeedKMH;   // Maximum KM/H speed that is safe for the bike
-    uint16_t DefaultMaxThrottleSpeedKMH;// Maximum KM/H speed that is considered safe 
+    uint16_t ThrottleMaxTorque;
     
-    uint16_t MaxSafeThrottleSpeedRPM;   // Maximum RPM speed that is safe for the bike
-    uint16_t MaxThrottleSpeedRPM;// Maximum RPM speed that is considered safe
-    
-    uint16_t ThrottleDecreasingRange;    
+    uint16_t DefaultMaxThrottleSpeedKMH;// Maximum KM/H speed that is the default value
+    uint16_t MaxThrottleSpeedKMH;       // Maximum KM/H speed that is the current value for the bike
+  
 } ThrottleParameters_t;
 
 /**
@@ -75,10 +67,12 @@ typedef struct
     bool extThrottleEnable;          // If this variable is true this means we should ignore adc values and only use throttle injected from a function call
     
     bool SafeStart;                  // Stuck throttle check on start
-        
-    SignalFilteringHandle_t ThrottleFilter; // Filter structure used to filter out noise.
     
-    Foldback_Handle_t *SpeedFoldbackVehicleThrottle;    /* Foldback handle for vehicle speed speed */
+    bool CruiseControlEnable;        // Used to control cruise control 
+    bool ForceDisengage;             // What ever the screen tells us we force the cruise control to disengage
+    int16_t CruiseControlTorqueAvg;  // Used to filter torque value when cruise control is engaged
+    
+    SignalFilteringHandle_t ThrottleFilter; // Filter structure used to filter out noise.
     
     ThrottleParameters_t hParameters;
     
@@ -92,7 +86,7 @@ typedef struct
  * @param  pHandle : Pointer on Handle of the throttle
  * @retval void
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay,  uint32_t MotorToHubGearRatio);
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay);
 
 /**
  * @brief Initializes internal average throttle computed value
@@ -154,11 +148,18 @@ void Throttle_DisableThrottleOutput(ThrottleHandle_t * pHandle);
 void Throttle_EnableThrottleOutput(ThrottleHandle_t * pHandle);
 
 /**
- * @brief  Set the max speed in RPM that you can reach with throttle 
- * @param  pHandle : Pointer on Handle of the throttle, aMaxSpeedRPM a maximumu speed in wheel RPM
+ * @brief  Set the max speed in KmH that you can reach with throttle 
+ * @param  pHandle : Pointer on Handle of the throttle, aMaxSpeed a maximumu speed
  * @retval void
  */
-void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM);
+void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeed);
+
+/**
+ * @brief  Get the max speed in KmH that you can reach with throttle 
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval current value of the top speed
+ */
+uint16_t Throttle_GetMaxSpeed(ThrottleHandle_t * pHandle);
 
 /**
  * @brief  Setup the throttle module to accept an external throttle as the input
@@ -167,7 +168,7 @@ void Throttle_SetMaxSpeed(ThrottleHandle_t * pHandle, uint16_t aMaxSpeedRPM);
  * 
  * @retval void
  */
-void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue, uint16_t aOffset, uint32_t MotorToHubGearRatio);
+void Throttle_SetupExternal(ThrottleHandle_t * pHandle, uint16_t aMaxValue, uint16_t aOffset);
 
 /**
  * @brief  Used to update the value of the throttle, the source of the external throttle should call this function
@@ -181,7 +182,57 @@ void Throttle_UpdateExternal(ThrottleHandle_t * pHandle, uint16_t aNewVal);
  * @param  pHandle : Pointer on Handle of the throttle
  * @retval void
  */
-void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle, uint16_t MotorToHubGearRatio);
+void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle);
+
+/**
+ * @brief  Return the cruise control state
+ * @param  pHandle : Pointer on Handle of the throttle,
+ * @retval bool state of the cruise control (1:Engaged, 0:Disengaged)
+ */ 
+bool Throttle_GetCruiseControlState(ThrottleHandle_t * pHandle);
+    
+/**
+ * @brief  Engage the cruise control feature
+ * @param  pHandle : Pointer on Handle of the throttle, desired speed for cruise control
+ * @retval void
+ */
+void Throttle_EngageCruiseControl(ThrottleHandle_t * pHandle, uint8_t aSpeed);
+
+/**
+ * @brief  Disengage the cruise control feature
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle);
+
+/**
+ * @brief  Function used to apply a filter on the Torque when engaging Cruise control
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+int16_t Throttle_ApplyCruiseFilter(ThrottleHandle_t * pHandle, int16_t aTorque);
+
+ /**
+ * @brief  Force the disengage the cruise control feature
+ *         No matter what the screen tells the controller
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+void Throttle_ForceDisengageCruiseControl(ThrottleHandle_t * pHandle);
+
+/**
+ * @brief  Get the state of the force disengage flag
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+bool Throttle_GetForceDisengageState(ThrottleHandle_t * pHandle);
+
+/**
+ * @brief  Clear the flag when the forced disengage is complete
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+void Throttle_ClearForceDisengage(ThrottleHandle_t * pHandle);
 
 #endif /*__THROTTLE_H*/
 

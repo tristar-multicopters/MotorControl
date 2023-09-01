@@ -145,7 +145,7 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
             pHandle->rx_frame.ByteCnt ++;
                 
         }
-        else if (ByteCount == 8) // Every frame has a lenght of 9 bytes (0-8)
+        else if (ByteCount == 8) // Every frame has a length of 9 bytes (0-8)
         {
                                         
             if (NextByte == APT_END) // Is it the proper end byte ?
@@ -270,11 +270,9 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         //Reading the Speed limit
         speedLimit = pHandle->rx_frame.Buffer[SPEED];        
         
-        speedLimit = Wheel_GetWheelRpmFromSpeed(speedLimit);
-        
-        // setting the max RPMs for any speed limits
+        // setting the max speed for any speed limits
         Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,speedLimit);
-        PWRT_SetNewTopRPMSpeed(pHandle->pVController->pPowertrain, speedLimit);
+        PedalAssist_SetTorquePASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,speedLimit);
         #endif 
         
         #ifdef SCREENPOWERCONTROL

@@ -52,23 +52,97 @@
 
 #endif
 
+#ifndef  VEHICLE_TOP_SPEED_KMH
+    #define VEHICLE_TOP_SPEED_KMH   32    
+#endif
+
 // PAS Cadence sesnor Torque power in % default values
 
-#ifndef PAS_C_6_POWER_PERCENT   // PAS C (Cadence) 6 has a ratio of 0%
-    #define PAS_C_6_POWER_PERCENT 0   
+#ifndef PAS_C_0_POWER_PERCENT
+    #define PAS_C_0_POWER_PERCENT      0    // PAS C (Cadence) 0 has a ratio of   0%
 #endif
 
-#ifndef PAS_C_7_POWER_PERCENT   // PAS C (Cadence) 7 has a ratio of 0%
-    #define PAS_C_7_POWER_PERCENT 0   
+#ifndef PAS_C_1_POWER_PERCENT
+    #define PAS_C_1_POWER_PERCENT     60    // PAS C (Cadence) has a ratio of  60% (3/5)
 #endif
 
-#ifndef PAS_C_8_POWER_PERCENT   // PAS C (Cadence) 8 has a ratio of 0%
-    #define PAS_C_8_POWER_PERCENT 0   
+#ifndef PAS_C_2_POWER_PERCENT
+    #define PAS_C_2_POWER_PERCENT     67    // PAS C (Cadence)has a ratio of  67% (4/6)
 #endif
 
-#ifndef PAS_C_9_POWER_PERCENT   // PAS C (Cadence) 9 has a ratio of 0%
-    #define PAS_C_9_POWER_PERCENT 0   
+#ifndef PAS_C_3_POWER_PERCENT
+    #define PAS_C_3_POWER_PERCENT     80    // PAS C (Cadence) 3 has a ratio of  80% (4/5)
 #endif
+
+#ifndef PAS_C_4_POWER_PERCENT
+    #define PAS_C_4_POWER_PERCENT     88    // PAS C (Cadence) 4 has a ratio of  88% (7/8)
+#endif
+
+#ifndef PAS_C_5_POWER_PERCENT
+    #define PAS_C_5_POWER_PERCENT    100    // PAS C (Cadence) 5 has a ratio of 100%
+#endif
+
+#ifndef PAS_C_6_POWER_PERCENT   
+    #define PAS_C_6_POWER_PERCENT      0    // PAS C (Cadence) 6 has a ratio of 0%
+#endif
+
+#ifndef PAS_C_7_POWER_PERCENT   
+    #define PAS_C_7_POWER_PERCENT      0    // PAS C (Cadence) 7 has a ratio of 0%
+#endif
+
+#ifndef PAS_C_8_POWER_PERCENT   
+    #define PAS_C_8_POWER_PERCENT      0    // PAS C (Cadence) 8 has a ratio of 0%
+#endif
+
+#ifndef PAS_C_9_POWER_PERCENT   
+    #define PAS_C_9_POWER_PERCENT      0    // PAS C (Cadence) 9 has a ratio of 0%
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_0
+    #define PAS_C_LEVEL_SPEED_0       (uint8_t)0      /* Maximum Speed for PAS Level 0 in Km/h */
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_1
+    #define PAS_C_LEVEL_SPEED_1       (uint8_t)10     /* Maximum Speed for PAS Level 1 in Km/h */
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_2
+    #define PAS_C_LEVEL_SPEED_2       (uint8_t)15     /* Maximum Speed for PAS Level 2 in Km/h */
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_3
+    #define PAS_C_LEVEL_SPEED_3       (uint8_t)20     /* Maximum Speed for PAS Level 3 in Km/h */
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_4
+    #define PAS_C_LEVEL_SPEED_4       (uint8_t)25     /* Maximum Speed for PAS Level 4 in Km/h */
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_5
+    #define PAS_C_LEVEL_SPEED_5       (uint8_t)32     /* Maximum Speed for PAS Level 5 in Km/h */
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_6
+    #define PAS_C_LEVEL_SPEED_6       (uint8_t)32     /* Maximum Speed for PAS Level 6 in Km/h */
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_7
+    #define PAS_C_LEVEL_SPEED_7       (uint8_t)32     /* Maximum Speed for PAS Level 7 in Km/h */
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_8
+    #define PAS_C_LEVEL_SPEED_8         (uint8_t)32     /* Maximum Speed for PAS Level 8 in Km/h */
+#endif
+
+#ifndef PAS_C_LEVEL_SPEED_9
+    #define PAS_C_LEVEL_SPEED_9         (uint8_t)32     /* Maximum Speed for PAS Level 9 in Km/h */
+#endif
+
+
+#ifndef PAS_LEVEL_SPEED_WALK
+    #define PAS_LEVEL_SPEED_WALK    (uint8_t)6     /* Maximum Speed for PAS Level walk in Km/h */
+#endif
+
 
 // PAS Torque sesnor Torque power in % default values
 
@@ -152,6 +226,12 @@
 
 #ifndef PTS_FILTER_BW2
     #define PTS_FILTER_BW2                   25    // BW coefficient for pedal torque sensor avereging
+#endif
+
+
+
+#ifndef TORQUE_SPEED_LIMIT_GAIN
+    #define TORQUE_SPEED_LIMIT_GAIN 100
 #endif
 
 #endif /*__VC_PARAMETERS_H*/

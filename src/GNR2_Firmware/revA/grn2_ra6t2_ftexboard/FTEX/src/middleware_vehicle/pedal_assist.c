@@ -34,15 +34,8 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
     WheelSpdSensor_Init(pHandle->pWSS);
     PedalTorqSensor_Init(pHandle->pPTS, pPTSstuckDelay);
     
-    
-    //initalise pass to level 1. This is necessary to 
-    //make the bike run if no screen is present
-    //as on apollo. 
     pHandle->bCurrentAssistLevel = DEFAULT_PAS_LEVEL;
-	
-    // Enable slow motor Start for Pedal Assist cadence base
-    Foldback_EnableSlowStart(pHandle->SpeedFoldbackVehiclePAS);
-    
+    PedalAssist_PASUpdateMaxSpeed(pHandle);
 }
 
 /**
@@ -61,7 +54,7 @@ void PedalAssist_SetAssistLevel(PAS_Handle_t * pHandle, PasLevel_t bLevel)
 /**
     * @brief  Get PAS level
     * @param  Pedal Assist handle
-    * @retval Current Pedal assit level
+    * @retval Current Pedal assist level
     */
 PasLevel_t PedalAssist_GetAssistLevel(PAS_Handle_t * pHandle)
 {
@@ -70,12 +63,13 @@ PasLevel_t PedalAssist_GetAssistLevel(PAS_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Set Pedal Assist standard torque based on screen informations`
+    * @brief  Set Pedal Assist standard torque based on screen informations
     * @param  Pedal Assist handle
     * @retval pRefTorque in int16
     */
 int16_t PedalAssist_GetPASTorque(PAS_Handle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
     int32_t hRefTorque;
     PasLevel_t Got_Level;
     // Get the used PAS level 
@@ -86,13 +80,14 @@ int16_t PedalAssist_GetPASTorque(PAS_Handle_t * pHandle)
     return (int16_t) hRefTorque;  
 }
 /**
-    * @brief  Set Pedal Assist standard torque based on screen informations`
+    * @brief  Set Pedal Assist standard torque based on screen informations
     *         for Cadence PAS base
     * @param  Pedal Assist handle
     * @retval pRefTorque in int16
     */
-int16_t PedalAssist_GetPASTorqueSpeed(PAS_Handle_t * pHandle)
+int16_t PedalAssist_GetPASCadenceMotorTorque(PAS_Handle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
     int16_t PASRatio = 0;
     PasLevel_t currentLevel = PedalAssist_GetAssistLevel(pHandle); 
 
@@ -117,35 +112,47 @@ int16_t PedalAssist_GetPASTorqueSpeed(PAS_Handle_t * pHandle)
     * @param  Pedal Assist handle
     * @retval pRefTorque in int16
     */
-void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
+void PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle)
 {
-    uint16_t hKmSpeedTemp;
+    ASSERT(pHandle != NULL);   
     PasLevel_t currentLevel = PedalAssist_GetAssistLevel(pHandle);
     
     // assert we're within range so that the code below doesn't go out of bounds
     AssertIsValidLevel(currentLevel);
-    
-    // Calculate the maximum speed for control 
-    hKmSpeedTemp = ((pHandle->sParameters.hMaxSpeedRatio * pHandle->sParameters.hPASMaxSpeed) / PAS_PERCENTAGE) / pHandle->sParameters.hPASMaxKmSpeed;
-    
+        
     // Get the userconfig speed
-    uint8_t userConfigSpeed = 0;
+    uint16_t userConfigSpeed = 0;
     if (currentLevel == PAS_LEVEL_WALK)
     {
         userConfigSpeed = UserConfigTask_GetWalkModeSpeed();
     }
-    else
+    else if (pHandle->bCurrentPasAlgorithm == CadenceSensorUse) // Set the level specific speed limit
     {
-        userConfigSpeed = UserConfigTask_GetCadenceHybridLevelSpeed(currentLevel);
+        userConfigSpeed = UserConfigTask_GetCadenceLevelSpeed(currentLevel);
+    }
+    else if(pHandle->bCurrentPasAlgorithm == TorqueSensorUse)  // Set the generic limit
+    {
+        userConfigSpeed = pHandle->sParameters.TorquePasMaxSpeed;
     }
     
-    pHandle->sParameters.hPASMaxRPMSpeed =  Wheel_GetWheelRpmFromSpeed(userConfigSpeed);
-    // set the foldbacks
-    uint16_t speed = (uint16_t)(round (hKmSpeedTemp * userConfigSpeed));
-    pHandle->hPASSelectedSpeed = speed;         // update selected speed in PAS Handle
-    
-    Foldback_SetDecreasingRange(pHandle->SpeedFoldbackVehiclePAS, speed);
-    Foldback_SetDecreasingRangeEndValue(pHandle->SpeedFoldbackVehiclePAS,(int16_t)(speed));
+    pHandle->sParameters.hPASMaxSpeed =  userConfigSpeed;
+}
+
+/**
+    * @brief  Get the Pedal Assist standard speed based on pas level
+    * @param  Pedal Assist handle
+    * @retval current PAS speed limit
+    */
+uint16_t PedalAssist_GetPASMaxSpeed(PAS_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->sParameters.hPASMaxSpeed;
+}
+
+void PedalAssist_SetTorquePASMaxSpeed(PAS_Handle_t * pHandle, uint16_t topSpeed)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->sParameters.TorquePasMaxSpeed = topSpeed;
 }
 
 /**
@@ -155,7 +162,9 @@ void PedalAssist_PASSetMaxSpeed(PAS_Handle_t * pHandle)
     */
 int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
     int16_t hRefTorqueS, hReadTS, hMaxTorq_Temp, hMaxLevelTorq_Temp;
+    
     /* Read the Pedal torque sensor */
     hReadTS = PedalTorqSensor_ToMotorTorque(pHandle->pPTS);
     /* Got the PAS from the screen */
@@ -174,7 +183,7 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     hRefTorqueS = (hRefTorqueS/PAS_PERCENTAGE) * pHandle->sParameters.PASTTorqRatiosInPercentage[pHandle->bCurrentAssistLevel];
     
     
-   // Safety for not exceeding the maximum torque value for a specific pas level
+    // Safety for not exceeding the maximum torque value for a specific pas level
     hMaxLevelTorq_Temp = (pHandle->sParameters.PASTTorqRatiosInPercentage[pHandle->bCurrentAssistLevel] * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
     if (hRefTorqueS > hMaxLevelTorq_Temp)
     {
@@ -198,6 +207,7 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     */
 void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle) 
 {
+    ASSERT(pHandle != NULL);
     uint32_t  wSpeedt;
     uint16_t  hTorqueSens;
     uint16_t  hOffsetTemp;
@@ -261,11 +271,6 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     {      
         pHandle->bPASDetected = true;
     }
-    /* Hybrid Algorithm use and the offset was detected */
-    else if ((pHandle->bCurrentPasAlgorithm == HybridSensorUse) && (hTorqueSens > hOffsetTemp))
-    {
-		pHandle->bPASDetected = true;
-    }
     /* Cadence Sensor use */
     else if (wSpeedt > 0)
     {
@@ -293,6 +298,7 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     */
 void PedalAssist_UpdatePASDetectionCall(PAS_Handle_t * pHandle) 
 {
+    ASSERT(pHandle != NULL);
     // Check if the PAS presence is detected
     if ( PedalAssist_IsPASDetected(pHandle))
     {
@@ -300,20 +306,20 @@ void PedalAssist_UpdatePASDetectionCall(PAS_Handle_t * pHandle)
         // For Slow PAS sensor on cadence check
         if (bPASCounterAct > pHandle->sParameters.bPASCountActivation && (pHandle->bCurrentPasAlgorithm == CadenceSensorUse))
         {
-            PedalAssist_UpdatePASDetection (pHandle);
+            PedalAssist_UpdatePASDetection(pHandle);
             bPASCounterAct = 0;
         }
-        // For normal use with hybrid or Torque sensor
-        if ((pHandle->bCurrentPasAlgorithm == TorqueSensorUse) || (pHandle->bCurrentPasAlgorithm ==HybridSensorUse))
+        
+        if(pHandle->bCurrentPasAlgorithm == TorqueSensorUse)
         {
-            PedalAssist_UpdatePASDetection (pHandle);
+            PedalAssist_UpdatePASDetection(pHandle);
         }
                    
     }
     // If the PAS presence is not detected the safe coefficient for PAS Safe detection remain
     else 
     {
-        PedalAssist_UpdatePASDetection (pHandle); 
+        PedalAssist_UpdatePASDetection(pHandle); 
         bPASCounterAct = 0;
     }
 }
@@ -325,6 +331,7 @@ void PedalAssist_UpdatePASDetectionCall(PAS_Handle_t * pHandle)
     */
 bool PedalAssist_IsPASDetected(PAS_Handle_t * pHandle) 
 {
+    ASSERT(pHandle != NULL);
     return pHandle->bPASDetected;
 }
 
@@ -335,6 +342,7 @@ bool PedalAssist_IsPASDetected(PAS_Handle_t * pHandle)
     */
 bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
     if(pHandle->bCurrentAssistLevel == PAS_LEVEL_WALK)
     {
         return true;  
@@ -352,9 +360,12 @@ bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle)
     */
 void PedalAssist_ResetParameters (PAS_Handle_t * pHandle) 
 {
+    ASSERT(pHandle != NULL);
     PedalTorqSensor_ResetAvValue(pHandle->pPTS);   
     PedalSpdSensor_ResetValue(pHandle->pPSS);   
 }
+
+
 
 // Internal utility function to verify that the assist level we got is within the supported range
 void AssertIsValidLevel(PasLevel_t level)
@@ -374,3 +385,16 @@ void AssertIsValidLevel(PasLevel_t level)
     // invalid
     ASSERT(false);
 }
+
+/**
+    * @brief  Reset the PAS algorithm
+    * @param  Pedal Assist handle, new pas algorithm
+    * @retval None
+    */
+void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo)
+{
+    ASSERT(pHandle != NULL);
+    
+    pHandle->bCurrentPasAlgorithm = aPASAlgo;
+}
+

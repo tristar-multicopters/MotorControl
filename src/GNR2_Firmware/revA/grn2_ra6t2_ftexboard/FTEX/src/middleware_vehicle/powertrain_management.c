@@ -9,7 +9,6 @@
 #include "powertrain_management.h"
 #include "vc_tasks.h"
 #include "firmware_update.h"
-
 #include "vc_errors_management.h"
 // ============================= Defines ================================ //
 #define OVERCURRENT_COUNTER         0
@@ -24,9 +23,9 @@
 // ============================= Variables ================================ //
                                   
 bool isPWMCleared;
-static Delay_Handle_t ThrottleDelay; /* Delay for Throttle stuck check while initialization*/
-static Delay_Handle_t PTSensorDelay; /* Delay for Pedal Torque sensor stuck check while initialization*/
-static Delay_Handle_t brakeDelay; /* Delay for Brake sensor stuck check while initialization*/
+static Delay_Handle_t ThrottleDelay; // Delay for Throttle stuck check while initialization
+static Delay_Handle_t PTSensorDelay; // Delay for Pedal Torque sensor stuck check while initialization
+static Delay_Handle_t brakeDelay;    // Delay for Brake sensor stuck check while initialization
 
 // ==================== Public function prototypes ======================== //
 
@@ -47,7 +46,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     // Initilaize peripherals
     Wheel_Init(WHEEL_DIAMETER_DEFAULT);
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
-    Throttle_Init(pHandle->pThrottle,&ThrottleDelay, pHandle->sParameters.MotorToHubGearRatio);
+    Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
     BRK_Init(pHandle->pBrake, &brakeDelay);
     BatMonitor_Init(pHandle->pBatMonitorHandle, pHandle->pMDI->pMCI);
     MS_Init(pHandle->pMS);
@@ -55,18 +54,13 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
     PedalAssist_Init(pHandle->pPAS, &PTSensorDelay);    
-        
-    Foldback_Init(pHandle->SpeedFoldbackVehicle);
 
     pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
     pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
-    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;
-    
-    // Enable slow motor Start for Pedal Assist cadence base
-    Foldback_EnableSlowStart(pHandle->SpeedFoldbackVehicle);
+    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;   
 }
 
 /**
@@ -90,11 +84,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     bool bIsBrakePressed = BRK_IsPressedSafety(pHandle->pBrake);
-    
-    /*bool bIsPwrEnabled = PWREN_IsPowerEnabled(pHandle->pPWREN);*/
-    int16_t hSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
-    //int16_t hSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
-    
+      
     MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
     int16_t hTorqueRef = 0; 
     uint16_t hSpeedRef = 0;
@@ -126,71 +116,38 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     pHandle->aTorque[M2] = 0;
     pHandle->aSpeed[M1] = 0;
     pHandle->aSpeed[M2] = 0;
-
     
     if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
     {
         PedalTorqSensor_CalcAvValue(pHandle->pPAS->pPTS); // Calculate the pedal assist torque sensor value
         
         hTorqueRef = PWRT_CalcSelectedTorque(pHandle); // Compute torque to motor depending on either throttle or PAS
-        hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on foldback and brake state for example.
-        
-        if(pHandle->sParameters.bTopSpeedPowerCutoffEnable == true)
-        {
-            uint16_t Vehicle_Speed = Wheel_GetVehicleSpeedFromWSS(pHandle->pPAS->pWSS);
-                        
-            if(Vehicle_Speed >= pHandle->sParameters.TopSpeedKMHCutoff)
-            {
-                hAux = 0;
-                // Reset All the Pedal Assist Parameters
-                PedalAssist_ResetParameters(pHandle->pPAS);
-            }
-        }    
+        hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on brake state.
                 
         if (bIsBrakePressed)
         {
             hAux = 0;
             // Reset All the Pedal Assist Parameters
             PedalAssist_ResetParameters(pHandle->pPAS);
+            Throttle_ForceDisengageCruiseControl(pHandle->pThrottle);
         }
-            
-         
+                     
         /* Throttle and walk mode always have higher priority over PAS but 
-              the priority between walk mode and throttle depends on the value 
-              of the parameter WalkmodeOverThrottle  */    
+           the priority between walk mode and throttle depends on the value 
+           of the parameter WalkmodeOverThrottle  */    
                  
             /* Using PAS or walk mode */
         if (((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
              (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
-        {
-            /* Used for Walk Mode */
-            if (PedalAssist_IsWalkModeDetected(pHandle->pPAS) )
-            {     
-                if(pHandle->bMainMotor != M2)
-                {                    
-                    int32_t absoluteSpeed = abs(hSpeedM1);
-                    int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
-                    
-                    hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
-                    //Apply the slow start for walk mode
-                    hAux = Foldback_ApplySlowStart(pHandle->SpeedFoldbackVehicle, hAux);
-                }
-                else // We cant use M2 for walk mode because we don't know it's motor speed
-                {
-                    hAux = 0;                
-                }
-            }                                   
-            /* Cadence sensor enabled */
-            else if ((pHandle->pPAS->bCurrentPasAlgorithm == CadenceSensorUse) && (pHandle->pPAS->sParameters.UseCadenceSpeedLimit))
-            {  
-                int32_t absoluteSpeed = abs(hSpeedM1);
-                int16_t speed = (int16_t)absoluteSpeed; // todo: we're losing precision going from int32 (hSpeedM1) to int16. Can hSpeedM1 ever be bigger than int16.MaxValue?
-
-                hAux = Foldback_ApplyFoldback( pHandle->SpeedFoldbackVehicle, hAux, speed);
-            }
+        {             
+            uint16_t TopSpeed = 0;
+            PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS); // Make sure we have the most up-to-date desired top speed
             
+            TopSpeed = PedalAssist_GetPASMaxSpeed(pHandle->pPAS);
+            PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed       
+           
             #if VEHICLE_SELECTION == VEHICLE_NIDEC
-            else if (pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse)
+            if (pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse)
             {
                 static int16_t PowerAvg = 0;                
                                    
@@ -220,55 +177,14 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             }
             #endif
         }                            
-        /* Using throttle */
-        else 
-        {  
-            #ifdef THROTTLE_SPEED_CTRL
-            static bool MajorOverSpeed = false;
-            int16_t NewMaxPower = 0;
-            int32_t TopSpeed = 0;
-            int16_t WSpeedRPM = (int16_t) pHandle->pPAS->pWSS->wWheelSpeedRpm;
-                                                                                      
-            // Get the current top speed in RPM
-            TopSpeed = (pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDecreasingEndValue);
-                            
-            if (WSpeedRPM > (TopSpeed + THROTTLR_MAJOR_OVER_SPEED_INTERVAL_RPM))
-            {
-                MajorOverSpeed = true;   
-            }                    
-                    
-            if ((WSpeedRPM > (TopSpeed - THROTTLE_STABLE_SPEED_INTERVAL_RPM)) && (MajorOverSpeed == true)) // If we are close to reach the top speed
-            {                   
-                // Reduce max allowed power           
-                NewMaxPower = (int16_t) ((pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh * THROTTLE_STABLE_SPEED_POWER_PERCENT)/100); 
-                        
-            }
-            else if (WSpeedRPM > (TopSpeed - pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDecreasingInterval))
-            {
-                MajorOverSpeed = false;
-                NewMaxPower = (int16_t) ((pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh * 75)/100); 
-            }
-            else // If not then let the foldback use the default max power
-            {
-                MajorOverSpeed = false;                     
-                NewMaxPower = (int16_t) (pHandle->pThrottle->SpeedFoldbackVehicleThrottle->hDefaultOutputLimitHigh);                          
-            }    
-                    
-            Foldback_UpdateMaxValue(pHandle->pThrottle->SpeedFoldbackVehicleThrottle,NewMaxPower);
-                   
-            hAux = Foldback_ApplyFoldback(pHandle->pThrottle->SpeedFoldbackVehicleThrottle, hAux, WSpeedRPM);
-            #endif       
-        } 
-        
-
-        int16_t WSpeedRPM = (int16_t) pHandle->pPAS->pWSS->wWheelSpeedRpm;
-        // checking if there's a max speed and if we're exceeding those RPM's already set motor torque to zero.
-        if (((pHandle->sParameters.topRPMSpeedGoal != 0) && (WSpeedRPM > pHandle->sParameters.topRPMSpeedGoal)) 
-            || ((pHandle->pPAS->sParameters.hPASMaxRPMSpeed != 0)  && !Throttle_IsThrottleDetected(pHandle->pThrottle) && (WSpeedRPM > pHandle->pPAS->sParameters.hPASMaxRPMSpeed)))
+        else if(Throttle_IsThrottleDetected(pHandle->pThrottle))
         {
-            hAux = 0;
-        }
-
+            uint16_t TopSpeed = 0;
+                          
+            TopSpeed = Throttle_GetMaxSpeed(pHandle->pThrottle);   // Get the current desired top speed for throttle
+            PWRT_SetNewTopSpeed(pHandle,TopSpeed);                 // Tell motor control what is our desired top speed 
+        }   
+        
         // Store powertrain target torque value in handle
         pHandle->aTorque[pHandle->bMainMotor] = hAux;
         
@@ -300,10 +216,9 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         }
         
         // Check if the calculated speed is more than maximum allowed Speed set by LCD
-        uint16_t MotorSpeedRPM = pHandle->pThrottle->hParameters.MaxThrottleSpeedRPM * (pHandle->sParameters.MotorToHubGearRatio >> 16);
-        if (hSpeedRef > MotorSpeedRPM)
+        if (hSpeedRef > pHandle->pThrottle->hParameters.MaxThrottleSpeedKMH)
         {
-            hSpeedRef = MotorSpeedRPM;
+            hSpeedRef = pHandle->pThrottle->hParameters.MaxThrottleSpeedKMH;
         }
         
         // set speed zero if brake is pressed
@@ -1141,10 +1056,6 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 {      
     ASSERT(pHandle != NULL);
-    /* Hybride PAS Parameters */
-    int16_t htorqueSelect = 0; 
-    int16_t htorqueSens= 0; 
-    int16_t hFinalTorque = 0;
     
     /* Disable the throttle output if we need to when PAS level is 0 */
     if(pHandle->sParameters.bPAS0DisableThrottle && PedalAssist_GetAssistLevel(pHandle->pPAS) == 0)
@@ -1166,56 +1077,27 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         - Walk Mode detected & Walk Mode over Throttle detected | No Throttle detected */
         
     if ((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
-        (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (pHandle->pPAS->sParameters.WalkmodeOverThrottle ||    !Throttle_IsThrottleDetected(pHandle->pThrottle))))
+        (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (pHandle->pPAS->sParameters.WalkmodeOverThrottle || !Throttle_IsThrottleDetected(pHandle->pThrottle))))
     {
         /* Torque sensor enabled */
         if ((pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
-         }                
-        /* Hybride sensor enabled */
-        else if ((pHandle->pPAS->bCurrentPasAlgorithm == HybridSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
-        {
-            /* Call the Main Motor Avg Speed for */
-            int16_t wSpeedMainMotor = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
-                    
-            /* Set Cadence Speed */  
-            PedalAssist_PASSetMaxSpeed(pHandle->pPAS); 
-            /* Get Torque Sensor */
-            htorqueSens = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
-            /* Get Motor Torque */
-            htorqueSelect = PedalAssist_GetPASTorqueSpeed(pHandle->pPAS);
-            /* Apply Limitation for the final torque */
-            int32_t temp = abs(wSpeedMainMotor);
-            int16_t absoluteSpeed = (int16_t)temp; // manually cast because abs returns an integer
-            
-            hFinalTorque = Foldback_ApplyFoldback(pHandle->SpeedFoldbackVehicle, htorqueSelect, absoluteSpeed);
-
-            hFinalTorque = Foldback_ApplySlowStart(pHandle->SpeedFoldbackVehicle, hFinalTorque); //Apply the slow start if needed                    
-            
-            /* Make a decision by adding the torque or limiting the speed */
-            if (htorqueSens > hFinalTorque)
-                pHandle->hTorqueSelect = htorqueSens;
-            else
-                pHandle->hTorqueSelect = hFinalTorque + htorqueSens;
-                
-        }
-            
+        }                
         /* Cadence sensor enabled */
         else 
         {
-            pHandle->hTorqueSelect= PedalAssist_GetPASTorqueSpeed(pHandle->pPAS);
-            PedalAssist_PASSetMaxSpeed(pHandle->pPAS); 
+            pHandle->hTorqueSelect = PedalAssist_GetPASCadenceMotorTorque(pHandle->pPAS);
+            PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS); 
         }
     }        
     /* Using throttle */
     else 
     {        
-        /* Throttle value convert to torque */
-        
+        /* Throttle value convert to torque */        
         pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);
-
     }
+    
     return pHandle->hTorqueSelect;
 }
 
@@ -1225,7 +1107,8 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
   * @retval current in amps uin16_t                                                                                   
   */
 uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
-{    
+{  
+    ASSERT(pHandle != NULL);    
     uint16_t TotalMotorCurrent = 0;
     uint16_t M1Current = 0;
     uint16_t M2Current = 0; 
@@ -1269,7 +1152,8 @@ uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
   * Get the max safe current we can push                                                                                  
   */
 uint16_t PWRT_GetMaxSafeCurrent(PWRT_Handle_t * pHandle)
-{   
+{  
+    ASSERT(pHandle != NULL);    
     uint16_t CurrentInAMPS;
     
     CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MCInterface_GetMaxCurrent(pHandle->pMDI->pMCI));
@@ -1282,6 +1166,7 @@ uint16_t PWRT_GetMaxSafeCurrent(PWRT_Handle_t * pHandle)
   */
 uint16_t PWRT_GetOngoingMaxCurrent(PWRT_Handle_t * pHandle)
 {
+    ASSERT(pHandle != NULL);
     uint16_t CurrentInAMPS;
     
     CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MCInterface_GetOngoingMaxCurrent(pHandle->pMDI->pMCI));
@@ -1294,12 +1179,12 @@ uint16_t PWRT_GetOngoingMaxCurrent(PWRT_Handle_t * pHandle)
   */
 void PWRT_SetOngoingMaxCurrent(PWRT_Handle_t * pHandle, uint16_t aCurrent)
 {
+    ASSERT(pHandle != NULL);
     uint16_t DigitalConv;
     
     DigitalConv = PWRT_ConvertAMPSToDigitalCurrent(pHandle, aCurrent);   
     
-    MCInterface_SetOngoingMaxCurrent(pHandle->pMDI->pMCI,(int16_t) DigitalConv);
-    
+    MCInterface_SetOngoingMaxCurrent(pHandle->pMDI->pMCI,(int16_t) DigitalConv);    
 }
 
 /**
@@ -1307,6 +1192,7 @@ void PWRT_SetOngoingMaxCurrent(PWRT_Handle_t * pHandle, uint16_t aCurrent)
   */
 uint16_t PWRT_ConvertDigitalCurrentToAMPS(PWRT_Handle_t * pHandle, uint16_t aDigitalCurrent)
 {
+    ASSERT(pHandle != NULL);
     return  (uint16_t) round(aDigitalCurrent / (65535/(pHandle->pMDI->pMCI->MCIConvFactors.MaxMeasurableCurrent * 2)));
 }
 
@@ -1315,15 +1201,27 @@ uint16_t PWRT_ConvertDigitalCurrentToAMPS(PWRT_Handle_t * pHandle, uint16_t aDig
   */
 uint16_t PWRT_ConvertAMPSToDigitalCurrent(PWRT_Handle_t * pHandle, uint16_t aAMPSCurrent)
 {
+    ASSERT(pHandle != NULL); 
     return  (uint16_t) round(aAMPSCurrent * (65535/(pHandle->pMDI->pMCI->MCIConvFactors.MaxMeasurableCurrent * 2)));
 }
 
 /**
-  * Setting a new top speed cutoff
+  * Setting a new top speed
   */
-bool PWRT_SetNewTopRPMSpeed(PWRT_Handle_t * pHandle, uint16_t topRPMSpeed)
+void PWRT_SetNewTopSpeed(PWRT_Handle_t * pHandle, uint16_t topSpeed)
 {
-    pHandle->sParameters.topRPMSpeedGoal = (int16_t) topRPMSpeed;
-
-    return true;
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pMDI != NULL); 
+    uint16_t NewTopSpeed = 0;
+    
+    if(topSpeed > pHandle->sParameters.VehicleMaxSpeed) // Safety measure to ensure vehicle max speed is always respected
+    {
+        NewTopSpeed = pHandle->sParameters.VehicleMaxSpeed;
+    }
+    else
+    {
+        NewTopSpeed = topSpeed;
+    }        
+    
+    MDI_SetTorqueSpeedLimit(pHandle->pMDI,NewTopSpeed,pHandle->sParameters.TorqueSpeedLimitGain);
 }

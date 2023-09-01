@@ -294,7 +294,7 @@ uint8_t UserConfigTask_GetTorqueMaxSpeed(void);
 void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value);
 
 /**
-  @brief Function to get cadence Hybrid Leve Speed
+  @brief Function to get cadence Level Speed
   read from data flash memory.
   
   @param void
@@ -302,17 +302,17 @@ void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value);
           range bewteen 0-40.
 
 */
-uint8_t UserConfigTask_GetCadenceHybridLevelSpeed(uint8_t pasLevel);
+uint8_t UserConfigTask_GetCadenceLevelSpeed(uint8_t pasLevel);
 
 /**
-  @brief Function to update cadence Hybrid Leve Speed value
+  @brief Function to update cadence Level Speed value
   read from data flash memory.
   
   @param uint8_t value to be passed into the
   @return void
 
 */
-void UserConfigTask_UpdateCadenceHybridLeveSpeed(uint8_t pasLevel, uint8_t value);
+void UserConfigTask_UpdateCadenceLevelSpeed(uint8_t pasLevel, uint8_t value);
 
 /**
   @brief Function to get torqueLevelPower
@@ -382,10 +382,10 @@ void UserConfigTask_UpdateWalkModeSpeed(uint8_t value);
   used by the bluetooth protocol.CCITT 16 bits polynom.
   
   @param uint8_t * data pointer to the data buffer where the CRC must be done.
-  @param uint8_t lenght the lenght of the data to be calculated by the CRC algorithm.
+  @param uint8_t length the length of the data to be calculated by the CRC algorithm.
   @return uint16_t return the calculated CRC.
 
 */
-uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t lenght);
+uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length);
 
 #endif

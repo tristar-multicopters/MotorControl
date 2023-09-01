@@ -52,7 +52,7 @@
           <OutputName>grn2_ra6t2_ftexboard_testing</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\Listings\</ListingPath>
@@ -448,6 +448,11 @@
               <FileName>internal_memory.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\Middleware\internal_memory.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial_lcd_comm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\Middleware\serial_lcd_comm.c</FilePath>
             </File>
           </Files>
         </Group>

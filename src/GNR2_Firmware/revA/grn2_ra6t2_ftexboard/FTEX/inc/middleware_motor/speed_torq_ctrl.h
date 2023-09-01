@@ -104,6 +104,14 @@ typedef struct
     float fGainTorqueIqref;            /* Gain (G) between Iqref in digital amps and torque reference in cNm. Iqref = Torq * G/D  */
     float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
     
+    float fGearRatio;                  /* fGearRatio Contians the gear ratio of the motor as defined in drive_parameters_xxx*/    
+    
+    bool bEnableSpdLimitControl;
+    int16_t hSpdLimit;
+    int16_t hTorqueReferenceSpdLim;
+    PIDHandle_t PISpeedLimit;               /*!< The regulator used to perform the speed limit control loop.*/
+    
+    
 } SpdTorqCtrlHandle_t;
 
 
@@ -335,6 +343,14 @@ int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle,
   * @retval 
   */
 void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle);
+
+/**
+  * @brief  Sets motor speed limit for speed limit controller (only for torque mode).
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  hSpdLim: Speed limit in unit specified by SPEED_UNIT (rpm, Hz, ...)
+  * @retval 
+  */
+void SpdTorqCtrl_SetSpeedLimit(SpdTorqCtrlHandle_t * pHandle, int16_t hSpdLimUnit);
 
 #ifdef __cplusplus
 }

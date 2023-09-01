@@ -12,6 +12,7 @@
 #include "external_flash_storage.h"
 #include "internal_flash_storage.h"
 #include "serial_response.h"
+#include "serial_lcd_comm.h"
 
 // ================================ Struct =============================== //
 typedef struct datas {
@@ -54,6 +55,8 @@ typedef struct datas {
 
 /* CONTROLLER_TEST command code */
 #define TEST_FLASH      0xC1    // Test Serial flash integrety and format 
+#define TEST_LCD_UART   0xC2    // Test LCD UART Connection
+
 
 /* ---------------------------------------------------------------------- */
 
@@ -85,5 +88,6 @@ void SerialProcess_ExecuteCommand ();
   * @return None
   */
 void SerialProcess_Main();
+void SerialProcessLCD_CleanFrame();
 
 #endif /* __SERIAL_PROCESS_H */

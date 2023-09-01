@@ -179,7 +179,7 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
         }
         else
         {
-            MDI_ExecSpeedRamp(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hSpeedRef);
+            MDI_ExecSpeedRamp(pVCI->pPowertrain->pMDI, M1, sDebugVariables.hSpeedRef); // SpeedRef is in KmH
             MDI_ExecSpeedRamp(pVCI->pPowertrain->pMDI, M2, sDebugVariables.hSpeedRef);
         }
         
@@ -366,6 +366,11 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         
         //set the going off flag to indicate the system is going turn off.
         PWREN_SetGoingOffFlag(pVCI->pPowertrain->pPWREN);
+        
+        // Force the lights to their desired state when the controller is turned off
+        Light_PowerOffSequence(pVCI->pPowertrain->pHeadLight);
+        Light_PowerOffSequence(pVCI->pPowertrain->pTailLight);
+        
         
         //while to wait until the turn off sequency to be finished.
         while(1)

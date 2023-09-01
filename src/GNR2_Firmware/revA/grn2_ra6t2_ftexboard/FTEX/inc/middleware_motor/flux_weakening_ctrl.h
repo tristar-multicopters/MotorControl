@@ -56,7 +56,7 @@ typedef struct
                                                definition */
   uint16_t        hVqdLowPassFilterBwLog; /**< hVqdLowPassFilterBw expressed as power of 2.
                                                E.g. if gain divisor is 512 the value
-                                               must be 9 because 2^9 = 512 */
+                                               must be 9 because 2^9 = 512 */    
 } MCConfigHandle_t;
 
 

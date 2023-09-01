@@ -44,6 +44,8 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     DynamicPower_Init(&pHandle->DynamicPowerHandle);
     StuckProtection_Init(&pHandle->StuckProtection);
     
+    PID_Init(&pHandle->PISpeedLimit);
+    
 #if HARDWARE_OCD == OCD_POWER_DERATING
     OCD2_Init(&pHandle->OCD2_Handle);
 #else
@@ -80,6 +82,8 @@ void SpdTorqCtrl_Clear(SpdTorqCtrlHandle_t * pHandle)
     {
         PID_SetIntegralTerm(pHandle->pPISpeed, 0);
     }
+    
+    PID_SetIntegralTerm(&pHandle->PISpeedLimit, pHandle->PISpeedLimit.wUpperIntegralLimit);
 
     RampMngr_Init(&pHandle->TorqueRampMngr);
     RampMngr_Init(&pHandle->SpeedRampMngr);
@@ -199,6 +203,19 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
+        
+        
+        if (pHandle->bEnableSpdLimitControl)
+        {
+            hMeasuredSpeed = -SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD); // Speed is somehow negative when applying positive torque, need to figure out why.
+            hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
+            pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
+            if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)
+            {
+                hTorqueReference = pHandle->hTorqueReferenceSpdLim;
+            }
+        }
+        
         hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
         hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
         /* Store values in handle */
@@ -525,3 +542,9 @@ void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle)
         //do nothing - keep it at maximum defined level 
     #endif
 }  
+
+void SpdTorqCtrl_SetSpeedLimit(SpdTorqCtrlHandle_t * pHandle, int16_t hSpdLimUnit)
+{
+    pHandle->hSpdLimit = hSpdLimUnit;
+}
+

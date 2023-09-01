@@ -1,5 +1,5 @@
-#ifndef __T47_AUTORQ_H
-#define __T47_AUTORQ_H
+#ifndef __DURATORQ_AUTORQ_H
+#define __DURATORQ_AUTORQ_H
 
 // Currently choosen torque sensor for Velec
 

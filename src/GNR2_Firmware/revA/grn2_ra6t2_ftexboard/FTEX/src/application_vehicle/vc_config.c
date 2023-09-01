@@ -21,7 +21,6 @@ MultipleDriveInterfaceHandle_t MDInterfaceHandle =
     0
 };
 
-
 VCSTM_Handle_t VCStateMachineHandle =
 {
     .bVState = V_IDLE,
@@ -161,49 +160,16 @@ PWREN_Handle_t PowerEnableHandle =
     .bSystemReady = false,
 };
 
-Foldback_Handle_t SpeedFoldbackVehicleConfig =
-{
-    .hDecreasingEndValue = POWERTRAIN_FOLDBACK_SPEED_END,
-    .hDecreasingRange = POWERTRAIN_FOLDBACK_SPEED_RANGE,
-    .hDecreasingInterval = POWERTRAIN_FOLDBACK_SPEED_INTERVAL,
-    .hDefaultOutputLimitHigh = POWERTRAIN_MAX_MOTOR_TORQUE,
-    .hDefaultOutputLimitLow = 0,
-    .FoldbackConfig = TRIM,
-    .bEnableFoldback = true,
-    .hSlowStartBandwidth = FOLDBACK_SLOW_START_BANDWIDTH,
-    .hSlowStopBandwidth = FOLDBACK_SLOW_STOP_BANDWIDTH,
-    .wSlowStartTimeout =  FOLDBACK_TIMEOUT,
-};
-
-Foldback_Handle_t SpeedFoldbackThrottle =
-{
-    .hDecreasingEndValue = 300, 
-    .hDecreasingRange    = 300,
-    .hDecreasingInterval = 30, 
-    .hDefaultOutputLimitHigh = POWERTRAIN_MAX_MOTOR_TORQUE,
-    .hDefaultOutputLimitLow = 0,
-    .FoldbackConfig = TRIM,
-    .bEnableFoldback = true,
-    .hSlowStartBandwidth = FOLDBACK_SLOW_START_BANDWIDTH,
-    .hSlowStopBandwidth = FOLDBACK_SLOW_STOP_BANDWIDTH,
-    .wSlowStartTimeout =  FOLDBACK_TIMEOUT,
-};
-
-
 PAS_Handle_t PedalAssistHandle = 
 {
     .sParameters.hPASMaxTorque = PAS_MAX_TORQUE,
-    .sParameters.hPASMaxSpeed = PAS_MAX_SPEED,
-    .sParameters.hPASMaxKmSpeed = PAS_MAX_KM_SPEED,
-    .sParameters.hPASMaxRPMSpeed = 0,
     .sParameters.bMaxLevel = PAS_MAX_LEVEL,
+    .sParameters.TorquePasMaxSpeed = VEHICLE_TOP_SPEED_KMH,
     .sParameters.bTorqueGain = PAS_TORQUE_GAIN,
     .sParameters.hMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
-    .sParameters.hMaxSpeedRatio = PAS_MAX_SPEED_RATIO,
     .sParameters.bPASCountSafe = PAS_MIN_PEDAL_COUNT_SAFE,
     .sParameters.bPASCountActivation = PAS_SLOW_PEDAL_COUNT,
     .sParameters.WalkmodeOverThrottle = PAS_WALKMODE_OVER_THROTTLE,
-    .sParameters.UseCadenceSpeedLimit = PAS_CADENCE_USE_SPEED_LIMIT,
     .sParameters.PASCTorqRatiosInPercentage[0] = PAS_C_0_POWER_PERCENT,
     .sParameters.PASCTorqRatiosInPercentage[1] = PAS_C_1_POWER_PERCENT,
     .sParameters.PASCTorqRatiosInPercentage[2] = PAS_C_2_POWER_PERCENT,
@@ -230,8 +196,6 @@ PAS_Handle_t PedalAssistHandle =
     .pPSS = &PedalSpeedSensorHandle,
     .pPTS = &PedalTorqueSensorHandle,
     .pWSS = &WheelSpeedHandle,       
-    .SpeedFoldbackVehiclePAS = &SpeedFoldbackVehicleConfig,
-
 };
 
 /**@brief Throttle initializing Parameters.
@@ -246,7 +210,6 @@ ThrottleHandle_t ThrottleHandle =
     {
         .pIIRFAInstance = NULL, // NULL to apply software filtering, no hardware accelerator
     },
-    .SpeedFoldbackVehicleThrottle = &SpeedFoldbackThrottle,
     .hParameters =
     {
         .fFilterAlpha = THROTTLE_FILTER_ALPHA,
@@ -262,9 +225,8 @@ ThrottleHandle_t ThrottleHandle =
 
         .hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
         
-        .MaxSafeThrottleSpeedKMH    = THROTTLE_MAX_SAFE_SPEED_KMH,
-        .DefaultMaxThrottleSpeedKMH = THROTTLE_DEFAULT_MAX_SPEED_KMH,
-        .ThrottleDecreasingRange    = THROTTLE_SPEED_DECREASING_RANGE,
+        .DefaultMaxThrottleSpeedKMH = VEHICLE_TOP_SPEED_KMH,
+        .ThrottleMaxTorque = POWERTRAIN_MAX_MOTOR_TORQUE,
     }
 };
 
@@ -282,21 +244,9 @@ PWRT_Handle_t PowertrainHandle =
     
     .sParameters.bPAS0DisableThrottle = POWERTRAIN_DISABLE_THROTTLE_PAS_0,
     
-    .sParameters.MotorToHubGearRatio = POWERTRAIN_MOTOR_GEARRATIO,
     .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
-    
-#ifdef VEHICLE_SPEED_KMH_POWER_CUTOFF
-    .sParameters.bTopSpeedPowerCutoffEnable = true,
-    .sParameters.TopSpeedKMHCutoff = VEHICLE_SPEED_KMH_POWER_CUTOFF,
-#else
-    .sParameters.bTopSpeedPowerCutoffEnable = false,
-    .sParameters.TopSpeedKMHCutoff = 100,   // we set this to an unachievable speed to ensure 
-                                            // if it is accidently used it will not limit the power      
-#endif    
-    .sParameters.topRPMSpeedGoal = 0,
-    
-    .SpeedFoldbackVehicle = &SpeedFoldbackVehicleConfig,
-
+    .sParameters.VehicleMaxSpeed = VEHICLE_TOP_SPEED_KMH,    
+    .sParameters.TorqueSpeedLimitGain = TORQUE_SPEED_LIMIT_GAIN,
     .pMDI = &MDInterfaceHandle,
     .pThrottle = &ThrottleHandle,
     .pBrake = &BrakeHandle,

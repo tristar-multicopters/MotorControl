@@ -67,11 +67,14 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint16_t hPWR[2];
     uint8_t  bSOC[2];
     uint8_t  bPAS[2];
+    uint8_t  bPasAlgorithm[2];
     uint16_t hMaxPwr[2];
     uint8_t  hWheelDiameter[2];
     uint8_t  hFrontLightState[2];
     uint8_t  hRearLightState[2];
     uint16_t hErrorState[2];
+    
+    
     
     ASSERT(pVCI != NULL);
     ASSERT(pVCI->pPowertrain != NULL);
@@ -81,7 +84,8 @@ static void UpdateObjectDictionnary(void *p_arg)
     hSpeed[VEHICLE_PARAM]  = (uint8_t)  CanVehiInterface_GetVehicleSpeed(pVCI);
     hPWR[VEHICLE_PARAM]    = (uint16_t) CanVehiInterface_GetVehiclePower(pVCI);
     bSOC[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehicleSOC(pVCI);
-    bPAS[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehiclePAS(pVCI);  
+    bPAS[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehiclePAS(pVCI); 
+    bPasAlgorithm[VEHICLE_PARAM] = (uint8_t) CanVehiInterface_GetVehiclePASAlgorithm(pVCI);    
     hMaxPwr[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleMaxPWR(pVCI);
     
     hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
@@ -111,7 +115,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t torqueSensorMultiplier;
     uint8_t torqueMaxSpeed;
     
-    uint8_t cadenceHybridLeveSpeed[10];
+    uint8_t cadenceLevelSpeed[10];
     uint8_t torqueLevelPower[10];
     uint8_t maxSpeed;
     uint8_t walkModeSpeed;
@@ -300,6 +304,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),  pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint16_t));
             
@@ -362,6 +367,12 @@ static void UpdateObjectDictionnary(void *p_arg)
             }
 
             
+            if(bPasAlgorithm[VEHICLE_PARAM] != bPasAlgorithm[CAN_PARAM])
+            {
+               bPasAlgorithm[VEHICLE_PARAM] = bPasAlgorithm[CAN_PARAM];  
+            }  
+            
+            
             // If the whele diameter in the OBJ dict and vehicle don't match, update the on in the vehicle
             if (VcAutodeter_GetGnrState())
             {
@@ -384,7 +395,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             }
             
             
-            
+            // Update the OD with the new PAS algorithm if needed
             if(hMaxPwr[VEHICLE_PARAM] != hMaxPwr[CAN_PARAM])
             {
                 hMaxPwr[CAN_PARAM] = hMaxPwr[VEHICLE_PARAM];
@@ -399,6 +410,8 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, M1)), pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
             
             if (WriteOBJDict)
             {    
@@ -442,7 +455,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         
                  for(uint8_t n = PAS_0;n <= PAS_9;n++)
                  {
-                    COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceHybridLeveSpeed[n], sizeof(uint8_t));
+                    COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceLevelSpeed[n], sizeof(uint8_t));
                     COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_LEVEL_POWER, n)), pNode, &torqueLevelPower[n], sizeof(uint8_t));
                  }
         
@@ -463,7 +476,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  for(uint8_t n = PAS_0;n <= PAS_9;n++)
                  {
-                    UserConfigTask_UpdateCadenceHybridLeveSpeed(n, cadenceHybridLeveSpeed[n]);
+                    UserConfigTask_UpdateCadenceLevelSpeed(n, cadenceLevelSpeed[n]);
                     UserConfigTask_UpdateTorqueLevelPower(n, torqueLevelPower[n]);   
                  }
                  
@@ -650,11 +663,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t torqueSensorMultiplier             = UserConfigTask_GetTorqueSensorMultiplier();
         uint8_t torqueMaxSpeed                     = UserConfigTask_GetTorqueMaxSpeed();
     
-        uint8_t cadenceHybridLeveSpeed[10] = {UserConfigTask_GetCadenceHybridLevelSpeed(PAS_0),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_1),
-                                              UserConfigTask_GetCadenceHybridLevelSpeed(PAS_2),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_3),
-                                              UserConfigTask_GetCadenceHybridLevelSpeed(PAS_4),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_5),
-                                              UserConfigTask_GetCadenceHybridLevelSpeed(PAS_6),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_7),
-                                              UserConfigTask_GetCadenceHybridLevelSpeed(PAS_8),UserConfigTask_GetCadenceHybridLevelSpeed(PAS_9)};
+        uint8_t cadenceLevelSpeed[10] =      {UserConfigTask_GetCadenceLevelSpeed(PAS_0),UserConfigTask_GetCadenceLevelSpeed(PAS_1),
+                                              UserConfigTask_GetCadenceLevelSpeed(PAS_2),UserConfigTask_GetCadenceLevelSpeed(PAS_3),
+                                              UserConfigTask_GetCadenceLevelSpeed(PAS_4),UserConfigTask_GetCadenceLevelSpeed(PAS_5),
+                                              UserConfigTask_GetCadenceLevelSpeed(PAS_6),UserConfigTask_GetCadenceLevelSpeed(PAS_7),
+                                              UserConfigTask_GetCadenceLevelSpeed(PAS_8),UserConfigTask_GetCadenceLevelSpeed(PAS_9)};
         uint8_t torqueLevelPower[10] =       {UserConfigTask_GetTorqueLevelPower(PAS_0),UserConfigTask_GetTorqueLevelPower(PAS_1),
                                               UserConfigTask_GetTorqueLevelPower(PAS_2),UserConfigTask_GetTorqueLevelPower(PAS_3),
                                               UserConfigTask_GetTorqueLevelPower(PAS_4),UserConfigTask_GetTorqueLevelPower(PAS_5),
@@ -678,11 +691,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, sizeof(uint8_t));    
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)),         pNode, &torqueMaxSpeed, sizeof(uint8_t));            
         
-        //fill the OD ID to cadenceHybridLeveSpeed and torqueLevelPower with the current values.
+        //fill the OD ID to cadenceLevelSpeed and torqueLevelPower with the current values.
         //this OD ID have 10 subindex each.
         for(uint8_t n = PAS_0;n <= PAS_9;n++)                                                                                                      
         {
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceHybridLeveSpeed[n], sizeof(uint8_t)); 
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceLevelSpeed[n], sizeof(uint8_t)); 
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_LEVEL_POWER, n)), pNode, &torqueLevelPower[n], sizeof(uint8_t));          
         }
         

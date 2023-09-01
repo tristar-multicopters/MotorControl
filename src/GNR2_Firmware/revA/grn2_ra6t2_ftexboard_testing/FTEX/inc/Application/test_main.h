@@ -13,7 +13,7 @@
 #include "external_flash_storage.h"
 #include "external_memory_spi.h"
 #include "serial_process.h"
-
+#include "serial_lcd_comm.h"
 // ================================ Defines =============================== //
 
 

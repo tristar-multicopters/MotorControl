@@ -64,11 +64,12 @@ uint8_t SF_format(void)
     // Initialize the external Flash / File system
     if(ExternalMemory_Init() != FLASH_OK)
     {
-        return EXIT_FAILURE;
+        return false;;
     }
     // Format External flash
     if(ExternalMemory_EraseChip() != FLASH_OK)
     {
-        return EXIT_FAILURE;
+        return false;;
     }
+    return true;
 }

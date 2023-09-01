@@ -39,7 +39,7 @@ typedef struct
 
 /**
   * @brief  Initializes Delay
-  * @param  pHandle : specific isntance of a delay, aPulseTime the lenght of a simngle pulse, pulse unit : the unit associated with a pulse time
+  * @param  pHandle : specific isntance of a delay, aPulseTime the length of a simngle pulse, pulse unit : the unit associated with a pulse time
   * @retval Nothing  
   */
 void Delay_Init(Delay_Handle_t * pHandle, uint32_t aPulseTime, DelayUnits_t aPulseUnit);
