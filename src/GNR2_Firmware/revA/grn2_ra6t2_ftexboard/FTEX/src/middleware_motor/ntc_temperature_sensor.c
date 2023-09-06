@@ -99,7 +99,7 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
     }
   
     int32_t wTemp;  // temporary 32 bit variable for calculation
-    if (pHandle->bSensorType == REAL_SENSOR && pHandle->pNTCLookupTable != NULL)  // Checks for sensor type
+    if ((pHandle->bSensorType == REAL_SENSOR) && (pHandle->pNTCLookupTable != NULL))  // Checks for sensor type
     {
         wTemp = LookupTable_CalcOutput(pHandle->pNTCLookupTable, pHandle->hAvTempDigital);          
     }
