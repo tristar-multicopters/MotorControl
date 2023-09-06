@@ -839,16 +839,18 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     uint16_t CodeReturn = MC_NO_ERROR;
     uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorInverter[bMotor]))
+    // Check if Controller temperature is higher than the threshold, then raise the error
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorInverter[bMotor]) != MC_NO_ERROR)
     {
         CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_CONTROLLER;
     }
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]))
+    // Check if Motor temperature is higher than the threshold, then raise the error
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]) != MC_NO_ERROR)
     {
         CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_MOTOR;
     }
     
-    CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);                     /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
+    CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
                                                                                     (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
     if (bMotor == M1)
     {
