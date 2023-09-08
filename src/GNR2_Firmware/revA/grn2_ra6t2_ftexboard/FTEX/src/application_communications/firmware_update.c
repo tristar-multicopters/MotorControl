@@ -257,7 +257,7 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
                 //initialize the variable.
                 dataFrameAttempts = 0;
                 
-                //reset the maximum timeout to wait 3000 ms.
+                //reset the maximum timeout to wait 3300 ms.
                 FirmwareUpdateControl.otaTimeOut = OTA_TIMEOUT;
             }
         }
@@ -273,7 +273,7 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
             //initialize the number of retry.
             dataFrameAttempts = 0;
             
-            //reset the maximum timeout to wait 3000 ms.
+            //reset the maximum timeout to wait 3300 ms.
             FirmwareUpdateControl.otaTimeOut = OTA_TIMEOUT;
         }
         
@@ -347,7 +347,7 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
                 //move to the next state.
                 FirmwareUpdateStateMachine = PREPARE_SYSTEM_TO_UPDATE;
                 
-                //wait maximum 3000 ms to motors stop and go to idle state.
+                //wait maximum 3300 ms to motors stop and go to idle state.
                 FirmwareUpdateControl.otaTimeOut = OTA_TIMEOUT;
             }
         
@@ -363,7 +363,7 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
                 //move to the next state.
                 FirmwareUpdateStateMachine = OPEN_DFU_FILE;
                 
-                //reset the maximum timeout to wait 3000 ms.
+                //reset the maximum timeout to wait 3300 ms.
                 FirmwareUpdateControl.otaTimeOut = OTA_TIMEOUT;    
                     
                 //initializa external flash memory response.
@@ -383,7 +383,7 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
                     //move to error state.
                     FirmwareUpdateStateMachine = FIRMWARE_UPDATE_ERROR;
                     
-                    //reset the maximum timeout to wait 3000 ms.
+                    //reset the maximum timeout to wait 3300 ms.
                     FirmwareUpdateControl.otaTimeOut = OTA_TIMEOUT;
                 }
             }
@@ -402,7 +402,7 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
                 //move to the next state.
                 FirmwareUpdateStateMachine = READY_TO_FIRMWARE_UPDATE;
                 
-                //reset the maximum timeout to wait 3000 ms.
+                //reset the maximum timeout to wait 3300 ms.
                 FirmwareUpdateControl.otaTimeOut = OTA_TIMEOUT;    
                     
                 //initializa external flash memory response.
@@ -411,6 +411,15 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
                 //close uart to reduce the volume of data stored in the FIFO queue buffer(RTOS).
                 //GNR will lost the communication with the display.
                 R_SCI_B_UART_Close(&g_uart9_ctrl);
+                
+                //Close ADC to reduce the number of interruption(ADC has hight priority)
+                //ADC interruption can block the interruption used by the DFU.
+                R_ADC_B_Close(g_adc0.p_ctrl);
+                
+                //Close theses timers interruption to give priority to interruptions
+                //used during DFU.
+                R_GPT_Close(g_timer0.p_ctrl);            
+                R_GPT_Close(g_timer9.p_ctrl);
             }
             else
             {
@@ -420,7 +429,7 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
                 //move to error state.
                 FirmwareUpdateStateMachine = FIRMWARE_UPDATE_ERROR;
                     
-                //reset the maximum timeout to wait 3000 ms.
+                //reset the maximum timeout to wait 3300 ms.
                 FirmwareUpdateControl.otaTimeOut = OTA_TIMEOUT;
             }
             
@@ -453,7 +462,7 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
                 //move to error state.
                 FirmwareUpdateStateMachine = FIRMWARE_UPDATE_ERROR;
                 
-                //reset the maximum timeout to wait 3000 ms.
+                //reset the maximum timeout to wait 3300 ms.
                 FirmwareUpdateControl.otaTimeOut = OTA_TIMEOUT;
             }
         

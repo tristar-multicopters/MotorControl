@@ -45,8 +45,8 @@
 #define TRANSFER_CORRUPTED_FRAME        0xFE
 #define TRANSFER_MISSING_FRAME          0xFF
 
-//timeout in steps of 0.5 ms. 1 = 0.5 ms, 2 = 1ms and etc.
-#define OTA_TIMEOUT                     6000
+//timeout in steps of 33 ms. 1 = 33 ms, 2 = 66ms and etc.
+#define OTA_TIMEOUT                     100 
 
 //number of bytes of the firmware data frame
 #define NUMBER_OF_DATA_FRAME_BYTES      134

@@ -132,6 +132,15 @@ void PedalSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
             default:
                 break;
         }
+        
+        //Verify if the System is ready to send and received CANOPEN msgs.
+        //this function must be called periodically(inside a timer)
+        //If CAN NODE is OK, verifify if a DFU was requested and handle it.
+        if(PWREN_GetSystemReadyFlag(VCInterfaceHandle.pPowertrain->pPWREN) == true)
+        {
+            //call function responsible to handle the firmware update.
+            FirmwareUpdate_Control (&CONodeGNR, &VCInterfaceHandle);
+        }
     }
 }
 
@@ -251,10 +260,7 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
     
         //callback function to process time interruption
         COTimerCallback(&CONodeGNR.Tmr);
-    
-        //call function responsible to handle the firmware update.
-        FirmwareUpdate_Control (&CONodeGNR, &VCInterfaceHandle);
-    
+        
         //added in this place to empty the buffer as quickly as possible.
         //if the tx can buffer is empty, nothing will happen.
         //here this function will called on each 0.5ms.
