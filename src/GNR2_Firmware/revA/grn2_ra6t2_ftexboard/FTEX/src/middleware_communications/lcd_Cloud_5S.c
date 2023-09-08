@@ -142,6 +142,7 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
              else // If not, its a bad cmd
              {
                  pHandle->rx_frame.ByteCnt = 0;
+                 uCAL_UART_SendDefault(pHandle->pUART_handle);
              }           
         }
         else if (ByteCount == 1)
@@ -154,6 +155,7 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
              else // If not, its a bad cmd
              {
                  pHandle->rx_frame.ByteCnt = 0;
+                 uCAL_UART_SendDefault(pHandle->pUART_handle);
              }
         }
         else if (ByteCount == 2)
@@ -175,6 +177,7 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
              else
              {
                 pHandle->rx_frame.ByteCnt = 0;
+                uCAL_UART_SendDefault(pHandle->pUART_handle);
              }    
  
         }
@@ -204,7 +207,8 @@ void LCD_Cloud_5S_Task(Cloud_5S_Handle_t *pHandle)
         else
         {            
             // We should never get here but if we do trash the frame
-            pHandle->rx_frame.ByteCnt = 0;                    
+            pHandle->rx_frame.ByteCnt = 0;
+            uCAL_UART_SendDefault(pHandle->pUART_handle);            
         }
     }        
 }
