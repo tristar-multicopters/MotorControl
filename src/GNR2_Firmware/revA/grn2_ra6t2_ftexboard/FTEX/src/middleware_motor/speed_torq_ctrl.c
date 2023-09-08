@@ -17,7 +17,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 uint16_t M_STUCK_timer = 0;
 uint16_t OCD_timer = 0;
-
+    
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
 {
@@ -200,7 +200,6 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
     int16_t hTargetSpeed;
     int16_t hError;
 
-
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
@@ -211,7 +210,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
             hMeasuredSpeed = -SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD); // Speed is somehow negative when applying positive torque, need to figure out why.
             hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
             pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
-            if ((pHandle->hTorqueReferenceSpdLim < hTorqueReference) && (hError < (SPEED_TORQUE_SWITCHING_RANGE_RPM)))
+            if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)
             {
                 hTorqueReference = pHandle->hTorqueReferenceSpdLim;
             }
