@@ -71,12 +71,12 @@
       <configSetting altId="canfd0.ctx0.pb13" configurationId="canfd0.ctx0" isUsedByDriver="true"/>
       <configSetting altId="dac122.da2.pc04" configurationId="dac122.da2" isUsedByDriver="true"/>
       <configSetting altId="dac123.da3.pc05" configurationId="dac123.da3" isUsedByDriver="true"/>
-      <configSetting altId="gpt4.gtioc4a.pe10" configurationId="gpt4.gtioc4a"/>
-      <configSetting altId="gpt4.gtioc4b.pe13" configurationId="gpt4.gtioc4b"/>
-      <configSetting altId="gpt5.gtioc5a.pe11" configurationId="gpt5.gtioc5a"/>
-      <configSetting altId="gpt5.gtioc5b.pe14" configurationId="gpt5.gtioc5b"/>
-      <configSetting altId="gpt6.gtioc6a.pe12" configurationId="gpt6.gtioc6a"/>
-      <configSetting altId="gpt6.gtioc6b.pe15" configurationId="gpt6.gtioc6b"/>
+      <configSetting altId="gpt4.gtioc4a.pe10" configurationId="gpt4.gtioc4a" isUsedByDriver="true"/>
+      <configSetting altId="gpt4.gtioc4b.pe13" configurationId="gpt4.gtioc4b" isUsedByDriver="true"/>
+      <configSetting altId="gpt5.gtioc5a.pe11" configurationId="gpt5.gtioc5a" isUsedByDriver="true"/>
+      <configSetting altId="gpt5.gtioc5b.pe14" configurationId="gpt5.gtioc5b" isUsedByDriver="true"/>
+      <configSetting altId="gpt6.gtioc6a.pe12" configurationId="gpt6.gtioc6a" isUsedByDriver="true"/>
+      <configSetting altId="gpt6.gtioc6b.pe15" configurationId="gpt6.gtioc6b" isUsedByDriver="true"/>
       <configSetting altId="gpt9.gtioc9b.pa10" configurationId="gpt9.gtioc9b" isUsedByDriver="true"/>
       <configSetting altId="gpt_poega.gtetrga.pc14" configurationId="gpt_poega.gtetrga"/>
       <configSetting altId="icu3.irq3_dash_ds.pb05" configurationId="icu3.irq3_dash_ds"/>
