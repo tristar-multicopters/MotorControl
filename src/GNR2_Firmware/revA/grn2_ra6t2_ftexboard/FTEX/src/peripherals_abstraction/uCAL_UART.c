@@ -64,4 +64,12 @@ void uCAL_UART_Receive(UART_Handle_t *pHandle, uint8_t *Buffer, uint32_t BufferS
     ASSERT(FSP_SUCCESS == err);
 }
 
-
+/**
+  Function used to send a default resposne when we don't know what is the frame we have received 
+*/
+void uCAL_UART_SendDefault(UART_Handle_t *pHandle)
+{
+    uint8_t DefaultMsg[] = "FTEX";
+    //Send the default frame
+    uCAL_UART_Transmit(pHandle, DefaultMsg, sizeof(DefaultMsg));    
+}

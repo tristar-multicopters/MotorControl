@@ -40,6 +40,8 @@ typedef enum
 typedef struct
 {
     const uart_instance_t * pUARTInstance;
+    
+    
     uCAL_BaudRate_t    UARTBaudrate;
     uCAL_Protocol_t    UARTProtocol;
     uint8_t            OpenRecpBuffer[30];
@@ -55,7 +57,7 @@ UART_Handle_t;
 /**
   @brief Function used to initialise the UART using the renesas API
     
-  @param Receives UART baud rate and handle
+  @param Receives UART handle
   @return void
 */
 void uCAL_UART_Init(UART_Handle_t *pHandle);
@@ -63,7 +65,7 @@ void uCAL_UART_Init(UART_Handle_t *pHandle);
 /**
   @brief Function used to set the UART baud rate using the renesas API
     
-  @param Receives UART baud rate
+  @param Receives UART handle that contains the baudrate
   @return void
 */
 void uCAL_UART_SetBaudRate(UART_Handle_t *pHandle);
@@ -71,7 +73,7 @@ void uCAL_UART_SetBaudRate(UART_Handle_t *pHandle);
 /**
   @brief Function used to transmit data via UART from a specific buffer
     
-  @param Buffer pointer and size
+  @param Receives UART handle, buffer pointer and size
   @return void
 */
 void uCAL_UART_Transmit(UART_Handle_t *pHandle, uint8_t *Buffer, uint32_t BufferSize);
@@ -79,12 +81,25 @@ void uCAL_UART_Transmit(UART_Handle_t *pHandle, uint8_t *Buffer, uint32_t Buffer
 /**
   @brief Function used to receive data via UART in a specific buffer
     
-  @param Buffer pointer and size
+  @param Receives UART handle, buffer pointer and size
   @return void
 */
 void uCAL_UART_Receive(UART_Handle_t *pHandle, uint8_t *Buffer, uint32_t BufferSize);
 
-
+/**
+  @brief Function used to manage interrupts of the uart module 
+    
+  @param Receives UART handle and renesas callback arguments
+  @return void
+*/
 void uCAL_UART_IRQHandler(UART_Handle_t *pHandle,uart_callback_args_t * p_args);
+
+/**
+  @brief Function used to send a default resposne when we don't know what is the frame we have received 
+    
+  @param Receives UART handle and renesas callback arguments
+  @return void
+*/
+void uCAL_UART_SendDefault(UART_Handle_t *pHandle);
 
 #endif
