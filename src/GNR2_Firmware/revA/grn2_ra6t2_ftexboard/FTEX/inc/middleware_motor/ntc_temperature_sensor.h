@@ -41,8 +41,9 @@ typedef struct
                                     This parameter is expressed in degC */
   uint16_t hOverTempDeactThreshold; /**< Temperature threshold below which an active over temperature fault is cleared.
                                          This parameter is expressed in degC */
-  uint8_t bConvHandle;            /*!< handle to the regular conversion */
+  uint8_t bConvHandle;            /**< handle to the regular conversion */
 
+  int8_t initIgnore;              /**< used to ignore first values in initialization */
 
   LookupTableHandle_t * pNTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
 
@@ -55,13 +56,13 @@ typedef struct
  * 	@brief Initializes temperature sensing conversions
  * 	@param pHandle : Pointer on Handle structure of TemperatureSensor component
  */
-void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle);
+void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp);
 
 /**
  * 	@brief Initializes internal average temperature computed value
  *  @param pHandle : Pointer on Handle structure of TemperatureSensor component
  */
-void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle);
+void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp);
 
 /**
  * 	@brief Performs the temperature sensing average computation after an ADC conversion

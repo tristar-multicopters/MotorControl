@@ -39,7 +39,8 @@
 #define STOPPERMANENCY_TICKS (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS) / 1000)
 #define STOPPERMANENCY_TICKS2 (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS2) / 1000)
 #define VBUS_TEMP_ERR_MASK (uint16_t) ~(0 | MC_NO_ERROR)
-
+#define DEFAULT_TEMP_MOTOR 0xFFF
+#define DEFAULT_TEMP_CONTROLLER 0x000
 
 /* Private variables----------------------------------------------------------*/
 FOCVars_t FOCVars[NBR_OF_MOTORS];
@@ -174,9 +175,9 @@ void MC_BootUp(void)
     /*******************************************************/
     /*   Temperature measurement component initialization  */
     /*******************************************************/
-    NTCTempSensor_Init(&TempSensorControllerM1);
+    NTCTempSensor_Init(&TempSensorControllerM1, DEFAULT_TEMP_CONTROLLER);
     pTemperatureSensorController[M1] = &TempSensorControllerM1;
-    NTCTempSensor_Init(&TempSensorMotorM1);
+    NTCTempSensor_Init(&TempSensorMotorM1, DEFAULT_TEMP_MOTOR);
     pTemperatureSensorMotor[M1] = &TempSensorMotorM1;
     /*******************************************************/
     /*     Motor Control component initialization         */

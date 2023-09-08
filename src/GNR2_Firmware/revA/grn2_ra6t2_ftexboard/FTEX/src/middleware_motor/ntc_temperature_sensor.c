@@ -10,6 +10,8 @@
 
 #define NTC_NO_ERRORS 0
 #define NTC_OV_TEMP 1
+#define INIT_IGNORE 5
+#define INIT_IGNORE_STEP 1
 
 /* the minimum acceptable value for NTC - any lower value means 
 sensor is disconnected or temeprature is very low
@@ -20,6 +22,7 @@ const uint8_t MIMIMUM_NTC_FREEZING = 200;
 
 /* Private function prototypes -----------------------------------------------*/
 uint16_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle);
+
 
 // ========================================================================= //
 
@@ -52,7 +55,7 @@ uint16_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle)
 /* Functions ---------------------------------------------------- */
 
 
-void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle)
+void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp)
 {
   if (pHandle->bSensorType == REAL_SENSOR)
   {
@@ -63,7 +66,8 @@ void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle)
           pHandle->OutsideTable = &(pHandle->pNTCLookupTable->OutsideTable); // Link the OutsideTable flag
       }
       pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->TempRegConv);  // Need to be register with RegularConvManager
-      NTCTempSensor_Clear(pHandle);
+      pHandle->initIgnore = INIT_IGNORE;
+      NTCTempSensor_Clear(pHandle, defaultTemp);
   }
   else  // VIRTUAL_SENSOR
   {
@@ -73,9 +77,9 @@ void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle)
 }
 
 
-void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle)
+void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp)
 {
-  pHandle->hAvTempDigital = 0u;
+  pHandle->hAvTempDigital = defaultTemp;
 }
 
 
@@ -85,16 +89,16 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
     uint16_t hAux;   // temporary 16 bit variable for calculation
     if (pHandle->bSensorType == REAL_SENSOR)  // Checks if the sensor is real or virtual
     {
-      hAux = RegConvMng_ReadConv(pHandle->bConvHandle);   // Reads raw value of converted ADC value.
-      if (hAux != 0xFFFFu)  // Checks for max reading, if yes, no point of averaging
-          {   // Performs first order averaging:
-              // new_average = (instantenous_measurment + (previous_average * number_of_smaples - 1)) / number_of_smaples
-          wtemp =  (uint32_t)(pHandle->hLowPassFilterBw) - 1u;
-          wtemp *= (uint32_t) (pHandle->hAvTempDigital);
-          wtemp += hAux;
-          wtemp /= (uint32_t)(pHandle->hLowPassFilterBw);
-          pHandle->hAvTempDigital = (uint16_t) wtemp;
-      }
+          hAux = RegConvMng_ReadConv(pHandle->bConvHandle);   // Reads raw value of converted ADC value.
+          if (hAux != 0xFFFFu)  // Checks for max reading, if yes, no point of averaging
+              {   // Performs first order averaging:
+                  // new_average = (instantenous_measurment + (previous_average * number_of_smaples - 1)) / number_of_smaples
+              wtemp =  (uint32_t)(pHandle->hLowPassFilterBw) - 1u;
+              wtemp *= (uint32_t) (pHandle->hAvTempDigital);
+              wtemp += hAux;
+              wtemp /= (uint32_t)(pHandle->hLowPassFilterBw);
+              pHandle->hAvTempDigital = (uint16_t) wtemp;
+              }
     }
     else  // VIRTUAL_SENSOR
     {
@@ -114,6 +118,13 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
     pHandle->hAvTempCelcius = (int16_t) wTemp;
     
     pHandle->hFaultState = NTC_SetFaultState(pHandle);  // Retain state
+    
+    //ignore the first 5 values after initialization to avoid triggering the error at the beginning
+    if (pHandle->initIgnore > 0)
+    {
+      pHandle->initIgnore -= INIT_IGNORE_STEP;
+      pHandle->hFaultState = NTC_NO_ERRORS;
+    }
     
     return pHandle->hFaultState;
 }

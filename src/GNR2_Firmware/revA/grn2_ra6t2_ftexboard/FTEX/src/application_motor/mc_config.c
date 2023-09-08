@@ -17,6 +17,7 @@
 #define OFFCALIBRWAIT_MS     0
 #define MAX_DUTY     				 30000 /* INT16_MAX is 100% duty cycle */
 
+
 MotorPowerQDHandle_t PQDMotorPowMeasM1 =
 {
     .wConvFact = PQD_CONVERSION_FACTOR
