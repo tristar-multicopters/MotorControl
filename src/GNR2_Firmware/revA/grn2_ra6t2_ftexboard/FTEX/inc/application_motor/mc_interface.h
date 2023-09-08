@@ -67,7 +67,6 @@ typedef struct
   MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
   STCModality_t LastModalitySetByUser;    /*!< The last STCModality_t set by the user. */
                                              
-  NTCTempSensorHandle_t	*pNTCTempSensor;  /*The NTC sensor value to be monitored in vehicle layer*/
   ConversionFactors_t MCIConvFactors;     /* Used to sent conversion factors that are in motor control to vehicle control */
 } MotorControlInterfaceHandle_t;
 
@@ -84,7 +83,7 @@ typedef struct
   * @param  pFOCVars pointer to FOC vars to be used by MCI.
   * @retval none.
   */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, NTCTempSensorHandle_t *pNTCTempSensor, MCConfigHandle_t *pMCConfig);
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, MCConfigHandle_t *pMCConfig);
 
 /**
   * @brief  This is usually a method managed by task. It must be called
@@ -403,11 +402,11 @@ uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHa
 //desctribtion alter
 
 /**
-  * @brief  Getting the inverter NTC temperature value
+  * @brief  Getting the controller NTC temperature value
   * @param  pHandle Pointer on the component instance to work on.
   * @retval Value of the heatsink temperature in celsius degree
   */
-int16_t MCInterface_GetInverterTemp(MotorControlInterfaceHandle_t * pHandle);
+int16_t MCInterface_GetControllerTemp(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  Getting the Motor NTC temperature value

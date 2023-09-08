@@ -53,7 +53,7 @@ PIDHandle_t *pPIDIq[NBR_OF_MOTORS];
 PIDHandle_t *pPIDId[NBR_OF_MOTORS];
 ResDivVbusSensorHandle_t *pBusSensorM1;
 
-NTCTempSensorHandle_t *pTemperatureSensorInverter[NBR_OF_MOTORS];
+NTCTempSensorHandle_t *pTemperatureSensorController[NBR_OF_MOTORS];
 NTCTempSensorHandle_t *pTemperatureSensorMotor[NBR_OF_MOTORS];
 PWMCurrFdbkHandle_t *pPWMCurrFdbk[NBR_OF_MOTORS];
 MotorPowerQDHandle_t *pMotorPower[NBR_OF_MOTORS];
@@ -143,7 +143,7 @@ void MC_BootUp(void)
     /******************************************************/
     /*   Speed & torque component initialization          */
     /******************************************************/
-    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1], pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorInverterM1, &TempSensorMotorM1);
+    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1], pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorControllerM1, &TempSensorMotorM1);
 
     /******************************************************/
     /*  Auxiliary speed sensor component initialization   */
@@ -174,8 +174,8 @@ void MC_BootUp(void)
     /*******************************************************/
     /*   Temperature measurement component initialization  */
     /*******************************************************/
-    NTCTempSensor_Init(&TempSensorInverterM1);
-    pTemperatureSensorInverter[M1] = &TempSensorInverterM1;
+    NTCTempSensor_Init(&TempSensorControllerM1);
+    pTemperatureSensorController[M1] = &TempSensorControllerM1;
     NTCTempSensor_Init(&TempSensorMotorM1);
     pTemperatureSensorMotor[M1] = &TempSensorMotorM1;
     /*******************************************************/
@@ -197,7 +197,7 @@ void MC_BootUp(void)
     oMCInterface[M1] = &MCInterface[M1];
     
     
-    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1], &(pBusSensorM1->Super), &TempSensorMotorM1,&MCConfig);
+    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1], &(pBusSensorM1->Super),&MCConfig);
     
     /* Section where we initialise conversion factors that need to be available to vehicle control */
     oMCInterface[M1]->MCIConvFactors.Gain_Torque_IQRef = GAIN_TORQUE_IQREF;
@@ -214,7 +214,7 @@ void MC_BootUp(void)
     MCTuning[M1].pSpeedSensorVirtual = MC_NULL;
     MCTuning[M1].pSpeednTorqueCtrl = pSpeedTorqCtrl[M1];
     MCTuning[M1].pStateMachine = &MCStateMachine[M1];
-    MCTuning[M1].pTemperatureSensorInverter = (NTCTempSensorHandle_t *)pTemperatureSensorInverter[M1];
+    MCTuning[M1].pTemperatureSensorController = (NTCTempSensorHandle_t *)pTemperatureSensorController[M1];
     MCTuning[M1].pTemperatureSensorMotor = (NTCTempSensorHandle_t *)pTemperatureSensorMotor[M1];
     MCTuning[M1].pBusVoltageSensor = &(pBusSensorM1->Super);
     MCTuning[M1].pMotorPower = (MotorPowerMeasHandle_t *)pMotorPower[M1];
@@ -840,7 +840,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
     // Check if Controller temperature is higher than the threshold, then raise the error
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorInverter[bMotor]) != MC_NO_ERROR)
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) != MC_NO_ERROR)
     {
         CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_CONTROLLER;
     }

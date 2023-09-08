@@ -150,6 +150,8 @@ uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
         {
             stateToSend |= MOTOR_OVER_C_FAULT;
         }
+        
+        
         // Motor speed feedback fault
         if(hCurrFault & MC_SPEED_FDBK)
         {

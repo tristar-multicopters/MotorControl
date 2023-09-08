@@ -8,6 +8,9 @@
 
 /* global Variables -----------------------------------------------------------*/
 
+#define NTC_NO_ERRORS 0
+#define NTC_OV_TEMP 1
+
 /* the minimum acceptable value for NTC - any lower value means 
 sensor is disconnected or temeprature is very low
 outuput voltage of 10K (resisotr on PCB) || 200K (NTC at -40degrees) on 3.3V = 0.157
@@ -33,11 +36,11 @@ uint16_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle)
 
   if (pHandle->hAvTempCelcius > pHandle->hOverTempThreshold)
   {
-    hFault = 1;
+    hFault = NTC_OV_TEMP;
   }
   else if (pHandle->hAvTempCelcius < pHandle->hOverTempDeactThreshold)
   {
-    hFault = 0;
+    hFault = NTC_NO_ERRORS;
   }
   else
   {
@@ -64,7 +67,7 @@ void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle)
   }
   else  // VIRTUAL_SENSOR
   {
-      pHandle->hFaultState = 0;
+      pHandle->hFaultState = NTC_NO_ERRORS;
       pHandle->hAvTempDigital = pHandle->hExpectedTempDigital;
   }
 }
@@ -95,7 +98,7 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
     }
     else  // VIRTUAL_SENSOR
     {
-      pHandle->hFaultState = 0;
+      pHandle->hFaultState = NTC_NO_ERRORS;
     }
   
     int32_t wTemp;  // temporary 32 bit variable for calculation

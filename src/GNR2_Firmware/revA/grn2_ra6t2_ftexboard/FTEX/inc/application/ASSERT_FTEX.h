@@ -1,9 +1,9 @@
 /**
 * @file   ASSERT_FTEX.h
 * @author Andy B
-* @brief  This file contaisn the FTEX assert wrapper.
+* @brief  This file contains the FTEX assert wrapper.
 *
-* This file contaisn the wrapper for assert checks which enables us to either call
+* This file contains the wrapper for assert checks which enables us to either call
 * the renesas assert when we are using a debugger or to log asserts with the CAN
 * logger. To add asserts checks to other files make sure to include this .h and use 
 * ASSERT(expr); where expr is the expression you want to test.

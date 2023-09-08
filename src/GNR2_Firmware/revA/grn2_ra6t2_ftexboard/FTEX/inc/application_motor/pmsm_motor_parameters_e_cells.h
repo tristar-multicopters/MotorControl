@@ -33,6 +33,7 @@
 
 #define ID_DEMAG_amps                -5 /*!< Demagnetization current */
 #define OV_TEMP_MOTOR_THRESHOLD_C 70    /* Maximum temperature in degree C */
+#define OV_TEMP_MOTOR_HYSTERESIS_C 10    /* Temperature to decrease after an overtemp fault occured before clearing the fault, in degree C */
 #define FLUX_WEAKENING_ENABLE   0       /* 0=disable 1=enable flux weakening , 
 
 /***************** MOTOR SENSORS PARAMETERS  ******************************/

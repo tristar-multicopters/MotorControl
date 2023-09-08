@@ -1,5 +1,5 @@
-#ifndef __DURATORQ_AUTORQ_H
-#define __DURATORQ_AUTORQ_H
+#ifndef __T47_AUTORQ_H
+#define __T47_AUTORQ_H
 
 // Currently choosen torque sensor for Velec
 
@@ -9,13 +9,10 @@
 #define PTS_FILTER_BETA                 -0.27F  // Butterworth beta coefficient pedal torque sensor filtering
 #define PTS_MAX_PTSVALUE                40000   // Maximum analog value to reach
 
-#define PTS_OFFSET_ADC2PTS              24000   // Offset for ADC to pedal torque sensor linear transformation
+#define PTS_OFFSET_ADC2PTS              10200   // Offset for ADC to pedal torque sensor linear transformation
 
 /***************** PEDAL TORQUE SENSOR CADENCE PARAMETERS  ******************************/
 
 #define PAS_SLOW_PEDAL_COUNT            4       // Loop wait counter to update the PAS detection function
-
-
-
 
 #endif

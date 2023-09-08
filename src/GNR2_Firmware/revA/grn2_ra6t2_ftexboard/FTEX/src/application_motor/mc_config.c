@@ -408,6 +408,8 @@ NTCTempSensorHandle_t TempSensorMotorM1 =
         .hChannel = MOTOR_TEMP_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
+
+
     .hOverTempThreshold      = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C),
     .hOverTempDeactThreshold = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C - OV_TEMP_MOTOR_HYSTERESIS_C),
 
@@ -415,9 +417,9 @@ NTCTempSensorHandle_t TempSensorMotorM1 =
 };
 
 /**
-  * temperature sensor parameters Inverter 1
+  * temperature sensor parameters Controller 1
   */
-NTCTempSensorHandle_t TempSensorInverterM1 =
+NTCTempSensorHandle_t TempSensorControllerM1 =
 {
     .bSensorType = REAL_SENSOR,
     .TempRegConv =
@@ -425,10 +427,10 @@ NTCTempSensorHandle_t TempSensorInverterM1 =
         .hChannel = HEATSINK_TEMP_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
-    .hOverTempThreshold      = (int16_t)(OV_TEMP_INVERTER_THRESHOLD_C),
-    .hOverTempDeactThreshold = (int16_t)(OV_TEMP_INVERTER_THRESHOLD_C - OV_TEMP_INVERTER_HYSTERESIS_C),
+    .hOverTempThreshold      = (int16_t)(OV_TEMP_CONTROLLER_THRESHOLD_C),
+    .hOverTempDeactThreshold = (int16_t)(OV_TEMP_CONTROLLER_THRESHOLD_C - OV_TEMP_CONTROLLER_HYSTERESIS_C),
 
-    .pNTCLookupTable = &InverterNTCLookupTable,
+    .pNTCLookupTable = &ControllerNTCLookupTable,
 };
 
 /* Bus voltage sensor value filter buffer */
