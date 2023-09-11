@@ -135,6 +135,7 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle)
              {
                  pHandle->rx_frame.ByteCnt = 0;
                  NbBytePerFrame = 0;
+                 uCAL_UART_SendDefault(pHandle->pUART_handle);
              }
              
         }
@@ -186,19 +187,22 @@ void LCD_KD718_Task(KD718_Handle_t *pHandle)
                 {   
                     NbBytePerFrame = 0;
                     pHandle->rx_frame.ByteCnt = 0;
+                    uCAL_UART_SendDefault(pHandle->pUART_handle);
                 }              
             }
             else // Trash the frame for unkwon write command
             {
                  NbBytePerFrame = 0;
                  pHandle->rx_frame.ByteCnt = 0;
+                 uCAL_UART_SendDefault(pHandle->pUART_handle);
             }                   
         }
         else
         {            
             // We should never get here but if we do trash the frame
             NbBytePerFrame = 0;
-            pHandle->rx_frame.ByteCnt = 0;                    
+            pHandle->rx_frame.ByteCnt = 0; 
+            uCAL_UART_SendDefault(pHandle->pUART_handle);            
         }
     }        
 }

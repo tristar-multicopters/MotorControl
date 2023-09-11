@@ -159,6 +159,25 @@ PWREN_Handle_t PowerEnableHandle =
     .bSdoResponseReceived = false,
     .bSystemReady = false,
 };
+Quadra_Accel_Ramp_t CadenceAccelRamp =
+{                       // Commented values are a bit more agressive config
+    .alphaNum    =  1,  //1,
+    .alphaDenum  =  10, //2,
+    .betaNum     =  1,  //1,
+    .betaDenum   =  10, //2,
+    .charlie     =  0,  //0,
+    .CurrentStep =  1,
+    .StepsPerTorque = 10, //= 200,
+    .ValueReached = false,
+};
+
+Linear_Decel_Ramp_t CadenceDecelRamp =
+{
+    .CurrentStep    = 1,
+    .OldTorque      = 0,    // Commented are an average decel ramp
+    .MinTorqueDelta = 3000, //35,
+    .StepsPerChange = 0,    //3,
+};
 
 PAS_Handle_t PedalAssistHandle = 
 {
@@ -191,7 +210,8 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.PASTTorqRatiosInPercentage[7] = PAS_T_7_POWER_PERCENT,
     .sParameters.PASTTorqRatiosInPercentage[8] = PAS_T_8_POWER_PERCENT,
     .sParameters.PASTTorqRatiosInPercentage[9] = PAS_T_9_POWER_PERCENT,
-
+    .CadenceAccelRamp = &CadenceAccelRamp,
+    .CadenceDecelRamp = &CadenceDecelRamp,
     .bCurrentPasAlgorithm = PAS_ALGORITHM,
     .pPSS = &PedalSpeedSensorHandle,
     .pPTS = &PedalTorqueSensorHandle,

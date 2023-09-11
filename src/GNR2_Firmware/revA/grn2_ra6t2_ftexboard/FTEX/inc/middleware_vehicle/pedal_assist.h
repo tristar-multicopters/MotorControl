@@ -43,6 +43,31 @@ typedef enum
     CadenceSensorUse,       // Cadence sensor use define
 }PasAlgorithm_t;
 
+typedef struct
+{
+  // Standard coefficient for a quadratic (f(x) = ax^2+bx+c)
+  // in place of adding a float alpha and beta are split in two that represent a fraction
+  // IE: alpha = alpNum/alphaDenum     
+  uint16_t alphaNum;    // Numerator of the aplha
+  uint16_t alphaDenum;  // Denomiantor of the aplha 
+  uint16_t betaNum;     // Numerator of the beta
+  uint16_t betaDenum;   // Denomiantor of the beta
+  uint16_t charlie;     // Avalue of the charlie
+    
+  uint16_t CurrentStep;
+  uint16_t StepsPerTorque;  // Divisor to scale the quadratic
+  bool ValueReached;    
+}Quadra_Accel_Ramp_t; 
+
+typedef struct
+{
+  uint16_t CurrentStep;
+  uint16_t StepsPerChange; 
+  int16_t  MinTorqueDelta; // The minimum amount of torque that can be removed
+  int16_t  OldTorque;      // Keeps track of the amount of torque of the preivous iteration
+}Linear_Decel_Ramp_t;
+
+
 // ======================== Configuration structures ======================== // 
 typedef struct
 { 
@@ -70,7 +95,10 @@ typedef struct
     PasLevel_t bCurrentAssistLevel;               // Current pedal assist level
     PasAlgorithm_t  bCurrentPasAlgorithm;         // Current PAS used Algorithm
     uint16_t hPASSelectedSpeed;                   // current PAS speed selected by user 
-   
+    
+    Quadra_Accel_Ramp_t * CadenceAccelRamp;
+    Linear_Decel_Ramp_t * CadenceDecelRamp;
+    
     bool bPASDetected;                            // Use PAS flag  for detection
     
     PedalSpeedSensorHandle_t * pPSS;              // Pointer to Pedal Speed Sensor handle
@@ -195,6 +223,34 @@ void PedalAssist_ResetParameters (PAS_Handle_t * pHandle);
     * @retval None
     */
 void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
+
+/**
+    * @brief  Apply the Quadratic acceleration
+    * @param  Quadratic acceleration ramp handle
+    * @retval int16_t
+    */
+int16_t QuadAccel_ApplyRamp(Quadra_Accel_Ramp_t *pRamp, int16_t Torque);
+
+/**
+    * @brief  Reset the Quadratic acceleration progression
+    * @param  Quadratic acceleration ramp handle
+    * @retval void
+    */
+void QuadAccel_ResetRamp(Quadra_Accel_Ramp_t *pRamp);
+
+/**
+    * @brief  Apply the Linear deceleration
+    * @param  Linear acceleration ramp handle
+    * @retval int16_t
+    */
+int16_t LinearDecel_ApplyRamp(Linear_Decel_Ramp_t *pRamp, int16_t Torque);
+
+/**
+    * @brief  Update the old torque value of the linear deceleration ramp
+    * @param  Linear acceleration ramp handle
+    * @retval void
+    */
+void LinearDecel_UpdateOldTorque(Linear_Decel_Ramp_t *pRamp, int16_t OldTorque);
 
 #endif /*__PEDAL_ASSIST_H*/
 

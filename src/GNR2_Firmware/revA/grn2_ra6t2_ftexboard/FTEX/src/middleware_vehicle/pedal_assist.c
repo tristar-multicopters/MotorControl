@@ -29,7 +29,7 @@ void AssertIsValidLevel(PasLevel_t level);
 void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
 {
     ASSERT(pHandle != NULL);
-
+    
     PedalSpdSensor_Init(pHandle->pPSS);
     WheelSpdSensor_Init(pHandle->pWSS);
     PedalTorqSensor_Init(pHandle->pPTS, pPTSstuckDelay);
@@ -208,6 +208,7 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
 void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle) 
 {
     ASSERT(pHandle != NULL);
+
     uint32_t  wSpeedt;
     uint16_t  hTorqueSens;
     uint16_t  hOffsetTemp;
@@ -398,3 +399,122 @@ void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo
     pHandle->bCurrentPasAlgorithm = aPASAlgo;
 }
 
+/**
+    * @brief  Apply the Quadratic acceleration
+    * @param  Quadratic acceleration ramp handle
+    * @retval int16_t
+    */
+int16_t QuadAccel_ApplyRamp(Quadra_Accel_Ramp_t *pRamp, int16_t Torque)
+{
+    ASSERT(pRamp != NULL);
+    uint32_t NextVal = 0;
+    int16_t TorqueOut = 0;
+    static int16_t OldTorque = 0;
+
+    
+    if(OldTorque != Torque) //reset the progression if needed 
+    {
+        pRamp->ValueReached = false;
+        OldTorque = Torque;
+    }
+    
+    
+    if (pRamp->CurrentStep <= 0 || pRamp->ValueReached == true) // Safety check we dont want to input a 0 in the function
+    {
+        pRamp->CurrentStep = 1;  
+    }       
+       
+    // Compute the hypothetical next torque value using the quadratic equation
+    NextVal = (pRamp->alphaNum * (pRamp->CurrentStep * pRamp->CurrentStep))/pRamp->alphaDenum; 
+    NextVal += (pRamp->betaNum * pRamp->CurrentStep)/pRamp->betaDenum;
+    NextVal += pRamp->charlie;
+        
+        
+    ASSERT(pRamp->StepsPerTorque > 0);
+        
+    NextVal = NextVal/pRamp->StepsPerTorque; // Apply the divisor to scale down the quadratic
+   
+    if (Torque > (int16_t)NextVal && pRamp->ValueReached == false) // Test the hypothetical value to see if it's ok
+    {
+        pRamp->CurrentStep ++;    
+            
+        TorqueOut = (int16_t)NextVal; // If it is ok, appply it
+    }
+    else
+    {
+        TorqueOut = Torque; // If not it means we have reached the stable torque so don't change the input argument
+            
+        if (pRamp->ValueReached == false)
+        {
+            pRamp->ValueReached = true; // Raise the flag that the ramp is finish.
+        }
+    }  
+   
+    return TorqueOut;    
+}
+
+/**
+    * @brief  Reset the Quadratic acceleration progression
+    * @param  Quadratic acceleration ramp handle
+    * @retval void
+    */
+void QuadAccel_ResetRamp(Quadra_Accel_Ramp_t *pRamp)
+{
+    ASSERT(pRamp != NULL);
+    pRamp->ValueReached = false;
+    pRamp->CurrentStep = 1;
+}    
+
+/**
+    * @brief  Apply the Linear deceleration
+    * @param  Linear acceleration ramp handle
+    * @retval int16_t
+    */
+int16_t LinearDecel_ApplyRamp(Linear_Decel_Ramp_t *pRamp, int16_t Torque)
+{
+    ASSERT(pRamp != NULL);
+    int16_t TorqueOut;
+    
+    if (Torque < (pRamp->OldTorque - pRamp->MinTorqueDelta)) // Are we decelarating too quickly ?
+    {
+        if (pRamp->CurrentStep > pRamp->StepsPerChange) // Apply the restricted deceleration
+        {
+            pRamp->CurrentStep = 1;
+            
+            if ((pRamp->OldTorque - pRamp->MinTorqueDelta) > 0)
+            {
+                TorqueOut = (pRamp->OldTorque - pRamp->MinTorqueDelta);
+            }
+            else
+            {
+               TorqueOut = 0;
+            }
+        }
+        else
+        {
+           pRamp->CurrentStep += 1;
+           TorqueOut = pRamp->OldTorque;
+        }            
+    }
+    else // If the requested deceleration is subtle enough dont change it
+    {
+        pRamp->CurrentStep = 1;
+        TorqueOut = Torque;
+    }       
+
+    pRamp->OldTorque = TorqueOut;
+    
+    return TorqueOut;
+}
+
+/**
+    * @brief  Update the old torque value of the linear deceleration ramp
+    * @param  Linear acceleration ramp handle
+    * @retval void
+    */
+void LinearDecel_UpdateOldTorque(Linear_Decel_Ramp_t *pRamp, int16_t OldTorque)
+{
+    ASSERT(pRamp != NULL);
+    pRamp->OldTorque = OldTorque;
+    pRamp->CurrentStep = 1;
+}

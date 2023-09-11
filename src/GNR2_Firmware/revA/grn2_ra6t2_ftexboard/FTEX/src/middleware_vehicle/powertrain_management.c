@@ -144,8 +144,8 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS); // Make sure we have the most up-to-date desired top speed
             
             TopSpeed = PedalAssist_GetPASMaxSpeed(pHandle->pPAS);
-            PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed       
-           
+            PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed                   
+            
             #if VEHICLE_SELECTION == VEHICLE_NIDEC
             if (pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse)
             {
@@ -1040,6 +1040,7 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 {      
     ASSERT(pHandle != NULL);
+    static bool CadenceDeceleration = false;
     
     /* Disable the throttle output if we need to when PAS level is 0 */
     if(pHandle->sParameters.bPAS0DisableThrottle && PedalAssist_GetAssistLevel(pHandle->pPAS) == 0)
@@ -1049,7 +1050,8 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     else
     {
         Throttle_EnableThrottleOutput(pHandle->pThrottle);
-    }
+    }  
+    
     
     /* Throttle and walk mode always have higher priority over PAS but 
        the priority between walk mode and throttle depends on the value 
@@ -1072,15 +1074,37 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         else 
         {
             pHandle->hTorqueSelect = PedalAssist_GetPASCadenceMotorTorque(pHandle->pPAS);
+            pHandle->hTorqueSelect = QuadAccel_ApplyRamp(pHandle->pPAS->CadenceAccelRamp,pHandle->hTorqueSelect); // Apply the quad acceleration ramp
+            
+            LinearDecel_UpdateOldTorque(pHandle->pPAS->CadenceDecelRamp,pHandle->hTorqueSelect);
+            
             PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS); 
+            CadenceDeceleration = true;
         }
-    }        
+    }
+    else if (CadenceDeceleration && !PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle))
+    {
+       
+        pHandle->hTorqueSelect = LinearDecel_ApplyRamp(pHandle->pPAS->CadenceDecelRamp,0);
+        
+        if(pHandle->hTorqueSelect == 0)
+        {
+            CadenceDeceleration = false;    
+        }
+        
+        QuadAccel_ResetRamp(pHandle->pPAS->CadenceAccelRamp);             
+    }       
     /* Using throttle */
     else 
     {        
         /* Throttle value convert to torque */        
         pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);
+        
+        QuadAccel_ResetRamp(pHandle->pPAS->CadenceAccelRamp);
+        LinearDecel_UpdateOldTorque(pHandle->pPAS->CadenceDecelRamp,0);
+        CadenceDeceleration = false;
     }
+
     
     return pHandle->hTorqueSelect;
 }
