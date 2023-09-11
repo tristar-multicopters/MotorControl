@@ -36,14 +36,16 @@ typedef struct
 
   uint16_t hLowPassFilterBw;   /**< used to configure the first order software filter bandwidth.
                                     hLowPassFilterBw = NTC_CalcBusReading
-                                    call rate [Hz]/ FilterBandwidth[Hz] */
-  uint16_t hOverTempThreshold; /**< Represents the over voltage protection intervention threshold.
+                                    
+    
+    call rate [Hz]/ FilterBandwidth[Hz] */
+  int16_t hOverTempThreshold; /**< Represents the over voltage protection intervention threshold.
                                     This parameter is expressed in degC */
-  uint16_t hOverTempDeactThreshold; /**< Temperature threshold below which an active over temperature fault is cleared.
+  int16_t hOverTempDeactThreshold; /**< Temperature threshold below which an active over temperature fault is cleared.
                                          This parameter is expressed in degC */
   uint8_t bConvHandle;            /**< handle to the regular conversion */
 
-  int8_t initIgnore;              /**< used to ignore first values in initialization */
+  int16_t initIgnore;              /**< used to ignore first values in initialization */
 
   LookupTableHandle_t * pNTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
 

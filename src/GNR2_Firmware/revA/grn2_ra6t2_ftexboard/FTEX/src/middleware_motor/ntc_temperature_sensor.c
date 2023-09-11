@@ -10,7 +10,7 @@
 
 #define NTC_NO_ERRORS 0
 #define NTC_OV_TEMP 1
-#define INIT_IGNORE 5
+#define INIT_IGNORE 1000
 #define INIT_IGNORE_STEP 1
 
 /* the minimum acceptable value for NTC - any lower value means 
@@ -119,7 +119,7 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
     
     pHandle->hFaultState = NTC_SetFaultState(pHandle);  // Retain state
     
-    //ignore the first 5 values after initialization to avoid triggering the error at the beginning
+    //ignore the first few values after initialization to avoid triggering the error at the beginning
     if (pHandle->initIgnore > 0)
     {
       pHandle->initIgnore -= INIT_IGNORE_STEP;
