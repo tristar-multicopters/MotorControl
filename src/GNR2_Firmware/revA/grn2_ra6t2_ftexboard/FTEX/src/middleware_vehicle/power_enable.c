@@ -91,17 +91,21 @@ void PWREN_MonitorPowerEnable(PWREN_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    // test if display resquested the turn off.
-    if((PWREN_IsPowerEnabled(pHandle) == false) && (pHandle->bInitialPowerLockState == true))        
-    {   
-        osThreadFlagsSet(PowerOffSequence_handle,POWEROFFSEQUENCE_FLAG);
-    }
-    
-    //test if was false turn on command received by CAN interface 
-    if ((PWREN_IsPowerEnabled(pHandle) == false) &&(pHandle->bWakeUpCommandChecked == true) && (pHandle->bWakeUpSDOCommand == false))
+    //check if a dfu is going on.
+    //power off sequency only works if dfu is not been executed.
+    if (FirmwareUpdate_Running() == false)
     {
-        
-        osThreadFlagsSet(PowerOffSequence_handle,POWEROFFSEQUENCE_FLAG);
+        // test if display resquested the turn off.
+        if((PWREN_IsPowerEnabled(pHandle) == false) && (pHandle->bInitialPowerLockState == true))        
+        {   
+            osThreadFlagsSet(PowerOffSequence_handle,POWEROFFSEQUENCE_FLAG);
+        }
+    
+        //test if was false turn on command received by CAN interface 
+        if ((PWREN_IsPowerEnabled(pHandle) == false) &&(pHandle->bWakeUpCommandChecked == true) && (pHandle->bWakeUpSDOCommand == false))
+        {
+            osThreadFlagsSet(PowerOffSequence_handle,POWEROFFSEQUENCE_FLAG);
+        }
     }
 } 
 
