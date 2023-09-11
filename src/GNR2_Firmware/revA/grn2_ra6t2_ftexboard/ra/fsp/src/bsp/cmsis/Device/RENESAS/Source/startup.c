@@ -59,7 +59,6 @@ int32_t main(void);
  * MCU starts executing here out of reset. Main stack pointer is set up already.
  **********************************************************************************************************************/
 void Reset_Handler (void)
-
 {
     /* Initialize system using BSP. */
     SystemInit();
