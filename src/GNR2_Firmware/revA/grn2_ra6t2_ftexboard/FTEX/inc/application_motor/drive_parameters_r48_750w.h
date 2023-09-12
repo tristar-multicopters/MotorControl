@@ -160,7 +160,7 @@
 #define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMP_CONTROLLER_HYSTERESIS_C  /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
 
 #define FOLDBACK_MOTOR_TEMP_END_VALUE   OV_TEMP_MOTOR_THRESHOLD_C  /* Max temperature value (degree C) of the decreasing torque ramp to limit motor temperature */
-#define FOLDBACK_MOTOR_TEMP_INTERVAL    20                         /* Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature */
+#define FOLDBACK_MOTOR_TEMP_INTERVAL    10                         /* Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature */
 
 /* Control mode */
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
