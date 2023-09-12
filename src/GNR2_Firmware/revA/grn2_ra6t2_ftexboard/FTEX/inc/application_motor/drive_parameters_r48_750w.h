@@ -78,7 +78,7 @@
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
 
 #define OV_VOLTAGE_THRESHOLD_V          75 /*!< Over-voltage threshold */
-#define UD_VOLTAGE_THRESHOLD_V          34 /*!< Under-voltage threshold - 34V is lowest acceptable value to generate Power Lock signal*/
+#define UD_VOLTAGE_THRESHOLD_V          36 /*!< Under-voltage threshold - 36V is lowest acceptable value to generate Power Lock signal*/
 
 
 #define OV_TEMP_CONTROLLER_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
@@ -140,7 +140,7 @@
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
 #define LOW_BATTERY_TORQUE              150         /* Maximum torque allowed in low SoC of battery */
-#define LOW_BATTERY_VOLTAGE_THRESHOLD   35          /* the threshold of battery voltage before limit torque */
+#define LOW_BATTERY_VOLTAGE_THRESHOLD   40          /* the threshold of battery voltage before limit torque */
 
 #define MAX_CURRENT_LIMIT               1           /* to calculate maximum poweer based on maximum current and Battery S0C */
 #define MAX_POWER_LIMIT                 2           /* to use  MAX_APPLICATION_POSITIVE_POWER as the reference for Maximum power*/
