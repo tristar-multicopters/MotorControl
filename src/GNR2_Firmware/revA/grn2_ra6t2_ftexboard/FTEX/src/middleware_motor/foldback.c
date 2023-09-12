@@ -17,6 +17,7 @@
   */
 static int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hControlVariable);
 
+
 /**
   * Refer to function definition
   **/
@@ -118,13 +119,14 @@ int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariab
             }
             else 
             { 
-                hOutputVariable = hInputVariable;} // set output as input
-            }    
-            else
-            {
-                // Foldback instance is used to calculate dynamic thresholds.
-                hOutputVariable = Foldback_GetMaxOutput(pHandle, hValue); 
-            }
+                hOutputVariable = hInputVariable;
+            } // set output as input
+        }    
+        else
+        {
+            // Foldback instance is used to calculate dynamic thresholds.
+            hOutputVariable = Foldback_GetMaxOutput(pHandle, hValue); 
+        }
     }
     else
     {

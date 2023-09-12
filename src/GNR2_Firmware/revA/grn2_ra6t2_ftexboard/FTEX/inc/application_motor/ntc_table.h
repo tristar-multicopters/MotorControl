@@ -8,4 +8,5 @@
 #include "stdint.h"
 #include "lookup_table.h"
 
-extern LookupTableHandle_t NTCLookupTable;
+extern LookupTableHandle_t ControllerNTCLookupTable;
+extern LookupTableHandle_t MotorNTCLookupTable;

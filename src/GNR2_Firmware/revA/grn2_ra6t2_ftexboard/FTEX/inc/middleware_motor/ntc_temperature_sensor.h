@@ -36,24 +36,16 @@ typedef struct
 
   uint16_t hLowPassFilterBw;   /**< used to configure the first order software filter bandwidth.
                                     hLowPassFilterBw = NTC_CalcBusReading
-                                    call rate [Hz]/ FilterBandwidth[Hz] */
-  uint16_t hOverTempThreshold; /**< Represents the over voltage protection intervention threshold.
-                                    This parameter is expressed in u16Celsius through formula:
-                                    hOverTempThreshold =
-                                    (V0[V]+dV/dT[V/°C]*(OverTempThreshold[°C] - T0[°C]))* 65536 / MCU supply voltage */
-  uint16_t hOverTempDeactThreshold; /**< Temperature threshold below which an active over temperature fault is cleared.
-                                         This parameter is expressed in u16Celsius through formula:
-                                         hOverTempDeactThreshold =
-                                         (V0[V]+dV/dT[V/°C]*(OverTempDeactThresh[°C] - T0[°C]))* 65536 / MCU supply voltage*/
-  int16_t hSensitivity;        /**< NTC sensitivity
-                                    This parameter is equal to MCU supply voltage [V] / dV/dT [V/°C] */
-  uint32_t wV0;                /**< V0 voltage constant value used to convert the temperature into Volts.
-                                    This parameter is equal V0*65536/MCU supply
-                                    Used in through formula: V[V]=V0+dV/dT[V/°C]*(T-T0)[°C] */
-  uint16_t hT0;                /**< T0 temperature constant value used to convert the temperature into Volts
-                                    Used in through formula: V[V]=V0+dV/dT[V/°C]*(T-T0)[°C] */
-  uint8_t bConvHandle;            /*!< handle to the regular conversion */
+                                    
+    
+    call rate [Hz]/ FilterBandwidth[Hz] */
+  int16_t hOverTempThreshold; /**< Represents the over voltage protection intervention threshold.
+                                    This parameter is expressed in degC */
+  int16_t hOverTempDeactThreshold; /**< Temperature threshold below which an active over temperature fault is cleared.
+                                         This parameter is expressed in degC */
+  uint8_t bConvHandle;            /**< handle to the regular conversion */
 
+  int16_t initIgnore;              /**< used to ignore first values in initialization */
 
   LookupTableHandle_t * pNTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
 
@@ -66,13 +58,13 @@ typedef struct
  * 	@brief Initializes temperature sensing conversions
  * 	@param pHandle : Pointer on Handle structure of TemperatureSensor component
  */
-void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle);
+void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp);
 
 /**
  * 	@brief Initializes internal average temperature computed value
  *  @param pHandle : Pointer on Handle structure of TemperatureSensor component
  */
-void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle);
+void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp);
 
 /**
  * 	@brief Performs the temperature sensing average computation after an ADC conversion
