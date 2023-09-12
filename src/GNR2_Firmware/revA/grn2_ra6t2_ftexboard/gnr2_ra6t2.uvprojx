@@ -10,7 +10,7 @@
       <TargetName>APP_DEBUG (Standard)</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
+      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -425,11 +425,6 @@
               <FilePath>.\FTEX\inc\application\user_config_data.h</FilePath>
             </File>
             <File>
-              <FileName>vc_constants.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
               <FileName>watchdog.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
@@ -439,6 +434,11 @@
         <Group>
           <GroupName>Application/Vehicle</GroupName>
           <Files>
+            <File>
+              <FileName>vc_constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
+            </File>
             <File>
               <FileName>vc_config.c</FileName>
               <FileType>1</FileType>
@@ -2072,7 +2072,7 @@
       <TargetName>APP_MAIN (JUST BUILD)</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
+      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -2195,7 +2195,7 @@
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
-            <Capability>1</Capability>
+            <Capability>0</Capability>
             <DriverSelection>4102</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
@@ -2487,11 +2487,6 @@
               <FilePath>.\FTEX\inc\application\user_config_data.h</FilePath>
             </File>
             <File>
-              <FileName>vc_constants.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
               <FileName>watchdog.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
@@ -2501,6 +2496,11 @@
         <Group>
           <GroupName>Application/Vehicle</GroupName>
           <Files>
+            <File>
+              <FileName>vc_constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
+            </File>
             <File>
               <FileName>vc_config.c</FileName>
               <FileType>1</FileType>
@@ -4414,11 +4414,6 @@
               <FilePath>.\FTEX\inc\application\user_config_data.h</FilePath>
             </File>
             <File>
-              <FileName>vc_constants.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
-            </File>
-            <File>
               <FileName>watchdog.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\application\watchdog.c</FilePath>
@@ -4428,6 +4423,11 @@
         <Group>
           <GroupName>Application/Vehicle</GroupName>
           <Files>
+            <File>
+              <FileName>vc_constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application\vc_constants.h</FilePath>
+            </File>
             <File>
               <FileName>vc_config.c</FileName>
               <FileType>1</FileType>

@@ -119,14 +119,6 @@
                                                            VBUS_PARTITIONING_FACTOR)))
 #define INT_SUPPLY_VOLTAGE          (uint16_t)(65536/ADC_REFERENCE_VOLTAGE)
 
-#define DELTA_TEMP_THRESHOLD        (OV_TEMPERATURE_THRESHOLD_C- T0_C)
-#define DELTA_V_THRESHOLD           (dV_dT * DELTA_TEMP_THRESHOLD)
-#define OV_TEMPERATURE_THRESHOLD_d  ((V0_V + DELTA_V_THRESHOLD)*INT_SUPPLY_VOLTAGE)
-
-#define DELTA_TEMP_HYSTERESIS        (OV_TEMPERATURE_HYSTERESIS_C)
-#define DELTA_V_HYSTERESIS           (dV_dT * DELTA_TEMP_HYSTERESIS)
-#define OV_TEMPERATURE_HYSTERESIS_d  (DELTA_V_HYSTERESIS*INT_SUPPLY_VOLTAGE)
-
 #define M1_VBUS_SW_FILTER_BW_FACTOR     6
 
 /*************** Timer for PWM generation & currenst sensing parameters  ******/

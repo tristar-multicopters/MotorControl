@@ -19,10 +19,4 @@
 #define AMPLIFICATION_GAIN            0.01   /* V/A of current sensors */
 
 
-/************ Temperature sensing section ***************/
-/* V[V]=V0+dV/dT[V/Celsius]*(T-T0)[Celsius]*/
-#define V0_V                          1.767 /*!< in Volts */
-#define T0_C                          30 /*!< in Celsius degrees */
-#define dV_dT                         0.030 /*!< V/Celsius degrees */
-
 #endif /*__POWER_STAGE_PARAMETERS_H*/
