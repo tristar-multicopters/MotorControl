@@ -33,7 +33,6 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     pHandle->SafeStart = false;
     
     pHandle->CruiseControlEnable = false;
-    pHandle->ForceDisengage = false;
     pHandle->CruiseControlTorqueAvg = 0;
     
     pHandle->hParameters.MaxThrottleSpeedKMH = pHandle->hParameters.DefaultMaxThrottleSpeedKMH; 
@@ -441,32 +440,4 @@ int16_t Throttle_ApplyCruiseFilter(ThrottleHandle_t * pHandle, int16_t aTorque)
     pHandle->CruiseControlTorqueAvg = TorqueOut;
    
     return TorqueOut;
-}
-
-/**
- *  Force the disengage the cruise control feature
- *  No matter what the screen tells the controller
- */
-void Throttle_ForceDisengageCruiseControl(ThrottleHandle_t * pHandle)
-{
-     ASSERT(pHandle != NULL);
-     
-     pHandle->ForceDisengage = true;
-     Throttle_DisengageCruiseControl(pHandle); 
-}
-
-/**
- *  Get the state of the force disengage flag
- */
-bool Throttle_GetForceDisengageState(ThrottleHandle_t * pHandle)
-{
-   return pHandle->ForceDisengage;   
-} 
-
-/**
- *  Clear the flag when the forced disengage is complete
- */
-void Throttle_ClearForceDisengage(ThrottleHandle_t * pHandle)
-{
-      pHandle->ForceDisengage = false;
 }

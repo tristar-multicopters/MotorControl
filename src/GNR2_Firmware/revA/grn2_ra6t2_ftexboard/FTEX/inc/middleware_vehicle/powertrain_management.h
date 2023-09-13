@@ -66,6 +66,9 @@ typedef struct
     bool bTopSpeedRestrictionEnable;     // Will determine if we must restrict vehicle speed
     uint16_t TorqueSpeedLimitGain;       // Used to adjuste the accuracy for torque speed limit
     
+    bool CruiseForceDisengage;
+    PasAlgorithm_t PreCruiseControlPAS;  // Keeps track of the pas algorithmed used when we engaged cruise control
+    
     uint16_t hStartingThrottle;          // Minimum torque to start powertrain
     uint16_t hStoppingThrottle;          // Minimum torque to stop powertrain
     uint16_t hStoppingSpeed;             // Minimum speed to stop powertrain
@@ -331,9 +334,52 @@ uint16_t PWRT_ConvertAMPSToDigitalCurrent(PWRT_Handle_t * pHandle, uint16_t aAMP
   * @brief  Setting a new top speed
   * @param  Powertrain handle
   * @param  New top speed in KMH
-  * @retval if successfully changed                                                                                 
+  * @retval nothing                                                                                
   */
 void PWRT_SetNewTopSpeed(PWRT_Handle_t * pHandle, uint16_t topSpeed);
+
+/**
+ * @brief  Return the cruise control state
+ * @param  Powertrain handle 
+ * @retval bool state of the curise control
+ */
+bool PWRT_GetCruiseControlState(PWRT_Handle_t * pHandle);
+
+/**
+ * @brief  Engage the cruise control feature and keep track of the PAS algorithm
+ * @param  Powertrain handle, Desired cruise speed 
+ * @retval nothing 
+ */
+void PWRT_EngageCruiseControl(PWRT_Handle_t * pHandle, uint8_t aSpeed);
+
+/**
+ * @brief  Disengage the cruise control feature and restore the PAS algorithm
+ * @param  Powertrain handle
+ * @retval nothing
+ */
+void PWRT_DisengageCruiseControl(PWRT_Handle_t * pHandle);
+
+/**
+ * @brief  Force the disengage the cruise control feature
+ *         No matter what the screen tells the controller
+ * @param  Powertrain handle
+ * @retval nothing
+ */
+void PWRT_ForceDisengageCruiseControl(PWRT_Handle_t * pHandle);
+
+/**
+ * @brief  Get the state of the force disengage flag
+ * @param  Powertrain handle
+ * @retval bool state of the flag
+ */
+bool PWRT_GetForceDisengageState(PWRT_Handle_t * pHandle);
+
+/**
+ * @brief  Clear the flag when the forced disengage is complete
+ * @param  Powertrain handle
+ * @retval nothing 
+ */
+void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle);
 
 #endif /*__POWERTRAIN_MANAGEMENT_H*/
 

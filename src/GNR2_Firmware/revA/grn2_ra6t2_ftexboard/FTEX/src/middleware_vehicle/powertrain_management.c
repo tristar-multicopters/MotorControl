@@ -61,6 +61,8 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;   
+    
+    pHandle->sParameters.CruiseForceDisengage = false;
 }
 
 /**
@@ -118,7 +120,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     pHandle->aSpeed[M2] = 0;
     
     if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
-    {
+    { 
         PedalTorqSensor_CalcAvValue(pHandle->pPAS->pPTS); // Calculate the pedal assist torque sensor value
         
         hTorqueRef = PWRT_CalcSelectedTorque(pHandle); // Compute torque to motor depending on either throttle or PAS
@@ -133,9 +135,19 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             
             // Reset All the Pedal Assist Parameters
             PedalAssist_ResetParameters(pHandle->pPAS);
-            Throttle_ForceDisengageCruiseControl(pHandle->pThrottle);
+            PWRT_ForceDisengageCruiseControl(pHandle);
         }
-                     
+        
+        if((pHandle->pPAS->bCurrentPasAlgorithm      == CadenceSensorUse) &&  // If the user pedals while were are in cruise
+           (PedalAssist_IsPASDetected(pHandle->pPAS) == true) && 
+           (PWRT_GetCruiseControlState(pHandle)      == true))
+        {
+            hAux = 0;                                  // Exit cruise control
+            pHandle->pPAS->bPASDetected = false;
+            PedalAssist_ResetParameters(pHandle->pPAS);
+            PWRT_ForceDisengageCruiseControl(pHandle);
+        }
+        
         /* Throttle and walk mode always have higher priority over PAS but 
            the priority between walk mode and throttle depends on the value 
            of the parameter WalkmodeOverThrottle  */    
@@ -149,7 +161,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             
             TopSpeed = PedalAssist_GetPASMaxSpeed(pHandle->pPAS);
             PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed       
-           
+
             #if VEHICLE_SELECTION == VEHICLE_NIDEC
             if (pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse)
             {
@@ -1228,4 +1240,82 @@ void PWRT_SetNewTopSpeed(PWRT_Handle_t * pHandle, uint16_t topSpeed)
     }        
     
     MDI_SetTorqueSpeedLimit(pHandle->pMDI,NewTopSpeed,pHandle->sParameters.TorqueSpeedLimitGain);
+}
+
+
+/**
+ * Return the cruise control state
+ */
+bool PWRT_GetCruiseControlState(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pThrottle != NULL);
+    
+    return Throttle_GetCruiseControlState(pHandle->pThrottle);    
+}    
+
+/**
+ * Engage the cruise control feature and keep track of the PAS algorithm
+ */
+void PWRT_EngageCruiseControl(PWRT_Handle_t * pHandle, uint8_t aSpeed)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pPAS != NULL);
+    ASSERT(pHandle->pThrottle != NULL);
+    
+    if(pHandle->pThrottle->CruiseControlEnable == false)
+    {    
+        pHandle->sParameters.PreCruiseControlPAS = PedalAssist_GetPASAlgorithm(pHandle->pPAS);
+        PedalAssist_SetPASAlgorithm(pHandle->pPAS,CadenceSensorUse);  // Force cadence while in cruise control
+        Throttle_EngageCruiseControl(pHandle->pThrottle,aSpeed);
+    }
+}
+
+/**
+ * Disengage the cruise control feature and restore the PAS algorithm
+ */
+void PWRT_DisengageCruiseControl(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pPAS != NULL);
+    ASSERT(pHandle->pThrottle != NULL);
+        
+    if(pHandle->pThrottle->CruiseControlEnable == true)
+    { 
+        PedalAssist_SetPASAlgorithm(pHandle->pPAS,pHandle->sParameters.PreCruiseControlPAS); 
+        Throttle_DisengageCruiseControl(pHandle->pThrottle);  
+    }        
+}
+
+/**
+ *  Force the disengage the cruise control feature
+ *  No matter what the screen tells the controller
+ */
+void PWRT_ForceDisengageCruiseControl(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+     
+    if(pHandle->sParameters.CruiseForceDisengage == false)
+    {
+        pHandle->sParameters.CruiseForceDisengage = true;
+        PWRT_DisengageCruiseControl(pHandle); 
+    }
+}
+
+/**
+ *  Get the state of the force disengage flag
+ */
+bool PWRT_GetForceDisengageState(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->sParameters.CruiseForceDisengage;   
+} 
+
+/**
+ *  Clear the flag when the forced disengage is complete
+ */
+void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->sParameters.CruiseForceDisengage = false;
 }
