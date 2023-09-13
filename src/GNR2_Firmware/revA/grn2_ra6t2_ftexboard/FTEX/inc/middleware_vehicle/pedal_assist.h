@@ -96,7 +96,10 @@ typedef struct
     PasAlgorithm_t  bCurrentPasAlgorithm;         // Current PAS used Algorithm
     uint16_t hPASSelectedSpeed;                   // current PAS speed selected by user 
     
-    Quadra_Accel_Ramp_t * CadenceAccelRamp;
+    Quadra_Accel_Ramp_t * Cadence_Default_AccelRamp; // default acceleration ramp, to use by default on all levels
+    Quadra_Accel_Ramp_t * Cadence_Level3_AccelRamp;// level 3 acceleration ramp to use on PAS cadence level 3
+    Quadra_Accel_Ramp_t * CurrentCadenceAccelRamp; // acceleration ramp currently in use by the PAS module
+    
     Linear_Decel_Ramp_t * CadenceDecelRamp;
     
     bool bPASDetected;                            // Use PAS flag  for detection

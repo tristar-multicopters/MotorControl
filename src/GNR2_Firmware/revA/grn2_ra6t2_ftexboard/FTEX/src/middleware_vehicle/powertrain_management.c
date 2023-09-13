@@ -1090,7 +1090,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         else 
         {
             pHandle->hTorqueSelect = PedalAssist_GetPASCadenceMotorTorque(pHandle->pPAS);
-            pHandle->hTorqueSelect = QuadAccel_ApplyRamp(pHandle->pPAS->CadenceAccelRamp,pHandle->hTorqueSelect); // Apply the quad acceleration ramp
+            pHandle->hTorqueSelect = QuadAccel_ApplyRamp(pHandle->pPAS->CurrentCadenceAccelRamp, pHandle->hTorqueSelect); // Apply the quad acceleration ramp
             
             LinearDecel_UpdateOldTorque(pHandle->pPAS->CadenceDecelRamp,pHandle->hTorqueSelect);
             
@@ -1101,14 +1101,14 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     else if (CadenceDeceleration && !PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle))
     {
        
-        pHandle->hTorqueSelect = LinearDecel_ApplyRamp(pHandle->pPAS->CadenceDecelRamp,0);
+        pHandle->hTorqueSelect = LinearDecel_ApplyRamp(pHandle->pPAS->CadenceDecelRamp, 0);
         
         if(pHandle->hTorqueSelect == 0)
         {
             CadenceDeceleration = false;    
         }
         
-        QuadAccel_ResetRamp(pHandle->pPAS->CadenceAccelRamp);             
+        QuadAccel_ResetRamp(pHandle->pPAS->CurrentCadenceAccelRamp);             
     }       
     /* Using throttle */
     else 
@@ -1116,8 +1116,8 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         /* Throttle value convert to torque */        
         pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);
         
-        QuadAccel_ResetRamp(pHandle->pPAS->CadenceAccelRamp);
-        LinearDecel_UpdateOldTorque(pHandle->pPAS->CadenceDecelRamp,0);
+        QuadAccel_ResetRamp(pHandle->pPAS->CurrentCadenceAccelRamp);
+        LinearDecel_UpdateOldTorque(pHandle->pPAS->CadenceDecelRamp, 0);
         CadenceDeceleration = false;
     }
 

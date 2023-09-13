@@ -49,6 +49,16 @@ void PedalAssist_SetAssistLevel(PAS_Handle_t * pHandle, PasLevel_t bLevel)
     ASSERT(pHandle != NULL);
     AssertIsValidLevel(bLevel);
     pHandle->bCurrentAssistLevel = bLevel;
+    
+    // Level 3 is a custom ramp with less acceleration
+    if ((bLevel == PAS_LEVEL_3) && (pHandle->bCurrentPasAlgorithm == CadenceSensorUse))
+    {
+        pHandle->CurrentCadenceAccelRamp = pHandle->Cadence_Level3_AccelRamp;
+    }
+    else
+    {
+        pHandle->CurrentCadenceAccelRamp = pHandle->Cadence_Default_AccelRamp;
+    }
 }
 
 /**

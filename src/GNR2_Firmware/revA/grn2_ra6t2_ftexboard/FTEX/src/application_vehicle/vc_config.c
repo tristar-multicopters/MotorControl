@@ -159,16 +159,31 @@ PWREN_Handle_t PowerEnableHandle =
     .bSdoResponseReceived = false,
     .bSystemReady = false,
 };
-Quadra_Accel_Ramp_t CadenceAccelRamp =
-{                       // Commented values are a bit more agressive config
-    .alphaNum    =  1,  //1,
-    .alphaDenum  =  10, //2,
-    .betaNum     =  1,  //1,
-    .betaDenum   =  10, //2,
-    .charlie     =  0,  //0,
+
+// ramp used by cadence PAS algo
+Quadra_Accel_Ramp_t CadenceDefaultAccelRamp =
+{
+    .alphaNum    =  0,
+    .alphaDenum  =  1,
+    .betaNum     =  6,
+    .betaDenum   =  16,
+    .charlie     =  250,
     .CurrentStep =  1,
-    .StepsPerTorque = 10, //= 200,
-    .ValueReached = false,
+    .StepsPerTorque = 1,
+    .ValueReached = false
+};
+
+// Less acceleration wanted on level 3, per Benoit on Sept11
+Quadra_Accel_Ramp_t CadenceLevel3AccelRamp =
+{
+    .alphaNum    =  0,
+    .alphaDenum  =  1,
+    .betaNum     =  3,
+    .betaDenum   =  16,
+    .charlie     =  250,
+    .CurrentStep =  1,
+    .StepsPerTorque = 1,
+    .ValueReached = false
 };
 
 Linear_Decel_Ramp_t CadenceDecelRamp =
@@ -210,7 +225,9 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.PASTTorqRatiosInPercentage[7] = PAS_T_7_POWER_PERCENT,
     .sParameters.PASTTorqRatiosInPercentage[8] = PAS_T_8_POWER_PERCENT,
     .sParameters.PASTTorqRatiosInPercentage[9] = PAS_T_9_POWER_PERCENT,
-    .CadenceAccelRamp = &CadenceAccelRamp,
+    .CurrentCadenceAccelRamp = &CadenceDefaultAccelRamp,
+    .Cadence_Default_AccelRamp = &CadenceDefaultAccelRamp,
+    .Cadence_Level3_AccelRamp = &CadenceLevel3AccelRamp,
     .CadenceDecelRamp = &CadenceDecelRamp,
     .bCurrentPasAlgorithm = PAS_ALGORITHM,
     .pPSS = &PedalSpeedSensorHandle,
