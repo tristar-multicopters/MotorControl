@@ -17,6 +17,7 @@
 #define OFFCALIBRWAIT_MS     0
 #define MAX_DUTY     				 30000 /* INT16_MAX is 100% duty cycle */
 
+
 MotorPowerQDHandle_t PQDMotorPowMeasM1 =
 {
     .wConvFact = PQD_CONVERSION_FACTOR
@@ -154,7 +155,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     },
         .FoldbackMotorTemperature =
     {
-        .bEnableFoldback = false,
+        .bEnableFoldback = true,
         .FoldbackConfig = TRIM,
         .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
         .hDefaultOutputLimitLow = 0,
@@ -400,7 +401,26 @@ HallPosSensorHandle_t HallPosSensorM1 =
 /**
   * temperature sensor parameters Motor 1
   */
-NTCTempSensorHandle_t TempSensorParamsM1 =
+NTCTempSensorHandle_t TempSensorMotorM1 =
+{
+    .bSensorType = MOTOR_TEMP_SENSOR_TYPE,
+    .TempRegConv =
+    {
+        .hChannel = MOTOR_TEMP_ANALOG_CHANNEL,
+    },
+    .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
+
+
+    .hOverTempThreshold      = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C),
+    .hOverTempDeactThreshold = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C - OV_TEMP_MOTOR_HYSTERESIS_C),
+
+    .pNTCLookupTable = &MotorNTCLookupTable,
+};
+
+/**
+  * temperature sensor parameters Controller 1
+  */
+NTCTempSensorHandle_t TempSensorControllerM1 =
 {
     .bSensorType = REAL_SENSOR,
     .TempRegConv =
@@ -408,13 +428,10 @@ NTCTempSensorHandle_t TempSensorParamsM1 =
         .hChannel = HEATSINK_TEMP_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
-    .hOverTempThreshold      = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d),
-    .hOverTempDeactThreshold = (uint16_t)(OV_TEMPERATURE_THRESHOLD_d - OV_TEMPERATURE_HYSTERESIS_d),
-    .hSensitivity            = (uint16_t)(ADC_REFERENCE_VOLTAGE/dV_dT),
-    .wV0                     = (uint16_t)(V0_V *65536/ ADC_REFERENCE_VOLTAGE),
-    .hT0                     = T0_C,
+    .hOverTempThreshold      = (int16_t)(OV_TEMP_CONTROLLER_THRESHOLD_C),
+    .hOverTempDeactThreshold = (int16_t)(OV_TEMP_CONTROLLER_THRESHOLD_C - OV_TEMP_CONTROLLER_HYSTERESIS_C),
 
-    .pNTCLookupTable = &NTCLookupTable,
+    .pNTCLookupTable = &ControllerNTCLookupTable,
 };
 
 /* Bus voltage sensor value filter buffer */

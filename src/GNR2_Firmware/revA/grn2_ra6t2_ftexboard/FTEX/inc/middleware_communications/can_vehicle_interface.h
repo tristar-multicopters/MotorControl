@@ -26,16 +26,16 @@
 
 
 /* Errors to send by CanOpen */
-#define MOTOR_OVER_T_FAULT   0x0001
-#define MOTOR_START_U_FAULT  0x0002
-#define MOTOR_OVER_C_FAULT   0x0004
-#define HALL_SENSOR_FAULT    0x0008
-#define WHEEL_SPEED_FAULT    0x0010
-#define CONTROL_OVER_V       0x0020
-#define CONTROL_UNDER_V      0x0040
-#define CONTROL_OVER_T       0x0080
-#define THROTTLE_FAULT       0x0100
-#define PAS_FAULT            0x0200
+#define CONTROLLER_OVER_T_FAULT     0x0001
+#define MOTOR_START_U_FAULT         0x0002
+#define MOTOR_OVER_C_FAULT          0x0004
+#define HALL_SENSOR_FAULT           0x0008
+#define WHEEL_SPEED_FAULT           0x0010
+#define CONTROL_OVER_V              0x0020
+#define CONTROL_UNDER_V             0x0040
+#define CONTROL_OVER_T              0x0080
+#define THROTTLE_FAULT              0x0100
+#define PAS_FAULT                   0x0200
 
 
 /* Other definitions */

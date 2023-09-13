@@ -39,7 +39,8 @@
 #define STOPPERMANENCY_TICKS (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS) / 1000)
 #define STOPPERMANENCY_TICKS2 (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS2) / 1000)
 #define VBUS_TEMP_ERR_MASK (uint16_t) ~(0 | MC_NO_ERROR)
-
+#define DEFAULT_TEMP_MOTOR 0xFFF
+#define DEFAULT_TEMP_CONTROLLER 0x000
 
 /* Private variables----------------------------------------------------------*/
 FOCVars_t FOCVars[NBR_OF_MOTORS];
@@ -53,7 +54,8 @@ PIDHandle_t *pPIDIq[NBR_OF_MOTORS];
 PIDHandle_t *pPIDId[NBR_OF_MOTORS];
 ResDivVbusSensorHandle_t *pBusSensorM1;
 
-NTCTempSensorHandle_t *pTemperatureSensor[NBR_OF_MOTORS];
+NTCTempSensorHandle_t *pTemperatureSensorController[NBR_OF_MOTORS];
+NTCTempSensorHandle_t *pTemperatureSensorMotor[NBR_OF_MOTORS];
 PWMCurrFdbkHandle_t *pPWMCurrFdbk[NBR_OF_MOTORS];
 MotorPowerQDHandle_t *pMotorPower[NBR_OF_MOTORS];
 CircleLimitationHandle_t *pCircleLimitation[NBR_OF_MOTORS];
@@ -142,7 +144,7 @@ void MC_BootUp(void)
     /******************************************************/
     /*   Speed & torque component initialization          */
     /******************************************************/
-    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1], pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorParamsM1, NULL);
+    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1], pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorControllerM1, &TempSensorMotorM1);
 
     /******************************************************/
     /*  Auxiliary speed sensor component initialization   */
@@ -173,8 +175,10 @@ void MC_BootUp(void)
     /*******************************************************/
     /*   Temperature measurement component initialization  */
     /*******************************************************/
-    NTCTempSensor_Init(&TempSensorParamsM1);
-    pTemperatureSensor[M1] = &TempSensorParamsM1;
+    NTCTempSensor_Init(&TempSensorControllerM1, DEFAULT_TEMP_CONTROLLER);
+    pTemperatureSensorController[M1] = &TempSensorControllerM1;
+    NTCTempSensor_Init(&TempSensorMotorM1, DEFAULT_TEMP_MOTOR);
+    pTemperatureSensorMotor[M1] = &TempSensorMotorM1;
     /*******************************************************/
     /*     Motor Control component initialization         */
     /*******************************************************/
@@ -194,7 +198,7 @@ void MC_BootUp(void)
     oMCInterface[M1] = &MCInterface[M1];
     
     
-    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1], &(pBusSensorM1->Super), &TempSensorParamsM1,&MCConfig);
+    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1], &(pBusSensorM1->Super),&MCConfig);
     
     /* Section where we initialise conversion factors that need to be available to vehicle control */
     oMCInterface[M1]->MCIConvFactors.Gain_Torque_IQRef = GAIN_TORQUE_IQREF;
@@ -211,7 +215,8 @@ void MC_BootUp(void)
     MCTuning[M1].pSpeedSensorVirtual = MC_NULL;
     MCTuning[M1].pSpeednTorqueCtrl = pSpeedTorqCtrl[M1];
     MCTuning[M1].pStateMachine = &MCStateMachine[M1];
-    MCTuning[M1].pTemperatureSensor = (NTCTempSensorHandle_t *)pTemperatureSensor[M1];
+    MCTuning[M1].pTemperatureSensorController = (NTCTempSensorHandle_t *)pTemperatureSensorController[M1];
+    MCTuning[M1].pTemperatureSensorMotor = (NTCTempSensorHandle_t *)pTemperatureSensorMotor[M1];
     MCTuning[M1].pBusVoltageSensor = &(pBusSensorM1->Super);
     MCTuning[M1].pMotorPower = (MotorPowerMeasHandle_t *)pMotorPower[M1];
     MCTuning[M1].pFieldWeakening = pFieldWeakening[M1];
@@ -835,9 +840,18 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     uint16_t CodeReturn = MC_NO_ERROR;
     uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
-    CodeReturn |= errMask[bMotor] & NTCTempSensor_CalcAvTemp(pTemperatureSensor[bMotor]); /* check for fault if FW protection is activated. It returns MC_OVER_TEMP or MC_NO_ERROR */
-    NTCTempSensor_GetAvTempCelcius(pTemperatureSensor[bMotor]);                           /* store into handle temperature in Celcius */
-    CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);                     /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
+    // Check if Controller temperature is higher than the threshold, then raise the error
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) != MC_NO_ERROR)
+    {
+        CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_CONTROLLER;
+    }
+    // Check if Motor temperature is higher than the threshold, then raise the error
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]) != MC_NO_ERROR)
+    {
+        CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_MOTOR;
+    }
+    
+    CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
                                                                                     (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
     if (bMotor == M1)
     {

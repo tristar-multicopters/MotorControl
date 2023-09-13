@@ -75,8 +75,8 @@
 #define OV_VOLTAGE_THRESHOLD_V          70 /*!< Over-voltage threshold */
 #define UD_VOLTAGE_THRESHOLD_V          36 /*!< Under-voltage threshold - experimental value that prevents BMS shutdowns on dead battery */
 
-#define OV_TEMPERATURE_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
-#define OV_TEMPERATURE_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
+#define OV_TEMP_CONTROLLER_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
+#define OV_TEMP_CONTROLLER_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
 
 #define OCSP_SAFETY_MARGIN_amps 	            85	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
@@ -148,10 +148,10 @@
 #define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM   /* Max speed value (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 #define FOLDBACK_SPEED_INTERVAL         750                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 
-#define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMPERATURE_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
-#define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMPERATURE_HYSTERESIS_C /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
+#define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMP_CONTROLLER_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
+#define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMP_CONTROLLER_HYSTERESIS_C /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
 
-#define FOLDBACK_MOTOR_TEMP_END_VALUE   70                          /* Max temperature value (degree C) of the decreasing torque ramp to limit motor temperature */
+#define FOLDBACK_MOTOR_TEMP_END_VALUE   OV_TEMP_MOTOR_THRESHOLD_C  /* Max temperature value (degree C) of the decreasing torque ramp to limit motor temperature */
 #define FOLDBACK_MOTOR_TEMP_INTERVAL    20                         /* Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature */
 
 /* Control mode */
@@ -214,6 +214,9 @@
 #define CONSTANT1_Q                    0            /* Feedforward Iq related gain */
 #define CONSTANT1_D                    0            /* Feedforward Id related gain */
 #define CONSTANT2_QD                   0            /* Feedforward speed related gain */
+
+/*	Motor temperature sensor */
+#define MOTOR_TEMP_SENSOR_TYPE				VIRTUAL_SENSOR	/* Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR */
 
 /*** On the fly start-up ***/
 
