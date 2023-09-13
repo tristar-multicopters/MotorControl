@@ -69,7 +69,6 @@ typedef struct
     bool SafeStart;                  // Stuck throttle check on start
     
     bool CruiseControlEnable;        // Used to control cruise control 
-    bool ForceDisengage;             // What ever the screen tells us we force the cruise control to disengage
     int16_t CruiseControlTorqueAvg;  // Used to filter torque value when cruise control is engaged
     
     SignalFilteringHandle_t ThrottleFilter; // Filter structure used to filter out noise.
@@ -211,28 +210,6 @@ void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle);
  * @retval void
  */
 int16_t Throttle_ApplyCruiseFilter(ThrottleHandle_t * pHandle, int16_t aTorque);
-
- /**
- * @brief  Force the disengage the cruise control feature
- *         No matter what the screen tells the controller
- * @param  pHandle : Pointer on Handle of the throttle
- * @retval void
- */
-void Throttle_ForceDisengageCruiseControl(ThrottleHandle_t * pHandle);
-
-/**
- * @brief  Get the state of the force disengage flag
- * @param  pHandle : Pointer on Handle of the throttle
- * @retval void
- */
-bool Throttle_GetForceDisengageState(ThrottleHandle_t * pHandle);
-
-/**
- * @brief  Clear the flag when the forced disengage is complete
- * @param  pHandle : Pointer on Handle of the throttle
- * @retval void
- */
-void Throttle_ClearForceDisengage(ThrottleHandle_t * pHandle);
 
 #endif /*__THROTTLE_H*/
 

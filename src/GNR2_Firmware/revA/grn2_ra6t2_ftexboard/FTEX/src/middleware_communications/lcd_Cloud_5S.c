@@ -235,6 +235,8 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     uint8_t  AssistType; 
     uint8_t  CruiseCtrlState;
     
+    PWRT_Handle_t *pPowertrainHandle = (pHandle->pVController->pPowertrain);
+    
     ThrottleHandle_t *pThrottleHandle = (pHandle->pVController->pPowertrain->pThrottle);
     
     PAS_Handle_t *pPASHandle = (pHandle->pVController->pPowertrain->pPAS);
@@ -344,7 +346,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
                 if (pasLevel != currentPAS)
                 {
                     PedalAssist_SetAssistLevel(pPASHandle,pasLevel); 
-                    pHandle->cloud5SChangePasFlag = true;            
+                    pHandle->cloud5SChangePasFlag = true;                    
                 }
             }
             
@@ -361,23 +363,20 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
                 Light_Disable(pHandle->pVController->pPowertrain->pTailLight);              
             }
             
-            
+                          
             CruiseCtrlState = (((pHandle->rx_frame.Buffer[5]) & 0x40) >> 5); // bit6: Cruise, 0 = Off 1 = On
-            
-;
-            
-            
-            if((CruiseCtrlState > 0) && (Throttle_GetForceDisengageState(pThrottleHandle) == false))
+        
+            if((CruiseCtrlState > 0) && (PWRT_GetForceDisengageState(pPowertrainHandle) == false))
             {
                 uint8_t CurrentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pPASHandle->pWSS));
-                Throttle_EngageCruiseControl(pThrottleHandle,CurrentSpeed);
+                PWRT_EngageCruiseControl(pPowertrainHandle,CurrentSpeed);
             }    
             else
             {
-                Throttle_DisengageCruiseControl(pThrottleHandle);
+                PWRT_DisengageCruiseControl(pPowertrainHandle);
                 if(CruiseCtrlState == 0)
                 {    
-                    Throttle_ClearForceDisengage(pThrottleHandle); 
+                    PWRT_ClearForceDisengage(pPowertrainHandle); 
                 }                    
             }    
             
@@ -438,8 +437,8 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
            
             replyFrame.Buffer[8] = LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(VC_Errors_CycleError()); // Error code
             
-            if((Throttle_GetCruiseControlState(pThrottleHandle) == true)     // If cruise contorl is still active and the                 
-            && (Throttle_GetForceDisengageState(pThrottleHandle) == false))  // controller doesn't want to for a disengage
+            if((PWRT_GetCruiseControlState(pPowertrainHandle) == true)   // If cruise control is still active and the                 
+            && (PWRT_GetForceDisengageState(pPowertrainHandle) == false))  // controller doesn't want to for a disengage
             {
                 replyFrame.Buffer[9] = CLOUD_CC_ON; //Cruise control status set to on 
             }

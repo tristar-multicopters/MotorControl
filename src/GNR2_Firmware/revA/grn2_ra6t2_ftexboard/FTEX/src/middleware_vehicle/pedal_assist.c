@@ -398,6 +398,17 @@ void AssertIsValidLevel(PasLevel_t level)
 }
 
 /**
+    * @brief  Get the PAS algorithm
+    * @param  Pedal Assist handle,
+    * @retval PasAlgorithm_t
+    */
+PasAlgorithm_t PedalAssist_GetPASAlgorithm(PAS_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->bCurrentPasAlgorithm;
+}
+
+/**
     * @brief  Reset the PAS algorithm
     * @param  Pedal Assist handle, new pas algorithm
     * @retval None
