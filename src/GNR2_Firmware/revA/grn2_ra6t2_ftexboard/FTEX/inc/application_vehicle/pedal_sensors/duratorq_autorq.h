@@ -7,9 +7,9 @@
 
 #define PTS_FILTER_ALPHA                2.27F   // Butterworth alpha coefficient pedal torque sensor filtering
 #define PTS_FILTER_BETA                 -0.27F  // Butterworth beta coefficient pedal torque sensor filtering
-#define PTS_MAX_PTSVALUE                52000   // Maximum analog value to reach
+#define PTS_MAX_PTSVALUE                61000   // Maximum analog value to reach
 
-#define PTS_OFFSET_ADC2PTS              24000   // Offset for ADC to pedal torque sensor linear transformation
+#define PTS_OFFSET_ADC2PTS              16000   // Offset for ADC to pedal torque sensor linear transformation
 
 /***************** PEDAL TORQUE SENSOR CADENCE PARAMETERS  ******************************/
 
