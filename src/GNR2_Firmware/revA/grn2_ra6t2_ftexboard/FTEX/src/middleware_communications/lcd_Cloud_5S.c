@@ -251,7 +251,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
     {
         if (pThrottleHandle->extThrottleEnable == false)
         {
-            Throttle_SetupExternal(pThrottleHandle,190,76);
+            Throttle_SetupExternal(pThrottleHandle,CLOUD_X_THROTTLE_MAX,CLOUD_X_THROTTLE_OFFSET);
         }
         
         if (pHandle->rx_frame.Buffer[2] == CLOUD_SYSTEM) // Check if its a system frame
