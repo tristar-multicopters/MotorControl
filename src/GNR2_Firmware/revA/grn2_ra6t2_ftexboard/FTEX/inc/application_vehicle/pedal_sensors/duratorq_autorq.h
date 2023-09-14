@@ -13,7 +13,7 @@
 
 /***************** PEDAL TORQUE SENSOR CADENCE PARAMETERS  ******************************/
 
-#define PAS_SLOW_PEDAL_COUNT            4       // Loop wait counter to update the PAS detection function
+#define PAS_SLOW_PEDAL_COUNT            0       // Loop wait counter to update the PAS detection function
 
 
 
