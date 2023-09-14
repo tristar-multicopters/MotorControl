@@ -127,6 +127,10 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         if (bIsBrakePressed)
         {
             hAux = 0;
+            
+            //Reset passed detection
+            pHandle->pPAS->bPASDetected = false;
+            
             // Reset All the Pedal Assist Parameters
             PedalAssist_ResetParameters(pHandle->pPAS);
             Throttle_ForceDisengageCruiseControl(pHandle->pThrottle);
