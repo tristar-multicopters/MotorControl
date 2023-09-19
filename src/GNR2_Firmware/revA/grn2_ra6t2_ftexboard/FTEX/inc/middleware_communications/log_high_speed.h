@@ -34,7 +34,7 @@ enum SendDataState
 };   
 
 #define LOGHS_NB_DATA            8 // Number of int16_t data per sample point
-#define LOGHS_NB_SAMPLE_POINT  2000 // Number of sample points in the buffer
+#define LOGHS_NB_SAMPLE_POINT  1750 // Number of sample points in the buffer
 #define LOGHS_RESOLUTION        4 // Number of times skip sampling when LogHS_LogMotorVals is called.
 
 
