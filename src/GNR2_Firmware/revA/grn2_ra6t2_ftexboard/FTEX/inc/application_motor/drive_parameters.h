@@ -51,10 +51,8 @@
 #endif
 
 /****** PHASE WIRE DISCONNECTIION DETECTIOT *******/
-#define CURRENT_AVG_WIN_SIZE                32           // the moving average window size
-#define PHASE_WIRE_DISCONNECT_THRESHOLD     5000        // Iq Threshold to check cabe is disconnected
-#define PHASE_WIRE_DISCONNECT_RATIO         10          // Ratio of measured Iqd vs Reference Iqd to be used for pashe wire disconnection
-#define PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE  1000        // The time to wait and check before rasing error
+#define CURRENT_AVG_WIN_SIZE                32          // the moving average window size
+#define PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE  100         // The time to wait and check before raising warning
 
 /******** STUCK PROTECTION SETTING SECTION ********/
 
