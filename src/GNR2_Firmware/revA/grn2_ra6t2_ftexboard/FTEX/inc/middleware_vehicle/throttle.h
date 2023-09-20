@@ -13,6 +13,7 @@
 #include "signal_filtering.h"
 #include "delay.h"
 #include "vc_errors_management.h"
+#include "vc_parameters.h"
     
 #define THROTTLE_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
                                       // If factor == 100 then 1.25f would make a 125/100 fraction 

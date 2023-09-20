@@ -368,8 +368,16 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
         
             if((CruiseCtrlState > 0) && (PWRT_GetForceDisengageState(pPowertrainHandle) == false))
             {
-                uint8_t CurrentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pPASHandle->pWSS));
-                PWRT_EngageCruiseControl(pPowertrainHandle,CurrentSpeed);
+                uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pPASHandle->pWSS));
+                
+                //check if the throttle max speed is inside of the max speed limit
+                //if not used MaxThrottleSpeedKMH as cruise control speed.
+                if (currentSpeed > pHandle->pVController->pPowertrain->pThrottle->hParameters.MaxThrottleSpeedKMH)
+                {
+                    currentSpeed = (uint8_t)pHandle->pVController->pPowertrain->pThrottle->hParameters.MaxThrottleSpeedKMH;
+                }
+                
+                PWRT_EngageCruiseControl(pPowertrainHandle,currentSpeed);
             }    
             else
             {

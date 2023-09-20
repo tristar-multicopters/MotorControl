@@ -139,6 +139,13 @@ void PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle)
     else if (pHandle->bCurrentPasAlgorithm == CadenceSensorUse) // Set the level specific speed limit
     {
         userConfigSpeed = UserConfigTask_GetCadenceLevelSpeed(currentLevel);
+        
+        //check if the cadence max speed is inside of the max speed limit
+        //torque and cadence must have the same max speed limit
+        if (userConfigSpeed > pHandle->sParameters.TorquePasMaxSpeed)
+        {
+            userConfigSpeed = pHandle->sParameters.TorquePasMaxSpeed;
+        }
     }
     else if(pHandle->bCurrentPasAlgorithm == TorqueSensorUse)  // Set the generic limit
     {

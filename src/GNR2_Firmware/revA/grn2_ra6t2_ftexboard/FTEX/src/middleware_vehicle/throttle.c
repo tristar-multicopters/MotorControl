@@ -403,7 +403,13 @@ void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle)
      {
         pHandle->CruiseControlEnable = false; 
         pHandle->CruiseControlTorqueAvg = 0; 
-        Throttle_SetMaxSpeed(pHandle,pHandle->hParameters.DefaultMaxThrottleSpeedKMH);
+         
+        //check if the controller was configured to accept
+        //dynamic speed limitation.
+        //when no dynamic speed limitation GRN gets deffautl max throttle speed.
+        #if DYNAMIC_SPEED_LIMITATION == false
+            Throttle_SetMaxSpeed(pHandle,pHandle->hParameters.DefaultMaxThrottleSpeedKMH);
+        #endif    
      }
 }
 
