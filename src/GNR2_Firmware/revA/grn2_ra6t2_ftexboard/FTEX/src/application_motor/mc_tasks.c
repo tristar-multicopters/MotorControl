@@ -957,11 +957,11 @@ __NO_RETURN void startMCSafetyTask(void *pvParameter)
 void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle)
 {
     static uint8_t AvgIndex = 0;
-    static qd_t Iqd_samples[CURRENT_AVG_WIN_SIZE];    
+    static qd_t Iqd_Samples[CURRENT_AVG_WIN_SIZE];    
     int32_t sumIq = 0, sumId = 0; 
     
     // write latest CURRENT value on the last updated value in array
-    Iqd_samples[AvgIndex]= pHandle->Iqd;
+    Iqd_Samples[AvgIndex]= pHandle->Iqd;
     
     // update AvgIndex to the next last updated value
     if (AvgIndex >= (CURRENT_AVG_WIN_SIZE - 1))
@@ -976,8 +976,8 @@ void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle)
     // calculate the average
     for (uint8_t i = 0; i < CURRENT_AVG_WIN_SIZE; i++ )
     {
-        sumIq += Iqd_samples[i].q;
-        sumId += Iqd_samples[i].d;
+        sumIq += Iqd_Samples[i].q;
+        sumId += Iqd_Samples[i].d;
     }
     pHandle->Iqd_avg.q = (int16_t)(sumIq / CURRENT_AVG_WIN_SIZE);   
     pHandle->Iqd_avg.d = (int16_t)(sumId / CURRENT_AVG_WIN_SIZE);
@@ -991,36 +991,31 @@ void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle)
 
 bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed)
 {
+    static uint16_t Timer_Disc, Timer_Conn;
+
     bool retVal = false;
     PWMCurrFdbk_IqdMovingAverage(pHandle);
-    if ((abs(pHandle->Iqdref.q) > PHASE_WIRE_DISCONNECT_THRESHOLD) && (abs(MechSpeed) == 0))
+    uint16_t MeanSquare = (uint16_t)sqrt((pHandle->Iqd_avg.q * pHandle->Iqd_avg.q) + (pHandle->Iqd_avg.d * pHandle->Iqd_avg.d));
+    
+    if ((MeanSquare < (abs(pHandle->Iqdref.q))) && (abs(MechSpeed) == 0))
     {
-        static uint16_t timer_DISC, timer_CONN;
-        uint16_t MeanSquare = (uint16_t)sqrt((pHandle->Iqd_avg.q ^ 2) + (pHandle->Iqd_avg.d ^2));
-        if (MeanSquare < (abs(pHandle->Iqdref.q) / PHASE_WIRE_DISCONNECT_RATIO))
-        {
-            timer_DISC++;
-            timer_CONN = 0;
-        }
-        else
-        {
-            timer_DISC = 0;
-            timer_CONN++;
-        }
-        
-        if (timer_DISC > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
-        {
-            retVal = true;
-            timer_CONN = 0;
-        }
-        else if (timer_CONN > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
-        {
-            timer_DISC = 0;
-            retVal = false;
-        }
+        Timer_Disc++;
+        Timer_Conn = 0;
     }
-    else 
+    else
     {
+        Timer_Disc = 0;
+        Timer_Conn++;
+    }
+    
+    if (Timer_Disc > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
+    {
+        retVal = true;
+        Timer_Conn = 0;
+    }
+    else if (Timer_Conn > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
+    {
+        Timer_Disc = 0;
         retVal = false;
     }
     return retVal;
