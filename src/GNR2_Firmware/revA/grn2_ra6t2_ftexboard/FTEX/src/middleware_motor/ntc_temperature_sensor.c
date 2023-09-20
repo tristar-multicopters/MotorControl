@@ -8,8 +8,6 @@
 
 /* global Variables -----------------------------------------------------------*/
 
-#define NTC_NO_ERRORS 0
-#define NTC_OV_TEMP 1
 #define INIT_IGNORE 1000
 #define INIT_IGNORE_STEP 1
 
@@ -21,7 +19,7 @@ const uint8_t MIMIMUM_NTC_FREEZING = 200;
 // ========================================================================= //
 
 /* Private function prototypes -----------------------------------------------*/
-uint16_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle);
+NTCTempFaultStates_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle);
 
 
 // ========================================================================= //
@@ -33,14 +31,18 @@ uint16_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle);
   *
   *  @r Fault status : Updated internal fault status
   */
-uint16_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle)
+NTCTempFaultStates_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle)
 {
-  uint16_t hFault;
+  NTCTempFaultStates_t hFault;
 
-  if (pHandle->hAvTempCelcius > pHandle->hOverTempThreshold)
+  if (pHandle->hAvTempCelcius >= pHandle->hOverTempThreshold)
   {
-    hFault = NTC_OV_TEMP;
+    hFault = NTC_OT;
   }
+  else if (pHandle->hAvTempCelcius >= pHandle->hFoldbackStartTemp)
+	{
+		hFault = NTC_FOLDBACK;
+	}
   else if (pHandle->hAvTempCelcius < pHandle->hOverTempDeactThreshold)
   {
     hFault = NTC_NO_ERRORS;

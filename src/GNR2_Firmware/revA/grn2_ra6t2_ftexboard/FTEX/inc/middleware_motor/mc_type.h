@@ -86,16 +86,17 @@ extern "C" {
 #define  MC_OVER_VOLT           (uint16_t)(0x0002u)     /**< @brief Error: Software over voltage.*/
 #define  MC_UNDER_VOLT          (uint16_t)(0x0004u)     /**< @brief Error: Software under voltage.*/
 #define  MC_OVER_TEMP_CONTROLLER  (uint16_t)(0x0008u)     /**< @brief Error: Software over temperature for controller.*/
-#define  MC_START_UP            (uint16_t)(0x0010u)     /**< @brief Error: Startup failed.*/
-#define  MC_SPEED_FDBK          (uint16_t)(0x0020u)     /**< @brief Error: Speed feedback.*/
-#define  MC_BREAK_IN            (uint16_t)(0x0040u)     /**< @brief Error: Emergency input (Over current).*/
-#define  MC_SW_ERROR            (uint16_t)(0x0080u)     /**< @brief Software Error.*/
-#define  MC_OCSP                (uint16_t)(0x0100u)     /**< @brief Error: Overcurrent software protection.*/
-#define  MC_MSRP                (uint16_t)(0x0200u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
-#define  MC_NTCERR              (uint16_t)(0x0400u)     /**< @brief Error: NTC disconnection or Freezing protection.*/
-#define  MC_HALL_DISC           (uint16_t)(0x0800u)     /**< @brief WARNING: disconnected Hall sensor detection */
-#define  MC_PHASE_DISC          (uint16_t)(0x1000u)     /**< @brief WARNING: disconnected Phase cable detection */
-#define  MC_OVER_TEMP_MOTOR     (uint16_t)(0x2000u)     /**< @brief Error: Software over temperature for motor.*/
+#define  MC_OVER_TEMP_MOTOR     (uint16_t)(0x0010u)     /**< @brief Error: Software over temperature for motor.*/
+#define  MC_FOLDBACK_TEMP_MOTOR (uint16_t)(0x0020u)     /**< @brief WARNING: motor temp has entered foldback region.*/
+#define  MC_START_UP            (uint16_t)(0x0040u)     /**< @brief Error: Startup failed.*/
+#define  MC_SPEED_FDBK          (uint16_t)(0x0080u)     /**< @brief Error: Speed feedback.*/
+#define  MC_BREAK_IN            (uint16_t)(0x0100u)     /**< @brief Error: Emergency input (Over current).*/
+#define  MC_SW_ERROR            (uint16_t)(0x0200u)     /**< @brief Error: Software Error.*/
+#define  MC_OCSP                (uint16_t)(0x0400u)     /**< @brief Error: Overcurrent software protection.*/
+#define  MC_MSRP                (uint16_t)(0x0800u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
+#define  MC_NTCERR              (uint16_t)(0x100u)     /**< @brief Error: NTC disconnection or Freezing protection.*/
+#define  MC_HALL_DISC           (uint16_t)(0x2000u)     /**< @brief WARNING: disconnected Hall sensor detection */
+#define  MC_PHASE_DISC          (uint16_t)(0x4000u)     /**< @brief WARNING: disconnected Phase cable detection */
 /** @} */
 
 /**

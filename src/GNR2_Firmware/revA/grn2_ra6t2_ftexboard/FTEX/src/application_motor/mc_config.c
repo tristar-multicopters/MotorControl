@@ -413,6 +413,7 @@ NTCTempSensorHandle_t TempSensorMotorM1 =
 
     .hOverTempThreshold      = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C),
     .hOverTempDeactThreshold = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C - OV_TEMP_MOTOR_HYSTERESIS_C),
+    .hFoldbackStartTemp = (int16_t)(FOLDBACK_MOTOR_TEMP_END_VALUE - FOLDBACK_MOTOR_TEMP_INTERVAL),
 
     .pNTCLookupTable = &MotorNTCLookupTable,
 };
@@ -430,6 +431,7 @@ NTCTempSensorHandle_t TempSensorControllerM1 =
     .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
     .hOverTempThreshold      = (int16_t)(OV_TEMP_CONTROLLER_THRESHOLD_C),
     .hOverTempDeactThreshold = (int16_t)(OV_TEMP_CONTROLLER_THRESHOLD_C - OV_TEMP_CONTROLLER_HYSTERESIS_C),
+    .hFoldbackStartTemp = (int16_t)(FOLDBACK_HS_TEMP_END_VALUE - FOLDBACK_HS_TEMP_INTERVAL),
 
     .pNTCLookupTable = &ControllerNTCLookupTable,
 };

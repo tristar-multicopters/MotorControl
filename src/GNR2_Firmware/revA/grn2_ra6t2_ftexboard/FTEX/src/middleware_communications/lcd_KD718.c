@@ -569,7 +569,8 @@ uint8_t LCD_KD718_ErrorConversionFTEXToKD718(uint8_t aError)
         case MOTOR_PHASE_ERROR:
             ConvertedError = KD718_MOTOR_PHASE_FAULT;
           break;        
-        case OT_PROTECTION:
+        case CONTROLLER_OT_PROTECT:
+				case MOTOR_FOLDBACK_TEMP: // Generic temp error
             ConvertedError = KD718_OVER_TEMP;
             break;
         case IOT_COMM_ERROR: // Generic comm error

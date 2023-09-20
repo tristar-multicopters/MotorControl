@@ -61,7 +61,7 @@ typedef enum
     APT_HALL_ERROR         = 0x07, // Check the hall connection
     APT_UV_PROTECTION      = 0x08, // Undervoltage
     APT_OV_PROTECTION      = 0x09, // Overvoltage
-    APT_OT_PROTECTION      = 0x0A, // Controller overtemperature
+    APT_CONTROLLER_OT_PROTECT  = 0x0A, // Controller overtemperature
     APT_OVER_CURRENT       = 0x0B, // Controller over current
     APT_UT_PROTECTION      = 0x0C, // under temperature
     APT_PAS_BOOT_ERR       = 0x0D, // PAS anamoly

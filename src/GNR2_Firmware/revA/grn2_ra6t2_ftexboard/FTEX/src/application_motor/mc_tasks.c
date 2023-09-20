@@ -381,7 +381,7 @@ void MediumFrequencyTaskM1(void)
 #endif
         MCInterface_ExecBufferedCommands(oMCInterface[M1]);
         FOC_CalcCurrRef(M1);
-        if(IsPhaseCableDisconnected(MCInterface->pFOCVars, MCInterface->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit) == true)
+        if (IsPhaseCableDisconnected(MCInterface->pFOCVars, MCInterface->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit) == true)
         {
             // raise MC_PHASE_DISC error if the ratio of measured Iqd and reference Iq is not reasoble
             MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_PHASE_DISC, 0);    //Report the Fault and change bstate to FaultNow
@@ -389,6 +389,16 @@ void MediumFrequencyTaskM1(void)
         else
         {
             MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_PHASE_DISC);    //Report the Fault and change bstate to FaultNow
+        }
+
+        //check for whether motor temp is in foldback region
+        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_FOLDBACK_TEMP_MOTOR, 0);    //Report the Fault and change bstate to FaultNow
+        }
+        else
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_MOTOR);    //Report the Fault and change bstate to FaultNow
         }
 
 #if !(BYPASS_POSITION_SENSOR)    
@@ -841,12 +851,13 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
     // Check if Controller temperature is higher than the threshold, then raise the error
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) != MC_NO_ERROR)
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_OT)
     {
         CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_CONTROLLER;
     }
+
     // Check if Motor temperature is higher than the threshold, then raise the error
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]) != MC_NO_ERROR)
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]) == NTC_OT)
     {
         CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_MOTOR;
     }

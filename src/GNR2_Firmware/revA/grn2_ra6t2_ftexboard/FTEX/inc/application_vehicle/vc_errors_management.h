@@ -22,18 +22,19 @@ typedef enum
     THROTTLE_STUCK    = 0x01, // On boot controller checks to make sure throttle is not above minimumu threshold
     UV_PROTECTION     = 0x02, // Under voltage protection
     OV_PROTECTION     = 0x03, // Over voltage protection
-    OT_PROTECTION     = 0x04, // Over temperature protection
-    MOTOR_HALL_ERROR  = 0x05, // We can't read motor hall sensor
-    MOTOR_PHASE_ERROR = 0x06, // Motor phase wiring is faulty
-    IOT_COMM_ERROR    = 0x07, // Controller loses communication with IOT module
-    DUAL_COMM_ERROR   = 0x08, // Master lost comm with slave or slave lost comm with master
-    OVER_CURRENT      = 0x09, // Over Current protection - HW & SW
-    UT_PROTECTION     = 0x0A, // Undertemperature causes the NTC to disconnect
-    BATT_LOW          = 0x0B, // Battery is low
-    PAS_BOOT_ERROR    = 0x0C, // Peddle Assist error
-    CONTROLLER_ERROR  = 0x0D, // Controller in unrecoverable state
-    BRAKE_ERROR       = 0x0E, // Brake cutoff sensor abnormal
-    MOTOR_OT_PROTECT  = 0x0F, // Motor is overheating
+    UT_PROTECTION     = 0x04, // Undertemperature causes the NTC to disconnect
+    MOTOR_OT_PROTECT  = 0x05, // Motor over temperature protection
+    MOTOR_FOLDBACK_TEMP = 0x06, // Foldback for motor temp has been initiated
+    CONTROLLER_OT_PROTECT  = 0x07, // Controller over temperature protection
+    MOTOR_HALL_ERROR  = 0x08, // We can't read motor hall sensor
+    MOTOR_PHASE_ERROR = 0x09, // Motor phase wiring is faulty
+    IOT_COMM_ERROR    = 0x0A, // Controller loses communication with IOT module
+    DUAL_COMM_ERROR   = 0x0B, // Master lost comm with slave or slave lost comm with master
+    OVER_CURRENT      = 0x0C, // Over Current protection - HW & SW
+    BATT_LOW          = 0x0D, // Battery is low
+    PAS_BOOT_ERROR    = 0x0E, // Peddle Assist error
+    CONTROLLER_ERROR  = 0x0F, // Controller in unrecoverable state
+    BRAKE_ERROR       = 0x10, // Brake cutoff sensor abnormal
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
 ErrorCodes_t; 

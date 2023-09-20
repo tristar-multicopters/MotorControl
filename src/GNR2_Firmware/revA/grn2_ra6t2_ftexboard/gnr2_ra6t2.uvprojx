@@ -819,14 +819,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_nidec.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters_quietkat.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_nidec.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_r48_750w.h</FileName>
@@ -2881,14 +2881,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_nidec.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters_quietkat.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_nidec.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_r48_750w.h</FileName>
@@ -4808,14 +4808,14 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_nidec.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters_quietkat.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_nidec.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_r48_750w.h</FileName>

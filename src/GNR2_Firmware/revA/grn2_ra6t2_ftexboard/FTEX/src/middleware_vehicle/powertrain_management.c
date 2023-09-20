@@ -706,7 +706,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         }
         if ((hFaultOccurred & MC_OVER_TEMP_CONTROLLER) != MC_NO_ERROR)
         {
-            VC_Errors_RaiseError(OT_PROTECTION, DEFAULT_HOLD_FRAMES);
+            VC_Errors_RaiseError(CONTROLLER_OT_PROTECT, DEFAULT_HOLD_FRAMES);
         }
         if ((hFaultOccurred & MC_OVER_TEMP_MOTOR) != MC_NO_ERROR)
         {
@@ -720,6 +720,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         {
             VC_Errors_RaiseError(UV_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
+				
     }
     if (PWRT_IsMotor1Used(pHandle))
     {// If there's an over current (OC) that has occurred but has already been cleared
@@ -973,6 +974,15 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
     else
     {
         VC_Errors_ClearError(MOTOR_HALL_ERROR);
+    }
+		
+    if ((hWarningOccurred & MC_FOLDBACK_TEMP_MOTOR) != MC_NO_ERROR )
+    {
+        VC_Errors_RaiseError(MOTOR_FOLDBACK_TEMP, HOLD_UNTIL_CLEARED);
+    }
+    else
+    {
+        VC_Errors_ClearError(MOTOR_FOLDBACK_TEMP);
     }
 }
 
