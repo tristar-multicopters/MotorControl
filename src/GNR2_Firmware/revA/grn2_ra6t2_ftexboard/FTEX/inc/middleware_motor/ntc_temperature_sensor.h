@@ -15,6 +15,18 @@
 
 extern const uint8_t MIMIMUM_NTC_FREEZING;
 
+/** NTC Errors Definitions */
+
+typedef enum
+{
+  NTC_NO_ERRORS   = 0,        /**< No temp related errors or warnings*/
+  
+  NTC_OT          = 1,        /**< Over temperature error */
+  
+  NTC_FOLDBACK    = 2,        /**< Foldback has started, to trigger foldback warning */
+  
+} NTCTempFaultStates_t;
+  
 typedef struct
 {
   SensorType_t  bSensorType;   /**< Type of instanced temperature.
@@ -31,7 +43,7 @@ typedef struct
   uint16_t hExpectedTempCelcius;    /**< Default value when no sensor available (ie virtual sensor).
                                     This parameter is expressed in Celsius */
 
-  uint16_t hFaultState;        /**< Contains latest Fault code.
+  NTCTempFaultStates_t hFaultState;        /**< Contains latest Fault code.
                                     This parameter is set to MC_OVER_TEMP or MC_NO_ERROR */
 
   uint16_t hLowPassFilterBw;   /**< used to configure the first order software filter bandwidth.
@@ -43,13 +55,15 @@ typedef struct
                                     This parameter is expressed in degC */
   int16_t hOverTempDeactThreshold; /**< Temperature threshold below which an active over temperature fault is cleared.
                                          This parameter is expressed in degC */
+  int16_t hFoldbackStartTemp;		/**< Temperature at which the foldback starts.
+                                         This parameter is expressed in degC */
   uint8_t bConvHandle;            /**< handle to the regular conversion */
 
   int16_t initIgnore;              /**< used to ignore first values in initialization */
 
-  LookupTableHandle_t * pNTCLookupTable;   /* Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
+  LookupTableHandle_t * pNTCLookupTable;   /**< Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
 
-  bool *OutsideTable;  /* Will be set to true if the current temp value is outside the table so it defaults to the nearest value */
+  bool *OutsideTable;  /**< Will be set to true if the current temp value is outside the table so it defaults to the nearest value */
 
 } NTCTempSensorHandle_t;
 

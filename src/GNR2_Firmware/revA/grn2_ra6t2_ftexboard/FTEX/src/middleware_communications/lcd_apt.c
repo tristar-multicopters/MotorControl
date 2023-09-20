@@ -593,8 +593,8 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
         case UV_PROTECTION:
             ConvertedError = APT_UV_PROTECTION;
             break;
-        case OT_PROTECTION:
-            ConvertedError = APT_OT_PROTECTION;
+        case CONTROLLER_OT_PROTECT:
+            ConvertedError = APT_CONTROLLER_OT_PROTECT;
             break;
         case UT_PROTECTION:
             ConvertedError = APT_UT_PROTECTION;
@@ -625,6 +625,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             ConvertedError = APT_BRAKE_ERROR;
             break;         
         case MOTOR_OT_PROTECT:
+				case MOTOR_FOLDBACK_TEMP:
             ConvertedError = APT_MOTOR_OT_PROTECT;
             break;         
         case UNMAPPED_ERROR: // Errors that APT has but that we currently don't flag            

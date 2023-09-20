@@ -218,6 +218,9 @@
 #define CONSTANT1_D                    0            /* Feedforward Id related gain */
 #define CONSTANT2_QD                   0            /* Feedforward speed related gain */
 
+/*	Motor temperature sensor */
+#define MOTOR_TEMP_SENSOR_TYPE				REAL_SENSOR		/* Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR */
+
 /*** On the fly start-up ***/
 
 /******************************   Rotor position observer Motor 1   **********************/
