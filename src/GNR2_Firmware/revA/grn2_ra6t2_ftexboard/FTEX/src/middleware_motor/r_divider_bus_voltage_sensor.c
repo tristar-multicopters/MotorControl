@@ -144,12 +144,34 @@ uint16_t ResDivVbusSensor_CalcAvVbus(ResDivVbusSensorHandle_t * pHandle)
 */
 uint16_t ResDivVbusSensor_CheckFaultState(ResDivVbusSensorHandle_t * pHandle)
 {
+    
+    //variable used to force the under voltage
+    //detection wait to the system to be stable
+    //when initialising.
+    static uint16_t underVoltInitTimeout = 0;
+    
+    //flag used to lete the under voltage detection knows 
+    //that system initilization time was finished.
+    static bool underVoltInitFlag = false;
+   
     uint16_t fault;
+    
+    //verify if max time has passed to the battery voltage stabilize
+    if ((underVoltInitTimeout >= UNDERVOLTAGE_INITTIMEOUT_MSEC) && (underVoltInitFlag == false))
+    {
+        underVoltInitFlag = true;
+    }
+    else if (underVoltInitFlag == false)
+    {
+        //this variable is incremented each 0.5 ms.
+        underVoltInitTimeout++;
+    }
+    
     if (pHandle->Super.hAvBusVoltageDigital > pHandle->hOverVoltageThreshold)  // Checks if measured average voltage is above over voltage threshold
     {
         fault = MC_OVER_VOLT;
     }
-    else if (pHandle->Super.hAvBusVoltageDigital < pHandle->hUnderVoltageThreshold) // Checks if measured average voltage is below under voltage threshold
+    else if ((pHandle->Super.hAvBusVoltageDigital < pHandle->hUnderVoltageThreshold) && (underVoltInitFlag == true)) // Checks if measured average voltage is below under voltage threshold
     {
         fault = MC_UNDER_VOLT;
     }
