@@ -10,6 +10,13 @@
 #include "regular_conversion_manager.h"
 #include "bus_voltage_sensor.h"
 
+/************** DEFINES************************/
+
+//under voltage timeout to the system volatge to be stable.
+#define UNDERVOLTAGE_INITTIMEOUT_MSEC  6000
+
+
+
 // ====== Structure used to configure resistor divider bus voltage sensor parameters ========== //
 
 typedef struct
