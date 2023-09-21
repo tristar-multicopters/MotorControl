@@ -10,3 +10,5 @@
 
 extern LookupTableHandle_t ControllerNTCLookupTable;
 extern LookupTableHandle_t MotorNTCLookupTable;
+
+

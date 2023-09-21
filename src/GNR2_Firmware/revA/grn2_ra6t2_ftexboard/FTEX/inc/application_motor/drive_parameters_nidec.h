@@ -156,7 +156,7 @@
 #define FOLDBACK_SPEED_INTERVAL         750                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMP_CONTROLLER_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
-#define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMP_CONTROLLER_HYSTERESIS_C  /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
+#define FOLDBACK_HS_TEMP_INTERVAL       45                               /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
 
 #define FOLDBACK_MOTOR_TEMP_END_VALUE   OV_TEMP_MOTOR_THRESHOLD_C  /* Max temperature value (degree C) of the decreasing torque ramp to limit motor temperature */
 #define FOLDBACK_MOTOR_TEMP_INTERVAL    20                         /* Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature */
@@ -171,7 +171,7 @@
 #define DEFAULT_SPEED_SLOPE_DOWN       2500        /* Slope in #SPEED_UNIT per second */
 
 /* Dynamic maximum power foldback settings */
-#define ENABLE_MAX_POWER_LIMIT          false        /* to enable or disable the foldback */
+#define ENABLE_MAX_POWER_LIMIT          true        /* to enable or disable the foldback */
 #define MAX_BMS_POSITIVE_POWER          500         /* Maximum Power at the end point of foldback */
 #define MAX_TIME_BMS_TOLERANT           20000       /* milliseconds - time of foldback end point */
 #define MAX_POWER_LIMIT_TIMEOUT         10000       /* milliseconds - timeout before start derating */
@@ -217,7 +217,7 @@
 #define CONSTANT2_QD                   0            /* Feedforward speed related gain */
 
 /*	Motor temperature sensor */
-#define MOTOR_TEMP_SENSOR_TYPE				VIRTUAL_SENSOR	/* Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR */
+#define MOTOR_TEMP_SENSOR_TYPE				REAL_SENSOR	/* Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR */
 
 /*** On the fly start-up ***/
 
