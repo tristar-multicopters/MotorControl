@@ -293,7 +293,7 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     }
     /* Cadence Sensor use */                                // Checking for a pedal periode so long that it would be impossible
                                                             // to pedal the bike at this speed
-    else if (LatestPeriode > 0 && LatestPeriod < 3980000)  //10000000 working but we still have room
+    else if (LatestPeriod > 0 && LatestPeriod < 3980000)  //10000000 working but we still have room
                                                             // 8000000 worked fine
                                                             // 4000000 worked good
                                                             // 3800000 barely too small
