@@ -99,12 +99,14 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
                 Light_PowerOnSequence(pVCI->pPowertrain->pHeadLight); // Setup the lights with their default values
                 Light_PowerOnSequence(pVCI->pPowertrain->pTailLight);
                 bLightInitalised = true;
-            }
+            }            
+
+            // Pedal Assist Cadence reading period
+            PedalSpdSensor_CalculateSpeed(pVCI->pPowertrain->pPAS->pPSS);
             
             // Check PAS activation based on torque or cadence
             PedalAssist_UpdatePASDetectionCall(pVCI->pPowertrain->pPAS);
-            // Pedal Assist Cadence reading period
-            PedalSpdSensor_CalculateSpeed(pVCI->pPowertrain->pPAS->pPSS);
+
             // Wheel Speed sensor reading period
             WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pPAS->pWSS);
 

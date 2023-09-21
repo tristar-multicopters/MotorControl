@@ -226,7 +226,6 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 
-    uint32_t  wSpeedt;
     uint16_t  hTorqueSens;
     uint16_t  hOffsetTemp;
     uint16_t  hWheelRPM;
@@ -234,63 +233,71 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
     static uint16_t PulseCounter = 0;
     bool CalculateAverage = false;
     
+    uint32_t LatestPeriod = PedalSpdSensor_GetPeriodValue(pHandle->pPSS);
     
-    hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
-    /* Calculate the offset based on ration percentage */
     
-    if(hWheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset
-    {     
-        CalculateAverage = true;  // Make sure we calculated the average to check for the threshold       
-        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;        
-    }
-    else
+    if(pHandle->bCurrentPasAlgorithm == TorqueSensorUse)
     {
-        CalculateAverage = false; // No need for the average      
-        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
-    }        
+        hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
+        /* Calculate the offset based on ration percentage */
     
-	
-    wSpeedt = PedalSpdSensor_GetPeriodValue(pHandle->pPSS);
-    hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
-   
-    static uint16_t hThresholdCheckAvg[TORQUE_THRESHOLD_AVG_NB];
-    static uint8_t AvgIndex = 0; 
-    uint32_t wThresholdAvg = 0;
-    
-    if(CalculateAverage) // If we need to calculate the average
-    {
-        hThresholdCheckAvg[AvgIndex] = hTorqueSens;
-    
-        if(AvgIndex >= TORQUE_THRESHOLD_AVG_NB - 1)
-        {
-            AvgIndex = 0;
-        }    
+        if(hWheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset
+        {        
+            CalculateAverage = true;  // Make sure we calculated the average to check for the threshold       
+            hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;        
+        }
         else
         {
-            AvgIndex ++;
-        }
+            CalculateAverage = false; // No need for the average      
+            hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+        }        
     
-        for(int i = 0; i < TORQUE_THRESHOLD_AVG_NB; i ++)
+        hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
+   
+        static uint16_t hThresholdCheckAvg[TORQUE_THRESHOLD_AVG_NB];
+        static uint8_t AvgIndex = 0; 
+        uint32_t wThresholdAvg = 0;
+    
+        if(CalculateAverage) // If we need to calculate the average
         {
-            wThresholdAvg += hThresholdCheckAvg[i];
+            hThresholdCheckAvg[AvgIndex] = hTorqueSens;
+    
+            if(AvgIndex >= TORQUE_THRESHOLD_AVG_NB - 1)
+            {
+                AvgIndex = 0;
+            }    
+            else
+            {
+                AvgIndex ++;
+            }
+    
+            for(int i = 0; i < TORQUE_THRESHOLD_AVG_NB; i ++)
+            {
+                wThresholdAvg += hThresholdCheckAvg[i];
+            }
+    
+            wThresholdAvg /= TORQUE_THRESHOLD_AVG_NB;
+        
+            hTorquePASThreshold = (uint16_t) wThresholdAvg;
+        }
+        else // if there is no need for an average
+        {
+            hTorquePASThreshold = hTorqueSens;
         }
     
-        wThresholdAvg /= TORQUE_THRESHOLD_AVG_NB;
-        
-        hTorquePASThreshold = (uint16_t) wThresholdAvg;
+        /* Torque Sensor use and the offset was detected */
+        if (hTorquePASThreshold > hOffsetTemp)
+        {      
+            pHandle->bPASDetected = true;
+        }
     }
-    else // if there is no need for an average
-    {
-        hTorquePASThreshold = hTorqueSens;
-    }
-    
-    /* Torque Sensor use and the offset was detected */
-    if ((pHandle->bCurrentPasAlgorithm == TorqueSensorUse) && (hTorquePASThreshold > hOffsetTemp))
-    {      
-        pHandle->bPASDetected = true;
-    }
-    /* Cadence Sensor use */
-    else if (wSpeedt > 0)
+    /* Cadence Sensor use */                                // Checking for a pedal periode so long that it would be impossible
+                                                            // to pedal the bike at this speed
+    else if (LatestPeriode > 0 && LatestPeriod < 3980000)  //10000000 working but we still have room
+                                                            // 8000000 worked fine
+                                                            // 4000000 worked good
+                                                            // 3800000 barely too small
+                                                            // 3000000 too small had to pedal fast
     {
         /* Add security layer to miss the first PAS detect if there is any issue 
            with the pedal */
@@ -317,29 +324,8 @@ void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle)
 void PedalAssist_UpdatePASDetectionCall(PAS_Handle_t * pHandle) 
 {
     ASSERT(pHandle != NULL);
-    // Check if the PAS presence is detected
-    if ( PedalAssist_IsPASDetected(pHandle))
-    {
-        bPASCounterAct ++;
-        // For Slow PAS sensor on cadence check
-        if (bPASCounterAct > pHandle->sParameters.bPASCountActivation && (pHandle->bCurrentPasAlgorithm == CadenceSensorUse))
-        {
-            PedalAssist_UpdatePASDetection(pHandle);
-            bPASCounterAct = 0;
-        }
-        
-        if(pHandle->bCurrentPasAlgorithm == TorqueSensorUse)
-        {
-            PedalAssist_UpdatePASDetection(pHandle);
-        }
-                   
-    }
-    // If the PAS presence is not detected the safe coefficient for PAS Safe detection remain
-    else 
-    {
-        PedalAssist_UpdatePASDetection(pHandle); 
-        bPASCounterAct = 0;
-    }
+    PedalAssist_UpdatePASDetection(pHandle); 
+    bPASCounterAct = 0;
 }
 
 /**
