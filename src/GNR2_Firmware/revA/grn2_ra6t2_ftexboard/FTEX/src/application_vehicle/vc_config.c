@@ -36,20 +36,21 @@ BRK_Handle_t BrakeHandle =
 
 Light_Handle_t HeadLightHandle =
 {
-    .wPinNumber = FRONT_LIGHT_PIN,
+    .PinNumber = FRONT_LIGHT_PIN,
     .bIsInvertedLogic = false,
     .bLightIsBlinking = false,
-    .BlinkPeriode     = 0,
+    .BlinkPeriod       = 0,
     .bLightStateLocked = POWERTRAIN_HEADLIGHT_LOCKED,
     .bDefaultLightState = POWERTRAIN_HEADLIGHT_DEFAULT,     
 };
 
 Light_Handle_t TailLightHandle =
 {
-    .wPinNumber = BACK_LIGHT_PIN,
+    .PinNumber = BACK_LIGHT_PIN,
     .bIsInvertedLogic = false,
-    .bLightIsBlinking = false, 
-    .BlinkPeriode     = 50,
+    .bLightIsBlinking = false,
+    .BlinkPeriodON  = 75,
+    .BlinkPeriodOFF = 5,    
     .bLightStateLocked = POWERTRAIN_TAILLIGHT_LOCKED,
     .bDefaultLightState = POWERTRAIN_TAILLIGHT_DEFAULT,   
 };    

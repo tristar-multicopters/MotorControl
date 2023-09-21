@@ -17,10 +17,17 @@
   */
 typedef struct
 {          
-    uint32_t wPinNumber;    // Contains the pin number on which the brake is connected
-    uint16_t BlinkPeriode;  // How many calls of the blink function need to be called before the led is
-                            // toggled. The blinking frequency of the light depends on how quickly
-                            // the blink function gets called.
+    uint32_t PinNumber;      // Contains the pin number on which the brake is connected
+    
+    uint16_t BlinkPeriod;
+    
+    uint16_t BlinkPeriodON;  // How many calls of the blink function need to be called before the led is
+                              // toggled when its on. The blinking frequency of the light depends on how quickly
+                              // the blink function gets called.
+    
+    uint16_t BlinkPeriodOFF; // How many calls of the blink function need to be called before the led is
+                              // toggled when its off. The blinking frequency of the light depends on how quickly
+                              // the blink function gets called.
     
     uint16_t BlinkCounter;  // Keeps track of when we need to toggle the LED
 	

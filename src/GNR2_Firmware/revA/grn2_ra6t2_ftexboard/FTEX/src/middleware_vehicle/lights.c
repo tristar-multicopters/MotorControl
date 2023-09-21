@@ -21,11 +21,11 @@ void Light_SetLight(Light_Handle_t * pHandle)
 {
     if (pHandle->bIsInvertedLogic) // If the logic is inverted we turn on the light with a 0
     {
-        uCAL_GPIO_Reset(pHandle->wPinNumber);
+        uCAL_GPIO_Reset(pHandle->PinNumber);
     }
     else
     {    
-        uCAL_GPIO_Set(pHandle->wPinNumber);
+        uCAL_GPIO_Set(pHandle->PinNumber);
     }
 }
 
@@ -37,11 +37,11 @@ void Light_ResetLight(Light_Handle_t * pHandle)
 {
     if (pHandle->bIsInvertedLogic) // If the logic is inverted we turn off the light with a 1
     {
-        uCAL_GPIO_Set(pHandle->wPinNumber);
+        uCAL_GPIO_Set(pHandle->PinNumber);
     }
     else
     {     
-        uCAL_GPIO_Reset(pHandle->wPinNumber);
+        uCAL_GPIO_Reset(pHandle->PinNumber);
     }   
 }
 
@@ -53,7 +53,7 @@ void Light_Toggle(Light_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    uCAL_GPIO_Toggle(pHandle->wPinNumber);
+    uCAL_GPIO_Toggle(pHandle->PinNumber);
 }
 
 /* Functions ---------------------------------------------------- */
@@ -70,7 +70,7 @@ void Light_Init(Light_Handle_t * pHandle)
     PinConfig.PinPull      = NONE; 
     PinConfig.PinOutput    = PUSH_PULL; 
     
-    uCAL_GPIO_ReInit(pHandle->wPinNumber, PinConfig);
+    uCAL_GPIO_ReInit(pHandle->PinNumber, PinConfig);
 }
 
 
@@ -130,7 +130,7 @@ bool Light_GetState(Light_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    return(uCAL_GPIO_Read(pHandle->wPinNumber));
+    return(uCAL_GPIO_Read(pHandle->PinNumber));
 }
 
 /**
@@ -140,7 +140,16 @@ void Light_Blink(Light_Handle_t * pHandle)
 {
     if (pHandle->bLightIsBlinking && pHandle->bLightIsActive)
     {
-        if (pHandle->BlinkCounter >= pHandle->BlinkPeriode) // If this function has been called enough 
+        if(Light_GetState(pHandle) == true)
+        {
+            pHandle->BlinkPeriod = pHandle->BlinkPeriodON;
+        }
+        else
+        {
+            pHandle->BlinkPeriod = pHandle->BlinkPeriodOFF;
+        }   
+        
+        if (pHandle->BlinkCounter >= pHandle->BlinkPeriod) // If this function has been called enough 
         {                                                  // so that Blink Counter equals Blink Periode   
             pHandle->BlinkCounter = 0; // reset the counter
             Light_Toggle(pHandle);     // Toggle the light
