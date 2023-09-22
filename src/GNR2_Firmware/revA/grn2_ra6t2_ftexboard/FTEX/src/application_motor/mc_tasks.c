@@ -400,6 +400,16 @@ void MediumFrequencyTaskM1(void)
         {
             MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_MOTOR);    //Report the Fault and change bstate to FaultNow
         }
+        
+        //check if NTC is disconnected
+        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_DISC)
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_NTC_DISC_FREEZE, 0);    //Report the Fault and change bstate to FaultNow
+        }
+        else
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_NTC_DISC_FREEZE);    //Report the Fault and change bstate to FaultNow
+        }
 
 #if !(BYPASS_POSITION_SENSOR)    
         if (Check_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
@@ -412,7 +422,7 @@ void MediumFrequencyTaskM1(void)
         
         if (pSpeedTorqCtrl[M1]->pHeatsinkTempSensor->hAvTempDigital < MIMIMUM_NTC_FREEZING)
         {
-            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_NTCERR, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_NTC_FREEZE, 0);    //Report the Fault and change bstate to FaultNow
         }
 
 #if !(BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)

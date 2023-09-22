@@ -25,6 +25,9 @@ typedef enum
   
   NTC_FOLDBACK    = 2,        /**< Foldback has started, to trigger foldback warning */
   
+  NTC_DISC        = 3,        /**< NTC is disconnected */
+  
+  
 } NTCTempFaultStates_t;
   
 typedef struct
@@ -47,24 +50,22 @@ typedef struct
                                     This parameter is set to MC_OVER_TEMP or MC_NO_ERROR */
 
   uint16_t hLowPassFilterBw;   /**< used to configure the first order software filter bandwidth.
-                                    hLowPassFilterBw = NTC_CalcBusReading
-                                    
-    
-    call rate [Hz]/ FilterBandwidth[Hz] */
-  int16_t hOverTempThreshold; /**< Represents the over voltage protection intervention threshold.
-                                    This parameter is expressed in degC */
-  int16_t hOverTempDeactThreshold; /**< Temperature threshold below which an active over temperature fault is cleared.
+                                    hLowPassFilterBw = NTC_CalcBusReading call rate [Hz]/ FilterBandwidth[Hz] */
+  int16_t hOverTempThreshold;         /**< Represents the over voltage protection intervention threshold.
+                                      This parameter is expressed in degC */
+  int16_t hOverTempDeactThreshold;    /**< Temperature threshold below which an active over temperature fault is cleared.
                                          This parameter is expressed in degC */
-  int16_t hFoldbackStartTemp;		/**< Temperature at which the foldback starts.
+  int16_t hFoldbackStartTemp;		      /**< Temperature at which the foldback starts.
                                          This parameter is expressed in degC */
-  uint8_t bConvHandle;            /**< handle to the regular conversion */
+                                           
+  uint8_t bConvHandle;                /**< handle to the regular conversion */
 
-  int16_t initIgnore;              /**< used to ignore first values in initialization */
+  uint16_t hTimer;                    /**< timer value used to ignore first values in initialization and to check for sensor disconnections */
 
   LookupTableHandle_t * pNTCLookupTable;   /**< Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
 
-  bool *OutsideTable;  /**< Will be set to true if the current temp value is outside the table so it defaults to the nearest value */
-
+  bool *OutsideTable;                 /**< Will be set to true if the current temp value is outside the table so it defaults to the nearest value */
+  
 } NTCTempSensorHandle_t;
 
 

@@ -811,9 +811,9 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             }
         }
 
-        if ((hM1FaultOccurredCode & MC_NTCERR) != 0)
+        if ((hM1FaultOccurredCode & MC_NTC_FREEZE) != 0)
         {
-            hM1FaultOccurredCode &= ~MC_NTCERR;
+            hM1FaultOccurredCode &= ~MC_NTC_FREEZE;
         }
 
         if ((hM1FaultOccurredCode & MC_FOC_DURATION) != 0)
@@ -922,9 +922,9 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
             }
         }
 
-        if ((hM2FaultOccurredCode & MC_NTCERR) != 0)
+        if ((hM2FaultOccurredCode & MC_NTC_FREEZE) != 0)
         {
-            hM2FaultOccurredCode &= ~MC_NTCERR;
+            hM2FaultOccurredCode &= ~MC_NTC_FREEZE;
         }
 
         if ((hM2FaultOccurredCode & MC_FOC_DURATION) != 0)
@@ -984,6 +984,15 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
     else
     {
         VC_Errors_ClearError(MOTOR_FOLDBACK_TEMP);
+    }
+    
+    if ((hWarningOccurred & MC_NTC_DISC_FREEZE) != MC_NO_ERROR )
+    {
+        VC_Errors_RaiseError(MOTOR_NTC_DISC_FREEZE, HOLD_UNTIL_CLEARED);
+    }
+    else
+    {
+        VC_Errors_ClearError(MOTOR_NTC_DISC_FREEZE);
     }
 }
 
