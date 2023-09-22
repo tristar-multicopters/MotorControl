@@ -604,7 +604,8 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
             ConvertedError = CLOUD_5S_IOT_COMM_ERROR;
             break;   
         case MOTOR_OT_PROTECT:
-				case MOTOR_FOLDBACK_TEMP:
+        case MOTOR_NTC_DISC_FREEZE:
+        case MOTOR_FOLDBACK_TEMP:
             ConvertedError = CLOUD_5S_MOT_ERROR;
             break;            
         case OV_PROTECTION:

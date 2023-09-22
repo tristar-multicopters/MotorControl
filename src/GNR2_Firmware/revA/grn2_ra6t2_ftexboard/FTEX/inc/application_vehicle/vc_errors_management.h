@@ -22,19 +22,20 @@ typedef enum
     THROTTLE_STUCK    = 0x01, // On boot controller checks to make sure throttle is not above minimumu threshold
     UV_PROTECTION     = 0x02, // Under voltage protection
     OV_PROTECTION     = 0x03, // Over voltage protection
-    UT_PROTECTION     = 0x04, // Undertemperature causes the NTC to disconnect
+    UT_PROTECTION     = 0x04, // Undertemperature protection
     MOTOR_OT_PROTECT  = 0x05, // Motor over temperature protection
     MOTOR_FOLDBACK_TEMP = 0x06, // Foldback for motor temp has been initiated
-    CONTROLLER_OT_PROTECT  = 0x07, // Controller over temperature protection
-    MOTOR_HALL_ERROR  = 0x08, // We can't read motor hall sensor
-    MOTOR_PHASE_ERROR = 0x09, // Motor phase wiring is faulty
-    IOT_COMM_ERROR    = 0x0A, // Controller loses communication with IOT module
-    DUAL_COMM_ERROR   = 0x0B, // Master lost comm with slave or slave lost comm with master
-    OVER_CURRENT      = 0x0C, // Over Current protection - HW & SW
-    BATT_LOW          = 0x0D, // Battery is low
-    PAS_BOOT_ERROR    = 0x0E, // Peddle Assist error
-    CONTROLLER_ERROR  = 0x0F, // Controller in unrecoverable state
-    BRAKE_ERROR       = 0x10, // Brake cutoff sensor abnormal
+    MOTOR_NTC_DISC_FREEZE    = 0x07,    // Motor temperature sensor is disconnected or cold warning
+    CONTROLLER_OT_PROTECT  = 0x08, // Controller over temperature protection
+    MOTOR_HALL_ERROR  = 0x09, // We can't read motor hall sensor
+    MOTOR_PHASE_ERROR = 0x0A, // Motor phase wiring is faulty
+    IOT_COMM_ERROR    = 0x0B, // Controller loses communication with IOT module
+    DUAL_COMM_ERROR   = 0x0C, // Master lost comm with slave or slave lost comm with master
+    OVER_CURRENT      = 0x0D, // Over Current protection - HW & SW
+    BATT_LOW          = 0x0E, // Battery is low
+    PAS_BOOT_ERROR    = 0x0F, // Peddle Assist error
+    CONTROLLER_ERROR  = 0x10, // Controller in unrecoverable state
+    BRAKE_ERROR       = 0x11, // Brake cutoff sensor abnormal
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
 ErrorCodes_t; 

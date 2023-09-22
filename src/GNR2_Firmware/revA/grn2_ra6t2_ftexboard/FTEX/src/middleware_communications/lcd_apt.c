@@ -625,7 +625,8 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             ConvertedError = APT_BRAKE_ERROR;
             break;         
         case MOTOR_OT_PROTECT:
-				case MOTOR_FOLDBACK_TEMP:
+        case MOTOR_NTC_DISC_FREEZE:
+        case MOTOR_FOLDBACK_TEMP:
             ConvertedError = APT_MOTOR_OT_PROTECT;
             break;         
         case UNMAPPED_ERROR: // Errors that APT has but that we currently don't flag            
