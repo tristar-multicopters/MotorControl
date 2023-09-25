@@ -94,7 +94,7 @@ extern "C" {
 #define  MC_SW_ERROR            (uint16_t)(0x0200u)     /**< @brief Error: Software Error.*/
 #define  MC_OCSP                (uint16_t)(0x0400u)     /**< @brief Error: Overcurrent software protection.*/
 #define  MC_MSRP                (uint16_t)(0x0800u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
-#define  MC_NTC_FREEZE          (uint16_t)(0x100u)      /**< @brief Error: NTC Freezing protection.*/
+#define  MC_NTC_FREEZE          (uint16_t)(0x100u)      /**< @brief Error: Controller NTC Freezing protection.*/
 #define  MC_HALL_DISC           (uint16_t)(0x2000u)     /**< @brief WARNING: disconnected Hall sensor detection */
 #define  MC_PHASE_DISC          (uint16_t)(0x4000u)     /**< @brief WARNING: disconnected Phase cable detection */
 #define  MC_NTC_DISC_FREEZE     (uint16_t)(0x8000u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
