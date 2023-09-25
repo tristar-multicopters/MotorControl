@@ -13,11 +13,30 @@
 #define NTC_CONTROLLER_LUT_DIGITAL_FIRST_VALUE         16000        //1000 is the first value considered in the table that has a temperature correlation (7 degree C).
                                                          //*16 is the factor on tics conversion due variable casting
 
-#define NTC_MOTOR_LUT_SIZE                        36           // the number of correlation elements on this table
+#if VEHICLE_SELECTION == VEHICLE_R48_750W
+
+#define NTC_MOTOR_LUT_SIZE                        38           // the number of correlation elements on this table
+
 #define NTC_MOTOR_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
 #define NTC_MOTOR_LUT_DIGITAL_FIRST_VALUE         4000        //250 is the first value considered in the table that has a temperature correlation (144 degree C).
                                                          //*16 is the factor on tics conversion due variable casting
 
+#elif VEHICLE_SELECTION == VEHICLE_NIDEC
+
+#define NTC_MOTOR_LUT_SIZE                        37           // the number of correlation elements on this table
+#define NTC_MOTOR_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
+#define NTC_MOTOR_LUT_DIGITAL_FIRST_VALUE         4000        //250 is the first value considered in the table that has a temperature correlation (144 degree C).
+                 
+                                        //*16 is the factor on tics conversion due variable casting
+
+#else
+
+#define NTC_MOTOR_LUT_SIZE                        0           // when there is no temp sensor
+#define NTC_MOTOR_LUT_DIGITAL_STEP                0         
+#define NTC_MOTOR_LUT_DIGITAL_FIRST_VALUE         0        
+
+
+#endif
 
 
 const int32_t NTCControllerTemperatureTable[NTC_CONTROLLER_LUT_SIZE] =        //revised the function to calculate temperature values of the controller after the NTC test.
@@ -94,7 +113,59 @@ const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function t
     -13,
     -17,
     -22,
+    -28,
+    -34,
 };
+
+
+#elif VEHICLE_SELECTION == VEHICLE_NIDEC
+
+const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
+{																																	 //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
+    148,
+    119,
+    103,
+    91,
+    83,
+    75,
+    69,
+    64,
+    59,
+    55,
+    51,
+    47,
+    44,
+    40,
+    37,
+    34,
+    31,
+    29,
+    26,
+    23,
+    20,
+    18,
+    15,
+    13,
+    10,
+    7,
+    4,
+    2,
+    -1,
+    -4,
+    -8,
+    -11,
+    -15,
+    -19,
+    -24,
+    -29,
+    -36,
+};
+
+#else 
+
+const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] = {}; //Empty array when no temp sensor
+
+#endif
 
 
 LookupTableHandle_t ControllerNTCLookupTable =
