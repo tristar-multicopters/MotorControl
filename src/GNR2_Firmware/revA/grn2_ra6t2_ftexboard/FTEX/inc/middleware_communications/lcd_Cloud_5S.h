@@ -70,6 +70,7 @@ typedef enum
     CLOUD_5S_MOT_ERROR      = 0x0B, // controller overtemperature error
     CLOUD_5S_OV_ERROR       = 0x0C, // DC bus goes over the safe voltage operating range of the controller
     CLOUD_5S_LOW_BAT        = 0x0D, // low battery error
+    CLOUD_5S_TEMP_DISC      = 0X0E, // temp sensor disconnected
     CLOUD_5S_RESERVED       = 0x0F, // Cloud drive's internal code
 
 }Cloud_5S_ErrorCodes_t;
