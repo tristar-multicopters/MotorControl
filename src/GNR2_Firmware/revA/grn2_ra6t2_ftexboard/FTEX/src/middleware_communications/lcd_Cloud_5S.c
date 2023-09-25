@@ -285,13 +285,13 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             HandshakeIndex = pHandle->rx_frame.Buffer[9]; // handshake byte     
             
             #if DYNAMIC_SPEED_LIMITATION
-            uint16_t  speedLimit    = 0;
+
             //Reading the Speed limit
-            speedLimit = pHandle->rx_frame.Buffer[10]; // speed limit       
+            pPowertrainHandle->sParameters.ScreenMaxSpeed = pHandle->rx_frame.Buffer[10]; // speed limit       
             
             // setting the max RPMs for any speed limits
-            Throttle_SetMaxSpeed(pThrottleHandle,speedLimit);        
-            PedalAssist_SetTorquePASMaxSpeed(pPASHandle,speedLimit);
+            Throttle_SetMaxSpeed(pThrottleHandle,pPowertrainHandle->sParameters.ScreenMaxSpeed);        
+            PedalAssist_SetTorquePASMaxSpeed(pPASHandle,pPowertrainHandle->sParameters.ScreenMaxSpeed);
             
             #endif    
            

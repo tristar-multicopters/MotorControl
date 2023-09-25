@@ -395,7 +395,7 @@ void Throttle_EngageCruiseControl(ThrottleHandle_t * pHandle, uint8_t aSpeed)
 /**
    Disengage the cruise control feature
  */
-void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle)
+void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle, uint16_t speed)
 {
      ASSERT(pHandle != NULL);
      
@@ -406,10 +406,13 @@ void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle)
          
         //check if the controller was configured to accept
         //dynamic speed limitation.
-        //when no dynamic speed limitation GRN gets deffautl max throttle speed.
+        //when dynamic speed limitation is off GRN gets deffautl max throttle speed.
+        //when dynamic speed limitation is on GRN gets max throttle speed from screen.
         #if DYNAMIC_SPEED_LIMITATION == false
             Throttle_SetMaxSpeed(pHandle,pHandle->hParameters.DefaultMaxThrottleSpeedKMH);
-        #endif    
+        #else
+            Throttle_SetMaxSpeed(pHandle,speed);
+        #endif
      }
 }
 

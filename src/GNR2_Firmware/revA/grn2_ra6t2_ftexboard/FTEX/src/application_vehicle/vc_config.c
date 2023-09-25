@@ -283,7 +283,8 @@ PWRT_Handle_t PowertrainHandle =
     .sParameters.bPAS0DisableThrottle = POWERTRAIN_DISABLE_THROTTLE_PAS_0,
     
     .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
-    .sParameters.VehicleMaxSpeed = VEHICLE_TOP_SPEED_KMH,    
+    .sParameters.VehicleMaxSpeed = VEHICLE_TOP_SPEED_KMH, 
+    .sParameters.ScreenMaxSpeed =  VEHICLE_TOP_SPEED_KMH,  
     .sParameters.TorqueSpeedLimitGain = TORQUE_SPEED_LIMIT_GAIN,
     .pMDI = &MDInterfaceHandle,
     .pThrottle = &ThrottleHandle,

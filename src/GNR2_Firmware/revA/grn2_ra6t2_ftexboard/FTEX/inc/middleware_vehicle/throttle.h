@@ -203,7 +203,7 @@ void Throttle_EngageCruiseControl(ThrottleHandle_t * pHandle, uint8_t aSpeed);
  * @param  pHandle : Pointer on Handle of the throttle
  * @retval void
  */
-void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle);
+void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle, uint16_t speed);
 
 /**
  * @brief  Function used to apply a filter on the Torque when engaging Cruise control

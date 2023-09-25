@@ -1318,7 +1318,7 @@ void PWRT_DisengageCruiseControl(PWRT_Handle_t * pHandle)
     if(pHandle->pThrottle->CruiseControlEnable == true)
     { 
         PedalAssist_SetPASAlgorithm(pHandle->pPAS,pHandle->sParameters.PreCruiseControlPAS); 
-        Throttle_DisengageCruiseControl(pHandle->pThrottle);  
+        Throttle_DisengageCruiseControl(pHandle->pThrottle, pHandle->sParameters.ScreenMaxSpeed);  
     }        
 }
 

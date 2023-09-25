@@ -76,6 +76,8 @@ typedef struct
     uint16_t hFaultManagementTimeout;    // Number of ticks the state machine should stay on fault state before restart
     
     uint16_t VehicleMaxSpeed;            // Contains the max speed that the vehicle can push power (no matter what)
+    
+    uint16_t ScreenMaxSpeed;            // Contains the max speed that the screen sent to the GRN
 		
 } PWRT_Parameters_t;
 
