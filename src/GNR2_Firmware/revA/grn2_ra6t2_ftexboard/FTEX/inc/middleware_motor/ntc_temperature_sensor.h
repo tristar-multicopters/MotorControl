@@ -13,8 +13,6 @@
 
 #include "lookup_table.h"
 
-extern const uint8_t MIMIMUM_NTC_FREEZING;
-
 /** NTC Errors Definitions */
 
 typedef enum
@@ -23,10 +21,11 @@ typedef enum
   
   NTC_OT          = 1,        /**< Over temperature error */
   
-  NTC_FOLDBACK    = 2,        /**< Foldback has started, to trigger foldback warning */
+  NTC_FREEZE      = 2,        /**< Under temperature error */
   
-  NTC_DISC        = 3,        /**< NTC is disconnected */
+  NTC_FOLDBACK    = 3,        /**< Foldback has started, to trigger foldback warning */
   
+  NTC_DISC        = 4,        /**< NTC is disconnected */
   
 } NTCTempFaultStates_t;
   
