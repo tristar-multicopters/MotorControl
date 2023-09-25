@@ -419,11 +419,6 @@ void MediumFrequencyTaskM1(void)
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }            
 #endif
-        
-        if (pSpeedTorqCtrl[M1]->pHeatsinkTempSensor->hAvTempDigital < MIMIMUM_NTC_FREEZING)
-        {
-            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_NTC_FREEZE, 0);    //Report the Fault and change bstate to FaultNow
-        }
 
 #if !(BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
         if (!bIsSpeedReliable)
@@ -870,6 +865,11 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]) == NTC_OT)
     {
         CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_MOTOR;
+    }
+    
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_FREEZE)
+    {
+        CodeReturn |= errMask[bMotor] & MC_NTC_FREEZE;
     }
     
     CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS

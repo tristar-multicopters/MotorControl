@@ -720,6 +720,10 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         {
             VC_Errors_RaiseError(UV_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
+        if ((hFaultOccurred & MC_NTC_FREEZE)!= MC_NO_ERROR)
+        {
+            VC_Errors_RaiseError(UT_PROTECTION, HOLD_UNTIL_CLEARED);
+        }
 				
     }
     if (PWRT_IsMotor1Used(pHandle))
