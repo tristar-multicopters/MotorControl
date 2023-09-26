@@ -10,7 +10,7 @@
 
 #define TIMER_STEP          1       /* Timer value increases by 1 */
 #define INIT_IGNORE_TIMER   1000    /* Timer for ignoring first NTC values in initialization */
-#define DISC_DIGITAL        60000   /* NTC digital value at which temp sensor disconnects at */
+#define NTC_DISC_TEMP       -20     /* Value in degrees Celcius read by NTC when NTC is disconnected (assuming +/- 2 degrees)*/
 
 /* the minimum acceptable value for NTC - any lower value means 
 sensor is disconnected or temeprature is very low
@@ -44,7 +44,7 @@ NTCTempFaultStates_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle)
 	{
 		hFault = NTC_FOLDBACK;
 	}
-  else if (pHandle->hAvTempDigital >= DISC_DIGITAL) //disconnection when temp is at lowest value in NTC table
+  else if (pHandle->hAvTempCelcius <= NTC_DISC_TEMP) //disconnection when temp is very low or varies in a short period of time
   {
     hFault = NTC_DISC;
   }
