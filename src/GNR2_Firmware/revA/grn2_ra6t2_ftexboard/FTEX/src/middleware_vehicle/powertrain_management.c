@@ -868,18 +868,6 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                 pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2]++;
             }
         }
-        if ((hM2FaultOccurredCode & MC_START_UP) != 0)
-        {// If there's a start-up (SU) that has occurred but has already been cleared
-            if(pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the SF fault
-                hM2FaultOccurredCode &= ~MC_START_UP;
-                pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2]++;
-            }
-        }
 
         if ((hM2FaultOccurredCode & MC_OVER_TEMP_CONTROLLER) != 0)
         {
