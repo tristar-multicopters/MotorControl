@@ -127,43 +127,43 @@ uint16_t CanVehiInterface_GetVehicleMaxPWR (VCI_Handle_t * pHandle)
 uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
-    uint16_t hCurrFault;
-    hCurrFault = MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI,M1)|
+    uint32_t wCurrFault;
+    wCurrFault = MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI,M1)|
                  MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI,M2);
     
     uint16_t stateToSend = MC_NO_ERROR;
       
-    if(hCurrFault != MC_NO_ERROR)
+    if(wCurrFault != MC_NO_ERROR)
     {
         // Motor over temperature fault
-        if(hCurrFault & MC_OVER_TEMP_CONTROLLER)
+        if(wCurrFault & MC_OVER_TEMP_CONTROLLER)
         {
             stateToSend |= CONTROLLER_OVER_T_FAULT;
         }
         // Motor start up fault
-        if(hCurrFault & MC_START_UP)
+        if(wCurrFault & MC_START_UP)
         {
             stateToSend |= MOTOR_START_U_FAULT;
         }
         // Motor over current fault
-        if(hCurrFault & MC_BREAK_IN)
+        if(wCurrFault & MC_BREAK_IN)
         {
             stateToSend |= MOTOR_OVER_C_FAULT;
         }
         
         
         // Motor speed feedback fault
-        if(hCurrFault & MC_SPEED_FDBK)
+        if(wCurrFault & MC_SPEED_FDBK)
         {
             stateToSend |= HALL_SENSOR_FAULT;
         }
         // Motor over voltage fault
-        if(hCurrFault & MC_OVER_VOLT)
+        if(wCurrFault & MC_OVER_VOLT)
         {
             stateToSend |= CONTROL_OVER_V;
         }
         // Motor under voltage
-        if(hCurrFault & MC_UNDER_VOLT)
+        if(wCurrFault & MC_UNDER_VOLT)
         {
             stateToSend |= CONTROL_UNDER_V;
         }

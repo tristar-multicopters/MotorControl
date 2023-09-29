@@ -51,7 +51,7 @@ void StuckProtection_Init(StuckProtection_t * pHandle);
     *         AvrgMecSpeed: average speed of the motor
     * @retval uint16_t the fault status
   */
-uint16_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorqueRef, uint16_t hBusVoltage, int16_t AvrgMecSpeed);
+uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorqueRef, uint16_t hBusVoltage, int16_t AvrgMecSpeed);
 /**
     * @brief  Clear  the motor stcuk timer
     * @param  

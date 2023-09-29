@@ -114,12 +114,12 @@ typedef struct
 {
   MotorState_t   bState;     /*!< Variable containing state machine current
                                     state */
-  uint16_t  hFaultNow;       /*!< Bit fields variable containing faults
+  uint32_t  wFaultNow;       /*!< Bit fields variable containing faults
                                     currently present */
-  uint16_t  hFaultOccurred;  /*!< Bit fields variable containing faults
+  uint32_t  wFaultOccurred;  /*!< Bit fields variable containing faults
                                     historically occurred since the state
                                     machine has been moved to FAULT_NOW state */
-  uint16_t  hWarnings;        /*!< containing warning that raised by MC Layer */
+  uint32_t  wWarnings;        /*!< containing warning that raised by MC Layer */
 } MotorStateMachineHandle_t;
 
 
@@ -159,8 +159,8 @@ bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t 
   * @param hResetErrors Bit field reporting faults to be cleared
   * @retval MotorState_t New state machine state after fault processing
   */
-MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle, uint16_t hSetErrors, uint16_t
-                             hResetErrors);
+MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle, uint32_t wSetErrors, uint32_t
+                             wResetErrors);
 
 /**
   * @brief It clocks both HW and SW warning processing
@@ -171,7 +171,7 @@ MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle,
   * @param hResetWarnings Bit field reporting warnings to be cleared
   * @retval none.
   */
-void MCStateMachine_WarningHandling(MotorStateMachineHandle_t * pHandle, uint16_t hSetWarnings, uint16_t  hResetWarnings);
+void MCStateMachine_WarningHandling(MotorStateMachineHandle_t * pHandle, uint32_t wSetWarnings, uint32_t  wResetWarnings);
 
 /**
   * @brief  Returns the current state machine state
@@ -203,7 +203,7 @@ bool MCStateMachine_FaultAcknowledged(MotorStateMachineHandle_t * pHandle);
   *         historically occurred since the state machine has been moved into
   *         FAULT_NOW state
   */
-uint32_t MCStateMachine_GetFaultState(MotorStateMachineHandle_t * pHandle);
+uint64_t MCStateMachine_GetFaultState(MotorStateMachineHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings

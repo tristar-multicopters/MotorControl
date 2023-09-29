@@ -76,7 +76,7 @@ static uint16_t RVBS_ConvertVbusFiltrered(ResDivVbusSensorHandle_t * pHandle)
 /**
 * It actually reads the Vbus ADC conversion and updates average value
 */
-uint16_t ResDivVbusSensor_CalcAvVbusFilt(ResDivVbusSensorHandle_t * pHandle)
+uint32_t ResDivVbusSensor_CalcAvVbusFilt(ResDivVbusSensorHandle_t * pHandle)
 {
     uint32_t wtemp;
     uint16_t hAux;
@@ -102,14 +102,14 @@ uint16_t ResDivVbusSensor_CalcAvVbusFilt(ResDivVbusSensorHandle_t * pHandle)
             pHandle->bIndex = 0;
         }
     }
-    pHandle->Super.hFaultState = ResDivVbusSensor_CheckFaultState(pHandle);
-    return (pHandle->Super.hFaultState);
+    pHandle->Super.wFaultState = ResDivVbusSensor_CheckFaultState(pHandle);
+    return (pHandle->Super.wFaultState);
 }
 
 /**
 * It actually performes the Vbus ADC conversion and updates average value
 */
-uint16_t ResDivVbusSensor_CalcAvVbus(ResDivVbusSensorHandle_t * pHandle)
+uint32_t ResDivVbusSensor_CalcAvVbus(ResDivVbusSensorHandle_t * pHandle)
 {
     uint32_t wtemp;
     uint16_t hAux;
@@ -135,14 +135,14 @@ uint16_t ResDivVbusSensor_CalcAvVbus(ResDivVbusSensorHandle_t * pHandle)
             pHandle->bIndex = 0;
         }
     }
-    pHandle->Super.hFaultState = ResDivVbusSensor_CheckFaultState(pHandle);
-    return (pHandle->Super.hFaultState);
+    pHandle->Super.wFaultState = ResDivVbusSensor_CheckFaultState(pHandle);
+    return (pHandle->Super.wFaultState);
 }
 
 /**
 * It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_ERROR depending on bus voltage and protection threshold values
 */
-uint16_t ResDivVbusSensor_CheckFaultState(ResDivVbusSensorHandle_t * pHandle)
+uint32_t ResDivVbusSensor_CheckFaultState(ResDivVbusSensorHandle_t * pHandle)
 {
     
     //variable used to force the under voltage
@@ -154,7 +154,7 @@ uint16_t ResDivVbusSensor_CheckFaultState(ResDivVbusSensorHandle_t * pHandle)
     //that system initilization time was finished.
     static bool underVoltInitFlag = false;
    
-    uint16_t fault;
+    uint32_t fault;
     
     //verify if max time has passed to the battery voltage stabilize
     if ((underVoltInitTimeout >= UNDERVOLTAGE_INITTIMEOUT_MSEC) && (underVoltInitFlag == false))

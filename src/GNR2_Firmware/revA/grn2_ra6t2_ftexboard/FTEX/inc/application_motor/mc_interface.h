@@ -220,14 +220,14 @@ MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle);
   *         FAULT_NOW state.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint16_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle);
+uint32_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings.
   * @param pHandle Pointer on the component instance to work on.
   * @retval uint16_t  16 bit fields with information about the warnings
   */
-uint16_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle);
+uint32_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about faults
@@ -238,7 +238,7 @@ uint16_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle)
   *         present faults.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint16_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle);
+uint32_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the modality of the speed and torque controller.

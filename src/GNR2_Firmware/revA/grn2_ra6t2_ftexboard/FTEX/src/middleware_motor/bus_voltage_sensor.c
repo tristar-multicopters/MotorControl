@@ -32,7 +32,7 @@ uint16_t VbusSensor_GetAvBusVoltageVolt(BusVoltageSensorHandle_t * pHandle)
 }
 
 
-uint16_t VbusSensor_GetFaultState(BusVoltageSensorHandle_t * pHandle)
+uint32_t VbusSensor_GetFaultState(BusVoltageSensorHandle_t * pHandle)
 {
-  return pHandle->hFaultState;
+  return pHandle->wFaultState;
 }

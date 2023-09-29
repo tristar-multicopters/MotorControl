@@ -72,7 +72,7 @@ void ResDivVbusSensor_Clear(ResDivVbusSensorHandle_t * pHandle);
   * @param  pHandle related ResDivVbusSensorHandle_t
   * @retval uint16_t Fault code error
   */
-uint16_t ResDivVbusSensor_CalcAvVbus(ResDivVbusSensorHandle_t * pHandle);
+uint32_t ResDivVbusSensor_CalcAvVbus(ResDivVbusSensorHandle_t * pHandle);
 
 /**
   * @brief  It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_ERROR depending on
@@ -80,6 +80,6 @@ uint16_t ResDivVbusSensor_CalcAvVbus(ResDivVbusSensorHandle_t * pHandle);
   * @param  pHandle related ResDivVbusSensorHandle_t
   * @retval uint16_t Fault code error
   */
-uint16_t ResDivVbusSensor_CheckFaultState(ResDivVbusSensorHandle_t * pHandle);
+uint32_t ResDivVbusSensor_CheckFaultState(ResDivVbusSensorHandle_t * pHandle);
 
 #endif

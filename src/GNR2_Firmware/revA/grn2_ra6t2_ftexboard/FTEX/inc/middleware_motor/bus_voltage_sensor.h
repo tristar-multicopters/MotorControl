@@ -20,7 +20,7 @@ typedef struct
                                 // attenuation. For virtual sensors it must be equal to 500
     uint16_t hLatestConv;  // It contains latest Vbus converted value expressed in u16Volts format
     uint16_t hAvBusVoltageDigital;  // It contains latest available average Vbus expressed in digit
-    uint16_t hFaultState;  // It contains latest Fault code (MC_NO_ERROR, MC_OVER_VOLT or MC_UNDER_VOLT)
+    uint32_t wFaultState;  // It contains latest Fault code (MC_NO_ERROR, MC_OVER_VOLT or MC_UNDER_VOLT)
 } BusVoltageSensorHandle_t;
 
 // ==================== Public function prototypes ========================= //
@@ -54,6 +54,6 @@ uint16_t VbusSensor_GetAvBusVoltageVolt(BusVoltageSensorHandle_t * pHandle);
   * @param  pHandle related Handle of BusVoltageSensorHandle_t
   * @retval uint16_t Fault code error
   */
-uint16_t VbusSensor_GetFaultState(BusVoltageSensorHandle_t * pHandle);
+uint32_t VbusSensor_GetFaultState(BusVoltageSensorHandle_t * pHandle);
 
 #endif

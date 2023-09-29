@@ -43,7 +43,7 @@ void PWMCurrFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHandle, ab_t * Iab )
 /*
     Execute software overcurrent protection algorithm. Must be called periodically to update current filters.
 */
-uint16_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
+uint32_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
 {
     int16_t IaFiltered, IbFiltered, IcFiltered;
 
@@ -70,7 +70,7 @@ uint16_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, co
     Converts input voltages @f$ V_{\alpha} @f$ and @f$ V_{\beta} @f$ into PWM duty cycles
     and update duty cycle registers.
 */
-uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t Valfa_beta)
+uint32_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle, AlphaBeta_t Valfa_beta)
 {
   int32_t wX, wY, wZ, wUAlpha, wUBeta, wTimePhA, wTimePhB, wTimePhC;
 
@@ -204,9 +204,9 @@ void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle)
 /*
     Check if hardware overcurrent occured since last call.
 */
-uint16_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle)
+uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle)
 {
-  uint16_t retVal = 0;  
+  uint32_t retVal = 0;  
   retVal = pHandle->pFctIsOverCurrentOccurred(pHandle);
   return retVal;
 }
@@ -236,9 +236,9 @@ void PWMCurrFdbk_RLDetectionModeDisable(PWMCurrFdbkHandle_t * pHandle)
 }
 
 
-uint16_t PWMCurrFdbk_RLDetectionModeSetDuty(PWMCurrFdbkHandle_t * pHandle, uint16_t hDuty)
+uint32_t PWMCurrFdbk_RLDetectionModeSetDuty(PWMCurrFdbkHandle_t * pHandle, uint16_t hDuty)
 {
-  uint16_t hRetVal = MC_FOC_DURATION;
+  uint32_t hRetVal = MC_FOC_DURATION;
   if (pHandle->pFctRLDetectionModeSetDuty)
   {
     hRetVal = pHandle->pFctRLDetectionModeSetDuty(pHandle, hDuty);
