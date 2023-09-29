@@ -98,10 +98,10 @@ extern "C" {
 
 /** @name Warning source codes */
 /** @{ */
-#define  MC_HALL_DISC               (uint32_t)(0x00001000u)     /**< @brief WARNING: disconnected Hall sensor detection */
-#define  MC_PHASE_DISC              (uint32_t)(0x00002000u)     /**< @brief WARNING: disconnected Phase cable detection */
-#define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00004000u)     /**< @brief WARNING: motor temp has entered foldback region.*/
-#define  MC_NTC_DISC_FREEZE_MOTOR   (uint32_t)(0x00008000u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
+#define  MC_HALL_DISC               (uint32_t)(0x00000001u)     /**< @brief WARNING: disconnected Hall sensor detection */
+#define  MC_PHASE_DISC              (uint32_t)(0x00000002u)     /**< @brief WARNING: disconnected Phase cable detection */
+#define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00000004u)     /**< @brief WARNING: motor temp has entered foldback region.*/
+#define  MC_NTC_DISC_FREEZE_MOTOR   (uint32_t)(0x00000008u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
 /** @} */
 
 
