@@ -176,70 +176,70 @@ MotorState_t  MDI_GetSTMState(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
 /*
 * see function definition
 */
-uint16_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+uint32_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
-    uint16_t hReturnValue = 0;
+    uint32_t wReturnValue = 0;
 
     switch (bMotor)
     {
         case M1:
-            hReturnValue = MCInterface_GetOccurredFaults(pHandle->pMCI);
+            wReturnValue = MCInterface_GetOccurredFaults(pHandle->pMCI);
             break;
         case M2:
-            hReturnValue = SlaveMCInterface_GetOccurredFaults(pHandle->pSlaveM2);
+            wReturnValue = SlaveMCInterface_GetOccurredFaults(pHandle->pSlaveM2);
             break;
         default:
             break;
     }
 
-    return hReturnValue;
+    return wReturnValue;
 }
 
 /*
 * see function definition
 */
-uint16_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+uint32_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
-    uint16_t hReturnValue = 0;
+    uint32_t wReturnValue = 0;
 
     switch (bMotor)
     {
         case M1:
-            hReturnValue = MCInterface_GetOccurredWarning(pHandle->pMCI);
+            wReturnValue = MCInterface_GetOccurredWarning(pHandle->pMCI);
             break;
         case M2:
-            hReturnValue = SlaveMCInterface_GetOccurredWarnings(pHandle->pSlaveM2);
+            wReturnValue = SlaveMCInterface_GetOccurredWarnings(pHandle->pSlaveM2);
             break;
         default:
             break;
     }
 
-    return hReturnValue;
+    return wReturnValue;
 }
 
 /*
 * see function definition
 */
-uint16_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+uint32_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
-    uint16_t hReturnValue = 0;
+    uint32_t wReturnValue = 0;
 
     switch (bMotor)
     {
         case M1:
-            hReturnValue = MCInterface_GetCurrentFaults(pHandle->pMCI);
+            wReturnValue = MCInterface_GetCurrentFaults(pHandle->pMCI);
             break;
         case M2:
-            hReturnValue = SlaveMCInterface_GetCurrentFaults(pHandle->pSlaveM2);
+            wReturnValue = SlaveMCInterface_GetCurrentFaults(pHandle->pSlaveM2);
             break;
         default:
             break;
     }
 
-    return hReturnValue;
+    return wReturnValue;
 }
 
 /*

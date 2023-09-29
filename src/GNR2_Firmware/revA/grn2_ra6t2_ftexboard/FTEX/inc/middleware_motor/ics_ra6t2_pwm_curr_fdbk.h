@@ -127,7 +127,7 @@ void PWMInsulCurrSensorFdbk_SwitchOffPWM(PWMCurrFdbkHandle_t * pHdl);
 	* @param  pHdl: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component.
 * @retval Motor control error code: MC_FOC_DURATION if overrun occured, MC_NO_FAULTS otherwise.
   */
-uint16_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl);
+uint32_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl);
 
 
 /**
@@ -150,7 +150,7 @@ void * PWMInsulCurrSensorFdbk_BRK_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pH
   * @retval uint16_t It returns MC_BREAK_IN whether an overcurrent has been
   *                  detected since last method call, MC_NO_FAULTS otherwise.
   */
-uint16_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl);
+uint32_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl);
 
 
 #ifdef __cplusplus

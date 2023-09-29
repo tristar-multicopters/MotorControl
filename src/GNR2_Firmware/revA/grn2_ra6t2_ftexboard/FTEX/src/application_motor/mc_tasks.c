@@ -38,7 +38,7 @@
 #define OFFCALIBRWAITTICKS2 (uint16_t)((SYS_TICK_FREQUENCY * OFFCALIBRWAIT_MS2) / 1000)
 #define STOPPERMANENCY_TICKS (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS) / 1000)
 #define STOPPERMANENCY_TICKS2 (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS2) / 1000)
-#define VBUS_TEMP_ERR_MASK (uint16_t) ~(0 | MC_NO_ERROR)
+#define VBUS_TEMP_ERR_MASK (uint32_t) ~(0 | MC_NO_ERROR)
 #define DEFAULT_TEMP_MOTOR 0xFFF
 #define DEFAULT_TEMP_CONTROLLER 0x000
 
@@ -83,7 +83,7 @@ void FOC_Clear(uint8_t bMotor);
 void FOC_UpdatePIDGains(uint8_t bMotor);
 void FOC_InitAdditionalMethods(uint8_t bMotor);
 void FOC_CalcCurrRef(uint8_t bMotor);
-static uint16_t FOC_CurrControllerM1(void);
+static uint32_t FOC_CurrControllerM1(void);
 void SetChargeBootCapDelayM1(uint16_t hTickCount);
 bool ChargeBootCapDelayHasElapsedM1(void);
 void SetStopPermanencyTimeM1(uint16_t hTickCount);
@@ -404,11 +404,11 @@ void MediumFrequencyTaskM1(void)
         //check if NTC is disconnected
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_DISC)
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_NTC_DISC_FREEZE, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_NTC_DISC_FREEZE_MOTOR, 0);    //Report the Fault and change bstate to FaultNow
         }
         else
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_NTC_DISC_FREEZE);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_NTC_DISC_FREEZE_MOTOR);    //Report the Fault and change bstate to FaultNow
         }
 
 #if !(BYPASS_POSITION_SENSOR)    
@@ -705,7 +705,7 @@ uint8_t MC_HighFrequencyTask(void)
 {
 
     uint8_t bMotorNbr = 0;
-    uint16_t hFOCreturn;
+    uint32_t wFOCreturn;
 
     BemfObserverInputs_t BemfObsInputs;
     BemfObsInputs.Valfa_beta = FOCVars[M1].Valphabeta;
@@ -730,8 +730,8 @@ uint8_t MC_HighFrequencyTask(void)
         MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
     }
     
-    hFOCreturn = FOC_CurrControllerM1();
-    if (hFOCreturn == MC_FOC_DURATION)
+    wFOCreturn = FOC_CurrControllerM1();
+    if (wFOCreturn == MC_FOC_DURATION)
     {
         MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_FOC_DURATION, 0);
     }
@@ -762,14 +762,14 @@ uint8_t MC_HighFrequencyTask(void)
  * @retval int16_t It returns MC_NO_FAULTS if the FOC has been ended before
  *                 next PWM Update event, MC_FOC_DURATION otherwise
  */
-inline uint16_t FOC_CurrControllerM1(void)
+inline uint32_t FOC_CurrControllerM1(void)
 {
     qd_t Iqd = {0}, Vqd = {0};
     ab_t Iab = {0};
     AlphaBeta_t Ialphabeta = {0}, Valphabeta = {0};
 
     int16_t hElAngle;
-    uint16_t hCodeError = 0;
+    uint32_t wCodeError = 0;
     SpdPosFdbkHandle_t *speedHandle;
 
     speedHandle = SpdTorqCtrl_GetSpeedSensor(pSpeedTorqCtrl[M1]);
@@ -804,7 +804,7 @@ inline uint16_t FOC_CurrControllerM1(void)
         Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
         Valphabeta = MCMath_RevPark(Vqd, hElAngle);
 
-        hCodeError = PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
+        wCodeError = PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
 
         FOCVars[M1].Vqd = Vqd;
         FOCVars[M1].Iab = Iab;
@@ -828,7 +828,7 @@ inline uint16_t FOC_CurrControllerM1(void)
 #endif
     }
 
-    return (hCodeError);
+    return (wCodeError);
 }
 
 /**
@@ -852,8 +852,8 @@ void MC_SafetyTask(void)
  */
 void SafetyTask_PWMOFF(uint8_t bMotor)
 {
-    uint16_t CodeReturn = MC_NO_ERROR;
-    uint16_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
+    uint32_t CodeReturn = MC_NO_ERROR;
+    uint32_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
     // Check if Controller temperature is higher than the threshold, then raise the error
     if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_OT)
@@ -869,7 +869,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     
     if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_FREEZE)
     {
-        CodeReturn |= errMask[bMotor] & MC_NTC_FREEZE;
+        CodeReturn |= errMask[bMotor] & MC_NTC_FREEZE_CONTROLLER;
     }
     
     CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
@@ -878,7 +878,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     {
         CodeReturn |= errMask[bMotor] & ResDivVbusSensor_CalcAvVbus(pBusSensorM1);
     }
-
+    
     MCStateMachine_FaultProcessing(&MCStateMachine[bMotor], CodeReturn, ~CodeReturn); /* Update the MCStateMachine according error code */
     switch (MCStateMachine_GetState(&MCStateMachine[bMotor]))                         /* Acts on PWM outputs in case of faults */
     {

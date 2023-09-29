@@ -22,11 +22,11 @@ void StuckProtection_Init(StuckProtection_t * pHandle)
 /*
     Check if motor is stuck or not
 */
-uint16_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorqueRef, uint16_t hBusVoltage, int16_t AvrgMecSpeed)
+uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorqueRef, uint16_t hBusVoltage, int16_t AvrgMecSpeed)
 {    
     ASSERT(pHandle != NULL); 
     
-    uint16_t hRetval = MC_NO_FAULTS;
+    uint32_t wRetval = MC_NO_FAULTS;
 
     if ((AvrgMecSpeed == 0) && (hFinalTorqueRef > pHandle->min_torque))
     {
@@ -34,13 +34,13 @@ uint16_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
         if (pHandle->counter < pHandle->timeout_general)
         {
             pHandle->counter++;
-            hRetval = MC_NO_FAULTS;
+            wRetval = MC_NO_FAULTS;
         }
         //if stuck time is more that threshold, rasie error and cut the power
         else 
         {
             pHandle->counter = 0;
-            hRetval = MC_MSRP;
+            wRetval = MC_MSRP;
         }
         #if VEHICLE_SELECTION == VEHICLE_QUIETKAT
         // this part checks if the battery SoC is low, rasies sooner to prevent unknown motor issue that causes controller burn
@@ -48,16 +48,16 @@ uint16_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
         if ((hBusVoltage < pHandle->low_battery_voltage) && (pHandle->counter > pHandle->timeout_low_battery))
         {
             pHandle->counter = 0;
-            hRetval = MC_MSRP;
+            wRetval = MC_MSRP;
         }
         #endif
     }
     else
     {
         pHandle->counter = 0;
-        hRetval = MC_NO_FAULTS;
+        wRetval = MC_NO_FAULTS;
     }
-    return hRetval;
+    return wRetval;
 }
 
 /*

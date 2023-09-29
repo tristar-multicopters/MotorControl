@@ -78,27 +78,32 @@ extern "C" {
 #define M_NONE  (uint8_t)(0xFF) /*!< None motor.*/
 /** @} */
 
-/** @name Fault and Warnings source codes */
+/** @name Error source codes */
 /** @{ */
-#define  MC_NO_ERROR            (uint16_t)(0x0000u)     /**< @brief No error.*/
-#define  MC_NO_FAULTS           (uint16_t)(0x0000u)     /**< @brief No error.*/
-#define  MC_FOC_DURATION        (uint16_t)(0x0001u)     /**< @brief Error: FOC rate to high.*/
-#define  MC_OVER_VOLT           (uint16_t)(0x0002u)     /**< @brief Error: Software over voltage.*/
-#define  MC_UNDER_VOLT          (uint16_t)(0x0004u)     /**< @brief Error: Software under voltage.*/
-#define  MC_OVER_TEMP_CONTROLLER  (uint16_t)(0x0008u)     /**< @brief Error: Software over temperature for controller.*/
-#define  MC_OVER_TEMP_MOTOR     (uint16_t)(0x0010u)     /**< @brief Error: Software over temperature for motor.*/
-#define  MC_FOLDBACK_TEMP_MOTOR (uint16_t)(0x0020u)     /**< @brief WARNING: motor temp has entered foldback region.*/
-#define  MC_START_UP            (uint16_t)(0x0040u)     /**< @brief Error: Startup failed.*/
-#define  MC_SPEED_FDBK          (uint16_t)(0x0080u)     /**< @brief Error: Speed feedback.*/
-#define  MC_BREAK_IN            (uint16_t)(0x0100u)     /**< @brief Error: Emergency input (Over current).*/
-#define  MC_SW_ERROR            (uint16_t)(0x0200u)     /**< @brief Error: Software Error.*/
-#define  MC_OCSP                (uint16_t)(0x0400u)     /**< @brief Error: Overcurrent software protection.*/
-#define  MC_MSRP                (uint16_t)(0x0800u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
-#define  MC_NTC_FREEZE          (uint16_t)(0x100u)      /**< @brief Error: Controller NTC Freezing protection.*/
-#define  MC_HALL_DISC           (uint16_t)(0x2000u)     /**< @brief WARNING: disconnected Hall sensor detection */
-#define  MC_PHASE_DISC          (uint16_t)(0x4000u)     /**< @brief WARNING: disconnected Phase cable detection */
-#define  MC_NTC_DISC_FREEZE     (uint16_t)(0x8000u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
+#define  MC_NO_ERROR                (uint32_t)(0x00000000u)     /**< @brief No error.*/
+#define  MC_NO_FAULTS               (uint32_t)(0x00000000u)     /**< @brief No error.*/
+#define  MC_FOC_DURATION            (uint32_t)(0x00000001u)     /**< @brief Error: FOC rate to high.*/
+#define  MC_OVER_VOLT               (uint32_t)(0x00000002u)     /**< @brief Error: Software over voltage.*/
+#define  MC_UNDER_VOLT              (uint32_t)(0x00000004u)     /**< @brief Error: Software under voltage.*/
+#define  MC_OVER_TEMP_CONTROLLER    (uint32_t)(0x00000008u)     /**< @brief Error: Software over temperature for controller.*/
+#define  MC_NTC_FREEZE_CONTROLLER   (uint32_t)(0x00000010u)     /**< @brief Error: Controller NTC Freezing protection.*/
+#define  MC_OVER_TEMP_MOTOR         (uint32_t)(0x00000020u)     /**< @brief Error: Software over temperature for motor.*/
+#define  MC_START_UP                (uint32_t)(0x00000040u)     /**< @brief Error: Startup failed.*/
+#define  MC_SPEED_FDBK              (uint32_t)(0x00000080u)     /**< @brief Error: Speed feedback.*/
+#define  MC_BREAK_IN                (uint32_t)(0x00000100u)     /**< @brief Error: Emergency input (Over current).*/
+#define  MC_SW_ERROR                (uint32_t)(0x00000200u)     /**< @brief Error: Software Error.*/
+#define  MC_OCSP                    (uint32_t)(0x00000400u)     /**< @brief Error: Overcurrent software protection.*/
+#define  MC_MSRP                    (uint32_t)(0x00000800u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
 /** @} */
+
+/** @name Warning source codes */
+/** @{ */
+#define  MC_HALL_DISC               (uint32_t)(0x00001000u)     /**< @brief WARNING: disconnected Hall sensor detection */
+#define  MC_PHASE_DISC              (uint32_t)(0x00002000u)     /**< @brief WARNING: disconnected Phase cable detection */
+#define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00004000u)     /**< @brief WARNING: motor temp has entered foldback region.*/
+#define  MC_NTC_DISC_FREEZE_MOTOR   (uint32_t)(0x00008000u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
+/** @} */
+
 
 /**
   * @brief Two components q, d type definition
@@ -183,7 +188,7 @@ typedef struct
   AlphaBeta_t Valphabeta;      /**< @brief Phase voltage on stator reference frame alpha-beta*/
   int16_t hTeref;              /**< @brief Reference torque */
   int16_t hElAngle;            /**< @brief Electrical angle used for reference frame transformation  */
-  uint16_t hCodeError;         /**< @brief error message */
+  uint32_t wCodeError;         /**< @brief error message */
   CurrRefSource_t bDriveInput; /**< @brief It specifies whether the current reference source must be
                                  *         #INTERNAL or #EXTERNAL*/
 } FOCVars_t, *pFOCVars_t;

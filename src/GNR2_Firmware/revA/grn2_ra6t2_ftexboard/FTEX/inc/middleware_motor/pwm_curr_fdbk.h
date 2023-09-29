@@ -86,7 +86,7 @@ typedef void (*PWMCurrFdbk_GetPhaseCurr_Cb_t)(PWMCurrFdbkHandle_t * pHandle, ab_
   * - PWMCurrFdbkHandle::pFctSetADCSampPointSect6
   *
   */
-typedef uint16_t (*PWMCurrFdbk_SetSampPointSectX_Cb_t)(PWMCurrFdbkHandle_t * pHandle);
+typedef uint32_t (*PWMCurrFdbk_SetSampPointSectX_Cb_t)(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief Pointer on the function provided by the PMWC component instance to check if an over current
@@ -96,7 +96,7 @@ typedef uint16_t (*PWMCurrFdbk_SetSampPointSectX_Cb_t)(PWMCurrFdbkHandle_t * pHa
   * (See PWMCurrFdbkHandle::pFctIsOverCurrentOccurred).
   *
   */
-typedef uint16_t (*PWMCurrFdbk_OverCurr_Cb_t)(PWMCurrFdbkHandle_t * pHandle);
+typedef uint32_t (*PWMCurrFdbk_OverCurr_Cb_t)(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief Pointer on the function provided by the PMWC component instance to set the PWM duty cycle
@@ -106,7 +106,7 @@ typedef uint16_t (*PWMCurrFdbk_OverCurr_Cb_t)(PWMCurrFdbkHandle_t * pHandle);
   * (See PWMCurrFdbkHandle::pFctRLDetectionModeSetDuty).
   *
   */
-typedef uint16_t (*PWMCurrFdbk_RLDetectSetDuty_Cb_t)(PWMCurrFdbkHandle_t * pHandle, uint16_t hDuty);
+typedef uint32_t (*PWMCurrFdbk_RLDetectSetDuty_Cb_t)(PWMCurrFdbkHandle_t * pHandle, uint16_t hDuty);
 
 /**
   * @brief This structure is used to handle the data of an instance of the PWM & Current Feedback component
@@ -213,7 +213,7 @@ static inline int16_t PWMCurrFdbk_GetIc(PWMCurrFdbkHandle_t * pHandle)
   * @param  Iqdref: Pointer to the structure that contains Idref and Iqref
   * @retval True if overcurrent condition, false otherwise.
 */
-uint16_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref);
+uint32_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref);
 
 /**
   * @brief  Converts input voltages @f$ V_{\alpha} @f$ and @f$ V_{\beta} @f$ into PWM duty cycles
@@ -234,7 +234,7 @@ uint16_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, co
   * @retval Returns #MC_NO_ERROR if no error occurred or #MC_FOC_DURATION if the duty cycles were
   *         set too late for being taken into account in the next PWM cycle (overrun condition).
   */
-uint16_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle,
+uint32_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle,
                                AlphaBeta_t Valfa_beta);
 
 /**
@@ -272,7 +272,7 @@ void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle);
  *	@retval Returns #MC_BREAK_IN if an over current condition was detected on the power stage
  *         controlled by the PWMC component pointed by  @p pHandle, since the last call to this function;
  *         returns #MC_NO_FAULTS otherwise. */
-uint16_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle);
+uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief  It is used to retrieve the status of TurnOnLowSides action.
@@ -300,7 +300,7 @@ void PWMCurrFdbk_RLDetectionModeDisable(PWMCurrFdbkHandle_t * pHandle);
   * @retval If the Duty Cycle could be applied on time for the next PWM period,
   *         #MC_NO_ERROR is returned. Otherwise, #MC_FOC_DURATION is returned.
   */
-uint16_t PWMCurrFdbk_RLDetectionModeSetDuty(PWMCurrFdbkHandle_t * pHandle,
+uint32_t PWMCurrFdbk_RLDetectionModeSetDuty(PWMCurrFdbkHandle_t * pHandle,
                                       uint16_t hDuty);
 
 /**

@@ -127,10 +127,10 @@ void PWMInsulCurrSensorFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHdl, ab_t * 
   pHandle->Super.Ic = -Iab->a - Iab->b;
 }
 
-uint16_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl)
+uint32_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl)
 {
 	PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
-	uint16_t hAux = MC_NO_ERROR;
+	uint32_t hAux = MC_NO_ERROR;
 	three_phase_duty_cycle_t sDutyCycle;
 	
 	/* Set duty cycles according to values in base handle */
@@ -247,11 +247,11 @@ void * PWMInsulCurrSensorFdbk_BRK_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pH
   return &(pHdl->Super.Motor);
 }
 
-uint16_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl)
+uint32_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl)
 {
 	PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
 	
-  uint16_t retVal = MC_NO_FAULTS;
+  uint32_t retVal = MC_NO_FAULTS;
 
   if (pHandle->bOverCurrentFlag == true)
   {

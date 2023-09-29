@@ -193,28 +193,28 @@ MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-uint16_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle)
+uint32_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return (uint16_t)(MCStateMachine_GetFaultState(pHandle->pSTM));
+  return (uint32_t)(MCStateMachine_GetFaultState(pHandle->pSTM));
 }
 
 /*
 * see function definition
 */
-uint16_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle)
+uint32_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return (uint16_t)(MCStateMachine_GetWarningState(pHandle->pSTM));
+  return MCStateMachine_GetWarningState(pHandle->pSTM);
 }
 
 /*
 * see function definition
 */
-uint16_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle)
+uint32_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return (uint16_t)(MCStateMachine_GetFaultState(pHandle->pSTM) >> 16);
+  return (uint32_t)(MCStateMachine_GetFaultState(pHandle->pSTM) >> 32);
 }
 
 /*

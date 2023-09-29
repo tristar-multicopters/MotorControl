@@ -26,9 +26,9 @@
 typedef struct
 {
     MotorState_t bState;
-    uint16_t hOccuredFaults;
-    uint16_t hCurrentFaults;
-    uint16_t hWarnings;
+    uint32_t wOccuredFaults;
+    uint32_t wCurrentFaults;
+    uint32_t wWarnings;
     int16_t hMotorSpeed;
     int16_t hMotorTemp;
     int16_t hHeatsinkTemp;
@@ -137,7 +137,7 @@ MotorState_t  SlaveMCInterface_GetSTMState(SlaveMotorHandle_t * pHandle);
   *         FAULT_NOW state.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint16_t SlaveMCInterface_GetOccurredFaults(SlaveMotorHandle_t * pHandle);
+uint32_t SlaveMCInterface_GetOccurredFaults(SlaveMotorHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings
@@ -148,7 +148,7 @@ uint16_t SlaveMCInterface_GetOccurredFaults(SlaveMotorHandle_t * pHandle);
   *         historically occurred
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint16_t SlaveMCInterface_GetOccurredWarnings(SlaveMotorHandle_t * pHandle);
+uint32_t SlaveMCInterface_GetOccurredWarnings(SlaveMotorHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about faults
@@ -159,7 +159,7 @@ uint16_t SlaveMCInterface_GetOccurredWarnings(SlaveMotorHandle_t * pHandle);
   *         present faults.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint16_t SlaveMCInterface_GetCurrentFaults(SlaveMotorHandle_t * pHandle);
+uint32_t SlaveMCInterface_GetCurrentFaults(SlaveMotorHandle_t * pHandle);
 
 /**
   * @brief  Returns the last computed average mechanical speed, expressed in

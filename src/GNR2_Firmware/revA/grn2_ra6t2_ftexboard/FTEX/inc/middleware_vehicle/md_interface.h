@@ -159,7 +159,7 @@ MotorState_t  MDI_GetSTMState(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
   *         FAULT_NOW state.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint16_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief It returns a 16 bit fields containing information about faults
@@ -171,7 +171,7 @@ uint16_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t
   *         present faults.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint16_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief It returns a 16 bit fields containing information about warning
@@ -181,7 +181,7 @@ uint16_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
   * @retval uint16_t  16 bit fields with information about about currently
   *         present faults.
   */
-uint16_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief  It returns the modality of the speed and torque controller.

@@ -18,8 +18,8 @@ void MCStateMachine_Init(MotorStateMachineHandle_t * pHandle)
 {
 
   pHandle->bState = M_IDLE;
-  pHandle->hFaultNow = MC_NO_FAULTS;
-  pHandle->hFaultOccurred = MC_NO_FAULTS;
+  pHandle->wFaultNow = MC_NO_FAULTS;
+  pHandle->wFaultOccurred = MC_NO_FAULTS;
 }
 
 
@@ -207,18 +207,18 @@ bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t 
 }
 
 
-MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle, uint16_t hSetErrors, uint16_t
-                             hResetErrors)
+MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle, uint32_t wSetErrors, uint32_t
+                             wResetErrors)
 {
   MotorState_t LocalState =  pHandle->bState;
 
   /* Set current errors */
-  pHandle->hFaultNow = (pHandle->hFaultNow | hSetErrors) & (~hResetErrors);
-  pHandle->hFaultOccurred |= hSetErrors;
+  pHandle->wFaultNow = (pHandle->wFaultNow | wSetErrors) & (~wResetErrors);
+  pHandle->wFaultOccurred |= wSetErrors;
 
   if (LocalState == M_FAULT_NOW)
   {
-    if (pHandle->hFaultNow == MC_NO_FAULTS)
+    if (pHandle->wFaultNow == MC_NO_FAULTS)
     {
       pHandle->bState = M_FAULT_OVER;
       LocalState = M_FAULT_OVER;
@@ -226,7 +226,7 @@ MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle,
   }
   else
   {
-    if (pHandle->hFaultNow != MC_NO_FAULTS)
+    if (pHandle->wFaultNow != MC_NO_FAULTS)
     {
       pHandle->bState = M_FAULT_NOW;
       LocalState = M_FAULT_NOW;
@@ -235,9 +235,9 @@ MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle,
   return (LocalState);
 }
 
-void MCStateMachine_WarningHandling(MotorStateMachineHandle_t * pHandle, uint16_t hSetWarnings, uint16_t  hResetWarnings)
+void MCStateMachine_WarningHandling(MotorStateMachineHandle_t * pHandle, uint32_t wSetWarnings, uint32_t  wResetWarnings)
 {
-    pHandle->hWarnings = (pHandle->hWarnings | hSetWarnings) & (~hResetWarnings);    
+    pHandle->wWarnings = (pHandle->wWarnings | wSetWarnings) & (~wResetWarnings);    
 }
 
 MotorState_t MCStateMachine_GetState(MotorStateMachineHandle_t * pHandle)
@@ -252,19 +252,19 @@ bool MCStateMachine_FaultAcknowledged(MotorStateMachineHandle_t * pHandle)
   if (pHandle->bState == M_FAULT_OVER)
   {
     pHandle->bState = M_STOP_IDLE;
-    pHandle->hFaultOccurred = MC_NO_FAULTS;
+    pHandle->wFaultOccurred = MC_NO_FAULTS;
     bToBeReturned = true;
   }
 
   return (bToBeReturned);
 }
 
-uint32_t MCStateMachine_GetFaultState(MotorStateMachineHandle_t * pHandle)
+uint64_t MCStateMachine_GetFaultState(MotorStateMachineHandle_t * pHandle)
 {
-  uint32_t LocalFaultState;
+  uint64_t LocalFaultState;
 
-  LocalFaultState = (uint32_t)(pHandle->hFaultOccurred);
-  LocalFaultState |= (uint32_t)(pHandle->hFaultNow) << 16;
+  LocalFaultState = (uint64_t)(pHandle->wFaultOccurred);
+  LocalFaultState |= (uint64_t)(pHandle->wFaultNow) << 32;
 
   return LocalFaultState;
 }
@@ -273,7 +273,7 @@ uint32_t MCStateMachine_GetWarningState(MotorStateMachineHandle_t * pHandle)
 {
   uint32_t LocalWarningState;
 
-  LocalWarningState = (uint32_t)(pHandle->hWarnings);
+  LocalWarningState = pHandle->wWarnings;
     
   return LocalWarningState;
 }
