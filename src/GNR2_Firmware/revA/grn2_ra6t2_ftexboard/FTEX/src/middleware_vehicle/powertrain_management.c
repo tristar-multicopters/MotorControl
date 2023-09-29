@@ -867,7 +867,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                 pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2]++;
             }
         }
-        
+
         if ((wM2FaultOccurredCode & MC_OVER_TEMP_CONTROLLER) != 0)
         {
             /* In case of controller overtemperature... */
