@@ -78,7 +78,7 @@
 /**************************    FIRMWARE PROTECTIONS SECTION   *****************/
 
 #define OV_VOLTAGE_THRESHOLD_V          75 /*!< Over-voltage threshold */
-#define UD_VOLTAGE_THRESHOLD_V          36 /*!< Under-voltage threshold - 36V is lowest acceptable value to generate Power Lock signal*/
+#define UD_VOLTAGE_THRESHOLD_V          25 /*!< Under-voltage threshold - 36V is lowest acceptable value to generate Power Lock signal*/
 
 
 #define OV_TEMP_CONTROLLER_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
@@ -140,7 +140,7 @@
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
 #define LOW_BATTERY_TORQUE              150         /* Maximum torque allowed in low SoC of battery */
-#define LOW_BATTERY_VOLTAGE_THRESHOLD   40          /* the threshold of battery voltage before limit torque */
+#define LOW_BATTERY_VOLTAGE_THRESHOLD   25          /* the threshold of battery voltage before limit torque */
 
 #define MAX_CURRENT_LIMIT               1           /* to calculate maximum poweer based on maximum current and Battery S0C */
 #define MAX_POWER_LIMIT                 2           /* to use  MAX_APPLICATION_POSITIVE_POWER as the reference for Maximum power*/
@@ -148,7 +148,7 @@
                                         as the reference for maximum power limitation*/
 #define MAX_APPLICATION_POSITIVE_POWER  1100    /* Refers to maximum power in watts that drive can push to the motor */
 #define MAX_APPLICATION_NEGATIVE_POWER  1100    /* Refers to maximum power in watts that drive can accept from the motor */
-#define MAX_APPLICATION_CURRENT         19      /* Refers to maximum battery current in amps that drive can accept from the motor */
+#define MAX_APPLICATION_CURRENT         13      /* Refers to maximum battery current in amps that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   
