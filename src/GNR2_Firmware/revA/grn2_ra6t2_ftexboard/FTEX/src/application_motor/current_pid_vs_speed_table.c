@@ -44,25 +44,25 @@ const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 #define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
 
 const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
-    300,
+    61,
+    61,
 };
 
 const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
 
-    20,   /* old PI = 50 parameter tunning for Vibration */ 
-    20,   /* old PI = 50 parameter tunning for Vibration */
+    19,   /* old PI = 50 parameter tunning for Vibration */ 
+    19,   /* old PI = 50 parameter tunning for Vibration */
 
 };
 
 const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    300,
-    300,	
+    48,
+    48,	
 };
 
 const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
-    20,	 /* old PI = 50 parameter tunning for Vibration */
-    20,	 /* old PI = 50 parameter tunning for Vibration */
+    15,	 /* old PI = 50 parameter tunning for Vibration */
+    15,	 /* old PI = 50 parameter tunning for Vibration */
 };
 
 #elif VEHICLE_SELECTION == VEHICLE_TSUGAWA
