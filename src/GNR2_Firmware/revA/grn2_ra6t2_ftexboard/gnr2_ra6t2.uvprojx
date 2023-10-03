@@ -1351,11 +1351,6 @@
               <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
             </File>
             <File>
-              <FileName>HardwareOverCurrentDetection.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\HardwareOverCurrentDetection.c</FilePath>
-            </File>
-            <File>
               <FileName>dynamic_power.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
@@ -3413,11 +3408,6 @@
               <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
             </File>
             <File>
-              <FileName>HardwareOverCurrentDetection.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\HardwareOverCurrentDetection.c</FilePath>
-            </File>
-            <File>
               <FileName>dynamic_power.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
@@ -5338,11 +5328,6 @@
               <FileName>mc_type.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
-            </File>
-            <File>
-              <FileName>HardwareOverCurrentDetection.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\HardwareOverCurrentDetection.c</FilePath>
             </File>
             <File>
               <FileName>dynamic_power.c</FileName>

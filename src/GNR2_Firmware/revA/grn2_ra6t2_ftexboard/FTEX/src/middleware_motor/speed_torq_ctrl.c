@@ -46,12 +46,6 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     
     PID_Init(&pHandle->PISpeedLimit);
     
-#if HARDWARE_OCD == OCD_POWER_DERATING
-    OCD2_Init(&pHandle->OCD2_Handle);
-#else
-    //do nothing here
-#endif
-    
     Foldback_Init(&pHandle->FoldbackDynamicMaxTorque);
     Foldback_Init(&pHandle->FoldbackHeatsinkTemperature);
     Foldback_Init(&pHandle->FoldbackMotorSpeed);
@@ -261,14 +255,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
         pHandle->hCurrentTorqueRef = hTorqueReference;
         pHandle->hCurrentSpeedRef = hTargetSpeed;
     }
-
-#if HARDWARE_OCD == OCD_POWER_DERATING
-    //Here the OCD2 (PC14) is checked to see Over Current feedback is received from current sesnor
-    hTorqueReference = SpdTorqCtrl_ApplyIncrementalPowerDerating(pHandle, hTorqueReference);
-#else
-    // nothing to do here
-
-#endif
+    
     
     return hTorqueReference;
 }
@@ -495,39 +482,6 @@ void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurren
     {
         pHandle->q = -(int16_t)hMaxLimit;
     }
-}
-
-
-/*
-    If Over Current Detected flag is raised, this function decreses torq until flag clear
-*/
-int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
-{
-    ASSERT(pHandle != NULL); 
-    
-    float hNewTorque = hInputTorque;
-    int16_t hRetval = 0;
-        
-    if (OCD2_IsEnabled(&pHandle->OCD2_Handle))
-    {
-        pHandle->HWOverCurrentDetection.bIsOverCurrentDetected = true;
-        
-        if (OCD_timer < pHandle->HWOverCurrentDetection.OCDTimeInterval)
-        {
-            OCD_timer++;
-        }
-        else
-        {
-            pHandle->HWOverCurrentDetection.OCDPowerDearatingGain *= pHandle->HWOverCurrentDetection.OCDPowerDeratingSlope;
-            OCD_timer = 0;
-        }
-    }
-    else 
-    {
-        OCD_timer = 0;
-    }
-    hRetval = (int16_t)(hNewTorque * pHandle->HWOverCurrentDetection.OCDPowerDearatingGain);
-    return hRetval;
 }
 
 /*

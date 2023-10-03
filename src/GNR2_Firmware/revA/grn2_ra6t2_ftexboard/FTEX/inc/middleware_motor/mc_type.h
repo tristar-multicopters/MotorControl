@@ -193,19 +193,6 @@ typedef struct
                                  *         #INTERNAL or #EXTERNAL*/
 } FOCVars_t, *pFOCVars_t;
 
-/**
-  * @brief  This structure is used to handle an instance of the
-  *         OverCurrentDetection_t component.
-  */
-typedef struct
-{
-    bool bIsOverCurrentDetected;      /*< Status of OCD2 pin which connected to OCD2 of current sensot*/
-    uint16_t OverCurrentStatus;
-    float OCDPowerDeratingSlope;
-    float OCDPowerDearatingGain;
-    uint16_t OCDTimeInterval;
-} HWOverCurrentDetection_t;
-
 /** @name Utility macros definitions */
 /** @{ */
 #define RPM2MEC01HZ(rpm) (int16_t)((int32_t)(rpm)/6)
