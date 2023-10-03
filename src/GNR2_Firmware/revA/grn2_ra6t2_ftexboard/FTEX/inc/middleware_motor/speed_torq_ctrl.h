@@ -20,7 +20,6 @@ extern "C" {
 #include "ramp_mngr.h"
 #include "foldback.h"
 #include "ntc_temperature_sensor.h"
-#include "HardwareOverCurrentDetection.h"
 #include "dynamic_power.h"
 #include "stuck_protection.h"
 
@@ -60,8 +59,6 @@ typedef struct
                                      regulation.*/
     NTCTempSensorHandle_t           * pHeatsinkTempSensor; /* Temperature sensor used to monitor heatsink temperature */
     NTCTempSensorHandle_t           * pMotorTempSensor; /* Temperature sensor used to monitor motor temperature */
-    OCD2_Handle_t                   OCD2_Handle;
-    HWOverCurrentDetection_t        HWOverCurrentDetection; /*< Status of OCD2 pin which connected to OCD2 of current sensot*/    
     StuckProtection_t               StuckProtection; /* parameters of Stcuk Protection */
     uint16_t hSTCFrequencyHz;               /*!< Frequency on which the user updates
                                              the torque reference calling
@@ -329,13 +326,6 @@ int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
   * @retval null
   */
 void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurr, int16_t UsrMaxCurr);
-
-/**
-  * @brief  Clear  the motor stcuk timer
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval 
-  */
-int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 
 /**
   * @brief  Sets Motor Max Power based if it is defined to be based on Battery SoC

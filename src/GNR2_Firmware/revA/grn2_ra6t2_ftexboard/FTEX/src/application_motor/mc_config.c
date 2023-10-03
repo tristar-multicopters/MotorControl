@@ -189,19 +189,6 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
         .hDecreasingRange = 10 * DYNAMICTORQUE_THRESHOLD_SPEED,
         .hDecreasingEndValue = 10 * DYNAMICTORQUE_THRESHOLD_SPEED,
     },
-    .OCD2_Handle =
-    {
-        .wPinNumber = CURRENT_SENSOR_OCD2,    // PC14
-        .bIsInvertedLogic = true,             //pin is ACTIVE LOW
-    },
-    .HWOverCurrentDetection = 
-    {
-        .OCDPowerDeratingSlope = OCD_POWER_DERATING_SLOPE,
-        .OCDTimeInterval = OCD_TIME_INTERVAL_COUNTS,
-        .OCDPowerDearatingGain = 1,
-        .bIsOverCurrentDetected = false,
-        .OverCurrentStatus = HARDWARE_OCD
-    },
     .DynamicPowerHandle =
     {
         .hDynamicMaxPower = MAX_APPLICATION_POSITIVE_POWER,
