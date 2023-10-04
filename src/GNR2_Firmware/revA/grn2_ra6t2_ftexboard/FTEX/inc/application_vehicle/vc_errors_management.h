@@ -27,15 +27,16 @@ typedef enum
     MOTOR_FOLDBACK_TEMP = 0x06, // Foldback for motor temp has been initiated
     MOTOR_NTC_DISC_FREEZE    = 0x07,    // Motor temperature sensor is disconnected or cold warning
     CONTROLLER_OT_PROTECT  = 0x08, // Controller over temperature protection
-    MOTOR_HALL_ERROR  = 0x09, // We can't read motor hall sensor
-    MOTOR_PHASE_ERROR = 0x0A, // Motor phase wiring is faulty
-    IOT_COMM_ERROR    = 0x0B, // Controller loses communication with IOT module
-    DUAL_COMM_ERROR   = 0x0C, // Master lost comm with slave or slave lost comm with master
-    OVER_CURRENT      = 0x0D, // Over Current protection - HW & SW
-    BATT_LOW          = 0x0E, // Battery is low
-    PAS_BOOT_ERROR    = 0x0F, // Peddle Assist error
-    CONTROLLER_ERROR  = 0x10, // Controller in unrecoverable state
-    BRAKE_ERROR       = 0x11, // Brake cutoff sensor abnormal
+    CONTROLLER_FOLDBACK_TEMP = 0x09, //Foldback for controller temp has been initiated
+    MOTOR_HALL_ERROR  = 0x0A, // We can't read motor hall sensor
+    MOTOR_PHASE_ERROR = 0x0B, // Motor phase wiring is faulty
+    IOT_COMM_ERROR    = 0x0C, // Controller loses communication with IOT module
+    DUAL_COMM_ERROR   = 0x0D, // Master lost comm with slave or slave lost comm with master
+    OVER_CURRENT      = 0x0E, // Over Current protection - HW & SW
+    BATT_LOW          = 0x0F, // Battery is low
+    PAS_BOOT_ERROR    = 0x10, // Peddle Assist error
+    CONTROLLER_ERROR  = 0x11, // Controller in unrecoverable state
+    BRAKE_ERROR       = 0x12, // Brake cutoff sensor abnormal
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
 ErrorCodes_t; 

@@ -951,6 +951,15 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
         VC_Errors_ClearError(MOTOR_FOLDBACK_TEMP);
     }
     
+    if ((wWarningOccurred & MC_FOLDBACK_TEMP_CONTROLLER) != MC_NO_ERROR )
+    {
+        VC_Errors_RaiseError(CONTROLLER_FOLDBACK_TEMP, HOLD_UNTIL_CLEARED);
+    }
+    else
+    {
+        VC_Errors_ClearError(CONTROLLER_FOLDBACK_TEMP);
+    }
+    
     if ((wWarningOccurred & MC_NTC_DISC_FREEZE_MOTOR) != MC_NO_ERROR )
     {
         VC_Errors_RaiseError(MOTOR_NTC_DISC_FREEZE, HOLD_UNTIL_CLEARED);

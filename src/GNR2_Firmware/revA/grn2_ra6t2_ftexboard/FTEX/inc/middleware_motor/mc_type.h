@@ -101,6 +101,7 @@ extern "C" {
 #define  MC_PHASE_DISC              (uint32_t)(0x00000002u)     /**< @brief WARNING: disconnected Phase cable detection */
 #define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00000004u)     /**< @brief WARNING: motor temp has entered foldback region.*/
 #define  MC_NTC_DISC_FREEZE_MOTOR   (uint32_t)(0x00000008u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
+#define  MC_FOLDBACK_TEMP_CONTROLLER     (uint32_t)(0x00000010u)     /**< @brief WARNING: controller temp has entered foldback region.*/
 /** @} */
 
 

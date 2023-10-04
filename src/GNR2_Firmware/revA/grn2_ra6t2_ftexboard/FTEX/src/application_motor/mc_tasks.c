@@ -401,6 +401,16 @@ void MediumFrequencyTaskM1(void)
             MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_MOTOR);    //Report the Fault and change bstate to FaultNow
         }
         
+        //check for whether controller temp is in foldback region
+        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[M1]) == NTC_FOLDBACK)
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_FOLDBACK_TEMP_CONTROLLER, 0);    //Report the Fault and change bstate to FaultNow
+        }
+        else
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_CONTROLLER);    //Report the Fault and change bstate to FaultNow
+        }
+        
         //check if NTC is disconnected
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_DISC)
         {
