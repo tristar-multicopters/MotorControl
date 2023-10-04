@@ -140,11 +140,6 @@ uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
         {
             stateToSend |= CONTROLLER_OVER_T_FAULT;
         }
-        // Motor start up fault
-        if(wCurrFault & MC_START_UP)
-        {
-            stateToSend |= MOTOR_START_U_FAULT;
-        }
         // Motor over current fault
         if(wCurrFault & MC_BREAK_IN)
         {
