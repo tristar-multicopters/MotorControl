@@ -598,6 +598,7 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
             ConvertedError = CLOUD_5S_UT_ERROR;
             break;            
         case CONTROLLER_OT_PROTECT:
+        case CONTROLLER_FOLDBACK_TEMP:
             ConvertedError = CLOUD_5S_OT_ERROR;
             break;            
         case IOT_COMM_ERROR:
