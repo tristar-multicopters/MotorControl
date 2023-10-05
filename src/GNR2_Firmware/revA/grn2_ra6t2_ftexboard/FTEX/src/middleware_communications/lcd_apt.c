@@ -599,10 +599,10 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
         case UT_PROTECTION:
             ConvertedError = APT_UT_PROTECTION;
             break;
-        case IOT_COMM_ERROR: // Both theses errors transflat eto a generic comm error
+       /* case IOT_COMM_ERROR: // Both theses errors transflat eto a generic comm error
         case DUAL_COMM_ERROR:    
             ConvertedError = APT_COMM_ERROR;
-            break;      
+            break;*/      
         case MOTOR_PHASE_ERROR:
             ConvertedError = APT_THREE_PHASE_ERROR;
             break;
@@ -624,11 +624,11 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
         case BRAKE_ERROR:
             ConvertedError = APT_BRAKE_ERROR;
             break;         
-        case MOTOR_OT_PROTECT:
+      /*case MOTOR_OT_PROTECT:
         case MOTOR_NTC_DISC_FREEZE:
         case MOTOR_FOLDBACK_TEMP:
             ConvertedError = APT_MOTOR_OT_PROTECT;
-            break;         
+            break;  */      
         case UNMAPPED_ERROR: // Errors that APT has but that we currently don't flag            
             ConvertedError = APT_TURN_ERROR;
             ConvertedError = APT_CONTROL_PROTEC;
