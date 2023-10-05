@@ -311,6 +311,35 @@ void MediumFrequencyTaskM1(void)
             MCStateMachine_NextState(&MCStateMachine[M1], M_IDLE_START);
         }
 #endif
+        //check for whether motor temp is in foldback region
+        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_FOLDBACK_TEMP_MOTOR, 0);    //Report the warning
+        }
+        else
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_MOTOR);    //Clear the warning
+        }
+        
+        //check for whether controller temp is in foldback region
+        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[M1]) == NTC_FOLDBACK)
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_FOLDBACK_TEMP_CONTROLLER, 0);    //Report the warning
+        }
+        else
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_CONTROLLER);    //Clear the warning
+        }
+        
+        //check if NTC is disconnected
+        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_DISC)
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_NTC_DISC_FREEZE_MOTOR, 0);  //Report the warning
+        }
+        else
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_NTC_DISC_FREEZE_MOTOR);  //Clear the warning
+        }
         break;
 
     case M_IDLE_START:
@@ -381,44 +410,44 @@ void MediumFrequencyTaskM1(void)
 #endif
         MCInterface_ExecBufferedCommands(oMCInterface[M1]);
         FOC_CalcCurrRef(M1);
+
         if (IsPhaseCableDisconnected(MCInterface->pFOCVars, MCInterface->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit) == true)
         {
             // raise MC_PHASE_DISC error if the ratio of measured Iqd and reference Iq is not reasoble
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_PHASE_DISC, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_PHASE_DISC, 0);    //Report the warning
         }
         else
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_PHASE_DISC);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_PHASE_DISC);    //Clear the warning
         }
-
         //check for whether motor temp is in foldback region
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_FOLDBACK_TEMP_MOTOR, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_FOLDBACK_TEMP_MOTOR, 0);    //Report the warning
         }
         else
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_MOTOR);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_MOTOR);    //Clear the warning
         }
         
         //check for whether controller temp is in foldback region
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[M1]) == NTC_FOLDBACK)
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_FOLDBACK_TEMP_CONTROLLER, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_FOLDBACK_TEMP_CONTROLLER, 0);    //Report the warning
         }
         else
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_CONTROLLER);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_FOLDBACK_TEMP_CONTROLLER);    //Clear the warning
         }
         
         //check if NTC is disconnected
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_DISC)
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_NTC_DISC_FREEZE_MOTOR, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_NTC_DISC_FREEZE_MOTOR, 0);    //Report the warning
         }
         else
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_NTC_DISC_FREEZE_MOTOR);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_NTC_DISC_FREEZE_MOTOR);    //Clear the warning
         }
 
 #if !(BYPASS_POSITION_SENSOR)    
