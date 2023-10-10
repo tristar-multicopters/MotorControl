@@ -37,7 +37,8 @@ void LCD_Cloud_5S_init(Cloud_5S_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART
     ASSERT(pHandle     != NULL);
     ASSERT(pVCIHandle  != NULL);
     ASSERT(pUARTHandle != NULL);
-    pHandle->isScreenSlave = true;  // Start as a slave to force pas to start at 1 on boot.
+    pHandle->isScreenSlave = true;  // Start as a slave to force pas to start at default pas on boot.
+    pHandle->controllerPas = 0;
     
     pHandle->pVController = pVCIHandle;        // Pointer to VController
     pHandle->pUART_handle = pUARTHandle;       // Pointer to UART instance  
@@ -341,6 +342,12 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             // Therefore we skip setting the Cloud Drive PAS to our PAS because 
             // we will be updating the Cloud Drive right after parsing this message
             // Otherwise check if the pas has changed to update the app and set the new pas
+            // As long as the app pas has been confirmed.
+            if(pHandle->isScreenSlave && (currentPAS == pHandle->pasController))
+            {
+                pHandle->isScreenSlave = false;
+            }
+
             if (!pHandle->isScreenSlave)
             {
                 if (pasLevel != currentPAS)
@@ -413,9 +420,12 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             replyFrame.Buffer[1] = CLOUD_SLAVE_ID;
             replyFrame.Buffer[2] = CLOUD_RUNTIME;
             replyFrame.Buffer[3] = 6; // Data length of this frame
-            replyFrame.Buffer[4] = LCD_Cloud_5S_ConvertPASLevelToCloud_5S(PedalAssist_GetAssistLevel(pPASHandle)); // PAS 
+            uint8_t controllerPas = PedalAssist_GetAssistLevel(pPASHandle);
+            replyFrame.Buffer[4] = LCD_Cloud_5S_ConvertPASLevelToCloud_5S(controllerPas); // PAS 
             if (pHandle->isScreenSlave == true)
-                pHandle->isScreenSlave = false;
+            {
+                pHandle->pasController = controllerPas;
+            }
 
             toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);             
             toSend = LCD_Cloud_5S_ApplyPowerFilter((uint16_t)toSend);  

@@ -98,6 +98,7 @@ typedef struct
     bool cloud5SChangePasFlag;              // Used to tell the Can interfacne that the screen changed the PAS    
     bool isScreenSlave;                     // Listening to the screen for pas changes, unless the app changes it
                                             // At that point the screen will become slave to the controller until it's updated.
+    uint8_t pasController;
     
 }Cloud_5S_Handle_t;
 
