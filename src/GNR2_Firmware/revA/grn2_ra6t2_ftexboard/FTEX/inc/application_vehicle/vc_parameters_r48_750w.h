@@ -36,19 +36,19 @@
 #include "pedal_sensors/duratorq_autorq.h"
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
-#define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_PTS2TORQUE_STARTUP       40              // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED_KMH         3              // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE               10              // Offset for pedal torque sensor to torque linear transformation in %
-#define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
+#define PTS_OFFSET_PTS2TORQUE_SAFETY        30            // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
-#define PTS_FILTER_BW1                      40              // BW coefficient for pedal torque sensor avereging
-#define PTS_FILTER_BW2                      90              // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW1                      25             // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW2                      90             // BW coefficient for pedal torque sensor avereging
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
-#define PAS_TORQUE_GAIN                     125             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
+#define PAS_TORQUE_GAIN                     100             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
 #define PAS_ALGORITHM                       TorqueSensorUse/* TorqueSensorUse  = 0, Torque sensor use define 
                                                                CadenceSensorUse = 1, Cadence sensor use define */
@@ -69,7 +69,7 @@
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
 
-#define PAS_MIN_PEDAL_COUNT_SAFE            2               // Number of pulse per pedal turn do we neeed after initial detection to push power
+#define PAS_MIN_PEDAL_COUNT_SAFE            0              // Number of pulse per pedal turn do we neeed after initial detection to push power
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
