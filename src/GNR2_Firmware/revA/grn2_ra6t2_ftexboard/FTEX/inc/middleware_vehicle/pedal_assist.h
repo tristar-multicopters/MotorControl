@@ -16,7 +16,7 @@
 // ============================== Defines =============================== // 
 #define PAS_PERCENTAGE          (uint8_t)100    /* Percentage for PAS use */
 
-#define TORQUE_THRESHOLD_AVG_NB   10  /* Number of values we use to do an average to check for Torque PAS threshold */ 
+#define TORQUE_THRESHOLD_AVG_NB   6  /* Number of values we use to do an average to check for Torque PAS threshold */ 
 
 // ======================== Configuration enums ======================== // 
 typedef enum
