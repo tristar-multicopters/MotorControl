@@ -19,7 +19,7 @@
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-#define VEHICLE_TOP_SPEED_KMH   32                                                                                             
+#define VEHICLE_TOP_SPEED_KMH   200                                                                                           
 /***************** THROTTLE SELECTION  ******************************/
 
 #include "throttle_sensors/vc_velec_r48_throttle.h"

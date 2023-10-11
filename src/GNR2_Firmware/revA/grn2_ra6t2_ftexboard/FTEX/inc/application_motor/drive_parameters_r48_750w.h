@@ -84,9 +84,9 @@
 #define OV_TEMP_CONTROLLER_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
 #define OV_TEMP_CONTROLLER_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
 
-#define OCSP_SAFETY_MARGIN_amps 	            85	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_SAFETY_MARGIN_amps 	          170	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
-#define OCSP_MAX_CURRENT_amps                85   /* Max current that can be reached before triggering software overcurrent */
+#define OCSP_MAX_CURRENT_amps                170 /* Max current that can be reached before triggering software overcurrent */
 #define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering */
 #define CURRENT_FILTER_BETA             -0.273F      /* Beta constant used in butterworth filter for current filtering */
 
@@ -122,7 +122,7 @@
 #define SPEED_LOOP_FREQUENCY_HZ       1000 /*!<Execution rate of speed
                                                       regulation loop (Hz) */
 
-#define ENABLE_SPEED_LIMIT_CONTROL    true
+#define ENABLE_SPEED_LIMIT_CONTROL    false
 
 #define PID_SPEED_KP_DEFAULT          40           /* Default gain speed control loop */
 #define PID_SPEED_KI_DEFAULT          4            /* Default gain speed control loop */
@@ -144,11 +144,11 @@
 
 #define MAX_CURRENT_LIMIT               1           /* to calculate maximum poweer based on maximum current and Battery S0C */
 #define MAX_POWER_LIMIT                 2           /* to use  MAX_APPLICATION_POSITIVE_POWER as the reference for Maximum power*/
-#define POWER_LIMIT_REF                 MAX_CURRENT_LIMIT   /* defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+#define POWER_LIMIT_REF                 MAX_POWER_LIMIT   /* defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
                                         as the reference for maximum power limitation*/
-#define MAX_APPLICATION_POSITIVE_POWER  1100    /* Refers to maximum power in watts that drive can push to the motor */
-#define MAX_APPLICATION_NEGATIVE_POWER  1100    /* Refers to maximum power in watts that drive can accept from the motor */
-#define MAX_APPLICATION_CURRENT         19      /* Refers to maximum battery current in amps that drive can accept from the motor */
+#define MAX_APPLICATION_POSITIVE_POWER  5000/* Refers to maximum power in watts that drive can push to the motor */
+#define MAX_APPLICATION_NEGATIVE_POWER  5000    /* Refers to maximum power in watts that drive can accept from the motor */
+#define MAX_APPLICATION_CURRENT         55     /* Refers to maximum battery current in amps that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   
@@ -166,15 +166,15 @@
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
 
 /*Torque ramp settings */
-#define DEFAULT_TORQUE_SLOPE_UP        5000         /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_UP       10000      /* Slope in cNm per second */
 #define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
 
 #define DEFAULT_SPEED_SLOPE_UP         10000        /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       10000        /* Slope in #SPEED_UNIT per second */
 
 /* Dynamic maximum power foldback settings */
-#define ENABLE_MAX_POWER_LIMIT          true        /* to enable or disable the foldback */
-#define MAX_BMS_POSITIVE_POWER          500         /* Maximum Power at the end point of foldback */
+#define ENABLE_MAX_POWER_LIMIT        false        /* to enable or disable the foldback */
+#define MAX_BMS_POSITIVE_POWER          5000         /* Maximum Power at the end point of foldback */
 #define MAX_TIME_BMS_TOLERANT           20000       /* milliseconds - time of foldback end point */
 #define MAX_POWER_LIMIT_TIMEOUT         10000       /* milliseconds - timeout before start derating */
 #define MAX_POWER_RECOVER_TIMEOUT       80          /* milliseconds - timeout before reset maximum power to default value */
