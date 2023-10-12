@@ -166,14 +166,14 @@
 #define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
 
 /*Torque ramp settings */
-#define DEFAULT_TORQUE_SLOPE_UP       10000      /* Slope in cNm per second */
+#define DEFAULT_TORQUE_SLOPE_UP        10000      /* Slope in cNm per second */
 #define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
 
 #define DEFAULT_SPEED_SLOPE_UP         10000        /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       10000        /* Slope in #SPEED_UNIT per second */
 
 /* Dynamic maximum power foldback settings */
-#define ENABLE_MAX_POWER_LIMIT        false        /* to enable or disable the foldback */
+#define ENABLE_MAX_POWER_LIMIT        true        /* to enable or disable the foldback */
 #define MAX_BMS_POSITIVE_POWER          5000         /* Maximum Power at the end point of foldback */
 #define MAX_TIME_BMS_TOLERANT           20000       /* milliseconds - time of foldback end point */
 #define MAX_POWER_LIMIT_TIMEOUT         10000       /* milliseconds - timeout before start derating */
