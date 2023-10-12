@@ -38,7 +38,7 @@ void LCD_Cloud_5S_init(Cloud_5S_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART
     ASSERT(pVCIHandle  != NULL);
     ASSERT(pUARTHandle != NULL);
     pHandle->isScreenSlave = true;  // Start as a slave to force pas to start at default pas on boot.
-    pHandle->controllerPas = 0;
+    pHandle->pasController = 0;
     
     pHandle->pVController = pVCIHandle;        // Pointer to VController
     pHandle->pUART_handle = pUARTHandle;       // Pointer to UART instance  
