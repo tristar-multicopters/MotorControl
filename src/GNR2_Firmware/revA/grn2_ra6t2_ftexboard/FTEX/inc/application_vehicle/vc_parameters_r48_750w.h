@@ -36,13 +36,13 @@
 #include "pedal_sensors/duratorq_autorq.h"
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
-#define PTS_OFFSET_PTS2TORQUE_STARTUP       60              // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_PTS2TORQUE_STARTUP       35              // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED_KMH         3              // Speed under which the Startup pedal torque sensor offset is used in km/h
-#define PTS_OFFSET_PTS2TORQUE               20              // Offset for pedal torque sensor to torque linear transformation in %
-#define PTS_OFFSET_PTS2TORQUE_SAFETY        30            // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
+#define PTS_OFFSET_PTS2TORQUE               10              // Offset for pedal torque sensor to torque linear transformation in %
+#define PTS_OFFSET_PTS2TORQUE_SAFETY        20            // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
-#define PTS_FILTER_BW1                      25             // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW1                      50             // BW coefficient for pedal torque sensor avereging
 #define PTS_FILTER_BW2                      90             // BW coefficient for pedal torque sensor avereging
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
