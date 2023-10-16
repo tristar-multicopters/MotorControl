@@ -11,10 +11,7 @@
 
 #include "vc_interface.h"
 #include "uCAL_UART.h"
-#include "lcd_apt.h"
-#include "lcd_KD718.h"
-#include "lcd_Cloud_5S.h"
-#include "log_high_speed.h"
+
 #include "co_can_ra6t2.h"
 #include "co_timer_ra6t2.h"
 #include "board_hardware.h"
@@ -29,15 +26,32 @@
 
 
 //========================= EXTERN TYPES ==========================//
+    #if SCREEN_PROTOCOL == UART_APT
+        #include "lcd_apt.h"
+        extern APT_Handle_t  LCD_APT_handle;
+    #elif SCREEN_PROTOCOL == UART_KD718
+        #include "lcd_KD718.h"
+        extern KD718_Handle_t LCD_KD718_handle;
+    #elif SCREEN_PROTOCOL == UART_CLOUD_5S
+        #include "lcd_Cloud_5S.h"
+        extern Cloud_5S_Handle_t LCD_Cloud_5S_handle;
+    #elif SCREEN_PROTOCOL == UART_LOG_HS
+        #include "log_high_speed.h"
+        extern LogHighSpeed_Handle_t LogHS_handle;
+    #else
+    #endif 
+
 
 extern CO_NODE CONodeGNR;
 extern SlaveMotorHandle_t SlaveM2;
-
-extern APT_Handle_t  LCD_APT_handle;
-extern KD718_Handle_t LCD_KD718_handle;
-extern Cloud_5S_Handle_t LCD_Cloud_5S_handle;
 extern UART_Handle_t  UART0Handle;
-extern LogHighSpeed_Handle_t LogHS_handle;
+
+
+
+
+
+
+
 extern DataFlash_Handle_t DataFlashHandle;
 
 extern SPI_Handle_t	SPI1Handle;

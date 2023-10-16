@@ -27,15 +27,12 @@ typedef enum  // Used to select the UART baudrate
     BAUD115200 = 115200,
 } uCAL_BaudRate_t;
 
-typedef enum
-{
-    UART_DISABLE,
-    UART_APT,
-    UART_KD718,
-    UART_CLOUD_5S,    
-    UART_LOG_HS 
 
-} uCAL_Protocol_t;
+#define  UART_DISABLE    0
+#define  UART_APT        1
+#define  UART_KD718      2
+#define  UART_CLOUD_5S   3    
+#define  UART_LOG_HS     4
 
 typedef struct
 {
@@ -43,7 +40,6 @@ typedef struct
     
     
     uCAL_BaudRate_t    UARTBaudrate;
-    uCAL_Protocol_t    UARTProtocol;
     uint8_t            OpenRecpBuffer[30];
     void* Super;                    /* Pointer to the higher handle that is using the uart port
                                        MUST be initialized before using. */

@@ -6,6 +6,7 @@
 #include "comm_tasks.h"
 #include "mc_tasks.h"
 #include "vc_tasks.h"
+#include "vc_parameters.h"
 
 #include "comm_config.h"
 #include "vc_config.h"
@@ -19,7 +20,6 @@
 #include "can_logger.h"
 #include "can_vehicle_interface.h"
 
-#include "lcd_apt.h"
 // Serial Flash storage
 #include "serial_flash_storage.h"
 
@@ -331,8 +331,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             }    
             bool WriteOBJDict = false;
             
-            if(UART0Handle.UARTProtocol == UART_APT)
-            {   
+            #if SCREEN_PROTOCOL == UART_APT   
                 if((bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM]) || !LCD_APT_handle.APTStabilizing)
                 {
                     WriteOBJDict = true; 
@@ -345,10 +344,9 @@ static void UpdateObjectDictionnary(void *p_arg)
                     {   
                         CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
                     }
-                }                    
-            }
-            else if(UART0Handle.UARTProtocol == UART_CLOUD_5S)
-            {
+                }                               
+            #elif SCREEN_PROTOCOL == UART_CLOUD_5S  
+            
                 if(bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM])
                 {
                     WriteOBJDict = true; 
@@ -363,8 +361,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                         CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
                     }
                 }                    
-            
-            }
+            #endif
 
             
             if(bPasAlgorithm[VEHICLE_PARAM] != bPasAlgorithm[CAN_PARAM])
@@ -532,27 +529,16 @@ void Comm_BootUp(void)
     SlaveMCInterface_Init(&SlaveM2, &CONodeGNR, M2RegAddr);
     #endif
 
-    /* Select UART protocol */
-    switch(UART0Handle.UARTProtocol)
-	  {
-            break;
-    	case UART_APT:
-            LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
-    		break;
-        case UART_KD718:
-            LCD_KD718_init(&LCD_KD718_handle, &VCInterfaceHandle, &UART0Handle);
-            break;
-        case UART_CLOUD_5S:
-            LCD_Cloud_5S_init(&LCD_Cloud_5S_handle, &VCInterfaceHandle, &UART0Handle);
-            break; 
-        case UART_LOG_HS:
-            LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
-    	case UART_DISABLE:
-            break;
-        default:
-            //Dont initialise the euart
-            break;
-	  }
+    #if SCREEN_PROTOCOL == UART_APT
+        LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
+    #elif SCREEN_PROTOCOL == UART_KD718
+        LCD_KD718_init(&LCD_KD718_handle, &VCInterfaceHandle, &UART0Handle);
+    #elif SCREEN_PROTOCOL == UART_CLOUD_5S
+        LCD_Cloud_5S_init(&LCD_Cloud_5S_handle, &VCInterfaceHandle, &UART0Handle);
+    #elif SCREEN_PROTOCOL == UART_LOG_HS
+        LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
+    #else
+    #endif 
 }
 
 __NO_RETURN void ProcessUARTFrames (void * pvParameter)
@@ -562,23 +548,16 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 	{
 		osThreadFlagsWait(UART_FLAG, osFlagsWaitAny, osWaitForever);
 
-      switch(UART0Handle.UARTProtocol)
-        {
-           case UART_APT:
-                LCD_APT_Task(&LCD_APT_handle); //Run the APT task
-                break;
-           case UART_KD718:
-                LCD_KD718_Task(&LCD_KD718_handle); //Run the KD718 task
-                break;
-           case UART_CLOUD_5S:
-                LCD_Cloud_5S_Task(&LCD_Cloud_5S_handle); //Run the Cloud 5S task
-                break;               
-           case UART_LOG_HS:
-                LogHS_ProcessFrame(&LogHS_handle);
-                break;
-            default:
-				break;
-		}
+        #if SCREEN_PROTOCOL == UART_APT
+            LCD_APT_Task(&LCD_APT_handle); //Run the APT task
+        #elif SCREEN_PROTOCOL == UART_KD718
+            LCD_KD718_Task(&LCD_KD718_handle); //Run the KD718 task
+        #elif SCREEN_PROTOCOL == UART_CLOUD_5S
+            LCD_Cloud_5S_Task(&LCD_Cloud_5S_handle); //Run the Cloud 5S task     
+        #elif SCREEN_PROTOCOL == UART_LOG_HS
+            LogHS_ProcessFrame(&LogHS_handle);
+        #else
+        #endif 
 	}
 }
 
