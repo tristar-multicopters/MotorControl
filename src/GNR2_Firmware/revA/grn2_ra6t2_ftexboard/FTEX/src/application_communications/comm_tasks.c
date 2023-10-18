@@ -598,7 +598,7 @@ bool Comm_CheckIotUsage(void)
     //if any of the vehicle tested below
     //return false to indicate that vehicle doesn't need
     //a specific functionality from IOT setup.
-    if ((VEHICLE_SELECTION == VEHICLE_NIDEC))
+    if ((VEHICLE_SELECTION == VEHICLE_NIDEC) || (VEHICLE_SELECTION == VEHICLE_R48_750W))
     {
         return false;
     }
