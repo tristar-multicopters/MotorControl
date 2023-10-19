@@ -610,10 +610,16 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
         case CONTROLLER_OT_PROTECT:
         case CONTROLLER_FOLDBACK_TEMP:
             ConvertedError = CLOUD_5S_OT_ERROR;
-            break;            
+            break; 
+        //velec is not using this error. 
+        //to keep compatibility, between main 
+        //and release branches, all customized 
+        //solutions must to be conditioned to the bike model.
+        #if VEHICLE_SELECTION != VEHICLE_R48_750W 
         case IOT_COMM_ERROR:
             ConvertedError = CLOUD_5S_IOT_COMM_ERROR;
             break;   
+        #endif
         case MOTOR_OT_PROTECT:
         case MOTOR_FOLDBACK_TEMP:
             ConvertedError = CLOUD_5S_MOT_ERROR;

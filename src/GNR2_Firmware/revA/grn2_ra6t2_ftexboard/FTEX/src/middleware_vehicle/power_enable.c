@@ -720,7 +720,13 @@ void GnrOn_CallbackSDODownloadFinish(CO_CSDO *csdo, uint16_t index, uint8_t sub,
         if(iotTimeoutCount >= IOT_RESPONSE_FAIL_DISCONNECT_LIMIT)
         {
             iotDisconnected = true;
+            //velec is not using this error. 
+            //to keep compatibility, between main 
+            //and release branches, all customized 
+            //solutions must to be conditioned to the bike model.
+            #if VEHICLE_SELECTION != VEHICLE_R48_750W 
             VC_Errors_RaiseError(IOT_COMM_ERROR, HOLD_UNTIL_CLEARED);
+            #endif
         }            
     }
     else 
@@ -729,7 +735,13 @@ void GnrOn_CallbackSDODownloadFinish(CO_CSDO *csdo, uint16_t index, uint8_t sub,
         if((code == 0) && iotDisconnected)
         {
             iotDisconnected = false;
+            //velec is not using this error. 
+            //to keep compatibility, between main 
+            //and release branches, all customized 
+            //solutions must to be conditioned to the bike model.
+            #if VEHICLE_SELECTION != VEHICLE_R48_750W 
             VC_Errors_ClearError(IOT_COMM_ERROR);
+            #endif
         }
     }
 }
