@@ -21,7 +21,7 @@
 #define MOTOR_VOLTAGE_CONSTANT  28.84f   /*!< Volts RMS ph-ph /kRPM */
 #define ST_Torque_Coef          1.2f       /* this coeficient always keeps the starting torque higher than the nominal torque */
 
-#define PEAK_CURRENT_amps       70   /* peak current in amps     */
+#define PEAK_CURRENT_amps       75   /* peak current in amps     */
 #define NOMINAL_TORQUE          (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)    /* Nominal torque to apply to motor in cNm   
                                                                                                  Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps */
 #define STARTING_TORQUE         (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef)    /* Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes*/
