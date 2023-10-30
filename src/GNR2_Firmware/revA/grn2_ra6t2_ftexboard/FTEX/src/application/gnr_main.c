@@ -368,7 +368,7 @@ static bool GPTInit(void)
 1- uncomment bool POEGInit() decleration in first rows of this file
 2- uncomment following function definition 
 3- Check if the PC14 is still defined as PEOG functionality
-4- Check the PWMBreak1_IRQHandler() which is going to raise the MC_BREAK_IN error
+4- Check the PWMBreak1_IRQHandler() which is going to raise the MC_OCD1 or MC_OCD2 error
 5- Check the PWRT_MotorFaultManagement() if still includes handeling this error flag
 6- Use the R_POEG_Open() function to bring back the PWM signal after error is handled
 */
@@ -381,6 +381,7 @@ static bool POEGInit(void)
     return bIsError;
 }
 #endif
+
 
 /**
   * @brief  Initialize DAC (Digital Analog Converter) hardware
@@ -417,7 +418,11 @@ static bool ELCInit(void)
 static bool ICUInit(void)
 {
     bool bIsError = false;
-
+    
+    /* Configure external interrupt for OCD1  */
+    bIsError |= g_external_irq0.p_api->open(g_external_irq0.p_ctrl, g_external_irq0.p_cfg);
+    bIsError |= g_external_irq0.p_api->enable(g_external_irq0.p_ctrl);
+        
     /* Configure external interrupts for hall sensing  */
     bIsError |= R_ICU_ExternalIrqOpen(g_external_irq3.p_ctrl,g_external_irq3.p_cfg);
     bIsError |= R_ICU_ExternalIrqOpen(g_external_irq4.p_ctrl,g_external_irq4.p_cfg);

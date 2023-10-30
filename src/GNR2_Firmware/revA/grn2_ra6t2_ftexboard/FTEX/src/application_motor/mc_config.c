@@ -227,19 +227,19 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     .hSpdLimit = MAX_APPLICATION_SPEED_UNIT,
     .PISpeedLimit =
     {
-      .hDefKpGain           = (int16_t)PID_SPEEDLIMIT_KP_DEFAULT,
-      .hDefKiGain           = (int16_t)PID_SPEEDLIMIT_KI_DEFAULT,
-      .wUpperIntegralLimit  = STARTING_TORQUE * SP_KIDIV,
-      .wLowerIntegralLimit  = 0,
-      .hUpperOutputLimit    = STARTING_TORQUE,
-      .hLowerOutputLimit    = 0,
-      .hKpDivisor           = (uint16_t)SP_KPDIV,
-      .hKiDivisor           = (uint16_t)SP_KIDIV,
-      .hKpDivisorPOW2       = (uint16_t)SP_KPDIV_LOG,
-      .hKiDivisorPOW2       = (uint16_t)SP_KIDIV_LOG,
-      .hDefKdGain           = 0x0000U,
-      .hKdDivisor           = 0x0000U,
-      .hKdDivisorPOW2       = 0x0000U,
+        .hDefKpGain           = (int16_t)PID_SPEEDLIMIT_KP_DEFAULT,
+        .hDefKiGain           = (int16_t)PID_SPEEDLIMIT_KI_DEFAULT,
+        .wUpperIntegralLimit  = STARTING_TORQUE * SP_KIDIV,
+        .wLowerIntegralLimit  = 0,
+        .hUpperOutputLimit    = STARTING_TORQUE,
+        .hLowerOutputLimit    = 0,
+        .hKpDivisor           = (uint16_t)SP_KPDIV,
+        .hKiDivisor           = (uint16_t)SP_KIDIV,
+        .hKpDivisorPOW2       = (uint16_t)SP_KPDIV_LOG,
+        .hKiDivisorPOW2       = (uint16_t)SP_KIDIV_LOG,
+        .hDefKdGain           = 0x0000U,
+        .hKdDivisor           = 0x0000U,
+        .hKdDivisorPOW2       = 0x0000U,
     },
 };
 
@@ -247,58 +247,59 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
   * @brief  Current sensor parameters Dual Drive Motor 1 - ICS, STM32G4xx
   */
 PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
-  {
-    .pFctGetPhaseCurrents              = &PWMInsulCurrSensorFdbk_GetPhaseCurrents,
-    .pFctSwitchOffPwm                  = &PWMInsulCurrSensorFdbk_SwitchOffPWM,
-    .pFctSwitchOnPwm                   = &PWMInsulCurrSensorFdbk_SwitchOnPWM,
-    .pFctCurrReadingCalib              = &PWMInsulCurrSensorFdbk_CurrentReadingPolarization,
-    .pFctTurnOnLowSides                = &PWMInsulCurrSensorFdbk_TurnOnLowSides,
-    .pFctSetADCSampPointSectX          = &PWMInsulCurrSensorFdbk_WriteTIMRegisters,
-    .pFctIsOverCurrentOccurred         = &PWMInsulCurrSensorFdbk_IsOverCurrentOccurred,
-    .pFctRLDetectionModeEnable         = MC_NULL,
-    .pFctRLDetectionModeDisable        = MC_NULL,
-    .pFctRLDetectionModeSetDuty        = MC_NULL,
-    .hT_Sqrt3 = (PWM_PERIOD_CYCLES*SQRT3FACTOR)/16384u,
-    .Sector = 0,
-    .hCntPhA = 0,
-    .hCntPhB = 0,
-    .hCntPhC = 0,
-    .hSWerror = 0,
-    .hTurnOnLowSidesAction = false,
-    .Motor = M1,
-    .bRLDetectionMode = false,
-    .Ia = 0,
-    .Ib = 0,
-    .Ic = 0,
-    .hPWMperiod          = PWM_PERIOD_CYCLES,
-
-    .IaFilter =
     {
-        .pIIRFAInstance = SOCP_IA_IIRFA_HANDLE_ADDRESS,
+        .pFctGetPhaseCurrents              = &PWMInsulCurrSensorFdbk_GetPhaseCurrents,
+        .pFctSwitchOffPwm                  = &PWMInsulCurrSensorFdbk_SwitchOffPWM,
+        .pFctSwitchOnPwm                   = &PWMInsulCurrSensorFdbk_SwitchOnPWM,
+        .pFctCurrReadingCalib              = &PWMInsulCurrSensorFdbk_CurrentReadingPolarization,
+        .pFctTurnOnLowSides                = &PWMInsulCurrSensorFdbk_TurnOnLowSides,
+        .pFctSetADCSampPointSectX          = &PWMInsulCurrSensorFdbk_WriteTIMRegisters,
+        .pFctIsOverCurrentOccurred         = &PWMInsulCurrSensorFdbk_IsOverCurrentOccurred,
+        .pFctRLDetectionModeEnable         = MC_NULL,
+        .pFctRLDetectionModeDisable        = MC_NULL,
+        .pFctRLDetectionModeSetDuty        = MC_NULL,
+        .hT_Sqrt3 = (PWM_PERIOD_CYCLES*SQRT3FACTOR)/16384u,
+        .Sector = 0,
+        .hCntPhA = 0,
+        .hCntPhB = 0,
+        .hCntPhC = 0,
+        .hSWerror = 0,
+        .hTurnOnLowSidesAction = false,
+        .Motor = M1,
+        .bRLDetectionMode = false,
+        .Ia = 0,
+        .Ib = 0,
+        .Ic = 0,
+        .hPWMperiod          = PWM_PERIOD_CYCLES,
+
+        .IaFilter =
+        {
+            .pIIRFAInstance = SOCP_IA_IIRFA_HANDLE_ADDRESS,
+        },
+        .IbFilter =
+        {
+            .pIIRFAInstance = SOCP_IB_IIRFA_HANDLE_ADDRESS,
+        },
+        .fCurrentFilterAlpha = CURRENT_FILTER_ALPHA,
+        .fCurrentFilterBeta  = CURRENT_FILTER_BETA,
+
+        .hSoftwareOCPMarginCurrent = OCSP_SAFETY_MARGIN,
+        .hSoftwareOCPMaximumCurrent = OCSP_MAX_CURRENT,
+
     },
-    .IbFilter =
-    {
-        .pIIRFAInstance = SOCP_IB_IIRFA_HANDLE_ADDRESS,
-    },
-    .fCurrentFilterAlpha = CURRENT_FILTER_ALPHA,
-    .fCurrentFilterBeta  = CURRENT_FILTER_BETA,
+    .hIaRaw = 0,
+    .hIbRaw = 0,
 
-    .hSoftwareOCPMarginCurrent = OCSP_SAFETY_MARGIN,
-    .hSoftwareOCPMaximumCurrent = OCSP_MAX_CURRENT,
+    .bOverrunFlag = false,
 
-  },
-	.hIaRaw = 0,
-	.hIbRaw = 0,
+    .wPhaseAOffset = 0,
+    .wPhaseBOffset = 0,
+    .hHalfPWMPeriod = PWM_PERIOD_CYCLES/2u,
+    .bPolarizationCounter = 0,
+    .bOCD1Flag = false,
+    .bOCD2Flag = false,
 
-	.bOverrunFlag = false,
-
-  .wPhaseAOffset = 0,
-  .wPhaseBOffset = 0,
-  .hHalfPWMPeriod = PWM_PERIOD_CYCLES/2u,
-  .bPolarizationCounter = 0,
-  .bOverCurrentFlag = false,
-
-  .pParamsStructure = &PWMICSParamsM1
+    .pParamsStructure = &PWMICSParamsM1
 };
 
 /**

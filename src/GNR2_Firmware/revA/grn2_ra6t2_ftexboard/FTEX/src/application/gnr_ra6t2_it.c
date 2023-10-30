@@ -14,7 +14,6 @@
 #include "comm_tasks.h"
 #include "core_cm33.h"
 #include "mc_tasks.h"
-
 #include "firmware_update.h"
 
 /**
@@ -55,7 +54,24 @@ void PWMTimer_IRQHandler(timer_callback_args_t * p_args)
 }
 
 /**
-  * @brief  Interrupt routine when POEG pin is pulled down. It means an overcurrent
+  * @brief  Interrupt routine when OCD1 pin is pulled down. It means an overcurrent
+	*					condition is detected and consequently PWM outputs will be stopped.
+  * @param  p_args: IRQ callback functions
+  */
+void OCD1_IRQHandler(external_irq_callback_args_t * p_args)
+{
+    if(NULL != p_args)
+    {
+        /* Switch off PWM */
+        MC_PWM_OFF_M1();
+        /* Run motor control PWM break routine */
+        PWMInsulCurrSensorFdbk_OCD1_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
+    }
+}
+
+
+/**
+  * @brief  Interrupt routine when OCD2 (POEG) pin is pulled down. It means an overcurrent
 	*					condition is detected and consequently PWM outputs were forcefully stopped.
   * @param  p_args: POEG callback function arguments, not used.
   */
@@ -64,19 +80,19 @@ void PWMBreak1_IRQHandler(poeg_callback_args_t * p_args)
     if(NULL != p_args)
     {
 #if HARDWARE_OCD == OCD_PWM_OFF
+        /* Switch off PWM */
+        MC_PWM_OFF_M1();
+        /* Run motor control PWM break routine */
+        PWMInsulCurrSensorFdbk_OCD2_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
         /* Stop POEG module so it does not reenter the interrupt twice */
         R_POEG_Reset((PWM_POEG0_HANDLE_ADDRESS)->p_ctrl);
-        /* Run motor control PWM break routine */
-        PWMInsulCurrSensorFdbk_BRK_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
-        
 #endif
         
     }
 }
 
 /**
-  * @brief  Interrupt routine when POEG pin is pulled down. It means an overcurrent
-	*					condition is detected and consequently PWM outputs were forcefully stopped.
+  * @brief  Interrupt routine not used
   * @param  p_args: POEG callback function arguments, not used.
   */
 void PWMBreak2_IRQHandler(poeg_callback_args_t * p_args)

@@ -30,7 +30,7 @@ void BRK_Init(BRK_Handle_t * pHandle, Delay_Handle_t * pBrakeDelay)
     pHandle->pBrakeStuckDelay = pBrakeDelay;
       
     ASSERT(pHandle->pBrakeStuckDelay->DelayInitialized); // Delay should be initialized in the task to specify at which 
-                                                            // frequence the update delay function will eb called
+                                                            // frequence the update delay function will be called
     Delay_SetTime(pHandle->pBrakeStuckDelay, 5, SEC); // Set a 5 seconds delay to detect a stuck throttle
     Delay_Reset(pHandle->pBrakeStuckDelay);           // Make sure the counter is reset 
 }

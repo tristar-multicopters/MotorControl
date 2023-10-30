@@ -55,21 +55,23 @@ typedef const struct
   */
 typedef struct
 {
-  PWMCurrFdbkHandle_t Super;     /*!< Base handle  */
-	
-	uint16_t hIaRaw;					/*!< Latest conversion value for Ia  */
-	uint16_t hIbRaw;					/*!< Latest conversion value for Ib  */
-	
-	volatile bool bOverrunFlag;
-	
-  uint32_t wPhaseAOffset;   	/*!< Offset of Phase A current sensing network  */
-  uint32_t wPhaseBOffset;   	/*!< Offset of Phase B current sensing network  */
-  uint16_t hHalfPWMPeriod;  /*!< Half PWM Period in timer clock counts */
-  volatile uint8_t bPolarizationCounter;
+    PWMCurrFdbkHandle_t Super;     /*!< Base handle  */
 
-  volatile bool bOverCurrentFlag;     /*!< This flag is used to check if overcurrent occured */
-	
-  pPWMInsulCurrSensorFdbkParams_t pParamsStructure; /*!< PWM component parameters*/
+    uint16_t hIaRaw;					/*!< Latest conversion value for Ia  */
+    uint16_t hIbRaw;					/*!< Latest conversion value for Ib  */
+
+    volatile bool bOverrunFlag;
+
+    uint32_t wPhaseAOffset;   	/*!< Offset of Phase A current sensing network  */
+    uint32_t wPhaseBOffset;   	/*!< Offset of Phase B current sensing network  */
+    uint16_t hHalfPWMPeriod;  /*!< Half PWM Period in timer clock counts */
+    volatile uint8_t bPolarizationCounter;
+
+    volatile bool bOCD1Flag;     /*!< This flag is used to check if OCD1 was triggered */
+    volatile bool bOCD2Flag;     /*!< This flag is used to check if OCD2 was triggered */
+
+
+    pPWMInsulCurrSensorFdbkParams_t pParamsStructure; /*!< PWM component parameters*/
 	
 } PWMInsulCurrSensorFdbkHandle_t;
 
@@ -138,16 +140,24 @@ uint32_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl);
 void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
 
 /**
-  * @brief  It is the routine to run when overcurrent trigger interrupt occured
+  * @brief  It is the routine to run when OCD2 trigger interrupt occured
   * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval Motor instance number
   */
-void * PWMInsulCurrSensorFdbk_BRK_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
+void * PWMInsulCurrSensorFdbk_OCD1_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
+
+
+/**
+  * @brief  It is the routine to run when OCD2 trigger interrupt occured
+  * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval Motor instance number
+  */
+void * PWMInsulCurrSensorFdbk_OCD2_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
 
 /**
   * @brief  It is used to check if an overcurrent occurred since last call.
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
-  * @retval uint16_t It returns MC_BREAK_IN whether an overcurrent has been
+  * @retval uint16_t It returns MC_OCD1 or MC_OCD2 whether an overcurrent has been
   *                  detected since last method call, MC_NO_FAULTS otherwise.
   */
 uint32_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl);

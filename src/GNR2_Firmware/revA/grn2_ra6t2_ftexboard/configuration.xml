@@ -233,11 +233,15 @@
     <eventProduced event="event.icu.irq3"/>
     <eventProduced event="event.icu.irq4"/>
     <eventProduced event="event.icu.irq5"/>
+    <eventProduced event="event.icu.irq0"/>
     <eventConsumed event="event.icu.irq3" link="link.gpth"/>
     <eventConsumed event="event.icu.irq4" link="link.gptg"/>
     <eventConsumed event="event.icu.irq5" link="link.gptf"/>
+    <eventConsumed event="event.icu.irq0" link="link.gpte"/>
   </raElcConfiguration>
-  <raIcuConfiguration/>
+  <raIcuConfiguration>
+    <interrupt event="event.icu.irq0" isr="r_icu_isr"/>
+  </raIcuConfiguration>
   <raModuleConfiguration>
     <module id="module.driver.ioport_on_ioport.0">
       <property id="module.driver.ioport.name" value="g_ioport"/>
@@ -1272,6 +1276,15 @@
       <property id="module.driver.transfer.activation_source" value="_disabled"/>
     </module>
     <module id="module.middleware.mcuboot_image_utilities.1998204525"/>
+    <module id="module.driver.external_irq_on_icu.728950937">
+      <property id="module.driver.external_irq.name" value="g_external_irq0"/>
+      <property id="module.driver.external_irq.channel" value="0"/>
+      <property id="module.driver.external_irq.trigger" value="module.driver.external_irq.trigger.trig_falling"/>
+      <property id="module.driver.external_irq.filter_enable" value="module.driver.external_irq.filter_enable.false"/>
+      <property id="module.driver.external_irq.pclk_div" value="module.driver.external_irq.pclk_div.pclk_div_by_64"/>
+      <property id="module.driver.external_irq.p_callback" value="OCD1_IRQHandler"/>
+      <property id="module.driver.external_irq.ipl" value="board.icu.common.irq.priority0"/>
+    </module>
     <context id="_hal.0">
       <stack module="module.driver.ioport_on_ioport.0"/>
       <stack module="module.driver.three_phase_on_gpt_three_phase.566906103">
@@ -1303,6 +1316,7 @@
       <stack module="module.middleware.mcuboot_image_utilities.1998204525">
         <stack module="module.driver.flash_on_flash_hp.1598203811" requires="module.middleware.mcuboot_image_utilities.requires.flash"/>
       </stack>
+      <stack module="module.driver.external_irq_on_icu.728950937"/>
     </context>
     <config id="config.driver.flash_hp">
       <property id="config.driver.flash_hp.param_checking_enable" value="config.flash_hp.param_checking_enable.bsp"/>
@@ -1493,6 +1507,7 @@
       <configSetting altId="gpt9.mode.gtiocaorgtiocb.free" configurationId="gpt9.mode"/>
       <configSetting altId="gpt_poega.gtetrga.pc14" configurationId="gpt_poega.gtetrga"/>
       <configSetting altId="gpt_poega.mode.enabled.free" configurationId="gpt_poega.mode"/>
+      <configSetting altId="icu0.mode.enabled.free" configurationId="icu0.mode"/>
       <configSetting altId="icu3.irq3_dash_ds.pb05" configurationId="icu3.irq3_dash_ds"/>
       <configSetting altId="icu3.mode.enabled.free" configurationId="icu3.mode"/>
       <configSetting altId="icu4.irq4_dash_ds.pb06" configurationId="icu4.irq4_dash_ds"/>
@@ -1504,6 +1519,9 @@
       <configSetting altId="jtag_fslash_swd.tdi.pa15" configurationId="jtag_fslash_swd.tdi"/>
       <configSetting altId="jtag_fslash_swd.tdo.pb03" configurationId="jtag_fslash_swd.tdo"/>
       <configSetting altId="jtag_fslash_swd.tms.pa13" configurationId="jtag_fslash_swd.tms"/>
+      <configSetting altId="p000.input" configurationId="p000"/>
+      <configSetting altId="p000.gpio_irq.gpio_irq_enabled" configurationId="p000.gpio_irq"/>
+      <configSetting altId="p000.gpio_mode.gpio_mode_in" configurationId="p000.gpio_mode"/>
       <configSetting altId="pa00.adc12.an000" configurationId="pa00"/>
       <configSetting altId="pa00.gpio_mode.gpio_mode_an" configurationId="pa00.gpio_mode"/>
       <configSetting altId="pa02.adc12.an002" configurationId="pa02"/>

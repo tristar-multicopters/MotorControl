@@ -15,7 +15,6 @@
 
 extern MotorControlInterfaceHandle_t MCInterface[NBR_OF_MOTORS];
 
-
 /**
   * @brief  Initializes the Motor subsystem core according to user defined parameters.
 	* @param	None
@@ -70,5 +69,13 @@ void MC_DualDriveFIFOUpdate(uint8_t Motor);
 	* @retval None
   */
 void MC_HardwareFaultTask(void);
+
+
+/**
+  * @brief  Turns off the PWM for M1
+	* @param	None
+	* @retval None
+  */
+void MC_PWM_OFF_M1(void);
 
 #endif /* __MCTASKS_H */

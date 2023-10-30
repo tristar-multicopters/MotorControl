@@ -89,10 +89,11 @@ extern "C" {
 #define  MC_NTC_FREEZE_CONTROLLER   (uint32_t)(0x00000010u)     /**< @brief Error: Controller NTC Freezing protection.*/
 #define  MC_OVER_TEMP_MOTOR         (uint32_t)(0x00000020u)     /**< @brief Error: Software over temperature for motor.*/
 #define  MC_SPEED_FDBK              (uint32_t)(0x00000040u)     /**< @brief Error: Speed feedback.*/
-#define  MC_BREAK_IN                (uint32_t)(0x00000080u)     /**< @brief Error: Emergency input (Over current).*/
-#define  MC_SW_ERROR                (uint32_t)(0x00000100u)     /**< @brief Error: Software Error.*/
-#define  MC_OCSP                    (uint32_t)(0x00000200u)     /**< @brief Error: Overcurrent software protection.*/
-#define  MC_MSRP                    (uint32_t)(0x00000400u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
+#define  MC_OCD1                    (uint32_t)(0x00000080u)     /**< @brief Error: Emergency input (Over current detection 1).*/
+#define  MC_OCD2                    (uint32_t)(0x00000100u)     /**< @brief Error: Emergency input (Over current detection 2).*/
+#define  MC_SW_ERROR                (uint32_t)(0x00000200u)     /**< @brief Error: Software Error.*/
+#define  MC_OCSP                    (uint32_t)(0x00000400u)     /**< @brief Error: Overcurrent software protection.*/
+#define  MC_MSRP                    (uint32_t)(0x00000800u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
 /** @} */
 
 /** @name Warning source codes */

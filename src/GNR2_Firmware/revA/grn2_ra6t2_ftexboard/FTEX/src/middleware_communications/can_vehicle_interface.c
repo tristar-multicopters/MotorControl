@@ -141,7 +141,7 @@ uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
             stateToSend |= CONTROLLER_OVER_T_FAULT;
         }
         // Motor over current fault
-        if(wCurrFault & MC_BREAK_IN)
+        if(wCurrFault & MC_OCD2)
         {
             stateToSend |= MOTOR_OVER_C_FAULT;
         }
