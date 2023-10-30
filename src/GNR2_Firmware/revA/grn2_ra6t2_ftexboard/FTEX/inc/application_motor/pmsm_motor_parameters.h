@@ -47,6 +47,10 @@
 
 #include "pmsm_motor_parameters_a2_500w.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_MAHLE
+
+#include "pmsm_motor_parameters_mahle.h"
+
 #endif
 
 #endif /*__PMSM_MOTOR_PARAMETERS_H*/

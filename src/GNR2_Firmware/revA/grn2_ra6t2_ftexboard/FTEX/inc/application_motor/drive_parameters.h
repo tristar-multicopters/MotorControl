@@ -48,6 +48,10 @@
 
 #include "drive_parameters_a2_500w.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_MAHLE
+
+#include "drive_parameters_mahle.h"
+
 #endif
 
 /****** PHASE WIRE DISCONNECTIION DETECTIOT *******/

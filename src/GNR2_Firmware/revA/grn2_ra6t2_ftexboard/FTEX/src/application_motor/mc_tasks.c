@@ -649,6 +649,10 @@ void FOC_CalcCurrRef(uint8_t bMotor)
     if (FOCVars[bMotor].bDriveInput == INTERNAL)
     {
         FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSpeedTorqCtrl[bMotor]);
+      if (VEHICLE_SELECTION == VEHICLE_MAHLE)
+      {
+        FOCVars[bMotor].hTeref *=-1;
+      }
         FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
         FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
 		

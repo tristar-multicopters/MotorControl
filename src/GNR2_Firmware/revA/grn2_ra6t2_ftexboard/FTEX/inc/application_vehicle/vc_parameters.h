@@ -49,6 +49,9 @@
 
 #include "vc_parameters_a2_500w.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_MAHLE 
+
+#include "vc_parameters_mahle.h"
 
 #endif
 

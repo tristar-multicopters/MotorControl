@@ -13,6 +13,7 @@
 #define VEHICLE_A2_350W               7
 #define VEHICLE_UTK_350W              8
 #define VEHICLE_A2_500W               9
+#define VEHICLE_MAHLE                 10
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 
