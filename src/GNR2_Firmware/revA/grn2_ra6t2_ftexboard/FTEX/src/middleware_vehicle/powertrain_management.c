@@ -27,6 +27,7 @@ static Delay_Handle_t ThrottleDelay; // Delay for Throttle stuck check while ini
 static Delay_Handle_t PTSensorDelay; // Delay for Pedal Torque sensor stuck check while initialization
 static Delay_Handle_t brakeDelay;    // Delay for Brake sensor stuck check while initialization
 
+
 // ==================== Public function prototypes ======================== //
 
 /**
@@ -699,9 +700,9 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 
     uint32_t wFaultOccurred = wM1FaultOccurredCode | wM2FaultOccurredCode;
 
-    if (wFaultOccurred != MC_NO_ERROR)      // Rasie Motor current error to the LCD
+    if (wFaultOccurred != MC_NO_ERROR)      // Raise Motor current error to the LCD
     {
-        if (((wFaultOccurred & MC_BREAK_IN) | (wFaultOccurred & MC_OCSP)) != MC_NO_ERROR )
+        if ((wFaultOccurred & MC_OCD1)!= MC_NO_ERROR)
         {
             VC_Errors_RaiseError(OVER_CURRENT, HOLD_UNTIL_CLEARED);
         }
@@ -729,14 +730,17 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
     }
     if (PWRT_IsMotor1Used(pHandle))
     {// If there's an over current (OC) that has occurred but has already been cleared
-        if ((wM1FaultOccurredCode & MC_BREAK_IN) | (wM1FaultOccurredCode & MC_OCSP))
+        if ((wM1FaultOccurredCode & MC_OCD2) || (wM1FaultOccurredCode & MC_OCSP))
         {
-            if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+            if (pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
             {// If the timer has timeout, clear the OC fault
-                wM1FaultOccurredCode &= ~MC_BREAK_IN;
+                wM1FaultOccurredCode &= ~MC_OCD2;
                 wM1FaultOccurredCode &= ~MC_OCSP;
                 pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
-                VC_Errors_ClearError(OVER_CURRENT);
+                if ((wFaultOccurred & MC_OCD1) == 0)
+                {
+                    VC_Errors_ClearError(OVER_CURRENT);
+                }
             }
             else
             {//Increase the counter one more tick
@@ -756,7 +760,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
                 pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1]++;
             }
         }
-
+        
         if ((wM1FaultOccurredCode & MC_OVER_TEMP_CONTROLLER) != 0)
         {
             // In case of controller overtemperature, clear the OT fault
@@ -815,14 +819,13 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 
     if (PWRT_IsMotor2Used(pHandle))
     {
-        if ((wM2FaultOccurredCode & MC_BREAK_IN) || (wM2FaultOccurredCode & MC_OCSP))
+        if ((wM2FaultOccurredCode & MC_OCD2) || (wM2FaultOccurredCode & MC_OCSP))
         {
             if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
             {// If the timer has timeout, clear the OC fault
-                wM2FaultOccurredCode &= ~MC_BREAK_IN;
+                wM2FaultOccurredCode &= ~MC_OCD2;
                 wM2FaultOccurredCode &= ~MC_OCSP;
                 pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
-                VC_Errors_ClearError(OVER_CURRENT);
             }
             else
             {//Increase the counter one more tick

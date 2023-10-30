@@ -41,6 +41,8 @@
 #define VBUS_TEMP_ERR_MASK (uint32_t) ~(0 | MC_NO_ERROR)
 #define DEFAULT_TEMP_MOTOR 0xFFF
 #define DEFAULT_TEMP_CONTROLLER 0x000
+#define OCD2_MAX 7
+#define OCD2_TIMER 10000 //~10 secs
 
 /* Private variables----------------------------------------------------------*/
 FOCVars_t FOCVars[NBR_OF_MOTORS];
@@ -65,6 +67,8 @@ FeedforwardHandle_t *pFeedforward[NBR_OF_MOTORS];
 static volatile uint16_t hMFTaskCounterM1 = 0;
 static volatile uint16_t hBootCapDelayCounterM1 = 0;
 static volatile uint16_t hStopPermanencyCounterM1 = 0;
+volatile uint8_t bOCCheck = 0;
+volatile uint16_t hOCCheckReset = 0;
 
 uint8_t bMCBootCompleted = 0;
 
@@ -281,7 +285,17 @@ void MediumFrequencyTaskM1(void)
 {
     MotorState_t StateM1;
     int16_t wAux = 0;
-
+    
+    if (hOCCheckReset < OCD2_TIMER)
+    {
+        hOCCheckReset++;
+    }
+    else if (bOCCheck < OCD2_MAX)
+    {
+        hOCCheckReset = 0;
+        bOCCheck = 0;
+    }
+    
     #if HSLOG_BUTTON_LOG
     (void) BemfObsPll_CalcAvrgMecSpeedUnit(&BemfObserverPllM1, &wAux);
         
@@ -882,8 +896,18 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
         CodeReturn |= errMask[bMotor] & MC_NTC_FREEZE_CONTROLLER;
     }
     
-    CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_BREAK_IN or MC_NO_FAULTS
+    CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_OCD1, MC_OCD2 or MC_NO_FAULTS
                                                                                     (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
+    if (((CodeReturn & MC_OCD2) == MC_OCD2) && (bOCCheck < OCD2_MAX))
+    {
+        bOCCheck++;
+        
+        if (bOCCheck == OCD2_MAX)
+        {
+            CodeReturn |= errMask[bMotor] & MC_OCD1;
+        }
+    }
+    
     if (bMotor == M1)
     {
         CodeReturn |= errMask[bMotor] & ResDivVbusSensor_CalcAvVbus(pBusSensorM1);
@@ -903,6 +927,16 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     default:
         break;
     }
+}
+
+/**
+  * @brief  Turns off the PWM for M1
+	* @param	None
+	* @retval None
+  */
+void MC_PWM_OFF_M1()
+{
+    PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
 }
 
 /**

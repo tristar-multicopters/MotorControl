@@ -631,8 +631,10 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
             ConvertedError = CLOUD_5S_LOW_BAT;
             break;            
         case MOTOR_NTC_DISC_FREEZE:
-             ConvertedError = CLOUD_5S_TEMP_DISC;
-             break;
+            ConvertedError = CLOUD_5S_TEMP_DISC;
+            break;
+        case OVER_CURRENT:
+            ConvertedError = CLOUD_5S_CNTL_ERROR;
         case UNMAPPED_ERROR: // Errors that Cloud 5S has but that we currently don't flag
             break;        
         default: // Cloud drive doesn't supports sending other error codes

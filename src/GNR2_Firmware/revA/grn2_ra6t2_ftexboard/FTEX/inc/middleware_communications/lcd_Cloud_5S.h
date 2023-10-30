@@ -67,7 +67,7 @@ typedef enum
     CLOUD_5S_UT_ERROR       = 0x08, // controller undertemperature error
     CLOUD_5S_OT_ERROR       = 0x09, // controller overtemperature error
     CLOUD_5S_IOT_COMM_ERROR = 0x0A, // iot communication error
-    CLOUD_5S_MOT_ERROR      = 0x0B, // controller overtemperature error
+    CLOUD_5S_MOT_ERROR      = 0x0B, // motor overtemperature error
     CLOUD_5S_OV_ERROR       = 0x0C, // DC bus goes over the safe voltage operating range of the controller
     CLOUD_5S_LOW_BAT        = 0x0D, // low battery error
     CLOUD_5S_TEMP_DISC      = 0X0E, // temp sensor disconnected
