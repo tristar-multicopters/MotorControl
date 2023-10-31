@@ -80,15 +80,18 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
     else
         hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
     /* Check if the variable not exceeding the limit*/
-    if (hAux != 0xFFFFu)
+    if (hAux == 0xFFFFu)
     {
-        wAux =  (uint32_t) (hBandwidth - 1u); // Affect Bandwidth to the output value
-        wAux *= (uint32_t) (pHandle->hAvADCValue); // Multiply the Avrg value with the coefficient
-        wAux += hAux;
-        wAux /= ( uint32_t )( hBandwidth );// Devide the output value  with the coefficient for a new avrg value
-        /* Affect the average value to the hAvADCValue */
-        pHandle->hAvADCValue = (uint16_t) wAux;
+        hAux = 0xFFFE;
     }
+        
+    wAux =  (uint32_t) (hBandwidth - 1u); // Affect Bandwidth to the output value
+    wAux *= (uint32_t) (pHandle->hAvADCValue); // Multiply the Avrg value with the coefficient
+    wAux += hAux;
+    wAux /= ( uint32_t )( hBandwidth );// Devide the output value  with the coefficient for a new avrg value
+    /* Affect the average value to the hAvADCValue */
+    pHandle->hAvADCValue = (uint16_t) wAux;
+    
 
     /* Compute torque sensor value (between 0 and 65535) */
     hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 
@@ -112,7 +115,7 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
         uint16_t TorqueSens;
         uint32_t OffsetSafe;
         
-        TorqueSens = PedalTorqSensor_GetAvValue(pHandle);
+        TorqueSens = hAux;
         
         // We include the startup threshold to check if throttle is detected
         // Be cause it is in % 
