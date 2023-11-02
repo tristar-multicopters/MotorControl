@@ -68,7 +68,7 @@
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
 
-#define PAS_MIN_PEDAL_COUNT_SAFE            2               // Number of pulse per pedal turn do we neeed after initial detection to push power
+#define PAS_MIN_PEDAL_COUNT_SAFE            1              // Number of pulse per pedal turn do we neeed after initial detection to push power
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
