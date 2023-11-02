@@ -130,7 +130,6 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         // Update Light if Blinking
         Light_Blink(pVCI->pPowertrain->pTailLight);
         
-        
         #if ENABLE_VC_DAC_DEBUGGING
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);
         R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hAvADCValue);
@@ -139,10 +138,6 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         osDelayUntil(xLastWakeTime);
     }
 }
-
-
-uint8_t ErrorTester = 0;
-
 
 /* 
    Task to control vehicle depending on its current state.
@@ -204,13 +199,13 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
         #else
         StateVC = VCSTM_GetState(pVCI->pStateMachine);
         PWRT_MotorWarningManagement(pVCI->pPowertrain);
+
         switch (StateVC)
         {
             case V_IDLE:
             /* Vehicule is idle, does not do anything */
                     osDelay(100);
                     wCounter = 0;
-                    ErrorTester = 0;
                     VCSTM_NextState(pVCI->pStateMachine, V_STANDBY);
                     break;
             
@@ -306,11 +301,8 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
             case V_FAULT_NOW:
             /* A vehicle fault happened and not processed yet */
                     PWRT_StopMotors(pVCI->pPowertrain); // Stop powertrain when fault happens
-                    
-                    ErrorTester = 1; 
                     if (PWRT_IsPowertrainStopped(pVCI->pPowertrain)) // If powertrain is stopped, do fault management strategy.
                     {
-                        ErrorTester = 2; 
                         if (!PWRT_MotorFaultManagement(pVCI->pPowertrain)) // If motor fault management is successful, remove vehicle faults related to motors.
                         {
                             VCSTM_FaultProcessing(pVCI->pStateMachine, 0, VC_M1_FAULTS); // Remove VC_M1_FAULTS flag
@@ -331,134 +323,6 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
                 VCSTM_FaultProcessing(pVCI->pStateMachine, VC_SW_ERROR, 0u);
             break;
         }
-        
- /*     
-#define  MC_FOC_DURATION            (uint32_t)(0x00000001u)  
-#define  MC_OVER_VOLT               (uint32_t)(0x00000002u)   
-#define  MC_UNDER_VOLT              (uint32_t)(0x00000004u)   
-#define  MC_OVER_TEMP_CONTROLLER    (uint32_t)(0x00000008u)   
-#define  MC_NTC_FREEZE_CONTROLLER   (uint32_t)(0x00000010u) 
-#define  MC_OVER_TEMP_MOTOR         (uint32_t)(0x00000020u)    
-#define  MC_START_UP                (uint32_t)(0x00000040u)   
-#define  MC_SPEED_FDBK              (uint32_t)(0x00000080u) 
-#define  MC_BREAK_IN                (uint32_t)(0x00000100u)    
-#define  MC_SW_ERROR                (uint32_t)(0x00000200u)   
-#define  MC_OCSP                    (uint32_t)(0x00000400u)    
-#define  MC_MSRP                    (uint32_t)(0x00000800u) */
-        
-        
-        uint32_t TestwM1FaultOccurredCode = MDI_GetOccurredFaults(pVCI->pPowertrain->pMDI, M1);
-        if (ErrorTester == 2)
-        {
-            if(TestwM1FaultOccurredCode & MC_FOC_DURATION)
-            {
-                VC_Errors_RaiseError(TEST1,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST1);
-            }    
-        
-            if(TestwM1FaultOccurredCode & MC_OVER_VOLT)
-            { 
-                VC_Errors_RaiseError(TEST2,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST2);
-            } 
-        
-            if(TestwM1FaultOccurredCode & MC_UNDER_VOLT)
-            {
-                VC_Errors_RaiseError(TEST3,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST3);
-            }    
-        
-            if(TestwM1FaultOccurredCode & MC_OVER_TEMP_CONTROLLER)
-            { 
-                VC_Errors_RaiseError(TEST4,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST4);
-            }
-        
-            if(TestwM1FaultOccurredCode & MC_NTC_FREEZE_CONTROLLER)
-            {
-                VC_Errors_RaiseError(TEST5,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST5);
-            }    
-        
-            if(TestwM1FaultOccurredCode & MC_OVER_TEMP_MOTOR)
-            { 
-                VC_Errors_RaiseError(TEST6,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST6);
-            }
-        
-            if(TestwM1FaultOccurredCode & MC_START_UP)
-            {
-                VC_Errors_RaiseError(TEST7,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST7);
-            }    
-        
-            if(TestwM1FaultOccurredCode & MC_SPEED_FDBK)
-            { 
-                VC_Errors_RaiseError(TEST8,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST8);
-            }
-        
-            if(TestwM1FaultOccurredCode & MC_BREAK_IN)
-            {
-                VC_Errors_RaiseError(TEST9,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST9);
-            }    
-            
-            if(TestwM1FaultOccurredCode & MC_SW_ERROR)
-            { 
-                VC_Errors_RaiseError(TEST10,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST10);
-            }
-        
-            if(TestwM1FaultOccurredCode & MC_OCSP)
-            {
-                VC_Errors_RaiseError(TEST11,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST11);
-            }    
-        
-            if(TestwM1FaultOccurredCode & MC_MSRP)
-            { 
-                VC_Errors_RaiseError(TEST12,HOLD_UNTIL_CLEARED);
-            }
-            else
-            {
-                VC_Errors_ClearError(TEST12);
-            } 
-        }        
-        
         #endif
     
         xLastWakeTime += TASK_VCSTM_SAMPLE_TIME_TICK;
