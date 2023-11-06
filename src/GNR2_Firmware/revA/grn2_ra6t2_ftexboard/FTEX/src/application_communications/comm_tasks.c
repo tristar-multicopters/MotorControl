@@ -81,19 +81,17 @@ static void UpdateObjectDictionnary(void *p_arg)
     ASSERT(pVCI->pPowertrain->pPAS != NULL);
     ASSERT(pVCI->pPowertrain->pPAS->pWSS != NULL);
     
-    hSpeed[VEHICLE_PARAM]  = (uint8_t)  CanVehiInterface_GetVehicleSpeed(pVCI);
-    hPWR[VEHICLE_PARAM]    = (uint16_t) CanVehiInterface_GetVehiclePower(pVCI);
-    bSOC[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehicleSOC(pVCI);
-    bPAS[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehiclePAS(pVCI); 
-    bPasAlgorithm[VEHICLE_PARAM] = (uint8_t) CanVehiInterface_GetVehiclePASAlgorithm(pVCI);    
-    hMaxPwr[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleMaxPWR(pVCI);
-    
-    hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
-    hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
-    
     //only master can access theses parameters.
     if (VcAutodeter_GetGnrState())
     {
+        hSpeed[VEHICLE_PARAM]  = (uint8_t)  CanVehiInterface_GetVehicleSpeed(pVCI);
+        hPWR[VEHICLE_PARAM]    = (uint16_t) CanVehiInterface_GetVehiclePower(pVCI);
+        bSOC[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehicleSOC(pVCI);
+        bPAS[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehiclePAS(pVCI); 
+        bPasAlgorithm[VEHICLE_PARAM] = (uint8_t) CanVehiInterface_GetVehiclePASAlgorithm(pVCI);
+        hMaxPwr[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleMaxPWR(pVCI);
+        hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
+        hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
         hErrorState[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleCurrentFaults(pVCI);
     }
@@ -101,9 +99,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     {
         hErrorState[VEHICLE_PARAM] = 0x0000;
     }
-    
-    
- 
     
     /***************Throttle/Pedal Assist variables******************************/
     uint8_t pasAlgorithm;
@@ -290,8 +285,9 @@ static void UpdateObjectDictionnary(void *p_arg)
     }
     #endif
 
-    //verify if the the node is operational to update the OD.
-    if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
+    //verify if the the node is operational to update the OD and if the device is a master
+    //slave doesn't support the variables below.
+    if((CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL) && (VcAutodeter_GetGnrState() == true))
     {
         COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_KEY_USER_DATA_CONFIG, 0)), pNode, &keyUserDataConfig, sizeof(uint16_t));
         
@@ -373,15 +369,11 @@ static void UpdateObjectDictionnary(void *p_arg)
             }  
             
             
-            // If the whele diameter in the OBJ dict and vehicle don't match, update the on in the vehicle
-            if (VcAutodeter_GetGnrState())
+            if(hWheelDiameter[VEHICLE_PARAM] != hWheelDiameter[CAN_PARAM])
             {
-                if(hWheelDiameter[VEHICLE_PARAM] != hWheelDiameter[CAN_PARAM])
-                {
-                    CanVehiInterface_UpdateWheelDiameter(hWheelDiameter[CAN_PARAM]);            
-                }
+                CanVehiInterface_UpdateWheelDiameter(hWheelDiameter[CAN_PARAM]);            
             }
-            
+           
             // If the light status in OBJ dict and vehicle don't match, update the one in the vehicle
             if(hFrontLightState[VEHICLE_PARAM] != hFrontLightState[CAN_PARAM])
             {
@@ -590,7 +582,7 @@ void CANOpenTask(void)
 {
 
     //setup can OD and node ID.
-    CO_Gnr2OdSetupt(VcAutodeter_GetGnrState());
+    CO_SelecOdSetup(VcAutodeter_GetGnrState());
 
     // Initialize canbus hardware layer and the CANopen stack
 	CONodeInit(&CONodeGNR, &GnR2ModuleSpec);
