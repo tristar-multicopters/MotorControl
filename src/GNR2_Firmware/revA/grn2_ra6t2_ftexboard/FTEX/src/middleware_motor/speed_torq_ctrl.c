@@ -13,6 +13,8 @@
 #include "mc_type.h"
 #include "parameters_conversion.h"
 
+int16_t hError;
+
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 uint16_t M_STUCK_timer = 0;
@@ -198,7 +200,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
     int16_t hTorqueReference = 0;
     int16_t hMeasuredSpeed;
     int16_t hTargetSpeed;
-    int16_t hError;
+    
 
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
@@ -207,7 +209,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
         
         if (pHandle->bEnableSpdLimitControl)
         {
-            hMeasuredSpeed = -SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD); // Speed is somehow negative when applying positive torque, need to figure out why.
+            hMeasuredSpeed = SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD); // Speed is somehow negative when applying positive torque, need to figure out why.
             hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
             pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
             if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)

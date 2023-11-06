@@ -53,7 +53,7 @@
 #endif
 
 #ifndef  VEHICLE_TOP_SPEED_KMH
-    #define VEHICLE_TOP_SPEED_KMH   32    
+    #define VEHICLE_TOP_SPEED_KMH   35   
 #endif
 
 // PAS Cadence sesnor Torque power in % default values
