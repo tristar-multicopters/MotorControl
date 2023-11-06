@@ -32,6 +32,108 @@ extern "C" {
 #define SDOCLIENTINDEX_MASTER       0x00
 #define SDOCLIENTINDEX_IOT          0x01
 
+//Number of entries to each OD configuration
+
+#define MASTER_IOT_SIZE       11
+#define MASTER_IOT_SLAVE_SIZE 15
+#define MASTER_SLAVE_SIZE     14
+#define SLAVE_MASTER_SIZE     14
+
+//Mandatory Object Entries address
+
+//OD ID for Device type
+#define CO_OD_REG_DEVICE_TYPE       0x1000
+
+//OD ID to hold the errors.
+#define CO_OD_REG_ERROR             0x1001
+
+//OD ID to sync message
+#define CO_OD_REG_SYNC_MESSAGE      0x1005
+
+//OD ID to sync period
+#define CO_OD_REG_SYNC_PERIOD       0x1006
+
+//OD ID to the Emergency message
+#define CO_OD_REG_EMCY_MSG          0x1014
+
+//OD ID to Producer Heartbeat Time
+#define CO_OD_REG_HB_TIME           0x1017
+
+//OD ID to Identity Object.
+#define CO_OD_IDENTITY_OBJECT       0x1018
+//this object has 5 subindex 
+// 0 -> Highest sub-index supported.
+// 1 -> Vendor ID.
+// 2 -> Product code
+// 3 -> Revision number
+// 4 -> Serial Number
+
+//OD ID to Communication Object SDO Server
+#define CO_OD_SDO_SERVER            0x1200
+//this object has 3 subindex 
+// 0 -> inform Highest sub-index supported.
+// 1 -> SDO Server Request COBID
+// 2 -> SDO Server Response COBID
+
+//OD ID to SDO Client - a device to request information
+#define CO_OD_SDO_CLIENT_01            0x1280
+//this object has 4 subindex 
+// 0 -> Highest sub-index supported.
+// 1 -> COB-ID Client to Server
+// 2 -> COB-ID Server to Client   
+// 3 -> Node-ID of the SDO server
+
+//OD ID to SDO Client - a device to request information
+#define CO_OD_SDO_CLIENT_02            0x1281
+//this object has 4 subindex 
+// 0 -> Highest sub-index supported.
+// 1 -> COB-ID Client to Server
+// 2 -> COB-ID Server to Client   
+// 3 -> Node-ID of the SDO server
+
+//OD ID to RPDO communication parameter
+#define CO_OD_RPOD                     0x1400
+//this object has 4 subindex 
+// 0 -> Highest sub-index supported.
+// 1 -> COB-ID used by RPDO
+// 2 -> Transmission type  
+// 5 -> Event timer
+
+//OD ID to RPDO mapping parameter
+#define CO_OD_RPOD_MAPPING             0x1600
+//this object can have until 8 subindex 
+// 0 -> Number of mapped application objects in PDO
+// 1 -> Application object 1
+// 2 -> Application object 2 
+// 3 -> Application object 3
+// 4 -> Application object 4
+// .....
+// 8 -> Application object 8
+
+//OD ID to TPDO communication parameter
+#define CO_OD_TPDO_COMMUNICATION       0x1800
+//this object can have until 8 subindex 
+// 0 -> Highest sub-index supported
+// 1 -> COB-ID used by TPDO
+// 2 -> Transmission type 
+// 5 -> Event timer
+// 6 -> SYNC start value
+
+//OD ID to RPDO mapping parameter
+#define CO_OD_TPOD_MAPPING             0x1A00
+//this object can have until 8 subindex 
+// 0 -> Number of mapped application objects in PDO
+// 1 -> Application object 1
+// 2 -> Application object 2 
+// 3 -> Application object 3
+// 4 -> Application object 4
+// .....
+// 8 -> Application object 8
+
+//OD ID to communn entries, used by all configuration.
+#define CO_OD_COMMUM_ENTRIES           0x5000
+
+
 /* Application specific CANopen registers for IOT */
 #define CO_OD_REG_SPEED_MEASURE     0x2000 /**< OD ID for speed measure           >*/
 #define CO_OD_REG_POWER_MEASURE     0x2001 /**< OD ID for power measure           >*/
@@ -202,12 +304,15 @@ extern struct CO_NODE_SPEC_T GnR2ModuleSpec;
 
 extern CO_OBJ_DOM bObjFirmwareUpdateDomain;
 
+
 /**
-  @brief Function used to config the OD as master or slave.
+  @brief Function used to config the OD as master/iot or slave.
+         Must be called before initialise CANOPEN Node.
+         Must be called only once.
   @param deviceState true to setup as master, false to setup as slave.
   @retval none
  */
-void CO_Gnr2OdSetupt(bool deviceState);
+void CO_SelecOdSetup(bool deviceFunction);
 
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
