@@ -19,7 +19,7 @@
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-#define VEHICLE_TOP_SPEED_KMH   5
+#define VEHICLE_TOP_SPEED_KMH   35 
 #define DEFAULT_WHEEL_DIAMETER_OVERRIDE 22
 /***************** THROTTLE SELECTION  ******************************/
 

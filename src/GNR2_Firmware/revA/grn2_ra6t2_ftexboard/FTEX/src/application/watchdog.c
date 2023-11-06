@@ -28,7 +28,7 @@ __NO_RETURN void Watchdog (void * pvParameter)
         //must to be refreshed before 2.2 seconds.
         //this must be uncommented when bootloader+main will be 
         //flashed.
-     //   Watchdog_Refresh();
+        Watchdog_Refresh();
         #endif
         
         osDelay(REFRESH_DELAY_MS); // Delay between refresh of watchdog
