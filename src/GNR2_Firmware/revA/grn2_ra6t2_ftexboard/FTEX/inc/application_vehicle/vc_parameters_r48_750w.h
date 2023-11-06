@@ -19,7 +19,7 @@
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-#define VEHICLE_TOP_SPEED_KMH   200                                                                                           
+#define VEHICLE_TOP_SPEED_KMH   32                                                                                           
 /***************** THROTTLE SELECTION  ******************************/
 
 #include "throttle_sensors/vc_velec_r48_throttle.h"
@@ -109,7 +109,7 @@
 #define POWERTRAIN_HEADLIGHT_DEFAULT        false           // Parameter that sets the default headlight state when the bike is powered on
 
 #define POWERTRAIN_TAILLIGHT_LOCKED         true            // Parameter that decide sif the user can change the state of the tail light 
-#define POWERTRAIN_TAILLIGHT_DEFAULT        true            // Parameter that sets the default tail light state when the bike is powered on
+#define POWERTRAIN_TAILLIGHT_DEFAULT        false            // Parameter that sets the default tail light state when the bike is powered on
 
 /******************************** BATTERY SELECTION ******************************/
 

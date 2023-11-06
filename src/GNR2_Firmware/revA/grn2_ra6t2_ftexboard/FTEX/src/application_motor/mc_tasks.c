@@ -727,7 +727,7 @@ uint8_t MC_HighFrequencyTask(void)
     if all last 16 records show vibration, then rasie the stuck protection error */
     if ((HallPosSensorM1.wDirectionChangePattern & 0xFFFF) == VIBRATION_PATTERN)
     {
-        MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+      //  MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
     }
     
     wFOCreturn = FOC_CurrControllerM1();
