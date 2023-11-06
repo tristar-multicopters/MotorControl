@@ -144,7 +144,7 @@
 
 #define MAX_CURRENT_LIMIT               1           /* to calculate maximum poweer based on maximum current and Battery S0C */
 #define MAX_POWER_LIMIT                 2           /* to use  MAX_APPLICATION_POSITIVE_POWER as the reference for Maximum power*/
-#define POWER_LIMIT_REF                 MAX_POWER_LIMIT     /* defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+#define POWER_LIMIT_REF                 MAX_CURRENT_LIMIT     /* defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
                                                             as the reference for maximum power limitation*/
 #define MAX_APPLICATION_POSITIVE_POWER  1000    /* Refers to maximum power in watts that drive can push to the motor */
 #define MAX_APPLICATION_NEGATIVE_POWER  1000    /* Refers to maximum power in watts that drive can accept from the motor */
