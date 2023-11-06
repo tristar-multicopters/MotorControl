@@ -63,7 +63,7 @@
 #define STUCK_TIMER_MAX_COUNTS_LOWBATTERY   (STUCK_TIMER_MAX_TICKS/10) * SPEED_LOOP_FREQUENCY_HZ/1000u - 1u     // the protection timeout battery SoC is detected as low
 
 /******** SPEED CONTROL SETTING SECTION ********/
-#define SPDCTRL_UPPER_INTEGRAL_LIMIT                2097152 // 2^21     // The maximum allowed value for Integral Term of Speed Control PID
+#define SPDCTRL_UPPER_INTEGRAL_LIMIT                4097152 // 2^21     // The maximum allowed value for Integral Term of Speed Control PID
 
 #define VIBRATION_PATTERN                   0xAAAA   // = 0b1010101010101010 which is 8 time of direction change
 #endif /*__DRIVE_PARAMETERS_H*/

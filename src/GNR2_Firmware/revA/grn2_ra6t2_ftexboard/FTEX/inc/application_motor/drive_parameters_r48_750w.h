@@ -124,7 +124,7 @@
 
 #define ENABLE_SPEED_LIMIT_CONTROL    true
 
-#define PID_SPEED_KP_DEFAULT          40           /* Default gain speed control loop */
+#define PID_SPEED_KP_DEFAULT          250         /* Default gain speed control loop */
 #define PID_SPEED_KI_DEFAULT          4            /* Default gain speed control loop */
 #define PID_SPEED_KD_DEFAULT          0             /* Default gain speed control loop */
 #define PID_SPEEDLIMIT_KP_DEFAULT     PID_SPEED_KP_DEFAULT           /* Default gain speed limit control loop */
@@ -137,7 +137,7 @@
 #define SP_KIDIV_LOG                  LOG2(4096)   /* Speed control gain divider log2, to allow decimal value */
 #define SP_KDDIV_LOG                  LOG2(16)      /* Speed control gain divider log2, to allow decimal value */
 
-#define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
+#define SPD_CTRL_MAX_TORQUE             10000     /* Maximum torque that speed control loop can apply */
 
 #define LOW_BATTERY_TORQUE              150         /* Maximum torque allowed in low SoC of battery */
 #define LOW_BATTERY_VOLTAGE_THRESHOLD   40          /* the threshold of battery voltage before limit torque */
@@ -169,7 +169,7 @@
 #define DEFAULT_TORQUE_SLOPE_UP        7500      /* Slope in cNm per second */
 #define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
 
-#define DEFAULT_SPEED_SLOPE_UP         10000        /* Slope in #SPEED_UNIT per second */
+#define DEFAULT_SPEED_SLOPE_UP         20000        /* Slope in #SPEED_UNIT per second */
 #define DEFAULT_SPEED_SLOPE_DOWN       10000        /* Slope in #SPEED_UNIT per second */
 
 /* Dynamic maximum power foldback settings */
