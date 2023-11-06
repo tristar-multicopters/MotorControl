@@ -11,7 +11,7 @@
 /************************
  *** Motor Parameters ***
  ************************/
-#define MOTOR_GEAR_RATIO          (float)10.9890 /* Motor gear ratio, the value is always X turns of the motor 
+#define MOTOR_GEAR_RATIO          (float) 5 /* Motor gear ratio, the value is always X turns of the motor 
                                                     equates to 1 turn of the output shaft/hub IE if ration is 11.5
                                                     on a hub motor that means 11.5 turns of the motor result 
                                                     in one turn of the read wheel */
@@ -122,7 +122,7 @@
 #define SPEED_LOOP_FREQUENCY_HZ       1000 /*!<Execution rate of speed
                                                       regulation loop (Hz) */
 
-#define ENABLE_SPEED_LIMIT_CONTROL    false
+#define ENABLE_SPEED_LIMIT_CONTROL    true
 
 #define PID_SPEED_KP_DEFAULT          40           /* Default gain speed control loop */
 #define PID_SPEED_KI_DEFAULT          4            /* Default gain speed control loop */
