@@ -56,8 +56,14 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
     //variable used on the crc calcule.
     uint8_t n;
     
-    //Variable used to receive the calculated crc.
-    uint32_t crc32 = 0;
+    //variable used on the crc check
+    uint8_t crcSize = 0;
+    
+    //Variable used to receive the calculate the crc32 on the fly.
+    volatile uint32_t crc32 = 0;
+    
+    //Variable used to hold the crc32(from the DFU file) received from the iot.
+    volatile uint32_t crc32Dfu = 0;
     
     //flag used to inform if the received data frame was corrupted or not.
     static bool dataFrameCorrupted = false;
@@ -164,8 +170,16 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
                         if ((SF_Storage_PutPackChunk(&FirmwareUpdateControl.data[DATAPAYLOAD_START], FirmwareUpdateControl.frameDataSize) == EXIT_SUCCESS)
                             && (uCAL_SPI_IO_GetSpiFailedFlag(&SPI1Handle) == false))
                         {
+                            
+                            //if is the fasy frame, change crcSize to 4, to not include
+                            //the crc32 bytes in the crc32 calculation.
+                            if (FirmwareUpdateControl.frameControl == LAST_FRAME)
+                            {
+                                crcSize = 4;
+                            }
+                            
                             //calculate crc 32 on the fly for the data payload of the received data frame.
-                            for (n = 0; n < FirmwareUpdateControl.frameDataSize; n++)
+                            for (n = 0; n < (FirmwareUpdateControl.frameDataSize - crcSize); n++)
                             {
                                 //Calculate frimware CRC32 on the fly.
                                 FirmwareUpdate_Crc32Update(FirmwareUpdateControl.data[DATAPAYLOAD_START + n]);
@@ -192,17 +206,32 @@ static void FirmwareUpdate_ReadDataFrame(CO_NODE  *pNode)
                             //Get crc 32 result.
                             crc32 = FirmwareUpdate_Crc32Result();
                             
-                            //Copy crc32 from variable to buffer to be written at the end of firmware file.
-                            memcpy(FirmwareUpdateControl.data,&crc32,sizeof(crc32));
+                            //get the LSB of the crc32
+                            crc32Dfu = FirmwareUpdateControl.data[DATAPAYLOAD_START + (FirmwareUpdateControl.frameDataSize - 4)];
+                            //get the 2 byte of the crc32
+                            crc32Dfu |= (uint32_t)(FirmwareUpdateControl.data[DATAPAYLOAD_START + (FirmwareUpdateControl.frameDataSize - 3)] << 8);
+                            //get the 3 byte of the crc32
+                            crc32Dfu |= (uint32_t)(FirmwareUpdateControl.data[DATAPAYLOAD_START + (FirmwareUpdateControl.frameDataSize - 2)] << 16);
+                            //get the 4 byte of the crc32
+                            crc32Dfu |= (uint32_t)(FirmwareUpdateControl.data[DATAPAYLOAD_START + (FirmwareUpdateControl.frameDataSize - 1)] << 24);
                             
-                            //Write crc32 at the end of firmware file.
-                            SF_Storage_PutPackChunk(FirmwareUpdateControl.data, sizeof(uint32_t));
-                            
-                            //informr the IOT that file transfer was finished.
-                            FirmwareUpdateControl.otaStatus = FILE_TRANSFER_COMPLETED;
-                            
-                            //move to FIRMWARE_UPDATE_FINISHED state.
-                            FirmwareUpdateStateMachine = FIRMWARE_UPDATE_FINISHED; 
+                            //Compare calculated CRC32 with crc32 read from the DFU file.
+                            if (crc32Dfu != crc32)
+                            {
+                                //data frame is corrupted.
+                                dataFrameCorrupted = true;
+                    
+                                //increment the number of retry.
+                                dataFrameAttempts = MAXIMUM_ATTEMPTS;
+                            }
+                            else
+                            {
+                                //informr the IOT that file transfer was finished.
+                                FirmwareUpdateControl.otaStatus = FILE_TRANSFER_COMPLETED;
+                                
+                                //move to FIRMWARE_UPDATE_FINISHED state.
+                                FirmwareUpdateStateMachine = FIRMWARE_UPDATE_FINISHED;
+                            }  
                         }
                     }
                     else
