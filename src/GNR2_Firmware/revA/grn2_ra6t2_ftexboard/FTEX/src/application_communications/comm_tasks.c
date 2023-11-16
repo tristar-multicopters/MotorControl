@@ -72,7 +72,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t  hWheelDiameter[2];
     uint8_t  hFrontLightState[2];
     uint8_t  hRearLightState[2];
-    uint16_t hErrorState[2];
+    uint32_t hErrorState[2];
     
     
     
@@ -302,7 +302,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),  pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint16_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint32_t));
             
             
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
@@ -395,7 +395,7 @@ static void UpdateObjectDictionnary(void *p_arg)
 
             if(hErrorState[VEHICLE_PARAM] != hErrorState[CAN_PARAM])
             {
-                // Behavior TBD 
+                hErrorState[CAN_PARAM] = hErrorState[VEHICLE_PARAM];
             }                
             
             /**************Write the repesctive OD ID, updating the OD that us read by the IOT module using SDO.*************/
@@ -411,7 +411,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             }
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint32_t));
             
                     
             //Read the OD responsible to hold the firmware update command.

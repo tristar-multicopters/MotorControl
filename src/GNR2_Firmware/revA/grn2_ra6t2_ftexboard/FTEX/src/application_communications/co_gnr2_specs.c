@@ -173,7 +173,7 @@ uint8_t  bObjDataMaxPAS                     = 0;
 uint32_t hObjDataFwVersion                  = 0;
 uint16_t hObjDataPowerMeas                  = 0;
 uint16_t hObjDataMaxPower                   = 0;
-uint16_t hObjDataErrorState                 = 0;
+uint32_t hObjDataErrorState                 = 0;
 uint32_t wObjDataSerialNbL                  = 0;
 uint32_t wObjDataSerialNbH                  = 0;
 
@@ -932,7 +932,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Error State
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_ERR_STATE,     0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataErrorState};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_ERR_STATE,     0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&hObjDataErrorState};
             //move to next OD index
             index++;
             // Application - Serial Number High side

@@ -98,9 +98,9 @@ uint16_t CanVehiInterface_GetVehicleMaxPWR (VCI_Handle_t * pHandle);
 /**
   @brief  Get Current Faults function
   @param  VCI_Handle_t handle
-  @return Get Current Faults in uint16_t format
+  @return Get Current Faults in uint32_t format
 */
-uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle);
+uint32_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle);
 
 /**
   @brief  Get FW Version function
