@@ -102,5 +102,15 @@ ErrorCodes_t VC_Errors_CycleError(void);
  */
 void VC_Errors_SetCycleLength(uint8_t aCycle);
 
+/**@brief Function used to get the current error states with each bit 
+ * of a 32 bit variable representing the state of one error      
+ *
+ * @param[in] nothing
+ *                 
+ *
+ * @return a 32 bitmap of the errors
+ */
+uint32_t VC_Errors_GetErrorBitMap(void);
+
 #endif /* __VC_ERRORS_MANAGEMENT_H */
 

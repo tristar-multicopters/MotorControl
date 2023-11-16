@@ -8,6 +8,7 @@
 
 VC_Errors_Handle_t Error_Handle;
 
+
 /**
  *  Function used to raise a specific error on the screen, cannot raise the same error twice. 
  */
@@ -163,8 +164,25 @@ ErrorCodes_t VC_Errors_CycleError(void)
     return ErrorShown;
 }
 
+/**Function used to specify how many cycles of the function CycleError
+ * need to be done before its output will change         
+ */
 void VC_Errors_SetCycleLength(uint8_t aCycle)
 {    
     Error_Handle.cycleLength = aCycle;
 }
 
+/** Function used to get the current error states with each bit 
+ * of a 32 bit variable representing the state of one error      
+ */
+uint32_t VC_Errors_GetErrorBitMap(void)
+{
+    uint32_t ErrorBitMap = 0;
+    
+    for(uint8_t i = 0; i < Error_Handle.errorCount ; i++)
+    {
+       ErrorBitMap |=  (1 << (Error_Handle.errorCodes[i] - 1));
+    }
+    
+    return ErrorBitMap; 
+}

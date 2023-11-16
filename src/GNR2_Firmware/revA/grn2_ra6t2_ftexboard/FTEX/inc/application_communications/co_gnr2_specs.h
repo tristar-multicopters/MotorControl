@@ -264,7 +264,7 @@ extern "C" {
 //Doesn't matter the value write on this address, important
 //is the response from CANOPEN layer to informing the other
 //side(master or slave) received the sdo download command.
-#define CO_OD_REG_MASTER_SLAVE_PRESENT  0x2023
+#define CO_OD_REG_MASTER_SLAVE_PRESENT         0x2023
 
 //this OD ID will be used to 
 //receive data and commands during a firmware update.
@@ -277,6 +277,14 @@ extern "C" {
 // 2 -> used to receive the data frame(part of the firware file).
 // 3 -> used to inform IOT the last received data frame.
 #define CO_OD_REG_FIRMWAREUPDATE_MEMORY        0x3000
+
+
+// !!! IMPORTANT !!! // !!! IMPORTANT !!! // !!! IMPORTANT !!! //
+//
+// If you add a new object in the dictionnairy make sure the following document is up-to-date !
+// https://tristarmulticopters.atlassian.net/wiki/spaces/ERR/pages/520126468/Evionics+Power+CAN+object+dictionary
+//
+// !!! IMPORTANT !!! // !!! IMPORTANT !!! // !!! IMPORTANT !!! //
 
 
 /*******************************************************/

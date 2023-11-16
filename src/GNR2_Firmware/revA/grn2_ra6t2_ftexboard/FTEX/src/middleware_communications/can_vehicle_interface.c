@@ -122,48 +122,12 @@ uint16_t CanVehiInterface_GetVehicleMaxPWR (VCI_Handle_t * pHandle)
 }
 
 /**
- *  Get vehicle current faults
+ *  Getbit map of vehicle current faults
  */
-uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
-{
-    ASSERT(pHandle!= NULL);
-    uint32_t wCurrFault;
-    wCurrFault = MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI,M1)|
-                 MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI,M2);
-    
-    uint16_t stateToSend = MC_NO_ERROR;
-      
-    if(wCurrFault != MC_NO_ERROR)
-    {
-        // Motor over temperature fault
-        if(wCurrFault & MC_OVER_TEMP_CONTROLLER)
-        {
-            stateToSend |= CONTROLLER_OVER_T_FAULT;
-        }
-        // Motor over current fault
-        if(wCurrFault & MC_OCD2)
-        {
-            stateToSend |= MOTOR_OVER_C_FAULT;
-        }
-        
-        
-        // Motor speed feedback fault
-        if(wCurrFault & MC_SPEED_FDBK)
-        {
-            stateToSend |= HALL_SENSOR_FAULT;
-        }
-        // Motor over voltage fault
-        if(wCurrFault & MC_OVER_VOLT)
-        {
-            stateToSend |= CONTROL_OVER_V;
-        }
-        // Motor under voltage
-        if(wCurrFault & MC_UNDER_VOLT)
-        {
-            stateToSend |= CONTROL_UNDER_V;
-        }
-    }
-    return stateToSend;
+uint32_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
+{   
+    ASSERT(pHandle!= NULL);    
+    return VC_Errors_GetErrorBitMap();
 }
 
 /**
