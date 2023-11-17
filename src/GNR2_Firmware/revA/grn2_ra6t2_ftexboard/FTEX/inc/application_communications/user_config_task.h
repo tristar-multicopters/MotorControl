@@ -44,7 +44,7 @@
 //blocks of the data flash memory are being
 //used to hold the user configuration.
 //each block has 64 bytes.
-#define NUMBER_OF_BLOCKS_USED  1
+#define NUMBER_OF_BLOCKS_USED             7
 
 //code used to indicate that data flash
 //memory(user configuration) is being updated by an external
