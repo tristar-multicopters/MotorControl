@@ -85,6 +85,11 @@ UserConfigHandle_t UserConfigHandle;
   @brief Function to verify if data flash memory is empty or not.
 	If it's empty write default configuration in the data memory.
     If it's not empty read the configuration from the data memory.
+    Data flash memory used to save data user configuration starts
+    at address FLASH_HP_DF_BLOCK_4.
+    Each block address has 64 bytes.
+    The number of blocks used to hold the user configuration is defined
+    here: NUMBER_OF_BLOCKS_USED.
     NOTE: on this first version this function will be used to test 
     the task:
      - Move PAS configurable fields to flash memory
@@ -125,7 +130,7 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
     if(uCAL_Flash_Open(userConfigHandle->pDataFlash_Handle) == true)
     {   
         //get date from data flash memory(backup)
-        uCAL_Data_Flash_Read(userConfigHandle->pDataFlash_Handle, data, FLASH_HP_DF_BLOCK_0, USER_DATA_CONFIG_LENGTH);
+        uCAL_Data_Flash_Read(userConfigHandle->pDataFlash_Handle, data, FLASH_HP_DF_BLOCK_4, USER_DATA_CONFIG_LENGTH);
         
         //caclualte the crc to verify integrit of the data excluding crc bytes.
         crc = UserConfigTask_CalculateCRC(data, USER_DATA_CONFIG_LENGTH - 2);
@@ -138,15 +143,15 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
             //try max three times to erase data flash memory.
             for(attempts = 0; attempts < MAX_ERASE_ATTEMPTS ; attempts++)
             {
-                //erase one block(block 0) of the data flash memory before write on it.
+                //erase seven blocks(block 4 unitl 10) of the data flash memory before write on it.
                 //if you need more than 64 to write user configuration we need to
                 //erase more than 1 block.
-                uCAL_Data_Flash_Erase(userConfigHandle->pDataFlash_Handle, FLASH_HP_DF_BLOCK_0, NUMBER_OF_BLOCKS_USED);
+                uCAL_Data_Flash_Erase(userConfigHandle->pDataFlash_Handle, FLASH_HP_DF_BLOCK_4, NUMBER_OF_BLOCKS_USED);
             
                 //check if all bytes were erased.
-                //we are using just 1 block, so just 64 are checked.
+                //we are using 7 blocks.
                 //to check 2 or more blocks use n*NUMBER_OF_BYTES_IN_THE_BLOCK.
-                if (uCAL_Data_Flash_Blank_Check(userConfigHandle->pDataFlash_Handle, FLASH_HP_DF_BLOCK_0, NUMBER_OF_BYTES_IN_THE_BLOCK) == true)
+                if (uCAL_Data_Flash_Blank_Check(userConfigHandle->pDataFlash_Handle, FLASH_HP_DF_BLOCK_4, NUMBER_OF_BLOCKS_USED*NUMBER_OF_BYTES_IN_THE_BLOCK) == true)
                 { 
                     //if memory was correctly erased break
                     //stop the attempts.
@@ -168,7 +173,7 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
                 memcpy(data,&userConfigData,USER_DATA_CONFIG_LENGTH);
                 
                 //write user configuration that represents USER_DATA_CONFIG_LENGTH bytes.
-                uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_0, NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN); 
+                uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_4, NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN); 
             }   
         }
         else
@@ -211,15 +216,15 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
         for(attempts = 0; attempts < MAX_ERASE_ATTEMPTS ; attempts++)
         {
             
-            //erase one block(block 0) of the data flash memory before write on it.
+            //erase 7 blocks(block 4 until 10) of the data flash memory before write on it.
             //if you need more than 64 to write user configuration we need to
             //erase more than 1 block.
-            uCAL_Data_Flash_Erase(userConfigHandle->pDataFlash_Handle, FLASH_HP_DF_BLOCK_0, NUMBER_OF_BLOCKS_USED);
+            uCAL_Data_Flash_Erase(userConfigHandle->pDataFlash_Handle, FLASH_HP_DF_BLOCK_4, NUMBER_OF_BLOCKS_USED);
             
             //check if all bytes were erased.
             //we are using just 1 block, so just 64 are checked.
             //to check 2 or more blocks use n*NUMBER_OF_BYTES_IN_THE_BLOCK.
-            if (uCAL_Data_Flash_Blank_Check(userConfigHandle->pDataFlash_Handle, FLASH_HP_DF_BLOCK_0, NUMBER_OF_BYTES_IN_THE_BLOCK) == true)
+            if (uCAL_Data_Flash_Blank_Check(userConfigHandle->pDataFlash_Handle, FLASH_HP_DF_BLOCK_4, NUMBER_OF_BLOCKS_USED*NUMBER_OF_BYTES_IN_THE_BLOCK) == true)
             {
                     
                 //if memory was correctly erased break
@@ -245,7 +250,7 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
             memcpy(data,&userConfigData,USER_DATA_CONFIG_LENGTH);
                 
             //write user configuration that represents USER_DATA_CONFIG_LENGTH bytes.
-            uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_0, NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN);
+            uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_4, NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN);
                 
         }
             

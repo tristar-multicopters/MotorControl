@@ -31,6 +31,14 @@
 #define FLASH_HP_DF_BLOCK_1   0x08000040U //64 bytes in each block
 #define FLASH_HP_DF_BLOCK_2   0x08000080U //64 bytes in each block
 #define FLASH_HP_DF_BLOCK_3   0x080000C0U //64 bytes in each block
+#define FLASH_HP_DF_BLOCK_4   0x08000100U //64 bytes in each block
+#define FLASH_HP_DF_BLOCK_5   0x08000140U //64 bytes in each block
+#define FLASH_HP_DF_BLOCK_6   0x08000180U //64 bytes in each block
+#define FLASH_HP_DF_BLOCK_7   0x080001C0U //64 bytes in each block
+#define FLASH_HP_DF_BLOCK_8   0x08000200U //64 bytes in each block
+#define FLASH_HP_DF_BLOCK_9   0x08000240U //64 bytes in each block
+#define FLASH_HP_DF_BLOCK_10  0x08000280U //64 bytes in each block
+
 
 /*********************************************
                 Data Struct Definition
