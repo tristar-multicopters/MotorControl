@@ -596,6 +596,9 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
         case CONTROLLER_OT_PROTECT:
             ConvertedError = APT_CONTROLLER_OT_PROTECT;
             break;
+         case CONTROLLER_FOLDBACK_TEMP:
+            ConvertedError = APT_CONTROLLER_TEMP_FOLDBACK;
+            break;
         case UT_PROTECTION:
             ConvertedError = APT_UT_PROTECTION;
             break;
@@ -643,7 +646,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             {
                 ConvertedError = 0x9F;
             }  
-          break; 
+            break;
     }
     
     return ConvertedError;

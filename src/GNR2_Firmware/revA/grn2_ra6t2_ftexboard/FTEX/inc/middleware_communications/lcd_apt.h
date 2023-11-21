@@ -69,6 +69,7 @@ typedef enum
     APT_MOTOR_OT_PROTECT   = 0x0F, // Motor over temperature
     APT_TURN_ERROR         = 0x10, // Check turn to connect
     APT_DUAL_COMM_ERROR    = 0x11, // Check the cable connection
+    APT_CONTROLLER_TEMP_FOLDBACK = 0x12, //Controller in temp foldback region
 
     // Custom FTEX errors
     // From 0x08 to 0x9F EXCLUDING 0x30

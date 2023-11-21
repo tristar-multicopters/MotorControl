@@ -149,14 +149,14 @@
 #define MAX_APPLICATION_NEGATIVE_POWER  1500    /* Refers to maximum power in watts that drive can accept from the motor */
 #define MAX_APPLICATION_CURRENT         30      /* Refers to maximum battery current in amps that drive can accept from the motor */
 
-#define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
+#define DYNAMICTORQUE_THRESHOLD_SPEED  120      /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   
 /* Foldbacks */
 #define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM   /* Max speed value (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 #define FOLDBACK_SPEED_INTERVAL         750                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
 
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMP_CONTROLLER_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
-#define FOLDBACK_HS_TEMP_INTERVAL       45                               /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
+#define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMP_CONTROLLER_HYSTERESIS_C  /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
 
 #define FOLDBACK_MOTOR_TEMP_END_VALUE   OV_TEMP_MOTOR_THRESHOLD_C  /* Max temperature value (degree C) of the decreasing torque ramp to limit motor temperature */
 #define FOLDBACK_MOTOR_TEMP_INTERVAL    20                         /* Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature */

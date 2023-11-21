@@ -23,7 +23,7 @@
 
 #elif VEHICLE_SELECTION == VEHICLE_NIDEC
 
-#define NTC_MOTOR_LUT_SIZE                        37           // the number of correlation elements on this table
+#define NTC_MOTOR_LUT_SIZE                        38           // the number of correlation elements on this table
 #define NTC_MOTOR_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
 #define NTC_MOTOR_LUT_DIGITAL_FIRST_VALUE         4000        //250 is the first value considered in the table that has a temperature correlation (144 degree C).
                  
@@ -122,43 +122,44 @@ const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function t
 
 const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
 {																																	 //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
-    148,
-    119,
-    103,
-    91,
-    83,
-    75,
-    69,
-    64,
-    59,
-    55,
-    51,
+    127,
+    104,
+    90,
+    81,
+    73,
+    67,
+    62,
+    58,
+    54,
+    50,
     47,
     44,
-    40,
-    37,
-    34,
-    31,
-    29,
+    41,
+    38,
+    35,
+    33,
+    30,
+    28,
     26,
     23,
-    20,
-    18,
-    15,
-    13,
+    21,
+    19,
+    17,
+    14,
+    12,
     10,
     7,
-    4,
+    5,
     2,
-    -1,
-    -4,
-    -8,
-    -11,
-    -15,
-    -19,
-    -24,
-    -29,
-    -36,
+    0,
+    -3,
+    -6,
+    -9,
+    -13,
+    -17,
+    -22,
+    -28,
+    -37,
 };
 
 #else 
