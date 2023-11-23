@@ -140,7 +140,7 @@
 #define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
 
 #define LOW_BATTERY_TORQUE              150         /* Maximum torque allowed in low SoC of battery */
-#define LOW_BATTERY_VOLTAGE_THRESHOLD   40          /* the threshold of battery voltage before limit torque */
+#define LOW_BATTERY_VOLTAGE_THRESHOLD   30          /* the threshold of battery voltage before limit torque */
 
 #define MAX_CURRENT_LIMIT               1           /* to calculate maximum poweer based on maximum current and Battery S0C */
 #define MAX_POWER_LIMIT                 2           /* to use  MAX_APPLICATION_POSITIVE_POWER as the reference for Maximum power*/
@@ -148,7 +148,7 @@
                                         as the reference for maximum power limitation*/
 #define MAX_APPLICATION_POSITIVE_POWER  1100    /* Refers to maximum power in watts that drive can push to the motor */
 #define MAX_APPLICATION_NEGATIVE_POWER  1100    /* Refers to maximum power in watts that drive can accept from the motor */
-#define MAX_APPLICATION_CURRENT         19      /* Refers to maximum battery current in amps that drive can accept from the motor */
+#define MAX_APPLICATION_CURRENT         20      /* Refers to maximum battery current in amps that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   
@@ -173,7 +173,7 @@
 #define DEFAULT_SPEED_SLOPE_DOWN       10000        /* Slope in #SPEED_UNIT per second */
 
 /* Dynamic maximum power foldback settings */
-#define ENABLE_MAX_POWER_LIMIT          true        /* to enable or disable the foldback */
+#define ENABLE_MAX_POWER_LIMIT          false        /* to enable or disable the foldback */
 #define MAX_BMS_POSITIVE_POWER          700         /* Maximum Power at the end point of foldback */
 #define MAX_TIME_BMS_TOLERANT           20000       /* milliseconds - time of foldback end point */
 #define MAX_POWER_LIMIT_TIMEOUT         10000       /* milliseconds - timeout before start derating */
@@ -219,7 +219,7 @@
 #define CONSTANT2_QD                   0            /* Feedforward speed related gain */
 
 /*	Motor temperature sensor */
-#define MOTOR_TEMP_SENSOR_TYPE				REAL_SENSOR		/* Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR */
+#define MOTOR_TEMP_SENSOR_TYPE				VIRTUAL_SENSOR		/* Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR */
 
 /*** On the fly start-up ***/
 
