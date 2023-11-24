@@ -82,7 +82,7 @@
 
 
 #define OV_TEMP_CONTROLLER_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
-#define OV_TEMP_CONTROLLER_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
+#define OV_TEMP_CONTROLLER_HYSTERESIS_C     20 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
 
 #define OCSP_SAFETY_MARGIN_amps 	            85	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */

@@ -148,7 +148,7 @@
                                         as the reference for maximum power limitation*/
 #define MAX_APPLICATION_POSITIVE_POWER  1100    /* Refers to maximum power in watts that drive can push to the motor */
 #define MAX_APPLICATION_NEGATIVE_POWER  1100    /* Refers to maximum power in watts that drive can accept from the motor */
-#define MAX_APPLICATION_CURRENT         20      /* Refers to maximum battery current in amps that drive can accept from the motor */
+#define MAX_APPLICATION_CURRENT         10     /* Refers to maximum battery current in amps that drive can accept from the motor */
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
   
@@ -173,7 +173,7 @@
 #define DEFAULT_SPEED_SLOPE_DOWN       10000        /* Slope in #SPEED_UNIT per second */
 
 /* Dynamic maximum power foldback settings */
-#define ENABLE_MAX_POWER_LIMIT          false        /* to enable or disable the foldback */
+#define ENABLE_MAX_POWER_LIMIT          true        /* to enable or disable the foldback */
 #define MAX_BMS_POSITIVE_POWER          700         /* Maximum Power at the end point of foldback */
 #define MAX_TIME_BMS_TOLERANT           20000       /* milliseconds - time of foldback end point */
 #define MAX_POWER_LIMIT_TIMEOUT         10000       /* milliseconds - timeout before start derating */
