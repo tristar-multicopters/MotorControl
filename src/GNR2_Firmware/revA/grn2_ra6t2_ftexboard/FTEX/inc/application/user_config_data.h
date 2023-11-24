@@ -79,14 +79,22 @@ typedef struct
     uint8_t walkModeSpeed;
 } Throttle_ConfigData_t;
 
+//struct used to hold the configuration
+//associated with the Vehicle.
+typedef struct
+{
+  uint8_t WheelDiameter; 
+} Vehicle_ConfigData_t;
+
 //struct used to hold all structs associated 
 //with user configuration data.
 typedef struct 
 {
     uint8_t dataHeader[2];
     uint8_t vehicle;
-    PAS_ConfigData_t PAS_ConfigData;
+    PAS_ConfigData_t      PAS_ConfigData;
     Throttle_ConfigData_t Throttle_ConfigData;
+    Vehicle_ConfigData_t  Vehicle_ConfigData;
     uint16_t crc;
 } User_ConfigData_t;
 

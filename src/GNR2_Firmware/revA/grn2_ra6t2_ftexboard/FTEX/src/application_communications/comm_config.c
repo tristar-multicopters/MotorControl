@@ -15,7 +15,8 @@ CO_NODE CONodeGNR;
 SlaveMotorHandle_t SlaveM2;
 
 UART_Handle_t UART0Handle =
-{     
+{   
+    .UARTProtocol = SCREEN_PROTOCOL,  
     .pUARTInstance = &g_uart9,
 };
 
@@ -40,17 +41,10 @@ EFlash_Storage_Handle_t EFlash_Storage_Handle =
     }
 };
 
-
-    #if SCREEN_PROTOCOL == UART_APT
-        APT_Handle_t LCD_APT_handle;
-    #elif SCREEN_PROTOCOL == UART_KD718
-        KD718_Handle_t LCD_KD718_handle;
-    #elif SCREEN_PROTOCOL == UART_CLOUD_5S
-        Cloud_5S_Handle_t LCD_Cloud_5S_handle;
-    #elif SCREEN_PROTOCOL == UART_LOG_HS
-        LogHighSpeed_Handle_t LogHS_handle;
-    #else
-    #endif 
+APT_Handle_t LCD_APT_handle;
+KD718_Handle_t LCD_KD718_handle;
+Cloud_5S_Handle_t LCD_Cloud_5S_handle;
+LogHighSpeed_Handle_t LogHS_handle;
 
 
 //Handle to control the data flash initialisation 

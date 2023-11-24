@@ -21,8 +21,6 @@
 *********************************************/
 #define MAX_ERASE_ATTEMPTS     3
 
-
-
 /*********************************************
                 Private Variables
 *********************************************/
@@ -62,6 +60,7 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_8] = 0,
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_9] = 0,
     .Throttle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
+    .Vehicle_ConfigData.WheelDiameter = WHEEL_DIAMETER,
     .crc = 0x0000,
 
 };
@@ -301,8 +300,7 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bTorqueGain = UserConfigTask_GetTorqueSensorMultiplier();
     
     //update PAS_ConfigData.torqueMaxSpeed(will be defined).
-    
-    
+       
     //PAS_ConfigData.cadenceLevelSpeed parameter is not passed to any system variable on the inialization.
     
     //update .PAS_ConfigData.torqueLevelPower(will be define)
@@ -312,7 +310,10 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     //Throttle_ConfigData.walkMOdeSpeed(PAS_LEVEL_SPEED_WALK) is not passed
     //directly to any variable. Because of this is not updated here.
-  
+    
+    //Config
+    
+    Wheel_SetWheelDiameter(UserConfigTask_GetWheelDiameter());  
 }
 
 /**
@@ -620,7 +621,6 @@ void UserConfigTask_UpdateTorqueLevelPower(uint8_t pasLevel, uint8_t value)
     {
         userConfigData.PAS_ConfigData.torqueLevelPower[pasLevel] = value;
     }
- 
 }
 
 /**
@@ -677,9 +677,38 @@ uint8_t UserConfigTask_GetWalkModeSpeed(void)
 */
 void UserConfigTask_UpdateWalkModeSpeed(uint8_t value)
 {
-    if((value <= 10) && (value >= 0))
+    if ((value <= 10) && (value >= 0))
     {
-    userConfigData.Throttle_ConfigData.walkModeSpeed = value;
+        userConfigData.Throttle_ConfigData.walkModeSpeed = value;
+    }
+}
+
+/**
+  @brief Function to get Wheel Diameter
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Wheel Diameter
+
+*/
+uint8_t UserConfigTask_GetWheelDiameter(void)
+{
+    return userConfigData.Vehicle_ConfigData.WheelDiameter;
+}
+
+/**
+  @brief Function to update bike Wheel Diameter value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the WheelDiameter
+  @return void
+
+*/
+void UserConfigTask_UpdateWheelDiameter(uint8_t value)
+{
+    if ((value <= 50) && (value >= 0))
+    {
+        userConfigData.Vehicle_ConfigData.WheelDiameter = value;
     }
 }
 

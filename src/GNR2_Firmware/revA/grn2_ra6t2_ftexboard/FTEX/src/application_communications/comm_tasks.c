@@ -6,7 +6,6 @@
 #include "comm_tasks.h"
 #include "mc_tasks.h"
 #include "vc_tasks.h"
-#include "vc_parameters.h"
 
 #include "comm_config.h"
 #include "vc_config.h"
@@ -20,6 +19,7 @@
 #include "can_logger.h"
 #include "can_vehicle_interface.h"
 
+#include "lcd_apt.h"
 // Serial Flash storage
 #include "serial_flash_storage.h"
 
@@ -114,6 +114,9 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t torqueLevelPower[10];
     uint8_t maxSpeed;
     uint8_t walkModeSpeed;
+    
+    
+    uint8_t ConfigWheelDiameter;
                                           
     /***********variable used to get the key code that enable user data configuration to be updated.**************/
     uint16_t keyUserDataConfig = 0;
@@ -327,7 +330,8 @@ static void UpdateObjectDictionnary(void *p_arg)
             }    
             bool WriteOBJDict = false;
             
-            #if SCREEN_PROTOCOL == UART_APT   
+            if(UART0Handle.UARTProtocol == UART_APT)
+            {   
                 if((bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM]) || !LCD_APT_handle.APTStabilizing)
                 {
                     WriteOBJDict = true; 
@@ -340,9 +344,10 @@ static void UpdateObjectDictionnary(void *p_arg)
                     {   
                         CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
                     }
-                }                               
-            #elif SCREEN_PROTOCOL == UART_CLOUD_5S  
-            
+                }                    
+            }
+            else if(UART0Handle.UARTProtocol == UART_CLOUD_5S)
+            {
                 if(bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM])
                 {
                     WriteOBJDict = true; 
@@ -357,7 +362,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                         CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
                     }
                 }                    
-            #endif
+            
+            }
 
             
             if(bPasAlgorithm[VEHICLE_PARAM] != bPasAlgorithm[CAN_PARAM])
@@ -368,7 +374,14 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             if(hWheelDiameter[VEHICLE_PARAM] != hWheelDiameter[CAN_PARAM])
             {
-                CanVehiInterface_UpdateWheelDiameter(hWheelDiameter[CAN_PARAM]);            
+                if (Wheel_CheckInternalUpdateFlag()) // Check if the change came from the vehicle
+                {
+                     hWheelDiameter[CAN_PARAM] = hWheelDiameter[VEHICLE_PARAM];
+                }   
+                else // If not it's a CAN change
+                {                   
+                     CanVehiInterface_UpdateWheelDiameter(hWheelDiameter[CAN_PARAM]);
+                }            
             }
            
             // If the light status in OBJ dict and vehicle don't match, update the one in the vehicle
@@ -409,7 +422,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint32_t));
-            
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
                     
             //Read the OD responsible to hold the firmware update command.
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0)), pNode, &FirmwareUpdateCommand, sizeof(uint8_t));
@@ -450,7 +463,8 @@ static void UpdateObjectDictionnary(void *p_arg)
         
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
-            
+                
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &ConfigWheelDiameter, sizeof(uint8_t)); 
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
                  //upadat Throttle/Pedal Assist variables that will be write into the user data flash.
@@ -471,6 +485,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  UserConfigTask_UpdateBikeMaxSpeed(maxSpeed);
                  UserConfigTask_UpdateWalkModeSpeed(walkModeSpeed);
+                 
+                 UserConfigTask_UpdateWheelDiameter(ConfigWheelDiameter);
                  
                  //write in the data flash and reset the system.
                  UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle);   
@@ -521,16 +537,27 @@ void Comm_BootUp(void)
     SlaveMCInterface_Init(&SlaveM2, &CONodeGNR, M2RegAddr);
     #endif
 
-    #if SCREEN_PROTOCOL == UART_APT
-        LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
-    #elif SCREEN_PROTOCOL == UART_KD718
-        LCD_KD718_init(&LCD_KD718_handle, &VCInterfaceHandle, &UART0Handle);
-    #elif SCREEN_PROTOCOL == UART_CLOUD_5S
-        LCD_Cloud_5S_init(&LCD_Cloud_5S_handle, &VCInterfaceHandle, &UART0Handle);
-    #elif SCREEN_PROTOCOL == UART_LOG_HS
-        LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
-    #else
-    #endif 
+    /* Select UART protocol */
+    switch(UART0Handle.UARTProtocol)
+	  {
+            break;
+    	case UART_APT:
+            LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
+    		break;
+        case UART_KD718:
+            LCD_KD718_init(&LCD_KD718_handle, &VCInterfaceHandle, &UART0Handle);
+            break;
+        case UART_CLOUD_5S:
+            LCD_Cloud_5S_init(&LCD_Cloud_5S_handle, &VCInterfaceHandle, &UART0Handle);
+            break; 
+        case UART_LOG_HS:
+            LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
+    	case UART_DISABLE:
+            break;
+        default:
+            //Dont initialise the euart
+            break;
+	  }
 }
 
 __NO_RETURN void ProcessUARTFrames (void * pvParameter)
@@ -540,16 +567,23 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 	{
 		osThreadFlagsWait(UART_FLAG, osFlagsWaitAny, osWaitForever);
 
-        #if SCREEN_PROTOCOL == UART_APT
-            LCD_APT_Task(&LCD_APT_handle); //Run the APT task
-        #elif SCREEN_PROTOCOL == UART_KD718
-            LCD_KD718_Task(&LCD_KD718_handle); //Run the KD718 task
-        #elif SCREEN_PROTOCOL == UART_CLOUD_5S
-            LCD_Cloud_5S_Task(&LCD_Cloud_5S_handle); //Run the Cloud 5S task     
-        #elif SCREEN_PROTOCOL == UART_LOG_HS
-            LogHS_ProcessFrame(&LogHS_handle);
-        #else
-        #endif 
+      switch(UART0Handle.UARTProtocol)
+        {
+           case UART_APT:
+                LCD_APT_Task(&LCD_APT_handle); //Run the APT task
+                break;
+           case UART_KD718:
+                LCD_KD718_Task(&LCD_KD718_handle); //Run the KD718 task
+                break;
+           case UART_CLOUD_5S:
+                LCD_Cloud_5S_Task(&LCD_Cloud_5S_handle); //Run the Cloud 5S task
+                break;               
+           case UART_LOG_HS:
+                LogHS_ProcessFrame(&LogHS_handle);
+                break;
+            default:
+				break;
+		}
 	}
 }
 
@@ -646,7 +680,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
                                               UserConfigTask_GetTorqueLevelPower(PAS_8),UserConfigTask_GetTorqueLevelPower(PAS_9)};
         uint8_t maxSpeed = UserConfigTask_GetBikeMaxSpeed();
         uint8_t walkModeSpeed = UserConfigTask_GetWalkModeSpeed(); 
-   
+        
+                                              
+        //Config                                      
+        uint8_t ConfigWheelDiameter =   UserConfigTask_GetWheelDiameter();                                    
+                                              
    
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow));     
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSerialNbHigh,  sizeof(fSerialNbHigh));  
@@ -662,6 +700,10 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, sizeof(uint8_t));    
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)),         pNode, &torqueMaxSpeed, sizeof(uint8_t));            
         
+        
+        // Initialise the wheel diameter with the value in the user config 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),       pNode, &ConfigWheelDiameter, sizeof(uint8_t));
+        
         //fill the OD ID to cadenceLevelSpeed and torqueLevelPower with the current values.
         //this OD ID have 10 subindex each.
         for(uint8_t n = PAS_0;n <= PAS_9;n++)                                                                                                      
@@ -671,7 +713,12 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         }
         
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));                                 
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));                       
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t)); 
+
+        //Config 
+        // Show what is the default wheel diameter in the user config
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &ConfigWheelDiameter, sizeof(uint8_t));         
+        
    }           
 }
 

@@ -11,7 +11,6 @@
 
 #include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"
-#include "uCAL_UART.h"
 
 /******************* SCREEN SELECTION  *******************************/
 #define SCREEN_PROTOCOL    UART_CLOUD_5S       

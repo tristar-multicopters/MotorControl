@@ -223,7 +223,7 @@ uint8_t bObjDataMaxSpeed                    = 0;
 uint8_t bObjDataWalkModeSpeed               = 0;
 
 //variable associated with CO_OD_REG_WHEELS_DIAMETER
-uint8_t bObjDataWheelDiamater               = 0;
+uint8_t bObjDataWheelDiameter               = 0;
 
 //variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT
 uint8_t bObjDataFrontLightState             = 0;
@@ -232,7 +232,10 @@ uint8_t bObjDataFrontLightState             = 0;
 uint8_t bObjDataRearLightState              = 0;
 
 //variable associated with CO_OD_REG_MASTER_SLAVE_PRESENT
-uint8_t bObjDataMasterSlavePresent = 0;
+uint8_t bObjDataMasterSlavePresent          = 0;
+
+//variable associated with CO_OD_CONFIG_WHEELS_DIAMETER 
+uint8_t bObjDataConfigWheelDiameter         = 0;
 
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
@@ -1170,7 +1173,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
     
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WHEELS_DIAMETER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWheelDiamater};    
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WHEELS_DIAMETER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWheelDiameter};    
             //move to next OD index
             index++;
         
@@ -1186,7 +1189,11 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MASTER_SLAVE_PRESENT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMasterSlavePresent};
             //move to next OD index
             index++;
-        
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_WHEELS_DIAMETER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigWheelDiameter};
+            //move to next OD index
+            index++;
+            
             //Application - Used to control the firmware update procedure.
             //subindex 0 is used to receive command from the IOT module to control the DFU process.
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(&bObjOtaCommand)};

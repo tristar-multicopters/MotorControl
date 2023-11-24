@@ -175,7 +175,7 @@ void CanVehiInterface_UpdateWheelDiameter(uint8_t aDiameterInInches)
 {
     if (10 < aDiameterInInches && aDiameterInInches < 40) // Temporary safety net until CAN screen integration is complete
     {
-        Wheel_SetWheelDiameter(aDiameterInInches);
+       Wheel_ExternalSetWheelDiameter(aDiameterInInches);
     }        
 }
 

@@ -10,47 +10,33 @@
 #include "vc_parameters.h"
 
 // Internal variable used to store the wheel diameter
-#ifdef DEFAULT_WHEEL_DIAMETER_OVERRIDE
-static uint8_t WheelDiameter = DEFAULT_WHEEL_DIAMETER_OVERRIDE;
-#else
-static uint8_t WheelDiameter = WHEEL_DIAMETER_DEFAULT;
-#endif
 
-// Is the module initialized
-static bool IsInitialized = false;
+static uint8_t WheelDiameter = WHEEL_DIAMETER;
+
+static bool InternalDiameterUpdate = false; // Indicates if the change of diameter of the wheel comes from the vehicle
+                                            // Used to coordinate with a change from CAN
+                                            
 // Formula to convert RPM to KM using the wheel diameter
 static float RpmToKmFormula = 0;
 float GetRpmFormula(uint8_t diameterInInches);
 
 // Initialize the wheel module
-void Wheel_Init(uint8_t diameterInInches)
+void Wheel_Init(void)
 {
-    ASSERT(!IsInitialized);
-    
-    IsInitialized = true;
-    WheelDiameter = diameterInInches;
     RpmToKmFormula = GetRpmFormula(WheelDiameter);
 }
 
 // Return the wheel diameter in inches
 uint8_t Wheel_GetWheelDiameter()
 {
-    ASSERT(IsInitialized);
     return WheelDiameter;
 }
 
 // Set the wheel diameter to a value in inches
 void Wheel_SetWheelDiameter(uint8_t diameterInInches)
 {
-    ASSERT(IsInitialized);
-    if (diameterInInches == 0)
-    {
-        // should never happen
-        ASSERT(false);
-        return;
-    }
     
-    if (diameterInInches == WheelDiameter)
+    if (diameterInInches == WheelDiameter || diameterInInches == 0)
     {
         // no change
         return;
@@ -60,6 +46,28 @@ void Wheel_SetWheelDiameter(uint8_t diameterInInches)
     
     // recompute the formula since diameter changed
     RpmToKmFormula = GetRpmFormula(WheelDiameter);
+    
+    InternalDiameterUpdate = true;
+}
+
+// Set the wheel diameter to a value in inches by external factor 
+// we override the flag to false
+void Wheel_ExternalSetWheelDiameter(uint8_t diameterInInches)
+{
+    Wheel_SetWheelDiameter(diameterInInches);   
+    InternalDiameterUpdate = false;
+}
+
+// Check if we had an internal change of the wheel diameter
+bool Wheel_CheckInternalUpdateFlag(void)
+{
+    return InternalDiameterUpdate;
+}
+
+// Clear the internal update flag after processing the change in CAN 
+void Wheel_ClearInternalUpdateFlag(void)
+{
+    InternalDiameterUpdate = false;
 }
 
 // Compute the speed in km/h from the wheel rpm

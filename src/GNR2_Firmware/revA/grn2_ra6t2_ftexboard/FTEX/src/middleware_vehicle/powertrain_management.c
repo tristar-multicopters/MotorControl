@@ -45,7 +45,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
     brakeDelay = pDelayArray[BRAKE_DELAY];
 
     // Initilaize peripherals
-    Wheel_Init(WHEEL_DIAMETER_DEFAULT);
+    Wheel_Init();
     MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
     Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
     BRK_Init(pHandle->pBrake, &brakeDelay);

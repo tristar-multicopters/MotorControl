@@ -247,9 +247,7 @@ extern "C" {
 #define CO_OD_REG_WALK_MODE_SPEED              0x201D
 
 // OD ID to set the wheel diamater in inches
-
 #define CO_OD_REG_WHEELS_DIAMETER              0x201F
-
 
 
 // OD ID to operate the front light (0 Off, 1 On)
@@ -265,6 +263,10 @@ extern "C" {
 //is the response from CANOPEN layer to informing the other
 //side(master or slave) received the sdo download command.
 #define CO_OD_REG_MASTER_SLAVE_PRESENT         0x2023
+
+
+// OD ID to set the default wheel diamater in inches
+#define CO_OD_CONFIG_WHEELS_DIAMETER           0x2024
 
 //this OD ID will be used to 
 //receive data and commands during a firmware update.
