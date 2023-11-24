@@ -268,6 +268,9 @@ extern "C" {
 // OD ID to set the default wheel diamater in inches
 #define CO_OD_CONFIG_WHEELS_DIAMETER           0x2024
 
+// OD ID to set the screen protocol 
+#define CO_OD_CONFIG_SCREEN_PROTOCOL           0x2025
+
 //this OD ID will be used to 
 //receive data and commands during a firmware update.
 //the GNR doesn't have enough memory to receive

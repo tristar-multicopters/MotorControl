@@ -398,6 +398,27 @@ uint8_t UserConfigTask_GetWheelDiameter(void);
 void UserConfigTask_UpdateWheelDiameter(uint8_t value);
 
 /**
+  @brief Function to get Screen Protocol
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Wheel Diameter
+
+*/
+uint8_t UserConfigTask_GetScreenProtocol(void);
+
+/**
+  @brief Function to update bike Screen Protocol value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the WheelDiameter
+  @return void
+
+*/
+void UserConfigTask_UpdateScreenProtocol(uint8_t value);
+
+/**
+
   @brief Function used to calculate a CRC 16 type using the same polynom 
   used by the bluetooth protocol.CCITT 16 bits polynom.
   

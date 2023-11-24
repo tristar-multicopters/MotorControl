@@ -117,6 +117,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     
     
     uint8_t ConfigWheelDiameter;
+    uint8_t ConfigScreenProtocol;
                                           
     /***********variable used to get the key code that enable user data configuration to be updated.**************/
     uint16_t keyUserDataConfig = 0;
@@ -464,7 +465,10 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
                 
+                 // Config 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &ConfigWheelDiameter, sizeof(uint8_t)); 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &ConfigScreenProtocol, sizeof(uint8_t)); 
+               
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
                  //upadat Throttle/Pedal Assist variables that will be write into the user data flash.
@@ -487,6 +491,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdateWalkModeSpeed(walkModeSpeed);
                  
                  UserConfigTask_UpdateWheelDiameter(ConfigWheelDiameter);
+                 UserConfigTask_UpdateScreenProtocol(ConfigScreenProtocol);
                  
                  //write in the data flash and reset the system.
                  UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle);   
@@ -683,7 +688,8 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         
                                               
         //Config                                      
-        uint8_t ConfigWheelDiameter =   UserConfigTask_GetWheelDiameter();                                    
+        uint8_t ConfigWheelDiameter =   UserConfigTask_GetWheelDiameter();
+        uint8_t ConfigScreenProtocol =  UserConfigTask_GetScreenProtocol();                                              
                                               
    
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow));     
@@ -718,7 +724,8 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         //Config 
         // Show what is the default wheel diameter in the user config
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &ConfigWheelDiameter, sizeof(uint8_t));         
-        
+        // Show the currently selected screen protocol
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &ConfigScreenProtocol, sizeof(uint8_t));        
    }           
 }
 

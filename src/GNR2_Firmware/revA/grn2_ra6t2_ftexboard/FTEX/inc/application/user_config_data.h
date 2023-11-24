@@ -83,7 +83,8 @@ typedef struct
 //associated with the Vehicle.
 typedef struct
 {
-  uint8_t WheelDiameter; 
+  uint8_t WheelDiameter;
+  uint8_t ScreenProtocol;    
 } Vehicle_ConfigData_t;
 
 //struct used to hold all structs associated 

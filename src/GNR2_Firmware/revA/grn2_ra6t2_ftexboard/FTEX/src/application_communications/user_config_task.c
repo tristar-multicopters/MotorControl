@@ -61,6 +61,7 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_9] = 0,
     .Throttle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
     .Vehicle_ConfigData.WheelDiameter = WHEEL_DIAMETER,
+    .Vehicle_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
     .crc = 0x0000,
 
 };
@@ -312,8 +313,12 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     //directly to any variable. Because of this is not updated here.
     
     //Config
-    
-    Wheel_SetWheelDiameter(UserConfigTask_GetWheelDiameter());  
+    Wheel_SetWheelDiameter(UserConfigTask_GetWheelDiameter()); 
+        
+    if(SCREEN_PROTOCOL != UART_LOG_HS) // This prevents the user config from blocking the use of high speed log 
+    {                                  // which can only be set by changing the define and building the code   
+        UART0Handle.UARTProtocol =  UserConfigTask_GetScreenProtocol();
+    }        
 }
 
 /**
@@ -709,6 +714,35 @@ void UserConfigTask_UpdateWheelDiameter(uint8_t value)
     if ((value <= 50) && (value >= 0))
     {
         userConfigData.Vehicle_ConfigData.WheelDiameter = value;
+    }
+}
+
+/**
+  @brief Function to get Screen Protocol
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Screen Protocol
+
+*/
+uint8_t UserConfigTask_GetScreenProtocol(void)
+{
+    return userConfigData.Vehicle_ConfigData.ScreenProtocol;
+}
+
+/**
+  @brief Function to update bike Screen Protocol value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Screen Protocol
+  @return void
+
+*/
+void UserConfigTask_UpdateScreenProtocol(uint8_t value)
+{
+    if (value == UART_APT || value == UART_CLOUD_5S)
+    {
+        userConfigData.Vehicle_ConfigData.ScreenProtocol = value;
     }
 }
 
