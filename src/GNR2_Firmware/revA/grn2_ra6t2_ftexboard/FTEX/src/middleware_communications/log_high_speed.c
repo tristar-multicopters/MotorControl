@@ -79,6 +79,8 @@ void LogHS_RX_IRQ_Handler(void *pVoidHandle)
     {    
         pHandle->RxFrame += (uint16_t)(pHandle->RxByte & 0x00FF); // Store the byte 
         pHandle->ByteCount = 0;
+        
+        uCAL_UART_SetTaskFlag(pHandle->pUART_handle);  // Tell the task that we unblocked the task
         osThreadFlagsSet(COMM_Uart_handle, UART_FLAG); // Notify task that we have a frame
     }
     else

@@ -549,29 +549,45 @@ void Comm_BootUp(void)
 
 __NO_RETURN void ProcessUARTFrames (void * pvParameter)
 {
-	UNUSED_PARAMETER(pvParameter);
-	while(true)
-	{
-		osThreadFlagsWait(UART_FLAG, osFlagsWaitAny, osWaitForever);
-
-      switch(UART0Handle.UARTProtocol)
+    UNUSED_PARAMETER(pvParameter);
+    
+    VCI_Handle_t * pVCI = &VCInterfaceHandle;
+    
+    while(true)
+    { 
+        osThreadFlagsWait(UART_FLAG, osFlagsWaitAny, 500); // 500 ticks should correpsond to 250 ms
+        
+        if(uCAL_UART_GetTaskFlag(&UART0Handle))
+        {            
+            switch(UART0Handle.UARTProtocol)
+            {
+                case UART_APT:
+                    LCD_APT_Task(&LCD_APT_handle); //Run the APT task
+                    break;
+                case UART_KD718:
+                    LCD_KD718_Task(&LCD_KD718_handle); //Run the KD718 task
+                    break;
+                case UART_CLOUD_5S:
+                    LCD_Cloud_5S_Task(&LCD_Cloud_5S_handle); //Run the Cloud 5S task
+                    break;               
+                case UART_LOG_HS:
+                    LogHS_ProcessFrame(&LogHS_handle);
+                    break;
+                default:
+                    break;
+            }
+            
+            uCAL_UART_ClearTaskFlag(&UART0Handle); 
+        }
+        else // We reached the timeout
         {
-           case UART_APT:
-                LCD_APT_Task(&LCD_APT_handle); //Run the APT task
-                break;
-           case UART_KD718:
-                LCD_KD718_Task(&LCD_KD718_handle); //Run the KD718 task
-                break;
-           case UART_CLOUD_5S:
-                LCD_Cloud_5S_Task(&LCD_Cloud_5S_handle); //Run the Cloud 5S task
-                break;               
-           case UART_LOG_HS:
-                LogHS_ProcessFrame(&LogHS_handle);
-                break;
-            default:
-				break;
-		}
-	}
+            if (UART0Handle.UARTProtocol == UART_CLOUD_5S) 
+            {              
+                Throttle_UpdateExternal(pVCI->pPowertrain->pThrottle, 0); // Make sure we set the throttle to 0
+                PWRT_ForceDisengageCruiseControl(pVCI->pPowertrain);      // Make sure we exit cruise control if we were using it when we lost connection
+            }
+        }              
+    }
 }
 
 

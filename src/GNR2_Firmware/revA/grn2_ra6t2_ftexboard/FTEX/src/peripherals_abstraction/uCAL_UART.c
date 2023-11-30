@@ -19,6 +19,7 @@ void uCAL_UART_Init(UART_Handle_t *pHandle)
     ASSERT(pHandle != NULL); 
 
     uCAL_UART_SetBaudRate(pHandle);
+    uCAL_UART_ClearTaskFlag(pHandle); 
 }
 
 /**
@@ -73,3 +74,35 @@ void uCAL_UART_SendDefault(UART_Handle_t *pHandle)
     //Send the default frame
     uCAL_UART_Transmit(pHandle, DefaultMsg, sizeof(DefaultMsg));    
 }
+
+/**
+  Function used to set the task flag to 1
+*/
+void uCAL_UART_SetTaskFlag(UART_Handle_t *pHandle)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->TaskFlag = true;    
+}
+
+/**
+  Function used to read the task flag
+*/
+bool uCAL_UART_GetTaskFlag(UART_Handle_t *pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->TaskFlag;   
+}
+
+/**
+  Function used to clear the task flag to 0
+*/
+void uCAL_UART_ClearTaskFlag(UART_Handle_t *pHandle)
+{
+    ASSERT(pHandle != NULL); 
+    pHandle->TaskFlag = false;
+}
+
+
+
+
+
