@@ -75,6 +75,7 @@ void LCD_Cloud_5S_RX_IRQ_Handler(void *pVoidHandle)
     pHandle->RxBuffer[pHandle->RxCount] = pHandle->RxByte;
     pHandle->RxCount++;
     
+    uCAL_UART_SetTaskFlag(pHandle->pUART_handle);  // Tell the task that we unblocked the task
     osThreadFlagsSet(COMM_Uart_handle, UART_FLAG); // Notify task that a byte has been received 
     uCAL_UART_Receive(pHandle->pUART_handle, &(pHandle->RxByte), sizeof(pHandle->RxByte));    
 }
