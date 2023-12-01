@@ -237,5 +237,9 @@
     #define TORQUE_SPEED_LIMIT_GAIN 100
 #endif
 
+#ifndef REAR_LIGHT_BLINK_ON_BRAKE
+    #define REAR_LIGHT_BLINK_ON_BRAKE     true // If set to true rear light will blink when brake is pressed
+#endif
+    
 #endif /*__VC_PARAMETERS_H*/
 

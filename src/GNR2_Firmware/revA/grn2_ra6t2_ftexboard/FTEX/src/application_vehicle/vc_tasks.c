@@ -116,11 +116,11 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
             
             if (BRK_IsPressed(pVCI->pPowertrain->pBrake))  //Blink the tail light when we brake
             {
-                Light_SetBlink(pVCI->pPowertrain->pTailLight,true);  
+                Light_SetBlinkByBrake(pVCI->pPowertrain->pTailLight,true);  
             }
             else
             {
-                Light_SetBlink(pVCI->pPowertrain->pTailLight,false);  
+                Light_SetBlinkByBrake(pVCI->pPowertrain->pTailLight,false);  
             }    
             
             //reset the count loop           

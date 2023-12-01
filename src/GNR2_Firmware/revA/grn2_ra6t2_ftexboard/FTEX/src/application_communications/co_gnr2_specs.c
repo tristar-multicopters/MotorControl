@@ -240,6 +240,20 @@ uint8_t bObjDataConfigWheelDiameter         = 0;
 //variable associated with CO_OD_CONFIG_SCREEN_PROTOCOL
 uint8_t bObjDataConfigScreenProtocol        = 0;
 
+//variable associated with  CO_OD_CONFIG_HEADLIGHT_DEFAULT
+uint8_t bObjDataConfigHeadLightDefault      = 0;
+
+//variable associated with  CO_OD_CONFIG_HEADLIGHT_LOCKED
+uint8_t bObjDataConfigHeadLightLocked       = 0;
+
+//variable associated with  CO_OD_CONFIG_TAILLIGHT_DEFAULT
+uint8_t bObjDataConfigTailLightDefault      = 0;
+
+//variable associated with  CO_OD_CONFIG_TAILLIGHT_LOCKED 
+uint8_t bObjDataConfigTailLightLocked       = 0;
+
+//variable associated with  CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE
+uint8_t bObjDataConfigTailLightBLinkOnBrake = 0;
 
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
@@ -1201,7 +1215,28 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_SCREEN_PROTOCOL, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigScreenProtocol};
             //move to next OD index
             index++;
-
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_HEADLIGHT_DEFAULT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigHeadLightDefault};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_HEADLIGHT_LOCKED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigHeadLightLocked};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TAILLIGHT_DEFAULT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigTailLightDefault};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TAILLIGHT_LOCKED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigTailLightLocked};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigTailLightBLinkOnBrake};
+            //move to next OD index
+            index++;
+            
+            
             //Application - Used to control the firmware update procedure.
             //subindex 0 is used to receive command from the IOT module to control the DFU process.
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(&bObjOtaCommand)};

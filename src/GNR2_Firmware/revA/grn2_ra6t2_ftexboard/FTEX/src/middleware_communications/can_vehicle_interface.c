@@ -209,16 +209,26 @@ uint8_t CanVehiInterface_GetFrontLightState(VCI_Handle_t * pHandle)
 /**
  *  Change the current state of the front light 
  */
-void CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aState)
+bool CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aState)
 {
     ASSERT(pHandle!= NULL);
-    if(aState == true)
-    {        
-        Light_Enable(pHandle->pPowertrain->pHeadLight);
+    
+    if(pHandle->pPowertrain->pTailLight->bLightStateLocked) // If the light is locked we arent allowed to change it
+    {
+        return false;
     }
     else
     {
-        Light_Disable(pHandle->pPowertrain->pHeadLight);
+        if(aState == true)
+        {        
+            Light_Enable(pHandle->pPowertrain->pHeadLight);
+        }
+        else
+        {
+            Light_Disable(pHandle->pPowertrain->pHeadLight);
+        }
+        
+        return true;
     }        
 }
 
@@ -234,16 +244,26 @@ uint8_t CanVehiInterface_GetRearLightState(VCI_Handle_t * pHandle)
 /**
  *  Change the current state of the rear light 
  */
-void CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aState)
+bool CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aState)
 {
     ASSERT(pHandle!= NULL);
-    if(aState)
-    {        
-        Light_Enable(pHandle->pPowertrain->pTailLight);
+    
+    if(pHandle->pPowertrain->pTailLight->bLightStateLocked) // If the light is locked we arent allowed to change it
+    {
+        return false;
     }
     else
-    {
-        Light_Disable(pHandle->pPowertrain->pTailLight);
+    {        
+        if(aState)
+        {        
+            Light_Enable(pHandle->pPowertrain->pTailLight);
+            Light_ClearInternalUpdateFlag(pHandle->pPowertrain->pTailLight);
+        }
+        else
+        {
+            Light_Disable(pHandle->pPowertrain->pTailLight);
+            Light_ClearInternalUpdateFlag(pHandle->pPowertrain->pTailLight);
+        }
+        return true;
     }
-    
 }

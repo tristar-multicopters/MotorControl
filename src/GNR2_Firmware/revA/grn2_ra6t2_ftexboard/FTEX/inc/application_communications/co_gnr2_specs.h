@@ -271,6 +271,17 @@ extern "C" {
 // OD ID to set the screen protocol 
 #define CO_OD_CONFIG_SCREEN_PROTOCOL           0x2025
 
+// OD ID to set the default headlight state
+#define CO_OD_CONFIG_HEADLIGHT_DEFAULT         0x2026 
+// OD ID to set the headlight locked state
+#define CO_OD_CONFIG_HEADLIGHT_LOCKED          0x2027 
+// OD ID to set the default taillight sate
+#define CO_OD_CONFIG_TAILLIGHT_DEFAULT         0x2028
+// OD ID to set the taillight locked state
+#define CO_OD_CONFIG_TAILLIGHT_LOCKED          0x2029
+// OD ID to set the taillight blink on brake behavior 
+#define CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE  0x202A
+
 //this OD ID will be used to 
 //receive data and commands during a firmware update.
 //the GNR doesn't have enough memory to receive

@@ -62,6 +62,11 @@ static User_ConfigData_t userConfigData =
     .Throttle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
     .Vehicle_ConfigData.WheelDiameter = WHEEL_DIAMETER,
     .Vehicle_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
+    .Vehicle_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
+    .Vehicle_ConfigData.HeadLightLocked  = POWERTRAIN_HEADLIGHT_LOCKED,
+    .Vehicle_ConfigData.TailLightDefault = POWERTRAIN_TAILLIGHT_DEFAULT,
+    .Vehicle_ConfigData.TailLightLocked  = POWERTRAIN_TAILLIGHT_LOCKED,
+    .Vehicle_ConfigData.TailLightBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,
     .crc = 0x0000,
 
 };
@@ -313,12 +318,21 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     //directly to any variable. Because of this is not updated here.
     
     //Config
+    
     Wheel_SetWheelDiameter(UserConfigTask_GetWheelDiameter()); 
-        
+    
+    
     if(SCREEN_PROTOCOL != UART_LOG_HS) // This prevents the user config from blocking the use of high speed log 
     {                                  // which can only be set by changing the define and building the code   
         UART0Handle.UARTProtocol =  UserConfigTask_GetScreenProtocol();
-    }        
+    }
+
+    userConfigHandle->pVController->pPowertrain->pHeadLight->bDefaultLightState  =  UserConfigTask_GetHeadLightDefault(); 
+    userConfigHandle->pVController->pPowertrain->pHeadLight->bLightStateLocked   =  UserConfigTask_GetHeadLightLocked();
+
+    userConfigHandle->pVController->pPowertrain->pTailLight->bDefaultLightState  =  UserConfigTask_GetTailLightDefault();
+    userConfigHandle->pVController->pPowertrain->pTailLight->bLightStateLocked   =  UserConfigTask_GetTailLightLocked();
+    userConfigHandle->pVController->pPowertrain->pTailLight->bBlinkOnBrake       =  UserConfigTask_GetTailLightBlinkOnBrake();  
 }
 
 /**
@@ -743,6 +757,171 @@ void UserConfigTask_UpdateScreenProtocol(uint8_t value)
     if (value == UART_APT || value == UART_CLOUD_5S)
     {
         userConfigData.Vehicle_ConfigData.ScreenProtocol = value;
+    }
+}
+
+/**
+  @brief Function to get HeadLight Default
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t HeadLight Default
+
+*/
+uint8_t UserConfigTask_GetHeadLightDefault(void)
+{
+    return userConfigData.Vehicle_ConfigData.HeadLightDefault;
+}
+
+/**
+  @brief Function to update bike HeadLight Default value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the HeadLight Default
+  @return void
+
+*/
+void UserConfigTask_UpdateHeadLightDefault(uint8_t value)
+{
+    if (value > 0)
+    {
+        userConfigData.Vehicle_ConfigData.HeadLightDefault = 1;
+    }
+    else
+    {
+        userConfigData.Vehicle_ConfigData.HeadLightDefault = 0;    
+    }
+}
+
+/**
+  @brief Function to get HeadLight Locked
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t HeadLight Locked
+
+*/
+uint8_t UserConfigTask_GetHeadLightLocked(void)
+{
+    return userConfigData.Vehicle_ConfigData.HeadLightLocked;
+}
+
+/**
+  @brief Function to update bike HeadLight Locked value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the HeadLight Locked
+  @return void
+
+*/
+void UserConfigTask_UpdateHeadLightLocked(uint8_t value)
+{
+    if (value > 0)
+    {
+        userConfigData.Vehicle_ConfigData.HeadLightLocked = 1;
+    }
+    else
+    {
+        userConfigData.Vehicle_ConfigData.HeadLightLocked = 0;    
+    }
+}
+
+/**
+  @brief Function to get TailLight Default
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t TailLight Default
+
+*/
+uint8_t UserConfigTask_GetTailLightDefault(void)
+{
+    return userConfigData.Vehicle_ConfigData.TailLightDefault;
+}
+
+/**
+  @brief Function to update bike TailLight Default value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the TailLight Default
+  @return void
+
+*/
+void UserConfigTask_UpdateTailLightDefault(uint8_t value)
+{
+    if (value > 0)
+    {
+        userConfigData.Vehicle_ConfigData.TailLightDefault = 1;
+    }
+    else
+    {
+        userConfigData.Vehicle_ConfigData.TailLightDefault = 0;    
+    }
+}
+
+/**
+  @brief Function to get TailLight Locked
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t TailLight Locked
+
+*/
+uint8_t UserConfigTask_GetTailLightLocked(void)
+{
+    return userConfigData.Vehicle_ConfigData.TailLightLocked;
+}
+
+/**
+  @brief Function to update bike TailLight Locked value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the TailLight Locked
+  @return void
+
+*/
+void UserConfigTask_UpdateTailLightLocked(uint8_t value)
+{
+    if (value > 0)
+    {
+        userConfigData.Vehicle_ConfigData.TailLightLocked = 1;
+    }
+    else
+    {
+        userConfigData.Vehicle_ConfigData.TailLightLocked = 0;    
+    }
+}
+
+/**
+  @brief Function to get TailLight Blink On Brake
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t TailLight Blink On Brake
+
+*/
+uint8_t UserConfigTask_GetTailLightBlinkOnBrake(void)
+{
+    return userConfigData.Vehicle_ConfigData.TailLightBlinkOnBrake;
+}
+
+/**
+  @brief Function to update bike TailLight Blink On Brake value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the TailLight Blink On Brake
+  @return void
+
+*/
+void UserConfigTask_UpdateTailLightBlinkOnBrake(uint8_t value)
+{
+    if (value > 0)
+    {
+        userConfigData.Vehicle_ConfigData.TailLightBlinkOnBrake = 1;
+    }
+    else
+    {
+        userConfigData.Vehicle_ConfigData.TailLightBlinkOnBrake = 0;    
     }
 }
 

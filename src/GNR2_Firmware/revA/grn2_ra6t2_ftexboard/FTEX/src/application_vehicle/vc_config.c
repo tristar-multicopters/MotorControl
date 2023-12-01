@@ -41,7 +41,8 @@ Light_Handle_t HeadLightHandle =
     .bLightIsBlinking = false,
     .BlinkPeriode     = 0,
     .bLightStateLocked = POWERTRAIN_HEADLIGHT_LOCKED,
-    .bDefaultLightState = POWERTRAIN_HEADLIGHT_DEFAULT,     
+    .bDefaultLightState = POWERTRAIN_HEADLIGHT_DEFAULT,
+    .bBlinkOnBrake = false,    
 };
 
 Light_Handle_t TailLightHandle =
@@ -51,7 +52,8 @@ Light_Handle_t TailLightHandle =
     .bLightIsBlinking = false, 
     .BlinkPeriode     = 50,
     .bLightStateLocked = POWERTRAIN_TAILLIGHT_LOCKED,
-    .bDefaultLightState = POWERTRAIN_TAILLIGHT_DEFAULT,   
+    .bDefaultLightState = POWERTRAIN_TAILLIGHT_DEFAULT,
+    .bBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,    
 };    
 
 BatMonitor_Handle_t BatMonitorHandle = 

@@ -417,8 +417,108 @@ uint8_t UserConfigTask_GetScreenProtocol(void);
 */
 void UserConfigTask_UpdateScreenProtocol(uint8_t value);
 
-/**
 
+/**
+  @brief Function to get HeadLight Default
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t HeadLight Default
+
+*/
+uint8_t UserConfigTask_GetHeadLightDefault(void);
+
+/**
+  @brief Function to update bike HeadLight Default value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the HeadLight Default
+  @return void
+
+*/
+void UserConfigTask_UpdateHeadLightDefault(uint8_t value);
+
+/**
+  @brief Function to get HeadLight Locked
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t HeadLight Locked
+
+*/
+uint8_t UserConfigTask_GetHeadLightLocked(void);
+
+/**
+  @brief Function to update bike HeadLight Locked value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the HeadLight Locked
+  @return void
+
+*/
+void UserConfigTask_UpdateHeadLightLocked(uint8_t value);
+
+/**
+  @brief Function to get TailLight Default
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t TailLight Default
+
+*/
+uint8_t UserConfigTask_GetTailLightDefault(void);
+
+/**
+  @brief Function to update bike TailLight Default value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the TailLight Default
+  @return void
+
+*/
+void UserConfigTask_UpdateTailLightDefault(uint8_t value);
+
+/**
+  @brief Function to get TailLight Locked
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t TailLight Locked
+
+*/
+uint8_t UserConfigTask_GetTailLightLocked(void);
+
+/**
+  @brief Function to update bike TailLight Locked value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the TailLight Locked
+  @return void
+
+*/
+void UserConfigTask_UpdateTailLightLocked(uint8_t value);
+
+/**
+  @brief Function to get TailLight Blink On Brake
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t TailLight Blink On Brake
+
+*/
+uint8_t UserConfigTask_GetTailLightBlinkOnBrake(void);
+
+/**
+  @brief Function to update bike TailLight Blink On Brake value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the TailLight Blink On Brake
+  @return void
+
+*/
+void UserConfigTask_UpdateTailLightBlinkOnBrake(uint8_t value);
+
+/**
   @brief Function used to calculate a CRC 16 type using the same polynom 
   used by the bluetooth protocol.CCITT 16 bits polynom.
   

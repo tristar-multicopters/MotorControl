@@ -154,9 +154,9 @@ uint8_t CanVehiInterface_GetFrontLightState(VCI_Handle_t * pHandle);
 /**
   @brief  Set the current state of the front light 
   @param  pHandle: handle of the vehicle, desired state of the light (0 Off, 1 On)
-  @return void
+  @return bool tells us if we are allowed to alter the state of the light
 */
-void CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aState);
+bool CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aState);
 
 /**
   @brief  Get the current state of the rear light 
@@ -168,8 +168,8 @@ uint8_t CanVehiInterface_GetRearLightState(VCI_Handle_t * pHandle);
 /**
   @brief  Set the current state of the rear light 
   @param  pHandle: handle of the vehicle, desired state of the light (0 Off, 1 On)
-  @return void
+  @return bool tells us if we are allowed to alter the state of the light
 */
-void CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aState);
+bool CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aState);
 
 #endif /* __CAN_IOT_COMM_H */
