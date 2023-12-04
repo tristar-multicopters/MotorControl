@@ -14,7 +14,7 @@
 static uint8_t  ReadData[20]= {0};
 
 //define the lenght on bytes of the User_ConfigData_t.
-#define USER_DATA_CONFIG_LENGTH   13
+#define USER_DATA_CONFIG_LENGTH   12
     
 //add pad bytes(zeros) to make the define be a multiple of 4(this is necessary to write correctly in 
 //the user data flash). write operation on data flash must be to be multiple of 4.
@@ -29,7 +29,7 @@ static uint8_t  ReadData[20]= {0};
            to give access to other structs like DataFlash_Handle_t and VCI_Handle_t.
   * @return void
 */
-void InternalMemory_WriteSerialNumber(uint8_t SaveData[13])
+void InternalMemory_WriteSerialNumber(uint8_t SaveData[SERIAL_LENGTH])
 {
     /* variable used to control how my attempts will be done when trying to erase data flash memory.*/
     uint8_t bAttempts;
