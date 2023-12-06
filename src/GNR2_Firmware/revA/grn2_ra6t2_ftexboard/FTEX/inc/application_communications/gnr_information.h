@@ -22,7 +22,7 @@
                 Defines
 *********************************************/
 //define the length on bytes of the GNR serial number.
-#define GNR_INFO_SERIAL_LENGTH     13 
+#define GNR_INFO_SERIAL_LENGTH     12 
 
 //define the length on bytes of the GNR serial number.
 #define GNR_DFUPACK_VERSION_LENGTH  4 
@@ -37,7 +37,7 @@
 typedef struct 
 {
     uint8_t  Gnr_DfuPackVersion[4];
-    uint8_t  Gnr_serialNumber[13];
+    uint8_t  Gnr_serialNumber[12];
     DataFlash_Handle_t *pDataFlash_Handle;
     
 }GnrInfoHandle_t;

@@ -57,16 +57,12 @@ void GnrInfo_Read(DataFlash_Handle_t * pDataFlashHandle)
     
     //Close data flash memory access.
     uCAL_Flash_Close(GnrInfoHandle.pDataFlash_Handle);
-    
-    //change postion of the year number to copy all important chars 
-    //directly. example: Gnr_serialNumber[9] = 2 and Gnr_serialNumber[10] = 3;
-    //year 23. we dont have enough space copy all char, so getting 
-    //Gnr_serialNumber[10] indicate to us, until 2030, the GNR production year.
-    GnrInfoHandle.Gnr_serialNumber[9] = GnrInfoHandle.Gnr_serialNumber[10];
 }
 
 /**
-* @brief Function used to read GNR serial number from the data flash.  
+* @brief Function used to read GNR serial number from the data flash. 
+*        Only the first 8 bytes of the serial number are provide to
+*        from this function.
 */
 uint64_t  GnrInfo_GetSerialNumber(void)
 {
@@ -74,9 +70,10 @@ uint64_t  GnrInfo_GetSerialNumber(void)
     uint8_t m = 0;
     
     //copy the serial number byte by byte to the variable.
-    for(short int n = 7; n >= 0; n--)
+    //starting from the years byte until the last by of the batch number.
+    for(uint8_t n = 1; n <= GNR_INFO_SERIAL_LENGTH - 4; n++)
     {
-        serialNumber = serialNumber | ((uint64_t)GnrInfoHandle.Gnr_serialNumber[n + 2] << m*8);
+        serialNumber = serialNumber | ((uint64_t)GnrInfoHandle.Gnr_serialNumber[GNR_INFO_SERIAL_LENGTH - n] << m*8);
         
         //increment to the next shift.
         m++;
