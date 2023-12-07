@@ -63,6 +63,8 @@ typedef struct
                                    
   qd_t Iqdref;                /*!< Current component of last
                                    SetCurrentReferences command.*/
+    
+  bool bDriverEn;             /*!< Status of Driver Enable pin */
 
   MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
   STCModality_t LastModalitySetByUser;    /*!< The last STCModality_t set by the user. */

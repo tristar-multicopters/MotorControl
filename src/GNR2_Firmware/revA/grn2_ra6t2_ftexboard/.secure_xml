@@ -90,6 +90,7 @@
       <configSetting altId="pa09.input" configurationId="pa09"/>
       <configSetting altId="pb04.output.low" configurationId="pb04"/>
       <configSetting altId="pb08.input" configurationId="pb08"/>
+      <configSetting altId="pb10.output.high" configurationId="pb10"/>
       <configSetting altId="pc00.input" configurationId="pc00"/>
       <configSetting altId="pd00.output.high" configurationId="pd00"/>
       <configSetting altId="pd04.output.low" configurationId="pd04"/>

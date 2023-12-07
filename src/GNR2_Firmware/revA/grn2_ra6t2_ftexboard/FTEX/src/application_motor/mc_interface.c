@@ -9,6 +9,7 @@
 #include "mc_math.h"
 #include "speed_torq_ctrl.h"
 #include "mc_interface.h"
+#include "pwm_common.h"
 
 
 
@@ -25,18 +26,23 @@
 */
 void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, MCConfigHandle_t *pMCConfig)
 {
-  ASSERT(pHandle != NULL);
-  pHandle->pSTM = pSTM;
-  pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
-  pHandle->pFOCVars = pFOCVars;
-  pHandle->pBusVoltageSensor = pBusVoltageSensor;
-  pHandle->pMCConfig = pMCConfig;
+    ASSERT(pHandle != NULL);
+    pHandle->pSTM = pSTM;
+    pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
+    pHandle->pFOCVars = pFOCVars;
+    pHandle->pBusVoltageSensor = pBusVoltageSensor;
+    pHandle->pMCConfig = pMCConfig;
+
+    /* Buffer related initialization */
+    pHandle->LastCommand = MCI_NOCOMMANDSYET;
+    pHandle->hFinalSpeed = 0;
+    pHandle->hFinalTorque = 0;
+    pHandle->CommandState = MCI_BUFFER_EMPTY;
     
-  /* Buffer related initialization */
-  pHandle->LastCommand = MCI_NOCOMMANDSYET;
-  pHandle->hFinalSpeed = 0;
-  pHandle->hFinalTorque = 0;
-  pHandle->CommandState = MCI_BUFFER_EMPTY;
+
+    /*Initialize driver */
+    Driver_Disable(&pHandle->bDriverEn);
+    
 }
 
 /*

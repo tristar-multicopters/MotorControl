@@ -29,6 +29,7 @@ uint32_t GetChipID(uint8_t ID_Half);
 #define PWRSTG_ENABLE_GPIO_PIN                              0xe9
 #define FRONT_LIGHT_PIN                                     0xd4
 #define BACK_LIGHT_PIN                                      0xda
+#define DRIVER_EN_PIN                                       0xba
 
 
 /* Hall position sensor ---------------------------------------------*/

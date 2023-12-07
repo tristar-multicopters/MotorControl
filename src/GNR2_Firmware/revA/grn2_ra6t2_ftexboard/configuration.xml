@@ -1454,6 +1454,7 @@
     <symbolicName propertyId="pb06.symbolic_name" value="M1_ENC_V"/>
     <symbolicName propertyId="pb07.symbolic_name" value="M1_ENC_W"/>
     <symbolicName propertyId="pb08.symbolic_name" value="PWREN_GPIO_PIN"/>
+    <symbolicName propertyId="pb10.symbolic_name" value="DRIVER_EN"/>
     <symbolicName propertyId="pc00.symbolic_name" value="BRAKE"/>
     <symbolicName propertyId="pc04.symbolic_name" value="DEBUG1_DAC"/>
     <symbolicName propertyId="pc05.symbolic_name" value="DEBUG2_DAC"/>
@@ -1563,6 +1564,9 @@
       <configSetting altId="pb07.gpio_mode.gpio_mode_irq" configurationId="pb07.gpio_mode"/>
       <configSetting altId="pb08.input" configurationId="pb08"/>
       <configSetting altId="pb08.gpio_mode.gpio_mode_in" configurationId="pb08.gpio_mode"/>
+      <configSetting altId="pb10.output.high" configurationId="pb10"/>
+      <configSetting altId="pb10.gpio_mode.gpio_mode_out.high" configurationId="pb10.gpio_mode"/>
+      <configSetting altId="pb10.gpio_otype.gpio_otype_n_ch_od" configurationId="pb10.gpio_otype"/>
       <configSetting altId="pb12.canfd0.crx0" configurationId="pb12"/>
       <configSetting altId="pb12.gpio_mode.gpio_mode_peripheral" configurationId="pb12.gpio_mode"/>
       <configSetting altId="pb13.canfd0.ctx0" configurationId="pb13"/>

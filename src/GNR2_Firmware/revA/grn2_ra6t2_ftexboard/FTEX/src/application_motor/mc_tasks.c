@@ -43,6 +43,7 @@
 #define DEFAULT_TEMP_CONTROLLER 0x000
 #define OCD2_MAX 7
 #define OCD2_TIMER 10000 //~10 secs
+#define DRIVER_TIMER 10000 //~.5 secs
 
 /* Private variables----------------------------------------------------------*/
 FOCVars_t FOCVars[NBR_OF_MOTORS];
@@ -69,6 +70,7 @@ static volatile uint16_t hBootCapDelayCounterM1 = 0;
 static volatile uint16_t hStopPermanencyCounterM1 = 0;
 volatile uint8_t bOCCheck = 0;
 volatile uint16_t hOCCheckReset = 0;
+volatile uint16_t hDriverCounter = 0;
 
 uint8_t bMCBootCompleted = 0;
 
@@ -95,7 +97,6 @@ bool StopPermanencyTimeHasElapsedM1(void);
 void SafetyTask_PWMOFF(uint8_t motor);
 void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle);
 bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed);
-
 
 /**
  * @brief It initializes the whole MC core according to user defined
@@ -325,6 +326,12 @@ void MediumFrequencyTaskM1(void)
             MCStateMachine_NextState(&MCStateMachine[M1], M_IDLE_START);
         }
 #endif
+    
+        if (MCInterface->bDriverEn == false)
+        {
+            Driver_Disable(&MCInterface->bDriverEn);
+        }
+        
         //check for whether motor temp is in foldback region
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
         {
@@ -483,6 +490,7 @@ void MediumFrequencyTaskM1(void)
 
     case M_ANY_STOP:
         PWMInsulCurrSensorFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
+        Driver_Disable(&MCInterface->bDriverEn);
         FOC_Clear(M1);
         MotorPowMeas_Clear((MotorPowerMeasHandle_t *)pMotorPower[M1]);
         SetStopPermanencyTimeM1(STOPPERMANENCY_TICKS);
@@ -860,7 +868,24 @@ inline uint32_t FOC_CurrControllerM1(void)
 
         Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
         Valphabeta = MCMath_RevPark(Vqd, hElAngle);
-
+        
+        if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == false))
+        {
+            if (hDriverCounter >= DRIVER_TIMER)
+            {
+                hDriverCounter = 0;
+                Driver_Disable(&MCInterface->bDriverEn);
+            }
+            else
+            {
+                hDriverCounter++;
+            }
+        }
+        else if ((MCInterface->bDriverEn == true) && (MCInterface->hFinalTorque != 0))
+        {
+            Driver_Enable(&MCInterface->bDriverEn);
+        }
+        
         wCodeError = PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
 
         FOCVars[M1].Vqd = Vqd;
