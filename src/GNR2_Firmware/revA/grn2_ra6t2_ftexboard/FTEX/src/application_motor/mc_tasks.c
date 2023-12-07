@@ -327,7 +327,7 @@ void MediumFrequencyTaskM1(void)
         }
 #endif
     
-        if (MCInterface->bDriverEn == false)
+        if (MCInterface->bDriverEn == true)
         {
             Driver_Disable(&MCInterface->bDriverEn);
         }
@@ -490,7 +490,10 @@ void MediumFrequencyTaskM1(void)
 
     case M_ANY_STOP:
         PWMInsulCurrSensorFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
-        Driver_Disable(&MCInterface->bDriverEn);
+        if (MCInterface->bDriverEn == true)
+        {
+            Driver_Disable(&MCInterface->bDriverEn);
+        }
         FOC_Clear(M1);
         MotorPowMeas_Clear((MotorPowerMeasHandle_t *)pMotorPower[M1]);
         SetStopPermanencyTimeM1(STOPPERMANENCY_TICKS);
@@ -869,7 +872,7 @@ inline uint32_t FOC_CurrControllerM1(void)
         Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
         Valphabeta = MCMath_RevPark(Vqd, hElAngle);
         
-        if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == false))
+        if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
         {
             if (hDriverCounter >= DRIVER_TIMER)
             {
@@ -881,7 +884,7 @@ inline uint32_t FOC_CurrControllerM1(void)
                 hDriverCounter++;
             }
         }
-        else if ((MCInterface->bDriverEn == true) && (MCInterface->hFinalTorque != 0))
+        else if ((MCInterface->bDriverEn == false) && (MCInterface->hFinalTorque != 0))
         {
             Driver_Enable(&MCInterface->bDriverEn);
         }

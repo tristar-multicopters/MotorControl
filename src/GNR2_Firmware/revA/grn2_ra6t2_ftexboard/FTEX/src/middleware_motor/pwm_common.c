@@ -23,7 +23,7 @@ void waitForPolarizationEnd(volatile uint8_t *cnt)
 
 void Driver_Disable(bool *bDriverEn)
 {
-    *bDriverEn = true;
+    *bDriverEn = false;
     //Disable OCD1
     R_ICU_ExternalIrqDisable(g_external_irq0.p_ctrl);
     //Writes a 0 to the pin 
@@ -33,7 +33,7 @@ void Driver_Disable(bool *bDriverEn)
 
 void Driver_Enable(bool *bDriverEn)
 {
-    *bDriverEn = false;
+    *bDriverEn = true;
     //Writes a 1 to the pin
     uCAL_GPIO_Set(DRIVER_EN_PIN);
     //Enable OCD1
