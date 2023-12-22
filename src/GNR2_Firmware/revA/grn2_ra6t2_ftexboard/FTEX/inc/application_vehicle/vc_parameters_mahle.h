@@ -9,7 +9,6 @@
 #ifndef __VC_PARAMETERS_MAHLE_H
 #define __VC_PARAMETERS_MAHLE_H
 
-#include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"
 #include "uCAL_UART.h"
 

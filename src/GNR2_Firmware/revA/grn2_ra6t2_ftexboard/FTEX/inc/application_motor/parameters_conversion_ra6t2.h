@@ -9,7 +9,6 @@
 #ifndef __PARAMETERS_CONVERSION_RA6T2_H
 #define __PARAMETERS_CONVERSION_RA6T2_H
 
-#include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"
 #include "power_stage_parameters.h"
 #include "mc_math.h"

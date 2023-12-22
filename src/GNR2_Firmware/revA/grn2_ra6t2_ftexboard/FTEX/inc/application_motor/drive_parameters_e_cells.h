@@ -8,232 +8,81 @@
 #ifndef __DRIVE_PARAMETERS_E_CELLS_H
 #define __DRIVE_PARAMETERS_E_CELLS_H
 
-/************************
- *** Motor Parameters ***
- ************************/ 
-#define MOTOR_GEAR_RATIO          (float)5      /* Motor gear ratio, the value is always X turns of the motor 
-                                                   equates to 1 turn of the output shaft/hub IE if ration is 11.5
-                                                   on a hub motor that means 11.5 turns of the motor result 
-                                                   in one turn of the read wheel */
+/************************** Motor Config  ************************/
+#define MOTOR_GEAR_RATIO                    (float)5        // Motor gear ratio, the value is always X turns of the motor 
+#define MOTOR_TEMP_SENSOR_TYPE              VIRTUAL_SENSOR  // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
 
-/******** MAIN AND AUXILIARY SPEED/POSITION SENSOR(S) SETTINGS SECTION ********/
+#define MAX_APPLICATION_SPEED_RPM           2000            // Max speed for the current application in mechanical rpm
+#define HALL_AVERAGING_FIFO_DEPTH           10              // Depth of the FIFO used to
 
-/*** Speed measurement settings ***/
-#define MAX_APPLICATION_SPEED_RPM       2000 /*!< Max speed for the current application in mechanical rpm */
-#define MIN_APPLICATION_SPEED_RPM       0 /*!< Min speed for the current application in mechanical rpm */
-#define MEAS_ERRORS_BEFORE_FAULTS       6 /*!< Number of speed
-                                                             measurement errors before
-                                                             main sensor goes in fault */
-/****** Hall sensors ************/
-#define HALL_MEAS_ERRORS_BEFORE_FAULTS  6 /*!< Number of failed
-                                                           derived class specific speed
-                                                           measurements before main sensor
-                                                           goes in fault */
+#define OV_VOLTAGE_THRESHOLD_V              70              // Over-voltage threshold
+#define UD_VOLTAGE_THRESHOLD_V              44              // Under-voltage threshold 
 
-#define HALL_AVERAGING_FIFO_DEPTH        10 /*!< depth of the FIFO used to
-                                                           average mechanical speed */
-#define HALL_MTPA  true                                 /* Must be set true. TODO: Remove that parameter. */
-/****** State Observer + PLL ****/
-#define VARIANCE_THRESHOLD              0.062 /*!<Maximum accepted
-                                                            variance on speed
-                                                            estimates (percentage) */
-/* State observer scaling factors F1 */
-#define F1                               16384
-#define F2                               8192
-#define F1_LOG                           LOG2(16384)
-#define F2_LOG                           LOG2(8192)
+#define PID_TORQUE_KP_DEFAULT               600             // Default gain if adaptative gain feature is not used
+#define PID_FLUX_KP_DEFAULT                 600             // Default gain if adaptative gain feature is not used
+#define PID_FLUX_KI_DEFAULT                 3000            // Default gain if adaptative gain feature is not used
 
-/* State observer constants */
-#define GAIN1                            -23040
-#define GAIN2                            28800
-/*Only in case PLL is used, PLL gains */
-#define PLL_KP_GAIN                      918
-#define PLL_KI_GAIN                      32
-#define PLL_KPDIV     16384
-#define PLL_KPDIV_LOG LOG2(PLL_KPDIV)
-#define PLL_KIDIV     65535
-#define PLL_KIDIV_LOG LOG2(PLL_KIDIV)
+#define ENABLE_SPEED_LIMIT_CONTROL          false
+#define PID_SPEED_KP_DEFAULT                100             // Default gain speed control loop
+#define PID_SPEED_KI_DEFAULT                10              // Default gain speed control loop
+#define SP_KIDIV                            16384           // Speed control gain divider, to allow decimal value
+#define SP_KIDIV_LOG                        LOG2(16384)     // Speed control gain divider log2, to allow decimal value
 
-#define OBS_MEAS_ERRORS_BEFORE_FAULTS    6  /*!< Number of consecutive errors
-                                                           on variance test before a speed
-                                                           feedback error is reported */
-#define STO_FIFO_DEPTH_DPP               64  /*!< Depth of the FIFO used
-                                                            to average mechanical speed
-                                                            in dpp format */
-#define STO_FIFO_DEPTH_DPP_LOG           LOG2(64)
+/************************** Power Limit Config  ************************/
+#define LOW_BATTERY_VOLTAGE_THRESHOLD       44              // The threshold of battery voltage before limit torque
 
-#define STO_FIFO_DEPTH_UNIT              64  /*!< Depth of the FIFO used
-                                                            to average mechanical speed
-                                                            in the unit defined by #SPEED_UNIT */
-#define BEMF_CONSISTENCY_TOL             32   /* Parameter for B-emf
-                                                            amplitude-speed consistency */
-#define BEMF_CONSISTENCY_GAIN            64   /* Parameter for B-emf
-                                                           amplitude-speed consistency */
+#define ENABLE_MAX_POWER_LIMIT              false           // To enable or disable the foldback
+#define MAX_TIME_BMS_TOLERANT               20000           // End time of derating for BMS protection in ms
+#define MAX_POWER_LIMIT_TIMEOUT             10000           // Start time of derating for BMS protection in ms
+#define MAX_BMS_POSITIVE_POWER              500             // Maximum Power at the end point of foldback
 
-/**************************    FIRMWARE PROTECTIONS SECTION   *****************/
+#define POWER_LIMIT_REF                     MAX_POWER_LIMIT // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+#define MAX_APPLICATION_POSITIVE_POWER      1100            // Refers to maximum power in watts that drive can push to the motor
+#define MAX_APPLICATION_NEGATIVE_POWER      1100            // Refers to maximum power in watts that drive can accept from the motor
+#define MAX_APPLICATION_CURRENT             22              // Refers to maximum battery current in amps that drive can accept from the motor
 
-#define OV_VOLTAGE_THRESHOLD_V          70 /*!< Over-voltage threshold */
-//*** the under voltage value set to high for safety until tune it later with main batteries in hand
-#define UD_VOLTAGE_THRESHOLD_V          44 /*!< Under-voltage threshold */ 
+#define FOLDBACK_SPEED_INTERVAL             750             // Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed
+#define FOLDBACK_MOTOR_TEMP_INTERVAL        20              // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
-#define OV_TEMP_CONTROLLER_THRESHOLD_C      70 /*!< Heatsink overtemperature threshold before thermal shutdown. Celsius degrees */
-#define OV_TEMP_CONTROLLER_HYSTERESIS_C     15 /*!< Heatsink overtemperature hysteresis after a thermal shutdown occured. Celsius degrees */
+ /************************** Ramp Manager Config  ************************/
+#define DEFAULT_TORQUE_SLOPE_UP             5000            // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_DOWN           10000           // Slope in cNm per second
+#define DEFAULT_SPEED_SLOPE_UP              500             // Slope in #SPEED_UNIT per second
+#define DEFAULT_SPEED_SLOPE_DOWN            500             // Slope in #SPEED_UNIT per second
 
-#define OCSP_SAFETY_MARGIN_amps 	            85	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
-                                                than reference current before overcurrent software protection triggers */
-#define OCSP_MAX_CURRENT_amps                85   /* Max current that can be reached before triggering software overcurrent */
-#define CURRENT_FILTER_ALPHA            2.273F       /* Alpha constant used in butterworth filter for current filtering */
-#define CURRENT_FILTER_BETA             -0.273F      /* Beta constant used in butterworth filter for current filtering */
+#define MEC_SPEED_FILTER_BUTTERWORTH_ALPHA  7.366197724F    // Alpha constant to configure butterworth filter for mecanical speed filtering
+#define MEC_SPEED_FILTER_BUTTERWORTH_BETA  -5.366197724F    // Beta constant to configure butterworth filter for mecanical speed filtering
 
-/**************************    DRIVE SETTINGS SECTION   **********************/
-/* PWM generation and current reading */
+/************************** DUAL Specific parameters  ************************/
+#define MASTER_DEFAULT_TORQUE_SLOPE_UP       4000           // Slope in cNm per second 
+#define SLAVE_DEFAULT_TORQUE_SLOPE_UP        2000           // Slope in cNm per second - the  value is less in comparison to the master because the slave should 
 
-#define PWM_FREQUENCY   20000           /* PWM switching frequency */
-#define PWM_FREQ_SCALING 1              /* Not used, set to one. */
+/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
+#define POLE_PAIR_NUM          	            10		        // Number of motor pole pairs
+#define RS                     	            0.071f	        // Stator resistance , ohm
+#define LS                     	            0.00015f	    // Stator inductance, H   For I-PMSM it is equal to Lq
+#define MOTOR_MAGNET_FLUX      	            0.013f	        // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
+#define MOTOR_VOLTAGE_CONSTANT 	            24.5f	        // Volts RMS ph-ph /kRPM
+#define ST_Torque_Coef         	            1.2f	        // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define SW_DEADTIME_NS                   250 /*!< Dead-time to be inserted by FW */
+#define PEAK_CURRENT_amps      	            55		        // peak current in amps
+#define NOMINAL_TORQUE         	            (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)	// Nominal torque to apply to motor in cNm   
+                                                                                           // Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps
+#define STARTING_TORQUE        	            (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef)	// Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes
 
-/* Torque and flux regulation loops */
-#define REGULATION_EXECUTION_RATE     1    /*!< FOC execution rate in
-                                                           number of PWM cycles */
-/* Gains values for torque and flux control loops */
-#define PID_TORQUE_KP_DEFAULT         600       /* Default gain if adaptative gain feature is not used */
-#define PID_TORQUE_KI_DEFAULT         1000      /* Default gain if adaptative gain feature is not used */
-#define PID_TORQUE_KD_DEFAULT         100       /* Default gain if adaptative gain feature is not used */
-#define PID_FLUX_KP_DEFAULT           600       /* Default gain if adaptative gain feature is not used */
-#define PID_FLUX_KI_DEFAULT           3000      /* Default gain if adaptative gain feature is not used */
-#define PID_FLUX_KD_DEFAULT           100       /* Default gain if adaptative gain feature is not used */
+#define MOTOR_MAX_SPEED_RPM    	            1875	        // Maximum rated speed - Old Example 2750 for 38Km/h
 
-/* Torque/Flux control loop gains dividers*/
-#define TF_KPDIV                      4096          /* Gain divider, to allow decimal value */
-#define TF_KIDIV                      16384         /* Gain divider, to allow decimal value */
-#define TF_KDDIV                      8192          /* Gain divider, to allow decimal value */
-#define TF_KPDIV_LOG                  LOG2(4096)    /* Gain divider, to allow decimal value */
-#define TF_KIDIV_LOG                  LOG2(16384)   /* Gain divider, to allow decimal value */
-#define TF_KDDIV_LOG                  LOG2(8192)    /* Gain divider, to allow decimal value */
+#define OV_TEMP_MOTOR_THRESHOLD_C 	        70		        // Maximum temperature in degree C
+#define OV_TEMP_MOTOR_HYSTERESIS_C 	        10		        // Temperature to decrease after an overtemp fault occurred before clearing the fault, in degree C
+#define FLUX_WEAKENING_ENABLE   	        0		        // 0=disable 1=enable flux weakening , 
 
-/* Speed control loop */
-#define SPEED_LOOP_FREQUENCY_HZ       1000 /*!<Execution rate of speed
-                                                      regulation loop (Hz) */
+/***************** MOTOR SENSORS PARAMETERS  ******************************/
+#define HALL_SENSORS_PLACEMENT 	            DEGREES_120	    // Mechanical position of the sensors
+                                                            // with reference to an electrical cycle.
+                                                            // It can be either DEGREES_120 or DEGREES_60
 
-#define ENABLE_SPEED_LIMIT_CONTROL    false
+#define HALL_PHASE_SHIFT       	            60		         // Electrical phase shift in degree between the low to high
+                                                             // transition of signal H1 and the zero crossing of the Bemf induced
+                                                             // between phase A and B
 
-#define PID_SPEED_KP_DEFAULT          100           /* Default gain speed control loop */
-#define PID_SPEED_KI_DEFAULT          10            /* Default gain speed control loop */
-#define PID_SPEED_KD_DEFAULT          0             /* Default gain speed control loop */
-#define PID_SPEEDLIMIT_KP_DEFAULT     PID_SPEED_KP_DEFAULT           /* Default gain speed limit control loop */
-#define PID_SPEEDLIMIT_KI_DEFAULT     PID_SPEED_KI_DEFAULT           /* Default gain speed limit control loop */
-/* Speed PID parameter dividers */
-#define SP_KPDIV                      256           /* Speed control gain divider, to allow decimal value */
-#define SP_KIDIV                      16384         /* Speed control gain divider, to allow decimal value */
-#define SP_KDDIV                      16            /* Speed control gain divider, to allow decimal value */
-#define SP_KPDIV_LOG                  LOG2(256)     /* Speed control gain divider log2, to allow decimal value */
-#define SP_KIDIV_LOG                  LOG2(16384)   /* Speed control gain divider log2, to allow decimal value */
-#define SP_KDDIV_LOG                  LOG2(16)      /* Speed control gain divider log2, to allow decimal value */
-
-#define SPD_CTRL_MAX_TORQUE             1000        /* Maximum torque that speed control loop can apply */
-
-#define LOW_BATTERY_TORQUE              150         /* Maximum torque allowed in low SoC of battery */
-//*** the low voltage threshold value set to high for safety until tune it later with main batteries in hand
-#define LOW_BATTERY_VOLTAGE_THRESHOLD   44          /* the threshold of battery voltage before limit torque */
-
-#define MAX_CURRENT_LIMIT               1           /* to calculate maximum poweer based on maximum current and Battery S0C */
-#define MAX_POWER_LIMIT                 2           /* to use  MAX_APPLICATION_POSITIVE_POWER as the reference for Maximum power*/
-#define POWER_LIMIT_REF                 MAX_POWER_LIMIT   /* defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
-                                        as the reference for maximum power limitation*/
-#define MAX_APPLICATION_POSITIVE_POWER  1100    /* Refers to maximum power in watts that drive can push to the motor */
-#define MAX_APPLICATION_NEGATIVE_POWER  1100    /* Refers to maximum power in watts that drive can accept from the motor */
-#define MAX_APPLICATION_CURRENT         22      /* Refers to maximum battery current in amps that drive can accept from the motor */
-
-#define DYNAMICTORQUE_THRESHOLD_SPEED  120       /* Refers to motor speed which starts the transition between STARTING_TORQUE and NOMINAL_TORQUE */
-
-/* Foldbacks */
-#define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM   /* Max speed value (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
-#define FOLDBACK_SPEED_INTERVAL         750                         /* Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed */
-
-#define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMP_CONTROLLER_THRESHOLD_C   /* Max temperature value (degree C) of the decreasing torque ramp to limit heatsink temperature */
-#define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMP_CONTROLLER_HYSTERESIS_C /* Temperature interval (degree C) of the decreasing torque ramp to limit heatsink temperature */
-
-#define FOLDBACK_MOTOR_TEMP_END_VALUE   OV_TEMP_MOTOR_THRESHOLD_C  /* Max temperature value (degree C) of the decreasing torque ramp to limit motor temperature */
-#define FOLDBACK_MOTOR_TEMP_INTERVAL    20                         /* Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature */
-
-/* Control mode */
-#define DEFAULT_CONTROL_MODE           STC_TORQUE_MODE /*!< Torque control or speed control. Can be STC_TORQUE_MODE or STC_SPEED_MODE */
-
-/*Torque ramp settings */
-#define MASTER_DEFAULT_TORQUE_SLOPE_UP       4000        /* Slope in cNm per second */
-#define SLAVE_DEFAULT_TORQUE_SLOPE_UP        2000        /* Slope in cNm per second - the  value is less in comparison to the master because the slave should be able to compensate delay of CAN with its own slope*/
-#define DEFAULT_TORQUE_SLOPE_UP        5000        /* Slope in cNm per second */
-#define DEFAULT_TORQUE_SLOPE_DOWN      10000        /* Slope in cNm per second */
-#define DEFAULT_SPEED_SLOPE_UP         500         /* Slope in #SPEED_UNIT per second */
-#define DEFAULT_SPEED_SLOPE_DOWN       500         /* Slope in #SPEED_UNIT per second */
-
-/* Dynamic maximum power foldback settings */
-#define ENABLE_MAX_POWER_LIMIT          false        /* to enable or disable the foldback */
-#define MAX_BMS_POSITIVE_POWER          500         /* Maximum Power at the end point of foldback */
-#define MAX_TIME_BMS_TOLERANT           20000       /* milliseconds - time of foldback end point */
-#define MAX_POWER_LIMIT_TIMEOUT         10000       /* milliseconds - timeout before start derating */
-#define MAX_POWER_RECOVER_TIMEOUT       80          /* milliseconds - timeout before reset maximum power to default value */
-/******************************   START-UP PARAMETERS   **********************/
-
-/* Observer start-up output conditions  */
-#define OBS_MINIMUM_SPEED_RPM          580
-
-#define NB_CONSECUTIVE_TESTS           2 /* corresponding to
-                                                         former NB_CONSECUTIVE_TESTS/
-                                                         (TF_REGULATION_RATE/
-                                                         MEDIUM_FREQUENCY_TASK_RATE) */
-#define SPEED_BAND_UPPER_LIMIT         17 /*!< It expresses how much
-                                                            estimated speed can exceed
-                                                            forced stator electrical
-                                                            without being considered wrong.
-                                                            In 1/16 of forced speed */
-#define SPEED_BAND_LOWER_LIMIT         15  /*!< It expresses how much
-                                                             estimated speed can be below
-                                                             forced stator electrical
-                                                             without being considered wrong.
-                                                             In 1/16 of forced speed */
-
-#define TRANSITION_DURATION            25  /* Switch over duration, ms */
-
-/******************************   ADDITIONAL FEATURES   **********************/
-
-/*  Flux weakening parameters */
-#define FW_VOLTAGE_REF                900 /*!<Flux weakening Vs reference, tenth
-                                                        of a percent */
-#define FW_KP_GAIN                    0 /*!< Flux weakening default Kp gain */
-#define FW_KI_GAIN                    0 /*!< Flux weakening default Ki gain */
-
-#define FW_KPDIV                      32768     /*!< Flux weakening gain divider, to allow decimal value */
-#define FW_KIDIV                      32768     /*!< Flux weakening gain divider, to allow decimal value */                                         
-#define FW_KPDIV_LOG                  LOG2(32768)       /*!< Flux weakening gain divider log2, to allow decimal value */
-#define FW_KIDIV_LOG                  LOG2(32768)       /*!< Flux weakening gain divider log2, to allow decimal value */
-
-/*  Feed-forward parameters */
-#define CONSTANT1_Q                    0            /* Feedforward Iq related gain */
-#define CONSTANT1_D                    0            /* Feedforward Id related gain */
-#define CONSTANT2_QD                   0            /* Feedforward speed related gain */
-
-/*	Motor temperature sensor */
-#define MOTOR_TEMP_SENSOR_TYPE				VIRTUAL_SENSOR	/* Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR */
-
-/*** On the fly start-up ***/
-
-/******************************   Rotor position observer Motor 1   **********************/
-
-#define ROTOR_POS_OBS_KP         		1250        /* Rotor position observer default gain */
-#define ROTOR_POS_OBS_KI         		0           /* Rotor position observer default gain */
-#define ROTOR_POS_OBS_KD         		1000        /* Rotor position observer default gain */
-
-#define ROTOR_POS_OBS_KPDIV             256         /* Rotor position observer gain divider, to allow decimal value */
-#define ROTOR_POS_OBS_KIDIV         	256         /* Rotor position observer gain divider, to allow decimal value */
-#define ROTOR_POS_OBS_KDDIV         	1           /* Rotor position observer gain divider, to allow decimal value */
-#define ROTOR_POS_OBS_KPDIV_LOG         LOG2(256)   /* Rotor position observer gain divider log2, to allow decimal value */
-#define ROTOR_POS_OBS_KIDIV_LOG         LOG2(256)   /* Rotor position observer gain divider log2, to allow decimal value */
-#define ROTOR_POS_OBS_KDDIV_LOG         LOG2(1)     /* Rotor position observer gain divider log2, to allow decimal value */
-
-#define MEC_SPEED_FILTER_BUTTERWORTH_ALPHA     7.366197724F /*!< Alpha constant to configure butterworth filter for mecanical speed filtering */
-#define MEC_SPEED_FILTER_BUTTERWORTH_BETA     -5.366197724F /*!< Beta constant to configure butterworth filter for mecanical speed filtering */
-
-
-#endif /*__DRIVE_PARAMETERS_E_CELLS_H*/
+#endif /* __DRIVE_PARAMETERS_E_CELLS_H */

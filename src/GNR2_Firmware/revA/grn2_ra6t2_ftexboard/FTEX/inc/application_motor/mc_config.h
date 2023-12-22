@@ -48,5 +48,6 @@ extern FeedforwardHandle_t FeedforwardM1;
 
 extern RotorPositionObserverHandle_t RotorPosObsM1;
 
+extern PWMInsulCurrSensorFdbkParams_t PWMICSParamsM1;
 
 #endif /* __MC_CONFIG_H */

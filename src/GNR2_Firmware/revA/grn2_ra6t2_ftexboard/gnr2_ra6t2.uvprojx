@@ -734,11 +734,6 @@
               <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
             </File>
             <File>
-              <FileName>mc_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\mc_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -747,56 +742,6 @@
               <FileName>parameters_conversion_ra6t2.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_e_cells.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_nidec.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_nidec.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_r48_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_r48_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_a2_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_a2_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_utk_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_utk_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_a2_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_a2_500w.h</FilePath>
             </File>
             <File>
               <FileName>power_stage_parameters.h</FileName>
@@ -2791,11 +2736,6 @@
               <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
             </File>
             <File>
-              <FileName>mc_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\mc_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -2804,56 +2744,6 @@
               <FileName>parameters_conversion_ra6t2.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_e_cells.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_nidec.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_nidec.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_r48_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_r48_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_a2_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_a2_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_utk_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_utk_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_a2_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_a2_500w.h</FilePath>
             </File>
             <File>
               <FileName>power_stage_parameters.h</FileName>
@@ -4713,11 +4603,6 @@
               <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
             </File>
             <File>
-              <FileName>mc_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\mc_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -4726,56 +4611,6 @@
               <FileName>parameters_conversion_ra6t2.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_e_cells.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_nidec.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_nidec.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_r48_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_r48_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_quietkat.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_quietkat.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_velec_citi_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_a2_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_a2_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_utk_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_utk_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>pmsm_motor_parameters_a2_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\pmsm_motor_parameters_a2_500w.h</FilePath>
             </File>
             <File>
               <FileName>power_stage_parameters.h</FileName>

@@ -6,7 +6,6 @@
 #include "gnr_main.h"
 #include "mc_type.h"
 #include "parameters_conversion.h"
-#include "mc_parameters.h"
 #include "pqd_motor_power_measurement.h"
 #include "mc_config.h"
 #include "board_hardware.h"

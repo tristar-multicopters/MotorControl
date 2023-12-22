@@ -31,7 +31,6 @@
 
 #include "mc_math.h"
 #include "parameters_conversion_ra6t2.h"
-#include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"
 #include "power_stage_parameters.h"
 
@@ -84,13 +83,6 @@
 
 #define MAX_APPLICATION_SPEED_UNIT ((MAX_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM)
 #define MIN_APPLICATION_SPEED_UNIT ((MIN_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM)
-
-/************************* OCD Power Derating factors **************************/
-
-#define OCD_DISABLE                     0
-#define OCD_PWM_OFF                     1
-#define HARDWARE_OCD    OCD_PWM_OFF     /* OCD_PWM_OFF to completley disable PWM using PEOG in timer0 */
-                                        /* OCD_DISABLED to disable any Hardware OverCurrent handling */
 
 /************************* PLL PARAMETERS **************************/
 #define C1 (int32_t)((((int16_t)F1)*RS)/(LS*TF_REGULATION_RATE))

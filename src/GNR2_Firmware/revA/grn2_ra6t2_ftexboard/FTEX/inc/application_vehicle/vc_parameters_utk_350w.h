@@ -9,7 +9,6 @@
 #ifndef __VC_PARAMETERS_UTK_350W_H
 #define __VC_PARAMETERS_UTK_350W_H
 
-#include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"
 
 /******************* SCREEN SELECTION  *******************************/
