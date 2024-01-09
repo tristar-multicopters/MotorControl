@@ -30,6 +30,7 @@
 
 /************************** Power Limit Config  ************************/
 #define LOW_BATTERY_VOLTAGE_THRESHOLD       35               // The threshold of battery voltage before limiting torque
+#define LOW_BATTERY_TORQUE                  150
 
 #define ENABLE_MAX_POWER_LIMIT              true             // To enable or disable the foldback
 #define MAX_TIME_BMS_TOLERANT               20000

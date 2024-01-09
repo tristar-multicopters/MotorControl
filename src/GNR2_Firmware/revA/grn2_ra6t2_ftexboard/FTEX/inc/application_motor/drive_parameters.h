@@ -52,16 +52,24 @@
 
 #endif
 
+/****** Constants ******/
+#define MAX_CURRENT_LIMIT               1
+#define MAX_POWER_LIMIT                 2
+#define OCD_DISABLE                     0
+#define OCD_PWM_OFF                     1
+
 /****** Motor Parameters ******/
 #define MIN_APPLICATION_SPEED_RPM       0           // Min speed for the current application in mechanical rpm
 #define MEAS_ERRORS_BEFORE_FAULTS       6           // Number of speed measurement errors before triggering faults
 #define HALL_MEAS_ERRORS_BEFORE_FAULTS  6           // Number of failed Hall sensor measurements before triggering faults
 #define HALL_MTPA                       true        // Must be set true. TODO: Remove that parameter.
 #define VARIANCE_THRESHOLD              0.062       // Maximum accepted variance for speed regulation
+
 #define F1                              16384
 #define F2                              8192
 #define F1_LOG                          LOG2(16384)
 #define F2_LOG                          LOG2(8192)
+
 #define GAIN1                           -23040
 #define GAIN2                           28800
 #define PLL_KP_GAIN                     918
@@ -78,10 +86,10 @@
 #define BEMF_CONSISTENCY_GAIN           64          // Parameter for B-emf consistency check
 
 /****** Temperature and Overcurrent Protection Parameters ******/
-#define OV_TEMP_CONTROLLER_THRESHOLD_C   70         // Heatsink overtemperature threshold before thermal shutdown. Celsius degrees
-#define OV_TEMP_CONTROLLER_HYSTERESIS_C  15         // Heatsink overtemperature hysteresis after a thermal shutdown occurred. Celsius degrees
-#define OCSP_SAFETY_MARGIN_amps          85         // Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
-#define OCSP_MAX_CURRENT_amps            85         // Max current that can be reached before triggering software overcurrent
+#define OV_TEMP_CONTROLLER_THRESHOLD_C  70         // Heatsink overtemperature threshold before thermal shutdown. Celsius degrees
+#define OV_TEMP_CONTROLLER_HYSTERESIS_C 15         // Heatsink overtemperature hysteresis after a thermal shutdown occurred. Celsius degrees
+#define OCSP_SAFETY_MARGIN_amps         85         // Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_MAX_CURRENT_amps           85         // Max current that can be reached before triggering software overcurrent
 
 /****** Current Filtering Parameters ******/
 #define CURRENT_FILTER_ALPHA            2.273F      // Alpha constant used in butterworth filter for current filtering
@@ -95,32 +103,37 @@
 /****** FOC Parameters ******/
 #define No_Load_PID_KIq_Gain            500
 #define REGULATION_EXECUTION_RATE       1
+
 #define PID_TORQUE_KI_DEFAULT           1000
 #define PID_TORQUE_KD_DEFAULT           100
 #define PID_FLUX_KD_DEFAULT             100
+
 #define TF_KPDIV                        4096
 #define TF_KIDIV                        16384
 #define TF_KDDIV                        8192
 #define TF_KPDIV_LOG                    LOG2(4096)
 #define TF_KIDIV_LOG                    LOG2(16384)
 #define TF_KDDIV_LOG                    LOG2(8192)
+
 #define SPEED_LOOP_FREQUENCY_HZ         1000
+
 #define PID_SPEED_KD_DEFAULT            0
 #define PID_SPEEDLIMIT_KP_DEFAULT       PID_SPEED_KP_DEFAULT
 #define PID_SPEEDLIMIT_KI_DEFAULT       PID_SPEED_KI_DEFAULT
+
 #define SP_KPDIV                        256
 #define SP_KDDIV                        16
 #define SP_KPDIV_LOG                    LOG2(256)
 #define SP_KDDIV_LOG                    LOG2(16)
 #define SPD_CTRL_MAX_TORQUE             1000
-#define LOW_BATTERY_TORQUE              150
-#define MAX_CURRENT_LIMIT               1
-#define MAX_POWER_LIMIT                 2
+
 #define DYNAMICTORQUE_THRESHOLD_SPEED    120
+
 #define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMP_CONTROLLER_THRESHOLD_C
 #define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMP_CONTROLLER_HYSTERESIS_C
 #define FOLDBACK_MOTOR_TEMP_END_VALUE   OV_TEMP_MOTOR_THRESHOLD_C
+
 #define DEFAULT_CONTROL_MODE            STC_TORQUE_MODE
 #define MAX_POWER_RECOVER_TIMEOUT       80
 #define OBS_MINIMUM_SPEED_RPM           580
@@ -167,14 +180,11 @@
 #define STUCK_TIMER_MAX_COUNTS_LOWBATTERY (STUCK_TIMER_MAX_TICKS / 10) * SPEED_LOOP_FREQUENCY_HZ / 1000u - 1u // the protection timeout battery SoC is detected as low
 
 /******** OCD Power Derating factors ********/
-#define OCD_DISABLE                     0
-#define OCD_PWM_OFF                     1
 #define HARDWARE_OCD    OCD_PWM_OFF     /* OCD_PWM_OFF to completley disable PWM using PEOG in timer0 */
                                         /* OCD_DISABLED to disable any Hardware OverCurrent handling */
-
 #define VIBRATION_PATTERN               0xAAAA      // = 0b1010101010101010 which is 8 time of direction change
                                         
 /******** SPEED CONTROL SETTING SECTION ********/
 #define SPDCTRL_UPPER_INTEGRAL_LIMIT    2097152     // =2^21 The maximum allowed value for Integral Term of Speed Control PID
 
-#endif                                       /*__DRIVE_PARAMETERS_H*/
+#endif  /*__DRIVE_PARAMETERS_H*/
