@@ -60,6 +60,8 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_8] = 0,
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_9] = 0,
     .Throttle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
+    .Throttle_ConfigData.AdcOffset = THROTTLE_OFFSET_ADC2THROTTLE,
+    .Throttle_ConfigData.AdcMax = THROTTLE_MAX_ADC2THROTTLE,
     .Vehicle_ConfigData.WheelDiameter = WHEEL_DIAMETER,
     .Vehicle_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
     .Vehicle_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
@@ -77,6 +79,8 @@ static User_ConfigData_t userConfigData =
 
 //buffer used to 
 static uint8_t data[NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN];
+
+
 
 /*********************************************
                 Public Variables
@@ -332,7 +336,10 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
 
     userConfigHandle->pVController->pPowertrain->pTailLight->bDefaultLightState  =  UserConfigTask_GetTailLightDefault();
     userConfigHandle->pVController->pPowertrain->pTailLight->bLightStateLocked   =  UserConfigTask_GetTailLightLocked();
-    userConfigHandle->pVController->pPowertrain->pTailLight->bBlinkOnBrake       =  UserConfigTask_GetTailLightBlinkOnBrake();  
+    userConfigHandle->pVController->pPowertrain->pTailLight->bBlinkOnBrake       =  UserConfigTask_GetTailLightBlinkOnBrake();
+
+    userConfigHandle->pVController->pPowertrain->pThrottle->hParameters.hOffsetThrottle = UserConfigTask_GetThrottleAdcOffset();
+    userConfigHandle->pVController->pPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();   
 }
 
 /**
@@ -922,6 +929,65 @@ void UserConfigTask_UpdateTailLightBlinkOnBrake(uint8_t value)
     else
     {
         userConfigData.Vehicle_ConfigData.TailLightBlinkOnBrake = 0;    
+    }
+}
+
+/**
+  @brief Function to get Throttle Adc Offset
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Throttle Adc Offset
+
+*/
+uint16_t UserConfigTask_GetThrottleAdcOffset(void)
+{
+    return userConfigData.Throttle_ConfigData.AdcOffset;
+}
+
+/**
+  @brief Function to update Throttle Adc Offset
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Throttle Adc Offset
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleAdcOffset(uint16_t value)
+{
+    if(value <= userConfigData.Throttle_ConfigData.AdcMax)
+    {
+        userConfigData.Throttle_ConfigData.AdcOffset = value;
+    }
+    
+}
+
+/**
+  @brief Function to get Throttle Adc Max
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Throttle Adc Max
+
+*/
+uint16_t UserConfigTask_GetThrottleAdcMax(void)
+{
+    return userConfigData.Throttle_ConfigData.AdcMax;
+}
+
+/**
+  @brief Function to update Throttle Adc Max
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Throttle Adc Max
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleAdcMax(uint16_t value)
+{       
+    if(value >= userConfigData.Throttle_ConfigData.AdcOffset)
+    {
+        userConfigData.Throttle_ConfigData.AdcMax = (uint16_t)value;
     }
 }
 

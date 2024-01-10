@@ -282,6 +282,12 @@ extern "C" {
 // OD ID to set the taillight blink on brake behavior 
 #define CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE  0x202A
 
+// OD ID to set the throttle adc offset
+#define CO_OD_CONFIG_THROTTLE_ADC_OFFSET       0x202B
+
+// OD ID to set the throttle adc max
+#define CO_OD_CONFIG_THROTTLE_ADC_MAX          0x202C
+
 //this OD ID will be used to 
 //receive data and commands during a firmware update.
 //the GNR doesn't have enough memory to receive

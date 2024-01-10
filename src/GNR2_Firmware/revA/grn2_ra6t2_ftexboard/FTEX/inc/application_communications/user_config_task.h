@@ -86,6 +86,7 @@ typedef enum
 	ERROR,
 } UserConfigStateMachine_t;
 
+
 //
 typedef struct 
 {
@@ -278,7 +279,7 @@ void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t value);
   read from data flash memory.
   
   @param void
-  @return uint8_t !!!!range will be defined.
+  @return uint8_t range will be defined.
 
 */
 uint8_t UserConfigTask_GetTorqueMaxSpeed(void);
@@ -517,6 +518,46 @@ uint8_t UserConfigTask_GetTailLightBlinkOnBrake(void);
 
 */
 void UserConfigTask_UpdateTailLightBlinkOnBrake(uint8_t value);
+
+/**
+  @brief Function to get Throttle Adc Offset
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Throttle Adc Offset
+
+*/
+uint16_t UserConfigTask_GetThrottleAdcOffset(void);
+
+/**
+  @brief Function to update Throttle Adc Offset
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Throttle Adc Offset
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleAdcOffset(uint16_t value);
+
+/**
+  @brief Function to get Throttle Adc Max
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Throttle Adc Max
+
+*/
+uint16_t UserConfigTask_GetThrottleAdcMax(void);
+
+/**
+  @brief Function to update Throttle Adc Max
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Throttle Adc Max
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleAdcMax(uint16_t value);
 
 /**
   @brief Function used to calculate a CRC 16 type using the same polynom 

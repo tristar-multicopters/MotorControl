@@ -240,20 +240,26 @@ uint8_t bObjDataConfigWheelDiameter         = 0;
 //variable associated with CO_OD_CONFIG_SCREEN_PROTOCOL
 uint8_t bObjDataConfigScreenProtocol        = 0;
 
-//variable associated with  CO_OD_CONFIG_HEADLIGHT_DEFAULT
+//variable associated with CO_OD_CONFIG_HEADLIGHT_DEFAULT
 uint8_t bObjDataConfigHeadLightDefault      = 0;
 
-//variable associated with  CO_OD_CONFIG_HEADLIGHT_LOCKED
+//variable associated with CO_OD_CONFIG_HEADLIGHT_LOCKED
 uint8_t bObjDataConfigHeadLightLocked       = 0;
 
-//variable associated with  CO_OD_CONFIG_TAILLIGHT_DEFAULT
+//variable associated with CO_OD_CONFIG_TAILLIGHT_DEFAULT
 uint8_t bObjDataConfigTailLightDefault      = 0;
 
-//variable associated with  CO_OD_CONFIG_TAILLIGHT_LOCKED 
+//variable associated with CO_OD_CONFIG_TAILLIGHT_LOCKED 
 uint8_t bObjDataConfigTailLightLocked       = 0;
 
-//variable associated with  CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE
+//variable associated with CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE
 uint8_t bObjDataConfigTailLightBLinkOnBrake = 0;
+
+//variable associated with CO_OD_CONFIG_THROTTLE_ADC_OFFSET
+uint16_t bObjDataConfigThrottleAdcOffset    = 0;
+
+//variable associated with CO_OD_CONFIG_THROTTLE_ADC_MAX
+uint16_t bObjDataConfigThrottleAdcMax       = 0;
 
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
@@ -1233,6 +1239,14 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigTailLightBLinkOnBrake};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcOffset};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcMax};
             //move to next OD index
             index++;
             

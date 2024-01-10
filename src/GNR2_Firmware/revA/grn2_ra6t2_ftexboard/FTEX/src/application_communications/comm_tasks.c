@@ -113,17 +113,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t torqueLevelPower[10];
     uint8_t maxSpeed;
     uint8_t walkModeSpeed;
-    
-    
-    uint8_t ConfigWheelDiameter;
-    uint8_t ConfigScreenProtocol;
-    
-    uint8_t ConfigHeadLightDefault;
-    uint8_t ConfigHeadLightLocked;
-    uint8_t ConfigTailLightDefault;
-    uint8_t ConfigTailLightLocked;
-    uint8_t ConfigTailLightBlinkOnBrake;    
-                                          
+                                              
     /***********variable used to get the key code that enable user data configuration to be updated.**************/
     uint16_t keyUserDataConfig = 0;
                                           
@@ -475,6 +465,19 @@ static void UpdateObjectDictionnary(void *p_arg)
         }
         else
         {
+            
+             uint8_t configWheelDiameter;
+             uint8_t configScreenProtocol;
+    
+             uint8_t configHeadLightDefault;
+             uint8_t configHeadLightLocked;
+             uint8_t configTailLightDefault;
+             uint8_t configTailLightLocked;
+             uint8_t configTailLightBlinkOnBrake;
+
+             uint16_t configThrottleAdcOffset;
+             uint16_t configThrottleAdcMax; 
+            
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
              {
@@ -498,17 +501,19 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
                 
                  // Config 
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &ConfigWheelDiameter, sizeof(uint8_t)); 
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &ConfigScreenProtocol, sizeof(uint8_t)); 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &configWheelDiameter, sizeof(uint8_t)); 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &configScreenProtocol, sizeof(uint8_t)); 
                  
                  // Headlight default state and locked state
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_DEFAULT, 0)),        pNode, &ConfigHeadLightDefault, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_LOCKED, 0)),         pNode, &ConfigHeadLightLocked, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_DEFAULT, 0)),        pNode, &configHeadLightDefault, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_LOCKED, 0)),         pNode, &configHeadLightLocked, sizeof(uint8_t));
                  // Taillight default state, locked state and blink on brake state
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_DEFAULT, 0)),        pNode, &ConfigTailLightDefault, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_LOCKED, 0)),         pNode, &ConfigTailLightLocked, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE, 0)), pNode, &ConfigTailLightBlinkOnBrake, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_DEFAULT, 0)),        pNode, &configTailLightDefault, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_LOCKED, 0)),         pNode, &configTailLightLocked, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE, 0)), pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));
                  
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
@@ -531,26 +536,26 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdateBikeMaxSpeed(maxSpeed);
                  UserConfigTask_UpdateWalkModeSpeed(walkModeSpeed);
                  
-                 UserConfigTask_UpdateWheelDiameter(ConfigWheelDiameter);
-                 UserConfigTask_UpdateScreenProtocol(ConfigScreenProtocol);
+                 UserConfigTask_UpdateWheelDiameter(configWheelDiameter);
+                 UserConfigTask_UpdateScreenProtocol(configScreenProtocol);
                  
                 
-                 UserConfigTask_UpdateHeadLightDefault(ConfigHeadLightDefault);
-                 UserConfigTask_UpdateHeadLightLocked(ConfigHeadLightLocked);
+                 UserConfigTask_UpdateHeadLightDefault(configHeadLightDefault);
+                 UserConfigTask_UpdateHeadLightLocked(configHeadLightLocked);
                  
-                 UserConfigTask_UpdateTailLightDefault(ConfigTailLightDefault);
-                 UserConfigTask_UpdateTailLightLocked(ConfigTailLightLocked);
-                 UserConfigTask_UpdateTailLightBlinkOnBrake(ConfigTailLightBlinkOnBrake);                 
+                 UserConfigTask_UpdateTailLightDefault(configTailLightDefault);
+                 UserConfigTask_UpdateTailLightLocked(configTailLightLocked);
+                 UserConfigTask_UpdateTailLightBlinkOnBrake(configTailLightBlinkOnBrake);                 
+                 
+                 UserConfigTask_UpdateThrottleAdcOffset(configThrottleAdcOffset);
+                 UserConfigTask_UpdateThrottleAdcMax(configThrottleAdcMax);
                  
                  //write in the data flash and reset the system.
                  UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle); 
-                                 
-                 
+                                                
              }
-        }
-         
+        }      
     }
-
 }
 
 /************* TASKS ****************/
@@ -755,16 +760,19 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         
                                               
         //Config                                      
-        uint8_t ConfigWheelDiameter =   UserConfigTask_GetWheelDiameter();
-        uint8_t ConfigScreenProtocol =  UserConfigTask_GetScreenProtocol();                                              
+        uint8_t configWheelDiameter =   UserConfigTask_GetWheelDiameter();
+        uint8_t configScreenProtocol =  UserConfigTask_GetScreenProtocol();                                              
         
-        uint8_t ConfigHeadLightDefault      = UserConfigTask_GetHeadLightDefault(); 
-        uint8_t ConfigHeadLightLocked       = UserConfigTask_GetHeadLightLocked(); 
+        uint8_t configHeadLightDefault      = UserConfigTask_GetHeadLightDefault(); 
+        uint8_t configHeadLightLocked       = UserConfigTask_GetHeadLightLocked(); 
         
-        uint8_t ConfigTailLightDefault      = UserConfigTask_GetTailLightDefault();
-        uint8_t ConfigTailLightLocked       = UserConfigTask_GetTailLightLocked();
-        uint8_t ConfigTailLightBlinkOnBrake = UserConfigTask_GetTailLightBlinkOnBrake();
+        uint8_t configTailLightDefault      = UserConfigTask_GetTailLightDefault();
+        uint8_t configTailLightLocked       = UserConfigTask_GetTailLightLocked();
+        uint8_t configTailLightBlinkOnBrake = UserConfigTask_GetTailLightBlinkOnBrake();
                                               
+        uint16_t configThrottleAdcOffset    = UserConfigTask_GetThrottleAdcOffset();                                      
+        uint16_t configThrottleAdcMax       = UserConfigTask_GetThrottleAdcMax();
+        
                                               
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow));     
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSerialNbHigh,  sizeof(fSerialNbHigh));  
@@ -782,11 +790,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         
         
         // Initialise the wheel diameter with the value in the user config 
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),       pNode, &ConfigWheelDiameter, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),       pNode, &configWheelDiameter, sizeof(uint8_t));
         
         // Initialise the light with the default value in user config
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)),  pNode, &ConfigHeadLightDefault, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),   pNode, &ConfigTailLightDefault, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)),  pNode, &configHeadLightDefault, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),   pNode, &configTailLightDefault, sizeof(uint8_t));
         
         //fill the OD ID to cadenceLevelSpeed and torqueLevelPower with the current values.
         //this OD ID have 10 subindex each.
@@ -801,17 +809,20 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
 
         //Config 
         // Show what is the default wheel diameter in the user config
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &ConfigWheelDiameter, sizeof(uint8_t));         
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &configWheelDiameter, sizeof(uint8_t));         
         // Show the currently selected screen protocol
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &ConfigScreenProtocol, sizeof(uint8_t)); 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &configScreenProtocol, sizeof(uint8_t)); 
         
         // Headlight default state and locked state
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_DEFAULT, 0)),        pNode, &ConfigHeadLightDefault, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_LOCKED, 0)),         pNode, &ConfigHeadLightLocked, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_DEFAULT, 0)),        pNode, &configHeadLightDefault, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_LOCKED, 0)),         pNode, &configHeadLightLocked, sizeof(uint8_t));
         // Taillight default state, locked state and blink on brake state
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_DEFAULT, 0)),        pNode, &ConfigTailLightDefault, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_LOCKED, 0)),         pNode, &ConfigTailLightLocked, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE, 0)), pNode, &ConfigTailLightBlinkOnBrake, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_DEFAULT, 0)),        pNode, &configTailLightDefault, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_LOCKED, 0)),         pNode, &configTailLightLocked, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE, 0)), pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
+        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));
    }           
 }
 

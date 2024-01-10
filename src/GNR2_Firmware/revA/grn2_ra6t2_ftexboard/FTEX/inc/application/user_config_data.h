@@ -77,6 +77,8 @@ typedef struct
 {
     uint8_t maxSpeed;
     uint8_t walkModeSpeed;
+    uint16_t AdcOffset;
+    uint16_t AdcMax; 
 } Throttle_ConfigData_t;
 
 //struct used to hold the configuration
