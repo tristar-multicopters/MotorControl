@@ -34,9 +34,10 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.pasAlgorithm = PAS_ALGORITHM,
     .PAS_ConfigData.numberOfPasLevels = PAS_MAX_LEVEL,
     .PAS_ConfigData.pasMaxPower = PAS_MAX_TORQUE_RATIO,
-    .PAS_ConfigData.torqueMinimumThreshold = PTS_OFFSET_PTS2TORQUE, 
-    .PAS_ConfigData.torqueMinimumThresholdStartup = PTS_OFFSET_PTS2TORQUE_STARTUP,
-    .PAS_ConfigData.startupTorqueMinimumThresholdSpeed = PTS_OFFSET_STARTUP_SPEED_KMH,
+    .PAS_ConfigData.pasTorqueStartupSpeed = PTS_OFFSET_STARTUP_SPEED_KMH,
+    .PAS_ConfigData.pasTorqueStartupThreshold = PTS_OFFSET_PTS2TORQUE_STARTUP,
+    .PAS_ConfigData.pasCadenceStartupNumbPulses = PAS_MIN_PEDAL_PULSE_COUNT,
+    .PAS_ConfigData.pasCadenceStartupWindows = CADENCE_DETECTION_WINDOWS_MS,
     .PAS_ConfigData.torqueSensorMultiplier = PAS_TORQUE_GAIN,
     .PAS_ConfigData.torqueMaxSpeed = 0,
     .PAS_ConfigData.cadenceLevelSpeed[PAS_0] = PAS_C_LEVEL_SPEED_0,
@@ -296,16 +297,19 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     //update userConfigData.PAS_ConfigData.pasMaxPower(PAS_MAX_TORQUE_RATIO)
     userConfigHandle->pVController->pPowertrain->pPAS->sParameters.hMaxTorqueRatio = UserConfigTask_GetPasMaxPower();
-
-    //update userConfigData.PAS_ConfigData.torqueMinimumThresholdStartup(PTS_OFFSET_PTS2TORQUE_STARTUP)
-    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hOffsetMTStartup = UserConfigTask_GetTorqueMinimumThresholdStartup();
-
-    //update userConfigData.PAS_ConfigData.startupTorqueMinimumThresholdSpeed(PTS_OFFSET_STARTUP_SPEED_KMH)
-    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hStartupOffsetMTSpeedKMH = UserConfigTask_GetStartupOffsetMinimumThresholdSpeed();
     
-    //update userConfigData.PAS_ConfigData.torqueMinimumThreshold(PTS_OFFSET_PTS2TORQUE)
-    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hOffsetMT = UserConfigTask_GetTorqueMinimumThreshold();  
+    //update userConfigData.PAS_ConfigData.pasTorqueStartupSpeed(PTS_OFFSET_STARTUP_SPEED_KMH)
+    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hStartupOffsetMTSpeedKMH = (uint16_t)UserConfigTask_GetPasTorqueStartupSpeed();
 
+    //update userConfigData.PAS_ConfigData.pasTorqueStartupThreshold(PTS_OFFSET_PTS2TORQUE_STARTUP)
+    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hOffsetMTStartup = UserConfigTask_GetPasTorqueStartupThreshold();
+    
+    //update userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bPASMinPulseCount(PAS_MIN_PEDAL_PULSE_COUNT)
+    userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bPASMinPulseCount = UserConfigTask_GetPasCadenceStartupNumbPulses();
+    
+    //update userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_Windows(CADENCE_DETECTION_WINDOWS_MS)
+    userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_Windows = UserConfigTask_GetPasCadenceStartupWindows();
+    
     //update PAS_ConfigData.torqueSensorMultiplier(PAS_TORQUE_GAIN)    
     userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bTorqueGain = UserConfigTask_GetTorqueSensorMultiplier();
     
@@ -431,9 +435,9 @@ void UserConfigTask_UpdatePasMaxPower(uint8_t value)
   @return uint8_t a number that represent Torque Minimum Threshold
   on %(0 until 100).
 */
-uint8_t UserConfigTask_GetTorqueMinimumThresholdStartup(void)
+uint8_t UserConfigTask_GetPasTorqueStartupSpeed(void)
 {
-    return userConfigData.PAS_ConfigData.torqueMinimumThresholdStartup;     
+    return userConfigData.PAS_ConfigData.pasTorqueStartupSpeed;     
 }
 
 /**
@@ -444,12 +448,12 @@ uint8_t UserConfigTask_GetTorqueMinimumThresholdStartup(void)
   @return void
  
 */
-void UserConfigTask_UpdateTorqueMinimumThresholdStartup(uint8_t value)
+void UserConfigTask_UpdatePasTorqueStartupSpeed(uint8_t value)
 {
     //verify if value is in the range.
-    if((value <= 100) && (value >= 0))
+    if((value <= 100) && (value > 0))
     {
-        userConfigData.PAS_ConfigData.torqueMinimumThresholdStartup = value;
+        userConfigData.PAS_ConfigData.pasTorqueStartupSpeed = value;
     }        
 }
 
@@ -461,9 +465,9 @@ void UserConfigTask_UpdateTorqueMinimumThresholdStartup(uint8_t value)
   @return uint8_t a number that represent Startup Offset Minimum Threshold Speed
   in RPM.
 */
-uint8_t UserConfigTask_GetStartupOffsetMinimumThresholdSpeed(void)
+uint8_t UserConfigTask_GetPasTorqueStartupThreshold(void)
 {
-    return userConfigData.PAS_ConfigData.startupTorqueMinimumThresholdSpeed; 
+    return userConfigData.PAS_ConfigData.pasTorqueStartupThreshold; 
 }
 
 /**
@@ -474,43 +478,74 @@ uint8_t UserConfigTask_GetStartupOffsetMinimumThresholdSpeed(void)
   @return void
  
 */
-void UserConfigTask_UpdateStartupOffsetMinimumThresholdSpeed(uint8_t value)
+void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value)
 {
     //verify if value is in the range.
-    if(value >= 0)
+     if((value <= 100) && (value > 0))
     {
-        userConfigData.PAS_ConfigData.startupTorqueMinimumThresholdSpeed = value;
+        userConfigData.PAS_ConfigData.pasTorqueStartupThreshold = value;
     }        
 }
 
 /**
-  @brief Function to get Torque Minimum Threshold
+  @brief Function to get pasCadenceStartupNumbPulses
   read from data flash memory.
   
   @param void
-  @return uint8_t a number that represent Torque Minimum Threshold
-  on %(0 until 100).
+  @return uint8_t a number that represent pasCadenceStartupNumbPulses.
 */
-uint8_t UserConfigTask_GetTorqueMinimumThreshold(void)
+uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void)
 {
-    return userConfigData.PAS_ConfigData.torqueMinimumThreshold; 
+    return userConfigData.PAS_ConfigData.pasCadenceStartupNumbPulses; 
 }
 
 /**
-  @brief Function to update Torque Minimum Threshold value
+  @brief Function to update pasCadenceStartupNumbPulses
   read from data flash memory.
   
-  @param uint8_t value to be passed into the Torque Minimum Threshold
+  @param uint8_t value to be passed into the pasCadenceStartupNumbPulses
   @return void
  
 */
-void UserConfigTask_UpdateTorqueMinimumThreshold(uint8_t value)
+void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint16_t value)
 {
     //verify if value is in the range.
-    if((value <= 100) && (value >= 0))
+    if((value > 0) && (value <= 0xFFFF))
     {
-        userConfigData.PAS_ConfigData.torqueMinimumThreshold = value;
+        userConfigData.PAS_ConfigData.pasCadenceStartupNumbPulses = value;
     }        
+}
+
+/**
+  @brief Function to get time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory.
+  
+  @param void
+  @return uint23_t a number that represent time windows used to check the number of
+  pulses.
+*/
+uint32_t UserConfigTask_GetPasCadenceStartupWindows(void)
+{
+    return userConfigData.PAS_ConfigData.pasCadenceStartupWindows;
+}
+
+/**
+  @brief Function to update time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory.
+  
+  @param uint32_t value to be passed into the time windows used to check the number of
+  pulses.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasCadenceStartupWindows(uint32_t value)
+{
+    //verify if value is in the range.
+    //range on ms.
+    if((value > 200) && (value <= 0xFFFFFFFF))
+    {
+        userConfigData.PAS_ConfigData.pasCadenceStartupWindows = value;
+    }   
 }
 
 /**

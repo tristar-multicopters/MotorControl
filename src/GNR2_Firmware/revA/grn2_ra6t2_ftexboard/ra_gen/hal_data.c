@@ -294,7 +294,7 @@ const agt_extended_cfg_t g_timer_a0_extend =
     .measurement_mode        = AGT_MEASURE_PULSE_PERIOD,
     .agtio_filter            = AGT_AGTIO_FILTER_PCLKB_DIV_32,
     .enable_pin              = AGT_ENABLE_PIN_NOT_USED,
-    .trigger_edge            = AGT_TRIGGER_EDGE_RISING,
+    .trigger_edge            = AGT_TRIGGER_EDGE_FALLING,
 };
 const timer_cfg_t g_timer_a0_cfg =
 {

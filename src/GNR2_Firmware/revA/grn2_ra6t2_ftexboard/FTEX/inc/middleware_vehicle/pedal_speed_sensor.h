@@ -19,11 +19,12 @@
 typedef struct {
 	PulseFrequencyHandle_t * pPulseFrequency;   /* Pointer to pedal handle */
 
-	uint32_t wPedalSpeedSens_Freq;  /* Pedal Speed sensor frequency calculated value */
-	uint32_t wPedalSpeedSens_Period;    /* Pedal Speed Sensor Periode value*/
-	int32_t  wPedalSpeedSens_RPM;   /* Pedal Speed sensor RPM calculated value */
-
-	uint8_t	bPulsePerRotation;			/* Number of pulse per rotation */
+    uint32_t wPedalSpeedSens_Freq;  /* Pedal Speed sensor frequency calculated value */
+    uint32_t wPedalSpeedSens_Windows; /* Maximum time, on ms, to verify the Detected Number of pulses*/
+    bool wPedalSpeedSens_ResetWindowsFlag;
+    uint16_t wPedalSpeedSens_NumberOfPulses;    /*Detected Number of pulses from teh cadence signal*/
+    uint32_t  wPedalSpeedSens_RPM;   /* Pedal Speed sensor RPM calculated value */
+    uint8_t	bPulsePerRotation;			/* Number of pulse per rotation */
 
 } PedalSpeedSensorHandle_t;
 
@@ -40,34 +41,49 @@ void PedalSpdSensor_Init(PedalSpeedSensorHandle_t* pHandle);
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PedalSpdSensor_CalculateSpeed(PedalSpeedSensorHandle_t* pHandle);
+void PedalSpdSensor_ReadNumberOfPulses(PedalSpeedSensorHandle_t* pHandle);
 
 /**
   @brief  Function to Get the Pedal Speed Sensor Periode
   @param  PedalSpeedSensorHandle_t handle
   @return wPedal_Sensor_Read in unit32_t
 */
-uint32_t PedalSpdSensor_GetPeriodValue(PedalSpeedSensorHandle_t* pHandle);
+uint16_t PedalSpdSensor_GetNumberOfPulses(PedalSpeedSensorHandle_t* pHandle);
 
 /**
-  @brief  Function to Reset the Pedal Speed Sensor Periode
+  @brief  Function to reset all variables used to hold the number of pulses measured
+          by the AGT timer.
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
 void PedalSpdSensor_ResetValue(PedalSpeedSensorHandle_t* pHandle);
 
 /**
-  @brief  Function to Get the Pedal Speed Sensor Frequency
+  @brief  Set windows reset flag
   @param  PedalSpeedSensorHandle_t handle
-  @return wPedalSpeedSens_Freq in unit32_t
+  @return None
 */
-uint32_t PedalSpdSensor_GetSpeedFreq(PedalSpeedSensorHandle_t* pHandle);
+void PedalSpdSensor_SetWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
+
+/**
+  @brief  Clear windows reset flag
+  @param  PedalSpeedSensorHandle_t handle
+  @return None
+*/
+void PedalSpdSensor_ClearWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
+
+/**
+  @brief  Get windows reset flag
+  @param  PedalSpeedSensorHandle_t handle
+  @return bool wPedalSpeedSens_ResetWindowsFlag
+*/
+bool PedalSpdSensor_GetWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
 
 /**
   @brief  Function to return speed in rpm
   @param  PedalSpeedSensorHandle_t handle
   @retval Speed in rpm
 */
-int32_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle);
+uint32_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle);
 
 #endif

@@ -83,13 +83,22 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
     uint32_t xLastWakeTime = osKernelGetTickCount();
     
     static bool bLightInitalised = false;
-        
+    
     while (true)
     {
         PWRT_UpdatePowertrainPeripherals(pVCI->pPowertrain);
         PWRT_CalcMotorTorqueSpeed(pVCI->pPowertrain);
         
+        //Try to detect PAS from a cadence signal(sensor).
+        //this function must increment , input number 2, with the same frequency of the task where he is being 
+        //called.
+        //This task runs each 5 ms(TASK_VCFASTLOOP_SAMPLE_TIME_TICK/2).
+        PedalAssist_CadencePASDetection(pVCI->pPowertrain->pPAS, (uint16_t)TASK_VCFASTLOOP_SAMPLE_TIME_TICK/2); 
+        
         // VC_SlowLoop execute in the MediumFreq loop
+        //The if conditon is actived each 250ms.
+        //TASK_VCSLOWLOOP_SAMPLE_TIME_TICK = 50.
+        //this task wake ups each 5 ms, so 
         TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT++;
         if (TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT > TASK_VCSLOWLOOP_SAMPLE_TIME_TICK)
         {
@@ -102,9 +111,7 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
             }
             
             // Check PAS activation based on torque or cadence
-            PedalAssist_UpdatePASDetectionCall(pVCI->pPowertrain->pPAS);
-            // Pedal Assist Cadence reading period
-            PedalSpdSensor_CalculateSpeed(pVCI->pPowertrain->pPAS->pPSS);
+            PedalAssist_TorquePASDetection(pVCI->pPowertrain->pPAS);
             // Wheel Speed sensor reading period
             WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pPAS->pWSS);
 
@@ -134,6 +141,8 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);
         R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hAvADCValue);
         #endif
+        
+        //this task runs each 5ms.
         xLastWakeTime += TASK_VCFASTLOOP_SAMPLE_TIME_TICK;
         osDelayUntil(xLastWakeTime);
     }

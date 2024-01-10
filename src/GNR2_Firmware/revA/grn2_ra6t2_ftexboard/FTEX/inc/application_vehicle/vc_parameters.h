@@ -241,5 +241,9 @@
     #define REAR_LIGHT_BLINK_ON_BRAKE     true // If set to true rear light will blink when brake is pressed
 #endif
     
+#ifndef CADENCE_DETECTION_WINDOWS_MS
+    #define CADENCE_DETECTION_WINDOWS_MS 3000           //cadence detection windows on ms.
+#endif    
+    
 #endif /*__VC_PARAMETERS_H*/
 

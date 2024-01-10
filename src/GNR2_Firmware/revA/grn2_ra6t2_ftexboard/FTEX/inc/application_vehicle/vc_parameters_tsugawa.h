@@ -92,7 +92,7 @@
 
 #define PAS_WALK_POWER_PERCENT    70    // PAS walk has a ratio of 70%
 
-#define PAS_MIN_PEDAL_COUNT_SAFE                  2    // Number of pulse per pedal turn do we neeed after initial detection to push power
+#define PAS_MIN_PEDAL_PULSE_COUNT                 6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
 #define PAS_SLOW_PEDAL_COUNT                      1    // Loop wait counter to update the PAS detection function
 #define PAS_WALKMODE_OVER_THROTTLE             true    // If set to true walk mode has higher priority than throttle
 

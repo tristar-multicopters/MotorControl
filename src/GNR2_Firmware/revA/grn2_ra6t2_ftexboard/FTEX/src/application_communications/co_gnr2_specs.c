@@ -193,16 +193,19 @@ uint16_t bObjDataKeyUserDataConfig          = 0;
 uint8_t bObjDataPasAlgorithm                = 0;
 
 //variable associated with CO_OD_REG_PAS_MAX_POWER.
-uint8_t bObjDataPasMaxPower                 = 0;
+uint8_t bObjDataPasMaxPower                 = 0; 
 
-//variable associated with CO_OD_REG_TORQUE_MINIMUM_THRESHOLD.
-uint8_t bObjDataTorqueMinimumThreshold      = 0;
+//variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 0
+uint8_t bObjDataPasTorqueStartupSpeed = 0;
 
-//variable associated with CO_OD_REG_TORQUE_MINIMUM_THRESHOLD.
-uint8_t bObjDataTorqueMinimumThresholdStartup  = 0;                     
+//variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 1
+uint8_t bObjDataPasTorqueStartupThreshold = 0;
 
-//variable associated with CO_OD_REG_TORQUE_MINIMUM_THRESHOLD.
-uint8_t bObjDataTorqueStartupSpeed           = 0;
+//variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 2
+uint16_t bObjDataPasCadenceStartupNumbPulses = 0;
+
+//variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 3
+uint32_t bObjDataPasCadenceStartupWindows = 0;
 
 //variable associated with CO_OD_REG_TORQUE_SENSOR_MULTIPLIER.
 uint8_t bObjDataTorqueSensorMultiplier      = 0;
@@ -1098,18 +1101,20 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
         
-            //Application - Torque threshold for starting motor assistance from 0 speed. Only relevant for torque/hybrid PAS. 
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueMinimumThreshold};
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueStartupSpeed};
             //move to next OD index
             index++;
-        
-            //Application - Offset for pedal torque sensor to torque linear transformation during the startup in %
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueMinimumThresholdStartup};
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueStartupThreshold};
             //move to next OD index
             index++;
-        
-            //Application - Speed under which the Startup pedal torque sensor offset is used in km/h 
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueStartupSpeed};
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceStartupNumbPulses};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 3, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&bObjDataPasCadenceStartupWindows};
             //move to next OD index
             index++;
         
@@ -1249,7 +1254,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcMax};
             //move to next OD index
             index++;
-            
+
             
             //Application - Used to control the firmware update procedure.
             //subindex 0 is used to receive command from the IOT module to control the DFU process.

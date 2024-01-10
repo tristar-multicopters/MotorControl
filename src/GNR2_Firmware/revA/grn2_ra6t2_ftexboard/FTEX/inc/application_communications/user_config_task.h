@@ -202,7 +202,7 @@ void UserConfigTask_UpdatePasMaxPower(uint8_t value);
   @return void
  
 */
-uint8_t UserConfigTask_GetTorqueMinimumThresholdStartup(void);
+uint8_t UserConfigTask_GetPasTorqueStartupSpeed(void);
 
 /**
   @brief Function to get Torque Minimum Threshold Startup
@@ -212,7 +212,7 @@ uint8_t UserConfigTask_GetTorqueMinimumThresholdStartup(void);
   @return uint8_t a number that represent Torque Minimum Threshold
   on %(0 until 100).
 */
-void UserConfigTask_UpdateTorqueMinimumThresholdStartup(uint8_t value);
+void UserConfigTask_UpdatePasTorqueStartupSpeed(uint8_t value);
 
 /**
   @brief Function to get Startup Offset Minimum Threshold Speed
@@ -222,7 +222,7 @@ void UserConfigTask_UpdateTorqueMinimumThresholdStartup(uint8_t value);
   @return uint8_t a number that represent Startup Offset Minimum Threshold Speed
   in RPM.
 */
-uint8_t UserConfigTask_GetStartupOffsetMinimumThresholdSpeed(void);
+uint8_t UserConfigTask_GetPasTorqueStartupThreshold(void);
 
 /**
   @brief Function to update Startup Offset Minimum Threshold Speed
@@ -232,27 +232,48 @@ uint8_t UserConfigTask_GetStartupOffsetMinimumThresholdSpeed(void);
   @return void
  
 */
-void UserConfigTask_UpdateStartupOffsetMinimumThresholdSpeed(uint8_t value);
+void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value);
+
 
 /**
-  @brief Function to get Torque Minimum Threshold
+  @brief Function to get pasCadenceStartupNumbPulses
   read from data flash memory.
   
   @param void
-  @return uint8_t a number that represent Torque Minimum Threshold
-  on %(0 until 100).
+  @return uint8_t a number that represent pasCadenceStartupNumbPulses.
 */
-uint8_t UserConfigTask_GetTorqueMinimumThreshold(void);
+uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void);
 
 /**
-  @brief Function to update Torque Minimum Threshold value
+  @brief Function to update pasCadenceStartupNumbPulses
   read from data flash memory.
   
-  @param uint8_t value to be passed into the Torque Minimum Threshold
+  @param uint16_t value to be passed into the pasCadenceStartupNumbPulses
   @return void
  
 */
-void UserConfigTask_UpdateTorqueMinimumThreshold(uint8_t value);
+void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint16_t value);
+
+/**
+  @brief Function to get time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory.
+  
+  @param void
+  @return uint23_t a number that represent time windows used to check the number of
+  pulses.
+*/
+uint32_t UserConfigTask_GetPasCadenceStartupWindows(void);
+
+/**
+  @brief Function to update time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory.
+  
+  @param uint32_t value to be passed into the time windows used to check the number of
+  pulses.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasCadenceStartupWindows(uint32_t value);
 
 /**
   @brief Function to get Torque Sensor Multiplier

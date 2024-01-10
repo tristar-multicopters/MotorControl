@@ -199,12 +199,23 @@ extern "C" {
 //PAS_MAX_TORQUE_RATIO                   99  
 #define CO_OD_REG_PAS_MAX_POWER                0x2016
 
-//OD ID for configure torque Minimum Threshold
-//The define used by this parameter is:
-//PTS_OFFSET_PTS2TORQUE                 
-//PTS_OFFSET_PTS2TORQUE_STARTUP
-//PTS_OFFSET_STARTUP_SPEED_KMH
-#define CO_OD_REG_TORQUE_MINIMUM_THRESHOLD     0x2017
+//OD ID to setup some PAS parameters on startup condition.
+//The define(s) used by this parameter is:
+//
+//Startup config speed. Speed at which startup configuration becomes active.
+//SUBINDEX 0: hStartupOffsetMTSpeedKMH = PTS_OFFSET_STARTUP_SPEED_KMH
+//
+//Startup threshold of the torque sensor (if present). 
+//Threshold in % of pressure needed to push power (when under the startup config speed)
+//SUBINDEX 1: hOffsetMTStartup = PTS_OFFSET_PTS2TORQUE_STARTUP.
+//
+//Minimum number of pulses to detect PAS cadence.
+//SUBINDEX 2: sParameters.bPASMinPulseCount = PAS_MIN_PEDAL_PULSE_COUNT.
+//
+//Time window for PAS cadence detection on start condition.
+//SUBINDEX 3: pPSS->wPedalSpeedSens_Windows = CADENCE_DETECTION_WINDOWS_MS.
+
+#define CO_OD_REG_PAS_DETECTION_STARTUP        0x2017
 
 //OD ID for configure torque Sensor Multiplier
 //PAS ramp multiplication coefficient for a better user feeling
@@ -263,7 +274,6 @@ extern "C" {
 //is the response from CANOPEN layer to informing the other
 //side(master or slave) received the sdo download command.
 #define CO_OD_REG_MASTER_SLAVE_PRESENT         0x2023
-
 
 // OD ID to set the default wheel diamater in inches
 #define CO_OD_CONFIG_WHEELS_DIAMETER           0x2024

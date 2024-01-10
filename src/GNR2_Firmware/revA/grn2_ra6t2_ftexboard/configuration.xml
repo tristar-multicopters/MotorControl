@@ -1162,7 +1162,7 @@
       <property id="module.driver.timer.measurement_mode" value="module.driver.timer.measurement_mode.measure_pulse_period"/>
       <property id="module.driver.timer.agtio_filter" value="module.driver.timer.agtio_filter.agtio_filter_pclkb_div_32"/>
       <property id="module.driver.timer.enable_pin" value="module.driver.timer.enable_pin.enable_pin_not_used"/>
-      <property id="module.driver.timer.trigger_edge" value="module.driver.timer.trigger_edge.trigger_edge_rising"/>
+      <property id="module.driver.timer.trigger_edge" value="module.driver.timer.trigger_edge.trigger_edge_falling"/>
       <property id="module.driver.timer.p_callback" value="PedalSpeedTimer_IRQHandler"/>
       <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority3"/>
     </module>

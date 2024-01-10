@@ -103,9 +103,10 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t pasAlgorithm;
     uint8_t maxPAS;
     uint8_t pasMaxPower;
-    uint8_t torqueMinimumThresholdStartup;    
-    uint8_t startupTorqueMinimumThresholdSpeed;
-    uint8_t torqueMinimumThreshold;
+    uint8_t pasTorqueStartupThreshold;    
+    uint8_t pasTorqueStartupSpeed;
+    uint16_t pasCadenceStartupNumbPulses;
+    uint32_t pasCadenceStartupWindows;
     uint8_t torqueSensorMultiplier;
     uint8_t torqueMaxSpeed;
     
@@ -485,9 +486,10 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)), pNode, &pasAlgorithm, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)), pNode, &maxPAS, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_POWER, 0)), pNode, &pasMaxPower, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0)), pNode, &torqueMinimumThreshold, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 1)), pNode, &torqueMinimumThresholdStartup, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 2)), pNode, &startupTorqueMinimumThresholdSpeed, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 1)), pNode, &pasTorqueStartupThreshold, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint32_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)), pNode, &torqueMaxSpeed, sizeof(uint8_t));
         
@@ -521,9 +523,10 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdataPasAlgorithm(pasAlgorithm);
                  UserConfigTask_UpdateNumberPasLevels(maxPAS);
                  UserConfigTask_UpdatePasMaxPower(pasMaxPower);
-                 UserConfigTask_UpdateTorqueMinimumThresholdStartup(torqueMinimumThresholdStartup);      
-                 UserConfigTask_UpdateStartupOffsetMinimumThresholdSpeed(startupTorqueMinimumThresholdSpeed);
-                 UserConfigTask_UpdateTorqueMinimumThreshold(torqueMinimumThreshold);
+                 UserConfigTask_UpdatePasTorqueStartupThreshold(pasTorqueStartupThreshold);
+                 UserConfigTask_UpdatePasTorqueStartupSpeed(pasTorqueStartupSpeed); 
+                 UserConfigTask_UpdatePasCadenceStartupNumbPulses(pasCadenceStartupNumbPulses);
+                 UserConfigTask_UpdatePasCadenceStartupWindows(pasCadenceStartupWindows);                 
                  UserConfigTask_UpdateTorqueSensorMultiplier(torqueSensorMultiplier);
                  UserConfigTask_UpdateTorqueMaxSpeed(torqueMaxSpeed);
                  
@@ -739,9 +742,10 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t pasAlgorithm                       = UserConfigTask_GetPasAlgorithm();
         uint8_t maxPAS                             = UserConfigTask_GetNumberPasLevels();
         uint8_t pasMaxPower                        = UserConfigTask_GetPasMaxPower();
-        uint8_t torqueMinimumThresholdStartup      = UserConfigTask_GetTorqueMinimumThresholdStartup();    
-        uint8_t startupTorqueMinimumThresholdSpeed = UserConfigTask_GetStartupOffsetMinimumThresholdSpeed();
-        uint8_t torqueMinimumThreshold             = UserConfigTask_GetTorqueMinimumThreshold();
+        uint8_t pasTorqueStartupThreshold          = UserConfigTask_GetPasTorqueStartupThreshold();    
+        uint8_t pasTorqueStartupSpeed              = UserConfigTask_GetPasTorqueStartupSpeed();
+        uint16_t pasCadenceStartupNumbPulses = UserConfigTask_GetPasCadenceStartupNumbPulses();
+        uint32_t pasCadenceStartupWindows = UserConfigTask_GetPasCadenceStartupWindows();
         uint8_t torqueSensorMultiplier             = UserConfigTask_GetTorqueSensorMultiplier();
         uint8_t torqueMaxSpeed                     = UserConfigTask_GetTorqueMaxSpeed();
     
@@ -781,10 +785,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         /***********************UPdate Throttle/Pedal Assist CANopen OD ID.********************************************/
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),            pNode, &pasAlgorithm, sizeof(uint8_t));      
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)),                  pNode, &maxPAS, sizeof(uint8_t));            
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_POWER, 0)),            pNode, &pasMaxPower, sizeof(uint8_t));             
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 0)), pNode, &torqueMinimumThreshold, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 1)), pNode, &torqueMinimumThresholdStartup, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MINIMUM_THRESHOLD, 2)), pNode, &startupTorqueMinimumThresholdSpeed, sizeof(uint8_t));                                              
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_POWER, 0)),            pNode, &pasMaxPower, sizeof(uint8_t));     
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 1)), pNode, &pasTorqueStartupThreshold, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint32_t));        
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, sizeof(uint8_t));    
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)),         pNode, &torqueMaxSpeed, sizeof(uint8_t));            
         

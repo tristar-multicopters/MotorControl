@@ -16,6 +16,9 @@
 
 uint8_t bPASCounterAct = 0; // Slow cadence PAS activation loop couter
 
+//
+static PasCadenceState_t PasCadenceState = CADENCE_DETECTION_START;
+
 /* Functions ---------------------------------------------------- */
 
 // Internal utility function to verify that the assist level we got is within the supported range
@@ -208,126 +211,163 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Check the PAS Presence Flag
+    * @brief  Check the PAS Presence Flag based on torque detection
     * @param  Pedal Assist handle
     * @retval None
     */
-void PedalAssist_UpdatePASDetection (PAS_Handle_t * pHandle) 
+void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle) 
 {
     ASSERT(pHandle != NULL);
-    uint32_t  wSpeedt;
     uint16_t  hTorqueSens;
     uint16_t  hOffsetTemp;
     uint16_t  hWheelRPM;
     uint16_t  hTorquePASThreshold;
-    static uint16_t PulseCounter = 0;
     bool CalculateAverage = false;
     
-    
-    hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
-    /* Calculate the offset based on ration percentage */
-    
-    if(hWheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset
-    {     
-        CalculateAverage = true;  // Make sure we calculated the average to check for the threshold       
-        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;        
-    }
-    else
+    //verify what kind of sensor the system is configured to use.
+    if (pHandle->bCurrentPasAlgorithm == TorqueSensorUse)
     {
-        CalculateAverage = false; // No need for the average      
-        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
-    }        
     
-	
-    wSpeedt = PedalSpdSensor_GetPeriodValue(pHandle->pPSS);
-    hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
-   
-    static uint16_t hThresholdCheckAvg[TORQUE_THRESHOLD_AVG_NB];
-    static uint8_t AvgIndex = 0; 
-    uint32_t wThresholdAvg = 0;
     
-    if(CalculateAverage) // If we need to calculate the average
-    {
-        hThresholdCheckAvg[AvgIndex] = hTorqueSens;
+        hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
+        /* Calculate the offset based on ration percentage */
     
-        if(AvgIndex >= TORQUE_THRESHOLD_AVG_NB - 1)
-        {
-            AvgIndex = 0;
-        }    
+        if(hWheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset
+        {     
+            CalculateAverage = true;  // Make sure we calculated the average to check for the threshold       
+            hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;        
+        }
         else
         {
-            AvgIndex ++;
-        }
+            CalculateAverage = false; // No need for the average      
+            hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+        }        
     
-        for(int i = 0; i < TORQUE_THRESHOLD_AVG_NB; i ++)
+        hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
+   
+        static uint16_t hThresholdCheckAvg[TORQUE_THRESHOLD_AVG_NB];
+        static uint8_t AvgIndex = 0; 
+        uint32_t wThresholdAvg = 0;
+    
+        if(CalculateAverage) // If we need to calculate the average
         {
-            wThresholdAvg += hThresholdCheckAvg[i];
-        }
+            hThresholdCheckAvg[AvgIndex] = hTorqueSens;
     
-        wThresholdAvg /= TORQUE_THRESHOLD_AVG_NB;
+            if(AvgIndex >= TORQUE_THRESHOLD_AVG_NB - 1)
+            {
+                AvgIndex = 0;
+            }    
+            else
+            {
+                AvgIndex ++;
+            }
+    
+            for(int i = 0; i < TORQUE_THRESHOLD_AVG_NB; i ++)
+            {
+                wThresholdAvg += hThresholdCheckAvg[i];
+            }
+    
+            wThresholdAvg /= TORQUE_THRESHOLD_AVG_NB;
         
-        hTorquePASThreshold = (uint16_t) wThresholdAvg;
-    }
-    else // if there is no need for an average
-    {
+            hTorquePASThreshold = (uint16_t) wThresholdAvg;
+        }
+        else // if there is no need for an average
+        {
         hTorquePASThreshold = hTorqueSens;
-    }
-    
-    /* Torque Sensor use and the offset was detected */
-    if ((pHandle->bCurrentPasAlgorithm == TorqueSensorUse) && (hTorquePASThreshold > hOffsetTemp))
-    {      
-        pHandle->bPASDetected = true;
-    }
-    /* Cadence Sensor use */
-    else if (wSpeedt > 0)
-    {
-        /* Add security layer to miss the first PAS detect if there is any issue 
-           with the pedal */
-        
-        PulseCounter++;
-        if ((PulseCounter > pHandle->sParameters.bPASCountSafe))
-        {
-            pHandle->bPASDetected = true;
-            PulseCounter--;
         }
-    }
-    else
-    {
-        PulseCounter = 0;
-        pHandle->bPASDetected = false;
+    
+        /* Torque Sensor use and the offset was detected */
+        if (hTorquePASThreshold > hOffsetTemp)
+        {      
+            pHandle->bPASDetected = true;
+        }
     }
 } 
 
 /**
-    * @brief  Check the PAS Presence Flag for slow PAS detection sensors
+    * @brief  Detect the PAS based on cadence detection
     * @param  Pedal Assist handle
+    * @param  Increment time used by the windowsDetectionLimite in ms.
     * @retval None
     */
-void PedalAssist_UpdatePASDetectionCall(PAS_Handle_t * pHandle) 
+void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIncrementTimeMs)
 {
-    ASSERT(pHandle != NULL);
-    // Check if the PAS presence is detected
-    if ( PedalAssist_IsPASDetected(pHandle))
+    //variable used to detect the cadence windows time.
+    static uint16_t windowsDetectionLimite = 0;
+    
+    //check if a windows value reset was requested by the system
+    //or PAS level is zero. 
+    //if true, clear all variables used on the PAS cadence detection.
+    //if not, continue the windows detection increment.
+    if ((PedalSpdSensor_GetWindowsFlag(pHandle->pPSS) == true) || (pHandle->bCurrentAssistLevel == 0))
     {
-        bPASCounterAct ++;
-        // For Slow PAS sensor on cadence check
-        if (bPASCounterAct > pHandle->sParameters.bPASCountActivation && (pHandle->bCurrentPasAlgorithm == CadenceSensorUse))
-        {
-            PedalAssist_UpdatePASDetection(pHandle);
-            bPASCounterAct = 0;
-        }
+        //reset windows flag to enable a new clear to the windows detection time.
+        PedalSpdSensor_ClearWindowsFlag(pHandle->pPSS);
         
-        if(pHandle->bCurrentPasAlgorithm == TorqueSensorUse)
-        {
-            PedalAssist_UpdatePASDetection(pHandle);
-        }
-                   
+        //initialize windows detection limite.
+        windowsDetectionLimite = 0;
+        
+        //Reset wNumberOfPulses value to initilaze a
+        //new windows of the detection.
+        PedalSpdSensor_ResetValue(pHandle->pPSS);
     }
-    // If the PAS presence is not detected the safe coefficient for PAS Safe detection remain
-    else 
+    else
     {
-        PedalAssist_UpdatePASDetection(pHandle); 
-        bPASCounterAct = 0;
+        //increment on each windowsIncrementTimeMs ms.
+        windowsDetectionLimite = windowsDetectionLimite + windowsIncrementTimeMs;
+    }
+    
+    //state macchine to handle PAS cadence detection
+    //on differents scenarios, as start, running and stop.
+    switch(PasCadenceState)
+    {
+        
+        //used to when PAS was not yet detected.
+        case CADENCE_DETECTION_START:
+            
+            //check if the cadence detection limite arived.
+            if (windowsDetectionLimite >= pHandle->pPSS->wPedalSpeedSens_Windows)
+            {
+                //initialize
+                windowsDetectionLimite = 0;
+    
+                //Read the number of pulses detected from the cadence signal.
+                //and reset detected number of pulses, in AGT timer.
+                PedalSpdSensor_ReadNumberOfPulses(pHandle->pPSS);
+
+                //get the number of pulses detected from the cadence signal.
+                uint16_t wNumberOfPulses = PedalSpdSensor_GetNumberOfPulses(pHandle->pPSS);
+        
+                //Reset wNumberOfPulses value to initilaze a
+                //new windows of the detection.
+                PedalSpdSensor_ResetValue(pHandle->pPSS);
+            
+                //verify if a cadence sensor is used to trigger PAS detection.
+                if (pHandle->bCurrentPasAlgorithm == CadenceSensorUse) 
+                {
+                    //check if the cadence signal was detected and if it is in the PAS
+                    //activation condition.
+                    //OBS: this function must to be called after PedalSpdSensor_ReadNumberOfPulses
+                    //     and inside of the THR_VC_MediumFreq task.
+                    if ((wNumberOfPulses >= pHandle->sParameters.bPASMinPulseCount))
+                    {
+                        pHandle->bPASDetected = true;
+                    }
+                    else
+                    {
+                        pHandle->bPASDetected = false;
+                    }
+                }
+            }
+        
+        break;
+        
+        //
+        default:
+            
+        
+        break;
+        
     }
 }
 
@@ -368,8 +408,11 @@ bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle)
 void PedalAssist_ResetParameters (PAS_Handle_t * pHandle) 
 {
     ASSERT(pHandle != NULL);
-    PedalTorqSensor_ResetAvValue(pHandle->pPTS);   
+    PedalTorqSensor_ResetAvValue(pHandle->pPTS);  
+    //reset the number of pulses
     PedalSpdSensor_ResetValue(pHandle->pPSS);   
+    //reset the pulse windows time.
+    PedalSpdSensor_SetWindowsFlag(pHandle->pPSS);
 }
 
 

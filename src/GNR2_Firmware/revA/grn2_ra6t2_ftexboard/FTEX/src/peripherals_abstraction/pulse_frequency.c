@@ -178,30 +178,11 @@ void PulseFrequency_ReadInputCapture (PulseFrequencyHandle_t * pHandle)
                 pHandle->wUsPeriod = 0U;
             }
             break;
+            
+        //Read AGT parameter, on this case the number of pulses
+        //detected by the AGT.
         case AGT_TIMER:
-            /* Check for the flag from ISR callback */
-            if (pHandle->start_measurement)
-            {           
-                /* Reset the flag */
-                pHandle->start_measurement = false;
-                /* Get the Timer Info for Perido check*/
-                PulseFrequency_GetTimerInfo(pHandle);
-                /* Get the period count and clock frequency */
-                pHandle->wCaptureCount = (info.period_counts * pHandle->wCaptureOverflow) + pHandle->wCaptureCount;
 
-                /* Calculate the pulse time */
-                pulse_time =(float)(((float)pHandle->wCaptureCount)/((float)info.clock_frequency));
-                pHandle->wUsPeriod = ((uint32_t) (pulse_time * (float)MICRO_SEC)) * PERIOD_FACTOR;
-                pHandle->wCaptureOverflow = 0U;
-            }
-            else 
-            {
-                /* Reset the capture varables */				
-                pHandle->wCaptureCount = 0U;
-                pHandle->wCaptureOverflow = 0U;
-                pHandle->wUsPeriod = 0U;
-            }
-            break;		
         default:
             ASSERT(false);
             break;
@@ -247,10 +228,10 @@ void PulseFrequency_IsrCallUpdate(PulseFrequencyHandle_t * pHandle ,uint32_t wCa
             pHandle->start_measurement = true;
             break;
         case AGT_TIMER:
-            /* Capture the count in a variable */
-            pHandle->wCaptureCount = wCapture;
-            /* Set start measurement */
-            pHandle->start_measurement = true;	
+            
+            //Increment the number of pulses detected by the AGT timer.
+            pHandle->wNumberOfPulse++;
+ 
             break;
         default:
             ASSERT(false);

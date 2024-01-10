@@ -124,6 +124,8 @@ PulseFrequencyHandle_t PulseFreqHandleWheel =
  */
 PedalSpeedSensorHandle_t PedalSpeedSensorHandle = {
     .pPulseFrequency = &PulseFreqHandlePedal,
+    .wPedalSpeedSens_Windows = CADENCE_DETECTION_WINDOWS_MS,
+    .wPedalSpeedSens_ResetWindowsFlag = false,
 };
 
 
@@ -169,7 +171,7 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.TorquePasMaxSpeed = VEHICLE_TOP_SPEED_KMH,
     .sParameters.bTorqueGain = PAS_TORQUE_GAIN,
     .sParameters.hMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
-    .sParameters.bPASCountSafe = PAS_MIN_PEDAL_COUNT_SAFE,
+    .sParameters.bPASMinPulseCount = PAS_MIN_PEDAL_PULSE_COUNT,
     .sParameters.bPASCountActivation = PAS_SLOW_PEDAL_COUNT,
     .sParameters.WalkmodeOverThrottle = PAS_WALKMODE_OVER_THROTTLE,
     .sParameters.PASCTorqRatiosInPercentage[0] = PAS_C_0_POWER_PERCENT,

@@ -63,6 +63,16 @@ uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle)
     //receive wheel speed value.
     uint32_t WheelSpeedRead = WheelSpdSensor_GetPeriodValue(pHandle);
     
+    //sometime it is possible to see 0 zero speed value on the screen.
+    //I think this is happening because the bSpeedslowDetect flag was not set yet
+    //and the system try to measure the pulse period and it was not measured yet, 
+    //start_measurement = false, making the pPulseFrequency->wUsPeriod set to zero.
+    //so, wheel speed will be zero too.
+    //our system is checking too much faster the capture process, from the AGT g_timer_a0.
+    //there are some design problems as: 
+    // - our system is calling/checking the PulseFrequency_ReadInputCapture on each 250 ms,
+    //   4 Hz. 
+    
     //verify if wWheelSpeed_Read value returned by WheelSpdSensor_GetPeriodValue(pHandle)
     //if not zero.
     if (WheelSpeedRead != 0)

@@ -61,13 +61,15 @@ typedef struct
     uint8_t pasAlgorithm;
     uint8_t numberOfPasLevels;
     uint8_t pasMaxPower;
-    uint8_t torqueMinimumThresholdStartup;    
-    uint8_t startupTorqueMinimumThresholdSpeed;
-    uint8_t torqueMinimumThreshold;
+    uint8_t pasTorqueStartupSpeed;
+    uint8_t pasTorqueStartupThreshold;    
+    uint16_t pasCadenceStartupNumbPulses;
+    uint32_t pasCadenceStartupWindows;
     uint8_t torqueSensorMultiplier;
     uint8_t torqueMaxSpeed;
     uint8_t cadenceLevelSpeed[10];
     uint8_t torqueLevelPower[10];
+
     
 } PAS_ConfigData_t;
 

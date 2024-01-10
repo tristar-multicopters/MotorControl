@@ -46,12 +46,12 @@ typedef struct
     const timer_instance_t* pTimer;
 	
     uint32_t wCaptureCount; 		/* timer capture variable */
-	uint32_t wCaptureOverflow; /* timer capture overflow variable */
-	uint32_t wUsPeriod; 			/* timer us Period Detection */
-	
-	volatile bool  start_measurement;		/* Flag start measurment */	
-
-	PulseFrequencyParam_t PulseFreqParam; /* AGT Parameters*/
+    uint32_t wCaptureOverflow; /* timer capture overflow variable */
+    uint32_t wUsPeriod; 			/* timer us Period Detection */
+    uint16_t wNumberOfPulse;   /* has the number of pulse detected by
+                               /* the time on capture mode.*/
+    volatile bool  start_measurement;		/* Flag start measurment */
+    PulseFrequencyParam_t PulseFreqParam; /* AGT Parameters*/
 	
 } PulseFrequencyHandle_t; 
 

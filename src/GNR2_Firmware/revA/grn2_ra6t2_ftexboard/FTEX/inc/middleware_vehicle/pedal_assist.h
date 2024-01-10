@@ -16,7 +16,8 @@
 // ============================== Defines =============================== // 
 #define PAS_PERCENTAGE          (uint8_t)100    /* Percentage for PAS use */
 
-#define TORQUE_THRESHOLD_AVG_NB   10  /* Number of values we use to do an average to check for Torque PAS threshold */ 
+#define TORQUE_THRESHOLD_AVG_NB   10  /* Number of values we use to do an average to check for Torque PAS threshold */
+
 
 // ======================== Configuration enums ======================== // 
 typedef enum
@@ -43,6 +44,15 @@ typedef enum
     CadenceSensorUse,       // Cadence sensor use define
 }PasAlgorithm_t;
 
+//emum used to control the PAS cadence detection
+//on differents situation.
+typedef enum 
+{
+    
+  CADENCE_DETECTION_START,  
+    
+}PasCadenceState_t;
+
 // ======================== Configuration structures ======================== // 
 typedef struct
 { 
@@ -56,7 +66,7 @@ typedef struct
     
     bool WalkmodeOverThrottle;              // Flag used to decide if walk mode has higher priority than throttle          
     
-    uint8_t bPASCountSafe;                  // Counter for safe detection of the PAS after one pedaling
+    uint16_t bPASMinPulseCount;                  // Counter for safe detection of the PAS after one pedaling
     uint8_t bPASCountActivation;            // Counter for slow PAS detection over than 700ms periode
 
     int16_t PASCTorqRatiosInPercentage[10]; // Cadence Torque ratio in % for each level
@@ -148,18 +158,19 @@ void PedalAssist_SetTorquePASMaxSpeed(PAS_Handle_t * pHandle, uint16_t topSpeed)
 int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle);
 
 /**
-    * @brief  Check the PAS Presence Flag
+    * @brief  Check the PAS Presence Flag based on torque detection
     * @param  Pedal Assist handle
     * @retval None
     */
-void PedalAssist_UpdatePASDetection(PAS_Handle_t * pHandle);
+void PedalAssist_TorquePASDetection(PAS_Handle_t * pHandle);
 
 /**
-    * @brief  Check the PAS Presence Flag for slow PAS detection sensors
+    * @brief  Detect the PAS based on cadence detection
     * @param  Pedal Assist handle
+    * @param  Increment time used by the windowsDetectionLimite in ms.
     * @retval None
     */
-void PedalAssist_UpdatePASDetectionCall(PAS_Handle_t * pHandle);
+void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIncrementTimeMs);
 
 /**
     * @brief  Set Pedal Assist standard speed based on screen informations
