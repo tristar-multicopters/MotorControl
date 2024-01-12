@@ -100,6 +100,9 @@ static void UpdateObjectDictionnary(void *p_arg)
         hErrorState[VEHICLE_PARAM] = 0x0000;
     }
     
+    //
+    
+    
     /***************Throttle/Pedal Assist variables******************************/
     uint8_t pasAlgorithm;
     uint8_t maxPAS;
@@ -396,7 +399,13 @@ static void UpdateObjectDictionnary(void *p_arg)
             if(hErrorState[VEHICLE_PARAM] != hErrorState[CAN_PARAM])
             {
                 hErrorState[CAN_PARAM] = hErrorState[VEHICLE_PARAM];
-            }                
+            }      
+
+            //
+            if (hErrorState[CAN_PARAM] == 0x00000000)
+            {
+                hErrorState[CAN_PARAM] = 0x80000000;
+            }
             
             /**************Write the repesctive OD ID, updating the OD that us read by the IOT module using SDO.*************/
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], sizeof(uint8_t));
