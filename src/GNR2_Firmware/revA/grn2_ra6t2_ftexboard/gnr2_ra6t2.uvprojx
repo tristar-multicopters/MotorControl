@@ -470,19 +470,29 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_a2_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_a2_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_pegatron.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_pegatron.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_quietkat.h</FileName>
@@ -495,14 +505,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_velec_citi_500w.h</FileName>
+              <FileName>vc_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_a2_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_utk_350w.h</FileName>
@@ -510,9 +515,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_a2_500w.h</FileName>
+              <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_config.h</FileName>
@@ -754,19 +759,19 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>drive_parameters_a2_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+            </File>
+            <File>
               <FileName>drive_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_quietkat.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_nidec.h</FileName>
@@ -774,19 +779,24 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
             </File>
             <File>
+              <FileName>drive_parameters_pegatron.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_pegatron.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
               <FileName>drive_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileName>drive_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_a2_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_utk_350w.h</FileName>
@@ -794,9 +804,9 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileName>drive_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2472,19 +2482,29 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_a2_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_a2_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_pegatron.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_pegatron.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_quietkat.h</FileName>
@@ -2497,14 +2517,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_velec_citi_500w.h</FileName>
+              <FileName>vc_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_a2_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_utk_350w.h</FileName>
@@ -2512,9 +2527,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_a2_500w.h</FileName>
+              <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_config.h</FileName>
@@ -2756,19 +2771,19 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>drive_parameters_a2_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+            </File>
+            <File>
               <FileName>drive_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_quietkat.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_nidec.h</FileName>
@@ -2776,19 +2791,24 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
             </File>
             <File>
+              <FileName>drive_parameters_pegatron.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_pegatron.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
               <FileName>drive_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileName>drive_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_a2_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_utk_350w.h</FileName>
@@ -2796,9 +2816,9 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileName>drive_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4339,19 +4359,29 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_a2_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_a2_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_pegatron.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_pegatron.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_quietkat.h</FileName>
@@ -4364,14 +4394,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_velec_citi_500w.h</FileName>
+              <FileName>vc_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_a2_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_utk_350w.h</FileName>
@@ -4379,9 +4404,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_a2_500w.h</FileName>
+              <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_config.h</FileName>
@@ -4623,19 +4648,19 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>drive_parameters_a2_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+            </File>
+            <File>
               <FileName>drive_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_quietkat.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_nidec.h</FileName>
@@ -4643,19 +4668,24 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
             </File>
             <File>
+              <FileName>drive_parameters_pegatron.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_pegatron.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+            </File>
+            <File>
               <FileName>drive_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileName>drive_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters_a2_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_utk_350w.h</FileName>
@@ -4663,9 +4693,9 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileName>drive_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
           </Files>
         </Group>

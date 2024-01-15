@@ -257,9 +257,16 @@ extern "C" {
 //PAS_LEVEL_SPEED_WALK
 #define CO_OD_REG_WALK_MODE_SPEED              0x201D
 
-// OD ID to set the wheel diamater in inches
-#define CO_OD_REG_WHEELS_DIAMETER              0x201F
+// OD ID to set the wheel with 3 subindexs
+//variable associated with CO_OD_REG_WHEELS_DIAMETER 0 
+//wheel diameter in inches
+//variable associated with CO_OD_REG_WHEELS_DIAMETER 1 
+//Wheel Pulse Per Rotation  (not implemented but subinde xis alreayd picked)     
+//variable associated with CO_OD_REG_WHEELS_DIAMETER 2 
+//Wheel Diameter Default  
 
+#define CO_OD_REG_WHEELS_DIAMETER              0x201F
+    
 
 // OD ID to operate the front light (0 Off, 1 On)
 #define CO_OD_REG_VEHICLE_FRONT_LIGHT          0x2021
@@ -275,8 +282,7 @@ extern "C" {
 //side(master or slave) received the sdo download command.
 #define CO_OD_REG_MASTER_SLAVE_PRESENT         0x2023
 
-// OD ID to set the default wheel diamater in inches
-#define CO_OD_CONFIG_WHEELS_DIAMETER           0x2024
+// 0x2024 available
 
 // OD ID to set the screen protocol 
 #define CO_OD_CONFIG_SCREEN_PROTOCOL           0x2025

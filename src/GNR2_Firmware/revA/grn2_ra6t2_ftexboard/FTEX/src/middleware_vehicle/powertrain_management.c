@@ -163,7 +163,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             TopSpeed = PedalAssist_GetPASMaxSpeed(pHandle->pPAS);
             PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed       
 
-            #if VEHICLE_SELECTION == VEHICLE_NIDEC
+            #if VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
             if (pHandle->pPAS->bCurrentPasAlgorithm == TorqueSensorUse)
             {
                 static int16_t PowerAvg = 0;                

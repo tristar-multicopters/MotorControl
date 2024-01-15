@@ -4,16 +4,18 @@
 */
 
 #define VEHICLE_DEFAULT               0
-#define VEHICLE_E_CELLS               1
-#define VEHICLE_R48_750W              2
-#define VEHICLE_TSUGAWA               3
-#define VEHICLE_NIDEC                 4
-#define VEHICLE_QUIETKAT              5
-#define VEHICLE_VELEC_CITI_500W       6 
-#define VEHICLE_A2_350W               7
-#define VEHICLE_UTK_350W              8
-#define VEHICLE_A2_500W               9
-#define VEHICLE_MAHLE                 10
+#define VEHICLE_A2_350W               1
+#define VEHICLE_A2_500W               2
+#define VEHICLE_E_CELLS               3
+#define VEHICLE_MAHLE                 4
+#define VEHICLE_NIDEC                 5
+#define VEHICLE_PEGATRON              6
+#define VEHICLE_QUIETKAT              7       
+#define VEHICLE_R48_750W              8
+#define VEHICLE_TSUGAWA               9                  
+#define VEHICLE_UTK_350W             10
+#define VEHICLE_VELEC_CITI_500W      11
+
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 
@@ -63,9 +65,9 @@
 //as WDT and etc.
 #define FIRMWARE_RELEASE              0
 
-#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
-                                                              Will be changed in the future for a more flexible way 
-                                                              of parametrization. */
+#define VEHICLE_SELECTION             VEHICLE_PEGATRON     /* Vehicle selection to adapt motor/vehicle parameters.
+                                                           Will be changed in the future for a more flexible way
+                                                           of parametrization. */
                                                                                                                
 //define responsible to enable some debug features as:
 //hardware fault catch 

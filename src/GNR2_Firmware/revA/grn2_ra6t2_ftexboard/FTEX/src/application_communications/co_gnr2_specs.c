@@ -225,8 +225,12 @@ uint8_t bObjDataMaxSpeed                    = 0;
 //variable associated with CO_OD_REG_WALK_MODE_SPEED.
 uint8_t bObjDataWalkModeSpeed               = 0;
 
-//variable associated with CO_OD_REG_WHEELS_DIAMETER
+//variable associated with CO_OD_REG_WHEELS_DIAMETER 0
 uint8_t bObjDataWheelDiameter               = 0;
+//variable associated with CO_OD_REG_WHEELS_DIAMETER 1 
+uint8_t bObjDataWheelPulsePerRotation       = 0;
+//variable associated with CO_OD_REG_WHEELS_DIAMETER 2 
+uint8_t bObjDataWheelDiameterDefault        = 0;
 
 //variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT
 uint8_t bObjDataFrontLightState             = 0;
@@ -236,9 +240,6 @@ uint8_t bObjDataRearLightState              = 0;
 
 //variable associated with CO_OD_REG_MASTER_SLAVE_PRESENT
 uint8_t bObjDataMasterSlavePresent          = 0;
-
-//variable associated with CO_OD_CONFIG_WHEELS_DIAMETER 
-uint8_t bObjDataConfigWheelDiameter         = 0;
 
 //variable associated with CO_OD_CONFIG_SCREEN_PROTOCOL
 uint8_t bObjDataConfigScreenProtocol        = 0;
@@ -1205,6 +1206,15 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WHEELS_DIAMETER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWheelDiameter};    
             //move to next OD index
             index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WHEELS_DIAMETER, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWheelPulsePerRotation};    
+            //move to next OD index
+            index++;
+                    
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WHEELS_DIAMETER, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWheelDiameterDefault};    
+            //move to next OD index
+            index++;
+            
         
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataFrontLightState};
             //move to next OD index
@@ -1216,10 +1226,6 @@ static void CO_addObj(uint16_t objId, bool deviceType)
         
             //User to master and/or slave write showing it is present(no lost on master/slave communication).
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MASTER_SLAVE_PRESENT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMasterSlavePresent};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_WHEELS_DIAMETER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigWheelDiameter};
             //move to next OD index
             index++;
             

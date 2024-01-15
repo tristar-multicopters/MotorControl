@@ -181,6 +181,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 {
     APT_frame_t replyFrame = {0};
     static bool walkmodeTransition = false;
+    static bool DefaultPasInitiliased = false;
     static uint8_t pasLvlBeforeWalk = 0;
     int32_t  toSend      = 0;
     uint32_t Check       = 0;
@@ -226,7 +227,12 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         uint8_t maxLevels = pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel;
         uint8_t currentPas = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
         uint8_t standardizedPas = LCD_APT_ConvertPASLevelFromAPT(pasLvl,maxLevels);
-
+        
+        if(standardizedPas == DEFAULT_PAS_LEVEL && DefaultPasInitiliased == false) 
+        {
+            DefaultPasInitiliased = true;
+        }
+        
         // Checking if the PAS from the APT has given a rational value
         bool isPasSane = true;
         if ((pasLvl != PAS_UNCHANGED) && (currentPas != (standardizedPas + 1)) && (currentPas != (standardizedPas - 1)) && (standardizedPas != PAS_LEVEL_WALK))
@@ -250,11 +256,14 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
                     walkmodeTransition = true;
                     pasLvlBeforeWalk = currentPas;
                 }                    
-
-                PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,standardizedPas);         
-                pHandle->APTChangePasFlag = true;
-                pHandle->APTStabilizing = true;
-                framesSinceSync = 0;
+                
+                if(DefaultPasInitiliased)
+                {    
+                    PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,standardizedPas);         
+                    pHandle->APTChangePasFlag = true;
+                    pHandle->APTStabilizing = true;
+                    framesSinceSync = 0;
+                }
             }
             else if (walkmodeTransition && (standardizedPas != PAS_LEVEL_WALK)) // If we were in walkmode we need to restore the previous pas level
             {
@@ -632,12 +641,12 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
         case MOTOR_NTC_DISC_FREEZE:
         case MOTOR_FOLDBACK_TEMP:
             ConvertedError = APT_MOTOR_OT_PROTECT;
-            break;         
+            break;              
         case UNMAPPED_ERROR: // Errors that APT has but that we currently don't flag            
             ConvertedError = APT_TURN_ERROR;
             ConvertedError = APT_CONTROL_PROTEC;
             break;        
-        default: // If it's not a standard APT error just consider it a custom error or a debugging error
+       /* default: // If it's not a standard APT error just consider it a custom error or a debugging error
             
             if (aError < 0x9F && aError != 0x30) // For custom errors we need a value less or equal to 0x9F but that isn't 0x30,  
             {
@@ -647,7 +656,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             {
                 ConvertedError = 0x9F;
             }  
-            break;
+          break; */
     }
     
     return ConvertedError;

@@ -21,7 +21,7 @@
 #define NTC_MOTOR_LUT_DIGITAL_FIRST_VALUE         4000        //250 is the first value considered in the table that has a temperature correlation (144 degree C).
                                                          //*16 is the factor on tics conversion due variable casting
 
-#elif VEHICLE_SELECTION == VEHICLE_NIDEC
+#elif VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
 
 #define NTC_MOTOR_LUT_SIZE                        38           // the number of correlation elements on this table
 #define NTC_MOTOR_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
@@ -118,7 +118,7 @@ const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function t
     -34,
 };
 
-#elif VEHICLE_SELECTION == VEHICLE_NIDEC
+#elif VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
 
 const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
 {																																	 //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0

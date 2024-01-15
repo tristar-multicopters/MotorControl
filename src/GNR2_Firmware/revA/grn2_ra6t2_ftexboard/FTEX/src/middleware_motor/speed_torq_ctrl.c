@@ -423,7 +423,12 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     {
         if (hInputTorque > 0)
         {
-            wTorqueLimit = 1000*pHandle->DynamicPowerHandle.hDynamicMaxPower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            #if VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
+                wTorqueLimit = 3000*pHandle->DynamicPowerHandle.hDynamicMaxPower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            #else
+                wTorqueLimit = 1000*pHandle->DynamicPowerHandle.hDynamicMaxPower/abs(hMeasuredSpeedTenthRadPerSec);
+            #endif
+            
             if (hInputTorque > wTorqueLimit)
             {
                 //limit the toque and start timer to count on max torque elapsed timer used by foldback to reduce power after a while

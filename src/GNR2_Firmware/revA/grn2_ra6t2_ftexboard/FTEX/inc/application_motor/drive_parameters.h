@@ -11,9 +11,35 @@
 
 #include "gnr_parameters.h"
 
-#if VEHICLE_SELECTION == VEHICLE_E_CELLS
+
+#if VEHICLE_SELECTION == VEHICLE_A2_350W
+
+#include "drive_parameters_a2_350w.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_A2_500W 
+
+#include "drive_parameters_a2_500w.h"
+
+
+#elif VEHICLE_SELECTION == VEHICLE_E_CELLS
 
 #include "drive_parameters_e_cells.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_MAHLE
+
+#include "drive_parameters_mahle.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_NIDEC
+
+#include "drive_parameters_nidec.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_PEGATRON
+
+#include "drive_parameters_pegatron.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_QUIETKAT
+
+#include "drive_parameters_quietkat.h"
 
 #elif VEHICLE_SELECTION == VEHICLE_R48_750W
 
@@ -23,32 +49,13 @@
 
 #include "drive_parameters_tsugawa.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_NIDEC
+#elif VEHICLE_SELECTION == VEHICLE_UTK_350W 
 
-#include "drive_parameters_nidec.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_QUIETKAT
-
-#include "drive_parameters_quietkat.h"
+#include "drive_parameters_utk_350w.h"
 
 #elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
 
 #include "drive_parameters_velec_citi_500w.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_A2_350W
-
-#include "drive_parameters_a2_350w.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_UTK_350W
-
-#include "drive_parameters_utk_350w.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_A2_500W
-#include "drive_parameters_a2_500w.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_MAHLE
-
-#include "drive_parameters_mahle.h"
 
 #endif
 

@@ -503,8 +503,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
                 
                  // Config 
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &configWheelDiameter, sizeof(uint8_t)); 
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &configScreenProtocol, sizeof(uint8_t)); 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),      pNode, &configWheelDiameter, sizeof(uint8_t)); 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),   pNode, &configScreenProtocol, sizeof(uint8_t)); 
                  
                  // Headlight default state and locked state
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_DEFAULT, 0)),        pNode, &configHeadLightDefault, sizeof(uint8_t));
@@ -704,7 +704,7 @@ bool Comm_CheckIotUsage(void)
     //if any of the vehicle tested below
     //return false to indicate that vehicle doesn't need
     //a specific functionality from IOT setup.
-    if ((VEHICLE_SELECTION == VEHICLE_NIDEC))
+    if ((VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON))
     {
         return false;
     }
@@ -814,7 +814,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
 
         //Config 
         // Show what is the default wheel diameter in the user config
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_WHEELS_DIAMETER, 0)),       pNode, &configWheelDiameter, sizeof(uint8_t));         
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),       pNode, &configWheelDiameter, sizeof(uint8_t));         
         // Show the currently selected screen protocol
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &configScreenProtocol, sizeof(uint8_t)); 
         

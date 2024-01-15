@@ -13,41 +13,46 @@
 #include "gnr_parameters.h"
 
 
-#if VEHICLE_SELECTION == VEHICLE_E_CELLS
+#if VEHICLE_SELECTION == VEHICLE_A2_350W 
+
+#include "vc_parameters_a2_350w.h"
+
+#elif VEHICLE_SELECTION ==  VEHICLE_A2_500W 
+
+#include "vc_parameters_a2_500w.h"
+
+#elif VEHICLE_SELECTION ==  VEHICLE_E_CELLS
 
 #include "vc_parameters_e_cells.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_R48_750W
-
-#include "vc_parameters_r48_750w.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_TSUGAWA
-
-#include "vc_parameters_tsugawa.h"
-
+ 
 #elif VEHICLE_SELECTION == VEHICLE_NIDEC
 
 #include "vc_parameters_nidec.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_PEGATRON
+
+#include "vc_parameters_pegatron.h"
 
 #elif VEHICLE_SELECTION == VEHICLE_QUIETKAT
 
 #include "vc_parameters_quietkat.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
+#elif VEHICLE_SELECTION == VEHICLE_R48_750W
 
-#include "vc_parameters_velec_citi_500w.h"
+#include "vc_parameters_r48_750w.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_A2_350W 
+#elif VEHICLE_SELECTION ==  VEHICLE_TSUGAWA
 
-#include "vc_parameters_a2_350w.h"
+#include "vc_parameters_tsugawa.h"
 
 #elif VEHICLE_SELECTION == VEHICLE_UTK_350W 
 
 #include "vc_parameters_utk_350w.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_A2_500W 
+#elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
 
-#include "vc_parameters_a2_500w.h"
+#include "vc_parameters_velec_citi_500w.h"
+
 
 #elif VEHICLE_SELECTION == VEHICLE_MAHLE 
 

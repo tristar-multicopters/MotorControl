@@ -1,13 +1,14 @@
 /**
-  * @file    vc_parameters_nidec.h
-  * @brief   This file contains the parameters needed in order to configure the motor of nidec bike.
+  * @file    vc_parameters_pegatron.h
+  * @brief   This file contains the parameters needed in order to 
+  *          configure the motor of nidec bike with the tuning for pegatron.
   *
   */
 
 /* Define to prevent recursive inclusion --- 
 ----------------------------------*/
-#ifndef __VC_PARAMETERS_NIDEC_H
-#define __VC_PARAMETERS_NIDEC_H
+#ifndef __VC_PARAMETERS_PEGATRON_H
+#define __VC_PARAMETERS_PEGATRON_H
 
 #include "drive_parameters.h"
 
@@ -62,6 +63,12 @@
 
 #define PAS_MIN_PEDAL_PULSE_COUNT            6              // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
+
+
+#define PAS_T_1_POWER_PERCENT      30
+#define PAS_T_2_POWER_PERCENT      55
+#define PAS_T_3_POWER_PERCENT     100
+
 
 /************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
 
