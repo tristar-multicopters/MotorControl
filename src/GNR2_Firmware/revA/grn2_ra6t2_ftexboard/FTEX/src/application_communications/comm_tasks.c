@@ -85,15 +85,15 @@ static void UpdateObjectDictionnary(void *p_arg)
     if (VcAutodeter_GetGnrState())
     {
         hSpeed[VEHICLE_PARAM]  = (uint8_t)  CanVehiInterface_GetVehicleSpeed(pVCI);
-        hPWR[VEHICLE_PARAM]    = (uint16_t) CanVehiInterface_GetVehiclePower(pVCI);
-        bSOC[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehicleSOC(pVCI);
-        bPAS[VEHICLE_PARAM]    = (uint8_t)  CanVehiInterface_GetVehiclePAS(pVCI); 
-        bPasAlgorithm[VEHICLE_PARAM] = (uint8_t) CanVehiInterface_GetVehiclePASAlgorithm(pVCI);
-        hMaxPwr[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleMaxPWR(pVCI);
+        hPWR[VEHICLE_PARAM]    = CanVehiInterface_GetVehiclePower(pVCI);
+        bSOC[VEHICLE_PARAM]    = CanVehiInterface_GetVehicleSOC(pVCI);
+        bPAS[VEHICLE_PARAM]    = CanVehiInterface_GetVehiclePAS(pVCI); 
+        bPasAlgorithm[VEHICLE_PARAM] = CanVehiInterface_GetVehiclePASAlgorithm(pVCI);
+        hMaxPwr[VEHICLE_PARAM] = CanVehiInterface_GetVehicleMaxPWR(pVCI);
         hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
         hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
-        hErrorState[VEHICLE_PARAM] = (uint16_t) CanVehiInterface_GetVehicleCurrentFaults(pVCI);
+        hErrorState[VEHICLE_PARAM] = CanVehiInterface_GetVehicleCurrentFaults(pVCI);
     }
     else
     {
