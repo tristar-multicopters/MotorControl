@@ -57,9 +57,8 @@ typedef enum
 typedef struct
 { 
     int16_t  hPASMaxTorque;                 // PAS Maximum given torque
-    uint16_t hPASMaxSpeed;                  // PAS Maximum given speed
     
-    uint16_t TorquePasMaxSpeed;             // Maxiumumu speed in torque pas (not level specific for now)
+    uint16_t PasMaxSpeed;                   // Maxiumumu Pas speed in torque/cadence.
     uint8_t  bMaxLevel;                     // PAS maximum given Level
     uint16_t bTorqueGain[10];                   // User gain used to affect the torque ramp in %
     int16_t  hMaxTorqueRatio;               // PAS maximum torque ratio
@@ -69,7 +68,7 @@ typedef struct
     uint16_t bPASMinPulseCount;                  // Counter for safe detection of the PAS after one pedaling
     uint8_t bPASCountActivation;            // Counter for slow PAS detection over than 700ms periode
 
-    uint8_t PASCCadenceSpeed[10];           // Speed on cadence mode to each PAS level.
+    uint8_t PASMaxSpeed[10];           // Speed on cadence mode to each PAS level.
     int16_t PASCTorqRatiosInPercentage[10]; // Cadence Torque ratio in % for each level
     int16_t PASTTorqRatiosInPercentage[10]; // Torque Torque ratio in % for each level
     int16_t walkModeTorqueRatio;            // Torque ratio in % for walk mode
@@ -133,23 +132,16 @@ int16_t PedalAssist_GetPASCadenceMotorTorque(PAS_Handle_t * pHandle);
 /**
     * @brief  Update Pedal Assist standard speed based on pas level
     * @param  Pedal Assist handle
-    * @retval nothing
-    */
-void PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Get the Pedal Assist standard speed based on pas level
-    * @param  Pedal Assist handle
     * @retval current PAS speed limit
     */
-uint16_t PedalAssist_GetPASMaxSpeed(PAS_Handle_t * pHandle);
+uint16_t PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle);
 
 /**
     * @brief  Set the generic top speed for torque pas (not level specific) 
     * @param  Pedal Assist handle
     * @retval desired PAS speed limit
     */
-void PedalAssist_SetTorquePASMaxSpeed(PAS_Handle_t * pHandle, uint16_t topSpeed);
+void PedalAssist_SetPASMaxSpeed(PAS_Handle_t * pHandle, uint16_t topSpeed);
 
 /**
     * @brief  Set Pedal Assist torque based on the pedal Torque Sensor

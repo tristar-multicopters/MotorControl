@@ -296,7 +296,7 @@ uint16_t UserConfigTask_GetTorqueSensorMultiplier(uint8_t pasLevel);
 void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t pasLevel, uint16_t value);
 
 /**
-  @brief Function to get torque Max Speed
+  @brief Function to get speed to the current Pas Level
   read from data flash memory.
   
   @param void
@@ -324,17 +324,17 @@ void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value);
           range bewteen 0-40.
 
 */
-uint8_t UserConfigTask_GetCadenceLevelSpeed(uint8_t pasLevel);
+uint8_t UserConfigTask_GetPasLevelSpeed(uint8_t pasLevel);
 
 /**
-  @brief Function to update cadence Level Speed value
+  @brief Function to update speed to the current Pas Level
   read from data flash memory.
   
   @param uint8_t value to be passed into the
   @return void
 
 */
-void UserConfigTask_UpdateCadenceLevelSpeed(uint8_t pasLevel, uint8_t value);
+void UserConfigTask_UpdatePasLevelSpeed(uint8_t pasLevel, uint8_t value);
 
 /**
   @brief Function to get torqueLevelPower

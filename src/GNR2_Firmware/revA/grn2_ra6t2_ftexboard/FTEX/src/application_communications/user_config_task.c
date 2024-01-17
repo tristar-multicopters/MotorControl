@@ -49,16 +49,16 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.torqueSensorMultiplier[PAS_8] = PAS_8_TORQUE_GAIN,
     .PAS_ConfigData.torqueSensorMultiplier[PAS_9] = PAS_9_TORQUE_GAIN,
     .PAS_ConfigData.torqueMaxSpeed = 0,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_0] = PAS_C_LEVEL_SPEED_0,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_1] = PAS_C_LEVEL_SPEED_1,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_2] = PAS_C_LEVEL_SPEED_2,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_3] = PAS_C_LEVEL_SPEED_3,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_4] = PAS_C_LEVEL_SPEED_4,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_5] = PAS_C_LEVEL_SPEED_5,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_6] = PAS_C_LEVEL_SPEED_6,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_7] = PAS_C_LEVEL_SPEED_7,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_8] = PAS_C_LEVEL_SPEED_8,
-    .PAS_ConfigData.cadenceLevelSpeed[PAS_9] = PAS_C_LEVEL_SPEED_9,
+    .PAS_ConfigData.PasLevelSpeed[PAS_0] = PAS_LEVEL_SPEED_0,
+    .PAS_ConfigData.PasLevelSpeed[PAS_1] = PAS_LEVEL_SPEED_1,
+    .PAS_ConfigData.PasLevelSpeed[PAS_2] = PAS_LEVEL_SPEED_2,
+    .PAS_ConfigData.PasLevelSpeed[PAS_3] = PAS_LEVEL_SPEED_3,
+    .PAS_ConfigData.PasLevelSpeed[PAS_4] = PAS_LEVEL_SPEED_4,
+    .PAS_ConfigData.PasLevelSpeed[PAS_5] = PAS_LEVEL_SPEED_5,
+    .PAS_ConfigData.PasLevelSpeed[PAS_6] = PAS_LEVEL_SPEED_6,
+    .PAS_ConfigData.PasLevelSpeed[PAS_7] = PAS_LEVEL_SPEED_7,
+    .PAS_ConfigData.PasLevelSpeed[PAS_8] = PAS_LEVEL_SPEED_8,
+    .PAS_ConfigData.PasLevelSpeed[PAS_9] = PAS_LEVEL_SPEED_9,
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_0] = 0,
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_1] = 0,
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_2] = 0,
@@ -324,17 +324,17 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     {
         //update PAS_ConfigData.torqueSensorMultiplier(PAS_TORQUE_GAIN) 
         userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bTorqueGain[n] = UserConfigTask_GetTorqueSensorMultiplier(n);
-        //update PASCCadenceSpeed, cadence speed by PAS level. 
-        userConfigHandle->pVController->pPowertrain->pPAS->sParameters.PASCCadenceSpeed[n] = UserConfigTask_GetCadenceLevelSpeed(n);
+        //update PASMaxSpeed, cadence speed by PAS level. 
+        userConfigHandle->pVController->pPowertrain->pPAS->sParameters.PASMaxSpeed[n] = UserConfigTask_GetPasLevelSpeed(n);
     }
     //update PAS_ConfigData.torqueMaxSpeed(will be defined).
        
-    //PAS_ConfigData.cadenceLevelSpeed parameter is not passed to any system variable on the inialization.
+    //PAS_ConfigData.PasLevelSpeed parameter is not passed to any system variable on the inialization.
     
     //update .PAS_ConfigData.torqueLevelPower(will be define)
     
     //update Throttle_ConfigData.maxSpeed(PAS_MAX_KM_SPEED).
-    userConfigHandle->pVController->pPowertrain->pPAS->sParameters.hPASMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
+    //userConfigHandle->pVController->pPowertrain->pPAS->sParameters.hPASMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
     
     //Throttle_ConfigData.walkMOdeSpeed(PAS_LEVEL_SPEED_WALK) is not passed
     //directly to any variable. Because of this is not updated here.
@@ -629,7 +629,7 @@ void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value)
 }
 
 /**
-  @brief Function to get cadence Level Speed
+  @brief Function to get speed to the current Pas Level
   read from data flash memory.
   
   @param void
@@ -637,33 +637,33 @@ void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value)
           range bewteen 0-40.
 
 */
-uint8_t UserConfigTask_GetCadenceLevelSpeed(uint8_t pasLevel)
+uint8_t UserConfigTask_GetPasLevelSpeed(uint8_t pasLevel)
 {
     //
     if (pasLevel < 10)
     {
-        return userConfigData.PAS_ConfigData.cadenceLevelSpeed[pasLevel];
+        return userConfigData.PAS_ConfigData.PasLevelSpeed[pasLevel];
     }
     else
     {
-        return userConfigData.PAS_ConfigData.cadenceLevelSpeed[0];
+        return userConfigData.PAS_ConfigData.PasLevelSpeed[0];
     }   
 }
 
 /**
-  @brief Function to update cadence Level Speed value
+  @brief Function to update speed to the current Pas Level
   read from data flash memory.
   
   @param uint8_t value to be passed into the Cadence Level Speed
   @return void
 
 */
-void UserConfigTask_UpdateCadenceLevelSpeed(uint8_t pasLevel, uint8_t value)
+void UserConfigTask_UpdatePasLevelSpeed(uint8_t pasLevel, uint8_t value)
 {
     //
     if ((pasLevel < 10) && (value <= 32))
     {
-        userConfigData.PAS_ConfigData.cadenceLevelSpeed[pasLevel] = value;
+        userConfigData.PAS_ConfigData.PasLevelSpeed[pasLevel] = value;
     }
 }
 

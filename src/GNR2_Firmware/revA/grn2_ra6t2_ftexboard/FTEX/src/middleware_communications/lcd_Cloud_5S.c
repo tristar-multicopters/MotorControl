@@ -293,7 +293,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             
             // setting the max RPMs for any speed limits
             Throttle_SetMaxSpeed(pThrottleHandle,speedLimit);        
-            PedalAssist_SetTorquePASMaxSpeed(pPASHandle,speedLimit);
+            PedalAssist_SetPASMaxSpeed(pPASHandle,speedLimit);
             
             #endif    
            

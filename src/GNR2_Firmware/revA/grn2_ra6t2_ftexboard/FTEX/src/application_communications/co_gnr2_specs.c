@@ -213,8 +213,8 @@ uint16_t bObjDataTorqueSensorMultiplier[10] = {0};
 //variable associated with CO_OD_REG_TORQUE_MAX_SPEED.
 uint8_t bObjDataTorqueMaxSpeed              = 0;
 
-//variable associated with CO_OD_REG_CADENCE_HYBRID_LEVEL.
-uint8_t bObjDataCadenceHybridLeveSpeed[10]  = {0};
+//variable associated with CO_OD_REG_PAS_LEVEL_SPEED.
+uint8_t bObjDataPasLeveSpeed[10]  = {0};
 
 //variable associated with CO_OD_REG_TORQUE_LEVEL_POWER.
 uint8_t bObjDataTorqueLevelPower[10]        = {0};
@@ -1166,34 +1166,34 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
         
             //Application - The speed up to which this PAS level will give motor assistance. 
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[0]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[0]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[1]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[1]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[2]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[2]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[3]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[3]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[4]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[4]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[5]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[5]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[6]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[6]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 7, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[7]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 7, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[7]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[8]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[8]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CADENCE_HYBRID_LEVEL, 9, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCadenceHybridLeveSpeed[9]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_LEVEL_SPEED, 9, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLeveSpeed[9]};
             //move to next OD index
             index++;
         

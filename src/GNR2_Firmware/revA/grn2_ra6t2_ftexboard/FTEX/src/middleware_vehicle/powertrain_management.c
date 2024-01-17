@@ -157,10 +157,9 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         if (((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
              (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
         {             
-            uint16_t TopSpeed = 0;
-            PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS); // Make sure we have the most up-to-date desired top speed
+             // Make sure we have the most up-to-date desired top speed
+            uint16_t TopSpeed = PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS);
             
-            TopSpeed = PedalAssist_GetPASMaxSpeed(pHandle->pPAS);
             PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed       
 
             #if VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
@@ -1101,7 +1100,6 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         else 
         {
             pHandle->hTorqueSelect = PedalAssist_GetPASCadenceMotorTorque(pHandle->pPAS);
-            PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS); 
         }
     }        
     /* Using throttle */

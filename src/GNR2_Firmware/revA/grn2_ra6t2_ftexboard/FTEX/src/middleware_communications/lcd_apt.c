@@ -284,7 +284,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         
         // setting the max speed for any speed limits
         Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,speedLimit);
-        PedalAssist_SetTorquePASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,speedLimit);
+        PedalAssist_SetPASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,speedLimit);
         #endif 
         
         #ifdef SCREENPOWERCONTROL

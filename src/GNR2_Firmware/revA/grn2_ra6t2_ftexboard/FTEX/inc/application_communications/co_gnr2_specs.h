@@ -241,25 +241,25 @@ extern "C" {
 //
 #define CO_OD_REG_TORQUE_MAX_SPEED             0x2019
 
-//OD ID for configure Cadence/hybrid level.
+//OD ID for configure the speed for each Pas Level.
 //Maximum Speed for PAS Level x in Km/h
 //The define(s) used by this parameter is:
-//.sParameters.PASCCadenceSpeed
+//.sParameters.PASMaxSpeed
 //Max Cadence on Speed PAS 0
-//SUBINDEX 0: sParameters.PASCCadenceSpeed[0] = PAS_C_LEVEL_SPEED_0
+//SUBINDEX 0: sParameters.PASMaxSpeed[0] = PAS_LEVEL_SPEED_0
 //
 //Max Cadence on Speed PAS 1
-//SUBINDEX 1: sParameters.PASCCadenceSpeed[1] = PAS_C_LEVEL_SPEED_1
+//SUBINDEX 1: sParameters.PASMaxSpeed[1] = PAS_LEVEL_SPEED_1
 //
 ////Max Cadence on Speed PAS 2
-//SUBINDEX 2: sParameters.PASCCadenceSpeed[2] = PAS_C_LEVEL_SPEED_2
+//SUBINDEX 2: sParameters.PASMaxSpeed[2] = PAS_LEVEL_SPEED_2
 //
 //.......
 //
 ////Max Cadence on Speed PAS 9
-//SUBINDEX 9: sParameters.PASCCadenceSpeed[9] = PAS_C_LEVEL_SPEED_9
+//SUBINDEX 9: sParameters.PASMaxSpeed[9] = PAS_LEVEL_SPEED_9
 //NOTE: this OD ID will have 10 subindexs.
-#define CO_OD_REG_CADENCE_HYBRID_LEVEL         0x201A
+#define CO_OD_REG_PAS_LEVEL_SPEED         0x201A
 
 //OD ID for configure Troque level Power.
 //The define(s) used by this parameter is:

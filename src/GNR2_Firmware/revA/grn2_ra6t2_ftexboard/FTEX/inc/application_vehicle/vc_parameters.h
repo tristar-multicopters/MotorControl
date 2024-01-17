@@ -148,44 +148,46 @@
     #define PAS_C_9_POWER_PERCENT      0    // PAS C (Cadence) 9 has a ratio of 0%
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_0
-    #define PAS_C_LEVEL_SPEED_0       (uint8_t)0      /* Maximum Speed for PAS Level 0 in Km/h */
+//Max speed for PAS level on Torque or Cadence.
+
+#ifndef PAS_LEVEL_SPEED_0
+    #define PAS_LEVEL_SPEED_0       (uint8_t)0      /* Maximum Speed for PAS Level 0 in Km/h */
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_1
-    #define PAS_C_LEVEL_SPEED_1       (uint8_t)10     /* Maximum Speed for PAS Level 1 in Km/h */
+#ifndef PAS_LEVEL_SPEED_1
+    #define PAS_LEVEL_SPEED_1       (uint8_t)10     /* Maximum Speed for PAS Level 1 in Km/h */
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_2
-    #define PAS_C_LEVEL_SPEED_2       (uint8_t)15     /* Maximum Speed for PAS Level 2 in Km/h */
+#ifndef PAS_LEVEL_SPEED_2
+    #define PAS_LEVEL_SPEED_2       (uint8_t)15     /* Maximum Speed for PAS Level 2 in Km/h */
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_3
-    #define PAS_C_LEVEL_SPEED_3       (uint8_t)20     /* Maximum Speed for PAS Level 3 in Km/h */
+#ifndef PAS_LEVEL_SPEED_3
+    #define PAS_LEVEL_SPEED_3       (uint8_t)20     /* Maximum Speed for PAS Level 3 in Km/h */
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_4
-    #define PAS_C_LEVEL_SPEED_4       (uint8_t)25     /* Maximum Speed for PAS Level 4 in Km/h */
+#ifndef PAS_LEVEL_SPEED_4
+    #define PAS_LEVEL_SPEED_4       (uint8_t)25     /* Maximum Speed for PAS Level 4 in Km/h */
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_5
-    #define PAS_C_LEVEL_SPEED_5       (uint8_t)32     /* Maximum Speed for PAS Level 5 in Km/h */
+#ifndef PAS_LEVEL_SPEED_5
+    #define PAS_LEVEL_SPEED_5       (uint8_t)32     /* Maximum Speed for PAS Level 5 in Km/h */
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_6
-    #define PAS_C_LEVEL_SPEED_6       (uint8_t)32     /* Maximum Speed for PAS Level 6 in Km/h */
+#ifndef PAS_LEVEL_SPEED_6
+    #define PAS_LEVEL_SPEED_6       (uint8_t)32     /* Maximum Speed for PAS Level 6 in Km/h */
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_7
-    #define PAS_C_LEVEL_SPEED_7       (uint8_t)32     /* Maximum Speed for PAS Level 7 in Km/h */
+#ifndef PAS_LEVEL_SPEED_7
+    #define PAS_LEVEL_SPEED_7       (uint8_t)32     /* Maximum Speed for PAS Level 7 in Km/h */
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_8
-    #define PAS_C_LEVEL_SPEED_8         (uint8_t)32     /* Maximum Speed for PAS Level 8 in Km/h */
+#ifndef PAS_LEVEL_SPEED_8
+    #define PAS_LEVEL_SPEED_8         (uint8_t)32     /* Maximum Speed for PAS Level 8 in Km/h */
 #endif
 
-#ifndef PAS_C_LEVEL_SPEED_9
-    #define PAS_C_LEVEL_SPEED_9         (uint8_t)32     /* Maximum Speed for PAS Level 9 in Km/h */
+#ifndef PAS_LEVEL_SPEED_9
+    #define PAS_LEVEL_SPEED_9         (uint8_t)32     /* Maximum Speed for PAS Level 9 in Km/h */
 #endif
 
 
@@ -289,7 +291,7 @@
 #endif
     
 #ifndef CADENCE_DETECTION_WINDOWS_MS
-    #define CADENCE_DETECTION_WINDOWS_MS 3000           //cadence detection windows on ms.
+    #define CADENCE_DETECTION_WINDOWS_MS 500           //cadence detection windows on ms.
 #endif    
     
 #endif /*__VC_PARAMETERS_H*/

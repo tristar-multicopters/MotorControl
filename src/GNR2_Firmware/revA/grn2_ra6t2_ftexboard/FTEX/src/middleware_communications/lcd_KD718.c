@@ -379,7 +379,7 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                     
                     // setting the max for any speed limits
                     Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit); 
-                    PedalAssist_SetTorquePASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,SpeedLimit); 
+                    PedalAssist_SetPASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,SpeedLimit); 
                     #endif                     
                 }
               break;                

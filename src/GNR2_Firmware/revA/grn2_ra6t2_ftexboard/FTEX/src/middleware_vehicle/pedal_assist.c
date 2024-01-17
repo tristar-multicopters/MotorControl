@@ -113,9 +113,9 @@ int16_t PedalAssist_GetPASCadenceMotorTorque(PAS_Handle_t * pHandle)
 /**
     * @brief  Set Pedal Assist standard speed based on screen informations
     * @param  Pedal Assist handle
-    * @retval pRefTorque in int16
+    * @retval current PAS speed limit
     */
-void PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle)
+uint16_t PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);   
     PasLevel_t currentLevel = PedalAssist_GetAssistLevel(pHandle);
@@ -129,41 +129,27 @@ void PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle)
     {
         userConfigSpeed = UserConfigTask_GetWalkModeSpeed();
     }
-    else if (pHandle->bCurrentPasAlgorithm == CadenceSensorUse) // Set the level specific speed limit
-    {   
-        //get cadence max speed associated with teh current pas level.
-        userConfigSpeed = pHandle->sParameters.PASCCadenceSpeed[currentLevel];
-        
-        //check if the cadence max speed is inside of the max speed limit
+    else
+    {        
+        //get max speed associated with the current pas level.
+        userConfigSpeed = pHandle->sParameters.PASMaxSpeed[currentLevel];
+          
+        //check if the max speed is inside of the max speed limit
         //torque and cadence must have the same max speed limit
-        if (userConfigSpeed > pHandle->sParameters.TorquePasMaxSpeed)
+        if (userConfigSpeed > pHandle->sParameters.PasMaxSpeed)
         {
-            userConfigSpeed = pHandle->sParameters.TorquePasMaxSpeed;
+            userConfigSpeed = pHandle->sParameters.PasMaxSpeed;
         }
     }
-    else if(pHandle->bCurrentPasAlgorithm == TorqueSensorUse)  // Set the generic limit
-    {
-        userConfigSpeed = pHandle->sParameters.TorquePasMaxSpeed;
-    }
-    
-    pHandle->sParameters.hPASMaxSpeed =  userConfigSpeed;
+    //set max pas speed.
+    return userConfigSpeed;
 }
 
-/**
-    * @brief  Get the Pedal Assist standard speed based on pas level
-    * @param  Pedal Assist handle
-    * @retval current PAS speed limit
-    */
-uint16_t PedalAssist_GetPASMaxSpeed(PAS_Handle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-    return pHandle->sParameters.hPASMaxSpeed;
-}
 
-void PedalAssist_SetTorquePASMaxSpeed(PAS_Handle_t * pHandle, uint16_t topSpeed)
+void PedalAssist_SetPASMaxSpeed(PAS_Handle_t * pHandle, uint16_t topSpeed)
 {
     ASSERT(pHandle != NULL);
-    pHandle->sParameters.TorquePasMaxSpeed = topSpeed;
+    pHandle->sParameters.PasMaxSpeed = topSpeed;
 }
 
 /**
