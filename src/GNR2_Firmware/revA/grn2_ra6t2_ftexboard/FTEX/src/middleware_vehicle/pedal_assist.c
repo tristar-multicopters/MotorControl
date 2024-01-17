@@ -130,8 +130,9 @@ void PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle)
         userConfigSpeed = UserConfigTask_GetWalkModeSpeed();
     }
     else if (pHandle->bCurrentPasAlgorithm == CadenceSensorUse) // Set the level specific speed limit
-    {
-        userConfigSpeed = UserConfigTask_GetCadenceLevelSpeed(currentLevel);
+    {   
+        //get cadence max speed associated with teh current pas level.
+        userConfigSpeed = pHandle->sParameters.PASCCadenceSpeed[currentLevel];
         
         //check if the cadence max speed is inside of the max speed limit
         //torque and cadence must have the same max speed limit
@@ -188,7 +189,7 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     }
     
     // Convert the PAS torque sensing in motor torque
-    hRefTorqueS = ((hReadTS * pHandle->sParameters.bTorqueGain)/PAS_PERCENTAGE);
+    hRefTorqueS = ((hReadTS * pHandle->sParameters.bTorqueGain[currentLevel])/PAS_PERCENTAGE);
     
     hRefTorqueS = (hRefTorqueS/PAS_PERCENTAGE) * pHandle->sParameters.PASTTorqRatiosInPercentage[pHandle->bCurrentAssistLevel];
     

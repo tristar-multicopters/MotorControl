@@ -64,6 +64,48 @@
     #define VEHICLE_TOP_SPEED_KMH   32    
 #endif
 
+// PAS sensor Torque power in % default values
+
+#ifndef PAS_0_TORQUE_GAIN
+    #define PAS_0_TORQUE_GAIN      0    // PAS T (Toque) 0 has a ratio of   0%
+#endif
+
+#ifndef PAS_1_TORQUE_GAIN
+    #define PAS_1_TORQUE_GAIN     100    // PAS T (Toque) has a ratio of  100%
+#endif
+
+#ifndef PAS_2_TORQUE_GAIN
+    #define PAS_2_TORQUE_GAIN     100    // PAS T (Toque)has a ratio of  100%
+#endif
+
+#ifndef PAS_3_TORQUE_GAIN
+    #define PAS_3_TORQUE_GAIN     100    // PAS T (Toque) 3 has a ratio of  100%
+#endif
+
+#ifndef PAS_4_TORQUE_GAIN
+    #define PAS_4_TORQUE_GAIN     100    // PAS T (Toque) 4 has a ratio of  100%
+#endif
+
+#ifndef PAS_5_TORQUE_GAIN
+    #define PAS_5_TORQUE_GAIN     100    // PAS T (Toque) 5 has a ratio of 100%
+#endif
+
+#ifndef PAS_6_TORQUE_GAIN   
+    #define PAS_6_TORQUE_GAIN     100    // PAS T (Toque) 6 has a ratio of 100%
+#endif
+
+#ifndef PAS_7_TORQUE_GAIN   
+    #define PAS_7_TORQUE_GAIN     100    // PAS T (Toque) 7 has a ratio of 100%
+#endif
+
+#ifndef PAS_8_TORQUE_GAIN   
+    #define PAS_8_TORQUE_GAIN     100    // PAS T (Toque) 8 has a ratio of 100%
+#endif
+
+#ifndef PAS_9_TORQUE_GAIN   
+    #define PAS_9_TORQUE_GAIN     100    // PAS T (Toque) 9 has a ratio of 100%
+#endif
+
 // PAS Cadence sesnor Torque power in % default values
 
 #ifndef PAS_C_0_POWER_PERCENT

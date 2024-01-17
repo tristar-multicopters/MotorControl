@@ -38,7 +38,16 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.pasTorqueStartupThreshold = PTS_OFFSET_PTS2TORQUE_STARTUP,
     .PAS_ConfigData.pasCadenceStartupNumbPulses = PAS_MIN_PEDAL_PULSE_COUNT,
     .PAS_ConfigData.pasCadenceStartupWindows = CADENCE_DETECTION_WINDOWS_MS,
-    .PAS_ConfigData.torqueSensorMultiplier = PAS_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_0] = PAS_0_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_1] = PAS_1_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_2] = PAS_2_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_3] = PAS_3_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_4] = PAS_4_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_5] = PAS_5_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_6] = PAS_6_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_7] = PAS_7_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_8] = PAS_8_TORQUE_GAIN,
+    .PAS_ConfigData.torqueSensorMultiplier[PAS_9] = PAS_9_TORQUE_GAIN,
     .PAS_ConfigData.torqueMaxSpeed = 0,
     .PAS_ConfigData.cadenceLevelSpeed[PAS_0] = PAS_C_LEVEL_SPEED_0,
     .PAS_ConfigData.cadenceLevelSpeed[PAS_1] = PAS_C_LEVEL_SPEED_1,
@@ -310,9 +319,14 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     //update userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_Windows(CADENCE_DETECTION_WINDOWS_MS)
     userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_Windows = UserConfigTask_GetPasCadenceStartupWindows();
     
-    //update PAS_ConfigData.torqueSensorMultiplier(PAS_TORQUE_GAIN)    
-    userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bTorqueGain = UserConfigTask_GetTorqueSensorMultiplier();
-    
+      
+    for(uint8_t n = PAS_0;n <= PAS_9;n++)
+    {
+        //update PAS_ConfigData.torqueSensorMultiplier(PAS_TORQUE_GAIN) 
+        userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bTorqueGain[n] = UserConfigTask_GetTorqueSensorMultiplier(n);
+        //update PASCCadenceSpeed, cadence speed by PAS level. 
+        userConfigHandle->pVController->pPowertrain->pPAS->sParameters.PASCCadenceSpeed[n] = UserConfigTask_GetCadenceLevelSpeed(n);
+    }
     //update PAS_ConfigData.torqueMaxSpeed(will be defined).
        
     //PAS_ConfigData.cadenceLevelSpeed parameter is not passed to any system variable on the inialization.
@@ -549,7 +563,7 @@ void UserConfigTask_UpdatePasCadenceStartupWindows(uint32_t value)
 }
 
 /**
-  @brief Function to get Torque Sensor Multiplier
+  @brief Function to get Torque Sensor Multiplier(GAIN)by PAS level
   read from data flash memory.
   
   @param void
@@ -558,25 +572,33 @@ void UserConfigTask_UpdatePasCadenceStartupWindows(uint32_t value)
 
 NOTE: parameter passed in the PedalAssist_GetTorqueFromTS
 */
-uint8_t UserConfigTask_GetTorqueSensorMultiplier(void)
+uint16_t UserConfigTask_GetTorqueSensorMultiplier(uint8_t pasLevel)
 {
-    return userConfigData.PAS_ConfigData.torqueSensorMultiplier; 
+    //verify if value is in the range.
+    if (pasLevel < 10)
+    {
+        return userConfigData.PAS_ConfigData.torqueSensorMultiplier[pasLevel];
+    }
+    else
+    {
+        return userConfigData.PAS_ConfigData.torqueSensorMultiplier[0];
+    }    
 }
 
 /**
-  @brief Function to update Torque Sensor Multiplier value
+  @brief Function to update Torque Sensor Multiplier value(GAIN) by PAS level
   read from data flash memory.
   
   @param uint8_t value to be passed into the Torque Sensor Multiplier
   @return void
 
 */
-void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t value)
+void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t pasLevel, uint16_t value)
 {
-    //verify if value is in the range.
-    if((value <= 3) && (value >= 1))
+    //
+    if ((pasLevel < 10) && (value <= 0xFFFF))
     {
-        userConfigData.PAS_ConfigData.torqueSensorMultiplier = value; 
+        userConfigData.PAS_ConfigData.torqueSensorMultiplier[pasLevel] = value;
     }
 }
 
@@ -639,7 +661,7 @@ uint8_t UserConfigTask_GetCadenceLevelSpeed(uint8_t pasLevel)
 void UserConfigTask_UpdateCadenceLevelSpeed(uint8_t pasLevel, uint8_t value)
 {
     //
-    if (pasLevel < 10)
+    if ((pasLevel < 10) && (value <= 32))
     {
         userConfigData.PAS_ConfigData.cadenceLevelSpeed[pasLevel] = value;
     }

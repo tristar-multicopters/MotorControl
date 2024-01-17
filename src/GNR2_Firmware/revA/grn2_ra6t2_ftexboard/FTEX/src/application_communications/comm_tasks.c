@@ -107,7 +107,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t pasTorqueStartupSpeed;
     uint16_t pasCadenceStartupNumbPulses;
     uint32_t pasCadenceStartupWindows;
-    uint8_t torqueSensorMultiplier;
+    uint16_t torqueSensorMultiplier[10];
     uint8_t torqueMaxSpeed;
     
     uint8_t cadenceLevelSpeed[10];
@@ -490,11 +490,11 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 1)), pNode, &pasTorqueStartupThreshold, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint32_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)), pNode, &torqueMaxSpeed, sizeof(uint8_t));
         
                  for(uint8_t n = PAS_0;n <= PAS_9;n++)
                  {
+                    COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, n)), pNode, &torqueSensorMultiplier[n], sizeof(uint16_t));
                     COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceLevelSpeed[n], sizeof(uint8_t));
                     COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_LEVEL_POWER, n)), pNode, &torqueLevelPower[n], sizeof(uint8_t));
                  }
@@ -527,11 +527,11 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdatePasTorqueStartupSpeed(pasTorqueStartupSpeed); 
                  UserConfigTask_UpdatePasCadenceStartupNumbPulses(pasCadenceStartupNumbPulses);
                  UserConfigTask_UpdatePasCadenceStartupWindows(pasCadenceStartupWindows);                 
-                 UserConfigTask_UpdateTorqueSensorMultiplier(torqueSensorMultiplier);
                  UserConfigTask_UpdateTorqueMaxSpeed(torqueMaxSpeed);
                  
                  for(uint8_t n = PAS_0;n <= PAS_9;n++)
                  {
+                    UserConfigTask_UpdateTorqueSensorMultiplier(n, torqueSensorMultiplier[n]);
                     UserConfigTask_UpdateCadenceLevelSpeed(n, cadenceLevelSpeed[n]);
                     UserConfigTask_UpdateTorqueLevelPower(n, torqueLevelPower[n]);   
                  }
@@ -746,7 +746,12 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t pasTorqueStartupSpeed              = UserConfigTask_GetPasTorqueStartupSpeed();
         uint16_t pasCadenceStartupNumbPulses = UserConfigTask_GetPasCadenceStartupNumbPulses();
         uint32_t pasCadenceStartupWindows = UserConfigTask_GetPasCadenceStartupWindows();
-        uint8_t torqueSensorMultiplier             = UserConfigTask_GetTorqueSensorMultiplier();
+        uint16_t torqueSensorMultiplier[10]         = {UserConfigTask_GetTorqueSensorMultiplier(PAS_0),UserConfigTask_GetTorqueSensorMultiplier(PAS_1),
+                                                      UserConfigTask_GetTorqueSensorMultiplier(PAS_2),UserConfigTask_GetTorqueSensorMultiplier(PAS_3),
+                                                      UserConfigTask_GetTorqueSensorMultiplier(PAS_4),UserConfigTask_GetTorqueSensorMultiplier(PAS_5),
+                                                      UserConfigTask_GetTorqueSensorMultiplier(PAS_6),UserConfigTask_GetTorqueSensorMultiplier(PAS_7),
+                                                      UserConfigTask_GetTorqueSensorMultiplier(PAS_8),UserConfigTask_GetTorqueSensorMultiplier(PAS_9)};
+
         uint8_t torqueMaxSpeed                     = UserConfigTask_GetTorqueMaxSpeed();
     
         uint8_t cadenceLevelSpeed[10] =      {UserConfigTask_GetCadenceLevelSpeed(PAS_0),UserConfigTask_GetCadenceLevelSpeed(PAS_1),
@@ -789,8 +794,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));        
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 1)), pNode, &pasTorqueStartupThreshold, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint16_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint32_t));        
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0)), pNode, &torqueSensorMultiplier, sizeof(uint8_t));    
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint32_t));            
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_MAX_SPEED, 0)),         pNode, &torqueMaxSpeed, sizeof(uint8_t));            
         
         
@@ -805,6 +809,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         //this OD ID have 10 subindex each.
         for(uint8_t n = PAS_0;n <= PAS_9;n++)                                                                                                      
         {
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, n)), pNode, &torqueSensorMultiplier[n], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CADENCE_HYBRID_LEVEL, n)), pNode, &cadenceLevelSpeed[n], sizeof(uint8_t)); 
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_LEVEL_POWER, n)), pNode, &torqueLevelPower[n], sizeof(uint8_t));          
         }

@@ -65,7 +65,7 @@ typedef struct
     uint8_t pasTorqueStartupThreshold;    
     uint16_t pasCadenceStartupNumbPulses;
     uint32_t pasCadenceStartupWindows;
-    uint8_t torqueSensorMultiplier;
+    uint16_t torqueSensorMultiplier[10];
     uint8_t torqueMaxSpeed;
     uint8_t cadenceLevelSpeed[10];
     uint8_t torqueLevelPower[10];

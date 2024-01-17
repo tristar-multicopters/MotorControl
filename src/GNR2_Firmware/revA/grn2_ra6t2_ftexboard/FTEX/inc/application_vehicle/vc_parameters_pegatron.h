@@ -48,7 +48,18 @@
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
-#define PAS_TORQUE_GAIN                     250             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
+
+#define PAS_0_TORQUE_GAIN                   0               // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
+#define PAS_1_TORQUE_GAIN                   250             // Torque sensor PAS Gain in % on PAS 1
+#define PAS_2_TORQUE_GAIN                   250             // Torque sensor PAS Gain in % on PAS 2                
+#define PAS_3_TORQUE_GAIN                   250             // Torque sensor PAS Gain in % on PAS 3
+#define PAS_4_TORQUE_GAIN                   250             // Torque sensor PAS Gain in % on PAS 4
+#define PAS_5_TORQUE_GAIN                   250             // Torque sensor PAS Gain in % on PAS 5
+#define PAS_6_TORQUE_GAIN                   250             // Torque sensor PAS Gain in % on PAS 6
+#define PAS_7_TORQUE_GAIN                   250             // Torque sensor PAS Gain in % on PAS 7 
+#define PAS_8_TORQUE_GAIN                   250             // Torque sensor PAS Gain in % on PAS 8 
+#define PAS_9_TORQUE_GAIN                   250             // Torque sensor PAS Gain in % on PAS 9 
+
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
 #define PAS_ALGORITHM                       TorqueSensorUse /* TorqueSensorUse  = 0, Torque sensor use define 
                                                                CadenceSensorUse = 1, Cadence sensor use define */

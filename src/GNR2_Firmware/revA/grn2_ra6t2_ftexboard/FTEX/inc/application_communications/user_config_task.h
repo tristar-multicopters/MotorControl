@@ -276,24 +276,24 @@ uint32_t UserConfigTask_GetPasCadenceStartupWindows(void);
 void UserConfigTask_UpdatePasCadenceStartupWindows(uint32_t value);
 
 /**
-  @brief Function to get Torque Sensor Multiplier
+  @brief Function to get Torque Sensor Multiplier(GAIN)by PAS level
   read from data flash memory.
   
   @param void
   @return uint8_t a number that represent Torque Sensor Multiplier
   between 1 and 3.
 */
-uint8_t UserConfigTask_GetTorqueSensorMultiplier(void);
+uint16_t UserConfigTask_GetTorqueSensorMultiplier(uint8_t pasLevel);
 
 /**
-  @brief Function to update Torque Sensor Multiplier value
+  @brief Function to update Torque Sensor Multiplier value(GAIN) by PAS level
   read from data flash memory.
   
   @param uint8_t value to be passed into the Torque Sensor Multiplier
   @return void
 
 */
-void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t value);
+void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t pasLevel, uint16_t value);
 
 /**
   @brief Function to get torque Max Speed

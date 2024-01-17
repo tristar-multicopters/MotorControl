@@ -61,7 +61,7 @@ typedef struct
     
     uint16_t TorquePasMaxSpeed;             // Maxiumumu speed in torque pas (not level specific for now)
     uint8_t  bMaxLevel;                     // PAS maximum given Level
-    uint8_t  bTorqueGain;                   // User gain used to affect the torque ramp in %
+    uint16_t bTorqueGain[10];                   // User gain used to affect the torque ramp in %
     int16_t  hMaxTorqueRatio;               // PAS maximum torque ratio
     
     bool WalkmodeOverThrottle;              // Flag used to decide if walk mode has higher priority than throttle          
@@ -69,6 +69,7 @@ typedef struct
     uint16_t bPASMinPulseCount;                  // Counter for safe detection of the PAS after one pedaling
     uint8_t bPASCountActivation;            // Counter for slow PAS detection over than 700ms periode
 
+    uint8_t PASCCadenceSpeed[10];           // Speed on cadence mode to each PAS level.
     int16_t PASCTorqRatiosInPercentage[10]; // Cadence Torque ratio in % for each level
     int16_t PASTTorqRatiosInPercentage[10]; // Torque Torque ratio in % for each level
     int16_t walkModeTorqueRatio;            // Torque ratio in % for walk mode

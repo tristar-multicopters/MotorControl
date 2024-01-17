@@ -217,10 +217,23 @@ extern "C" {
 
 #define CO_OD_REG_PAS_DETECTION_STARTUP        0x2017
 
-//OD ID for configure torque Sensor Multiplier
+//OD ID for configure torque Sensor Multiplier(GAIN)
 //PAS ramp multiplication coefficient for a better user feeling
 //The define used by this parameter is:
-//PAS_LEVEL_COEFF                         1
+//
+//Torque Gain to PAS 0
+//SUBINDEX 0: sParameters.bTorqueGain[0] = PAS_0_TORQUE_GAIN
+//
+//Torque Gain to PAS 1
+//SUBINDEX 1: sParameters.bTorqueGain[1] = PAS_1_TORQUE_GAIN
+//
+//Torque Gain to PAS 2
+//SUBINDEX 2: sParameters.bTorqueGain[2] = PAS_2_TORQUE_GAIN
+//
+//
+//
+//Torque Gain to PAS 9
+//SUBINDEX 9: sParameters.bTorqueGain[9] = PAS_9_TORQUE_GAIN
 #define CO_OD_REG_TORQUE_SENSOR_MULTIPLIER     0x2018
 
 //OD ID for configure torque Maximum speed
@@ -231,11 +244,20 @@ extern "C" {
 //OD ID for configure Cadence/hybrid level.
 //Maximum Speed for PAS Level x in Km/h
 //The define(s) used by this parameter is:
-//PAS_LEVEL_SPEED_0
-//PAS_LEVEL_SPEED_1
-//PAS_LEVEL_SPEED_2
-//PAS_LEVEL_SPEED_3
-//.....
+//.sParameters.PASCCadenceSpeed
+//Max Cadence on Speed PAS 0
+//SUBINDEX 0: sParameters.PASCCadenceSpeed[0] = PAS_C_LEVEL_SPEED_0
+//
+//Max Cadence on Speed PAS 1
+//SUBINDEX 1: sParameters.PASCCadenceSpeed[1] = PAS_C_LEVEL_SPEED_1
+//
+////Max Cadence on Speed PAS 2
+//SUBINDEX 2: sParameters.PASCCadenceSpeed[2] = PAS_C_LEVEL_SPEED_2
+//
+//.......
+//
+////Max Cadence on Speed PAS 9
+//SUBINDEX 9: sParameters.PASCCadenceSpeed[9] = PAS_C_LEVEL_SPEED_9
 //NOTE: this OD ID will have 10 subindexs.
 #define CO_OD_REG_CADENCE_HYBRID_LEVEL         0x201A
 

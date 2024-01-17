@@ -208,7 +208,7 @@ uint16_t bObjDataPasCadenceStartupNumbPulses = 0;
 uint32_t bObjDataPasCadenceStartupWindows = 0;
 
 //variable associated with CO_OD_REG_TORQUE_SENSOR_MULTIPLIER.
-uint8_t bObjDataTorqueSensorMultiplier      = 0;
+uint16_t bObjDataTorqueSensorMultiplier[10] = {0};
 
 //variable associated with CO_OD_REG_TORQUE_MAX_SPEED.
 uint8_t bObjDataTorqueMaxSpeed              = 0;
@@ -1119,8 +1119,44 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
         
-            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque/hybrid PAS. 
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueSensorMultiplier};
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[0]};
+            //move to next OD index
+            index++;
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[1]};
+            //move to next OD index
+            index++;
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[2]};
+            //move to next OD index
+            index++;
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[3]};
+            //move to next OD index
+            index++;
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 4, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[4]};
+            //move to next OD index
+            index++;
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 5, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[5]};
+            //move to next OD index
+            index++;
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 6, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[6]};
+            //move to next OD index
+            index++;
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 7, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[7]};
+            //move to next OD index
+            index++;
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 8, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[8]};
+            //move to next OD index
+            index++;
+            //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 9, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[9]};
             //move to next OD index
             index++;
         
