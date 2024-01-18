@@ -77,8 +77,6 @@ typedef struct
 //associated with Throttle.
 typedef struct
 {
-    uint8_t maxSpeed;
-    uint8_t walkModeSpeed;
     uint16_t AdcOffset;
     uint16_t AdcMax; 
 } Throttle_ConfigData_t;
@@ -87,13 +85,15 @@ typedef struct
 //associated with the Vehicle.
 typedef struct
 {
-  uint8_t WheelDiameter;
-  uint8_t ScreenProtocol;
-  uint8_t HeadLightDefault;      // Contains the default state of the head light (on or off)
-  uint8_t HeadLightLocked; 
-  uint8_t TailLightDefault;      // Contains the default state of the tail light (on or off)    
-  uint8_t TailLightLocked;      
-  uint8_t TailLightBlinkOnBrake;    
+    uint8_t walkModeSpeed;
+    uint8_t maxSpeed;
+    uint8_t WheelDiameter;
+    uint8_t ScreenProtocol;
+    uint8_t HeadLightDefault;      // Contains the default state of the head light (on or off)
+    uint8_t HeadLightLocked; 
+    uint8_t TailLightDefault;      // Contains the default state of the tail light (on or off)    
+    uint8_t TailLightLocked;      
+    uint8_t TailLightBlinkOnBrake;    
 } Vehicle_ConfigData_t;
 
 //struct used to hold all structs associated 

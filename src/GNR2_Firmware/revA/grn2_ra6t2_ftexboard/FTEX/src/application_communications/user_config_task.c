@@ -69,9 +69,10 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_7] = 0,
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_8] = 0,
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_9] = 0,
-    .Throttle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
+    .Vehicle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
     .Throttle_ConfigData.AdcOffset = THROTTLE_OFFSET_ADC2THROTTLE,
     .Throttle_ConfigData.AdcMax = THROTTLE_MAX_ADC2THROTTLE,
+    .Vehicle_ConfigData.maxSpeed = VEHICLE_TOP_SPEED_KMH,
     .Vehicle_ConfigData.WheelDiameter = WHEEL_DIAMETER,
     .Vehicle_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
     .Vehicle_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
@@ -333,13 +334,12 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     //update .PAS_ConfigData.torqueLevelPower(will be define)
     
-    //update Throttle_ConfigData.maxSpeed(PAS_MAX_KM_SPEED).
-    //userConfigHandle->pVController->pPowertrain->pPAS->sParameters.hPASMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
+    //update vehicle max speed(VEHICLE_TOP_SPEED_KMH).
+    userConfigHandle->pVController->pPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
     
     //Throttle_ConfigData.walkMOdeSpeed(PAS_LEVEL_SPEED_WALK) is not passed
     //directly to any variable. Because of this is not updated here.
     
-    //Config
     
     Wheel_SetWheelDiameter(UserConfigTask_GetWheelDiameter()); 
     
@@ -717,7 +717,7 @@ void UserConfigTask_UpdateTorqueLevelPower(uint8_t pasLevel, uint8_t value)
 */
 uint8_t UserConfigTask_GetBikeMaxSpeed(void)
 {
-    return userConfigData.Throttle_ConfigData.maxSpeed;
+    return userConfigData.Vehicle_ConfigData.maxSpeed;
 }
 
 /**
@@ -732,7 +732,7 @@ void UserConfigTask_UpdateBikeMaxSpeed(uint8_t value)
 {
     if((value <= 75) && (value >= 0))
     {
-        userConfigData.Throttle_ConfigData.maxSpeed = value;
+        userConfigData.Vehicle_ConfigData.maxSpeed = value;
     }
 }
 
@@ -747,7 +747,7 @@ void UserConfigTask_UpdateBikeMaxSpeed(uint8_t value)
 */
 uint8_t UserConfigTask_GetWalkModeSpeed(void)
 {
-    return userConfigData.Throttle_ConfigData.walkModeSpeed;
+    return userConfigData.Vehicle_ConfigData.walkModeSpeed;
 }
 
 /**
@@ -762,7 +762,7 @@ void UserConfigTask_UpdateWalkModeSpeed(uint8_t value)
 {
     if ((value <= 10) && (value >= 0))
     {
-        userConfigData.Throttle_ConfigData.walkModeSpeed = value;
+        userConfigData.Vehicle_ConfigData.walkModeSpeed = value;
     }
 }
 
