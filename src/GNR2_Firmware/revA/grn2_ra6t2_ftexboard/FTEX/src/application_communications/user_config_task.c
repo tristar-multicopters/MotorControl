@@ -69,9 +69,12 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_7] = 0,
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_8] = 0,
     .PAS_ConfigData.torqueLevelPower[TORQUE_LEVEL_9] = 0,
-    .Vehicle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
+    .PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn = 0, // To update
+    .PAS_ConfigData.PasSensorConfig.pasTorqueInputMax = PTS_MAX_PTSVALUE,
+    .PAS_ConfigData.PasSensorConfig.pasTorqueInputMin = PTS_OFFSET_ADC2PTS,
     .Throttle_ConfigData.AdcOffset = THROTTLE_OFFSET_ADC2THROTTLE,
     .Throttle_ConfigData.AdcMax = THROTTLE_MAX_ADC2THROTTLE,
+    .Vehicle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
     .Vehicle_ConfigData.maxSpeed = VEHICLE_TOP_SPEED_KMH,
     .Vehicle_ConfigData.WheelDiameter = WHEEL_DIAMETER,
     .Vehicle_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
@@ -295,38 +298,40 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
 */
 void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
 {
+    
+    PWRT_Handle_t *paPowertrain = userConfigHandle->pVController->pPowertrain;
  
     //verify the pointer.
     ASSERT(userConfigHandle->pVController  != NULL);
     
     //update userConfigData.PAS_ConfigData.pasAlgorithm(PAS_ALGORITHM)
-    userConfigHandle->pVController->pPowertrain->pPAS->bCurrentPasAlgorithm = UserConfigTask_GetPasAlgorithm();
+    paPowertrain->pPAS->bCurrentPasAlgorithm = UserConfigTask_GetPasAlgorithm();
     
     //update userConfigData.PAS_ConfigData.numberOfPasLevels(PAS_MAX_LEVEL)
-    userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel = UserConfigTask_GetNumberPasLevels();
+    paPowertrain->pPAS->sParameters.bMaxLevel = UserConfigTask_GetNumberPasLevels();
     
     //update userConfigData.PAS_ConfigData.pasMaxPower(PAS_MAX_TORQUE_RATIO)
-    userConfigHandle->pVController->pPowertrain->pPAS->sParameters.hMaxTorqueRatio = UserConfigTask_GetPasMaxPower();
+    paPowertrain->pPAS->sParameters.hMaxTorqueRatio = UserConfigTask_GetPasMaxPower();
     
     //update userConfigData.PAS_ConfigData.pasTorqueStartupSpeed(PTS_OFFSET_STARTUP_SPEED_KMH)
-    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hStartupOffsetMTSpeedKMH = (uint16_t)UserConfigTask_GetPasTorqueStartupSpeed();
+    paPowertrain->pPAS->pPTS->hParameters.hStartupOffsetMTSpeedKMH = (uint16_t)UserConfigTask_GetPasTorqueStartupSpeed();
 
     //update userConfigData.PAS_ConfigData.pasTorqueStartupThreshold(PTS_OFFSET_PTS2TORQUE_STARTUP)
-    userConfigHandle->pVController->pPowertrain->pPAS->pPTS->hParameters.hOffsetMTStartup = UserConfigTask_GetPasTorqueStartupThreshold();
+    paPowertrain->pPAS->pPTS->hParameters.hOffsetMTStartup = UserConfigTask_GetPasTorqueStartupThreshold();
     
     //update userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bPASMinPulseCount(PAS_MIN_PEDAL_PULSE_COUNT)
-    userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bPASMinPulseCount = UserConfigTask_GetPasCadenceStartupNumbPulses();
+    paPowertrain->pPAS->sParameters.bPASMinPulseCount = UserConfigTask_GetPasCadenceStartupNumbPulses();
     
     //update userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_Windows(CADENCE_DETECTION_WINDOWS_MS)
-    userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_Windows = UserConfigTask_GetPasCadenceStartupWindows();
+    paPowertrain->pPAS->pPSS->wPedalSpeedSens_Windows = UserConfigTask_GetPasCadenceStartupWindows();
     
       
     for(uint8_t n = PAS_0;n <= PAS_9;n++)
     {
         //update PAS_ConfigData.torqueSensorMultiplier(PAS_TORQUE_GAIN) 
-        userConfigHandle->pVController->pPowertrain->pPAS->sParameters.bTorqueGain[n] = UserConfigTask_GetTorqueSensorMultiplier(n);
+        paPowertrain->pPAS->sParameters.bTorqueGain[n] = UserConfigTask_GetTorqueSensorMultiplier(n);
         //update PASMaxSpeed, cadence speed by PAS level. 
-        userConfigHandle->pVController->pPowertrain->pPAS->sParameters.PASMaxSpeed[n] = UserConfigTask_GetPasLevelSpeed(n);
+        paPowertrain->pPAS->sParameters.PASMaxSpeed[n] = UserConfigTask_GetPasLevelSpeed(n);
     }
     //update PAS_ConfigData.torqueMaxSpeed(will be defined).
        
@@ -335,7 +340,12 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     //update .PAS_ConfigData.torqueLevelPower(will be define)
     
     //update vehicle max speed(VEHICLE_TOP_SPEED_KMH).
-    userConfigHandle->pVController->pPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
+      paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
+
+    //Magnets per pedal turn doesn't exist in vc layer yet so there is nothing to initialise
+  
+      paPowertrain->pPAS->pPTS->hParameters.hOffsetPTS = UserConfigTask_GetPasTorqueInputMin();
+      paPowertrain->pPAS->pPTS->hParameters.hMax       = UserConfigTask_GetPasTorqueInputMax();
     
     //Throttle_ConfigData.walkMOdeSpeed(PAS_LEVEL_SPEED_WALK) is not passed
     //directly to any variable. Because of this is not updated here.
@@ -349,15 +359,15 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
         UART0Handle.UARTProtocol =  UserConfigTask_GetScreenProtocol();
     }
 
-    userConfigHandle->pVController->pPowertrain->pHeadLight->bDefaultLightState  =  UserConfigTask_GetHeadLightDefault(); 
-    userConfigHandle->pVController->pPowertrain->pHeadLight->bLightStateLocked   =  UserConfigTask_GetHeadLightLocked();
+    paPowertrain->pHeadLight->bDefaultLightState  =  UserConfigTask_GetHeadLightDefault(); 
+    paPowertrain->pHeadLight->bLightStateLocked   =  UserConfigTask_GetHeadLightLocked();
 
-    userConfigHandle->pVController->pPowertrain->pTailLight->bDefaultLightState  =  UserConfigTask_GetTailLightDefault();
-    userConfigHandle->pVController->pPowertrain->pTailLight->bLightStateLocked   =  UserConfigTask_GetTailLightLocked();
+    paPowertrain->pTailLight->bDefaultLightState  =  UserConfigTask_GetTailLightDefault();
+    paPowertrain->pTailLight->bLightStateLocked   =  UserConfigTask_GetTailLightLocked();
     userConfigHandle->pVController->pPowertrain->pTailLight->bBlinkOnBrake       =  UserConfigTask_GetTailLightBlinkOnBrake();
 
-    userConfigHandle->pVController->pPowertrain->pThrottle->hParameters.hOffsetThrottle = UserConfigTask_GetThrottleAdcOffset();
-    userConfigHandle->pVController->pPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();   
+    paPowertrain->pThrottle->hParameters.hOffsetThrottle = UserConfigTask_GetThrottleAdcOffset();
+    paPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();   
 }
 
 /**
@@ -707,6 +717,103 @@ void UserConfigTask_UpdateTorqueLevelPower(uint8_t pasLevel, uint8_t value)
 }
 
 /**
+  @brief Function to get Pas Nb Magnets Per Turn
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Number of magnets per pedal rotation, cannot be 0
+
+*/
+uint8_t UserConfigTask_GetPasNbMagnetsPerTurn(void)
+{
+    return userConfigData.PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn;
+}
+
+/**
+  @brief Function to update Pas Nb Magnets Per Turn value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Pas Nb Magnets Per Turn cannot be 0
+  @return void
+
+*/
+void UserConfigTask_UpdatePasNbMagnetsPerTurn(uint8_t value)
+{
+    if (value > 0)
+    {
+        userConfigData.PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn = value;
+    }
+}
+
+/**
+  @brief Function to get Pas Torque Input Max
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Pas Torque Input Max
+
+*/
+uint16_t UserConfigTask_GetPasTorqueInputMax(void)
+{
+    return userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMax;
+}
+
+/**
+  @brief Function to update Pas Torque Input Max value
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Pas Torque Input Max value
+  @return void
+
+*/
+void UserConfigTask_UpdatePasTorqueInputMax(uint16_t value)
+{
+    if (value > userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMin)
+    {    
+        if (value < DIGITAL33_0_7_VOLTS)
+        {
+            value = DIGITAL33_0_7_VOLTS;
+        }
+    
+        userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMax = value;   
+    }
+}
+
+/**
+  @brief Function to get Pas Torque Input Min
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Pas Torque Input Min
+
+*/
+uint16_t UserConfigTask_GetPasTorqueInputMin(void)
+{
+    return userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMin;  
+}
+
+/**
+  @brief Function to update Pas Torque Input Min
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Pas Torque Input Min
+  @return void
+
+*/
+void UserConfigTask_UpdatePasTorqueInputMin(uint16_t value)
+{
+    if (value < userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMax)
+    {    
+        if (value < DIGITAL33_0_7_VOLTS)
+        {
+            value = DIGITAL33_0_7_VOLTS;
+        }
+    
+        userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMin = value;   
+    }
+}
+
+/**
   @brief Function to get bike max speed
   read from data flash memory.
   
@@ -1014,6 +1121,11 @@ void UserConfigTask_UpdateThrottleAdcOffset(uint16_t value)
 {
     if(value <= userConfigData.Throttle_ConfigData.AdcMax)
     {
+        if(value < DIGITAL5_0_8_VOLTS)
+        {
+           value = DIGITAL5_0_8_VOLTS;  
+        }   
+        
         userConfigData.Throttle_ConfigData.AdcOffset = value;
     }
     
@@ -1044,6 +1156,11 @@ void UserConfigTask_UpdateThrottleAdcMax(uint16_t value)
 {       
     if(value >= userConfigData.Throttle_ConfigData.AdcOffset)
     {
+        if(value < DIGITAL5_0_8_VOLTS)
+        {
+           value = DIGITAL5_0_8_VOLTS;  
+        } 
+        
         userConfigData.Throttle_ConfigData.AdcMax = (uint16_t)value;
     }
 }

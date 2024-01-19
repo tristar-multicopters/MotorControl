@@ -304,7 +304,28 @@ extern "C" {
 //side(master or slave) received the sdo download command.
 #define CO_OD_REG_MASTER_SLAVE_PRESENT         0x2023
 
-// 0x2024 available
+
+// OD ID used to configure the charateristics of a pas sensor
+/*
+COD_OD_REG_PAS_SENSOR 0 (Placeholder currently not implemented) 
+Current pedaling cadence from the PAS sensor, in RPM
+
+COD_OD_REG_PAS_SENSOR 1 (Placeholder currently not implemented) 
+Current torque detected on the pedals (if torque sensor present), expressed in %
+
+COD_OD_REG_PAS_SENSOR 2 (Placeholder currently not implemented) 
+Current torque detected on the pedals (if torque sensor present), expressed in watts
+
+COD_OD_REG_PAS_SENSOR 3
+Configure the number of magnets per rotation of the PAS cadence sensor
+
+COD_OD_REG_PAS_SENSOR 4
+PAS torque sensor min value (ie. Offset), between 0-65535  (0 means 0V, 65535 means 5V)
+
+COD_OD_REG_PAS_SENSOR 5
+PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
+*/
+#define COD_OD_REG_PAS_SENSOR                  0x2024
 
 // OD ID to set the screen protocol 
 #define CO_OD_CONFIG_SCREEN_PROTOCOL           0x2025

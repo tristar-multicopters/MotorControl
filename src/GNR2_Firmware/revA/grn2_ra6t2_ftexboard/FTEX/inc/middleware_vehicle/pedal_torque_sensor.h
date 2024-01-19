@@ -37,6 +37,7 @@ typedef struct
     float fFilterBeta;      /* Beta coefficient for low pass first order butterworth filter */
     
     uint16_t    hOffsetPTS;     /* Offset of the torque sensor signal when at lowest position */
+    uint16_t    hMax;               /* torque signal when at maximum position */
     uint16_t    bSlopePTS;      /* Gain factor of ADC value vs torque sensor */
     uint16_t    bDivisorPTS;    /* Scaling factor of ADC value vs torque sensor */
     
@@ -49,7 +50,7 @@ typedef struct
     int16_t     bSlopeMT;       /* Gain factor of torque sensor vs torque */
     int16_t     bDivisorMT;     /* Scaling factor of torque sensor vs torque */
     
-    uint16_t    hMax;               /* torque signal when at maximum position */
+
     uint16_t    PasMaxOutputTorque; /* max motor torque that PAS is allowed to use */
     
     uint16_t    hLowPassFilterBW1;      /* used to configure the first coefficient software filter bandwidth */

@@ -358,6 +358,66 @@ uint8_t UserConfigTask_GetTorqueLevelPower(uint8_t pasLevel);
 void UserConfigTask_UpdateTorqueLevelPower(uint8_t pasLevel, uint8_t value);
 
 /**
+  @brief Function to get Pas Nb Magnets Per Turn
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Number of magnets per pedal rotation, cannot be 0
+
+*/
+uint8_t UserConfigTask_GetPasNbMagnetsPerTurn(void);
+
+/**
+  @brief Function to update Pas Nb Magnets Per Turn value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Pas Nb Pulse Per Turn cannot be 0
+  @return void
+
+*/
+void UserConfigTask_UpdatePasNbMagnetsPerTurn(uint8_t value);
+
+/**
+  @brief Function to get Pas Torque Input Max
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Pas Torque Input Max
+
+*/
+uint16_t UserConfigTask_GetPasTorqueInputMax(void);
+
+/**
+  @brief Function to update Pas Torque Input Max value
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Pas Torque Input Max value
+  @return void
+
+*/
+void UserConfigTask_UpdatePasTorqueInputMax(uint16_t value);
+
+/**
+  @brief Function to get Pas Torque Input Min
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Pas Torque Input Min
+
+*/
+uint16_t UserConfigTask_GetPasTorqueInputMin(void);
+
+/**
+  @brief Function to update Pas Torque Input Min
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Pas Torque Input Min
+  @return void
+
+*/
+void UserConfigTask_UpdatePasTorqueInputMin(uint16_t value);
+
+/**
   @brief Function to get bike max speed
   read from data flash memory.
   

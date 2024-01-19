@@ -466,6 +466,9 @@ static void UpdateObjectDictionnary(void *p_arg)
         }
         else
         {
+             uint8_t  configPasNbMagnetsPerTurn = UserConfigTask_GetPasNbMagnetsPerTurn();                                     
+             uint16_t configPasTorqueInputMax = UserConfigTask_GetPasTorqueInputMax();
+             uint16_t configPasTorqueInputMin = UserConfigTask_GetPasTorqueInputMin();
             
              uint8_t configWheelDiameter;
              uint8_t configScreenProtocol;
@@ -503,6 +506,13 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
                 
                  // Config 
+                         // Subindex 0-2 have place holder but have not been implemented yet.
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 3)),       pNode, &configPasNbMagnetsPerTurn, sizeof(uint8_t));  
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 4)),       pNode, &configPasTorqueInputMin, sizeof(uint16_t));  
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 5)),       pNode, &configPasTorqueInputMax, sizeof(uint16_t)); 
+                 
+                 
+                 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),      pNode, &configWheelDiameter, sizeof(uint8_t)); 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),   pNode, &configScreenProtocol, sizeof(uint8_t)); 
                  
@@ -538,11 +548,14 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  UserConfigTask_UpdateBikeMaxSpeed(maxSpeed);
                  UserConfigTask_UpdateWalkModeSpeed(walkModeSpeed);
-                 
+                     
+                 UserConfigTask_UpdatePasNbMagnetsPerTurn(configPasNbMagnetsPerTurn);                                     
+                 UserConfigTask_UpdatePasTorqueInputMax(configPasTorqueInputMax);
+                 UserConfigTask_UpdatePasTorqueInputMin(configPasTorqueInputMin);
+                                  
                  UserConfigTask_UpdateWheelDiameter(configWheelDiameter);
                  UserConfigTask_UpdateScreenProtocol(configScreenProtocol);
-                 
-                
+                                 
                  UserConfigTask_UpdateHeadLightDefault(configHeadLightDefault);
                  UserConfigTask_UpdateHeadLightLocked(configHeadLightLocked);
                  
@@ -764,11 +777,16 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
                                               UserConfigTask_GetTorqueLevelPower(PAS_4),UserConfigTask_GetTorqueLevelPower(PAS_5),
                                               UserConfigTask_GetTorqueLevelPower(PAS_6),UserConfigTask_GetTorqueLevelPower(PAS_7),
                                               UserConfigTask_GetTorqueLevelPower(PAS_8),UserConfigTask_GetTorqueLevelPower(PAS_9)};
+                                         
         uint8_t maxSpeed = UserConfigTask_GetBikeMaxSpeed();
         uint8_t walkModeSpeed = UserConfigTask_GetWalkModeSpeed(); 
         
                                               
-        //Config                                      
+        //Config    
+        uint8_t  configPasNbMagnetsPerTurn = UserConfigTask_GetPasNbMagnetsPerTurn();                                     
+        uint16_t configPasTorqueInputMax = UserConfigTask_GetPasTorqueInputMax();
+        uint16_t configPasTorqueInputMin = UserConfigTask_GetPasTorqueInputMin();
+                                              
         uint8_t configWheelDiameter =   UserConfigTask_GetWheelDiameter();
         uint8_t configScreenProtocol =  UserConfigTask_GetScreenProtocol();                                              
         
@@ -818,7 +836,13 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t)); 
 
         //Config 
-        // Show what is the default wheel diameter in the user config
+
+        // Subindex 0-2 have place holder but have not been implemented yet.
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 3)),       pNode, &configPasNbMagnetsPerTurn, sizeof(uint8_t));  
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 4)),       pNode, &configPasTorqueInputMin, sizeof(uint16_t));  
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 5)),       pNode, &configPasTorqueInputMax, sizeof(uint16_t));  
+        
+                // Show what is the default wheel diameter in the user config 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),       pNode, &configWheelDiameter, sizeof(uint8_t));         
         // Show the currently selected screen protocol
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &configScreenProtocol, sizeof(uint8_t)); 

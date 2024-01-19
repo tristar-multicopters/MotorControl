@@ -241,6 +241,19 @@ uint8_t bObjDataRearLightState              = 0;
 //variable associated with CO_OD_REG_MASTER_SLAVE_PRESENT
 uint8_t bObjDataMasterSlavePresent          = 0;
 
+//variable associated with COD_OD_REG_PAS_SENSOR 0 (Placeholder currently not implemented) 
+uint16_t bObjDataPasPedalRPM                = 0;
+//variable associated with COD_OD_REG_PAS_SENSOR 1 (Placeholder currently not implemented) 
+uint8_t  bObjDataPasTorqueForcePercent      = 0;
+//variable associated with COD_OD_REG_PAS_SENSOR 2 (Placeholder currently not implemented) 
+uint16_t bObjDataPasTorqueForceWatts       = 0;
+//variable associated with COD_OD_REG_PAS_SENSOR 3
+uint8_t  bObjDataPasNbMagnetsPerTurn       = 0;  
+//variable associated with COD_OD_REG_PAS_SENSOR 4
+uint16_t bObjDataPasTorqueInputMin         = 0;  
+//variable associated with COD_OD_REG_PAS_SENSOR 5
+uint16_t bObjDataPasTorqueInputMax         = 0;
+
 //variable associated with CO_OD_CONFIG_SCREEN_PROTOCOL
 uint8_t bObjDataConfigScreenProtocol        = 0;
 
@@ -1264,6 +1277,37 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MASTER_SLAVE_PRESENT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMasterSlavePresent};
             //move to next OD index
             index++;
+            
+            //User to master and/or slave write showing it is present(no lost on master/slave communication).
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasPedalRPM};
+            //move to next OD index
+            index++;
+            
+            //User to master and/or slave write showing it is present(no lost on master/slave communication).
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueForcePercent};
+            //move to next OD index
+            index++;
+            
+            //User to master and/or slave write showing it is present(no lost on master/slave communication).
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasTorqueForceWatts};
+            //move to next OD index
+            index++;
+            
+            //User to master and/or slave write showing it is present(no lost on master/slave communication).
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasNbMagnetsPerTurn};
+            //move to next OD index
+            index++;
+            
+            //User to master and/or slave write showing it is present(no lost on master/slave communication).
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 4, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasTorqueInputMin};
+            //move to next OD index
+            index++;
+            
+            //User to master and/or slave write showing it is present(no lost on master/slave communication).
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 5, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasTorqueInputMax};
+            //move to next OD index
+            index++;
+            
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_SCREEN_PROTOCOL, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigScreenProtocol};
             //move to next OD index

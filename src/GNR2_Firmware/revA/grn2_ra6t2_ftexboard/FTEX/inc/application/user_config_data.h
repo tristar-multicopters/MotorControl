@@ -54,6 +54,20 @@
 //avoid padding bytes.
 #pragma pack(1)
 
+#define DIGITAL33_0_7_VOLTS 13900 // Value of 0.7 volts when you have a 0-65535 digital value where 65535 = 3.3V
+#define DIGITAL5_0_8_VOLTS  10500 // Value of 0.8 volts when you have a 0-65535 digital value where 65535 = 5.0V
+
+typedef struct
+{
+    uint16_t pasPedalRPM;           // PlaceHolder Currently not supported          
+    uint8_t  pasTorqueForcePercent; // PlaceHolder Currently not supported  
+    uint16_t pasTorqueForceWatts;   // PlaceHolder Currently not supported  
+    uint8_t  pasNbMagnetsPerTurn;      
+    uint16_t pasTorqueInputMin;  
+    uint16_t pasTorqueInputMax;
+} PAS_Sensor_Configuration_t;
+
+
 //struct used to hold the configuration
 //associated with PAS(pedal Assist System).
 typedef struct 
@@ -69,8 +83,7 @@ typedef struct
     uint8_t torqueMaxSpeed;
     uint8_t PasLevelSpeed[10];
     uint8_t torqueLevelPower[10];
-
-    
+    PAS_Sensor_Configuration_t PasSensorConfig;   
 } PAS_ConfigData_t;
 
 //struct used to hold the configuration
