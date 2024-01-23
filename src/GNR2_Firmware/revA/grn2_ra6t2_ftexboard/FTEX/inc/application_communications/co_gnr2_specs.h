@@ -197,7 +197,7 @@ extern "C" {
 //Maximum PAS Torque feed ratio in 100%.
 //The define used by this parameter is:
 //PAS_MAX_TORQUE_RATIO                   99  
-#define CO_OD_REG_PAS_MAX_POWER                0x2016
+#define CO_OD_REG_PAS_MAX_TORQUE_RATIO        0x2016
 
 //OD ID to setup some PAS parameters on startup condition.
 //The define(s) used by this parameter is:
@@ -239,7 +239,7 @@ extern "C" {
 //OD ID for configure torque Maximum speed
 //The define used by this parameter is:
 //
-#define CO_OD_REG_TORQUE_MAX_SPEED             0x2019
+#define CO_OD_REG_PAS_MIN_TORQUE             0x2019
 
 //OD ID for configure the speed for each Pas Level.
 //Maximum Speed for PAS Level x in Km/h
@@ -265,7 +265,7 @@ extern "C" {
 //The define(s) used by this parameter is:
 //
 //NOTE: this OD ID will have 10 subindexs.
-#define CO_OD_REG_TORQUE_LEVEL_POWER           0x201B
+#define CO_OD_REG_PAS_MAX_TORQUE           0x201B
 
 //OD ID for configure Maximum speed.
 //Maximum Bike Speed in Km/h using RPM

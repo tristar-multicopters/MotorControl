@@ -192,8 +192,8 @@ uint16_t bObjDataKeyUserDataConfig          = 0;
 //variable associated with CO_OD_REG_PAS_ALGORITHM.
 uint8_t bObjDataPasAlgorithm                = 0;
 
-//variable associated with CO_OD_REG_PAS_MAX_POWER.
-uint8_t bObjDataPasMaxPower                 = 0; 
+//variable associated with CO_OD_REG_PAS_MAX_TORQUE_RATIO.
+uint8_t bObjDataPasMaxTorqueRatio                 = 0; 
 
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 0
 uint8_t bObjDataPasTorqueStartupSpeed = 0;
@@ -210,14 +210,14 @@ uint32_t bObjDataPasCadenceStartupWindows = 0;
 //variable associated with CO_OD_REG_TORQUE_SENSOR_MULTIPLIER.
 uint16_t bObjDataTorqueSensorMultiplier[10] = {0};
 
-//variable associated with CO_OD_REG_TORQUE_MAX_SPEED.
-uint8_t bObjDataTorqueMaxSpeed              = 0;
+//variable associated with CO_OD_REG_PAS_MIN_TORQUE.
+uint8_t bObjDataPasLevelMinTorque[10]              = {0};
 
 //variable associated with CO_OD_REG_PAS_LEVEL_SPEED.
 uint8_t bObjDataPasLeveSpeed[10]  = {0};
 
-//variable associated with CO_OD_REG_TORQUE_LEVEL_POWER.
-uint8_t bObjDataTorqueLevelPower[10]        = {0};
+//variable associated with CO_OD_REG_PAS_MAX_TORQUE.
+uint8_t bObjDataPasLevelMaxTorque[10]        = {0};
 
 //variable associated with CO_OD_REG_MAX_SPEED.
 uint8_t bObjDataMaxSpeed                    = 0;
@@ -1111,7 +1111,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
         
             //Application - Percentage of the available max motor power that the PAS algorithm can use. 
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_POWER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasMaxPower};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE_RATIO, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasMaxTorqueRatio};
             //move to next OD index
             index++;
         
@@ -1173,8 +1173,36 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
         
-            //Application - not defined. to do. 
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_MAX_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueMaxSpeed};
+            
+            //Application - The min power on PAS level. 
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[0]};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[1]};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[2]};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[3]};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[4]};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[5]};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[6]};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 7, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[7]};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[8]};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MIN_TORQUE, 9, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMinTorque[9]};
             //move to next OD index
             index++;
         
@@ -1211,34 +1239,34 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
         
             //Application - The speed up to which this PAS level will give motor assistance. 
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[0]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[0]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[1]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[1]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[2]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[2]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[3]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[3]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[4]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[4]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[5]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[5]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[6]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[6]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 7, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[7]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 7, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[7]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[8]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[8]};
             //move to next OD index
             index++;
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_LEVEL_POWER, 9, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataTorqueLevelPower[9]};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE, 9, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasLevelMaxTorque[9]};
             //move to next OD index
             index++;
         

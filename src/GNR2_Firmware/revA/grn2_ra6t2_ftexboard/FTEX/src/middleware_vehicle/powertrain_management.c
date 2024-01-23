@@ -86,6 +86,11 @@ void PWRT_UpdatePowertrainPeripherals(PWRT_Handle_t * pHandle)
 void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
+    
+    //this variable was added to create a linear deceleration ramp
+    //when PAS is off(bike is stoping).
+    static int16_t lastTorque = 0;
+    
     bool bIsBrakePressed = BRK_IsPressedSafety(pHandle->pBrake);
       
     MotorSelection_t bMotorSelection = MS_CheckSelection(pHandle->pMS); // Check which motor is selected
@@ -154,9 +159,12 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
            of the parameter WalkmodeOverThrottle  */    
                  
             /* Using PAS or walk mode */
-        if (((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
+        if ((((PedalAssist_IsPASDetected(pHandle->pPAS) | (hAux < lastTorque)) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
              (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
         {             
+            //get the last torque value.
+            lastTorque = hAux;
+            
              // Make sure we have the most up-to-date desired top speed
             uint16_t TopSpeed = PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS);
             

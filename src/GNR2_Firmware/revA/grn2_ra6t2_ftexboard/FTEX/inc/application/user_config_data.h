@@ -32,19 +32,6 @@
 #define PAS_8  8
 #define PAS_9  9
 
-//defines used to access torqueLevelPower[] array
-//each position in the array is associated with a torque level
-#define TORQUE_LEVEL_0  0
-#define TORQUE_LEVEL_1  1
-#define TORQUE_LEVEL_2  2
-#define TORQUE_LEVEL_3  3
-#define TORQUE_LEVEL_4  4
-#define TORQUE_LEVEL_5  5
-#define TORQUE_LEVEL_6  6
-#define TORQUE_LEVEL_7  7
-#define TORQUE_LEVEL_8  8
-#define TORQUE_LEVEL_9  9
-
 
 /*********************************************
             Data Struct Definition
@@ -74,15 +61,15 @@ typedef struct
 {
     uint8_t pasAlgorithm;
     uint8_t numberOfPasLevels;
-    uint8_t pasMaxPower;
+    uint8_t pasMaxTorqueRatio;
     uint8_t pasTorqueStartupSpeed;
     uint8_t pasTorqueStartupThreshold;    
     uint16_t pasCadenceStartupNumbPulses;
     uint32_t pasCadenceStartupWindows;
     uint16_t torqueSensorMultiplier[10];
-    uint8_t torqueMaxSpeed;
     uint8_t PasLevelSpeed[10];
-    uint8_t torqueLevelPower[10];
+    uint8_t pasLevelMaxTorque[10];
+    uint8_t pasLevelMinTorque[10];
     PAS_Sensor_Configuration_t PasSensorConfig;   
 } PAS_ConfigData_t;
 

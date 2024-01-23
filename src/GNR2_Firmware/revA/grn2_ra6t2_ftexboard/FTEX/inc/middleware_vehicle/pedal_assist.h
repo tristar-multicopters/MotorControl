@@ -69,8 +69,8 @@ typedef struct
     uint8_t bPASCountActivation;            // Counter for slow PAS detection over than 700ms periode
 
     uint8_t PASMaxSpeed[10];           // Speed on cadence mode to each PAS level.
-    int16_t PASCTorqRatiosInPercentage[10]; // Cadence Torque ratio in % for each level
-    int16_t PASTTorqRatiosInPercentage[10]; // Torque Torque ratio in % for each level
+    int16_t PASMinTorqRatiosInPercentage[10]; // Min PAS Torque ratio in % for each level
+    int16_t PASMaxTorqRatiosInPercentage[10]; // Max PAS Torque ratio in % for each level
     int16_t walkModeTorqueRatio;            // Torque ratio in % for walk mode
 } PAS_Parameters_t;
 

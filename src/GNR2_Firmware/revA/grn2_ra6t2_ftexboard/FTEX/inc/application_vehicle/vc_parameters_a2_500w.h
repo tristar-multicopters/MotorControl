@@ -52,13 +52,7 @@
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
 #define PAS_ALGORITHM                       TorqueSensorUse /* TorqueSensorUse  = 0, Torque sensor use define 
                                                                CadenceSensorUse = 1, Cadence sensor use define */
-    
-#define PAS_C_0_POWER_PERCENT               0               // PAS 0 has a ratio of   0%
-#define PAS_C_1_POWER_PERCENT               60              // PAS 1 has a ratio of  60% (3/5)
-#define PAS_C_2_POWER_PERCENT               67              // PAS 2 has a ratio of  67% (4/6)
-#define PAS_C_3_POWER_PERCENT               80              // PAS 3 has a ratio of  80% (4/5)
-#define PAS_C_4_POWER_PERCENT               88              // PAS 4 has a ratio of  88% (7/8)
-#define PAS_C_5_POWER_PERCENT               100             // PAS 5 has a ratio of 100%
+  
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
 
 #define PAS_MIN_PEDAL_PULSE_COUNT            6              // Mini Number of pulse, inside a specific time, to the detect PAS on cadence

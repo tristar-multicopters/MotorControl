@@ -78,7 +78,7 @@ int16_t PedalAssist_GetPASTorque(PAS_Handle_t * pHandle)
     // Get the used PAS level 
     Got_Level = PedalAssist_GetAssistLevel(pHandle);
     // Calculate the maximum given reference torque per level 
-    hRefTorque = (pHandle->sParameters.hPASMaxTorque/PAS_PERCENTAGE) * pHandle->sParameters.PASTTorqRatiosInPercentage[Got_Level];
+    hRefTorque = (pHandle->sParameters.hPASMaxTorque/PAS_PERCENTAGE) * pHandle->sParameters.PASMaxTorqRatiosInPercentage[Got_Level];
    
     return (int16_t) hRefTorque;  
 }
@@ -103,7 +103,7 @@ int16_t PedalAssist_GetPASCadenceMotorTorque(PAS_Handle_t * pHandle)
     else
     {
         // The pedal_assist module only supports 5 PAS levels at the moment
-        PASRatio = pHandle->sParameters.PASCTorqRatiosInPercentage[currentLevel];
+        PASRatio = pHandle->sParameters.PASMaxTorqRatiosInPercentage[currentLevel];
     }
     
     // compute the torque using the ratio from the PAS level
@@ -160,7 +160,7 @@ void PedalAssist_SetPASMaxSpeed(PAS_Handle_t * pHandle, uint16_t topSpeed)
 int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    int16_t hRefTorqueS, hReadTS, hMaxTorq_Temp, hMaxLevelTorq_Temp;
+    int16_t hRefTorqueS, hRefMinTorqueS, hReadTS, hMaxTorq_Temp, hMaxLevelTorq_Temp;
     
     /* Read the Pedal torque sensor */
     hReadTS = PedalTorqSensor_ToMotorTorque(pHandle->pPTS);
@@ -177,11 +177,24 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     // Convert the PAS torque sensing in motor torque
     hRefTorqueS = ((hReadTS * pHandle->sParameters.bTorqueGain[currentLevel])/PAS_PERCENTAGE);
     
-    hRefTorqueS = (hRefTorqueS/PAS_PERCENTAGE) * pHandle->sParameters.PASTTorqRatiosInPercentage[pHandle->bCurrentAssistLevel];
+    //get ref torque to min torque calculation.
+    hRefMinTorqueS = hRefTorqueS;
     
+    //caclulate the final torque to be applied.
+    hRefTorqueS = (hRefTorqueS/PAS_PERCENTAGE) * pHandle->sParameters.PASMaxTorqRatiosInPercentage[pHandle->bCurrentAssistLevel];
+    
+    //calculate the min torque to be applied, once PAS is detected.
+    hRefMinTorqueS = hRefMinTorqueS*pHandle->sParameters.PASMinTorqRatiosInPercentage[pHandle->bCurrentAssistLevel];
+    
+    //verify if the applied torque is less than the minimum torque
+    //if true, apllied the minimum torque.
+    if (hRefTorqueS < hRefMinTorqueS)
+    {
+        hRefTorqueS = hRefMinTorqueS;
+    }
     
     // Safety for not exceeding the maximum torque value for a specific pas level
-    hMaxLevelTorq_Temp = (pHandle->sParameters.PASTTorqRatiosInPercentage[pHandle->bCurrentAssistLevel] * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+    hMaxLevelTorq_Temp = (pHandle->sParameters.PASMaxTorqRatiosInPercentage[pHandle->bCurrentAssistLevel] * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
     if (hRefTorqueS > hMaxLevelTorq_Temp)
     {
         hRefTorqueS = hMaxLevelTorq_Temp;
@@ -260,13 +273,21 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
         }
         else // if there is no need for an average
         {
-        hTorquePASThreshold = hTorqueSens;
+            //Initialize the buffer used to avg the toque value on start and stop
+            //condition.
+            memset(hThresholdCheckAvg,0,TORQUE_THRESHOLD_AVG_NB);
+            
+            hTorquePASThreshold = hTorqueSens;
         }
     
         /* Torque Sensor use and the offset was detected */
         if (hTorquePASThreshold > hOffsetTemp)
         {      
             pHandle->bPASDetected = true;
+        }
+        else
+        {
+            pHandle->bPASDetected = false;
         }
     }
 } 

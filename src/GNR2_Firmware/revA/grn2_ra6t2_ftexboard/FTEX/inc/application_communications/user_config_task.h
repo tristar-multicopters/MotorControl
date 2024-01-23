@@ -176,23 +176,23 @@ uint8_t UserConfigTask_GetNumberPasLevels(void);
 void UserConfigTask_UpdateNumberPasLevels(uint8_t value);
 
 /**
-  @brief Function to get Pas Max Power
+  @brief Function to get Pas Max Torque Ratio
   read from data flash memory.
   
   @param void
   @return uint8_t a number that represent Pas Max Power
   on %(0 until 100).
 */
-uint8_t UserConfigTask_GetPasMaxPower(void);
+uint8_t UserConfigTask_GetPasMaxTorqueRatio(void);
 
 /**
-  @brief Function to update Pas Max Power value
+  @brief Function to update Pas Max Torque Ratio value
   read from data flash memory.
   
   @param uint8_t
   @return  void
 */
-void UserConfigTask_UpdatePasMaxPower(uint8_t value);
+void UserConfigTask_UpdatePasMaxTorqueRatio(uint8_t value);
 
 /**
   @brief Function to update Torque Minimum Threshold Startup
@@ -303,7 +303,7 @@ void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t pasLevel, uint16_t valu
   @return uint8_t range will be defined.
 
 */
-uint8_t UserConfigTask_GetTorqueMaxSpeed(void);
+uint8_t UserConfigTask_GetPasLevelMinTorque(uint8_t pasLevel);
 
 /**
   @brief Function to update torque Max Speed avlue
@@ -313,7 +313,7 @@ uint8_t UserConfigTask_GetTorqueMaxSpeed(void);
   @return void
 
 */
-void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value);
+void UserConfigTask_UpdatePasLevelMinTorque(uint8_t value, uint8_t pasLevel);
 
 /**
   @brief Function to get cadence Level Speed
@@ -337,7 +337,7 @@ uint8_t UserConfigTask_GetPasLevelSpeed(uint8_t pasLevel);
 void UserConfigTask_UpdatePasLevelSpeed(uint8_t pasLevel, uint8_t value);
 
 /**
-  @brief Function to get torqueLevelPower
+  @brief Function to get pasLevelMaxTorque
   read from data flash memory.
   
   @param void
@@ -345,17 +345,17 @@ void UserConfigTask_UpdatePasLevelSpeed(uint8_t pasLevel, uint8_t value);
           range bewteen 0-x.
 
 */
-uint8_t UserConfigTask_GetTorqueLevelPower(uint8_t pasLevel);
+uint8_t UserConfigTask_GetPasLevelMaxTorque(uint8_t pasLevel);
 
 /**
-  @brief Function to update torqueLevelPower value
+  @brief Function to update pasLevelMaxTorque value
   read from data flash memory.
   
-  @param uint8_t value to be passed into the torqueLevelPower
+  @param uint8_t value to be passed into the pasLevelMaxTorque
   @return void
 
 */
-void UserConfigTask_UpdateTorqueLevelPower(uint8_t pasLevel, uint8_t value);
+void UserConfigTask_UpdatePasLevelMaxTorque(uint8_t pasLevel, uint8_t value);
 
 /**
   @brief Function to get Pas Nb Magnets Per Turn

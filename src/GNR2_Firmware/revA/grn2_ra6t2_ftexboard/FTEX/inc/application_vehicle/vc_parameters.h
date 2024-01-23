@@ -106,47 +106,6 @@
     #define PAS_9_TORQUE_GAIN     100    // PAS T (Toque) 9 has a ratio of 100%
 #endif
 
-// PAS Cadence sesnor Torque power in % default values
-
-#ifndef PAS_C_0_POWER_PERCENT
-    #define PAS_C_0_POWER_PERCENT      0    // PAS C (Cadence) 0 has a ratio of   0%
-#endif
-
-#ifndef PAS_C_1_POWER_PERCENT
-    #define PAS_C_1_POWER_PERCENT     60    // PAS C (Cadence) has a ratio of  60% (3/5)
-#endif
-
-#ifndef PAS_C_2_POWER_PERCENT
-    #define PAS_C_2_POWER_PERCENT     67    // PAS C (Cadence)has a ratio of  67% (4/6)
-#endif
-
-#ifndef PAS_C_3_POWER_PERCENT
-    #define PAS_C_3_POWER_PERCENT     80    // PAS C (Cadence) 3 has a ratio of  80% (4/5)
-#endif
-
-#ifndef PAS_C_4_POWER_PERCENT
-    #define PAS_C_4_POWER_PERCENT     88    // PAS C (Cadence) 4 has a ratio of  88% (7/8)
-#endif
-
-#ifndef PAS_C_5_POWER_PERCENT
-    #define PAS_C_5_POWER_PERCENT    100    // PAS C (Cadence) 5 has a ratio of 100%
-#endif
-
-#ifndef PAS_C_6_POWER_PERCENT   
-    #define PAS_C_6_POWER_PERCENT      0    // PAS C (Cadence) 6 has a ratio of 0%
-#endif
-
-#ifndef PAS_C_7_POWER_PERCENT   
-    #define PAS_C_7_POWER_PERCENT      0    // PAS C (Cadence) 7 has a ratio of 0%
-#endif
-
-#ifndef PAS_C_8_POWER_PERCENT   
-    #define PAS_C_8_POWER_PERCENT      0    // PAS C (Cadence) 8 has a ratio of 0%
-#endif
-
-#ifndef PAS_C_9_POWER_PERCENT   
-    #define PAS_C_9_POWER_PERCENT      0    // PAS C (Cadence) 9 has a ratio of 0%
-#endif
 
 //Max speed for PAS level on Torque or Cadence.
 
@@ -196,47 +155,90 @@
 #endif
 
 
-// PAS Torque sesnor Torque power in % default values
+// PAS Max Torque power in % default values
 
-#ifndef PAS_T_0_POWER_PERCENT
-    #define PAS_T_0_POWER_PERCENT      0
+#ifndef PAS_0_MAX_TORQUE_PERCENT
+    #define PAS_0_MAX_TORQUE_PERCENT      0
 #endif
 
-#ifndef PAS_T_1_POWER_PERCENT
-    #define PAS_T_1_POWER_PERCENT     20
+#ifndef PAS_1_MAX_TORQUE_PERCENT
+    #define PAS_1_MAX_TORQUE_PERCENT     20
 #endif
 
-#ifndef PAS_T_2_POWER_PERCENT
-    #define PAS_T_2_POWER_PERCENT     40
+#ifndef PAS_2_MAX_TORQUE_PERCENT
+    #define PAS_2_MAX_TORQUE_PERCENT     40
 #endif
 
-#ifndef PAS_T_3_POWER_PERCENT
-    #define PAS_T_3_POWER_PERCENT     60
+#ifndef PAS_3_MAX_TORQUE_PERCENT
+    #define PAS_3_MAX_TORQUE_PERCENT     60
 #endif
 
-#ifndef PAS_T_4_POWER_PERCENT
-    #define PAS_T_4_POWER_PERCENT     80
+#ifndef PAS_4_MAX_TORQUE_PERCENT
+    #define PAS_4_MAX_TORQUE_PERCENT     80
 #endif
 
-#ifndef PAS_T_5_POWER_PERCENT
-    #define PAS_T_5_POWER_PERCENT    100 
+#ifndef PAS_5_MAX_TORQUE_PERCENT
+    #define PAS_5_MAX_TORQUE_PERCENT    100 
 #endif
 
-#ifndef PAS_T_6_POWER_PERCENT
-    #define PAS_T_6_POWER_PERCENT      0
+#ifndef PAS_6_MAX_TORQUE_PERCENT
+    #define PAS_6_MAX_TORQUE_PERCENT      0
 #endif
 
-#ifndef PAS_T_7_POWER_PERCENT
-    #define PAS_T_7_POWER_PERCENT      0
+#ifndef PAS_7_MAX_TORQUE_PERCENT
+    #define PAS_7_MAX_TORQUE_PERCENT      0
 #endif
 
-#ifndef PAS_T_8_POWER_PERCENT
-    #define PAS_T_8_POWER_PERCENT      0 
+#ifndef PAS_8_MAX_TORQUE_PERCENT
+    #define PAS_8_MAX_TORQUE_PERCENT      0 
 #endif
 
-#ifndef PAS_T_9_POWER_PERCENT
-    #define PAS_T_9_POWER_PERCENT      0 
+#ifndef PAS_9_MAX_TORQUE_PERCENT
+    #define PAS_9_MAX_TORQUE_PERCENT      0 
 #endif
+
+// PAS Min Torque power in % default values
+
+#ifndef PAS_0_MIN_TORQUE_PERCENT
+    #define PAS_0_MIN_TORQUE_PERCENT      0
+#endif
+
+#ifndef PAS_1_MIN_TORQUE_PERCENT
+    #define PAS_1_MIN_TORQUE_PERCENT      0
+#endif
+
+#ifndef PAS_2_MIN_TORQUE_PERCENT
+    #define PAS_2_MIN_TORQUE_PERCENT      0
+#endif
+
+#ifndef PAS_3_MIN_TORQUE_PERCENT
+    #define PAS_3_MIN_TORQUE_PERCENT      0 
+#endif
+
+#ifndef PAS_4_MIN_TORQUE_PERCENT
+    #define PAS_4_MIN_TORQUE_PERCENT      0
+#endif
+
+#ifndef PAS_5_MIN_TORQUE_PERCENT
+    #define PAS_5_MIN_TORQUE_PERCENT      0 
+#endif
+
+#ifndef PAS_6_MIN_TORQUE_PERCENT
+    #define PAS_6_MIN_TORQUE_PERCENT      0
+#endif
+
+#ifndef PAS_7_MIN_TORQUE_PERCENT
+    #define PAS_7_MIN_TORQUE_PERCENT      0
+#endif
+
+#ifndef PAS_8_MIN_TORQUE_PERCENT
+    #define PAS_8_MIN_TORQUE_PERCENT      0 
+#endif
+
+#ifndef PAS_9_MIN_TORQUE_PERCENT
+    #define PAS_9_MIN_TORQUE_PERCENT      0 
+#endif
+
 
 // PAS Torque sesnor parameters as default values
 

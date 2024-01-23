@@ -49,29 +49,21 @@
 #define PAS_TORQUE_GAIN                     200             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%    
 #define PAS_ALGORITHM                       TorqueSensorUse /* TorqueSensorUse  = 0, Torque sensor use define 
-                                                               CadenceSensorUse = 1, Cadence sensor use define */
-    
-// PAS C (Cadence) power per level setting in %
-#define PAS_C_0_POWER_PERCENT               0    
-#define PAS_C_1_POWER_PERCENT               60   
-#define PAS_C_2_POWER_PERCENT               67   
-#define PAS_C_3_POWER_PERCENT               80    
-#define PAS_C_4_POWER_PERCENT               88   
-#define PAS_C_5_POWER_PERCENT               100    
+                                                               CadenceSensorUse = 1, Cadence sensor use define */  
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
 
 // PAS T (Torque sensor) power per level setting in %
-#define PAS_T_0_POWER_PERCENT               0 
-#define PAS_T_1_POWER_PERCENT               30
-#define PAS_T_2_POWER_PERCENT               39
-#define PAS_T_3_POWER_PERCENT               47
-#define PAS_T_4_POWER_PERCENT               56
-#define PAS_T_5_POWER_PERCENT               65 
-#define PAS_T_6_POWER_PERCENT               74
-#define PAS_T_7_POWER_PERCENT               83
-#define PAS_T_8_POWER_PERCENT               91 
-#define PAS_T_9_POWER_PERCENT               100 
+#define PAS_0_MAX_TORQUE_PERCENT               0 
+#define PAS_1_MAX_TORQUE_PERCENT               30
+#define PAS_2_MAX_TORQUE_PERCENT               39
+#define PAS_3_MAX_TORQUE_PERCENT               47
+#define PAS_4_MAX_TORQUE_PERCENT               56
+#define PAS_5_MAX_TORQUE_PERCENT               65 
+#define PAS_6_MAX_TORQUE_PERCENT               74
+#define PAS_7_MAX_TORQUE_PERCENT               83
+#define PAS_8_MAX_TORQUE_PERCENT               91 
+#define PAS_9_MAX_TORQUE_PERCENT               100 
 
 #define PAS_MIN_PEDAL_PULSE_COUNT            6              // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
