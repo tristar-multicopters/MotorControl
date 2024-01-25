@@ -30,10 +30,10 @@
 #define SP_KIDIV_LOG                        LOG2(16384)     // Speed control gain divider log2, to allow decimal value
 
 /************************** Power Limit Config  ************************/
-#define LOW_BATTERY_VOLTAGE_THRESHOLD       35              // The threshold of battery voltage before limit torque
+#define LOW_BATTERY_VOLTAGE_THRESHOLD       25              // The threshold of battery voltage before limit torque
 #define LOW_BATTERY_TORQUE                  150
 
-#define ENABLE_MAX_POWER_LIMIT              true            // To enable or disable the foldback
+#define ENABLE_MAX_POWER_LIMIT              false            // To enable or disable the foldback
 #define MAX_TIME_BMS_TOLERANT               20000           // End time of derating for BMS protection in ms
 #define MAX_POWER_LIMIT_TIMEOUT             10000           // Start time of derating for BMS protection in ms
 #define MAX_BMS_POSITIVE_POWER              750             // Maximum Power at the end point of foldback
@@ -63,7 +63,7 @@
 #define MOTOR_VOLTAGE_CONSTANT              28.84f          // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f            // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_amps                   55              // peak current in amps
+#define PEAK_CURRENT_amps                   49              // peak current in amps
 #define NOMINAL_TORQUE                      (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)   // Nominal torque to apply to motor in cNm   
                                                                                                                             // Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps
 #define STARTING_TORQUE                     (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef) // Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes
