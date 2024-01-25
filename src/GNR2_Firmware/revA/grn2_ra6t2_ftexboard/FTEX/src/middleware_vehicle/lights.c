@@ -117,7 +117,7 @@ void Light_Enable(Light_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    if (!pHandle->bLightStateLocked && pHandle->bLightIsActive != true) // If the lights are not locked to prevent a change
+    if (pHandle->bLightIsActive != true) 
     {    
         pHandle->bLightIsActive = true;
         pHandle->bInternalUpdateFlag = true;
@@ -136,7 +136,7 @@ void Light_Disable(Light_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    if (!pHandle->bLightStateLocked && pHandle->bLightIsActive != false) // If the lights are not locked to prevent a change
+    if (pHandle->bLightIsActive != false) // If the lights are not locked to prevent a change
     { 
         pHandle->bLightIsActive = false;
     

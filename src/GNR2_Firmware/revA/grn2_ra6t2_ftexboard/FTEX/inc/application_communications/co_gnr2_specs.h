@@ -290,12 +290,32 @@ extern "C" {
 #define CO_OD_REG_WHEELS_DIAMETER              0x201F
     
 
-// OD ID to operate the front light (0 Off, 1 On)
+
 #define CO_OD_REG_VEHICLE_FRONT_LIGHT          0x2021
+//variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT 0 
+// OD ID to operate the front light (0 Off, 1 On) 	
 
+//variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT 1
+// Get or set vehicle front light's default state 0 = Off by default. This means the light will be off when the bike turns on,
+//                                                 1= On  by default: turn on when the controller turns on (and off when the controller turns off)
 
-// OD ID to operate the rear light (0 Off, 1 On)
 #define CO_OD_REG_VEHICLE_REAR_LIGHT           0x2022
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 0 
+// OD ID to operate the rear light (0 Off, 1 On) 	
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 1
+// Get or set vehicle rear light's default state 0 = Off by default. This means the light will be off when the bike turns on,
+//                                                 1= On  by default: turn on when the controller turns on (and off when the controller turns off)
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 2
+// Get or set the lights brake behavior.
+//0 = no special behavior on brake 1 = blink on brake
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 3 PLACEHOLDER
+//Get or set the rear light blinking period. This changes the speed at which the rear light blinks if set to blink, 
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 4 PLACEHOLDER
+//Get or set the rear light duty cycle when blinking. The % represents the % of time the light should be on when the light is blinking.
 
 // OD ID used on dual motor to detect if the GNR master/slave
 //communication still on.
@@ -330,16 +350,21 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 // OD ID to set the screen protocol 
 #define CO_OD_CONFIG_SCREEN_PROTOCOL           0x2025
 
-// OD ID to set the default headlight state
-#define CO_OD_CONFIG_HEADLIGHT_DEFAULT         0x2026 
-// OD ID to set the headlight locked state
-#define CO_OD_CONFIG_HEADLIGHT_LOCKED          0x2027 
-// OD ID to set the default taillight sate
-#define CO_OD_CONFIG_TAILLIGHT_DEFAULT         0x2028
-// OD ID to set the taillight locked state
-#define CO_OD_CONFIG_TAILLIGHT_LOCKED          0x2029
-// OD ID to set the taillight blink on brake behavior 
-#define CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE  0x202A
+
+// Available                                   0x2026 
+
+
+// Available                                   0x2027 
+
+
+// Available                                   0x2028
+
+
+// Available                                   0x2029
+
+
+// Available                                   0x202A
+
 
 // OD ID to set the throttle adc offset
 #define CO_OD_CONFIG_THROTTLE_ADC_OFFSET       0x202B

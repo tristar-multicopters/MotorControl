@@ -27,7 +27,6 @@ typedef struct
     bool bLightIsBlinking;  // Shows if the light should be blinking
     bool bLightIsActive;    // Shows if the light should be on or off
     
-    bool bLightStateLocked; // Shows if the light state can be changed externaly
     bool bDefaultLightState;// Shows the stae of the light that is desired when the bike is turned on    
     
     bool bIsInvertedLogic;  // States if the logic is inverted 

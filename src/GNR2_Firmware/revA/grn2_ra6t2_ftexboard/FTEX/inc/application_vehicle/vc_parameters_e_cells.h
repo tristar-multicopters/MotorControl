@@ -100,11 +100,9 @@
 #define POWERTRAIN_MAX_MOTOR_TORQUE         STARTING_TORQUE // Maximum motor torque to apply with powertrain management
 
 /***************** BIKE LIGHT SETTINGS  ******************************/
-
-#define POWERTRAIN_HEADLIGHT_LOCKED         false           // Parameter that decides if the user can change the state of the headlight      
+     
 #define POWERTRAIN_HEADLIGHT_DEFAULT        false           // Parameter that sets the default headlight state when the bike is powered on
-
-#define POWERTRAIN_TAILLIGHT_LOCKED         false           // Parameter that decide sif the user can change the state of the tail light 
+ 
 #define POWERTRAIN_TAILLIGHT_DEFAULT        false           // Parameter that sets the default tail light state when the bike is powered on
 
 /******************************** BATTERY SELECTION ******************************/

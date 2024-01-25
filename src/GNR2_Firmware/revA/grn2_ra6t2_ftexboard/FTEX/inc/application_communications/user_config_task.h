@@ -499,7 +499,6 @@ uint8_t UserConfigTask_GetScreenProtocol(void);
 */
 void UserConfigTask_UpdateScreenProtocol(uint8_t value);
 
-
 /**
   @brief Function to get HeadLight Default
   read from data flash memory.
@@ -521,26 +520,6 @@ uint8_t UserConfigTask_GetHeadLightDefault(void);
 void UserConfigTask_UpdateHeadLightDefault(uint8_t value);
 
 /**
-  @brief Function to get HeadLight Locked
-  read from data flash memory.
-  
-  @param void
-  @return uint8_t HeadLight Locked
-
-*/
-uint8_t UserConfigTask_GetHeadLightLocked(void);
-
-/**
-  @brief Function to update bike HeadLight Locked value
-  read from data flash memory.
-  
-  @param uint8_t value to be passed into the HeadLight Locked
-  @return void
-
-*/
-void UserConfigTask_UpdateHeadLightLocked(uint8_t value);
-
-/**
   @brief Function to get TailLight Default
   read from data flash memory.
   
@@ -559,26 +538,6 @@ uint8_t UserConfigTask_GetTailLightDefault(void);
 
 */
 void UserConfigTask_UpdateTailLightDefault(uint8_t value);
-
-/**
-  @brief Function to get TailLight Locked
-  read from data flash memory.
-  
-  @param void
-  @return uint8_t TailLight Locked
-
-*/
-uint8_t UserConfigTask_GetTailLightLocked(void);
-
-/**
-  @brief Function to update bike TailLight Locked value
-  read from data flash memory.
-  
-  @param uint8_t value to be passed into the TailLight Locked
-  @return void
-
-*/
-void UserConfigTask_UpdateTailLightLocked(uint8_t value);
 
 /**
   @brief Function to get TailLight Blink On Brake

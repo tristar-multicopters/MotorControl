@@ -90,9 +90,7 @@ typedef struct
     uint8_t WheelDiameter;
     uint8_t ScreenProtocol;
     uint8_t HeadLightDefault;      // Contains the default state of the head light (on or off)
-    uint8_t HeadLightLocked; 
-    uint8_t TailLightDefault;      // Contains the default state of the tail light (on or off)    
-    uint8_t TailLightLocked;      
+    uint8_t TailLightDefault;      // Contains the default state of the tail light (on or off)      
     uint8_t TailLightBlinkOnBrake;    
 } Vehicle_ConfigData_t;
 

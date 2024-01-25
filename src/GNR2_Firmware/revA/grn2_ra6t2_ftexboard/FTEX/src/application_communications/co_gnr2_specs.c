@@ -232,11 +232,26 @@ uint8_t bObjDataWheelPulsePerRotation       = 0;
 //variable associated with CO_OD_REG_WHEELS_DIAMETER 2 
 uint8_t bObjDataWheelDiameterDefault        = 0;
 
-//variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT
+//variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT 0
 uint8_t bObjDataFrontLightState             = 0;
 
-//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT
+//variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT 1
+uint8_t bObjDataFrontLightDefaultState      = 0;
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT  0
 uint8_t bObjDataRearLightState              = 0;
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT  1
+uint8_t bObjDataRearLightDefaultState       = 0;
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 2
+uint8_t bObjDataRearLightBlinkOnBrake       = 0;
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 3 PLACEHOLDER
+uint16_t bObjDataRearLightBlinkPeriod        = 0; // in ms
+
+//variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 4 PLACEHOLDER
+uint8_t bObjDataRearLightBlinkDutyCycle     = 0; // % on
 
 //variable associated with CO_OD_REG_MASTER_SLAVE_PRESENT
 uint8_t bObjDataMasterSlavePresent          = 0;
@@ -256,21 +271,6 @@ uint16_t bObjDataPasTorqueInputMax         = 0;
 
 //variable associated with CO_OD_CONFIG_SCREEN_PROTOCOL
 uint8_t bObjDataConfigScreenProtocol        = 0;
-
-//variable associated with CO_OD_CONFIG_HEADLIGHT_DEFAULT
-uint8_t bObjDataConfigHeadLightDefault      = 0;
-
-//variable associated with CO_OD_CONFIG_HEADLIGHT_LOCKED
-uint8_t bObjDataConfigHeadLightLocked       = 0;
-
-//variable associated with CO_OD_CONFIG_TAILLIGHT_DEFAULT
-uint8_t bObjDataConfigTailLightDefault      = 0;
-
-//variable associated with CO_OD_CONFIG_TAILLIGHT_LOCKED 
-uint8_t bObjDataConfigTailLightLocked       = 0;
-
-//variable associated with CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE
-uint8_t bObjDataConfigTailLightBLinkOnBrake = 0;
 
 //variable associated with CO_OD_CONFIG_THROTTLE_ADC_OFFSET
 uint16_t bObjDataConfigThrottleAdcOffset    = 0;
@@ -1296,11 +1296,31 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataFrontLightState};
             //move to next OD index
             index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_FRONT_LIGHT, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataFrontLightDefaultState};
+            //move to next OD index
+            index++;
         
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_REAR_LIGHT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataRearLightState};
             //move to next OD index
             index++;
-        
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_REAR_LIGHT, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataRearLightDefaultState};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_REAR_LIGHT, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataRearLightBlinkOnBrake};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_REAR_LIGHT, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataRearLightBlinkPeriod};
+            //move to next OD index
+            index++;
+                        
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_REAR_LIGHT, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataRearLightBlinkDutyCycle};
+            //move to next OD index
+            index++;
+            
             //User to master and/or slave write showing it is present(no lost on master/slave communication).
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MASTER_SLAVE_PRESENT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMasterSlavePresent};
             //move to next OD index
@@ -1338,26 +1358,6 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_SCREEN_PROTOCOL, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigScreenProtocol};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_HEADLIGHT_DEFAULT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigHeadLightDefault};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_HEADLIGHT_LOCKED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigHeadLightLocked};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TAILLIGHT_DEFAULT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigTailLightDefault};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TAILLIGHT_LOCKED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigTailLightLocked};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigTailLightBLinkOnBrake};
             //move to next OD index
             index++;
             

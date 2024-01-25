@@ -391,11 +391,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                 }
                 else
                 {
-                    if(!CanVehiInterface_ChangeFrontLightState(&VCInterfaceHandle,hFrontLightState[CAN_PARAM]))
-                    {
-                        //if we fail at changing the light it means it's locked
-                        hFrontLightState[CAN_PARAM] = hFrontLightState[VEHICLE_PARAM];
-                    }
+                    CanVehiInterface_ChangeFrontLightState(&VCInterfaceHandle,hFrontLightState[CAN_PARAM]);
                 }
                             
             }
@@ -409,11 +405,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                 }
                 else
                 {
-                    if(!CanVehiInterface_ChangeRearLightState(&VCInterfaceHandle,hRearLightState[CAN_PARAM]))
-                    {
-                       //if we fail at changing the light it means it's locked
-                       hRearLightState[CAN_PARAM] = hRearLightState[VEHICLE_PARAM]; 
-                    }                        
+                    CanVehiInterface_ChangeRearLightState(&VCInterfaceHandle,hRearLightState[CAN_PARAM]);                   
                 }                    
             }
             
@@ -474,9 +466,7 @@ static void UpdateObjectDictionnary(void *p_arg)
              uint8_t configScreenProtocol;
     
              uint8_t configHeadLightDefault;
-             uint8_t configHeadLightLocked;
              uint8_t configTailLightDefault;
-             uint8_t configTailLightLocked;
              uint8_t configTailLightBlinkOnBrake;
 
              uint16_t configThrottleAdcOffset;
@@ -516,13 +506,11 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),      pNode, &configWheelDiameter, sizeof(uint8_t)); 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),   pNode, &configScreenProtocol, sizeof(uint8_t)); 
                  
-                 // Headlight default state and locked state
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_DEFAULT, 0)),        pNode, &configHeadLightDefault, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_LOCKED, 0)),         pNode, &configHeadLightLocked, sizeof(uint8_t));
-                 // Taillight default state, locked state and blink on brake state
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_DEFAULT, 0)),        pNode, &configTailLightDefault, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_LOCKED, 0)),         pNode, &configTailLightLocked, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE, 0)), pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
+                 // Headlight default state
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 1)),  pNode, &configHeadLightDefault, sizeof(uint8_t));
+                 // Taillight default state and blink on brake state
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 1)),   pNode, &configTailLightDefault, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 2)),   pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));
@@ -557,10 +545,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdateScreenProtocol(configScreenProtocol);
                                  
                  UserConfigTask_UpdateHeadLightDefault(configHeadLightDefault);
-                 UserConfigTask_UpdateHeadLightLocked(configHeadLightLocked);
                  
                  UserConfigTask_UpdateTailLightDefault(configTailLightDefault);
-                 UserConfigTask_UpdateTailLightLocked(configTailLightLocked);
                  UserConfigTask_UpdateTailLightBlinkOnBrake(configTailLightBlinkOnBrake);                 
                  
                  UserConfigTask_UpdateThrottleAdcOffset(configThrottleAdcOffset);
@@ -796,10 +782,8 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t configScreenProtocol =  UserConfigTask_GetScreenProtocol();                                              
         
         uint8_t configHeadLightDefault      = UserConfigTask_GetHeadLightDefault(); 
-        uint8_t configHeadLightLocked       = UserConfigTask_GetHeadLightLocked(); 
         
         uint8_t configTailLightDefault      = UserConfigTask_GetTailLightDefault();
-        uint8_t configTailLightLocked       = UserConfigTask_GetTailLightLocked();
         uint8_t configTailLightBlinkOnBrake = UserConfigTask_GetTailLightBlinkOnBrake();
                                               
         uint16_t configThrottleAdcOffset    = UserConfigTask_GetThrottleAdcOffset();                                      
@@ -852,13 +836,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         // Show the currently selected screen protocol
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &configScreenProtocol, sizeof(uint8_t)); 
         
-        // Headlight default state and locked state
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_DEFAULT, 0)),        pNode, &configHeadLightDefault, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_HEADLIGHT_LOCKED, 0)),         pNode, &configHeadLightLocked, sizeof(uint8_t));
-        // Taillight default state, locked state and blink on brake state
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_DEFAULT, 0)),        pNode, &configTailLightDefault, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_LOCKED, 0)),         pNode, &configTailLightLocked, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TAILLIGHT_BLINK_ON_BRAKE, 0)), pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
+        // Headlight default state
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 1)),        pNode, &configHeadLightDefault, sizeof(uint8_t));
+        // Taillight default state and blink on brake state
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 1)),        pNode, &configTailLightDefault, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 2)), pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
         
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));

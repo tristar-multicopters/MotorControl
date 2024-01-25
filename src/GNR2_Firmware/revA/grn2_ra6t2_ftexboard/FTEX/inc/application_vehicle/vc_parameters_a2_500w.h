@@ -102,10 +102,10 @@
 #define POWERTRAIN_FOLDBACK_SPEED_INTERVAL  MAX_APPLICATION_SPEED_RPM/15  /*  Speed interval value between maximum torque and start torque,
                                                                               when using single motor startup strategy. */
 
-#define POWERTRAIN_HEADLIGHT_LOCKED         true            // Parameter that decides if the user can change the state of the headlight      
+/***************** BIKE LIGHT SETTINGS  ******************************/
+     
 #define POWERTRAIN_HEADLIGHT_DEFAULT        false           // Parameter that sets the default headlight state when the bike is powered on
 
-#define POWERTRAIN_TAILLIGHT_LOCKED         true            // Parameter that decide sif the user can change the state of the tail light 
 #define POWERTRAIN_TAILLIGHT_DEFAULT        true            // Parameter that sets the default tail light state when the bike is powered on
 
 /******************************** BATTERY SELECTION ******************************/
