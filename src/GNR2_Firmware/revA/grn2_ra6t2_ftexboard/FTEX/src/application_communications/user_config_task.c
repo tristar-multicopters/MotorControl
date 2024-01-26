@@ -941,7 +941,7 @@ uint8_t UserConfigTask_GetScreenProtocol(void)
 */
 void UserConfigTask_UpdateScreenProtocol(uint8_t value)
 {
-    if (value == UART_APT || value == UART_CLOUD_5S)
+    if (value == UART_APT || value == UART_CLOUD_5S || value == UART_DISABLE)
     {
         userConfigData.Vehicle_ConfigData.ScreenProtocol = value;
     }
