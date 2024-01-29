@@ -837,8 +837,10 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &configScreenProtocol, sizeof(uint8_t)); 
         
         // Headlight default state
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)),        pNode, &configHeadLightDefault, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 1)),        pNode, &configHeadLightDefault, sizeof(uint8_t));
         // Taillight default state and blink on brake state
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),        pNode, &configTailLightDefault, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 1)),        pNode, &configTailLightDefault, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 2)), pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
         
