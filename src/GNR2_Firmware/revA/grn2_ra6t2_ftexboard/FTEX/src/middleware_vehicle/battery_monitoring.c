@@ -83,7 +83,7 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle)
     
     if(pHandle->VBatAvg < (pHandle->VBatMin * 100))
     {
-        pHandle->VBatAvg = pHandle->VBatMin;   
+        pHandle->VBatAvg = pHandle->VBatMin * 100;   
     }   
     
     NewSOC = ((pHandle->VBatAvg) - (pHandle->VBatMin * 100u))/VoltPercent; //Calculate the SOC
