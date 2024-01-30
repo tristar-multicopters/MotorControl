@@ -372,6 +372,36 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 // OD ID to set the throttle adc max
 #define CO_OD_CONFIG_THROTTLE_ADC_MAX          0x202C
 
+// OD ID to configure speed value to each filter band.
+//The define(s) used by this parameter is:
+
+//Speed value used to decide what pair of filter bands will be used.
+//SUBINDEX 0: hFilterSpeed[0] = PTS_SPEED_FILTER_1
+//Speed value used to decide what pair of filter bands will be used.
+//SUBINDEX 1: hFilterSpeed[1] = PTS_SPEED_FILTER_2
+#define CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER        0x202D
+
+// OD ID to configure filter bands for each speed
+//The define(s) used by this parameter is:
+
+//Torque filter band 1 when speed is under the speed torque band.
+//SUBINDEX 0: hLowPassFilterBW1[0] = PTS_FILTER_BW1_1
+//
+//Torque filter band 2 when speed is under the speed torque band.
+//SUBINDEX 1: hLowPassFilterBW2[0] = PTS_FILTER_BW2_1
+//
+//Torque filter band 1 when speed is above the speed torque band.
+//SUBINDEX 2: hLowPassFilterBW1[1] = PTS_FILTER_BW1_2
+//
+//Torque filter band 2 when speed is above the speed torque band.
+//SUBINDEX 3: hLowPassFilterBW2[1] = PTS_FILTER_BW2_2
+//Torque filter band 1 when speed is above the speed torque band.
+//SUBINDEX 4: hLowPassFilterBW1[2] = PTS_FILTER_BW1_3
+//
+//Torque filter band 2 when speed is above the speed torque band.
+//SUBINDEX 5: hLowPassFilterBW2[2] = PTS_FILTER_BW2_3
+#define CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED    0x202E
+
 //this OD ID will be used to 
 //receive data and commands during a firmware update.
 //the GNR doesn't have enough memory to receive

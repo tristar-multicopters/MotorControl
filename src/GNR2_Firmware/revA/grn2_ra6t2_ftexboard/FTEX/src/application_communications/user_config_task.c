@@ -81,6 +81,14 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn = 0, // To update
     .PAS_ConfigData.PasSensorConfig.pasTorqueInputMax = PTS_MAX_PTSVALUE,
     .PAS_ConfigData.PasSensorConfig.pasTorqueInputMin = PTS_OFFSET_ADC2PTS,
+    .PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[0] = PTS_SPEED_FILTER_1,
+    .PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[1] = PTS_SPEED_FILTER_2,
+    .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW1[0] = PTS_FILTER_BW1_1,
+    .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW2[0] = PTS_FILTER_BW2_1,
+    .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW1[1] = PTS_FILTER_BW1_2,
+    .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW2[1] = PTS_FILTER_BW2_2,
+    .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW1[2] = PTS_FILTER_BW1_3,
+    .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW2[2] = PTS_FILTER_BW2_3,
     .Throttle_ConfigData.AdcOffset = THROTTLE_OFFSET_ADC2THROTTLE,
     .Throttle_ConfigData.AdcMax = THROTTLE_MAX_ADC2THROTTLE,
     .Vehicle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
@@ -346,12 +354,12 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     }
     
     //update vehicle max speed(VEHICLE_TOP_SPEED_KMH).
-      paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
+    paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
 
     //Magnets per pedal turn doesn't exist in vc layer yet so there is nothing to initialise
   
-      paPowertrain->pPAS->pPTS->hParameters.hOffsetPTS = UserConfigTask_GetPasTorqueInputMin();
-      paPowertrain->pPAS->pPTS->hParameters.hMax       = UserConfigTask_GetPasTorqueInputMax();
+    paPowertrain->pPAS->pPTS->hParameters.hOffsetPTS = UserConfigTask_GetPasTorqueInputMin();
+    paPowertrain->pPAS->pPTS->hParameters.hMax       = UserConfigTask_GetPasTorqueInputMax();
     
     //Throttle_ConfigData.walkMOdeSpeed(PAS_LEVEL_SPEED_WALK) is not passed
     //directly to any variable. Because of this is not updated here.
@@ -371,7 +379,20 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     userConfigHandle->pVController->pPowertrain->pTailLight->bBlinkOnBrake       =  UserConfigTask_GetTailLightBlinkOnBrake();
 
     paPowertrain->pThrottle->hParameters.hOffsetThrottle = UserConfigTask_GetThrottleAdcOffset();
-    paPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();   
+    paPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();  
+
+    //
+    for (uint8_t n = 0; n < FILTERSPEED_ARRAY_SIZE; n++)
+    {
+        paPowertrain->pPAS->pPTS->hParameters.hFilterSpeed[n] = UserConfigTask_GetFilterSpeed(n);
+    }
+    
+    //
+    for (uint8_t n = 0; n < BW_ARRAY_SIZE; n++)
+    {
+        paPowertrain->pPAS->pPTS->hParameters.hLowPassFilterBW1[n] = UserConfigTask_GetFilterBwValue(n,BW1);
+        paPowertrain->pPAS->pPTS->hParameters.hLowPassFilterBW2[n] = UserConfigTask_GetFilterBwValue(n,BW2);
+    }
 }
 
 /**
@@ -1115,6 +1136,122 @@ void UserConfigTask_UpdateThrottleAdcMax(uint16_t value)
         userConfigData.Throttle_ConfigData.AdcMax = (uint16_t)value;
     }
 }
+
+/**
+  @brief Function to get FilterSpeed value
+  read from data flash memory.
+  @param uint8_t index number of the speed to get.
+  @return uint8_t Speed value
+
+*/
+uint8_t UserConfigTask_GetFilterSpeed(uint8_t index)
+{
+    //
+    if (index < FILTERSPEED_ARRAY_SIZE)
+    {
+        return userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[index];
+    }
+    else
+    {
+        return userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[0];
+    }   
+}
+
+/**
+  @brief Function to update FilterSpeed value
+  read from data flash memory.
+  @param uint8_t index number of the speed to get.
+  @param uint8_t speed value to be passed into FilterSpeed.
+  @return void
+
+*/
+void UserConfigTask_UpdateFilterSpeed(uint8_t index, uint8_t value)
+{
+    //
+    if ((index < FILTERSPEED_ARRAY_SIZE) && (value <= 32))
+    {
+        userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[index] = value;
+    }
+}
+
+/**
+  @brief Function to get bw filter value
+  read from data flash memory.
+  @param uint8_t index number of the bw filter to get.
+  @param uint8_t type of the filer to be get.
+  @return uint8_t bw filter value.
+
+*/
+uint16_t UserConfigTask_GetFilterBwValue(uint8_t index, uint8_t bwType)
+{
+    //verify the condition to update the value.
+    if ((index < BW_ARRAY_SIZE) && ((bwType == BW1) || (bwType == BW2)))
+    {
+        //state to decide what BW parameter will be returned.
+        switch(bwType)
+        {
+            case BW1:
+
+                return userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW1[index];  
+            
+            break;
+            
+            case BW2:
+        
+                return userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW2[index];
+
+            break;
+            
+            default:
+            
+                return 0;
+        
+            break;   
+        }        
+    }
+    else
+    {
+        return 0;
+    }
+}
+    
+/**
+  @brief Function to chnage bw filter value
+  read from data flash memory.
+  @param uint8_t index of the bw filter to be changed.
+  @param uint8_t type of the filer to be changed.
+  @param uint16_t new bw filter value 
+  @return void
+
+*/
+void UserConfigTask_UpdateFilterBwValue(uint8_t index, uint8_t bwType, uint16_t value)
+{
+    //verify the condition to update the value.
+    if ((index < BW_ARRAY_SIZE) && (value <= 0xFFFF) && ((bwType == BW1) || (bwType == BW2)))
+    {
+        //state to decide what BW parameter will be returned.
+        switch(bwType)
+        {
+            case BW1:
+        
+                userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW1[index] = value;
+            
+            break;
+            
+            case BW2:
+        
+                userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW2[index] = value;
+            
+            break;
+            
+            default:
+
+        
+            break;   
+        }
+    }    
+}
+
 
 /**
   @brief Function used to calculate a CRC 16 type using the same polynom 

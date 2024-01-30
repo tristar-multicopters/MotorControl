@@ -44,8 +44,12 @@
 #define PTS_OFFSET_PTS2TORQUE            10    // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY     40    // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
-#define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging
-#define PTS_FILTER_BW2                   25    // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW1_1                      10              // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW2_1                      25              // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW1_2                      10              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW2_2                      25              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW1_3                      10              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW2_3                      25              // BW coefficient for pedal torque sensor avereging for speed 3
 
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 

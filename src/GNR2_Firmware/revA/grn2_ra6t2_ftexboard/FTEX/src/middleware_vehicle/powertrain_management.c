@@ -126,8 +126,9 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     pHandle->aSpeed[M2] = 0;
     
     if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
-    { 
-        PedalTorqSensor_CalcAvValue(pHandle->pPAS->pPTS); // Calculate the pedal assist torque sensor value
+    {   
+        // Calculate the pedal assist torque sensor value
+        PedalTorqSensor_CalcAvValue(pHandle->pPAS->pPTS, (uint8_t)Wheel_GetVehicleSpeedFromWSS(pHandle->pPAS->pWSS)); 
         
         hTorqueRef = PWRT_CalcSelectedTorque(pHandle); // Compute torque to motor depending on either throttle or PAS
         hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on brake state.

@@ -21,7 +21,7 @@
 #define GNR2_BAUDRATE      500000u             /* CAN baudrate                */
 #define GNR2_TMR_N         16u                 /* Number of software timers   */
 #define GNR2_TICKS_PER_SEC 2000u               /* Timer clock frequency in Hz */
-#define GNR2_OBJ_N         128u                /* Object dictionary max size  */
+#define GNR2_OBJ_N         256u                /* Object dictionary max size  */
 
 //Master configuration - used by a master
 #define MASTER_GENERATE_SYNC    1           /* Generate or not the SYNC frame. 1 for yes, 0 for no. */
@@ -277,6 +277,12 @@ uint16_t bObjDataConfigThrottleAdcOffset    = 0;
 
 //variable associated with CO_OD_CONFIG_THROTTLE_ADC_MAX
 uint16_t bObjDataConfigThrottleAdcMax       = 0;
+
+//variable associated with CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER.
+uint16_t bObjDataConfigSpeedForTorqueFilter[2]    = {0};
+
+//variable associated with CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED.
+uint16_t bObjDataConfigTorqueFilterForSpeed[6]    = {0};
 
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
@@ -1366,6 +1372,38 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcMax};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigSpeedForTorqueFilter[0]};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigSpeedForTorqueFilter[1]};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigTorqueFilterForSpeed[0]};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigTorqueFilterForSpeed[1]};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigTorqueFilterForSpeed[2]};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigTorqueFilterForSpeed[3]};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 4, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigTorqueFilterForSpeed[4]};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigTorqueFilterForSpeed[5]};
             //move to next OD index
             index++;
 

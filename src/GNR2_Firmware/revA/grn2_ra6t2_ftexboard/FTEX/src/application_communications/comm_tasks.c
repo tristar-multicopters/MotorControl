@@ -458,19 +458,24 @@ static void UpdateObjectDictionnary(void *p_arg)
         }
         else
         {
-             uint8_t  configPasNbMagnetsPerTurn = UserConfigTask_GetPasNbMagnetsPerTurn();                                     
-             uint16_t configPasTorqueInputMax = UserConfigTask_GetPasTorqueInputMax();
-             uint16_t configPasTorqueInputMin = UserConfigTask_GetPasTorqueInputMin();
             
-             uint8_t configWheelDiameter;
-             uint8_t configScreenProtocol;
+            uint8_t  configPasNbMagnetsPerTurn = UserConfigTask_GetPasNbMagnetsPerTurn();                                     
+            uint16_t configPasTorqueInputMax = UserConfigTask_GetPasTorqueInputMax();
+            uint16_t configPasTorqueInputMin = UserConfigTask_GetPasTorqueInputMin();
+            
+            uint8_t configWheelDiameter;
+            uint8_t configScreenProtocol;
     
-             uint8_t configHeadLightDefault;
-             uint8_t configTailLightDefault;
-             uint8_t configTailLightBlinkOnBrake;
+            uint8_t configHeadLightDefault;
+            uint8_t configTailLightDefault;
+            uint8_t configTailLightBlinkOnBrake;
 
-             uint16_t configThrottleAdcOffset;
-             uint16_t configThrottleAdcMax; 
+            uint16_t configThrottleAdcOffset;
+            uint16_t configThrottleAdcMax; 
+            
+            uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE]; 
+            uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE]; 
+            uint8_t  FilterSpeed[FILTERSPEED_ARRAY_SIZE];
             
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
@@ -515,6 +520,16 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));
                  
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 0)),      pNode, &FilterSpeed[0], sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 1)),      pNode, &FilterSpeed[1], sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 0)),      pNode, &pasLowPassFilterBW1[0], sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 1)),      pNode, &pasLowPassFilterBW2[0], sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 2)),      pNode, &pasLowPassFilterBW1[1], sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 3)),      pNode, &pasLowPassFilterBW2[1], sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 4)),      pNode, &pasLowPassFilterBW1[2], sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),      pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));
+                 
+                 
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
                  //upadat Throttle/Pedal Assist variables that will be write into the user data flash.
@@ -551,6 +566,19 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  UserConfigTask_UpdateThrottleAdcOffset(configThrottleAdcOffset);
                  UserConfigTask_UpdateThrottleAdcMax(configThrottleAdcMax);
+                 
+                 //update speed values to bw filter.
+                 for(uint8_t n = 0;n < FILTERSPEED_ARRAY_SIZE;n++)
+                 {
+                    UserConfigTask_UpdateFilterSpeed(n, FilterSpeed[n]);
+                 }
+                 
+                 //update bw filter values to the speed intervals.
+                 for(uint8_t n = 0;n < BW_ARRAY_SIZE;n++)
+                 {
+                    UserConfigTask_UpdateFilterBwValue(n, BW1, pasLowPassFilterBW1[n]);
+                    UserConfigTask_UpdateFilterBwValue(n, BW2, pasLowPassFilterBW2[n]);
+                 }
                  
                  //write in the data flash and reset the system.
                  UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle); 
@@ -788,6 +816,10 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
                                               
         uint16_t configThrottleAdcOffset    = UserConfigTask_GetThrottleAdcOffset();                                      
         uint16_t configThrottleAdcMax       = UserConfigTask_GetThrottleAdcMax();
+      
+        uint8_t  FilterSpeed[FILTERSPEED_ARRAY_SIZE] = {UserConfigTask_GetFilterSpeed(0), UserConfigTask_GetFilterSpeed(1)}; 
+        uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW1), UserConfigTask_GetFilterBwValue(1, BW1), UserConfigTask_GetFilterBwValue(2, BW1)};
+        uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW2), UserConfigTask_GetFilterBwValue(1, BW2), UserConfigTask_GetFilterBwValue(2, BW2)};
         
                                               
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow));     
@@ -846,6 +878,16 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));
+        
+        //torque band filter parameters
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 0)),      pNode, &FilterSpeed[0], sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 1)),      pNode, &FilterSpeed[1], sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 0)),      pNode, &pasLowPassFilterBW1[0], sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 1)),      pNode, &pasLowPassFilterBW2[0], sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 2)),      pNode, &pasLowPassFilterBW1[1], sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 3)),      pNode, &pasLowPassFilterBW2[1], sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 4)),      pNode, &pasLowPassFilterBW1[2], sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),      pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));
    }           
 }
 

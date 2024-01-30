@@ -67,6 +67,9 @@
 //CRC-16-CCITT polynom
 #define CCITT_POLYNOM 0x1021
 
+//
+#define BW1             0
+#define BW2             1
 
 /*********************************************
           Data Struct Definition
@@ -598,6 +601,46 @@ uint16_t UserConfigTask_GetThrottleAdcMax(void);
 
 */
 void UserConfigTask_UpdateThrottleAdcMax(uint16_t value);
+
+/**
+  @brief Function to get FilterSpeed value
+  read from data flash memory.
+  @param uint8_t index number of the speed to get.
+  @return uint8_t Speed value
+
+*/
+uint8_t UserConfigTask_GetFilterSpeed(uint8_t index);
+
+/**
+  @brief Function to update FilterSpeed value
+  read from data flash memory.
+  @param uint8_t index number of the speed to get.
+  @param uint8_t speed value to be passed into FilterSpeed.
+  @return void
+
+*/
+void UserConfigTask_UpdateFilterSpeed(uint8_t index, uint8_t value);
+
+/**
+  @brief Function to get bw filter value
+  read from data flash memory.
+  @param uint8_t index number of the bw filter to get.
+  @param uint8_t type of the filer to be get.
+  @return uint8_t bw filter value.
+
+*/
+uint16_t UserConfigTask_GetFilterBwValue(uint8_t index, uint8_t bwType);
+
+/**
+  @brief Function to chnage bw filter value
+  read from data flash memory.
+  @param uint8_t index of the bw filter to be changed.
+  @param uint8_t type of the filer to be changed.
+  @param uint16_t new bw filter value 
+  @return void
+
+*/
+void UserConfigTask_UpdateFilterBwValue(uint8_t index, uint8_t bwType, uint16_t value);
 
 /**
   @brief Function used to calculate a CRC 16 type using the same polynom 

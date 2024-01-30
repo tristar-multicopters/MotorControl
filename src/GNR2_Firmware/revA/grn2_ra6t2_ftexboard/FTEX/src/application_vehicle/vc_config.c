@@ -88,8 +88,14 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
         .hOffsetMTSafety = PTS_OFFSET_PTS2TORQUE_SAFETY,
        
         .hMax = PTS_MAX_PTSVALUE,
-        .hLowPassFilterBW1 = PTS_FILTER_BW1,
-        .hLowPassFilterBW2 = PTS_FILTER_BW2,
+        .hFilterSpeed[0] = PTS_SPEED_FILTER_1,
+        .hFilterSpeed[1] = PTS_SPEED_FILTER_2,
+        .hLowPassFilterBW1[0] = PTS_FILTER_BW1_1,
+        .hLowPassFilterBW2[0] = PTS_FILTER_BW2_1,
+        .hLowPassFilterBW1[1] = PTS_FILTER_BW1_2,
+        .hLowPassFilterBW2[1] = PTS_FILTER_BW2_2,
+        .hLowPassFilterBW1[2] = PTS_FILTER_BW1_3,
+        .hLowPassFilterBW2[2] = PTS_FILTER_BW2_3,
         .PasMaxOutputTorque = PAS_MAX_TORQUE,
     }
 };

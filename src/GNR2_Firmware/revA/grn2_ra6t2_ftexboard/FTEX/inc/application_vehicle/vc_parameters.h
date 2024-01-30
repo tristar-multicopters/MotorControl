@@ -274,12 +274,33 @@
     #define PTS_OFFSET_PTS2TORQUE_SAFETY     40    // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 #endif
 
-#ifndef PTS_FILTER_BW1
-    #define PTS_FILTER_BW1                   10    // BW coefficient for pedal torque sensor avereging
+#ifndef PTS_SPEED_FILTER_1                   
+    #define PTS_SPEED_FILTER_1                3
+#endif
+#ifndef PTS_SPEED_FILTER_2                   
+    #define PTS_SPEED_FILTER_2                6
 #endif
 
-#ifndef PTS_FILTER_BW2
-    #define PTS_FILTER_BW2                   25    // BW coefficient for pedal torque sensor avereging
+#ifndef PTS_FILTER_BW1_1
+    #define PTS_FILTER_BW1_1                   10    // BW coefficient for pedal torque sensor avereging
+#endif
+
+#ifndef PTS_FILTER_BW2_1
+    #define PTS_FILTER_BW2_1                   25    // BW coefficient for pedal torque sensor avereging
+#endif
+#ifndef PTS_FILTER_BW1_2
+    #define PTS_FILTER_BW1_2                   10    // BW coefficient for pedal torque sensor avereging
+#endif
+
+#ifndef PTS_FILTER_BW2_2
+    #define PTS_FILTER_BW2_2                   25    // BW coefficient for pedal torque sensor avereging
+#endif
+#ifndef PTS_FILTER_BW1_3
+    #define PTS_FILTER_BW1_3                   10    // BW coefficient for pedal torque sensor avereging
+#endif
+
+#ifndef PTS_FILTER_BW2_3
+    #define PTS_FILTER_BW2_3                   25    // BW coefficient for pedal torque sensor avereging
 #endif
 
 

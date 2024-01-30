@@ -65,20 +65,23 @@ void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle)
 /**
     Pedal torque Sensor ADC value calculation and filtering
 */
-void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
+void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle, uint8_t speed)
 {
     uint32_t wAux;
     uint16_t hAux;
     uint16_t hBandwidth;
+    
+    //get the index of the bw to be used. this is speed dependent.
+    uint8_t n = PedalTorqSensor_GetBwUsingSpeed(pHandle,speed);
 
     /* Use the Read conversion Manager for ADC read*/
     hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
     pHandle->hInstTorque = hAux;
     /* Select the filter coefficient based on start or stop condition*/
     if (pHandle->hInstTorque > pHandle->hAvADCValue)
-        hBandwidth = pHandle->hParameters.hLowPassFilterBW1;
+        hBandwidth = pHandle->hParameters.hLowPassFilterBW1[n];
     else
-        hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
+        hBandwidth = pHandle->hParameters.hLowPassFilterBW2[n];
     /* Check if the variable not exceeding the limit*/
     if (hAux == 0xFFFFu)
     {
@@ -254,4 +257,37 @@ void PedalTorqSensor_ComputeSlopes(PedalTorqSensorHandle_t * pHandle)
    pHandle->hParameters.bSlopeMT   = (int16_t) round(TorqueSensor2Torq);    // Save the numerator
    pHandle->hParameters.bDivisorMT = PTS_SLOPE_FACTOR;                      // and denominator 
     
+}
+
+/**
+    Select the index of the bw buffer based on the bike speed.
+*/
+uint8_t PedalTorqSensor_GetBwUsingSpeed(PedalTorqSensorHandle_t * pHandle, uint8_t speed)
+{
+    //get array size
+    uint8_t size = sizeof(pHandle->hParameters.hFilterSpeed)/sizeof(pHandle->hParameters.hFilterSpeed[0]);
+    
+    //
+    for (uint8_t n = 0; n < size; n++)
+    {
+        //edge case 1.
+        if ((speed < pHandle->hParameters.hFilterSpeed[n]) && (n == 0))
+        {
+            return n;
+        }
+        
+        //edge case 2.
+        if ((n + 1) == (size))
+        {
+            return size;
+        }
+        
+        //middle condtion.
+        if ((speed >= pHandle->hParameters.hFilterSpeed[n]) && ((speed < pHandle->hParameters.hFilterSpeed[n + 1])))
+        {
+           return n + 1; 
+        }
+    }
+    
+    return 0;
 }

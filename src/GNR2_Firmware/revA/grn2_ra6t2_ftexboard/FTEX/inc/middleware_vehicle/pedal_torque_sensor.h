@@ -28,6 +28,11 @@
                                  // If factor == 100 then 1.25f would make a 125/100 fraction 
                                  
 #define PTS_PERCENTAGE    (uint8_t)100    /* Percentage for PTS use */
+    
+//hLowPassFilterBW1 and 2 array size.
+#define BW_ARRAY_SIZE        3
+//hFilterSpeed array size.
+#define FILTERSPEED_ARRAY_SIZE       (BW_ARRAY_SIZE - 1)
 
 // ======================= Public strutures ============================= //
 
@@ -53,8 +58,10 @@ typedef struct
 
     uint16_t    PasMaxOutputTorque; /* max motor torque that PAS is allowed to use */
     
-    uint16_t    hLowPassFilterBW1;      /* used to configure the first coefficient software filter bandwidth */
-    uint16_t    hLowPassFilterBW2;      /* used to configure the second coefficient software filter bandwidth */ 
+    uint16_t    hLowPassFilterBW1[BW_ARRAY_SIZE];      /* used to configure the first coefficient software filter bandwidth */
+    uint16_t    hLowPassFilterBW2[BW_ARRAY_SIZE];      /* used to configure the second coefficient software filter bandwidth */ 
+    
+    uint8_t     hFilterSpeed[FILTERSPEED_ARRAY_SIZE];   /* speed value used to decide what filter band will be used.*/
         
 } PTS_Param_t;
 
@@ -100,7 +107,7 @@ void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle);
   @param  PedalTorqSensorHandle_t handle
   @return None
 */
-void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle);
+void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle,uint8_t speed);
 
 /**
   @brief  Pedal torque Sensor return ADC value
@@ -134,5 +141,13 @@ bool PedalTorqSensor_IsDetected (PedalTorqSensorHandle_t * pHandle);
   @return void
 */
 void PedalTorqSensor_ComputeSlopes(PedalTorqSensorHandle_t * pHandle);
+
+/**
+  @brief  Select the index of the bw buffer based on the bike speed.
+  @param  PedalTorqSensorHandle_t handle
+  @param  uint8_t speed to be compared.
+  @return void
+*/
+uint8_t PedalTorqSensor_GetBwUsingSpeed(PedalTorqSensorHandle_t * pHandle, uint8_t speed);
 
 #endif

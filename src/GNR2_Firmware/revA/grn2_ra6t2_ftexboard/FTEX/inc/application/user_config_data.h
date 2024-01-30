@@ -32,6 +32,10 @@
 #define PAS_8  8
 #define PAS_9  9
 
+//
+#define BW_ARRAY_SIZE        3
+
+#define FILTERSPEED_ARRAY_SIZE       (BW_ARRAY_SIZE - 1)
 
 /*********************************************
             Data Struct Definition
@@ -43,6 +47,15 @@
 
 #define DIGITAL33_0_7_VOLTS 13900 // Value of 0.7 volts when you have a 0-65535 digital value where 65535 = 3.3V
 #define DIGITAL5_0_8_VOLTS  10500 // Value of 0.8 volts when you have a 0-65535 digital value where 65535 = 5.0V
+
+
+
+typedef struct
+{
+    uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE];
+    uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE];
+    uint8_t  FilterSpeed[FILTERSPEED_ARRAY_SIZE];
+}PAS_Torque_Filter_Configuration_t;
 
 typedef struct
 {
@@ -70,7 +83,9 @@ typedef struct
     uint8_t PasLevelSpeed[10];
     uint8_t pasLevelMaxTorque[10];
     uint8_t pasLevelMinTorque[10];
-    PAS_Sensor_Configuration_t PasSensorConfig;   
+    PAS_Torque_Filter_Configuration_t PAS_Torque_Filter_Configuration;
+    PAS_Sensor_Configuration_t PasSensorConfig;
+    
 } PAS_ConfigData_t;
 
 //struct used to hold the configuration
