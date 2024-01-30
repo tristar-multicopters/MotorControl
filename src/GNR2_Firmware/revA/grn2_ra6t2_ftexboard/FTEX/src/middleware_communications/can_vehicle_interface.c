@@ -214,13 +214,15 @@ void CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aSta
     ASSERT(pHandle!= NULL);
     
 
-    if(aState == true)
+    if(aState)
     {        
         Light_Enable(pHandle->pPowertrain->pHeadLight);
+        Light_ClearInternalUpdateFlag(pHandle->pPowertrain->pHeadLight);
     }
     else
     {
         Light_Disable(pHandle->pPowertrain->pHeadLight);
+        Light_ClearInternalUpdateFlag(pHandle->pPowertrain->pHeadLight);
     }      
 }
 
