@@ -617,7 +617,7 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
     {
         if (abs(wSpeedM1) <= pHandle->sParameters.hStoppingSpeed) // If motor speed is lower than stopping speed parameter
         {
-            bCheckStop1 = true;
+            //bCheckStop1 = true;
         }
     }
     else

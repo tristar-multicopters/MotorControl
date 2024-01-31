@@ -12,9 +12,9 @@
 #include "drive_parameters.h"
 
 /******************* SCREEN SELECTION  *******************************/
-#define SCREEN_PROTOCOL    UART_CLOUD_5S       
+#define SCREEN_PROTOCOL    UART_LOG_HS       
                                                             // UART_DISABLE,
-                                                            // UART_APT,
+                                                            // UART_APT,    
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
@@ -40,50 +40,34 @@
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
-#define PTS_FILTER_BW1_1                      40              // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW2_1                      90              // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW1_2                      40              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW2_2                      90              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW1_3                      40              // BW coefficient for pedal torque sensor avereging for speed 3
-#define PTS_FILTER_BW2_3                      90              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW1                      40              // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW2                      90              // BW coefficient for pedal torque sensor avereging
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
-
-#define PAS_0_TORQUE_GAIN                   0               // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
-#define PAS_1_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 1
-#define PAS_2_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 2                
-#define PAS_3_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 3
-#define PAS_4_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 4
-#define PAS_5_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 5
-#define PAS_6_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 6
-#define PAS_7_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 7 
-#define PAS_8_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 8 
-#define PAS_9_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 9 
-
+#define PAS_TORQUE_GAIN                     125             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
 #define PAS_ALGORITHM                       TorqueSensorUse/* TorqueSensorUse  = 0, Torque sensor use define 
-
                                                                CadenceSensorUse = 1, Cadence sensor use define */
-                                                               
-#define PAS_0_MIN_TORQUE_PERCENT               0
-#define PAS_1_MIN_TORQUE_PERCENT               0
-#define PAS_2_MIN_TORQUE_PERCENT               0
-#define PAS_3_MIN_TORQUE_PERCENT               0
-#define PAS_4_MIN_TORQUE_PERCENT               0
-#define PAS_5_MIN_TORQUE_PERCENT               0 
+    
+#define PAS_C_0_POWER_PERCENT               0               // PAS 0 has a ratio of   0%
+#define PAS_C_1_POWER_PERCENT               60              // PAS 1 has a ratio of  60% (3/5)
+#define PAS_C_2_POWER_PERCENT               67              // PAS 2 has a ratio of  67% (4/6)
+#define PAS_C_3_POWER_PERCENT               80              // PAS 3 has a ratio of  80% (4/5)
+#define PAS_C_4_POWER_PERCENT               88              // PAS 4 has a ratio of  88% (7/8)
+#define PAS_C_5_POWER_PERCENT               100             // PAS 5 has a ratio of 100%
 
-#define PAS_0_MAX_TORQUE_PERCENT               0
-#define PAS_1_MAX_TORQUE_PERCENT               20
-#define PAS_2_MAX_TORQUE_PERCENT               35
-#define PAS_3_MAX_TORQUE_PERCENT               45
-#define PAS_4_MAX_TORQUE_PERCENT               70
-#define PAS_5_MAX_TORQUE_PERCENT               100 
+#define PAS_T_0_POWER_PERCENT               0
+#define PAS_T_1_POWER_PERCENT               20
+#define PAS_T_2_POWER_PERCENT               35
+#define PAS_T_3_POWER_PERCENT               45
+#define PAS_T_4_POWER_PERCENT               70
+#define PAS_T_5_POWER_PERCENT               100 
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
 
-#define PAS_MIN_PEDAL_PULSE_COUNT            6             // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
+#define PAS_MIN_PEDAL_PULSE_COUNT            16             // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
@@ -96,7 +80,7 @@
   
 /***************** POWER ENABLE PARAMETERS  ******************************/
 
-#define POWER_ENABLE_ENABLE                 true            // True if power enable input is used to prevent powertrain start
+#define POWER_ENABLE_ENABLE                 false            // True if power enable input is used to prevent powertrain start
 
 /***************** POWERTRAIN MANAGEMENT ******************************/
 
@@ -119,9 +103,11 @@
 #define POWERTRAIN_MAX_MOTOR_TORQUE         STARTING_TORQUE // Maximum motor torque to apply with powertrain management
 
 /***************** BIKE LIGHT SETTINGS  ******************************/
-    
+
+#define POWERTRAIN_HEADLIGHT_LOCKED         true            // Parameter that decides if the user can change the state of the headlight      
 #define POWERTRAIN_HEADLIGHT_DEFAULT        false           // Parameter that sets the default headlight state when the bike is powered on
 
+#define POWERTRAIN_TAILLIGHT_LOCKED         true            // Parameter that decide sif the user can change the state of the tail light 
 #define POWERTRAIN_TAILLIGHT_DEFAULT        true            // Parameter that sets the default tail light state when the bike is powered on
 
 /******************************** BATTERY SELECTION ******************************/

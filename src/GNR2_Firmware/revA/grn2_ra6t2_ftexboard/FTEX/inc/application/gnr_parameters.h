@@ -65,7 +65,7 @@
 //as WDT and etc.
 #define FIRMWARE_RELEASE              0
 
-#define VEHICLE_SELECTION             VEHICLE_PEGATRON     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                                                                                
@@ -94,14 +94,14 @@
 
 //definition used to enable log function
 
-#define USE_HSLOG 0 // Define to 1 to enable HS logger
+#define USE_HSLOG 1 // Define to 1 to enable HS logger
 
 //LogHS_StartOneShot(&LogHS_handle);
-#define HSLOG_ZEROSPEED_LOG 0
+#define HSLOG_ZEROSPEED_LOG 1
 
 //definition used to enable log function
 //LogHS_LogMotorVals(&LogHS_handle);
-#define LOGMOTORVALS 0
+#define LOGMOTORVALS 1
 
 //definition used to enable log function
 //LogHS_LogMotorValsVarRes(&LogHS_handle);
