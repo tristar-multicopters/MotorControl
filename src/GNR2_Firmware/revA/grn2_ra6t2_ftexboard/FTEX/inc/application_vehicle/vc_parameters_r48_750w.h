@@ -12,7 +12,7 @@
 #include "drive_parameters.h"
 
 /******************* SCREEN SELECTION  *******************************/
-#define SCREEN_PROTOCOL    UART_LOG_HS       
+#define SCREEN_PROTOCOL    UART_APT       
                                                             // UART_DISABLE,
                                                             // UART_APT,    
                                                             // UART_KD718,

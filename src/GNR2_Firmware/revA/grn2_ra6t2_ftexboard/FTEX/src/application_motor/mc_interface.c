@@ -41,7 +41,7 @@ void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachine
     
 
     /*Initialize driver */
-    Driver_Disable(&pHandle->bDriverEn);
+    Driver_Enable(&pHandle->bDriverEn);
     
 }
 

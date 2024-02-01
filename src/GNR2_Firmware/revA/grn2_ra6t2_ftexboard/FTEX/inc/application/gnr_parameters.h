@@ -55,7 +55,7 @@
 #define IOT_NODE_ID                   0x02                /* Node-ID of the IOT module(configured in the IOT firmware)*/ 
 #define GNR2_SLAVE_NODE_ID            0x03                /* Node-ID of ganrunner slave */
 
-#define SWD_CONTROL_ENABLE            1                   /* Enable controlling motor directly from debugging interface with vehicle control layer */
+#define SWD_CONTROL_ENABLE            0                   /* Enable controlling motor directly from debugging interface with vehicle control layer */
 #define DEBUGMODE_MOTOR_CONTROL       0                   /* Disable vehicle control and communications to debug only motor control layer */
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
@@ -94,14 +94,14 @@
 
 //definition used to enable log function
 
-#define USE_HSLOG 1 // Define to 1 to enable HS logger
+#define USE_HSLOG 0 // Define to 1 to enable HS logger
 
 //LogHS_StartOneShot(&LogHS_handle);
-#define HSLOG_ZEROSPEED_LOG 1
+#define HSLOG_ZEROSPEED_LOG 0
 
 //definition used to enable log function
 //LogHS_LogMotorVals(&LogHS_handle);
-#define LOGMOTORVALS 1
+#define LOGMOTORVALS 0
 
 //definition used to enable log function
 //LogHS_LogMotorValsVarRes(&LogHS_handle);
