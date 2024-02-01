@@ -105,7 +105,8 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
 PulseFrequencyHandle_t PulseFreqHandlePedal =
 {    
     .TimerType = AGT_TIMER,    
-    .start_measurement = false,    
+    .measuring = false, 
+    .wNumberOfPulse = 0,        
     .PulseFreqParam =
     {
         .PF_Timer = PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
@@ -117,7 +118,9 @@ PulseFrequencyHandle_t PulseFreqHandlePedal =
 PulseFrequencyHandle_t PulseFreqHandleWheel =
 {        
     .TimerType = GPT_TIMER,
-    .start_measurement = false,    
+    .measuring = false, 
+    .wCaptureCount = 0,
+    .wCaptureOverflow = 0,    
     .PulseFreqParam =
     {
         .PF_Timer = WHEEL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
@@ -137,9 +140,6 @@ WheelSpeedSensorHandle_t WheelSpeedHandle =
 {
     .pPulseFrequency = &PulseFreqHandleWheel,
     .bPulsePerRotation = WHEEL_SPEED_SENSOR_NBR_PER_ROTATION,
-    .bSpeedslowDetect = WHEEL_SPEED_SLOW_LOOP_DETECT,
-    .bSlowDetectCountValue = WHEEL_SPEED_SLOW_LOOP_COUNT, 
-    .bSpeedslowDetectCorrection = WHEEL_SPEED_SENSOR_CORRECTION_FACTOR
 };
 
 

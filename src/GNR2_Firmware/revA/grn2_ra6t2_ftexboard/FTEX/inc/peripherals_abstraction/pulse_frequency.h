@@ -22,6 +22,9 @@
 #define COEFFREQ        1000000000	// Period coeff for usecond division
 #define MICRO_SEC       1000000 // us coefficient precision
 #define PERIOD_FACTOR   2       // Period factor
+//define the maximum number of times the timer can overflow when measuring 
+//wheel speed.
+#define MAXNUMBER_OVERFLOW_WHEELSPEED    1
 	   
 // =============================== Variables ================================== //
 
@@ -47,10 +50,10 @@ typedef struct
 	
     uint32_t wCaptureCount; 		/* timer capture variable */
     uint32_t wCaptureOverflow; /* timer capture overflow variable */
-    uint32_t wUsPeriod; 			/* timer us Period Detection */
+    float wUsPeriod; 			/* timer us Period Detection */
     uint16_t wNumberOfPulse;   /* has the number of pulse detected by
                                /* the time on capture mode.*/
-    volatile bool  start_measurement;		/* Flag start measurment */
+    volatile bool  measuring;		/* Flag start measurment */
     PulseFrequencyParam_t PulseFreqParam; /* AGT Parameters*/
 	
 } PulseFrequencyHandle_t; 
@@ -58,18 +61,18 @@ typedef struct
 // ==================== Public function prototypes ========================= //
 
 /**
+  @brief  Function used to get the info of the timer
+  @param  PulseFrequencyHandle_t handle
+  @return bIsError in boolean
+*/
+bool PulseFrequency_GetTimerInfo(PulseFrequencyHandle_t * pHandle);
+
+/**
   @brief  Function used to read the capture input from the Timer
   @param  PulseFrequencyHandle_t handle
   @return None
 */
 void PulseFrequency_ReadInputCapture (PulseFrequencyHandle_t * pHandle);
-
-/**
-  @brief  Function used to return period of pulse signal
-  @param  PulseFrequencyHandle_t handle
-  @return Latest period measurement of pulse signal
-*/
-uint32_t PulseFrequency_GetPeriod(PulseFrequencyHandle_t * pHandle);
 
 /**
   @brief  Function used to update the capture variables from the interrupt

@@ -67,6 +67,7 @@ void PedalSpdSensor_ClearWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
 	pHandle->wPedalSpeedSens_ResetWindowsFlag = false;
 }
 
+
 /**
 	Get windows reset flag
 */

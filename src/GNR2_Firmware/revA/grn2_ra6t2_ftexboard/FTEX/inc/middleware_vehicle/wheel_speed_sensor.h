@@ -15,6 +15,16 @@
 // =============================== Includes ================================== //
 #include "pulse_frequency.h"
 
+
+//-------------------------------- Defines ----------------------------------- //
+
+//timeout when measuring the time off(not running) of the timer.
+#define WHEELSPEED_TIMEOUT_MS          4000
+
+//steps used to increment the variable used to
+//measure the time interval where timer is not working.
+#define WHEELSPEED_TIME_INCREMENT_MS   250
+
 // ================= Structure used to configure a pin ===================== //
 typedef struct {
     
@@ -22,16 +32,10 @@ typedef struct {
 
   uint8_t	bPulsePerRotation;  /* Nunber of pulse per rotation */
 		
-  uint32_t wWheelSpeed_Read;    /* Wheel Speed Sensor Periode value*/
+  float wWheelSpeed_Read;    /* Wheel Speed Sensor Periode value*/
   uint32_t wWheelSpeedFreq;     /* Wheel Speed sensor frequency calculated value */
   int32_t wWheelSpeedRpm;       /* Wheel Speed sensor rotation per minute calculated value */
-  
-  bool bSpeedDetected;          /* True if speed is detected */
-  bool bSpeedslowDetect;        /* Use Wheel speed sensor flag  for slow detection */
-
-  uint8_t bSlowDetectCount;      /* Wheel speed sensor flag  variable for slow loop detection*/	
-  uint8_t bSlowDetectCountValue; /*Wheel speed sensor flag  last variable count for slow loop detection*/	
-  uint8_t bSpeedslowDetectCorrection; /*Wheel speed /correction factor for slow loop detection on Velec*/
+  uint16_t wWheelSpeedTimeOut;  /*  variable used to count the maximum time before show time ris not working.  */
 	
 } WheelSpeedSensorHandle_t;
 
@@ -56,14 +60,7 @@ void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle);
   @param  WheelSpeedSensorHandle_t handle
   @return Speed in rpm
 */
-uint32_t WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle);
-
-/**
-  @brief  Function to  return the wheel speed frequency in mHz
-  @param  WheelSpeedSensorHandle_t handle
-  @return Speed in rpm
-*/
-uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle);
+float WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle);
 
 /**
   @brief  Function to return speed in rpm
@@ -71,20 +68,6 @@ uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle);
   @return Speed in rpm
 */
 uint16_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle);
-
-/**
-  @brief  Function to check if speed is detected
-  @param  WheelSpeedSensorHandle_t handle
-  @return None
-*/
-void WheelSpdSensor_UpdateWSSDetection (WheelSpeedSensorHandle_t * pHandle);
-
-/**
-  @brief  Function to return the Wheel speed boolean detection
-  @param  WheelSpeedSensorHandle_t handle
-  @return True if speed is detected
-*/
-bool WheelSpdSensor_IsSpeedDetected(WheelSpeedSensorHandle_t * pHandle);
 
 
 #endif
