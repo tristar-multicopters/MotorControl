@@ -500,6 +500,13 @@ static void UpdateObjectDictionnary(void *p_arg)
             uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE]; 
             uint8_t  FilterSpeed[FILTERSPEED_ARRAY_SIZE];
             
+             uint16_t configBatteryFullVoltage;       
+             uint16_t configBatteryEmptyVoltage;          
+             uint16_t configBatteryMaxPeakDCCurrent;
+             uint16_t configBatteryContinuousDCCurrent;        
+             uint16_t configBatteryPeakCurrentMaxDuration;
+             uint16_t configBatteryPeakCurrentDeratingDuration;
+            
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
              {
@@ -529,7 +536,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 4)),       pNode, &configPasTorqueInputMin, sizeof(uint16_t));  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 5)),       pNode, &configPasTorqueInputMax, sizeof(uint16_t)); 
                  
-                 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 0)),        pNode, &configBatteryFullVoltage, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 1)),        pNode, &configBatteryEmptyVoltage, sizeof(uint16_t));
                  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),      pNode, &configWheelDiameter, sizeof(uint8_t)); 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),   pNode, &configScreenProtocol, sizeof(uint8_t)); 
@@ -540,6 +548,11 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 1)),   pNode, &configTailLightDefault, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 2)),   pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 0)),     pNode, &configBatteryMaxPeakDCCurrent, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 1)),     pNode, &configBatteryContinuousDCCurrent, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 2)),     pNode, &configBatteryPeakCurrentMaxDuration, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 3)),     pNode, &configBatteryPeakCurrentDeratingDuration, sizeof(uint16_t));               
+                 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));
                  
@@ -589,6 +602,14 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  UserConfigTask_UpdateThrottleAdcOffset(configThrottleAdcOffset);
                  UserConfigTask_UpdateThrottleAdcMax(configThrottleAdcMax);
+                                  
+                 UserConfigTask_UpdateBatteryFullVoltage(configBatteryFullVoltage);
+                 UserConfigTask_UpdateBatteryEmptyVoltage(configBatteryEmptyVoltage);
+                 UserConfigTask_UpdateBatteryMaxPeakDCCurrent(configBatteryMaxPeakDCCurrent);
+                 UserConfigTask_UpdateBatteryContinuousDCCurrent(configBatteryContinuousDCCurrent);        
+                 UserConfigTask_UpdateBatteryPeakCurrentMaxDuration(configBatteryPeakCurrentMaxDuration);
+                 UserConfigTask_UpdateBatteryPeakCurrentDeratingDuration(configBatteryPeakCurrentDeratingDuration);   
+                 
                  
                  //update speed values to bw filter.
                  for(uint8_t n = 0;n < FILTERSPEED_ARRAY_SIZE;n++)
@@ -605,7 +626,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  //write in the data flash and reset the system.
                  UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle); 
-                                                
+                                             
              }
         }      
     }
@@ -828,10 +849,18 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t  configPasNbMagnetsPerTurn = UserConfigTask_GetPasNbMagnetsPerTurn();                                     
         uint16_t configPasTorqueInputMax = UserConfigTask_GetPasTorqueInputMax();
         uint16_t configPasTorqueInputMin = UserConfigTask_GetPasTorqueInputMin();
+        
+        uint16_t configBatteryFullVoltage                   = UserConfigTask_GetBatteryFullVoltage();
+        uint16_t configBatteryEmptyVoltage                  = UserConfigTask_GetBatteryEmptyVoltage();
                                               
         uint8_t configWheelDiameter =   UserConfigTask_GetWheelDiameter();
         uint8_t configScreenProtocol =  UserConfigTask_GetScreenProtocol();                                              
-        
+         
+        uint16_t configBatteryMaxPeakDCCurrent              = UserConfigTask_GetBatteryMaxPeakDCCurrent();
+        uint16_t configBatteryContinuousDCCurrent           = UserConfigTask_GetBatteryContinuousDCCurrent();        
+        uint16_t configBatteryPeakCurrentMaxDuration        = UserConfigTask_GetBatteryPeakCurrentMaxDuration();
+        uint16_t configBatteryPeakCurrentDeratingDuration   = UserConfigTask_GetBatteryPeakCurrentDeratingDuration();                                      
+                                              
         uint8_t configHeadLightDefault      = UserConfigTask_GetHeadLightDefault(); 
         
         uint8_t configTailLightDefault      = UserConfigTask_GetTailLightDefault();
@@ -839,7 +868,8 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
                                               
         uint16_t configThrottleAdcOffset    = UserConfigTask_GetThrottleAdcOffset();                                      
         uint16_t configThrottleAdcMax       = UserConfigTask_GetThrottleAdcMax();
-      
+                                              
+     
         uint8_t  FilterSpeed[FILTERSPEED_ARRAY_SIZE] = {UserConfigTask_GetFilterSpeed(0), UserConfigTask_GetFilterSpeed(1)}; 
         uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW1), UserConfigTask_GetFilterBwValue(1, BW1), UserConfigTask_GetFilterBwValue(2, BW1)};
         uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW2), UserConfigTask_GetFilterBwValue(1, BW2), UserConfigTask_GetFilterBwValue(2, BW2)};
@@ -886,7 +916,10 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 4)),       pNode, &configPasTorqueInputMin, sizeof(uint16_t));  
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 5)),       pNode, &configPasTorqueInputMax, sizeof(uint16_t));  
         
-                // Show what is the default wheel diameter in the user config 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 0)),        pNode, &configBatteryFullVoltage, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 1)),        pNode, &configBatteryEmptyVoltage, sizeof(uint16_t));
+        
+        // Show what is the default wheel diameter in the user config 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),       pNode, &configWheelDiameter, sizeof(uint8_t));         
         // Show the currently selected screen protocol
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &configScreenProtocol, sizeof(uint8_t)); 
@@ -898,6 +931,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),        pNode, &configTailLightDefault, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 1)),        pNode, &configTailLightDefault, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 2)), pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
+        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 0)),     pNode, &configBatteryMaxPeakDCCurrent, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 1)),     pNode, &configBatteryContinuousDCCurrent, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 2)),     pNode, &configBatteryPeakCurrentMaxDuration, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 3)),     pNode, &configBatteryPeakCurrentDeratingDuration, sizeof(uint16_t));
         
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));

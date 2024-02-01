@@ -77,16 +77,16 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle)
     uint16_t NewSOC = 0;
     uint32_t VoltPercent = 0;
     
-    VoltPercent = (pHandle->VBatMax * 100u) - (pHandle->VBatMin * 100u); // Values are * 100 to upscale the calculation
+    VoltPercent = (pHandle->VBatMax - pHandle->VBatMin); // Values are already volts x 100 to upscale the calculation
                                                                          // So we have better accuracy
     VoltPercent =  VoltPercent/100u; // Calculate how many volts correpsond to 1 % charge
     
-    if(pHandle->VBatAvg < (pHandle->VBatMin * 100))
+    if(pHandle->VBatAvg < pHandle->VBatMin)
     {
-        pHandle->VBatAvg = pHandle->VBatMin * 100;   
+        pHandle->VBatAvg = pHandle->VBatMin;   
     }   
     
-    NewSOC = ((pHandle->VBatAvg) - (pHandle->VBatMin * 100u))/VoltPercent; //Calculate the SOC
+    NewSOC = ((pHandle->VBatAvg) - (pHandle->VBatMin/VoltPercent)); //Calculate the SOC
     
     // We need to get a new SOC value that is consistent enough
     // before we decided to change the actual SOC.

@@ -20,9 +20,9 @@
   */
 typedef struct
 {          
-  uint16_t VBatMin; // Value in volts that the battery has when it's empty
-  uint16_t VBatMax; // Value in volts that the battery has when it's fully charged
-  uint16_t VBatAvg; // Value in volts of the average voltage present in the battery.  
+  uint16_t VBatMin; // Value in volts x100 that the battery has when it's empty
+  uint16_t VBatMax; // Value in volts x100 that the battery has when it's fully charged
+  uint16_t VBatAvg; // Value in volts x100 of the average voltage present in the battery.  
   
   MotorControlInterfaceHandle_t * pMCI;  
     

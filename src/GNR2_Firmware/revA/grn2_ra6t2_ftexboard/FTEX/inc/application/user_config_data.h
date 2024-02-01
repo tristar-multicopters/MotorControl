@@ -96,6 +96,18 @@ typedef struct
     uint16_t AdcMax; 
 } Throttle_ConfigData_t;
 
+typedef struct
+{
+    uint16_t FullVoltage;                 // In Volts x100
+    uint16_t EmptyVoltage;                // In Volts x100
+    uint16_t MaxPeakDCCurrent;            // In Amps x100
+    uint16_t ContinuousDCCurrent;         // in Amps x100
+    uint16_t PeakCurrentMaxDuration;      // In Seconds x10
+    uint16_t PeakCurrentDeratingDuration; // In seconds x10
+} Battery_ConfigData_t;
+
+
+
 //struct used to hold the configuration
 //associated with the Vehicle.
 typedef struct
@@ -117,6 +129,7 @@ typedef struct
     uint8_t vehicle;
     PAS_ConfigData_t      PAS_ConfigData;
     Throttle_ConfigData_t Throttle_ConfigData;
+    Battery_ConfigData_t  Battery_ConfigData; 
     Vehicle_ConfigData_t  Vehicle_ConfigData;
     uint16_t crc;
 } User_ConfigData_t;

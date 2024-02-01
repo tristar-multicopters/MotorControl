@@ -417,6 +417,8 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
 
     // Limit MAX POWER by the foldback to prevent BMS shutdown
     Foldback_UpdateMaxValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower);        // this foldback limits MAX POWER after a while
+    Foldback_UpdateLimitValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxContinuousPower);      // this foldback limits MAX POWER immediately
+    
     pHandle->DynamicPowerHandle.hDynamicMaxPower = (uint16_t)Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower, (int16_t)pHandle->DynamicPowerHandle.hOverMaxPowerTimer);    
 
     if (hMeasuredSpeedUnit != 0)
@@ -496,6 +498,7 @@ void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle)
 {
     #if POWER_LIMIT_REF == MAX_CURRENT_LIMIT
     pHandle->hMaxPositivePower = pHandle->hMaxBusCurrent * pHandle->hBusVoltage;
+    pHandle->hMaxContinuousPower = pHandle->hMaxContinuousCurrent * pHandle->hBusVoltage;
     #else
         UNUSED_PARAMETER(pHandle);
         //do nothing - keep it at maximum defined level 

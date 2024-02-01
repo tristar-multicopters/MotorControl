@@ -226,6 +226,11 @@ uint8_t bObjDataMaxSpeed                    = 0;
 //variable associated with CO_OD_REG_WALK_MODE_SPEED.
 uint8_t bObjDataWalkModeSpeed               = 0;
 
+//variable associated with CO_OD_REG_BATTERY_VOLTAGE 0
+uint16_t bObjDataBatteryFullVoltage         = 0;
+//variable associated with CO_OD_REG_BATTERY_VOLTAGE 1
+uint16_t bObjDataBatteryEmptyVoltage        = 0;
+
 //variable associated with CO_OD_REG_WHEELS_DIAMETER 0
 uint8_t bObjDataWheelDiameter               = 0;
 //variable associated with CO_OD_REG_WHEELS_DIAMETER 1 
@@ -272,6 +277,15 @@ uint16_t bObjDataPasTorqueInputMax         = 0;
 
 //variable associated with CO_OD_CONFIG_SCREEN_PROTOCOL
 uint8_t bObjDataConfigScreenProtocol        = 0;
+
+//variable associated with  CO_OD_REG_BATTERY_DC_CURRENT subindex 0
+uint16_t bObjDataConfigBatteryMaxPeakDCCurrent             = 0;
+//variable associated with  CO_OD_REG_BATTERY_DC_CURRENT subindex 1
+uint16_t bObjDataConfigBatteryContinuousDCCurrent          = 0;
+//variable associated with  CO_OD_REG_BATTERY_DC_CURRENT subindex 2
+uint16_t bObjDataConfigBatteryPeakCurrentDuration          = 0;
+//variable associated with  CO_OD_REG_BATTERY_DC_CURRENT subindex 3
+uint16_t bObjDataConfigBatteryPeakCurrentDeratingDuration  = 0;
 
 //variable associated with CO_OD_CONFIG_THROTTLE_ADC_OFFSET
 uint16_t bObjDataConfigThrottleAdcOffset    = 0;
@@ -1292,7 +1306,18 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WALK_MODE_SPEED, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWalkModeSpeed};
             //move to next OD index
             index++;
-    
+            
+            //Application - Speed that the walk mode of the vehicle goes up to. 
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BATTERY_VOLTAGE, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataBatteryFullVoltage};
+            //move to next OD index
+            index++;
+            
+            //Application - Speed that the walk mode of the vehicle goes up to. 
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BATTERY_VOLTAGE, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataBatteryEmptyVoltage};
+            //move to next OD index
+            index++;
+            
+            
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WHEELS_DIAMETER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWheelDiameter};    
             //move to next OD index
             index++;
@@ -1374,6 +1399,22 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             
+             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BATTERY_DC_CURRENT, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigBatteryMaxPeakDCCurrent};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BATTERY_DC_CURRENT, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigBatteryContinuousDCCurrent};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BATTERY_DC_CURRENT, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigBatteryPeakCurrentDuration};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BATTERY_DC_CURRENT, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigBatteryPeakCurrentDeratingDuration};
+            //move to next OD index
+            index++;
+            
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcOffset};
             //move to next OD index
             index++;
@@ -1432,7 +1473,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 3, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)(&bObjOtaFrameCount)}; 
             //move to next OD index
             index++;
-       
+          
             //mark end of used objects
             GNR2_OD[index] = (struct CO_OBJ_T)CO_OBJ_DICT_ENDMARK;
             

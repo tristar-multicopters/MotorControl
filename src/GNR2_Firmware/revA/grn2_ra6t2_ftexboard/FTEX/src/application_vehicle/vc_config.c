@@ -56,8 +56,8 @@ Light_Handle_t TailLightHandle =
 
 BatMonitor_Handle_t BatMonitorHandle = 
 {
-    .VBatMin = BATTERY_EMPTY_VOLT,  // Values that represent a fully charged battery and an empty one
-    .VBatMax = BATTERY_FULL_VOLT,   // Set in the VC_parameters_xxxxx.h of each bike
+    .VBatMin = BATTERY_EMPTY_VOLT_X_100,  // Values that represent a fully charged battery and an empty one
+    .VBatMax = BATTERY_FULL_VOLT_X_100,   // Set in the VC_parameters_xxxxx.h of each bike
     .LowBatSOC = BATTERY_SOC_LOW_PERCENT,        // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
     .RechargedBatSOC = BATTERY_SOC_OK_PERCENT,   // Battery SOC in % for which we clear the battery low flag
 };

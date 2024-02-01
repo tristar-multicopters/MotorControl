@@ -33,9 +33,10 @@
 #define LOW_BATTERY_TORQUE                  150
 
 #define ENABLE_MAX_POWER_LIMIT              false               // to enable or disable the foldback
-#define MAX_BMS_POSITIVE_POWER              500                 // Maximum Power at the end point of foldback
 #define MAX_TIME_BMS_TOLERANT               20000               // End time of derating for BMS protection in ms
 #define MAX_POWER_LIMIT_TIMEOUT             10000               // Start time of derating for BMS protection in ms
+#define MAX_BMS_POSITIVE_POWER              500                 // Maximum Power at the end point of foldback
+#define MAX_BMS_CONTINOUS_CURRENT           10              // Maximum Power at the end point of foldback in amps
 
 #define POWER_LIMIT_REF                     MAX_CURRENT_LIMIT   // defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
 #define MAX_APPLICATION_POSITIVE_POWER      750                 // Refers to maximum power in watts that drive can push to the motor
