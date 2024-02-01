@@ -172,6 +172,7 @@ uint8_t  bObjDataPAS                        = DEFAULT_PAS_LEVEL; // The default 
 uint8_t  bObjDataMaxPAS                     = 0;
 uint32_t hObjDataFwVersion                  = 0;
 uint16_t hObjDataPowerMeas                  = 0;
+uint16_t hObjDataTorqueMeas                 = 0; 
 uint16_t hObjDataMaxPower                   = 0;
 uint32_t hObjDataErrorState                 = 0;
 uint32_t wObjDataSerialNbL                  = 0;
@@ -958,15 +959,21 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             
             /**********************GNR2-IOT OBJECTS MODULE*******************************************/
             // Application - Inst Speed
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SPEED_MEASURE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataSpeedMeas}; 
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SPEED_MEASURE, 0, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&bObjDataSpeedMeas}; 
             //move to next OD index
             index++;
+            
             // Application - Inst Power
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&hObjDataPowerMeas};  
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataPowerMeas};  
             //move to next OD index
             index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_POWER_MEASURE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataTorqueMeas};  
+            //move to next OD index
+            index++;
+                        
             // Application - State of Charge
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SOC,           0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataSOC}; 
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SOC,           0, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&bObjDataSOC}; 
             //move to next OD index
             index++;
             // Application - PAS Level
@@ -982,19 +989,19 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Error State
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_ERR_STATE,     0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&hObjDataErrorState};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_ERR_STATE,     0, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&hObjDataErrorState};
             //move to next OD index
             index++;
             // Application - Serial Number High side
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SERIAL_NB,     0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&wObjDataSerialNbH};  
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SERIAL_NB,     0, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataSerialNbH};  
             //move to next OD index
             index++;
             // Application - Serial Number Low side
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SERIAL_NB,     1, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&wObjDataSerialNbL};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SERIAL_NB,     1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataSerialNbL};
             //move to next OD index
             index++;
             // Application - Firmware Version
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&hObjDataFwVersion};   
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FW_VERSION,    0, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&hObjDataFwVersion};   
             //move to next OD index
             index++;
         

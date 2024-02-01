@@ -64,6 +64,9 @@ static void UpdateObjectDictionnary(void *p_arg)
     // Get Bike Parameters 
     uint8_t  hSpeed[2]; 
     uint16_t hPWR[2];
+    uint16_t hTorque[2];
+     int16_t hMotorTemp[2];
+     int16_t hHeatsinkTemp[2];
     uint8_t  bSOC[2];
     uint8_t  bPAS[2];
     uint8_t  bPasAlgorithm[2];
@@ -85,6 +88,9 @@ static void UpdateObjectDictionnary(void *p_arg)
     {
         hSpeed[VEHICLE_PARAM]  = (uint8_t)  CanVehiInterface_GetVehicleSpeed(pVCI);
         hPWR[VEHICLE_PARAM]    = CanVehiInterface_GetVehiclePower(pVCI);
+        hTorque[VEHICLE_PARAM] = CanVehiInterface_GetVehicleTorque(pVCI);
+        hMotorTemp[VEHICLE_PARAM]    = CanVehiInterface_GetMotorTemp(pVCI);
+        hHeatsinkTemp[VEHICLE_PARAM] = CanVehiInterface_GetControllerTemp(pVCI);
         bSOC[VEHICLE_PARAM]    = CanVehiInterface_GetVehicleSOC(pVCI);
         bPAS[VEHICLE_PARAM]    = CanVehiInterface_GetVehiclePAS(pVCI); 
         bPasAlgorithm[VEHICLE_PARAM] = CanVehiInterface_GetVehiclePASAlgorithm(pVCI);
@@ -126,8 +132,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     /* Get data from motor control and vehicle control layer */
     int16_t hMotorSpeedMeas         = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
     int16_t hBusVoltage             = 0;
-    int16_t hMotorTemp              = 0;
-    int16_t hHeatsinkTemp           = 0;
     uint16_t hMotorState            = MCInterface_GetSTMState(&MCInterface[0]);
     uint32_t wMotorOccuredFaults    = MCInterface_GetOccurredFaults(&MCInterface[0]);
     uint32_t wMotorCurrentFaults    = MCInterface_GetCurrentFaults(&MCInterface[0]);
@@ -162,8 +166,6 @@ static void UpdateObjectDictionnary(void *p_arg)
             /* Update M1 feedback data to CANOpen object dictionnary */
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(hMotorSpeedMeas));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, sizeof(hBusVoltage));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, sizeof(hMotorTemp));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, sizeof(hHeatsinkTemp));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, sizeof(hMotorState));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &wMotorOccuredFaults, sizeof(wMotorOccuredFaults));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &wMotorCurrentFaults, sizeof(wMotorCurrentFaults));
@@ -203,8 +205,6 @@ static void UpdateObjectDictionnary(void *p_arg)
                 /* Update M1 feedback data to CANOpen object dictionnary */
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, sizeof(uint16_t));
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, sizeof(uint16_t));
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &wMotorOccuredFaults, sizeof(uint32_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &wMotorCurrentFaults, sizeof(uint32_t));
@@ -297,7 +297,10 @@ static void UpdateObjectDictionnary(void *p_arg)
         {
             //Get the latest value of these parameters            
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 0)),  pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 1)),  pNode, &hTorque[CAN_PARAM], sizeof(uint16_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP,    M1)), pNode, &hMotorTemp[CAN_PARAM], sizeof(int16_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp[CAN_PARAM], sizeof(int16_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),  pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
@@ -306,25 +309,42 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)),     pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),     pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
              
             // Check if there were changes made to a parameter by a can device
             
             if(hSpeed[VEHICLE_PARAM] != hSpeed[CAN_PARAM])
             {
-                 hSpeed[CAN_PARAM] = hSpeed[VEHICLE_PARAM];
+                hSpeed[CAN_PARAM] = hSpeed[VEHICLE_PARAM];
             }                
             
             if(hPWR[VEHICLE_PARAM] != hPWR[CAN_PARAM])
             {
-                 hPWR[CAN_PARAM] = hPWR[VEHICLE_PARAM];
+                hPWR[CAN_PARAM] = hPWR[VEHICLE_PARAM];
             }
+            
+            if(hTorque[VEHICLE_PARAM] != hTorque[CAN_PARAM])
+            {
+                hTorque[CAN_PARAM] = hTorque[VEHICLE_PARAM];
+            }
+                        
+            if(hMotorTemp[VEHICLE_PARAM] != hMotorTemp[CAN_PARAM])
+            {
+                hMotorTemp[CAN_PARAM] = hMotorTemp[VEHICLE_PARAM];
+            }
+            
+            if(hHeatsinkTemp[VEHICLE_PARAM] != hHeatsinkTemp[CAN_PARAM])
+            {
+                hHeatsinkTemp[CAN_PARAM] = hHeatsinkTemp[VEHICLE_PARAM];
+            }
+
             
             if(bSOC[VEHICLE_PARAM] != bSOC[CAN_PARAM])
             {
-                 bSOC[CAN_PARAM] = bSOC[VEHICLE_PARAM];   
-            }    
+                bSOC[CAN_PARAM] = bSOC[VEHICLE_PARAM];   
+            }
+            
             bool WriteOBJDict = false;
             
             if(UART0Handle.UARTProtocol == UART_APT)
@@ -423,7 +443,10 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             /**************Write the repesctive OD ID, updating the OD that us read by the IOT module using SDO.*************/
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 0 )), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 1 )), pNode, &hTorque[CAN_PARAM], sizeof(uint16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP,    M1)), pNode, &hMotorTemp[CAN_PARAM], sizeof(int16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp[CAN_PARAM], sizeof(int16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, M1)), pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));

@@ -352,6 +352,20 @@ int16_t MDI_GetPhaseCurrentAmplitude(MultipleDriveInterfaceHandle_t * pHandle, u
 int16_t MDI_GetPhaseVoltageAmplitude(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
+  * @brief  Getting the controller NTC temperature value
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval int16_t temperature
+  */
+int16_t MDI_GetControllerTemp(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Getting the motor NTC temperature value
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval int16_t temperature
+  */
+int16_t MDI_GetMotorTemp(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
   * @brief  It re-initializes Iqdref variables with their default values.
   * @param  pHandle Pointer on the component instance to work on.
   * @param  bMotor is the target motor number

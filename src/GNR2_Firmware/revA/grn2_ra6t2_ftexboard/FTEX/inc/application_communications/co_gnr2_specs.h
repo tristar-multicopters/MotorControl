@@ -136,7 +136,14 @@ extern "C" {
 
 /* Application specific CANopen registers for IOT */
 #define CO_OD_REG_SPEED_MEASURE     0x2000 /**< OD ID for speed measure           >*/
-#define CO_OD_REG_POWER_MEASURE     0x2001 /**< OD ID for power measure           >*/
+
+#define CO_OD_REG_POWER_MEASURE     0x2001 
+//variable associated with CO_OD_REG_POWER_MEASURE 0 
+// OD ID for power measure in watts
+
+//variable associated with CO_OD_REG_POWER_MEASURE 1 
+// OD ID for torque measure in Ncm
+
 #define CO_OD_REG_SOC               0x2002 /**< OD ID for state of charge measure >*/
 #define CO_OD_REG_PAS_LEVEL         0x2003 /**< OD ID for PAS level               >*/
 #define CO_OD_REG_MAX_PAS           0x2004 /**< OD ID for maximum PAS level       >*/

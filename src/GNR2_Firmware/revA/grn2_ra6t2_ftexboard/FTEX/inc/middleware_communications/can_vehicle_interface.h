@@ -50,7 +50,14 @@
   @param  VCI_Handle_t handle
   @return Power in uint16_t format
 */
-uint16_t CanVehiInterface_GetVehiclePower (VCI_Handle_t * pHandle);
+uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle);
+
+/**
+  @brief  Get Torque function
+  @param  VCI_Handle_t handle
+  @return Torque in uint16_t format
+*/
+uint16_t CanVehiInterface_GetVehicleTorque(VCI_Handle_t * pHandle);
 
 /**
   @brief  Get State of Charge function
@@ -171,5 +178,19 @@ uint8_t CanVehiInterface_GetRearLightState(VCI_Handle_t * pHandle);
   @return void
 */
 void CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aState);
+
+/**
+  @brief  Getting the controller NTC temperature value 
+  @param  pHandle: handle of the vehicle
+  @return int16_t controller temperature
+*/  
+int16_t CanVehiInterface_GetControllerTemp(VCI_Handle_t * pHandle);
+
+/**
+  @brief  Getting the motor NTC temperature value 
+  @param  pHandle: handle of the vehicle
+  @return int16_t motor temperature
+*/  
+int16_t CanVehiInterface_GetMotorTemp(VCI_Handle_t * pHandle);
 
 #endif /* __CAN_IOT_COMM_H */
