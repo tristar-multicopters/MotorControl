@@ -46,7 +46,7 @@
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        10                  // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
  /************************** Ramp Manager Config  ************************/
-#define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_UP             1000                // Slope in cNm per second
 #define DEFAULT_TORQUE_SLOPE_DOWN           10000               // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP              10000               // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN            10000               // Slope in #SPEED_UNIT per second
@@ -55,10 +55,10 @@
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA   -14.91F             // Beta constant to configure Butterworth filter for mechanical speed filtering
 
 /***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
-#define POLE_PAIR_NUM                       8                   // Number of motor pole pairs
+#define POLE_PAIR_NUM                       23                   // Number of motor pole pairs
 #define RS                                  0.1f                // Stator resistance , ohm
 #define LS                                  0.000235f           // Stator inductance, H   For I-PMSM it is equal to Lq
-#define MOTOR_MAGNET_FLUX                   0.0195f             // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
+#define MOTOR_MAGNET_FLUX                   0.0052f             // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
 #define MOTOR_VOLTAGE_CONSTANT              28.84f              // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
 
