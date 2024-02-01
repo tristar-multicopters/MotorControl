@@ -86,7 +86,7 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle)
         pHandle->VBatAvg = pHandle->VBatMin;   
     }   
     
-    NewSOC = ((pHandle->VBatAvg) - (pHandle->VBatMin/VoltPercent)); //Calculate the SOC
+    NewSOC = (pHandle->VBatAvg - pHandle->VBatMin)/VoltPercent; //Calculate the SOC
     
     // We need to get a new SOC value that is consistent enough
     // before we decided to change the actual SOC.
