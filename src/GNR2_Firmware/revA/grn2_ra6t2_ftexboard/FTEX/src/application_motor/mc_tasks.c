@@ -71,7 +71,7 @@ static volatile uint16_t hStopPermanencyCounterM1 = 0;
 volatile uint8_t bOCCheck = 0;
 volatile uint16_t hOCCheckReset = 0;
 volatile uint16_t hDriverCounter = 0;
-
+volatile bool test_point = 0;
 uint8_t bMCBootCompleted = 0;
 
 #if DEBUGMODE_MOTOR_CONTROL
@@ -863,6 +863,15 @@ inline uint32_t FOC_CurrControllerM1(void)
     PWMCurrFdbk_GetPhaseCurrents(pPWMCurrFdbk[M1], &Iab);
     MotorState_t StateM1;
     StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
+    
+    if ((abs(Iab.a) <500) && (MCInterface->pFOCVars->Iqdref.q == 0)) {
+      Iab.a = 0;
+    }
+    
+    if ((abs(Iab.b) <500) && (MCInterface->pFOCVars->Iqdref.q == 0)) {
+      Iab.b = 0;
+    }
+    
     if (StateM1 == M_RUN || StateM1 == M_ANY_STOP)
     {
         Ialphabeta = MCMath_Clarke(Iab);
@@ -884,23 +893,25 @@ inline uint32_t FOC_CurrControllerM1(void)
         Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
         Valphabeta = MCMath_RevPark(Vqd, hElAngle);
         
-        if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
-        {
-            if (hDriverCounter >= DRIVER_TIMER)
-            {
-                hDriverCounter = 0;
-                Driver_Disable(&MCInterface->bDriverEn);
-            }
-            else
-            {
-                hDriverCounter++;
-            }
-        }
-        else if ((MCInterface->bDriverEn == false) && (MCInterface->hFinalTorque != 0))
-        {
-            Driver_Enable(&MCInterface->bDriverEn);
-        }
-        
+//        if ((MCInterface->pFOCVars->Iqdref.q == 0) && (MCInterface->pFOCVars->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
+//        {
+//            if (hDriverCounter >= DRIVER_TIMER)
+//            {
+//                hDriverCounter = 0;
+//                Driver_Disable(&MCInterface->bDriverEn);
+//                test_point = 1;
+//            }
+//            else
+//            {
+//                hDriverCounter++;
+//            }
+//        }
+//        else if ((MCInterface->bDriverEn == false) && (MCInterface->pFOCVars->Iqdref.q != 0))
+//        {
+//            Driver_Enable(&MCInterface->bDriverEn);
+//            test_point = 0;
+//        }
+        Driver_Enable(&MCInterface->bDriverEn);
         wCodeError = PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
 
         FOCVars[M1].Vqd = Vqd;
@@ -1132,6 +1143,7 @@ bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed)
     static uint16_t Timer_Disc, Timer_Conn;
 
     bool retVal = false;
+    
     PWMCurrFdbk_IqdMovingAverage(pHandle);
     uint16_t MeanSquare = (uint16_t)sqrt((pHandle->Iqd_avg.q * pHandle->Iqd_avg.q) + (pHandle->Iqd_avg.d * pHandle->Iqd_avg.d));
     
@@ -1148,7 +1160,7 @@ bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed)
     
     if (Timer_Disc > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
     {
-        retVal = true;
+        //retVal = true;
         Timer_Conn = 0;
     }
     else if (Timer_Conn > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)

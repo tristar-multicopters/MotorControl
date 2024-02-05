@@ -10,7 +10,7 @@
 
 /************************** Motor Config  ************************/
 #define MOTOR_GEAR_RATIO                    (float)10.9890      // Motor gear ratio, the value is always X turns of the motor 
-#define MOTOR_TEMP_SENSOR_TYPE              REAL_SENSOR         // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
+#define MOTOR_TEMP_SENSOR_TYPE              VIRTUAL_SENSOR         // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
 
 #define MAX_APPLICATION_SPEED_RPM           4000                // Max speed for the current application in mechanical rpm
 #define HALL_AVERAGING_FIFO_DEPTH           8                   // Depth of the FIFO used to average Hall sensor values
