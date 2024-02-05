@@ -78,8 +78,15 @@ uint16_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle)
 {
     float wSpeed = WheelSpdSensor_GetPeriodValue(pHandle);
     
-    pHandle->wWheelSpeedRpm = (int32_t)(((float)(RPMCOEFF))/(wSpeed*pHandle->bPulsePerRotation));
-
+    if (wSpeed != 0.0f) // Div by 0 protection
+    {
+        pHandle->wWheelSpeedRpm = (int32_t)(((float)(RPMCOEFF))/(wSpeed*pHandle->bPulsePerRotation));
+    }
+    else
+    {
+        pHandle->wWheelSpeedRpm = 0;  
+    }
+    
 	return (uint16_t)round(pHandle->wWheelSpeedRpm);
 }
 
