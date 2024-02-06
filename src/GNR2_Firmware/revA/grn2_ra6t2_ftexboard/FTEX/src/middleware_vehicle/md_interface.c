@@ -657,6 +657,24 @@ int16_t MDI_GetPhaseVoltageAmplitude(MultipleDriveInterfaceHandle_t * pHandle, u
     return hReturnValue;
 }
 
+/**
+  *  Getting the controller NTC temperature value
+  */
+int16_t MDI_GetControllerTemp(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetControllerTemp(pHandle->pMCI);
+}
+
+/**
+  *  Getting the controller NTC temperature value
+  */
+int16_t MDI_GetMotorTemp(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMotorTemp(pHandle->pMCI);
+}
+
 /*
 * see function definition
 */

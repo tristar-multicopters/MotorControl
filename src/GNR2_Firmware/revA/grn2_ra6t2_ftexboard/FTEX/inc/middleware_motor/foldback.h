@@ -69,6 +69,15 @@ int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariab
 void Foldback_UpdateMaxValue(Foldback_Handle_t * pHandle, int16_t hMaxValue);
 
 /**
+  * @brief  Function for updating the thresholds between which the input needs to be trimmed. 
+  * @param  pHandle: handler of the current instance of the Foldback component
+  * @param  hDefaultOutputLimitLow: End value of decreasing output limit
+  * @retval None
+  */
+void Foldback_UpdateLimitValue(Foldback_Handle_t * pHandle, int16_t hLimitValue);
+
+
+/**
   * @brief  Function for setting the range of the control variable from when output limit starts to decrease until lower limit
   * @param  pHandle: handler of the current instance of the Foldback component
   * @param  hDecreasingRange: Range of decreasing output limit

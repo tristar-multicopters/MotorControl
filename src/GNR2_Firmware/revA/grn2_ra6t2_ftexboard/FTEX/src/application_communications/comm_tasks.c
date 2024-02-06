@@ -62,16 +62,23 @@ static void UpdateObjectDictionnary(void *p_arg)
     
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
     // Get Bike Parameters 
-    uint8_t  hSpeed[2]; 
-    uint16_t hPWR[2];
-    uint8_t  bSOC[2];
+    // Read only
+    uint8_t  hSpeed; 
+    uint16_t hPWR;
+    uint16_t hTorque;
+     int16_t hMotorTemp;
+     int16_t hHeatsinkTemp;
+     uint8_t bSOC;
+    uint32_t hErrorState;
+    
+    // Read and write
     uint8_t  bPAS[2];
     uint8_t  bPasAlgorithm[2];
     uint16_t hMaxPwr[2];
     uint8_t  hWheelDiameter[2];
     uint8_t  hFrontLightState[2];
     uint8_t  hRearLightState[2];
-    uint32_t hErrorState[2];
+
     
     
     
@@ -83,20 +90,25 @@ static void UpdateObjectDictionnary(void *p_arg)
     //only master can access theses parameters.
     if (VcAutodeter_GetGnrState())
     {
-        hSpeed[VEHICLE_PARAM]  = (uint8_t)  CanVehiInterface_GetVehicleSpeed(pVCI);
-        hPWR[VEHICLE_PARAM]    = CanVehiInterface_GetVehiclePower(pVCI);
-        bSOC[VEHICLE_PARAM]    = CanVehiInterface_GetVehicleSOC(pVCI);
-        bPAS[VEHICLE_PARAM]    = CanVehiInterface_GetVehiclePAS(pVCI); 
-        bPasAlgorithm[VEHICLE_PARAM] = CanVehiInterface_GetVehiclePASAlgorithm(pVCI);
-        hMaxPwr[VEHICLE_PARAM] = CanVehiInterface_GetVehicleMaxPWR(pVCI);
+        hSpeed        = (uint8_t) CanVehiInterface_GetVehicleSpeed(pVCI);
+        hPWR          = CanVehiInterface_GetVehiclePower(pVCI);
+        hTorque       = CanVehiInterface_GetVehicleTorque(pVCI);
+        hMotorTemp    = CanVehiInterface_GetMotorTemp(pVCI);
+        hHeatsinkTemp = CanVehiInterface_GetControllerTemp(pVCI);
+        bSOC          = CanVehiInterface_GetVehicleSOC(pVCI);
+        hErrorState   = CanVehiInterface_GetVehicleCurrentFaults(pVCI);
+        
+        bPAS[VEHICLE_PARAM]             = CanVehiInterface_GetVehiclePAS(pVCI); 
+        bPasAlgorithm[VEHICLE_PARAM]    = CanVehiInterface_GetVehiclePASAlgorithm(pVCI);
+        hMaxPwr[VEHICLE_PARAM]          = CanVehiInterface_GetVehicleMaxPWR(pVCI);
         hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
         hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
-        hErrorState[VEHICLE_PARAM] = CanVehiInterface_GetVehicleCurrentFaults(pVCI);
+
     }
     else
     {
-        hErrorState[VEHICLE_PARAM] = 0x0000;
+        hErrorState = 0x0000;
     }
     
     /***************Throttle/Pedal Assist variables******************************/
@@ -126,8 +138,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     /* Get data from motor control and vehicle control layer */
     int16_t hMotorSpeedMeas         = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
     int16_t hBusVoltage             = 0;
-    int16_t hMotorTemp              = 0;
-    int16_t hHeatsinkTemp           = 0;
     uint16_t hMotorState            = MCInterface_GetSTMState(&MCInterface[0]);
     uint32_t wMotorOccuredFaults    = MCInterface_GetOccurredFaults(&MCInterface[0]);
     uint32_t wMotorCurrentFaults    = MCInterface_GetCurrentFaults(&MCInterface[0]);
@@ -162,8 +172,6 @@ static void UpdateObjectDictionnary(void *p_arg)
             /* Update M1 feedback data to CANOpen object dictionnary */
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(hMotorSpeedMeas));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, sizeof(hBusVoltage));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, sizeof(hMotorTemp));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, sizeof(hHeatsinkTemp));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, sizeof(hMotorState));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &wMotorOccuredFaults, sizeof(wMotorOccuredFaults));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &wMotorCurrentFaults, sizeof(wMotorCurrentFaults));
@@ -203,8 +211,6 @@ static void UpdateObjectDictionnary(void *p_arg)
                 /* Update M1 feedback data to CANOpen object dictionnary */
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M1)), pNode, &hBusVoltage, sizeof(uint16_t));
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP, M1)), pNode, &hMotorTemp, sizeof(uint16_t));
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &wMotorOccuredFaults, sizeof(uint32_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &wMotorCurrentFaults, sizeof(uint32_t));
@@ -296,35 +302,17 @@ static void UpdateObjectDictionnary(void *p_arg)
         if((keyUserDataConfig != KEY_USER_DATA_CONFIG_BEING_UPDATED) && (keyUserDataConfig != KEY_USER_DATA_CONFIG_UPDATED))
         {
             //Get the latest value of these parameters            
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),  pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint32_t));
             
             
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)),     pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),     pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
              
             // Check if there were changes made to a parameter by a can device
             
-            if(hSpeed[VEHICLE_PARAM] != hSpeed[CAN_PARAM])
-            {
-                 hSpeed[CAN_PARAM] = hSpeed[VEHICLE_PARAM];
-            }                
-            
-            if(hPWR[VEHICLE_PARAM] != hPWR[CAN_PARAM])
-            {
-                 hPWR[CAN_PARAM] = hPWR[VEHICLE_PARAM];
-            }
-            
-            if(bSOC[VEHICLE_PARAM] != bSOC[CAN_PARAM])
-            {
-                 bSOC[CAN_PARAM] = bSOC[VEHICLE_PARAM];   
-            }    
             bool WriteOBJDict = false;
             
             if(UART0Handle.UARTProtocol == UART_APT)
@@ -414,18 +402,18 @@ static void UpdateObjectDictionnary(void *p_arg)
             if(hMaxPwr[VEHICLE_PARAM] != hMaxPwr[CAN_PARAM])
             {
                 hMaxPwr[CAN_PARAM] = hMaxPwr[VEHICLE_PARAM];
-            }
-
-            if(hErrorState[VEHICLE_PARAM] != hErrorState[CAN_PARAM])
-            {
-                hErrorState[CAN_PARAM] = hErrorState[VEHICLE_PARAM];
-            }                
+            }               
             
             /**************Write the repesctive OD ID, updating the OD that us read by the IOT module using SDO.*************/
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed[CAN_PARAM], sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, M1)), pNode, &hPWR[CAN_PARAM], sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC[CAN_PARAM], sizeof(uint8_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed, sizeof(uint8_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 0 )), pNode, &hPWR, sizeof(uint16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 1 )), pNode, &hTorque, sizeof(uint16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP,    M1)), pNode, &hMotorTemp, sizeof(int16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, sizeof(int16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC, sizeof(uint8_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState, sizeof(uint32_t));
+            
+            
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, M1)), pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
             
             if (WriteOBJDict)
@@ -434,7 +422,6 @@ static void UpdateObjectDictionnary(void *p_arg)
             }
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState[CAN_PARAM], sizeof(uint32_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
@@ -477,13 +464,20 @@ static void UpdateObjectDictionnary(void *p_arg)
             uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE]; 
             uint8_t  FilterSpeed[FILTERSPEED_ARRAY_SIZE];
             
+             uint16_t configBatteryFullVoltage;       
+             uint16_t configBatteryEmptyVoltage;          
+             uint16_t configBatteryMaxPeakDCCurrent;
+             uint16_t configBatteryContinuousDCCurrent;        
+             uint16_t configBatteryPeakCurrentMaxDuration;
+             uint16_t configBatteryPeakCurrentDeratingDuration;
+            
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
              {
                  /**********read value hold by the OD****************/
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)), pNode, &pasAlgorithm, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)), pNode, &maxPAS, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE_RATIO, 0)), pNode, &pasMaxTorqueRatio, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM,         0)), pNode, &pasAlgorithm, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS,               0)), pNode, &maxPAS, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE_RATIO,  0)), pNode, &pasMaxTorqueRatio, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 1)), pNode, &pasTorqueStartupThreshold, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint16_t));
@@ -506,7 +500,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 4)),       pNode, &configPasTorqueInputMin, sizeof(uint16_t));  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 5)),       pNode, &configPasTorqueInputMax, sizeof(uint16_t)); 
                  
-                 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 0)),        pNode, &configBatteryFullVoltage, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 1)),        pNode, &configBatteryEmptyVoltage, sizeof(uint16_t));
                  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),      pNode, &configWheelDiameter, sizeof(uint8_t)); 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),   pNode, &configScreenProtocol, sizeof(uint8_t)); 
@@ -517,6 +512,11 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 1)),   pNode, &configTailLightDefault, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 2)),   pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 0)),     pNode, &configBatteryMaxPeakDCCurrent, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 1)),     pNode, &configBatteryContinuousDCCurrent, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 2)),     pNode, &configBatteryPeakCurrentMaxDuration, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 3)),     pNode, &configBatteryPeakCurrentDeratingDuration, sizeof(uint16_t));               
+                 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));
                  
@@ -566,6 +566,14 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  UserConfigTask_UpdateThrottleAdcOffset(configThrottleAdcOffset);
                  UserConfigTask_UpdateThrottleAdcMax(configThrottleAdcMax);
+                                  
+                 UserConfigTask_UpdateBatteryFullVoltage(configBatteryFullVoltage);
+                 UserConfigTask_UpdateBatteryEmptyVoltage(configBatteryEmptyVoltage);
+                 UserConfigTask_UpdateBatteryMaxPeakDCCurrent(configBatteryMaxPeakDCCurrent);
+                 UserConfigTask_UpdateBatteryContinuousDCCurrent(configBatteryContinuousDCCurrent);        
+                 UserConfigTask_UpdateBatteryPeakCurrentMaxDuration(configBatteryPeakCurrentMaxDuration);
+                 UserConfigTask_UpdateBatteryPeakCurrentDeratingDuration(configBatteryPeakCurrentDeratingDuration);   
+                 
                  
                  //update speed values to bw filter.
                  for(uint8_t n = 0;n < FILTERSPEED_ARRAY_SIZE;n++)
@@ -582,7 +590,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  //write in the data flash and reset the system.
                  UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle); 
-                                                
+                                             
              }
         }      
     }
@@ -805,10 +813,18 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t  configPasNbMagnetsPerTurn = UserConfigTask_GetPasNbMagnetsPerTurn();                                     
         uint16_t configPasTorqueInputMax = UserConfigTask_GetPasTorqueInputMax();
         uint16_t configPasTorqueInputMin = UserConfigTask_GetPasTorqueInputMin();
+        
+        uint16_t configBatteryFullVoltage                   = UserConfigTask_GetBatteryFullVoltage();
+        uint16_t configBatteryEmptyVoltage                  = UserConfigTask_GetBatteryEmptyVoltage();
                                               
         uint8_t configWheelDiameter =   UserConfigTask_GetWheelDiameter();
         uint8_t configScreenProtocol =  UserConfigTask_GetScreenProtocol();                                              
-        
+         
+        uint16_t configBatteryMaxPeakDCCurrent              = UserConfigTask_GetBatteryMaxPeakDCCurrent();
+        uint16_t configBatteryContinuousDCCurrent           = UserConfigTask_GetBatteryContinuousDCCurrent();        
+        uint16_t configBatteryPeakCurrentMaxDuration        = UserConfigTask_GetBatteryPeakCurrentMaxDuration();
+        uint16_t configBatteryPeakCurrentDeratingDuration   = UserConfigTask_GetBatteryPeakCurrentDeratingDuration();                                      
+                                              
         uint8_t configHeadLightDefault      = UserConfigTask_GetHeadLightDefault(); 
         
         uint8_t configTailLightDefault      = UserConfigTask_GetTailLightDefault();
@@ -816,7 +832,8 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
                                               
         uint16_t configThrottleAdcOffset    = UserConfigTask_GetThrottleAdcOffset();                                      
         uint16_t configThrottleAdcMax       = UserConfigTask_GetThrottleAdcMax();
-      
+                                              
+     
         uint8_t  FilterSpeed[FILTERSPEED_ARRAY_SIZE] = {UserConfigTask_GetFilterSpeed(0), UserConfigTask_GetFilterSpeed(1)}; 
         uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW1), UserConfigTask_GetFilterBwValue(1, BW1), UserConfigTask_GetFilterBwValue(2, BW1)};
         uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW2), UserConfigTask_GetFilterBwValue(1, BW2), UserConfigTask_GetFilterBwValue(2, BW2)};
@@ -863,7 +880,10 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 4)),       pNode, &configPasTorqueInputMin, sizeof(uint16_t));  
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 5)),       pNode, &configPasTorqueInputMax, sizeof(uint16_t));  
         
-                // Show what is the default wheel diameter in the user config 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 0)),        pNode, &configBatteryFullVoltage, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 1)),        pNode, &configBatteryEmptyVoltage, sizeof(uint16_t));
+        
+        // Show what is the default wheel diameter in the user config 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),       pNode, &configWheelDiameter, sizeof(uint8_t));         
         // Show the currently selected screen protocol
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),       pNode, &configScreenProtocol, sizeof(uint8_t)); 
@@ -875,6 +895,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),        pNode, &configTailLightDefault, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 1)),        pNode, &configTailLightDefault, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 2)), pNode, &configTailLightBlinkOnBrake, sizeof(uint8_t));
+        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 0)),     pNode, &configBatteryMaxPeakDCCurrent, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 1)),     pNode, &configBatteryContinuousDCCurrent, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 2)),     pNode, &configBatteryPeakCurrentMaxDuration, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_DC_CURRENT, 3)),     pNode, &configBatteryPeakCurrentDeratingDuration, sizeof(uint16_t));
         
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));

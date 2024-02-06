@@ -260,7 +260,7 @@ const gpt_extended_cfg_t g_timer9_extend =
 const timer_cfg_t g_timer9_cfg =
 {
     .mode                = TIMER_MODE_PERIODIC,
-    /* Actual period: 35.791394133333334 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0x100000000, .duty_cycle_counts = 0x80000000, .source_div = (timer_source_div_t)0,
+    /* Actual period: 1 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0x7270e00, .duty_cycle_counts = 0x3938700, .source_div = (timer_source_div_t)0,
     .channel             = 9,
     .p_callback          = WheelSpeedTimer_IRQHandler,
     /** If NULL then do not add & */

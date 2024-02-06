@@ -71,6 +71,10 @@
 #define BW1             0
 #define BW2             1
 
+#define MAXTHROTTLEVOLTX100   330
+
+#define VOLT_TO_DIGITAL    UINT16_MAX/MAXTHROTTLEVOLTX100
+
 /*********************************************
           Data Struct Definition
 *********************************************/
@@ -601,6 +605,126 @@ uint16_t UserConfigTask_GetThrottleAdcMax(void);
 
 */
 void UserConfigTask_UpdateThrottleAdcMax(uint16_t value);
+
+/**
+  @brief Function to get Battery Full Voltage
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Full Voltage in Volts x100
+
+*/
+uint16_t UserConfigTask_GetBatteryFullVoltage(void);
+
+/**
+  @brief Function to update Battery Full Voltage
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Full Voltage in Volts x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryFullVoltage(uint16_t value);
+
+/**
+  @brief Function to get Battery Empty Voltage 
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Empty Voltage in Volts x100
+
+*/
+uint16_t UserConfigTask_GetBatteryEmptyVoltage(void);
+
+/**
+  @brief Function to update Battery Empty Voltage
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Empty Voltage in Volts x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryEmptyVoltage(uint16_t value);
+
+/**
+  @brief Function to get Battery Max Peak DC Current
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Max Peak DC Current in Amps x100
+
+*/
+uint16_t UserConfigTask_GetBatteryMaxPeakDCCurrent(void);
+
+/**
+  @brief Function to update Battery Max Peak DC Current 
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Max Peak DC Current in Amps x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryMaxPeakDCCurrent(uint16_t value);
+
+/**
+  @brief Function to get Battery Continuous DC Current
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Continuous DC Current Amps x100
+
+*/
+uint16_t UserConfigTask_GetBatteryContinuousDCCurrent(void);
+
+/**
+  @brief Function to update Battery Continuous DC Current
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Continuous DC Current Amps x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryContinuousDCCurrent(uint16_t value);
+
+/**
+  @brief Function to get Battery Peak Current Derating Duration
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Peak Current Derating Duration In Seconds x10
+
+*/
+uint16_t UserConfigTask_GetBatteryPeakCurrentDeratingDuration(void);
+
+/**
+  @brief Function to update Battery Peak Current Derating Duration
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery PeakCurrent Derating Duration Seconds x10
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryPeakCurrentDeratingDuration(uint16_t value);
+
+/**
+  @brief Function to get Battery Peak Current Max Duration
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Peak Current Max Duration Seconds x10
+
+*/
+uint16_t UserConfigTask_GetBatteryPeakCurrentMaxDuration(void);
+
+/**
+  @brief Function to update Battery Peak Current Max Duration
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Peak Current Max Duration Seconds x10
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryPeakCurrentMaxDuration(uint16_t value);
 
 /**
   @brief Function to get FilterSpeed value

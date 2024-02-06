@@ -62,6 +62,23 @@ uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle)
 }
 
 /**
+ *  Get vehicle torque
+ */
+uint16_t CanVehiInterface_GetVehicleTorque(VCI_Handle_t * pHandle)
+{
+    float TotalVehicleTorque = 0;
+    ASSERT(pHandle!= NULL);
+    
+    // Add up motor torque reference from both motors
+    TotalVehicleTorque = (float)(abs(pHandle->pPowertrain->aTorque[0]));
+    
+    TotalVehicleTorque = TotalVehicleTorque * MOTOR_GEAR_RATIO;
+    
+    return (uint16_t)round(TotalVehicleTorque);
+}
+
+
+/**
  *  Get vehicle state of charge
  */
 uint8_t CanVehiInterface_GetVehicleSOC (VCI_Handle_t * pHandle)
@@ -252,4 +269,22 @@ void CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aStat
         Light_Disable(pHandle->pPowertrain->pTailLight);
         Light_ClearInternalUpdateFlag(pHandle->pPowertrain->pTailLight);
     }
+}
+
+/**
+  *  Getting the controller NTC temperature value
+  */
+int16_t CanVehiInterface_GetControllerTemp(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MDI_GetControllerTemp(pHandle->pPowertrain->pMDI);
+}
+
+/**
+  *  Getting the motor NTC temperature value
+  */
+int16_t CanVehiInterface_GetMotorTemp(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MDI_GetMotorTemp(pHandle->pPowertrain->pMDI);
 }

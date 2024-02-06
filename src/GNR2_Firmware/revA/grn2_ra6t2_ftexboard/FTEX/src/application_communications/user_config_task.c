@@ -91,6 +91,12 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW2[2] = PTS_FILTER_BW2_3,
     .Throttle_ConfigData.AdcOffset = THROTTLE_OFFSET_ADC2THROTTLE,
     .Throttle_ConfigData.AdcMax = THROTTLE_MAX_ADC2THROTTLE,
+    .Battery_ConfigData.FullVoltage = BATTERY_FULL_VOLT_X_100,
+    .Battery_ConfigData.EmptyVoltage = BATTERY_EMPTY_VOLT_X_100,   
+    .Battery_ConfigData.MaxPeakDCCurrent = MAX_APPLICATION_CURRENT,
+    .Battery_ConfigData.ContinuousDCCurrent = MAX_BMS_POSITIVE_POWER,
+    .Battery_ConfigData.PeakCurrentDeratingDuration =  (MAX_TIME_BMS_TOLERANT - MAX_POWER_LIMIT_TIMEOUT),
+    .Battery_ConfigData.PeakCurrentMaxDuration = MAX_POWER_LIMIT_TIMEOUT,
     .Vehicle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
     .Vehicle_ConfigData.maxSpeed = VEHICLE_TOP_SPEED_KMH,
     .Vehicle_ConfigData.WheelDiameter = WHEEL_DIAMETER,
@@ -313,11 +319,11 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
 */
 void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
 {
-    
-    PWRT_Handle_t *paPowertrain = userConfigHandle->pVController->pPowertrain;
- 
     //verify the pointer.
     ASSERT(userConfigHandle->pVController  != NULL);
+    
+    PWRT_Handle_t * paPowertrain = userConfigHandle->pVController->pPowertrain;
+    
     
     //update userConfigData.PAS_ConfigData.pasAlgorithm(PAS_ALGORITHM)
     paPowertrain->pPAS->bCurrentPasAlgorithm = UserConfigTask_GetPasAlgorithm();
@@ -380,6 +386,17 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
 
     paPowertrain->pThrottle->hParameters.hOffsetThrottle = UserConfigTask_GetThrottleAdcOffset();
     paPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();  
+    
+    paPowertrain->pBatMonitorHandle->VBatMax = UserConfigTask_GetBatteryFullVoltage();
+    paPowertrain->pBatMonitorHandle->VBatMin = UserConfigTask_GetBatteryEmptyVoltage();
+    
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->hMaxBusCurrent = UserConfigTask_GetBatteryMaxPeakDCCurrent();
+
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->hMaxContinuousCurrent = UserConfigTask_GetBatteryContinuousDCCurrent();
+
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingEndValue  = UserConfigTask_GetBatteryPeakCurrentMaxDuration() + UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
+    
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingRange = UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
 
     //
     for (uint8_t n = 0; n < FILTERSPEED_ARRAY_SIZE; n++)
@@ -1135,6 +1152,176 @@ void UserConfigTask_UpdateThrottleAdcMax(uint16_t value)
         
         userConfigData.Throttle_ConfigData.AdcMax = (uint16_t)value;
     }
+}
+
+
+/**
+  @brief Function to get Battery Full Voltage
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Full Voltage in Volts x100
+
+*/
+uint16_t UserConfigTask_GetBatteryFullVoltage(void)
+{
+    return userConfigData.Battery_ConfigData.FullVoltage;
+}
+
+/**
+  @brief Function to update Battery Full Voltage
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Full Voltage in Volts x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryFullVoltage(uint16_t value)
+{   
+    if(value > userConfigData.Battery_ConfigData.EmptyVoltage)
+    {        
+        userConfigData.Battery_ConfigData.FullVoltage = value;
+    }
+}
+
+/**
+  @brief Function to get Battery Empty Voltage 
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Empty Voltage in Volts x100
+
+*/
+uint16_t UserConfigTask_GetBatteryEmptyVoltage(void)
+{
+    return userConfigData.Battery_ConfigData.EmptyVoltage;
+}
+
+/**
+  @brief Function to update Battery Empty Voltage
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Empty Voltage in Volts x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryEmptyVoltage(uint16_t value)
+{         
+    if(value < userConfigData.Battery_ConfigData.FullVoltage)
+    {
+        userConfigData.Battery_ConfigData.EmptyVoltage = (uint16_t)value;
+    }
+}
+
+/**
+  @brief Function to get Battery Max Peak DC Current
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Max Peak DC Current in Amps x100
+
+*/
+uint16_t UserConfigTask_GetBatteryMaxPeakDCCurrent(void)
+{
+    return userConfigData.Battery_ConfigData.MaxPeakDCCurrent;
+}
+
+/**
+  @brief Function to update Battery Max Peak DC Current 
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Max Peak DC Current
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryMaxPeakDCCurrent(uint16_t value)
+{       
+    if(value >= userConfigData.Battery_ConfigData.ContinuousDCCurrent)
+    {
+        userConfigData.Battery_ConfigData.MaxPeakDCCurrent = (uint16_t)value;
+    }
+}
+
+/**
+  @brief Function to get Battery Continuous DC Current
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Continuous DC Current Amps x100
+
+*/
+uint16_t UserConfigTask_GetBatteryContinuousDCCurrent(void)
+{
+    return userConfigData.Throttle_ConfigData.AdcMax;
+}
+
+/**
+  @brief Function to update Battery Continuous DC Current
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Continuous DC Current Amps x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryContinuousDCCurrent(uint16_t value)
+{       
+    if(value <= userConfigData.Battery_ConfigData.MaxPeakDCCurrent)
+    {
+        userConfigData.Battery_ConfigData.ContinuousDCCurrent = (uint16_t)value;
+    }
+}
+
+
+/**
+  @brief Function to get Battery Peak Current Derating Duration
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Peak Current Derating Duration Seconds x10
+
+*/
+uint16_t UserConfigTask_GetBatteryPeakCurrentDeratingDuration(void)
+{
+    return userConfigData.Battery_ConfigData.PeakCurrentDeratingDuration;
+}
+
+/**
+  @brief Function to update Battery Peak Current Derating Duration
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery PeakCurrent Derating Duration Seconds x10
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryPeakCurrentDeratingDuration(uint16_t value)
+{       
+    userConfigData.Battery_ConfigData.PeakCurrentDeratingDuration = (uint16_t)value;
+}
+
+/**
+  @brief Function to get Battery Peak Current Max Duration
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Peak Current Max Duration Seconds x10
+
+*/
+uint16_t UserConfigTask_GetBatteryPeakCurrentMaxDuration(void)
+{
+    return userConfigData.Battery_ConfigData.PeakCurrentMaxDuration;
+}
+
+/**
+  @brief Function to update Battery Peak Current Max Duration
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Peak Current Max Duration Seconds x10
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryPeakCurrentMaxDuration(uint16_t value)
+{       
+    userConfigData.Battery_ConfigData.PeakCurrentMaxDuration = (uint16_t)value;
 }
 
 /**

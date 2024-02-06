@@ -37,6 +37,7 @@
 #define MAX_TIME_BMS_TOLERANT               20000           // End time of derating for BMS protection in ms
 #define MAX_POWER_LIMIT_TIMEOUT             10000           // Start time of derating for BMS protection in ms
 #define MAX_BMS_POSITIVE_POWER              750             // Maximum Power at the end point of foldback
+#define MAX_BMS_CONTINOUS_CURRENT           10              // Maximum Power at the end point of foldback in amps
 
 #define POWER_LIMIT_REF                     MAX_CURRENT_LIMIT  // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
 #define MAX_APPLICATION_POSITIVE_POWER      1500            // Refers to maximum power in watts that drive can push to the motor
@@ -44,7 +45,7 @@
 #define MAX_APPLICATION_CURRENT             30              // Refers to maximum battery current in amps that drive can accept from the motor
 
 #define FOLDBACK_SPEED_INTERVAL             750             // Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed
-#define FOLDBACK_MOTOR_TEMP_INTERVAL        22              // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
+#define FOLDBACK_MOTOR_TEMP_INTERVAL        45              // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
  /************************** Ramp Manager Config  ************************/
 #define DEFAULT_TORQUE_SLOPE_UP              3000           // Slope in cNm per second
@@ -59,11 +60,11 @@
 #define POLE_PAIR_NUM                       6               // Number of motor pole pairs
 #define RS                                  0.044f          // Stator resistance , ohm
 #define LS                                  0.000235f       // Stator inductance, H   For I-PMSM it is equal to Lq
-#define MOTOR_MAGNET_FLUX                   0.016f          // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
+#define MOTOR_MAGNET_FLUX                   0.0056f          // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
 #define MOTOR_VOLTAGE_CONSTANT              28.84f          // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f            // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_amps                   49              // peak current in amps
+#define PEAK_CURRENT_amps                   55              // peak current in amps
 #define NOMINAL_TORQUE                      (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)   // Nominal torque to apply to motor in cNm   
                                                                                                                             // Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps
 #define STARTING_TORQUE                     (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef) // Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes
@@ -71,7 +72,7 @@
 
 #define MOTOR_MAX_SPEED_RPM                 2100            // Maximum rated speed - Old Example 2750 for 38Km/h
 
-#define OV_TEMP_MOTOR_THRESHOLD_C           127             // Maximum temperature in degree C
+#define OV_TEMP_MOTOR_THRESHOLD_C           150             // Maximum temperature in degree C
 #define OV_TEMP_MOTOR_HYSTERESIS_C          5              // Temperature to decrease after an overtemp fault occured before clearing the fault, in degree C
 #define FLUX_WEAKENING_ENABLE               0               // 0=disable 1=enable flux weakening , 
 

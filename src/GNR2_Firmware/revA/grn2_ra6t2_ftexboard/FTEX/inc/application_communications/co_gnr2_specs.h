@@ -136,7 +136,14 @@ extern "C" {
 
 /* Application specific CANopen registers for IOT */
 #define CO_OD_REG_SPEED_MEASURE     0x2000 /**< OD ID for speed measure           >*/
-#define CO_OD_REG_POWER_MEASURE     0x2001 /**< OD ID for power measure           >*/
+
+#define CO_OD_REG_POWER_MEASURE     0x2001 
+//variable associated with CO_OD_REG_POWER_MEASURE 0 
+// OD ID for power measure in watts
+
+//variable associated with CO_OD_REG_POWER_MEASURE 1 
+// OD ID for torque measure in Ncm
+
 #define CO_OD_REG_SOC               0x2002 /**< OD ID for state of charge measure >*/
 #define CO_OD_REG_PAS_LEVEL         0x2003 /**< OD ID for PAS level               >*/
 #define CO_OD_REG_MAX_PAS           0x2004 /**< OD ID for maximum PAS level       >*/
@@ -169,7 +176,7 @@ extern "C" {
 
 /*User Data configuration for Gnr*/
 
-//OD ID for inform if user data was upadted or
+//OD ID to inform if user data was upadted or
 //is being upadted.
 //There are two possible values that can be written 
 //on this address:
@@ -185,7 +192,7 @@ extern "C" {
 //variables that can be used by canopen, using SDO,
 //to configure Throttle/Pedal Assist parameters.
 
-//OD ID for configure PAS algorithm. 
+//OD ID to configure PAS algorithm. 
 //Chose what algorithm will be used by the system.
 //PAS algorithm can be:
 //TorqueSensorUse = 0,     Torque sensor use define 
@@ -193,7 +200,7 @@ extern "C" {
 //HybridSensorUse = 2,     Hybride sensor use define
 #define CO_OD_REG_PAS_ALGORITHM               0x2015   
 
-//OD ID for configure PAS max power.
+//OD ID to configure PAS max power.
 //Maximum PAS Torque feed ratio in 100%.
 //The define used by this parameter is:
 //PAS_MAX_TORQUE_RATIO                   99  
@@ -236,7 +243,7 @@ extern "C" {
 //SUBINDEX 9: sParameters.bTorqueGain[9] = PAS_9_TORQUE_GAIN
 #define CO_OD_REG_TORQUE_SENSOR_MULTIPLIER     0x2018
 
-//OD ID for configure torque Maximum speed
+//OD ID to configure torque Maximum speed
 //The define used by this parameter is:
 //
 #define CO_OD_REG_PAS_MIN_TORQUE             0x2019
@@ -261,23 +268,33 @@ extern "C" {
 //NOTE: this OD ID will have 10 subindexs.
 #define CO_OD_REG_PAS_LEVEL_SPEED         0x201A
 
-//OD ID for configure Troque level Power.
+//OD ID to configure Torque level Power.
 //The define(s) used by this parameter is:
 //
 //NOTE: this OD ID will have 10 subindexs.
 #define CO_OD_REG_PAS_MAX_TORQUE           0x201B
 
-//OD ID for configure Maximum speed.
+//OD ID to configure Maximum speed.
 //Maximum Bike Speed in Km/h using RPM
 //The define(s) used by this parameter is:
 //PAS_MAX_KM_SPEED
 #define CO_OD_REG_MAX_SPEED                    0x201C
 
-//OD ID for configure walk mode speed.
+//OD ID to configure walk mode speed.
 //Maximum bike speed when on the walk mode.
 //The define(s) used by this parameter is:
 //PAS_LEVEL_SPEED_WALK
 #define CO_OD_REG_WALK_MODE_SPEED              0x201D
+
+//OD ID to configure battery voltages
+//The define(s) used by this parameter are:
+//BATTERY_FULL_VOLT_X_100
+//BATTERY_EMPTY_VOLT_X_100
+
+//NOTE: this OD ID will have 2 subindexs.
+// 0  Battery full voltage. Useful for battery SOC calculation in volts x100
+// 1  Battery empty voltage. Useful for battery SOC calculation in volts x100
+#define CO_OD_REG_BATTERY_VOLTAGE              0x201E
 
 // OD ID to set the wheel with 3 subindexs
 //variable associated with CO_OD_REG_WHEELS_DIAMETER 0 
@@ -286,7 +303,6 @@ extern "C" {
 //Wheel Pulse Per Rotation  (not implemented but subinde xis alreayd picked)     
 //variable associated with CO_OD_REG_WHEELS_DIAMETER 2 
 //Wheel Diameter Default  
-
 #define CO_OD_REG_WHEELS_DIAMETER              0x201F
     
 
@@ -349,10 +365,20 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 
 // OD ID to set the screen protocol 
 #define CO_OD_CONFIG_SCREEN_PROTOCOL           0x2025
+                                    
+//OD ID to configure battery voltages
+//The define(s) used by this parameter are:
+//BATTERY_FULL_VOLT_X_100
+//BATTERY_EMPTY_VOLT_X_100
 
+//NOTE: this OD ID will have 4 subindexs.
+// 0  Max peak DC current that the controller can draw from the battery in 
+// 1  Continuous DC current that the controller can draw from the battery
+// 2  Duration of the peak current, after which the controller starts derating to continuous current
+// 3  Derating ramp time. This time represents the period of time that the controller uses to derate 
+//    from peak to continuous current.
 
-// Available                                   0x2026 
-
+#define CO_OD_REG_BATTERY_DC_CURRENT           0x2026
 
 // Available                                   0x2027 
 

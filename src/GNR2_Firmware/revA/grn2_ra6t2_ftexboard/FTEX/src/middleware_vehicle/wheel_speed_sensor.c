@@ -16,7 +16,10 @@
 */
 void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle)
 {
-	ASSERT(pHandle != NULL);
+    ASSERT(pHandle != NULL);
+    
+    //get GPT timer information
+    PulseFrequency_GetTimerInfo(pHandle->pPulseFrequency);
 }
 
 /**
@@ -24,68 +27,48 @@ void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle)
 */
 void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle)
 {
-	/* Detect if the WSS is in slow mode read (more than 200ms)*/
-	if (pHandle->bSpeedslowDetect)
-	{
-		pHandle->bSlowDetectCount ++;
-		if (pHandle->bSlowDetectCount > pHandle->bSlowDetectCountValue)
-		{
-            PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
-            /* Affectation to the wheel speed sensor read value from the gpt counter read*/
-            pHandle->wWheelSpeed_Read = (uint32_t) pHandle->pPulseFrequency->wUsPeriod; 
-            /* Reset the wheel slow loop counter*/
-            pHandle->bSlowDetectCount = 0;
-		}
-	}
-	/* WSS calculate speed in normal mode*/
-	else
+    //verify if the timer is measuring.
+    //if yes, initialise the flag to wait for the timer
+    //to set the flag again and indicating it still working.
+    if (pHandle->pPulseFrequency->measuring == true)
     {
+        pHandle->pPulseFrequency->measuring = false;
+        pHandle->wWheelSpeedTimeOut = 0;
+    }
+    else
+    {
+        //avoid variable overflow
+        if (pHandle->wWheelSpeedTimeOut < WHEELSPEED_TIMEOUT_MS)
+        {   
+            //increment the timeout variable
+            pHandle->wWheelSpeedTimeOut = pHandle->wWheelSpeedTimeOut + WHEELSPEED_TIME_INCREMENT_MS;
+        }
+    }
+    
+	// Detect if the timer did more than 2 overflows or timer is not running anymore, speed must to be set to zero.
+	if ((pHandle->pPulseFrequency->wCaptureOverflow > MAXNUMBER_OVERFLOW_WHEELSPEED) || ((pHandle->pPulseFrequency->measuring == false) && (pHandle->wWheelSpeedTimeOut >= WHEELSPEED_TIMEOUT_MS)))
+	{
+        //Wheel speed is zero becacuse the timer overflowed
+        //the time period determine the maximum time to the
+        //wheel complete a full revolution.
+        //this means that: 
+        pHandle->wWheelSpeed_Read = 0;  
+	}
+    else
+    {
+        //update basic wheel speed information.
         PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
-        /* Affectation to the wheel speed sensor read value from the gpt counter read*/
-        pHandle->wWheelSpeed_Read = (uint32_t) pHandle->pPulseFrequency->wUsPeriod; 
+        //get the time used by the wheel to complet a revolution.
+        pHandle->wWheelSpeed_Read = pHandle->pPulseFrequency->wUsPeriod;   
     }
 }
 
 /**
     Wheel Speed Sensor Get periode value in usec
 */
-uint32_t WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle)
+float WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle)
 {
 	return pHandle->wWheelSpeed_Read;
-}
-
-/**
-    Wheel Speed Sensor retrun Frequency in mHz
-*/
-uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle)
-{
-    
-    //receive wheel speed value.
-    uint32_t WheelSpeedRead = WheelSpdSensor_GetPeriodValue(pHandle);
-    
-    //sometime it is possible to see 0 zero speed value on the screen.
-    //I think this is happening because the bSpeedslowDetect flag was not set yet
-    //and the system try to measure the pulse period and it was not measured yet, 
-    //start_measurement = false, making the pPulseFrequency->wUsPeriod set to zero.
-    //so, wheel speed will be zero too.
-    //our system is checking too much faster the capture process, from the AGT g_timer_a0.
-    //there are some design problems as: 
-    // - our system is calling/checking the PulseFrequency_ReadInputCapture on each 250 ms,
-    //   4 Hz. 
-    
-    //verify if wWheelSpeed_Read value returned by WheelSpdSensor_GetPeriodValue(pHandle)
-    //if not zero.
-    if (WheelSpeedRead != 0)
-    {
-        pHandle->wWheelSpeedFreq = COEFFREQ / (WheelSpeedRead);  
-    }
-    else
-    {
-        pHandle->wWheelSpeedFreq = 0; 
-    }
-    
-    return pHandle->wWheelSpeedFreq;
-    
 }
 
 /**
@@ -93,43 +76,17 @@ uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle)
 */
 uint16_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle)
 {
-    uint32_t wSpeedFreq = WheelSpdSensor_GetSpeedFreq(pHandle);
+    float wSpeed = WheelSpdSensor_GetPeriodValue(pHandle);
     
-    if (pHandle->bSpeedslowDetect)
-    {   // Ebgo Wheel Parameters 
-        pHandle->wWheelSpeedRpm = (((wSpeedFreq / pHandle->bPulsePerRotation)* RPMCOEFF) / PRECISIONCOEFF) * pHandle->bSpeedslowDetectCorrection;
-    }  
-    else
-    {   // Grizzly Wheel Parameters
-        pHandle->wWheelSpeedRpm = (((wSpeedFreq / pHandle->bPulsePerRotation)* RPMCOEFF) / PRECISIONCOEFF) * pHandle->bSpeedslowDetectCorrection;
+    if (wSpeed != 0.0f) // Div by 0 protection
+    {
+        pHandle->wWheelSpeedRpm = (int32_t)(((float)(RPMCOEFF))/(wSpeed*pHandle->bPulsePerRotation));
     }
-	
-	return (uint16_t) pHandle->wWheelSpeedRpm;
+    else
+    {
+        pHandle->wWheelSpeedRpm = 0;  
+    }
+    
+	return (uint16_t)round(pHandle->wWheelSpeedRpm);
 }
 
-/**
-    Wheel Speed Sensor Detection
-*/
-void WheelSpdSensor_UpdateWSSDetection(WheelSpeedSensorHandle_t * pHandle) 
-{
-	int32_t	wWheelSpeed;
-	
-	wWheelSpeed = WheelSpdSensor_GetSpeedRPM(pHandle);
-
-	if (wWheelSpeed > 0)
-	{
-		pHandle->bSpeedDetected = true;
-	}
-	else 
-	{
-		pHandle->bSpeedDetected = false;
-	}
-}
-
-/**
-    Wheel Speed Sensor Get Detection flag
-*/
-bool WheelSpdSensor_IsSpeedDetected(WheelSpeedSensorHandle_t * pHandle) 
-{
-	return pHandle->bSpeedDetected;
-}

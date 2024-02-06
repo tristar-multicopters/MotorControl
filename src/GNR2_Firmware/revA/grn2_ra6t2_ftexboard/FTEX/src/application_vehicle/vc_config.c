@@ -56,8 +56,8 @@ Light_Handle_t TailLightHandle =
 
 BatMonitor_Handle_t BatMonitorHandle = 
 {
-    .VBatMin = BATTERY_EMPTY_VOLT,  // Values that represent a fully charged battery and an empty one
-    .VBatMax = BATTERY_FULL_VOLT,   // Set in the VC_parameters_xxxxx.h of each bike
+    .VBatMin = BATTERY_EMPTY_VOLT_X_100,  // Values that represent a fully charged battery and an empty one
+    .VBatMax = BATTERY_FULL_VOLT_X_100,   // Set in the VC_parameters_xxxxx.h of each bike
     .LowBatSOC = BATTERY_SOC_LOW_PERCENT,        // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
     .RechargedBatSOC = BATTERY_SOC_OK_PERCENT,   // Battery SOC in % for which we clear the battery low flag
 };
@@ -105,7 +105,8 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
 PulseFrequencyHandle_t PulseFreqHandlePedal =
 {    
     .TimerType = AGT_TIMER,    
-    .start_measurement = false,    
+    .measuring = false, 
+    .wNumberOfPulse = 0,        
     .PulseFreqParam =
     {
         .PF_Timer = PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
@@ -117,7 +118,9 @@ PulseFrequencyHandle_t PulseFreqHandlePedal =
 PulseFrequencyHandle_t PulseFreqHandleWheel =
 {        
     .TimerType = GPT_TIMER,
-    .start_measurement = false,    
+    .measuring = false, 
+    .wCaptureCount = 0,
+    .wCaptureOverflow = 0,    
     .PulseFreqParam =
     {
         .PF_Timer = WHEEL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
@@ -137,9 +140,6 @@ WheelSpeedSensorHandle_t WheelSpeedHandle =
 {
     .pPulseFrequency = &PulseFreqHandleWheel,
     .bPulsePerRotation = WHEEL_SPEED_SENSOR_NBR_PER_ROTATION,
-    .bSpeedslowDetect = WHEEL_SPEED_SLOW_LOOP_DETECT,
-    .bSlowDetectCountValue = WHEEL_SPEED_SLOW_LOOP_COUNT, 
-    .bSpeedslowDetectCorrection = WHEEL_SPEED_SENSOR_CORRECTION_FACTOR
 };
 
 

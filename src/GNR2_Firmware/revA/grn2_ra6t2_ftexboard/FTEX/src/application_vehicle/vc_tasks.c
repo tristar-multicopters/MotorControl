@@ -110,10 +110,11 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
                 bLightInitalised = true;
             }
             
-            // Check PAS activation based on torque or cadence
-            PedalAssist_TorquePASDetection(pVCI->pPowertrain->pPAS);
             // Wheel Speed sensor reading period
             WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pPAS->pWSS);
+            
+            // Check PAS activation based on torque or cadence
+            PedalAssist_TorquePASDetection(pVCI->pPowertrain->pPAS);
 
             // Check if we still have power enabled
             PWREN_MonitorPowerEnable(pVCI->pPowertrain->pPWREN);          

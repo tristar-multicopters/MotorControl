@@ -66,7 +66,10 @@ typedef struct
                                              expressed in Hz */
     uint16_t hBusVoltage;                   /* the Bus Voltage coming from Voltage Sensor
                                              in voltage unit                                            */    
-    uint16_t hMaxBusCurrent;                /*!< Application maximum Current
+    uint16_t hMaxBusCurrent;                /*!< Application maximum Peak Current
+                                             of the rotor mechanical speed. Expressed in Amps 
+                                             */
+    uint16_t hMaxContinuousCurrent;         /*!< Application maximumContinouse Current
                                              of the rotor mechanical speed. Expressed in Amps 
                                              */
     uint16_t hBatteryLowVoltage;            /* Application maximum voltage that the MC layer can 
@@ -89,6 +92,8 @@ typedef struct
     int16_t  hMinNegativeTorque;            /*!< Minimum negative value of motor
                                              torque in cNm.*/                         
     uint16_t hMaxPositivePower;             /*!< Maximum positive value of motor
+                                             power in W.*/
+    uint16_t hMaxContinuousPower;             /*!< Maximum positive value of motor
                                              power in W.*/
     int16_t hMinNegativePower;              /*!< Minimum negative value of motor
                                              power in W.*/

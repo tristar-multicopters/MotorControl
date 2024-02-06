@@ -199,6 +199,19 @@ void Foldback_UpdateMaxValue(Foldback_Handle_t * pHandle, int16_t hMaxValue)
 }
 
 /**
+ * Check function definition
+ **/
+void Foldback_UpdateLimitValue(Foldback_Handle_t * pHandle, int16_t hLimitValue)
+{
+    ASSERT(pHandle != NULL); 
+    if(pHandle->FoldbackConfig == TRIM)
+    {
+        pHandle->hMaxOutputLimitLow = hLimitValue; 
+    }
+    
+}
+
+/**
  * Apply a low pass filter on the torque after for smooth 
  * accelearation with Pedal Assist
  **/

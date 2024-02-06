@@ -1170,7 +1170,7 @@
       <property id="module.driver.timer.name" value="g_timer9"/>
       <property id="module.driver.timer.channel" value="9"/>
       <property id="module.driver.timer.mode" value="module.driver.timer.mode.mode_periodic"/>
-      <property id="module.driver.timer.period" value="0x100000000"/>
+      <property id="module.driver.timer.period" value="120000000"/>
       <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_raw_counts"/>
       <property id="module.driver.timer.gtior.gtioa.initial_output_level" value="module.driver.timer.gtior.gtioa.initial_output_level.low"/>
       <property id="module.driver.timer.gtior.gtioa.cycle_end_output_level" value="module.driver.timer.gtior.gtioa.cycle_end_output_level.retain"/>
