@@ -35,6 +35,7 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     pHandle->CruiseControlEnable = false;
     pHandle->CruiseControlTorqueAvg = 0;
     
+    pHandle->hParameters.DefaultMaxThrottleSpeedKMH = 6;        // hard coded default value to meet European regulations
     pHandle->hParameters.MaxThrottleSpeedKMH = pHandle->hParameters.DefaultMaxThrottleSpeedKMH; 
     
     /* Need to be register with RegularConvManager */

@@ -143,6 +143,15 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     {
         .wScalingFactor = INT16_MAX,
     },
+        .FoldbackLimitSpeed =
+    {
+        .bEnableFoldback = true,
+        .FoldbackConfig = TRIM,
+        .hDefaultOutputLimitHigh = 0,
+        .hDefaultOutputLimitLow = 0,
+        .hDecreasingEndValue = 0,
+        .hDecreasingRange = 0,
+    },
         .FoldbackMotorSpeed =
     {
         .bEnableFoldback = true,

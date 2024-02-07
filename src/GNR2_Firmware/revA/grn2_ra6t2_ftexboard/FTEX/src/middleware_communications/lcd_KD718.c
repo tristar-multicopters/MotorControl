@@ -575,7 +575,7 @@ uint8_t LCD_KD718_ErrorConversionFTEXToKD718(uint8_t aError)
         case MOTOR_FOLDBACK_TEMP: // Generic temp error
             ConvertedError = KD718_OVER_TEMP;
             break;
-        case IOT_COMM_ERROR: // Generic comm error
+//        case IOT_COMM_ERROR: // Generic comm error
         case DUAL_COMM_ERROR:    
             ConvertedError = KD718_HDQ_COMM_FAYLT;
             break;

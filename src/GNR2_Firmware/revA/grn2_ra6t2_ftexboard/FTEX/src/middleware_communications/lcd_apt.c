@@ -612,7 +612,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
         case UT_PROTECTION:
             ConvertedError = APT_UT_PROTECTION;
             break;
-        case IOT_COMM_ERROR: // Both theses errors transflat eto a generic comm error
+//        case IOT_COMM_ERROR: // Both theses errors transflat eto a generic comm error
         case DUAL_COMM_ERROR:    
             ConvertedError = APT_COMM_ERROR;
             break;      

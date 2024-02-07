@@ -9,9 +9,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "speed_torq_ctrl.h"
 #include "speed_pos_fdbk.h"
+#include "foldback.h"
 
 #include "mc_type.h"
 #include "parameters_conversion.h"
+
+int16_t Local1TorqueReference = 0;
+int16_t Local2TorqueReference = 0;
 
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
@@ -197,17 +201,25 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
-        
+
+        Foldback_UpdateLimitValue(&pHandle->FoldbackLimitSpeed, 0); // Update speed limit foldback
+        Foldback_UpdateMaxValue(&pHandle->FoldbackLimitSpeed, hTorqueReference); // Update speed limit foldback
+        Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * 1.1)); // Update speed limit foldback
+        Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, pHandle->hSpdLimit * 0.3); // Update speed limit foldback
         
         if (pHandle->bEnableSpdLimitControl)
         {
             hMeasuredSpeed = -SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD); // Speed is somehow negative when applying positive torque, need to figure out why.
-            hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
-            pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
-            if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)
-            {
-                hTorqueReference = pHandle->hTorqueReferenceSpdLim;
-            }
+            // hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
+            // pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
+            // if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)
+            // {
+            //     hTorqueReference = pHandle->hTorqueReferenceSpdLim;
+            // }
+            Local1TorqueReference = hTorqueReference;
+
+            hTorqueReference = Foldback_ApplyFoldback(&pHandle->FoldbackLimitSpeed, hTorqueReference, abs(hMeasuredSpeed));      // Apply speed limit foldback
+            Local2TorqueReference = hTorqueReference;
         }
         
         hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
