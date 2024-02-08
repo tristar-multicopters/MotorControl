@@ -35,13 +35,13 @@
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
 #define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // Offset for pedal torque sensor to torque linear transformation during the startup in %
-#define PTS_OFFSET_STARTUP_SPEED_KMH         3              // Speed under which the Startup pedal torque sensor offset is used in km/h
+#define PTS_OFFSET_STARTUP_SPEED_KMH         1              // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE               10              // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
 #define PTS_FILTER_BW1                      40              // BW coefficient for pedal torque sensor avereging
-#define PTS_FILTER_BW2                      90              // BW coefficient for pedal torque sensor avereging
+#define PTS_FILTER_BW2                      150             // BW coefficient for pedal torque sensor avereging
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
