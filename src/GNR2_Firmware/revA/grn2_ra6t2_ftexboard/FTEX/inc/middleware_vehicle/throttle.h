@@ -65,6 +65,8 @@ typedef struct
     bool DisableThrottleOutput;      // Used to prevent the throttle value from requesting power 
                                      // We still read the throttle but simply set the output as 0
     
+    bool BlockOffThrottle;           //If this variable is true this means we block throttle
+    
     bool extThrottleEnable;          // If this variable is true this means we should ignore adc values and only use throttle injected from a function call
     
     bool SafeStart;                  // Stuck throttle check on start

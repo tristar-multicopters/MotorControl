@@ -380,7 +380,13 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 
 #define CO_OD_REG_BATTERY_DC_CURRENT           0x2026
 
-// Available                                   0x2027 
+// OD ID to control throttle
+//SUBINDEX 0 = Throttle ADC Value
+//SUBINDEX 1 = Throttle GetSet Value
+//SUBINDEX 2 = Throttle ADC Offset
+//SUBINDEX 3 = Throttle ADC Max
+//SUBINDEX 4 = Throttle Block Off
+#define CO_OD_REG_CONTROLLER_THROTTLE          0x2027
 
 
 // Available                                   0x2028
@@ -391,12 +397,10 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 
 // Available                                   0x202A
 
+// Available                                   0x202B
 
-// OD ID to set the throttle adc offset
-#define CO_OD_CONFIG_THROTTLE_ADC_OFFSET       0x202B
+// Available                                   0x202C
 
-// OD ID to set the throttle adc max
-#define CO_OD_CONFIG_THROTTLE_ADC_MAX          0x202C
 
 // OD ID to configure speed value to each filter band.
 //The define(s) used by this parameter is:
@@ -427,6 +431,9 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 //Torque filter band 2 when speed is above the speed torque band.
 //SUBINDEX 5: hLowPassFilterBW2[2] = PTS_FILTER_BW2_3
 #define CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED    0x202E
+
+
+
 
 //this OD ID will be used to 
 //receive data and commands during a firmware update.

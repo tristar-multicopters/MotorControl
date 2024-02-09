@@ -89,22 +89,23 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW2[1] = PTS_FILTER_BW2_2,
     .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW1[2] = PTS_FILTER_BW1_3,
     .PAS_ConfigData.PAS_Torque_Filter_Configuration.pasLowPassFilterBW2[2] = PTS_FILTER_BW2_3,
-    .Throttle_ConfigData.AdcOffset = THROTTLE_OFFSET_ADC2THROTTLE,
-    .Throttle_ConfigData.AdcMax = THROTTLE_MAX_ADC2THROTTLE,
+    .Screen_ConfigData.Throttle_ConfigData.AdcOffset = THROTTLE_OFFSET_ADC2THROTTLE,
+    .Screen_ConfigData.Throttle_ConfigData.AdcMax = THROTTLE_MAX_ADC2THROTTLE,
     .Battery_ConfigData.FullVoltage = BATTERY_FULL_VOLT_X_100,
     .Battery_ConfigData.EmptyVoltage = BATTERY_EMPTY_VOLT_X_100,   
     .Battery_ConfigData.MaxPeakDCCurrent = MAX_APPLICATION_CURRENT,
     .Battery_ConfigData.ContinuousDCCurrent = MAX_BMS_POSITIVE_POWER,
     .Battery_ConfigData.PeakCurrentDeratingDuration =  (MAX_TIME_BMS_TOLERANT - MAX_POWER_LIMIT_TIMEOUT),
     .Battery_ConfigData.PeakCurrentMaxDuration = MAX_POWER_LIMIT_TIMEOUT,
-    .Vehicle_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
-    .Vehicle_ConfigData.maxSpeed = VEHICLE_TOP_SPEED_KMH,
-    .Vehicle_ConfigData.WheelDiameter = WHEEL_DIAMETER,
-    .Vehicle_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
-    .Vehicle_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
-    .Vehicle_ConfigData.TailLightDefault = POWERTRAIN_TAILLIGHT_DEFAULT,
-    .Vehicle_ConfigData.TailLightBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,
+    .Screen_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
+    .Screen_ConfigData.maxSpeed = VEHICLE_TOP_SPEED_KMH,
+    .Screen_ConfigData.WheelDiameter = WHEEL_DIAMETER,
+    .Screen_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
+    .Screen_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
+    .Screen_ConfigData.TailLightDefault = POWERTRAIN_TAILLIGHT_DEFAULT,
+    .Screen_ConfigData.TailLightBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,
     .crc = 0x0000,
+    .Screen_ConfigData.Throttle_ConfigData.ThrottleBlock = THROTTLE_BLOCK_OFF,
 
 };
 
@@ -386,6 +387,8 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
 
     paPowertrain->pThrottle->hParameters.hOffsetThrottle = UserConfigTask_GetThrottleAdcOffset();
     paPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();  
+    paPowertrain->pThrottle->BlockOffThrottle = UserConfigTask_GetThrottleBlockOff();
+
     
     paPowertrain->pBatMonitorHandle->VBatMax = UserConfigTask_GetBatteryFullVoltage();
     paPowertrain->pBatMonitorHandle->VBatMin = UserConfigTask_GetBatteryEmptyVoltage();
@@ -878,7 +881,7 @@ void UserConfigTask_UpdatePasTorqueInputMin(uint16_t value)
 */
 uint8_t UserConfigTask_GetBikeMaxSpeed(void)
 {
-    return userConfigData.Vehicle_ConfigData.maxSpeed;
+    return userConfigData.Screen_ConfigData.maxSpeed;
 }
 
 /**
@@ -893,7 +896,7 @@ void UserConfigTask_UpdateBikeMaxSpeed(uint8_t value)
 {
     if((value <= 75) && (value >= 0))
     {
-        userConfigData.Vehicle_ConfigData.maxSpeed = value;
+        userConfigData.Screen_ConfigData.maxSpeed = value;
     }
 }
 
@@ -908,7 +911,7 @@ void UserConfigTask_UpdateBikeMaxSpeed(uint8_t value)
 */
 uint8_t UserConfigTask_GetWalkModeSpeed(void)
 {
-    return userConfigData.Vehicle_ConfigData.walkModeSpeed;
+    return userConfigData.Screen_ConfigData.walkModeSpeed;
 }
 
 /**
@@ -923,7 +926,7 @@ void UserConfigTask_UpdateWalkModeSpeed(uint8_t value)
 {
     if ((value <= 10) && (value >= 0))
     {
-        userConfigData.Vehicle_ConfigData.walkModeSpeed = value;
+        userConfigData.Screen_ConfigData.walkModeSpeed = value;
     }
 }
 
@@ -937,7 +940,7 @@ void UserConfigTask_UpdateWalkModeSpeed(uint8_t value)
 */
 uint8_t UserConfigTask_GetWheelDiameter(void)
 {
-    return userConfigData.Vehicle_ConfigData.WheelDiameter;
+    return userConfigData.Screen_ConfigData.WheelDiameter;
 }
 
 /**
@@ -952,7 +955,7 @@ void UserConfigTask_UpdateWheelDiameter(uint8_t value)
 {
     if ((value <= 50) && (value >= 0))
     {
-        userConfigData.Vehicle_ConfigData.WheelDiameter = value;
+        userConfigData.Screen_ConfigData.WheelDiameter = value;
     }
 }
 
@@ -966,7 +969,7 @@ void UserConfigTask_UpdateWheelDiameter(uint8_t value)
 */
 uint8_t UserConfigTask_GetScreenProtocol(void)
 {
-    return userConfigData.Vehicle_ConfigData.ScreenProtocol;
+    return userConfigData.Screen_ConfigData.ScreenProtocol;
 }
 
 /**
@@ -981,7 +984,7 @@ void UserConfigTask_UpdateScreenProtocol(uint8_t value)
 {
     if (value == UART_APT || value == UART_CLOUD_5S || value == UART_DISABLE)
     {
-        userConfigData.Vehicle_ConfigData.ScreenProtocol = value;
+        userConfigData.Screen_ConfigData.ScreenProtocol = value;
     }
 }
 
@@ -995,7 +998,7 @@ void UserConfigTask_UpdateScreenProtocol(uint8_t value)
 */
 uint8_t UserConfigTask_GetHeadLightDefault(void)
 {
-    return userConfigData.Vehicle_ConfigData.HeadLightDefault;
+    return userConfigData.Screen_ConfigData.HeadLightDefault;
 }
 
 /**
@@ -1010,11 +1013,11 @@ void UserConfigTask_UpdateHeadLightDefault(uint8_t value)
 {
     if (value > 0)
     {
-        userConfigData.Vehicle_ConfigData.HeadLightDefault = 1;
+        userConfigData.Screen_ConfigData.HeadLightDefault = 1;
     }
     else
     {
-        userConfigData.Vehicle_ConfigData.HeadLightDefault = 0;    
+        userConfigData.Screen_ConfigData.HeadLightDefault = 0;    
     }
 }
 
@@ -1029,7 +1032,7 @@ void UserConfigTask_UpdateHeadLightDefault(uint8_t value)
 */
 uint8_t UserConfigTask_GetTailLightDefault(void)
 {
-    return userConfigData.Vehicle_ConfigData.TailLightDefault;
+    return userConfigData.Screen_ConfigData.TailLightDefault;
 }
 
 /**
@@ -1044,11 +1047,11 @@ void UserConfigTask_UpdateTailLightDefault(uint8_t value)
 {
     if (value > 0)
     {
-        userConfigData.Vehicle_ConfigData.TailLightDefault = 1;
+        userConfigData.Screen_ConfigData.TailLightDefault = 1;
     }
     else
     {
-        userConfigData.Vehicle_ConfigData.TailLightDefault = 0;    
+        userConfigData.Screen_ConfigData.TailLightDefault = 0;    
     }
 }
 
@@ -1062,7 +1065,7 @@ void UserConfigTask_UpdateTailLightDefault(uint8_t value)
 */
 uint8_t UserConfigTask_GetTailLightBlinkOnBrake(void)
 {
-    return userConfigData.Vehicle_ConfigData.TailLightBlinkOnBrake;
+    return userConfigData.Screen_ConfigData.TailLightBlinkOnBrake;
 }
 
 /**
@@ -1077,11 +1080,11 @@ void UserConfigTask_UpdateTailLightBlinkOnBrake(uint8_t value)
 {
     if (value > 0)
     {
-        userConfigData.Vehicle_ConfigData.TailLightBlinkOnBrake = 1;
+        userConfigData.Screen_ConfigData.TailLightBlinkOnBrake = 1;
     }
     else
     {
-        userConfigData.Vehicle_ConfigData.TailLightBlinkOnBrake = 0;    
+        userConfigData.Screen_ConfigData.TailLightBlinkOnBrake = 0;    
     }
 }
 
@@ -1095,7 +1098,7 @@ void UserConfigTask_UpdateTailLightBlinkOnBrake(uint8_t value)
 */
 uint16_t UserConfigTask_GetThrottleAdcOffset(void)
 {
-    return userConfigData.Throttle_ConfigData.AdcOffset;
+    return userConfigData.Screen_ConfigData.Throttle_ConfigData.AdcOffset;
 }
 
 /**
@@ -1108,14 +1111,14 @@ uint16_t UserConfigTask_GetThrottleAdcOffset(void)
 */
 void UserConfigTask_UpdateThrottleAdcOffset(uint16_t value)
 {
-    if(value <= userConfigData.Throttle_ConfigData.AdcMax)
+    if(value <= userConfigData.Screen_ConfigData.Throttle_ConfigData.AdcMax)
     {
         if(value < DIGITAL5_0_8_VOLTS)
         {
            value = DIGITAL5_0_8_VOLTS;  
         }   
         
-        userConfigData.Throttle_ConfigData.AdcOffset = value;
+        userConfigData.Screen_ConfigData.Throttle_ConfigData.AdcOffset = value;
     }
     
 }
@@ -1130,7 +1133,7 @@ void UserConfigTask_UpdateThrottleAdcOffset(uint16_t value)
 */
 uint16_t UserConfigTask_GetThrottleAdcMax(void)
 {
-    return userConfigData.Throttle_ConfigData.AdcMax;
+    return userConfigData.Screen_ConfigData.Throttle_ConfigData.AdcMax;
 }
 
 /**
@@ -1143,14 +1146,14 @@ uint16_t UserConfigTask_GetThrottleAdcMax(void)
 */
 void UserConfigTask_UpdateThrottleAdcMax(uint16_t value)
 {       
-    if(value >= userConfigData.Throttle_ConfigData.AdcOffset)
+    if(value >= userConfigData.Screen_ConfigData.Throttle_ConfigData.AdcOffset)
     {
         if(value < DIGITAL5_0_8_VOLTS)
         {
            value = DIGITAL5_0_8_VOLTS;  
         } 
         
-        userConfigData.Throttle_ConfigData.AdcMax = (uint16_t)value;
+        userConfigData.Screen_ConfigData.Throttle_ConfigData.AdcMax = (uint16_t)value;
     }
 }
 
@@ -1252,7 +1255,7 @@ void UserConfigTask_UpdateBatteryMaxPeakDCCurrent(uint16_t value)
 */
 uint16_t UserConfigTask_GetBatteryContinuousDCCurrent(void)
 {
-    return userConfigData.Throttle_ConfigData.AdcMax;
+    return userConfigData.Screen_ConfigData.Throttle_ConfigData.AdcMax;
 }
 
 /**
@@ -1480,4 +1483,32 @@ uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length)
     }
   
 	return crc;
+}
+
+
+/**
+  @brief Function to get Throttle BlockOff Value
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Throttle Block Off
+
+*/
+uint8_t UserConfigTask_GetThrottleBlockOff(void)
+{
+    
+    return userConfigData.Screen_ConfigData.Throttle_ConfigData.ThrottleBlock;
+}
+
+/**
+  @brief Function to update Throttle BlockOff Value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Throttle Block Off
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleBlockOff(uint8_t value)
+{
+    userConfigData.Screen_ConfigData.Throttle_ConfigData.ThrottleBlock = (uint8_t)value;
 }

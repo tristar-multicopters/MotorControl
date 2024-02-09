@@ -777,4 +777,24 @@ void UserConfigTask_UpdateFilterBwValue(uint8_t index, uint8_t bwType, uint16_t 
 */
 uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length);
 
+/**
+  @brief Function to get Throttle BlockOff Value
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Throttle Block Off
+
+*/
+uint8_t UserConfigTask_GetThrottleBlockOff(void);
+
+/**
+  @brief Function to update Throttle BlockOff Value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Throttle Block Off
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleBlockOff(uint8_t value);
+
 #endif

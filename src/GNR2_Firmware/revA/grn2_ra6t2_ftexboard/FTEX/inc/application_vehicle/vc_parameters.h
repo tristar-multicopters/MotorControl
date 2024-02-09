@@ -317,5 +317,9 @@
     #define CADENCE_DETECTION_WINDOWS_MS 500           //cadence detection windows on ms.
 #endif    
     
+#ifndef THROTTLE_BLOCK_OFF
+    #define THROTTLE_BLOCK_OFF            false        //If set to true, the throttle will be blocked.
+#endif
+    
 #endif /*__VC_PARAMETERS_H*/
 

@@ -67,9 +67,9 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
     
 	static bool ThrottleStuck = false;
     
-    if(pHandle->DisableThrottleOutput) // Test if we want to disable the throttle on PAS 0
+    if(pHandle->DisableThrottleOutput || pHandle->BlockOffThrottle) // Test if we want to disable the throttle on PAS 0 or the throttle BlockOff
     {
-        hAux = 0;  // We are in PAS level 0 so the throttle is disabled
+        hAux = 0;  //The throttle is blocked or We are in PAS level 0 so the throttle is disabled
     } 
     else if(pHandle->extThrottleEnable == false)
     {    

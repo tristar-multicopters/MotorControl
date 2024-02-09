@@ -94,6 +94,7 @@ typedef struct
 {
     uint16_t AdcOffset;
     uint16_t AdcMax; 
+    uint8_t  ThrottleBlock;
 } Throttle_ConfigData_t;
 
 typedef struct
@@ -119,7 +120,8 @@ typedef struct
     uint8_t HeadLightDefault;      // Contains the default state of the head light (on or off)
     uint8_t TailLightDefault;      // Contains the default state of the tail light (on or off)      
     uint8_t TailLightBlinkOnBrake;    
-} Vehicle_ConfigData_t;
+    Throttle_ConfigData_t Throttle_ConfigData;
+} Screen_ConfigData_t;
 
 //struct used to hold all structs associated 
 //with user configuration data.
@@ -128,9 +130,8 @@ typedef struct
     uint8_t dataHeader[2];
     uint8_t vehicle;
     PAS_ConfigData_t      PAS_ConfigData;
-    Throttle_ConfigData_t Throttle_ConfigData;
     Battery_ConfigData_t  Battery_ConfigData; 
-    Vehicle_ConfigData_t  Vehicle_ConfigData;
+    Screen_ConfigData_t   Screen_ConfigData;
     uint16_t crc;
 } User_ConfigData_t;
 

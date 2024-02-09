@@ -287,11 +287,20 @@ uint16_t bObjDataConfigBatteryPeakCurrentDuration          = 0;
 //variable associated with  CO_OD_REG_BATTERY_DC_CURRENT subindex 3
 uint16_t bObjDataConfigBatteryPeakCurrentDeratingDuration  = 0;
 
-//variable associated with CO_OD_CONFIG_THROTTLE_ADC_OFFSET
+//variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 0
+uint16_t bObjDataConfigThrottleAdcValue = 0;
+
+//variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 1
+uint8_t  bObjDataConfigThrottleGetSetValue = 0;
+
+//variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 2
 uint16_t bObjDataConfigThrottleAdcOffset    = 0;
 
-//variable associated with CO_OD_CONFIG_THROTTLE_ADC_MAX
+//variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 3
 uint16_t bObjDataConfigThrottleAdcMax       = 0;
+
+//variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 4
+uint8_t  bObjDataConfigThrottleBlockOff = 0;
 
 //variable associated with CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER.
 uint16_t bObjDataConfigSpeedForTorqueFilter[2]    = {0};
@@ -1415,11 +1424,23 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_THROTTLE_ADC_OFFSET, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcOffset};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcValue};
             //move to next OD index
             index++;
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_THROTTLE_ADC_MAX, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcMax};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigThrottleGetSetValue};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcOffset};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAdcMax};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigThrottleBlockOff};
             //move to next OD index
             index++;
             
@@ -1454,7 +1475,8 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigTorqueFilterForSpeed[5]};
             //move to next OD index
             index++;
-
+            
+            
             
             //Application - Used to control the firmware update procedure.
             //subindex 0 is used to receive command from the IOT module to control the DFU process.

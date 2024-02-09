@@ -254,7 +254,8 @@ ThrottleHandle_t ThrottleHandle =
         
         .DefaultMaxThrottleSpeedKMH = VEHICLE_TOP_SPEED_KMH,
         .ThrottleMaxTorque = POWERTRAIN_MAX_MOTOR_TORQUE,
-    }
+    },
+    .BlockOffThrottle = THROTTLE_BLOCK_OFF,
 };
 
 PWRT_Handle_t PowertrainHandle =
