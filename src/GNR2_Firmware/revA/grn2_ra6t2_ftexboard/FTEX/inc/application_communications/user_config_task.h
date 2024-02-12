@@ -797,4 +797,24 @@ uint8_t UserConfigTask_GetThrottleBlockOff(void);
 */
 void UserConfigTask_UpdateThrottleBlockOff(uint8_t value);
 
+/**
+  @brief Function to get Throttle Max Speed Value
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Throttle Max Speed
+
+*/
+uint8_t UserConfigTask_GetThrottleMaxSpeed(void);
+
+/**
+  @brief Function to update Throttle Max Speed Value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Throttle Max Speed
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleMaxSpeed(uint8_t value);
+
 #endif

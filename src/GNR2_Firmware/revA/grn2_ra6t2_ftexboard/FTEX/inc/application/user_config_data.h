@@ -95,6 +95,7 @@ typedef struct
     uint16_t AdcOffset;
     uint16_t AdcMax; 
     uint8_t  ThrottleBlock;
+    uint8_t  MaxSpeed;
 } Throttle_ConfigData_t;
 
 typedef struct

@@ -302,6 +302,9 @@ uint16_t bObjDataConfigThrottleAdcMax       = 0;
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 4
 uint8_t  bObjDataConfigThrottleBlockOff = 0;
 
+//variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 5
+uint8_t  bObjDataConfigThrottleMaxSpeed = 0;
+
 //variable associated with CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER.
 uint16_t bObjDataConfigSpeedForTorqueFilter[2]    = {0};
 
@@ -1441,6 +1444,10 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigThrottleBlockOff};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigThrottleMaxSpeed};
             //move to next OD index
             index++;
             

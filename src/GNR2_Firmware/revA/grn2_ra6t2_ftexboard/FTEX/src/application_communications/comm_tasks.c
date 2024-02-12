@@ -471,6 +471,7 @@ static void UpdateObjectDictionnary(void *p_arg)
              uint16_t configBatteryPeakCurrentMaxDuration;
              uint16_t configBatteryPeakCurrentDeratingDuration;
              uint8_t  configThrottleBlockOff;
+             uint8_t  configThrottleMaxSpeed;
             
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
@@ -521,6 +522,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 2)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 3)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 4)),         pNode, &configThrottleBlockOff, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 5)),         pNode, &configThrottleMaxSpeed, sizeof(uint8_t));
                  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 0)),      pNode, &FilterSpeed[0], sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 1)),      pNode, &FilterSpeed[1], sizeof(uint8_t));
@@ -536,6 +538,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  //upadat Throttle/Pedal Assist variables that will be write into the user data flash.
                  UserConfigTask_UpdateThrottleBlockOff(configThrottleBlockOff);
+                 UserConfigTask_UpdateThrottleMaxSpeed(configThrottleMaxSpeed);
                  UserConfigTask_UpdataPasAlgorithm(pasAlgorithm);
                  UserConfigTask_UpdateNumberPasLevels(maxPAS);
                  UserConfigTask_UpdatePasMaxTorqueRatio(pasMaxTorqueRatio);
@@ -836,6 +839,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint16_t configThrottleAdcOffset    = UserConfigTask_GetThrottleAdcOffset();                                      
         uint16_t configThrottleAdcMax       = UserConfigTask_GetThrottleAdcMax();
         uint8_t  configThrottleBlockOff     = UserConfigTask_GetThrottleBlockOff();
+        uint8_t  configThrottleMaxSpeed     = UserConfigTask_GetThrottleMaxSpeed();
 
                                               
      
@@ -909,6 +913,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 2)),      pNode, &configThrottleAdcOffset, sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 3)),         pNode, &configThrottleAdcMax, sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 4)),         pNode, &configThrottleBlockOff, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 5)),         pNode, &configThrottleMaxSpeed, sizeof(uint8_t));
         
         //torque band filter parameters
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 0)),      pNode, &FilterSpeed[0], sizeof(uint8_t));

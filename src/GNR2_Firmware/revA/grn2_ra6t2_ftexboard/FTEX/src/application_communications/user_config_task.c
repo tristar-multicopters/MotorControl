@@ -106,7 +106,7 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.TailLightBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,
     .crc = 0x0000,
     .Screen_ConfigData.Throttle_ConfigData.ThrottleBlock = THROTTLE_BLOCK_OFF,
-
+    .Screen_ConfigData.Throttle_ConfigData.MaxSpeed = VEHICLE_TOP_SPEED_KMH,
 };
 
 //struct used to hold the values of the user configuration
@@ -388,7 +388,7 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pThrottle->hParameters.hOffsetThrottle = UserConfigTask_GetThrottleAdcOffset();
     paPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();  
     paPowertrain->pThrottle->BlockOffThrottle = UserConfigTask_GetThrottleBlockOff();
-
+    paPowertrain->pThrottle->hParameters.DefaultMaxThrottleSpeedKMH= UserConfigTask_GetThrottleMaxSpeed();
     
     paPowertrain->pBatMonitorHandle->VBatMax = UserConfigTask_GetBatteryFullVoltage();
     paPowertrain->pBatMonitorHandle->VBatMin = UserConfigTask_GetBatteryEmptyVoltage();
@@ -1511,4 +1511,30 @@ uint8_t UserConfigTask_GetThrottleBlockOff(void)
 void UserConfigTask_UpdateThrottleBlockOff(uint8_t value)
 {
     userConfigData.Screen_ConfigData.Throttle_ConfigData.ThrottleBlock = (uint8_t)value;
+}
+
+/**
+  @brief Function to get Throttle Max Speed Value
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Throttle Max Speed
+
+*/
+uint8_t UserConfigTask_GetThrottleMaxSpeed(void)
+{
+    return userConfigData.Screen_ConfigData.Throttle_ConfigData.MaxSpeed;
+}
+
+/**
+  @brief Function to update Throttle Max Speed Value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Throttle Max Speed
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleMaxSpeed(uint8_t value)
+{
+    userConfigData.Screen_ConfigData.Throttle_ConfigData.MaxSpeed = (uint8_t)value;
 }

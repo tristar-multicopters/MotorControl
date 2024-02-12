@@ -386,6 +386,7 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 //SUBINDEX 2 = Throttle ADC Offset
 //SUBINDEX 3 = Throttle ADC Max
 //SUBINDEX 4 = Throttle Block Off
+//SUBINDEX 5 = Throttle Max Speed
 #define CO_OD_REG_CONTROLLER_THROTTLE          0x2027
 
 
