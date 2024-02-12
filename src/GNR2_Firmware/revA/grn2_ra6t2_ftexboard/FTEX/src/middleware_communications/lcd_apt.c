@@ -310,8 +310,19 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);
          
         toSend = LCD_APT_ApplyPowerFilter((uint16_t)toSend);  
-          
+        
         toSend = toSend * 2; //Covert from amps to 0.5 amps; 
+        
+        
+        uint16_t VBatx100 = pHandle->pVController->pPowertrain->pBatMonitorHandle->VBatAvg;
+        
+        if ((toSend * VBatx100) > 50000) // toSend is in 1/2 Amps, VBat is in Volts x 100
+                                         // Max watt is 250, which could be 50 volts and 5 amps 
+                                         // that would be 5000 in Vbat and 10 in toSend
+        {                                                                                        
+            toSend = 50000/VBatx100; // This should be max power to be under 250W                                                                  
+        
+        }
         
         replyFrame.Buffer[1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
 
