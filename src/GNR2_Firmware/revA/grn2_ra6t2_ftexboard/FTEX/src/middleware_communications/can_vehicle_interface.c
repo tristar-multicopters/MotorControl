@@ -115,7 +115,7 @@ void CanVehiInterface_SetVehiclePAS (VCI_Handle_t * pHandle, uint8_t Set_PAS)
 uint8_t CanVehiInterface_GetVehiclePASAlgorithm (VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
-    return pHandle->pPowertrain->pPAS->bCurrentPasAlgorithm;    
+    return pHandle->pPowertrain->pPAS->bPasPowerAlgorithm;    
 }
 
 /**

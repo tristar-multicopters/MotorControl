@@ -283,6 +283,25 @@ uint32_t UserConfigTask_GetPasCadenceStartupWindows(void);
 void UserConfigTask_UpdatePasCadenceStartupWindows(uint32_t value);
 
 /**
+  @brief Function to get pas algorithm detection used on startup state
+  read from data flash memory.
+  
+  @param void
+  @return uint23_t pas algorithm detection used on startup state.
+*/
+uint8_t UserConfigTask_GetPasAlgorithmStartup(void);
+
+/**
+  @brief Function to update pas algorithm detection used on startup state
+  read from data flash memory.
+  
+  @param uint32_t value equivalent to the pas algorithm detection that must be used.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasPasAlgorithmStartup(uint8_t value);
+
+/**
   @brief Function to get Torque Sensor Multiplier(GAIN)by PAS level
   read from data flash memory.
   
@@ -765,6 +784,87 @@ uint16_t UserConfigTask_GetFilterBwValue(uint8_t index, uint8_t bwType);
 
 */
 void UserConfigTask_UpdateFilterBwValue(uint8_t index, uint8_t bwType, uint16_t value);
+
+/**
+  @brief Function to get Minimum Torque Threshold
+  read from data flash memory on running mode.
+  
+  @param void
+  @return uint8_t a number that represent Minimum Torque Threshold.
+
+*/
+uint8_t UserConfigTask_GetPasTorqueRunningThreshold(void);
+
+/**
+  @brief Function to update Minimum Torque Threshold
+  read from data flash memory on running mode.
+  
+  @param uint8_t value to be passed into the  Minimum Torque Threshold.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasTorqueRunningThreshold(uint8_t value);
+
+/**
+  @brief Function to get pasCadenceRunningNumbPulses
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t a number that represent pasCadenceRunningNumbPulses.
+*/
+uint16_t UserConfigTask_GetPasCadenceRunningNumbPulses(void);
+
+/**
+  @brief Function to update pasCadenceRunningNumbPulses
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the pasCadenceRunningNumbPulses
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint16_t value);
+
+/**
+  @brief Function to get time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory
+  on run mode.
+  
+  @param void
+  @return uint23_t a number that represent time windows used to check the number of
+  pulses.
+*/
+uint32_t UserConfigTask_GetPasCadenceRunningWindows(void);
+
+/**
+  @brief Function to update time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory
+  on run mode.
+  
+  @param uint32_t value to be passed into the time windows used to check the number of
+  pulses.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasCadenceRunningWindows(uint32_t value);
+
+/**
+  @brief Function to get pas algorithm detection used on running state
+  read from data flash memory.
+  
+  @param void
+  @return uint23_t pas algorithm detection used on running state.
+*/
+uint8_t UserConfigTask_GetPasAlgorithmRunning(void);
+
+/**
+  @brief Function to update pas algorithm detection used on running state
+  read from data flash memory.
+  
+  @param uint32_t value equivalent to the pas algorithm detection that must be used.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasPasAlgorithmRunning(uint8_t value);
 
 /**
   @brief Function used to calculate a CRC 16 type using the same polynom 

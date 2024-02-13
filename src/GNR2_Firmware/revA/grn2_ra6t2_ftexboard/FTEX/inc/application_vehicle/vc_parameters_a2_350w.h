@@ -52,12 +52,30 @@
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
 #define PAS_TORQUE_GAIN                     100             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
-#define PAS_ALGORITHM                       TorqueSensorUse /* TorqueSensorUse  = 0, Torque sensor use define 
-                                                               CadenceSensorUse = 1, Cadence sensor use define */
+
+//Used to chose what power calculation will be used, 
+//torque or cadence.
+#define PAS_POWER_ALGORITHM                       TorqueSensorUse /* TorqueSensorUse  = 1, Torque sensor use define 
+                                                               CadenceSensorUse = 2, Cadence sensor use define */
+//Used to chose the pas detection mode on startup, torque or/and cadence,
+//torque only or cadence only.
+#define PAS_DETECTIONSTARTUP_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
+                                                            TorqueSensorUse,    // Torque sensor use define
+                                                            CadenceSensorUse,   // Cadence sensor use define
+                                                            HybridAndSensorUse, // Torque AND Cadence sensor use define
+                                                            HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
+//Used to chose the pas detection mode on running, torque or/and cadence,
+//torque only or cadence only.
+#define PAS_DETECTIONRUNNING_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
+                                                            TorqueSensorUse,    // Torque sensor use define
+                                                            CadenceSensorUse,   // Cadence sensor use define
+                                                            HybridAndSensorUse, // Torque AND Cadence sensor use define
+                                                            HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
     
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
 
-#define PAS_MIN_PEDAL_PULSE_COUNT            6              // Mini Number of pulse, inside a specific time, to the detect PAS on cadence.
+#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
+#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/

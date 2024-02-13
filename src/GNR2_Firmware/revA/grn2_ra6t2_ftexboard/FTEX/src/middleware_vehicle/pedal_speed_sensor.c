@@ -26,10 +26,10 @@ void PedalSpdSensor_Init(PedalSpeedSensorHandle_t* pHandle)
 void PedalSpdSensor_ReadNumberOfPulses(PedalSpeedSensorHandle_t* pHandle)
 {	
 	//PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
-	pHandle->wPedalSpeedSens_NumberOfPulses = (uint16_t) pHandle->pPulseFrequency->wNumberOfPulse; 
+	pHandle->hPedalSpeedSens_NumberOfPulses = (uint16_t) pHandle->pPulseFrequency->hNumberOfPulse; 
     
     //Initialize the number of pulses detected by the AGT Timer.
-    pHandle->pPulseFrequency->wNumberOfPulse = 0;
+    pHandle->pPulseFrequency->hNumberOfPulse = 0;
 }
 
 /**
@@ -37,7 +37,7 @@ void PedalSpdSensor_ReadNumberOfPulses(PedalSpeedSensorHandle_t* pHandle)
 */
 uint16_t PedalSpdSensor_GetNumberOfPulses(PedalSpeedSensorHandle_t* pHandle)
 {	
-	return pHandle->wPedalSpeedSens_NumberOfPulses;
+	return pHandle->hPedalSpeedSens_NumberOfPulses;
 }
 
 /**
@@ -46,9 +46,9 @@ uint16_t PedalSpdSensor_GetNumberOfPulses(PedalSpeedSensorHandle_t* pHandle)
 */
 void PedalSpdSensor_ResetValue(PedalSpeedSensorHandle_t* pHandle)
 {	
-	pHandle->wPedalSpeedSens_NumberOfPulses = 0;
+	pHandle->hPedalSpeedSens_NumberOfPulses = 0;
     //Initialize the number of pulses detected by the AGT Timer.
-    pHandle->pPulseFrequency->wNumberOfPulse = 0;
+    pHandle->pPulseFrequency->hNumberOfPulse = 0;
 }
 
 /**
@@ -56,7 +56,7 @@ void PedalSpdSensor_ResetValue(PedalSpeedSensorHandle_t* pHandle)
 */
 void PedalSpdSensor_SetWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
 {	
-	pHandle->wPedalSpeedSens_ResetWindowsFlag = true;
+	pHandle->bPedalSpeedSens_ResetWindowsFlag = true;
 }
 
 /**
@@ -64,7 +64,7 @@ void PedalSpdSensor_SetWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
 */
 void PedalSpdSensor_ClearWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
 {	
-	pHandle->wPedalSpeedSens_ResetWindowsFlag = false;
+	pHandle->bPedalSpeedSens_ResetWindowsFlag = false;
 }
 
 
@@ -73,7 +73,7 @@ void PedalSpdSensor_ClearWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
 */
 bool PedalSpdSensor_GetWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
 {	
-	return pHandle->wPedalSpeedSens_ResetWindowsFlag;
+	return pHandle->bPedalSpeedSens_ResetWindowsFlag;
 }
 
 /**

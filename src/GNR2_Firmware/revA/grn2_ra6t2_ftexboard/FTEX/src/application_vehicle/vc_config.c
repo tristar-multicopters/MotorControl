@@ -106,7 +106,7 @@ PulseFrequencyHandle_t PulseFreqHandlePedal =
 {    
     .TimerType = AGT_TIMER,    
     .measuring = false, 
-    .wNumberOfPulse = 0,        
+    .hNumberOfPulse = 0,        
     .PulseFreqParam =
     {
         .PF_Timer = PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
@@ -131,15 +131,18 @@ PulseFrequencyHandle_t PulseFreqHandleWheel =
  */
 PedalSpeedSensorHandle_t PedalSpeedSensorHandle = {
     .pPulseFrequency = &PulseFreqHandlePedal,
-    .wPedalSpeedSens_Windows = CADENCE_DETECTION_WINDOWS_MS,
-    .wPedalSpeedSens_ResetWindowsFlag = false,
+    .hPedalSpeedSens_MinPulseStartup = PEDALSPEEDSENSOR_MIN_PULSE_STARTUP,
+    .wPedalSpeedSens_WindowsStartup = PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS,
+    .hPedalSpeedSens_MinPulseRunning = PEDALSPEEDSENSOR_MIN_PULSE_RUNNING,
+    .wPedalSpeedSens_WindowsRunning = PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS,
+    .bPedalSpeedSens_ResetWindowsFlag = false,
 };
 
 
 WheelSpeedSensorHandle_t WheelSpeedHandle =
 {
     .pPulseFrequency = &PulseFreqHandleWheel,
-    .bPulsePerRotation = WHEEL_SPEED_SENSOR_NBR_PER_ROTATION,
+    .bWheelSpeed_PulsePerRotation = WHEEL_SPEED_SENSOR_NBR_PER_ROTATION,
 };
 
 
@@ -184,8 +187,6 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.bTorqueGain[8] = PAS_8_TORQUE_GAIN,
     .sParameters.bTorqueGain[9] = PAS_9_TORQUE_GAIN,
     .sParameters.hMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
-    .sParameters.bPASMinPulseCount = PAS_MIN_PEDAL_PULSE_COUNT,
-    .sParameters.bPASCountActivation = PAS_SLOW_PEDAL_COUNT,
     .sParameters.WalkmodeOverThrottle = PAS_WALKMODE_OVER_THROTTLE,
     .sParameters.PASMaxSpeed[0] = PAS_LEVEL_SPEED_0,
     .sParameters.PASMaxSpeed[1] = PAS_LEVEL_SPEED_1,
@@ -219,7 +220,9 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.PASMaxTorqRatiosInPercentage[8] = PAS_8_MAX_TORQUE_PERCENT,
     .sParameters.PASMaxTorqRatiosInPercentage[9] = PAS_9_MAX_TORQUE_PERCENT,
 
-    .bCurrentPasAlgorithm = PAS_ALGORITHM,
+    .bPasPowerAlgorithm = PAS_POWER_ALGORITHM,
+    .bStartupPasAlgorithm = PAS_DETECTIONSTARTUP_ALGORITHM,
+    .bRunningPasAlgorithm = PAS_DETECTIONRUNNING_ALGORITHM,
     .pPSS = &PedalSpeedSensorHandle,
     .pPTS = &PedalTorqueSensorHandle,
     .pWSS = &WheelSpeedHandle,       

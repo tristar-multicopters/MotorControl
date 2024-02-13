@@ -37,6 +37,12 @@
 
 #define FILTERSPEED_ARRAY_SIZE       (BW_ARRAY_SIZE - 1)
 
+#define DIGITAL33_0_7_VOLTS 13900 // Value of 0.7 volts when you have a 0-65535 digital value where 65535 = 3.3V
+#define DIGITAL5_0_8_VOLTS  10500 // Value of 0.8 volts when you have a 0-65535 digital value where 65535 = 5.0V
+
+//it need to be updated if this struct is modified : PasAlgorithm_t
+#define MAX_PASALGORITHM_VALUE    4
+
 /*********************************************
             Data Struct Definition
 *********************************************/
@@ -44,11 +50,6 @@
 //force compiler to use 1 byte packaging
 //avoid padding bytes.
 #pragma pack(1)
-
-#define DIGITAL33_0_7_VOLTS 13900 // Value of 0.7 volts when you have a 0-65535 digital value where 65535 = 3.3V
-#define DIGITAL5_0_8_VOLTS  10500 // Value of 0.8 volts when you have a 0-65535 digital value where 65535 = 5.0V
-
-
 
 typedef struct
 {
@@ -67,6 +68,23 @@ typedef struct
     uint16_t pasTorqueInputMax;
 } PAS_Sensor_Configuration_t;
 
+typedef struct
+{
+    uint8_t pasTorqueStartupSpeed;
+    uint8_t pasTorqueStartupThreshold;    
+    uint16_t pasCadenceStartupNumbPulses;
+    uint32_t pasCadenceStartupWindows;
+    uint8_t PasAlgorithmStartup;
+} PAS_Startup_Detection_t;
+
+typedef struct
+{
+    uint8_t pasTorqueRunningThreshold;    
+    uint16_t pasCadenceRunningNumbPulses;
+    uint32_t pasCadenceRunningWindows;
+    uint8_t PasAlgorithmRunning;
+} PAS_Running_Detection_t;
+
 
 //struct used to hold the configuration
 //associated with PAS(pedal Assist System).
@@ -75,10 +93,8 @@ typedef struct
     uint8_t pasAlgorithm;
     uint8_t numberOfPasLevels;
     uint8_t pasMaxTorqueRatio;
-    uint8_t pasTorqueStartupSpeed;
-    uint8_t pasTorqueStartupThreshold;    
-    uint16_t pasCadenceStartupNumbPulses;
-    uint32_t pasCadenceStartupWindows;
+    PAS_Startup_Detection_t PAS_Startup_Detection;
+    PAS_Running_Detection_t PAS_Running_Detection;
     uint16_t torqueSensorMultiplier[10];
     uint8_t PasLevelSpeed[10];
     uint8_t pasLevelMaxTorque[10];

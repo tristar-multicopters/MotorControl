@@ -90,7 +90,7 @@ void PulseFrequency_IsrCallUpdate(PulseFrequencyHandle_t * pHandle ,uint32_t wCa
         case AGT_TIMER:
             
             //Increment the number of pulses detected by the AGT timer.
-            pHandle->wNumberOfPulse++;
+            pHandle->hNumberOfPulse++;
  
             break;
         default:

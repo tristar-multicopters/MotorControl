@@ -23,15 +23,14 @@
 
 //steps used to increment the variable used to
 //measure the time interval where timer is not working.
-#define WHEELSPEED_TIME_INCREMENT_MS   250
+#define WHEELSPEED_TIME_INCREMENT_MS   5
 
 // ================= Structure used to configure a pin ===================== //
 typedef struct {
     
   PulseFrequencyHandle_t * pPulseFrequency;  /* Pointer to speed handle */
 
-  uint8_t	bPulsePerRotation;  /* Nunber of pulse per rotation */
-		
+  uint8_t	bWheelSpeed_PulsePerRotation;  /* Nunber of pulse per rotation */
   float wWheelSpeed_Read;    /* Wheel Speed Sensor Periode value*/
   uint32_t wWheelSpeedFreq;     /* Wheel Speed sensor frequency calculated value */
   int32_t wWheelSpeedRpm;       /* Wheel Speed sensor rotation per minute calculated value */

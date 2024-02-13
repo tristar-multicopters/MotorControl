@@ -217,11 +217,13 @@ extern "C" {
 //SUBINDEX 1: hOffsetMTStartup = PTS_OFFSET_PTS2TORQUE_STARTUP.
 //
 //Minimum number of pulses to detect PAS cadence.
-//SUBINDEX 2: sParameters.bPASMinPulseCount = PAS_MIN_PEDAL_PULSE_COUNT.
+//SUBINDEX 2: sParameters.hPedalSpeedSens_MinPulseStartup = PEDALSPEEDSENSOR_MIN_PULSE_STARTUP.
 //
 //Time window for PAS cadence detection on start condition.
-//SUBINDEX 3: pPSS->wPedalSpeedSens_Windows = CADENCE_DETECTION_WINDOWS_MS.
-
+//SUBINDEX 3: pPSS->wPedalSpeedSens_WindowsStartup = PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS.
+//
+//PasAlgorithmStartup for decide what algo will be used to detected PAS on startup.
+//SUBINDEX 4: paPowertrain->pPAS->bStartupPasAlgorithm = PAS_DETECTIONSTARTUP_ALGORITHM
 #define CO_OD_REG_PAS_DETECTION_STARTUP        0x2017
 
 //OD ID for configure torque Sensor Multiplier(GAIN)
@@ -365,11 +367,6 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 
 // OD ID to set the screen protocol 
 #define CO_OD_CONFIG_SCREEN_PROTOCOL           0x2025
-                                    
-//OD ID to configure battery voltages
-//The define(s) used by this parameter are:
-//BATTERY_FULL_VOLT_X_100
-//BATTERY_EMPTY_VOLT_X_100
 
 //NOTE: this OD ID will have 4 subindexs.
 // 0  Max peak DC current that the controller can draw from the battery in 
@@ -377,7 +374,6 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 // 2  Duration of the peak current, after which the controller starts derating to continuous current
 // 3  Derating ramp time. This time represents the period of time that the controller uses to derate 
 //    from peak to continuous current.
-
 #define CO_OD_REG_BATTERY_DC_CURRENT           0x2026
 
 // OD ID to control throttle
@@ -389,8 +385,22 @@ PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 5V)
 //SUBINDEX 5 = Throttle Max Speed
 #define CO_OD_REG_CONTROLLER_THROTTLE          0x2027
 
+//OD ID to setup some PAS parameters on running condition.
+//The define(s) used by this parameter is:
 
-// Available                                   0x2028
+//Startup threshold of the torque sensor (if present). 
+//Threshold in % of pressure needed to push power (when under the startup config speed)
+//SUBINDEX 0: hOffsetMTp = PTS_OFFSET_PTS2TORQUE.
+//
+//Minimum number of pulses to detect PAS cadence.
+//SUBINDEX 1: sParameters.hPedalSpeedSens_MinPulseStartup = PEDALSPEEDSENSOR_MIN_PULSE_RUNNING.
+//
+//Time window for PAS cadence detection on start condition.
+//SUBINDEX 2: pPSS->wPedalSpeedSens_WindowsStartup = PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS.
+//
+//PasAlgorithmRunning for decide what algo will be used to detected PAS on run time.
+//SUBINDEX 3: paPowertrain->pPAS->bRunningPasAlgorithm = PAS_DETECTIONRUNNING_ALGORITHM
+#define CO_OD_REG_PAS_DETECTION_RUNNING        0x2028 
 
 
 // Available                                   0x2029

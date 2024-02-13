@@ -313,9 +313,14 @@
     #define REAR_LIGHT_BLINK_ON_BRAKE     true // If set to true rear light will blink when brake is pressed
 #endif
     
-#ifndef CADENCE_DETECTION_WINDOWS_MS
-    #define CADENCE_DETECTION_WINDOWS_MS 500           //cadence detection windows on ms.
+//cadence detection windows on ms when starting to use the pedal.
+#ifndef PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS
+    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 500           
 #endif    
+//cadence detection windows on ms when running. 
+#ifndef PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS
+    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 500
+#endif
     
 #ifndef THROTTLE_BLOCK_OFF
     #define THROTTLE_BLOCK_OFF            false        //If set to true, the throttle will be blocked.

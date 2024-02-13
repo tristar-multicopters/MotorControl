@@ -198,15 +198,14 @@ uint8_t bObjDataPasMaxTorqueRatio                 = 0;
 
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 0
 uint8_t bObjDataPasTorqueStartupSpeed = 0;
-
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 1
 uint8_t bObjDataPasTorqueStartupThreshold = 0;
-
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 2
 uint16_t bObjDataPasCadenceStartupNumbPulses = 0;
-
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 3
 uint32_t bObjDataPasCadenceStartupWindows = 0;
+//variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 4
+uint8_t bObjDataPasAlgorithmStartup = 0;
 
 //variable associated with CO_OD_REG_TORQUE_SENSOR_MULTIPLIER.
 uint16_t bObjDataTorqueSensorMultiplier[10] = {0};
@@ -277,6 +276,14 @@ uint16_t bObjDataPasTorqueInputMax         = 0;
 
 //variable associated with CO_OD_CONFIG_SCREEN_PROTOCOL
 uint8_t bObjDataConfigScreenProtocol        = 0;
+//variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 0
+uint8_t bObjDataPasTorqueRunningThreshold = 0;
+//variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 1
+uint16_t bObjDataPasCadenceRunningNumbPulses = 0;
+//variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 2
+uint32_t bObjDataPasCadenceRunningWindows = 0;
+//variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 3
+uint8_t bObjDataPasAlgorithmRunning = 0;
 
 //variable associated with  CO_OD_REG_BATTERY_DC_CURRENT subindex 0
 uint16_t bObjDataConfigBatteryMaxPeakDCCurrent             = 0;
@@ -1170,6 +1177,10 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 3, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&bObjDataPasCadenceStartupWindows};
             //move to next OD index
             index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithmStartup};
+            //move to next OD index
+            index++;
         
             //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[0]};
@@ -1410,8 +1421,9 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_SCREEN_PROTOCOL, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigScreenProtocol};
             //move to next OD index
             index++;
+
             
-             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BATTERY_DC_CURRENT, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigBatteryMaxPeakDCCurrent};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BATTERY_DC_CURRENT, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigBatteryMaxPeakDCCurrent};
             //move to next OD index
             index++;
             
@@ -1450,6 +1462,24 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 5, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigThrottleMaxSpeed};
             //move to next OD index
             index++;
+            
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueRunningThreshold};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceRunningNumbPulses};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 2, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&bObjDataPasCadenceRunningWindows};
+			//move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithmRunning};
+			//move to next OD index
+            index++;
+            
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigSpeedForTorqueFilter[0]};
             //move to next OD index

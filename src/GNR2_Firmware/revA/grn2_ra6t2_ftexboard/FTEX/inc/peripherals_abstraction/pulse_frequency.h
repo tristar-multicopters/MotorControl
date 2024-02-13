@@ -51,7 +51,7 @@ typedef struct
     uint32_t wCaptureCount; 		/* timer capture variable */
     uint32_t wCaptureOverflow; /* timer capture overflow variable */
     float wUsPeriod; 			/* timer us Period Detection */
-    uint16_t wNumberOfPulse;   /* has the number of pulse detected by
+    uint16_t hNumberOfPulse;   /* has the number of pulse detected by
                                /* the time on capture mode.*/
     volatile bool  measuring;		/* Flag start measurment */
     PulseFrequencyParam_t PulseFreqParam; /* AGT Parameters*/

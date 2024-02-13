@@ -27,6 +27,8 @@ void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle)
 */
 void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle)
 {
+    //check input conditions
+    ASSERT(pHandle != NULL);
     //verify if the timer is measuring.
     //if yes, initialise the flag to wait for the timer
     //to set the flag again and indicating it still working.
@@ -80,7 +82,7 @@ uint16_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle)
     
     if (wSpeed != 0.0f) // Div by 0 protection
     {
-        pHandle->wWheelSpeedRpm = (int32_t)(((float)(RPMCOEFF))/(wSpeed*pHandle->bPulsePerRotation));
+        pHandle->wWheelSpeedRpm = (int32_t)(((float)(RPMCOEFF))/(wSpeed*pHandle->bWheelSpeed_PulsePerRotation));
     }
     else
     {

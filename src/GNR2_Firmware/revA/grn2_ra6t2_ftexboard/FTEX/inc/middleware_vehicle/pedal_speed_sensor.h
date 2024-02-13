@@ -17,15 +17,20 @@
 
 // ================= Structure used to configure a pin ===================== //
 typedef struct {
+    
 	PulseFrequencyHandle_t * pPulseFrequency;   /* Pointer to pedal handle */
-
-    uint32_t wPedalSpeedSens_Freq;  /* Pedal Speed sensor frequency calculated value */
-    uint32_t wPedalSpeedSens_Windows; /* Maximum time, on ms, to verify the Detected Number of pulses*/
-    bool wPedalSpeedSens_ResetWindowsFlag;
-    uint16_t wPedalSpeedSens_NumberOfPulses;    /*Detected Number of pulses from teh cadence signal*/
+    uint16_t hPedalSpeedSens_MinPulseStartup;   //It has the minimum number of pulses, on startup, 
+                                                //to detect PAS from cadence sensor
+    uint32_t wPedalSpeedSens_WindowsStartup;    //Maximum time, on ms, to verify the Detected Number of pulses
+                                                //from the cadence sensor when starts to pedal.
+    uint16_t hPedalSpeedSens_MinPulseRunning;   //It has the minimum number of pulses, on running, 
+                                                //to detect PAS from cadence sensor
+    uint32_t wPedalSpeedSens_WindowsRunning;    //Maximum time, on ms, to verify the Detected Number of pulses
+                                                //from the cadence sensor when on run mode.
+    bool bPedalSpeedSens_ResetWindowsFlag;      //Used to 
+    uint16_t hPedalSpeedSens_NumberOfPulses;    /*Detected Number of pulses from teh cadence signal*/
     uint32_t  wPedalSpeedSens_RPM;   /* Pedal Speed sensor RPM calculated value */
-    uint8_t	bPulsePerRotation;			/* Number of pulse per rotation */
-
+    
 } PedalSpeedSensorHandle_t;
 
 // ==================== Public function prototypes ========================= //
@@ -75,7 +80,7 @@ void PedalSpdSensor_ClearWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
 /**
   @brief  Get windows reset flag
   @param  PedalSpeedSensorHandle_t handle
-  @return bool wPedalSpeedSens_ResetWindowsFlag
+  @return bool bPedalSpeedSens_ResetWindowsFlag
 */
 bool PedalSpdSensor_GetWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
 
