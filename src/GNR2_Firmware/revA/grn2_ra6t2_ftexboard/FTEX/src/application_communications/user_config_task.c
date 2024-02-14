@@ -1407,10 +1407,33 @@ uint8_t UserConfigTask_GetFilterSpeed(uint8_t index)
 */
 void UserConfigTask_UpdateFilterSpeed(uint8_t index, uint8_t value)
 {
-    //
-    if ((index < FILTERSPEED_ARRAY_SIZE) && (value <= 32))
-    {
-        userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[index] = value;
+    //check speed value condtions.
+    if ((index < FILTERSPEED_ARRAY_SIZE) && (value <= 75) && (value >= 1))
+    {   
+        //used to test speed condition, the index above must to bigger than the (index - 1).
+        //ex: index 1 needs to have a speed value bigger than speed of index 0.
+        switch(index)
+        {
+            case 0:
+                //speed associated with index 0 must to be smaller than speed associated with the next index.
+                if (userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[index] < userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[index + 1])
+                {
+                    userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[index] = value;
+                }     
+            break;
+            
+            case 1:
+                //speed associated with index 1 must to be bigger than speed associated with the previous index.
+                if (userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[index] > userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[index - 1])
+                {
+                    userConfigData.PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[index] = value;
+                }
+            break;
+            //nothing must to be done.    
+            default:
+
+            break;
+        }
     }
 }
 
@@ -1467,7 +1490,7 @@ uint16_t UserConfigTask_GetFilterBwValue(uint8_t index, uint8_t bwType)
 void UserConfigTask_UpdateFilterBwValue(uint8_t index, uint8_t bwType, uint16_t value)
 {
     //verify the condition to update the value.
-    if ((index < BW_ARRAY_SIZE) && (value <= 0xFFFF) && ((bwType == BW1) || (bwType == BW2)))
+    if ((index < BW_ARRAY_SIZE) && (value > 0) && (value <= 0xFFFF) && ((bwType == BW1) || (bwType == BW2)))
     {
         //state to decide what BW parameter will be returned.
         switch(bwType)
