@@ -570,7 +570,7 @@ uint8_t UserConfigTask_GetPasTorqueStartupThreshold(void)
 void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value)
 {
     //verify if value is in the range.
-     if((value <= 100) && (value > 0))
+     if((value <= 100) && (value >= 0))
     {
         userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupThreshold = value;
     }        
@@ -583,7 +583,7 @@ void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value)
   @param void
   @return uint8_t a number that represent pasCadenceStartupNumbPulses.
 */
-uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void)
+uint8_t UserConfigTask_GetPasCadenceStartupNumbPulses(void)
 {
     return userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupNumbPulses; 
 }
@@ -596,10 +596,10 @@ uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void)
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint16_t value)
+void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint8_t value)
 {
     //verify if value is in the range.
-    if((value > 0) && (value <= 0xFFFF))
+    if((value > 0) && (value <= 0xFF))
     {
         userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupNumbPulses = value;
     }        
@@ -610,10 +610,10 @@ void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint16_t value)
   pulses detected from the cadence sensor read from data flash memory.
   
   @param void
-  @return uint23_t a number that represent time windows used to check the number of
+  @return uint16_t a number that represent time windows used to check the number of
   pulses.
 */
-uint32_t UserConfigTask_GetPasCadenceStartupWindows(void)
+uint16_t UserConfigTask_GetPasCadenceStartupWindows(void)
 {
     return userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupWindows;
 }
@@ -622,16 +622,16 @@ uint32_t UserConfigTask_GetPasCadenceStartupWindows(void)
   @brief Function to update time windows used to check the number of
   pulses detected from the cadence sensor read from data flash memory.
   
-  @param uint32_t value to be passed into the time windows used to check the number of
+  @param uint16_t value to be passed into the time windows used to check the number of
   pulses.
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceStartupWindows(uint32_t value)
+void UserConfigTask_UpdatePasCadenceStartupWindows(uint16_t value)
 {
     //verify if value is in the range.
     //range on ms.
-    if((value >= 200) && (value <= 0xFFFFFFFF))
+    if((value >= 200) && (value <= 0xFFFF))
     {
         userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupWindows = value;
     }   
@@ -1539,7 +1539,7 @@ uint8_t UserConfigTask_GetPasTorqueRunningThreshold(void)
 void UserConfigTask_UpdatePasTorqueRunningThreshold(uint8_t value)
 {
     //verify if value is in the range.
-     if((value <= 100) && (value > 0))
+     if((value <= 100) && (value >= 0))
     {
         userConfigData.PAS_ConfigData.PAS_Running_Detection.pasTorqueRunningThreshold = value;
     }        
@@ -1552,7 +1552,7 @@ void UserConfigTask_UpdatePasTorqueRunningThreshold(uint8_t value)
   @param void
   @return uint8_t a number that represent pasCadenceRunningNumbPulses.
 */
-uint16_t UserConfigTask_GetPasCadenceRunningNumbPulses(void)
+uint8_t UserConfigTask_GetPasCadenceRunningNumbPulses(void)
 {
     return userConfigData.PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningNumbPulses; 
 }
@@ -1565,10 +1565,10 @@ uint16_t UserConfigTask_GetPasCadenceRunningNumbPulses(void)
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint16_t value)
+void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint8_t value)
 {
     //verify if value is in the range.
-    if((value > 0) && (value <= 0xFFFF))
+    if((value > 0) && (value <= 0xFF))
     {
         userConfigData.PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningNumbPulses = value;
     }        
@@ -1580,10 +1580,10 @@ void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint16_t value)
   on run mode.
   
   @param void
-  @return uint23_t a number that represent time windows used to check the number of
+  @return uint16_t a number that represent time windows used to check the number of
   pulses.
 */
-uint32_t UserConfigTask_GetPasCadenceRunningWindows(void)
+uint16_t UserConfigTask_GetPasCadenceRunningWindows(void)
 {
     return userConfigData.PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningWindows;
 }
@@ -1593,16 +1593,16 @@ uint32_t UserConfigTask_GetPasCadenceRunningWindows(void)
   pulses detected from the cadence sensor read from data flash memory
   on run mode.
   
-  @param uint32_t value to be passed into the time windows used to check the number of
+  @param uint16_t value to be passed into the time windows used to check the number of
   pulses.
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceRunningWindows(uint32_t value)
+void UserConfigTask_UpdatePasCadenceRunningWindows(uint16_t value)
 {
     //verify if value is in the range.
     //range on ms.
-    if((value >= 200) && (value <= 0xFFFFFFFF))
+    if((value >= 200) && (value <= 0xFFFF))
     {
         userConfigData.PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningWindows = value;
     }   

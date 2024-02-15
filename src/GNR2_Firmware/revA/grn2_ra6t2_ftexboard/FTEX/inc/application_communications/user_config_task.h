@@ -249,7 +249,7 @@ void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value);
   @param void
   @return uint8_t a number that represent pasCadenceStartupNumbPulses.
 */
-uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void);
+uint8_t UserConfigTask_GetPasCadenceStartupNumbPulses(void);
 
 /**
   @brief Function to update pasCadenceStartupNumbPulses
@@ -259,28 +259,28 @@ uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void);
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint16_t value);
+void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint8_t value);
 
 /**
   @brief Function to get time windows used to check the number of
   pulses detected from the cadence sensor read from data flash memory.
   
   @param void
-  @return uint23_t a number that represent time windows used to check the number of
+  @return uint16_t a number that represent time windows used to check the number of
   pulses.
 */
-uint32_t UserConfigTask_GetPasCadenceStartupWindows(void);
+uint16_t UserConfigTask_GetPasCadenceStartupWindows(void);
 
 /**
   @brief Function to update time windows used to check the number of
   pulses detected from the cadence sensor read from data flash memory.
   
-  @param uint32_t value to be passed into the time windows used to check the number of
+  @param uint16_t value to be passed into the time windows used to check the number of
   pulses.
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceStartupWindows(uint32_t value);
+void UserConfigTask_UpdatePasCadenceStartupWindows(uint16_t value);
 
 /**
   @brief Function to get pas algorithm detection used on startup state
@@ -812,7 +812,7 @@ void UserConfigTask_UpdatePasTorqueRunningThreshold(uint8_t value);
   @param void
   @return uint8_t a number that represent pasCadenceRunningNumbPulses.
 */
-uint16_t UserConfigTask_GetPasCadenceRunningNumbPulses(void);
+uint8_t UserConfigTask_GetPasCadenceRunningNumbPulses(void);
 
 /**
   @brief Function to update pasCadenceRunningNumbPulses
@@ -822,7 +822,7 @@ uint16_t UserConfigTask_GetPasCadenceRunningNumbPulses(void);
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint16_t value);
+void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint8_t value);
 
 /**
   @brief Function to get time windows used to check the number of
@@ -830,10 +830,10 @@ void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint16_t value);
   on run mode.
   
   @param void
-  @return uint23_t a number that represent time windows used to check the number of
+  @return uint16_t a number that represent time windows used to check the number of
   pulses.
 */
-uint32_t UserConfigTask_GetPasCadenceRunningWindows(void);
+uint16_t UserConfigTask_GetPasCadenceRunningWindows(void);
 
 /**
   @brief Function to update time windows used to check the number of
@@ -845,7 +845,7 @@ uint32_t UserConfigTask_GetPasCadenceRunningWindows(void);
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceRunningWindows(uint32_t value);
+void UserConfigTask_UpdatePasCadenceRunningWindows(uint16_t value);
 
 /**
   @brief Function to get pas algorithm detection used on running state

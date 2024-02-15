@@ -72,16 +72,16 @@ typedef struct
 {
     uint8_t pasTorqueStartupSpeed;
     uint8_t pasTorqueStartupThreshold;    
-    uint16_t pasCadenceStartupNumbPulses;
-    uint32_t pasCadenceStartupWindows;
+    uint8_t pasCadenceStartupNumbPulses;
+    uint16_t pasCadenceStartupWindows;
     uint8_t PasAlgorithmStartup;
 } PAS_Startup_Detection_t;
 
 typedef struct
 {
     uint8_t pasTorqueRunningThreshold;    
-    uint16_t pasCadenceRunningNumbPulses;
-    uint32_t pasCadenceRunningWindows;
+    uint8_t pasCadenceRunningNumbPulses;
+    uint16_t pasCadenceRunningWindows;
     uint8_t PasAlgorithmRunning;
 } PAS_Running_Detection_t;
 

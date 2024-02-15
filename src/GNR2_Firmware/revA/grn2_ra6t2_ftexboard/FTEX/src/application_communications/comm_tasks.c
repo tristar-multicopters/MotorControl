@@ -117,12 +117,12 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t pasMaxTorqueRatio;
     uint8_t pasTorqueStartupThreshold;    
     uint8_t pasTorqueStartupSpeed;
-    uint16_t pasCadenceStartupNumbPulses;
-    uint32_t pasCadenceStartupWindows;
+    uint8_t pasCadenceStartupNumbPulses;
+    uint16_t pasCadenceStartupWindows;
     uint8_t PasAlgorithmStartup;
     uint8_t pasTorqueRunningThreshold;    
-    uint16_t pasCadenceRunningNumbPulses;
-    uint32_t pasCadenceRunningWindows;
+    uint8_t pasCadenceRunningNumbPulses;
+    uint16_t pasCadenceRunningWindows;
     uint8_t PasAlgorithmRunning;
     uint16_t torqueSensorMultiplier[10];
     uint8_t pasLevelMinTorque[10];
@@ -802,12 +802,12 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t pasMaxTorqueRatio                        = UserConfigTask_GetPasMaxTorqueRatio();
         uint8_t pasTorqueStartupThreshold          = UserConfigTask_GetPasTorqueStartupThreshold();    
         uint8_t pasTorqueStartupSpeed              = UserConfigTask_GetPasTorqueStartupSpeed();
-        uint16_t pasCadenceStartupNumbPulses = UserConfigTask_GetPasCadenceStartupNumbPulses();
-        uint32_t pasCadenceStartupWindows = UserConfigTask_GetPasCadenceStartupWindows();
+        uint8_t pasCadenceStartupNumbPulses = UserConfigTask_GetPasCadenceStartupNumbPulses();
+        uint16_t pasCadenceStartupWindows = UserConfigTask_GetPasCadenceStartupWindows();
         uint8_t PasAlgorithmStartup = UserConfigTask_GetPasAlgorithmStartup();
         uint8_t pasTorqueRunningThreshold          = UserConfigTask_GetPasTorqueRunningThreshold();
-        uint16_t pasCadenceRunningNumbPulses = UserConfigTask_GetPasCadenceRunningNumbPulses();
-        uint32_t pasCadenceRunningWindows = UserConfigTask_GetPasCadenceRunningWindows();
+        uint8_t pasCadenceRunningNumbPulses = UserConfigTask_GetPasCadenceRunningNumbPulses();
+        uint16_t pasCadenceRunningWindows = UserConfigTask_GetPasCadenceRunningWindows();
         uint8_t PasAlgorithmRunning = UserConfigTask_GetPasAlgorithmRunning();
         uint16_t torqueSensorMultiplier[10]         = {UserConfigTask_GetTorqueSensorMultiplier(PAS_0),UserConfigTask_GetTorqueSensorMultiplier(PAS_1),
                                                       UserConfigTask_GetTorqueSensorMultiplier(PAS_2),UserConfigTask_GetTorqueSensorMultiplier(PAS_3),
