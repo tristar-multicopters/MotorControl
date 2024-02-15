@@ -34,11 +34,11 @@
 
 //first byte used to show that data memory
 //has user configuration
-#define ID0_DATA_FLASH                 0xB5
+#define ID0_DATA_FLASH                 0x01
 
 //second byte used to show that data memory
 //has user configuration
-#define ID1_DATA_FLASH                 0xC3
+#define ID1_DATA_FLASH                 0x02
 
 //definition used to control how many
 //blocks of the data flash memory are being
