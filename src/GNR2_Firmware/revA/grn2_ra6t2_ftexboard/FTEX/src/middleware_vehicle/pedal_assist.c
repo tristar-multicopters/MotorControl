@@ -574,6 +574,10 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
             {
                 PedalAssist_SetPASDetected(pHandle);
             }
+            else
+            {
+                PedalAssist_ResetPASDetected(pHandle);
+            }
         
         break;
         
@@ -582,6 +586,10 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
             if (pHandle->bCadenceStartupPASDetected == true)
             {
                 PedalAssist_SetPASDetected(pHandle);
+            }
+            else
+            {
+                PedalAssist_ResetPASDetected(pHandle);
             }
         
         break;
@@ -592,6 +600,10 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
             {
                 PedalAssist_SetPASDetected(pHandle);
             }
+            else
+            {
+                PedalAssist_ResetPASDetected(pHandle);
+            }
         
         break;
         
@@ -600,6 +612,10 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
             if ((pHandle->bTorqueStartupPASDetected == true) || (pHandle->bCadenceStartupPASDetected == true))
             {
                 PedalAssist_SetPASDetected(pHandle);
+            }
+            else
+            {
+                PedalAssist_ResetPASDetected(pHandle);
             }
         
         break;
@@ -629,6 +645,10 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
             {
                 PedalAssist_SetPASDetected(pHandle);
             }
+            else
+            {
+                PedalAssist_ResetPASDetected(pHandle);
+            }
         
         break;
         
@@ -637,6 +657,10 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
             if (pHandle->bCadenceRunningPASDetected == true)
             {
                 PedalAssist_SetPASDetected(pHandle);
+            }
+            else
+            {
+                PedalAssist_ResetPASDetected(pHandle);
             }
         
         break;
@@ -647,6 +671,10 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
             {
                 PedalAssist_SetPASDetected(pHandle);
             }
+            else
+            {
+                PedalAssist_ResetPASDetected(pHandle);
+            }
         
         break;
         
@@ -655,6 +683,10 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
             if ((pHandle->bTorqueRunningPASDetected == true) || (pHandle->bCadenceRunningPASDetected == true))
             {
                 PedalAssist_SetPASDetected(pHandle);
+            }
+            else
+            {
+                PedalAssist_ResetPASDetected(pHandle);
             }
         
         break;
