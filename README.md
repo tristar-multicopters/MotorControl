@@ -35,3 +35,8 @@ Once you've gotten all these things installed follow these steps to finally setu
 https://tristarmulticopters.atlassian.net/wiki/spaces/DT/pages/410026781/CREATING+EDITING+Keil+PROJECT+ENVIRONMENT+FOR+RENESAS+uC
 
 Note that creating a new project is unnecessary, you can generate with the Smart Configurator the code for this repository.
+
+# Python Requirements
+This repository uses a code signing process in python. If you don't have the python requirements no errors is risen except a failure to sign the package and create an image with the bootloader. To make sure this doesn't happen make sure to install imgtool.
+
+pip install imgtool
