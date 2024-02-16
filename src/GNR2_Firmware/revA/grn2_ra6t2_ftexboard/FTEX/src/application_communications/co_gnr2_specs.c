@@ -201,9 +201,9 @@ uint8_t bObjDataPasTorqueStartupSpeed = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 1
 uint8_t bObjDataPasTorqueStartupThreshold = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 2
-uint16_t bObjDataPasCadenceStartupNumbPulses = 0;
+uint8_t bObjDataPasCadenceStartupNumbPulses = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 3
-uint32_t bObjDataPasCadenceStartupWindows = 0;
+uint16_t bObjDataPasCadenceStartupWindows = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 4
 uint8_t bObjDataPasAlgorithmStartup = 0;
 
@@ -279,9 +279,9 @@ uint8_t bObjDataConfigScreenProtocol        = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 0
 uint8_t bObjDataPasTorqueRunningThreshold = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 1
-uint16_t bObjDataPasCadenceRunningNumbPulses = 0;
+uint8_t bObjDataPasCadenceRunningNumbPulses = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 2
-uint32_t bObjDataPasCadenceRunningWindows = 0;
+uint16_t bObjDataPasCadenceRunningWindows = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 3
 uint8_t bObjDataPasAlgorithmRunning = 0;
 
@@ -1170,11 +1170,11 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceStartupNumbPulses};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasCadenceStartupNumbPulses};
             //move to next OD index
             index++;
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 3, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&bObjDataPasCadenceStartupWindows};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceStartupWindows};
             //move to next OD index
             index++;
             
@@ -1468,11 +1468,11 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceRunningNumbPulses};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasCadenceRunningNumbPulses};
             //move to next OD index
             index++;
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 2, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&bObjDataPasCadenceRunningWindows};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceRunningWindows};
 			//move to next OD index
             index++;
             

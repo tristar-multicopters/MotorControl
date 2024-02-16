@@ -487,13 +487,13 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE_RATIO,  0)), pNode, &pasMaxTorqueRatio, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 1)), pNode, &pasTorqueStartupThreshold, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint32_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 4)), pNode, &PasAlgorithmStartup, sizeof(uint8_t));
                  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 0)), pNode, &pasTorqueRunningThreshold, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 1)), pNode, &pasCadenceRunningNumbPulses, sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 2)), pNode, &pasCadenceRunningWindows, sizeof(uint32_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 1)), pNode, &pasCadenceRunningNumbPulses, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 2)), pNode, &pasCadenceRunningWindows, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 3)), pNode, &PasAlgorithmRunning, sizeof(uint8_t));
         
                  for(uint8_t n = PAS_0;n <= PAS_9;n++)
@@ -880,13 +880,13 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE_RATIO, 0)),            pNode, &pasMaxTorqueRatio, sizeof(uint8_t));     
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));        
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 1)), pNode, &pasTorqueStartupThreshold, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint16_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint32_t)); 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint16_t)); 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 4)), pNode, &PasAlgorithmStartup, sizeof(uint8_t));        
         
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 0)), pNode, &pasTorqueRunningThreshold, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 1)), pNode, &pasCadenceRunningNumbPulses, sizeof(uint16_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 2)), pNode, &pasCadenceRunningWindows, sizeof(uint32_t));  
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 1)), pNode, &pasCadenceRunningNumbPulses, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 2)), pNode, &pasCadenceRunningWindows, sizeof(uint16_t));  
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 3)), pNode, &PasAlgorithmRunning, sizeof(uint8_t)); 
         
         
