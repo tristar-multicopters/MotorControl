@@ -90,18 +90,21 @@ typedef struct
 //associated with PAS(pedal Assist System).
 typedef struct 
 {
-    uint8_t pasAlgorithm;
-    uint8_t numberOfPasLevels;
-    uint8_t pasMaxTorqueRatio;
+    uint8_t PasAlgorithm;
+    uint8_t NumberOfPasLevels;
+    uint8_t PasMaxTorqueRatio;
     PAS_Startup_Detection_t PAS_Startup_Detection;
     PAS_Running_Detection_t PAS_Running_Detection;
-    uint16_t torqueSensorMultiplier[10];
-    uint8_t PasLevelSpeed[10];
-    uint8_t pasLevelMaxTorque[10];
-    uint8_t pasLevelMinTorque[10];
+    uint16_t TorqueSensorMultiplier[9];
+    uint8_t PasLevelSpeed[9];
+    uint8_t PasLevelMaxTorque[9];
+    uint8_t PasLevelMinTorque[9];
+    uint8_t PasAccelRampType[9];
+    uint16_t PasAccelRampArg1[9];
+    uint8_t PasDecelRampType[9];
+    uint16_t PasDecelRampArg1[9];
     PAS_Torque_Filter_Configuration_t PAS_Torque_Filter_Configuration;
-    PAS_Sensor_Configuration_t PasSensorConfig;
-    
+    PAS_Sensor_Configuration_t PasSensorConfig;    
 } PAS_ConfigData_t;
 
 //struct used to hold the configuration
@@ -112,6 +115,8 @@ typedef struct
     uint16_t AdcMax; 
     uint8_t  ThrottleBlock;
     uint8_t  MaxSpeed;
+    uint8_t  AccelRampType;
+    uint16_t AccelRampArg1;
 } Throttle_ConfigData_t;
 
 typedef struct
@@ -124,19 +129,20 @@ typedef struct
     uint16_t PeakCurrentDeratingDuration; // In seconds x10
 } Battery_ConfigData_t;
 
-
-
 //struct used to hold the configuration
 //associated with the Vehicle.
 typedef struct
 {
-    uint8_t walkModeSpeed;
-    uint8_t maxSpeed;
-    uint8_t WheelDiameter;
-    uint8_t ScreenProtocol;
-    uint8_t HeadLightDefault;      // Contains the default state of the head light (on or off)
-    uint8_t TailLightDefault;      // Contains the default state of the tail light (on or off)      
-    uint8_t TailLightBlinkOnBrake;    
+    uint8_t  WalkmodeSpeed;
+    uint8_t  WalkmodeMaxTorque;
+    uint8_t  WalkmodeAccelRampType;
+    uint16_t WalkmodeAccelRampArg1;
+    uint8_t  MaxSpeed;
+    uint8_t  WheelDiameter;
+    uint8_t  ScreenProtocol;
+    uint8_t  HeadLightDefault;      // Contains the default state of the head light (on or off)
+    uint8_t  TailLightDefault;      // Contains the default state of the tail light (on or off)      
+    uint8_t  TailLightBlinkOnBrake;    
     Throttle_ConfigData_t Throttle_ConfigData;
 } Screen_ConfigData_t;
 

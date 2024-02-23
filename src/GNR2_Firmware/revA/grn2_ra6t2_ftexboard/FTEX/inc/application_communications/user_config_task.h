@@ -339,7 +339,7 @@ uint8_t UserConfigTask_GetPasLevelMinTorque(uint8_t pasLevel);
   @return void
 
 */
-void UserConfigTask_UpdatePasLevelMinTorque(uint8_t value, uint8_t pasLevel);
+void UserConfigTask_UpdatePasLevelMinTorque(uint8_t pasLevel, uint8_t value);
 
 /**
   @brief Function to get cadence Level Speed
@@ -473,7 +473,7 @@ void UserConfigTask_UpdateBikeMaxSpeed(uint8_t value);
           range bewteen 0-10.
 
 */
-uint8_t UserConfigTask_GetWalkModeSpeed(void);
+uint8_t UserConfigTask_GetWalkmodeSpeed(void);
 
 /**
   @brief Function to update bike speed on walk mode value
@@ -483,7 +483,63 @@ uint8_t UserConfigTask_GetWalkModeSpeed(void);
   @return void
 
 */
-void UserConfigTask_UpdateWalkModeSpeed(uint8_t value);
+void UserConfigTask_UpdateWalkmodeSpeed(uint8_t value);
+
+/**
+  @brief Function to get max torque on walk mode
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t max torque in % that the walk mode of the vehicle goes up to.
+
+*/
+uint8_t UserConfigTask_GetWalkmodeMaxTorque(void);
+
+/**
+  @brief Function to update max torque on walk mode value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the walk mode max torque in %
+  @return void
+
+*/
+void UserConfigTask_UpdateWalkmodeMaxTorque(uint8_t value);
+
+/**
+  @brief Function to get walkmode acceleration ramp type read from data flash memory.
+  
+  @param  void
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetWalkmodeAccelRampType(void);
+
+/**
+  @brief Function to update the walkmode acceleration ramp type read from data flash memory.
+  
+  @param uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateWalkmodeAccelRampType(uint8_t rampType);
+
+/**
+  @brief Function to get walkmode acceleration ramp argument 1 read from data flash memory.
+  
+  @param  void
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetWalkmodeAccelRampArg1(void);
+
+/**
+  @brief Function to update the walkmode acceleration ramp argument 1 read from data flash memory.
+  
+  @param uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateWalkmodeAccelRampArg1(uint16_t arg1);
 
 /**
   @brief Function to get Wheel Diameter
@@ -624,6 +680,42 @@ uint16_t UserConfigTask_GetThrottleAdcMax(void);
 
 */
 void UserConfigTask_UpdateThrottleAdcMax(uint16_t value);
+
+/**
+  @brief Function to get throttle acceleration ramp type read from data flash memory.
+  
+  @param  void
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetThrottleAccelRampType(void);
+
+/**
+  @brief Function to update the throttle acceleration ramp type read from data flash memory.
+  
+  @param uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateThrottleAccelRampType(uint8_t rampType);
+
+/**
+  @brief Function to get throttle acceleration ramp argument 1 read from data flash memory.
+  
+  @param  void
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetThrottleAccelRampArg1(void);
+
+/**
+  @brief Function to update the throttle acceleration ramp argument 1 read from data flash memory.
+  
+  @param uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateThrottleAccelRampArg1(uint16_t arg1);
 
 /**
   @brief Function to get Battery Full Voltage
@@ -865,6 +957,78 @@ uint8_t UserConfigTask_GetPasAlgorithmRunning(void);
  
 */
 void UserConfigTask_UpdatePasPasAlgorithmRunning(uint8_t value);
+
+/**
+  @brief Function to get pas acceleration ramp type read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetPasAccelRampType(uint8_t pasLevel);
+
+/**
+  @brief Function to update the pas acceleration ramp type read from data flash memory.
+  
+  @param uint8_t pasLevel, uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasAccelRampType(uint8_t pasLevel, uint8_t rampType);
+
+/**
+  @brief Function to get pas acceleration ramp argument 1 read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetPasAccelRampArg1(uint8_t pasLevel);
+
+/**
+  @brief Function to update the pas acceleration ramp argument 1 read from data flash memory.
+  
+  @param uint8_t pasLevel, uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasAccelRampArg1(uint8_t pasLevel, uint16_t arg1);
+
+/**
+  @brief Function to get pas deceleration ramp type read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetPasDecelRampType(uint8_t pasLevel);
+
+/**
+  @brief Function to update the pas deceleration ramp type read from data flash memory.
+  
+  @param uint8_t pasLevel, uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasDecelRampType(uint8_t pasLevel, uint8_t rampType);
+
+/**
+  @brief Function to get pas deceleration ramp argument 1 read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetPasDecelRampArg1(uint8_t pasLevel);
+
+/**
+  @brief Function to update the pas deceleration ramp argument 1 read from data flash memory.
+  
+  @param uint8_t pasLevel, uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasDecelRampArg1(uint8_t pasLevel, uint16_t arg1);
 
 /**
   @brief Function used to calculate a CRC 16 type using the same polynom 

@@ -277,8 +277,8 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             else
             {
                 ASSERT(false); // unexpected AssistType
-            }            
-            
+            }        
+
             //pHandle->rx_frame.Buffer[5] // assitance sensor type
             //pHandle->rx_frame.Buffer[6] // Magnets/ low speed behavior
             //pHandle->rx_frame.Buffer[7] // System undervoltage value

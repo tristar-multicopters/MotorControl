@@ -11,7 +11,7 @@
 #define __VC_PARAMETERS_H
 
 #include "gnr_parameters.h"
-
+#include "ramps.h"
 
 #if VEHICLE_SELECTION == VEHICLE_A2_350W 
 
@@ -142,11 +142,11 @@
 #endif
 
 #ifndef PAS_LEVEL_SPEED_8
-    #define PAS_LEVEL_SPEED_8         (uint8_t)32     /* Maximum Speed for PAS Level 8 in Km/h */
+    #define PAS_LEVEL_SPEED_8       (uint8_t)32     /* Maximum Speed for PAS Level 8 in Km/h */
 #endif
 
 #ifndef PAS_LEVEL_SPEED_9
-    #define PAS_LEVEL_SPEED_9         (uint8_t)32     /* Maximum Speed for PAS Level 9 in Km/h */
+    #define PAS_LEVEL_SPEED_9       (uint8_t)32     /* Maximum Speed for PAS Level 9 in Km/h */
 #endif
 
 
@@ -303,7 +303,168 @@
     #define PTS_FILTER_BW2_3                   25    // BW coefficient for pedal torque sensor avereging
 #endif
 
+//PAS ramps default values
 
+#ifndef PAS1_ACCEL_RAMP_TYPE
+    #define PAS1_ACCEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS1_ACCEL_RAMP_ARG1
+    #define PAS1_ACCEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS2_ACCEL_RAMP_TYPE
+    #define PAS2_ACCEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS2_ACCEL_RAMP_ARG1
+    #define PAS2_ACCEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS3_ACCEL_RAMP_TYPE
+    #define PAS3_ACCEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS3_ACCEL_RAMP_ARG1
+    #define PAS3_ACCEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS4_ACCEL_RAMP_TYPE
+    #define PAS4_ACCEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS4_ACCEL_RAMP_ARG1
+    #define PAS4_ACCEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS5_ACCEL_RAMP_TYPE
+    #define PAS5_ACCEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS5_ACCEL_RAMP_ARG1
+    #define PAS5_ACCEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS6_ACCEL_RAMP_TYPE
+    #define PAS6_ACCEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS6_ACCEL_RAMP_ARG1
+    #define PAS6_ACCEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS7_ACCEL_RAMP_TYPE
+    #define PAS7_ACCEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS7_ACCEL_RAMP_ARG1
+    #define PAS7_ACCEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS8_ACCEL_RAMP_TYPE
+    #define PAS8_ACCEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS8_ACCEL_RAMP_ARG1
+    #define PAS8_ACCEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS9_ACCEL_RAMP_TYPE
+    #define PAS9_ACCEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS9_ACCEL_RAMP_ARG1
+    #define PAS9_ACCEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS1_DECEL_RAMP_TYPE
+    #define PAS1_DECEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS1_DECEL_RAMP_ARG1
+    #define PAS1_DECEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS2_DECEL_RAMP_TYPE
+    #define PAS2_DECEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS2_DECEL_RAMP_ARG1
+    #define PAS2_DECEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS3_DECEL_RAMP_TYPE
+    #define PAS3_DECEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS3_DECEL_RAMP_ARG1
+    #define PAS3_DECEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS4_DECEL_RAMP_TYPE
+    #define PAS4_DECEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS4_DECEL_RAMP_ARG1
+    #define PAS4_DECEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS5_DECEL_RAMP_TYPE
+    #define PAS5_DECEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS5_DECEL_RAMP_ARG1
+    #define PAS5_DECEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS6_DECEL_RAMP_TYPE
+    #define PAS6_DECEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS6_DECEL_RAMP_ARG1
+    #define PAS6_DECEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS7_DECEL_RAMP_TYPE
+    #define PAS7_DECEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS7_DECEL_RAMP_ARG1
+    #define PAS7_DECEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS8_DECEL_RAMP_TYPE
+    #define PAS8_DECEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS8_DECEL_RAMP_ARG1
+    #define PAS8_DECEL_RAMP_ARG1                    0    
+#endif
+
+#ifndef PAS9_DECEL_RAMP_TYPE
+    #define PAS9_DECEL_RAMP_TYPE              NO_RAMP    
+#endif
+
+#ifndef PAS9_DECEL_RAMP_ARG1
+    #define PAS9_DECEL_RAMP_ARG1                    0    
+#endif
+
+
+#ifndef WALKMODE_ACCEL_RAMP_TYPE
+    #define WALKMODE_ACCEL_RAMP_TYPE          NO_RAMP    
+#endif
+
+#ifndef WALKMODE_ACCEL_RAMP_ARG1
+    #define WALKMODE_ACCEL_RAMP_ARG1                0    
+#endif
+
+#ifndef THROTTLE_ACCEL_RAMP_TYPE
+    #define THROTTLE_ACCEL_RAMP_TYPE          NO_RAMP    
+#endif
+
+#ifndef THROTTLE_ACCEL_RAMP_ARG1
+    #define THROTTLE_ACCEL_RAMP_ARG1                0    
+#endif
 
 #ifndef TORQUE_SPEED_LIMIT_GAIN
     #define TORQUE_SPEED_LIMIT_GAIN 100
@@ -319,7 +480,7 @@
 #endif    
 //cadence detection windows on ms when running. 
 #ifndef PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS
-    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 500
+    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 150
 #endif
     
 #ifndef THROTTLE_BLOCK_OFF

@@ -19,6 +19,11 @@ uint8_t bPASCounterAct = 0; // Slow cadence PAS activation loop couter
 //
 static PasCadenceState_t PasCadenceState = CADENCE_DETECTION_STARTUP;
 
+Ramps_Handle_t PasCadenceDecelRamp = {
+    .RampDirection = DECELERATION,
+    .RampType = NO_RAMP,
+};  
+
 /* Functions ---------------------------------------------------- */
 
 // Internal utility function to verify that the assist level we got is within the supported range
@@ -44,6 +49,13 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
     PedalAssist_ResetTorqueStartupPasDection(pHandle);
     PedalAssist_ResetTorqueRunningPasDection(pHandle);
     PedalAssist_PASUpdateMaxSpeed(pHandle);
+    
+    for( int i = 0; i < 10 ; i++) 
+    {
+        Ramps_Init(&(pHandle->sParameters.PasRamps[0][i]));
+        Ramps_Init(&(pHandle->sParameters.PasRamps[1][i]));
+    }
+
 }
 
 /**
@@ -132,7 +144,7 @@ uint16_t PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle)
     uint16_t userConfigSpeed = 0;
     if (currentLevel == PAS_LEVEL_WALK)
     {
-        userConfigSpeed = UserConfigTask_GetWalkModeSpeed();
+        userConfigSpeed = UserConfigTask_GetWalkmodeSpeed();
     }
     else
     {        
@@ -537,6 +549,39 @@ void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo
     ASSERT(pHandle != NULL);
     
     pHandle->bPasPowerAlgorithm = aPASAlgo;
+}
+
+/**
+    * @brief  Get the ramp that should be applied when using PAS
+    * @param  Pedal Assist handle, Ramp to apply
+    * @retval void
+    */
+Ramps_Handle_t * PedalAssist_GetRamp(PAS_Handle_t * pHandle, uint8_t Direction)
+{
+    ASSERT(pHandle != NULL);
+        
+    if (pHandle->bCurrentAssistLevel != PAS_LEVEL_WALK)
+    {
+        if (pHandle->bPasPowerAlgorithm == CadenceSensorUse && Direction == DECELERATION)
+        {
+            return &PasCadenceDecelRamp; // Force a common no ramp decel for any cadence powered pas 
+        }
+        else
+        {            
+            return &(pHandle->sParameters.PasRamps[Direction][pHandle->bCurrentAssistLevel]); 
+        }
+    }
+    else
+    {
+        if (pHandle->bPasPowerAlgorithm == CadenceSensorUse && Direction == DECELERATION)
+        {
+            return &PasCadenceDecelRamp;
+        }
+        else
+        {
+            return &(pHandle->sParameters.PasWalkmodeRamp);
+        }
+    }      
 }
 
 /**

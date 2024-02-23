@@ -1050,6 +1050,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\vc_autodetermination.c</FilePath>
             </File>
+            <File>
+              <FileName>ramps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\ramps.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2927,6 +2932,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\vc_autodetermination.c</FilePath>
             </File>
+            <File>
+              <FileName>ramps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\ramps.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -4803,6 +4813,11 @@
               <FileName>vc_autodetermination.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\vc_autodetermination.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\ramps.c</FilePath>
             </File>
           </Files>
         </Group>

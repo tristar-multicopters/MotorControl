@@ -60,7 +60,7 @@ extern "C" {
 #define CO_OD_REG_HB_TIME                      0x1017
 
 //OD ID used to Identity the Object.
-//this object has 5 subindex 
+// this object has 5 subindex 
 //
 // 0 -> Highest sub-index supported.
 // 1 -> Vendor ID.
@@ -70,7 +70,7 @@ extern "C" {
 #define CO_OD_IDENTITY_OBJECT                  0x1018
 
 //OD ID used for the Communication Object SDO Server
-//this object has 3 subindex 
+// this object has 3 subindex 
 //
 // 0 -> inform Highest sub-index supported.
 // 1 -> SDO Server Request COBID
@@ -78,7 +78,7 @@ extern "C" {
 #define CO_OD_SDO_SERVER                       0x1200
 
 //OD ID used for the SDO Client - a device to request information
-//this object has 4 subindex
+// this object has 4 subindex
 //
 // 0 -> Highest sub-index supported.
 // 1 -> COB-ID Client to Server
@@ -87,7 +87,7 @@ extern "C" {
 #define CO_OD_SDO_CLIENT_01                    0x1280
 
 //OD ID used for the SDO Client - a device to request information
-//this object has 4 subindex 
+// this object has 4 subindex 
 //
 // 0 -> Highest sub-index supported.
 // 1 -> COB-ID Client to Server
@@ -96,7 +96,7 @@ extern "C" {
 #define CO_OD_SDO_CLIENT_02                    0x1281
 
 //OD ID used for RPDO communication parameters
-//this object has 4 subindex 
+// this object has 4 subindex 
 //
 // 0 -> Highest sub-index supported.
 // 1 -> COB-ID used by RPDO
@@ -105,7 +105,7 @@ extern "C" {
 #define CO_OD_RPOD                             0x1400
 
 //OD ID used for RPDO mapping parameters
-//this object can have up to 8 subindex 
+// this object can have up to 8 subindex 
 //
 // 0 -> Number of mapped application objects in PDO
 // 1 -> Application object 1
@@ -117,7 +117,7 @@ extern "C" {
 #define CO_OD_RPOD_MAPPING                     0x1600
 
 //OD ID used for TPDO communication parameter
-//this object can have up to 8 subindex 
+// this object can have up to 8 subindex 
 //
 // 0 -> Highest sub-index supported
 // 1 -> COB-ID used by TPDO
@@ -127,7 +127,7 @@ extern "C" {
 #define CO_OD_TPDO_COMMUNICATION               0x1800
 
 //OD ID used for RPDO mapping parameter
-//this object can have up to 8 subindex
+// this object can have up to 8 subindex
 //
 // 0 -> Number of mapped application objects in PDO
 // 1 -> Application object 1
@@ -148,7 +148,7 @@ extern "C" {
 #define CO_OD_REG_SPEED_MEASURE                0x2000 /**< OD ID for speed measure           >*/
 
 //OD ID used to hold the vehicle power/torque values
-//this object has 2 subindex
+// this object has 2 subindex
 //
 // 0 -> power measure in watts
 // 1 -> torque measure in Ncm
@@ -185,7 +185,7 @@ extern "C" {
 /* User Data configuration for the Gnr */
 
 //OD ID used to inform if user data was updated or is being updated.
-//this object has 2 subindex 
+// this object has 2 subindex 
 //
 // 0 -> KEY_USER_DATA_CONFIG_BEING_UPDATED   0xD5A3 : indicate memory being upadted
 // 1 -> KEY_USER_DATA_CONFIG_UPDATED         0xC2E5 : indicate memory was updated
@@ -208,7 +208,7 @@ extern "C" {
 #define CO_OD_REG_PAS_MAX_TORQUE_RATIO         0x2016
 
 //OD ID used to setup some PAS parameters on startup condition.
-//this object has 5 subindex 
+// this object has 5 subindex 
 //
 // 0 -> hStartupOffsetMTSpeedKMH = PTS_OFFSET_STARTUP_SPEED_KMH
 //     Startup config speed. Speed at which startup configuration becomes active.
@@ -229,46 +229,49 @@ extern "C" {
 
 //OD ID used to configure the torque Sensor Multiplier(GAIN)
 //PAS ramp multiplication coefficient for a better user feeling
-//this object has 10 subindex 
+// this object has 9 subindex 
 //
-// 0 -> sParameters.bTorqueGain[0] = PAS_0_TORQUE_GAIN
-//     Torque Gain to PAS 0
 //
-// 1 -> sParameters.bTorqueGain[1] = PAS_1_TORQUE_GAIN
+// 0 -> sParameters.bTorqueGain[1] = PAS_1_TORQUE_GAIN
 //     Torque Gain to PAS 1
 //
-// 2 -> sParameters.bTorqueGain[2] = PAS_2_TORQUE_GAIN
+// 1 -> sParameters.bTorqueGain[2] = PAS_2_TORQUE_GAIN
 //     Torque Gain to PAS 2
 // .....
-// 9 -> sParameters.bTorqueGain[9] = PAS_9_TORQUE_GAIN
+// 8 -> sParameters.bTorqueGain[9] = PAS_9_TORQUE_GAIN
 //     Torque Gain to PAS 9
 #define CO_OD_REG_TORQUE_SENSOR_MULTIPLIER     0x2018
 
-//OD ID used to configure the pas minimum torque 
+//OD ID used to configure the pas minimum torque
+// this object has 9 subindex 
+//
+// 0 -> PAS 1 Min Torque
+// 1 -> PAS 2 Min Torque
+// .....
+// 8 -> PAS 9 Min Torque
 #define CO_OD_REG_PAS_MIN_TORQUE               0x2019
 
 //OD ID used to configure the speed for each Pas Level.
 //Maximum Speed for PAS Level x in Km/h
 //The define(s) used by this parameter is:
 //.sParameters.PASMaxSpeed
-// this object has 10 subindex 
+// this object has 9 subindex 
 //
-// Max Cadence on Speed PAS 0
-// 0 -> sParameters.PASMaxSpeed[0] = PAS_LEVEL_SPEED_0
 //
 // Max Cadence on Speed PAS 1
-// 1 -> sParameters.PASMaxSpeed[1] = PAS_LEVEL_SPEED_1
+// 0 -> sParameters.PASMaxSpeed[1] = PAS_LEVEL_SPEED_1
 //
 // Max Cadence on Speed PAS 2
-// 2 -> sParameters.PASMaxSpeed[2] = PAS_LEVEL_SPEED_2
+// 1 -> sParameters.PASMaxSpeed[2] = PAS_LEVEL_SPEED_2
 //.....
 // Max Cadence on Speed PAS 9
-// 9 -> sParameters.PASMaxSpeed[9] = PAS_LEVEL_SPEED_9
+// 8 -> sParameters.PASMaxSpeed[9] = PAS_LEVEL_SPEED_9
 #define CO_OD_REG_PAS_LEVEL_SPEED              0x201A
 
 //OD ID used to the configure Torque level Power.
 //The define(s) used by this parameter is:
-//this object has 10 subindex
+//
+//this object has 9 subindex
 #define CO_OD_REG_PAS_MAX_TORQUE               0x201B
 
 //OD ID used to configure the  Maximum speed.
@@ -281,6 +284,12 @@ extern "C" {
 //Maximum bike speed when on the walk mode.
 //The define(s) used by this parameter is:
 //PAS_LEVEL_SPEED_WALK
+// this object has 3 subindex
+//
+// 0 -> Walkmode Speed in km/h
+// 1 -> Walkmode Max torque in %
+// 2 -> Walkmode Acceleration ramp type 
+// 3 -> Walkmode Acceleration ramp argument 1 
 #define CO_OD_REG_WALK_MODE_SPEED              0x201D
 
 //OD ID used to configure battery voltages
@@ -324,7 +333,6 @@ extern "C" {
 //     This changes the speed at which the rear light blinks if set to blink, 
 // 4 -> Get or set the rear light duty cycle when blinking. 
 //     The % represents the % of time the light should be on when the light is blinking.
-
 #define CO_OD_REG_VEHICLE_REAR_LIGHT           0x2022
 
 //OD ID used on dual motor to detect if the GNR master/slave
@@ -346,7 +354,6 @@ extern "C" {
 // 3 -> Configure the number of magnets per rotation of the PAS cadence sensor
 // 4 -> PAS torque sensor min value (ie. Offset), between 0-65535  (0 means 0V, 65535 means 3.3V)
 // 5 -> PAS torque sensor max value, between 0-65535  (0 means 0V, 65535 means 3.3V)
-
 #define COD_OD_REG_PAS_SENSOR                  0x2024
 
 //OD ID is used to set the screen protocol 
@@ -363,7 +370,7 @@ extern "C" {
 #define CO_OD_REG_BATTERY_DC_CURRENT           0x2026
 
 //OD ID is used to control the throttle and to set it's limits
-// this object has 6 subindex
+// this object has 8 subindex
 //
 // 0 -> Throttle ADC Value  [0 - 65535] where 65535 = 5 V
 // 1 -> Throttle Get/Set Value in %
@@ -371,6 +378,8 @@ extern "C" {
 // 3 -> Throttle ADC Max    [0 - 65535] where 65535 = 5 V
 // 4 -> Throttle Block Off  true/false
 // 5 -> Throttle Max Speed
+// 6 -> Throttle Acceleration ramp type 
+// 7 -> Throttle Acceleration ramp argument 1 
 #define CO_OD_REG_CONTROLLER_THROTTLE          0x2027
 
 //OD ID used to setup some PAS parameters on running condition.
@@ -390,9 +399,29 @@ extern "C" {
 //     PasAlgorithmRunning for decide what algo will be used to detected PAS on run time.
 #define CO_OD_REG_PAS_DETECTION_RUNNING        0x2028 
 
-// Available                                   0x2029
+//OD ID used to setup some PAS parameters on acceleration ramp 
+// this object has 18 subindex
+//
+//  0 -> PAS 1 Ramp Type 0 No Ramp, 1 Linear
+//  1 -> PAS 1 Ramp Argument 1
+//  2 -> PAS 2 Ramp Type 0 No Ramp, 1 Linear
+//  3 -> PAS 2 Ramp Argument 1
+//.....
+// 16 -> PAS 9 Ramp Type 0 No Ramp, 1 Linear
+// 17 -> PAS 9 Ramp Argument 1
+#define CO_OD_REG_PAS_ACCEL_RAMP               0x2029
 
-// Available                                   0x202A
+//OD ID used to setup some PAS parameters on deceleration ramp 
+// this object has 18 subindex
+//
+//  0 -> PAS 1 Ramp Type 0 No Ramp, 1 Linear
+//  1 -> PAS 1 Ramp Argument 1
+//  2 -> PAS 2 Ramp Type 0 No Ramp, 1 Linear
+//  3 -> PAS 2 Ramp Argument 1
+//.....
+// 16 -> PAS 9 Ramp Type 0 No Ramp, 1 Linear
+// 17 -> PAS 9 Ramp Argument 1
+#define CO_OD_REG_PAS_DECEL_RAMP               0x202A
 
 // Available                                   0x202B
 

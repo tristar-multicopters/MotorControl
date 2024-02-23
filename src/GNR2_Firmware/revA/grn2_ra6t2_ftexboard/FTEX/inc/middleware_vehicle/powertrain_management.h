@@ -19,6 +19,7 @@
 #include "battery_monitoring.h"
 #include "pedal_assist.h"
 #include "wheel.h"
+#include "ramps.h"
 #include "vc_constants.h"
 
 // ============================== Defines =============================== // 
@@ -96,6 +97,7 @@ typedef struct
     int16_t aSpeed[2];                            // Array of speed reference, first element is for M1, second is for M2
     
     int16_t hTorqueSelect;                        // Select torque to feed for motor control
+    int16_t hOldTorqueSelect;                     // Contaisn the preivous value of torque select that we sent, value can only be updated right before we send it to the MC layer
     
     uint16_t aFaultManagementCounters[5][2];      /* Array of counter before acknowledging motor faults. First dimension is
                                                      fault type in this order: Over current, startup, and speed feedback, Stuck Reverse. 

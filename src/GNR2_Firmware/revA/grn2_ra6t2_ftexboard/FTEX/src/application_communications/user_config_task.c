@@ -31,9 +31,9 @@ static User_ConfigData_t userConfigData =
     .dataHeader[0] = ID0_DATA_FLASH,
     .dataHeader[1] = ID1_DATA_FLASH,
     .vehicle = VEHICLE_SELECTION,
-    .PAS_ConfigData.pasAlgorithm = PAS_POWER_ALGORITHM,
-    .PAS_ConfigData.numberOfPasLevels = PAS_MAX_LEVEL,
-    .PAS_ConfigData.pasMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
+    .PAS_ConfigData.PasAlgorithm = PAS_POWER_ALGORITHM,
+    .PAS_ConfigData.NumberOfPasLevels = PAS_MAX_LEVEL,
+    .PAS_ConfigData.PasMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
     .PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupSpeed = PTS_OFFSET_STARTUP_SPEED_KMH,
     .PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupThreshold = PTS_OFFSET_PTS2TORQUE_STARTUP,
     .PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupNumbPulses = PEDALSPEEDSENSOR_MIN_PULSE_STARTUP,
@@ -43,46 +43,86 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningNumbPulses = PEDALSPEEDSENSOR_MIN_PULSE_RUNNING,
     .PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningWindows = PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS,
     .PAS_ConfigData.PAS_Running_Detection.PasAlgorithmRunning = PAS_DETECTIONRUNNING_ALGORITHM,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_0] = PAS_0_TORQUE_GAIN,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_1] = PAS_1_TORQUE_GAIN,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_2] = PAS_2_TORQUE_GAIN,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_3] = PAS_3_TORQUE_GAIN,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_4] = PAS_4_TORQUE_GAIN,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_5] = PAS_5_TORQUE_GAIN,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_6] = PAS_6_TORQUE_GAIN,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_7] = PAS_7_TORQUE_GAIN,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_8] = PAS_8_TORQUE_GAIN,
-    .PAS_ConfigData.torqueSensorMultiplier[PAS_9] = PAS_9_TORQUE_GAIN,
-    .PAS_ConfigData.PasLevelSpeed[PAS_0] = PAS_LEVEL_SPEED_0,
-    .PAS_ConfigData.PasLevelSpeed[PAS_1] = PAS_LEVEL_SPEED_1,
-    .PAS_ConfigData.PasLevelSpeed[PAS_2] = PAS_LEVEL_SPEED_2,
-    .PAS_ConfigData.PasLevelSpeed[PAS_3] = PAS_LEVEL_SPEED_3,
-    .PAS_ConfigData.PasLevelSpeed[PAS_4] = PAS_LEVEL_SPEED_4,
-    .PAS_ConfigData.PasLevelSpeed[PAS_5] = PAS_LEVEL_SPEED_5,
-    .PAS_ConfigData.PasLevelSpeed[PAS_6] = PAS_LEVEL_SPEED_6,
-    .PAS_ConfigData.PasLevelSpeed[PAS_7] = PAS_LEVEL_SPEED_7,
-    .PAS_ConfigData.PasLevelSpeed[PAS_8] = PAS_LEVEL_SPEED_8,
-    .PAS_ConfigData.PasLevelSpeed[PAS_9] = PAS_LEVEL_SPEED_9,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_0] = PAS_0_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_1] = PAS_1_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_2] = PAS_2_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_3] = PAS_3_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_4] = PAS_4_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_5] = PAS_5_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_6] = PAS_6_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_7] = PAS_7_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_8] = PAS_8_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMinTorque[PAS_9] = PAS_9_MIN_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_0] = PAS_0_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_1] = PAS_1_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_2] = PAS_2_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_3] = PAS_3_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_4] = PAS_4_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_5] = PAS_5_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_6] = PAS_6_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_7] = PAS_7_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_8] = PAS_8_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.pasLevelMaxTorque[PAS_9] = PAS_9_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.TorqueSensorMultiplier[0] = PAS_1_TORQUE_GAIN,
+    .PAS_ConfigData.TorqueSensorMultiplier[1] = PAS_2_TORQUE_GAIN,
+    .PAS_ConfigData.TorqueSensorMultiplier[2] = PAS_3_TORQUE_GAIN,
+    .PAS_ConfigData.TorqueSensorMultiplier[3] = PAS_4_TORQUE_GAIN,
+    .PAS_ConfigData.TorqueSensorMultiplier[4] = PAS_5_TORQUE_GAIN,
+    .PAS_ConfigData.TorqueSensorMultiplier[5] = PAS_6_TORQUE_GAIN,
+    .PAS_ConfigData.TorqueSensorMultiplier[6] = PAS_7_TORQUE_GAIN,
+    .PAS_ConfigData.TorqueSensorMultiplier[7] = PAS_8_TORQUE_GAIN,
+    .PAS_ConfigData.TorqueSensorMultiplier[8] = PAS_9_TORQUE_GAIN,
+    
+    .PAS_ConfigData.PasLevelSpeed[0] = PAS_LEVEL_SPEED_1,
+    .PAS_ConfigData.PasLevelSpeed[1] = PAS_LEVEL_SPEED_2,
+    .PAS_ConfigData.PasLevelSpeed[2] = PAS_LEVEL_SPEED_3,
+    .PAS_ConfigData.PasLevelSpeed[3] = PAS_LEVEL_SPEED_4,
+    .PAS_ConfigData.PasLevelSpeed[4] = PAS_LEVEL_SPEED_5,
+    .PAS_ConfigData.PasLevelSpeed[5] = PAS_LEVEL_SPEED_6,
+    .PAS_ConfigData.PasLevelSpeed[6] = PAS_LEVEL_SPEED_7,
+    .PAS_ConfigData.PasLevelSpeed[7] = PAS_LEVEL_SPEED_8,
+    .PAS_ConfigData.PasLevelSpeed[8] = PAS_LEVEL_SPEED_9,
+    
+    .PAS_ConfigData.PasLevelMinTorque[0] = PAS_1_MIN_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMinTorque[1] = PAS_2_MIN_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMinTorque[2] = PAS_3_MIN_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMinTorque[3] = PAS_4_MIN_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMinTorque[4] = PAS_5_MIN_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMinTorque[5] = PAS_6_MIN_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMinTorque[6] = PAS_7_MIN_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMinTorque[7] = PAS_8_MIN_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMinTorque[8] = PAS_9_MIN_TORQUE_PERCENT,
+    
+    .PAS_ConfigData.PasLevelMaxTorque[0] = PAS_1_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMaxTorque[1] = PAS_2_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMaxTorque[2] = PAS_3_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMaxTorque[3] = PAS_4_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMaxTorque[4] = PAS_5_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMaxTorque[5] = PAS_6_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMaxTorque[6] = PAS_7_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMaxTorque[7] = PAS_8_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMaxTorque[8] = PAS_9_MAX_TORQUE_PERCENT,
+    
+    .PAS_ConfigData.PasAccelRampType[0] = PAS1_ACCEL_RAMP_TYPE, 
+    .PAS_ConfigData.PasAccelRampType[1] = PAS2_ACCEL_RAMP_TYPE, 
+    .PAS_ConfigData.PasAccelRampType[2] = PAS3_ACCEL_RAMP_TYPE, 
+    .PAS_ConfigData.PasAccelRampType[3] = PAS4_ACCEL_RAMP_TYPE, 
+    .PAS_ConfigData.PasAccelRampType[4] = PAS5_ACCEL_RAMP_TYPE, 
+    .PAS_ConfigData.PasAccelRampType[5] = PAS6_ACCEL_RAMP_TYPE, 
+    .PAS_ConfigData.PasAccelRampType[6] = PAS7_ACCEL_RAMP_TYPE,
+    .PAS_ConfigData.PasAccelRampType[7] = PAS8_ACCEL_RAMP_TYPE,
+    .PAS_ConfigData.PasAccelRampType[8] = PAS9_ACCEL_RAMP_TYPE,
+    
+    .PAS_ConfigData.PasAccelRampArg1[0] = PAS1_ACCEL_RAMP_ARG1,
+    .PAS_ConfigData.PasAccelRampArg1[1] = PAS2_ACCEL_RAMP_ARG1,
+    .PAS_ConfigData.PasAccelRampArg1[2] = PAS3_ACCEL_RAMP_ARG1,
+    .PAS_ConfigData.PasAccelRampArg1[3] = PAS4_ACCEL_RAMP_ARG1,
+    .PAS_ConfigData.PasAccelRampArg1[4] = PAS5_ACCEL_RAMP_ARG1,
+    .PAS_ConfigData.PasAccelRampArg1[5] = PAS6_ACCEL_RAMP_ARG1,
+    .PAS_ConfigData.PasAccelRampArg1[6] = PAS7_ACCEL_RAMP_ARG1,
+    .PAS_ConfigData.PasAccelRampArg1[7] = PAS8_ACCEL_RAMP_ARG1,
+    .PAS_ConfigData.PasAccelRampArg1[8] = PAS9_ACCEL_RAMP_ARG1,
+    
+    .PAS_ConfigData.PasDecelRampType[0] = PAS1_DECEL_RAMP_TYPE,
+    .PAS_ConfigData.PasDecelRampType[1] = PAS2_DECEL_RAMP_TYPE,
+    .PAS_ConfigData.PasDecelRampType[2] = PAS3_DECEL_RAMP_TYPE,
+    .PAS_ConfigData.PasDecelRampType[3] = PAS4_DECEL_RAMP_TYPE,
+    .PAS_ConfigData.PasDecelRampType[4] = PAS5_DECEL_RAMP_TYPE,
+    .PAS_ConfigData.PasDecelRampType[5] = PAS6_DECEL_RAMP_TYPE,
+    .PAS_ConfigData.PasDecelRampType[6] = PAS7_DECEL_RAMP_TYPE,
+    .PAS_ConfigData.PasDecelRampType[7] = PAS8_DECEL_RAMP_TYPE,
+    .PAS_ConfigData.PasDecelRampType[8] = PAS9_DECEL_RAMP_TYPE,
+    
+    .PAS_ConfigData.PasDecelRampArg1[0] = PAS1_DECEL_RAMP_ARG1,
+    .PAS_ConfigData.PasDecelRampArg1[1] = PAS2_DECEL_RAMP_ARG1,
+    .PAS_ConfigData.PasDecelRampArg1[2] = PAS3_DECEL_RAMP_ARG1,
+    .PAS_ConfigData.PasDecelRampArg1[3] = PAS4_DECEL_RAMP_ARG1,
+    .PAS_ConfigData.PasDecelRampArg1[4] = PAS5_DECEL_RAMP_ARG1,
+    .PAS_ConfigData.PasDecelRampArg1[5] = PAS6_DECEL_RAMP_ARG1,
+    .PAS_ConfigData.PasDecelRampArg1[6] = PAS7_DECEL_RAMP_ARG1,
+    .PAS_ConfigData.PasDecelRampArg1[7] = PAS8_DECEL_RAMP_ARG1,
+    .PAS_ConfigData.PasDecelRampArg1[8] = PAS9_DECEL_RAMP_ARG1,   
+    
     .PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn = 0, // To update
     .PAS_ConfigData.PasSensorConfig.pasTorqueInputMax = PTS_MAX_PTSVALUE,
     .PAS_ConfigData.PasSensorConfig.pasTorqueInputMin = PTS_OFFSET_ADC2PTS,
@@ -102,8 +142,11 @@ static User_ConfigData_t userConfigData =
     .Battery_ConfigData.ContinuousDCCurrent = MAX_BMS_POSITIVE_POWER,
     .Battery_ConfigData.PeakCurrentDeratingDuration =  (MAX_TIME_BMS_TOLERANT - MAX_POWER_LIMIT_TIMEOUT),
     .Battery_ConfigData.PeakCurrentMaxDuration = MAX_POWER_LIMIT_TIMEOUT,
-    .Screen_ConfigData.walkModeSpeed = PAS_LEVEL_SPEED_WALK,
-    .Screen_ConfigData.maxSpeed = VEHICLE_TOP_SPEED_KMH,
+    .Screen_ConfigData.WalkmodeSpeed = PAS_LEVEL_SPEED_WALK,
+    .Screen_ConfigData.WalkmodeMaxTorque = PAS_WALK_POWER_PERCENT,
+    .Screen_ConfigData.WalkmodeAccelRampType = WALKMODE_ACCEL_RAMP_TYPE,
+    .Screen_ConfigData.WalkmodeAccelRampArg1 = WALKMODE_ACCEL_RAMP_ARG1,
+    .Screen_ConfigData.MaxSpeed = VEHICLE_TOP_SPEED_KMH,
     .Screen_ConfigData.WheelDiameter = WHEEL_DIAMETER,
     .Screen_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
     .Screen_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
@@ -112,6 +155,8 @@ static User_ConfigData_t userConfigData =
     .crc = 0x0000,
     .Screen_ConfigData.Throttle_ConfigData.ThrottleBlock = THROTTLE_BLOCK_OFF,
     .Screen_ConfigData.Throttle_ConfigData.MaxSpeed = VEHICLE_TOP_SPEED_KMH,
+    .Screen_ConfigData.Throttle_ConfigData.AccelRampType = THROTTLE_ACCEL_RAMP_TYPE,
+    .Screen_ConfigData.Throttle_ConfigData.AccelRampArg1 = THROTTLE_ACCEL_RAMP_ARG1, 
 };
 
 //struct used to hold the values of the user configuration
@@ -281,8 +326,7 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
                 //stop the attempts.
                 break;
                 
-            }
-                
+            }               
         }
             
         //check if the memory was erased in less than three attempts
@@ -300,10 +344,8 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
             memcpy(data,&userConfigData,USER_DATA_CONFIG_LENGTH);
                 
             //write user configuration that represents USER_DATA_CONFIG_LENGTH bytes.
-            uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_4, NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN);
-                
-        }
-            
+            uCAL_Data_Flash_Write(userConfigHandle->pDataFlash_Handle,data,FLASH_HP_DF_BLOCK_4, NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN);                
+        }            
     }
     
     //Close data flash memory access.
@@ -368,7 +410,7 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pPAS->bRunningPasAlgorithm = UserConfigTask_GetPasAlgorithmRunning();
     
       
-    for(uint8_t n = PAS_0;n <= PAS_9;n++)
+    for(uint8_t n = PAS_1;n <= PAS_9;n++)
     {
         //update PAS_ConfigData.torqueSensorMultiplier(PAS_TORQUE_GAIN) 
         paPowertrain->pPAS->sParameters.bTorqueGain[n] = UserConfigTask_GetTorqueSensorMultiplier(n);
@@ -378,7 +420,18 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
         paPowertrain->pPAS->sParameters.PASMinTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMinTorque(n);
         //
         paPowertrain->pPAS->sParameters.PASMaxTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMaxTorque(n);
+        
+        paPowertrain->pPAS->sParameters.PasRamps[0][n].RampType = UserConfigTask_GetPasAccelRampType(n);
+        paPowertrain->pPAS->sParameters.PasRamps[1][n].RampType = UserConfigTask_GetPasDecelRampType(n);
+        
+        paPowertrain->pPAS->sParameters.PasRamps[0][n].LinearParameters.Alpha = UserConfigTask_GetPasAccelRampArg1(n);
+        paPowertrain->pPAS->sParameters.PasRamps[1][n].LinearParameters.Alpha = UserConfigTask_GetPasDecelRampArg1(n);
     }
+    
+    paPowertrain->pPAS->sParameters.walkModeTorqueRatio = UserConfigTask_GetWalkmodeMaxTorque();
+    paPowertrain->pPAS->sParameters.PasWalkmodeRamp.RampType = UserConfigTask_GetWalkmodeAccelRampType();
+    paPowertrain->pPAS->sParameters.PasWalkmodeRamp.LinearParameters.Alpha =  UserConfigTask_GetWalkmodeAccelRampArg1();
+
     
     //update vehicle max speed(VEHICLE_TOP_SPEED_KMH).
     paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
@@ -409,6 +462,10 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();  
     paPowertrain->pThrottle->BlockOffThrottle = UserConfigTask_GetThrottleBlockOff();
     paPowertrain->pThrottle->hParameters.DefaultMaxThrottleSpeedKMH= UserConfigTask_GetThrottleMaxSpeed();
+    
+    paPowertrain->pThrottle->hParameters.ThrottleRamps[0].RampType = UserConfigTask_GetThrottleAccelRampType();
+    paPowertrain->pThrottle->hParameters.ThrottleRamps[0].LinearParameters.Alpha = UserConfigTask_GetThrottleAccelRampArg1();
+
     
     paPowertrain->pBatMonitorHandle->VBatMax = UserConfigTask_GetBatteryFullVoltage();
     paPowertrain->pBatMonitorHandle->VBatMin = UserConfigTask_GetBatteryEmptyVoltage();
@@ -444,7 +501,7 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
 */
 uint8_t UserConfigTask_GetPasAlgorithm(void)
 {
-    return userConfigData.PAS_ConfigData.pasAlgorithm;   
+    return userConfigData.PAS_ConfigData.PasAlgorithm;   
 }
 
 /**
@@ -456,7 +513,7 @@ uint8_t UserConfigTask_GetPasAlgorithm(void)
 */
 void UserConfigTask_UpdataPasAlgorithm(uint8_t value)
 {
-    userConfigData.PAS_ConfigData.pasAlgorithm = value;   
+    userConfigData.PAS_ConfigData.PasAlgorithm = value;   
 }
 
 /**
@@ -468,7 +525,7 @@ void UserConfigTask_UpdataPasAlgorithm(uint8_t value)
 */
 uint8_t UserConfigTask_GetNumberPasLevels(void)
 {
-    return userConfigData.PAS_ConfigData.numberOfPasLevels; 
+    return userConfigData.PAS_ConfigData.NumberOfPasLevels; 
 }
 
 /**
@@ -481,9 +538,9 @@ uint8_t UserConfigTask_GetNumberPasLevels(void)
 void UserConfigTask_UpdateNumberPasLevels(uint8_t value)
 {
     //verify if vakue is in the range.
-    if((value <= 10) && (value >= 0))
+    if((value < 10) && (value >= 0))
     {
-        userConfigData.PAS_ConfigData.numberOfPasLevels = value;
+        userConfigData.PAS_ConfigData.NumberOfPasLevels = value;
     }        
 }
 
@@ -497,7 +554,7 @@ void UserConfigTask_UpdateNumberPasLevels(uint8_t value)
 */
 uint8_t UserConfigTask_GetPasMaxTorqueRatio(void)
 {
-    return userConfigData.PAS_ConfigData.pasMaxTorqueRatio; 
+    return userConfigData.PAS_ConfigData.PasMaxTorqueRatio; 
 }
 
 /**
@@ -512,7 +569,7 @@ void UserConfigTask_UpdatePasMaxTorqueRatio(uint8_t value)
     //verify if vakue is in the range.
     if((value <= 100) && (value >= 0))
     {
-        userConfigData.PAS_ConfigData.pasMaxTorqueRatio = value;    
+        userConfigData.PAS_ConfigData.PasMaxTorqueRatio = value;    
     }
 }
 
@@ -570,7 +627,7 @@ uint8_t UserConfigTask_GetPasTorqueStartupThreshold(void)
 void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value)
 {
     //verify if value is in the range.
-     if((value <= 100) && (value >= 0))
+    if((value <= 100) && (value >= 0))
     {
         userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupThreshold = value;
     }        
@@ -680,13 +737,13 @@ NOTE: parameter passed in the PedalAssist_GetTorqueFromTS
 uint16_t UserConfigTask_GetTorqueSensorMultiplier(uint8_t pasLevel)
 {
     //verify if value is in the range.
-    if (pasLevel < 10)
+    if (0 < pasLevel && pasLevel < 10)
     {
-        return userConfigData.PAS_ConfigData.torqueSensorMultiplier[pasLevel];
+        return userConfigData.PAS_ConfigData.TorqueSensorMultiplier[pasLevel-1];
     }
     else
     {
-        return userConfigData.PAS_ConfigData.torqueSensorMultiplier[0];
+        return 0;
     }    
 }
 
@@ -701,9 +758,9 @@ uint16_t UserConfigTask_GetTorqueSensorMultiplier(uint8_t pasLevel)
 void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t pasLevel, uint16_t value)
 {
     //
-    if ((pasLevel < 10) && (value <= 0xFFFF))
+    if ((0 < pasLevel && pasLevel < 10) && (value <= 0xFFFF))
     {
-        userConfigData.PAS_ConfigData.torqueSensorMultiplier[pasLevel] = value;
+        userConfigData.PAS_ConfigData.TorqueSensorMultiplier[pasLevel-1] = value;
     }
 }
 
@@ -718,13 +775,13 @@ void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t pasLevel, uint16_t valu
 uint8_t UserConfigTask_GetPasLevelMinTorque(uint8_t pasLevel)
 {
     //
-    if (pasLevel < 10)
+    if (0 < pasLevel && pasLevel < 10)
     {
-        return userConfigData.PAS_ConfigData.pasLevelMinTorque[pasLevel];
+        return userConfigData.PAS_ConfigData.PasLevelMinTorque[pasLevel-1];
     }
     else
     {
-        return userConfigData.PAS_ConfigData.pasLevelMinTorque[0];
+        return 0;
     }    
 }
 
@@ -736,12 +793,12 @@ uint8_t UserConfigTask_GetPasLevelMinTorque(uint8_t pasLevel)
   @return void
 
 */
-void UserConfigTask_UpdatePasLevelMinTorque(uint8_t value, uint8_t pasLevel)
+void UserConfigTask_UpdatePasLevelMinTorque( uint8_t pasLevel, uint8_t value)
 {
     //
-    if ((pasLevel < 10) && (value <= 100))
+    if ((0 < pasLevel && pasLevel < 10) && (value <= 100))
     {
-        userConfigData.PAS_ConfigData.pasLevelMinTorque[pasLevel] = value;
+        userConfigData.PAS_ConfigData.PasLevelMinTorque[pasLevel-1] = value;
     }
 }
 
@@ -757,13 +814,13 @@ void UserConfigTask_UpdatePasLevelMinTorque(uint8_t value, uint8_t pasLevel)
 uint8_t UserConfigTask_GetPasLevelSpeed(uint8_t pasLevel)
 {
     //
-    if (pasLevel < 10)
+    if (0 < pasLevel && pasLevel < 10)
     {
-        return userConfigData.PAS_ConfigData.PasLevelSpeed[pasLevel];
+        return userConfigData.PAS_ConfigData.PasLevelSpeed[pasLevel-1];
     }
     else
     {
-        return userConfigData.PAS_ConfigData.PasLevelSpeed[0];
+        return 0;
     }   
 }
 
@@ -778,9 +835,9 @@ uint8_t UserConfigTask_GetPasLevelSpeed(uint8_t pasLevel)
 void UserConfigTask_UpdatePasLevelSpeed(uint8_t pasLevel, uint8_t value)
 {
     //
-    if ((pasLevel < 10) && (value <= 32))
+    if ((0 < pasLevel && pasLevel < 10) && (value <= 32))
     {
-        userConfigData.PAS_ConfigData.PasLevelSpeed[pasLevel] = value;
+        userConfigData.PAS_ConfigData.PasLevelSpeed[pasLevel-1] = value;
     }
 }
 
@@ -795,14 +852,14 @@ void UserConfigTask_UpdatePasLevelSpeed(uint8_t pasLevel, uint8_t value)
 */
 uint8_t UserConfigTask_GetPasLevelMaxTorque(uint8_t pasLevel)
 {
-    //
-    if (pasLevel < 10)
-    {
-        return userConfigData.PAS_ConfigData.pasLevelMaxTorque[pasLevel];
+    // 
+    if (0 < pasLevel && pasLevel < 10)
+    {        
+        return userConfigData.PAS_ConfigData.PasLevelMaxTorque[pasLevel-1];
     }
     else
     {
-        return userConfigData.PAS_ConfigData.pasLevelMaxTorque[0];
+        return 0;
     }   
 }
 
@@ -817,9 +874,9 @@ uint8_t UserConfigTask_GetPasLevelMaxTorque(uint8_t pasLevel)
 void UserConfigTask_UpdatePasLevelMaxTorque(uint8_t pasLevel, uint8_t value)
 {
     //
-    if ((pasLevel < 10) && (value <= 100))
+    if ((0 < pasLevel && pasLevel < 10) && (value <= 100))
     {
-        userConfigData.PAS_ConfigData.pasLevelMaxTorque[pasLevel] = value;
+        userConfigData.PAS_ConfigData.PasLevelMaxTorque[pasLevel-1] = value;
     }
 }
 
@@ -931,7 +988,7 @@ void UserConfigTask_UpdatePasTorqueInputMin(uint16_t value)
 */
 uint8_t UserConfigTask_GetBikeMaxSpeed(void)
 {
-    return userConfigData.Screen_ConfigData.maxSpeed;
+    return userConfigData.Screen_ConfigData.MaxSpeed;
 }
 
 /**
@@ -946,7 +1003,7 @@ void UserConfigTask_UpdateBikeMaxSpeed(uint8_t value)
 {
     if((value <= 75) && (value >= 0))
     {
-        userConfigData.Screen_ConfigData.maxSpeed = value;
+        userConfigData.Screen_ConfigData.MaxSpeed = value;
     }
 }
 
@@ -959,9 +1016,9 @@ void UserConfigTask_UpdateBikeMaxSpeed(uint8_t value)
           range bewteen 0-10.
 
 */
-uint8_t UserConfigTask_GetWalkModeSpeed(void)
+uint8_t UserConfigTask_GetWalkmodeSpeed(void)
 {
-    return userConfigData.Screen_ConfigData.walkModeSpeed;
+    return userConfigData.Screen_ConfigData.WalkmodeSpeed;
 }
 
 /**
@@ -972,12 +1029,93 @@ uint8_t UserConfigTask_GetWalkModeSpeed(void)
   @return void
 
 */
-void UserConfigTask_UpdateWalkModeSpeed(uint8_t value)
+void UserConfigTask_UpdateWalkmodeSpeed(uint8_t value)
 {
     if ((value <= 10) && (value >= 0))
     {
-        userConfigData.Screen_ConfigData.walkModeSpeed = value;
+        userConfigData.Screen_ConfigData.WalkmodeSpeed = value;
     }
+}
+
+/**
+  @brief Function to get max torque on walk mode
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t max torque in % that the walk mode of the vehicle goes up to.
+
+*/
+uint8_t UserConfigTask_GetWalkmodeMaxTorque(void)
+{
+    return userConfigData.Screen_ConfigData.WalkmodeMaxTorque;
+}
+
+/**
+  @brief Function to update max torque on walk mode value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the walk mode max torque in %
+  @return void
+
+*/
+void UserConfigTask_UpdateWalkmodeMaxTorque(uint8_t value)
+{
+    if (value <= 100)
+    {
+       userConfigData.Screen_ConfigData.WalkmodeMaxTorque = value;
+    }
+    else
+    {
+       userConfigData.Screen_ConfigData.WalkmodeMaxTorque = 100;
+    }        
+}
+
+/**
+  @brief Function to get walkmode acceleration ramp type read from data flash memory.
+  
+  @param  void
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetWalkmodeAccelRampType(void)
+{
+    return userConfigData.Screen_ConfigData.WalkmodeAccelRampType;    
+}
+
+/**
+  @brief Function to update the walkmode acceleration ramp type read from data flash memory.
+  
+  @param uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateWalkmodeAccelRampType(uint8_t rampType)
+{
+    userConfigData.Screen_ConfigData.WalkmodeAccelRampType = rampType;
+}
+
+/**
+  @brief Function to get walkmode acceleration ramp argument 1 read from data flash memory.
+  
+  @param  void
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetWalkmodeAccelRampArg1(void)
+{
+    return userConfigData.Screen_ConfigData.WalkmodeAccelRampArg1;      
+}
+
+/**
+  @brief Function to update the walkmode acceleration ramp argument 1 read from data flash memory.
+  
+  @param uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateWalkmodeAccelRampArg1(uint16_t arg1)
+{
+    userConfigData.Screen_ConfigData.WalkmodeAccelRampArg1 = arg1; 
 }
 
 /**
@@ -1070,7 +1208,6 @@ void UserConfigTask_UpdateHeadLightDefault(uint8_t value)
         userConfigData.Screen_ConfigData.HeadLightDefault = 0;    
     }
 }
-
 
 /**
   @brief Function to get TailLight Default
@@ -1169,8 +1306,7 @@ void UserConfigTask_UpdateThrottleAdcOffset(uint16_t value)
         }   
         
         userConfigData.Screen_ConfigData.Throttle_ConfigData.AdcOffset = value;
-    }
-    
+    }   
 }
 
 /**
@@ -1207,6 +1343,53 @@ void UserConfigTask_UpdateThrottleAdcMax(uint16_t value)
     }
 }
 
+/**
+  @brief Function to get throttle acceleration ramp type read from data flash memory.
+  
+  @param  void
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetThrottleAccelRampType(void)
+{
+    return userConfigData.Screen_ConfigData.Throttle_ConfigData.AccelRampType;    
+}
+
+/**
+  @brief Function to update the throttle acceleration ramp type read from data flash memory.
+  
+  @param uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateThrottleAccelRampType(uint8_t rampType)
+{
+    userConfigData.Screen_ConfigData.Throttle_ConfigData.AccelRampType = rampType;
+}
+
+/**
+  @brief Function to get throttle acceleration ramp argument 1 read from data flash memory.
+  
+  @param  void
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetThrottleAccelRampArg1(void)
+{
+    return userConfigData.Screen_ConfigData.Throttle_ConfigData.AccelRampArg1;      
+}
+
+/**
+  @brief Function to update the throttle acceleration ramp argument 1 read from data flash memory.
+  
+  @param uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateThrottleAccelRampArg1(uint16_t arg1)
+{
+    userConfigData.Screen_ConfigData.Throttle_ConfigData.AccelRampArg1 = arg1; 
+}
 
 /**
   @brief Function to get Battery Full Voltage
@@ -1539,7 +1722,7 @@ uint8_t UserConfigTask_GetPasTorqueRunningThreshold(void)
 void UserConfigTask_UpdatePasTorqueRunningThreshold(uint8_t value)
 {
     //verify if value is in the range.
-     if((value <= 100) && (value >= 0))
+    if ((value <= 100) && (value >= 0))
     {
         userConfigData.PAS_ConfigData.PAS_Running_Detection.pasTorqueRunningThreshold = value;
     }        
@@ -1636,6 +1819,142 @@ void UserConfigTask_UpdatePasPasAlgorithmRunning(uint8_t value)
     {
         userConfigData.PAS_ConfigData.PAS_Running_Detection.PasAlgorithmRunning = value;
     }   
+}
+
+/**
+  @brief Function to get pas acceleration ramp type read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetPasAccelRampType(uint8_t pasLevel)
+{
+    if (0 < pasLevel && pasLevel < 10)
+    {
+        return userConfigData.PAS_ConfigData.PasAccelRampType[pasLevel-1];
+    }
+    else
+    {
+        return 0;
+    }        
+}
+
+/**
+  @brief Function to update the pas acceleration ramp type read from data flash memory.
+  
+  @param uint8_t pasLevel, uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasAccelRampType(uint8_t pasLevel, uint8_t rampType)
+{
+    if (0 < pasLevel && pasLevel < 10)
+    {
+         userConfigData.PAS_ConfigData.PasAccelRampType[pasLevel-1] = rampType;
+    } 
+}
+
+/**
+  @brief Function to get pas acceleration ramp argument 1 read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetPasAccelRampArg1(uint8_t pasLevel)
+{
+    if (0 < pasLevel && pasLevel < 10)
+    {
+        return userConfigData.PAS_ConfigData.PasAccelRampArg1[pasLevel-1];
+    }
+    else
+    {
+        return 0;
+    }        
+}
+
+/**
+  @brief Function to update the pas acceleration ramp argument 1 read from data flash memory.
+  
+  @param uint8_t pasLevel, uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasAccelRampArg1(uint8_t pasLevel, uint16_t arg1)
+{
+    if (0 < pasLevel && pasLevel < 10)
+    {
+         userConfigData.PAS_ConfigData.PasAccelRampArg1[pasLevel-1] = arg1;
+    } 
+}
+
+/**
+  @brief Function to get pas deceleration ramp type read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetPasDecelRampType(uint8_t pasLevel)
+{
+    if (0 < pasLevel && pasLevel < 10)
+    {
+        return userConfigData.PAS_ConfigData.PasDecelRampType[pasLevel-1];
+    }
+    else
+    {
+        return 0;
+    }        
+}
+
+/**
+  @brief Function to update the pas deceleration ramp type read from data flash memory.
+  
+  @param uint8_t pasLevel, uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasDecelRampType(uint8_t pasLevel, uint8_t rampType)
+{
+    if (0 < pasLevel && pasLevel < 10)
+    {
+         userConfigData.PAS_ConfigData.PasDecelRampType[pasLevel-1] = rampType;
+    } 
+}
+
+/**
+  @brief Function to get pas deceleration ramp argument 1 read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetPasDecelRampArg1(uint8_t pasLevel)
+{
+    if (0 < pasLevel && pasLevel < 10)
+    {
+        return userConfigData.PAS_ConfigData.PasDecelRampArg1[pasLevel-1];
+    }
+    else
+    {
+        return 0;
+    }        
+}
+
+/**
+  @brief Function to update the pas deceleration ramp argument 1 read from data flash memory.
+  
+  @param uint8_t pasLevel, uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasDecelRampArg1(uint8_t pasLevel, uint16_t arg1)
+{
+    if (0 < pasLevel && pasLevel < 10)
+    {
+         userConfigData.PAS_ConfigData.PasDecelRampArg1[pasLevel-1] = arg1;
+    } 
 }
 
 /**

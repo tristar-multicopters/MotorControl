@@ -171,6 +171,7 @@ PWREN_Handle_t PowerEnableHandle =
     .bSystemReady = false,
 };
 
+
 PAS_Handle_t PedalAssistHandle = 
 {
     .sParameters.hPASMaxTorque = PAS_MAX_TORQUE,
@@ -219,7 +220,136 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.PASMaxTorqRatiosInPercentage[7] = PAS_7_MAX_TORQUE_PERCENT,
     .sParameters.PASMaxTorqRatiosInPercentage[8] = PAS_8_MAX_TORQUE_PERCENT,
     .sParameters.PASMaxTorqRatiosInPercentage[9] = PAS_9_MAX_TORQUE_PERCENT,
-
+    
+    //Deceleration ramps
+    .sParameters.PasRamps[0][0] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = NO_RAMP,
+                                 .RampMax = (PAS_0_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[0][1] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = PAS1_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS1_ACCEL_RAMP_ARG1, 
+                                 .RampMax = (PAS_1_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[0][2] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = PAS2_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS2_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_2_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[0][3] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = PAS3_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS3_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_3_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[0][4] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = PAS4_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS4_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_4_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[0][5] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = PAS5_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS5_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_5_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[0][6] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = PAS6_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS6_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_6_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[0][7] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = PAS7_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS7_ACCEL_RAMP_ARG1,        
+                                 .RampMax = (PAS_7_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[0][8] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = PAS8_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS8_ACCEL_RAMP_ARG1, 
+                                 .RampMax = (PAS_8_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[0][9] = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = PAS9_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS9_ACCEL_RAMP_ARG1, 
+                                 .RampMax = (PAS_9_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    
+    //Deceleration ramps
+    .sParameters.PasRamps[1][0] = {
+                                 .RampDirection = DECELERATION, 
+                                 .RampType = NO_RAMP,
+                                 .RampMax = (PAS_0_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[1][1] = {
+                                 .RampDirection = DECELERATION,
+                                 .RampType = PAS1_DECEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS1_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_1_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[1][2] = {
+                                 .RampDirection = DECELERATION,
+                                 .RampType = PAS2_DECEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS2_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_2_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[1][3] = {
+                                 .RampDirection = DECELERATION,
+                                 .RampType = PAS3_DECEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS3_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_3_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[1][4] = {                          
+                                 .RampDirection = DECELERATION,
+                                 .RampType = PAS4_DECEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS4_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_4_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[1][5] = {
+                                 .RampDirection = DECELERATION,
+                                 .RampType = PAS5_DECEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS5_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_5_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[1][6] = {
+                                 .RampDirection = DECELERATION,
+                                 .RampType = PAS6_DECEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS6_ACCEL_RAMP_ARG1, 
+                                 .RampMax = (PAS_6_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[1][7] = {
+                                 .RampDirection = DECELERATION,
+                                 .RampType = PAS7_DECEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS7_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_7_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[1][8] = {
+                                 .RampDirection = DECELERATION,
+                                 .RampType = PAS8_DECEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS8_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_8_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    .sParameters.PasRamps[1][9] = {
+                                 .RampDirection = DECELERATION, 
+                                 .RampType = PAS9_DECEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = PAS9_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_9_MAX_TORQUE_PERCENT * PAS_MAX_TORQUE)/100,
+                               },
+    
+    .sParameters.PasWalkmodeRamp = {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = WALKMODE_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = WALKMODE_ACCEL_RAMP_ARG1,
+                                 .RampMax = (PAS_WALK_POWER_PERCENT * PAS_MAX_TORQUE)/100,
+                               },    
+    
     .bPasPowerAlgorithm = PAS_POWER_ALGORITHM,
     .bStartupPasAlgorithm = PAS_DETECTIONSTARTUP_ALGORITHM,
     .bRunningPasAlgorithm = PAS_DETECTIONRUNNING_ALGORITHM,
@@ -240,6 +370,7 @@ ThrottleHandle_t ThrottleHandle =
     {
         .pIIRFAInstance = NULL, // NULL to apply software filtering, no hardware accelerator
     },
+    .BlockOffThrottle = THROTTLE_BLOCK_OFF,
     .hParameters =
     {
         .fFilterAlpha = THROTTLE_FILTER_ALPHA,
@@ -257,8 +388,18 @@ ThrottleHandle_t ThrottleHandle =
         
         .DefaultMaxThrottleSpeedKMH = VEHICLE_TOP_SPEED_KMH,
         .ThrottleMaxTorque = POWERTRAIN_MAX_MOTOR_TORQUE,
+        .ThrottleRamps[0] =  {
+                                 .RampDirection = ACCELERATION,
+                                 .RampType = THROTTLE_ACCEL_RAMP_TYPE,
+                                 .LinearParameters.Alpha = THROTTLE_ACCEL_RAMP_ARG1,
+                                 .RampMax = POWERTRAIN_MAX_MOTOR_TORQUE,
+                             },
+        .ThrottleRamps[1] =  {
+                                 .RampDirection = DECELERATION,
+                                 .RampType = NO_RAMP,
+                                 .RampMax = POWERTRAIN_MAX_MOTOR_TORQUE,
+                              },
     },
-    .BlockOffThrottle = THROTTLE_BLOCK_OFF,
 };
 
 PWRT_Handle_t PowertrainHandle =

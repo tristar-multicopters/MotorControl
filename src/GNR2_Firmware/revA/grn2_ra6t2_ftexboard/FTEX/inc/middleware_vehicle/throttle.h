@@ -14,6 +14,7 @@
 #include "delay.h"
 #include "vc_errors_management.h"
 #include "vc_parameters.h"
+#include "ramps.h"
     
 #define THROTTLE_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
                                       // If factor == 100 then 1.25f would make a 125/100 fraction 
@@ -46,6 +47,8 @@ typedef struct
     
     uint16_t DefaultMaxThrottleSpeedKMH;// Maximum KM/H speed that is the default value
     uint16_t MaxThrottleSpeedKMH;       // Maximum KM/H speed that is the current value for the bike
+  
+    Ramps_Handle_t ThrottleRamps[2];   
   
 } ThrottleParameters_t;
 
@@ -213,6 +216,13 @@ void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle);
  * @retval void
  */
 int16_t Throttle_ApplyCruiseFilter(ThrottleHandle_t * pHandle, int16_t aTorque);
+
+/**
+ * @brief  Function used to obtain the ramp of the throttle module
+ * @param  pHandle : Pointer on Handle of the throttle, 
+ * @retval reference to the ramp
+ */
+Ramps_Handle_t * Throttle_GetRamp(ThrottleHandle_t * pHandle, uint8_t Direction);   
 
 #endif /*__THROTTLE_H*/
 

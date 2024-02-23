@@ -12,6 +12,7 @@
 #include "pedal_speed_sensor.h"
 #include "pedal_torque_sensor.h"
 #include "wheel_speed_sensor.h"
+#include "ramps.h"
 
 // ============================== Defines =============================== // 
 #define PAS_PERCENTAGE          (uint8_t)100    /* Percentage for PAS use */
@@ -69,10 +70,14 @@ typedef struct
     
     bool WalkmodeOverThrottle;              // Flag used to decide if walk mode has higher priority than throttle          
 
-    uint8_t PASMaxSpeed[10];           // Speed on cadence mode to each PAS level.
+    uint8_t PASMaxSpeed[10];                  // Max speed to each PAS level.
     int16_t PASMinTorqRatiosInPercentage[10]; // Min PAS Torque ratio in % for each level
     int16_t PASMaxTorqRatiosInPercentage[10]; // Max PAS Torque ratio in % for each level
-    int16_t walkModeTorqueRatio;            // Torque ratio in % for walk mode
+    int16_t walkModeTorqueRatio;              // Torque ratio in % for walk mode
+    
+    Ramps_Handle_t PasRamps[2][10];           // Acceleration and deceleration ramps for each pas level
+    Ramps_Handle_t PasWalkmodeRamp;   
+    
 } PAS_Parameters_t;
 
 typedef struct
@@ -227,6 +232,13 @@ PasAlgorithm_t PedalAssist_GetPASAlgorithm(PAS_Handle_t * pHandle);
     * @retval None
     */
 void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
+
+/**
+    * @brief  Get the ramp that should be applied
+    * @param  Pedal Assist handle, Ramp to apply
+    * @retval void
+    */
+Ramps_Handle_t * PedalAssist_GetRamp(PAS_Handle_t * pHandle, uint8_t Direction);
 
 /**
     * @brief  Reset Cadence State Pas Dection

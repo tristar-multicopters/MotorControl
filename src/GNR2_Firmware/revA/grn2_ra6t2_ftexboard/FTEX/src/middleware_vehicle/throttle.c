@@ -41,6 +41,9 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
     Throttle_Clear(pHandle);
     Throttle_ComputeSlopes(pHandle); // Used to calculate values to calibrate ADC value to a standard value
+     
+    Ramps_Init(&(pHandle->hParameters.ThrottleRamps[0]));
+    Ramps_Init(&(pHandle->hParameters.ThrottleRamps[1]));
 }
 
 /**
@@ -446,4 +449,16 @@ int16_t Throttle_ApplyCruiseFilter(ThrottleHandle_t * pHandle, int16_t aTorque)
     pHandle->CruiseControlTorqueAvg = TorqueOut;
    
     return TorqueOut;
+}
+
+/**
+ * @brief  Function used to obtain the ramp of the throttle module
+ * @param  pHandle : Pointer on Handle of the throttle, 
+ * @retval Ramp to apply
+ */
+Ramps_Handle_t * Throttle_GetRamp(ThrottleHandle_t * pHandle, uint8_t Direction) 
+{
+    ASSERT(pHandle != NULL);
+    
+    return &(pHandle->hParameters.ThrottleRamps[Direction]);
 }
