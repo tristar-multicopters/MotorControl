@@ -139,7 +139,7 @@ static User_ConfigData_t userConfigData =
     .Battery_ConfigData.FullVoltage = BATTERY_FULL_VOLT_X_100,
     .Battery_ConfigData.EmptyVoltage = BATTERY_EMPTY_VOLT_X_100,   
     .Battery_ConfigData.MaxPeakDCCurrent = MAX_APPLICATION_CURRENT,
-    .Battery_ConfigData.ContinuousDCCurrent = MAX_BMS_POSITIVE_POWER,
+    .Battery_ConfigData.ContinuousDCCurrent = MAX_BMS_CONTINOUS_CURRENT,
     .Battery_ConfigData.PeakCurrentDeratingDuration =  (MAX_TIME_BMS_TOLERANT - MAX_POWER_LIMIT_TIMEOUT),
     .Battery_ConfigData.PeakCurrentMaxDuration = MAX_POWER_LIMIT_TIMEOUT,
     .Screen_ConfigData.WalkmodeSpeed = PAS_LEVEL_SPEED_WALK,
@@ -1488,7 +1488,7 @@ void UserConfigTask_UpdateBatteryMaxPeakDCCurrent(uint16_t value)
 */
 uint16_t UserConfigTask_GetBatteryContinuousDCCurrent(void)
 {
-    return userConfigData.Screen_ConfigData.Throttle_ConfigData.AdcMax;
+    return userConfigData.Battery_ConfigData.ContinuousDCCurrent;
 }
 
 /**
