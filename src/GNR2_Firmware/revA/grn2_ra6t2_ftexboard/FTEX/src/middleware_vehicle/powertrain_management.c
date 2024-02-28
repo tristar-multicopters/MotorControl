@@ -182,7 +182,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed       
 
             #if VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
-            if (pHandle->pPAS->bPasPowerAlgorithm == TorqueSensorUse)
+            if (pHandle->pPAS->bPasPowerAlgorithm == TorqueSensorUse && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
             {
                 static int16_t PowerAvg = 0;                
                                    
@@ -1117,8 +1117,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (pHandle->pPAS->sParameters.WalkmodeOverThrottle || !Throttle_IsThrottleDetected(pHandle->pThrottle))))
     {
         PASWasDetected = true;
-        
-        
+               
         /* Torque sensor enabled */
         if ((pHandle->pPAS->bPasPowerAlgorithm == TorqueSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
@@ -1130,8 +1129,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
             pHandle->hTorqueSelect = PedalAssist_GetPASCadenceMotorTorque(pHandle->pPAS);
         }
         
-        
-        if(pHandle->hTorqueSelect >= pHandle->hOldTorqueSelect) // Check which direction of ramp we need to select
+        if (pHandle->hTorqueSelect >= pHandle->hOldTorqueSelect) // Check which direction of ramp we need to select
         {
             Direction = ACCELERATION;
         }
@@ -1139,9 +1137,9 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         {
             Direction = DECELERATION;
         }
+        
         // Link the correct PAS ramp as the ramp to apply
-        pSelectedRampHandle = PedalAssist_GetRamp(pHandle->pPAS, Direction);
-       
+        pSelectedRampHandle = PedalAssist_GetRamp(pHandle->pPAS, Direction);       
     }        
     /* Using throttle */
     else 
@@ -1167,7 +1165,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     pHandle->hTorqueSelect = (int16_t) Ramps_ApplyRamp(pSelectedRampHandle, (uint16_t)pHandle->hTorqueSelect);
     
     
-    if (PASWasDetected && PedalAssist_IsPASDetected(pHandle->pPAS) == false) // If pas was detected but we switched to throttle, reset the ramps
+    if (PASWasDetected && PedalAssist_IsPASDetected(pHandle->pPAS) == false && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If pas was detected but we switched to throttle, reset the ramps
     {
             PASWasDetected = false;
             for(uint8_t i = 0; i < 10; i++)

@@ -55,7 +55,8 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
         Ramps_Init(&(pHandle->sParameters.PasRamps[0][i]));
         Ramps_Init(&(pHandle->sParameters.PasRamps[1][i]));
     }
-
+    
+    Ramps_Init(&(pHandle->sParameters.PasWalkmodeRamp));
 }
 
 /**
@@ -573,7 +574,7 @@ Ramps_Handle_t * PedalAssist_GetRamp(PAS_Handle_t * pHandle, uint8_t Direction)
     }
     else
     {
-        if (pHandle->bPasPowerAlgorithm == CadenceSensorUse && Direction == DECELERATION)
+        if (Direction == DECELERATION)
         {
             return &PasCadenceDecelRamp;
         }
@@ -602,75 +603,47 @@ void PedalAssist_ResetCadenceStatePasDection(void)
 void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
+    bool PasDetected = false;
     
     //check if the condition to PAS detection, at startup,
     //has been met.
     switch (pHandle->bStartupPasAlgorithm)
     {
-        case noSensorUse:
-            
-            PedalAssist_ResetPASDetected(pHandle);
-        
+        case noSensorUse:            
+            // Do nothing      
         break;
             
-        case TorqueSensorUse:
-            
+        case TorqueSensorUse:            
             if (pHandle->bTorqueStartupPASDetected == true)
             {
-                PedalAssist_SetPASDetected(pHandle);
-            }
-            else
-            {
-                PedalAssist_ResetPASDetected(pHandle);
-            }
-        
+                PasDetected = true;
+            }        
         break;
         
-        case CadenceSensorUse:
-            
+        case CadenceSensorUse:            
             if (pHandle->bCadenceStartupPASDetected == true)
             {
-                PedalAssist_SetPASDetected(pHandle);
-            }
-            else
-            {
-                PedalAssist_ResetPASDetected(pHandle);
-            }
-        
+                PasDetected = true;
+            }        
         break;
         
-        case HybridAndSensorUse:
-            
+        case HybridAndSensorUse:           
             if ((pHandle->bTorqueStartupPASDetected == true) && (pHandle->bCadenceStartupPASDetected == true))
             {
-                PedalAssist_SetPASDetected(pHandle);
-            }
-            else
-            {
-                PedalAssist_ResetPASDetected(pHandle);
-            }
-        
+                PasDetected = true;
+            }        
         break;
         
-        case HybridOrSensorUse:
-            
+        case HybridOrSensorUse:           
             if ((pHandle->bTorqueStartupPASDetected == true) || (pHandle->bCadenceStartupPASDetected == true))
             {
-                PedalAssist_SetPASDetected(pHandle);
-            }
-            else
-            {
-                PedalAssist_ResetPASDetected(pHandle);
-            }
-        
-        break;
-            
+                PasDetected = true;
+            }       
+        break;            
          //must not go into this state.
-        default:
-            
+        default:           
             //reset the system using a software reset
-            ASSERT(false);
-        
+            ASSERT(false);        
         break;
     }
     
@@ -679,71 +652,52 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     switch (pHandle->bRunningPasAlgorithm)
     {
         case noSensorUse:
-            
-            PedalAssist_ResetPASDetected(pHandle);
-        
+        //Do nothing                    
         break;
             
-        case TorqueSensorUse:
-            
+        case TorqueSensorUse:            
             if (pHandle->bTorqueRunningPASDetected == true)
             {
-                PedalAssist_SetPASDetected(pHandle);
-            }
-            else
-            {
-                PedalAssist_ResetPASDetected(pHandle);
-            }
-        
+                PasDetected = true;
+            }        
         break;
         
-        case CadenceSensorUse:
-            
+        case CadenceSensorUse:            
             if (pHandle->bCadenceRunningPASDetected == true)
             {
-                PedalAssist_SetPASDetected(pHandle);
-            }
-            else
-            {
-                PedalAssist_ResetPASDetected(pHandle);
-            }
+                PasDetected = true;
+            }        
+            break;
         
-        break;
-        
-        case HybridAndSensorUse:
-            
+        case HybridAndSensorUse:            
             if ((pHandle->bTorqueRunningPASDetected == true) && (pHandle->bCadenceRunningPASDetected == true))
             {
-                PedalAssist_SetPASDetected(pHandle);
-            }
-            else
-            {
-                PedalAssist_ResetPASDetected(pHandle);
-            }
-        
+                PasDetected = true;
+            }        
         break;
         
         case HybridOrSensorUse:
-
             if ((pHandle->bTorqueRunningPASDetected == true) || (pHandle->bCadenceRunningPASDetected == true))
             {
-                PedalAssist_SetPASDetected(pHandle);
-            }
-            else
-            {
-                PedalAssist_ResetPASDetected(pHandle);
-            }
-        
+                PasDetected = true;
+            }        
         break;
             
-         //must not go into this state.
-        default:
-            
+        //must not go into this state.
+        default:           
             //reset the system using a software reset
-            ASSERT(false);
-        
+            ASSERT(false);        
         break;
     }
+
+    if (PasDetected)
+    {
+        PedalAssist_SetPASDetected(pHandle);
+    }
+    else
+    {
+        PedalAssist_ResetPASDetected(pHandle);
+    }  
 }
 
 /**
