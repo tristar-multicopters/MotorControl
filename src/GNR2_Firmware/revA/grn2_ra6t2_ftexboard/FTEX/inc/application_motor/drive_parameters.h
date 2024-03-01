@@ -11,6 +11,11 @@
 
 #include "gnr_parameters.h"
 
+#define CONTROLLER_EP1200       0
+#define CONTROLLER_EP600        1
+#define CONTROLLER_EP350        2
+#define CONTROLLER_EP700        3
+
 
 #if VEHICLE_SELECTION == VEHICLE_A2_350W
 
@@ -59,11 +64,32 @@
 
 #endif
 
+
+
+#if CONTROLLER_SELECTION == CONTROLLER_EP1200
+
+#include "controller_parameters_EP1200.h"
+
+#elif CONTROLLER_SELECTION == CONTROLLER_EP600
+
+#include "controller_parameters_EP600.h"
+
+#elif CONTROLLER_SELECTION == CONTROLLER_EP350
+
+#include "controller_parameters_EP350.h"
+
+#elif CONTROLLER_SELECTION == CONTROLLER_EP700
+
+#include "controller_parameters_EP700.h"
+
+#endif
+
+
 /****** Constants ******/
 #define MAX_CURRENT_LIMIT               1
 #define MAX_POWER_LIMIT                 2
-#define OCD_DISABLE                     0
-#define OCD_PWM_OFF                     1
+#define OCD2_DISABLE                    0
+#define OCD2_ENABLED                    1
 
 /****** Motor Parameters ******/
 #define MIN_APPLICATION_SPEED_RPM       0           // Min speed for the current application in mechanical rpm
@@ -92,12 +118,6 @@
 #define BEMF_CONSISTENCY_TOL            32          // Parameter for B-emf consistency check
 #define BEMF_CONSISTENCY_GAIN           64          // Parameter for B-emf consistency check
 
-/****** Temperature and Overcurrent Protection Parameters ******/
-#define OV_TEMP_CONTROLLER_THRESHOLD_C  70         // Heatsink overtemperature threshold before thermal shutdown. Celsius degrees
-#define OV_TEMP_CONTROLLER_HYSTERESIS_C 15         // Heatsink overtemperature hysteresis after a thermal shutdown occurred. Celsius degrees
-#define OCSP_SAFETY_MARGIN_amps         85         // Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
-#define OCSP_MAX_CURRENT_amps           85         // Max current that can be reached before triggering software overcurrent
-
 /****** Current Filtering Parameters ******/
 #define CURRENT_FILTER_ALPHA            2.273F      // Alpha constant used in butterworth filter for current filtering
 #define CURRENT_FILTER_BETA             -0.273F     // Beta constant used in butterworth filter for current filtering
@@ -105,7 +125,6 @@
 /****** PWM Parameters ******/
 #define PWM_FREQUENCY                   20000       // PWM switching frequency
 #define PWM_FREQ_SCALING                1           // Not used, set to one.
-#define SW_DEADTIME_NS                  250         // Dead-time to be inserted by FW
 
 /****** FOC Parameters ******/
 #define No_Load_PID_KIq_Gain            500
@@ -175,23 +194,21 @@
 #define ROTOR_POS_OBS_KIDIV_LOG         LOG2(256)   // Rotor position observer gain divider log2, to allow decimal value
 #define ROTOR_POS_OBS_KDDIV_LOG         LOG2(1)     // Rotor position observer gain divider log2, to allow decimal value
 
-/****** PHASE WIRE DISCONNECTIION DETECTIOT *******/
+/****** Phase Wire Disconnection Detection *******/
 #define CURRENT_AVG_WIN_SIZE            32          // the moving average window size
 #define PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE 100      // The time to wait and check before raising warning
 
-/******** STUCK PROTECTION SETTING SECTION ********/
+/******** Stuck Protection Settings Section ********/
 #define STUCK_TIMER_MAX_TICKS           2000        // protection timeout in MC Layer ticks
 #define STUCK_TIMER_MAX_COUNTS          STUCK_TIMER_MAX_TICKS *SPEED_LOOP_FREQUENCY_HZ / 1000u - 1u     // protection timeout
 #define STUCK_MIN_TORQUE                200         // minimum torque that can cause the protection to get activated
 #define STUCK_LOW_VOLTAGE_THRESHOLD     42          // this parameter is used to reduce protection timeout when battery SoC is low
 #define STUCK_TIMER_MAX_COUNTS_LOWBATTERY (STUCK_TIMER_MAX_TICKS / 10) * SPEED_LOOP_FREQUENCY_HZ / 1000u - 1u // the protection timeout battery SoC is detected as low
 
-/******** OCD Power Derating factors ********/
-#define HARDWARE_OCD    OCD_PWM_OFF     /* OCD_PWM_OFF to completley disable PWM using PEOG in timer0 */
-                                        /* OCD_DISABLED to disable any Hardware OverCurrent handling */
+/******** Hall Sensor factors ********/
 #define VIBRATION_PATTERN               0xAAAA      // = 0b1010101010101010 which is 8 time of direction change
                                         
-/******** SPEED CONTROL SETTING SECTION ********/
+/******** Speed Control Settings Section ********/
 #define SPDCTRL_UPPER_INTEGRAL_LIMIT    2097152     // =2^21 The maximum allowed value for Integral Term of Speed Control PID
 
 #endif  /*__DRIVE_PARAMETERS_H*/

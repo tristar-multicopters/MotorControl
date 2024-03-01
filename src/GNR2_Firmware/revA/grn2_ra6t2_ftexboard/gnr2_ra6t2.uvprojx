@@ -470,14 +470,14 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_a2_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_a2_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_e_cells.h</FileName>
@@ -538,6 +538,16 @@
               <FileName>vc_tasks.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_tasks.h</FilePath>
+            </File>
+            <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>utk_350w_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -749,11 +759,6 @@
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
             <File>
-              <FileName>power_stage_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
@@ -807,6 +812,26 @@
               <FileName>drive_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP1200.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP1200.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP700.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2352,14 +2377,14 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_a2_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_a2_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_e_cells.h</FileName>
@@ -2420,6 +2445,16 @@
               <FileName>vc_tasks.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_tasks.h</FilePath>
+            </File>
+            <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>utk_350w_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2631,11 +2666,6 @@
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
             <File>
-              <FileName>power_stage_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
@@ -2689,6 +2719,26 @@
               <FileName>drive_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP1200.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP1200.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP700.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4183,14 +4233,14 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_a2_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_a2_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_e_cells.h</FileName>
@@ -4251,6 +4301,16 @@
               <FileName>vc_tasks.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_tasks.h</FilePath>
+            </File>
+            <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>utk_350w_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4462,11 +4522,6 @@
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
             <File>
-              <FileName>power_stage_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\power_stage_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
@@ -4520,6 +4575,26 @@
               <FileName>drive_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP1200.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP1200.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>controller_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP700.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -79,7 +79,7 @@ void PWMBreak1_IRQHandler(poeg_callback_args_t * p_args)
 {
     if(NULL != p_args)
     {
-#if HARDWARE_OCD == OCD_PWM_OFF
+#if HARDWARE_OCD2 == OCD2_ENABLED
         /* Switch off PWM */
         MC_PWM_OFF_M1();
         /* Run motor control PWM break routine */

@@ -127,9 +127,5 @@
  
 #define POWERTRAIN_TAILLIGHT_DEFAULT        false           // Parameter that sets the default tail light state when the bike is powered on
 
-/******************************** BATTERY SELECTION ******************************/
-
-#include "batteries/e_cell_52v_battery.h"
-
 #endif                                            
 

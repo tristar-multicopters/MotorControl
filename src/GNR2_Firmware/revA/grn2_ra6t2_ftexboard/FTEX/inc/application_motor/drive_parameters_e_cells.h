@@ -8,6 +8,14 @@
 #ifndef __DRIVE_PARAMETERS_E_CELLS_H
 #define __DRIVE_PARAMETERS_E_CELLS_H
 
+/******************************** BATTERY SELECTION ******************************/
+
+#include "batteries/e_cell_52v_battery.h"
+
+/************************** Controller Config  ************************/
+
+#define CONTROLLER_SELECTION                 CONTROLLER_EP700    // Controller selection to adapt controller parameters
+
 /************************** Motor Config  ************************/
 #define MOTOR_GEAR_RATIO                    (float)5        // Motor gear ratio, the value is always X turns of the motor 
 #define MOTOR_TEMP_SENSOR_TYPE              VIRTUAL_SENSOR  // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
@@ -38,11 +46,6 @@
 #define MAX_BMS_POSITIVE_POWER              500             // Maximum Power at the end point of foldback
 #define MAX_BMS_CONTINOUS_CURRENT           10              // Maximum Power at the end point of foldback in amps
 
-#define POWER_LIMIT_REF                     MAX_POWER_LIMIT // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
-#define MAX_APPLICATION_POSITIVE_POWER      1100            // Refers to maximum power in watts that drive can push to the motor
-#define MAX_APPLICATION_NEGATIVE_POWER      1100            // Refers to maximum power in watts that drive can accept from the motor
-#define MAX_APPLICATION_CURRENT             22              // Refers to maximum battery current in amps that drive can accept from the motor
-
 #define FOLDBACK_SPEED_INTERVAL             750             // Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        20              // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
@@ -67,9 +70,9 @@
 #define MOTOR_VOLTAGE_CONSTANT 	            24.5f	        // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef         	            1.2f	        // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_amps      	            55		        // peak current in amps
-#define NOMINAL_TORQUE         	            (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)	// Nominal torque to apply to motor in cNm   
-                                                                                           // Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps
+#define PEAK_CURRENT_MOTOR_amps      	            55		        // peak current in amps
+#define NOMINAL_TORQUE         	            (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_MOTOR_amps)	// Nominal torque to apply to motor in cNm   
+                                                                                           // Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_MOTOR_amps
 #define STARTING_TORQUE        	            (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef)	// Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes
 
 #define MOTOR_MAX_SPEED_RPM    	            1875	        // Maximum rated speed - Old Example 2750 for 38Km/h

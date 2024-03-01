@@ -115,10 +115,6 @@
 #define POWERTRAIN_HEADLIGHT_DEFAULT        false           // Parameter that sets the default headlight state when the bike is powered on
 
 #define POWERTRAIN_TAILLIGHT_DEFAULT        true            // Parameter that sets the default tail light state when the bike is powered on
-
-/******************************** BATTERY SELECTION ******************************/
-
-#include "batteries/velec_500w_battery.h"
                                             
 #endif                                            
 

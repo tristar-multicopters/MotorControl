@@ -10,7 +10,6 @@
 #define __PARAMETERS_CONVERSION_RA6T2_H
 
 #include "drive_parameters.h"
-#include "power_stage_parameters.h"
 #include "mc_math.h"
 
 /************************* CPU & ADC PERIPHERAL CLOCK CONFIG ******************/

@@ -32,7 +32,6 @@
 #include "mc_math.h"
 #include "parameters_conversion_ra6t2.h"
 #include "drive_parameters.h"
-#include "power_stage_parameters.h"
 
 #define ADC_REFERENCE_VOLTAGE  3.30
 
@@ -71,11 +70,12 @@
 
 /* The maximum current from Current Sensor with AMPLIFICATION_GAIN that we can measure using ADC with ADC_REFERENCE_VOLTAGE */
 #define current_correction_factor   0.85  /* correction factor for the current sensor range */
-#define MAX_MEASURABLE_CURRENT  (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN)* current_correction_factor)  
-#define NOMINAL_PEAK_CURRENT    (uint16_t)(PEAK_CURRENT_amps * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Maximum current amplitude that can be injected per phase in digital Amps */
-#define ID_DEMAG        (uint16_t)(ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
+#define MAX_MEASURABLE_CURRENT      (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN)* current_correction_factor)
+#define PEAK_CURRENT_amps           (PEAK_CURRENT_MOTOR_amps < PEAK_CURRENT_CONTROLLER_amps ? PEAK_CURRENT_MOTOR_amps : PEAK_CURRENT_CONTROLLER_amps)
+#define NOMINAL_PEAK_CURRENT        (uint16_t)(PEAK_CURRENT_amps * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Maximum current amplitude that can be injected per phase in digital Amps, motor limit */
+#define ID_DEMAG                    (uint16_t)(ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
 
-#define OCSP_SAFETY_MARGIN 	            (uint16_t)(OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_SAFETY_MARGIN 	            (uint16_t)(OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))	/* Measured current amplitude can be until OCSP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
 #define OCSP_MAX_CURRENT                (uint16_t)(OCSP_MAX_CURRENT_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Max current that can be reached before triggering software overcurrent */
 
@@ -109,8 +109,6 @@
 
 /*************** Timer for PWM generation & currenst sensing parameters  ******/
 #define PWM_PERIOD_CYCLES (uint16_t)((PWM_TIM_CLK_MHz*(uint32_t)1000000u/((uint32_t)(PWM_FREQUENCY)))&0xFFFE)
-
-#define DEADTIME_NS  SW_DEADTIME_NS
 
 #define DEAD_TIME_ADV_TIM_CLK_MHz (PWM_TIM_CLK_MHz)
 #define DEAD_TIME_COUNTS_1  (DEAD_TIME_ADV_TIM_CLK_MHz * DEADTIME_NS/1000uL)
