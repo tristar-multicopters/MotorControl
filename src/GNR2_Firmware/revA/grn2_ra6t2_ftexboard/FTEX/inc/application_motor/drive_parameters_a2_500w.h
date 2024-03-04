@@ -37,14 +37,16 @@
 #define SP_KIDIV_LOG                        LOG2(16384)      // Speed control gain divider log2, to allow decimal value
 
 /************************** Power Limit Config  ************************/
-#define LOW_BATTERY_VOLTAGE_THRESHOLD       35               // The threshold of battery voltage before limiting torque
+#define ENABLE_LV_TORQUE_LIMIT              false            // Enable or disable the low voltage torque limit
+#define LOW_VOLTAGE_THRESHOLD_PERCENTAGE    10               // The threshold percentage of battery voltage before limiting torque
 #define LOW_BATTERY_TORQUE                  150
 
 #define ENABLE_MAX_POWER_LIMIT              true             // To enable or disable the foldback
 #define MAX_TIME_BMS_TOLERANT               20000
 #define MAX_POWER_LIMIT_TIMEOUT             10000
 #define MAX_BMS_POSITIVE_POWER              500              // Maximum Power at the end point of foldback
-#define MAX_BMS_CONTINOUS_CURRENT           10              // Maximum Power at the end point of foldback in amps
+#define MAX_BMS_CONTINOUS_CURRENT           10               // Maximum Power at the end point of foldback in amps
+
 
 #define FOLDBACK_SPEED_INTERVAL             0                // Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        20               // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature

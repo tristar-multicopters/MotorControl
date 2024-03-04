@@ -72,6 +72,7 @@ typedef struct
     uint16_t hMaxContinuousCurrent;         /*!< Application maximumContinouse Current
                                              of the rotor mechanical speed. Expressed in Amps 
                                              */
+    bool hEnableLVtorqueLimit;              /* Enable or disable the low voltage torque limit*/ 
     uint16_t hBatteryLowVoltage;            /* Application maximum voltage that the MC layer can 
                                               operate with maximum torque
                                               */
