@@ -1,12 +1,12 @@
 /**
-  * @file    controller_parameters_EP700.h
+  * @file    hardware_parameters_EP700.h
   * @brief   This file contains the parameters needed for EP700.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 
-#ifndef __CONTROLLER_PARAMETERS_EP700_H
-#define __CONTROLLER_PARAMETERS_EP700_H
+#ifndef __HARDWARE_PARAMETERS_EP700_H
+#define __HARDWARE_PARAMETERS_EP700_H
 
 /************************** Current Sensing and Protection Parameters ************************/
 

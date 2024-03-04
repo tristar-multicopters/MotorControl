@@ -814,24 +814,24 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP1200.h</FileName>
+              <FileName>hardware_parameters_EP1200.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP1200.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP600.h</FileName>
+              <FileName>hardware_parameters_EP350.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP600.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP350.h</FileName>
+              <FileName>hardware_parameters_EP600.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP350.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP700.h</FileName>
+              <FileName>hardware_parameters_EP700.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP700.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2721,24 +2721,24 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP1200.h</FileName>
+              <FileName>hardware_parameters_EP1200.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP1200.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP600.h</FileName>
+              <FileName>hardware_parameters_EP350.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP600.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP350.h</FileName>
+              <FileName>hardware_parameters_EP600.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP350.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP700.h</FileName>
+              <FileName>hardware_parameters_EP700.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP700.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4577,24 +4577,24 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP1200.h</FileName>
+              <FileName>hardware_parameters_EP1200.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP1200.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP600.h</FileName>
+              <FileName>hardware_parameters_EP350.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP600.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP350.h</FileName>
+              <FileName>hardware_parameters_EP600.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP350.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
             </File>
             <File>
-              <FileName>controller_parameters_EP700.h</FileName>
+              <FileName>hardware_parameters_EP700.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\controller_parameters_EP700.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
             </File>
           </Files>
         </Group>

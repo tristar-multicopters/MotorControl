@@ -17,4 +17,10 @@
 #define MAX_APPLICATION_NEGATIVE_POWER      1100                // Refers to maximum power in watts that drive can accept from the motor
 #define MAX_APPLICATION_CURRENT             20                  // Refers to maximum current in amps that drive can accept from the motor
 
+
+/******************************** BATTERY  PARAMETERS ******************************/
+
+#define UD_VOLTAGE_THRESHOLD_BATT_V            24                   // Under-voltage threshold to prevent BMS shutdown
+
+
 #endif

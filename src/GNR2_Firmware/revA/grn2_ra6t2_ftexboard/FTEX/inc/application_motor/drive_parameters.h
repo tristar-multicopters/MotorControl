@@ -11,10 +11,10 @@
 
 #include "gnr_parameters.h"
 
-#define CONTROLLER_EP1200       0
-#define CONTROLLER_EP600        1
-#define CONTROLLER_EP350        2
-#define CONTROLLER_EP700        3
+#define HARDWARE_EP1200       0
+#define HARDWARE_EP600        1
+#define HARDWARE_EP350        2
+#define HARDWARE_EP700        3
 
 
 #if VEHICLE_SELECTION == VEHICLE_A2_350W
@@ -66,21 +66,21 @@
 
 
 
-#if CONTROLLER_SELECTION == CONTROLLER_EP1200
+#if HARDWARE_SELECTION == HARDWARE_EP1200
 
-#include "controller_parameters_EP1200.h"
+#include "hardware_parameters_EP1200.h"
 
-#elif CONTROLLER_SELECTION == CONTROLLER_EP600
+#elif HARDWARE_SELECTION == HARDWARE_EP600
 
-#include "controller_parameters_EP600.h"
+#include "hardware_parameters_EP600.h"
 
-#elif CONTROLLER_SELECTION == CONTROLLER_EP350
+#elif HARDWARE_SELECTION == HARDWARE_EP350
 
-#include "controller_parameters_EP350.h"
+#include "hardware_parameters_EP350.h"
 
-#elif CONTROLLER_SELECTION == CONTROLLER_EP700
+#elif HARDWARE_SELECTION == HARDWARE_EP700
 
-#include "controller_parameters_EP700.h"
+#include "hardware_parameters_EP700.h"
 
 #endif
 
@@ -121,6 +121,19 @@
 /****** Current Filtering Parameters ******/
 #define CURRENT_FILTER_ALPHA            2.273F      // Alpha constant used in butterworth filter for current filtering
 #define CURRENT_FILTER_BETA             -0.273F     // Beta constant used in butterworth filter for current filtering
+
+/****** Current and Torque Parameters ******/
+#define PEAK_CURRENT_amps               (PEAK_CURRENT_MOTOR_amps < PEAK_CURRENT_CONTROLLER_amps ? PEAK_CURRENT_MOTOR_amps : PEAK_CURRENT_CONTROLLER_amps)
+
+#define NOMINAL_TORQUE                  (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)    // Nominal torque to apply to motor in cNm   
+                                                                                           // Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps
+#define STARTING_TORQUE                 (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef)    // Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes
+
+/****** Over and Under Voltage Parameters ******/
+#define OV_VOLTAGE_THRESHOLD_V             75                   // Over-voltage threshold
+
+#define UD_VOLTAGE_THRESHOLD_CONV_V     32         //Undervoltage threshold for board to work
+#define UD_VOLTAGE_THRESHOLD_V          (UD_VOLTAGE_THRESHOLD_BATT_V > UD_VOLTAGE_THRESHOLD_CONV_V ? UD_VOLTAGE_THRESHOLD_BATT_V : UD_VOLTAGE_THRESHOLD_CONV_V)
 
 /****** PWM Parameters ******/
 #define PWM_FREQUENCY                   20000       // PWM switching frequency

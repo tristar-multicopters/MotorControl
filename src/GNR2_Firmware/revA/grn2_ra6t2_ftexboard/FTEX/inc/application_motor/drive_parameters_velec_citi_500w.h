@@ -14,7 +14,7 @@
 
 /************************** Controller Config  ************************/
 
-#define CONTROLLER_SELECTION                 CONTROLLER_EP700    // Controller selection to adapt controller parameters
+#define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters
 
 /************************** Motor Config  ************************/
 #define MOTOR_GEAR_RATIO                    (float)10.9890      // Motor gear ratio, the value is always X turns of the motor 
@@ -22,9 +22,6 @@
 
 #define MAX_APPLICATION_SPEED_RPM           4000                // Max speed for the current application in mechanical rpm
 #define HALL_AVERAGING_FIFO_DEPTH           8                   // Depth of the FIFO used to
-
-#define OV_VOLTAGE_THRESHOLD_V              75                  // Over-voltage threshold
-#define UD_VOLTAGE_THRESHOLD_V              32                  // Under-voltage threshold
 
 #define PID_TORQUE_KP_DEFAULT               300                 // Default gain if adaptive gain feature is not used
 #define PID_FLUX_KP_DEFAULT                 100                 // Default gain if adaptive gain feature is not used
@@ -68,9 +65,6 @@
 #define ST_Torque_Coef                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
 
 #define PEAK_CURRENT_MOTOR_amps                   50                  // peak current in amps
-#define NOMINAL_TORQUE                      (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_MOTOR_amps)   // Nominal torque to apply to motor in cNm   
-                                                                                        // Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_MOTOR_amps
-#define STARTING_TORQUE                     (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef) // Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes
 
 #define MOTOR_MAX_SPEED_RPM                 2100                // Maximum rated speed -  Old Example 2750 for 38Km/h
 

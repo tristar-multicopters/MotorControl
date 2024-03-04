@@ -1,12 +1,12 @@
 /**
-  * @file    controller_parameters_EP350.h
+  * @file    hardware_parameters_EP350.h
   * @brief   This file contains the parameters needed for EP350.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 
-#ifndef __CONTROLLER_PARAMETERS_EP350_H
-#define __CONTROLLER_PARAMETERS_EP350_H
+#ifndef __HARDWARE_PARAMETERS_EP350_H
+#define __HARDWARE_PARAMETERS_EP350_H
 
 
 /************************** Current Sensing and Protection Parameters ************************/

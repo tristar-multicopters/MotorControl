@@ -71,7 +71,6 @@
 /* The maximum current from Current Sensor with AMPLIFICATION_GAIN that we can measure using ADC with ADC_REFERENCE_VOLTAGE */
 #define current_correction_factor   0.85  /* correction factor for the current sensor range */
 #define MAX_MEASURABLE_CURRENT      (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN)* current_correction_factor)
-#define PEAK_CURRENT_amps           (PEAK_CURRENT_MOTOR_amps < PEAK_CURRENT_CONTROLLER_amps ? PEAK_CURRENT_MOTOR_amps : PEAK_CURRENT_CONTROLLER_amps)
 #define NOMINAL_PEAK_CURRENT        (uint16_t)(PEAK_CURRENT_amps * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Maximum current amplitude that can be injected per phase in digital Amps, motor limit */
 #define ID_DEMAG                    (uint16_t)(ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
 
