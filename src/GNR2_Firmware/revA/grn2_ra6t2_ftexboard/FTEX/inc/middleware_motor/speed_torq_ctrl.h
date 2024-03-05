@@ -49,6 +49,8 @@ typedef struct
 
     int16_t hFinalTorqueRef;
     int16_t hFinalSpeedRef;
+    
+    MotorType_t motorType;                          /* Type of motor, can be HUB_DRIVE or MID_DRIVE */
 
     STCModality_t                   Mode;        /*!< Modality of STC. It can be one of these two
                                                 settings: STC_TORQUE_MODE to enable the
@@ -110,7 +112,8 @@ typedef struct
     float fGearRatio;                  /* fGearRatio Contians the gear ratio of the motor as defined in drive_parameters_xxx*/    
     
     bool bEnableSpdLimitControl;
-    int16_t hSpdLimit;
+    int16_t hSpdLimit;                /* Speed limit of motor rpm */
+    uint16_t hSpdLimitWheelRpm;       /* Speed limit of wheel rpm */
     int16_t hTorqueReferenceSpdLim;
     PIDHandle_t PISpeedLimit;               /*!< The regulator used to perform the speed limit control loop.*/
     
@@ -347,6 +350,14 @@ void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle);
   * @retval 
   */
 void SpdTorqCtrl_SetSpeedLimit(SpdTorqCtrlHandle_t * pHandle, int16_t hSpdLimUnit);
+
+/**
+  * @brief  Sets wheel speed limit for speed limit controller (only for torque mode and mid-drives).
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  hSpdLim: Speed limit in unit specified by SPEED_UNIT (rpm, Hz, ...)
+  * @retval 
+  */
+void SpdTorqCtrl_SetSpeedLimitWheelRpm(SpdTorqCtrlHandle_t * pHandle, uint16_t hSpdLimUnit);
 
 #ifdef __cplusplus
 }

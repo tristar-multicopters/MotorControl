@@ -19,7 +19,7 @@
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-                                              
+                                      
 /***************** THROTTLE SELECTION  ******************************/
 
 // Nidec has no throttle, but some defines needed regardless
@@ -36,9 +36,9 @@
 #include "pedal_sensors/torg8b_k59.h"
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
-#define PTS_OFFSET_PTS2TORQUE_STARTUP       70           // Offset for pedal torque sensor to torque linear transformation during the startup in %
-#define PTS_OFFSET_STARTUP_SPEED_KMH        1               // Speed under which the Startup pedal torque sensor offset is used in km/h
-#define PTS_OFFSET_PTS2TORQUE               2             // Offset for pedal torque sensor to torque linear transformation in %
+#define PTS_OFFSET_PTS2TORQUE_STARTUP       70              // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_STARTUP_SPEED_KMH        3               // Speed under which the Startup pedal torque sensor offset is used in km/h
+#define PTS_OFFSET_PTS2TORQUE               2               // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
@@ -68,7 +68,7 @@
 
 //Used to chose what power calculation will be used, 
 //torque or cadence.
-#define PAS_POWER_ALGORITHM                       TorqueSensorUse /* TorqueSensorUse  = 1, Torque sensor use define 
+#define PAS_POWER_ALGORITHM                 TorqueSensorUse /* TorqueSensorUse  = 1, Torque sensor use define 
                                                                CadenceSensorUse = 2, Cadence sensor use define */
 //Used to chose the pas detection mode on startup, torque or/and cadence,
 //torque only or cadence only.
@@ -85,12 +85,21 @@
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
     
-#define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
+#define PAS_WALK_POWER_PERCENT              40              // PAS walk has a ratio of 70%
 
 #define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
 #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
-#define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
+#define PAS_WALKMODE_OVER_THROTTLE          true       // If set to true walk mode has higher priority than throttle
 
+
+#define WALKMODE_ACCEL_RAMP_TYPE LINEAR
+#define WALKMODE_ACCEL_RAMP_ARG1     25
+
+#define PAS_LEVEL_SPEED_1     45
+#define PAS_LEVEL_SPEED_2     45
+#define PAS_LEVEL_SPEED_3     45
+#define PAS_LEVEL_SPEED_4     45
+#define PAS_LEVEL_SPEED_5     45
 
 #define PAS_1_MAX_TORQUE_PERCENT      30
 #define PAS_2_MAX_TORQUE_PERCENT      55
@@ -100,7 +109,9 @@
 /************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
 
 #include "speed_sensors/p3_d70008_w.h"
-    
+
+#define VEHICLE_TOP_SPEED_KMH   45    
+
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
 #define MOTOR_SELECTOR_ENABLE               false           // True if active motor can be changed using 3 way switch
@@ -121,7 +132,7 @@
 #define POWERTRAIN_STOP_SPEED_THRESHOLD     0               // Speed value to stop powertrain
 #define POWERTRAIN_DISABLE_THROTTLE_PAS_0   true            // If set the tru throttle is disabled when pas level is 0
 
-#define DYNAMIC_SPEED_LIMITATION            false           // Indicates if the the top speed change be changed dynamically or is fixed to the default value
+#define DYNAMIC_SPEED_LIMITATION            true            // Indicates if the the top speed change be changed dynamically or is fixed to the default value
 
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT 200             /*  Number of task ticks to wait after a fault occurs to 
                                                                 attempt a powertrain restart (OC, SF and SU faults)   */

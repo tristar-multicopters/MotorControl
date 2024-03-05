@@ -734,15 +734,25 @@ void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t 
     ASSERT(pHandle != NULL);
     ASSERT(pHandle->pMCI->pSpeedTorqCtrl);
     
-    int16_t DesiredMotorRPM;
+    int16_t desiredMotorRPM;
     float gearRatio = pHandle->pMCI->pSpeedTorqCtrl->fGearRatio;
     uint16_t wheelRpm = (uint16_t) Wheel_GetWheelRpmFromSpeed(speedKMH);  // Convert desired wheel speed in kmH to desired wheel RPM
     
+    SpdTorqCtrl_SetSpeedLimitWheelRpm(pHandle->pMCI->pSpeedTorqCtrl, wheelRpm);
     
-    DesiredMotorRPM = (int16_t) round(gearRatio * wheelRpm);  // Convert desired wheel rpm to desired motor rpm
+    desiredMotorRPM = (int16_t) round(gearRatio * wheelRpm);  // Convert desired wheel rpm to desired motor rpm
     
-    DesiredMotorRPM = (DesiredMotorRPM * gain)/ MDI_PERCENT;
+    desiredMotorRPM = (desiredMotorRPM * gain)/ MDI_PERCENT;
     
-    SpdTorqCtrl_SetSpeedLimit(pHandle->pMCI->pSpeedTorqCtrl, DesiredMotorRPM); // Set the torqeu control speed limitation
+    SpdTorqCtrl_SetSpeedLimit(pHandle->pMCI->pSpeedTorqCtrl, desiredMotorRPM); // Set the torque control speed limitation
 
 }    
+
+/**
+  *  Function sets the wheel speed limit. Used for mid-drives. Is also the wrapper for the function SpdTorqCtrl_SetSpeedLimitWheelRpm
+  */
+void MDI_SetWheelRPM(MultipleDriveInterfaceHandle_t * pHandle, uint16_t aWheelRPM)
+{
+    ASSERT(pHandle != NULL);
+    MCInterface_SetWheelRPM(pHandle->pMCI, aWheelRPM);
+}  

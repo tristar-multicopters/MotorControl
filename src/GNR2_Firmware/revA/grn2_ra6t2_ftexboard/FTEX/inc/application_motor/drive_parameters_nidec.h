@@ -18,6 +18,7 @@
 
 /************************** Motor Config  ************************/
 #define MOTOR_GEAR_RATIO                    (float)36       // Motor gear ratio, the value is always X turns of the motor 
+#define MOTOR_TYPE                          MID_DRIVE 
 #define MOTOR_TEMP_SENSOR_TYPE              REAL_SENSOR     // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
 
 #define MAX_APPLICATION_SPEED_RPM           3600            // Max speed for the current application in mechanical rpm
@@ -64,13 +65,14 @@
 #define MOTOR_VOLTAGE_CONSTANT              28.84f          // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f            // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps                   55              // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps             49              // peak current in amps
 
 /****** Hall sensors ************/
 #define HALL_MEAS_ERRORS_BEFORE_FAULTS  6 /*!< Number of failed
                                                            derived class specific speed
                                                            measurements before main sensor
                                                            goes in fault */
+
 #define MOTOR_MAX_SPEED_RPM                 2100            // Maximum rated speed - Old Example 2750 for 38Km/h
 
 #define OV_TEMP_MOTOR_THRESHOLD_C           150             // Maximum temperature in degree C

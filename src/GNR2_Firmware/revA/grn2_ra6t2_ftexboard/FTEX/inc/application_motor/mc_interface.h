@@ -439,7 +439,13 @@ int16_t MCInterface_GetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle
 void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, int16_t aCurrent);
 
 /**
-  * @brief  Get the current torq reference 
+  * @brief  update the wheelRPM in the speed position feedback handle 
+  * @param  pHandle : handle of the MCI interface
+  * @retval nothing
+  */
+void  MCInterface_SetWheelRPM(MotorControlInterfaceHandle_t * pHandle, uint16_t aWheelRPM);
+
+/** @brief  Get the current torq reference 
   * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
   * @retval nothing
   */

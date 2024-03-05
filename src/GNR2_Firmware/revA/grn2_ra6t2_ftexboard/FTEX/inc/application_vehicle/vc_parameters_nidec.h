@@ -82,6 +82,8 @@
 /************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
 
 #include "speed_sensors/p3_d70008_w.h"
+
+#define VEHICLE_TOP_SPEED_KMH   45    
     
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 

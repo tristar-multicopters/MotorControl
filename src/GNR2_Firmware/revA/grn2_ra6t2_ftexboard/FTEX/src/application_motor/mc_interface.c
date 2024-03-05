@@ -557,6 +557,16 @@ void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, i
 }
 
 /**
+  *  Set the wheel RPM
+  */
+void  MCInterface_SetWheelRPM(MotorControlInterfaceHandle_t * pHandle, uint16_t aWheelRPM)
+{
+  ASSERT(pHandle != NULL);  
+  pHandle->pSpeedTorqCtrl->pSPD->wheelRPM = aWheelRPM;
+    
+}   
+
+/**
   *  Get the current torq reference 
   */
 int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, uint8_t Motor)

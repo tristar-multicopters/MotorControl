@@ -9,14 +9,20 @@
 /* Includes ------------------------------------------------------------------*/
 #include "speed_torq_ctrl.h"
 #include "speed_pos_fdbk.h"
-
 #include "mc_type.h"
 #include "parameters_conversion.h"
+#include "gear_ratio_table.h"
+
+#define GEAR_RATIO_LOWER_BOUND_MIN 1        //min gear ratio, cannot be 0
+#define GEAR_RATIO_UPPER_BOUND_MAX 10       //max gear ratio = highest gear + GEAR_RATIO_UPPER_BOUND_MAX
 
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
+void SpdTorqCtrl_SetGearRatio(SpdTorqCtrlHandle_t * pHandle, int16_t hMeasuredSpeed);
+
 uint16_t M_STUCK_timer = 0;
 uint16_t OCD_timer = 0;
+
 
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor)
@@ -24,6 +30,13 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     ASSERT(pHandle != NULL);
     pHandle->pPISpeed = pPI;
     pHandle->pSPD = SPD_Handle;
+    pHandle->pSPD->gearMAFiltPos = 0;
+    
+    for(uint16_t count = 0; count < GEAR_FILTER_SIZE; count++)
+    {
+        pHandle->pSPD->gearArray[count] = 0;
+    }
+    
     pHandle->pHeatsinkTempSensor = pTempSensorHS;
     pHandle->pMotorTempSensor = pTempSensorMotor;
     pHandle->Mode = pHandle->ModeDefault;
@@ -51,6 +64,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     Foldback_Init(&pHandle->FoldbackMotorSpeed);
     Foldback_Init(&pHandle->FoldbackDynamicMaxPower);
     Foldback_Init(&pHandle->FoldbackMotorTemperature);
+    
     
 }
 
@@ -185,7 +199,6 @@ void SpdTorqCtrl_StopRamp(SpdTorqCtrlHandle_t * pHandle)
     RampMngr_StopRamp(&pHandle->SpeedRampMngr);
 }
 
-
 int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -198,10 +211,24 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
     {
         hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
         
-        
         if (pHandle->bEnableSpdLimitControl)
         {
-            hMeasuredSpeed = -SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD); // Speed is somehow negative when applying positive torque, need to figure out why.
+            
+            hMeasuredSpeed = (int16_t) abs(SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD)); // Speed is somehow negative when applying positive torque, need to figure out why.
+            //bug filed for negative speed: https://tristarmulticopters.atlassian.net/browse/DEV-505
+            //for mid-drives, get gear ratio if motor is spinning to set motor speed limit, else use wheel speed with gear ratio
+            if (pHandle->motorType == MID_DRIVE)
+            {
+                if (pHandle->hCurrentTorqueRef > 0)
+                {
+                    SpdTorqCtrl_SetGearRatio(pHandle, hMeasuredSpeed);
+                }
+                else
+                {
+                    hMeasuredSpeed = (pHandle->pSPD->dynamic_gear)*(int16_t)(pHandle->pSPD->wheelRPM);
+                }
+            }
+            
             hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
             pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
             if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)
@@ -209,6 +236,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
                 hTorqueReference = pHandle->hTorqueReferenceSpdLim;
             }
         }
+        
         
         hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
         hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference); // Apply motor torque foldbacks
@@ -259,6 +287,76 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
     
     return hTorqueReference;
 }
+
+/*
+    Calculates and sets the gear ratio
+*/
+void SpdTorqCtrl_SetGearRatio(SpdTorqCtrlHandle_t * pHandle, int16_t hMeasuredSpeed)
+{
+    int16_t gearTemp = 0;
+    bool gearSame = true;
+    
+    //calculate gear ratio
+    if (pHandle->pSPD->wheelRPM > 0)
+    {
+        gearTemp = (int16_t) hMeasuredSpeed/pHandle->pSPD->wheelRPM;
+    }
+    
+    //compare calculated gear ratio with table
+    for (uint8_t count = 0; count < NUM_GEARS; count++)
+    {
+        int16_t upperBound;
+        int16_t lowerBound;
+        
+        //A gear ratio from the gear ratio table is chosen if the calculated gear ratio is between midpoint of the current gear and the previous gear,
+        //and the midpoint of current gear and the next gear. For the lowest gear, the min calculated gear ratio considered is set to GEAR_RATIO_LOWER_BOUND_MIN,
+        //For the highest gear, the max calculated gear ratio considered is set to the max gear ratio + GEAR_RATIO_UPPER_BOUND_MAX.
+        if (count == 0)
+        {
+            upperBound = (gearRatioTable[count] + gearRatioTable[count + 1]) / 2;
+            lowerBound = GEAR_RATIO_LOWER_BOUND_MIN;
+        }
+        else if (count == (NUM_GEARS - 1))
+        {
+            upperBound = gearRatioTable[count] + GEAR_RATIO_UPPER_BOUND_MAX;
+            lowerBound = (gearRatioTable[count] + gearRatioTable[count - 1]) / 2;
+        }
+        else
+        {
+            upperBound = (gearRatioTable[count] + gearRatioTable[count + 1]) / 2;
+            lowerBound = (gearRatioTable[count] + gearRatioTable[count - 1]) / 2;
+        }
+        
+        //if gearTemp is within the bounds put the value in the filter
+        if ((gearTemp <= upperBound) && (gearTemp >= lowerBound))
+        {
+            pHandle->pSPD->gearArray[pHandle->pSPD->gearMAFiltPos] = gearRatioTable[count];
+            if (pHandle->pSPD->gearMAFiltPos < (GEAR_FILTER_SIZE - 1))
+            {
+                pHandle->pSPD->gearMAFiltPos++;
+            }
+            else
+            {
+                pHandle->pSPD->gearMAFiltPos = 0;
+            }
+        }
+    }
+    
+    //if all numbers in filter are the same update gear ratio
+    for(uint16_t count = 1; count < GEAR_FILTER_SIZE; count++)
+    {
+        if (pHandle->pSPD->gearArray[count] != pHandle->pSPD->gearArray[0])
+        {
+            gearSame = false;
+        }
+    }
+                
+    if (gearSame == true)
+    {
+        pHandle->pSPD->dynamic_gear = pHandle->pSPD->gearArray[pHandle->pSPD->gearMAFiltPos];
+    }        
+}
+
 
 uint16_t SpdTorqCtrl_GetMaxAppPositiveMecSpeedUnit(SpdTorqCtrlHandle_t * pHandle)
 {
@@ -322,15 +420,18 @@ void SpdTorqCtrl_SetSpeedRampSlope(SpdTorqCtrlHandle_t * pHandle, uint32_t wSlop
 /*
     Apply all torque foldbacks and returns limited torque.
 */
+
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque)
 {
-    ASSERT(pHandle != NULL);
     
+    ASSERT(pHandle != NULL);
+        
     int16_t hMeasuredSpeed = 0;
     int16_t hMeasuredMotorTemp = 0;
     int16_t hMeasuredHeatsinkTemp = 0;
 
     hMeasuredSpeed = 10 * SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
+
     if (pHandle->pMotorTempSensor != NULL)
     {
         hMeasuredMotorTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pMotorTempSensor) * 100;
@@ -339,14 +440,32 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     {
         hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor) * 100;
     }
-
+        
     int16_t hOutputTorque, hMaxTorque; 
     hMaxTorque = Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxTorque, NULL,(int16_t) abs(hMeasuredSpeed) );
     Foldback_UpdateMaxValue(&pHandle->FoldbackMotorSpeed, hMaxTorque);
     Foldback_UpdateMaxValue(&pHandle->FoldbackMotorTemperature, hMaxTorque);
     Foldback_UpdateMaxValue(&pHandle->FoldbackHeatsinkTemperature, hMaxTorque);
     
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)(abs(hMeasuredSpeed)));
+    //for mid-drives, we need to also set the max wheel speed since it can vary based on the gear with a constant motor speed
+    if (pHandle->motorType == MID_DRIVE)
+    {
+    
+        int16_t hMaxWheelSpeed = 0;
+                
+        hMaxWheelSpeed = (int16_t) pHandle->hSpdLimitWheelRpm;
+        
+        if (pHandle->pSPD->dynamic_gear == 0)
+        {
+            pHandle->pSPD->dynamic_gear = gearRatioTable[NUM_GEARS - 1];
+        }
+
+        pHandle->FoldbackMotorSpeed.hDecreasingEndValue = 10 * hMaxWheelSpeed * pHandle->pSPD->dynamic_gear; //multiplied by 10 for higher accuracy in foldback
+        pHandle->FoldbackMotorSpeed.hDecreasingRange = (FOLDBACK_SPEED_INTERVAL / FOLDBACK_SPEED_END_VALUE) * (uint16_t) pHandle->FoldbackMotorSpeed.hDecreasingEndValue;
+    }
+    
+    
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)abs(hMeasuredSpeed));    
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
     
@@ -426,11 +545,7 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     {
         if (hInputTorque > 0)
         {
-            #if VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
-                wTorqueLimit = 3000*pHandle->DynamicPowerHandle.hDynamicMaxPower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
-            #else
-                wTorqueLimit = 1000*pHandle->DynamicPowerHandle.hDynamicMaxPower/abs(hMeasuredSpeedTenthRadPerSec);
-            #endif
+                wTorqueLimit = 1000*pHandle->DynamicPowerHandle.hDynamicMaxPower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
             
             if (hInputTorque > wTorqueLimit)
             {
@@ -458,6 +573,7 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
         else
         {
             wTorqueLimit = 1000*pHandle->hMinNegativePower/abs(hMeasuredSpeedTenthRadPerSec); // Torque limit in cNm. 1000 comes from 100*10
+            
             if (hInputTorque < wTorqueLimit)
             {
                 hRetval = (int16_t) wTorqueLimit;
@@ -506,8 +622,21 @@ void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle)
     #endif
 }  
 
+/*
+    set speed limit of motor
+*/
 void SpdTorqCtrl_SetSpeedLimit(SpdTorqCtrlHandle_t * pHandle, int16_t hSpdLimUnit)
 {
+    ASSERT(pHandle != NULL);
     pHandle->hSpdLimit = hSpdLimUnit;
+}
+
+/*
+    set speed limit of wheel
+*/
+void SpdTorqCtrl_SetSpeedLimitWheelRpm(SpdTorqCtrlHandle_t * pHandle, uint16_t hSpdLimUnit)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->hSpdLimitWheelRpm = hSpdLimUnit;
 }
 

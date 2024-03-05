@@ -203,6 +203,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
         .min_torque = STUCK_MIN_TORQUE,
         .low_battery_voltage = STUCK_LOW_VOLTAGE_THRESHOLD
     },  
+    .motorType =                    MOTOR_TYPE,
     .hSTCFrequencyHz =              MEDIUM_FREQUENCY_TASK_RATE,
     .hMaxBusCurrent =               (uint16_t)(MAX_APPLICATION_CURRENT),
     .hMaxContinuousCurrent =        (uint16_t)(MAX_BMS_CONTINOUS_CURRENT),
@@ -227,6 +228,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     .fGearRatio =                   MOTOR_GEAR_RATIO,  
     .bEnableSpdLimitControl = ENABLE_SPEED_LIMIT_CONTROL,
     .hSpdLimit = MAX_APPLICATION_SPEED_UNIT,
+    .hSpdLimitWheelRpm = MAX_APPLICATION_SPEED_UNIT,
     .PISpeedLimit =
     {
         .hDefKpGain           = (int16_t)PID_SPEEDLIMIT_KP_DEFAULT,

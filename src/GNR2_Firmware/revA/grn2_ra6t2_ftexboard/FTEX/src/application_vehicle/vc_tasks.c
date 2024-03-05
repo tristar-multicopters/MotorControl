@@ -144,6 +144,9 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         // Update Light if Blinking
         Light_Blink(pVCI->pPowertrain->pTailLight);
         
+        // Update Mc layer wheel speed
+        PWRT_SetWheelRPM(pVCI->pPowertrain);
+        
         #if ENABLE_VC_DAC_DEBUGGING
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);
         R_DAC_Write((DEBUG2_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hAvADCValue);

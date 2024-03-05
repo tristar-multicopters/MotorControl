@@ -140,8 +140,18 @@ typedef struct
   */
 typedef enum
 {
-  REAL_SENSOR, VIRTUAL_SENSOR
+    REAL_SENSOR,
+    VIRTUAL_SENSOR,
 } SensorType_t;
+
+/**
+  * @brief  MotorType_t type definition, it's used in speed_torque_control to specify the type of motor used.
+  */
+typedef enum
+{
+    HUB_DRIVE,
+    MID_DRIVE,
+} MotorType_t;
 
 
 /**

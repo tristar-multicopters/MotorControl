@@ -19,6 +19,7 @@
 
 /************************** Motor Config  ************************/
 #define MOTOR_GEAR_RATIO                    (float)36       // Motor gear ratio, the value is always X turns of the motor 
+#define MOTOR_TYPE                          MID_DRIVE
 #define MOTOR_TEMP_SENSOR_TYPE              REAL_SENSOR     // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
 
 #define MAX_APPLICATION_SPEED_RPM           3600            // Max speed for the current application in mechanical rpm
@@ -28,7 +29,7 @@
 #define PID_FLUX_KP_DEFAULT                 100             // Default gain if adaptative gain feature is not used
 #define PID_FLUX_KI_DEFAULT                 1000            // Default gain if adaptative gain feature is not used
 
-#define ENABLE_SPEED_LIMIT_CONTROL          false
+#define ENABLE_SPEED_LIMIT_CONTROL          true
 #define PID_SPEED_KP_DEFAULT                100             // Default gain speed control loop
 #define PID_SPEED_KI_DEFAULT                10              // Default gain speed control loop
 #define SP_KIDIV                            16384           // Speed control gain divider, to allow decimal value
@@ -39,7 +40,7 @@
 #define LOW_VOLTAGE_THRESHOLD_PERCENTAGE    10              // The threshold percentage of battery voltage before limiting torque
 #define LOW_BATTERY_TORQUE                  150
 
-#define ENABLE_MAX_POWER_LIMIT              false           // To enable or disable the foldback
+#define ENABLE_MAX_POWER_LIMIT              true            // To enable or disable the foldback
 #define MAX_TIME_BMS_TOLERANT               20000           // End time of derating for BMS protection in ms
 #define MAX_POWER_LIMIT_TIMEOUT             10000           // Start time of derating for BMS protection in ms
 #define MAX_BMS_POSITIVE_POWER              750             // Maximum Power at the end point of foldback
@@ -65,7 +66,7 @@
 #define MOTOR_VOLTAGE_CONSTANT              28.84f          // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f            // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps                   55              // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps             49         // peak current in amps
 
 #define MOTOR_MAX_SPEED_RPM                 2100            // Maximum rated speed - Old Example 2750 for 38Km/h
 

@@ -3,6 +3,7 @@
 
 /******************************** BATTERY MONITORING PARAMETERS ******************************/
 
+
 #define BATTERY_FULL_VOLT_X_100   4000
 #define BATTERY_EMPTY_VOLT_X_100  3200
 

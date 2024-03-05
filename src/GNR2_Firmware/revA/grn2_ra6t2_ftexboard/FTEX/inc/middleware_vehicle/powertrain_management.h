@@ -418,5 +418,12 @@ bool PWRT_GetForceDisengageState(PWRT_Handle_t * pHandle);
  */
 void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle);
 
+/**
+ * @brief  Update the wheel RPM to the MC layer
+ * @param  Powertrain handle
+ * @retval nothing 
+ */
+void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle);
+    
 #endif /*__POWERTRAIN_MANAGEMENT_H*/
 

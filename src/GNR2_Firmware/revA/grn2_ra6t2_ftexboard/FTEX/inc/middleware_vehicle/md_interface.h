@@ -398,4 +398,13 @@ uint16_t MDI_GetMaxPositivePower(MultipleDriveInterfaceHandle_t * pHandle);
   */
 void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t speedKMH, uint16_t gain);
 
+/**
+  * @brief  Update the wheel RPM value
+  * @param  pHandle .
+  * @param  aWheelRPM
+  * @retval none
+  */
+void MDI_SetWheelRPM(MultipleDriveInterfaceHandle_t * pHandle, uint16_t aWheelRPM);
+    
+
 #endif /* __MD_INTERFACE_H */

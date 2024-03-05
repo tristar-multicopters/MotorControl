@@ -17,6 +17,9 @@ extern "C" {
 #include "stdint.h"
 #include "mc_type.h"
 
+/* Constants -----------------------------------------------------------------*/
+
+#define GEAR_FILTER_SIZE 100    /* Size of the filter used for gear ratio readings */
 
 /* Exported types ------------------------------------------------------------*/
 /**
@@ -61,6 +64,14 @@ typedef struct
                                     It is also used to convert measured speed from the unit
                                     defined by #SPEED_UNIT to dpp and viceversa.*/
     uint32_t DPPConvFactor; /* (65536/PWM_FREQ_SCALING) */
+    
+    uint16_t wheelRPM;     /* Wheel rpm which becomes updated from vc layer*/
+    
+    uint8_t dynamic_gear;   /* Dynamic gear ratio for mid-drive application*/
+    
+    uint8_t gearArray[GEAR_FILTER_SIZE]; /* Filter for gear ratio readings */
+    
+    uint16_t gearMAFiltPos;     /* Moving average filter position for dynamic gear ratio */
 
 
 } SpdPosFdbkHandle_t;

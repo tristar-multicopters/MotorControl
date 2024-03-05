@@ -191,7 +191,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 int16_t Bandwidth = 0;
                 
                     
-                if(abs(PowerAvg - hAux) > (pHandle->pPAS->sParameters.hPASMaxTorque/25)) // Sudden acceleration or decelration ? 
+                if(abs(PowerAvg - hAux * 100) > ((pHandle->pPAS->sParameters.hPASMaxTorque * 100)/25)) // Sudden acceleration or decelration ? 
                 {                                                                      
                     BandwidthUp = 60;
                     BandwidthDown = 30;                    
@@ -206,9 +206,9 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                     Bandwidth = BandwidthDown;
                 }
                 
-                PowerAvg = ((Bandwidth-1) * PowerAvg + hAux)/Bandwidth;
+                PowerAvg = ((Bandwidth-1) * PowerAvg + (hAux * 100))/Bandwidth;
                                         
-                hAux = PowerAvg;
+                hAux = PowerAvg/100;
             }
             #endif
         }                            
@@ -1464,4 +1464,15 @@ void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     pHandle->sParameters.CruiseForceDisengage = false;
+}
+
+/**
+ *  Updates wheel RPM to MC Layer
+ */
+void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle)
+{ 
+    ASSERT(pHandle != NULL);
+    uint16_t wheelRPM = WheelSpdSensor_GetSpeedRPM(pHandle->pPAS->pWSS);
+    
+    MDI_SetWheelRPM(pHandle->pMDI, wheelRPM);
 }
