@@ -251,7 +251,7 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
               break;                                                                      
             case R_CURRENT:
                          //Get the amount of amps we are currently pushing 
-                toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain); 
+                toSend = PWRT_GetDCCurrent(pHandle->pVController->pPowertrain); 
           
                 //No filtering needed for this LCD
             

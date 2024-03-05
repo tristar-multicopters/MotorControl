@@ -438,7 +438,19 @@ int16_t MCInterface_GetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle
   */
 void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, int16_t aCurrent);
 
+/**
+  * @brief  Get the current torq reference 
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval nothing
+  */
+int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, uint8_t Motor);
 
+/**
+  * @brief  Get the max application power
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval max app power
+  */
+uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle);
 
 #ifdef __cplusplus
 }

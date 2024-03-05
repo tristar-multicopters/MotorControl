@@ -45,12 +45,13 @@
 #define MAX_DATA_IN_SEG      8      /**< Maxime data to send in a reply segment             */
 
 // ==================== Public function prototypes ========================= //
+
 /**
-  @brief  Get Power function
+  @brief  Get DE Power function
   @param  VCI_Handle_t handle
-  @return Power in uint16_t format
+  @return DC power in uint16_t format
 */
-uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle);
+uint16_t CanVehiInterface_GetVehicleDCPower(VCI_Handle_t * pHandle);
 
 /**
   @brief  Get Torque function
@@ -58,6 +59,13 @@ uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle);
   @return Torque in uint16_t format
 */
 uint16_t CanVehiInterface_GetVehicleTorque(VCI_Handle_t * pHandle);
+
+/**
+  @brief  Get Power function
+  @param  VCI_Handle_t handle
+  @return Power in uint16_t format
+*/
+uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle);
 
 /**
   @brief  Get State of Charge function
@@ -96,11 +104,11 @@ uint8_t CanVehiInterface_GetVehiclePASAlgorithm (VCI_Handle_t * pHandle);
 uint8_t CanVehiInterface_GetMaxVehiclePAS (void);
 
 /**
-  @brief  Get MAX Power function
+  @brief  Get MAX DC Power function
   @param  None
-  @return Maximum Power in uint8_t format
+  @return Maximum Power in uint16_t format
 */
-uint16_t CanVehiInterface_GetVehicleMaxPWR (VCI_Handle_t * pHandle);
+uint16_t CanVehiInterface_GetMaxDCPWR (VCI_Handle_t * pHandle);
 
 /**
   @brief  Get Current Faults function

@@ -374,6 +374,21 @@ int16_t MDI_GetMotorTemp(MultipleDriveInterfaceHandle_t * pHandle);
 void MDI_Clear_Iqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
+  * @brief  Obtain the motor torque referenece for a motor
+  * @param  pHandle Pointer on the component instance to work on.
+  * @param  bMotor is the target motor number
+  * @retval none
+  */
+uint16_t MDI_GetMotorTorqueReference(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+
+/**
+  * @brief  Obtain the max application power
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the max app power
+  */
+uint16_t MDI_GetMaxPositivePower(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
   * @brief  Function sets the torque control speed limit does the conversion from desired 
   *         wheel speed in kmH to motor rpm.Is also the wrapper for the function SpdTorqCtrl_SetSpeedLimit
   * @param  pHandle Pointer on the component instance to work on.

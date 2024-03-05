@@ -171,10 +171,11 @@ uint8_t  bObjDataSOC                        = 0;
 uint8_t  bObjDataPAS                        = DEFAULT_PAS_LEVEL; // The default PAS level should be 1
 uint8_t  bObjDataMaxPAS                     = 0;
 uint32_t hObjDataFwVersion                  = 0;
-uint16_t hObjDataPowerMeas                  = 0;
+uint16_t hObjDataDCPowerMeas                = 0;
 uint16_t hObjDataTorqueMeas                 = 0; 
-uint16_t hObjDataMaxPower                   = 0;
-uint32_t hObjDataErrorState                  = 0;
+uint16_t hObjDataPowerMeas                  = 0;
+uint16_t hObjDataMaxDCPower                 = 0;
+uint32_t hObjDataErrorState                 = 0;
 uint32_t wObjDataSerialNbL                  = 0;
 uint32_t wObjDataSerialNbH                  = 0;
 
@@ -1087,14 +1088,18 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             // Application - Inst Power
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataPowerMeas};  
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataDCPowerMeas};  
             //move to next OD index
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_POWER_MEASURE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataTorqueMeas};  
             //move to next OD index
             index++;
-                        
+                  
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_POWER_MEASURE, 2, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataPowerMeas};  
+            //move to next OD index
+            index++;
+            
             // Application - State of Charge
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SOC,           0, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&bObjDataSOC}; 
             //move to next OD index
@@ -1108,7 +1113,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Max Power
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MAX_POWER,     0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMaxPower}; 
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MAX_DCPOWER,   0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMaxDCPower}; 
             //move to next OD index
             index++;
             // Application - Error State

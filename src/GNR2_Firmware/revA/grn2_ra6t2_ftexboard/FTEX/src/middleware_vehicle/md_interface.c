@@ -694,6 +694,38 @@ void MDI_Clear_Iqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 }
 
 /**
+  *  Obtain the motor torque referenece for a motor
+  */
+uint16_t MDI_GetMotorTorqueReference(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+{
+    ASSERT(pHandle != NULL);
+    
+    uint16_t MotorTorqueRef = 0;
+    switch (bMotor)
+    {
+        case M1:            
+            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M1));
+            break;
+        case M2:
+            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M2));
+            break;
+        default:
+            break;
+    }
+    
+    return MotorTorqueRef;
+}
+
+/**
+  *  Obtain the max application power
+  */
+uint16_t MDI_GetMaxPositivePower(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMaxPositivePower(pHandle->pMCI);
+}
+
+/**
   *  Function sets the torque control speed limit does the conversion from desired 
   *  wheel speed in kmH to motor rpm.Is also the wrapper for the function SpdTorqCtrl_SetSpeedLimit
   */

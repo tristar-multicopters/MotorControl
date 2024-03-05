@@ -57,10 +57,10 @@
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA  -14.91F          // Beta constant to configure butterworth filter for mecanical speed filtering
 
 /***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
-#define POLE_PAIR_NUM                       7               // Number of motor pole pairs
+#define POLE_PAIR_NUM                       6               // Number of motor pole pairs
 #define RS                                  0.044f          // Stator resistance , ohm
 #define LS                                  0.000235f       // Stator inductance, H   For I-PMSM it is equal to Lq
-#define MOTOR_MAGNET_FLUX                   0.016f          // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
+#define MOTOR_MAGNET_FLUX                   0.0057f          // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
 #define MOTOR_VOLTAGE_CONSTANT              28.84f          // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f            // this coeficient always keeps the starting torque higher than the nominal torque
 

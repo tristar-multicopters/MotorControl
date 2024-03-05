@@ -428,7 +428,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
                 pHandle->pasController = controllerPas;
             }
 
-            toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);             
+            toSend = PWRT_GetDCCurrent(pHandle->pVController->pPowertrain);             
             toSend = LCD_Cloud_5S_ApplyPowerFilter((uint16_t)toSend);  
           
             toSend = toSend * 2; //Covert from amps to 0.5 amps; 
@@ -491,8 +491,20 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
 uint16_t LCD_Cloud_5S_ApplyPowerFilter(uint16_t aInstantPowerInAmps)
 {
    static uint16_t PowerAvg; 
-   uint16_t Bandwidth = 5; //Bandwidth CANNOT be set to 0
-        
+   uint16_t BandwidthUp   = 1; //Bandwidth CANNOT be set to 0
+   uint16_t BandwidthDown = 5;   
+
+   uint16_t Bandwidth = 0;
+
+   if (aInstantPowerInAmps >= PowerAvg)
+   {
+       Bandwidth = BandwidthUp;
+   }
+   else
+   {
+       Bandwidth = BandwidthDown;
+   }       
+    
    PowerAvg = (((Bandwidth-1) * PowerAvg + aInstantPowerInAmps)/Bandwidth);
    
    return (PowerAvg); 

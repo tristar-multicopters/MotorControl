@@ -307,7 +307,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         replyFrame.Buffer[ 0] = APT_START; //Start
       
         //Get the amount of amps we are currently pushing 
-        toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);
+        toSend = PWRT_GetDCCurrent(pHandle->pVController->pPowertrain);
          
         toSend = LCD_APT_ApplyPowerFilter((uint16_t)toSend);  
           

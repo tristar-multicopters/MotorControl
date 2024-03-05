@@ -40,25 +40,12 @@ void CanVehiInterface_sendLongMsgs(uint8_t * message, uint8_t * dataToSend, uint
 // ==================== Public function prototypes ======================== //
 
 /**
- *  Get vehicle power
+ *  Get vehicle DC power
  */
-uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetVehicleDCPower(VCI_Handle_t * pHandle)
 {
-    ASSERT(pHandle!= NULL);
-    uint16_t hmsgToSend;
-    
-    // Get Current from motor drive layer
-    uint16_t current = PWRT_ConvertDigitalCurrentToAMPS(pHandle->pPowertrain, (uint16_t) pHandle->pPowertrain->pMDI->pMCI->pFOCVars->Iqdref.q);   
-    
-    // Get Voltage from motor drive layer
-    uint16_t voltage = MCInterface_GetBusVoltageInVoltx100(pHandle->pPowertrain->pMDI->pMCI)/100;
-    
-    // Calculate the power
-    uint16_t power = current * voltage;
-    
-    // Load data buffer
-    hmsgToSend = power;   
-    return hmsgToSend;
+    ASSERT(pHandle!= NULL);    
+    return PWRT_GetDCPower(pHandle->pPowertrain);
 }
 
 /**
@@ -70,13 +57,23 @@ uint16_t CanVehiInterface_GetVehicleTorque(VCI_Handle_t * pHandle)
     ASSERT(pHandle!= NULL);
     
     // Add up motor torque reference from both motors
-    TotalVehicleTorque = (float)(abs(pHandle->pPowertrain->aTorque[0]));
+    TotalVehicleTorque = (float)PWRT_GetTotalMotorsTorque(pHandle->pPowertrain);
     
     TotalVehicleTorque = TotalVehicleTorque * MOTOR_GEAR_RATIO;
     
-    return (uint16_t)round(TotalVehicleTorque);
+    return (uint16_t)round(TotalVehicleTorque/100);
 }
 
+/**
+ *  Get vehicle power
+ */
+uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle!= NULL);
+    uint16_t hmsgToSend;
+    hmsgToSend = PWRT_GetTotalMotorsPower(pHandle->pPowertrain);
+    return hmsgToSend;
+}
 
 /**
  *  Get vehicle state of charge
@@ -129,13 +126,12 @@ uint8_t CanVehiInterface_GetVehicleMaxPAS (void)
 }
 
 /**
- *  Get vehicle max power
+ *  Get max DC power
  */
-uint16_t CanVehiInterface_GetVehicleMaxPWR (VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetMaxDCPWR (VCI_Handle_t * pHandle)
 {
-    uint16_t bMaxPWR;
-    bMaxPWR = (MCInterface_GetBusVoltageInVoltx100(pHandle->pPowertrain->pMDI->pMCI)/100) * PWRT_GetOngoingMaxCurrent(pHandle->pPowertrain);
-    return bMaxPWR;
+    ASSERT(pHandle!= NULL); 
+    return PWRT_GetMaxDCPower(pHandle->pPowertrain);
 }
 
 /**

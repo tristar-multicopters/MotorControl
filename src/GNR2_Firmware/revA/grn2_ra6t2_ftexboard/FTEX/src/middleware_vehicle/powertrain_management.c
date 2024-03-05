@@ -1187,45 +1187,129 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle)
 {  
     ASSERT(pHandle != NULL);    
-    uint16_t TotalMotorCurrent = 0;
-    uint16_t M1Current = 0;
-    uint16_t M2Current = 0; 
+    uint16_t TotalMotorPower = PWRT_GetTotalMotorsPower(pHandle);
     
-    // Check if M1 is selected
-    if (pHandle->pMS->bMotorSelection == ALL_MOTOR_SELECTED || pHandle->pMS->bMotorSelection == M1_SELECTED)
-    {    
-        int32_t temp = abs(pHandle->pMDI->pMCI->pFOCVars->Iqdref.q);
-        
-        // explicit cast to uint16 because abs returns an integer. Should not be an issue because q is an int16
-        M1Current = (uint16_t)temp;
-        
-        M1Current = M1Current/(uint16_t)round((INT16_MAX/MAXCURRENT));  // Convert the Iq reference to an actual current value           
-    }
+    float TotalMotorCurrent;
     
-    if (pHandle->pMS->bMotorSelection == ALL_MOTOR_SELECTED) // we assume m1 and m2 are the same
+    if (pHandle->pBatMonitorHandle->VBatAvg > 0)
     {
-        M2Current = M1Current;
+        TotalMotorCurrent = (TotalMotorPower * 100)/ pHandle->pBatMonitorHandle->VBatAvg;
     }
-    
-    // Check if M2 is selected
-    if (pHandle->pMS->bMotorSelection == M2_SELECTED)
+    else
     {
-        M2Current = (uint16_t) abs(pHandle->aTorque[M2]); // Get the current torque reference for M2
-         
-        M2Current = (M2Current * (uint16_t) pHandle->pMDI->pMCI->MCIConvFactors.Gain_Torque_IQRef);    // Convert it to a IQ current reference
-        if (M2Current > INT16_MAX)
-        {
-            M2Current = INT16_MAX;
-        }
-        
-        M2Current = M2Current/(uint16_t)round((INT16_MAX/MAXCURRENT));  // Convert the Iq refference to an actual current value 
+        TotalMotorCurrent = 0;
     }
-    
-    TotalMotorCurrent =  M1Current + M2Current;  // Get the sum of the currents form both motors             
-  
-    return  TotalMotorCurrent;   
+    return (uint16_t) round(TotalMotorCurrent);
 }
 
+/**
+  * @brief  Get the total amount of power the vehicle is pushing
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetTotalMotorsPower(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL); 
+    
+    float TotalMotorPower = 0;
+    uint16_t M1Rpm = (uint16_t) abs(MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1));
+   // uint16_t M2Rpm = (uint16_t) abs(MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2)); // dual not supported for now
+    
+    float M1TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M1);
+    //float M2TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M2);
+    
+    TotalMotorPower  = M1Rpm * RPM_TO_RAD_PERSEC  * (M1TorqueRef/100);
+                
+   // TotalMotorPower += M2Rpm * RPM_TO_RAD_PERSEC  * (M2TorqueRef/100);
+    
+    return  (uint16_t)round(TotalMotorPower);   
+
+}
+
+/**
+  * @brief  Get the approximate DC power (motor power + losses)
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetDCPower(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    
+    float Amps = 0;
+    float Loss = 0;
+    uint16_t IqRef = 0;
+    qd_t Iqdref = MDI_GetIqdref(pHandle->pMDI,M1);
+    
+    
+    // Get Iqref
+    IqRef = (uint16_t) abs(Iqdref.q);
+    
+    // Convert to amps using amps = iqref *(2 * MAX_MEASURABLE_CURRENT)/65535;
+    Amps = (float)(IqRef *(2 * MAX_MEASURABLE_CURRENT)/65535);
+    
+    // Aprox motor loss with 3*Rs*amps^2;
+    Loss = 3 * RS * Amps * Amps;
+    
+    // Total power is mech power + loss    
+    return (uint16_t) round(PWRT_GetTotalMotorsPower(pHandle) + Loss);
+}
+
+/**
+  * @brief  Get the max DC power (motor power + losses)
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetMaxDCPower(PWRT_Handle_t * pHandle)
+{
+  ASSERT(pHandle != NULL); 
+  return MDI_GetMaxPositivePower(pHandle->pMDI);  
+}
+
+/**
+  * @brief  Get the approximate DC current (motor current + losses)
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetDCCurrent(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);    
+    uint16_t DCPower = PWRT_GetDCPower(pHandle);
+    
+    float DCCurrent;
+    
+    if (pHandle->pBatMonitorHandle->VBatAvg > 0)
+    {
+        DCCurrent = (DCPower * 100)/ pHandle->pBatMonitorHandle->VBatAvg;
+    }
+    else
+    {
+        DCCurrent = 0;
+    }
+    
+    return (uint16_t) round(DCCurrent);
+}
+
+/**
+  * @brief  Get the total amount of torque the motors are pushing
+  * @param  Powertrain handle
+  * @retval torque in nm uin16_t                                                                                   
+  */
+uint16_t PWRT_GetTotalMotorsTorque(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL); 
+    
+    float TotalMotorTorque = 0;
+    
+    uint16_t M1TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M1);
+    //uint16_t M2TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M2);
+    
+    TotalMotorTorque  = M1TorqueRef;
+                
+   // TotalMotorTorque += M2TorqueRef/100; // For now not supporting dual
+    
+    return  (uint16_t)round(TotalMotorTorque);   
+
+}
 /**
   * Get the max safe current we can push                                                                                  
   */

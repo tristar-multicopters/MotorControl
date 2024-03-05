@@ -298,6 +298,41 @@ void PWRT_CheckPwrEnable(PWRT_Handle_t * pHandle);
 uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle);
 
 /**
+  * @brief  Get the total amount of power the motors are pushing
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetTotalMotorsPower(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Get the approximate DC power (motor power + losses)
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetDCPower(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Get the max DC power (motor power + losses)
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetMaxDCPower(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Get the approximate DC current (motor current + losses)
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetDCCurrent(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Get the total amount of torque the motors are pushing
+  * @param  Powertrain handle
+  * @retval power in nm uin16_t                                                                                   
+  */
+uint16_t PWRT_GetTotalMotorsTorque(PWRT_Handle_t * pHandle);
+
+/**
   * @brief  Get the max safe current we can push
   * @param  Powertrain handle
   * @retval current in amps uin16_t                                                                                   

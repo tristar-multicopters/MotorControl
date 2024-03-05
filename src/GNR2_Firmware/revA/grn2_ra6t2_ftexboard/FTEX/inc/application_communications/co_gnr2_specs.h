@@ -148,16 +148,17 @@ extern "C" {
 #define CO_OD_REG_SPEED_MEASURE                0x2000 /**< OD ID for speed measure           >*/
 
 //OD ID used to hold the vehicle power/torque values
-// this object has 2 subindex
+//this object has 3 subindex
 //
-// 0 -> power measure in watts
+// 0 -> DC current approx
 // 1 -> torque measure in Ncm
+// 2 -> power measure in watts
 #define CO_OD_REG_POWER_MEASURE                0x2001 
 
 #define CO_OD_REG_SOC                          0x2002 /**< OD ID for state of charge measure >*/
 #define CO_OD_REG_PAS_LEVEL                    0x2003 /**< OD ID for PAS level               >*/
 #define CO_OD_REG_MAX_PAS                      0x2004 /**< OD ID for maximum PAS level       >*/
-#define CO_OD_REG_MAX_POWER                    0x2005 /**< OD ID for maximum power           >*/
+#define CO_OD_REG_MAX_DCPOWER                  0x2005 /**< OD ID for maximum power           >*/
 #define CO_OD_REG_ERR_STATE                    0x2006 /**< OD ID for error state             >*/
 #define CO_OD_REG_SERIAL_NB                    0x2007 /**< OD ID for Serial number           >*/
 #define CO_OD_REG_FW_VERSION                   0x2008 /**< OD ID for firmware version        >*/

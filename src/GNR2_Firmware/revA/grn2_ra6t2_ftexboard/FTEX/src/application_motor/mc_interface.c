@@ -555,3 +555,27 @@ void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, i
     
     pHandle->pMCConfig->wUsrMaxCurr = aCurrent;
 }
+
+/**
+  *  Get the current torq reference 
+  */
+int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, uint8_t Motor)
+{
+    if (Motor == 0)
+    {
+        return pHandle->pFOCVars[M1].hTeref;
+    }
+    else
+    {
+        return pHandle->pFOCVars[M2].hTeref;
+    }          
+}
+
+/**
+  *  Get the max application power
+  */
+uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->hMaxPositivePower;
+}

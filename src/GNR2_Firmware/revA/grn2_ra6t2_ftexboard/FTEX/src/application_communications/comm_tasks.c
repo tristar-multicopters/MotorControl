@@ -63,9 +63,11 @@ static void UpdateObjectDictionnary(void *p_arg)
 	VCI_Handle_t * pVCI = &VCInterfaceHandle;
     // Get Bike Parameters 
     // Read only
-    uint8_t  hSpeed; 
-    uint16_t hPWR;
+    uint8_t  hSpeed;
+    uint16_t hDCPWR;    
     uint16_t hTorque;
+    uint16_t hPWR;
+    uint16_t hMaxDCPwr;
      int16_t hMotorTemp;
      int16_t hHeatsinkTemp;
      uint8_t bSOC;
@@ -74,7 +76,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     // Read and write
     uint8_t  bPAS[2];
     uint8_t  bPasAlgorithm[2];
-    uint16_t hMaxPwr[2];
     uint8_t  hWheelDiameter[2];
     uint8_t  hFrontLightState[2];
     uint8_t  hRearLightState[2];
@@ -91,8 +92,10 @@ static void UpdateObjectDictionnary(void *p_arg)
     if (VcAutodeter_GetGnrState())
     {
         hSpeed        = (uint8_t) CanVehiInterface_GetVehicleSpeed(pVCI);
-        hPWR          = CanVehiInterface_GetVehiclePower(pVCI);
+        hDCPWR        = CanVehiInterface_GetVehicleDCPower(pVCI);
         hTorque       = CanVehiInterface_GetVehicleTorque(pVCI);
+        hPWR          = CanVehiInterface_GetVehiclePower(pVCI);
+        hMaxDCPwr     = CanVehiInterface_GetMaxDCPWR(pVCI);
         hMotorTemp    = CanVehiInterface_GetMotorTemp(pVCI);
         hHeatsinkTemp = CanVehiInterface_GetControllerTemp(pVCI);
         bSOC          = CanVehiInterface_GetVehicleSOC(pVCI);
@@ -100,7 +103,6 @@ static void UpdateObjectDictionnary(void *p_arg)
         
         bPAS[VEHICLE_PARAM]             = CanVehiInterface_GetVehiclePAS(pVCI); 
         bPasAlgorithm[VEHICLE_PARAM]    = CanVehiInterface_GetVehiclePASAlgorithm(pVCI);
-        hMaxPwr[VEHICLE_PARAM]          = CanVehiInterface_GetVehicleMaxPWR(pVCI);
         hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
         hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
@@ -309,8 +311,6 @@ static void UpdateObjectDictionnary(void *p_arg)
             //Get the latest value of these parameters            
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),  pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
-            
             
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
@@ -385,8 +385,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                 else
                 {
                     CanVehiInterface_ChangeFrontLightState(&VCInterfaceHandle,hFrontLightState[CAN_PARAM]);
-                }
-                            
+                }                           
             }
             
             if(hRearLightState[VEHICLE_PARAM] != hRearLightState[CAN_PARAM])
@@ -402,22 +401,18 @@ static void UpdateObjectDictionnary(void *p_arg)
                 }                    
             }
             
-            
-            // Update the OD with the new PAS algorithm if needed
-            if(hMaxPwr[VEHICLE_PARAM] != hMaxPwr[CAN_PARAM])
-            {
-                hMaxPwr[CAN_PARAM] = hMaxPwr[VEHICLE_PARAM];
-            }               
+                       
             
             /**************Write the repesctive OD ID, updating the OD that us read by the IOT module using SDO.*************/
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed, sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 0 )), pNode, &hPWR, sizeof(uint16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 0 )), pNode, &hDCPWR, sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 1 )), pNode, &hTorque, sizeof(uint16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 2 )), pNode, &hPWR, sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMP,    M1)), pNode, &hMotorTemp, sizeof(int16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, sizeof(int16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC, sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState, sizeof(uint32_t));
-            
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_DCPOWER, M1)),     pNode, &hMaxDCPwr, sizeof(uint16_t));
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, M1)), pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
             
@@ -426,7 +421,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
             }
             
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_POWER, M1)),     pNode, &hMaxPwr[CAN_PARAM], sizeof(uint16_t));
+
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));

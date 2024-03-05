@@ -12,4 +12,6 @@
 #define WHEEL_DIAMETER_DEFAULT 28.0 // Default wheel diam
 #define MINUTES_PER_HOUR 60
 
+#define RPM_TO_RAD_PERSEC (float)0.1047
+
 #endif
