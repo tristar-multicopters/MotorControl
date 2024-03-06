@@ -38,7 +38,7 @@
 
 //second byte used to show that data memory
 //has user configuration
-#define ID1_DATA_FLASH                 0x02
+#define ID1_DATA_FLASH                 0x03
 
 //definition used to control how many
 //blocks of the data flash memory are being
@@ -145,24 +145,6 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
   @return void
 */
 void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle);
-
-/**
-  @brief Function to get PasAlgorithm
-  read from data flash memory.
-  
-  @param void
-  @return uint8_t a number que represent pas algorithm type.
-*/
-uint8_t UserConfigTask_GetPasAlgorithm(void);
-
-/**
-  @brief Function to update PasAlgorithm value
-  read from data flash memory.
-  
-  @param uint8_t value to be passed into the pasAlgorithm  variable.
-  @return void
-*/
-void UserConfigTask_UpdataPasAlgorithm(uint8_t value);
 
 /**
   @brief Function to get number Of Pas Levels

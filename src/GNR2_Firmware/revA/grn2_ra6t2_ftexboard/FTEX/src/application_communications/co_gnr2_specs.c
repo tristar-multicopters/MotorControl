@@ -191,9 +191,6 @@ uint16_t bObjDataKeyUserDataConfig          = 0;
 
 /*****Allocate global variables for Throttle/Pedal Assist Gnr objects*****/
 
-//variable associated with CO_OD_REG_PAS_ALGORITHM.
-uint8_t bObjDataPasAlgorithm                = 0;
-
 //variable associated with CO_OD_REG_PAS_MAX_TORQUE_RATIO.
 uint8_t bObjDataPasMaxTorqueRatio                 = 0; 
 
@@ -1243,13 +1240,6 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             // IN the dictionary they are reponsible to hold the configuration
             // of the Throttle/Pedal Assist parameters.
             // Theses configuration can be read and write using SDO services.
-    
-            // Application - 
-            // Torque: based on a multiplier of the torque input. 
-            // Cadence: based on pedaling speed.
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ALGORITHM, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithm};
-            //move to next OD index
-            index++;
         
             //Application - Percentage of the available max motor power that the PAS algorithm can use. 
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE_RATIO, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasMaxTorqueRatio};

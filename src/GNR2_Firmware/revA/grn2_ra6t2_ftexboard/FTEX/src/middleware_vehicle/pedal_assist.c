@@ -18,11 +18,7 @@ uint8_t bPASCounterAct = 0; // Slow cadence PAS activation loop couter
 
 //
 static PasCadenceState_t PasCadenceState = CADENCE_DETECTION_STARTUP;
-
-Ramps_Handle_t PasCadenceDecelRamp = {
-    .RampDirection = DECELERATION,
-    .RampType = NO_RAMP,
-};  
+  
 
 /* Functions ---------------------------------------------------- */
 
@@ -187,32 +183,38 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     
     AssertIsValidLevel(currentLevel);
     
-    if (currentLevel == PAS_LEVEL_WALK || currentLevel == PAS_LEVEL_0)
+    //safe measure
+    if (currentLevel == PAS_LEVEL_0)
     {
         return 0;
     }
+    //return torque to walk mode.
+    if (currentLevel == PAS_LEVEL_WALK)
+    {
+       return pHandle->sParameters.walkModeTorqueRatio;
+    }
+        
     
-    // Convert the PAS torque sensing in motor torque
+    // Multiple gain on the motor torque
     hRefTorqueS = ((hReadTS * pHandle->sParameters.bTorqueGain[currentLevel])/PAS_PERCENTAGE);
     
-    //get ref torque to min torque calculation.
-    hRefMinTorqueS = hRefTorqueS;
-    
-    //caclulate the final torque to be applied.
+    //Caclulate the final torque to be applied based on the max torque percentage to the current PAS level.
     hRefTorqueS = (hRefTorqueS/PAS_PERCENTAGE) * pHandle->sParameters.PASMaxTorqRatiosInPercentage[pHandle->bCurrentAssistLevel];
     
-    //calculate the min torque to be applied, once PAS is detected.
-    hRefMinTorqueS = hRefMinTorqueS*pHandle->sParameters.PASMinTorqRatiosInPercentage[pHandle->bCurrentAssistLevel];
+    //Calculate the min motor torque to be applied, for a specific PAS level.
+    hRefMinTorqueS = (pHandle->sParameters.hPASMaxTorque/PAS_PERCENTAGE)*pHandle->sParameters.PASMinTorqRatiosInPercentage[pHandle->bCurrentAssistLevel];
     
-    //verify if the applied torque is less than the minimum torque
+    //verify if the applied torque is less or equal than the minimum torque
     //if true, apllied the minimum torque.
     if (hRefTorqueS < hRefMinTorqueS)
     {
         hRefTorqueS = hRefMinTorqueS;
     }
     
-    // Safety for not exceeding the maximum torque value for a specific pas level
+    // Calculate the maximo safety motor torque for not exceeding the maximum torque value for a specific pas level
     hMaxLevelTorq_Temp = (pHandle->sParameters.PASMaxTorqRatiosInPercentage[pHandle->bCurrentAssistLevel] * pHandle->sParameters.hPASMaxTorque)/PAS_PERCENTAGE;
+    
+    //Verify if the current motor torque execeed the maximo torque value to current PAS level.
     if (hRefTorqueS > hMaxLevelTorq_Temp)
     {
         hRefTorqueS = hMaxLevelTorq_Temp;
@@ -530,26 +532,49 @@ void AssertIsValidLevel(PasLevel_t level)
 }
 
 /**
-    * @brief  Get the PAS algorithm
+    * @brief  Get the Startup Pas algorithm
     * @param  Pedal Assist handle,
     * @retval PasAlgorithm_t
     */
-PasAlgorithm_t PedalAssist_GetPASAlgorithm(PAS_Handle_t * pHandle)
+PasAlgorithm_t PedalAssist_GetStartupPasAlgorithm(PAS_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    return pHandle->bPasPowerAlgorithm;
+    return pHandle->bStartupPasAlgorithm;
 }
 
 /**
-    * @brief  Reset the PAS algorithm
+    * @brief  Get the Running Pas algorithm
+    * @param  Pedal Assist handle,
+    * @retval PasAlgorithm_t
+    */
+PasAlgorithm_t PedalAssist_GetRunningPasAlgorithm(PAS_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->bRunningPasAlgorithm;
+}
+
+/**
+    * @brief  Set startup PAS algorithm
     * @param  Pedal Assist handle, new pas algorithm
     * @retval None
     */
-void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo)
+void PedalAssist_SetStartupPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo)
 {
     ASSERT(pHandle != NULL);
     
-    pHandle->bPasPowerAlgorithm = aPASAlgo;
+    pHandle->bStartupPasAlgorithm = aPASAlgo;
+}
+
+/**
+    * @brief  Set running PAS algorithm
+    * @param  Pedal Assist handle, new pas algorithm
+    * @retval None
+    */
+void PedalAssist_SetRunningPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo)
+{
+    ASSERT(pHandle != NULL);
+    
+    pHandle->bRunningPasAlgorithm = aPASAlgo;
 }
 
 /**
@@ -562,26 +587,12 @@ Ramps_Handle_t * PedalAssist_GetRamp(PAS_Handle_t * pHandle, uint8_t Direction)
     ASSERT(pHandle != NULL);
         
     if (pHandle->bCurrentAssistLevel != PAS_LEVEL_WALK)
-    {
-        if (pHandle->bPasPowerAlgorithm == CadenceSensorUse && Direction == DECELERATION)
-        {
-            return &PasCadenceDecelRamp; // Force a common no ramp decel for any cadence powered pas 
-        }
-        else
-        {            
-            return &(pHandle->sParameters.PasRamps[Direction][pHandle->bCurrentAssistLevel]); 
-        }
+    {       
+        return &(pHandle->sParameters.PasRamps[Direction][pHandle->bCurrentAssistLevel]);        
     }
     else
-    {
-        if (Direction == DECELERATION)
-        {
-            return &PasCadenceDecelRamp;
-        }
-        else
-        {
-            return &(pHandle->sParameters.PasWalkmodeRamp);
-        }
+    {        
+        return &(pHandle->sParameters.PasWalkmodeRamp);        
     }      
 }
 

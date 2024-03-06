@@ -90,7 +90,6 @@ typedef struct
 //associated with PAS(pedal Assist System).
 typedef struct 
 {
-    uint8_t PasAlgorithm;
     uint8_t NumberOfPasLevels;
     uint8_t PasMaxTorqueRatio;
     PAS_Startup_Detection_t PAS_Startup_Detection;

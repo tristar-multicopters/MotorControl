@@ -349,8 +349,7 @@ PAS_Handle_t PedalAssistHandle =
                                  .LinearParameters.Alpha = WALKMODE_ACCEL_RAMP_ARG1,
                                  .RampMax = (PAS_WALK_POWER_PERCENT * PAS_MAX_TORQUE)/100,
                                },    
-    
-    .bPasPowerAlgorithm = PAS_POWER_ALGORITHM,
+
     .bStartupPasAlgorithm = PAS_DETECTIONSTARTUP_ALGORITHM,
     .bRunningPasAlgorithm = PAS_DETECTIONRUNNING_ALGORITHM,
     .pPSS = &PedalSpeedSensorHandle,

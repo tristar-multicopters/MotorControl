@@ -192,15 +192,7 @@ extern "C" {
 // 1 -> KEY_USER_DATA_CONFIG_UPDATED         0xC2E5 : indicate memory was updated
 #define CO_OD_REG_KEY_USER_DATA_CONFIG         0x2014
 
-/********************************************************/
-
-//OD ID used to configure PAS algorithm. 
-//Chose what algorithm will be used by the system.
-//PAS algorithm can be:
-//TorqueSensorUse = 0,     Torque sensor use define 
-//CadenceSensorUse = 1,    Cadence sensor use define 
-//HybridSensorUse = 2,     Hybride sensor use define
-#define CO_OD_REG_PAS_ALGORITHM                0x2015   
+/********************************************************/ 
 
 //OD ID used to configure the PAS max power.
 //Maximum PAS Torque feed ratio in 100%.

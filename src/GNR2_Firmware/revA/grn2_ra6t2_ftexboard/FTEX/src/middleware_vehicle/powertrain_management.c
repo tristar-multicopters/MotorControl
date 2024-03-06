@@ -150,9 +150,8 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             PWRT_ForceDisengageCruiseControl(pHandle);
         }
         
-        if((pHandle->pPAS->bPasPowerAlgorithm == CadenceSensorUse) &&  // If the user pedals while were are in cruise
-           (PedalAssist_IsPASDetected(pHandle->pPAS) == true) && 
-           (PWRT_GetCruiseControlState(pHandle)      == true))
+        // If the user pedals while were are in cruise
+        if((PedalAssist_IsPASDetected(pHandle->pPAS) == true) && (PWRT_GetCruiseControlState(pHandle) == true))
         {
             hAux = 0;                                  // Exit cruise control
             PedalAssist_ResetPASDetected(pHandle->pPAS);
@@ -182,7 +181,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed       
 
             #if VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
-            if (pHandle->pPAS->bPasPowerAlgorithm == TorqueSensorUse && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
+            if (!PedalAssist_IsWalkModeDetected(pHandle->pPAS))
             {
                 static int16_t PowerAvg = 0;                
                                    
@@ -1119,15 +1118,10 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         PASWasDetected = true;
                
         /* Torque sensor enabled */
-        if ((pHandle->pPAS->bPasPowerAlgorithm == TorqueSensorUse) && !PedalAssist_IsWalkModeDetected(pHandle->pPAS))
+        if (!PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
         }                
-        /* Cadence sensor enabled */
-        else 
-        {
-            pHandle->hTorqueSelect = PedalAssist_GetPASCadenceMotorTorque(pHandle->pPAS);
-        }
         
         if (pHandle->hTorqueSelect >= pHandle->hOldTorqueSelect) // Check which direction of ramp we need to select
         {
@@ -1161,10 +1155,6 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         pSelectedRampHandle = Throttle_GetRamp(pHandle->pThrottle, Direction);
     }
     
-    
-    pHandle->hTorqueSelect = (int16_t) Ramps_ApplyRamp(pSelectedRampHandle, (uint16_t)pHandle->hTorqueSelect);
-    
-    
     if (PASWasDetected && PedalAssist_IsPASDetected(pHandle->pPAS) == false && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If pas was detected but we switched to throttle, reset the ramps
     {
             PASWasDetected = false;
@@ -1176,6 +1166,10 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
             Ramps_ResetRamp(&(pHandle->pPAS->sParameters.PasWalkmodeRamp));        
     }
         
+    pHandle->hTorqueSelect = (int16_t) Ramps_ApplyRamp(pSelectedRampHandle, (uint16_t)pHandle->hTorqueSelect);
+    
+    
+
     return pHandle->hTorqueSelect;
 }
 
@@ -1411,8 +1405,10 @@ void PWRT_EngageCruiseControl(PWRT_Handle_t * pHandle, uint8_t aSpeed)
     
     if(pHandle->pThrottle->CruiseControlEnable == false)
     {    
-        pHandle->sParameters.PreCruiseControlPAS = PedalAssist_GetPASAlgorithm(pHandle->pPAS);
-        PedalAssist_SetPASAlgorithm(pHandle->pPAS,CadenceSensorUse);  // Force cadence while in cruise control
+        pHandle->sParameters.PreCruiseControlStartupPASAlgo = PedalAssist_GetStartupPasAlgorithm(pHandle->pPAS);
+        pHandle->sParameters.PreCruiseControlRunningPASAlgo = PedalAssist_GetRunningPasAlgorithm(pHandle->pPAS);
+        PedalAssist_SetStartupPASAlgorithm(pHandle->pPAS,CadenceSensorUse);  // Force cadence while in cruise control
+        PedalAssist_SetRunningPASAlgorithm(pHandle->pPAS,CadenceSensorUse);  // Force cadence while in cruise control
         Throttle_EngageCruiseControl(pHandle->pThrottle,aSpeed);
     }
 }
@@ -1428,7 +1424,8 @@ void PWRT_DisengageCruiseControl(PWRT_Handle_t * pHandle)
         
     if(pHandle->pThrottle->CruiseControlEnable == true)
     { 
-        PedalAssist_SetPASAlgorithm(pHandle->pPAS,pHandle->sParameters.PreCruiseControlPAS); 
+        PedalAssist_SetStartupPASAlgorithm(pHandle->pPAS,pHandle->sParameters.PreCruiseControlStartupPASAlgo); 
+        PedalAssist_SetRunningPASAlgorithm(pHandle->pPAS,pHandle->sParameters.PreCruiseControlRunningPASAlgo); 
         Throttle_DisengageCruiseControl(pHandle->pThrottle);  
     }        
 }

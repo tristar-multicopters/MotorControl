@@ -53,10 +53,6 @@
 #define PAS_TORQUE_GAIN                     100             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
 
-//Used to chose what power calculation will be used, 
-//torque or cadence.
-#define PAS_POWER_ALGORITHM                       TorqueSensorUse /* TorqueSensorUse  = 1, Torque sensor use define 
-                                                               CadenceSensorUse = 2, Cadence sensor use define */
 //Used to chose the pas detection mode on startup, torque or/and cadence,
 //torque only or cadence only.
 #define PAS_DETECTIONSTARTUP_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,

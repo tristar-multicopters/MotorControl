@@ -75,7 +75,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     
     // Read and write
     uint8_t  bPAS[2];
-    uint8_t  bPasAlgorithm[2];
     uint8_t  hWheelDiameter[2];
     uint8_t  hFrontLightState[2];
     uint8_t  hRearLightState[2];
@@ -102,7 +101,6 @@ static void UpdateObjectDictionnary(void *p_arg)
         hErrorState   = CanVehiInterface_GetVehicleCurrentFaults(pVCI);
         
         bPAS[VEHICLE_PARAM]             = CanVehiInterface_GetVehiclePAS(pVCI); 
-        bPasAlgorithm[VEHICLE_PARAM]    = CanVehiInterface_GetVehiclePASAlgorithm(pVCI);
         hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
         hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
@@ -114,7 +112,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     }
     
     /***************Throttle/Pedal Assist variables******************************/
-    uint8_t pasAlgorithm;
     uint8_t maxPAS;
     uint8_t pasMaxTorqueRatio;
     uint8_t pasTorqueStartupThreshold;    
@@ -310,8 +307,6 @@ static void UpdateObjectDictionnary(void *p_arg)
         {
             //Get the latest value of these parameters            
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),  pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
-            
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
@@ -354,13 +349,6 @@ static void UpdateObjectDictionnary(void *p_arg)
                 }                    
             
             }
-
-            
-            if(bPasAlgorithm[VEHICLE_PARAM] != bPasAlgorithm[CAN_PARAM])
-            {
-               bPasAlgorithm[VEHICLE_PARAM] = bPasAlgorithm[CAN_PARAM];  
-            }  
-            
             
             if(hWheelDiameter[VEHICLE_PARAM] != hWheelDiameter[CAN_PARAM])
             {
@@ -412,9 +400,8 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M1)), pNode, &hHeatsinkTemp, sizeof(int16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SOC, M1)),           pNode, &bSOC, sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ERR_STATE, M1)),     pNode, &hErrorState, sizeof(uint32_t));
+
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_DCPOWER, M1)),     pNode, &hMaxDCPwr, sizeof(uint16_t));
-            
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, M1)), pNode, &bPasAlgorithm[CAN_PARAM], sizeof(uint8_t));
             
             if (WriteOBJDict)
             {    
@@ -425,7 +412,16 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));        
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));   
+            
+            //Update pasLevelMinTorque
+            CanVehiInterface_GetPasLevelMinTorque(&VCInterfaceHandle, pasLevelMinTorque);
+
+            //Update the minimum torque percentage value to all PAS level.
+            for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
+            {
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MIN_TORQUE, n)), pNode, &pasLevelMinTorque[n], sizeof(uint8_t));
+            }
             
             //Read the OD responsible to hold the firmware update command.
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0)), pNode, &FirmwareUpdateCommand, sizeof(uint8_t));
@@ -490,7 +486,6 @@ static void UpdateObjectDictionnary(void *p_arg)
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
              {
                  /**********read value hold by the OD****************/
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM,         0)), pNode, &pasAlgorithm, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS,               0)), pNode, &maxPAS, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE_RATIO,  0)), pNode, &pasMaxTorqueRatio, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));
@@ -574,7 +569,6 @@ static void UpdateObjectDictionnary(void *p_arg)
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
                  //upadat Throttle/Pedal Assist variables that will be write into the user data flash.
-                 UserConfigTask_UpdataPasAlgorithm(pasAlgorithm);
                  UserConfigTask_UpdateNumberPasLevels(maxPAS);
                  UserConfigTask_UpdatePasMaxTorqueRatio(pasMaxTorqueRatio);
                  UserConfigTask_UpdatePasTorqueStartupThreshold(pasTorqueStartupThreshold);
@@ -833,7 +827,6 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
     
      
         /***************Throttle/Pedal Assist variables******************************/
-        uint8_t pasAlgorithm                       = UserConfigTask_GetPasAlgorithm();
         uint8_t maxPAS                             = UserConfigTask_GetNumberPasLevels();
         uint8_t pasMaxTorqueRatio                        = UserConfigTask_GetPasMaxTorqueRatio();
         uint8_t pasTorqueStartupThreshold          = UserConfigTask_GetPasTorqueStartupThreshold();    
@@ -938,8 +931,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSerialNbHigh,  sizeof(fSerialNbHigh));  
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion, sizeof(uint32_t));           
         
-        /***********************UPdate Throttle/Pedal Assist CANopen OD ID.********************************************/
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ALGORITHM, 0)),         pNode, &pasAlgorithm, sizeof(uint8_t));      
+        /***********************UPdate Throttle/Pedal Assist CANopen OD ID.********************************************/     
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)),               pNode, &maxPAS, sizeof(uint8_t));            
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE_RATIO, 0)),  pNode, &pasMaxTorqueRatio, sizeof(uint8_t));     
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));        

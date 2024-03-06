@@ -268,11 +268,11 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             
             if(AssistType == CLOUD_TORQ_ASSIST_TYPE) // Check if we want torque or cadence PAS and apply the change to the module
             {
-                PedalAssist_SetPASAlgorithm(pPASHandle, TorqueSensorUse);
+                LCD_Cloud_5S_SetPASAlgorithm(pPASHandle, TorqueSensorUse);
             }
             else if (AssistType == CLOUD_CADE_ASSIST_TYPE)
             {
-                PedalAssist_SetPASAlgorithm(pPASHandle, CadenceSensorUse);
+                LCD_Cloud_5S_SetPASAlgorithm(pPASHandle, CadenceSensorUse);
             }
             else
             {
@@ -669,4 +669,42 @@ void LCD_Cloud_5S_ComputeChecksum(Cloud_5S_frame_t aFrame, uint8_t *pCheck1, uin
     
     *pCheck1 = (uint8_t) (CheckCalc%256); // These two values are used for checksum verification
     *pCheck2 = (uint8_t) (CheckCalc/256);
+}
+
+/**
+    * @brief  Set a new PAS algorithm
+    * @param  Pedal Assist handle, new pas algorithm
+    * @retval None
+    */
+void LCD_Cloud_5S_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo)
+{
+
+    ASSERT(pHandle != NULL);
+    ASSERT((aPASAlgo == TorqueSensorUse) || (aPASAlgo == CadenceSensorUse));
+    
+    if (aPASAlgo == CadenceSensorUse)
+    {
+        //make max and min torque the same to create a cadence behavior.
+        for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
+        {
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[n] = pHandle->sParameters.PASMaxTorqRatiosInPercentage[n];
+        }
+    }
+    else
+    {
+        //make max and min torque the same to create a cadence behavior.
+        for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
+        {    
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[0] = PAS_0_MIN_TORQUE_PERCENT;
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[1] = PAS_1_MIN_TORQUE_PERCENT;
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[2] = PAS_2_MIN_TORQUE_PERCENT;
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[3] = PAS_3_MIN_TORQUE_PERCENT;
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[4] = PAS_4_MIN_TORQUE_PERCENT;
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[5] = PAS_5_MIN_TORQUE_PERCENT;
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[6] = PAS_6_MIN_TORQUE_PERCENT;
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[7] = PAS_7_MIN_TORQUE_PERCENT;
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[8] = PAS_8_MIN_TORQUE_PERCENT;
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[9] = PAS_9_MIN_TORQUE_PERCENT;  
+        }
+    }
 }

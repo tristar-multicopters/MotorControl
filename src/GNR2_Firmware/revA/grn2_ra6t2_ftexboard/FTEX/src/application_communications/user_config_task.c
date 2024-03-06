@@ -31,7 +31,6 @@ static User_ConfigData_t userConfigData =
     .dataHeader[0] = ID0_DATA_FLASH,
     .dataHeader[1] = ID1_DATA_FLASH,
     .vehicle = VEHICLE_SELECTION,
-    .PAS_ConfigData.PasAlgorithm = PAS_POWER_ALGORITHM,
     .PAS_ConfigData.NumberOfPasLevels = PAS_MAX_LEVEL,
     .PAS_ConfigData.PasMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
     .PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupSpeed = PTS_OFFSET_STARTUP_SPEED_KMH,
@@ -372,10 +371,6 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     PWRT_Handle_t * paPowertrain = userConfigHandle->pVController->pPowertrain;
     
-    
-    //update userConfigData.PAS_ConfigData.pasAlgorithm(PAS_POWER_ALGORITHM)
-    paPowertrain->pPAS->bPasPowerAlgorithm = UserConfigTask_GetPasAlgorithm();
-    
     //update userConfigData.PAS_ConfigData.numberOfPasLevels(PAS_MAX_LEVEL)
     paPowertrain->pPAS->sParameters.bMaxLevel = UserConfigTask_GetNumberPasLevels();
     
@@ -492,29 +487,6 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     }
 }
 
-/**
-  @brief Function to get PasAlgorithm
-  read from data flash memory.
-  
-  @param void
-  @return uint8_t a number that represent pas algorithm type.
-*/
-uint8_t UserConfigTask_GetPasAlgorithm(void)
-{
-    return userConfigData.PAS_ConfigData.PasAlgorithm;   
-}
-
-/**
-  @brief Function to update PasAlgorithm value
-  read from data flash memory.
-  
-  @param uint8_t value to be passed into the pasAlgorithm  variable.
-  @return void
-*/
-void UserConfigTask_UpdataPasAlgorithm(uint8_t value)
-{
-    userConfigData.PAS_ConfigData.PasAlgorithm = value;   
-}
 
 /**
   @brief Function to get number Of Pas Levels

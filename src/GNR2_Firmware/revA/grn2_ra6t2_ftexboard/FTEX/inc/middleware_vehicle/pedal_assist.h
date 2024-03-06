@@ -71,8 +71,8 @@ typedef struct
     bool WalkmodeOverThrottle;              // Flag used to decide if walk mode has higher priority than throttle          
 
     uint8_t PASMaxSpeed[10];                  // Max speed to each PAS level.
-    int16_t PASMinTorqRatiosInPercentage[10]; // Min PAS Torque ratio in % for each level
-    int16_t PASMaxTorqRatiosInPercentage[10]; // Max PAS Torque ratio in % for each level
+    uint8_t PASMinTorqRatiosInPercentage[10]; // Min PAS Torque ratio in % for each level
+    uint8_t PASMaxTorqRatiosInPercentage[10]; // Max PAS Torque ratio in % for each level
     int16_t walkModeTorqueRatio;              // Torque ratio in % for walk mode
     
     Ramps_Handle_t PasRamps[2][10];           // Acceleration and deceleration ramps for each pas level
@@ -220,18 +220,32 @@ bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle);
 void PedalAssist_ResetParameters (PAS_Handle_t * pHandle);
 
 /**
-    * @brief  Get the PAS algorithm
+    * @brief  Get the Startup Pas algorithm
     * @param  Pedal Assist handle,
     * @retval PasAlgorithm_t
     */
-PasAlgorithm_t PedalAssist_GetPASAlgorithm(PAS_Handle_t * pHandle);
+PasAlgorithm_t PedalAssist_GetStartupPasAlgorithm(PAS_Handle_t * pHandle);
 
 /**
-    * @brief  Reset the PAS algorithm
+    * @brief  Get the Running Pas algorithm
+    * @param  Pedal Assist handle,
+    * @retval PasAlgorithm_t
+    */
+PasAlgorithm_t PedalAssist_GetRunningPasAlgorithm(PAS_Handle_t * pHandle);
+
+/**
+    * @brief  Set startup PAS algorithm
     * @param  Pedal Assist handle, new pas algorithm
     * @retval None
     */
-void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
+void PedalAssist_SetStartupPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
+
+/**
+    * @brief  Set running PAS algorithm
+    * @param  Pedal Assist handle, new pas algorithm
+    * @retval None
+    */
+void PedalAssist_SetRunningPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
 
 /**
     * @brief  Get the ramp that should be applied

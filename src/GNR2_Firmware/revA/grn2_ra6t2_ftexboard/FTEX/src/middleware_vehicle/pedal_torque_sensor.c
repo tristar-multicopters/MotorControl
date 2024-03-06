@@ -208,8 +208,9 @@ int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle)
     }
     else if (tAux < INT16_MIN)
     {
-        tAux = INT16_MIN;
+        tAux = 0;
     }
+    
     return (int16_t)tAux;
 }
 

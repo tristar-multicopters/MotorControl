@@ -68,7 +68,8 @@ typedef struct
     uint16_t TorqueSpeedLimitGain;       // Used to adjuste the accuracy for torque speed limit
     
     bool CruiseForceDisengage;
-    PasAlgorithm_t PreCruiseControlPAS;  // Keeps track of the pas algorithmed used when we engaged cruise control
+    PasAlgorithm_t PreCruiseControlStartupPASAlgo;  // Keeps track of the startup pas algorithmed used when we engaged cruise control
+    PasAlgorithm_t PreCruiseControlRunningPASAlgo;  // Keeps track of the run time pas algorithmed used when we engaged cruise control
     
     uint16_t hStartingThrottle;          // Minimum torque to start powertrain
     uint16_t hStoppingThrottle;          // Minimum torque to stop powertrain

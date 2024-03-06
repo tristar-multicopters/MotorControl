@@ -107,15 +107,6 @@ void CanVehiInterface_SetVehiclePAS (VCI_Handle_t * pHandle, uint8_t Set_PAS)
 }
 
 /**
- *  Get PAS Algorithm 
- */
-uint8_t CanVehiInterface_GetVehiclePASAlgorithm (VCI_Handle_t * pHandle)
-{
-    ASSERT(pHandle!= NULL);
-    return pHandle->pPowertrain->pPAS->bPasPowerAlgorithm;    
-}
-
-/**
  *  Get vehicle maximum PAS
  */
 uint8_t CanVehiInterface_GetVehicleMaxPAS (void)
@@ -283,4 +274,15 @@ int16_t CanVehiInterface_GetMotorTemp(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     return MDI_GetMotorTemp(pHandle->pPowertrain->pMDI);
+}
+
+/**
+ *  Pass by reference all PAS values of the minimum torque percentage
+ */
+void CanVehiInterface_GetPasLevelMinTorque(VCI_Handle_t * pHandle, uint8_t * pasLevelMinTorque)
+{
+   for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
+   {
+        pasLevelMinTorque[n] = pHandle->pPowertrain->pPAS->sParameters.PASMinTorqRatiosInPercentage[n];
+   }
 }
