@@ -30,7 +30,7 @@ void LogHS_Init(LogHighSpeed_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Ha
     ASSERT(pUARTHandle != NULL);
     
     #if USE_HSLOG
-	static LogBuffer_t LogBuffer;   
+    static LogBuffer_t LogBuffer;   
     
     pHandle->pVController = pVCIHandle;               // Pointer to VController
     pHandle->pUART_handle = pUARTHandle;              // Pointer to UART instance  
@@ -46,11 +46,11 @@ void LogHS_Init(LogHighSpeed_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART_Ha
     pHandle->ByteCount = 0;
     pHandle->State     = 0;
     pHandle->LogHSBufferIndex = 0;   
-	pHandle->TxComplete     = false; 
+    pHandle->TxComplete     = false; 
     pHandle->DumpInProgress = false;
     pHandle->pLogHSBuffer = &LogBuffer;   
-					
-    //Initial behavior of the logger				
+                    
+    //Initial behavior of the logger                
     pHandle->LogHSEnable      = true; // States if the logger is active by default
     pHandle->BufferWrapAround = true; // States if the buffer automatically wraps around
     
@@ -104,13 +104,13 @@ void LogHS_TX_IRQ_Handler(void *pVoidHandle)
 
 /**
   Function that is called once a complete UART frame is received. It process
-	the frame and takes decisions according to the current state of the module and the 
-	contents of the frame.
+    the frame and takes decisions according to the current state of the module and the 
+    contents of the frame.
 */
 void LogHS_ProcessFrame(LogHighSpeed_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
-	
+    
     switch(pHandle->RxFrame)
     {
         case START_LOG: // PC asks us to start the log 
@@ -139,26 +139,26 @@ void LogHS_ProcessFrame(LogHighSpeed_Handle_t *pHandle)
                 LogHS_SendDataStateMachine(pHandle);
             }
             break;
-		case FORMAT_LOG:       // PC tells us to wipe the contents of the buffer
+        case FORMAT_LOG:       // PC tells us to wipe the contents of the buffer
             if(!pHandle->DumpInProgress)
             {
-                LogHS_ResetBuffer(pHandle);						
-            }			
+                LogHS_ResetBuffer(pHandle);                        
+            }            
             break;
     } 
-    uCAL_UART_Receive(pHandle->pUART_handle, &(pHandle->RxByte), sizeof(pHandle->RxByte));	//Set the UART for the next reception	
+    uCAL_UART_Receive(pHandle->pUART_handle, &(pHandle->RxByte), sizeof(pHandle->RxByte));    //Set the UART for the next reception    
 }
 
 
 
 /**
   Function that is used to coordinate the transfer of data between the controller
-	and the pyhton script running on a PC.It does so using a simple state machine
+    and the pyhton script running on a PC.It does so using a simple state machine
 */
 void LogHS_SendDataStateMachine(LogHighSpeed_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
-	
+    
     switch(pHandle->State)
     {
         case STANDBY: 
@@ -181,16 +181,16 @@ void LogHS_SendDataStateMachine(LogHighSpeed_Handle_t *pHandle)
 
 /**
   Function that is used to insert motor control data into the logging buffer.
-	a new data point made up of a data set is inserted in the buffere everytime
-	this function is called.
+    a new data point made up of a data set is inserted in the buffere everytime
+    this function is called.
 */
 void LogHS_LogMotorVals(LogHighSpeed_Handle_t *pHandle)
 {
-	ASSERT(pHandle != NULL);
-	
-	pFOCVars_t FOCCopy;
-	FOCCopy = pHandle->pVController->pPowertrain->pMDI->pMCI->pFOCVars;
-	  
+    ASSERT(pHandle != NULL);
+    
+    pFOCVars_t FOCCopy;
+    FOCCopy = pHandle->pVController->pPowertrain->pMDI->pMCI->pFOCVars;
+      
     ASSERT(pHandle != NULL); 
     if(pHandle->LogHSEnable && pHandle->DumpInProgress == false)
     {
@@ -214,7 +214,7 @@ void LogHS_LogMotorVals(LogHighSpeed_Handle_t *pHandle)
                 else                         //If we dont want wrap around stop the buffer
                 {
                     LogHS_StopLog(pHandle);
-                }							
+                }                            
             }
             else
             {
@@ -225,8 +225,8 @@ void LogHS_LogMotorVals(LogHighSpeed_Handle_t *pHandle)
 
 /**
   Function that is used to insert motor control data into the logging buffer.
-	a new data point made up of a data set is inserted in the buffere every nth time
-	this function is called.
+    a new data point made up of a data set is inserted in the buffere every nth time
+    this function is called.
 */
 void LogHS_LogMotorValsVarRes(LogHighSpeed_Handle_t *pHandle)
 {
@@ -243,27 +243,27 @@ void LogHS_LogMotorValsVarRes(LogHighSpeed_Handle_t *pHandle)
 }
 /**
   Function that is used to dump the collected data on the UART.
-	this is called once the python script running on a CP has confirmed 
-	that it is ready for the data.
+    this is called once the python script running on a CP has confirmed 
+    that it is ready for the data.
 */
 void LogHS_DumpLog(LogHighSpeed_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
-	  static uint32_t ReadIndex;
+      static uint32_t ReadIndex;
     
     if(pHandle->DumpInProgress)
     {    
          //Start from the oldest data     
-			   if(pHandle->LogHSBufferIndex > 0)
-				 {
-				     ReadIndex = (pHandle->LogHSBufferIndex - 1); 
-				 }
-				 else
-				 {
-				     ReadIndex = LOGHS_NB_SAMPLE_POINT-1;
-				 }
-				 
-				 //Log each data point represented by a data set
+               if(pHandle->LogHSBufferIndex > 0)
+                 {
+                     ReadIndex = (pHandle->LogHSBufferIndex - 1); 
+                 }
+                 else
+                 {
+                     ReadIndex = LOGHS_NB_SAMPLE_POINT-1;
+                 }
+                 
+                 //Log each data point represented by a data set
          for(int i = 0; i < LOGHS_NB_SAMPLE_POINT; i++)
          {
              if(ReadIndex < LOGHS_NB_SAMPLE_POINT - 1)
@@ -280,22 +280,22 @@ void LogHS_DumpLog(LogHighSpeed_Handle_t *pHandle)
          }
     
          pHandle->DumpInProgress = false;
-		 LogHS_ResetBuffer(pHandle);
+         LogHS_ResetBuffer(pHandle);
          HSLog_ResolutionCounter = 0;
     }     
 }
 
 /**
   Function that is used to dump a data set. Only called by the DumpLog function.
-	It is called as many times as there are data points. The data set index received 
-	tells the function which set of data does it need to send over UART
+    It is called as many times as there are data points. The data set index received 
+    tells the function which set of data does it need to send over UART
 */
 void LogHS_DumpDataSet(LogHighSpeed_Handle_t *pHandle, uint32_t DataSetIndex)
 {
-	 ASSERT(pHandle != NULL);
-	
+     ASSERT(pHandle != NULL);
+    
    uint8_t buffer[LOGHS_NB_DATA*2];  
-		
+        
    for(unsigned int i = 0; i < LOGHS_NB_DATA; i++) // Transfer the int16_t data into a char array
    {     
       buffer[i*2]   = ((*(pHandle->pLogHSBuffer))[DataSetIndex][i]) & 0x00FF;           
@@ -326,7 +326,7 @@ void LogHS_DumpDataSet(LogHighSpeed_Handle_t *pHandle, uint32_t DataSetIndex)
 void LogHS_StartDumpLog(LogHighSpeed_Handle_t *pHandle)
 {   
     ASSERT(pHandle != NULL);
-	
+    
     pHandle->LogHSEnable    = false;
     pHandle->DumpInProgress = true;
     LogHS_DumpLog(pHandle);   
@@ -334,13 +334,13 @@ void LogHS_StartDumpLog(LogHighSpeed_Handle_t *pHandle)
 
 /**
   Function that is used to send the dump info to the python script
-	running on a PC. It tells it how many data points we have and how   
-	many data we have per set (each set is a data point)
+    running on a PC. It tells it how many data points we have and how   
+    many data we have per set (each set is a data point)
 */
 void LogHS_SendDumpInfo(LogHighSpeed_Handle_t *pHandle)
 {
-	  ASSERT(pHandle != NULL);
-	
+      ASSERT(pHandle != NULL);
+    
     static uint8_t DIbuffer[6]; //Dump Info buffer
     uint16_t NumberDataPoints = LOGHS_NB_SAMPLE_POINT;
     uint16_t NumberDataPerSet = LOGHS_NB_DATA;
@@ -366,19 +366,19 @@ void LogHS_SendDumpInfo(LogHighSpeed_Handle_t *pHandle)
 */
 void LogHS_ResetBuffer(LogHighSpeed_Handle_t *pHandle)
 {
-	  ASSERT(pHandle != NULL);
-	
-	  if(pHandle->DumpInProgress == false)
-		{
-	      pHandle->LogHSEnable = false; //disable the log while we reset the array
- 	      for(int i = 0; i < LOGHS_NB_SAMPLE_POINT; i++)
-        { 		 
-		        for(int y = 0; y < LOGHS_NB_DATA; y++)
-		        {
-	              (*(pHandle->pLogHSBuffer)) [i][y] = 0;
-	          }
+      ASSERT(pHandle != NULL);
+    
+      if(pHandle->DumpInProgress == false)
+        {
+          pHandle->LogHSEnable = false; //disable the log while we reset the array
+           for(int i = 0; i < LOGHS_NB_SAMPLE_POINT; i++)
+        {          
+                for(int y = 0; y < LOGHS_NB_DATA; y++)
+                {
+                  (*(pHandle->pLogHSBuffer)) [i][y] = 0;
+              }
         }
-		}
+        }
 }
 
 /**
@@ -386,12 +386,12 @@ void LogHS_ResetBuffer(LogHighSpeed_Handle_t *pHandle)
 */
 void LogHS_StartLog(LogHighSpeed_Handle_t *pHandle)
 {
-	  ASSERT(pHandle != NULL);
-	  
-	  if(pHandle->DumpInProgress == false)
-		{	
+      ASSERT(pHandle != NULL);
+      
+      if(pHandle->DumpInProgress == false)
+        {    
         pHandle->LogHSEnable = true;
-		}
+        }
 }
 
 /**
@@ -399,19 +399,19 @@ void LogHS_StartLog(LogHighSpeed_Handle_t *pHandle)
 */
 void LogHS_StopLog(LogHighSpeed_Handle_t *pHandle)
 {
-	  ASSERT(pHandle != NULL);
-	
+      ASSERT(pHandle != NULL);
+    
     pHandle->LogHSEnable = false;
 }
 
 /**
   Functions that returns the position of the cursor
-	of the logger.Value between 0 and  LOGHS_NB_SAMPLE_POINT - 1
+    of the logger.Value between 0 and  LOGHS_NB_SAMPLE_POINT - 1
 */
-uint32_t LogHS_GetCursorPos(LogHighSpeed_Handle_t *pHandle)	
+uint32_t LogHS_GetCursorPos(LogHighSpeed_Handle_t *pHandle)    
 {
-	  ASSERT(pHandle != NULL);
-	
+      ASSERT(pHandle != NULL);
+    
     return(pHandle->LogHSBufferIndex);
 }
 
@@ -420,29 +420,29 @@ uint32_t LogHS_GetCursorPos(LogHighSpeed_Handle_t *pHandle)
 */
 void LogHS_ResetCursor(LogHighSpeed_Handle_t *pHandle)
 {
-	  ASSERT(pHandle != NULL);
-	
-	  if(pHandle->DumpInProgress == false)
-		{
+      ASSERT(pHandle != NULL);
+    
+      if(pHandle->DumpInProgress == false)
+        {
         pHandle->LogHSBufferIndex = 0;
-		}
+        }
 }
 
 /**
   Functions that starts a one shot capture of the high speed logger.
-	This means that the contents of the buffer is erased and the logger is then started 
-	Once it is competly filled it automatically stops.
+    This means that the contents of the buffer is erased and the logger is then started 
+    Once it is competly filled it automatically stops.
 */
 void LogHS_StartOneShot(LogHighSpeed_Handle_t *pHandle)
 {
-	ASSERT(pHandle != NULL);
-	
-	if(pHandle->DumpInProgress == false)
-	{
+    ASSERT(pHandle != NULL);
+    
+    if(pHandle->DumpInProgress == false)
+    {
         LogHS_StopLog(pHandle);             //Stop the logger (if it was started)
-	    LogHS_ResetCursor(pHandle);         //Reset the postion of the cursor
-	    pHandle->BufferWrapAround = false; //Disable the wrap around (if it was enabled)
-	    LogHS_StartLog(pHandle);            //Start the logger
-	}
+        LogHS_ResetCursor(pHandle);         //Reset the postion of the cursor
+        pHandle->BufferWrapAround = false; //Disable the wrap around (if it was enabled)
+        LogHS_StartLog(pHandle);            //Start the logger
+    }
 }
 

@@ -47,15 +47,15 @@ void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle)
         }
     }
     
-	// Detect if the timer did more than 2 overflows or timer is not running anymore, speed must to be set to zero.
-	if ((pHandle->pPulseFrequency->wCaptureOverflow > MAXNUMBER_OVERFLOW_WHEELSPEED) || ((pHandle->pPulseFrequency->measuring == false) && (pHandle->wWheelSpeedTimeOut >= WHEELSPEED_TIMEOUT_MS)))
-	{
+    // Detect if the timer did more than 2 overflows or timer is not running anymore, speed must to be set to zero.
+    if ((pHandle->pPulseFrequency->wCaptureOverflow > MAXNUMBER_OVERFLOW_WHEELSPEED) || ((pHandle->pPulseFrequency->measuring == false) && (pHandle->wWheelSpeedTimeOut >= WHEELSPEED_TIMEOUT_MS)))
+    {
         //Wheel speed is zero becacuse the timer overflowed
         //the time period determine the maximum time to the
         //wheel complete a full revolution.
         //this means that: 
         pHandle->wWheelSpeed_Read = 0;  
-	}
+    }
     else
     {
         //update basic wheel speed information.
@@ -70,7 +70,7 @@ void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle)
 */
 float WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle)
 {
-	return pHandle->wWheelSpeed_Read;
+    return pHandle->wWheelSpeed_Read;
 }
 
 /**
@@ -89,6 +89,6 @@ uint16_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle)
         pHandle->wWheelSpeedRpm = 0;  
     }
     
-	return (uint16_t)round(pHandle->wWheelSpeedRpm);
+    return (uint16_t)round(pHandle->wWheelSpeedRpm);
 }
 

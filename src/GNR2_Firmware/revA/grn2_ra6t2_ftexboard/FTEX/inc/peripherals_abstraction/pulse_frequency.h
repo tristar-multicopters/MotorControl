@@ -3,7 +3,7 @@
   * @file    pulse_frequency.h
   * @author  FTEX inc
   * @brief   Header for the Pulse frequency reading module
-	*					 pulse_frequency_gpt.c using General Purpose Timer
+    *                     pulse_frequency_gpt.c using General Purpose Timer
   ******************************************************************************
 */
 
@@ -18,28 +18,28 @@
 
 // =============================== Defines ================================== //
 #define RPMCOEFF        60      // RPM multiplication for r/min
-#define PRECISIONCOEFF	1000    // ms coefficient precision
-#define COEFFREQ        1000000000	// Period coeff for usecond division
+#define PRECISIONCOEFF    1000    // ms coefficient precision
+#define COEFFREQ        1000000000    // Period coeff for usecond division
 #define MICRO_SEC       1000000 // us coefficient precision
 #define PERIOD_FACTOR   2       // Period factor
 //define the maximum number of times the timer can overflow when measuring 
 //wheel speed.
 #define MAXNUMBER_OVERFLOW_WHEELSPEED    1
-	   
+       
 // =============================== Variables ================================== //
 
-	
+    
 // ================= Structure used to configure a pin ===================== //
 typedef enum
 {
-	GPT_TIMER = 0,
-	AGT_TIMER,
+    GPT_TIMER = 0,
+    AGT_TIMER,
 } TimerType_t;
 
 typedef struct
 {
     const timer_instance_t* PF_Timer;
-	
+    
 }  PulseFrequencyParam_t; 
 
 
@@ -47,15 +47,15 @@ typedef struct
 {
     TimerType_t TimerType;
     const timer_instance_t* pTimer;
-	
-    uint32_t wCaptureCount; 		/* timer capture variable */
+    
+    uint32_t wCaptureCount;         /* timer capture variable */
     uint32_t wCaptureOverflow; /* timer capture overflow variable */
-    float wUsPeriod; 			/* timer us Period Detection */
+    float wUsPeriod;             /* timer us Period Detection */
     uint16_t hNumberOfPulse;   /* has the number of pulse detected by
                                /* the time on capture mode.*/
-    volatile bool  measuring;		/* Flag start measurment */
+    volatile bool  measuring;        /* Flag start measurment */
     PulseFrequencyParam_t PulseFreqParam; /* AGT Parameters*/
-	
+    
 } PulseFrequencyHandle_t; 
 
 // ==================== Public function prototypes ========================= //

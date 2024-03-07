@@ -15,7 +15,7 @@
  *  Initializes battery monitor module
  */
 void BatMonitor_Init(BatMonitor_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMCI)
-{	
+{    
     ASSERT(pHandle != NULL);
     ASSERT(pMCI != NULL);    
     pHandle->pMCI = pMCI;

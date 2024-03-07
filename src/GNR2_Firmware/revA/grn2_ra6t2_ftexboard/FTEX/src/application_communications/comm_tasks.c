@@ -57,10 +57,10 @@ extern osThreadId_t CANOpenTaskHandle;
 static void UpdateObjectDictionnary(void *p_arg)
 {
 
-	CO_NODE  *pNode;
+    CO_NODE  *pNode;
     pNode = (CO_NODE *)p_arg;
     
-	VCI_Handle_t * pVCI = &VCInterfaceHandle;
+    VCI_Handle_t * pVCI = &VCInterfaceHandle;
     // Get Bike Parameters 
     // Read only
     uint8_t  hSpeed;
@@ -165,7 +165,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     
     #if GNR_IOT
 
-	if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
+    if(CONmtGetMode(&pNode->Nmt) == CO_OPERATIONAL)
     {                  
         /* Read commands in CANOpen object dictionnary received by SDO */
         //COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)), pNode, &bPAS, sizeof(uint8_t));
@@ -653,7 +653,7 @@ static void UpdateObjectDictionnary(void *p_arg)
 
 /**
   *  It initializes the vehicle control application. Needs to be called before using
-  *	 vehicle control related modules.
+  *     vehicle control related modules.
   */
 void Comm_BootUp(void)
 {
@@ -691,11 +691,11 @@ void Comm_BootUp(void)
 
     /* Select UART protocol */
     switch(UART0Handle.UARTProtocol)
-	  {
+      {
             break;
-    	case UART_APT:
+        case UART_APT:
             LCD_APT_init(&LCD_APT_handle, &VCInterfaceHandle, &UART0Handle);
-    		break;
+            break;
         case UART_KD718:
             LCD_KD718_init(&LCD_KD718_handle, &VCInterfaceHandle, &UART0Handle);
             break;
@@ -704,12 +704,12 @@ void Comm_BootUp(void)
             break; 
         case UART_LOG_HS:
             LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
-    	case UART_DISABLE:
+        case UART_DISABLE:
             break;
         default:
             //Dont initialise the euart
             break;
-	  }
+      }
 }
 
 __NO_RETURN void ProcessUARTFrames (void * pvParameter)
@@ -766,21 +766,21 @@ void CANOpenTask(void)
     CO_SelecOdSetup(VcAutodeter_GetGnrState());
 
     // Initialize canbus hardware layer and the CANopen stack
-	CONodeInit(&CONodeGNR, &GnR2ModuleSpec);
+    CONodeInit(&CONodeGNR, &GnR2ModuleSpec);
 
     // Stop execution if an error is detected on GNR2 node
     if (CONodeGetErr(&CONodeGNR) != CO_ERR_NONE)
     {
-			while(1);
-	}
+            while(1);
+    }
 
    /* Use CANopen software timer to create a cyclic function
-	 * call to the callback function 'UpdateObjectDictionnary()' with a period
-	 * of 25ms.
-	 */
+     * call to the callback function 'UpdateObjectDictionnary()' with a period
+     * of 25ms.
+     */
     uint32_t ticks;
-	ticks = COTmrGetTicks(&CONodeGNR.Tmr, 25U, (uint32_t)CO_TMR_UNIT_1MS);
-	COTmrCreate(&CONodeGNR.Tmr, 0, ticks, UpdateObjectDictionnary, &CONodeGNR);
+    ticks = COTmrGetTicks(&CONodeGNR.Tmr, 25U, (uint32_t)CO_TMR_UNIT_1MS);
+    COTmrCreate(&CONodeGNR.Tmr, 0, ticks, UpdateObjectDictionnary, &CONodeGNR);
 }
 
 /**

@@ -64,7 +64,7 @@ void HallPosSensor_Init(HallPosSensorHandle_t * pHandle)
         pHandle->hHallTimeout = 1000*SPEED_UNIT / (6u * hMinReliableElSpeedUnit);
     }
     /* Compute the prescaler to the closet value of the TimeOut (in mS)*/
-    pHandle->hHallMaxRatio = (pHandle->hHallTimeout * pHandle->hOvfFreq) / 1000 ;					// prescaler so that counter counts 65536 in desired timeout value
+    pHandle->hHallMaxRatio = (pHandle->hHallTimeout * pHandle->hOvfFreq) / 1000 ;                    // prescaler so that counter counts 65536 in desired timeout value
     /* Align wMaxPeriod to a multiple of Overflow.*/
     pHandle->wMaxPeriod = (pHandle->hHallMaxRatio) * 524287uL;
     pHandle->wMaxElSum = pHandle->wMaxPeriod * pHandle->bSpeedBufferSize;
@@ -165,11 +165,11 @@ int16_t HallPosSensor_CalcElAngle(HallPosSensorHandle_t * pHandle)
             pHandle->Super.hElAngle += pHandle->hPrevRotorFreq;
         }
         /* Confine angle calculation to 60-degrees */
-		int32_t hAngle_Diff = abs(pHandle->Super.hElAngle - pHandle->SectorMiddleAngle[pHandle->bHallState]);
-		if((hAngle_Diff>S16_40_PHASE_SHIFT))
-		{
+        int32_t hAngle_Diff = abs(pHandle->Super.hElAngle - pHandle->SectorMiddleAngle[pHandle->bHallState]);
+        if((hAngle_Diff>S16_40_PHASE_SHIFT))
+        {
             uint16_t hAngle_Diffu = ((uint16_t) pHandle->Super.hElAngle) - ((uint16_t) pHandle->SectorMiddleAngle[pHandle->bHallState]);
-			if(abs((int16_t)hAngle_Diffu)>S16_40_PHASE_SHIFT)
+            if(abs((int16_t)hAngle_Diffu)>S16_40_PHASE_SHIFT)
             {
                 if(pHandle->bDirection == POSITIVE)
                 {
@@ -180,7 +180,7 @@ int16_t HallPosSensor_CalcElAngle(HallPosSensorHandle_t * pHandle)
                     pHandle->Super.hElAngle = pHandle->SectorStartAngle[pHandle->bHallState];
                 }
             }
-		}
+        }
     }
     return pHandle->Super.hElAngle;
 }
@@ -544,7 +544,7 @@ void * HallPosSensor_TIMx_UP_IRQHandler(void * pHandleVoid)
             pHandle->wElPeriodSum = pHandle->wMaxPeriod * pHandle->bSpeedBufferSize;
         }
     }
-    return (void *)(0x0);				// MC_NULL
+    return (void *)(0x0);                // MC_NULL
 }
 
 /**
@@ -594,10 +594,10 @@ static void HALL_Init_Electrical_Angle(HallPosSensorHandle_t * pHandle)
 
 void HallPosSensor_SetMecAngle(HallPosSensorHandle_t * pHandle, int16_t hMecAngle)
 {
-	if(pHandle!= NULL)
-	{
-		hMecAngle = 0;
-	}
+    if(pHandle!= NULL)
+    {
+        hMecAngle = 0;
+    }
     (void) hMecAngle; // Void line added to remove warning
 }
 

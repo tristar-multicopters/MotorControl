@@ -358,7 +358,7 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
 
 __NO_RETURN void PowerOffSequence (void * pvParameter)
 {
-	UNUSED_PARAMETER(pvParameter);
+    UNUSED_PARAMETER(pvParameter);
     
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     

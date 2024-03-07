@@ -21,11 +21,11 @@ void CANLog_SendStatus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t 
     // Prepare Header of CAN message 
     msgToSend.DLC = 3;
     // Get status, fault now and occured faults
-	if(bMotorSelection == M_NONE)
-	{
-		msgToSend.Identifier = CAN_ID_STATUS_VC;
-		status = ((uint32_t)VCSTM_GetState(pHandle->pStateMachine) << 16) |
-				  (uint32_t)VCSTM_GetFaultState(pHandle->pStateMachine);
+    if(bMotorSelection == M_NONE)
+    {
+        msgToSend.Identifier = CAN_ID_STATUS_VC;
+        status = ((uint32_t)VCSTM_GetState(pHandle->pStateMachine) << 16) |
+                  (uint32_t)VCSTM_GetFaultState(pHandle->pStateMachine);
         // Load data buffer
         msgToSend.Data[0] = status & 0xFF;     // Fault occurred
         msgToSend.Data[1] = (status >> 8)  & 0xFF; // Fault now
@@ -33,14 +33,14 @@ void CANLog_SendStatus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t 
         
         //Send CAN message
         pCANOpenCANInterface->Send(&msgToSend);
-	}
-	
-	else if(bMotorSelection == M1)
-	{
-		msgToSend.Identifier = CAN_ID_STATUS_M1;
-		status = MDI_GetSTMState(pHandle->pPowertrain->pMDI, bMotorSelection)                |
-						 (uint32_t)MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI, bMotorSelection)  <<  8 |
-						 (uint32_t)MDI_GetOccurredFaults(pHandle->pPowertrain->pMDI, bMotorSelection) << 16;
+    }
+    
+    else if(bMotorSelection == M1)
+    {
+        msgToSend.Identifier = CAN_ID_STATUS_M1;
+        status = MDI_GetSTMState(pHandle->pPowertrain->pMDI, bMotorSelection)                |
+                         (uint32_t)MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI, bMotorSelection)  <<  8 |
+                         (uint32_t)MDI_GetOccurredFaults(pHandle->pPowertrain->pMDI, bMotorSelection) << 16;
         // Load data buffer
         msgToSend.Data[0] = status & 0xFF;     // Fault occurred
         msgToSend.Data[1] = (status >> 8)  & 0xFF; // Fault now
@@ -48,13 +48,13 @@ void CANLog_SendStatus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t 
         
         //Send CAN message
         pCANOpenCANInterface->Send(&msgToSend);
-	}
-	else if(bMotorSelection == M2)
-	{
-		msgToSend.Identifier = CAN_ID_STATUS_M2;
-		status = MDI_GetSTMState(pHandle->pPowertrain->pMDI, bMotorSelection)                |
-						 (uint32_t)MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI, bMotorSelection)  <<  8 |
-						 (uint32_t)MDI_GetOccurredFaults(pHandle->pPowertrain->pMDI, bMotorSelection) << 16;
+    }
+    else if(bMotorSelection == M2)
+    {
+        msgToSend.Identifier = CAN_ID_STATUS_M2;
+        status = MDI_GetSTMState(pHandle->pPowertrain->pMDI, bMotorSelection)                |
+                         (uint32_t)MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI, bMotorSelection)  <<  8 |
+                         (uint32_t)MDI_GetOccurredFaults(pHandle->pPowertrain->pMDI, bMotorSelection) << 16;
         // Load data buffer
         msgToSend.Data[0] = status & 0xFF;     // Fault occurred
         msgToSend.Data[1] = (status >> 8)  & 0xFF; // Fault now
@@ -62,7 +62,7 @@ void CANLog_SendStatus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t 
         
         //Send CAN message
         pCANOpenCANInterface->Send(&msgToSend);
-	}
+    }
 
 }
 
@@ -112,9 +112,9 @@ void CANLog_SendCurrent(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t
         //Send CAN message
         pCANOpenCANInterface->Send(&msgToSend);
     }
-	else
+    else
     {
-		msgToSend.Identifier = CAN_ID_CURRENT_M2;
+        msgToSend.Identifier = CAN_ID_CURRENT_M2;
         // Get current values
         int16_t hCurrentRefq = MDI_GetIqdref(pHandle->pPowertrain->pMDI, bMotorSelection).q;
         int16_t hCurrentRefd = MDI_GetIqdref(pHandle->pPowertrain->pMDI, bMotorSelection).d;
@@ -154,12 +154,12 @@ void CANLog_SendSpeed(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t *
         msgToSend.Data[3] = speedMeas >> 8 & 0xFF;
         //Send CAN message
         pCANOpenCANInterface->Send(&msgToSend);
-	}
+    }
     else if (bMotorSelection == M2)
     {
         int16_t speedRef = MDI_GetMecSpeedRefUnit(pHandle->pPowertrain->pMDI,bMotorSelection);
         int16_t speedMeas = MDI_GetAvrgMecSpeedUnit(pHandle->pPowertrain->pMDI,bMotorSelection);
-		msgToSend.Identifier = CAN_ID_SPEED_M2;
+        msgToSend.Identifier = CAN_ID_SPEED_M2;
         msgToSend.DLC = 4;
         // Load data buffer
         msgToSend.Data[0] = speedRef & 0xFF;
@@ -197,11 +197,11 @@ void CANLog_SendTemperature(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Hand
         //Send CAN message
         pCANOpenCANInterface->Send(&msgToSend);
     }
-	else
+    else
     {
         // TO DO : Add a function in MDI module to get the motor temperature
         int16_t temperature = 70;
-		msgToSend.Identifier = CAN_ID_TEMPERATURE_M2;
+        msgToSend.Identifier = CAN_ID_TEMPERATURE_M2;
         msgToSend.DLC = 2;
         // Load data buffer
         msgToSend.Data[0] = temperature & 0xFF;

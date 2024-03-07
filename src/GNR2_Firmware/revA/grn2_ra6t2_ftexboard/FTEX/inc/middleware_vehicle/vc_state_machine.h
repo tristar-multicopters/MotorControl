@@ -19,21 +19,21 @@
   */
 typedef enum
 {
-  V_IDLE = 0,             	/*!< Vehicle is off */
-	V_STANDBY = 1,            /*!< Vehicle is waiting for a start condition */
-	V_STANDBY_START = 2,			/*!< Pass-throught state, between standby and start  */
-	V_START = 3,							/*!< Startup procedure (mainly for sensorless drive)  */
-  V_RUN = 4,      					/*!< Torque is applied to motors  */
-	V_ANY_STOP = 5,						/*!< Pass-throught state, before stop  */
-	V_STOP = 6,								/*!< Stop motors  */
-  V_FAULT_NOW = 7,       	/*!< Persistent state, the state machine can be moved from
-																	any condition directly to this state by
-																	VCSTM_FaultProcessing method. This method also manage
-																	the passage to the only allowed following state that
-																	is V_FAULT_OVER */
-  V_FAULT_OVER = 8,       	/*!< Persistent state where the application is intended to
-																	stay when the fault conditions disappeared. State machine is moved as
-																	soon as the user has acknowledged the fault condition.*/
+  V_IDLE = 0,                 /*!< Vehicle is off */
+    V_STANDBY = 1,            /*!< Vehicle is waiting for a start condition */
+    V_STANDBY_START = 2,            /*!< Pass-throught state, between standby and start  */
+    V_START = 3,                            /*!< Startup procedure (mainly for sensorless drive)  */
+  V_RUN = 4,                          /*!< Torque is applied to motors  */
+    V_ANY_STOP = 5,                        /*!< Pass-throught state, before stop  */
+    V_STOP = 6,                                /*!< Stop motors  */
+  V_FAULT_NOW = 7,           /*!< Persistent state, the state machine can be moved from
+                                                                    any condition directly to this state by
+                                                                    VCSTM_FaultProcessing method. This method also manage
+                                                                    the passage to the only allowed following state that
+                                                                    is V_FAULT_OVER */
+  V_FAULT_OVER = 8,           /*!< Persistent state where the application is intended to
+                                                                    stay when the fault conditions disappeared. State machine is moved as
+                                                                    soon as the user has acknowledged the fault condition.*/
 } VC_State_t;
 
 /**
@@ -93,10 +93,10 @@ VC_State_t VCSTM_FaultProcessing(VCSTM_Handle_t * pHandle, uint16_t hSetErrors, 
   */
 VC_State_t VCSTM_GetState(VCSTM_Handle_t * pHandle);
 
-/*	Function to get the current fault (if there's any) of the vehicle*/
+/*    Function to get the current fault (if there's any) of the vehicle*/
 uint16_t VCSTM_getCurrentFaults(VCSTM_Handle_t * pHandle);
 
-/*	Function to get faults that occured of the vehicle	*/
+/*    Function to get faults that occured of the vehicle    */
 uint16_t VCSTM_getOccurredFaults(VCSTM_Handle_t * pHandle);
 
 /**

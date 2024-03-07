@@ -19,7 +19,7 @@
 
 // =============================== Defines ================================= //
 /* 4*FW vers (2 bytes) + 3 * Fw size (4bytes) + 4 * Enc Key (32bytes) */
-#define HEADER_SIZE					156
+#define HEADER_SIZE                    156
 #define HEADER_START_ADDR       0x00000000
 #define FW_START_ADDR           (HEADER_START_ADDR + HEADER_SIZE)
 #define FW_ADDR(n)              (FW_START_ADDR + n)
@@ -27,10 +27,10 @@
 // ================= Structure used to configure a pin ===================== //
 // State related to the file system and file manipulation, used to avoid bad sequences of action
 typedef enum {
-	STORAGE_UNINIT,
-	STORAGE_IDLE,
-	STORAGE_PACK_WRITE,
-	STORAGE_PACK_READ
+    STORAGE_UNINIT,
+    STORAGE_IDLE,
+    STORAGE_PACK_WRITE,
+    STORAGE_PACK_READ
 } Storage_State_t;
 
 typedef struct
@@ -40,20 +40,20 @@ typedef struct
 
 // Structure of the DFU File header, used to easyli parse if from a raw memory bulk read.
 typedef union {
-	struct {
-		uint32_t Pack_FwVersion;
-		uint32_t BLE_FwVersion;
-		uint32_t REN_FwVersion;
-		uint32_t GNR_FwVersion;
-		uint32_t BLE_FwSize;
-		uint32_t REN_FwSize;
-		uint32_t GNR_FwSize;
-		uint8_t Pack_EncKey[32];
-		uint8_t BLE_EncKey[32];
-		uint8_t REN_EncKey[32];
-		uint8_t GNR_EncKey[32];
-	} data;
-	uint8_t Header[HEADER_SIZE];
+    struct {
+        uint32_t Pack_FwVersion;
+        uint32_t BLE_FwVersion;
+        uint32_t REN_FwVersion;
+        uint32_t GNR_FwVersion;
+        uint32_t BLE_FwSize;
+        uint32_t REN_FwSize;
+        uint32_t GNR_FwSize;
+        uint8_t Pack_EncKey[32];
+        uint8_t BLE_EncKey[32];
+        uint8_t REN_EncKey[32];
+        uint8_t GNR_EncKey[32];
+    } data;
+    uint8_t Header[HEADER_SIZE];
 } OTA_Header_t;
 // ==================== Public function prototypes ========================= //
 

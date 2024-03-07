@@ -40,4 +40,4 @@ const uint8_t gearRatioTable[NUM_GEARS] =                 //gear ratios for each
 
 #endif
 
-#endif	
+#endif    

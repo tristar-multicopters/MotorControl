@@ -681,9 +681,9 @@ void FOC_CalcCurrRef(uint8_t bMotor)
       }
         FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
         FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
-		
+        
         /* Use Flux Weakening to recalculate Iq and Id if it is enabled for motor */
-        if (FLUX_WEAKENING_ENABLE == 1)	
+        if (FLUX_WEAKENING_ENABLE == 1)    
         {
             IqdTmp.q = FOCVars[bMotor].Iqdref.q;
             IqdTmp.d = FOCVars[bMotor].Iqdref.d;
@@ -700,7 +700,7 @@ void FOC_CalcCurrRef(uint8_t bMotor)
     }
 
     /* If current references iqref and idref are computed externaly    */
-    else if (FOCVars[bMotor].bDriveInput == EXTERNAL)	//Added to calculate FlxWeakening parameters in SWD Debug mode
+    else if (FOCVars[bMotor].bDriveInput == EXTERNAL)    //Added to calculate FlxWeakening parameters in SWD Debug mode
     {
         IqdTmp.q = FOCVars[bMotor].Iqdref.q;
         IqdTmp.d = FOCVars[bMotor].Iqdref.d;
@@ -993,8 +993,8 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
 
 /**
   * @brief  Turns off the PWM for M1
-	* @param	None
-	* @retval None
+    * @param    None
+    * @retval None
   */
 void MC_PWM_OFF_M1()
 {

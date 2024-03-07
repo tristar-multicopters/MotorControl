@@ -12,12 +12,12 @@
 
 // ==================== Public function prototypes ======================== //
 /**
-	Initializes peripherals used by the Serial FLASH device.
+    Initializes peripherals used by the Serial FLASH device.
 */
 uint8_t Serial_Flash_Init(EFlash_Handle_t * pHandle)
 {
     uint8_t flash_id[3] = {0};
-	
+    
     if (MX25L3233F_ResetEnable(&pHandle->eFlash) != MX25L3233F_OK) 
         return FLASH_ERROR;
     
@@ -29,27 +29,27 @@ uint8_t Serial_Flash_Init(EFlash_Handle_t * pHandle)
     R_BSP_SoftwareDelay(1, BSP_DELAY_UNITS_MILLISECONDS);
 
     Serial_Flash_ReadID(pHandle, flash_id);
-	
+    
     if (flash_id[0] != MX25L3233F_MANUFACTURER_ID)
     {
         return FLASH_ERROR;
     }
     else if (flash_id[1] != MX25L3233F_MEMORY_TYPE)
     {
-		return FLASH_ERROR;
-	}
-    else if (flash_id[2] != MX25L3233F_MEMORY_CAPACITY)
-	{
         return FLASH_ERROR;
-	}
+    }
+    else if (flash_id[2] != MX25L3233F_MEMORY_CAPACITY)
+    {
+        return FLASH_ERROR;
+    }
     else
-	{
+    {
         return FLASH_OK;
-	}
+    }
 }
 
 /**
-	Erases the specified FLASH sector.
+    Erases the specified FLASH sector.
 */
 uint8_t Serial_Flash_EraseSector(EFlash_Handle_t * pHandle, uint32_t SectorAddr)
 {
@@ -70,7 +70,7 @@ uint8_t Serial_Flash_EraseSector(EFlash_Handle_t * pHandle, uint32_t SectorAddr)
 }
 
 /**
-	Erases the entire FLASH.
+    Erases the entire FLASH.
 */
 uint8_t Serial_Flash_EraseChip(EFlash_Handle_t * pHandle)
 {
@@ -91,8 +91,8 @@ uint8_t Serial_Flash_EraseChip(EFlash_Handle_t * pHandle)
 }
 
 /**
-	Writes block of data to the FLASH. In this function, the number of
-	WRITE cycles are reduced, using Page WRITE sequence.
+    Writes block of data to the FLASH. In this function, the number of
+    WRITE cycles are reduced, using Page WRITE sequence.
 */
 uint8_t Serial_Flash_WriteData(EFlash_Handle_t * pHandle, uint32_t WriteAddr, uint8_t* pData, uint32_t Size)
 {
@@ -141,7 +141,7 @@ uint8_t Serial_Flash_WriteData(EFlash_Handle_t * pHandle, uint32_t WriteAddr, ui
 }
 
 /**
-	Reads a block of data from the FLASH.
+    Reads a block of data from the FLASH.
 */
 uint8_t Serial_Flash_ReadData(EFlash_Handle_t * pHandle, uint32_t uwStartAddress, uint8_t* pData, uint32_t uwDataSize)
 {
@@ -156,7 +156,7 @@ uint8_t Serial_Flash_ReadData(EFlash_Handle_t * pHandle, uint32_t uwStartAddress
 }
 
 /**
-	Reads FLASH identification.
+    Reads FLASH identification.
 */
 uint8_t Serial_Flash_ReadID (EFlash_Handle_t * pHandle, uint8_t* pData)
 {

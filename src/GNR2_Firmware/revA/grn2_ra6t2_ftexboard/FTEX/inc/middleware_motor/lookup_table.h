@@ -20,16 +20,16 @@ typedef struct
 } LookupTableHandle_t;
 
 /**
- * 	@brief Initializes lookup table module.
- * 	@param pHandle : Pointer on Handle structure of LookupTable component
+ *     @brief Initializes lookup table module.
+ *     @param pHandle : Pointer on Handle structure of LookupTable component
  */
 void LookupTable_Init(LookupTableHandle_t *pHandle);
 
 /**
- * 	@brief Calculate output of lookup table by using interpolation between values if needed.
+ *     @brief Calculate output of lookup table by using interpolation between values if needed.
             If input is out of range of x-data, keep first or last value of the lookup table.
- * 	@param pHandle : Pointer on Handle structure of LookupTable component
- * 	@param wInputdata : Input data to feed lookup table
+ *     @param pHandle : Pointer on Handle structure of LookupTable component
+ *     @param wInputdata : Input data to feed lookup table
  */
 int32_t LookupTable_CalcOutput(LookupTableHandle_t *pHandle, int32_t wInputdata);
 

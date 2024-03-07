@@ -3,7 +3,7 @@
   * @brief   This file contains definitions and functions prototypes common to all
   *          State Observer based Speed & Position Feedback components of the Motor
   *          Control application.
-	*/
+    */
 
 
 /* Define to prevent recursive inclusion -------------------------------------*/

@@ -84,5 +84,5 @@
                                                             // transition of signal H1 and the zero crossing of the Bemf induced
                                                             // between phase A and B
                                                             
-                                                     													
+                                                                                                         
 #endif /* __DRIVE_PARAMETERS_VELEC_A2_H */

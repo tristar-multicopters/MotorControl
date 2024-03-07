@@ -17,7 +17,7 @@ static bool brakeStuck = false;
  *  Initializes brake sensor module
  */
 void BRK_Init(BRK_Handle_t * pHandle, Delay_Handle_t * pBrakeDelay)
-{	
+{    
     ASSERT(pHandle != NULL); 
     struct GPIOConfig PinConfig;
    
@@ -40,13 +40,13 @@ void BRK_Init(BRK_Handle_t * pHandle, Delay_Handle_t * pBrakeDelay)
  */
 bool BRK_IsPressed(BRK_Handle_t * pHandle)
 {
-	ASSERT(pHandle != NULL); 
+    ASSERT(pHandle != NULL); 
 
     bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
     
     pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
-	
-	return pHandle->bIsPressed;
+    
+    return pHandle->bIsPressed;
 }
 
 /**
@@ -55,7 +55,7 @@ bool BRK_IsPressed(BRK_Handle_t * pHandle)
  */
 bool BRK_IsPressedSafety(BRK_Handle_t * pHandle)
 {
-	ASSERT(pHandle != NULL); 
+    ASSERT(pHandle != NULL); 
 
     bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
     pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
@@ -88,6 +88,6 @@ bool BRK_IsPressedSafety(BRK_Handle_t * pHandle)
             }
         }            
     }
-	
-	return pHandle->bIsPressed;
+    
+    return pHandle->bIsPressed;
 }

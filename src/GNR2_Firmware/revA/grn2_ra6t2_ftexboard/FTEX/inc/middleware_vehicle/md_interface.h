@@ -37,7 +37,7 @@ void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHan
   * @brief  This function update the virtual motor handle with the provided feedback.
   * @param  pHandle Pointer on the component instance to operate on.
   * @param  bMotor Motor number. Must be higher than M2
-	*	@param	pFeedback pointer to a virtual motor feedback structure. Data will be copied in pHandle.
+    *    @param    pFeedback pointer to a virtual motor feedback structure. Data will be copied in pHandle.
   * @retval none.
   */
 void MDI_UpdateVirtualMotorFeedback(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, SlaveMotorFeedback_t Feedback);
@@ -50,7 +50,7 @@ void MDI_UpdateVirtualMotorFeedback(MultipleDriveInterfaceHandle_t * pHandle, ui
   * @param  pHandle Pointer on the component instance to operate on.
   * @param  hFinalSpeed is the value of mechanical rotor speed reference at the
   *         end of the ramp expressed in tenths of HZ.
-	*	@param	bMotor is the target motor number
+    *    @param    bMotor is the target motor number
   * @retval none.
   */
 void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, int16_t hFinalSpeed);
@@ -63,7 +63,7 @@ void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor,
   * @param  pHandle Pointer on the component instance to work on.
   * @param  hFinalTorque is the value of motor torque reference at the end of
   *         the ramp in cNm (Nm/100).
-	*	@param	bMotor is the target motor number
+    *    @param    bMotor is the target motor number
   * @retval none.
   */
 void MDI_ExecTorqueRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, int16_t hFinalTorque);

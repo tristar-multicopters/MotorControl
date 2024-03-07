@@ -637,7 +637,7 @@ uint8_t crc8(const void* vptr, int len)
     int i;
 
     for (i = 0; i < len; i++) 
-	{
+    {
         crc = crc8_table[crc ^ data[i]];
     }
 

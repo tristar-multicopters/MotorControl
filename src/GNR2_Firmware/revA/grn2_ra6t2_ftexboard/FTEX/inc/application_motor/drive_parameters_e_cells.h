@@ -64,27 +64,27 @@
 #define SLAVE_DEFAULT_TORQUE_SLOPE_UP        2000           // Slope in cNm per second - the  value is less in comparison to the master because the slave should 
 
 /***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
-#define POLE_PAIR_NUM          	            10		        // Number of motor pole pairs
-#define RS                     	            0.071f	        // Stator resistance , ohm
-#define LS                     	            0.00015f	    // Stator inductance, H   For I-PMSM it is equal to Lq
-#define MOTOR_MAGNET_FLUX      	            0.013f	        // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
-#define MOTOR_VOLTAGE_CONSTANT 	            24.5f	        // Volts RMS ph-ph /kRPM
-#define ST_Torque_Coef         	            1.2f	        // this coeficient always keeps the starting torque higher than the nominal torque
+#define POLE_PAIR_NUM                          10                // Number of motor pole pairs
+#define RS                                     0.071f            // Stator resistance , ohm
+#define LS                                     0.00015f        // Stator inductance, H   For I-PMSM it is equal to Lq
+#define MOTOR_MAGNET_FLUX                      0.013f            // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
+#define MOTOR_VOLTAGE_CONSTANT                 24.5f            // Volts RMS ph-ph /kRPM
+#define ST_Torque_Coef                         1.2f            // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps      	            55		        // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps                      55                // peak current in amps
 
-#define MOTOR_MAX_SPEED_RPM    	            1875	        // Maximum rated speed - Old Example 2750 for 38Km/h
+#define MOTOR_MAX_SPEED_RPM                    1875            // Maximum rated speed - Old Example 2750 for 38Km/h
 
-#define OV_TEMP_MOTOR_THRESHOLD_C 	        70		        // Maximum temperature in degree C
-#define OV_TEMP_MOTOR_HYSTERESIS_C 	        10		        // Temperature to decrease after an overtemp fault occurred before clearing the fault, in degree C
-#define FLUX_WEAKENING_ENABLE   	        0		        // 0=disable 1=enable flux weakening , 
+#define OV_TEMP_MOTOR_THRESHOLD_C             70                // Maximum temperature in degree C
+#define OV_TEMP_MOTOR_HYSTERESIS_C             10                // Temperature to decrease after an overtemp fault occurred before clearing the fault, in degree C
+#define FLUX_WEAKENING_ENABLE               0                // 0=disable 1=enable flux weakening , 
 
 /***************** MOTOR SENSORS PARAMETERS  ******************************/
-#define HALL_SENSORS_PLACEMENT 	            DEGREES_120	    // Mechanical position of the sensors
+#define HALL_SENSORS_PLACEMENT                 DEGREES_120        // Mechanical position of the sensors
                                                             // with reference to an electrical cycle.
                                                             // It can be either DEGREES_120 or DEGREES_60
 
-#define HALL_PHASE_SHIFT       	            60		         // Electrical phase shift in degree between the low to high
+#define HALL_PHASE_SHIFT                       60                 // Electrical phase shift in degree between the low to high
                                                              // transition of signal H1 and the zero crossing of the Bemf induced
                                                              // between phase A and B
 

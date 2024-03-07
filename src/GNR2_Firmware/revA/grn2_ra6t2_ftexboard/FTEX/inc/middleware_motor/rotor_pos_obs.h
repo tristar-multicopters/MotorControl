@@ -1,6 +1,6 @@
 /**
   * @file       rotor_pos_obs.h
-  * @brief     	This file provides firmware functions that implement the features
+  * @brief         This file provides firmware functions that implement the features
   *             of the Angle Observer component.
   *
 */
@@ -22,29 +22,29 @@
   */
 typedef struct
 {
-	SpdPosFdbkHandle_t Super; /* Base class module */
+    SpdPosFdbkHandle_t Super; /* Base class module */
 
-	HallPosSensorHandle_t * pHallSensor;									/* Pointer to hall sensor handle used by rotor position observer */
+    HallPosSensorHandle_t * pHallSensor;                                    /* Pointer to hall sensor handle used by rotor position observer */
 
-	int16_t hKpGainDef;																		/* Default proportional gain */
-	int16_t hKpGain;																			/* Proportional gain */
-	uint16_t hKpDivisorPOW2;															/* Proportional divisor by 2 */
+    int16_t hKpGainDef;                                                                        /* Default proportional gain */
+    int16_t hKpGain;                                                                            /* Proportional gain */
+    uint16_t hKpDivisorPOW2;                                                            /* Proportional divisor by 2 */
 
-	int16_t hKiGainDef;																		/* Default integral gain */
-	int16_t hKiGain;																			/* Integral gain */
-	uint16_t hKiDivisorPOW2;															/* Integral divisor by 2 */
+    int16_t hKiGainDef;                                                                        /* Default integral gain */
+    int16_t hKiGain;                                                                            /* Integral gain */
+    uint16_t hKiDivisorPOW2;                                                            /* Integral divisor by 2 */
 
-	int16_t hKdGainDef;																		/* Default derivative gain */
-	int16_t hKdGain;																			/* Derivative gain */
-	uint16_t hKdDivisorPOW2;															/* Derivative divisor, power of 2 */
+    int16_t hKdGainDef;                                                                        /* Default derivative gain */
+    int16_t hKdGain;                                                                            /* Derivative gain */
+    uint16_t hKdDivisorPOW2;                                                            /* Derivative divisor, power of 2 */
 
-	int16_t hEstMechTorque;																/* Estimated mechanical torque on shaft, half-word */
-	int16_t hEstElSpeedDpp;																/* Estimated speed by the observer, half-word  */
-	int16_t hEstElAngle;																	/* Estimated angle by the observer, half-word  */
+    int16_t hEstMechTorque;                                                                /* Estimated mechanical torque on shaft, half-word */
+    int16_t hEstElSpeedDpp;                                                                /* Estimated speed by the observer, half-word  */
+    int16_t hEstElAngle;                                                                    /* Estimated angle by the observer, half-word  */
 
-	int32_t wEstMechTorque;																/* Estimated mechanical torque on shaft, word */
-	int32_t wEstElSpeedDpp;																/* Estimated speed by the observer, word */
-	int32_t wEstElAngle;																	/* Estimated angle by the observer, word */
+    int32_t wEstMechTorque;                                                                /* Estimated mechanical torque on shaft, word */
+    int32_t wEstElSpeedDpp;                                                                /* Estimated speed by the observer, word */
+    int32_t wEstElAngle;                                                                    /* Estimated angle by the observer, word */
 
     SignalFilteringHandle_t SpeedFilter;
     float fFilterAlpha;                 // Alpha coefficient for low pass first order butterworth filter
@@ -72,7 +72,7 @@ void RotorPosObs_Clear(RotorPositionObserverHandle_t * pHandle);
 
 /**
   * @brief  It executes vector tracking state observer to compute new angle estimation
-	*					and update the estimated electrical angle. Must be executed at FOC frequency.
+    *                    and update the estimated electrical angle. Must be executed at FOC frequency.
   * @param  pHandle: handler of the current instance of the AO component
   * @param  hElTorque: electrical torque currently applied to the shaft (zero if only angle filtering is required)
   * @retval none

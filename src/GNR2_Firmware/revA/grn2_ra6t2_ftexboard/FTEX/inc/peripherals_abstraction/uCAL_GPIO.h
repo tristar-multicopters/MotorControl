@@ -24,20 +24,20 @@
 typedef enum  // Used to select the pin direction
 {
     INPUT,
-    OUTPUT	
+    OUTPUT    
 } uCALPin_Direction_t;
 
 typedef enum  // Used to select if the pull up is enable
 {
     NONE,
     UP
-   //Down // Still part of the FTEX standard but not supported by renesas	
+   //Down // Still part of the FTEX standard but not supported by renesas    
 } uCALPin_PullType_t;
 
 typedef enum  // Used to select the output
 {
     PUSH_PULL,
-    OPEN_DRAIN	
+    OPEN_DRAIN    
 } uCALPin_OutputType_t;
 
 // ================= Structure used to configure a pin ===================== //
@@ -53,7 +53,7 @@ struct GPIOConfig  //Contaisn the different parameters to configure a pin
 
 /**
   @brief Function used to initialise a GPIO using the renesas API
-	
+    
   @param Receives GPIO number and config struct
   @return void
 */
@@ -61,7 +61,7 @@ void uCAL_GPIO_ReInit(uint32_t aGPIO, struct GPIOConfig aPinConfig);
 
 /**
   @brief Function used to read the state of a GPIO using the renesas API
-	      Depending on if the pin is in output or input mode a different part of 
+          Depending on if the pin is in output or input mode a different part of 
          the pin register is being read 
   
   @param Receives GPIO number
@@ -71,7 +71,7 @@ bool uCAL_GPIO_Read(uint32_t aGPIO);
 
 /**
   @brief Function used to set a GPIO using the renesas API
-	
+    
   @param Receives GPIO number
   @return void
 */
@@ -79,7 +79,7 @@ void uCAL_GPIO_Set(uint32_t aGPIO);
 
 /**
   @brief Function used to reset a GPIO using the renesas API
-	
+    
   @param Receives GPIO number
   @return void
 */
@@ -87,7 +87,7 @@ void uCAL_GPIO_Reset(uint32_t aGPIO);
 
 /**
   @brief Function used to toggle a GPIO using the renesas API
-	
+    
   @param Receives GPIO number
   @return void
 */

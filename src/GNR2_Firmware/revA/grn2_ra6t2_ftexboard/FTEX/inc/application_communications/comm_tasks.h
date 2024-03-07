@@ -22,7 +22,7 @@ extern bool bCANOpenTaskBootUpCompleted;
 
 /**
   * @brief  It initializes the vehicle control application. Needs to be called before using
-  *	        vehicle control related modules.
+  *            vehicle control related modules.
   * @retval None
   */
 void Comm_BootUp(void);

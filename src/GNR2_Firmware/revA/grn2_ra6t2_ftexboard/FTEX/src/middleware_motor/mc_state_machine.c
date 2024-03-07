@@ -8,7 +8,7 @@
   *           * Provide accessor to State machine internal state
   *           * Provide accessor to error state
   *
-	*/
+    */
 
 /* Includes ------------------------------------------------------------------*/
 #include "mc_state_machine.h"

@@ -50,9 +50,9 @@ LogHighSpeed_Handle_t LogHS_handle;
 //Handle to control the data flash initialisation 
 DataFlash_Handle_t DataFlashHandle =
 {
-	
-	.pFlashInstance = &g_flash0,
-	.dataFlashOpenFlag = false,
+    
+    .pFlashInstance = &g_flash0,
+    .dataFlashOpenFlag = false,
 
 };
 

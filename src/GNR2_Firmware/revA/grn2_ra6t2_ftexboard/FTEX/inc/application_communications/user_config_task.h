@@ -84,13 +84,13 @@
 //state machine.
 typedef enum
 {
-	IDLE,
-	OPEN,
-	CLOSE,
-	READ,
-	ERASE,
-	WRITE,
-	ERROR,
+    IDLE,
+    OPEN,
+    CLOSE,
+    READ,
+    ERASE,
+    WRITE,
+    ERROR,
 } UserConfigStateMachine_t;
 
 
@@ -111,7 +111,7 @@ extern UserConfigHandle_t UserConfigHandle;
 // ==================== Public function prototypes ========================= //
 /**
   @brief Function to verify if data flash memory is empty or not.
-	If it's empty write default configuration in the data memory.
+    If it's empty write default configuration in the data memory.
     If it's not empty read the configuration from the data memory.
     NOTE: on this first version this function will be used to test 
     the task:

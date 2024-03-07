@@ -71,7 +71,7 @@ typedef struct
   @brief Initialises the handle variables that are specific to the module and
          links the generic UART interrupts of the specified UART instance to this module.
          VCI handle is used to acces the information that needs to be logged
-				
+                
   @param Receives LogHS handle, VCI handle and UART handle
   @return void
 */
@@ -96,9 +96,9 @@ void LogHS_TX_IRQ_Handler(void *pVoidHandle);
 
 /**
   @brief Function that is called once a complete UART frame is received. It process
-				 the frame and takes decisions according to the current state of the module and the 
-				 contents of the frame.
-				 
+                 the frame and takes decisions according to the current state of the module and the 
+                 contents of the frame.
+                 
   @param Receives LogHS handle
   @return void
 */
@@ -106,8 +106,8 @@ void LogHS_ProcessFrame(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Function that is used to coordinate the transfer of data between the controller
-	       and the pyhton script running on a PC.It does so using a simple state machine
-				 
+           and the pyhton script running on a PC.It does so using a simple state machine
+                 
   @param Receives LogHS handle
   @return void
 */
@@ -115,9 +115,9 @@ void LogHS_SendDataStateMachine(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Function that is used to insert motor control data into the logging buffer.
-				 a new data point made up of a data set is inserted in the buffere everytime
-				 this function is called.
-				 
+                 a new data point made up of a data set is inserted in the buffere everytime
+                 this function is called.
+                 
   @param Receives LogHS handle
   @return void
 */
@@ -126,9 +126,9 @@ void LogHS_LogMotorVals(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Function that is used to insert motor control data into the logging buffer.
-				 a new data point made up of a data set is inserted in the buffere every nth time
-				 this function is called.
-				 
+                 a new data point made up of a data set is inserted in the buffere every nth time
+                 this function is called.
+                 
   @param Receives LogHS handle
   @return void
 */
@@ -136,9 +136,9 @@ void LogHS_LogMotorValsVarRes(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Function that is used to dump the collected data on the UART.
-				 this is called once the python script running on a CP has confirmed 
-				 that it is ready for the data.
-				 
+                 this is called once the python script running on a CP has confirmed 
+                 that it is ready for the data.
+                 
   @param Receives LogHS handle
   @return void
 */
@@ -146,9 +146,9 @@ void LogHS_DumpLog(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Function that is used to dump a data set. Only called by the DumpLog function.
-				 It is called as many times as there are data points. The data set index received 
-				 tells the function which set of data does it need to send over UART
-				 
+                 It is called as many times as there are data points. The data set index received 
+                 tells the function which set of data does it need to send over UART
+                 
   @param Receives LogHS handle and the data set index
   @return void
 */
@@ -156,7 +156,7 @@ void LogHS_DumpDataSet(LogHighSpeed_Handle_t *pHandle, uint32_t DataSetIndex);
 
 /**
   @brief Function that is used to start the data dump.
-				 
+                 
   @param Receives LogHS handle and the data set index
   @return void
 */
@@ -164,9 +164,9 @@ void LogHS_StartDumpLog(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Function that is used to send the dump info to the python script
-	       running on a PC. It tells it how many data points we have and how   
-				 many data we have per set (each set is a data point)
-				 
+           running on a PC. It tells it how many data points we have and how   
+                 many data we have per set (each set is a data point)
+                 
   @param Receives LogHS handle and the data set index
   @return void
 */
@@ -174,7 +174,7 @@ void LogHS_SendDumpInfo(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Function that resets the contents of the logging buffer
-				 
+                 
   @param Receives LogHS handle and the data set index
   @return void
 */
@@ -182,7 +182,7 @@ void LogHS_ResetBuffer(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Functions that starts the logger 
-				 
+                 
   @param Receives LogHS handle and the data set index
   @return void
 */
@@ -190,7 +190,7 @@ void LogHS_StartLog(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Functions that stops the logger 
-				 
+                 
   @param Receives LogHS handle and the data set index
   @return void
 */
@@ -198,16 +198,16 @@ void LogHS_StopLog(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Functions that returns the position of the cursor
-	       of the logger.Value between 0 and  LOGHS_NB_SAMPLE_POINT - 1
-				 
+           of the logger.Value between 0 and  LOGHS_NB_SAMPLE_POINT - 1
+                 
   @param Receives LogHS handle and the data set index
   @return uint32_t position of the cursor
 */
-uint32_t LogHS_GetCursorPos(LogHighSpeed_Handle_t *pHandle);	
+uint32_t LogHS_GetCursorPos(LogHighSpeed_Handle_t *pHandle);    
 
 /**
   @brief Functions that resets the position of the cursor
-				 
+                 
   @param Receives LogHS handle and the data set index
   @return void
 */
@@ -215,9 +215,9 @@ void LogHS_ResetCursor(LogHighSpeed_Handle_t *pHandle);
 
 /**
   @brief Functions that starts a one shot capture of the high speed logger.
-	       This means that the contents of the buffer is erased and the logger is then started 
-				 Once it is competly filled it automatically stops.
-				 
+           This means that the contents of the buffer is erased and the logger is then started 
+                 Once it is competly filled it automatically stops.
+                 
   @param Receives LogHS handle and the data set index
   @return void
 */

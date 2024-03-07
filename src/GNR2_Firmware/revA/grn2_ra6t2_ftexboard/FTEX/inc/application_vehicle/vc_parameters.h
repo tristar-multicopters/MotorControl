@@ -1,6 +1,6 @@
 /**
   * @file    vc_parameters.h
-	* @author	 Sami Bouzid, FTEX inc	 
+    * @author     Sami Bouzid, FTEX inc     
   * @brief   This file contains the parameters needed in order to configure vehicle control layer.
   *
 */

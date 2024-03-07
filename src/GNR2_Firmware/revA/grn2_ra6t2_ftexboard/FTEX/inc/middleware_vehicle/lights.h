@@ -23,14 +23,14 @@ typedef struct
                             // the blink function gets called.
     
     uint16_t BlinkCounter;  // Keeps track of when we need to toggle the LED
-	
+    
     bool bLightIsBlinking;  // Shows if the light should be blinking
     bool bLightIsActive;    // Shows if the light should be on or off
     
     bool bDefaultLightState;// Shows the stae of the light that is desired when the bike is turned on    
     
     bool bIsInvertedLogic;  // States if the logic is inverted 
-	                        // That would mean you would turn the light on with a 0 and off with a 1
+                            // That would mean you would turn the light on with a 0 and off with a 1
     
     bool bBlinkOnBrake;     // Tells the light if it should blink on brake
     

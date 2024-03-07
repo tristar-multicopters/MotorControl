@@ -28,12 +28,12 @@ bool PWMCurrFdbk_Init( PWMCurrFdbkHandle_t * pHandle)
     SignalFiltering_Init(&pHandle->IbFilter);
     SignalFiltering_ConfigureButterworthFOLP(&pHandle->IbFilter, pHandle->fCurrentFilterAlpha, pHandle->fCurrentFilterBeta);
 
-	return bIsError;
+    return bIsError;
 }
 
 /*
     Returns the phase current of the motor (in s16A unit).
-	To call in order to compute Ia, Ib and Ic and store into handle.
+    To call in order to compute Ia, Ib and Ic and store into handle.
 */
 void PWMCurrFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHandle, ab_t * Iab )
 {
@@ -183,7 +183,7 @@ bool PWMCurrFdbk_CurrentReadingCalibr(PWMCurrFdbkHandle_t * pHandle)
 {
   bool retVal = true;
 
-	PWMCurrFdbk_SwitchOffPWM(pHandle);
+    PWMCurrFdbk_SwitchOffPWM(pHandle);
 
   pHandle->pFctCurrReadingCalib(pHandle);
 

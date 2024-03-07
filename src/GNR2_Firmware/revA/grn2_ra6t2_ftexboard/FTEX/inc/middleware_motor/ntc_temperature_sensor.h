@@ -54,7 +54,7 @@ typedef struct
                                       This parameter is expressed in degC */
   int16_t hOverTempDeactThreshold;    /**< Temperature threshold below which an active over temperature fault is cleared.
                                          This parameter is expressed in degC */
-  int16_t hFoldbackStartTemp;		      /**< Temperature at which the foldback starts.
+  int16_t hFoldbackStartTemp;              /**< Temperature at which the foldback starts.
                                          This parameter is expressed in degC */
                                            
   uint8_t bConvHandle;                /**< handle to the regular conversion */
@@ -69,19 +69,19 @@ typedef struct
 
 
 /**
- * 	@brief Initializes temperature sensing conversions
- * 	@param pHandle : Pointer on Handle structure of TemperatureSensor component
+ *     @brief Initializes temperature sensing conversions
+ *     @param pHandle : Pointer on Handle structure of TemperatureSensor component
  */
 void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp);
 
 /**
- * 	@brief Initializes internal average temperature computed value
+ *     @brief Initializes internal average temperature computed value
  *  @param pHandle : Pointer on Handle structure of TemperatureSensor component
  */
 void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp);
 
 /**
- * 	@brief Performs the temperature sensing average computation after an ADC conversion
+ *     @brief Performs the temperature sensing average computation after an ADC conversion
  *  @param pHandle : Pointer on Handle structure of TemperatureSensor component
  *  @retval Fault status : Error reported in case of an over temperature detection
  */
@@ -89,14 +89,14 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle);
 
 /**
   * @brief  Returns latest averaged temperature measured expressed in u16Celsius
-  * @param 	pHandle : Pointer on Handle structure of TemperatureSensor component
+  * @param     pHandle : Pointer on Handle structure of TemperatureSensor component
   * @retval AverageTemperature : Current averaged temperature measured (in u16Celsius)
   */
 uint16_t NTCTempSensor_GetAvTempDigital(NTCTempSensorHandle_t * pHandle);
 
 /**
   * @brief  Returns latest averaged temperature expressed in Celsius degrees
-  * @param 	pHandle : Pointer on Handle structure of TemperatureSensor component
+  * @param     pHandle : Pointer on Handle structure of TemperatureSensor component
   * @retval AverageTemperature : Latest averaged temperature measured (in Celsius degrees)
   */
 int16_t NTCTempSensor_GetAvTempCelcius(NTCTempSensorHandle_t * pHandle);

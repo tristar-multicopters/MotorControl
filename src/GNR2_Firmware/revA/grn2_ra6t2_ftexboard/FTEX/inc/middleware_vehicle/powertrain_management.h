@@ -78,7 +78,7 @@ typedef struct
     uint16_t hFaultManagementTimeout;    // Number of ticks the state machine should stay on fault state before restart
     
     uint16_t VehicleMaxSpeed;            // Contains the max speed that the vehicle can push power (no matter what)
-		
+        
 } PWRT_Parameters_t;
 
 typedef struct

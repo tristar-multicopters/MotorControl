@@ -83,9 +83,9 @@ static const osThreadAttr_t ThAtt_MC_MediumFrequencyTask = {
 };
 
 static const osThreadAttr_t ThAtt_PowerOffSequence = {
-	.name = "VC_PowerOffSequence",
-	.stack_size = 512,
-	.priority = osPriorityBelowNormal
+    .name = "VC_PowerOffSequence",
+    .stack_size = 512,
+    .priority = osPriorityBelowNormal
 };
 
 
@@ -110,15 +110,15 @@ static const osThreadAttr_t ThAtt_CANLogger = {
 #endif
 
 static const osThreadAttr_t ThAtt_UART = {
-	.name = "TSK_UART",
-	.stack_size = 512,
-	.priority = osPriorityBelowNormal
+    .name = "TSK_UART",
+    .stack_size = 512,
+    .priority = osPriorityBelowNormal
 };
 
 static const osThreadAttr_t ThAtt_Watchdog = {
-	.name = "TSK_Watchdog",
-	.stack_size = 256,
-	.priority = osPriorityLow2
+    .name = "TSK_Watchdog",
+    .stack_size = 256,
+    .priority = osPriorityLow2
 };
 
 #endif
@@ -257,7 +257,7 @@ void gnr_main(void)
                                       &ThAtt_Watchdog);
     //verify if the task was correctly created.              
     ASSERT(Watchdog_handle != NULL);
-	
+    
     #endif
     
     //if is a slave add the task below.
@@ -437,17 +437,17 @@ static bool ICUInit(void)
 static bool AGTInit(void)
 {
     bool bIsError = false;
-	  /* ________________________
+      /* ________________________
      *        AGT0
      * ________________________ */
     // Initialize the low power timer for capture mode
     bIsError |= R_AGT_Open(g_timer_a0.p_ctrl, g_timer_a0.p_cfg);
     // Enable external event triggers that start the AGT
     bIsError |= R_AGT_Enable(g_timer_a0.p_ctrl);
-	  /* ________________________
+      /* ________________________
      *        AGT1
      * ________________________ */
-		// Initialize the low power timer 1 as timer for CANOpen
+        // Initialize the low power timer 1 as timer for CANOpen
     bIsError |= R_AGT_Open(g_timer_a1.p_ctrl, g_timer_a1.p_cfg);
 
 

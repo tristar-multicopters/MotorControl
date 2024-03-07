@@ -177,7 +177,7 @@ UserConfigHandle_t UserConfigHandle;
 // ==================== Public Functions ======================== //
 /**
   @brief Function to verify if data flash memory is empty or not.
-	If it's empty write default configuration in the data memory.
+    If it's empty write default configuration in the data memory.
     If it's not empty read the configuration from the data memory.
     Data flash memory used to save data user configuration starts
     at address FLASH_HP_DF_BLOCK_4.
@@ -1968,7 +1968,7 @@ uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length)
         n++;
     }
   
-	return crc;
+    return crc;
 }
 
 

@@ -105,10 +105,10 @@ uint8_t SF_Storage_Init(EFlash_Storage_Handle_t * pHandle)
                 // Return error for file system fail
                 return FLASH_ERROR;
             }
-        }		
+        }        
         m_state = STORAGE_IDLE;
         return EXIT_SUCCESS;
-    }		
+    }        
 }
 
 /**
@@ -133,10 +133,10 @@ uint8_t SF_Storage_Deinit()
         if(err != LFS_ERR_OK)
         {
             return EXIT_FAILURE;
-        }		
+        }        
         m_state = STORAGE_UNINIT;
         return EXIT_SUCCESS;
-    }	
+    }    
 }
 
 /**
@@ -150,7 +150,7 @@ uint8_t SF_Storage_StartPackWrite()
     {
         return EXIT_FAILURE;
     }
-	
+    
     /* Open and Overwrite Firmware Pack File */
     err = lfs_file_opencfg(&lfs, &file, DFU_FILE_NAME, LFS_O_RDWR | LFS_O_CREAT, &lfs_file_cfg);
     
@@ -171,14 +171,14 @@ uint8_t SF_Storage_StartPackWrite()
 uint8_t SF_Storage_PutPackChunk(uint8_t* data, uint8_t size)
 {
     int err;
-	
+    
     if(m_state != STORAGE_PACK_WRITE)
     {
         return EXIT_FAILURE;
     }
     /* Write FW Pack file */
     err = lfs_file_write(&lfs, &file, data, size);
-	
+    
     if(err != size)
     {
         return EXIT_FAILURE;
@@ -195,15 +195,15 @@ uint8_t SF_Storage_PutPackChunk(uint8_t* data, uint8_t size)
 uint8_t SF_Storage_FinalizePackWrite()
 {
     int err;
-	
+    
     if(m_state != STORAGE_PACK_WRITE)
     {
         return EXIT_FAILURE;
     }
-	
+    
     /* Close FW Pack file */
     err = lfs_file_close(&lfs, &file);
-	
+    
     if(err != LFS_ERR_OK)
     {
         return EXIT_FAILURE;
@@ -221,12 +221,12 @@ uint8_t SF_Storage_FinalizePackWrite()
 uint8_t SF_Storage_StartPackRead()
 {
     int err;
-	
+    
     if(m_state != STORAGE_IDLE)
     {
         return EXIT_FAILURE;
     }
-	
+    
     w_FilePosition = 0;
     /* Open File system for reading */
     err = lfs_file_opencfg(&lfs, &file, DFU_FILE_NAME, LFS_O_RDONLY, &lfs_file_cfg);
@@ -236,7 +236,7 @@ uint8_t SF_Storage_StartPackRead()
     }
     /* Read file using lfs read */
     err = lfs_file_read(&lfs, &file, hdr.Header, HEADER_SIZE);
-	
+    
     if(err != HEADER_SIZE)
     {
         return EXIT_FAILURE;
@@ -244,17 +244,17 @@ uint8_t SF_Storage_StartPackRead()
     else
     {
         w_PackSize = hdr.data.BLE_FwSize + hdr.data.REN_FwSize + hdr.data.GNR_FwSize + HEADER_SIZE;
-		
+        
         m_state = STORAGE_PACK_READ;
     }
-	
+    
     err = lfs_file_rewind(&lfs, &file);
     if(err != LFS_ERR_OK)
     {
         return EXIT_FAILURE;
     }
     else
-    {		
+    {        
         return EXIT_SUCCESS;
     }
 }
@@ -265,25 +265,25 @@ uint8_t SF_Storage_StartPackRead()
 uint8_t SF_Storage_GetPackChunk( uint8_t* data, uint8_t n )
 {
     int err;
-	
+    
     if(m_state != STORAGE_PACK_READ)
     {
         return 0;
     }
-	
+    
     volatile uint32_t remaining_data = w_PackSize - w_FilePosition;
     if(remaining_data == 0)
     {
         return 0;
     }
-	
+    
     if(remaining_data < n)
     {
         n = (uint8_t) remaining_data;
     }
-	
+    
     err = lfs_file_read(&lfs, &file, data, n);
-	
+    
     if(err != n)
     {
         return EXIT_FAILURE;
@@ -301,15 +301,15 @@ uint8_t SF_Storage_GetPackChunk( uint8_t* data, uint8_t n )
 uint8_t SF_Storage_FinalizePackRead(void)
 {
     int err;
-	
+    
     if( m_state != STORAGE_PACK_READ)
     {
         return EXIT_FAILURE;
     }
     m_state = STORAGE_IDLE;
-	
+    
     err = lfs_file_close(&lfs, &file);
-	
+    
     if(err != LFS_ERR_OK)
     {
         return EXIT_FAILURE;
@@ -326,18 +326,18 @@ uint8_t SF_Storage_FinalizePackRead(void)
 int SF_Storage_Erase()
 {
     int err = EXIT_SUCCESS;
-	
+    
     if( m_state != STORAGE_IDLE)
     {
         return EXIT_FAILURE;
     }
-	
+    
     err = lfs_remove(&lfs, DFU_FILE_NAME);
     if(err != LFS_ERR_OK)
     {
         return err;
     }
-	
+    
     return err;
 }
 
@@ -348,7 +348,7 @@ int SF_Storage_Erase()
 int32_t SF_STORAGE_GetCurrentFilePosition()
 {
     int32_t err;
-	
+    
     //used  on STORAGE_PACK_READ or write
     if((m_state != STORAGE_PACK_READ) && (m_state != STORAGE_PACK_WRITE))
     {
@@ -376,13 +376,13 @@ int32_t SF_STORAGE_GetCurrentFilePosition()
 uint8_t SF_Storage_Read(uint8_t* data, uint8_t n , int position, bool beginning)
 {
     int err;
-	
+    
     //used only on STORAGE_PACK_READ.
     if(m_state != STORAGE_PACK_READ)
     {
         return EXIT_FAILURE;
     }
-	
+    
     //verify of shoud start read from the beginning.
     if (beginning == true)
     {
@@ -402,7 +402,7 @@ uint8_t SF_Storage_Read(uint8_t* data, uint8_t n , int position, bool beginning)
             return EXIT_FAILURE;
         }
     }
-	
+    
     //read n bytes from teh file to the data array.
     err = lfs_file_read(&lfs, &file, data, n);
     if(err != LFS_ERR_OK)
@@ -410,7 +410,7 @@ uint8_t SF_Storage_Read(uint8_t* data, uint8_t n , int position, bool beginning)
         return EXIT_FAILURE;
     }
     else
-    {		
+    {        
         return EXIT_SUCCESS;
     }
 }
@@ -421,7 +421,7 @@ uint8_t SF_Storage_Read(uint8_t* data, uint8_t n , int position, bool beginning)
 uint8_t SF_Storage_OpenRead(void)
 {
     int err;
-	
+    
     //file system on idle mode.
     if(m_state != STORAGE_IDLE)
     {
@@ -448,15 +448,15 @@ uint8_t SF_Storage_OpenRead(void)
 uint8_t SF_Storage_CloseRead(void)
 {
     int err;
-	
+    
     if( m_state != STORAGE_PACK_READ)
     {
         return EXIT_FAILURE;
     }
     m_state = STORAGE_IDLE;
-	
+    
     err = lfs_file_close(&lfs, &file);
-	
+    
     if(err != LFS_ERR_OK)
     {
         return EXIT_FAILURE;
@@ -475,14 +475,14 @@ int32_t SF_Storage_GetSize(void)
 {
     
     int32_t err;
-	
+    
     if( m_state != STORAGE_PACK_READ)
     {
         return EXIT_FAILURE;
     }
     
     err = lfs_file_size(&lfs, &file);
-	
+    
     if(err < 0)
     {
         return EXIT_FAILURE;
@@ -500,7 +500,7 @@ int32_t SF_Storage_GetSize(void)
 uint8_t SF_Storage_MovetoTheEndOfFile(void)
 {
     int32_t err;
-	
+    
     if( m_state != STORAGE_PACK_WRITE)
     {
         return EXIT_FAILURE;
@@ -531,13 +531,13 @@ uint8_t SF_Storage_SetPosition(int32_t position)
     {
         return EXIT_FAILURE;
     }
-	
+    
     //Change the position of the file to the to position
     //if the new position is negative, position change failled.
     if (lfs_file_seek(&lfs, &file, position, LFS_SEEK_SET) < 0)
     {
         return EXIT_FAILURE;
     }
-	
+    
     return EXIT_SUCCESS;
 }

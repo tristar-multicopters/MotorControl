@@ -3,7 +3,7 @@
   * @brief   This file provides firmware functions that implement the features
   *          of the State Observer + PLL Speed & Position Feedback module
   *
-	*/
+    */
 
 /* Includes ------------------------------------------------------------------*/
 #include "sto_pll_speed_pos_fdbk.h"

@@ -3,7 +3,7 @@
   * @brief   This file provides mathematics functions useful for and specific to
   *          Motor Control application
   *
-	*/
+    */
 /* Includes ------------------------------------------------------------------*/
 #include "mc_math.h"
 #include "mc_type.h"
@@ -196,16 +196,16 @@ AlphaBeta_t MCMath_RevPark(qd_t Input, int16_t Theta)
 
 TrigComponents_t MCMath_TrigFunctions(int16_t hAngle)
 {
-	float fAngle = 0;
-	float fSin, fCos;
-	TrigComponents_t sCosSin;
+    float fAngle = 0;
+    float fSin, fCos;
+    TrigComponents_t sCosSin;
 
-	fAngle = (float)hAngle/(INT16_MAX+1) * fPi;
-	sincosf(fAngle, &fSin, &fCos);
-	
-	sCosSin.hSin = (int16_t)(fSin * INT16_MAX);
-	sCosSin.hCos = (int16_t)(fCos * INT16_MAX);
-	
+    fAngle = (float)hAngle/(INT16_MAX+1) * fPi;
+    sincosf(fAngle, &fSin, &fCos);
+    
+    sCosSin.hSin = (int16_t)(fSin * INT16_MAX);
+    sCosSin.hCos = (int16_t)(fCos * INT16_MAX);
+    
   return sCosSin;
 
 }
@@ -256,9 +256,9 @@ int32_t MCMath_Sqrt(int32_t wInput)
 
 inline int16_t MCMath_PhaseComputation(int32_t wBemfalfaEst, int32_t wBemfbetaEst)
 {
-	float fAngle = 0;
-	
-	fAngle = atan2f(wBemfbetaEst>>8, wBemfalfaEst>>8); /* Reduce amplitude of BEMF to fit into float type*/
+    float fAngle = 0;
+    
+    fAngle = atan2f(wBemfbetaEst>>8, wBemfalfaEst>>8); /* Reduce amplitude of BEMF to fit into float type*/
 
   return (int16_t)(fAngle/fPi*INT16_MAX);
 

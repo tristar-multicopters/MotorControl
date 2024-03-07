@@ -744,7 +744,7 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
         {
             VC_Errors_RaiseError(UT_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
-				
+                
     }
     if (PWRT_IsMotor1Used(pHandle))
     {// If there's an over current (OC) that has occurred but has already been cleared
@@ -963,7 +963,7 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
     {
         VC_Errors_ClearError(MOTOR_HALL_ERROR);
     }
-		
+        
     if ((wWarningOccurred & MC_FOLDBACK_TEMP_MOTOR) != MC_NO_ERROR )
     {
         VC_Errors_RaiseError(MOTOR_FOLDBACK_TEMP, HOLD_UNTIL_CLEARED);

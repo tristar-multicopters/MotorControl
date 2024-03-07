@@ -18,7 +18,7 @@
 
 typedef struct  // Parameters to configure an ADC conversion element in array.
 {
-		uint8_t hChannel;
+        uint8_t hChannel;
 } RegConv_t;
 
 // ==================== Public function prototypes ========================= //

@@ -36,7 +36,7 @@
 #define ADC_REFERENCE_VOLTAGE  3.30
 
 /************************* CONTROL FREQUENCIES & DELAIES **********************/
-#define TF_REGULATION_RATE 	(uint32_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE))
+#define TF_REGULATION_RATE     (uint32_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE))
 
 /* TF_REGULATION_RATE_SCALED is TF_REGULATION_RATE divided by PWM_FREQ_SCALING to allow more dynamic */
 #define TF_REGULATION_RATE_SCALED (uint16_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE*PWM_FREQ_SCALING))
@@ -44,14 +44,14 @@
 /* DPP_CONV_FACTOR is introduce to compute the right DPP with TF_REGULATOR_SCALED  */
 #define DPP_CONV_FACTOR (65536/PWM_FREQ_SCALING)
 
-#define REP_COUNTER 			(uint16_t) ((REGULATION_EXECUTION_RATE *2u)-1u)
+#define REP_COUNTER             (uint16_t) ((REGULATION_EXECUTION_RATE *2u)-1u)
 
 #define SYS_TICK_FREQUENCY          2000
 #define UI_TASK_FREQUENCY_HZ        10
 #define SERIAL_COM_TIMEOUT_INVERSE  25
 #define SERIAL_COM_ATR_TIME_MS 20
 
-#define MEDIUM_FREQUENCY_TASK_RATE	(uint16_t)SPEED_LOOP_FREQUENCY_HZ
+#define MEDIUM_FREQUENCY_TASK_RATE    (uint16_t)SPEED_LOOP_FREQUENCY_HZ
 
 #define INRUSH_CURRLIMIT_DELAY_COUNTS  (uint16_t)(INRUSH_CURRLIMIT_DELAY_MS * \
                                   ((uint16_t)SPEED_LOOP_FREQUENCY_HZ)/1000u -1u)
@@ -74,7 +74,7 @@
 #define NOMINAL_PEAK_CURRENT        (uint16_t)(PEAK_CURRENT_amps * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Maximum current amplitude that can be injected per phase in digital Amps, motor limit */
 #define ID_DEMAG                    (uint16_t)(ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
 
-#define OCSP_SAFETY_MARGIN 	            (uint16_t)(OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))	/* Measured current amplitude can be until OCSP_SAFETY_MARGIN higher
+#define OCSP_SAFETY_MARGIN                 (uint16_t)(OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))    /* Measured current amplitude can be until OCSP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
 #define OCSP_MAX_CURRENT                (uint16_t)(OCSP_MAX_CURRENT_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Max current that can be reached before triggering software overcurrent */
 

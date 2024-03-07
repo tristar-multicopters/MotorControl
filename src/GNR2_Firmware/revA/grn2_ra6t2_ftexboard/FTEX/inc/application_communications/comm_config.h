@@ -40,7 +40,7 @@ extern UART_Handle_t  UART0Handle;
 extern LogHighSpeed_Handle_t LogHS_handle;
 extern DataFlash_Handle_t DataFlashHandle;
 
-extern SPI_Handle_t	SPI1Handle;
+extern SPI_Handle_t    SPI1Handle;
 extern EFlash_Storage_Handle_t EFlash_Storage_Handle;
 
 #endif /* __COMM_CONFIG_H */

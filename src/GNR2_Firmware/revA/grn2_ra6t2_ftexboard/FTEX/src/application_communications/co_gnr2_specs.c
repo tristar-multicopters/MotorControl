@@ -697,7 +697,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
         case CO_OD_IDENTITY_OBJECT:
             
             // Identity - Highest Sub Index
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_IDENTITY_OBJECT, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4};	
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_IDENTITY_OBJECT, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4};    
         
             //move the indext to the next free position in the array.
             index++;
@@ -745,7 +745,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             // SDO Srv Parameter - COB-ID Server to Client  
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_SDO_SERVER, 2, CO_OBJ_DN__R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()};	
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_SDO_SERVER, 2, CO_OBJ_DN__R_), CO_TUNSIGNED32, CO_COBID_SDO_RESPONSE()};    
             
             //move to next OD index
             index++;
@@ -820,7 +820,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             // SDO Client Parameter - COB-ID Client to Server       
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_SDO_CLIENT_02, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()};	
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_SDO_CLIENT_02, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_SDO_REQUEST()};    
         
             //move to next OD index
             index++;
@@ -857,7 +857,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 index++;
         
                 // RPDO1 Parameter - Transmission type
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_RPDO_TRANSMISSION_TYPE};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_RPDO_TRANSMISSION_TYPE};    
         
                 //move to next OD index
                 index++;// RPDO1 Parameter - Event period
@@ -882,7 +882,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 index++;
         
                 // RPDO1 Parameter - Transmission type
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_RPDO_TRANSMISSION_TYPE};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_RPDO_TRANSMISSION_TYPE};    
         
                 //move to next OD index
                 index++;
@@ -903,31 +903,31 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             if (deviceType == true)
             { 
                 // RPDO1 Mapping - Number of mapped object in PDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4};    
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)};    
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Mapping - Object 2
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)};    
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Mapping - Object 3
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)};			
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)};            
                 
                 //move to next OD index
                 index++;
                 
                 // RPDO1 Mapping - Object 4
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)};		
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)};        
                 
                 //move to next OD index
                 index++;
@@ -941,13 +941,13 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 index++;
         
                 // RPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};    
         
                 //move to next OD index
                 index++;
         
-                // RPDO1 Mapping - Object 2		
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)};			    
+                // RPDO1 Mapping - Object 2        
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)};                
         
                 //move to next OD index
                 index++;
@@ -987,7 +987,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 index++;
         
                 // TPDO1 Parameter - SYNC start value
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};		
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
                 
                 //move to next OD index
                 index++;
@@ -1020,7 +1020,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 index++;
                 
                 // TPDO1 Parameter - SYNC start value
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};		
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
                 
                 //move to next OD index
                 index++;
@@ -1039,11 +1039,11 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 //move to next OD index
                 index++;
                 // RPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};    
                 //move to next OD index
                 index++;
-                // RPDO1 Mapping - Object 2		
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)};			    
+                // RPDO1 Mapping - Object 2        
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)};                
                 //move to next OD index
                 index++;
                 
@@ -1051,23 +1051,23 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             else
             {
                 // TPDO1 Mapping - Number of mapped object in PDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4};    
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)};    
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 2
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)};	
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)};    
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 3
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)};			
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)};            
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 4
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)};		
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)};        
                 //move to next OD index
                 index++;
                 
@@ -1106,7 +1106,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Max PAS Level
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MAX_PAS,       0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMaxPAS};	
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MAX_PAS,       0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMaxPAS};    
             //move to next OD index
             index++;
             // Application - Max Power
@@ -1138,16 +1138,16 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Measured motor speed of slave 1
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_SPEED, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2SpeedMeas};			        
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_SPEED, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2SpeedMeas};                    
             //move to next OD index
             index++;
         
             // Application - Measured bus voltage of master
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BUS_VOLTAGE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1BusVoltage};	
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BUS_VOLTAGE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1BusVoltage};    
             //move to next OD index
             index++;
             // Application - Measured bus voltage of slave 1
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BUS_VOLTAGE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2BusVoltage};			    
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BUS_VOLTAGE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2BusVoltage};                
             //move to next OD index
             index++;
         
@@ -1156,7 +1156,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Measured motor Iq of slave 1
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TEMP, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2Temp};			                
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TEMP, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2Temp};                            
             //move to next OD index
             index++;
         
@@ -1165,7 +1165,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Measured motor Id of slave 1        
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_HEATSINK_TEMP, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataHeatsink2Temp};			        
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_HEATSINK_TEMP, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataHeatsink2Temp};                    
             //move to next OD index
             index++;
         
@@ -1174,7 +1174,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Motor state of slave 1        
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_STATE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2State};			            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_STATE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2State};                        
             //move to next OD index
             index++;
         
@@ -1183,7 +1183,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Motor faults of slave 1
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2OccuredFaults};		
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2OccuredFaults};        
             //move to next OD index
             index++;
         
@@ -1192,7 +1192,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Motor faults of slave 1
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2CurrentFaults};		
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2CurrentFaults};        
             //move to next OD index
             index++;
         
@@ -1210,7 +1210,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Start bit to activate slave motor 1
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_START, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor2Start};		            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_START, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor2Start};                    
             //move to next OD index
             index++;
         
@@ -1219,7 +1219,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             // Application - Bit to acknowledge motor fault slave 1
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FAULT_ACK, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor2FaultAck};		            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FAULT_ACK, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataMotor2FaultAck};                    
             //move to next OD index
             index++;
         
@@ -1561,11 +1561,11 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceRunningWindows};
-			//move to next OD index
+            //move to next OD index
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithmRunning};
-			//move to next OD index
+            //move to next OD index
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas1AccelRampType};

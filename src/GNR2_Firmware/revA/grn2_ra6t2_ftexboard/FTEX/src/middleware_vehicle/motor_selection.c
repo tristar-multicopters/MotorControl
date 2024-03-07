@@ -28,31 +28,31 @@ void MS_Init(MS_Handle_t * pHandle)
 
 MotorSelection_t MS_CheckSelection(MS_Handle_t* pHandle)
 {
-	ASSERT(pHandle != NULL);
-	if (pHandle->bMSEnable)
-	{
-		bool bM1Select = uCAL_GPIO_Read(pHandle->wM1SelectPinNumber);
-		bool bM2Select = uCAL_GPIO_Read(pHandle->wM2SelectPinNumber);
-		bool bBothSelect = bM1Select && bM2Select;
-		
-		if (bBothSelect)
-		{
-			pHandle->bMotorSelection = ALL_MOTOR_SELECTED;
-		}
-		else if (bM2Select)
-		{
-			pHandle->bMotorSelection = M2_SELECTED;
-		}
-		else
-		{
-			pHandle->bMotorSelection = M1_SELECTED;
-		}
-		
-	}
-	else
-	{
-		pHandle->bMotorSelection = M1_SELECTED;
-	}
-	return pHandle->bMotorSelection;
+    ASSERT(pHandle != NULL);
+    if (pHandle->bMSEnable)
+    {
+        bool bM1Select = uCAL_GPIO_Read(pHandle->wM1SelectPinNumber);
+        bool bM2Select = uCAL_GPIO_Read(pHandle->wM2SelectPinNumber);
+        bool bBothSelect = bM1Select && bM2Select;
+        
+        if (bBothSelect)
+        {
+            pHandle->bMotorSelection = ALL_MOTOR_SELECTED;
+        }
+        else if (bM2Select)
+        {
+            pHandle->bMotorSelection = M2_SELECTED;
+        }
+        else
+        {
+            pHandle->bMotorSelection = M1_SELECTED;
+        }
+        
+    }
+    else
+    {
+        pHandle->bMotorSelection = M1_SELECTED;
+    }
+    return pHandle->bMotorSelection;
 }
 

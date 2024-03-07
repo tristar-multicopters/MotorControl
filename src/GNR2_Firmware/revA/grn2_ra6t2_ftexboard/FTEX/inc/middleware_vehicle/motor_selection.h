@@ -3,9 +3,9 @@
   * @author  Sami Bouzid, FTEX
   * @brief   This module handles motor selection inputs
   *
-	*/
-	
-	/* Define to prevent recursive inclusion -------------------------------------*/
+    */
+    
+    /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MOTOR_SELECTION_H
 #define __MOTOR_SELECTION_H
 
@@ -16,21 +16,21 @@
 
 typedef enum
 {
-	M1_SELECTED,
-	M2_SELECTED,
-	ALL_MOTOR_SELECTED,
-	
+    M1_SELECTED,
+    M2_SELECTED,
+    ALL_MOTOR_SELECTED,
+    
 } MotorSelection_t;
 
 typedef struct
 {          
-	uint32_t wM1SelectPinNumber;
-	uint32_t wM2SelectPinNumber;
-	bool bIsInvertedLogic;
-	bool bMSEnable;
-	
-	MotorSelection_t bMotorSelection;
-	
+    uint32_t wM1SelectPinNumber;
+    uint32_t wM2SelectPinNumber;
+    bool bIsInvertedLogic;
+    bool bMSEnable;
+    
+    MotorSelection_t bMotorSelection;
+    
 } MS_Handle_t;
 
 

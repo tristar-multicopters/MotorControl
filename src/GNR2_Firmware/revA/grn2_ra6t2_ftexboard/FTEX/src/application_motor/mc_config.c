@@ -14,7 +14,7 @@
 
 
 #define OFFCALIBRWAIT_MS     0
-#define MAX_DUTY     				 30000 /* INT16_MAX is 100% duty cycle */
+#define MAX_DUTY                      30000 /* INT16_MAX is 100% duty cycle */
 
 
 MotorPowerQDHandle_t PQDMotorPowMeasM1 =
@@ -209,17 +209,17 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     .hMaxContinuousCurrent =        (uint16_t)(MAX_BMS_CONTINOUS_CURRENT),
     .hEnableLVtorqueLimit =      ENABLE_LV_TORQUE_LIMIT,
     .hBatteryLowVoltage =           (uint16_t)(UD_VOLTAGE_THRESHOLD_V *(LOW_VOLTAGE_THRESHOLD_PERCENTAGE + 100))/100, 
-    .hMaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
-    .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-    .hMaxAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
-    .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
+    .hMaxAppPositiveMecSpeedUnit =    (uint16_t)(MAX_APPLICATION_SPEED_UNIT),
+    .hMinAppPositiveMecSpeedUnit =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+    .hMaxAppNegativeMecSpeedUnit =    (int16_t)(-MAX_APPLICATION_SPEED_UNIT),
+    .hMinAppNegativeMecSpeedUnit =    (int16_t)(-MIN_APPLICATION_SPEED_UNIT),
     .hMaxPositiveTorque =           (int16_t)NOMINAL_TORQUE,
     .hMinNegativeTorque =           -(int16_t)NOMINAL_TORQUE,
     .hMaxPositivePower =            (int16_t)MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
     .hMaxContinuousPower =           (int16_t)MAX_BMS_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
     .hMinNegativePower =            -(int16_t)MAX_APPLICATION_NEGATIVE_POWER * ESTIMATED_EFFICIENCY / 100,
     .hEstimatedEfficiencyPercent =  ESTIMATED_EFFICIENCY,
-    .ModeDefault =					DEFAULT_CONTROL_MODE,
+    .ModeDefault =                    DEFAULT_CONTROL_MODE,
     .wTorqueSlopePerSecondUp =      DEFAULT_TORQUE_SLOPE_UP,
     .wTorqueSlopePerSecondDown =    DEFAULT_TORQUE_SLOPE_DOWN,
     .wSpeedSlopePerSecondUp =       DEFAULT_SPEED_SLOPE_UP,
@@ -313,22 +313,22 @@ PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
 BemfObserverPllHandle_t BemfObserverPllM1 =
 {
     .Super = {
-        .bElToMecRatio                     =	POLE_PAIR_NUM,
+        .bElToMecRatio                     =    POLE_PAIR_NUM,
         .bSpeedUnit                         =    SPEED_UNIT,
-        .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
-        .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-        .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
-        .hMaxReliableMecAccelUnitP         =	65535,
-        .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
+        .hMaxReliableMecSpeedUnit          =    (uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
+        .hMinReliableMecSpeedUnit          =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+        .bMaximumSpeedErrorsNumber         =    MEAS_ERRORS_BEFORE_FAULTS,
+        .hMaxReliableMecAccelUnitP         =    65535,
+        .hMeasurementFrequency             =    TF_REGULATION_RATE_SCALED,
         .DPPConvFactor                     =  DPP_CONV_FACTOR,
     },
-    .hC1                         =	(int16_t) C1,
-    .hC2                         =	C2,
-    .hC3                         =	(int16_t) C3,
-    .hC4                         =	C4,
-    .hC5                         =	(int16_t) C5,
-    .hF1                         =	F1,
-    .hF2                         =	F2,
+    .hC1                         =    (int16_t) C1,
+    .hC2                         =    C2,
+    .hC3                         =    (int16_t) C3,
+    .hC4                         =    C4,
+    .hC5                         =    (int16_t) C5,
+    .hF1                         =    F1,
+    .hF2                         =    F2,
     .PIRegulator = {
         .hDefKpGain = PLL_KP_GAIN,
         .hDefKiGain = PLL_KI_GAIN,
@@ -344,20 +344,20 @@ BemfObserverPllHandle_t BemfObserverPllM1 =
         .hKiDivisorPOW2 = (uint16_t)PLL_KIDIV_LOG,
         .hKdDivisorPOW2       = 0x0000U,
     },
-    .bSpeedBufferSizeUnit                =	STO_FIFO_DEPTH_UNIT,
-    .bSpeedBufferSizeDpp                 =	STO_FIFO_DEPTH_DPP,
-    .hVariancePercentage                 =	PERCENTAGE_FACTOR,
-    .bSpeedValidationBandHigh              =	SPEED_BAND_UPPER_LIMIT,
-    .bSpeedValidationBandLow              =	SPEED_BAND_LOWER_LIMIT,
-    .hMinStartUpValidSpeed               =	OBS_MINIMUM_SPEED_UNIT,
-    .bStartUpConsistThreshold            =	NB_CONSECUTIVE_TESTS,
-    .bReliabilityHysteresys             =	OBS_MEAS_ERRORS_BEFORE_FAULTS,
-    .bBemfConsistencyCheck               =	BEMF_CONSISTENCY_TOL,
-    .bBemfConsistencyGain                =	BEMF_CONSISTENCY_GAIN,
-    .hMaxAppPositiveMecSpeedUnit         =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT*1.15),
-    .hF1Log                              =	(uint16_t)F1_LOG,
-    .hF2Log                              =	(uint16_t)F2_LOG,
-    .hSpeedBufferSizeDppLog              =	(uint16_t)STO_FIFO_DEPTH_DPP_LOG,
+    .bSpeedBufferSizeUnit                =    STO_FIFO_DEPTH_UNIT,
+    .bSpeedBufferSizeDpp                 =    STO_FIFO_DEPTH_DPP,
+    .hVariancePercentage                 =    PERCENTAGE_FACTOR,
+    .bSpeedValidationBandHigh              =    SPEED_BAND_UPPER_LIMIT,
+    .bSpeedValidationBandLow              =    SPEED_BAND_LOWER_LIMIT,
+    .hMinStartUpValidSpeed               =    OBS_MINIMUM_SPEED_UNIT,
+    .bStartUpConsistThreshold            =    NB_CONSECUTIVE_TESTS,
+    .bReliabilityHysteresys             =    OBS_MEAS_ERRORS_BEFORE_FAULTS,
+    .bBemfConsistencyCheck               =    BEMF_CONSISTENCY_TOL,
+    .bBemfConsistencyGain                =    BEMF_CONSISTENCY_GAIN,
+    .hMaxAppPositiveMecSpeedUnit         =    (uint16_t)(MAX_APPLICATION_SPEED_UNIT*1.15),
+    .hF1Log                              =    (uint16_t)F1_LOG,
+    .hF2Log                              =    (uint16_t)F2_LOG,
+    .hSpeedBufferSizeDppLog              =    (uint16_t)STO_FIFO_DEPTH_DPP_LOG,
     .hForcedDirection                   =  0x0000U
 }; BemfObserverPllHandle_t *pBemfObserverPllM1 = &BemfObserverPllM1;
 
@@ -368,12 +368,12 @@ HallPosSensorHandle_t HallPosSensorM1 =
 {
     .Super = 
     {
-        .bElToMecRatio                     =	POLE_PAIR_NUM,
-        .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
-        .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-        .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
-        .hMaxReliableMecAccelUnitP         =	65535,
-        .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
+        .bElToMecRatio                     =    POLE_PAIR_NUM,
+        .hMaxReliableMecSpeedUnit          =    (uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
+        .hMinReliableMecSpeedUnit          =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+        .bMaximumSpeedErrorsNumber         =    MEAS_ERRORS_BEFORE_FAULTS,
+        .hMaxReliableMecAccelUnitP         =    65535,
+        .hMeasurementFrequency             =    TF_REGULATION_RATE_SCALED,
         .DPPConvFactor                     =  DPP_CONV_FACTOR,
     },
     .TIMx                = HALL_POSITION_TIMER_HANDLE_ADDRESS,
@@ -459,7 +459,7 @@ ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1 =
 CircleLimitationHandle_t CircleLimitationM1 =
 {
     .hMaxModule          = MAX_MODULE,
-    .hMaxVd          	  = (uint16_t)(MAX_MODULE * FW_VOLTAGE_REF / 1000),
+    .hMaxVd                = (uint16_t)(MAX_MODULE * FW_VOLTAGE_REF / 1000),
     .CircleLimitTable = MMITABLE,
     .bStartIndex        = START_INDEX,
 };
@@ -467,12 +467,12 @@ CircleLimitationHandle_t CircleLimitationM1 =
 RotorPositionObserverHandle_t RotorPosObsM1 =
 {
     .Super = {
-    .bElToMecRatio                     =	POLE_PAIR_NUM,
-    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
-    .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-    .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
-    .hMaxReliableMecAccelUnitP         =	65535,
-    .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
+    .bElToMecRatio                     =    POLE_PAIR_NUM,
+    .hMaxReliableMecSpeedUnit          =    (uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
+    .hMinReliableMecSpeedUnit          =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+    .bMaximumSpeedErrorsNumber         =    MEAS_ERRORS_BEFORE_FAULTS,
+    .hMaxReliableMecAccelUnitP         =    65535,
+    .hMeasurementFrequency             =    TF_REGULATION_RATE_SCALED,
     .DPPConvFactor                     =  DPP_CONV_FACTOR,
     },
 

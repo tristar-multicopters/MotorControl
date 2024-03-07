@@ -82,7 +82,7 @@ typedef struct
     ThrottleParameters_t hParameters;
     
     Delay_Handle_t * pThrottleStuckDelay;
-	
+    
 } ThrottleHandle_t;
 
 

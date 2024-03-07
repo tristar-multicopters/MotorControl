@@ -5,7 +5,7 @@
   * @brief   This file defines the handles, constantas and function prototypes
   *           used in higher level modules for pedal speed sensor
   *
-	******************************************************************************
+    ******************************************************************************
 */
 
 #ifndef __PEDAL_SPEED_SENSOR_H
@@ -18,7 +18,7 @@
 // ================= Structure used to configure a pin ===================== //
 typedef struct {
     
-	PulseFrequencyHandle_t * pPulseFrequency;   /* Pointer to pedal handle */
+    PulseFrequencyHandle_t * pPulseFrequency;   /* Pointer to pedal handle */
     uint16_t hPedalSpeedSens_MinPulseStartup;   //It has the minimum number of pulses, on startup, 
                                                 //to detect PAS from cadence sensor
     uint32_t wPedalSpeedSens_WindowsStartup;    //Maximum time, on ms, to verify the Detected Number of pulses

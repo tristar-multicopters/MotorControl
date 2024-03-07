@@ -306,7 +306,7 @@ extern "C" {
 //OD ID used to configure and operate the front light
 // this object has 2 subindex
 //
-// 0 -> operate the front light (0 Off, 1 On) 	
+// 0 -> operate the front light (0 Off, 1 On)     
 // 1 -> Get or set vehicle front light's default state 
 //     0 = Off by default. This means the light will be off when the bike turns on,
 //     1 = On  by default: turn on when the controller turns on (and off when the controller turns off)
@@ -315,7 +315,7 @@ extern "C" {
 //OD ID used to configure and operate the rear light
 // this object has 5 subindex
 //
-// 0 -> operate the rear light (0 Off, 1 On) 	
+// 0 -> operate the rear light (0 Off, 1 On)     
 // 1 -> Get or set vehicle rear light's default state 
 //     0 = Off by default. This means the light will be off when the bike turns on,
 //     1 = On  by default: turn on when the controller turns on (and off when the controller turns off)
@@ -478,19 +478,19 @@ extern "C" {
 
 /* Specify the EMCY-IDs for the application */
 enum EMCY_CODES {
-	APP_NO_ERROR = 0,
-	APP_ERR_MOTOR_OVER_TEMPERATURE,
-	APP_ERR_MOTOR_STARTUP_FAULT,
-	APP_ERR_CURRENT_FAULT,
-	APP_ERR_HALL_SENSOR_FAULT,
-	APP_ERR_WHEEL_SPEED_SENSOR_FAULT,
-	APP_ERR_CONTROLLER_OVER_VOLTAGE,
-	APP_ERR_CONTROLLER_UNDER_VOLTAGE,
-	APP_ERR_CONTROLLER_OVER_TEMPERATURE,
-	APP_ERR_THROTTLE_FAULT,
-	APP_ERR_PAS_FAULT,
+    APP_NO_ERROR = 0,
+    APP_ERR_MOTOR_OVER_TEMPERATURE,
+    APP_ERR_MOTOR_STARTUP_FAULT,
+    APP_ERR_CURRENT_FAULT,
+    APP_ERR_HALL_SENSOR_FAULT,
+    APP_ERR_WHEEL_SPEED_SENSOR_FAULT,
+    APP_ERR_CONTROLLER_OVER_VOLTAGE,
+    APP_ERR_CONTROLLER_UNDER_VOLTAGE,
+    APP_ERR_CONTROLLER_OVER_TEMPERATURE,
+    APP_ERR_THROTTLE_FAULT,
+    APP_ERR_PAS_FAULT,
 
-	APP_ERR_ID_NUM            /* number of EMCY error codes in application */
+    APP_ERR_ID_NUM            /* number of EMCY error codes in application */
 };
 
 // ================================== PUBLIC SYMBOLS ================================== //

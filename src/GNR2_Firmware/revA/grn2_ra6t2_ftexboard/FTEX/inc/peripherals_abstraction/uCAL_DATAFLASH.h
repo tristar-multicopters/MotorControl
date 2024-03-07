@@ -22,7 +22,7 @@
                 Defines
 *********************************************/
                                      
-#define DATA_FLASH_START_ADDRESS  	 0x08000000U
+#define DATA_FLASH_START_ADDRESS       0x08000000U
 #define DATA_FLASH_END_ADDRESS       0x08003FFFU
 #define DATA_FLASH_LAST_BLOCK_ADDRESS 0x8003FC0U
 #define DATA_FLASH_BLOCK_OFFSET_64BYTES   0x00000040U
@@ -50,8 +50,8 @@
 typedef struct
 {
     const flash_instance_t * pFlashInstance;
-	  flash_result_t blank_check_result;
-	  bool dataFlashOpenFlag;
+      flash_result_t blank_check_result;
+      bool dataFlashOpenFlag;
     //void* Super;                     
     //void (*pFlashCallback)(void *);
 }
@@ -63,7 +63,7 @@ DataFlash_Handle_t;
   @brief Function to open the flash memory access.
   
   @param FLASH_Handle_t that allow to configure all necessary 
-	parameters.
+    parameters.
   @return bool return true if operation was a success.
 */
 bool uCAL_Flash_Open(DataFlash_Handle_t * pHandle);
@@ -72,7 +72,7 @@ bool uCAL_Flash_Open(DataFlash_Handle_t * pHandle);
   @brief Function to close the flash memory access.
   
   @param FLASH_Handle_t that allow to configure all necessary 
-	parameters.
+    parameters.
   @return bool return true if operation was a success.
 */
 bool uCAL_Flash_Close(DataFlash_Handle_t * pHandle);
@@ -81,7 +81,7 @@ bool uCAL_Flash_Close(DataFlash_Handle_t * pHandle);
   @brief Function to erase the data flash memory.
   
   @param FLASH_Handle_t that allow to configure all necessary 
-	parameters.
+    parameters.
   @param uint32_t const blockAddress start block address to be erased. 
   @oaram uint32_t const numBlocks number of black to be erased.
   @return bool return true if the data memory was correctly reased and false if not
@@ -93,7 +93,7 @@ bool uCAL_Data_Flash_Erase(DataFlash_Handle_t * pHandle, uint32_t const blockAdd
   @brief Function to write bytes in the data flash memory.
   
   @param FLASH_Handle_t that allow to configure all necessary 
-	parameters.
+    parameters.
   @param uint8_t * data pointer to the data to be written in the data flash memory.
   @param uint32_t const flashAddress start address to be written. 
   @param uint32_t const numBytes number of bytes to be written.
@@ -108,7 +108,7 @@ bool uCAL_Data_Flash_Write(DataFlash_Handle_t * pHandle, uint8_t * data, uint32_
   must to be on open state.
   
   @param FLASH_Handle_t that allow to configure all necessary 
-	parameters.
+    parameters.
   @param uint8_t * data pointer to the buffer that will receive data 
   from the data flash memory.
   @param uint32_t const flashAddress start address to be read. 
@@ -126,7 +126,7 @@ bool uCAL_Data_Flash_Read(DataFlash_Handle_t * pHandle, uint8_t * data, uint32_t
   function.
   
   @param FLASH_Handle_t that allow to configure all necessary 
-	parameters.
+    parameters.
   @param uint32_t const blockAddress start block address to be blank checked. 
   @oaram uint32_t const numBytes number of bytes to be blank checked(at least 4 bytes).
   @return bool return true if the memory was correctly erased and false if not

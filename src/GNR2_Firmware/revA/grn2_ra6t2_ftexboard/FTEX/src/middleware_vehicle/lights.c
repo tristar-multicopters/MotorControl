@@ -78,7 +78,7 @@ void Light_Toggle(Light_Handle_t * pHandle)
  *  Initializes light sensor module
  */
 void Light_Init(Light_Handle_t * pHandle)
-{	
+{    
     ASSERT(pHandle != NULL); 
     struct GPIOConfig PinConfig;
    

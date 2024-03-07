@@ -22,15 +22,15 @@
   */
 void ADC_IRQHandler(adc_callback_args_t * p_args)
 {
-	if (p_args->event == ADC_EVENT_SCAN_COMPLETE && p_args->group_mask == ADC_GROUP_MASK_0)
-	{
-		/* Run motor control high frequency task */
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_HIGH);
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_LOW);
-		MC_HighFrequencyTask();
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_HIGH);
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_LOW);
-	}
+    if (p_args->event == ADC_EVENT_SCAN_COMPLETE && p_args->group_mask == ADC_GROUP_MASK_0)
+    {
+        /* Run motor control high frequency task */
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_HIGH);
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_LOW);
+        MC_HighFrequencyTask();
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_HIGH);
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_LOW);
+    }
 
 }
 
@@ -40,22 +40,22 @@ void ADC_IRQHandler(adc_callback_args_t * p_args)
   */
 void PWMTimer_IRQHandler(timer_callback_args_t * p_args)
 {
-	if (p_args->event == TIMER_EVENT_TROUGH)
-	{
-	}
+    if (p_args->event == TIMER_EVENT_TROUGH)
+    {
+    }
 
-	if (p_args->event == TIMER_EVENT_CREST)
-	{
-		/* Run motor control timer update routine */
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_HIGH);
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_LOW);
-		PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
-	}
+    if (p_args->event == TIMER_EVENT_CREST)
+    {
+        /* Run motor control timer update routine */
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_HIGH);
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_LOW);
+        PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
+    }
 }
 
 /**
   * @brief  Interrupt routine when OCD1 pin is pulled down. It means an overcurrent
-	*					condition is detected and consequently PWM outputs will be stopped.
+    *                    condition is detected and consequently PWM outputs will be stopped.
   * @param  p_args: IRQ callback functions
   */
 void OCD1_IRQHandler(external_irq_callback_args_t * p_args)
@@ -72,7 +72,7 @@ void OCD1_IRQHandler(external_irq_callback_args_t * p_args)
 
 /**
   * @brief  Interrupt routine when OCD2 (POEG) pin is pulled down. It means an overcurrent
-	*					condition is detected and consequently PWM outputs were forcefully stopped.
+    *                    condition is detected and consequently PWM outputs were forcefully stopped.
   * @param  p_args: POEG callback function arguments, not used.
   */
 void PWMBreak1_IRQHandler(poeg_callback_args_t * p_args)
@@ -139,7 +139,7 @@ void PedalSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
         {
             case TIMER_EVENT_CAPTURE_A :
                 /* Call ISR AGT Capture function */
-                PulseFrequency_IsrCallUpdate(VCInterfaceHandle.pPowertrain->pPAS->pPSS->pPulseFrequency,p_args->capture);				
+                PulseFrequency_IsrCallUpdate(VCInterfaceHandle.pPowertrain->pPAS->pPSS->pPulseFrequency,p_args->capture);                
                 break;
             case TIMER_EVENT_CYCLE_END:
                 /* An overflow occurred during capture. */
@@ -173,7 +173,7 @@ void WheelSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
             {
                 case TIMER_EVENT_CAPTURE_B :
                     /* Call ISR GPT Capture function */
-                    PulseFrequency_IsrCallUpdate(VCInterfaceHandle.pPowertrain->pPAS->pWSS->pPulseFrequency, p_args->capture);	 					
+                    PulseFrequency_IsrCallUpdate(VCInterfaceHandle.pPowertrain->pPAS->pWSS->pPulseFrequency, p_args->capture);                         
                     break;
                 case TIMER_EVENT_CYCLE_END:
                     /* An overflow occurred during capture. */
@@ -182,7 +182,7 @@ void WheelSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
                 default:
                     break;
             }
-    }		
+    }        
 }
 
 /**

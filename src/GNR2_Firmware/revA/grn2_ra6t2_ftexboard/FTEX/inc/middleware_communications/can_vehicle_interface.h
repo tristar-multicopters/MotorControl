@@ -6,7 +6,7 @@
   *
   ******************************************************************************
 */
-	
+    
 #ifndef __CAN_VEHICLE_INTERFACE_H
 #define __CAN_VEHICLE_INTERFACE_H
 

@@ -24,11 +24,11 @@
   */
 typedef struct
 {          
-	bool bIsPressed;        // Contains the actual state of the brake
+    bool bIsPressed;        // Contains the actual state of the brake
     uint32_t wPinNumber;    // Contaisn the pin number on which the brake is connected
-	
+    
     bool bIsInvertedLogic;  // States if the logic is inverted 
-	                        // If set to true then a 1 would mean that the brake isnt 
+                            // If set to true then a 1 would mean that the brake isnt 
                             // pressed and a 0 would mean it is pressed
     bool bEngagedOnStart; // Is the brake live on boot 
     bool bSafeStart;      // brake value has been measured safely

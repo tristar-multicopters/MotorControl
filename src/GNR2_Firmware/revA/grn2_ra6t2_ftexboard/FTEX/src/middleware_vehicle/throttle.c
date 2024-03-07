@@ -68,7 +68,7 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
     uint32_t wAux;
     uint16_t hAux;
     
-	static bool ThrottleStuck = false;
+    static bool ThrottleStuck = false;
     
     if(pHandle->DisableThrottleOutput || pHandle->BlockOffThrottle) // Test if we want to disable the throttle on PAS 0 or the throttle BlockOff
     {
@@ -125,7 +125,7 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
         hAux = (uint16_t)wAux;    
     }
     
-	pHandle->hAvThrottleValue = hAux;
+    pHandle->hAvThrottleValue = hAux;
     
     // Throttle stuck on startup verification
     if(!pHandle->SafeStart && !pHandle->DisableThrottleOutput) 

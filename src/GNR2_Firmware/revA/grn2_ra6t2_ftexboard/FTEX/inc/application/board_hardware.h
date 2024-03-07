@@ -4,8 +4,8 @@
   * @author  Sami Bouzid, FTEX
   * @brief   This module defines the hardware (pins, peripherals, ...) used by the board. 
   *
-	******************************************************************************
-	*/
+    ******************************************************************************
+    */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __BOARD_HARDWARE_H

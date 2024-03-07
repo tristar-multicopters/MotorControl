@@ -16,71 +16,71 @@
 */
 void PedalSpdSensor_Init(PedalSpeedSensorHandle_t* pHandle)
 {
-	ASSERT(pHandle != NULL);    
+    ASSERT(pHandle != NULL);    
 }
 
 /**
-	Pedal Speed Sensor capture the number of pulses detected from the 
+    Pedal Speed Sensor capture the number of pulses detected from the 
     cadence signal/sesnor.
 */
 void PedalSpdSensor_ReadNumberOfPulses(PedalSpeedSensorHandle_t* pHandle)
-{	
-	//PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
-	pHandle->hPedalSpeedSens_NumberOfPulses = (uint16_t) pHandle->pPulseFrequency->hNumberOfPulse; 
+{    
+    //PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
+    pHandle->hPedalSpeedSens_NumberOfPulses = (uint16_t) pHandle->pPulseFrequency->hNumberOfPulse; 
     
     //Initialize the number of pulses detected by the AGT Timer.
     pHandle->pPulseFrequency->hNumberOfPulse = 0;
 }
 
 /**
-	Pedal Speed Sensor Periode Get value
+    Pedal Speed Sensor Periode Get value
 */
 uint16_t PedalSpdSensor_GetNumberOfPulses(PedalSpeedSensorHandle_t* pHandle)
-{	
-	return pHandle->hPedalSpeedSens_NumberOfPulses;
+{    
+    return pHandle->hPedalSpeedSens_NumberOfPulses;
 }
 
 /**
-	Reset all variables used to hold the number of pulses measured
+    Reset all variables used to hold the number of pulses measured
     by the AGT timer.
 */
 void PedalSpdSensor_ResetValue(PedalSpeedSensorHandle_t* pHandle)
-{	
-	pHandle->hPedalSpeedSens_NumberOfPulses = 0;
+{    
+    pHandle->hPedalSpeedSens_NumberOfPulses = 0;
     //Initialize the number of pulses detected by the AGT Timer.
     pHandle->pPulseFrequency->hNumberOfPulse = 0;
 }
 
 /**
-	Set windows reset flag 
+    Set windows reset flag 
 */
 void PedalSpdSensor_SetWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
-{	
-	pHandle->bPedalSpeedSens_ResetWindowsFlag = true;
+{    
+    pHandle->bPedalSpeedSens_ResetWindowsFlag = true;
 }
 
 /**
-	Clear windows reset flag
+    Clear windows reset flag
 */
 void PedalSpdSensor_ClearWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
-{	
-	pHandle->bPedalSpeedSens_ResetWindowsFlag = false;
+{    
+    pHandle->bPedalSpeedSens_ResetWindowsFlag = false;
 }
 
 
 /**
-	Get windows reset flag
+    Get windows reset flag
 */
 bool PedalSpdSensor_GetWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
-{	
-	return pHandle->bPedalSpeedSens_ResetWindowsFlag;
+{    
+    return pHandle->bPedalSpeedSens_ResetWindowsFlag;
 }
 
 /**
-	Pedal Speed Sensor RPM Get value
+    Pedal Speed Sensor RPM Get value
 */
 uint32_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle)
-{	
-	return pHandle->wPedalSpeedSens_RPM;
+{    
+    return pHandle->wPedalSpeedSens_RPM;
 }
 
