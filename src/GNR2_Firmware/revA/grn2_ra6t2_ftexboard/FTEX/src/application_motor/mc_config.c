@@ -174,8 +174,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     {
         .bEnableFoldback = ENABLE_MAX_POWER_LIMIT,
         .FoldbackConfig = TRIM,
-        .hDefaultOutputLimitHigh = MAX_APPLICATION_POSITIVE_POWER,
-        .hDefaultOutputLimitLow = MAX_BMS_POSITIVE_POWER,
+        .hDefaultOutputLimitHigh = MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
+        .hDefaultOutputLimitLow = MAX_BMS_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
         .hDecreasingEndValue = MAX_TIME_BMS_TOLERANT,
         .hDecreasingRange = MAX_POWER_LIMIT_TIMEOUT,
     },
@@ -190,7 +190,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     },
     .DynamicPowerHandle =
     {
-        .hDynamicMaxPower = MAX_APPLICATION_POSITIVE_POWER,
+        .hDynamicMaxPower = MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
         .hBelowMaxPowerTimeout = MAX_POWER_RECOVER_TIMEOUT,  
         .hOverMaxPowerTimeout = 0,    // since using foldback this parameter is not needed
         .hBelowMaxPowerTimer = 0,
@@ -215,9 +215,10 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
     .hMaxPositiveTorque =           (int16_t)NOMINAL_TORQUE,
     .hMinNegativeTorque =           -(int16_t)NOMINAL_TORQUE,
-    .hMaxPositivePower =            (int16_t)MAX_APPLICATION_POSITIVE_POWER,
-    .hMaxContinuousPower =           (int16_t)MAX_BMS_POSITIVE_POWER,
-    .hMinNegativePower =            -(int16_t)MAX_APPLICATION_NEGATIVE_POWER,
+    .hMaxPositivePower =            (int16_t)MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
+    .hMaxContinuousPower =           (int16_t)MAX_BMS_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
+    .hMinNegativePower =            -(int16_t)MAX_APPLICATION_NEGATIVE_POWER * ESTIMATED_EFFICIENCY / 100,
+    .hEstimatedEfficiencyPercent =  ESTIMATED_EFFICIENCY,
     .ModeDefault =					DEFAULT_CONTROL_MODE,
     .wTorqueSlopePerSecondUp =      DEFAULT_TORQUE_SLOPE_UP,
     .wTorqueSlopePerSecondDown =    DEFAULT_TORQUE_SLOPE_DOWN,

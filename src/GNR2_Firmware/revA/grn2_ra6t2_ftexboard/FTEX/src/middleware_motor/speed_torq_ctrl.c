@@ -614,8 +614,8 @@ void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurren
 void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle)
 {
     #if POWER_LIMIT_REF == MAX_CURRENT_LIMIT
-    pHandle->hMaxPositivePower = pHandle->hMaxBusCurrent * pHandle->hBusVoltage;
-    pHandle->hMaxContinuousPower = pHandle->hMaxContinuousCurrent * pHandle->hBusVoltage;
+    pHandle->hMaxPositivePower = pHandle->hMaxBusCurrent * pHandle->hBusVoltage * pHandle->hEstimatedEfficiencyPercent / 100;
+    pHandle->hMaxContinuousPower = pHandle->hMaxContinuousCurrent * pHandle->hBusVoltage * pHandle->hEstimatedEfficiencyPercent / 100;
     #else
         UNUSED_PARAMETER(pHandle);
         //do nothing - keep it at maximum defined level 

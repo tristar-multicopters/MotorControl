@@ -45,6 +45,8 @@
 #define MAX_BMS_POSITIVE_POWER              700                 // Maximum power at the end point of foldback
 #define MAX_BMS_CONTINOUS_CURRENT           10                  // Maximum Power at the end point of foldback in amps
 
+#define ESTIMATED_EFFICIENCY                100             // Percent efficiency of input compared to output power
+
 #define FOLDBACK_SPEED_INTERVAL             0                   // Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        10                  // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
