@@ -41,6 +41,10 @@
 
 #include "vc_parameters_r48_750w.h"
 
+#elif VEHICLE_SELECTION ==  VEHICLE_SUPER73
+
+#include "vc_parameters_super73.h"
+
 #elif VEHICLE_SELECTION ==  VEHICLE_TSUGAWA
 
 #include "vc_parameters_tsugawa.h"

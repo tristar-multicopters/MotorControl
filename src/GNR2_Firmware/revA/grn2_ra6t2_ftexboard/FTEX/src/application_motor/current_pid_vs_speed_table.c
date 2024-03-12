@@ -198,6 +198,33 @@ const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
     20,     /* old PI = 50 parameter tunning for Vibration */
 };
 
+#elif VEHICLE_SELECTION == VEHICLE_SUPER73
+
+#define CURRENT_PID_LUT_SPEED_STEP                    700
+#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
+
+const int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    72,
+    72,
+};
+
+const int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+
+    20,   /* old PI = 50 parameter tunning for Vibration */ 
+    20,   /* old PI = 50 parameter tunning for Vibration */
+
+};
+
+const int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    54,
+    54,	
+};
+
+const int32_t IdKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE] = {
+    15,	 /* old PI = 50 parameter tunning for Vibration */
+    15,	 /* old PI = 50 parameter tunning for Vibration */
+};
+
 #elif VEHICLE_SELECTION == VEHICLE_TSUGAWA
 
 #define CURRENT_PID_LUT_SPEED_STEP                    300

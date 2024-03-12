@@ -54,6 +54,10 @@
 
 #include "drive_parameters_tsugawa.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_SUPER73
+
+#include "drive_parameters_super73.h"
+
 #elif VEHICLE_SELECTION == VEHICLE_UTK_350W 
 
 #include "drive_parameters_utk_350w.h"

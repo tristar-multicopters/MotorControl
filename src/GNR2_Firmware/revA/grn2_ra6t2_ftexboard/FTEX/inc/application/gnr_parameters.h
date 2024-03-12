@@ -3,18 +3,21 @@
   * @brief   This file contains general parameters used by ganrunner firmware
 */
 
+//Version to bike lookup table for defines below: https://tristarmulticopters.atlassian.net/wiki/spaces/ERR/pages/607420452/Bike+Model+Versions+for+firmware+pack
+
 #define VEHICLE_DEFAULT               0
-#define VEHICLE_A2_350W               1
-#define VEHICLE_A2_500W               2
-#define VEHICLE_E_CELLS               3
-#define VEHICLE_MAHLE                 4
+#define VEHICLE_R48_750W              1
+#define VEHICLE_A2_350W               2
+#define VEHICLE_A2_500W               3
+#define VEHICLE_QUIETKAT              4
 #define VEHICLE_NIDEC                 5
-#define VEHICLE_PEGATRON              6
-#define VEHICLE_QUIETKAT              7       
-#define VEHICLE_R48_750W              8
+#define VEHICLE_E_CELLS               6
+#define VEHICLE_MAHLE                 7
+#define VEHICLE_PEGATRON              8   
 #define VEHICLE_TSUGAWA               9                  
 #define VEHICLE_UTK_350W             10
 #define VEHICLE_VELEC_CITI_500W      11
+#define VEHICLE_SUPER73              12
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
@@ -65,7 +68,7 @@
 //as WDT and etc.
 #define FIRMWARE_RELEASE              0
 
-#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_SUPER73     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                            

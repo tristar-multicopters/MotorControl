@@ -505,6 +505,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_super73.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
@@ -548,6 +553,11 @@
               <FileName>utk_350w_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>super73_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -643,6 +653,11 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>super73_wheel_motor_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\super73_wheel_motor_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -797,6 +812,11 @@
               <FileName>drive_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_super73.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_super73.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_tsugawa.h</FileName>
@@ -2422,6 +2442,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_super73.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
@@ -2465,6 +2490,11 @@
               <FileName>utk_350w_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>super73_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2560,6 +2590,11 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>super73_wheel_motor_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\super73_wheel_motor_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2714,6 +2749,11 @@
               <FileName>drive_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_super73.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_super73.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_tsugawa.h</FileName>
@@ -4288,6 +4328,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_super73.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_tsugawa.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
@@ -4331,6 +4376,11 @@
               <FileName>utk_350w_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>super73_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4426,6 +4476,11 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>super73_wheel_motor_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\super73_wheel_motor_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -4580,6 +4635,11 @@
               <FileName>drive_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>drive_parameters_super73.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\drive_parameters_super73.h</FilePath>
             </File>
             <File>
               <FileName>drive_parameters_tsugawa.h</FileName>
