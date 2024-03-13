@@ -187,13 +187,13 @@ int FW_CheckUpdate(void)
     // Must be the same Major version(hardware version), otherwise launch the current one
     if(version_img_1.hardware != dfu_pack.hardware)
     {
-        return VERSION_OK;
+        return UPDATE_REQUIRED;
     }
     
     // if not the same bike model don't update and keep the current one
     if(version_img_1.bikeModel != dfu_pack.bikeModel)
     {	
-        return VERSION_OK;
+        return UPDATE_REQUIRED;
     }
     else if(version_img_1.revision >= dfu_pack.revision)
     {
