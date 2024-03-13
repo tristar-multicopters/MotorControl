@@ -679,9 +679,11 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     bool bCheckStart1 = false;
     bool bCheckStart2 = false;
     bool bCheckStart3 = false;
+    bool bCheckStart4 = false;
 
     uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
-
+    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pHandle->pPAS->pWSS));
+    
     //check if a firmware update is going. firmware update true block start condition.
     if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
     {
@@ -702,7 +704,11 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     {
         bCheckStart3 = true;
     }
-    return bCheckStart1 & bCheckStart2 & bCheckStart3; // Final logic to know if powertrain should be started.
+    if(wheelSpeed < pHandle->sParameters.VehicleMaxSpeed) //Check if the wheel speed does not exceeds the speed limit
+    {
+        bCheckStart4 = true;
+    }
+    return bCheckStart1 & bCheckStart2 & bCheckStart3 & bCheckStart4; // Final logic to know if powertrain should be started.
 }
 
 /**
