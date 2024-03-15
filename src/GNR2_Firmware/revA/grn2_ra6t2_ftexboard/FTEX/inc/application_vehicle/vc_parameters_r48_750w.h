@@ -18,7 +18,7 @@
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-#define VEHICLE_TOP_SPEED_KMH   25                                                                                             
+#define VEHICLE_TOP_SPEED_KMH   28                                                                                             
 /***************** THROTTLE SELECTION  ******************************/
 
 #include "throttle_sensors/vc_velec_r48_throttle.h"
@@ -48,7 +48,7 @@
 #define PAS_MAX_LEVEL                       5            
 
 // Maximum PAS Level given by the screen
-#define PAS_TORQUE_GAIN                     150             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
+#define PAS_TORQUE_GAIN                     850             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
 #define PAS_ALGORITHM                       TorqueSensorUse/* TorqueSensorUse  = 0, Torque sensor use define 
                                                                CadenceSensorUse = 1, Cadence sensor use define */

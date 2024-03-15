@@ -47,7 +47,7 @@
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        10                  // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
  /************************** Ramp Manager Config  ************************/
-#define DEFAULT_TORQUE_SLOPE_UP             1000                // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_UP             6000                // Slope in cNm per second
 #define DEFAULT_TORQUE_SLOPE_DOWN           10000               // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP              10000               // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN            10000               // Slope in #SPEED_UNIT per second
