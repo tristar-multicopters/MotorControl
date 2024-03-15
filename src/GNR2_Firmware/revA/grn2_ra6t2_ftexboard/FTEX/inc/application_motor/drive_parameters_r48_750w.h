@@ -35,13 +35,13 @@
 #define ENABLE_MAX_POWER_LIMIT              true                // Enable or disable the foldback
 #define MAX_TIME_BMS_TOLERANT               40000               // End time of derating for BMS protection in ms
 #define MAX_POWER_LIMIT_TIMEOUT             10000               // Start time of derating for BMS protection in ms
-#define MAX_BMS_POSITIVE_POWER              700                 // Maximum power at the end point of foldback
+#define MAX_BMS_POSITIVE_POWER              1800                 // Maximum power at the end point of foldback
 #define MAX_BMS_CONTINOUS_CURRENT           5              // Maximum Power at the end point of foldback in amps
 
 #define POWER_LIMIT_REF                     MAX_CURRENT_LIMIT   // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
-#define MAX_APPLICATION_POSITIVE_POWER      1100                // Maximum power in watts that drive can push to the motor
-#define MAX_APPLICATION_NEGATIVE_POWER      1100                // Maximum power in watts that drive can accept from the motor
-#define MAX_APPLICATION_CURRENT             19                  // Maximum battery current in amps that drive can accept from the motor
+#define MAX_APPLICATION_POSITIVE_POWER      1800                // Maximum power in watts that drive can push to the motor
+#define MAX_APPLICATION_NEGATIVE_POWER      1800                // Maximum power in watts that drive can accept from the motor
+#define MAX_APPLICATION_CURRENT             40                  // Maximum battery current in amps that drive can accept from the motor
 
 #define FOLDBACK_SPEED_INTERVAL             0                   // Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        10                  // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
