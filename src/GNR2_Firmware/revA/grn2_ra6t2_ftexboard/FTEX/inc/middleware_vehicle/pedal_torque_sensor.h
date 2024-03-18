@@ -13,9 +13,7 @@
 #define __PEDAL_TORQUE_SENSOR_H
 
 // ============================ Includes ================================= //
-
 #include "regular_conversion_manager.h"
-#include "vc_errors_management.h"
 #include "signal_filtering.h"
 #include "delay.h"
 

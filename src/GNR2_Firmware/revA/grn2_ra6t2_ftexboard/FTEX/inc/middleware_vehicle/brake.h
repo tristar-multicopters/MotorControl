@@ -10,8 +10,6 @@
 #define __BRAKE_H
 
 #include "stdbool.h"
-#include "uCAL_GPIO.h"
-#include "vc_errors_management.h"
 #include "delay.h"
 
 // ============================= Defines ================================= //

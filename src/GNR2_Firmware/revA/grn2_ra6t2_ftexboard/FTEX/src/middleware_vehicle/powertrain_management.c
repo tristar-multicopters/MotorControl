@@ -10,6 +10,11 @@
 #include "vc_tasks.h"
 #include "firmware_update.h"
 #include "vc_errors_management.h"
+#include "vc_defines.h"
+#include "wheel.h"
+#include "ramps.h"
+#include "vc_constants.h"
+
 // ============================= Defines ================================ //
 #define OVERCURRENT_COUNTER         0
 #define STARTUP_COUNTER             1

@@ -5,6 +5,7 @@
   */
 
 #include "lights.h"
+#include "uCAL_GPIO.h"
 #include "ASSERT_FTEX.h"
 
 void Light_SetLight(Light_Handle_t * pHandle);

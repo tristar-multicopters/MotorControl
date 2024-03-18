@@ -13,7 +13,7 @@
 
 // =============================== Includes ================================== //
 #include "pulse_frequency.h"
-#include "pedal_torque_sensor.h"
+//#include "pedal_torque_sensor.h"
 
 // ================= Structure used to configure a pin ===================== //
 typedef struct {

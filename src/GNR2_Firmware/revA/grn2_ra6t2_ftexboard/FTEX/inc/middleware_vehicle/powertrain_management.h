@@ -9,18 +9,16 @@
 #ifndef __POWERTRAIN_MANAGEMENT_H
 #define __POWERTRAIN_MANAGEMENT_H
 
+#include "stdbool.h"
+#include "stdint.h"
 #include "md_interface.h"
+#include "pedal_assist.h"
 #include "throttle.h"
 #include "brake.h"
 #include "lights.h"
 #include "motor_selection.h"
-#include "vc_defines.h"
-#include "power_enable.h"
 #include "battery_monitoring.h"
-#include "pedal_assist.h"
-#include "wheel.h"
-#include "ramps.h"
-#include "vc_constants.h"
+#include "power_enable.h"
 
 // ============================== Defines =============================== // 
 

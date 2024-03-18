@@ -26,7 +26,7 @@ typedef enum
   */
 typedef struct
 {                  
-        uint32_t TimePerPulse;       // States how much time per pulse ex if 1 pulse is 5 ms then thos variable wpuld be 5
+    uint32_t TimePerPulse;       // States how much time per pulse ex if 1 pulse is 5 ms then thos variable wpuld be 5
     DelayUnits_t TimePerPulseUnits;  // States in which units os the time per pulse, if you hate 5 ms then this would be set to MIL_SECS 
     
     uint32_t DelayTimePulse;     // Represents how many pulse we need to wait for to achieve the desired Delay

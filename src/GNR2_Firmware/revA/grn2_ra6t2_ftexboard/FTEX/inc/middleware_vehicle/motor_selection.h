@@ -10,9 +10,7 @@
 #define __MOTOR_SELECTION_H
 
 #include "stdbool.h"
-#include "ASSERT_FTEX.h"
-#include "uCAL_GPIO.h"
-
+#include "stdint.h"
 
 typedef enum
 {

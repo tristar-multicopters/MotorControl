@@ -8,7 +8,6 @@
 #include "vc_errors_management.h"
 #include "ASSERT_FTEX.h"
  
-
 /* Functions ---------------------------------------------------- */
 
 /**

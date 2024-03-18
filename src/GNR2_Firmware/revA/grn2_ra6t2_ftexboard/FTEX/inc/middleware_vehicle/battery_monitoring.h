@@ -9,7 +9,7 @@
 #define __BAT_MONITOR_H
 
 #include "stdbool.h"
-#include "uCAL_GPIO.h"
+#include "stdint.h"
 #include "mc_interface.h"
 
 #define NB_SAMPLES_4_AVG 20 // Obtained through trial and error

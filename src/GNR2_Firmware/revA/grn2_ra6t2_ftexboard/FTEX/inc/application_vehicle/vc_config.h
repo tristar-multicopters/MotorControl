@@ -11,7 +11,6 @@
 
 #include "vc_interface.h"
 #include "co_gnr2_specs.h"
-#include "wheel.h"
 
 extern VCI_Handle_t VCInterfaceHandle;
 

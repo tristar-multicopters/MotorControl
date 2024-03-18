@@ -9,7 +9,7 @@
 #define __LIGHTS_H
 
 #include "stdbool.h"
-#include "uCAL_GPIO.h"
+#include "stdint.h"
 
 /**
   * @brief Handle used to operate a light

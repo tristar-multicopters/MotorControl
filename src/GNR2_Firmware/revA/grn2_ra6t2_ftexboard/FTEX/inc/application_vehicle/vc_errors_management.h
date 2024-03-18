@@ -8,8 +8,8 @@
 #ifndef __VC_ERRORS_MANAGEMENT_H
 #define __VC_ERRORS_MANAGEMENT_H
 
-#include "gnr_main.h"
-
+#include "stdint.h"
+#include "stdbool.h"
 
 #define ERROR_BUFFER_SIZE       20
 #define DEFAULT_CYCLE_LENGTH    6 

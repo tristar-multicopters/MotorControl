@@ -8,7 +8,6 @@
 #ifndef __PEDAL_ASSIST_H
 #define __PEDAL_ASSIST_H
 
-
 #include "pedal_speed_sensor.h"
 #include "pedal_torque_sensor.h"
 #include "wheel_speed_sensor.h"

@@ -9,11 +9,8 @@
 #define __THROTTLE_H
 
 #include "regular_conversion_manager.h"
-#include <math.h>
 #include "signal_filtering.h"
 #include "delay.h"
-#include "vc_errors_management.h"
-#include "vc_parameters.h"
 #include "ramps.h"
     
 #define THROTTLE_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction

@@ -8,6 +8,7 @@
                 Includes                       
 *********************************************/
 
+#include "ASSERT_FTEX.h"
 #include "vc_autodetermination.h"
 
 /*********************************************

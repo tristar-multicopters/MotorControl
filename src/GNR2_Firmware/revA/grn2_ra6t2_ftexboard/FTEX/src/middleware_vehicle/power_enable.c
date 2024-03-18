@@ -11,7 +11,13 @@
 #include "firmware_update.h"
 #include "vc_autodetermination.h"
 #include "vc_fault_management.h"
+#include "vc_errors_management.h"
+#include "uCAL_GPIO.h"
+#include "ASSERT_FTEX.h"
 
+// CANOpen includes
+
+#include "co_gnr2_specs.h"
 
 extern osThreadId_t PowerOffSequence_handle;
 

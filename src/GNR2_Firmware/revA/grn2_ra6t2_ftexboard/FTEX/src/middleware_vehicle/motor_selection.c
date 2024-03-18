@@ -7,6 +7,7 @@
 
 #include "motor_selection.h"
 #include "ASSERT_FTEX.h"
+#include "uCAL_GPIO.h"
 
 /**
  * @brief Initializes torque distribution module

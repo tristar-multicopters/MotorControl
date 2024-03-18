@@ -9,11 +9,7 @@
 #include "vc_tasks.h"
 #include "mc_tasks.h"
 #include "comm_tasks.h"
-
 #include "mc_interface.h"
-
-#include "gnr_main.h"
-
 #include "vc_autodetermination.h"
 
 

@@ -8,8 +8,10 @@
 */
 
 #include "can_vehicle_interface.h"
+#include "vc_errors_management.h"
 #include "ASSERT_FTEX.h"
 #include "Utilities.h"
+#include "wheel.h"
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpragma-pack"

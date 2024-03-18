@@ -143,9 +143,9 @@ uint8_t  hObjDataErrorRegister    = 0;
 /*****Allocate global variables for GNR objects*****/
 int16_t  hObjDataMotor1SpeedMeas            = 0;
 uint16_t hObjDataMotor1BusVoltage           = 0;
-int16_t  hObjDataMotor1Temp                      = 0;
-int16_t hObjDataHeatsink1Temp                  = 0;
-uint16_t hObjDataMotor1State                     = 0;
+int16_t  hObjDataMotor1Temp                 = 0;
+int16_t  hObjDataHeatsink1Temp              = 0;
+uint16_t hObjDataMotor1State                = 0;
 uint16_t hObjDataMotor1OccuredFaults        = 0;
 uint16_t hObjDataMotor1CurrentFaults        = 0;
 
@@ -161,7 +161,7 @@ uint8_t  bObjDataMotor1Start                = 0;
 int16_t  hObjDataMotor1TorqRef              = 0;
 uint8_t  bObjDataMotor1FaultAck             = 0;
 
-uint8_t  bObjDataMotor2Start                   = 0;
+uint8_t  bObjDataMotor2Start                = 0;
 int16_t  hObjDataMotor2TorqRef              = 0;
 uint8_t  bObjDataMotor2FaultAck             = 0;
     
@@ -192,90 +192,90 @@ uint16_t bObjDataKeyUserDataConfig          = 0;
 /*****Allocate global variables for Throttle/Pedal Assist Gnr objects*****/
 
 //variable associated with CO_OD_REG_PAS_MAX_TORQUE_RATIO.
-uint8_t bObjDataPasMaxTorqueRatio                 = 0; 
+uint8_t bObjDataPasMaxTorqueRatio           = 0; 
 
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 0
-uint8_t bObjDataPasTorqueStartupSpeed = 0;
+uint8_t bObjDataPasTorqueStartupSpeed       = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 1
-uint8_t bObjDataPasTorqueStartupThreshold = 0;
+uint8_t bObjDataPasTorqueStartupThreshold   = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 2
 uint8_t bObjDataPasCadenceStartupNumbPulses = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_STARTUP subindex 3
-uint16_t bObjDataPasCadenceStartupWindows = 0;
+uint16_t bObjDataPasCadenceStartupWindows   = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 4
-uint8_t bObjDataPasAlgorithmStartup = 0;
+uint8_t bObjDataPasAlgorithmStartup         = 0;
 
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 0
-uint8_t bObjDataPas1AccelRampType = 0;
+uint8_t bObjDataPas1AccelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 1
 uint16_t bObjDataPas1AccelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 2
-uint8_t bObjDataPas2AccelRampType = 0;
+uint8_t bObjDataPas2AccelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 3
 uint16_t bObjDataPas2AccelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 4
-uint8_t bObjDataPas3AccelRampType = 0;
+uint8_t bObjDataPas3AccelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 5
 uint16_t bObjDataPas3AccelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 6
-uint8_t bObjDataPas4AccelRampType = 0;
+uint8_t bObjDataPas4AccelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 7
 uint16_t bObjDataPas4AccelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 8
-uint8_t bObjDataPas5AccelRampType = 0;
+uint8_t bObjDataPas5AccelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 9
 uint16_t bObjDataPas5AccelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 10
-uint8_t bObjDataPas6AccelRampType = 0;
+uint8_t bObjDataPas6AccelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 11
 uint16_t bObjDataPas6AccelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 12
-uint8_t bObjDataPas7AccelRampType = 0;
+uint8_t bObjDataPas7AccelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 13
 uint16_t bObjDataPas7AccelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 14
-uint8_t bObjDataPas8AccelRampType = 0;
+uint8_t bObjDataPas8AccelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 15
 uint16_t bObjDataPas8AccelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 16
-uint8_t bObjDataPas9AccelRampType = 0;
+uint8_t bObjDataPas9AccelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_ACCEL_RAMP subindex 17
 uint16_t bObjDataPas9AccelRampArg1 = 0;
 
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 0
-uint8_t bObjDataPas1DecelRampType = 0;
+uint8_t bObjDataPas1DecelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 1
 uint16_t bObjDataPas1DecelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 2
-uint8_t bObjDataPas2DecelRampType = 0;
+uint8_t bObjDataPas2DecelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 3
 uint16_t bObjDataPas2DecelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 4
-uint8_t bObjDataPas3DecelRampType = 0;
+uint8_t bObjDataPas3DecelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 5
 uint16_t bObjDataPas3DecelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 6
-uint8_t bObjDataPas4DecelRampType = 0;
+uint8_t bObjDataPas4DecelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 7
 uint16_t bObjDataPas4DecelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 8
-uint8_t bObjDataPas5DecelRampType = 0;
+uint8_t bObjDataPas5DecelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 9
 uint16_t bObjDataPas5DecelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 10
-uint8_t bObjDataPas6DecelRampType = 0;
+uint8_t bObjDataPas6DecelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 11
 uint16_t bObjDataPas6DecelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 12
-uint8_t bObjDataPas7DecelRampType = 0;
+uint8_t bObjDataPas7DecelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 13
 uint16_t bObjDataPas7DecelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 14
-uint8_t bObjDataPas8DecelRampType = 0;
+uint8_t bObjDataPas8DecelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 15
 uint16_t bObjDataPas8DecelRampArg1 = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 16
-uint8_t bObjDataPas9DecelRampType = 0;
+uint8_t bObjDataPas9DecelRampType  = 0;
 //variable associated with CO_OD_REG_PAS_DECEL_RAMP subindex 17
 uint16_t bObjDataPas9DecelRampArg1 = 0;
 
@@ -283,13 +283,13 @@ uint16_t bObjDataPas9DecelRampArg1 = 0;
 uint16_t bObjDataTorqueSensorMultiplier[10] = {0};
 
 //variable associated with CO_OD_REG_PAS_MIN_TORQUE.
-uint8_t bObjDataPasLevelMinTorque[10]              = {0};
+uint8_t bObjDataPasLevelMinTorque[10]       = {0};
 
 //variable associated with CO_OD_REG_PAS_LEVEL_SPEED.
-uint8_t bObjDataPasLeveSpeed[10]  = {0};
+uint8_t bObjDataPasLeveSpeed[10]            = {0};
 
 //variable associated with CO_OD_REG_PAS_MAX_TORQUE.
-uint8_t bObjDataPasLevelMaxTorque[10]        = {0};
+uint8_t bObjDataPasLevelMaxTorque[10]       = {0};
 
 //variable associated with CO_OD_REG_MAX_SPEED.
 uint8_t bObjDataMaxSpeed                    = 0;
@@ -298,13 +298,13 @@ uint8_t bObjDataMaxSpeed                    = 0;
 uint8_t bObjDataWalkModeSpeed               = 0;
 
 //variable associated with CO_OD_REG_WALK_MODE_SPEED.
-uint8_t bObjDataWalkModeMaxTorque               = 0;
+uint8_t bObjDataWalkModeMaxTorque           = 0;
 
 //variable associated with CO_OD_REG_WALK_MODE_SPEED.
-uint8_t bObjDataWalkModeAccelRampType               = 0;
+uint8_t bObjDataWalkModeAccelRampType       = 0;
 
 //variable associated with CO_OD_REG_WALK_MODE_SPEED.
-uint16_t bObjDataWalkModeAccelRampArg1              = 0;
+uint16_t bObjDataWalkModeAccelRampArg1      = 0;
 
 
 //variable associated with CO_OD_REG_BATTERY_VOLTAGE 0
@@ -335,7 +335,7 @@ uint8_t bObjDataRearLightDefaultState       = 0;
 uint8_t bObjDataRearLightBlinkOnBrake       = 0;
 
 //variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 3 PLACEHOLDER
-uint16_t bObjDataRearLightBlinkPeriod        = 0; // in ms
+uint16_t bObjDataRearLightBlinkPeriod       = 0; // in ms
 
 //variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 4 PLACEHOLDER
 uint8_t bObjDataRearLightBlinkDutyCycle     = 0; // % on
@@ -348,24 +348,24 @@ uint16_t bObjDataPasPedalRPM                = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 1 (Placeholder currently not implemented) 
 uint8_t  bObjDataPasTorqueForcePercent      = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 2 (Placeholder currently not implemented) 
-uint16_t bObjDataPasTorqueForceWatts       = 0;
+uint16_t bObjDataPasTorqueForceWatts        = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 3
-uint8_t  bObjDataPasNbMagnetsPerTurn       = 0;  
+uint8_t  bObjDataPasNbMagnetsPerTurn        = 0;  
 //variable associated with COD_OD_REG_PAS_SENSOR 4
-uint16_t bObjDataPasTorqueInputMin         = 0;  
+uint16_t bObjDataPasTorqueInputMin          = 0;  
 //variable associated with COD_OD_REG_PAS_SENSOR 5
-uint16_t bObjDataPasTorqueInputMax         = 0;
+uint16_t bObjDataPasTorqueInputMax          = 0;
 
 //variable associated with CO_OD_CONFIG_SCREEN_PROTOCOL
 uint8_t bObjDataConfigScreenProtocol        = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 0
-uint8_t bObjDataPasTorqueRunningThreshold = 0;
+uint8_t bObjDataPasTorqueRunningThreshold   = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 1
 uint8_t bObjDataPasCadenceRunningNumbPulses = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 2
-uint16_t bObjDataPasCadenceRunningWindows = 0;
+uint16_t bObjDataPasCadenceRunningWindows   = 0;
 //variable associated with CO_OD_REG_PAS_DETECTION_RUNNING subindex 3
-uint8_t bObjDataPasAlgorithmRunning = 0;
+uint8_t bObjDataPasAlgorithmRunning         = 0;
 
 //variable associated with  CO_OD_REG_BATTERY_DC_CURRENT subindex 0
 uint16_t bObjDataConfigBatteryMaxPeakDCCurrent             = 0;
@@ -377,25 +377,25 @@ uint16_t bObjDataConfigBatteryPeakCurrentDuration          = 0;
 uint16_t bObjDataConfigBatteryPeakCurrentDeratingDuration  = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 0
-uint16_t bObjDataConfigThrottleAdcValue = 0;
+uint16_t bObjDataConfigThrottleAdcValue       = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 1
-uint8_t  bObjDataConfigThrottleGetSetValue = 0;
+uint8_t  bObjDataConfigThrottleGetSetValue    = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 2
-uint16_t bObjDataConfigThrottleAdcOffset    = 0;
+uint16_t bObjDataConfigThrottleAdcOffset      = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 3
-uint16_t bObjDataConfigThrottleAdcMax       = 0;
+uint16_t bObjDataConfigThrottleAdcMax         = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 4
-uint8_t  bObjDataConfigThrottleBlockOff = 0;
+uint8_t  bObjDataConfigThrottleBlockOff       = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 5
-uint8_t  bObjDataConfigThrottleMaxSpeed = 0;
+uint8_t  bObjDataConfigThrottleMaxSpeed       = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 6
-uint8_t  bObjDataConfigThrottleAccelRampType= 0;
+uint8_t  bObjDataConfigThrottleAccelRampType  = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 7
 uint16_t  bObjDataConfigThrottleAccelRampArg1 = 0;

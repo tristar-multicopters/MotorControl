@@ -7,7 +7,7 @@
 #include "comm_config.h"
 #include "gnr_parameters.h"
 #include "co_gnr2_specs.h"
-
+#include "vc_parameters.h"
 // Handle of the CANOpen node
 CO_NODE CONodeGNR;
 

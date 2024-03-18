@@ -405,11 +405,6 @@
               <FilePath>.\FTEX\src\application\gnr_ra6t2_it.c</FilePath>
             </File>
             <File>
-              <FileName>ASSERT_FTEX.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\ASSERT_FTEX.c</FilePath>
-            </File>
-            <File>
               <FileName>board_hardware.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\board_hardware.h</FilePath>
@@ -528,11 +523,6 @@
               <FileName>vc_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_config.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_errors_management.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_errors_management.h</FilePath>
             </File>
             <File>
               <FileName>vc_interface.h</FileName>
@@ -1572,6 +1562,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>ASSERT_FTEX.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\ASSERT_FTEX.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2342,11 +2337,6 @@
               <FilePath>.\FTEX\src\application\gnr_ra6t2_it.c</FilePath>
             </File>
             <File>
-              <FileName>ASSERT_FTEX.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\ASSERT_FTEX.c</FilePath>
-            </File>
-            <File>
               <FileName>board_hardware.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\board_hardware.h</FilePath>
@@ -2465,11 +2455,6 @@
               <FileName>vc_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_config.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_errors_management.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_errors_management.h</FilePath>
             </File>
             <File>
               <FileName>vc_interface.h</FileName>
@@ -3457,6 +3442,11 @@
               <FileName>uCAL_DATAFLASH.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_DATAFLASH.c</FilePath>
+            </File>
+            <File>
+              <FileName>ASSERT_FTEX.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\ASSERT_FTEX.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4228,11 +4218,6 @@
               <FilePath>.\FTEX\src\application\gnr_ra6t2_it.c</FilePath>
             </File>
             <File>
-              <FileName>ASSERT_FTEX.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application\ASSERT_FTEX.c</FilePath>
-            </File>
-            <File>
               <FileName>board_hardware.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application\board_hardware.h</FilePath>
@@ -4351,11 +4336,6 @@
               <FileName>vc_config.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_config.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_errors_management.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_errors_management.h</FilePath>
             </File>
             <File>
               <FileName>vc_interface.h</FileName>
@@ -5394,6 +5374,11 @@
               <FileName>uCAL_DATAFLASH.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\peripherals_abstraction\uCAL_DATAFLASH.c</FilePath>
+            </File>
+            <File>
+              <FileName>ASSERT_FTEX.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\peripherals_abstraction\ASSERT_FTEX.c</FilePath>
             </File>
           </Files>
         </Group>

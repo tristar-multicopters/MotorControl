@@ -5,8 +5,9 @@
   */
 
 #include "throttle.h"
-#include "wheel.h"
 #include "ASSERT_FTEX.h"
+#include "vc_errors_management.h"
+
 /* Functions ---------------------------------------------------- */
 /**
    Initializes throttle sensing conversions

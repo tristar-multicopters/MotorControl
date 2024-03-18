@@ -10,8 +10,8 @@
 #include "pedal_torque_sensor.h"
 #include "wheel.h"
 #include "ASSERT_FTEX.h"
+#include "vc_errors_management.h"
 
-#include "gnr_parameters.h"
 
 
 // ============================= Variables ================================ //

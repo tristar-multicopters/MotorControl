@@ -8,7 +8,11 @@
 */
     
 #include "lcd_KD718.h"
+#include "wheel.h"
 #include "ASSERT_FTEX.h"
+#include "gnr_main.h"
+#include "vc_errors_management.h"
+#include "vc_constants.h"
 
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 

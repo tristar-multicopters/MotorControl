@@ -1,5 +1,5 @@
 /**
-  * @file    power_enable.h
+  * @file    ramps.h
   * @brief   This module handles power enable pin
   *
 */

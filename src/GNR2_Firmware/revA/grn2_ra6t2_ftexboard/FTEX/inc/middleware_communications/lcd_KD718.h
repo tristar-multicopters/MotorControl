@@ -11,12 +11,7 @@
 #define __LCD_KD718_H
 
 #include "vc_interface.h"
-#include "powertrain_management.h"
-#include "can_vehicle_interface.h"
-#include "vc_errors_management.h"
-#include "vc_constants.h"
 #include "uCAL_UART.h"
-#include "gnr_main.h"
 
 /**************************** DEFINITIONS AND STRUCTS ****************************/
 #define KD718_RX_BYTE_BUFFER_SIZE 8

@@ -8,6 +8,8 @@
 *********************************************/
 
 #include "vc_fault_management.h"
+#include "vc_autodetermination.h"
+#include "ASSERT_FTEX.h"
 
 /**
  *@brief Function used to get the flag that indicate if

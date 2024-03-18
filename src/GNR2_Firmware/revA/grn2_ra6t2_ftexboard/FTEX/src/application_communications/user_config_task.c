@@ -10,11 +10,13 @@
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpragma-pack"
-#include "user_config_task.h"
+#include "user_config_data.h"
 #pragma clang diagnostic pop
 
+#include "user_config_task.h"
+
 #include "ASSERT_FTEX.h"
-#include "vc_config.h"
+#include "wheel.h"
 
 /*********************************************
                 Defines

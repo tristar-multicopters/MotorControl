@@ -6,6 +6,8 @@
 
 #include "brake.h"
 #include "ASSERT_FTEX.h"
+#include "uCAL_GPIO.h"
+#include "vc_errors_management.h"
 
 // ============================= Variables ================================ //
 static uint16_t hSafeCounter = 0;

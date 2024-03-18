@@ -16,11 +16,7 @@
 
 #include "uCAL_DATAFLASH.h"
 
-// disable warning about user_config_data modifying the pragma pack value
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpragma-pack"
-#include "user_config_data.h"
-#pragma clang diagnostic pop
+
 
 #include "comm_config.h"
 #include "vc_parameters.h"
@@ -29,6 +25,16 @@
 /*********************************************
                 Defines
 *********************************************/
+#define PAS_0  0
+#define PAS_1  1
+#define PAS_2  2
+#define PAS_3  3
+#define PAS_4  4
+#define PAS_5  5
+#define PAS_6  6
+#define PAS_7  7
+#define PAS_8  8
+#define PAS_9  9
 
 #define NUMBER_OF_BYTES_IN_THE_BLOCK    64U
 

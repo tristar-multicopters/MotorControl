@@ -9,12 +9,8 @@
 #define __POWER_ENABLE_H
 
 #include "stdbool.h"
-#include "uCAL_GPIO.h"
-#include "ASSERT_FTEX.h"
-
-// CANOpen includes
+#include "stdint.h"
 #include "co_core.h"
-#include "co_gnr2_specs.h"
 
 #define POWEROFFSEQUENCE_FLAG  0x13  // OS flag used to block the power enable task
                                      // TODO move to a dedicated flag file

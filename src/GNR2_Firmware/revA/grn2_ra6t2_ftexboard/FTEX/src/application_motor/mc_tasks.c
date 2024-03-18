@@ -17,7 +17,7 @@
 #include "uCAL_GPIO.h"
 #include "current_pid_vs_speed_table.h"
 #include "log_high_speed.h"
-#include "comm_config.h"
+#include "comm_config.h" // For dual
 
 #include "mc_tasks.h"
 #include "parameters_conversion.h"

@@ -11,6 +11,9 @@
 #include "vc_config.h"
 #include "Utilities.h"
 #include "gnr_main.h"
+#include "vc_autodetermination.h"
+#include "board_hardware.h"
+#include "uCAL_GPIO.h"
 
 // CANOpen includes
 #include "co_core.h"
@@ -20,6 +23,7 @@
 #include "can_vehicle_interface.h"
 
 #include "lcd_apt.h"
+#include "wheel.h"
 // Serial Flash storage
 #include "serial_flash_storage.h"
 

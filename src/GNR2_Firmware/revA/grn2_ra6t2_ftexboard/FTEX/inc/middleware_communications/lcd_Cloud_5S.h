@@ -11,12 +11,7 @@
 #define __LCD_CLOUD_5S_H
 
 #include "vc_interface.h"
-#include "powertrain_management.h"
-#include "can_vehicle_interface.h"
-#include "vc_errors_management.h"
-#include "vc_constants.h"
 #include "uCAL_UART.h"
-#include "gnr_main.h"
 
 /**************************** DEFINITIONS AND STRUCTS ****************************/
 // Commands
