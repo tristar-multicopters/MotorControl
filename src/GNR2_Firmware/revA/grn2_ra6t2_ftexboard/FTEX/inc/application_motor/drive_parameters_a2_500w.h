@@ -8,10 +8,6 @@
 #ifndef __DRIVE_PARAMETERS_A2_500W_H
 #define __DRIVE_PARAMETERS_A2_500W_H
 
-/******************************** BATTERY SELECTION ******************************/
-
-#include "batteries/velec_500w_battery.h"
-
 /************************** Controller Config  ************************/
 
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters

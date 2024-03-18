@@ -1309,11 +1309,6 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
             </File>
-            <File>
-              <FileName>gear_ratio_table.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\gear_ratio_table.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -3241,11 +3236,6 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
             </File>
-            <File>
-              <FileName>gear_ratio_table.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\gear_ratio_table.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -5172,11 +5162,6 @@
               <FileName>stuck_protection.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
-            </File>
-            <File>
-              <FileName>gear_ratio_table.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\gear_ratio_table.h</FilePath>
             </File>
           </Files>
         </Group>

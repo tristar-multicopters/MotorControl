@@ -12,7 +12,6 @@
 #include "mc_interface.h"
 #include "slave_mc_interface.h"
 
-
 #define MDI_PERCENT 100 // Used to apply a % based gain
 
 /*
@@ -29,9 +28,10 @@ typedef struct
   * @param  pHandle Pointer on the component instance to operate on.
   * @param  pMCI Pointer to the MotorControlInterface handle of M1 (local motor controller of this ganrunner device)
   * @param  pSlaveM2 Pointer to the SlaveMotorControlInterface handle of M2 (motor controller outside this ganrunner device)
+  * @param  pBatteryPower to the BatteryPower handle
   * @retval none.
   */
-void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2);
+void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2, MC_Setup_t MCSetup);
 
 /**
   * @brief  This function update the virtual motor handle with the provided feedback.
@@ -50,7 +50,7 @@ void MDI_UpdateVirtualMotorFeedback(MultipleDriveInterfaceHandle_t * pHandle, ui
   * @param  pHandle Pointer on the component instance to operate on.
   * @param  hFinalSpeed is the value of mechanical rotor speed reference at the
   *         end of the ramp expressed in tenths of HZ.
-    *    @param    bMotor is the target motor number
+  * @param    bMotor is the target motor number
   * @retval none.
   */
 void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, int16_t hFinalSpeed);
@@ -63,10 +63,17 @@ void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor,
   * @param  pHandle Pointer on the component instance to work on.
   * @param  hFinalTorque is the value of motor torque reference at the end of
   *         the ramp in cNm (Nm/100).
-    *    @param    bMotor is the target motor number
+  * @param    bMotor is the target motor number
   * @retval none.
   */
 void MDI_ExecTorqueRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, int16_t hFinalTorque);
+
+/**
+  * @brief  This function gets the bus voltage in volts x100
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval The bus voltage in volts x 100.
+  */
+uint16_t MDI_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  This is a buffered command to set directly the motor current

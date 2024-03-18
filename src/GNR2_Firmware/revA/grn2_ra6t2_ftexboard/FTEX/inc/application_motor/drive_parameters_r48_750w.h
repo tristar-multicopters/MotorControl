@@ -8,10 +8,6 @@
 #ifndef __DRIVE_PARAMETERS_R48_750W_H
 #define __DRIVE_PARAMETERS_R48_750W_H
 
-/******************************** BATTERY SELECTION ******************************/
-
-#include "batteries/velec_750w_battery.h"
-
 /************************** Controller Config  ************************/
 
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters

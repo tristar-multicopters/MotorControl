@@ -11,7 +11,8 @@
 
 /************************** Current Sensing and Protection Parameters ************************/
 
-#define AMPLIFICATION_GAIN              0.01        // V/A of current sensors, for scaling                                      //NEEDS TO BE VERIFIED
+#define AMPLIFICATION_GAIN              0.01        //DO NOT CHANGE THIS VALUE UNLESS YOU REFLASH THE CURRENT SENSOR
+                                                    // V/A of current sensors, for scaling                                      //NEEDS TO BE VERIFIED
                                                     // Values are on p.15 of this doc (MEASmg): https://www.infineon.com/dgdl/Infineon-TLI4971_ProgGuide-ApplicationNotes-v01_30-EN.pdf?fileId=5546d4626bfb5124016c1a294ad5286e
 
 #define PEAK_CURRENT_CONTROLLER_amps    55          //peak current of controller in amps                                        //NEEDS TO BE VERIFIED

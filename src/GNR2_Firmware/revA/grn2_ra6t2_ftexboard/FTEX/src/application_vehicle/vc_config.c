@@ -56,12 +56,11 @@ Light_Handle_t TailLightHandle =
 
 BatMonitor_Handle_t BatMonitorHandle = 
 {
-    .VBatMin = BATTERY_EMPTY_VOLT_X_100,  // Values that represent a fully charged battery and an empty one
-    .VBatMax = BATTERY_FULL_VOLT_X_100,   // Set in the VC_parameters_xxxxx.h of each bike
-    .LowBatSOC = BATTERY_SOC_LOW_PERCENT,        // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
-    .RechargedBatSOC = BATTERY_SOC_OK_PERCENT,   // Battery SOC in % for which we clear the battery low flag
+    .VBatMin = BATTERY_EMPTY_VOLT_X_100,                            // Values that represent a fully charged battery and an empty one
+    .VBatMax = BATTERY_FULL_VOLT_X_100,                             // Set in the VC_parameters_xxxxx.h of each bike
+    .LowBatSOC = BATTERY_SOC_LOW_PERCENT,                           // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
+    .RechargedBatSOC = BATTERY_SOC_OK_PERCENT,                      // Battery SOC in % for which we clear the battery low flag
 };
-
 
 /**@brief Pedal torque sensor initializing Parameters.
  */
@@ -434,4 +433,21 @@ VCI_Handle_t VCInterfaceHandle =
     .pStateMachine = &VCStateMachineHandle,
     .pPowertrain = &PowertrainHandle,
     .pFirmwareUpdateDomainObj = &bObjFirmwareUpdateDomain,
+};
+
+
+/**@brief MC setup initializing parameters.
+ */
+MC_Setup_t MCSetup = 
+{
+    /**@brief Battery power initializing parameters.
+    */
+    .BatteryPowerSetup =
+    {
+        .bPowerLimitRef = POWER_LIMIT_REF,                              // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+        .hMaxApplicationPositivePower = MAX_APPLICATION_POSITIVE_POWER, // Maximum power in watts that drive can push to the motor
+        .hMaxApplicationNegativePower = MAX_APPLICATION_NEGATIVE_POWER, // Maximum power in watts that drive can accept from the motor
+        .hMaxApplicationCurrent = MAX_APPLICATION_CURRENT,              // Maximum battery current in amps that drive can accept from the motor
+        .hUndervoltageThreshold = UD_VOLTAGE_THRESHOLD_BATT_V,
+    }
 };

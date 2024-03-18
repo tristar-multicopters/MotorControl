@@ -7,6 +7,9 @@
 
 #include "r_divider_bus_voltage_sensor.h"
 #include "regular_conversion_manager.h"
+#include "parameters_conversion.h"
+#include "ASSERT_FTEX.h"
+
 
 /**
 * It initializes bus voltage conversion (ADC, ADC channel, conversion time. It must be called only after PWMC_Init.
@@ -15,6 +18,19 @@ void ResDivVbusSensor_Init(ResDivVbusSensorHandle_t * pHandle)
 {
     pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->VbusRegConv);  // Need to be register with RegularConvManager    
     ResDivVbusSensor_Clear(pHandle);  // Check
+}
+
+/**
+* It initializes the undervoltage threshold value from the battery parameters.
+*/
+void ResDivVbusSensor_UVInit(ResDivVbusSensorHandle_t * pResDivVbusSensor, MC_Setup_t MCSetup)
+{
+    ASSERT(pResDivVbusSensor != NULL);
+    
+    //convert to digital value
+    uint16_t UVThreshDigital = (uint16_t)((MCSetup.BatteryPowerSetup.hUndervoltageThreshold*65535) / ((uint16_t)(ADC_REFERENCE_VOLTAGE / VBUS_PARTITIONING_FACTOR)));
+    
+    pResDivVbusSensor->hUnderVoltageThreshold = UVThreshDigital;
 }
 
 /**

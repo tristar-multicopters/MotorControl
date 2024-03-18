@@ -12,14 +12,27 @@
 /*
 * see function definition
 */
-void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2)
+void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2, MC_Setup_t MCSetup)
 {
     ASSERT(pHandle != NULL);
     ASSERT(pMCI != NULL);
     ASSERT(pSlaveM2 != NULL);
-    
+
     pHandle->pMCI = pMCI;
     pHandle->pSlaveM2 = pSlaveM2;
+    
+    //Power initialization is not supported with dual motor, will have to change default values in MC layer to initialize the parameters that come from the battery
+    MCInterface_PowerInit(pHandle->pMCI, MCSetup);
+    
+}
+
+/*
+* see function definition
+*/
+uint16_t MDI_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetBusVoltageInVoltx100(pHandle);
 }
 
 /*

@@ -68,6 +68,44 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     
 }
 
+/*
+ * see function definition
+ */
+void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup)
+{
+    ASSERT(pHandle != NULL);
+    
+    //initialize maximum power in watts that drive can push to the motor
+    if (MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower < DEFAULT_MAX_APPLICATION_POSITIVE_POWER)
+    {
+        pHandle->FoldbackDynamicMaxPower.hDefaultOutputLimitHigh = MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower * ESTIMATED_EFFICIENCY / 100;
+        pHandle->DynamicPowerHandle.hDynamicMaxPower = MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower * ESTIMATED_EFFICIENCY / 100;
+        pHandle->hMaxPositivePower = (uint16_t)(MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower * ESTIMATED_EFFICIENCY / 100);
+    }
+    
+    //initialize maximum power in watts that drive can accept from the motor
+    if (MCSetup.BatteryPowerSetup.hMaxApplicationNegativePower < DEFAULT_MAX_APPLICATION_NEGATIVE_POWER)
+    {
+        pHandle->hMinNegativePower = -(int16_t)MCSetup.BatteryPowerSetup.hMaxApplicationNegativePower * ESTIMATED_EFFICIENCY / 100;
+    }
+    
+    // Initialize maximum battery current in amps that drive can accept from the motor
+    if (MCSetup.BatteryPowerSetup.hMaxApplicationCurrent < DEFAULT_MAX_APPLICATION_CURRENT)
+    {
+        pHandle->hMaxBusCurrent = MCSetup.BatteryPowerSetup.hMaxApplicationCurrent;
+    }
+    
+    // Initializes the undervoltage threshold of the battery
+    if (MCSetup.BatteryPowerSetup.hUndervoltageThreshold > UD_VOLTAGE_THRESHOLD_CONT_V)
+    {
+        pHandle->hBatteryLowVoltage = (uint16_t)(MCSetup.BatteryPowerSetup.hUndervoltageThreshold *(LOW_VOLTAGE_THRESHOLD_PERCENTAGE + 100))/100;
+    }
+    
+    // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+    pHandle->bPowerRef = MCSetup.BatteryPowerSetup.bPowerLimitRef;
+    
+}
+
 
 void SpdTorqCtrl_SetSpeedSensor(SpdTorqCtrlHandle_t * pHandle, SpdPosFdbkHandle_t * SPD_Handle)
 {

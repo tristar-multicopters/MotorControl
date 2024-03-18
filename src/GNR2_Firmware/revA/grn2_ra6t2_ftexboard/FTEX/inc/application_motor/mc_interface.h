@@ -19,6 +19,7 @@ extern "C" {
 #include "mc_state_machine.h"
 #include "speed_torq_ctrl.h"
 #include "bus_voltage_sensor.h"
+#include "r_divider_bus_voltage_sensor.h"
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum
@@ -51,11 +52,11 @@ typedef struct
 
 typedef struct
 {
-  MotorStateMachineHandle_t * pSTM;            /*!< State machine object used by MCI.*/
-  SpdTorqCtrlHandle_t * pSpeedTorqCtrl;        /*!< Speed and torque controller object used by MCI.*/
-  pFOCVars_t pFOCVars;                         /*!< Pointer to FOC vars used by MCI.*/
-  BusVoltageSensorHandle_t *pBusVoltageSensor; // Used to raise the bus voltage sensor to the vehicle layer 
-  MCInterfaceUserCommands_t LastCommand;       /*!< Last command coming from the user.*/
+  MotorStateMachineHandle_t * pSTM;             /*!< State machine object used by MCI.*/
+  SpdTorqCtrlHandle_t * pSpeedTorqCtrl;         /*!< Speed and torque controller object used by MCI.*/
+  pFOCVars_t pFOCVars;                          /*!< Pointer to FOC vars used by MCI.*/
+  ResDivVbusSensorHandle_t  *pResDivVbusSensor; /*!< Used to raise the resistor dividor bus voltage sensor to the vehicle layer*/
+  MCInterfaceUserCommands_t LastCommand;        /*!< Last command coming from the user.*/
   MCConfigHandle_t          *pMCConfig;
     
   int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
@@ -85,7 +86,16 @@ typedef struct
   * @param  pFOCVars pointer to FOC vars to be used by MCI.
   * @retval none.
   */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, MCConfigHandle_t *pMCConfig);
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, ResDivVbusSensorHandle_t * pResDivVbusSensor, MCConfigHandle_t *pMCConfig);
+
+/**
+  * @brief  Initializes the parameters related to the battery (max power, max current,
+  *         undervoltage threshold)
+  * @param  pHandle: pointer on the component instance to operate on.
+  * @param  pBatteryPower: battery power parameters to initialize the power in the MC layer
+  * @retval none.
+  */
+void MCInterface_PowerInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup);
 
 /**
   * @brief  This is usually a method managed by task. It must be called

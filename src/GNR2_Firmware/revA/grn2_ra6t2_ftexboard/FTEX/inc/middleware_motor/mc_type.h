@@ -204,6 +204,29 @@ typedef struct
                                  *         #INTERNAL or #EXTERNAL*/
 } FOCVars_t, *pFOCVars_t;
 
+/**
+  * @brief  Battery power variables structure
+  */
+typedef struct
+{
+    uint8_t bPowerLimitRef;                              // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+    uint16_t hMaxApplicationPositivePower;               // Maximum power in watts that drive can push to the motor
+    uint16_t hMaxApplicationNegativePower;               // Maximum power in watts that drive can accept from the motor
+    uint16_t hMaxApplicationCurrent;                     // Maximum battery current in amps that drive can accept from the motor
+    
+    uint16_t hUndervoltageThreshold;                     // Undervoltage threshold of the battery
+    
+} BatteryPower_Setup_t;
+
+/**
+  * @brief  MC Setup structure
+  */
+typedef struct 
+{
+    BatteryPower_Setup_t    BatteryPowerSetup;
+    
+} MC_Setup_t;
+
 /** @name Utility macros definitions */
 /** @{ */
 #define RPM2MEC01HZ(rpm) (int16_t)((int32_t)(rpm)/6)

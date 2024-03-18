@@ -136,8 +136,13 @@
 /****** Over and Under Voltage Parameters ******/
 #define OV_VOLTAGE_THRESHOLD_V             75                   // Over-voltage threshold
 
-#define UD_VOLTAGE_THRESHOLD_CONV_V     32         //Undervoltage threshold for board to work
-#define UD_VOLTAGE_THRESHOLD_V          (UD_VOLTAGE_THRESHOLD_BATT_V > UD_VOLTAGE_THRESHOLD_CONV_V ? UD_VOLTAGE_THRESHOLD_BATT_V : UD_VOLTAGE_THRESHOLD_CONV_V)
+#define UD_VOLTAGE_THRESHOLD_CONT_V        32         //Undervoltage threshold for board to work
+
+/****** Power Parameters ******/
+#define DEFAULT_POWER_LIMIT_REF                     MAX_POWER_LIMIT
+#define DEFAULT_MAX_APPLICATION_CURRENT             PEAK_CURRENT_CONTROLLER_amps * 0.8          //Make default max DC current about 80% of the peak phase current
+#define DEFAULT_MAX_APPLICATION_POSITIVE_POWER      DEFAULT_MAX_APPLICATION_CURRENT * OV_VOLTAGE_THRESHOLD_V
+#define DEFAULT_MAX_APPLICATION_NEGATIVE_POWER      DEFAULT_MAX_APPLICATION_CURRENT * OV_VOLTAGE_THRESHOLD_V
 
 /****** PWM Parameters ******/
 #define PWM_FREQUENCY                   20000       // PWM switching frequency

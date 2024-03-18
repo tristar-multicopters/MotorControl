@@ -8,10 +8,6 @@
 #ifndef __DRIVE_PARAMETERS_QUIETKAT_H
 #define __DRIVE_PARAMETERS_QUIETKAT_H
 
-/******************************** BATTERY SELECTION ******************************/
-
-#include "batteries/pathfinder_battery.h"
-
 /************************** Controller Config  ************************/
 
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters

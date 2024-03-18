@@ -9,10 +9,6 @@
 #ifndef __DRIVE_PARAMETERS_PEGATRON_H
 #define __DRIVE_PARAMETERS_PEGATRON_H
 
-/******************************** BATTERY SELECTION ******************************/
-
-#include "batteries/nidec_battery.h"
-
 /************************** Controller Config  ************************/
 
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters

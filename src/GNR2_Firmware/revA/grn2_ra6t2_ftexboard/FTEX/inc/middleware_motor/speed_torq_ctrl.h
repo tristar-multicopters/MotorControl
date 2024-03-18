@@ -93,10 +93,12 @@ typedef struct
     uint16_t hMaxPositiveTorque;            /*!< Maximum positive value of motor
                                              torque in cNm.*/
     int16_t  hMinNegativeTorque;            /*!< Minimum negative value of motor
-                                             torque in cNm.*/                         
+                                             torque in cNm.*/                     
+    uint8_t  bPowerRef;
+
     uint16_t hMaxPositivePower;             /*!< Maximum positive value of motor
                                              power in W.*/
-    uint16_t hMaxContinuousPower;             /*!< Maximum positive value of motor
+    uint16_t hMaxContinuousPower;           /*!< Maximum positive value of motor
                                              power in W.*/
     int16_t hMinNegativePower;              /*!< Minimum negative value of motor
                                              power in W.*/
@@ -145,6 +147,21 @@ typedef struct
   */
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
                         NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor);
+
+/**
+  * @brief  Initializes the parameters related to the battery (max power, max current,
+  *         undervoltage threshold)
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  powerRef: indicates whether to use the max power or max current parameter
+  *         to determine the max power
+  * @param  maxPosPower: max power that can be sent to the motor
+  * @param  maxNegPower: max power that can be recieved from the motor
+  * @param  maxCurr: max DC current of the battery
+  * @param  UVThresh: undervoltage threshold of the battery
+  * @retval none.
+  */
+void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup);
+
 
 /**
   * @brief  It should be called before each motor restart. If STC is set in

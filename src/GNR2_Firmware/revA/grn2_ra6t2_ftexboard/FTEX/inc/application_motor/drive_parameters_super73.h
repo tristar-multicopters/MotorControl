@@ -8,10 +8,6 @@
 #ifndef __DRIVE_PARAMETERS_SUPER73_H
 #define __DRIVE_PARAMETERS_SUPER73_H
 
-/******************************** BATTERY SELECTION ******************************/
-
-#include "batteries/super73_battery.h" //CHECK!!!
-
 /************************** Controller Config  ************************/
 
 #define HARDWARE_SELECTION                 HARDWARE_EP1200    // Controller selection to adapt controller parameters

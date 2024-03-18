@@ -174,7 +174,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     {
         .bEnableFoldback = ENABLE_MAX_POWER_LIMIT,
         .FoldbackConfig = TRIM,
-        .hDefaultOutputLimitHigh = MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
+        .hDefaultOutputLimitHigh = (uint16_t)(DEFAULT_MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100),
         .hDefaultOutputLimitLow = MAX_BMS_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
         .hDecreasingEndValue = MAX_TIME_BMS_TOLERANT,
         .hDecreasingRange = MAX_POWER_LIMIT_TIMEOUT,
@@ -190,7 +190,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     },
     .DynamicPowerHandle =
     {
-        .hDynamicMaxPower = MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
+        .hDynamicMaxPower = (uint16_t)(DEFAULT_MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100),
         .hBelowMaxPowerTimeout = MAX_POWER_RECOVER_TIMEOUT,  
         .hOverMaxPowerTimeout = 0,    // since using foldback this parameter is not needed
         .hBelowMaxPowerTimer = 0,
@@ -205,19 +205,20 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     },  
     .motorType =                    MOTOR_TYPE,
     .hSTCFrequencyHz =              MEDIUM_FREQUENCY_TASK_RATE,
-    .hMaxBusCurrent =               (uint16_t)(MAX_APPLICATION_CURRENT),
+    .hMaxBusCurrent =               (uint16_t)(DEFAULT_MAX_APPLICATION_CURRENT),
     .hMaxContinuousCurrent =        (uint16_t)(MAX_BMS_CONTINOUS_CURRENT),
     .hEnableLVtorqueLimit =      ENABLE_LV_TORQUE_LIMIT,
-    .hBatteryLowVoltage =           (uint16_t)(UD_VOLTAGE_THRESHOLD_V *(LOW_VOLTAGE_THRESHOLD_PERCENTAGE + 100))/100, 
+    .hBatteryLowVoltage =           (uint16_t)(UD_VOLTAGE_THRESHOLD_CONT_V *(LOW_VOLTAGE_THRESHOLD_PERCENTAGE + 100))/100, 
     .hMaxAppPositiveMecSpeedUnit =    (uint16_t)(MAX_APPLICATION_SPEED_UNIT),
     .hMinAppPositiveMecSpeedUnit =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
     .hMaxAppNegativeMecSpeedUnit =    (int16_t)(-MAX_APPLICATION_SPEED_UNIT),
     .hMinAppNegativeMecSpeedUnit =    (int16_t)(-MIN_APPLICATION_SPEED_UNIT),
     .hMaxPositiveTorque =           (int16_t)NOMINAL_TORQUE,
     .hMinNegativeTorque =           -(int16_t)NOMINAL_TORQUE,
-    .hMaxPositivePower =            (int16_t)MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
+    .bPowerRef          =           DEFAULT_POWER_LIMIT_REF,
+    .hMaxPositivePower =            (int16_t)(DEFAULT_MAX_APPLICATION_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100),
     .hMaxContinuousPower =           (int16_t)MAX_BMS_POSITIVE_POWER * ESTIMATED_EFFICIENCY / 100,
-    .hMinNegativePower =            -(int16_t)MAX_APPLICATION_NEGATIVE_POWER * ESTIMATED_EFFICIENCY / 100,
+    .hMinNegativePower =            -(int16_t)(DEFAULT_MAX_APPLICATION_NEGATIVE_POWER * ESTIMATED_EFFICIENCY / 100),
     .hEstimatedEfficiencyPercent =  ESTIMATED_EFFICIENCY,
     .ModeDefault =                    DEFAULT_CONTROL_MODE,
     .wTorqueSlopePerSecondUp =      DEFAULT_TORQUE_SLOPE_UP,
@@ -448,8 +449,8 @@ ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1 =
         .hChannel = BUS_VOLTAGE_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw       =  M1_VBUS_SW_FILTER_BW_FACTOR,
-    .hOverVoltageThreshold  = OVERVOLTAGE_THRESHOLD_d,
-    .hUnderVoltageThreshold =  UNDERVOLTAGE_THRESHOLD_d,
+    .hOverVoltageThreshold  =  OVERVOLTAGE_THRESHOLD_d,
+    .hUnderVoltageThreshold =  DEFAULT_UNDERVOLTAGE_THRESHOLD_d,
     .aBuffer = RealBusVoltageSensorFilterBufferM1,
 };
 

@@ -8,10 +8,6 @@
 #ifndef __DRIVE_PARAMETERS_E_CELLS_H
 #define __DRIVE_PARAMETERS_E_CELLS_H
 
-/******************************** BATTERY SELECTION ******************************/
-
-#include "batteries/e_cell_52v_battery.h"
-
 /************************** Controller Config  ************************/
 
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters

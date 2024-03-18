@@ -61,7 +61,7 @@ void VC_BootUp(void)
     Delay_Init(&DelayArray[PTS_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // // Initialize the time base for the Pedal Torque sensor stuck delay
     Delay_Init(&DelayArray[BRAKE_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // // Initialize the time base for the brake sensor stuck delay
     
-    /* Initialize vehicle controller state machine and powertrain components */
+    /* Initialize MC layer, vehicle controller state machine and powertrain components */
     VCSTM_Init(pVCI->pStateMachine);
     PWRT_Init(pVCI->pPowertrain, &MCInterface[M1], &SlaveM2, DelayArray);
 }
@@ -111,6 +111,8 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         if (TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT > TASK_VCSLOWLOOP_SAMPLE_TIME_TICK)
         {
             
+            uint16_t busVoltageVoltx100;
+            
             if ((pVCI->pPowertrain->pPWREN->bIsPowerEnabled == true) && (bLightInitalised == false)) // If we have bene powered on by the screen
             {
                 Light_PowerOnSequence(pVCI->pPowertrain->pHeadLight); // Setup the lights with their default values
@@ -121,8 +123,10 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
             // Check if we still have power enabled
             PWREN_MonitorPowerEnable(pVCI->pPowertrain->pPWREN);          
             
+            busVoltageVoltx100 = MDI_GetBusVoltageInVoltx100(pVCI->pPowertrain->pMDI->pMCI);
+            
             // Update the SOC voltage reference
-            BatMonitor_UpdateSOC(pVCI->pPowertrain->pBatMonitorHandle);
+            BatMonitor_UpdateSOC(pVCI->pPowertrain->pBatMonitorHandle, busVoltageVoltx100);
             
             if (BRK_IsPressed(pVCI->pPowertrain->pBrake))  //Blink the tail light when we brake
             {

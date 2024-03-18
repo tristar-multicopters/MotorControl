@@ -203,7 +203,7 @@ void MC_BootUp(void)
     oMCInterface[M1] = &MCInterface[M1];
     
     
-    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1], &(pBusSensorM1->Super),&MCConfig);
+    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1], pBusSensorM1, &MCConfig);
     
     /* Section where we initialise conversion factors that need to be available to vehicle control */
     oMCInterface[M1]->MCIConvFactors.Gain_Torque_IQRef = GAIN_TORQUE_IQREF;

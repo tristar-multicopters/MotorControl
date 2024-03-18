@@ -24,13 +24,13 @@
 /*
 * see function definition
 */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, MCConfigHandle_t *pMCConfig)
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, ResDivVbusSensorHandle_t * pResDivVbusSensor, MCConfigHandle_t *pMCConfig)
 {
     ASSERT(pHandle != NULL);
     pHandle->pSTM = pSTM;
     pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
     pHandle->pFOCVars = pFOCVars;
-    pHandle->pBusVoltageSensor = pBusVoltageSensor;
+    pHandle->pResDivVbusSensor = pResDivVbusSensor;
     pHandle->pMCConfig = pMCConfig;
 
     /* Buffer related initialization */
@@ -39,10 +39,19 @@ void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachine
     pHandle->hFinalTorque = 0;
     pHandle->CommandState = MCI_BUFFER_EMPTY;
     
-
     /*Initialize driver */
     Driver_Disable(&pHandle->bDriverEn);
     
+}
+
+/*
+* see function definition
+*/
+void MCInterface_PowerInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup)
+{
+    ASSERT(pHandle != NULL);
+    SpdTorqCtrl_PowerInit(pHandle->pSpeedTorqCtrl, MCSetup);
+    ResDivVbusSensor_UVInit(pHandle->pResDivVbusSensor, MCSetup);
 }
 
 /*
@@ -492,8 +501,8 @@ uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHa
     uint32_t VoltageConverted = 0;
     uint16_t ConversionFactor = 0;
     
-    ConversionFactor = pHandle->pBusVoltageSensor->hConversionFactor;
-    VoltageConverted = VbusSensor_GetAvBusVoltageDigital(pHandle->pBusVoltageSensor);
+    ConversionFactor = pHandle->pResDivVbusSensor->Super.hConversionFactor;
+    VoltageConverted = VbusSensor_GetAvBusVoltageDigital(&(pHandle->pResDivVbusSensor->Super));
     VoltageConverted = VoltageConverted * ConversionFactor * 100u;
     VoltageConverted = VoltageConverted/65536u;
          

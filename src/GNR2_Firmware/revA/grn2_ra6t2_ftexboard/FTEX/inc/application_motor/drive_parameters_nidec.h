@@ -8,10 +8,6 @@
 #ifndef __DRIVE_PARAMETERS_NIDEC_H
 #define __DRIVE_PARAMETERS_NIDEC_H
 
-/******************************** BATTERY SELECTION ******************************/
-
-#include "batteries/nidec_battery.h"
-
 /************************** Controller Config  ************************/
 
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters

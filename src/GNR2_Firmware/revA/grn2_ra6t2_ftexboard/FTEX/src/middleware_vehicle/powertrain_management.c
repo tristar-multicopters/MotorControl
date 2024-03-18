@@ -51,10 +51,10 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
 
     // Initilaize peripherals
     Wheel_Init();
-    MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2);
+    MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2, MCSetup);
     Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
     BRK_Init(pHandle->pBrake, &brakeDelay);
-    BatMonitor_Init(pHandle->pBatMonitorHandle, pHandle->pMDI->pMCI);
+    BatMonitor_Init(pHandle->pBatMonitorHandle);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
     Light_Init(pHandle->pHeadLight);

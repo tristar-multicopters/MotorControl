@@ -97,10 +97,10 @@
 #define MIN_APPLICATION_SPEED_UNIT2 ((MIN_APPLICATION_SPEED_RPM2*SPEED_UNIT)/_RPM)
 
 /**************************   VOLTAGE CONVERSIONS  Motor 1 *************************/
-#define OVERVOLTAGE_THRESHOLD_d   (uint16_t)(OV_VOLTAGE_THRESHOLD_V*65535/\
-                                  (ADC_REFERENCE_VOLTAGE/VBUS_PARTITIONING_FACTOR))
-#define UNDERVOLTAGE_THRESHOLD_d  (uint16_t)((UD_VOLTAGE_THRESHOLD_V*65535)/\
-                                  ((uint16_t)(ADC_REFERENCE_VOLTAGE/\
+#define OVERVOLTAGE_THRESHOLD_d            (uint16_t)(OV_VOLTAGE_THRESHOLD_V*65535/\
+                                           (ADC_REFERENCE_VOLTAGE/VBUS_PARTITIONING_FACTOR))
+#define DEFAULT_UNDERVOLTAGE_THRESHOLD_d   (uint16_t)((UD_VOLTAGE_THRESHOLD_CONT_V*65535)/\
+                                           ((uint16_t)(ADC_REFERENCE_VOLTAGE/\
                                                            VBUS_PARTITIONING_FACTOR)))
 #define INT_SUPPLY_VOLTAGE          (uint16_t)(65536/ADC_REFERENCE_VOLTAGE)
 

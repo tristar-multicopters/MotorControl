@@ -58,6 +58,14 @@ typedef struct
 void ResDivVbusSensor_Init(ResDivVbusSensorHandle_t * pHandle);
 
 /**
+  * @brief  It initializes the undervoltage threshold value from the battery parameters.
+  * @param  pHandle related ResDivVbusSensorHandle_t
+  *         UVThresh is the undervoltage threshold value from the battery parameters
+  * @retval none
+  */
+void ResDivVbusSensor_UVInit(ResDivVbusSensorHandle_t * pResDivVbusSensor, MC_Setup_t MCSetup);
+
+/**
   * @brief  It clears bus voltage FW variable containing average bus voltage
   *         value
   * @param  pHandle related ResDivVbusSensorHandle_t
