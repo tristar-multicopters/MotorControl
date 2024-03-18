@@ -205,7 +205,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
         Foldback_UpdateLimitValue(&pHandle->FoldbackLimitSpeed, 0); // Update speed limit foldback
         Foldback_UpdateMaxValue(&pHandle->FoldbackLimitSpeed, hTorqueReference); // Update speed limit foldback
         Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * 1.1)); // Update speed limit foldback
-        Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, pHandle->hSpdLimit * 0.1); // Update speed limit foldback
+        Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, 12); // Update speed limit foldback
         
         if (pHandle->bEnableSpdLimitControl)
         {
