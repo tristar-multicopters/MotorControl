@@ -72,6 +72,12 @@
 #define PAS_MIN_PEDAL_PULSE_COUNT            16             // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
+#define PAS_LEVEL_SPEED_1  VEHICLE_TOP_SPEED_KMH
+#define PAS_LEVEL_SPEED_2  VEHICLE_TOP_SPEED_KMH
+#define PAS_LEVEL_SPEED_3  VEHICLE_TOP_SPEED_KMH
+#define PAS_LEVEL_SPEED_4  VEHICLE_TOP_SPEED_KMH
+#define PAS_LEVEL_SPEED_5  VEHICLE_TOP_SPEED_KMH
+
 /************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
 
 #include "speed_sensors/velec_wheel_motor_sensor.h"
