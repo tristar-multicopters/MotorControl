@@ -219,8 +219,17 @@ int  FW_EraseFirstImage(void)
     {
         return FLASH_ERROR;
     }
+    
+    //macro defined on keil target bootloader_512K
+    #ifdef BOOT_512K
+    
+    flash_area_erase(fap, 0, IMAGE_SIZE_MCU_512K);
+    
+    #else
 
     flash_area_erase(fap, 0, flash_area_get_size(fap));
+    
+    #endif
     flash_area_close(fap);
     
     return rc;
@@ -299,6 +308,9 @@ bool FW_CheckFirmwareIntegrity(void)
             //calculate crc 4 on the fly.
             FirmwareUpdate_Crc32Update(external_flash_data[n]);
         }
+        
+        //kick to reset WDT timeout.
+        Watchdog_Refresh();
     }while(data_read_len == SPI_TRANSFER_SIZE);
     
     //read the last four bytes of the file. Theses bytes

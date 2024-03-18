@@ -10,6 +10,13 @@
 #include "watchdog.h"
 #include "fw_version.h"
 
+//image header szie(1024 bytes). Firmware start after it.
+#define IMAGE_HEADERSIZE  0x400
+//firmware image starts at this address, after (64K bytes).
+//this offset is the size of the bootloader, that is allocated
+//before the image firmware.
+#define IMAGE_OFFSET      0x10000
+
 
 FSP_CPP_HEADER
 void R_BSP_WarmStart(bsp_warm_start_event_t event);
@@ -51,6 +58,25 @@ void MCuboot_QuickSetup(void)
     /* Verify the boot image and get its location. */
     struct boot_rsp rsp;
     
+    //macro defined on keil target bootloader_512K
+    #ifdef BOOT_512K
+    
+    //declare a image header struct and initialise the image
+    //header size.
+    const struct image_header imageHeader = {.ih_hdr_size = IMAGE_HEADERSIZE};
+    
+    //check firmware memory
+    
+    //firmware image starts here
+    //It's a fixed position
+    rsp.br_image_off = IMAGE_OFFSET;
+    
+    //this will be used to set the  main firmware location
+    //IMAGE_OFFSET + IMAGE_HEADERSIZE
+    rsp.br_hdr = &imageHeader;
+    
+    #else
+    
     //get valid or invalid bank information
     //this function must return zero if 
     //a valid image was found and a no-zero
@@ -76,6 +102,9 @@ void MCuboot_QuickSetup(void)
     //a corrupted or a empty bank was found.
     assert(bootValidBank == 0);
     
+    
+    #endif
+    
     //read and update dfu pack version into
     //data flash if necessary(a new version 
     //was flashed in the mcu memory.)
@@ -85,6 +114,8 @@ void MCuboot_QuickSetup(void)
     //only if a valid(not corrupted) firmware
     //was detected.
     RM_MCUBOOT_PORT_BootApp(&rsp);
+    
+
 }
 
 /*******************************************************************************************************************//**
