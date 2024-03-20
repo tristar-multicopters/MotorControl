@@ -42,7 +42,7 @@ uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
             pHandle->counter = 0;
             wRetval = MC_MSRP;
         }
-        #if VEHICLE_SELECTION == VEHICLE_QUIETKAT
+        #if MOTOR_SELECTION == MOTOR_BAFANG_G062_750W
         // this part checks if the battery SoC is low, rasies sooner to prevent unknown motor issue that causes controller burn
         // for now, only spotted on QiuetKat, more tests are needed for other bikes
         if ((hBusVoltage < pHandle->low_battery_voltage) && (pHandle->counter > pHandle->timeout_low_battery))

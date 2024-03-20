@@ -10,7 +10,7 @@
       <TargetName>APP_DEBUG (Standard)</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
+      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -465,6 +465,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_default.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_default.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
@@ -505,16 +510,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_utk_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
@@ -534,10 +529,15 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_tasks.h</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/Vehicle/Peripherals</GroupName>
+          <Files>
             <File>
-              <FileName>tsugawa_battery.h</FileName>
+              <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -545,15 +545,25 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
             </File>
             <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
+            <File>
               <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/Vehicle/Peripherals</GroupName>
-          <Files>
+            <File>
+              <FileName>utk_350w_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
             <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
@@ -590,26 +600,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\velec_750w_battery.h</FilePath>
             </File>
             <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_velec_r48_throttle.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\throttle_sensors\vc_velec_r48_throttle.h</FilePath>
@@ -643,6 +633,26 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>p3_d70008_w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
+            </File>
+            <File>
+              <FileName>velec_wheel_motor_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
             </File>
             <File>
               <FileName>super73_wheel_motor_sensor.h</FileName>
@@ -769,59 +779,64 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_350w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_e_cells.h</FileName>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_nidec.h</FileName>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_pegatron.h</FileName>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_pegatron.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_r48_750w.h</FileName>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_super73.h</FileName>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_tsugawa.h</FileName>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_utk_350w.h</FileName>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -829,14 +844,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP600.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP700.h</FileName>
@@ -2392,6 +2407,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_default.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_default.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
@@ -2432,16 +2452,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_utk_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
@@ -2461,10 +2471,15 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_tasks.h</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/Vehicle/Peripherals</GroupName>
+          <Files>
             <File>
-              <FileName>tsugawa_battery.h</FileName>
+              <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -2472,15 +2487,25 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
             </File>
             <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
+            <File>
               <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/Vehicle/Peripherals</GroupName>
-          <Files>
+            <File>
+              <FileName>utk_350w_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
             <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
@@ -2517,26 +2542,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\velec_750w_battery.h</FilePath>
             </File>
             <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_velec_r48_throttle.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\throttle_sensors\vc_velec_r48_throttle.h</FilePath>
@@ -2570,6 +2575,26 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>p3_d70008_w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
+            </File>
+            <File>
+              <FileName>velec_wheel_motor_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
             </File>
             <File>
               <FileName>super73_wheel_motor_sensor.h</FileName>
@@ -2696,59 +2721,64 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_350w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_e_cells.h</FileName>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_nidec.h</FileName>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_pegatron.h</FileName>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_pegatron.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_r48_750w.h</FileName>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_super73.h</FileName>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_tsugawa.h</FileName>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_utk_350w.h</FileName>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -2756,14 +2786,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP600.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP700.h</FileName>
@@ -4268,6 +4298,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_default.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_default.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
@@ -4308,16 +4343,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_utk_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
@@ -4337,10 +4362,15 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_tasks.h</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/Vehicle/Peripherals</GroupName>
+          <Files>
             <File>
-              <FileName>tsugawa_battery.h</FileName>
+              <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -4348,15 +4378,25 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
             </File>
             <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
+            <File>
               <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/Vehicle/Peripherals</GroupName>
-          <Files>
+            <File>
+              <FileName>utk_350w_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
             <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
@@ -4393,26 +4433,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\velec_750w_battery.h</FilePath>
             </File>
             <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_velec_r48_throttle.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\throttle_sensors\vc_velec_r48_throttle.h</FilePath>
@@ -4446,6 +4466,26 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>p3_d70008_w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
+            </File>
+            <File>
+              <FileName>velec_wheel_motor_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
             </File>
             <File>
               <FileName>super73_wheel_motor_sensor.h</FileName>
@@ -4572,59 +4612,64 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_350w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_e_cells.h</FileName>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_nidec.h</FileName>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_pegatron.h</FileName>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_pegatron.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_r48_750w.h</FileName>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_super73.h</FileName>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_tsugawa.h</FileName>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_utk_350w.h</FileName>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -4632,14 +4677,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP600.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP700.h</FileName>
@@ -6195,6 +6240,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_default.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_default.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
@@ -6235,16 +6285,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_utk_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
@@ -6264,10 +6304,15 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_tasks.h</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/Vehicle/Peripherals</GroupName>
+          <Files>
             <File>
-              <FileName>tsugawa_battery.h</FileName>
+              <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -6275,15 +6320,25 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
             </File>
             <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
+            <File>
               <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/Vehicle/Peripherals</GroupName>
-          <Files>
+            <File>
+              <FileName>utk_350w_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
             <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
@@ -6320,26 +6375,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\velec_750w_battery.h</FilePath>
             </File>
             <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_velec_r48_throttle.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\throttle_sensors\vc_velec_r48_throttle.h</FilePath>
@@ -6373,6 +6408,26 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>p3_d70008_w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
+            </File>
+            <File>
+              <FileName>velec_wheel_motor_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
             </File>
             <File>
               <FileName>super73_wheel_motor_sensor.h</FileName>
@@ -6499,59 +6554,64 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_350w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_e_cells.h</FileName>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_nidec.h</FileName>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_pegatron.h</FileName>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_pegatron.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_r48_750w.h</FileName>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_super73.h</FileName>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_tsugawa.h</FileName>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_utk_350w.h</FileName>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -6559,14 +6619,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP600.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP700.h</FileName>
@@ -8122,6 +8182,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_default.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_default.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
@@ -8162,16 +8227,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_utk_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
@@ -8191,10 +8246,15 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_tasks.h</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/Vehicle/Peripherals</GroupName>
+          <Files>
             <File>
-              <FileName>tsugawa_battery.h</FileName>
+              <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -8202,15 +8262,25 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
             </File>
             <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
+            <File>
               <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/Vehicle/Peripherals</GroupName>
-          <Files>
+            <File>
+              <FileName>utk_350w_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
             <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
@@ -8247,26 +8317,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\velec_750w_battery.h</FilePath>
             </File>
             <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_velec_r48_throttle.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\throttle_sensors\vc_velec_r48_throttle.h</FilePath>
@@ -8300,6 +8350,26 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>p3_d70008_w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
+            </File>
+            <File>
+              <FileName>velec_wheel_motor_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
             </File>
             <File>
               <FileName>super73_wheel_motor_sensor.h</FileName>
@@ -8426,59 +8496,64 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_350w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_e_cells.h</FileName>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_nidec.h</FileName>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_pegatron.h</FileName>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_pegatron.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_r48_750w.h</FileName>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_super73.h</FileName>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_tsugawa.h</FileName>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_utk_350w.h</FileName>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -8486,14 +8561,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP600.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP700.h</FileName>
@@ -9998,6 +10073,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_default.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_default.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_a2_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_a2_350w.h</FilePath>
@@ -10038,16 +10118,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_tsugawa.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_tsugawa.h</FilePath>
-            </File>
-            <File>
-              <FileName>vc_parameters_utk_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_utk_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
@@ -10067,10 +10137,15 @@
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_tasks.h</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/Vehicle/Peripherals</GroupName>
+          <Files>
             <File>
-              <FileName>tsugawa_battery.h</FileName>
+              <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -10078,15 +10153,25 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
             </File>
             <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
+            <File>
               <FileName>super73_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Application/Vehicle/Peripherals</GroupName>
-          <Files>
+            <File>
+              <FileName>utk_350w_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>tsugawa_battery.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
+            </File>
             <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
@@ -10123,26 +10208,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\velec_750w_battery.h</FilePath>
             </File>
             <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
               <FileName>vc_velec_r48_throttle.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\throttle_sensors\vc_velec_r48_throttle.h</FilePath>
@@ -10176,6 +10241,26 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>p3_d70008_w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
+            </File>
+            <File>
+              <FileName>velec_wheel_motor_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
             </File>
             <File>
               <FileName>super73_wheel_motor_sensor.h</FileName>
@@ -10302,59 +10387,64 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_350w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_a2_500w.h</FileName>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_a2_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_e_cells.h</FileName>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_e_cells.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_nidec.h</FileName>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_nidec.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_pegatron.h</FileName>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_pegatron.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_quietkat.h</FileName>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_quietkat.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_r48_750w.h</FileName>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_r48_750w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_super73.h</FileName>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_tsugawa.h</FileName>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_tsugawa.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_utk_350w.h</FileName>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_utk_350w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>drive_parameters_velec_citi_500w.h</FileName>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters_velec_citi_500w.h</FilePath>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -10362,14 +10452,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP600.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP700.h</FileName>

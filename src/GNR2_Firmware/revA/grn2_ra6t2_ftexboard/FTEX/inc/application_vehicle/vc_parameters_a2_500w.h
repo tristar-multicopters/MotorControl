@@ -9,7 +9,9 @@
 #ifndef __VC_PARAMETERS_A2_500W_H
 #define __VC_PARAMETERS_A2_500W_H
 
-#include "drive_parameters.h"
+/******************* MOTOR SELECTION  *******************************/
+#define MOTOR_SELECTION    MOTOR_AKM_128SX_500W
+
 
 /******************* SCREEN SELECTION  *******************************/
 #define SCREEN_PROTOCOL    UART_CLOUD_5S       
@@ -81,10 +83,6 @@
 #define FOLDBACK_SLOW_START_BANDWIDTH       500             // Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control
 #define FOLDBACK_SLOW_STOP_BANDWIDTH        155             // Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control
 #define FOLDBACK_TIMEOUT                    400             // Fold Back Timeout for the slow start ramp
-
-/************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
-
-#include "speed_sensors/velec_wheel_motor_sensor.h"
     
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 

@@ -10,6 +10,7 @@
 #define __DRIVE_PARAMETERS_H
 
 #include "gnr_parameters.h"
+#include "vc_parameters.h"
 
 #define HARDWARE_EP1200       0
 #define HARDWARE_EP600        1
@@ -17,56 +18,56 @@
 #define HARDWARE_EP700        3
 
 
-#if VEHICLE_SELECTION == VEHICLE_A2_350W
+#if MOTOR_SELECTION == MOTOR_AKM_128SX_350W
 
-#include "drive_parameters_a2_350w.h"
+#include "motor_parameters_akm_128sx_350w.h"
 
-#elif VEHICLE_SELECTION == VEHICLE_A2_500W 
+#elif MOTOR_SELECTION == MOTOR_AKM_128SX_500W 
 
-#include "drive_parameters_a2_500w.h"
+#include "motor_parameters_akm_128sx_500w.h"
 
+#elif MOTOR_SELECTION == MOTOR_AKM_128SX_750W
 
-#elif VEHICLE_SELECTION == VEHICLE_E_CELLS
+#include "motor_parameters_akm_128sx_750w.h"
 
-#include "drive_parameters_e_cells.h"
+#elif MOTOR_SELECTION == MOTOR_NIDEC_B900_V3
 
-#elif VEHICLE_SELECTION == VEHICLE_MAHLE
+#include "motor_parameters_nidec_b900_v3.h"
 
-#include "drive_parameters_mahle.h"
+#elif MOTOR_SELECTION == MOTOR_BAFANG_G020_500W
 
-#elif VEHICLE_SELECTION == VEHICLE_NIDEC
+#include "motor_parameters_bafang_g020_500w.h"
 
-#include "drive_parameters_nidec.h"
+#elif MOTOR_SELECTION == MOTOR_BAFANG_G040_500W
 
-#elif VEHICLE_SELECTION == VEHICLE_PEGATRON
+#include "motor_parameters_bafang_g040_500w.h"
 
-#include "drive_parameters_pegatron.h"
+#elif MOTOR_SELECTION == MOTOR_BAFANG_G60_750W
 
-#elif VEHICLE_SELECTION == VEHICLE_QUIETKAT
+#include "motor_parameters_bafang_g60_750w.h"
 
-#include "drive_parameters_quietkat.h"
+#elif MOTOR_SELECTION == MOTOR_BAFANG_G062_750W
 
-#elif VEHICLE_SELECTION == VEHICLE_R48_750W
+#include "motor_parameters_bafang_g062_750w.h"
 
-#include "drive_parameters_r48_750w.h"
+#elif MOTOR_SELECTION == MOTOR_BAFANG_G0900_750W
 
-#elif VEHICLE_SELECTION == VEHICLE_TSUGAWA
+#include "motor_parameters_bafang_g0900_750w.h"
 
-#include "drive_parameters_tsugawa.h"
+#elif MOTOR_SELECTION == MOTOR_TSUGAWA_L13S5_350W
 
-#elif VEHICLE_SELECTION == VEHICLE_SUPER73
+#include "motor_parameters_tsugawa_li3s5_350w.h"
 
-#include "drive_parameters_super73.h"
+#elif MOTOR_SELECTION == MOTOR_RS2_1200W
 
-#elif VEHICLE_SELECTION == VEHICLE_UTK_350W 
+#include "motor_parameters_rs2_1200w.h"
 
-#include "drive_parameters_utk_350w.h"
+#elif MOTOR_SELECTION == MOTOR_UTK_G250R_CA11_350W 
 
-#elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
-
-#include "drive_parameters_velec_citi_500w.h"
+#include "motor_parameters_utk_g250r_ca11_350w.h"
 
 #endif
+
 
 
 

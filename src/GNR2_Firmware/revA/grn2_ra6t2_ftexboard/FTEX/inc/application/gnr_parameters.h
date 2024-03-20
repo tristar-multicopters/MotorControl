@@ -10,14 +10,11 @@
 #define VEHICLE_A2_350W               2
 #define VEHICLE_A2_500W               3
 #define VEHICLE_QUIETKAT              4
-#define VEHICLE_NIDEC                 5
+#define VEHICLE_PEGATRON              5
 #define VEHICLE_E_CELLS               6
-#define VEHICLE_MAHLE                 7
-#define VEHICLE_PEGATRON              8   
-#define VEHICLE_TSUGAWA               9                  
-#define VEHICLE_UTK_350W             10
-#define VEHICLE_VELEC_CITI_500W      11
-#define VEHICLE_SUPER73              12
+#define VEHICLE_NIDEC                 7   
+#define VEHICLE_VELEC_CITI_500W       8
+#define VEHICLE_SUPER73               9
 
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
@@ -68,7 +65,7 @@
 //as WDT and etc.
 #define FIRMWARE_RELEASE              0
 
-#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_NIDEC     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                            

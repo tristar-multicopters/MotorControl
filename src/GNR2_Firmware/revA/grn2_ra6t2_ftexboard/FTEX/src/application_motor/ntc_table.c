@@ -7,21 +7,21 @@
 */
 
 #include "ntc_table.h"
-#include "gnr_parameters.h"
+#include "vc_parameters.h"
 
 #define NTC_CONTROLLER_LUT_SIZE                        31           // the number of correlation elements on this table
 #define NTC_CONTROLLER_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
 #define NTC_CONTROLLER_LUT_DIGITAL_FIRST_VALUE         16000        //1000 is the first value considered in the table that has a temperature correlation (7 degree C).
                                                          //*16 is the factor on tics conversion due variable casting
 
-#if VEHICLE_SELECTION == VEHICLE_R48_750W
+#if MOTOR_SELECTION == MOTOR_AKM_128SX_750W
 
 #define NTC_MOTOR_LUT_SIZE                        38           // the number of correlation elements on this table
 #define NTC_MOTOR_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
 #define NTC_MOTOR_LUT_DIGITAL_FIRST_VALUE         4000        //250 is the first value considered in the table that has a temperature correlation (144 degree C).
                                                          //*16 is the factor on tics conversion due variable casting
 
-#elif VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
+#elif MOTOR_SELECTION == MOTOR_NIDEC_B900_V3
 
 #define NTC_MOTOR_LUT_SIZE                        38           // the number of correlation elements on this table
 #define NTC_MOTOR_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion
@@ -74,7 +74,7 @@ const int32_t NTCControllerTemperatureTable[NTC_CONTROLLER_LUT_SIZE] =        //
     129,
 };
 
-#if VEHICLE_SELECTION == VEHICLE_R48_750W
+#if MOTOR_SELECTION == MOTOR_AKM_128SX_750W
 
 const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
 {                                                                   //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
@@ -118,7 +118,7 @@ const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function t
     -34,
 };
 
-#elif VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
+#elif MOTOR_SELECTION == MOTOR_NIDEC_B900_V3
 
 const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
 {                                                                                                                                     //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0

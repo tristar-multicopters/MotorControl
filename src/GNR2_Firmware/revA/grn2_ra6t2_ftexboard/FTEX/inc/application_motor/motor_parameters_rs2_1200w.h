@@ -1,12 +1,12 @@
 /**
-  * @file    drive_parameters_super73.h
+  * @file    motor_parameters_rs2_1200w.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to velec r48 750W motor.
+  *          in order to configure a motor drive. This file is specific to R/S2 1200W motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_SUPER73_H
-#define __DRIVE_PARAMETERS_SUPER73_H
+#ifndef __MOTOR_PARAMETERS_RS2_1200W_H
+#define __MOTOR_PARAMETERS_RS2_1200W_H
 
 /************************** Controller Config  ************************/
 
@@ -81,4 +81,8 @@
 #define HALL_PHASE_SHIFT                    60                  // Electrical phase shift in degree between the low to high
                                                                 // transition of signal H1 and the zero crossing of the Bemf induced
                                                                 // between phase A and B
-#endif /* __DRIVE_PARAMETERS_SUPER73_H */
+/************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
+
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     6       // Wheel speed sensor cycle number for one wheel rotation
+
+#endif /* __MOTOR_PARAMETERS_RS2_1200W_H */

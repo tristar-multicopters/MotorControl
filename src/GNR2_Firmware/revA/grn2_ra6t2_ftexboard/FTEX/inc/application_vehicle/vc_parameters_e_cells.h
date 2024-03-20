@@ -9,7 +9,9 @@
 #ifndef __VC_PARAMETERS_E_CELLS_H
 #define __VC_PARAMETERS_E_CELLS_H
 
-#include "drive_parameters.h"
+/******************* MOTOR SELECTION  *******************************/
+#define MOTOR_SELECTION    MOTOR_BAFANG_G60_750W
+
 
 /******************* SCREEN SELECTION  *******************************/
 #define SCREEN_PROTOCOL    UART_APT       
@@ -85,10 +87,6 @@
 #define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
 #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
-
-/************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
-
-#include "speed_sensors/bafang_g60_750w.h"
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 

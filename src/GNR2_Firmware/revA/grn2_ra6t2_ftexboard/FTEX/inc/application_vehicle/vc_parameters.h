@@ -13,7 +13,26 @@
 #include "gnr_parameters.h"
 #include "ramps.h"
 
-#if VEHICLE_SELECTION == VEHICLE_A2_350W 
+
+
+#define MOTOR_AKM_128SX_750W          1
+#define MOTOR_AKM_128SX_500W          2
+#define MOTOR_AKM_128SX_350W          3
+#define MOTOR_BAFANG_G020_500W        4
+#define MOTOR_BAFANG_G040_500W        5
+#define MOTOR_BAFANG_G062_750W        6
+#define MOTOR_BAFANG_G60_750W         7
+#define MOTOR_BAFANG_G0900_750W       8
+#define MOTOR_NIDEC_B900_V3           9
+#define MOTOR_TSUGAWA_L13S5_350W     10
+#define MOTOR_UTK_G250R_CA11_350W    11
+#define MOTOR_RS2_1200W              12
+
+#if VEHICLE_SELECTION == VEHICLE_DEFAULT 
+
+#include "vc_parameters_default.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_A2_350W 
 
 #include "vc_parameters_a2_350w.h"
 
@@ -45,22 +64,9 @@
 
 #include "vc_parameters_super73.h"
 
-#elif VEHICLE_SELECTION ==  VEHICLE_TSUGAWA
-
-#include "vc_parameters_tsugawa.h"
-
-#elif VEHICLE_SELECTION == VEHICLE_UTK_350W 
-
-#include "vc_parameters_utk_350w.h"
-
 #elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
 
 #include "vc_parameters_velec_citi_500w.h"
-
-
-#elif VEHICLE_SELECTION == VEHICLE_MAHLE 
-
-#include "vc_parameters_mahle.h"
 
 #endif
 

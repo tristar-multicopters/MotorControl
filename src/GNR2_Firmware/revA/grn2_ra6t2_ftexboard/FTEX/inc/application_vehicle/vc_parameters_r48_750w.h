@@ -9,7 +9,9 @@
 #ifndef __VC_PARAMETERS_R48_750W_H
 #define __VC_PARAMETERS_R48_750W_H
 
-#include "drive_parameters.h"
+/******************* MOTOR SELECTION  *******************************/
+#define MOTOR_SELECTION    MOTOR_AKM_128SX_750W
+
 
 /******************* SCREEN SELECTION  *******************************/
 #define SCREEN_PROTOCOL    UART_CLOUD_5S       
@@ -98,10 +100,6 @@
 #define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
 #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        2    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
-
-/************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
-
-#include "speed_sensors/velec_wheel_motor_sensor.h"
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 

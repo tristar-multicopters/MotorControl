@@ -9,7 +9,9 @@
 #ifndef __VC_PARAMETERS_SUPER73_H
 #define __VC_PARAMETERS_SUPER73_H
 
-#include "drive_parameters.h"
+/******************* MOTOR SELECTION  *******************************/
+#define MOTOR_SELECTION    MOTOR_RS2_1200W
+
 
 /******************* SCREEN SELECTION  *******************************/
 #define SCREEN_PROTOCOL    UART_APT       
@@ -100,10 +102,6 @@
 #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 300
 
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
-
-/************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
-
-#include "speed_sensors/super73_wheel_motor_sensor.h"
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 

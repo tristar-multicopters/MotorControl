@@ -572,7 +572,7 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
   
   
 
-#if VEHICLE_SELECTION == VEHICLE_TSUGAWA    
+#if MOTOR_SELECTION == MOTOR_TSUGAWA_L13S5_350W    
     if (FOCVars[bMotor].hTeref == 0.0)
     {
         PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
@@ -589,7 +589,7 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
     PID_SetKP(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKp, abs(hM1SpeedUnit)));
     PID_SetKI(pPIDId[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IdKi, abs(hM1SpeedUnit)));
     
-#if VEHICLE_SELECTION == VEHICLE_R48_750W    
+#if MOTOR_SELECTION == MOTOR_AKM_128SX_750W    
     // this PID update is for correct IqKI for imidietly stop when release trottle
     if (FOCVars[bMotor].hTeref == 0.0)
     {
@@ -601,7 +601,7 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
     }
 #endif
     
-#if VEHICLE_SELECTION == VEHICLE_A2_500W    
+#if MOTOR_SELECTION == MOTOR_AKM_128SX_500W    
     // this PID update is for correct IqKI for imidietly stop when release trottle
     if (FOCVars[bMotor].hTeref == 0.0)
     {
@@ -613,19 +613,7 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
     }
 #endif
     
-#if VEHICLE_SELECTION == VEHICLE_A2_350W    
-    // this PID update is for correct IqKI for imidietly stop when release trottle
-    if (FOCVars[bMotor].hTeref == 0.0)
-    {
-        PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
-    }
-    else
-    {
-        PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
-    }
-#endif
-    
-#if VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W    
+#if MOTOR_SELECTION == MOTOR_AKM_128SX_350W    
     // this PID update is for correct IqKI for imidietly stop when release trottle
     if (FOCVars[bMotor].hTeref == 0.0)
     {
@@ -675,10 +663,6 @@ void FOC_CalcCurrRef(uint8_t bMotor)
     if (FOCVars[bMotor].bDriveInput == INTERNAL)
     {
         FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSpeedTorqCtrl[bMotor]);
-      if (VEHICLE_SELECTION == VEHICLE_MAHLE)
-      {
-        FOCVars[bMotor].hTeref *=-1;
-      }
         FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
         FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
         

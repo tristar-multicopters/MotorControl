@@ -1,12 +1,13 @@
 /**
-  * @file    drive_parameters_nidec.h
+  * @file    motor_parameters_nidec_b900_v3.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to nidec motor.
+  *          in order to configure a motor drive. 
+  *          This file is specific to the B900 v3 motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_NIDEC_H
-#define __DRIVE_PARAMETERS_NIDEC_H
+#ifndef __MOTOR_PARAMETERS_NIDEC_B900_V3_H
+#define __MOTOR_PARAMETERS_NIDEC_B900_V3_H
 
 /************************** Controller Config  ************************/
 
@@ -14,7 +15,7 @@
 
 /************************** Motor Config  ************************/
 #define MOTOR_GEAR_RATIO                    (float)36       // Motor gear ratio, the value is always X turns of the motor 
-#define MOTOR_TYPE                          MID_DRIVE 
+#define MOTOR_TYPE                          MID_DRIVE
 #define MOTOR_TEMP_SENSOR_TYPE              REAL_SENSOR     // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
 
 #define MAX_APPLICATION_SPEED_RPM           3600            // Max speed for the current application in mechanical rpm
@@ -24,7 +25,7 @@
 #define PID_FLUX_KP_DEFAULT                 100             // Default gain if adaptative gain feature is not used
 #define PID_FLUX_KI_DEFAULT                 1000            // Default gain if adaptative gain feature is not used
 
-#define ENABLE_SPEED_LIMIT_CONTROL          false
+#define ENABLE_SPEED_LIMIT_CONTROL          true
 #define PID_SPEED_KP_DEFAULT                100             // Default gain speed control loop
 #define PID_SPEED_KI_DEFAULT                10              // Default gain speed control loop
 #define SP_KIDIV                            16384           // Speed control gain divider, to allow decimal value
@@ -38,19 +39,19 @@
 #define ENABLE_MAX_POWER_LIMIT              true            // To enable or disable the foldback
 #define MAX_TIME_BMS_TOLERANT               20000           // End time of derating for BMS protection in ms
 #define MAX_POWER_LIMIT_TIMEOUT             10000           // Start time of derating for BMS protection in ms
-#define MAX_BMS_POSITIVE_POWER              500             // Maximum Power at the end point of foldback
+#define MAX_BMS_POSITIVE_POWER              750             // Maximum Power at the end point of foldback
 #define MAX_BMS_CONTINOUS_CURRENT           10              // Maximum Power at the end point of foldback in amps
 
 #define ESTIMATED_EFFICIENCY                67              // Percent efficiency of input compared to output power
 
 #define FOLDBACK_SPEED_INTERVAL             750             // Speed interval (#SPEED_UNIT) of the decreasing torque ramp to limit speed
-#define FOLDBACK_MOTOR_TEMP_INTERVAL        20              // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
+#define FOLDBACK_MOTOR_TEMP_INTERVAL        45              // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
  /************************** Ramp Manager Config  ************************/
-#define DEFAULT_TORQUE_SLOPE_UP             5000            // Slope in cNm per second
-#define DEFAULT_TORQUE_SLOPE_DOWN           5000            // Slope in cNm per second
-#define DEFAULT_SPEED_SLOPE_UP              2500            // Slope in #SPEED_UNIT per second
-#define DEFAULT_SPEED_SLOPE_DOWN            2500            // Slope in #SPEED_UNIT per second
+#define DEFAULT_TORQUE_SLOPE_UP              3000           // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_DOWN            3000           // Slope in cNm per second
+#define DEFAULT_SPEED_SLOPE_UP              25000           // Slope in #SPEED_UNIT per second
+#define DEFAULT_SPEED_SLOPE_DOWN            25000           // Slope in #SPEED_UNIT per second
 
 #define MEC_SPEED_FILTER_BUTTERWORTH_ALPHA  16.91F          // Alpha constant to configure butterworth filter for mecanical speed filtering
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA  -14.91F          // Beta constant to configure butterworth filter for mecanical speed filtering
@@ -59,22 +60,16 @@
 #define POLE_PAIR_NUM                       6               // Number of motor pole pairs
 #define RS                                  0.044f          // Stator resistance , ohm
 #define LS                                  0.000235f       // Stator inductance, H   For I-PMSM it is equal to Lq
-#define MOTOR_MAGNET_FLUX                   0.0057f          // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
+#define MOTOR_MAGNET_FLUX                   0.0056f          // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
 #define MOTOR_VOLTAGE_CONSTANT              28.84f          // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f            // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps             49              // peak current in amps
-
-/****** Hall sensors ************/
-#define HALL_MEAS_ERRORS_BEFORE_FAULTS  6 /*!< Number of failed
-                                                           derived class specific speed
-                                                           measurements before main sensor
-                                                           goes in fault */
+#define PEAK_CURRENT_MOTOR_amps             49         // peak current in amps
 
 #define MOTOR_MAX_SPEED_RPM                 2100            // Maximum rated speed - Old Example 2750 for 38Km/h
 
 #define OV_TEMP_MOTOR_THRESHOLD_C           150             // Maximum temperature in degree C
-#define OV_TEMP_MOTOR_HYSTERESIS_C          20              // Temperature to decrease after an overtemp fault occured before clearing the fault, in degree C
+#define OV_TEMP_MOTOR_HYSTERESIS_C          5              // Temperature to decrease after an overtemp fault occured before clearing the fault, in degree C
 #define FLUX_WEAKENING_ENABLE               0               // 0=disable 1=enable flux weakening , 
 
 /***************** MOTOR SENSORS PARAMETERS  ******************************/
@@ -86,4 +81,8 @@
                                                             // transition of signal H1 and the zero crossing of the Bemf induced
                                                             // between phase A and B
 
-#endif /* __DRIVE_PARAMETERS_NIDEC_H */
+/************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
+
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     1       // Wheel speed sensor cycle number for one wheel rotation
+
+#endif /* __MOTOR_PARAMETERS_NIDEC_B900_V3_H */

@@ -1,12 +1,12 @@
 /**
-  * @file    drive_parameters_quietkat.h
+  * @file    motor_parameters_bafang_g062_750w.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to quietkat motor.
+  *          in order to configure a motor drive. This file is specific to the Bafang G062 750W motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_QUIETKAT_H
-#define __DRIVE_PARAMETERS_QUIETKAT_H
+#ifndef __MOTOR_PARAMETERS_BAFANG_G062_750W_H
+#define __MOTOR_PARAMETERS_BAFANG_G062_750W_H
 
 /************************** Controller Config  ************************/
 
@@ -67,7 +67,7 @@
 #define MOTOR_VOLTAGE_CONSTANT              24.5f               // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps                   55                  // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps             55                  // peak current in amps
 
 #define MOTOR_MAX_SPEED_RPM                 1875                // Maximum rated speed
 
@@ -84,4 +84,8 @@
                                                                 // transition of signal H1 and the zero crossing of the Bemf induced
                                                                 // between phase A and B
 
-#endif /* __DRIVE_PARAMETERS_QUIETKAT_H */
+/************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
+
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     1       // Wheel speed sensor cycle number for one wheel rotation
+
+#endif /* __MOTOR_PARAMETERS_BAFANG_G062_750W_H */

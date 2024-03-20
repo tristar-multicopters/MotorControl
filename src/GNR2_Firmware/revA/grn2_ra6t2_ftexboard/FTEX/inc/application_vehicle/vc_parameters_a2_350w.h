@@ -9,7 +9,9 @@
 #ifndef __VC_PARAMETERS_VELEC_A2_H
 #define __VC_PARAMETERS_VELEC_A2_H
 
-#include "drive_parameters.h"
+/******************* MOTOR SELECTION  *******************************/
+#define MOTOR_SELECTION    MOTOR_AKM_128SX_350W
+
 
 /******************* SCREEN SELECTION  *******************************/
 #define SCREEN_PROTOCOL    UART_APT       
@@ -75,8 +77,6 @@
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /************** WHEEL SPEED SENSOR SELECTION (MOTOR SIGNALS) *****************************/
-
-#include "speed_sensors/velec_wheel_motor_sensor.h"
 
 #define DEFAULT_WHEEL_DIAMETER_OVERRIDE     26              // Overrides the default wheel diameter value 
 

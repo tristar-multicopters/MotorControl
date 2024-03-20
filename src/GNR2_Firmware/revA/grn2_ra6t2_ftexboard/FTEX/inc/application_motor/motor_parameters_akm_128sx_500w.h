@@ -1,12 +1,12 @@
 /**
-  * @file    drive_parameters_a2_500w.h
+  * @file    motor_parameters_akm_128sx_500w.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to velec  a2 500w motor.
+  *          in order to configure a motor drive. This file is specific to the AKM 128SX 500W motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_A2_500W_H
-#define __DRIVE_PARAMETERS_A2_500W_H
+#ifndef __MOTOR_PARAMETERS_AKM_128SX_500W_H
+#define __MOTOR_PARAMETERS_AKM_128SX_500W_H
 
 /************************** Controller Config  ************************/
 
@@ -37,6 +37,7 @@
 
 #define ENABLE_MAX_POWER_LIMIT              true             // To enable or disable the foldback
 #define MAX_TIME_BMS_TOLERANT               20000
+
 #define MAX_POWER_LIMIT_TIMEOUT             10000
 #define MAX_BMS_POSITIVE_POWER              500              // Maximum Power at the end point of foldback
 #define MAX_BMS_CONTINOUS_CURRENT           10               // Maximum Power at the end point of foldback in amps
@@ -63,7 +64,7 @@
 #define MOTOR_VOLTAGE_CONSTANT              28.84f          // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f            // Coefficient to keep the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps                   50              // Peak current in amps
+#define PEAK_CURRENT_MOTOR_amps             50              // Peak current in amps
 
 #define MOTOR_MAX_SPEED_RPM                 2100            // Maximum rated speed - Old Example 2750 for 38Km/h
 
@@ -75,5 +76,9 @@
 #define HALL_SENSORS_PLACEMENT              DEGREES_120     // Mechanical position of the sensors with reference to an electrical cycle. It can be either DEGREES_120 or DEGREES_60
 #define HALL_PHASE_SHIFT                    60              // Electrical phase shift in degrees between the low to high transition of signal H1 and the zero crossing of the Bemf induced between phase A and B
 
+/************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
-#endif /* __DRIVE_PARAMETERS_A2_500W_H */
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     1       // Wheel speed sensor cycle number for one wheel rotation
+                                                            
+
+#endif /* __MOTOR_PARAMETERS_AKM_128SX_500W_H */

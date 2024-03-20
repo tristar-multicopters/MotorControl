@@ -1,12 +1,12 @@
 /**
-  * @file    drive_parameters_tsugawa.h
+  * @file    motor_parameters_tsugawa_li3s5_350w.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to tsugawa motor.
+  *          in order to configure a motor drive. This file is specific to the Tsugawa L13S5DPC0TH 350W motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_TSUGAWA_H
-#define __DRIVE_PARAMETERS_TSUGAWA_H
+#ifndef __MOTOR_PARAMETERS_TSUGAWA_LI3S5_350W_H
+#define __MOTOR_PARAMETERS_TSUGAWA_LI3S5_350W_H
 
 /************************** Controller Config  ************************/
 
@@ -24,7 +24,7 @@
 #define PID_FLUX_KP_DEFAULT                100                  // Default gain if adaptive gain feature is not used
 #define PID_FLUX_KI_DEFAULT                1000                 // Default gain if adaptive gain feature is not used
 
-#define ENABLE_SPEED_LIMIT_CONTROL         false                // Enable or disable speed limit control
+#define ENABLE_SPEED_LIMIT_CONTROL         true                // Enable or disable speed limit control
 #define PID_SPEED_KP_DEFAULT               100                  // Default gain for speed control loop
 #define PID_SPEED_KI_DEFAULT               10                   // Default gain for speed control loop
 #define SP_KIDIV                           16384                // Speed control gain divider, to allow decimal value
@@ -47,7 +47,7 @@
 #define FOLDBACK_MOTOR_TEMP_INTERVAL       20                   // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
  /************************** Ramp Manager Config  ************************/
-#define DEFAULT_TORQUE_SLOPE_UP            5000                 // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_UP            2000                 // Slope in cNm per second
 #define DEFAULT_TORQUE_SLOPE_DOWN          5000                 // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP             500                  // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN           500                  // Slope in #SPEED_UNIT per second
@@ -63,7 +63,7 @@
 #define MOTOR_VOLTAGE_CONSTANT          18.4f                   // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                  1.2f                    // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps               50                      // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps               30                      // peak current in amps
 
 #define MOTOR_MAX_SPEED_RPM             4000                    // Maximum rated speed  -Old Example 2750 for 38Km/h
 
@@ -81,4 +81,9 @@
 #define HALL_PHASE_SHIFT           20                           // Electrical phase shift in degree between the low to high
                                                                 // transition of signal H1 and the zero crossing of the Bemf induced
                                                                 // between phase A and B
-#endif /* __DRIVE_PARAMETERS_TSUGAWA_H */
+
+/************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
+
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION      8    // Wheel speed sensor cycle number for one wheel rotation
+
+#endif /* __MOTOR_PARAMETERS_TSUGAWA_LI3S5_350W_H */

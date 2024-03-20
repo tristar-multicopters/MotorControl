@@ -1,12 +1,12 @@
 /**
-  * @file    drive_parameters_velec_a2.h
+  * @file    motor_parameters_akm_128sx_350w.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to velec A2 motor.
+  *          in order to configure a motor drive. This file is specific to AKM 128SX 350W motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __DRIVE_PARAMETERS_VELEC_A2_H
-#define __DRIVE_PARAMETERS_VELEC_A2_H
+#ifndef __MOTOR_PARAMETERS_AKM_128SX_350W_H
+#define __MOTOR_PARAMETERS_AKM_128SX_350W_H
 
 /************************** Controller Config  ************************/
 
@@ -63,7 +63,7 @@
 #define MOTOR_VOLTAGE_CONSTANT              28.84f          // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f            // Coefficient to keep the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps                   50              // Peak current in amps
+#define PEAK_CURRENT_MOTOR_amps             50              // Peak current in amps
 
 #define MOTOR_MAX_SPEED_RPM                 2100            // Maximum rated speed - Old Example 2750 for 38Km/h                                                      
 
@@ -80,5 +80,9 @@
                                                             // transition of signal H1 and the zero crossing of the Bemf induced
                                                             // between phase A and B
                                                             
+/************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
+
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     1       // Wheel speed sensor cycle number for one wheel rotation
+                                                            
                                                                                                          
-#endif /* __DRIVE_PARAMETERS_VELEC_A2_H */
+#endif /* __MOTOR_PARAMETERS_AKM_128SX_350W_H */
