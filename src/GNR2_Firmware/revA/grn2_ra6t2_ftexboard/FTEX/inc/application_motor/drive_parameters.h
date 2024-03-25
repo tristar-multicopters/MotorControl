@@ -193,13 +193,13 @@
 
 /****** Flux Weakening Parameters  ******/
 #define FW_VOLTAGE_REF                  900         // Flux weakening Vs reference, tenth
-#define FW_KP_GAIN                      0           // Flux weakening default Kp gain
-#define FW_KI_GAIN                      0           // Flux weakening default Ki gain
+#define FW_KP_GAIN                      2000           // Flux weakening default Kp gain
+#define FW_KI_GAIN                      100           // Flux weakening default Ki gain
 #define FW_KPDIV                        32768       // Flux weakening gain divider, to allow decimal value
 #define FW_KIDIV                        32768       // Flux weakening gain divider, to allow decimal value
 #define FW_KPDIV_LOG                    LOG2(32768) // Flux weakening gain divider log2, to allow decimal value
 #define FW_KIDIV_LOG                    LOG2(32768) // Flux weakening gain divider log2, to allow decimal value
-#define ID_DEMAG_amps                   -5          // Demagnetization current
+#define ID_DEMAG_amps                   -20          // Demagnetization current
 
 /****** Feedforward Parameters ******/
 #define CONSTANT1_Q                     0           // Feedforward Iq related gain
