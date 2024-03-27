@@ -57,7 +57,7 @@ uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
     * @param  
     * @retval 
 */
-void Clear_MotorStuckReverse();
+void Clear_MotorStuckReverse(StuckProtection_t * pHandle);
 
 #endif /* __STUCKPROTECTION_H */
 

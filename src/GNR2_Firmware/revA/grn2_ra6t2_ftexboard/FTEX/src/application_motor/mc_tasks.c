@@ -387,7 +387,7 @@ void MediumFrequencyTaskM1(void)
         HallPosSensor_Clear(&HallPosSensorM1);
         BemfObsPll_Clear(&BemfObserverPllM1);
         RotorPosObs_Clear(&RotorPosObsM1);
-        Clear_MotorStuckReverse();
+        Clear_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection);
         if (MCStateMachine_NextState(&MCStateMachine[M1], M_START) == true)
         {
             FOC_Clear(M1);
