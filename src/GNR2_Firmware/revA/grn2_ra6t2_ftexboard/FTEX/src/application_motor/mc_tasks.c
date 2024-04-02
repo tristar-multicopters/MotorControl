@@ -836,6 +836,7 @@ inline uint32_t FOC_CurrControllerM1(void)
     PWMCurrFdbk_GetPhaseCurrents(pPWMCurrFdbk[M1], &Iab);
     MotorState_t StateM1;
     StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
+    
     if (StateM1 == M_RUN || StateM1 == M_ANY_STOP)
     {
         Ialphabeta = MCMath_Clarke(Iab);

@@ -12,7 +12,6 @@
 /************************** Controller Config  ************************/
 
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters
-
 /************************** Motor Config  ************************/
 #define MOTOR_GEAR_RATIO                    (float)36       // Motor gear ratio, the value is always X turns of the motor 
 #define MOTOR_TYPE                          MID_DRIVE

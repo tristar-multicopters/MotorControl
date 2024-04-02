@@ -66,6 +66,10 @@
 
 #include "motor_parameters_utk_g250r_ca11_350w.h"
 
+#elif MOTOR_SELECTION == MOTOR_GHR_0194_DD
+
+#include "motor_parameters_ghr_0194_dd.h"
+
 #endif
 
 

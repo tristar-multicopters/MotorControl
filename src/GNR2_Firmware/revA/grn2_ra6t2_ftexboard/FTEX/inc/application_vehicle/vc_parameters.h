@@ -27,6 +27,7 @@
 #define MOTOR_TSUGAWA_L13S5_350W     10
 #define MOTOR_UTK_G250R_CA11_350W    11
 #define MOTOR_RS2_1200W              12
+#define MOTOR_GHR_0194_DD            13
 
 #if VEHICLE_SELECTION == VEHICLE_DEFAULT 
 
@@ -67,6 +68,10 @@
 #elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
 
 #include "vc_parameters_velec_citi_500w.h"
+
+#elif VEHICLE_SELECTION == VEHICLE_MILEBOX
+
+#include "vc_parameters_milebox.h"
 
 #endif
 

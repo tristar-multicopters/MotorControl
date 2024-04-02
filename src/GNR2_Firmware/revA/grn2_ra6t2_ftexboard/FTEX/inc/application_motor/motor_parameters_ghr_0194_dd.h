@@ -1,20 +1,20 @@
 /**
-  * @file    motor_parameters_akm_128sx_750w.h
+  * @file    motor_parameters_ghr_0194_dd.h
   * @brief   This file contains the parameters needed for the Motor Control application
-  *          in order to configure a motor drive. This file is specific to AKM 128SX 750W motor.
+  *          in order to configure a motor drive. This file is specific to milebox direct drive motor.
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MOTOR_PARAMETERS_AKM_128SX_750W_H
-#define __MOTOR_PARAMETERS_AKM_128SX_750W_H
+#ifndef __MOTOR_PARAMETERS_GHR_0194_DD_H
+#define __MOTOR_PARAMETERS_GHR_0194_DD_H
 
 /************************** Controller Config  ************************/
 
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters
 /************************** Motor Config  ************************/
-#define MOTOR_GEAR_RATIO                    (float)10.9890      // Motor gear ratio, the value is always X turns of the motor 
-#define MOTOR_TYPE                          HUB_DRIVE           // Motor type. Can be HUB_DRIVE or MID_DRIVE
-#define MOTOR_TEMP_SENSOR_TYPE              REAL_SENSOR         // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
+#define MOTOR_GEAR_RATIO                    (float)1      // Motor gear ratio, the value is always X turns of the motor 
+#define MOTOR_TYPE                          DIRECT_DRIVE           // Motor type. Can be HUB_DRIVE or MID_DRIVE or DIRECT_DRIVE
+#define MOTOR_TEMP_SENSOR_TYPE              VIRTUAL_SENSOR         // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
 
 #define MAX_APPLICATION_SPEED_RPM           4000                // Max speed for the current application in mechanical rpm
 #define HALL_AVERAGING_FIFO_DEPTH           8                   // Depth of the FIFO used to average Hall sensor values
@@ -37,7 +37,7 @@
 #define ENABLE_MAX_POWER_LIMIT              true                // Enable or disable the foldback
 #define MAX_TIME_BMS_TOLERANT               20000               // End time of derating for BMS protection in ms
 #define MAX_POWER_LIMIT_TIMEOUT             10000               // Start time of derating for BMS protection in ms
-#define MAX_BMS_POSITIVE_POWER              700                 // Maximum power at the end point of foldback
+#define MAX_BMS_POSITIVE_POWER              1800                 // Maximum power at the end point of foldback
 #define MAX_BMS_CONTINOUS_CURRENT           10                  // Maximum Power at the end point of foldback in amps
 
 #define ESTIMATED_EFFICIENCY                100             // Percent efficiency of input compared to output power
@@ -46,7 +46,7 @@
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        10                  // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
  /************************** Ramp Manager Config  ************************/
-#define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_UP             1000                // Slope in cNm per second
 #define DEFAULT_TORQUE_SLOPE_DOWN           10000               // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP              10000               // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN            10000               // Slope in #SPEED_UNIT per second
@@ -55,10 +55,10 @@
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA   -14.91F             // Beta constant to configure Butterworth filter for mechanical speed filtering
 
 /***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
-#define POLE_PAIR_NUM                       8                   // Number of motor pole pairs
+#define POLE_PAIR_NUM                       23                   // Number of motor pole pairs
 #define RS                                  0.1f                // Stator resistance , ohm
 #define LS                                  0.000235f           // Stator inductance, H   For I-PMSM it is equal to Lq
-#define MOTOR_MAGNET_FLUX                   0.0195f             // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
+#define MOTOR_MAGNET_FLUX                   0.0052f             // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
 #define MOTOR_VOLTAGE_CONSTANT              28.84f              // Volts RMS ph-ph /kRPM
 #define ST_Torque_Coef                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
 
@@ -81,6 +81,6 @@
 
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
-#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     1       // Wheel speed sensor cycle number for one wheel rotation
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     46       // Wheel speed sensor cycle number for one wheel rotation
                                                             
-#endif /* __MOTOR_PARAMETERS_AKM_128SX_750W_H */
+#endif /* __MOTOR_PARAMETERS_GHR_0194_DD_H */
