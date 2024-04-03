@@ -22,7 +22,7 @@ typedef enum
 }DelayUnits_t;
 
 /**
-  * @brief Generic structure contianing the information inside the handle of a delay 
+  * @brief Generic structure containing the information inside the handle of a delay 
   */
 typedef struct
 {                  

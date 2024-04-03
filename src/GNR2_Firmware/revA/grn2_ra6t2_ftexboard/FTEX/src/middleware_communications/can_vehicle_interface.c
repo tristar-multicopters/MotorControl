@@ -18,6 +18,9 @@
 #include "user_config_task.h"
 #pragma clang diagnostic pop
 
+
+bool CANScreenSetup = false;
+
 // ==================== Public function prototypes ======================== //
 
 /**
@@ -283,8 +286,45 @@ int16_t CanVehiInterface_GetMotorTemp(VCI_Handle_t * pHandle)
  */
 void CanVehiInterface_GetPasLevelMinTorque(VCI_Handle_t * pHandle, uint8_t * pasLevelMinTorque)
 {
+   ASSERT(pHandle != NULL); 
    for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
    {
         pasLevelMinTorque[n] = pHandle->pPowertrain->pPAS->sParameters.PASMinTorqRatiosInPercentage[n];
    }
 }
+
+/**
+  Setup the vehicle to use a CAN screen
+ */
+void CanVehiInterface_SetupCANScreen(VCI_Handle_t * pHandle)
+{
+   ASSERT(pHandle != NULL);
+   ASSERT(UART0Handle.UARTProtocol == UART_DISABLE);  // We can only call this when no UART screen is present
+    
+   Throttle_SetupExternal(pHandle->pPowertrain->pThrottle,65535,0); 
+   CANScreenSetup = true; 
+}
+
+/**
+  Check if we are setup for a CAN screen
+ */
+bool CanVehiInterface_CheckCANScreenSetup(void)
+{
+    return CANScreenSetup;
+}
+
+/**
+  Provide the vc layer with an updated Throttle value
+ */
+void CanVehiInterface_UpdateExternalThrottle(VCI_Handle_t * pHandle, uint16_t aNewThrottleVal)
+{
+   if(CANScreenSetup) // Check if we are expecting a CAN screen
+   {
+       Throttle_UpdateExternal(pHandle->pPowertrain->pThrottle,aNewThrottleVal);
+   }       
+   else
+   {
+       ASSERT(false);
+   }
+}
+

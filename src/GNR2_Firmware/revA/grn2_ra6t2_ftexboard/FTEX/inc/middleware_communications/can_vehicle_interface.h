@@ -195,10 +195,31 @@ int16_t CanVehiInterface_GetControllerTemp(VCI_Handle_t * pHandle);
 int16_t CanVehiInterface_GetMotorTemp(VCI_Handle_t * pHandle);
 
 /**
-  @briefPass Pass by reference all PAS values of the minimum torque percentage
+  @brief Pass by reference all PAS values of the minimum torque percentage
   @param  pHandle: handle of the vehicle 
   @return none
  */
 void CanVehiInterface_GetPasLevelMinTorque(VCI_Handle_t * pHandle, uint8_t * pasLevelMinTorque);
 
+/**
+  @brief Setup the vehicle to use a CAN screen
+  @param  pHandle: handle of the vehicle 
+  @return none
+ */
+void CanVehiInterface_SetupCANScreen(VCI_Handle_t * pHandle);
+
+/**
+  @brief Check if we are setup for a CAN screen
+  @param none
+  @return State of the CAN screen setup
+ */
+bool CanVehiInterface_CheckCANScreenSetup(void);
+    
+/**
+  @brief Provide the vc layer with an updated Throttle value
+  @param  pHandle: handle of the vehicle, uint16_t new value of throttle 
+  @return none
+ */
+void CanVehiInterface_UpdateExternalThrottle(VCI_Handle_t * pHandle, uint16_t aNewThrottleVal);
+    
 #endif /* __CAN_IOT_COMM_H */

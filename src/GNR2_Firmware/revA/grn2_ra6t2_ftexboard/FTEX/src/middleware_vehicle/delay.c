@@ -64,7 +64,7 @@ void Delay_SetTime(Delay_Handle_t * pHandle, uint32_t aDelay, DelayUnits_t aDela
 {
     ASSERT(pHandle != NULL);
     
-    ASSERT(pHandle->TimePerPulseUnits < aDelayUnits); // If we want a milisecond delay but we receive pulses every second 
+    ASSERT(pHandle->TimePerPulseUnits <= aDelayUnits); // If we want a milisecond delay but we receive pulses every second 
                                                       // it is not possible to make the Delay
     
     if(pHandle->TimePerPulseUnits == aDelayUnits && aDelay < pHandle->TimePerPulse) // If we want a delay every 6 ms but the pusle                                                                   
@@ -97,5 +97,12 @@ void Delay_SetTime(Delay_Handle_t * pHandle, uint32_t aDelay, DelayUnits_t aDela
             
     }
     
-    pHandle->DelayTimePulse = ((aDelay * ConversionRate)/pHandle->TimePerPulse) + 1; // We would rather have a slightly longer delay then slightly shorter
+    if (((aDelay * ConversionRate)) % pHandle->TimePerPulse == 0) // Do we have a common divisior ?
+    {
+        pHandle->DelayTimePulse = ((aDelay * ConversionRate)/pHandle->TimePerPulse); 
+    }
+    else
+    {
+        pHandle->DelayTimePulse = ((aDelay * ConversionRate)/pHandle->TimePerPulse) + 1; // We would rather have a slightly longer delay then slightly shorter
+    }
 }

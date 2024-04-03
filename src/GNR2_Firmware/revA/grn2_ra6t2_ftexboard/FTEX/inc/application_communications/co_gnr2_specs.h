@@ -150,7 +150,7 @@ extern "C" {
 //OD ID used to hold the vehicle power/torque values
 //this object has 3 subindex
 //
-// 0 -> DC current approx
+// 0 -> DC power approx
 // 1 -> torque measure in Ncm
 // 2 -> power measure in watts
 #define CO_OD_REG_POWER_MEASURE                0x2001 
@@ -416,7 +416,12 @@ extern "C" {
 // 17 -> PAS 9 Ramp Argument 1
 #define CO_OD_REG_PAS_DECEL_RAMP               0x202A
 
-// Available                                   0x202B
+//OD ID used to send an external throttle value to the vehicle
+// this object has 2 subindex
+//
+// 0 -> CAN screen Notifier 0 - 1
+// 1 -> External input for the throttle 0 - 65535
+#define CO_OD_REG_CAN_SCREEN            0x202B
 
 // Available                                   0x202C
 

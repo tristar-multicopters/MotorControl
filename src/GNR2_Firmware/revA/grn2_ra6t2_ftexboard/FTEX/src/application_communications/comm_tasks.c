@@ -15,6 +15,8 @@
 #include "board_hardware.h"
 #include "uCAL_GPIO.h"
 
+#include "delay.h"
+
 // CANOpen includes
 #include "co_core.h"
 #include "co_gnr2_specs.h"
@@ -48,7 +50,7 @@ uint16_t hCommErrors = COMM_NO_ERROR;  /* This global variable holds all error f
 
 bool bCANOpenTaskBootUpCompleted = false;
 
-
+Delay_Handle_t CANScreenTimeout;
 /********* PRIVATE MEMBERS *************/
 
 extern osThreadId_t CANOpenTaskHandle;
@@ -350,9 +352,41 @@ static void UpdateObjectDictionnary(void *p_arg)
                         LCD_Cloud_5S_handle.isScreenSlave = true;
                         CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle
                     }
-                }                    
-            
+                }                                
             }
+            else if (CanVehiInterface_CheckCANScreenSetup()) // If we have a can screen just reflect the change
+            {
+                CanVehiInterface_SetVehiclePAS (&VCInterfaceHandle, bPAS[CAN_PARAM]);  // propagate the change in the vehicle 
+            }
+            
+            if(CanVehiInterface_CheckCANScreenSetup()) // If we are allowed to have a CAN screen
+            {
+                uint16_t ExternalThrottleVal = 0;
+                uint8_t  CANScreenNotifier = 0;
+                
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 0)),  pNode, &CANScreenNotifier, sizeof(uint8_t));
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 1)),  pNode, &ExternalThrottleVal, sizeof(uint16_t));
+                
+                if(CANScreenNotifier == 1)
+                {
+                    Delay_Reset(&CANScreenTimeout);
+                                        
+                    // Keep the throttle value up to date
+                    CanVehiInterface_UpdateExternalThrottle(&VCInterfaceHandle,ExternalThrottleVal);
+                    
+                    CANScreenNotifier = 0; // Update the notifier to acknowledge we received the new value
+                    COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 0)),  pNode, &CANScreenNotifier, sizeof(uint8_t));                    
+                }  
+                else if (ExternalThrottleVal > 0)
+                {
+                    if(Delay_Update(&CANScreenTimeout)) // If we haven't received anything from the screen and the timeout overflowed
+                    {
+                        CanVehiInterface_UpdateExternalThrottle(&VCInterfaceHandle,0);
+                        ExternalThrottleVal = 0;    // Reflect the change on CAN
+                        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 1)),  pNode, &ExternalThrottleVal, sizeof(uint16_t));
+                    }   
+                }
+            }   
             
             if(hWheelDiameter[VEHICLE_PARAM] != hWheelDiameter[CAN_PARAM])
             {
@@ -709,6 +743,11 @@ void Comm_BootUp(void)
         case UART_LOG_HS:
             LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
         case UART_DISABLE:
+            // If we don;t use the UART assume we have a CAN screen
+            Delay_Init(&CANScreenTimeout,25,MIL_SEC); // Setup the timeout delay
+            Delay_SetTime(&CANScreenTimeout,250,MIL_SEC);
+            CanVehiInterface_SetupCANScreen(&VCInterfaceHandle);
+            
             break;
         default:
             //Dont initialise the euart
