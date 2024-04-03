@@ -362,9 +362,11 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
                 }
             }
             
-            LightStatus = (pHandle->rx_frame.Buffer[5]) & 0x80; // bit7: headlight. 0: light off, 1: light on
-         
-            if (LightStatus == true) //Operate the light according to what the screne tells us
+            LightStatus = pHandle->rx_frame.Buffer[5]; 
+            
+            LightStatus = (LightStatus & 0x80); // bit7: headlight. 0: light off, 1: light on
+            
+            if (LightStatus > 0) //Operate the light according to what the screen tells us
             {
                 Light_Enable(pHandle->pVController->pPowertrain->pHeadLight);  
                 Light_Enable(pHandle->pVController->pPowertrain->pTailLight); 
