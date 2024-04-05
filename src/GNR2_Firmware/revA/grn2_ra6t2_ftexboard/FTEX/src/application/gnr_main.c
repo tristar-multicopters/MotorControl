@@ -450,7 +450,6 @@ static bool AGTInit(void)
         // Initialize the low power timer 1 as timer for CANOpen
     bIsError |= R_AGT_Open(g_timer_a1.p_ctrl, g_timer_a1.p_cfg);
 
-
     return bIsError;
 }
 

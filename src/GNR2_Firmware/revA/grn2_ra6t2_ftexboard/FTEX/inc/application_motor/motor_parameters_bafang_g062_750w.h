@@ -15,6 +15,7 @@
 #define MOTOR_GEAR_RATIO                   (float)5             // Motor gear ratio, the value is always X turns of the motor
 #define MOTOR_TYPE                          HUB_DRIVE           // Motor type. Can be HUB_DRIVE or MID_DRIVE
 #define MOTOR_TEMP_SENSOR_TYPE              VIRTUAL_SENSOR      // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
+#define MOTOR_TEMP_MIXED                    false               // true if the motor temperature signal is mixed with wheelspeed.
 
 #define MAX_APPLICATION_SPEED_RPM           2000                // Max speed for the current application in mechanical rpm
 #define HALL_AVERAGING_FIFO_DEPTH           10                  // depth of the FIFO used to

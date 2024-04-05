@@ -10,7 +10,7 @@
       <TargetName>APP_DEBUG (Standard)</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
+      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -550,21 +550,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
             </File>
             <File>
-              <FileName>super73_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>utk_350w_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>tsugawa_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
-            </File>
-            <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\bafang_30nm.h</FilePath>
@@ -633,31 +618,6 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
-              <FileName>super73_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\super73_wheel_motor_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1323,6 +1283,11 @@
               <FileName>stuck_protection.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_signal_processing.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2492,21 +2457,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
             </File>
             <File>
-              <FileName>super73_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>utk_350w_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>tsugawa_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
-            </File>
-            <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\bafang_30nm.h</FilePath>
@@ -2575,31 +2525,6 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
-              <FileName>super73_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\super73_wheel_motor_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3265,6 +3190,11 @@
               <FileName>stuck_protection.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_signal_processing.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4383,21 +4313,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
             </File>
             <File>
-              <FileName>super73_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>utk_350w_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>tsugawa_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
-            </File>
-            <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\bafang_30nm.h</FilePath>
@@ -4466,31 +4381,6 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
-              <FileName>super73_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\super73_wheel_motor_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -5207,6 +5097,11 @@
               <FileName>stuck_protection.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_signal_processing.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6325,21 +6220,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
             </File>
             <File>
-              <FileName>super73_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>utk_350w_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>tsugawa_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
-            </File>
-            <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\bafang_30nm.h</FilePath>
@@ -6408,31 +6288,6 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
-              <FileName>super73_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\super73_wheel_motor_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -7098,6 +6953,11 @@
               <FileName>stuck_protection.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_signal_processing.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -8267,21 +8127,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
             </File>
             <File>
-              <FileName>super73_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>utk_350w_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>tsugawa_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
-            </File>
-            <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\bafang_30nm.h</FilePath>
@@ -8350,31 +8195,6 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
-              <FileName>super73_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\super73_wheel_motor_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -9040,6 +8860,11 @@
               <FileName>stuck_protection.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_signal_processing.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -10158,21 +9983,6 @@
               <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
             </File>
             <File>
-              <FileName>super73_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>utk_350w_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\utk_350w_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>tsugawa_battery.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\tsugawa_battery.h</FilePath>
-            </File>
-            <File>
               <FileName>bafang_30nm.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\pedal_sensors\bafang_30nm.h</FilePath>
@@ -10241,31 +10051,6 @@
               <FileName>e_cell_52v_battery.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\batteries\e_cell_52v_battery.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>p3_d70008_w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\p3_d70008_w.h</FilePath>
-            </File>
-            <File>
-              <FileName>velec_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\velec_wheel_motor_sensor.h</FilePath>
-            </File>
-            <File>
-              <FileName>super73_wheel_motor_sensor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\speed_sensors\super73_wheel_motor_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -10982,6 +10767,11 @@
               <FileName>stuck_protection.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_signal_processing.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
           </Files>
         </Group>

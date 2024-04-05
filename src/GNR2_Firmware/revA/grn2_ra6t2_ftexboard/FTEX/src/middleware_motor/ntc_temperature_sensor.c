@@ -5,6 +5,9 @@
 */
 
 #include "ntc_temperature_sensor.h"
+#include "drive_parameters.h"
+#include "motor_signal_processing.h"
+
 
 /* global Variables -----------------------------------------------------------*/
 
@@ -100,7 +103,16 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
     uint16_t hAux;   // temporary 16 bit variable for calculation
     if (pHandle->bSensorType == REAL_SENSOR)  // Checks if the sensor is real or virtual
     {
-        hAux = RegConvMng_ReadConv(pHandle->bConvHandle);   // Reads raw value of converted ADC value.
+        //does have the current motor mixed signal?
+        if ((MOTOR_TEMP_MIXED == true) && (getMixedSignalRegConvIndex() == pHandle->bConvHandle))
+        { 
+            hAux = getExtractedMotorTemperature();
+        }
+        else
+        {
+            hAux = RegConvMng_ReadConv(pHandle->bConvHandle);   // Reads raw value of converted ADC value.
+        }
+        
         // Checks for max reading, if yes, no point of averaging
         // Performs first order averaging:
         // new_average = (instantenous_measurment + (previous_average * number_of_smaples - 1)) / number_of_smaples

@@ -257,6 +257,7 @@ void MC_Scheduler(void)
         }
         else
         {
+            //period of execution is 1 ms.
             MediumFrequencyTaskM1();
             hMFTaskCounterM1 = MF_TASK_OCCURENCE_TICKS;
         }
@@ -312,8 +313,10 @@ void MediumFrequencyTaskM1(void)
 #if DYNAMIC_CURRENT_CONTROL_PID
     FOC_UpdatePIDGains(M1);
 #endif
-
-    RegConvMng_ExecuteGroupRegularConv(FIRST_REG_CONV_ADC_GROUP_MASK | SECOND_REG_CONV_ADC_GROUP_MASK);
+    if (MOTOR_TEMP_MIXED == false)
+    {
+        RegConvMng_ExecuteGroupRegularConv(FIRST_REG_CONV_ADC_GROUP_MASK | SECOND_REG_CONV_ADC_GROUP_MASK);
+    }
 
     StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
     switch (StateM1)

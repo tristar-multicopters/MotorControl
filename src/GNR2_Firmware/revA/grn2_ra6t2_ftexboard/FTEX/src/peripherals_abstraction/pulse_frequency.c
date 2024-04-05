@@ -49,7 +49,7 @@ void PulseFrequency_ReadInputCapture (PulseFrequencyHandle_t * pHandle)
         case GPT_TIMER:
             /* Calculate the pulse width on microseconds */
             //pulse width is almost the rovolution time of the wheel.
-           pHandle->wUsPeriod =(float)(((float)pHandle->wCaptureCount)/((float)info.clock_frequency));
+           pHandle->wSecondPeriod =(float)(((float)pHandle->wCaptureCount)/((float)info.clock_frequency));
             
         //Read AGT parameter, on this case the number of pulses
         //detected by the AGT.

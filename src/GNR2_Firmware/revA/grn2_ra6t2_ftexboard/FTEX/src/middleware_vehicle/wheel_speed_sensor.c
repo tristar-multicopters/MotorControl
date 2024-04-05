@@ -9,6 +9,8 @@
 
 #include "wheel_speed_sensor.h"
 #include "ASSERT_FTEX.h"
+#include "motor_signal_processing.h"
+#include "drive_parameters.h"
 // ==================== Public function prototypes ======================== //
 
 /**
@@ -29,44 +31,55 @@ void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle)
 {
     //check input conditions
     ASSERT(pHandle != NULL);
-    //verify if the timer is measuring.
-    //if yes, initialise the flag to wait for the timer
-    //to set the flag again and indicating it still working.
-    if (pHandle->pPulseFrequency->measuring == true)
+    
+    //if motor doesn't have a mixed temperature/wheelspeed siganl,
+    //get wheel speed period from the capture timer. 
+    if (MOTOR_TEMP_MIXED == false)
     {
-        pHandle->pPulseFrequency->measuring = false;
-        pHandle->wWheelSpeedTimeOut = 0;
-    }
-    else
-    {
-        //avoid variable overflow
-        if (pHandle->wWheelSpeedTimeOut < WHEELSPEED_TIMEOUT_MS)
-        {   
-            //increment the timeout variable
-            pHandle->wWheelSpeedTimeOut = pHandle->wWheelSpeedTimeOut + WHEELSPEED_TIME_INCREMENT_MS;
+        //verify if the timer is measuring.
+        //if yes, initialise the flag to wait for the timer
+        //to set the flag again and indicating it still working.
+        if (pHandle->pPulseFrequency->measuring == true)
+        {
+            pHandle->pPulseFrequency->measuring = false;
+            pHandle->wWheelSpeedTimeOut = 0;
+        }
+        else
+        {
+            //avoid variable overflow
+            if (pHandle->wWheelSpeedTimeOut < WHEELSPEED_TIMEOUT_MS)
+            {   
+                //increment the timeout variable
+                pHandle->wWheelSpeedTimeOut = pHandle->wWheelSpeedTimeOut + WHEELSPEED_TIME_INCREMENT_MS;
+            }
+        }
+    
+        // Detect if the timer did more than 2 overflows or timer is not running anymore, speed must to be set to zero.
+        if ((pHandle->pPulseFrequency->wCaptureOverflow > MAXNUMBER_OVERFLOW_WHEELSPEED) || ((pHandle->pPulseFrequency->measuring == false) && (pHandle->wWheelSpeedTimeOut >= WHEELSPEED_TIMEOUT_MS)))
+        {
+            //Wheel speed is zero becacuse the timer overflowed
+            //the time period determine the maximum time to the
+            //wheel complete a full revolution.
+            //this means that: 
+            pHandle->wWheelSpeed_Read = 0;  
+        }
+        else
+        {
+            //update basic wheel speed information.
+            PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
+            //get the time used by the wheel to complet a revolution.
+            pHandle->wWheelSpeed_Read = pHandle->pPulseFrequency->wSecondPeriod;   
         }
     }
-    
-    // Detect if the timer did more than 2 overflows or timer is not running anymore, speed must to be set to zero.
-    if ((pHandle->pPulseFrequency->wCaptureOverflow > MAXNUMBER_OVERFLOW_WHEELSPEED) || ((pHandle->pPulseFrequency->measuring == false) && (pHandle->wWheelSpeedTimeOut >= WHEELSPEED_TIMEOUT_MS)))
-    {
-        //Wheel speed is zero becacuse the timer overflowed
-        //the time period determine the maximum time to the
-        //wheel complete a full revolution.
-        //this means that: 
-        pHandle->wWheelSpeed_Read = 0;  
-    }
     else
     {
-        //update basic wheel speed information.
-        PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
-        //get the time used by the wheel to complet a revolution.
-        pHandle->wWheelSpeed_Read = pHandle->pPulseFrequency->wUsPeriod;   
+        //get directly from the mixed signal, using analogic input.
+        pHandle->wWheelSpeed_Read = (float)getExtractedWheelSpeed();
     }
 }
 
 /**
-    Wheel Speed Sensor Get periode value in usec
+    Wheel Speed Sensor Get periode value in seconds.
 */
 float WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle)
 {
