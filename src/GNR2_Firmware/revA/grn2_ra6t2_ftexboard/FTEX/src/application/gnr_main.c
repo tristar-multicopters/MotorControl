@@ -166,6 +166,10 @@ void gnr_main(void)
     //load user config from the data flash.
     UserConfigTask_InitUserConfigFromDataFlash(&UserConfigHandle,&DataFlashHandle,&VCInterfaceHandle);
     
+    //fucntion to pass the user configuration read from the memory to
+    //VCInterfaceHandle
+    UserConfigTask_UpdateUserConfigData(&UserConfigHandle);
+    
     //get all information from the GNR controller, as serial number, firmware and dfu pack version.
     GnrInfo_Read(&DataFlashHandle);  
 
@@ -179,9 +183,7 @@ void gnr_main(void)
     }
     
     Comm_BootUp();
-    //fucntion to pass the user configuration read from the memory to
-    //VCInterfaceHandle
-    UserConfigTask_UpdateUserConfigData(&UserConfigHandle);
+    
     //Initialize the CAN OPEN ID/object dictionary.
     CANOpenTask();
 
