@@ -363,9 +363,13 @@ static void UpdateObjectDictionnary(void *p_arg)
             {
                 uint16_t ExternalThrottleVal = 0;
                 uint8_t  CANScreenNotifier = 0;
+                uint8_t  ExternalCruiseControlState = 0;
+                static uint8_t LastCANCruiseState = 0;
                 
                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 0)),  pNode, &CANScreenNotifier, sizeof(uint8_t));
                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 1)),  pNode, &ExternalThrottleVal, sizeof(uint16_t));
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 2)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t));
+                
                 
                 if(CANScreenNotifier == 1)
                 {
@@ -374,16 +378,44 @@ static void UpdateObjectDictionnary(void *p_arg)
                     // Keep the throttle value up to date
                     CanVehiInterface_UpdateExternalThrottle(&VCInterfaceHandle,ExternalThrottleVal);
                     
+                    if (LastCANCruiseState == 1 && CanVehiInterface_GetCruiseControlState(&VCInterfaceHandle) == false) // Did the controller force a disengage of cruise control
+                    {                                               
+                        if (ExternalCruiseControlState == 1) // Does CAN still think cruise is On ?
+                        { 
+                           // Force the change on CAN
+                           ExternalCruiseControlState = 0;
+                           COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 2)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t)); 
+                        }
+                        else
+                        {
+                           LastCANCruiseState = 0;
+                        }                        
+                    }
+                    else if (ExternalCruiseControlState == 1 && LastCANCruiseState == 0)
+                    {
+                        CanVehiInterface_EngageCruiseControl(&VCInterfaceHandle);
+                        LastCANCruiseState = 1;
+                    }
+                    else if (ExternalCruiseControlState == 0 && LastCANCruiseState == 1)
+                    { 
+                        CanVehiInterface_DisengageCruiseControl(&VCInterfaceHandle);
+                        LastCANCruiseState = 0;
+                    }
+                
                     CANScreenNotifier = 0; // Update the notifier to acknowledge we received the new value
                     COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 0)),  pNode, &CANScreenNotifier, sizeof(uint8_t));                    
                 }  
-                else if (ExternalThrottleVal > 0)
+                else if (ExternalThrottleVal > 0 || ExternalCruiseControlState == 1)
                 {
                     if(Delay_Update(&CANScreenTimeout)) // If we haven't received anything from the screen and the timeout overflowed
                     {
                         CanVehiInterface_UpdateExternalThrottle(&VCInterfaceHandle,0);
+                        CanVehiInterface_DisengageCruiseControl(&VCInterfaceHandle);
+                        
                         ExternalThrottleVal = 0;    // Reflect the change on CAN
                         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 1)),  pNode, &ExternalThrottleVal, sizeof(uint16_t));
+                        ExternalCruiseControlState = 0;
+                        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 2)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t));
                     }   
                 }
             }   

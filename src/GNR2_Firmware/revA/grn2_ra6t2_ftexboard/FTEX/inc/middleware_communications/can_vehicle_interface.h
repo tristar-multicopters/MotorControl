@@ -221,5 +221,26 @@ bool CanVehiInterface_CheckCANScreenSetup(void);
   @return none
  */
 void CanVehiInterface_UpdateExternalThrottle(VCI_Handle_t * pHandle, uint16_t aNewThrottleVal);
+
+/**
+  @brief Enables the can layer to engage cruise control
+  @param  pHandle: handle of the vehicle
+  @return none
+ */
+void CanVehiInterface_EngageCruiseControl(VCI_Handle_t * pHandle);
+
+/**
+  @brief Enables the can layer to disengage cruise control
+  @param  pHandle: handle of the vehicle
+  @return none
+ */
+void CanVehiInterface_DisengageCruiseControl(VCI_Handle_t * pHandle);
+
+/**
+  @brief Gives the can layer acces to the current state of the cruise control
+  @param  pHandle: handle of the vehicle
+  @return sta eof the curise control 0 off, 1 on
+ */
+bool CanVehiInterface_GetCruiseControlState(VCI_Handle_t * pHandle);
     
 #endif /* __CAN_IOT_COMM_H */

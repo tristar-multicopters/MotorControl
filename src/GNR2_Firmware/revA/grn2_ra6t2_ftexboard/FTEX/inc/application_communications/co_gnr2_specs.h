@@ -421,6 +421,7 @@ extern "C" {
 //
 // 0 -> CAN screen Notifier 0 - 1
 // 1 -> External input for the throttle 0 - 65535
+// 2 -> External input for cruise control 0 - 1
 #define CO_OD_REG_CAN_SCREEN            0x202B
 
 // Available                                   0x202C

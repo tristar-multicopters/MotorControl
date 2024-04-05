@@ -328,3 +328,36 @@ void CanVehiInterface_UpdateExternalThrottle(VCI_Handle_t * pHandle, uint16_t aN
    }
 }
 
+/**
+  Enables the can layer to engage cruise control
+ */
+void CanVehiInterface_EngageCruiseControl(VCI_Handle_t * pHandle)
+{
+     uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pHandle->pPowertrain->pPAS->pWSS));
+                
+     //check if the current speed is inside of the max speed limit
+     //if not used MaxThrottleSpeedKMH as cruise control speed.
+     if (currentSpeed > pHandle->pPowertrain->pThrottle->hParameters.MaxThrottleSpeedKMH)
+     {
+         currentSpeed = (uint8_t)pHandle->pPowertrain->pThrottle->hParameters.MaxThrottleSpeedKMH;
+     }
+                
+     PWRT_EngageCruiseControl(pHandle->pPowertrain,currentSpeed);
+}
+
+/**
+  Enables the can layer to disengage cruise control
+ */
+void CanVehiInterface_DisengageCruiseControl(VCI_Handle_t * pHandle)
+{
+    PWRT_DisengageCruiseControl(pHandle->pPowertrain);
+}
+
+/**
+  Gives the can layer acces to the current state of the cruise control
+ */
+bool CanVehiInterface_GetCruiseControlState(VCI_Handle_t * pHandle)
+{
+    return PWRT_GetCruiseControlState(pHandle->pPowertrain);
+}    
+
