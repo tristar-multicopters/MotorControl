@@ -11,15 +11,16 @@
 
 /************************** Current Sensing and Protection Parameters ************************/
 
-#define AMPLIFICATION_GAIN              0.01        //DO NOT CHANGE THIS VALUE UNLESS YOU REFLASH THE CURRENT SENSOR
-                                                    // V/A of current sensors, for scaling                                      //NEEDS TO BE VERIFIED
-                                                    // Values are on p.15 of this doc (MEASmg): https://www.infineon.com/dgdl/Infineon-TLI4971_ProgGuide-ApplicationNotes-v01_30-EN.pdf?fileId=5546d4626bfb5124016c1a294ad5286e                                        //NEEDS TO BE VERIFIED
+#define AMPLIFICATION_GAIN              0.01       // DO NOT CHANGE THIS VALUE UNLESS YOU REFLASH THE CURRENT SENSOR
+                                                    // V/A of current sensors, for scaling
+                                                    // MEASmg should be 0x5
+                                                    // Values are on p.15 of this doc: https://www.infineon.com/dgdl/Infineon-TLI4971_ProgGuide-ApplicationNotes-v01_30-EN.pdf?fileId=5546d4626bfb5124016c1a294ad5286e                                        //NEEDS TO BE VERIFIED
 
-#define PEAK_CURRENT_CONTROLLER_amps    55          //peak current of controller in amps                                        //NEEDS TO BE VERIFIED
-#define OCSP_SAFETY_MARGIN_amps         85         // Measured current amplitude can be until SOCP_SAFETY_MARGIN higher        //NEEDS TO BE VERIFIED
-#define OCSP_MAX_CURRENT_amps           85         // Max current that can be reached before triggering software overcurrent   //NEEDS TO BE VERIFIED
+#define PEAK_CURRENT_CONTROLLER_amps    90          //peak current of controller in amps
+#define OCSP_SAFETY_MARGIN_amps         105         // Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_MAX_CURRENT_amps           100         // Max current that can be reached before triggering software overcurrent
 
-#define HARDWARE_OCD2    OCD2_ENABLED     // OCD2_ENABLED to completley disable PWM using PEOG in timer0                        //NEEDS TO BE VERIFIED
+#define HARDWARE_OCD2    OCD2_ENABLED     // OCD2_ENABLED to completley disable PWM using PEOG in timer0
                                           // OCD2_DISABLED to disable any Hardware OverCurrent handling
 
 
