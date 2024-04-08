@@ -624,7 +624,7 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
     bool bCheckStop4 = false;
     bool bCheckStop5 = false;
     bool bCheckStop6 = false;
-    
+
     int32_t wSpeedM1 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1);
     int32_t wSpeedM2 = MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2);
     uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
@@ -633,10 +633,11 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
     {
         if (abs(wSpeedM1) <= pHandle->sParameters.hStoppingSpeed) // If motor speed is lower than stopping speed parameter
         {
-            #if !(MOTOR_TYPE == DIRECT_DRIVE)
+            if (!(pHandle->pMDI->pMCI->pSpeedTorqCtrl->motorType == DIRECT_DRIVE))      // 
+            {
                 bCheckStop1 = true;
-            #endif
-        }
+            }
+          }
     }
     else
     {

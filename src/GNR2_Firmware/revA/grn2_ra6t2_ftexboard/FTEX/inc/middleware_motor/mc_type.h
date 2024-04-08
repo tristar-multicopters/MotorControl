@@ -151,6 +151,7 @@ typedef enum
 {
     HUB_DRIVE,
     MID_DRIVE,
+    DIRECT_DRIVE,
 } MotorType_t;
 
 

@@ -15,7 +15,10 @@
 
 #define GEAR_RATIO_LOWER_BOUND_MIN 1        //min gear ratio, cannot be 0
 #define GEAR_RATIO_UPPER_BOUND_MAX 10       //max gear ratio = highest gear + GEAR_RATIO_UPPER_BOUND_MAX
-
+#define SPEED_MARGIN  110
+#define DIV_PERCENTAGE 100
+#define DECC_RANGE_PW  100 //decceleration range
+#define DCC_RANGE 12  //decceleration range for walk mode
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 void SpdTorqCtrl_SetGearRatio(SpdTorqCtrlHandle_t * pHandle, int16_t hMeasuredSpeed);
@@ -244,19 +247,19 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle)
     int16_t hMeasuredSpeed;
     int16_t hTargetSpeed;
     int16_t hError;
-    const int16_t speed_margin =  110;
-    const int16_t DIV_Percentage =  100;
-    const int16_t dcc_range = 12;
+ 
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
         
-          #if (MOTOR_TYPE == DIRECT_DRIVE)
+          if (pHandle->motorType == DIRECT_DRIVE)
+          {
               Foldback_UpdateLimitValue(&pHandle->FoldbackLimitSpeed, 0); // Update speed limit foldback
               Foldback_UpdateMaxValue(&pHandle->FoldbackLimitSpeed, hTorqueReference); // Update speed limit foldback
-              Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * speed_margin/DIV_Percentage)); // Update speed limit by 10 percent
-              Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, dcc_range); // Update speed limit foldback
-          #endif
+              Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * SPEED_MARGIN/DIV_PERCENTAGE)); // Update speed limit by 10 percent
+              Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, DCC_RANGE); // Update speed limit foldback
+          }
+
         if (pHandle->bEnableSpdLimitControl)
         {
             
@@ -576,9 +579,7 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     int16_t hMeasuredSpeedTenthRadPerSec = 0;
     int16_t hMeasuredSpeedUnit = 0;
     int16_t hRetval = hInputTorque;
-    const int16_t speed_margin =  110;
-    const int16_t DIV_Percentage =  100;
-    const int16_t decc_range =  100; //decceleration range
+    
   
     hMeasuredSpeedUnit = SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
     hMeasuredSpeedTenthRadPerSec = (int16_t)((10*hMeasuredSpeedUnit*2*3.1416F)/SPEED_UNIT);
@@ -588,8 +589,8 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     Foldback_UpdateMaxValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower);        // this foldback limits MAX POWER after a while
     Foldback_UpdateLimitValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxContinuousPower);      // this foldback limits MAX POWER immediately
     
-    Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * speed_margin/DIV_Percentage)); // Update speed limit foldback
-    Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, decc_range); // Update speed limit foldback
+    Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * SPEED_MARGIN/DIV_PERCENTAGE)); // Update speed limit foldback
+    Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, DECC_RANGE_PW); // Update speed limit foldback
   
     pHandle->DynamicPowerHandle.hDynamicMaxPower = (uint16_t)Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower, (int16_t)pHandle->DynamicPowerHandle.hOverMaxPowerTimer);    
 
