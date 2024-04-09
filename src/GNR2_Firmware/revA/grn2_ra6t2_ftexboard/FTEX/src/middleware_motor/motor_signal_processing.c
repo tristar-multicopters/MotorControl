@@ -12,6 +12,7 @@
 #include "board_hardware.h"
 #include "ASSERT_FTEX.h"
 #include "ntc_table.h"
+#include "drive_parameters.h"
 
 
 /*********************************************
@@ -30,7 +31,8 @@ static processingMotorSignal_t processingMotoSignal =
     .motorTemperature = INITIAL_TEMP_MOTOR,
     .wheelSpeedPeriod = 0, 
     .maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US, 
-    .minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD
+    .minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
+    .isMotorMixedSignal = MOTOR_TEMP_MIXED
 };
 
                                                        
@@ -268,4 +270,50 @@ uint8_t getMixedSignalRegConvIndex(void)
 float getExtractedWheelSpeed(void)
 {
     return (((float)processingMotoSignal.wheelSpeedPeriod)*1.33f)/1000000.0f;
+}
+
+/**
+  @brief Function used to know if the current motor has 
+         temperature and wheel speed mixed.
+  @param none.
+  @return bool true if motor has mixed temperature and wheel speed signal
+          false if not.
+*/
+
+bool isMotorMixedSignal(void)
+{
+    return processingMotoSignal.isMotorMixedSignal;
+}
+
+/**
+  @brief Function used change the flag isMotorMixedSignal.
+  @param bool new value, true or false.
+  @return none.
+*/
+
+void updateisMotorMixedSignalValue(bool value)
+{
+    processingMotoSignal.isMotorMixedSignal = value;
+}
+
+/**
+  @brief Function used change the value of the minSignalThreshold.
+  @param uint16_t value the new value to be used. 
+  @return none.
+*/
+
+void updateMinSignalThresholdValue(uint16_t value)
+{
+    processingMotoSignal.minSignalThreshold = value;
+}
+
+/**
+  @brief Function used change the value of the MaxWheelSpeedPeriodUs.
+  @param uint32_t value the new value to be used and represented micro seconds.
+  @return none.
+*/
+
+void updateMaxWheelSpeedPeriodUsValue(uint32_t value)
+{
+    processingMotoSignal.maxWheelSpeedPeriodUs = value;
 }

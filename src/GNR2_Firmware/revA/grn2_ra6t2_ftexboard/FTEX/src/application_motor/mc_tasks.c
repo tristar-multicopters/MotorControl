@@ -23,6 +23,7 @@
 #include "parameters_conversion.h"
 #include "gnr_parameters.h"
 #include "vc_autodetermination.h"
+#include "motor_signal_processing.h"
 
 /* Private define ------------------------------------------------------------*/
 
@@ -313,10 +314,6 @@ void MediumFrequencyTaskM1(void)
 #if DYNAMIC_CURRENT_CONTROL_PID
     FOC_UpdatePIDGains(M1);
 #endif
-    if (MOTOR_TEMP_MIXED == false)
-    {
-        RegConvMng_ExecuteGroupRegularConv(FIRST_REG_CONV_ADC_GROUP_MASK | SECOND_REG_CONV_ADC_GROUP_MASK);
-    }
 
     StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
     switch (StateM1)

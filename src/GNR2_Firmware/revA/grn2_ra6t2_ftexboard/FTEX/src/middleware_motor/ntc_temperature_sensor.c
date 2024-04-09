@@ -104,7 +104,7 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
     if (pHandle->bSensorType == REAL_SENSOR)  // Checks if the sensor is real or virtual
     {
         //does have the current motor mixed signal?
-        if ((MOTOR_TEMP_MIXED == true) && (getMixedSignalRegConvIndex() == pHandle->bConvHandle))
+        if ((isMotorMixedSignal() == true) && (getMixedSignalRegConvIndex() == pHandle->bConvHandle))
         { 
             hAux = getExtractedMotorTemperature();
         }

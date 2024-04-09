@@ -35,6 +35,8 @@
 #include "user_config_task.h"
 #pragma clang diagnostic pop
 
+#include "motor_signal_processing.h"
+
 /************* DEFINES ****************/
 
 #define CAN_LOG_INTERVAL_TICK               25      /* CAN logger task send a new log frame every 25 RTOS ticks */
@@ -518,6 +520,10 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             uint8_t configWheelDiameter;
             uint8_t configScreenProtocol;
+            
+            bool configisMotorMixedSignal;
+            uint16_t configMinSignalThreshold;
+            uint32_t configMaxWheelSpeedPeriodUs;
     
             uint8_t configHeadLightDefault;
             uint8_t configTailLightDefault;
@@ -606,7 +612,12 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 1)),        pNode, &configBatteryEmptyVoltage, sizeof(uint16_t));
                  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),      pNode, &configWheelDiameter, sizeof(uint8_t)); 
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),   pNode, &configScreenProtocol, sizeof(uint8_t)); 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),   pNode, &configScreenProtocol, sizeof(uint8_t));
+
+                 //Motor signals parameters  
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 0)), pNode, &configisMotorMixedSignal, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 1)), pNode, &configMinSignalThreshold, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 2)), pNode, &configMaxWheelSpeedPeriodUs, sizeof(uint32_t));
                  
                  // Headlight default state
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 1)),  pNode, &configHeadLightDefault, sizeof(uint8_t));
@@ -634,6 +645,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 3)),      pNode, &pasLowPassFilterBW2[1], sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 4)),      pNode, &pasLowPassFilterBW1[2], sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),      pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));
+                 
+                 
                  
                  
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
@@ -676,6 +689,10 @@ static void UpdateObjectDictionnary(void *p_arg)
                                   
                  UserConfigTask_UpdateWheelDiameter(configWheelDiameter);
                  UserConfigTask_UpdateScreenProtocol(configScreenProtocol);
+                 
+                 UserConfigTask_UpdateMotorMixedSignalState(configisMotorMixedSignal);
+                 UserConfigTask_UpdateMinSignalThreshold(configMinSignalThreshold);
+                 UserConfigTask_UpdateMaxWheelSpeedPeriodUs(configMaxWheelSpeedPeriodUs);
                                  
                  UserConfigTask_UpdateHeadLightDefault(configHeadLightDefault);
                  
@@ -977,7 +994,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint16_t configBatteryEmptyVoltage = UserConfigTask_GetBatteryEmptyVoltage();
                                               
         uint8_t configWheelDiameter  =  UserConfigTask_GetWheelDiameter();
-        uint8_t configScreenProtocol =  UserConfigTask_GetScreenProtocol();                                              
+        uint8_t configScreenProtocol =  UserConfigTask_GetScreenProtocol();  
+
+        bool configisMotorMixedSignal = UserConfigTask_GetMotorMixedSignalState(); 
+        uint16_t configMinSignalThreshold = UserConfigTask_GetMinSignalThreshold();
+        uint32_t configMaxWheelSpeedPeriodUs = UserConfigTask_GetMaxWheelSpeedPeriodUs();
          
         uint16_t configBatteryMaxPeakDCCurrent              = UserConfigTask_GetBatteryMaxPeakDCCurrent();
         uint16_t configBatteryContinuousDCCurrent           = UserConfigTask_GetBatteryContinuousDCCurrent();        
@@ -1023,6 +1044,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         
         // Initialise the wheel diameter with the value in the user config 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),       pNode, &configWheelDiameter, sizeof(uint8_t));
+        
+        //Initialise isMotorMixedSignal with the value in the user config
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 0)), pNode, &configisMotorMixedSignal, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 1)), pNode, &configMinSignalThreshold, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 2)), pNode, &configMaxWheelSpeedPeriodUs, sizeof(uint32_t));
         
         // Initialise the light with the default value in user config
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)),   pNode, &configHeadLightDefault, sizeof(uint8_t));

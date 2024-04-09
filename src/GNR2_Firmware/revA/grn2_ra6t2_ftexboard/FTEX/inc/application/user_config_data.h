@@ -6,6 +6,7 @@
 *********************************************/
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /*********************************************
                   Defines
@@ -50,6 +51,15 @@
 //force compiler to use 1 byte packaging
 //avoid padding bytes.
 #pragma pack(1)
+
+//struct used to hold information about motor mixed signal
+typedef struct 
+{
+    bool motorMixedSignal;
+    uint16_t minSignalThreshold;
+    uint32_t maxWheelSpeedPeriodUs;
+    
+}Motor_Signal_Parameters_t;
 
 typedef struct
 {
@@ -154,6 +164,7 @@ typedef struct
     PAS_ConfigData_t      PAS_ConfigData;
     Battery_ConfigData_t  Battery_ConfigData; 
     Screen_ConfigData_t   Screen_ConfigData;
+    Motor_Signal_Parameters_t Motor_Signal_Parameters;
     uint16_t crc;
 } User_ConfigData_t;
 

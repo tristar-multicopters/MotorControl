@@ -57,6 +57,7 @@
 typedef struct
 {
     bool adcChannelConfigured;
+    bool isMotorMixedSignal;
     RegConv_t mixedSignalRegConv;
     uint8_t mixedSignalIndex;
     uint16_t algorithmTick; 
@@ -106,5 +107,39 @@ uint8_t getMixedSignalRegConvIndex(void);
 */
 
 float getExtractedWheelSpeed(void);
+
+/**
+  @brief Function used to know if the current motor has 
+         temperature and wheel speed mixed.
+  @param none.
+  @return bool true if motor has mixed temperature and wheel speed signal
+          false if not.
+*/
+
+bool isMotorMixedSignal(void);
+
+/**
+  @brief Function used change the flag isMotorMixedSignal.
+  @param bool new value, true or false.
+  @return none.
+*/
+
+void updateisMotorMixedSignalValue(bool value);
+
+/**
+  @brief Function used change the value of the minSignalThreshold.
+  @param uint16_t value the new value to be used. 
+  @return none.
+*/
+
+void updateMinSignalThresholdValue(uint16_t value);
+
+/**
+  @brief Function used change the value of the MaxWheelSpeedPeriodUs.
+  @param uint32_t value the new value to be used and represented micro seconds.
+  @return none.
+*/
+
+void updateMaxWheelSpeedPeriodUsValue(uint32_t value);
 
 #endif

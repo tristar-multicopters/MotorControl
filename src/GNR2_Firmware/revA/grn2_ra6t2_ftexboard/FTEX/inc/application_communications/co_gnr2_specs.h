@@ -303,6 +303,15 @@ extern "C" {
 // 2 -> Wheel Diameter Default in inches 
 #define CO_OD_REG_WHEELS_DIAMETER              0x201F
 
+
+//OD ID used to configure Motor Signal Parameters
+//this object has 3 subindex
+// 0 -> enalble/disable mixed motor signal
+// 1 -> minimal threshold to detect motor temperature and high logic 1 on wheel speed
+// 2 -> maxWheelSpeedPeriodUs, used to as limit to detect when wheel speed must be considered zero
+
+#define CO_OD_REG_MOTOR_SIGNALS_PARAMETER      0x2020
+
 //OD ID used to configure and operate the front light
 // this object has 2 subindex
 //

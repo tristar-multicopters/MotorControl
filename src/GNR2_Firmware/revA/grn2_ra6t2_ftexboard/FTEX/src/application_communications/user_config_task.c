@@ -14,6 +14,7 @@
 #pragma clang diagnostic pop
 
 #include "user_config_task.h"
+#include "motor_signal_processing.h"
 
 #include "ASSERT_FTEX.h"
 #include "wheel.h"
@@ -158,6 +159,9 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.Throttle_ConfigData.MaxSpeed = VEHICLE_TOP_SPEED_KMH,
     .Screen_ConfigData.Throttle_ConfigData.AccelRampType = THROTTLE_ACCEL_RAMP_TYPE,
     .Screen_ConfigData.Throttle_ConfigData.AccelRampArg1 = THROTTLE_ACCEL_RAMP_ARG1, 
+    .Motor_Signal_Parameters.motorMixedSignal = MOTOR_TEMP_MIXED,
+    .Motor_Signal_Parameters.minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
+    .Motor_Signal_Parameters.maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US,
 };
 
 //struct used to hold the values of the user configuration
@@ -487,6 +491,11 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
         paPowertrain->pPAS->pPTS->hParameters.hLowPassFilterBW1[n] = UserConfigTask_GetFilterBwValue(n,BW1);
         paPowertrain->pPAS->pPTS->hParameters.hLowPassFilterBW2[n] = UserConfigTask_GetFilterBwValue(n,BW2);
     }
+    
+    updateisMotorMixedSignalValue(UserConfigTask_GetMotorMixedSignalState());
+    updateMinSignalThresholdValue(UserConfigTask_GetMinSignalThreshold());
+    updateMaxWheelSpeedPeriodUsValue(UserConfigTask_GetMaxWheelSpeedPeriodUs());
+    
 }
 
 
@@ -2025,4 +2034,80 @@ uint8_t UserConfigTask_GetThrottleMaxSpeed(void)
 void UserConfigTask_UpdateThrottleMaxSpeed(uint8_t value)
 {
     userConfigData.Screen_ConfigData.Throttle_ConfigData.MaxSpeed = (uint8_t)value;
+}
+
+/**
+  @brief Function to get the mixed motor signal state(true or false)
+  read from data flash memory.
+  
+  @param void
+  @return bool true if motor signals are mixed, false if not.
+*/
+bool UserConfigTask_GetMotorMixedSignalState(void)
+{
+    return userConfigData.Motor_Signal_Parameters.motorMixedSignal; 
+}
+
+/**
+  @brief Function to update the mixed motor signal state(true or false)
+  read from data flash memory.
+  
+  @param bool new value
+  @return none.
+*/
+void UserConfigTask_UpdateMotorMixedSignalState(bool value)
+{
+    userConfigData.Motor_Signal_Parameters.motorMixedSignal = value; 
+}
+
+/**
+  @brief Function to get the minimal threshold to detect motor temperature
+  and high logic 1 on wheel speed.
+  
+  @param void
+  @return uint16_t minimum value used to detect max motor temperature
+  and high level on wheel speed signal.
+*/
+uint16_t UserConfigTask_GetMinSignalThreshold(void)
+{
+    return userConfigData.Motor_Signal_Parameters.minSignalThreshold; 
+}
+
+/**
+  @brief Function to update the minimal threshold to detect motor temperature
+  and high logic 1 on wheel speed.
+  
+  @param uint16_t value is the minimal threshold to detect motor temperature
+  and high logic 1 on wheel speed.
+  @return none.
+*/
+void UserConfigTask_UpdateMinSignalThreshold(uint16_t value)
+{
+    userConfigData.Motor_Signal_Parameters.minSignalThreshold = value; 
+}
+
+/**
+  @brief Function to get the MaxWheelSpeedPeriodUs, used to as limit to detect when
+  wheel speed must be considered zero.
+  
+  @param void
+  @return uint32_t maximum value used to as limit to detetc when
+  wheel speed must be considered zero.
+*/
+uint32_t UserConfigTask_GetMaxWheelSpeedPeriodUs(void)
+{
+    return userConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs; 
+}
+
+/**
+  @brief Function to update the MaxWheelSpeedPeriodUs, used to as limit to detect when
+  wheel speed must be considered zero.
+  
+  @param uint32_t value maximum value used to as limit to detetc when
+  wheel speed must be considered zero.
+  @return none.
+*/
+void UserConfigTask_UpdateMaxWheelSpeedPeriodUs(uint32_t value)
+{
+    userConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = value; 
 }

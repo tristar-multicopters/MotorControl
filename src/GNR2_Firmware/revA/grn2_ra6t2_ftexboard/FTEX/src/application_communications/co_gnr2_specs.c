@@ -326,6 +326,13 @@ uint8_t bObjDataWheelPulsePerRotation       = 0;
 //variable associated with CO_OD_REG_WHEELS_DIAMETER 2 
 uint8_t bObjDataWheelDiameterDefault        = 0;
 
+//variable associated with CO_OD_REG_MOTOR_SIGNALS_PARAMETER 0
+uint8_t  bObjisMotorMixedSignal             = 0;
+//variable associated with CO_OD_REG_MOTOR_SIGNALS_PARAMETER 1
+uint16_t bObjminSignalThreshold             = 0;
+//variable associated with CO_OD_REG_MOTOR_SIGNALS_PARAMETER 2
+uint32_t bObjmaxWheelSpeedPeriodUs          = 0;
+
 //variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT 0
 uint8_t bObjDataFrontLightState             = 0;
 
@@ -1441,6 +1448,18 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjisMotorMixedSignal};    
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjminSignalThreshold};    
+            //move to next OD index
+            index++;
+                    
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 2, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&bObjmaxWheelSpeedPeriodUs};    
+            //move to next OD index
+            index++;
         
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataFrontLightState};
             //move to next OD index

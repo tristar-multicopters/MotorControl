@@ -292,16 +292,16 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
     //was a wrong turn on.
     PWREN_TurnoffWhenMasterIsNotDetected(&CONodeGNR, VCInterfaceHandle.pPowertrain->pPWREN);
     
+    //initialize ADC conversion to throttle and temperature analog channels.
+    //adc sample will be done each 0.5 ms.
+    //this is necessary to the extract temperature and wheel speed from the mixed signal
+    //comming from the motor.
+    RegConvMng_ExecuteGroupRegularConv(FIRST_REG_CONV_ADC_GROUP_MASK | SECOND_REG_CONV_ADC_GROUP_MASK);
+    
     //if the current motor has mixed signal, use the lines below to measure motor temperature
     //and wheel speed.
-    if (MOTOR_TEMP_MIXED == true)
-    {
-        //initialize ADC conversion to throttle and temperature analog channels.
-        //adc sample will be done each 0.5 ms.
-        //this is necessary to the extract temperature and wheel speed from the mixed signal
-        //comming from the motor.
-        RegConvMng_ExecuteGroupRegularConv(FIRST_REG_CONV_ADC_GROUP_MASK | SECOND_REG_CONV_ADC_GROUP_MASK);
-        
+    if (isMotorMixedSignal() == true)
+    {   
         //fucntion responsible to extract and measure motor temperature and wheel speed from a mixed signal.
         processingMotorMixedSignal();  
     }

@@ -34,7 +34,7 @@ void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle)
     
     //if motor doesn't have a mixed temperature/wheelspeed siganl,
     //get wheel speed period from the capture timer. 
-    if (MOTOR_TEMP_MIXED == false)
+    if (isMotorMixedSignal() == false)
     {
         //verify if the timer is measuring.
         //if yes, initialise the flag to wait for the timer
