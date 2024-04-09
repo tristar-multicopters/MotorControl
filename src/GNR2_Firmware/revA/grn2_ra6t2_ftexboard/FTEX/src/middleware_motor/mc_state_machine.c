@@ -12,7 +12,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "mc_state_machine.h"
-
+#include "gnr_parameters.h"
 
 void MCStateMachine_Init(MotorStateMachineHandle_t * pHandle)
 {
@@ -40,7 +40,7 @@ bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t 
       break;
     case M_IDLE:
       if ((bState == M_IDLE_START) || (bState == M_IDLE_ALIGNMENT)
-           || (bState == M_ICLWAIT))
+           || (bState == M_ICLWAIT)  || (bState == M_AUTOTUNE_ENTER_IDENTIFICATION))
       {
         bNewState = bState;
         bChangeState = true;
@@ -185,6 +185,39 @@ bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t 
         bChangeState = true;
       }
       break;
+   #if AUTOTUNE_ENABLE
+    case M_AUTOTUNE_ENTER_IDENTIFICATION:
+      if (bState == M_AUTOTUNE_IDENTIFICATION)
+      {
+        bNewState = bState;
+        bChangeState = true;
+      }
+      break;
+      
+    case M_AUTOTUNE_IDENTIFICATION:
+      if (bState == M_AUTOTUNE_ANY_STOP_IDENTIFICATION)
+      {
+        bNewState = bState;
+        bChangeState = true;
+      }
+      break;
+      
+    case M_AUTOTUNE_ANY_STOP_IDENTIFICATION:
+      if (bState == M_AUTOTUNE_STOP_IDENTIFICATION)
+      {
+        bNewState = bState;
+        bChangeState = true;
+      }
+      break;
+      
+    case M_AUTOTUNE_STOP_IDENTIFICATION:
+      if (bState == M_IDLE)
+      {
+        bNewState = bState;
+        bChangeState = true;
+      }
+      break;
+   #endif
     default:
       break;
   }

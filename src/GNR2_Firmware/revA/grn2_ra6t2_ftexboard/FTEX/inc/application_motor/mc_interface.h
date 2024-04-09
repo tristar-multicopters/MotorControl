@@ -20,6 +20,7 @@ extern "C" {
 #include "speed_torq_ctrl.h"
 #include "bus_voltage_sensor.h"
 #include "r_divider_bus_voltage_sensor.h"
+#include "gnr_parameters.h"
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum
@@ -467,6 +468,27 @@ int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, 
   * @retval max app power
   */
 uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle);
+
+#if AUTOTUNE_ENABLE
+/**
+  * @brief  This is a user command used to enter motor tuning mode.
+  *         Commands to motor tuner (using the motor identification API) are only processed when motor is in this mode.
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval bool It returns true if the command is successfully executed
+  *         otherwise it return false.
+  */
+  
+bool MCInterface_StartMotorTuning(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  This is a user command used to exit motor tuning mode.
+  *         Commands to motor tuner (using the motor identification API) are only processed when motor is in this mode.
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval bool It returns true if the command is successfully executed
+  *         otherwise it return false.
+  */
+bool MCInterface_StopMotorTuning(MotorControlInterfaceHandle_t * pHandle);
+#endif
 
 #ifdef __cplusplus
 }

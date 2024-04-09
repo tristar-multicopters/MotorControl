@@ -276,7 +276,9 @@ PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
         .Ia = 0,
         .Ib = 0,
         .Ic = 0,
+        
         .hPWMperiod          = PWM_PERIOD_CYCLES,
+        
 
         .IaFilter =
         {
@@ -291,6 +293,17 @@ PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
 
         .hSoftwareOCPMarginCurrent = OCSP_SAFETY_MARGIN,
         .hSoftwareOCPMaximumCurrent = OCSP_MAX_CURRENT,
+        /*******************************************************/
+        /*     Motor tuner pwm current feedback parameters     */
+        /*******************************************************/
+       #if AUTOTUNE_ENABLE
+        .IaFilt = 0,
+        .IbFilt = 0,
+        .IcFilt = 0,
+        .hPWMDeadtime = DEAD_TIME_COUNTS,
+        .fCurrentConversionFactor =  (float)ADC_REFERENCE_VOLTAGE / (65536.0f * (float)AMPLIFICATION_GAIN),
+        .fCycle2SecondConversionFactor = 1.0f / ((float)PWM_TIM_CLK_MHz * 1000000.0f),
+       #endif
 
     },
     .hIaRaw = 0,

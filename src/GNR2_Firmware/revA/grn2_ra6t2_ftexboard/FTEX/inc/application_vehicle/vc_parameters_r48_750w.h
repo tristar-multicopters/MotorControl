@@ -14,7 +14,7 @@
 
 
 /******************* SCREEN SELECTION  *******************************/
-#define SCREEN_PROTOCOL    UART_CLOUD_5S       
+#define SCREEN_PROTOCOL    UART_APT       
                                                             // UART_DISABLE,
                                                             // UART_APT,
                                                             // UART_KD718,

@@ -27,7 +27,7 @@ bool PWMInsulCurrSensorFdbk_Init(PWMInsulCurrSensorFdbkHandle_t * pHandle)
     bool bIsError = false;
     
     bIsError = PWMCurrFdbk_Init(&pHandle->Super);
-    
+
     return bIsError;
 }
 
@@ -39,7 +39,7 @@ void PWMInsulCurrSensorFdbk_CurrentReadingPolarization(PWMCurrFdbkHandle_t * pHd
     pHandle->wPhaseAOffset = 0u;
     pHandle->wPhaseBOffset = 0u;
     pHandle->bPolarizationCounter = 0u;
-
+    
     /* Disable PWM output */
     R_GPT_OutputDisable(pHandle->pParamsStructure->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_U]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
     R_GPT_OutputDisable(pHandle->pParamsStructure->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_V]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
@@ -47,13 +47,13 @@ void PWMInsulCurrSensorFdbk_CurrentReadingPolarization(PWMCurrFdbkHandle_t * pHd
 
     /* Change function to be executed in ADC interrupt routine */
     pHandle->Super.pFctGetPhaseCurrents = &ICS_HFCurrentsPolarization;
-
+    
     /* Start PWM, but output is disabled */
     PWMInsulCurrSensorFdbk_SwitchOnPWM(&pHandle->Super);
 
     /* Wait for NB_CONVERSIONS to be executed */
     waitForPolarizationEnd(&pHandle->bPolarizationCounter);
-
+    
     /* Stop PWM */
     PWMInsulCurrSensorFdbk_SwitchOffPWM(&pHandle->Super);
     
@@ -197,8 +197,8 @@ void PWMInsulCurrSensorFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHdl)
     sDutyCycle.duty[THREE_PHASE_CHANNEL_W] = 0;
     
     /* Update duty cycle registers */
-    R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl, &sDutyCycle);
-    
+    R_GPT_THREE_PHASE_DutyCycleSet(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl, &sDutyCycle); 
+
     /* Start timer */
     R_GPT_THREE_PHASE_Start(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl);
 }

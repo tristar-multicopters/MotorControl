@@ -37,14 +37,14 @@ bool PWMCurrFdbk_Init( PWMCurrFdbkHandle_t * pHandle)
 */
 void PWMCurrFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHandle, ab_t * Iab )
 {
-  pHandle->pFctGetPhaseCurrents(pHandle, Iab);
+    pHandle->pFctGetPhaseCurrents(pHandle, Iab);
 }
 
 /*
     Execute software overcurrent protection algorithm. Must be called periodically to update current filters.
 */
 uint32_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
-{
+{    
     int16_t IaFiltered, IbFiltered, IcFiltered;
 
     IaFiltered = SignalFiltering_CalcOutputI16(&pHandle->IaFilter, Iab->a);
@@ -63,7 +63,7 @@ uint32_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, co
     {
         return MC_OCSP;
     }
-    return MC_NO_ERROR;
+    return MC_NO_ERROR; 
 }
 
 /*

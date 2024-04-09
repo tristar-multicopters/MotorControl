@@ -103,7 +103,17 @@ typedef enum
                           state is normally STOP_IDLE, state machine is moved as
                           soon as the user has acknowledged the fault condition.
                       */
-  M_WAIT_STOP_MOTOR = 20
+  M_WAIT_STOP_MOTOR = 20,
+  
+  /*******************************************************/
+  /*     Motor tuner state machines         */
+  /*******************************************************/
+  
+  M_AUTOTUNE_ENTER_IDENTIFICATION = 21,         /* "Pass-through" state for entering motor parameter identification mode. */
+  M_AUTOTUNE_IDENTIFICATION = 22,               /* Persistent state for identifiying the motor parameters. */
+  M_AUTOTUNE_ANY_STOP_IDENTIFICATION = 23,      /* "Pass-through" state for beginning the procedure to exit motor parameter identification mode. */
+  M_AUTOTUNE_STOP_IDENTIFICATION = 24,          /* Persistent state for waiting until motor tuner is completetly stopped. */
+
 
 } MotorState_t;
 

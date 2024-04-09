@@ -598,3 +598,36 @@ uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle
     ASSERT(pHandle != NULL);
     return pHandle->pSpeedTorqCtrl->hMaxPositivePower;
 }
+
+#if AUTOTUNE_ENABLE
+
+/**
+  *  This command enters motor tuning mode.
+  *  Commands to the motor tuner are only processed in this mode.
+  */
+bool MCInterface_StartMotorTuning(MotorControlInterfaceHandle_t * pHandle)
+{
+  bool bRetVal = false;
+
+  if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE)
+  {
+      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_AUTOTUNE_ENTER_IDENTIFICATION );
+  }
+  return bRetVal;
+}
+
+/**
+  *  This command exits motor tuning mode.
+  *  Commands to the motor tuner are only processed in this mode.
+  */
+bool MCInterface_StopMotorTuning(MotorControlInterfaceHandle_t * pHandle)
+{
+  bool bRetVal = false;
+
+  if (MCStateMachine_GetState(pHandle->pSTM) == M_AUTOTUNE_IDENTIFICATION)
+  {
+      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_AUTOTUNE_ANY_STOP_IDENTIFICATION );
+  }
+  return bRetVal;
+}
+#endif

@@ -25,6 +25,17 @@
 #include "vc_autodetermination.h"
 #include "motor_signal_processing.h"
 
+#if AUTOTUNE_ENABLE
+#include "r_aid_auto_identify.h"
+#include "r_aid_driver_if.h"
+#include "r_aid_core.h"
+#include "autotune.h"
+AutoTune_Handle_t pAutoTune;
+void MCTask_InitTuning();
+bool MC_UpdateMotorTunerOutput(float fBatteryVoltage);
+void MC_ConfigureMotorTuner(void);
+#endif
+
 /* Private define ------------------------------------------------------------*/
 
 #define CHARGE_BOOT_CAP_MS 10
@@ -65,6 +76,7 @@ MotorPowerQDHandle_t *pMotorPower[NBR_OF_MOTORS];
 CircleLimitationHandle_t *pCircleLimitation[NBR_OF_MOTORS];
 MCConfigHandle_t *pFieldWeakening[NBR_OF_MOTORS];
 FeedforwardHandle_t *pFeedforward[NBR_OF_MOTORS];
+
 
 static volatile uint16_t hMFTaskCounterM1 = 0;
 static volatile uint16_t hBootCapDelayCounterM1 = 0;
@@ -235,7 +247,19 @@ void MC_BootUp(void)
     LookupTable_Init(&LookupTableM1IqKi);
     LookupTable_Init(&LookupTableM1IdKp);
     LookupTable_Init(&LookupTableM1IdKi);
-
+    
+    /*******************************************************/
+    /*     Motor tuner initialization         */
+    /*******************************************************/
+    #if AUTOTUNE_ENABLE
+    R_AID_Init(REGULATION_EXECUTION_RATE, 1.0f/(float)SPEED_LOOP_FREQUENCY_HZ);
+    R_AID_ConfigEnableVolterrID(); // Enable the voltage error measurement procedure.
+    R_AID_ConfigSetVolterrCrntStep(10);       
+    pAutoTune.TuningStatus=0;
+    pAutoTune.bStartTuning=false;
+    MCTask_InitTuning();
+    #endif
+    
     bMCBootCompleted = 1;
 }
 
@@ -288,7 +312,6 @@ void MediumFrequencyTaskM1(void)
 {
     MotorState_t StateM1;
     int16_t wAux = 0;
-    
     if (hOCCheckReset < OCD2_TIMER)
     {
         hOCCheckReset++;
@@ -308,7 +331,7 @@ void MediumFrequencyTaskM1(void)
      }
     #endif
 
-    (void)HallPosSensor_CalcAvrgMecSpeedUnit(&HallPosSensorM1, &wAux);
+   (void)HallPosSensor_CalcAvrgMecSpeedUnit(&HallPosSensorM1, &wAux);
    bool bIsSpeedReliable = RotorPosObs_CalcMecSpeedUnit(&RotorPosObsM1, &wAux);
     MotorPowerQD_CalcElMotorPower(pMotorPower[M1]);
 #if DYNAMIC_CURRENT_CONTROL_PID
@@ -326,7 +349,18 @@ void MediumFrequencyTaskM1(void)
             MCStateMachine_NextState(&MCStateMachine[M1], M_IDLE_START);
         }
 #endif
-    
+#if AUTOTUNE_ENABLE
+        if (pAutoTune.bStartTuning == 1)
+        {      
+            PWMInsulCurrSensorFdbk_TurnOnLowSides(pPWMCurrFdbk[M1]);
+            PWMInsulCurrSensorFdbk_SwitchOnPWM(pPWMCurrFdbk[M1]);            
+            MCInterface_StartMotorTuning(oMCInterface[M1]);
+            PWMInsulCurrSensorFdbkHandleM1.wPhaseAOffset=UINT16_MAX/2;
+            PWMInsulCurrSensorFdbkHandleM1.wPhaseBOffset=UINT16_MAX/2;
+            pPWMCurrFdbk[M1]->IaFilter.pIIRFAInstance =NULL;
+            pPWMCurrFdbk[M1]->IbFilter.pIIRFAInstance =NULL;
+        }
+ #endif    
         if (MCInterface->bDriverEn == true)
         {
             Driver_Disable(&MCInterface->bDriverEn);
@@ -511,7 +545,50 @@ void MediumFrequencyTaskM1(void)
     case M_STOP_IDLE:
         MCStateMachine_NextState(&MCStateMachine[M1], M_IDLE);
         break;
-
+#if AUTOTUNE_ENABLE
+    case M_AUTOTUNE_ENTER_IDENTIFICATION:    
+        MC_ConfigureMotorTuner();
+    
+        R_AID_CmdStart();
+        pAutoTune.TuningStatus = TUNING_START;
+        MCStateMachine_NextState(&MCStateMachine[M1], M_AUTOTUNE_IDENTIFICATION);
+        break;
+    
+    case M_AUTOTUNE_IDENTIFICATION:
+        R_AID_SpeedCtrlISR();
+        pAutoTune.TuningStatus = TUNING_IN_PROGRESS;
+        MC_UpdateMotorTunerOutput(pAutoTune.MotorTunerInput.DCBusVoltage);
+        // Check if the autotune is completed or has an error.
+        if (R_AID_GetSystemStatus() == AID_STATUS_COMPLETED || R_AID_GetSystemStatus() == AID_STATUS_ERROR )
+        {
+            MCInterface_StopMotorTuning(oMCInterface[M1]); // Return to normal motor control mode
+            if (R_AID_GetSystemStatus() == AID_STATUS_ERROR)
+            {
+                pAutoTune.TuningStatus = TUNING_ERROR;
+            }
+        }
+        
+        break;
+    
+    case M_AUTOTUNE_ANY_STOP_IDENTIFICATION:
+        R_AID_CmdStop();
+        PWMInsulCurrSensorFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
+        SetStopPermanencyTimeM1(STOPPERMANENCY_TICKS);
+        MCStateMachine_NextState(&MCStateMachine[M1], M_AUTOTUNE_STOP_IDENTIFICATION);
+        break;
+    
+    case M_AUTOTUNE_STOP_IDENTIFICATION:
+        if (StopPermanencyTimeHasElapsedM1())
+        {
+            if (pAutoTune.TuningStatus != TUNING_ERROR)
+            {
+                pAutoTune.TuningStatus = TUNING_DONE;
+            }
+            pAutoTune.bStartTuning = false;
+            MCStateMachine_NextState(&MCStateMachine[M1], M_IDLE);
+        }
+        break;
+#endif
     default:
         break;
     }
@@ -766,6 +843,16 @@ uint8_t MC_HighFrequencyTask(void)
     HallPosSensor_CalcElAngle(&HallPosSensorM1);
     RotorPosObs_CalcElAngle(&RotorPosObsM1, 0);
     
+#if AUTOTUNE_ENABLE
+    Autotune_CalcPhaseCurrents(pPWMCurrFdbk[M1]);
+    Driver_Enable(&MCInterface->bDriverEn);
+    MotorState_t StateM1;
+    StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
+    if (StateM1 == M_AUTOTUNE_IDENTIFICATION || StateM1 == M_AUTOTUNE_ENTER_IDENTIFICATION || StateM1 == M_AUTOTUNE_ANY_STOP_IDENTIFICATION)
+    {
+        R_AID_CurrentCtrlISR();
+    }
+#else
     // Check if the Hall Sensors are disconneted and raise the error
     if (HallSensor_IsDisconnected(&HallPosSensorM1) == true)
     {
@@ -794,7 +881,7 @@ uint8_t MC_HighFrequencyTask(void)
         //        BemfObsInputs.Vbus = VbusSensor_GetAvBusVoltageDigital(&(pBusSensorM1->Super));
         //        BemfObsPll_CalcElAngle (&BemfObserverPllM1, &BemfObsInputs);
         //        BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
-    }      
+    } 
 
     #if LOGMOTORVALS
     LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
@@ -802,7 +889,8 @@ uint8_t MC_HighFrequencyTask(void)
     #if LOGMOTORVALSRES
     LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through
     #endif
-
+#endif
+    
     return bMotorNbr;
 }
 
@@ -1132,3 +1220,72 @@ bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed)
     }
     return retVal;
 }
+
+#if AUTOTUNE_ENABLE
+/*************************** TUNING ************************************/
+/**
+  * @brief  This function fills the initiate values to the tuning variables
+  */
+void MCTask_InitTuning()
+{
+    pAutoTune.MotorTunerInput.NumPolePairs = 8;
+    pAutoTune.MotorTunerInput.RatedMotorCurrent = 30;
+    pAutoTune.MotorTunerInput.DCBusVoltage = 48;
+}
+
+/**
+  * @brief  This function returns the results of the last identification procedure.
+  * @param  fBatteryVoltage Rated DC voltage of battery used to operate the motor.
+  * @retval True if last identification was successfully completed.
+  */
+bool MC_UpdateMotorTunerOutput(float fBatteryVoltage)
+{
+    bool bRetVal = false;
+    st_aid_id_setting_t IdentificationSettings;
+    
+    pAutoTune.MotorTunerOutput.fProgress = R_AID_GetProgress();
+    pAutoTune.MotorTunerOutput.hErrorCode = R_AID_GetErrorStatus();
+    pAutoTune.MotorTunerOutput.bCompleted = false;
+    
+    if (R_AID_GetSystemStatus() == AID_STATUS_COMPLETED)
+    {        
+        pAutoTune.MotorTunerOutput.bCompleted = true;
+        
+        R_AID_GetIDSetting(&IdentificationSettings);
+        //Make a coef to convert PID gains from the autotune library range to match the range expected by our firmware.
+        float fScalingKpIq = (float)(fBatteryVoltage/SQRT_3*AMPLIFICATION_GAIN/ADC_REFERENCE_VOLTAGE*PID_GetKPDivisor(pPIDIq[M1]));
+        float fScalingKiIq = (float)(fBatteryVoltage/SQRT_3*AMPLIFICATION_GAIN/ADC_REFERENCE_VOLTAGE*PID_GetKIDivisor(pPIDIq[M1]));
+        float fScalingKpId = (float)(fBatteryVoltage/SQRT_3*AMPLIFICATION_GAIN/ADC_REFERENCE_VOLTAGE*PID_GetKPDivisor(pPIDId[M1]));
+        float fScalingKiId = (float)(fBatteryVoltage/SQRT_3*AMPLIFICATION_GAIN/ADC_REFERENCE_VOLTAGE*PID_GetKIDivisor(pPIDId[M1]));
+        
+        pAutoTune.MotorTunerOutput.fBatteryVoltage = fBatteryVoltage;
+        pAutoTune.MotorTunerOutput.Rs = R_AID_GetResistance();
+        pAutoTune.MotorTunerOutput.Ld = R_AID_GetLd();
+        pAutoTune.MotorTunerOutput.Lq = R_AID_GetLq();
+        pAutoTune.MotorTunerOutput.J = R_AID_GetInertia();
+        pAutoTune.MotorTunerOutput.Friction = R_AID_GetFriction();
+        pAutoTune.MotorTunerOutput.Ke = R_AID_GetKe();
+        pAutoTune.MotorTunerOutput.IqKp = (int16_t) (fScalingKpIq*aid_f4_kp_iq);
+        pAutoTune.MotorTunerOutput.IqKi = (int16_t) (fScalingKiIq*aid_f4_ki_iq);
+        pAutoTune.MotorTunerOutput.IdKp = (int16_t) (fScalingKpId*aid_f4_kp_id);
+        pAutoTune.MotorTunerOutput.IdKi = (int16_t) (fScalingKiId*aid_f4_ki_id);
+        pAutoTune.MotorTunerOutput.RatedSpeed =  (int16_t) (fBatteryVoltage/SQRT_3/R_AID_GetKe()/(2*PI_)*_RPM);
+        pAutoTune.MotorTunerOutput.RatedTorque = (int16_t) (1.5f*IdentificationSettings.u2_num_pole_pairs*IdentificationSettings.f4_rated_current*R_AID_GetKe()*100.0f);
+        bRetVal = true;
+    }
+    
+    return bRetVal;
+}
+
+/**
+  *  @brief This function configure motor information for tuning
+  */
+void MC_ConfigureMotorTuner(void)
+{   
+    R_AID_ConfigMotorPlate(pAutoTune.MotorTunerInput.RatedMotorCurrent, pAutoTune.MotorTunerInput.NumPolePairs);
+    R_AID_SetInitElecParams(pAutoTune.MotorTunerInput.KnownRs,
+                            pAutoTune.MotorTunerInput.KnownLd,
+                            pAutoTune.MotorTunerInput.KnownLq,
+                            pAutoTune.MotorTunerInput.KnownMagnetFlux);
+}
+#endif
