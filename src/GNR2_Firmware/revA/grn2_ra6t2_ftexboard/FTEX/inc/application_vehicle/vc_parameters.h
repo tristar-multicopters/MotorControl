@@ -129,19 +129,19 @@
 #endif
 
 #ifndef PAS_LEVEL_SPEED_1
-    #define PAS_LEVEL_SPEED_1       (uint8_t)10     /* Maximum Speed for PAS Level 1 in Km/h */
+    #define PAS_LEVEL_SPEED_1       (uint8_t)32     /* Maximum Speed for PAS Level 1 in Km/h */
 #endif
 
 #ifndef PAS_LEVEL_SPEED_2
-    #define PAS_LEVEL_SPEED_2       (uint8_t)15     /* Maximum Speed for PAS Level 2 in Km/h */
+    #define PAS_LEVEL_SPEED_2       (uint8_t)32     /* Maximum Speed for PAS Level 2 in Km/h */
 #endif
 
 #ifndef PAS_LEVEL_SPEED_3
-    #define PAS_LEVEL_SPEED_3       (uint8_t)20     /* Maximum Speed for PAS Level 3 in Km/h */
+    #define PAS_LEVEL_SPEED_3       (uint8_t)32     /* Maximum Speed for PAS Level 3 in Km/h */
 #endif
 
 #ifndef PAS_LEVEL_SPEED_4
-    #define PAS_LEVEL_SPEED_4       (uint8_t)25     /* Maximum Speed for PAS Level 4 in Km/h */
+    #define PAS_LEVEL_SPEED_4       (uint8_t)32     /* Maximum Speed for PAS Level 4 in Km/h */
 #endif
 
 #ifndef PAS_LEVEL_SPEED_5
@@ -491,7 +491,8 @@
     
 //cadence detection windows on ms when starting to use the pedal.
 #ifndef PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS
-    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 500           
+    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 150
+    
 #endif    
 //cadence detection windows on ms when running. 
 #ifndef PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS
@@ -499,7 +500,7 @@
 #endif
     
 #ifndef THROTTLE_BLOCK_OFF
-    #define THROTTLE_BLOCK_OFF            false        //If set to true, the throttle will be blocked.
+    #define THROTTLE_BLOCK_OFF            true        //If set to true, the throttle will be blocked.
 #endif
     
 #endif /*__VC_PARAMETERS_H*/
