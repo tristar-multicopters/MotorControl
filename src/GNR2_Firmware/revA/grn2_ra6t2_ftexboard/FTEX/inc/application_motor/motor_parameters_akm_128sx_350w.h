@@ -82,7 +82,7 @@
                                                             
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
-#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     1       // Wheel speed sensor cycle number for one wheel rotation
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     6       // Wheel speed sensor cycle number for one wheel rotation
                                                             
                                                                                                          
 #endif /* __MOTOR_PARAMETERS_AKM_128SX_350W_H */

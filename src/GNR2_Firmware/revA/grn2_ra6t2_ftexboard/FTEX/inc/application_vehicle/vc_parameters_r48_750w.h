@@ -10,7 +10,7 @@
 #define __VC_PARAMETERS_R48_750W_H
 
 /******************* MOTOR SELECTION  *******************************/
-#define MOTOR_SELECTION    MOTOR_AKM_128SX_750W
+#define MOTOR_SELECTION    MOTOR_AKM_128SX_350W
 
 
 /******************* SCREEN SELECTION  *******************************/
@@ -36,10 +36,10 @@
 #include "pedal_sensors/duratorq_autorq.h"
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
-#define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // Offset for pedal torque sensor to torque linear transformation during the startup in %
-#define PTS_OFFSET_STARTUP_SPEED_KMH         3              // Speed under which the Startup pedal torque sensor offset is used in km/h
-#define PTS_OFFSET_PTS2TORQUE               10              // Offset for pedal torque sensor to torque linear transformation in %
-#define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
+#define PTS_OFFSET_PTS2TORQUE_STARTUP       1              // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_STARTUP_SPEED_KMH        3              // Speed under which the Startup pedal torque sensor offset is used in km/h
+#define PTS_OFFSET_PTS2TORQUE               1              // Offset for pedal torque sensor to torque linear transformation in %
+#define PTS_OFFSET_PTS2TORQUE_SAFETY        1              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
 #define PTS_FILTER_BW1_1                      40              // BW coefficient for pedal torque sensor avereging for speed 1
@@ -68,14 +68,14 @@
 
 //Used to chose the pas detection mode on startup, torque or/and cadence,
 //torque only or cadence only.
-#define PAS_DETECTIONSTARTUP_ALGORITHM      CadenceSensorUse /*noSensorUse = 0,
+#define PAS_DETECTIONSTARTUP_ALGORITHM      HybridAndSensorUse /*noSensorUse = 0,
                                                             TorqueSensorUse,    // Torque sensor use define
                                                             CadenceSensorUse,   // Cadence sensor use define
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
 //Used to chose the pas detection mode on running, torque or/and cadence,
 //torque only or cadence only.
-#define PAS_DETECTIONRUNNING_ALGORITHM      CadenceSensorUse /*noSensorUse = 0,
+#define PAS_DETECTIONRUNNING_ALGORITHM      HybridAndSensorUse /*noSensorUse = 0,
                                                             TorqueSensorUse,    // Torque sensor use define
                                                             CadenceSensorUse,   // Cadence sensor use define
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
@@ -137,7 +137,7 @@
     
 /******************************** BATTERY SELECTION ******************************/
 
-#include "batteries/velec_750w_battery.h"
+#include "batteries/velec_350w_battery.h"
                                             
 #endif                                            
 
