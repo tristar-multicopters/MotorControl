@@ -315,7 +315,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         {
             //Get the latest value of these parameters            
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL, M1)),     pNode, &bPAS[CAN_PARAM], sizeof(uint8_t));
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
              
@@ -481,7 +481,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             }
             
 
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 0)),pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));   
@@ -611,13 +611,13 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 0)),        pNode, &configBatteryFullVoltage, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 1)),        pNode, &configBatteryEmptyVoltage, sizeof(uint16_t));
                  
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),      pNode, &configWheelDiameter, sizeof(uint8_t)); 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 2)),      pNode, &configWheelDiameter, sizeof(uint8_t)); 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),   pNode, &configScreenProtocol, sizeof(uint8_t));
 
                  //Motor signals parameters  
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 0)), pNode, &configisMotorMixedSignal, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 1)), pNode, &configMinSignalThreshold, sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 2)), pNode, &configMaxWheelSpeedPeriodUs, sizeof(uint32_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 4)), pNode, &configisMotorMixedSignal, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 5)), pNode, &configMinSignalThreshold, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 6)), pNode, &configMaxWheelSpeedPeriodUs, sizeof(uint32_t));
                  
                  // Headlight default state
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 1)),  pNode, &configHeadLightDefault, sizeof(uint8_t));
@@ -1043,12 +1043,12 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         
         
         // Initialise the wheel diameter with the value in the user config 
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 0)),       pNode, &configWheelDiameter, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 0)),       pNode, &configWheelDiameter, sizeof(uint8_t));
         
         //Initialise isMotorMixedSignal with the value in the user config
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 0)), pNode, &configisMotorMixedSignal, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 1)), pNode, &configMinSignalThreshold, sizeof(uint16_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SIGNALS_PARAMETER, 2)), pNode, &configMaxWheelSpeedPeriodUs, sizeof(uint32_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 4)), pNode, &configisMotorMixedSignal, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 5)), pNode, &configMinSignalThreshold, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 6)), pNode, &configMaxWheelSpeedPeriodUs, sizeof(uint32_t));
         
         // Initialise the light with the default value in user config
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)),   pNode, &configHeadLightDefault, sizeof(uint8_t));
@@ -1093,7 +1093,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 1)),        pNode, &configBatteryEmptyVoltage, sizeof(uint16_t));
         
         // Show what is the default wheel diameter in the user config 
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS_DIAMETER, 2)),        pNode, &configWheelDiameter, sizeof(uint8_t));         
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 2)),        pNode, &configWheelDiameter, sizeof(uint8_t));         
         // Show the currently selected screen protocol
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),     pNode, &configScreenProtocol, sizeof(uint8_t)); 
         

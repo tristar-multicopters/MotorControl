@@ -159,9 +159,9 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.Throttle_ConfigData.MaxSpeed = VEHICLE_TOP_SPEED_KMH,
     .Screen_ConfigData.Throttle_ConfigData.AccelRampType = THROTTLE_ACCEL_RAMP_TYPE,
     .Screen_ConfigData.Throttle_ConfigData.AccelRampArg1 = THROTTLE_ACCEL_RAMP_ARG1, 
-    .Motor_Signal_Parameters.motorMixedSignal = MOTOR_TEMP_MIXED,
-    .Motor_Signal_Parameters.minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
-    .Motor_Signal_Parameters.maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US,
+    .Screen_ConfigData.Motor_Signal_Parameters.motorMixedSignal = MOTOR_TEMP_MIXED,
+    .Screen_ConfigData.Motor_Signal_Parameters.minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
+    .Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US,
 };
 
 //struct used to hold the values of the user configuration
@@ -2045,7 +2045,7 @@ void UserConfigTask_UpdateThrottleMaxSpeed(uint8_t value)
 */
 bool UserConfigTask_GetMotorMixedSignalState(void)
 {
-    return userConfigData.Motor_Signal_Parameters.motorMixedSignal; 
+    return userConfigData.Screen_ConfigData.Motor_Signal_Parameters.motorMixedSignal; 
 }
 
 /**
@@ -2057,7 +2057,7 @@ bool UserConfigTask_GetMotorMixedSignalState(void)
 */
 void UserConfigTask_UpdateMotorMixedSignalState(bool value)
 {
-    userConfigData.Motor_Signal_Parameters.motorMixedSignal = value; 
+    userConfigData.Screen_ConfigData.Motor_Signal_Parameters.motorMixedSignal = value; 
 }
 
 /**
@@ -2070,7 +2070,7 @@ void UserConfigTask_UpdateMotorMixedSignalState(bool value)
 */
 uint16_t UserConfigTask_GetMinSignalThreshold(void)
 {
-    return userConfigData.Motor_Signal_Parameters.minSignalThreshold; 
+    return userConfigData.Screen_ConfigData.Motor_Signal_Parameters.minSignalThreshold; 
 }
 
 /**
@@ -2083,7 +2083,7 @@ uint16_t UserConfigTask_GetMinSignalThreshold(void)
 */
 void UserConfigTask_UpdateMinSignalThreshold(uint16_t value)
 {
-    userConfigData.Motor_Signal_Parameters.minSignalThreshold = value; 
+    userConfigData.Screen_ConfigData.Motor_Signal_Parameters.minSignalThreshold = value; 
 }
 
 /**
@@ -2096,7 +2096,7 @@ void UserConfigTask_UpdateMinSignalThreshold(uint16_t value)
 */
 uint32_t UserConfigTask_GetMaxWheelSpeedPeriodUs(void)
 {
-    return userConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs; 
+    return userConfigData.Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs; 
 }
 
 /**
@@ -2109,5 +2109,5 @@ uint32_t UserConfigTask_GetMaxWheelSpeedPeriodUs(void)
 */
 void UserConfigTask_UpdateMaxWheelSpeedPeriodUs(uint32_t value)
 {
-    userConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = value; 
+    userConfigData.Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = value; 
 }

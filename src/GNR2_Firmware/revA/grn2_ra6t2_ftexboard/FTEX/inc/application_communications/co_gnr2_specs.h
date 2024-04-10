@@ -296,21 +296,19 @@ extern "C" {
 #define CO_OD_REG_BATTERY_VOLTAGE              0x201E
 
 //OD ID used to configure wheel parameters
-// this object has 3 subindex
+// this object has 6 subindex
 //
 // 0 -> wheel diameter in inches 
 // 1 -> Wheel Pulse Per Rotation  (not implemented but subindex is already picked)     
 // 2 -> Wheel Diameter Default in inches 
-#define CO_OD_REG_WHEELS_DIAMETER              0x201F
+// 3 -> Wheel speed sensor status
+// 4 -> enalble/disable mixed motor signal
+// 5 -> minimal threshold to detect motor temperature and high logic 1 on wheel speed
+// 6 -> maxWheelSpeedPeriodUs, used to as limit to detect when wheel speed must be considered zero
+#define CO_OD_REG_WHEELS                       0x201F
 
+//avalible                                     0x2020
 
-//OD ID used to configure Motor Signal Parameters
-//this object has 3 subindex
-// 0 -> enalble/disable mixed motor signal
-// 1 -> minimal threshold to detect motor temperature and high logic 1 on wheel speed
-// 2 -> maxWheelSpeedPeriodUs, used to as limit to detect when wheel speed must be considered zero
-
-#define CO_OD_REG_MOTOR_SIGNALS_PARAMETER      0x2020
 
 //OD ID used to configure and operate the front light
 // this object has 2 subindex

@@ -153,6 +153,7 @@ typedef struct
     uint8_t  TailLightDefault;      // Contains the default state of the tail light (on or off)      
     uint8_t  TailLightBlinkOnBrake;    
     Throttle_ConfigData_t Throttle_ConfigData;
+    Motor_Signal_Parameters_t Motor_Signal_Parameters;
 } Screen_ConfigData_t;
 
 //struct used to hold all structs associated 
@@ -164,7 +165,6 @@ typedef struct
     PAS_ConfigData_t      PAS_ConfigData;
     Battery_ConfigData_t  Battery_ConfigData; 
     Screen_ConfigData_t   Screen_ConfigData;
-    Motor_Signal_Parameters_t Motor_Signal_Parameters;
     uint16_t crc;
 } User_ConfigData_t;
 
