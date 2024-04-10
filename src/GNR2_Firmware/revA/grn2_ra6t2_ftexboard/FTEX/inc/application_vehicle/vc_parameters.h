@@ -491,7 +491,7 @@
     
 //cadence detection windows on ms when starting to use the pedal.
 #ifndef PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS
-    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 150
+    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 500
     
 #endif    
 //cadence detection windows on ms when running. 
