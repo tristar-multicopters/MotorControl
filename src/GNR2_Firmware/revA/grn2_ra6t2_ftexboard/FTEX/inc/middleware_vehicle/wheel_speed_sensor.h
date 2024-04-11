@@ -19,7 +19,7 @@
 //-------------------------------- Defines ----------------------------------- //
 
 //timeout when measuring the time off(not running) of the timer.
-#define WHEELSPEED_TIMEOUT_MS          4000
+#define WHEELSPEED_TIMEOUT_MS          1000
 
 //steps used to increment the variable used to
 //measure the time interval where timer is not working.

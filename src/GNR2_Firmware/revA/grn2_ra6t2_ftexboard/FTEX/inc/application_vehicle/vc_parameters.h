@@ -290,10 +290,10 @@
 #endif
 
 #ifndef PTS_SPEED_FILTER_1                   
-    #define PTS_SPEED_FILTER_1                3
+    #define PTS_SPEED_FILTER_1                5
 #endif
 #ifndef PTS_SPEED_FILTER_2                   
-    #define PTS_SPEED_FILTER_2                6
+    #define PTS_SPEED_FILTER_2                15
 #endif
 
 #ifndef PTS_FILTER_BW1_1
@@ -491,7 +491,7 @@
     
 //cadence detection windows on ms when starting to use the pedal.
 #ifndef PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS
-    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 500
+    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 150
     
 #endif    
 //cadence detection windows on ms when running. 

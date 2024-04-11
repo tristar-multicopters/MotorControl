@@ -36,17 +36,17 @@
 #include "pedal_sensors/duratorq_autorq.h"
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
-#define PTS_OFFSET_PTS2TORQUE_STARTUP       1             // Offset for pedal torque sensor to torque linear transformation during the startup in %
-#define PTS_OFFSET_STARTUP_SPEED_KMH        20              // Speed under which the Startup pedal torque sensor offset is used in km/h
+#define PTS_OFFSET_PTS2TORQUE_STARTUP       10             // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_STARTUP_SPEED_KMH        3              // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE               1              // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        1              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
 #define PTS_FILTER_BW1_1                      7             // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW2_1                      10              // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW1_2                      7              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW2_2                      15              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW1_3                      7              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW2_1                      30             // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW1_2                      10              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW2_2                      25              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW1_3                      10             // BW coefficient for pedal torque sensor avereging for speed 3
 #define PTS_FILTER_BW2_3                      20              // BW coefficient for pedal torque sensor avereging for speed 3
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
@@ -54,11 +54,11 @@
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
 
 #define PAS_0_TORQUE_GAIN                   0               // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
-#define PAS_1_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 1
-#define PAS_2_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 2                
-#define PAS_3_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 3
+#define PAS_1_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 1
+#define PAS_2_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 2                
+#define PAS_3_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 3
 #define PAS_4_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 4
-#define PAS_5_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 5
+#define PAS_5_TORQUE_GAIN                   200             // Torque sensor PAS Gain in % on PAS 5
 #define PAS_6_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 6
 #define PAS_7_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 7 
 #define PAS_8_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 8 
@@ -92,7 +92,7 @@
 #define PAS_1_MAX_TORQUE_PERCENT            35
 #define PAS_2_MAX_TORQUE_PERCENT            50
 #define PAS_3_MAX_TORQUE_PERCENT            60
-#define PAS_4_MAX_TORQUE_PERCENT            75
+#define PAS_4_MAX_TORQUE_PERCENT           100
 #define PAS_5_MAX_TORQUE_PERCENT           100 
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
