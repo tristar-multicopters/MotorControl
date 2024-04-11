@@ -75,25 +75,25 @@
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
 //Used to chose the pas detection mode on running, torque or/and cadence,
 //torque only or cadence only.
-#define PAS_DETECTIONRUNNING_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
+#define PAS_DETECTIONRUNNING_ALGORITHM      HybridOrSensorUse /*noSensorUse = 0,
                                                             TorqueSensorUse,    // Torque sensor use define
                                                             CadenceSensorUse,   // Cadence sensor use define
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
                                                                
-#define PAS_0_MIN_TORQUE_PERCENT               0
-#define PAS_1_MIN_TORQUE_PERCENT               0
-#define PAS_2_MIN_TORQUE_PERCENT               0
-#define PAS_3_MIN_TORQUE_PERCENT                0
-#define PAS_4_MIN_TORQUE_PERCENT                0
-#define PAS_5_MIN_TORQUE_PERCENT                0
+#define PAS_0_MIN_TORQUE_PERCENT             0
+#define PAS_1_MIN_TORQUE_PERCENT             0
+#define PAS_2_MIN_TORQUE_PERCENT             0
+#define PAS_3_MIN_TORQUE_PERCENT             0
+#define PAS_4_MIN_TORQUE_PERCENT             0
+#define PAS_5_MIN_TORQUE_PERCENT             0
 
-#define PAS_0_MAX_TORQUE_PERCENT               0
-#define PAS_1_MAX_TORQUE_PERCENT               35
-#define PAS_2_MAX_TORQUE_PERCENT               50
-#define PAS_3_MAX_TORQUE_PERCENT               60
-#define PAS_4_MAX_TORQUE_PERCENT               75
-#define PAS_5_MAX_TORQUE_PERCENT               100 
+#define PAS_0_MAX_TORQUE_PERCENT             0
+#define PAS_1_MAX_TORQUE_PERCENT            35
+#define PAS_2_MAX_TORQUE_PERCENT            50
+#define PAS_3_MAX_TORQUE_PERCENT            60
+#define PAS_4_MAX_TORQUE_PERCENT            75
+#define PAS_5_MAX_TORQUE_PERCENT           100 
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
 
