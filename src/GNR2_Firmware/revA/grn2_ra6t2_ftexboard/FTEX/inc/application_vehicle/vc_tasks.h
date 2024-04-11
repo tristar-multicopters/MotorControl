@@ -12,6 +12,8 @@
 
 void VC_BootUp(void);
 
+void MD_BootUp(void);
+
 
 #endif /* __MD_TASKS_H */
 

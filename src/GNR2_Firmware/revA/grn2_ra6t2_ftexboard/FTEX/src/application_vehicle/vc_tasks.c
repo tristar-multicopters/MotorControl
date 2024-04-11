@@ -47,6 +47,15 @@ uint16_t TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT = 0;
 /************* TASKS ****************/
 
 /**
+  * @brief  It initializes the motor driver application.
+  * @retval None
+  */
+void MD_BootUp(void)
+{
+    VCI_Handle_t * pVCI = &VCInterfaceHandle;
+    MDI_Init(pVCI->pPowertrain->pMDI, &MCInterface[M1], &SlaveM2, MCSetup);
+}
+/**
   * @brief  It initializes the vehicle control application. Needs to be called before using
     *                    vehicle control related modules.
   * @retval None
@@ -63,7 +72,7 @@ void VC_BootUp(void)
     
     /* Initialize MC layer, vehicle controller state machine and powertrain components */
     VCSTM_Init(pVCI->pStateMachine);
-    PWRT_Init(pVCI->pPowertrain, &MCInterface[M1], &SlaveM2, DelayArray);
+    PWRT_Init(pVCI->pPowertrain,DelayArray);
 }
 
 /**

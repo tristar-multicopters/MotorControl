@@ -40,7 +40,7 @@ static Delay_Handle_t brakeDelay;    // Delay for Brake sensor stuck check while
   * @param  Powertrain handle
   * @retval None
   */
-void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1, SlaveMotorHandle_t * pSlaveM2, Delay_Handle_t pDelayArray[])
+void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
 {
     ASSERT(pHandle != NULL);     
     
@@ -51,7 +51,6 @@ void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1,
 
     // Initilaize peripherals
     Wheel_Init();
-    MDI_Init(pHandle->pMDI, pMci_M1, pSlaveM2, MCSetup);
     Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
     BRK_Init(pHandle->pBrake, &brakeDelay);
     BatMonitor_Init(pHandle->pBatMonitorHandle);
