@@ -1141,6 +1141,10 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
         }                
+        else
+        {
+            pHandle->hTorqueSelect = PedalAssist_GetWalkmodeTorque(pHandle->pPAS);
+        }
         
         if (pHandle->hTorqueSelect >= pHandle->hOldTorqueSelect) // Check which direction of ramp we need to select
         {

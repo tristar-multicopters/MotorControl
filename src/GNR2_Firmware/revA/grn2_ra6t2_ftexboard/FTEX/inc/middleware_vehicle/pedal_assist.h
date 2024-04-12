@@ -162,6 +162,13 @@ void PedalAssist_SetPASMaxSpeed(PAS_Handle_t * pHandle, uint16_t topSpeed);
 int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle);
 
 /**
+    * @brief  Set walkmode torque
+    * @param  Pedal Assist handle
+    * @retval pRefTorqueS in int16
+    */
+int16_t PedalAssist_GetWalkmodeTorque(PAS_Handle_t * pHandle);
+
+/**
     * @brief  Check the PAS Presence Flag based on torque detection
     * @param  Pedal Assist handle
     * @retval None

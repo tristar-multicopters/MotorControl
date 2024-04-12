@@ -239,6 +239,16 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
 }
 
 /**
+    * @brief  Set walkmode torque
+    * @param  Pedal Assist handle
+    * @retval pRefTorqueS in int16
+    */
+int16_t PedalAssist_GetWalkmodeTorque(PAS_Handle_t * pHandle)
+{
+    return (pHandle->sParameters.walkModeTorqueRatio * pHandle->sParameters.hPASMaxTorque)/100;
+}
+
+/**
     * @brief  Check the PAS Presence Flag based on torque detection
     * @param  Pedal Assist handle
     * @retval None
