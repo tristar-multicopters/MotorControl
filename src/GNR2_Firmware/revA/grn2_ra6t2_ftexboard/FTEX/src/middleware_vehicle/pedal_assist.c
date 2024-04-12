@@ -239,7 +239,7 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
 }
 
 /**
-    * @brief  Set walkmode torque
+    * @brief  Get walkmode torque
     * @param  Pedal Assist handle
     * @retval pRefTorqueS in int16
     */
