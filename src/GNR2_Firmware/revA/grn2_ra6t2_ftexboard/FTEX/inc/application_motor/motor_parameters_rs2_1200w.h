@@ -2,6 +2,19 @@
   * @file    motor_parameters_rs2_1200w.h
   * @brief   This file contains the parameters needed for the Motor Control application
   *          in order to configure a motor drive. This file is specific to R/S2 1200W motor.
+  
+      ::::    :::       ::::::::   :::::::::::       :::::::::: 
+     :+:+:   :+:      :+:    :+:      :+:           :+:         
+    :+:+:+  +:+      +:+    +:+      +:+           +:+          
+   +#+ +:+ +#+      +#+    +:+      +#+           +#++:++#      
+  +#+  +#+#+#      +#+    +#+      +#+           +#+            
+ #+#   #+#+#      #+#    #+#      #+#           #+#             
+###    ####       ########       ###           ##########         
+               
+When you add parameters to this file, you MUST create a variable within MotorParamters_t in motor_parameters.h.
+Use the variable in MotorParameters_t AND NOT THE DEFINE.
+These variables are used to configure the motor within the smart config tool.
+
 */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -30,6 +43,20 @@
 #define SP_KIDIV                            4096                // Speed control gain divider, to allow decimal value
 #define SP_KIDIV_LOG                        LOG2(4096)          // Speed control gain divider log2, to allow decimal value
 
+/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
+#define POLE_PAIR_NUM                       8                   // Number of motor pole pairs
+#define RS_VAL                              0.02417f            // Stator resistance , ohm
+#define LS                                  0.00047f            // Stator inductance, H   For I-PMSM it is equal to Lq
+#define MOTOR_MAGNET_FLUX                   0.0195f             // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
+#define MOTOR_VOLTAGE_CONSTANT              28.84f              // Volts RMS ph-ph /kRPM
+#define ST_TORQUE_COEF                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
+
+#define PEAK_CURRENT_MOTOR_amps             78                  // peak current in amps
+
+#define OV_TEMP_MOTOR_THRESHOLD_C           125                 // Maximum temperature in degree C
+#define OV_TEMP_MOTOR_HYSTERESIS_C          5                   // Temperature to decrease after an overtemp fault occured before clearing the fault, in degree C
+#define FLUX_WEAKENING_ENABLE               false               // enable or disable flux weakening
+    
 /************************** Power Limit Config  ************************/
 #define ENABLE_LV_TORQUE_LIMIT              true                // Enable or disable the low voltage torque limit
 #define LOW_VOLTAGE_THRESHOLD_PERCENTAGE    12                  // The threshold percentage of battery voltage before limiting torque
@@ -39,7 +66,7 @@
 #define MAX_TIME_BMS_TOLERANT               20000               // End time of derating for BMS protection in ms
 #define MAX_POWER_LIMIT_TIMEOUT             10000               // Start time of derating for BMS protection in ms
 #define MAX_BMS_POSITIVE_POWER              700                 // Maximum power at the end point of foldback
-#define MAX_BMS_CONTINOUS_CURRENT           10                  // Maximum Power at the end point of foldback in amps
+#define MAX_BMS_CONTINUOUS_CURRENT           10                  // Maximum Power at the end point of foldback in amps
 
 #define ESTIMATED_EFFICIENCY                100                 // Percent efficiency of input compared to output power
 
@@ -55,24 +82,6 @@
 #define MEC_SPEED_FILTER_BUTTERWORTH_ALPHA  16.91F              // Alpha constant to configure Butterworth filter for mechanical speed filtering
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA   -14.91F             // Beta constant to configure Butterworth filter for mechanical speed filtering
 
-/***************** MOTOR ELECTRICAL PARAMETERS  ******************************/
-#define POLE_PAIR_NUM                       8                   // Number of motor pole pairs
-#define RS                                  0.02417f            // Stator resistance , ohm
-#define LS                                  0.00047f            // Stator inductance, H   For I-PMSM it is equal to Lq
-#define MOTOR_MAGNET_FLUX                   0.0195f             // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
-#define MOTOR_VOLTAGE_CONSTANT              28.84f              // Volts RMS ph-ph /kRPM
-#define ST_Torque_Coef                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
-
-#define PEAK_CURRENT_MOTOR_amps             78                  // peak current in amps
-
-#define MOTOR_MAX_SPEED_RPM                 4000                // Maximum rated speed - Old Example 2750 for 38Km/h
-
-#define OV_TEMP_MOTOR_THRESHOLD_C           125                 // Maximum temperature in degree C
-#define OV_TEMP_MOTOR_HYSTERESIS_C          5                   // Temperature to decrease after an overtemp fault occured before clearing the fault, in degree C
-#define FLUX_WEAKENING_ENABLE               0                   // 0=disable 1=enable flux weakening
-
-
-
 /***************** MOTOR SENSORS PARAMETERS  ******************************/
 #define HALL_SENSORS_PLACEMENT              DEGREES_120         // Mechanical position of the sensors
                                                                 // withreference to an electrical cycle.
@@ -84,5 +93,20 @@
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
 #define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     6       // Wheel speed sensor cycle number for one wheel rotation
+
+/************** CURRENT AND SPEED PID PARAMETERS PARAMETERS  *****************************/
+
+#define IQ_KP_VS_SPEED_1                    72
+#define IQ_KP_VS_SPEED_2                    72
+
+#define IQ_KI_VS_SPEED_1                    20
+#define IQ_KI_VS_SPEED_2                    20
+
+#define ID_KP_VS_SPEED_1                    54
+#define ID_KP_VS_SPEED_2                    54
+
+#define ID_KI_VS_SPEED_1                    15
+#define ID_KI_VS_SPEED_2                    15
+
 
 #endif /* __MOTOR_PARAMETERS_RS2_1200W_H */

@@ -64,7 +64,7 @@ uint16_t CanVehiInterface_GetVehicleTorque(VCI_Handle_t * pHandle)
     // Add up motor torque reference from both motors
     TotalVehicleTorque = (float)PWRT_GetTotalMotorsTorque(pHandle->pPowertrain);
     
-    TotalVehicleTorque = TotalVehicleTorque * MOTOR_GEAR_RATIO;
+    TotalVehicleTorque = TotalVehicleTorque * MDI_GetMotorGearRatio(pHandle->pPowertrain->pMDI);
     
     return (uint16_t)round(TotalVehicleTorque/100);
 }

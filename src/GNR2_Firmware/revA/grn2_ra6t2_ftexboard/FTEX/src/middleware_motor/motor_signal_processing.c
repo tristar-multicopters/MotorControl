@@ -24,7 +24,7 @@
 *********************************************/
 
 //initialize the struct responsible to handle the data/info in the processing motor siganl
-static processingMotorSignal_t processingMotoSignal = 
+static processingMotorSignal_t processingMotorSignal = 
 {
     .adcChannelConfigured = false,
     .algorithmTick = ALGORITHM_TICK_US, 
@@ -32,7 +32,6 @@ static processingMotorSignal_t processingMotoSignal =
     .wheelSpeedPeriod = 0, 
     .maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US, 
     .minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
-    .isMotorMixedSignal = MOTOR_TEMP_MIXED
 };
 
                                                        
@@ -86,15 +85,15 @@ static void extractMotorTemperature(uint16_t signal)
     // signal must to be, consecutivly times, above the
     // minimum value. This indicate that our signal is good
     //and is not having transition detection.
-    if ((signalMaxValue > processingMotoSignal.minSignalThreshold) && (countToMaximum >= TEMPERATURE_MAX_PERIOD_US) && (processingMotoSignal.wheelSpeedPeriod > 0))
+    if ((signalMaxValue > processingMotorSignal.minSignalThreshold) && (countToMaximum >= TEMPERATURE_MAX_PERIOD_US) && (processingMotorSignal.wheelSpeedPeriod > 0))
     {
-        processingMotoSignal.motorTemperature = signalMaxValue;
+        processingMotorSignal.motorTemperature = signalMaxValue;
         signalMaxValue = 0;
         countToMaximum = 0;
     }
     
     //
-    countToMaximum = countToMaximum  + processingMotoSignal.algorithmTick;
+    countToMaximum = countToMaximum  + processingMotorSignal.algorithmTick;
 }
 
 /**
@@ -117,30 +116,30 @@ static void extractWheelSpeed(uint16_t signal)
     float accuWheelSpeedValue = 0;
     
     //
-    if ((signal < processingMotoSignal.minSignalThreshold) && (lowLevelDtectionFlag == false))
+    if ((signal < processingMotorSignal.minSignalThreshold) && (lowLevelDtectionFlag == false))
     {
         lowLevelDtectionFlag = true;
     }
     
     //
-    if ((signal >= processingMotoSignal.minSignalThreshold) && (lowLevelDtectionFlag == true) && (startMeasureFlag == false))
+    if ((signal >= processingMotorSignal.minSignalThreshold) && (lowLevelDtectionFlag == true) && (startMeasureFlag == false))
     {
         startMeasureFlag = true;
         wheelSpeedPeriod = 0;
     }
     
     //increment the period
-    wheelSpeedPeriod = wheelSpeedPeriod + processingMotoSignal.algorithmTick;
+    wheelSpeedPeriod = wheelSpeedPeriod + processingMotorSignal.algorithmTick;
     
     // new low detection condition test.
-    if ((signal < processingMotoSignal.minSignalThreshold) && (newLowLevelDtectionFlag == false) && (startMeasureFlag == true))
+    if ((signal < processingMotorSignal.minSignalThreshold) && (newLowLevelDtectionFlag == false) && (startMeasureFlag == true))
     {
         newLowLevelDtectionFlag = true;
     }
     
     //low to high and a high to low condition was detected. 
     //wheel speed measure is done.
-    if ((signal < processingMotoSignal.minSignalThreshold) && (newLowLevelDtectionFlag == true) && (startMeasureFlag == true))
+    if ((signal < processingMotorSignal.minSignalThreshold) && (newLowLevelDtectionFlag == true) && (startMeasureFlag == true))
     {
         endMeasureFlag = true;
     }
@@ -171,7 +170,7 @@ static void extractWheelSpeed(uint16_t signal)
         }
         
         //get final avg value.
-        processingMotoSignal.wheelSpeedPeriod = accuWheelSpeedValue/avgFiltercoef;
+        processingMotorSignal.wheelSpeedPeriod = accuWheelSpeedValue/avgFiltercoef;
         
         // verify if array index is above the limit to reinitialize it.
         if (avgFilterIndex < (MAX_AVG_FILTER_SIZE - 1))
@@ -185,9 +184,9 @@ static void extractWheelSpeed(uint16_t signal)
     }
     
     //timeout detection to measure the signal.
-    if (wheelSpeedPeriod >= processingMotoSignal.maxWheelSpeedPeriodUs)
+    if (wheelSpeedPeriod >= processingMotorSignal.maxWheelSpeedPeriodUs)
     {
-        processingMotoSignal.wheelSpeedPeriod = 0;
+        processingMotorSignal.wheelSpeedPeriod = 0;
         wheelSpeedPeriod = 0;
         avgFilterIndex = 0;
         avgFiltercoef = 0;
@@ -203,30 +202,39 @@ static void extractWheelSpeed(uint16_t signal)
 *****************************************************************/
 
 /**
+  @brief Function used to initialize the motor signal.
+  @param MotorParameters: inital motor parameters.
+  @return void.
+*/
+void initMotorMixedSignal(MotorParameters_t MotorParameters)
+{
+    processingMotorSignal.isMotorMixedSignal = MotorParameters.TempParameters.bMotorTempMixed;
+}
+
+/**
   @brief Function used to get, process and extract motor temperature
          and wheel speed the mixed signal comming from the motor.
   @param none.
   @return void.
 */
-
 void processingMotorMixedSignal(void)
 {
     //verify if the right ADC channel was correctly assigned
     //to this function.
-    if (processingMotoSignal.adcChannelConfigured == false)
+    if (processingMotorSignal.adcChannelConfigured == false)
     {
         //pass the adc channel used to digitalize the mixed motor signal
-        processingMotoSignal.mixedSignalRegConv.hChannel = MOTOR_TEMP_ANALOG_CHANNEL;
+        processingMotorSignal.mixedSignalRegConv.hChannel = MOTOR_TEMP_ANALOG_CHANNEL;
         
         //get the index position where the digitalized mixed sensor will be.
-        processingMotoSignal.mixedSignalIndex = RegConvMng_RegisterRegConv(&processingMotoSignal.mixedSignalRegConv);
+        processingMotorSignal.mixedSignalIndex = RegConvMng_RegisterRegConv(&processingMotorSignal.mixedSignalRegConv);
         
         //adc channel correctly assigned now.
-        processingMotoSignal.adcChannelConfigured = true;
+        processingMotorSignal.adcChannelConfigured = true;
     }
     
     //get the raw digitalized signal from the mixed signal
-    uint16_t signal = RegConvMng_ReadConv(processingMotoSignal.mixedSignalIndex);
+    uint16_t signal = RegConvMng_ReadConv(processingMotorSignal.mixedSignalIndex);
     
     //Call the algorithm responsible to extract and calculate wheel speed period value
     //from the mixed signal.
@@ -246,7 +254,7 @@ void processingMotorMixedSignal(void)
 
 uint16_t getExtractedMotorTemperature(void)
 {
-    return processingMotoSignal.motorTemperature;
+    return processingMotorSignal.motorTemperature;
 }
 
 /**
@@ -257,7 +265,7 @@ uint16_t getExtractedMotorTemperature(void)
 
 uint8_t getMixedSignalRegConvIndex(void)
 {
-    return processingMotoSignal.mixedSignalIndex;
+    return processingMotorSignal.mixedSignalIndex;
 }
 
 /**
@@ -269,7 +277,7 @@ uint8_t getMixedSignalRegConvIndex(void)
 
 float getExtractedWheelSpeed(void)
 {
-    return (((float)processingMotoSignal.wheelSpeedPeriod)*1.33f)/1000000.0f;
+    return (((float)processingMotorSignal.wheelSpeedPeriod)*1.33f)/1000000.0f;
 }
 
 /**
@@ -282,7 +290,7 @@ float getExtractedWheelSpeed(void)
 
 bool isMotorMixedSignal(void)
 {
-    return processingMotoSignal.isMotorMixedSignal;
+    return processingMotorSignal.isMotorMixedSignal;
 }
 
 /**
@@ -293,7 +301,7 @@ bool isMotorMixedSignal(void)
 
 void updateisMotorMixedSignalValue(bool value)
 {
-    processingMotoSignal.isMotorMixedSignal = value;
+    processingMotorSignal.isMotorMixedSignal = value;
 }
 
 /**
@@ -304,7 +312,7 @@ void updateisMotorMixedSignalValue(bool value)
 
 void updateMinSignalThresholdValue(uint16_t value)
 {
-    processingMotoSignal.minSignalThreshold = value;
+    processingMotorSignal.minSignalThreshold = value;
 }
 
 /**
@@ -315,5 +323,5 @@ void updateMinSignalThresholdValue(uint16_t value)
 
 void updateMaxWheelSpeedPeriodUsValue(uint32_t value)
 {
-    processingMotoSignal.maxWheelSpeedPeriodUs = value;
+    processingMotorSignal.maxWheelSpeedPeriodUs = value;
 }

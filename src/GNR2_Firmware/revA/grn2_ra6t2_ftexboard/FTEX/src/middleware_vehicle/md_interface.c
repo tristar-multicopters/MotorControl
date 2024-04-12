@@ -769,3 +769,66 @@ void MDI_SetWheelRPM(MultipleDriveInterfaceHandle_t * pHandle, uint16_t aWheelRP
     ASSERT(pHandle != NULL);
     MCInterface_SetWheelRPM(pHandle->pMCI, aWheelRPM);
 }  
+
+/**
+  *  Get the motor gear ratio
+  */
+float MDI_GetMotorGearRatio(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMotorGearRatio(pHandle->pMCI);
+}
+
+/**
+  *  Get the motor type
+  */
+MotorType_t MDI_GetMotorType(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMotorType(pHandle->pMCI);
+}
+
+/**
+  *  Get the nominal torque
+  */
+uint16_t MDI_GetNominalTorque(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetNominalTorque(pHandle->pMCI);
+}
+
+/**
+  *  Get the starting torque
+  */
+uint16_t MDI_GetStartingTorque(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetStartingTorque(pHandle->pMCI);
+}
+
+/**
+  *  Get the RS value
+  */
+float MDI_GetRS(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetRS(pHandle->pMCI);
+}
+
+/**
+  *  Get the number of magnets on the wheel speed sensor
+  */
+uint8_t MDI_GetWheelSpdSensorNbrPerRotation(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetWheelSpdSensorNbrPerRotation(pHandle->pMCI);
+}
+
+/**
+  *  Get whether the motor temp sensor is mixed
+  */
+bool MDI_GetMotorTempSensorMixed(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMotorTempSensorMixed(pHandle->pMCI);
+}

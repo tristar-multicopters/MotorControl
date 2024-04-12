@@ -7,7 +7,7 @@
 
 #include "stdint.h"
 #include "lookup_table.h"
-#include "vc_parameters.h"
+#include "motor_parameters.h"
 
 #define NTC_CONTROLLER_LUT_SIZE                        31           // the number of correlation elements on this table
 #define NTC_CONTROLLER_LUT_DIGITAL_STEP                1600         //100 is the tics steps for a 12bits ADC conversion

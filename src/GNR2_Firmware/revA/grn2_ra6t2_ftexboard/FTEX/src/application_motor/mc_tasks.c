@@ -15,12 +15,11 @@
 #include "pwm_common.h"
 #include "board_hardware.h"
 #include "uCAL_GPIO.h"
-#include "current_pid_vs_speed_table.h"
 #include "log_high_speed.h"
 #include "comm_config.h" // For dual
 
 #include "mc_tasks.h"
-#include "parameters_conversion.h"
+#include "motor_parameters.h"
 #include "gnr_parameters.h"
 #include "vc_autodetermination.h"
 #include "motor_signal_processing.h"
@@ -118,6 +117,9 @@ bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed);
  */
 void MC_BootUp(void)
 {
+    
+    MotorParameters_Init(&MotorParameters);
+    
     /**************************************/
     /*    State machine initialization    */
     /**************************************/
@@ -137,7 +139,7 @@ void MC_BootUp(void)
     /******************************************************/
     /*   PID component initialization: speed regulation   */
     /******************************************************/
-    PID_Init(&PIDSpeedHandleM1);
+    PID_Init(&PIDSpeedHandleM1, MotorParameters.ParametersConversion.PIDInitSpeed);
     pPIDSpeed[M1] = &PIDSpeedHandleM1;
 
     /******************************************************/
@@ -156,24 +158,24 @@ void MC_BootUp(void)
     }
     #endif
     pSpeedTorqCtrl[M1] = &SpeednTorqCtrlM1;
-    HallPosSensor_Init(&HallPosSensorM1);
-    RotorPosObs_Init(&RotorPosObsM1);
+    HallPosSensor_Init(&HallPosSensorM1, MotorParameters);
+    RotorPosObs_Init(&RotorPosObsM1, MotorParameters);
 
     /******************************************************/
     /*   Speed & torque component initialization          */
     /******************************************************/
-    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1], pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorControllerM1, &TempSensorMotorM1);
+    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1], pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorControllerM1, &TempSensorMotorM1, MotorParameters);
 
     /******************************************************/
     /*  Auxiliary speed sensor component initialization   */
     /******************************************************/
-    BemfObsPll_Init(&BemfObserverPllM1);
+    BemfObsPll_Init(&BemfObserverPllM1, MotorParameters);
 
     /********************************************************/
     /*     PID component initialization: current regulation */
     /********************************************************/
-    PID_Init(&PIDIqHandleM1);
-    PID_Init(&PIDIdHandleM1);
+    PID_Init(&PIDIqHandleM1, MotorParameters.ParametersConversion.PIDInitIq);
+    PID_Init(&PIDIdHandleM1, MotorParameters.ParametersConversion.PIDInitId);
     pPIDIq[M1] = &PIDIqHandleM1;
     pPIDId[M1] = &PIDIdHandleM1;
 
@@ -193,15 +195,16 @@ void MC_BootUp(void)
     /*******************************************************/
     /*   Temperature measurement component initialization  */
     /*******************************************************/
-    NTCTempSensor_Init(&TempSensorControllerM1, DEFAULT_TEMP_CONTROLLER);
+    NTCTempSensor_Init(&TempSensorControllerM1, MotorParameters.ParametersConversion.HeatsinkNTCInit, DEFAULT_TEMP_CONTROLLER);
     pTemperatureSensorController[M1] = &TempSensorControllerM1;
-    NTCTempSensor_Init(&TempSensorMotorM1, DEFAULT_TEMP_MOTOR);
+    NTCTempSensor_Init(&TempSensorMotorM1, MotorParameters.ParametersConversion.MotorNTCInit, DEFAULT_TEMP_MOTOR);
     pTemperatureSensorMotor[M1] = &TempSensorMotorM1;
+    initMotorMixedSignal(MotorParameters);
     /*******************************************************/
     /*     Motor Control component initialization         */
     /*******************************************************/
-    PID_Init(&PIDMotorControlM1);
-    MotorControl_Init(pFieldWeakening[M1], pPIDSpeed[M1], &PIDMotorControlM1);
+    PID_Init(&PIDMotorControlM1, MotorParameters.ParametersConversion.PIDInitMotorControl);
+    MotorControl_Init(pFieldWeakening[M1], pPIDSpeed[M1], &PIDMotorControlM1, MotorParameters);
 
     /*******************************************************/
     /*     Feed forward component initialization           */
@@ -219,7 +222,7 @@ void MC_BootUp(void)
     MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1], pBusSensorM1, &MCConfig);
     
     /* Section where we initialise conversion factors that need to be available to vehicle control */
-    oMCInterface[M1]->MCIConvFactors.Gain_Torque_IQRef = GAIN_TORQUE_IQREF;
+    oMCInterface[M1]->MCIConvFactors.Gain_Torque_IQRef = MotorParameters.ParametersConversion.fGainTorqueIqRef;
     oMCInterface[M1]->MCIConvFactors.MaxMeasurableCurrent = MAX_MEASURABLE_CURRENT;
     /***********************************************************************************************/
     
@@ -739,12 +742,12 @@ void FOC_CalcCurrRef(uint8_t bMotor)
     /* If current references iqref and idref are computed internally    */
     if (FOCVars[bMotor].bDriveInput == INTERNAL)
     {
-        FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSpeedTorqCtrl[bMotor]);
+        FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSpeedTorqCtrl[bMotor], MotorParameters);
         FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
         FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
         
         /* Use Flux Weakening to recalculate Iq and Id if it is enabled for motor */
-        if (FLUX_WEAKENING_ENABLE == 1)    
+        if (pSpeedTorqCtrl[bMotor]->bFluxWeakeningEn == true)    
         {
             IqdTmp.q = FOCVars[bMotor].Iqdref.q;
             IqdTmp.d = FOCVars[bMotor].Iqdref.d;
@@ -752,7 +755,7 @@ void FOC_CalcCurrRef(uint8_t bMotor)
         }
         
         /* apply the maximum nominal limitation to the Iq */
-        SpdTorqCtrl_ApplyCurrentLimitation_Iq(&FOCVars[bMotor].Iqdref, MCConfig.wNominalCurr, MCConfig.wUsrMaxCurr);
+        SpdTorqCtrl_ApplyCurrentLimitation_Iq(&FOCVars[bMotor].Iqdref, MCConfig.hNominalCurr, MCConfig.wUsrMaxCurr);
         
         if (pFeedforward[bMotor])
         {

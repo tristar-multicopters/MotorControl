@@ -22,6 +22,7 @@ extern "C" {
 #include "ntc_temperature_sensor.h"
 #include "dynamic_power.h"
 #include "stuck_protection.h"
+#include "motor_parameters.h"
 
 
 /* Exported types ------------------------------------------------------------*/
@@ -74,7 +75,7 @@ typedef struct
     uint16_t hMaxContinuousCurrent;         /*!< Application maximumContinouse Current
                                              of the rotor mechanical speed. Expressed in Amps 
                                              */
-    bool hEnableLVtorqueLimit;              /* Enable or disable the low voltage torque limit*/ 
+    bool bEnableLVtorqueLimit;              /* Enable or disable the low voltage torque limit*/ 
     uint16_t hBatteryLowVoltage;            /* Application maximum voltage that the MC layer can 
                                               operate with maximum torque
                                               */
@@ -94,6 +95,8 @@ typedef struct
                                              torque in cNm.*/
     int16_t  hMinNegativeTorque;            /*!< Minimum negative value of motor
                                              torque in cNm.*/                     
+    uint16_t hStartingTorque;               /*!< Maximum starting torque to apply
+                                             to motor in cNm  Only used for Heavy bikes */
     uint8_t  bPowerRef;
 
     uint16_t hMaxPositivePower;             /*!< Maximum positive value of motor
@@ -120,6 +123,7 @@ typedef struct
     int16_t hTorqueReferenceSpdLim;
     PIDHandle_t PISpeedLimit;               /*!< The regulator used to perform the speed limit control loop.*/
     
+    bool bFluxWeakeningEn;           /* Enable flux weakening */
     
 } SpdTorqCtrlHandle_t;
 
@@ -146,7 +150,7 @@ typedef struct
   * @retval none.
   */
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
-                        NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor);
+                        NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor, MotorParameters_t MotorParameters);
 
 /**
   * @brief  Initializes the parameters related to the battery (max power, max current,
@@ -160,7 +164,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
   * @param  UVThresh: undervoltage threshold of the battery
   * @retval none.
   */
-void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup);
+void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup, MotorParameters_t MotorParameters);
 
 
 /**
@@ -254,7 +258,7 @@ void SpdTorqCtrl_StopRamp(SpdTorqCtrlHandle_t * pHandle);
   * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
   * @retval int16_t motor torque reference in cNm (Nm/100).
   */
-int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle);
+int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorParameters_t MotorParameters);
 
 /**
   * @brief  Returns the Application maximum positive value of rotor speed. Expressed in the unit defined by #SPEED_UNIT.

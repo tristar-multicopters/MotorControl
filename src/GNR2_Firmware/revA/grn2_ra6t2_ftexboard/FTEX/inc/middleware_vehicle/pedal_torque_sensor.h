@@ -92,7 +92,7 @@ typedef struct
   @param  PedalTorqSensorHandle_t handle & Delay_Handle_t pPTSstuckDelay
   @return None
 */
-void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay);
+void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque);
 /**
   @brief  Pedal torque Sensor ADC hardware values clear
   @param  PedalTorqSensorHandle_t handle

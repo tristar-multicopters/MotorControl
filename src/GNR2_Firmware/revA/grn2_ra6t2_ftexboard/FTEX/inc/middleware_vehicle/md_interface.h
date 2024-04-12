@@ -412,6 +412,54 @@ void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t 
   * @retval none
   */
 void MDI_SetWheelRPM(MultipleDriveInterfaceHandle_t * pHandle, uint16_t aWheelRPM);
-    
+
+/**
+  * @brief  Get the motor gear ratio
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the motor gear raio
+  */
+float MDI_GetMotorGearRatio(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the motor type
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the motor gear raio
+  */
+MotorType_t MDI_GetMotorType(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the nominal torque
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the nominal torque
+  */
+uint16_t MDI_GetNominalTorque(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the starting torque
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the starting torque
+  */
+uint16_t MDI_GetStartingTorque(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the RS value
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of RS
+  */
+float MDI_GetRS(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the number of magnets on the wheel speed sensor
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Number of magnets on the wheel speed
+  */
+uint8_t MDI_GetWheelSpdSensorNbrPerRotation(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get whether the motor temp sensor is mixed
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Whether the motor temp sensor is mixed
+  */
+bool MDI_GetMotorTempSensorMixed(MultipleDriveInterfaceHandle_t * pHandle);
 
 #endif /* __MD_INTERFACE_H */

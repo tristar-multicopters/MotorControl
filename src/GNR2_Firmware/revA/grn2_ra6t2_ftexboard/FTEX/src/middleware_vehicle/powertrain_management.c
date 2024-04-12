@@ -51,14 +51,20 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
 
     // Initilaize peripherals
     Wheel_Init();
-    Throttle_Init(pHandle->pThrottle,&ThrottleDelay);
+    Throttle_Init(pHandle->pThrottle, &ThrottleDelay, MDI_GetStartingTorque(pHandle->pMDI));
     BRK_Init(pHandle->pBrake, &brakeDelay);
     BatMonitor_Init(pHandle->pBatMonitorHandle);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
-    PedalAssist_Init(pHandle->pPAS, &PTSensorDelay);    
+    
+    //use starting torque for dual motors, nominal torque  for all other motors
+    #if VEHICLE_SELECTION == VEHICLE_QUIETKAT || VEHICLE_SELECTION == VEHICLE_E_CELLS
+        PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), MDI_GetWheelSpdSensorNbrPerRotation(pHandle->pMDI));
+    #else
+        PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), MDI_GetWheelSpdSensorNbrPerRotation(pHandle->pMDI));    
+    #endif
 
     pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
     pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
@@ -632,11 +638,11 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
     {
         if (abs(wSpeedM1) <= pHandle->sParameters.hStoppingSpeed) // If motor speed is lower than stopping speed parameter
         {
-            if (!(pHandle->pMDI->pMCI->pSpeedTorqCtrl->motorType == DIRECT_DRIVE))      // 
+            if (MDI_GetMotorType(pHandle->pMDI) != DIRECT_DRIVE)
             {
                 bCheckStop1 = true;
             }
-          }
+        }
     }
     else
     {
@@ -1255,7 +1261,7 @@ uint16_t PWRT_GetDCPower(PWRT_Handle_t * pHandle)
     Amps = (float)(IqRef *(2 * MAX_MEASURABLE_CURRENT)/65535);
     
     // Aprox motor loss with 3*Rs*amps^2;
-    Loss = 3 * RS * Amps * Amps;
+    Loss = 3 * MDI_GetRS(pHandle->pMDI) * Amps * Amps;
     
     // Total power is mech power + loss    
     return (uint16_t) round(PWRT_GetTotalMotorsPower(pHandle) + Loss);

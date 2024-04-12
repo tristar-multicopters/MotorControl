@@ -38,13 +38,26 @@
 static void HALL_Init_Electrical_Angle(HallPosSensorHandle_t * pHandle);
 
 
-void HallPosSensor_Init(HallPosSensorHandle_t * pHandle)
+void HallPosSensor_Init(HallPosSensorHandle_t * pHandle, MotorParameters_t MotorParameters)
 {
+    pHandle->bSpeedBufferSize = MotorParameters.HallSensorParameters.bHallAveragingFifoDepth;
+    
+    pHandle->Super.hMaxReliableMecSpeedUnit = (uint16_t)(MotorParameters.ParametersConversion.hMaxApplicationSpeedUnit * 1.5);
+    
+    pHandle->fFilterAlpha = MotorParameters.RampManagerParameters.fMecSpeedFilterButterworthAlpha;
+    pHandle->fFilterBeta = MotorParameters.RampManagerParameters.fMecSpeedFilterButterworthBeta;
+    
+    pHandle->Super.bElToMecRatio = MotorParameters.ConfigParameters.bPolePairNum;
+    
+    pHandle->bSensorPlacement = MotorParameters.HallSensorParameters.bHallSensorsPlacement;
+    pHandle->hPhaseShift = (int16_t)(MotorParameters.HallSensorParameters.hHallPhaseShift * 65536/360);
+    
     // Calculate loacl variables and HALL handle variables
     uint16_t hMinReliableElSpeedUnit = pHandle->Super.hMinReliableMecSpeedUnit * pHandle->Super.bElToMecRatio;
     uint16_t hMaxReliableElSpeedUnit = pHandle->Super.hMaxReliableMecSpeedUnit * pHandle->Super.bElToMecRatio;
     uint8_t bSpeedBufferSize;
     uint8_t bIndex;
+    
     /* Adjustment factor: minimum measurable speed is x time less than the minimum reliable speed */
     hMinReliableElSpeedUnit /= 4u;
     /* Adjustment factor: maximum measurable speed is x time greater than the maximum reliable speed */

@@ -31,39 +31,41 @@ typedef enum
   
 typedef struct
 {
-  SensorType_t  bSensorType;   /**< Type of instanced temperature.
+    SensorType_t  bSensorType;   /**< Type of instanced temperature.
                                     This parameter can be REAL_SENSOR or VIRTUAL_SENSOR */
 
-  RegConv_t      TempRegConv;
+    bool          bSensorMixed;
 
-  uint16_t hAvTempDigital;          /**< It contains latest available average temperature.
+    RegConv_t      TempRegConv;
+
+    uint16_t hAvTempDigital;          /**< It contains latest available average temperature.
                                     This parameter is expressed in u16Celsius */
-  int16_t hAvTempCelcius;            /**< It contains latest computation of temperature in Celcius */
+    int16_t hAvTempCelcius;            /**< It contains latest computation of temperature in Celcius */
 
-  uint16_t hExpectedTempDigital;    /**< Default set when no sensor available (ie virtual sensor) */
+    uint16_t hExpectedTempDigital;    /**< Default set when no sensor available (ie virtual sensor) */
 
-  uint16_t hExpectedTempCelcius;    /**< Default value when no sensor available (ie virtual sensor).
+    uint16_t hExpectedTempCelcius;    /**< Default value when no sensor available (ie virtual sensor).
                                     This parameter is expressed in Celsius */
 
-  NTCTempFaultStates_t hFaultState;        /**< Contains latest Fault code.
+    NTCTempFaultStates_t hFaultState;        /**< Contains latest Fault code.
                                     This parameter is set to MC_OVER_TEMP or MC_NO_ERROR */
 
-  uint16_t hLowPassFilterBw;   /**< used to configure the first order software filter bandwidth.
+    uint16_t hLowPassFilterBw;   /**< used to configure the first order software filter bandwidth.
                                     hLowPassFilterBw = NTC_CalcBusReading call rate [Hz]/ FilterBandwidth[Hz] */
-  int16_t hOverTempThreshold;         /**< Represents the over voltage protection intervention threshold.
+    int16_t hOverTempThreshold;         /**< Represents the over voltage protection intervention threshold.
                                       This parameter is expressed in degC */
-  int16_t hOverTempDeactThreshold;    /**< Temperature threshold below which an active over temperature fault is cleared.
+    int16_t hOverTempDeactThreshold;    /**< Temperature threshold below which an active over temperature fault is cleared.
                                          This parameter is expressed in degC */
-  int16_t hFoldbackStartTemp;              /**< Temperature at which the foldback starts.
+    int16_t hFoldbackStartTemp;              /**< Temperature at which the foldback starts.
                                          This parameter is expressed in degC */
                                            
-  uint8_t bConvHandle;                /**< handle to the regular conversion */
+    uint8_t bConvHandle;                /**< handle to the regular conversion */
 
-  uint16_t hTimer;                    /**< timer value used to ignore first values in initialization and to check for sensor disconnections */
+    uint16_t hTimer;                    /**< timer value used to ignore first values in initialization and to check for sensor disconnections */
 
-  LookupTableHandle_t * pNTCLookupTable;   /**< Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
+    LookupTableHandle_t * pNTCLookupTable;   /**< Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
 
-  bool *OutsideTable;                 /**< Will be set to true if the current temp value is outside the table so it defaults to the nearest value */
+    bool *OutsideTable;                 /**< Will be set to true if the current temp value is outside the table so it defaults to the nearest value */
   
 } NTCTempSensorHandle_t;
 
@@ -72,8 +74,7 @@ typedef struct
  *     @brief Initializes temperature sensing conversions
  *     @param pHandle : Pointer on Handle structure of TemperatureSensor component
  */
-void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp);
-
+void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, NTCTempSensorHandle_t NTCInit, uint16_t defaultTemp);
 /**
  *     @brief Initializes internal average temperature computed value
  *  @param pHandle : Pointer on Handle structure of TemperatureSensor component

@@ -12,10 +12,10 @@
 
 typedef struct
 {
-    const uint16_t hXDataStep;             /* Step size between values of x-data */
-    const int32_t wXDataFirstValue;        /* Value of first element of x-data */
-    const uint16_t hTableLength;           /* Length of lookup table */
-    const int32_t * pOutputTable;          /* Pointer to instance of y-data table */
+    uint16_t hXDataStep;             /* Step size between values of x-data */
+    int32_t wXDataFirstValue;        /* Value of first element of x-data */
+    uint16_t hTableLength;           /* Length of lookup table */
+    int32_t * pOutputTable;          /* Pointer to instance of y-data table */
     bool  OutsideTable;                    /* Flag that indicates if the received value is outside of the expected table input range*/
 } LookupTableHandle_t;
 

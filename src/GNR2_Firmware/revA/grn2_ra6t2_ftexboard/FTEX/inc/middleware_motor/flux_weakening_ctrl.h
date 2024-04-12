@@ -16,36 +16,37 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
 #include "pid_regulator.h"
+#include "motor_parameters.h"
 
 /**
   * @brief  Flux Weakening Control Component handle structure
   */
 typedef struct
 {
-  PIDHandle_t *       pMotorControlPID; /**< PI object used for flux weakening */
-  PIDHandle_t *       pSpeedPID;         /**< PI object used for speed control */
-  uint16_t        hFwVoltRef;              /**< Voltage reference, tenth of
+    PIDHandle_t *       pMotorControlPID; /**< PI object used for flux weakening */
+    PIDHandle_t *       pSpeedPID;         /**< PI object used for speed control */
+    uint16_t        hFwVoltRef;              /**< Voltage reference, tenth of
                                                  percentage points */
-  qd_t            AvVoltQd;              /**< Average stator voltage in qd
+    qd_t            AvVoltQd;              /**< Average stator voltage in qd
                                                  reference frame */
-  int16_t         AvVoltAmpl;             /**< Average stator voltage amplitude */
-  int16_t         hIdRefOffset;           /**< Id reference offset */
-  uint16_t        hMaxModule;             /**< Circle limitation maximum allowed module */
+    int16_t         AvVoltAmpl;             /**< Average stator voltage amplitude */
+    int16_t         hIdRefOffset;           /**< Id reference offset */
+    uint16_t        hMaxModule;             /**< Circle limitation maximum allowed module */
 
-  uint16_t        hDefaultFwVoltRef;       /**< Default flux weakening voltage reference,
+    uint16_t        hDefaultFwVoltRef;       /**< Default flux weakening voltage reference,
                                                tenth of percentage points*/
-  int16_t         hDemagCurrent;          /**< Demagnetization current in s16A:
+    int16_t         hDemagCurrent;          /**< Demagnetization current in s16A:
                                                Current(Amp) = [Current(s16A) * Vdd micro]/
                                                [65536 * Rshunt * Aop] */
-  int16_t         wNominalCurr;           /**< Squared motor nominal current in */
-  int32_t         wNominalSqCurr;         /**< Squared motor nominal current in (s16A)^2
+    int16_t         hNominalCurr;           /**< Squared motor nominal current in */
+    int32_t         wNominalSqCurr;         /**< Squared motor nominal current in (s16A)^2
                                                where:
                                                Current(Amp) = [Current(s16A) * Vdd micro]/
                                                [65536 * Rshunt * Aop] */
-  int16_t         wUsrMaxCurr;             /**< User Defined Maximum Curent comming from APT
+    int16_t         wUsrMaxCurr;             /**< User Defined Maximum Curent comming from APT
                                                initial value is NominamMaxCurr but Vehicle layer
                                                can update the value */
-  uint16_t        hVqdLowPassFilterBw;    /**< Use this parameter to configure the Vqd
+    uint16_t        hVqdLowPassFilterBw;    /**< Use this parameter to configure the Vqd
                                                first order software filter bandwidth.
                                                hVqdLowPassFilterBw = FOC_CurrController
                                                call rate [Hz]/ FilterBandwidth[Hz] in
@@ -54,9 +55,11 @@ typedef struct
                                                is not defined, hVqdLowPassFilterBw is
                                                equal to log with base two of previous
                                                definition */
-  uint16_t        hVqdLowPassFilterBwLog; /**< hVqdLowPassFilterBw expressed as power of 2.
+    uint16_t        hVqdLowPassFilterBwLog; /**< hVqdLowPassFilterBw expressed as power of 2.
                                                E.g. if gain divisor is 512 the value
                                                must be 9 because 2^9 = 512 */    
+    float           fRS;                    /**< Stator resistance, in ohms */
+    uint8_t         bWheelSpdSensorNbrPerRotation;      /**< Number of magnets on the wheel speed sensor */
 } MCConfigHandle_t;
 
 
@@ -70,7 +73,7 @@ typedef struct
   * @param  pPIDMotorControlHandle FW PID structure.
   * @retval none.
   */
-void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle);
+void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle, MotorParameters_t MotorParameters);
 
 /**
   * @brief  It should be called before each motor restart and clears the Flux

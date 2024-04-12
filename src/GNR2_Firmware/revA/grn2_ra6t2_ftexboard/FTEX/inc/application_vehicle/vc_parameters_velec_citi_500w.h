@@ -51,7 +51,6 @@
 #define PTS_FILTER_BW2_3                      25              // BW coefficient for pedal torque sensor avereging for speed 3
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
-#define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
 #define PAS_TORQUE_GAIN                     100             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
@@ -101,8 +100,6 @@
 
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT 200             /* Number of task ticks to wait after a fault occurs to
                                                                attempt a powertrain restart (OC, SF and SU faults)   */
-
-#define POWERTRAIN_MAX_MOTOR_TORQUE         STARTING_TORQUE // Maximum motor torque to apply with powertrain management
 
 /***************** BIKE LIGHT SETTINGS  ******************************/
     

@@ -131,13 +131,6 @@
 #define CURRENT_FILTER_ALPHA            2.273F      // Alpha constant used in butterworth filter for current filtering
 #define CURRENT_FILTER_BETA             -0.273F     // Beta constant used in butterworth filter for current filtering
 
-/****** Current and Torque Parameters ******/
-#define PEAK_CURRENT_amps               (PEAK_CURRENT_MOTOR_amps < PEAK_CURRENT_CONTROLLER_amps ? PEAK_CURRENT_MOTOR_amps : PEAK_CURRENT_CONTROLLER_amps)
-
-#define NOMINAL_TORQUE                  (uint16_t)(1.5 * 100 * POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps)    // Nominal torque to apply to motor in cNm   
-                                                                                           // Torque (cNm) = (3/2)* POLE_PAIR_NUM * MOTOR_MAGNET_FLUX * PEAK_CURRENT_amps
-#define STARTING_TORQUE                 (uint16_t)(NOMINAL_TORQUE * ST_Torque_Coef)    // Maximum starting torque to apply to motor in cNm  Only used for Heavy bikes
-
 /****** Over and Under Voltage Parameters ******/
 #define OV_VOLTAGE_THRESHOLD_V             75                   // Over-voltage threshold
 
@@ -152,6 +145,8 @@
 /****** PWM Parameters ******/
 #define PWM_FREQUENCY                   20000       // PWM switching frequency
 #define PWM_FREQ_SCALING                1           // Not used, set to one.
+
+#define MAX_DUTY                        30000       // INT16_MAX is 100% duty cycle
 
 /****** FOC Parameters ******/
 #define No_Load_PID_KIq_Gain            500
@@ -171,8 +166,6 @@
 #define SPEED_LOOP_FREQUENCY_HZ         1000
 
 #define PID_SPEED_KD_DEFAULT            0
-#define PID_SPEEDLIMIT_KP_DEFAULT       PID_SPEED_KP_DEFAULT
-#define PID_SPEEDLIMIT_KI_DEFAULT       PID_SPEED_KI_DEFAULT
 
 #define SP_KPDIV                        256
 #define SP_KDDIV                        16
@@ -182,10 +175,8 @@
 
 #define DYNAMICTORQUE_THRESHOLD_SPEED    120
 
-#define FOLDBACK_SPEED_END_VALUE        MAX_APPLICATION_SPEED_RPM
 #define FOLDBACK_HS_TEMP_END_VALUE      OV_TEMP_CONTROLLER_THRESHOLD_C
 #define FOLDBACK_HS_TEMP_INTERVAL       OV_TEMP_CONTROLLER_HYSTERESIS_C
-#define FOLDBACK_MOTOR_TEMP_END_VALUE   OV_TEMP_MOTOR_THRESHOLD_C
 
 #define DEFAULT_CONTROL_MODE            STC_TORQUE_MODE
 #define MAX_POWER_RECOVER_TIMEOUT       80
@@ -197,7 +188,7 @@
 
 /****** Flux Weakening Parameters  ******/
 #define FW_VOLTAGE_REF                  900         // Flux weakening Vs reference, tenth
-#define FW_KP_GAIN                      2000           // Flux weakening default Kp gain
+#define FW_KP_GAIN                      2000        // Flux weakening default Kp gain
 #define FW_KI_GAIN                      100           // Flux weakening default Ki gain
 #define FW_KPDIV                        32768       // Flux weakening gain divider, to allow decimal value
 #define FW_KIDIV                        32768       // Flux weakening gain divider, to allow decimal value

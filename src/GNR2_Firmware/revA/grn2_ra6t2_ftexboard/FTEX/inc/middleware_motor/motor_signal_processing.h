@@ -13,6 +13,7 @@
 *********************************************/
 #include <stdint.h>
 #include "regular_conversion_manager.h"
+#include "motor_parameters.h"
 
 /*********************************************
                   Defines
@@ -73,6 +74,13 @@ typedef struct
                 Public Functions 
 *****************************************************************/
 
+/**
+  @brief Function used to initialize the motor signal.
+  @param MotorParameters: inital motor parameters.
+  @return void.
+*/
+void initMotorMixedSignal(MotorParameters_t MotorParameters);
+    
 /**
   @brief Function used to get, process and extract motor temperature
          and wheel speed the mixed signal comming from the motor.

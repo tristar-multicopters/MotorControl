@@ -32,8 +32,12 @@
 #include "mc_math.h"
 #include "parameters_conversion_ra6t2.h"
 #include "drive_parameters.h"
+#include "foldback.h"
+#include "pid_regulator.h"
+#include "ntc_temperature_sensor.h"
 
 #define ADC_REFERENCE_VOLTAGE  3.30
+
 
 /************************* CONTROL FREQUENCIES & DELAIES **********************/
 #define TF_REGULATION_RATE     (uint32_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE))
@@ -63,15 +67,12 @@
 #define SERIALCOM_ATR_TIME_TICKS (uint16_t)(((SYS_TICK_FREQUENCY * SERIAL_COM_ATR_TIME_MS) / 1000u) - 1u)
 
 /************************* COMMON OBSERVER PARAMETERS **************************/
-#define MAX_BEMF_VOLTAGE  (uint16_t)((MAX_APPLICATION_SPEED_RPM * 1.2 *\
-                           MOTOR_VOLTAGE_CONSTANT*SQRT_2)/(1000u*SQRT_3))
 /*max phase voltage, 0-peak Volts*/
 #define MAX_VOLTAGE (int16_t)((ADC_REFERENCE_VOLTAGE/SQRT_3)/VBUS_PARTITIONING_FACTOR)
 
 /* The maximum current from Current Sensor with AMPLIFICATION_GAIN that we can measure using ADC with ADC_REFERENCE_VOLTAGE */
 #define current_correction_factor   0.85  /* correction factor for the current sensor range */
 #define MAX_MEASURABLE_CURRENT      (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN)* current_correction_factor)
-#define NOMINAL_PEAK_CURRENT        (uint16_t)(PEAK_CURRENT_amps * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Maximum current amplitude that can be injected per phase in digital Amps, motor limit */
 #define ID_DEMAG                    (int16_t)(ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
 
 #define OCSP_SAFETY_MARGIN                 (uint16_t)(OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))    /* Measured current amplitude can be until OCSP_SAFETY_MARGIN higher
@@ -80,21 +81,14 @@
 
 #define OBS_MINIMUM_SPEED_UNIT    (uint16_t) ((OBS_MINIMUM_SPEED_RPM*SPEED_UNIT)/_RPM)
 
-#define MAX_APPLICATION_SPEED_UNIT ((MAX_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM)
 #define MIN_APPLICATION_SPEED_UNIT ((MIN_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM)
 
 /************************* PLL PARAMETERS **************************/
-#define C1 (int32_t)((((int16_t)F1)*RS)/(LS*TF_REGULATION_RATE))
 #define C2 (int32_t) GAIN1
-#define C3 (int32_t)((((int16_t)F1)*MAX_BEMF_VOLTAGE)/(LS*MAX_MEASURABLE_CURRENT*TF_REGULATION_RATE))
 #define C4 (int32_t) GAIN2
-#define C5 (int32_t)((((int16_t)F1)*MAX_VOLTAGE)/(LS*MAX_MEASURABLE_CURRENT*TF_REGULATION_RATE))
 
 #define PERCENTAGE_FACTOR    (uint16_t)(VARIANCE_THRESHOLD*128u)
 #define HFI_MINIMUM_SPEED    (uint16_t) (HFI_MINIMUM_SPEED_RPM/6u)
-
-#define MAX_APPLICATION_SPEED_UNIT2 ((MAX_APPLICATION_SPEED_RPM2*SPEED_UNIT)/_RPM)
-#define MIN_APPLICATION_SPEED_UNIT2 ((MIN_APPLICATION_SPEED_RPM2*SPEED_UNIT)/_RPM)
 
 /**************************   VOLTAGE CONVERSIONS  Motor 1 *************************/
 #define OVERVOLTAGE_THRESHOLD_d            (uint16_t)(OV_VOLTAGE_THRESHOLD_V*65535/\
@@ -131,9 +125,7 @@
 #define TOFF (uint16_t)((TOFF_NS * PWM_TIM_CLK_MHz) / 2000)
 
 /*************** Current vs torque ratio ******/
-// #define MOTOR_MAGNET_FLUX              (float) MOTOR_VOLTAGE_CONSTANT*60/(2*POLE_PAIR_NUM*1000*SQRT_3*PI_)     /*!< In weber rms */
 
-#define GAIN_TORQUE_IQREF              (float) (1/(100*3*POLE_PAIR_NUM*MOTOR_MAGNET_FLUX*MAX_MEASURABLE_CURRENT/(UINT16_MAX))) 
 #define GAIN_TORQUE_IDREF              0
 
 
@@ -212,6 +204,43 @@
 #define SAMPLING_CYCLE_CORRECTION 0.5 /* Add half cycle required by STM32G431CBUx ADC */
 #define LL_ADC_SAMPLINGTIME_1CYCLES_5 LL_ADC_SAMPLINGTIME_1CYCLE_5
 #define LL_ADC_SAMPLING_CYCLE(CYCLE) LL_ADC_SAMPLINGTIME_ ## CYCLE ## CYCLES_5
+
+//Parameters to convert that are based on motor-specific parameters
+typedef struct 
+{
+    uint16_t hPeakCurrentAmps;
+    int16_t hNominalPeakCurrent;
+    
+    int16_t hMaxBEMFVoltage;
+    
+    uint16_t hMaxApplicationSpeedUnit;
+    
+    uint16_t hNominalTorque;
+    uint16_t hStartingTorque;
+    float fGainTorqueIqRef;
+    
+    int16_t hC1;
+    int16_t hC3;
+    int16_t hC5;
+    
+    Foldback_Handle_t FoldbackInitSpeed;
+    Foldback_Handle_t FoldbackInitTorque;
+    Foldback_Handle_t FoldbackInitPower;
+    Foldback_Handle_t FoldbackInitHeatsinkTemp;
+    Foldback_Handle_t FoldbackInitMotorTemp;
+    
+    PIDHandle_t PIDInitSpeedLimit;
+    PIDHandle_t PIDInitSpeed;
+    PIDHandle_t PIDInitIq;
+    PIDHandle_t PIDInitId;
+    PIDHandle_t PIDInitMotorControl;
+    PIDHandle_t PIDInitBemfObserverPl;
+    
+    NTCTempSensorHandle_t HeatsinkNTCInit;
+    NTCTempSensorHandle_t MotorNTCInit;
+    
+} ParametersConversion_t;
+
 
 #endif /*__PARAMETERS_CONVERSION_H*/
 

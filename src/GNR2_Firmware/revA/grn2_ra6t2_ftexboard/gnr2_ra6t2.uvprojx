@@ -739,6 +739,16 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>motor_parameters.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+            </File>
+            <File>
               <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
@@ -2889,6 +2899,16 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>motor_parameters.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+            </File>
+            <File>
               <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
@@ -4986,6 +5006,16 @@
               <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
             </File>
             <File>
               <FileName>motor_parameters_akm_128sx_350w.h</FileName>
@@ -7138,6 +7168,16 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>motor_parameters.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+            </File>
+            <File>
               <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
@@ -9288,6 +9328,16 @@
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
+              <FileName>motor_parameters.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+            </File>
+            <File>
               <FileName>motor_parameters_akm_128sx_350w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
@@ -11385,6 +11435,16 @@
               <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
             </File>
             <File>
               <FileName>motor_parameters_akm_128sx_350w.h</FileName>

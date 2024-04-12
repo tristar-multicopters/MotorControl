@@ -49,7 +49,7 @@ typedef struct
   * @brief  Function for Initialializing foldback
   * @param  pHandle: handler of the current instance of the Foldback component
   */
-void Foldback_Init( Foldback_Handle_t * pHandle );
+void Foldback_Init(Foldback_Handle_t * pHandle, Foldback_Handle_t FoldbackInit);
 
 /**
   * @brief  Function for applying the limitation based on the control variable

@@ -70,8 +70,15 @@ NTCTempFaultStates_t NTC_SetFaultState(NTCTempSensorHandle_t * pHandle)
 /* Functions ---------------------------------------------------- */
 
 
-void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp)
+void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, NTCTempSensorHandle_t NTCInit, uint16_t defaultTemp)
 {
+    
+    pHandle->bSensorType = NTCInit.bSensorType;
+    pHandle->bSensorMixed = NTCInit.bSensorMixed;
+    pHandle->hOverTempThreshold = NTCInit.hOverTempDeactThreshold;
+    pHandle->hOverTempDeactThreshold = NTCInit.hOverTempThreshold;
+    pHandle->hFoldbackStartTemp = NTCInit.hFoldbackStartTemp;
+    
     if (pHandle->bSensorType == REAL_SENSOR)
     {
         if(pHandle->pNTCLookupTable != NULL)

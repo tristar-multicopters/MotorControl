@@ -21,39 +21,47 @@ static int16_t BemfObs_ExecutePLL(BemfObserverPllHandle_t * pHandle, int16_t hBe
 static void BemfObs_InitSpeedBuffer(BemfObserverPllHandle_t * pHandle);
 
 
-void BemfObsPll_Init(BemfObserverPllHandle_t * pHandle)
+void BemfObsPll_Init(BemfObserverPllHandle_t * pHandle, MotorParameters_t MotorParameters)
 {
-  int16_t htempk;
-  int32_t wAux;
+    int16_t htempk;
+    int32_t wAux;
 
+    pHandle->Super.hMaxReliableMecSpeedUnit = (uint16_t)(MotorParameters.ParametersConversion.hMaxApplicationSpeedUnit * 1.5);
+    pHandle->hMaxAppPositiveMecSpeedUnit = (uint16_t)(MotorParameters.ParametersConversion.hMaxApplicationSpeedUnit * 1.15);
+    
+    pHandle->hC1 = (int16_t) MotorParameters.ParametersConversion.hC1;
+    pHandle->hC3 = (int16_t) MotorParameters.ParametersConversion.hC3;
+    pHandle->hC5 = (int16_t) MotorParameters.ParametersConversion.hC5;
+    
+    pHandle->Super.bElToMecRatio = MotorParameters.ConfigParameters.bPolePairNum;
 
-  pHandle->bConsistencyCounter = pHandle->bStartUpConsistThreshold;
-  pHandle->bEnableDualCheck = true;
+    pHandle->bConsistencyCounter = pHandle->bStartUpConsistThreshold;
+    pHandle->bEnableDualCheck = true;
 
-  wAux = (int32_t)1;
-  pHandle->hF3Pow2 = 0u;
+    wAux = (int32_t)1;
+    pHandle->hF3Pow2 = 0u;
 
-  htempk = (int16_t)(C6_COMP_CONST1 / (pHandle->hF2));
+    htempk = (int16_t)(C6_COMP_CONST1 / (pHandle->hF2));
 
-  while (htempk != 0)
-  {
+    while (htempk != 0)
+    {
     htempk /= (int16_t)2;
     wAux *= (int32_t)2;
     pHandle->hF3Pow2++;
-  }
+    }
 
-  pHandle->hF3 = (int16_t)wAux;
-  wAux = (int32_t)(pHandle->hF2) * pHandle->hF3;
-  pHandle->hC6 = (int16_t)(wAux / C6_COMP_CONST2);
+    pHandle->hF3 = (int16_t)wAux;
+    wAux = (int32_t)(pHandle->hF2) * pHandle->hF3;
+    pHandle->hC6 = (int16_t)(wAux / C6_COMP_CONST2);
 
-  BemfObsPll_Clear(pHandle);
+    BemfObsPll_Clear(pHandle);
 
-  PID_Init(& pHandle->PIRegulator);
+    PID_Init(& pHandle->PIRegulator, MotorParameters.ParametersConversion.PIDInitBemfObserverPl);
 
-  /* Acceleration measurement set to zero */
-  pHandle->Super.hMecAccelUnitP = 0;
+    /* Acceleration measurement set to zero */
+    pHandle->Super.hMecAccelUnitP = 0;
 
-  return;
+    return;
 }
 
 void BemfObsPll_Return(BemfObserverPllHandle_t * pHandle, uint8_t flag)

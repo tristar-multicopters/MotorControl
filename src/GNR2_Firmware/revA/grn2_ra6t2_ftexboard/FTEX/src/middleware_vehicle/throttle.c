@@ -12,13 +12,15 @@
 /**
    Initializes throttle sensing conversions
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay)
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay, uint16_t maxTorque)
 {
     ASSERT(pHandle != NULL);
     pHandle->DisableThrottleOutput = false;
     pHandle->extThrottleEnable = false;    
     
     pHandle->pThrottleStuckDelay = pThrottleStuckDelay;
+    
+    pHandle->hParameters.ThrottleMaxTorque = maxTorque;
       
     ASSERT(pHandle->pThrottleStuckDelay->DelayInitialized); // Delay sohuld be initialized in the task to specify at which 
                                                             // frequence the update delay function will eb called
@@ -45,6 +47,9 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
      
     Ramps_Init(&(pHandle->hParameters.ThrottleRamps[0]));
     Ramps_Init(&(pHandle->hParameters.ThrottleRamps[1]));
+    
+    pHandle->hParameters.ThrottleRamps[0].RampMax = maxTorque;
+    pHandle->hParameters.ThrottleRamps[1].RampMax = maxTorque;
 }
 
 /**

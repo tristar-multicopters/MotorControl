@@ -30,13 +30,13 @@ void AssertIsValidLevel(PasLevel_t level);
     * @param  Pedal Assist handle & Delay Handle
     * @retval None
     */
-void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
+void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation)
 {
     ASSERT(pHandle != NULL);
 
     PedalSpdSensor_Init(pHandle->pPSS);
-    WheelSpdSensor_Init(pHandle->pWSS);
-    PedalTorqSensor_Init(pHandle->pPTS, pPTSstuckDelay);
+    WheelSpdSensor_Init(pHandle->pWSS, wheelSpdSensorNbrPerRotation);
+    PedalTorqSensor_Init(pHandle->pPTS, pPTSstuckDelay, maxTorque);
     
     pHandle->bCurrentAssistLevel = DEFAULT_PAS_LEVEL;
     PedalAssist_ResetPASDetected(pHandle);
@@ -50,9 +50,17 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
     {
         Ramps_Init(&(pHandle->sParameters.PasRamps[0][i]));
         Ramps_Init(&(pHandle->sParameters.PasRamps[1][i]));
+
+        pHandle->sParameters.PasRamps[0][i].RampMax = maxTorque;
+        pHandle->sParameters.PasRamps[1][i].RampMax = maxTorque;
+
     }
     
     Ramps_Init(&(pHandle->sParameters.PasWalkmodeRamp));
+    
+    pHandle->sParameters.PasWalkmodeRamp.RampMax = maxTorque;
+    pHandle->sParameters.hPASMaxTorque = (int16_t)maxTorque;
+
 }
 
 /**

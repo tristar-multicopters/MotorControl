@@ -17,7 +17,7 @@
 #include <rtx_os.h>
 //#include "EventRecorder.h"
 
-#include "parameters_conversion.h"
+#include "motor_parameters.h"
 
 
 

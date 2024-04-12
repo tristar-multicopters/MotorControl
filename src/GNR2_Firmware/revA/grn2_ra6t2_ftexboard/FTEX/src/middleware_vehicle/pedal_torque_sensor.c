@@ -24,7 +24,7 @@ static bool PTSsensorStuck = false;
 /**
     Pedal torque Sensor conversion Initialization
 */
-void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
+void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque)
 {    
     
     ASSERT(pHandle != NULL);
@@ -50,6 +50,9 @@ void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pP
     PedalTorqSensor_ComputeSlopes(pHandle);
     
     pHandle->hParameters.hStartupOffsetMTSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.hStartupOffsetMTSpeedKMH);
+
+    pHandle->hParameters.PasMaxOutputTorque = maxTorque;
+
 }
 
 

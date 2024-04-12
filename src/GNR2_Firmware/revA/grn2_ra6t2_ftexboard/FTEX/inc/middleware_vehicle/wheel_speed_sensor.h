@@ -15,7 +15,6 @@
 // =============================== Includes ================================== //
 #include "pulse_frequency.h"
 
-
 //-------------------------------- Defines ----------------------------------- //
 
 //timeout when measuring the time off(not running) of the timer.
@@ -45,14 +44,14 @@ typedef struct {
   @param  WheelSpeedSensorHandle_t handle
   @return None
 */
-void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle);
+void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle, uint8_t wheelSpdSensorNbrPerRotation);
 
 /**
   @brief  Function to calculate the wheel speed sensor value
   @param  WheelSpeedSensorHandle_t handle
   @return None
 */
-void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle);
+void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle, bool motorTempSensorMixed);
 
 /**
   @brief  Function to Get periode value in usec

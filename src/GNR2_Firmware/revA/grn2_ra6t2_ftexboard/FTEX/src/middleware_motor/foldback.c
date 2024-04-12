@@ -22,9 +22,15 @@ static int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hContr
   * Refer to function definition
   **/
 
-void Foldback_Init( Foldback_Handle_t * pHandle )
+void Foldback_Init(Foldback_Handle_t * pHandle, Foldback_Handle_t FoldbackInit)
 {
     ASSERT(pHandle != NULL);
+    pHandle->bEnableFoldback = FoldbackInit.bEnableFoldback;
+    pHandle->hDefaultOutputLimitHigh = FoldbackInit.hDefaultOutputLimitHigh;
+    pHandle->hDefaultOutputLimitLow = FoldbackInit.hDefaultOutputLimitLow;
+    pHandle->hDecreasingEndValue = FoldbackInit.hDecreasingEndValue;
+    pHandle->hDecreasingRange = FoldbackInit.hDecreasingRange;
+    
     pHandle->hMaxOutputLimitHigh = (int16_t) pHandle->hDefaultOutputLimitHigh;
     pHandle->hMaxOutputLimitLow = (int16_t) pHandle->hDefaultOutputLimitLow;
 }

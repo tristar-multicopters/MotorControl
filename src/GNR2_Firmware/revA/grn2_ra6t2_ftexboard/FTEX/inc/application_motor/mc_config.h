@@ -17,6 +17,8 @@
 #include "feed_forward_ctrl.h"
 #include "flux_weakening_ctrl.h"
 #include "pqd_motor_power_measurement.h"
+#include "motor_parameters.h"
+#include "parameters_conversion.h"
 
 #include "ics_ra6t2_pwm_curr_fdbk.h"
 
@@ -29,6 +31,7 @@
 
 #define NBR_OF_MOTORS 1
 
+extern MotorParameters_t MotorParameters;
 extern PIDHandle_t PIDSpeedHandleM1;
 extern PIDHandle_t PIDIqHandleM1;
 extern PIDHandle_t PIDIdHandleM1;

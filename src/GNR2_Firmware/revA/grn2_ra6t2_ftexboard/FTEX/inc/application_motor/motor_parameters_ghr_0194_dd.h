@@ -82,5 +82,20 @@
 /************** WHEEL SPEED SENSOR PARAMETERS  *****************************/
 
 #define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     46       // Wheel speed sensor cycle number for one wheel rotation
+
+/************** CURRENT AND SPEED PID PARAMETERS PARAMETERS  *****************************/
+
+#define IQ_KP_VS_SPEED_1                    200
+#define IQ_KP_VS_SPEED_2                    100
+
+#define IQ_KI_VS_SPEED_1                    10
+#define IQ_KI_VS_SPEED_2                    10
+
+#define ID_KP_VS_SPEED_1                    100
+#define ID_KP_VS_SPEED_2                    100
+
+#define ID_KI_VS_SPEED_1                    10
+#define ID_KI_VS_SPEED_2                    10
+
                                                             
 #endif /* __MOTOR_PARAMETERS_GHR_0194_DD_H */

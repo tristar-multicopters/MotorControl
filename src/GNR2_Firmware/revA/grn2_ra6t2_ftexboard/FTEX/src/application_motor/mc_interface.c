@@ -10,7 +10,7 @@
 #include "speed_torq_ctrl.h"
 #include "mc_interface.h"
 #include "pwm_common.h"
-
+#include "mc_config.h"
 
 
 /* Private macros ------------------------------------------------------------*/
@@ -24,7 +24,8 @@
 /*
 * see function definition
 */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, ResDivVbusSensorHandle_t * pResDivVbusSensor, MCConfigHandle_t *pMCConfig)
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars,
+                        ResDivVbusSensorHandle_t * pResDivVbusSensor, MCConfigHandle_t *pMCConfig)
 {
     ASSERT(pHandle != NULL);
     pHandle->pSTM = pSTM;
@@ -50,7 +51,7 @@ void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachine
 void MCInterface_PowerInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup)
 {
     ASSERT(pHandle != NULL);
-    SpdTorqCtrl_PowerInit(pHandle->pSpeedTorqCtrl, MCSetup);
+    SpdTorqCtrl_PowerInit(pHandle->pSpeedTorqCtrl, MCSetup, MotorParameters);
     ResDivVbusSensor_UVInit(pHandle->pResDivVbusSensor, MCSetup);
 }
 
@@ -540,7 +541,7 @@ int16_t MCInterface_GetMaxCurrent(MotorControlInterfaceHandle_t * pHandle)
     ASSERT(pHandle != NULL);
     ASSERT(pHandle->pMCConfig != NULL);
     
-    return pHandle->pMCConfig->wNominalCurr;
+    return pHandle->pMCConfig->hNominalCurr;
 }
 
 /**
@@ -597,6 +598,69 @@ uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle
 {
     ASSERT(pHandle != NULL);
     return pHandle->pSpeedTorqCtrl->hMaxPositivePower;
+}
+
+/**
+  *  Get the motor gear ratio
+  */
+float MCInterface_GetMotorGearRatio(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->fGearRatio;
+}
+
+/**
+  *  Get the motor type
+  */
+MotorType_t MCInterface_GetMotorType(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->motorType;
+}
+
+/**
+  *  Get the nominal torque
+  */
+uint16_t MCInterface_GetNominalTorque(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->hMaxPositiveTorque;
+}
+
+/**
+  *  Get the starting torque
+  */
+uint16_t MCInterface_GetStartingTorque(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->hStartingTorque;
+}
+
+/**
+  *  Get the RS torque
+  */
+float MCInterface_GetRS(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pMCConfig->fRS;
+}
+
+/**
+  *  Get the number of magnets on the wheel speed sensor
+  */
+uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pMCConfig->bWheelSpdSensorNbrPerRotation;
+}
+
+/**
+  *  Get whether the motor sensor type is mixed or not
+  */
+bool MCInterface_GetMotorTempSensorMixed(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->pMotorTempSensor->bSensorMixed;
 }
 
 #if AUTOTUNE_ENABLE

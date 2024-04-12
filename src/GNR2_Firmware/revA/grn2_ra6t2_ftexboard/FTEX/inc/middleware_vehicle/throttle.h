@@ -12,6 +12,7 @@
 #include "signal_filtering.h"
 #include "delay.h"
 #include "ramps.h"
+
     
 #define THROTTLE_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
                                       // If factor == 100 then 1.25f would make a 125/100 fraction 
@@ -88,7 +89,7 @@ typedef struct
  * @param  pHandle : Pointer on Handle of the throttle
  * @retval void
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay);
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay, uint16_t maxTorque);
 
 /**
  * @brief Initializes internal average throttle computed value

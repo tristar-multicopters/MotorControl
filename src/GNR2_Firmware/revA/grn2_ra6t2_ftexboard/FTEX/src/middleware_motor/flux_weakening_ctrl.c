@@ -13,13 +13,21 @@
 #include "pid_regulator.h"
 
 
-void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle)
+void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle, MotorParameters_t MotorParameters)
 {
-  pHandle->hFwVoltRef = pHandle->hDefaultFwVoltRef;
+    pHandle->hFwVoltRef = pHandle->hDefaultFwVoltRef;
 
-  pHandle->pMotorControlPID = pPIDMotorControlHandle;
+    pHandle->pMotorControlPID = pPIDMotorControlHandle;
 
-  pHandle->pSpeedPID = pPIDSpeed;
+    pHandle->pSpeedPID = pPIDSpeed;
+
+    pHandle->fRS = MotorParameters.ConfigParameters.fRS;
+    
+    pHandle->hNominalCurr = MotorParameters.ParametersConversion.hNominalPeakCurrent;
+    pHandle->wNominalSqCurr = MotorParameters.ParametersConversion.hNominalPeakCurrent * MotorParameters.ParametersConversion.hNominalPeakCurrent;
+    pHandle->wUsrMaxCurr = MotorParameters.ParametersConversion.hNominalPeakCurrent;
+    
+    pHandle->bWheelSpdSensorNbrPerRotation = MotorParameters.WheelSpeedSensorParameters.bWheelSpeedSensorNbrPerRotation;
 }
 
 

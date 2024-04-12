@@ -13,8 +13,15 @@
 #include "mc_type.h"
 
 
-void RotorPosObs_Init(RotorPositionObserverHandle_t * pHandle)
+void RotorPosObs_Init(RotorPositionObserverHandle_t * pHandle, MotorParameters_t MotorParameters)
 {
+    pHandle->Super.hMaxReliableMecSpeedUnit = (uint16_t)(MotorParameters.ParametersConversion.hMaxApplicationSpeedUnit * 1.5);
+    
+    pHandle->fFilterAlpha = MotorParameters.RampManagerParameters.fMecSpeedFilterButterworthAlpha;
+    pHandle->fFilterBeta = MotorParameters.RampManagerParameters.fMecSpeedFilterButterworthBeta;
+    
+    pHandle->Super.bElToMecRatio = MotorParameters.ConfigParameters.bPolePairNum;
+    
     pHandle->hKpGain = pHandle->hKpGainDef;
     pHandle->hKdGain = pHandle->hKdGainDef;
     pHandle->hKiGain = pHandle->hKiGainDef;

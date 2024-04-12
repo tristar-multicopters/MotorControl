@@ -7,12 +7,11 @@
 */
 
 #include "ntc_table.h"
-#include "vc_parameters.h"
+#include "motor_parameters.h"
 
 
 
-
-const int32_t NTCControllerTemperatureTable[NTC_CONTROLLER_LUT_SIZE] =        //revised the function to calculate temperature values of the controller after the NTC test.
+int32_t NTCControllerTemperatureTable[NTC_CONTROLLER_LUT_SIZE] =        //revised the function to calculate temperature values of the controller after the NTC test.
 {
     7,                                                   //Added few values to check the behaviour for low temperature values.
     9,            
@@ -49,7 +48,7 @@ const int32_t NTCControllerTemperatureTable[NTC_CONTROLLER_LUT_SIZE] =        //
 
 #if MOTOR_SELECTION == MOTOR_AKM_128SX_750W
 
-const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
+int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
 {                                                                   //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
     144,
     104,
@@ -93,7 +92,7 @@ const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function t
 
 #elif MOTOR_SELECTION == MOTOR_NIDEC_B900_V3
 
-const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
+int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
 {                                                                                                                                     //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
     150,
     113,
@@ -137,7 +136,7 @@ const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function t
 
 #elif MOTOR_SELECTION == MOTOR_AKM_128SX_500W
 
-const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
+int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
 {                                                                   //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
     144,
     104,
@@ -181,7 +180,7 @@ const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function t
 
 #else 
 
-const int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] = {}; //Empty array when no temp sensor
+int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] = {}; //Empty array when no temp sensor
 
 #endif
 

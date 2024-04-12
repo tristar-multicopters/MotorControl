@@ -469,6 +469,57 @@ int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, 
   */
 uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle);
 
+/**
+  * @brief  Get the motor gear ratio
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval motor gear ratio
+  */
+float MCInterface_GetMotorGearRatio(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the motor type
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval motor type
+  */
+MotorType_t MCInterface_GetMotorType(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the nominal torque
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval nominal torque
+  */
+uint16_t MCInterface_GetNominalTorque(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the starting torque
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval starting torque
+  */
+uint16_t MCInterface_GetStartingTorque(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the RS value
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval RS
+  */
+float MCInterface_GetRS(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the number of magnets on the wheel speed sensor
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval number of magnets on the wheel speed sensor
+  */
+uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get whether the motor temp sensor is mixed
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval whether the motor temp sensor is mixed
+  */
+bool MCInterface_GetMotorTempSensorMixed(MotorControlInterfaceHandle_t * pHandle);
+
+
+
 #if AUTOTUNE_ENABLE
 /**
   * @brief  This is a user command used to enter motor tuning mode.
@@ -491,7 +542,7 @@ bool MCInterface_StopMotorTuning(MotorControlInterfaceHandle_t * pHandle);
 #endif
 
 #ifdef __cplusplus
-}
+
 #endif /* __cpluplus */
 
 #endif /* __MC_INTERFACE_H */

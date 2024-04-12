@@ -10,15 +10,16 @@
 #include "wheel_speed_sensor.h"
 #include "ASSERT_FTEX.h"
 #include "motor_signal_processing.h"
-#include "drive_parameters.h"
 // ==================== Public function prototypes ======================== //
 
 /**
     Wheel Speed Sensor Initialization
 */
-void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle)
+void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle, uint8_t wheelSpdSensorNbrPerRotation)
 {
     ASSERT(pHandle != NULL);
+    
+    pHandle->bWheelSpeed_PulsePerRotation = wheelSpdSensorNbrPerRotation;
     
     //get GPT timer information
     PulseFrequency_GetTimerInfo(pHandle->pPulseFrequency);
@@ -27,14 +28,14 @@ void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle)
 /**
     Wheel Speed Sensor calculate periode value
 */
-void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle)
+void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle, bool motorTempSensorMixed)
 {
     //check input conditions
     ASSERT(pHandle != NULL);
     
     //if motor doesn't have a mixed temperature/wheelspeed siganl,
     //get wheel speed period from the capture timer. 
-    if (isMotorMixedSignal() == false)
+    if (motorTempSensorMixed == false)
     {
         //verify if the timer is measuring.
         //if yes, initialise the flag to wait for the timer

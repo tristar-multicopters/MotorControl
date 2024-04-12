@@ -61,7 +61,7 @@ typedef struct
   * @param  pHandle: handler of the current instance of the RotorPosObs component
   * @retval none
   */
-void RotorPosObs_Init(RotorPositionObserverHandle_t * pHandle);
+void RotorPosObs_Init(RotorPositionObserverHandle_t * pHandle, MotorParameters_t MotorParameters);
 
 /**
   * @brief  It clears state observer object by re-initializing private variables
