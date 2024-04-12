@@ -789,6 +789,11 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
               <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
@@ -2949,6 +2954,11 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
               <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
@@ -5056,6 +5066,11 @@
               <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
             </File>
             <File>
               <FileName>motor_parameters_nidec_b900_v3.h</FileName>
@@ -7218,6 +7233,11 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
               <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
@@ -9378,6 +9398,11 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
             </File>
             <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
               <FileName>motor_parameters_nidec_b900_v3.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
@@ -11485,6 +11510,11 @@
               <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
             </File>
             <File>
               <FileName>motor_parameters_nidec_b900_v3.h</FileName>
