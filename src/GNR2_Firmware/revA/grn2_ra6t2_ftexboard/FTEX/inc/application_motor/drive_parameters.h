@@ -146,7 +146,7 @@
 #define PWM_FREQUENCY                   20000       // PWM switching frequency
 #define PWM_FREQ_SCALING                1           // Not used, set to one.
 
-#define MAX_DUTY                        30000       // INT16_MAX is 100% duty cycle
+#define MAX_DUTY                        INT16_MAX       // INT16_MAX is 100% duty cycle
 
 /****** FOC Parameters ******/
 #define No_Load_PID_KIq_Gain            500
