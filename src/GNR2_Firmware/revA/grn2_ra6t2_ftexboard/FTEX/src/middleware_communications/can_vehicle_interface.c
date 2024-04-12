@@ -19,6 +19,7 @@
 #pragma clang diagnostic pop
 
 
+
 bool CANScreenSetup = false;
 
 // ==================== Public function prototypes ======================== //
@@ -359,5 +360,13 @@ void CanVehiInterface_DisengageCruiseControl(VCI_Handle_t * pHandle)
 bool CanVehiInterface_GetCruiseControlState(VCI_Handle_t * pHandle)
 {
     return PWRT_GetCruiseControlState(pHandle->pPowertrain);
+}  
+
+/**
+  Set New PAS algorithm
+ */
+void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAlgo)
+{
+    PedalAssist_SetPASAlgorithm(pHandle->pPowertrain->pPAS, aPASAlgo);
 }    
 

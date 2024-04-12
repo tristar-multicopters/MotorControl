@@ -816,3 +816,41 @@ void PedalAssist_SetTorqueRunningPasDection(PAS_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     pHandle->bTorqueRunningPASDetected = true;
 }
+
+/**
+    * @brief  Set a new PAS algorithm
+    * @param  Pedal Assist handle, new pas algorithm
+    * @retval None
+    */
+void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo)
+{
+
+    ASSERT(pHandle != NULL);
+    ASSERT((aPASAlgo == TorqueSensorUse) || (aPASAlgo == CadenceSensorUse));
+    
+    if (aPASAlgo == CadenceSensorUse)
+    {
+        //Cadence PAS detection algorithm
+        pHandle->bStartupPasAlgorithm = CadenceSensorUse;
+        pHandle->bRunningPasAlgorithm = CadenceSensorUse;
+        
+        //make max and min torque the same to create a cadence behavior(power caculation).
+        for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
+        {
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[n] = pHandle->sParameters.PASMaxTorqRatiosInPercentage[n];
+        }
+    }
+    else
+    {
+        //Torque PAS detection algorithm
+        pHandle->bStartupPasAlgorithm = TorqueSensorUse;
+        pHandle->bRunningPasAlgorithm = TorqueSensorUse; 
+        
+        //setup the system to make a torque behavior(power calculation)
+        for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
+        {    
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMinTorque(n);;
+            
+        }
+    }
+}

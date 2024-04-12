@@ -87,7 +87,8 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t  hFrontLightState[2];
     uint8_t  hRearLightState[2];
 
-    
+    //canopen algorithm selection
+    static uint8_t CanOpenSetAlgorithm = 0;
     
     
     ASSERT(pVCI != NULL);
@@ -318,6 +319,21 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
+            
+            //used to get the current algorithm in the OD.
+            uint8_t CanOpenAlgorithm = 0;
+            
+            //read and check if PAS algorithm was changed by CANOPEN interface.
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 3)),  pNode, &CanOpenAlgorithm, sizeof(uint8_t));
+            
+            //verify if PAS algorithm must to be changed.
+            if (((CanOpenAlgorithm  == TorqueSensorUse) || ((CanOpenAlgorithm  == CadenceSensorUse))) && (CanOpenAlgorithm != CanOpenSetAlgorithm) )
+            {
+                CanVehiInterface_SetAlgorithm(pVCI, CanOpenAlgorithm);
+            }
+            
+            //hold the last received value.
+            CanOpenSetAlgorithm = CanOpenAlgorithm;
              
             // Check if there were changes made to a parameter by a can device
             

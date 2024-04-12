@@ -330,5 +330,12 @@ void PedalAssist_ResetTorqueRunningPasDection(PAS_Handle_t * pHandle);
     */
 void PedalAssist_SetTorqueRunningPasDection(PAS_Handle_t * pHandle);
 
+/**
+    * @brief  Set a new PAS algorithm
+    * @param  Pedal Assist handle, new pas algorithm
+    * @retval None
+    */
+void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
+
 #endif /*__PEDAL_ASSIST_H*/
 

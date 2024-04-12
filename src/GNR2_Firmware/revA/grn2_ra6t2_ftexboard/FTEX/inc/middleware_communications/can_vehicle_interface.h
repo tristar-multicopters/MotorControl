@@ -242,5 +242,12 @@ void CanVehiInterface_DisengageCruiseControl(VCI_Handle_t * pHandle);
   @return sta eof the curise control 0 off, 1 on
  */
 bool CanVehiInterface_GetCruiseControlState(VCI_Handle_t * pHandle);
+
+/**
+  @brief Set New PAS algorithm
+  @param  pHandle: handle of the vehicle
+  @return none
+ */
+void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
     
 #endif /* __CAN_IOT_COMM_H */

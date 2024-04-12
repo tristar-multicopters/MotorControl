@@ -285,6 +285,8 @@ uint8_t bObjDataCANScreenNotifier  = 0;
 uint16_t bObjDataExternalThrottle  = 0;
 //variable associated with CO_OD_REG_CAN_SCREEN subindex 2
 uint8_t bObjDataExternalCruiseControl = 0;
+//variable associated with CO_OD_REG_CAN_SCREEN subindex 3
+uint8_t bObjDataCanOpenSetAlgorithm = 0;
 
 //variable associated with CO_OD_REG_TORQUE_SENSOR_MULTIPLIER.
 uint16_t bObjDataTorqueSensorMultiplier[10] = {0};
@@ -1748,6 +1750,10 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataExternalCruiseControl};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCanOpenSetAlgorithm};
             //move to next OD index
             index++;
             

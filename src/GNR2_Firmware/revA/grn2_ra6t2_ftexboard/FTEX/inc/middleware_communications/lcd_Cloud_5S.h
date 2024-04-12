@@ -206,11 +206,4 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError);
  */
 void LCD_Cloud_5S_ComputeChecksum(Cloud_5S_frame_t aFrame, uint8_t *pCheckLow, uint8_t *pCheckHigh);
 
-/**
-    * @brief  set a new PAS algorithm
-    * @param  Pedal Assist handle, new pas algorithm
-    * @retval None
-    */
-void LCD_Cloud_5S_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
-
 #endif
