@@ -201,7 +201,8 @@ typedef struct
   int16_t hTeref;              /**< @brief Reference torque */
   int16_t hElAngle;            /**< @brief Electrical angle used for reference frame transformation  */
   uint32_t wCodeError;         /**< @brief error message */
-  CurrRefSource_t bDriveInput; /**< @brief It specifies whether the current reference source must be
+  CurrRefSource_t bDriveInput; /**< @brief It specifies whether the current reference source must be*/
+  int16_t I_regen;              /**< @brief it shows the regenerative current value
                                  *         #INTERNAL or #EXTERNAL*/
 } FOCVars_t, *pFOCVars_t;
 

@@ -15,7 +15,6 @@
 #define VEHICLE_NIDEC                 7   
 #define VEHICLE_VELEC_CITI_500W       8
 #define VEHICLE_SUPER73               9
-
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 

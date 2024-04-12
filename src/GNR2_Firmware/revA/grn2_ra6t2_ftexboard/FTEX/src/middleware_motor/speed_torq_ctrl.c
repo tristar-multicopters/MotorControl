@@ -283,7 +283,6 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
     int16_t hMeasuredSpeed;
     int16_t hTargetSpeed;
     int16_t hError;
- 
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
@@ -623,9 +622,9 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     // Limit MAX POWER by the foldback to prevent BMS shutdown
     Foldback_UpdateMaxValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower);        // this foldback limits MAX POWER after a while
     Foldback_UpdateLimitValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxContinuousPower);      // this foldback limits MAX POWER immediately
-    
     Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * SPEED_MARGIN/DIV_PERCENTAGE)); // Update speed limit foldback
     Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, DECC_RANGE_PW); // Update speed limit foldback
+
   
     pHandle->DynamicPowerHandle.hDynamicMaxPower = (uint16_t)Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower, (int16_t)pHandle->DynamicPowerHandle.hOverMaxPowerTimer);    
 

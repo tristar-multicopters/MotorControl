@@ -201,6 +201,10 @@
 #define CONSTANT1_D                     0           // Feedforward Id related gain
 #define CONSTANT2_QD                    0           // Feedforward speed related gain
 
+/***********Regen Parameters *********/
+#define IQ_REGEN_AMPS                    -25         // regeneration current in amps
+#define MIN_REGEN_SPEED                 50         // minimum speed for activating the regen in rpm
+#define RESET_SPEED                     25        //  speed for reseting the PIDs in rpm
 /****** Rotor Position Observer Parameters ******/
 #define ROTOR_POS_OBS_KP                1250        // Rotor position observer default gain
 #define ROTOR_POS_OBS_KI                0           // Rotor position observer default gain

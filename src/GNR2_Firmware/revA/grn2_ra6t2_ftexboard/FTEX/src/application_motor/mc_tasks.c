@@ -705,6 +705,18 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
     }
 #endif
 
+#if MOTOR_SELECTION == MOTOR_GHR_0194_DD    
+    // this PID update is for correct IqKI for imidietly stop when release trottle
+    if (FOCVars[bMotor].hTeref == 0.0)
+    {
+        PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
+        PID_SetKP(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
+    }
+    else
+    {
+        PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
+    }
+#endif
 }
 
 /**
@@ -734,7 +746,10 @@ void FOC_InitAdditionalMethods(uint8_t bMotor)
 void FOC_CalcCurrRef(uint8_t bMotor)
 {
     qd_t IqdTmp;
-
+    int16_t delta_t;
+  
+    delta_t = -2;
+  
     /* update Max Power based on DC Voltage */
     pSpeedTorqCtrl[bMotor]->hBusVoltage = VbusSensor_GetAvBusVoltageVolt(pMotorPower[bMotor]->pVBS);
     MC_AdaptiveMaxPower(pSpeedTorqCtrl[bMotor]);    
@@ -756,6 +771,34 @@ void FOC_CalcCurrRef(uint8_t bMotor)
         
         /* apply the maximum nominal limitation to the Iq */
         SpdTorqCtrl_ApplyCurrentLimitation_Iq(&FOCVars[bMotor].Iqdref, MCConfig.hNominalCurr, MCConfig.wUsrMaxCurr);
+        
+  //=================================APPLY REGENERATIVE CURRENT ========================================      
+        if (pSpeedTorqCtrl[bMotor]->motorType == DIRECT_DRIVE) // providing negative current for regen
+        {
+            if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
+            {
+                if (abs(pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit) > MIN_REGEN_SPEED)
+                {
+                    if (FOCVars[M1].I_regen < IQ_REGEN)
+                    {
+                        FOCVars[M1].I_regen = IQ_REGEN;  
+                    }
+                    else
+                    {
+                        FOCVars[M1].I_regen = FOCVars[M1].I_regen + delta_t;
+                    }
+                  
+                    FOCVars[M1].Iqdref.q =  FOCVars[M1].I_regen;
+                    FOCVars[M1].Iqdref.d = 0;
+                }
+                else
+                {
+                    FOCVars[M1].I_regen = 0;
+                }
+                
+            }   
+        }
+ // ========================================================================================================
         
         if (pFeedforward[bMotor])
         {
@@ -915,7 +958,12 @@ inline uint32_t FOC_CurrControllerM1(void)
     int16_t hElAngle;
     uint32_t wCodeError = 0;
     SpdPosFdbkHandle_t *speedHandle;
-
+    
+    if (MCInterface->bDriverEn == false)
+    {
+        Driver_Enable(&MCInterface->bDriverEn);
+    }
+    
     speedHandle = SpdTorqCtrl_GetSpeedSensor(pSpeedTorqCtrl[M1]);
     hElAngle = SpdPosFdbk_GetElAngle(speedHandle);
 
@@ -947,24 +995,31 @@ inline uint32_t FOC_CurrControllerM1(void)
 #endif
 
         Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
-        Valphabeta = MCMath_RevPark(Vqd, hElAngle);
         
-        if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
+    if (pSpeedTorqCtrl[M1]->motorType == DIRECT_DRIVE)     
+    {      
+
+      if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
         {
-            if (hDriverCounter >= DRIVER_TIMER)
-            {
-                hDriverCounter = 0;
-                Driver_Disable(&MCInterface->bDriverEn);
-            }
-            else
-            {
-                hDriverCounter++;
-            }
+            
+          if (abs(pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit) < RESET_SPEED)
+          {
+            
+            Driver_Disable(&MCInterface->bDriverEn);
+            PID_SetIntegralTerm(pPIDIq[M1], (int32_t)0);
+            PID_SetIntegralTerm(pPIDId[M1], (int32_t)0);
+          }
+          
         }
         else if ((MCInterface->bDriverEn == false) && (MCInterface->hFinalTorque != 0))
         {
             Driver_Enable(&MCInterface->bDriverEn);
         }
+      }
+        
+       
+        
+        Valphabeta = MCMath_RevPark(Vqd, hElAngle);
         
         wCodeError = PWMCurrFdbk_SetPhaseVoltage(pPWMCurrFdbk[M1], Valphabeta);
 
