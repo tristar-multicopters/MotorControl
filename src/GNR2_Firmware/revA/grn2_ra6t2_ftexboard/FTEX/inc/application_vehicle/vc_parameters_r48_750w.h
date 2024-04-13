@@ -14,7 +14,9 @@
 
 
 /******************* SCREEN SELECTION  *******************************/
-#define SCREEN_PROTOCOL    UART_CLOUD_5S       
+#define SCREEN_PROTOCOL    UART_DISABLE
+
+
                                                             // UART_DISABLE,
                                                             // UART_APT,
                                                             // UART_KD718,
@@ -43,11 +45,11 @@
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
 #define PTS_FILTER_BW1_1                      7             // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW2_1                      30             // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW2_1                      50             // BW coefficient for pedal torque sensor avereging for speed 1
 #define PTS_FILTER_BW1_2                      10              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW2_2                      40              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW2_2                      50              // BW coefficient for pedal torque sensor avereging for speed 2
 #define PTS_FILTER_BW1_3                      10             // BW coefficient for pedal torque sensor avereging for speed 3
-#define PTS_FILTER_BW2_3                      40              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW2_3                      50              // BW coefficient for pedal torque sensor avereging for speed 3
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
@@ -57,8 +59,8 @@
 #define PAS_1_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 1
 #define PAS_2_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 2                
 #define PAS_3_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 3
-#define PAS_4_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 4
-#define PAS_5_TORQUE_GAIN                   200             // Torque sensor PAS Gain in % on PAS 5
+#define PAS_4_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 4
+#define PAS_5_TORQUE_GAIN                   80             // Torque sensor PAS Gain in % on PAS 5
 #define PAS_6_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 6
 #define PAS_7_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 7 
 #define PAS_8_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 8 

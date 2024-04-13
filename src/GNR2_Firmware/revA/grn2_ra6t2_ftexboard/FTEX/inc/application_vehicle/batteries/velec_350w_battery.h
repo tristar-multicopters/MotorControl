@@ -13,8 +13,8 @@
 /******************************** BATTERY POWER PARAMETERS ******************************/
 
 #define POWER_LIMIT_REF                     MAX_POWER_LIMIT // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
-#define MAX_APPLICATION_POSITIVE_POWER      700             // Refers to maximum power in watts that drive can push to the motor
-#define MAX_APPLICATION_NEGATIVE_POWER      700             // Refers to maximum power in watts that drive can accept from the motor
+#define MAX_APPLICATION_POSITIVE_POWER      500             // Refers to maximum power in watts that drive can push to the motor
+#define MAX_APPLICATION_NEGATIVE_POWER      500             // Refers to maximum power in watts that drive can accept from the motor
 #define MAX_APPLICATION_CURRENT             22              // Refers to maximum current in amps that drive can accept from the motor
 
 /******************************** BATTERY  PARAMETERS ******************************/
