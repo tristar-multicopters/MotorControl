@@ -47,9 +47,9 @@
 #define PTS_FILTER_BW1_1                      7             // BW coefficient for pedal torque sensor avereging for speed 1
 #define PTS_FILTER_BW2_1                      50             // BW coefficient for pedal torque sensor avereging for speed 1
 #define PTS_FILTER_BW1_2                      10              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW2_2                      50              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW2_2                      90              // BW coefficient for pedal torque sensor avereging for speed 2
 #define PTS_FILTER_BW1_3                      10             // BW coefficient for pedal torque sensor avereging for speed 3
-#define PTS_FILTER_BW2_3                      50              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW2_3                      90              // BW coefficient for pedal torque sensor avereging for speed 3
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
@@ -60,7 +60,7 @@
 #define PAS_2_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 2                
 #define PAS_3_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 3
 #define PAS_4_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 4
-#define PAS_5_TORQUE_GAIN                   80             // Torque sensor PAS Gain in % on PAS 5
+#define PAS_5_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 5
 #define PAS_6_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 6
 #define PAS_7_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 7 
 #define PAS_8_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 8 
@@ -94,7 +94,7 @@
 #define PAS_1_MAX_TORQUE_PERCENT            35
 #define PAS_2_MAX_TORQUE_PERCENT            50
 #define PAS_3_MAX_TORQUE_PERCENT            60
-#define PAS_4_MAX_TORQUE_PERCENT           100
+#define PAS_4_MAX_TORQUE_PERCENT            80
 #define PAS_5_MAX_TORQUE_PERCENT           100 
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
@@ -109,7 +109,7 @@
   
 /***************** POWER ENABLE PARAMETERS  ******************************/
 
-#define POWER_ENABLE_ENABLE                 true            // True if power enable input is used to prevent powertrain start
+#define POWER_ENABLE_ENABLE                 false            // True if power enable input is used to prevent powertrain start
 
 /***************** POWERTRAIN MANAGEMENT ******************************/
 
