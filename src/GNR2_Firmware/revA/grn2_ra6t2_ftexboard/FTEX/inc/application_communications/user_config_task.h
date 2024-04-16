@@ -235,9 +235,9 @@ void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value);
   read from data flash memory.
   
   @param void
-  @return uint8_t a number that represent pasCadenceStartupNumbPulses.
+  @return uint16_t a number that represent pasCadenceStartupNumbPulses.
 */
-uint8_t UserConfigTask_GetPasCadenceStartupNumbPulses(void);
+uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void);
 
 /**
   @brief Function to update pasCadenceStartupNumbPulses
@@ -247,7 +247,7 @@ uint8_t UserConfigTask_GetPasCadenceStartupNumbPulses(void);
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint8_t value);
+void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint16_t value);
 
 /**
   @brief Function to get time windows used to check the number of
@@ -890,19 +890,19 @@ void UserConfigTask_UpdatePasTorqueRunningThreshold(uint8_t value);
   read from data flash memory.
   
   @param void
-  @return uint8_t a number that represent pasCadenceRunningNumbPulses.
+  @return uint16_t a number that represent pasCadenceRunningNumbPulses.
 */
-uint8_t UserConfigTask_GetPasCadenceRunningNumbPulses(void);
+uint16_t UserConfigTask_GetPasCadenceRunningNumbPulses(void);
 
 /**
   @brief Function to update pasCadenceRunningNumbPulses
   read from data flash memory.
   
-  @param uint8_t value to be passed into the pasCadenceRunningNumbPulses
+  @param uint16_t value to be passed into the pasCadenceRunningNumbPulses
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint8_t value);
+void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint16_t value);
 
 /**
   @brief Function to get time windows used to check the number of

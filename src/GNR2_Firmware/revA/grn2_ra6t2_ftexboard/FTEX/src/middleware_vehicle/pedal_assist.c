@@ -285,7 +285,7 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
     hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
     
     /* Calculate the offset based on ration percentage */
-    if(hWheelRPM < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset
+    if(hWheelRPM <= pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset
     {     
         CalculateAverage = true;  // Make sure we calculated the average to check for the threshold       
         hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;

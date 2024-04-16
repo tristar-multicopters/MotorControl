@@ -580,7 +580,7 @@ uint8_t UserConfigTask_GetPasTorqueStartupSpeed(void)
 void UserConfigTask_UpdatePasTorqueStartupSpeed(uint8_t value)
 {
     //verify if value is in the range.
-    if((value <= 100) && (value > 0))
+    if((value <= 255) && (value >= 0))
     {
         userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupSpeed = value;
     }        
@@ -621,9 +621,9 @@ void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value)
   read from data flash memory.
   
   @param void
-  @return uint8_t a number that represent pasCadenceStartupNumbPulses.
+  @return uint16_t a number that represent pasCadenceStartupNumbPulses.
 */
-uint8_t UserConfigTask_GetPasCadenceStartupNumbPulses(void)
+uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void)
 {
     return userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupNumbPulses; 
 }
@@ -636,10 +636,10 @@ uint8_t UserConfigTask_GetPasCadenceStartupNumbPulses(void)
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint8_t value)
+void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint16_t value)
 {
     //verify if value is in the range.
-    if((value > 0) && (value <= 0xFF))
+    if((value >= 1) && (value <= 500))
     {
         userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupNumbPulses = value;
     }        
@@ -671,7 +671,7 @@ void UserConfigTask_UpdatePasCadenceStartupWindows(uint16_t value)
 {
     //verify if value is in the range.
     //range on ms.
-    if((value >= 200) && (value <= 0xFFFF))
+    if((value >= 200) && (value <= 10000))
     {
         userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupWindows = value;
     }   
@@ -1716,9 +1716,9 @@ void UserConfigTask_UpdatePasTorqueRunningThreshold(uint8_t value)
   read from data flash memory.
   
   @param void
-  @return uint8_t a number that represent pasCadenceRunningNumbPulses.
+  @return uint16_t a number that represent pasCadenceRunningNumbPulses.
 */
-uint8_t UserConfigTask_GetPasCadenceRunningNumbPulses(void)
+uint16_t UserConfigTask_GetPasCadenceRunningNumbPulses(void)
 {
     return userConfigData.PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningNumbPulses; 
 }
@@ -1727,14 +1727,14 @@ uint8_t UserConfigTask_GetPasCadenceRunningNumbPulses(void)
   @brief Function to update pasCadenceRunningNumbPulses
   read from data flash memory.
   
-  @param uint8_t value to be passed into the pasCadenceRunningNumbPulses
+  @param uint16_t value to be passed into the pasCadenceRunningNumbPulses
   @return void
  
 */
-void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint8_t value)
+void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint16_t value)
 {
     //verify if value is in the range.
-    if((value > 0) && (value <= 0xFF))
+    if((value >= 1) && (value <= 500))
     {
         userConfigData.PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningNumbPulses = value;
     }        
@@ -1768,7 +1768,7 @@ void UserConfigTask_UpdatePasCadenceRunningWindows(uint16_t value)
 {
     //verify if value is in the range.
     //range on ms.
-    if((value >= 200) && (value <= 0xFFFF))
+    if((value >= 200) && (value <= 10000))
     {
         userConfigData.PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningWindows = value;
     }   
