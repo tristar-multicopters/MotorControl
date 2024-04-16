@@ -141,6 +141,8 @@ typedef struct
     CurrentSpeedPID_t CurrentSpeedPID;
     ParametersConversion_t ParametersConversion;
     
+    bool bAutotuneEnable;
+    
 } MotorParameters_t;
 
 

@@ -124,6 +124,7 @@ MotorParameters_t MotorParameters =
             ID_KI_VS_SPEED_2,     /* old PI = 50 parameter tunning for Vibration */
         },
     },
+    .bAutotuneEnable = false,
 };
 
 MotorPowerQDHandle_t PQDMotorPowMeasM1 =

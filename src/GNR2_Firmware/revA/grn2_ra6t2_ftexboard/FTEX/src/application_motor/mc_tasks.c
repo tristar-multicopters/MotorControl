@@ -353,7 +353,7 @@ void MediumFrequencyTaskM1(void)
         }
 #endif
 #if AUTOTUNE_ENABLE
-        if (pAutoTune.bStartTuning == 1)
+        if ((MotorParameters.bAutotuneEnable == true) && (pAutoTune.bStartTuning == 1))
         {      
             PWMInsulCurrSensorFdbk_TurnOnLowSides(pPWMCurrFdbk[M1]);
             PWMInsulCurrSensorFdbk_SwitchOnPWM(pPWMCurrFdbk[M1]);            
@@ -890,52 +890,61 @@ uint8_t MC_HighFrequencyTask(void)
     RotorPosObs_CalcElAngle(&RotorPosObsM1, 0);
     
 #if AUTOTUNE_ENABLE
-    Autotune_CalcPhaseCurrents(pPWMCurrFdbk[M1]);
-    Driver_Enable(&MCInterface->bDriverEn);
-    MotorState_t StateM1;
-    StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
-    if (StateM1 == M_AUTOTUNE_IDENTIFICATION || StateM1 == M_AUTOTUNE_ENTER_IDENTIFICATION || StateM1 == M_AUTOTUNE_ANY_STOP_IDENTIFICATION)
+    if(MotorParameters.bAutotuneEnable == true)
     {
-        R_AID_CurrentCtrlISR();
+        Autotune_CalcPhaseCurrents(pPWMCurrFdbk[M1]);
+        Driver_Enable(&MCInterface->bDriverEn);
+        MotorState_t StateM1;
+        StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
+        if (StateM1 == M_AUTOTUNE_IDENTIFICATION || StateM1 == M_AUTOTUNE_ENTER_IDENTIFICATION || StateM1 == M_AUTOTUNE_ANY_STOP_IDENTIFICATION)
+        {
+            R_AID_CurrentCtrlISR();
+        }
     }
 #else
-    // Check if the Hall Sensors are disconneted and raise the error
-    if (HallSensor_IsDisconnected(&HallPosSensorM1) == true)
+    if (false)
     {
-        MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_HALL_DISC, 0);
     }
-    else
-    {
-        MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_HALL_DISC);
-    }
-    
-    /* here the code is checking last 16 records of direction, 
-    if all last 16 records show vibration, then rasie the stuck protection error */
-    if ((HallPosSensorM1.wDirectionChangePattern & 0xFFFF) == VIBRATION_PATTERN)
-    {
-        MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
-    }
-    
-    wFOCreturn = FOC_CurrControllerM1();
-    if (wFOCreturn == MC_FOC_DURATION)
-    {
-        MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_FOC_DURATION, 0);
-    }
-    else
-    {
-        //        BemfObsInputs.Ialfa_beta = FOCVars[M1].Ialphabeta;
-        //        BemfObsInputs.Vbus = VbusSensor_GetAvBusVoltageDigital(&(pBusSensorM1->Super));
-        //        BemfObsPll_CalcElAngle (&BemfObserverPllM1, &BemfObsInputs);
-        //        BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
-    } 
-
-    #if LOGMOTORVALS
-    LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
-    #endif
-    #if LOGMOTORVALSRES
-    LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through
-    #endif
 #endif
+    else
+    {
+        // Check if the Hall Sensors are disconneted and raise the error
+        if (HallSensor_IsDisconnected(&HallPosSensorM1) == true)
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_HALL_DISC, 0);
+        }
+        else
+        {
+            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_HALL_DISC);
+        }
+        
+        /* here the code is checking last 16 records of direction, 
+        if all last 16 records show vibration, then rasie the stuck protection error */
+        if ((HallPosSensorM1.wDirectionChangePattern & 0xFFFF) == VIBRATION_PATTERN)
+        {
+            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+        }
+        
+        wFOCreturn = FOC_CurrControllerM1();
+        if (wFOCreturn == MC_FOC_DURATION)
+        {
+            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_FOC_DURATION, 0);
+        }
+        else
+        {
+            //        BemfObsInputs.Ialfa_beta = FOCVars[M1].Ialphabeta;
+            //        BemfObsInputs.Vbus = VbusSensor_GetAvBusVoltageDigital(&(pBusSensorM1->Super));
+            //        BemfObsPll_CalcElAngle (&BemfObserverPllM1, &BemfObsInputs);
+            //        BemfObsPll_CalcAvrgElSpeedDpp (&BemfObserverPllM1);
+        } 
+
+        #if LOGMOTORVALS
+        LogHS_LogMotorVals(&LogHS_handle); //High speed logging, if disable function does a run through
+        #endif
+        #if LOGMOTORVALSRES
+        LogHS_LogMotorValsVarRes(&LogHS_handle); //High speed logging, if disable function does a run through
+        #endif
+    }
     
     return bMotorNbr;
 }

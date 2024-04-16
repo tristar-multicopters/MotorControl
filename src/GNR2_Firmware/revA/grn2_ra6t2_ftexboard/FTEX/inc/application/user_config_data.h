@@ -168,6 +168,7 @@ typedef struct
     uint16_t crc;
 } User_ConfigData_t;
 
+
 //ends 1 bytes alignment.
 #pragma pack(0)
 
