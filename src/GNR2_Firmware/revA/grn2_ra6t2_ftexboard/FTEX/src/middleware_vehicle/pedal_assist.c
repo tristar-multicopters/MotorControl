@@ -33,6 +33,33 @@ void AssertIsValidLevel(PasLevel_t level);
 void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation)
 {
     ASSERT(pHandle != NULL);
+    
+    //init pas torque ramps
+    pHandle->sParameters.PasRamps[0][0].RampMax = (PAS_0_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[0][1].RampMax = (PAS_1_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[0][2].RampMax = (PAS_2_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[0][3].RampMax = (PAS_3_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[0][4].RampMax = (PAS_4_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[0][5].RampMax = (PAS_5_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[0][6].RampMax = (PAS_6_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[0][7].RampMax = (PAS_7_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[0][8].RampMax = (PAS_8_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[0][9].RampMax = (PAS_9_MAX_TORQUE_PERCENT * maxTorque)/100;
+    
+    pHandle->sParameters.PasRamps[1][0].RampMax = (PAS_0_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[1][1].RampMax = (PAS_1_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[1][2].RampMax = (PAS_2_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[1][3].RampMax = (PAS_3_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[1][4].RampMax = (PAS_4_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[1][5].RampMax = (PAS_5_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[1][6].RampMax = (PAS_6_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[1][7].RampMax = (PAS_7_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[1][8].RampMax = (PAS_8_MAX_TORQUE_PERCENT * maxTorque)/100;
+    pHandle->sParameters.PasRamps[1][9].RampMax = (PAS_9_MAX_TORQUE_PERCENT * maxTorque)/100;
+
+    //init walkmode ramp amd pas max torque
+    pHandle->sParameters.PasWalkmodeRamp.RampMax = (PAS_WALK_POWER_PERCENT * maxTorque)/100;
+    pHandle->sParameters.hPASMaxTorque = (int16_t)maxTorque;
 
     PedalSpdSensor_Init(pHandle->pPSS);
     WheelSpdSensor_Init(pHandle->pWSS, wheelSpdSensorNbrPerRotation);
@@ -47,19 +74,12 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, u
     PedalAssist_PASUpdateMaxSpeed(pHandle);
     
     for( int i = 0; i < 10 ; i++) 
-    {
+    {   
         Ramps_Init(&(pHandle->sParameters.PasRamps[0][i]));
         Ramps_Init(&(pHandle->sParameters.PasRamps[1][i]));
-
-        pHandle->sParameters.PasRamps[0][i].RampMax = maxTorque;
-        pHandle->sParameters.PasRamps[1][i].RampMax = maxTorque;
-
     }
     
     Ramps_Init(&(pHandle->sParameters.PasWalkmodeRamp));
-    
-    pHandle->sParameters.PasWalkmodeRamp.RampMax = maxTorque;
-    pHandle->sParameters.hPASMaxTorque = (int16_t)maxTorque;
 
 }
 

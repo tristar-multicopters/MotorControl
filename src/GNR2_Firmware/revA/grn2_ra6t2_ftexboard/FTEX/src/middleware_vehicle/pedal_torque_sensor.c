@@ -28,6 +28,9 @@ void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pP
 {    
     
     ASSERT(pHandle != NULL);
+    
+    //init pas max output
+    pHandle->hParameters.PasMaxOutputTorque = maxTorque;
    
     pHandle->bSafeStart = false; 
         
@@ -50,8 +53,6 @@ void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pP
     PedalTorqSensor_ComputeSlopes(pHandle);
     
     pHandle->hParameters.hStartupOffsetMTSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.hStartupOffsetMTSpeedKMH);
-
-    pHandle->hParameters.PasMaxOutputTorque = maxTorque;
 
 }
 
