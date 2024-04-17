@@ -276,18 +276,18 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
             }                
         }
 
-        #if DYNAMIC_SPEED_LIMITATION   
+    #if DYNAMIC_SPEED_LIMITATION   
 
-        uint16_t speedLimit;
+        uint8_t speedLimit;
         //Reading the Speed limit
         speedLimit = pHandle->rx_frame.Buffer[SPEED];        
         
         // setting the max speed for any speed limits
-        Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,speedLimit);
-        PedalAssist_SetPASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,speedLimit);
-        #endif 
+        PWRT_SetScreenMaxSpeed(pHandle->pVController->pPowertrain,speedLimit);
         
-        #ifdef SCREENPOWERCONTROL
+    #endif 
+        
+    #ifdef SCREENPOWERCONTROL
         
         // Reading the Current limit          
         uint16_t CurrentLimit;
@@ -295,7 +295,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         
         PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);
         
-        #endif
+    #endif
 
         //Reading and updating the wheel diameter 
         uint8_t diameterFromScreen = LCD_APT_CalculateWheelDiameter(pHandle->rx_frame.Buffer[WHEELD]);

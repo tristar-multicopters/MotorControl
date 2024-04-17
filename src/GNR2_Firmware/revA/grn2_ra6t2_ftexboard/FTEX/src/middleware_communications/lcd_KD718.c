@@ -374,7 +374,7 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                  
                 if (CRC == pHandle->rx_frame.Buffer[4]) // If the CRC is good update the new Speed limit
                 {
-                    #if DYNAMIC_SPEED_LIMITATION
+            #if DYNAMIC_SPEED_LIMITATION
                     uint16_t SpeedLimit = 0;
                     SpeedLimit += (pHandle->rx_frame.Buffer[2] << 8);
                     SpeedLimit +=  pHandle->rx_frame.Buffer[3];
@@ -382,9 +382,8 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                     SpeedLimit = Wheel_GetSpeedFromWheelRpm(SpeedLimit);
                     
                     // setting the max for any speed limits
-                    Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit); 
-                    PedalAssist_SetPASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,SpeedLimit); 
-                    #endif                     
+                    PWRT_SetScreenMaxSpeed(pHandle->pVController->pPowertrain,(uint8_t)SpeedLimit); 
+            #endif                     
                 }
               break;                
           default:

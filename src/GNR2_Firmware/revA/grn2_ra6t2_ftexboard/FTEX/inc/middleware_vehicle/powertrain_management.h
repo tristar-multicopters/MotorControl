@@ -74,7 +74,8 @@ typedef struct
     uint16_t hStoppingSpeed;             // Minimum speed to stop powertrain
     
     uint16_t hFaultManagementTimeout;    // Number of ticks the state machine should stay on fault state before restart
-    
+   
+    uint16_t ScreenMaxSpeed;             // Contains the max speed specified by the screen   
     uint16_t VehicleMaxSpeed;            // Contains the max speed that the vehicle can push power (no matter what)
         
 } PWRT_Parameters_t;
@@ -423,6 +424,14 @@ void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle);
  * @retval nothing 
  */
 void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle);
-    
+
+/**
+ * @brief  Updates the top speed of the screen
+ * @param  Powertrain handle
+ * @retval nothing 
+ */
+void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed);
+
+
 #endif /*__POWERTRAIN_MANAGEMENT_H*/
 

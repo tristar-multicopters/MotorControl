@@ -74,6 +74,8 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;   
     
     pHandle->sParameters.CruiseForceDisengage = false;
+    
+    pHandle->sParameters.ScreenMaxSpeed = pHandle->sParameters.VehicleMaxSpeed;
 }
 
 /**
@@ -1392,16 +1394,29 @@ void PWRT_SetNewTopSpeed(PWRT_Handle_t * pHandle, uint16_t topSpeed)
     ASSERT(pHandle != NULL);
     ASSERT(pHandle->pMDI != NULL); 
     uint16_t NewTopSpeed = 0;
+    uint16_t SmallestSpeedLimit = 0;
     
-    if(topSpeed > pHandle->sParameters.VehicleMaxSpeed) // Safety measure to ensure vehicle max speed is always respected
+    // Check which of the speed limits is the most restrictive
+    if (pHandle->sParameters.ScreenMaxSpeed > pHandle->sParameters.VehicleMaxSpeed)
     {
-        NewTopSpeed = pHandle->sParameters.VehicleMaxSpeed;
-    }
+        SmallestSpeedLimit = pHandle->sParameters.VehicleMaxSpeed;
+    }        
     else
     {
+        SmallestSpeedLimit = pHandle->sParameters.ScreenMaxSpeed;
+    }
+    
+        
+    // Apply the speed limit restriction
+    if (topSpeed > SmallestSpeedLimit) 
+    {
+        NewTopSpeed = SmallestSpeedLimit;
+    }   
+    else
+    {          
         NewTopSpeed = topSpeed;
     }        
-    
+   
     MDI_SetTorqueSpeedLimit(pHandle->pMDI,NewTopSpeed,pHandle->sParameters.TorqueSpeedLimitGain);
 }
 
@@ -1496,3 +1511,13 @@ void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle)
     
     MDI_SetWheelRPM(pHandle->pMDI, wheelRPM);
 }
+
+/**
+ *  Updates the top speed of the screen
+ */
+void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed)
+{ 
+    ASSERT(pHandle != NULL);
+    pHandle->sParameters.ScreenMaxSpeed = aSpeed;
+}
+

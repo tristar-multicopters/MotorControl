@@ -291,18 +291,16 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             
             HandshakeIndex = pHandle->rx_frame.Buffer[9]; // handshake byte     
             
-            #if DYNAMIC_SPEED_LIMITATION
-            uint16_t  speedLimit    = 0;
+        #if DYNAMIC_SPEED_LIMITATION
+            uint8_t  speedLimit    = 0;
             //Reading the Speed limit
             speedLimit = pHandle->rx_frame.Buffer[10]; // speed limit       
             
             // setting the max RPMs for any speed limits
-            Throttle_SetMaxSpeed(pThrottleHandle,speedLimit);        
-            PedalAssist_SetPASMaxSpeed(pPASHandle,speedLimit);
-            
-            #endif    
+            PWRT_SetScreenMaxSpeed(pHandle->pVController->pPowertrain,speedLimit);        
+        #endif    
            
-            #ifdef SCREENPOWERCONTROL        
+        #ifdef SCREENPOWERCONTROL        
             // Reading the Current limit          
             uint16_t CurrentLimit;
             CurrentLimit = pHandle->rx_frame.Buffer[11];  // current limit
@@ -310,7 +308,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             CurrentLimit /=2; // Transform from 0.5 amps perunit to 1 amps per unit 
             
             PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);        
-            #endif
+        #endif
            
             WheelDiameter = Cloud_5S_WheelDiameterInch[pHandle->rx_frame.Buffer[12]]; // wheel diameter 
                                                                                     
