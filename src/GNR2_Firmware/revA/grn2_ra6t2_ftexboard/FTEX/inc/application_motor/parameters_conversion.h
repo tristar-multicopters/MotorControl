@@ -226,7 +226,6 @@ typedef struct
     
     Foldback_Handle_t FoldbackInitSpeed;
     Foldback_Handle_t FoldbackInitTorque;
-    Foldback_Handle_t FoldbackInitPower;
     Foldback_Handle_t FoldbackInitHeatsinkTemp;
     Foldback_Handle_t FoldbackInitMotorTemp;
     

@@ -32,17 +32,7 @@ typedef struct
 
 //Motor parameters that limit power
 typedef struct
-{
-    bool bEnableLVTorqueLimit;
-    uint16_t hLowVoltageThresholdPercentage;
-    int16_t hLowBatteryTorque;
-    
-    bool bEnableMaxPowerLimit;
-    int32_t wMaxTimeBMSTolerant;
-    uint16_t hMaxPowerLimitTimeout;
-    uint16_t hMaxBMSPositivePower;
-    uint16_t hMaxBMSContinuousCurrent;
-    
+{   
     uint16_t hEstimatedEfficiency;
     
 } PowerParameters_t;

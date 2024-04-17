@@ -37,7 +37,6 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     Foldback_Init(&pHandle->FoldbackDynamicMaxTorque, MotorParameters.ParametersConversion.FoldbackInitTorque);
     Foldback_Init(&pHandle->FoldbackHeatsinkTemperature, MotorParameters.ParametersConversion.FoldbackInitHeatsinkTemp);
     Foldback_Init(&pHandle->FoldbackMotorSpeed, MotorParameters.ParametersConversion.FoldbackInitSpeed);
-    Foldback_Init(&pHandle->FoldbackDynamicMaxPower, MotorParameters.ParametersConversion.FoldbackInitPower);
     Foldback_Init(&pHandle->FoldbackMotorTemperature, MotorParameters.ParametersConversion.FoldbackInitMotorTemp);
     
     //Init the variables dependent on motor parameters
@@ -51,10 +50,6 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     
     pHandle->bEnableSpdLimitControl = MotorParameters.SpeedParameters.bEnableSpeedLimitControl;
     
-    pHandle->bEnableLVtorqueLimit = MotorParameters.PowerParameters.bEnableLVTorqueLimit;
-    pHandle->hBatteryLowVoltage = (uint16_t)(UD_VOLTAGE_THRESHOLD_CONT_V *(MotorParameters.PowerParameters.hLowVoltageThresholdPercentage + 100))/100;
-    pHandle->hMaxContinuousPower = MotorParameters.PowerParameters.hMaxBMSPositivePower * MotorParameters.PowerParameters.hEstimatedEfficiency / 100;
-    pHandle->hMaxContinuousCurrent = MotorParameters.PowerParameters.hMaxBMSContinuousCurrent;
     pHandle->hMaxPositivePower = (uint16_t)(DEFAULT_MAX_APPLICATION_POSITIVE_POWER * MotorParameters.PowerParameters.hEstimatedEfficiency / 100);
     pHandle->hMinNegativePower = -(int16_t)(DEFAULT_MAX_APPLICATION_POSITIVE_POWER * MotorParameters.PowerParameters.hEstimatedEfficiency / 100);
     pHandle->hEstimatedEfficiencyPercent = MotorParameters.PowerParameters.hEstimatedEfficiency;
@@ -114,6 +109,8 @@ void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup, Mo
 {
     ASSERT(pHandle != NULL);
     
+    Foldback_Handle_t FoldbackInitPower;
+    
     //initialize maximum power in watts that drive can push to the motor
     if (MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower < DEFAULT_MAX_APPLICATION_POSITIVE_POWER)
     {
@@ -137,12 +134,26 @@ void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup, Mo
     // Initializes the undervoltage threshold of the battery
     if (MCSetup.BatteryPowerSetup.hUndervoltageThreshold > UD_VOLTAGE_THRESHOLD_CONT_V)
     {
-        pHandle->hBatteryLowVoltage = (uint16_t)(MCSetup.BatteryPowerSetup.hUndervoltageThreshold *(MotorParameters.PowerParameters.hLowVoltageThresholdPercentage + 100))/100;
+        pHandle->hBatteryLowVoltage = (uint16_t)(MCSetup.BatteryPowerSetup.hUndervoltageThreshold *(MCSetup.BatteryPowerSetup.hLowVoltageThresholdPercentage + 100))/100;
     }
     
     // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
     pHandle->bPowerRef = MCSetup.BatteryPowerSetup.bPowerLimitRef;
     
+    pHandle->bEnableLVtorqueLimit = MCSetup.BatteryPowerSetup.bEnableLVTorqueLimit;
+    pHandle->hLowBatteryTorque = MCSetup.BatteryPowerSetup.hLowBatteryTorque;
+    pHandle->hBatteryLowVoltage = (uint16_t)(UD_VOLTAGE_THRESHOLD_CONT_V * (MCSetup.BatteryPowerSetup.hLowVoltageThresholdPercentage + 100))/100;
+    pHandle->hMaxContinuousPower = MCSetup.BatteryPowerSetup.hMaxBMSPositivePower * MotorParameters.PowerParameters.hEstimatedEfficiency / 100;
+    pHandle->hMaxContinuousCurrent = MCSetup.BatteryPowerSetup.hMaxBMSContinuousCurrent;
+    
+    //Init power foldback
+    FoldbackInitPower.bEnableFoldback = MCSetup.BatteryPowerSetup.bEnableMaxPowerLimit;
+    FoldbackInitPower.hDefaultOutputLimitHigh = (uint16_t)(MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower * MotorParameters.PowerParameters.hEstimatedEfficiency / 100);
+    FoldbackInitPower.hDefaultOutputLimitLow = MCSetup.BatteryPowerSetup.hMaxBMSPositivePower * MotorParameters.PowerParameters.hEstimatedEfficiency / 100;
+    FoldbackInitPower.hDecreasingEndValue = MCSetup.BatteryPowerSetup.wMaxTimeBMSTolerant;
+    FoldbackInitPower.hDecreasingRange = MCSetup.BatteryPowerSetup.hMaxPowerLimitTimeout;
+    
+    Foldback_Init(&pHandle->FoldbackDynamicMaxPower, FoldbackInitPower);
 }
 
 
@@ -555,9 +566,9 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     //limit Torque when the Battery SoC is low to prevent UNDERVOLTAGE fault
     if(pHandle->bEnableLVtorqueLimit)
     {
-        if (pHandle->hBusVoltage < pHandle->hBatteryLowVoltage && hOutputTorque > MotorParameters.PowerParameters.hLowBatteryTorque)
+        if (pHandle->hBusVoltage < pHandle->hBatteryLowVoltage && hOutputTorque > pHandle->hLowBatteryTorque)
         {
-            hOutputTorque = MotorParameters.PowerParameters.hLowBatteryTorque;
+            hOutputTorque = pHandle->hLowBatteryTorque;
         }
     }
     

@@ -216,6 +216,16 @@ typedef struct
     uint16_t hMaxApplicationNegativePower;               // Maximum power in watts that drive can accept from the motor
     uint16_t hMaxApplicationCurrent;                     // Maximum battery current in amps that drive can accept from the motor
     
+    bool bEnableLVTorqueLimit;
+    uint16_t hLowVoltageThresholdPercentage;
+    int16_t hLowBatteryTorque;
+    
+    bool bEnableMaxPowerLimit;
+    int32_t wMaxTimeBMSTolerant;
+    uint16_t hMaxPowerLimitTimeout;
+    uint16_t hMaxBMSPositivePower;
+    uint16_t hMaxBMSContinuousCurrent;
+    
     uint16_t hUndervoltageThreshold;                     // Undervoltage threshold of the battery
     
 } BatteryPower_Setup_t;

@@ -81,13 +81,6 @@ void FoldbackParameters_Init(MotorParameters_t * MotorParameters)
     MotorParameters->ParametersConversion.FoldbackInitTorque.hDecreasingEndValue = 10 * DYNAMICTORQUE_THRESHOLD_SPEED;
     MotorParameters->ParametersConversion.FoldbackInitTorque.hDecreasingRange = 10 * DYNAMICTORQUE_THRESHOLD_SPEED;
     
-    //Init power foldback
-    MotorParameters->ParametersConversion.FoldbackInitPower.bEnableFoldback = MotorParameters->PowerParameters.bEnableMaxPowerLimit;
-    MotorParameters->ParametersConversion.FoldbackInitPower.hDefaultOutputLimitHigh = (uint16_t)(DEFAULT_MAX_APPLICATION_POSITIVE_POWER * MotorParameters->PowerParameters.hEstimatedEfficiency / 100);
-    MotorParameters->ParametersConversion.FoldbackInitPower.hDefaultOutputLimitLow = MotorParameters->PowerParameters.hMaxBMSPositivePower * MotorParameters->PowerParameters.hEstimatedEfficiency / 100;
-    MotorParameters->ParametersConversion.FoldbackInitPower.hDecreasingEndValue = MotorParameters->PowerParameters.wMaxTimeBMSTolerant;
-    MotorParameters->ParametersConversion.FoldbackInitPower.hDecreasingRange = MotorParameters->PowerParameters.hMaxPowerLimitTimeout;
-    
     //Init heatsink foldback
     MotorParameters->ParametersConversion.FoldbackInitHeatsinkTemp.bEnableFoldback = true;
     MotorParameters->ParametersConversion.FoldbackInitHeatsinkTemp.hDefaultOutputLimitHigh = MotorParameters->ParametersConversion.hNominalTorque;

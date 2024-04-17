@@ -17,6 +17,16 @@
 #define MAX_APPLICATION_NEGATIVE_POWER      900              // Refers to maximum power in watts that drive can accept from the motor
 #define MAX_APPLICATION_CURRENT             18               // Refers to maximum battery current in amps that drive can accept from the motor
 
+#define ENABLE_LV_TORQUE_LIMIT              false            // Enable or disable the low voltage torque limit
+#define LOW_VOLTAGE_THRESHOLD_PERCENTAGE    10               // The threshold percentage of battery voltage before limiting torque
+#define LOW_BATTERY_TORQUE                  150
+
+#define ENABLE_MAX_POWER_LIMIT              true             // To enable or disable the foldback
+#define MAX_TIME_BMS_TOLERANT               20000
+
+#define MAX_POWER_LIMIT_TIMEOUT             10000
+#define MAX_BMS_POSITIVE_POWER              500              // Maximum Power at the end point of foldback
+#define MAX_BMS_CONTINUOUS_CURRENT           10              // Maximum Power at the end point of foldback in amps
 
 /******************************** BATTERY  PARAMETERS ******************************/
 

@@ -421,6 +421,17 @@ MC_Setup_t MCSetup =
         .hMaxApplicationPositivePower = MAX_APPLICATION_POSITIVE_POWER, // Maximum power in watts that drive can push to the motor
         .hMaxApplicationNegativePower = MAX_APPLICATION_NEGATIVE_POWER, // Maximum power in watts that drive can accept from the motor
         .hMaxApplicationCurrent = MAX_APPLICATION_CURRENT,              // Maximum battery current in amps that drive can accept from the motor
+        
+        .bEnableLVTorqueLimit           = ENABLE_LV_TORQUE_LIMIT,
+        .hLowVoltageThresholdPercentage = LOW_VOLTAGE_THRESHOLD_PERCENTAGE,
+        .hLowBatteryTorque              = LOW_BATTERY_TORQUE,
+        
+        .bEnableMaxPowerLimit           = ENABLE_MAX_POWER_LIMIT,
+        .wMaxTimeBMSTolerant            = MAX_TIME_BMS_TOLERANT,
+        .hMaxPowerLimitTimeout          = MAX_POWER_LIMIT_TIMEOUT,
+        .hMaxBMSPositivePower           = MAX_BMS_POSITIVE_POWER,
+        .hMaxBMSContinuousCurrent       = MAX_BMS_CONTINUOUS_CURRENT,
+        
         .hUndervoltageThreshold = UD_VOLTAGE_THRESHOLD_BATT_V,
     }
 };

@@ -105,6 +105,7 @@ typedef struct
                                              power in W.*/
     int16_t hMinNegativePower;              /*!< Minimum negative value of motor
                                              power in W.*/
+    int16_t hLowBatteryTorque;              /*!< Max torque when low battery.*/
     uint16_t hEstimatedEfficiencyPercent;     /*! < Power losses from input to output power in percent. */
     STCModality_t ModeDefault;              /*!< Default STC modality.*/
     uint32_t wTorqueSlopePerSecondUp;       /*!< Slope in cNm per second when ramping up torque. */

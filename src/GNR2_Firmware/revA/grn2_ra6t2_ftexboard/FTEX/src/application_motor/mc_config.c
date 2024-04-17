@@ -34,17 +34,7 @@ MotorParameters_t MotorParameters =
 
     },
     .PowerParameters =
-    {
-        .bEnableLVTorqueLimit           = ENABLE_LV_TORQUE_LIMIT,
-        .hLowVoltageThresholdPercentage = LOW_VOLTAGE_THRESHOLD_PERCENTAGE,
-        .hLowBatteryTorque              = LOW_BATTERY_TORQUE,
-        
-        .bEnableMaxPowerLimit           = ENABLE_MAX_POWER_LIMIT,
-        .wMaxTimeBMSTolerant            = MAX_TIME_BMS_TOLERANT,
-        .hMaxPowerLimitTimeout          = MAX_POWER_LIMIT_TIMEOUT,
-        .hMaxBMSPositivePower           = MAX_BMS_POSITIVE_POWER,
-        .hMaxBMSContinuousCurrent       = MAX_BMS_CONTINUOUS_CURRENT,
-        
+    {   
         .hEstimatedEfficiency           = ESTIMATED_EFFICIENCY,
     },
     .SpeedParameters =
@@ -254,7 +244,6 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     .hMaxBusCurrent =               (uint16_t)(DEFAULT_MAX_APPLICATION_CURRENT),
     .hMinAppPositiveMecSpeedUnit =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
     .hMinAppNegativeMecSpeedUnit =    (int16_t)(-MIN_APPLICATION_SPEED_UNIT),
-    .bPowerRef          =           DEFAULT_POWER_LIMIT_REF,
     .ModeDefault =                    DEFAULT_CONTROL_MODE,
     .fGainTorqueIdref =             GAIN_TORQUE_IDREF,
     .PISpeedLimit =
