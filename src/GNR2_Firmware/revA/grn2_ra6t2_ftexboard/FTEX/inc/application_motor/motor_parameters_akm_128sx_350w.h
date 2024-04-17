@@ -31,7 +31,7 @@
 #define SP_KIDIV_LOG                        LOG2(16384)     // Speed control gain divider log2, to allow decimal value
 
 /************************** Power Limit Config  ************************/
-#define ENABLE_LV_TORQUE_LIMIT              false           // Enable or disable the low voltage torque limit
+#define ENABLE_LV_TORQUE_LIMIT              true           // Enable or disable the low voltage torque limit
 #define LOW_VOLTAGE_THRESHOLD_PERCENTAGE    10              // The threshold percentage of battery voltage before limiting torque
 #define LOW_BATTERY_TORQUE                  150
 
