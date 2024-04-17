@@ -174,9 +174,6 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
  *  This is executed in a comm task that gets unblocked when a complete frame is received.
  *
  */
-
-static uint8_t framesSinceSync = 0; // Count frames since the last pas sync to the screen to send repeatedly.
-
 void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 {
     APT_frame_t replyFrame = {0};
@@ -233,48 +230,30 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
             DefaultPasInitiliased = true;
         }
         
-        // Checking if the PAS from the APT has given a rational value
-        bool isPasSane = true;
-        if ((pasLvl != PAS_UNCHANGED) && (currentPas != (standardizedPas + 1)) && (currentPas != (standardizedPas - 1)) && (standardizedPas != PAS_LEVEL_WALK))
-        {
-           isPasSane = false;
-        }
-
-        if (pHandle->APTStabilizing && (pasLvl == PAS_UNCHANGED))
-        {
-            pHandle->APTStabilizing = false;
-            pHandle->OldPAS = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
-        }
-        // The PAS value being sent by the screen is the old PAS value for a while
-        // So we wait for it to tell us that PAS has finished changing so we know it is now stable.
-        if (isPasSane)
-        {
-            if ((!pHandle->APTChangePasFlag && (pasLvl != PAS_UNCHANGED) && (standardizedPas != pHandle->OldPAS)) || (standardizedPas == PAS_LEVEL_WALK))
-            {                  
-                if((pasLvl == PAS_LEVEL_WALK) && (walkmodeTransition == false)) // when we switch to walk mode we need to remember our previous state
-                {
-                    walkmodeTransition = true;
-                    pasLvlBeforeWalk = currentPas;
-                }                    
-                
-                if(DefaultPasInitiliased)
-                {    
-                    PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,standardizedPas);         
-                    pHandle->APTChangePasFlag = true;
-                    pHandle->APTStabilizing = true;
-                    framesSinceSync = 0;
-                }
-            }
-            else if (walkmodeTransition && (standardizedPas != PAS_LEVEL_WALK)) // If we were in walkmode we need to restore the previous pas level
+        
+        if ((pasLvl != PAS_UNCHANGED && (standardizedPas != pHandle->OldPAS)) || (standardizedPas == PAS_LEVEL_WALK))
+        {                  
+            if((pasLvl == PAS_LEVEL_WALK) && (walkmodeTransition == false)) // when we switch to walk mode we need to remember our previous state
             {
-                walkmodeTransition = false;
+                walkmodeTransition = true;
+                pasLvlBeforeWalk = currentPas;
+            }                    
                 
-                PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,pasLvlBeforeWalk);         
+            if(DefaultPasInitiliased)
+            {    
+                PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,standardizedPas);   
+                pHandle->OldPAS = standardizedPas;                 
                 pHandle->APTChangePasFlag = true;
-                pHandle->APTStabilizing = true;
-                framesSinceSync = 0;
-            }                
-        }
+            }
+         }
+         else if (walkmodeTransition && (standardizedPas != PAS_LEVEL_WALK)) // If we were in walkmode we need to restore the previous pas level
+         {
+            walkmodeTransition = false;
+                
+            PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,pasLvlBeforeWalk);         
+            pHandle->APTChangePasFlag = true;
+         }                
+
 
     #if DYNAMIC_SPEED_LIMITATION   
 
@@ -340,17 +319,13 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
          
         // If we want to change the PAS level we need to change it here
         replyFrame.Buffer[7] = PAS_UNCHANGED; // Send 0x0A unless we want to change the PAS on the screen  
-         
-        if (!pHandle->APTChangePasFlag && (pasLvl == PAS_UNCHANGED) && !pHandle->APTStabilizing && (framesSinceSync >= MINIMUM_FRAMES_TO_SYNC_PAS))
-        {
-            currentPas = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
-            framesSinceSync = 0;
+        
+        currentPas = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
+        if ((!pHandle->APTChangePasFlag && (pasLvl == PAS_UNCHANGED) && currentPas != pHandle->OldPAS) || DefaultPasInitiliased == false)
+        {           
+           // framesSinceSync = 0;
             replyFrame.Buffer[7] = currentPas;
             pHandle->OldPAS = currentPas;
-        }
-        else
-        {
-            framesSinceSync++;
         }
                                
         replyFrame.Buffer[8] = 0x00;

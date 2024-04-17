@@ -92,7 +92,6 @@ typedef struct
     uint8_t OldPAS;                        // Used to keep track of the current PAs levle on the screen
 
     bool APTChangePasFlag;                 // Used to tell the Can interfacne that the screen changed the PAS    
-    bool APTStabilizing;                   // Used while the APT values are inconsistent
     
 }APT_Handle_t;
 

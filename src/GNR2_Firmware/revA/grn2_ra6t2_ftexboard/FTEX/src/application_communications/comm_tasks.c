@@ -341,7 +341,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             if(UART0Handle.UARTProtocol == UART_APT)
             {   
-                if((bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM]) || !LCD_APT_handle.APTStabilizing)
+                if(bPAS[VEHICLE_PARAM] != bPAS[CAN_PARAM])
                 {
                     WriteOBJDict = true; 
                     if (LCD_APT_handle.APTChangePasFlag) // Check if PAS was changed by non-can source                          
