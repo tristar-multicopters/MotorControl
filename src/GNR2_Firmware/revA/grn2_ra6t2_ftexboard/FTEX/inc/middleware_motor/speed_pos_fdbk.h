@@ -72,7 +72,16 @@ typedef struct
     uint8_t gearArray[GEAR_FILTER_SIZE]; /* Filter for gear ratio readings */
     
     uint16_t gearMAFiltPos;     /* Moving average filter position for dynamic gear ratio */
+    
+    int16_t hTorqueRegenMax;  /* max regenerative torque  */
+    
+    int16_t hDeltaT;        /* ramp of increasing the regen torque   Nm/msec      */
+    
+    int16_t hTorqueRegen;   /* the setpoint of regenerative torque */
+    
+    int16_t hIdcRegen;      /* the max.regenerative current in amps */
 
+    bool bActiveRegen;      /* TO ENABLE REGEN FOR VC */
 
 } SpdPosFdbkHandle_t;
 

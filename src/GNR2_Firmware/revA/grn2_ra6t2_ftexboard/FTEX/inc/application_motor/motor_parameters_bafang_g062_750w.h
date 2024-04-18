@@ -23,6 +23,7 @@ These variables are used to configure the motor within the smart config tool.
 
 /************************** Controller Config  ************************/
 
+
 #define HARDWARE_SELECTION                 HARDWARE_EP700       // Controller selection to adapt controller parameters
 
 /************************** Motor Config Parameters ************************/

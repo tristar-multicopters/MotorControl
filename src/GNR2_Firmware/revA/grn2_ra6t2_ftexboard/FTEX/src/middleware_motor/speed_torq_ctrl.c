@@ -14,6 +14,7 @@
 
 #define GEAR_RATIO_LOWER_BOUND_MIN 1        //min gear ratio, cannot be 0
 #define GEAR_RATIO_UPPER_BOUND_MAX 10       //max gear ratio = highest gear + GEAR_RATIO_UPPER_BOUND_MAX
+
 #define SPEED_MARGIN  110
 #define DIV_PERCENTAGE 100
 #define DECC_RANGE_PW  100 //decceleration range
@@ -71,8 +72,11 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     pHandle->pPISpeed = pPI;
     pHandle->pSPD = SPD_Handle;
     pHandle->pSPD->gearMAFiltPos = 0;
-    
-    //Init gear array
+    pHandle->pSPD->hTorqueRegenMax = 0;
+    pHandle->pSPD->hDeltaT = REGEN_TORQUE_RAMP;
+    pHandle->pSPD->hTorqueRegen = 0;
+    pHandle->pSPD->hIdcRegen = MAX_NEG_DC_CURRENT;
+    pHandle->pSPD->bActiveRegen = 0;
     for(uint16_t count = 0; count < GEAR_FILTER_SIZE; count++)
     {
         pHandle->pSPD->gearArray[count] = 0;
@@ -336,6 +340,42 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
         hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference, MotorParameters); // Apply motor torque foldbacks
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
+        
+        if (pHandle->motorType == DIRECT_DRIVE)
+          
+        {
+          if (pHandle->pSPD->hIdcRegen)
+              {
+                if (pHandle->hCurrentTorqueRef == 0)
+                {
+                      if (abs(pHandle->pSPD->hAvrMecSpeedUnit) > MIN_REGEN_SPEED)
+                        { 
+                          pHandle->pSPD->hTorqueRegenMax = (int16_t)(pHandle->pSPD->hIdcRegen * pHandle->hBusVoltage * 100)/(int16_t)(abs(pHandle->pSPD->hAvrMecSpeedUnit)*PI_/30);
+                          if (pHandle->pSPD->hTorqueRegen < pHandle->pSPD->hTorqueRegenMax)
+                          {
+                            pHandle->pSPD->hTorqueRegen = pHandle->pSPD->hTorqueRegenMax;  
+                            
+                            hTorqueReference = pHandle->pSPD->hTorqueRegen;
+                          }
+                          else
+                          {
+                            pHandle->pSPD->hTorqueRegen = pHandle->pSPD->hTorqueRegen + pHandle->pSPD->hDeltaT;
+                            
+                            hTorqueReference = pHandle->pSPD->hTorqueRegen;
+                          }
+                  
+                  
+                        }
+                      else
+                        {
+                          pHandle->pSPD->hTorqueRegen = 0;
+                        }
+                 }
+                
+                
+              }
+            }              
+      
     }
     else
     {
@@ -624,7 +664,6 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     int16_t hMeasuredSpeedTenthRadPerSec = 0;
     int16_t hMeasuredSpeedUnit = 0;
     int16_t hRetval = hInputTorque;
-    
   
     hMeasuredSpeedUnit = SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
     hMeasuredSpeedTenthRadPerSec = (int16_t)((10*hMeasuredSpeedUnit*2*3.1416F)/SPEED_UNIT);
@@ -635,7 +674,6 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
     Foldback_UpdateLimitValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxContinuousPower);      // this foldback limits MAX POWER immediately
     Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * SPEED_MARGIN/DIV_PERCENTAGE)); // Update speed limit foldback
     Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, DECC_RANGE_PW); // Update speed limit foldback
-
   
     pHandle->DynamicPowerHandle.hDynamicMaxPower = (uint16_t)Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower, (int16_t)pHandle->DynamicPowerHandle.hOverMaxPowerTimer);    
 

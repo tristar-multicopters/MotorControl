@@ -6,7 +6,6 @@
 */
 
 #include "current_pid_vs_speed_table.h"
-
 LookupTableHandle_t LookupTableM1IqKp =
 {
   .hXDataStep = CURRENT_PID_LUT_SPEED_STEP,

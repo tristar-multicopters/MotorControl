@@ -36,6 +36,7 @@ typedef struct
     RampMngr_Handle_t SpeedRampMngr;                    /* Ramp management structure for speed reference */
 
     Foldback_Handle_t FoldbackMotorSpeed;               /* Foldback structure used to limit maximum motor speed */
+
     Foldback_Handle_t FoldbackLimitSpeed;               /* Foldback structure used to limit the speed regarding the speed limit value */
     Foldback_Handle_t FoldbackMotorTemperature;         /* Foldback structure used to limit maximum motor temperature */
     Foldback_Handle_t FoldbackHeatsinkTemperature;      /* Foldback structure used to limit maximum heatsink temperature */

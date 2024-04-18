@@ -601,6 +601,63 @@ uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle
 }
 
 /**
+  *  enable the regen feature,
+  */
+void MCInterface_Enableregen(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pSPD != NULL);
+    
+    pHandle->pSPD->bActiveRegen = true;
+}
+
+/**
+  *  disable the regen feature,
+  */
+void MCInterface_Disableregen(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pSPD != NULL);
+    
+    pHandle->pSPD->bActiveRegen = false;
+}
+
+/**
+  *  Get the max negative battery current in amps
+  */
+int16_t MCInterface_GetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSPD->hIdcRegen;
+}
+
+/**
+  *  Set the max negative battery current in amps
+  */
+void MCInterface_SetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle, int16_t Idc_Negative)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->pSPD->hIdcRegen = Idc_Negative;
+}
+
+/**
+  *  Get the rate of increasing the negative Torque in mili Nm per milisecond or Nm/sec
+  */
+int16_t MCInterface_GetMaxNegativeTorqueRate(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSPD->hDeltaT;
+}
+
+/**
+  *  Get the regenerative torque value in mili Nm
+  */
+int16_t MCInterface_GetRegenTorque(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSPD->hTorqueRegen;
+}
+/**
   *  Get the motor gear ratio
   */
 float MCInterface_GetMotorGearRatio(MotorControlInterfaceHandle_t * pHandle)

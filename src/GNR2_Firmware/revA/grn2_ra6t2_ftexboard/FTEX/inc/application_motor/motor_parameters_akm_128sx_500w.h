@@ -26,7 +26,6 @@ These variables are used to configure the motor within the smart config tool.
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters
 
 /************************** Motor Config Parameters ************************/
-
 #define MOTOR_GEAR_RATIO                    (float)10.9890   // Motor gear ratio, the value is always X turns of the motor
 #define MOTOR_TYPE                          HUB_DRIVE        // Motor type. Can be HUB_DRIVE or MID_DRIVE or DIRECT_DRIVE
 #define POLE_PAIR_NUM                       8                // Number of motor pole pairs

@@ -67,6 +67,7 @@
 #define MEC_SPEED_FILTER_BUTTERWORTH_ALPHA  16.91F              // Alpha constant to configure Butterworth filter for mechanical speed filtering
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA   -14.91F             // Beta constant to configure Butterworth filter for mechanical speed filtering
 
+
 /************************** Temp Limit Parameters  ************************/
 
 #define MOTOR_TEMP_SENSOR_TYPE              VIRTUAL_SENSOR      // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
@@ -101,6 +102,5 @@
 
 #define ID_KI_VS_SPEED_1                    10
 #define ID_KI_VS_SPEED_2                    10
-
                                                             
 #endif /* __MOTOR_PARAMETERS_GHR_0194_DD_H */

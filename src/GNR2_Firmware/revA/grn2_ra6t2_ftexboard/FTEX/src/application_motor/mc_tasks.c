@@ -83,7 +83,6 @@ static volatile uint16_t hStopPermanencyCounterM1 = 0;
 volatile uint8_t bOCCheck = 0;
 volatile uint16_t hOCCheckReset = 0;
 volatile uint16_t hDriverCounter = 0;
-
 uint8_t bMCBootCompleted = 0;
 
 #if DEBUGMODE_MOTOR_CONTROL
@@ -746,9 +745,6 @@ void FOC_InitAdditionalMethods(uint8_t bMotor)
 void FOC_CalcCurrRef(uint8_t bMotor)
 {
     qd_t IqdTmp;
-    int16_t delta_t;
-  
-    delta_t = -2;
   
     /* update Max Power based on DC Voltage */
     pSpeedTorqCtrl[bMotor]->hBusVoltage = VbusSensor_GetAvBusVoltageVolt(pMotorPower[bMotor]->pVBS);
@@ -772,32 +768,7 @@ void FOC_CalcCurrRef(uint8_t bMotor)
         /* apply the maximum nominal limitation to the Iq */
         SpdTorqCtrl_ApplyCurrentLimitation_Iq(&FOCVars[bMotor].Iqdref, MCConfig.hNominalCurr, MCConfig.wUsrMaxCurr);
         
-  //=================================APPLY REGENERATIVE CURRENT ========================================      
-        if (pSpeedTorqCtrl[bMotor]->motorType == DIRECT_DRIVE) // providing negative current for regen
-        {
-            if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
-            {
-                if (abs(pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit) > MIN_REGEN_SPEED)
-                {
-                    if (FOCVars[M1].I_regen < IQ_REGEN)
-                    {
-                        FOCVars[M1].I_regen = IQ_REGEN;  
-                    }
-                    else
-                    {
-                        FOCVars[M1].I_regen = FOCVars[M1].I_regen + delta_t;
-                    }
-                  
-                    FOCVars[M1].Iqdref.q =  FOCVars[M1].I_regen;
-                    FOCVars[M1].Iqdref.d = 0;
-                }
-                else
-                {
-                    FOCVars[M1].I_regen = 0;
-                }
-                
-            }   
-        }
+    
  // ========================================================================================================
         
         if (pFeedforward[bMotor])
@@ -985,6 +956,7 @@ inline uint32_t FOC_CurrControllerM1(void)
     MotorState_t StateM1;
     StateM1 = MCStateMachine_GetState(&MCStateMachine[M1]);
     
+
     if (StateM1 == M_RUN || StateM1 == M_ANY_STOP)
     {
         Ialphabeta = MCMath_Clarke(Iab);
@@ -1005,6 +977,7 @@ inline uint32_t FOC_CurrControllerM1(void)
 
         Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
         
+
     if (pSpeedTorqCtrl[M1]->motorType == DIRECT_DRIVE)     
     {      
 
@@ -1023,6 +996,7 @@ inline uint32_t FOC_CurrControllerM1(void)
         else if ((MCInterface->bDriverEn == false) && (MCInterface->hFinalTorque != 0))
         {
             Driver_Enable(&MCInterface->bDriverEn);
+            //FOC_InitAdditionalMethods(M1);
         }
       }
         

@@ -470,6 +470,49 @@ int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, 
 uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle);
 
 /**
+  * @brief  Enable regen 
+  * @param  pHandle : handle of the MCI interface,
+  * @retval enabling regenerative feature for direct drive
+  */
+void MCInterface_EnableRegen(SpdTorqCtrlHandle_t * pHandle);
+
+/**
+  * @brief  Disable regen 
+  * @param  pHandle : handle of the MCI interface,
+  * @retval Disabling regenerative feature for Hub drive and mid drive
+  */
+void MCInterface_DisableRegen(SpdTorqCtrlHandle_t * pHandle);
+
+/**
+  * @brief  Get the max negative battery current in amps
+  * @param  pHandle : handle of the MCI interface,
+  * @retval max negative current
+  */
+int16_t MCInterface_GetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle);
+
+/**
+  * @brief  set the max negative battery current in amps
+  * @param  pHandle : handle of the MCI interface,
+  * @retval max negative current
+  */
+void MCInterface_SetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle, int16_t Idc_Negative);
+
+/**
+  * @brief  Get the increasing rate of max negative battery current in Nm per second
+  * @param  pHandle : handle of the MCI interface,
+  * @retval rate of negative current
+  */
+int16_t MCInterface_GetMaxNegativeTorqueRate(SpdTorqCtrlHandle_t * pHandle);
+
+
+/**
+  * @brief  Get the value of regenerative torque in milli Nm
+  * @param  pHandle : handle of the MCI interface,
+  * @retval Get the value of regenerative torque
+  */
+int16_t MCInterface_GetRegenTorque(SpdTorqCtrlHandle_t * pHandle);
+
+/**
   * @brief  Get the motor gear ratio
   * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
   * @retval motor gear ratio
