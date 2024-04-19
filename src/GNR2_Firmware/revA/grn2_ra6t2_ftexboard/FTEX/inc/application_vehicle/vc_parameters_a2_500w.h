@@ -37,7 +37,7 @@
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
 
-#define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_PTS2TORQUE_STARTUP       30              // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED_KMH        3               // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE               10              // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
@@ -45,11 +45,11 @@
 /***************** TORQUE SENSOR FILTERING  ******************************/
 
 #define PTS_FILTER_BW1_1                      10              // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW2_1                      25              // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW2_1                      40              // BW coefficient for pedal torque sensor avereging for speed 1
 #define PTS_FILTER_BW1_2                      10              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW2_2                      25              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW2_2                      40              // BW coefficient for pedal torque sensor avereging for speed 2
 #define PTS_FILTER_BW1_3                      10              // BW coefficient for pedal torque sensor avereging for speed 3
-#define PTS_FILTER_BW2_3                      25              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW2_3                      40              // BW coefficient for pedal torque sensor avereging for speed 3
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_TORQUE                      NOMINAL_TORQUE  // Maximum motor torque to apply using pedal assist
@@ -59,14 +59,14 @@
 
 //Used to chose the pas detection mode on startup, torque or/and cadence,
 //torque only or cadence only.
-#define PAS_DETECTIONSTARTUP_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
+#define PAS_DETECTIONSTARTUP_ALGORITHM      HybridAndSensorUse /*noSensorUse = 0,
                                                             TorqueSensorUse,    // Torque sensor use define
                                                             CadenceSensorUse,   // Cadence sensor use define
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
 //Used to chose the pas detection mode on running, torque or/and cadence,
 //torque only or cadence only.
-#define PAS_DETECTIONRUNNING_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
+#define PAS_DETECTIONRUNNING_ALGORITHM      HybridOrSensorUse /*noSensorUse = 0,
                                                             TorqueSensorUse,    // Torque sensor use define
                                                             CadenceSensorUse,   // Cadence sensor use define
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
@@ -74,8 +74,8 @@
   
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
 
-#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
-#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
+#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        2    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
+#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        2    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /***************** PEDDLE ASSIST SYSTEM FILTER PARAMETERS  ***************************/
@@ -122,7 +122,7 @@
      
 #define POWERTRAIN_HEADLIGHT_DEFAULT        false           // Parameter that sets the default headlight state when the bike is powered on
 
-#define POWERTRAIN_TAILLIGHT_DEFAULT        true            // Parameter that sets the default tail light state when the bike is powered on
+#define POWERTRAIN_TAILLIGHT_DEFAULT        false            // Parameter that sets the default tail light state when the bike is powered on
     
 /******************************** BATTERY SELECTION ******************************/
 
