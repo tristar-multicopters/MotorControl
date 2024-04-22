@@ -56,8 +56,11 @@ extern "C" {
 //OD ID used for the Emergency message
 #define CO_OD_REG_EMCY_MSG                     0x1014
 
+//OD ID used to Consume the Heartbeat Time
+#define CO_OD_REG_HB_CONSUMER                  0x1016
+
 //OD ID used to Produce the Heartbeat Time
-#define CO_OD_REG_HB_TIME                      0x1017
+#define CO_OD_REG_HB_PRODUCER                  0x1017
 
 //OD ID used to Identity the Object.
 // this object has 5 subindex 
@@ -307,8 +310,8 @@ extern "C" {
 // 6 -> maxWheelSpeedPeriodUs, used to as limit to detect when wheel speed must be considered zero
 #define CO_OD_REG_WHEELS                       0x201F
 
-//avalible                                     0x2020
-
+//OD ID used to enage/disengage the cruise control
+#define CO_OD_REG_VEHICLE_CRUISE               0x2020
 
 //OD ID used to configure and operate the front light
 // this object has 2 subindex
@@ -430,7 +433,7 @@ extern "C" {
 // 1 -> External input for the throttle 0 - 65535
 // 2 -> External input for cruise control 0 - 1
 // 3 -> External input for switch between torque/cadence(algorithm choise).
-#define CO_OD_REG_CAN_SCREEN            0x202B
+#define CO_OD_REG_CAN_SCREEN                   0x202B
 
 // Available                                   0x202C
 
@@ -513,6 +516,22 @@ extern struct CO_NODE_SPEC_T GnR2ModuleSpec;
 
 extern CO_OBJ_DOM bObjFirmwareUpdateDomain;
 
+typedef struct
+{
+   uint16_t NodeID; // Which node id is associated with this heatrbeat
+   bool bHBPresent;  // Shows if the heartbeat is present 
+   bool bConnectionLost; // Used to detect when a connection was lost
+   uint16_t OldEventNb; // Used to track how many events were logged 
+   uint16_t MaxNbMissedHB; // Maximumu nuber of consecutive heartbeats that can be missed 
+   uint16_t SafetyCounter; // Used to keep track of the lack of events to determin when the conneciton is restored  
+   bool bCANHeartBeatDelta; // Used to tell the periodically called checking function 
+                            // that the callback for a change notification was called
+   uint16_t CANHBSafeMinNbPulse; // Used for time tracking after how much time do we consider the connection restored 
+   uint16_t HeartBeatTimeMS; // States how much time will the OD librairy wait between heartbeats    
+   CO_HBCONS* pCANODHeartbeat; // Pointer to the associated CAN OD Heartbeat structure 
+}HeartBeatHandle_t; 
+
+extern HeartBeatHandle_t CanScreenHB;
 
 /**
   @brief Function used to config the OD as master/iot or slave.
@@ -523,6 +542,21 @@ extern CO_OBJ_DOM bObjFirmwareUpdateDomain;
  */
 void CO_SelecOdSetup(bool deviceFunction);
 
+/**
+  @brief Function used to setup the heartbeat  
+
+  @param HeartBeat Handle
+  @retval none
+ */
+void CO_SetupCANHB(HeartBeatHandle_t * pHandle);   
+
+/**
+  @brief Function used to monitored the heartbeat  
+         made to be called every 25 ms in the CAN reoccuring function
+  @param HeartBeat Handle
+  @retval State of the hearbeat
+ */
+bool CO_CheckCANHB(HeartBeatHandle_t * pHandle);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

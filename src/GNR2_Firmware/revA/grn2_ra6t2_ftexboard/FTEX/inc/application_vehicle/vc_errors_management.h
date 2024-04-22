@@ -37,6 +37,7 @@ typedef enum
     PAS_BOOT_ERROR    = 0x10, // Peddle Assist error
     CONTROLLER_ERROR  = 0x11, // Controller in unrecoverable state
     BRAKE_ERROR       = 0x12, // Brake cutoff sensor abnormal
+    SCREEN_COMM_ERROR = 0x13, // We we lose connection with the screen
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
 ErrorCodes_t; 

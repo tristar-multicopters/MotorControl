@@ -13,6 +13,8 @@
 #include "co_timer_ra6t2.h"         /* Timer driver                */
 #include "co_nvm_ra6t2.h"           /* NVM driver                  */
 
+#include "vc_errors_management.h"
+
 // ==================== PRIVATE DEFINES ======================== //
 
 //by defaul make master id the node id.
@@ -34,7 +36,35 @@
 //increased heartbeat period on produced side
 //to syncronize power off sequency.
 #define HEARTBEAT_PRODUCE_PERIOD_MS         2500                     /* Period of the heartbeat frame */
-#define HEARTBEAT_CONSUME_PERIOD_MS         500                     /* Max time to wait for receiving next heartbeat */  
+
+#define HEARTBEAT_CONSUME_PERIOD_MS           50                     /* Max time to wait for receiving next heartbeat */  
+/* Allocate global variables for runtime value of objects */
+CO_HBCONS CANScreenHbConsumer = {
+    .Time   = HEARTBEAT_CONSUME_PERIOD_MS,
+    .NodeId = CAN_SCREEN_ID,
+    .Event  = 0,
+    .Next   = 0,
+    .Node   = 0,
+    .State  = 0,
+    .Tmr    = 0,
+};
+
+HeartBeatHandle_t CanScreenHB = 
+{
+  .NodeID = CAN_SCREEN_ID, 
+  .HeartBeatTimeMS = HEARTBEAT_CONSUME_PERIOD_MS, 
+  .bConnectionLost = false,  
+  .bCANHeartBeatDelta = false,
+  .bHBPresent = false,
+  .CANHBSafeMinNbPulse = 0,
+  .MaxNbMissedHB = 9,
+  .OldEventNb = 0,
+  .SafetyCounter = 0,
+  .pCANODHeartbeat = &CANScreenHbConsumer,  
+};
+
+
+
 
 #define USE_RPDO                1           /* Use or not RPDO. 1 for yes, 0 for no. */
 #define MASTER_STD_ID_RPDO1     0x300       /* Standard ID of RPDO 1 */
@@ -72,7 +102,7 @@ CO_OD_REG_ERROR,
 CO_OD_REG_SYNC_MESSAGE,
 CO_OD_REG_SYNC_PERIOD, 
 CO_OD_REG_EMCY_MSG, 
-CO_OD_REG_HB_TIME, 
+CO_OD_REG_HB_PRODUCER, 
 CO_OD_IDENTITY_OBJECT, 
 CO_OD_SDO_SERVER,
 CO_OD_SDO_CLIENT_01, 
@@ -86,7 +116,7 @@ CO_OD_REG_ERROR,
 CO_OD_REG_SYNC_MESSAGE,
 CO_OD_REG_SYNC_PERIOD,
 CO_OD_REG_EMCY_MSG,
-CO_OD_REG_HB_TIME, 
+CO_OD_REG_HB_PRODUCER, 
 CO_OD_IDENTITY_OBJECT, 
 CO_OD_SDO_SERVER,
 CO_OD_SDO_CLIENT_01, 
@@ -104,7 +134,7 @@ CO_OD_REG_ERROR,
 CO_OD_REG_SYNC_MESSAGE,
 CO_OD_REG_SYNC_PERIOD, 
 CO_OD_REG_EMCY_MSG, 
-CO_OD_REG_HB_TIME, 
+CO_OD_REG_HB_PRODUCER, 
 CO_OD_IDENTITY_OBJECT, 
 CO_OD_SDO_SERVER, 
 CO_OD_SDO_CLIENT_01, 
@@ -121,7 +151,7 @@ CO_OD_REG_ERROR,
 CO_OD_REG_SYNC_MESSAGE,
 CO_OD_REG_SYNC_PERIOD, 
 CO_OD_REG_EMCY_MSG, 
-CO_OD_REG_HB_TIME, 
+CO_OD_REG_HB_PRODUCER, 
 CO_OD_IDENTITY_OBJECT, 
 CO_OD_SDO_SERVER, 
 CO_OD_SDO_CLIENT_01,
@@ -131,11 +161,6 @@ CO_OD_TPDO_COMMUNICATION,
 CO_OD_TPOD_MAPPING, 
 CO_OD_COMMUM_ENTRIES};
 
-/* Allocate global variables for runtime value of objects */
-CO_HBCONS AppHbConsumer_1 = {
-    .Time = HEARTBEAT_CONSUME_PERIOD_MS,
-    .NodeId = GNR2_MASTER_NODE_ID,
-};
 
 uint16_t hObjDataProdHbTime       = HEARTBEAT_PRODUCE_PERIOD_MS;
 uint8_t  hObjDataErrorRegister    = 0;
@@ -327,7 +352,6 @@ uint8_t bObjDataWheelDiameter               = 0;
 uint8_t bObjDataWheelPulsePerRotation       = 0;
 //variable associated with CO_OD_REG_WHEELS 2 
 uint8_t bObjDataWheelDiameterDefault        = 0;
-
 //variable associated with CO_OD_REG_WHEELS 4
 uint8_t  bObjisMotorMixedSignal             = 0;
 //variable associated with CO_OD_REG_WHEELS 5
@@ -335,24 +359,22 @@ uint16_t bObjminSignalThreshold             = 0;
 //variable associated with CO_OD_REG_WHEELS 6
 uint32_t bObjmaxWheelSpeedPeriodUs          = 0;
 
+//variable associated with CO_OD_REG_VEHICLE_CRUISE
+uint8_t bObjDataCruiseControlState          = 0;
+
 //variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT 0
 uint8_t bObjDataFrontLightState             = 0;
-
 //variable associated with CO_OD_REG_VEHICLE_FRONT_LIGHT 1
 uint8_t bObjDataFrontLightDefaultState      = 0;
 
 //variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT  0
 uint8_t bObjDataRearLightState              = 0;
-
 //variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT  1
 uint8_t bObjDataRearLightDefaultState       = 0;
-
 //variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 2
 uint8_t bObjDataRearLightBlinkOnBrake       = 0;
-
 //variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 3 PLACEHOLDER
 uint16_t bObjDataRearLightBlinkPeriod       = 0; // in ms
-
 //variable associated with CO_OD_REG_VEHICLE_REAR_LIGHT 4 PLACEHOLDER
 uint8_t bObjDataRearLightBlinkDutyCycle     = 0; // % on
 
@@ -396,7 +418,7 @@ uint16_t bObjDataConfigBatteryPeakCurrentDeratingDuration  = 0;
 uint16_t bObjDataConfigThrottleAdcValue       = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 1
-uint8_t  bObjDataConfigThrottleGetSetValue    = 0;
+uint16_t  bObjDataConfigThrottleGetSetValue    = 0;
 
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 2
 uint16_t bObjDataConfigThrottleAdcOffset      = 0;
@@ -699,13 +721,26 @@ static void CO_addObj(uint16_t objId, bool deviceType)
         break;
             
         //Producer Heartbeat period
-        case CO_OD_REG_HB_TIME:
+        case CO_OD_REG_HB_PRODUCER:
             
-            // Producer Heartbeat Time
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_HB_TIME, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)&hObjDataProdHbTime};
+              // Consumer Heartbeat 
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_HB_CONSUMER, 0, CO_OBJ_D___R_), CO_THB_CONS, (CO_DATA)1};
             
             //move the indext to the next free position in the array.
             index++;
+            
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_HB_CONSUMER, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)&CANScreenHbConsumer};
+            
+            //move the indext to the next free position in the array.
+            index++;      
+            
+            // Producer Heartbeat Time
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_HB_PRODUCER, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)&hObjDataProdHbTime};
+            
+            //move the indext to the next free position in the array.
+            index++;
+                  
             
         break;
             
@@ -1462,7 +1497,11 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WHEELS, 6, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&bObjmaxWheelSpeedPeriodUs};    
             //move to next OD index
             index++;
-        
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_CRUISE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCruiseControlState};    
+            //move to next OD index
+            index++;
+                                
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataFrontLightState};
             //move to next OD index
             index++;
@@ -1552,7 +1591,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigThrottleGetSetValue};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleGetSetValue};
             //move to next OD index
             index++;
             
@@ -1741,17 +1780,6 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCANScreenNotifier};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataExternalThrottle};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataExternalCruiseControl};
-            //move to next OD index
-            index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCanOpenSetAlgorithm};
             //move to next OD index
@@ -1846,4 +1874,96 @@ static void CO_GnrOdSetup(const uint16_t arraySetup, bool deviceType)
     //add the Object ID to the OD entrie.
     CO_addObj(arraySetup, deviceType);
     
+}
+
+
+/**
+  Callback that is called when the heartbeat consumer is in use
+*/
+void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId)
+{
+    
+    if (nodeId == CanScreenHB.NodeID) // Are we getting an change for the CAN screen heartbeat ?
+    {
+        CanScreenHB.bCANHeartBeatDelta = true;
+    
+        if (nmt->HbCons->Event >= 200) // uint8_t overflow protection
+        {
+            nmt->HbCons->Event = 1;
+        }
+    }
+}
+
+/**
+   Function used to setup the heartbeat  
+ */
+void CO_SetupCANHB(HeartBeatHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    
+    pHandle->CANHBSafeMinNbPulse = ((pHandle->HeartBeatTimeMS + (pHandle->HeartBeatTimeMS/2))/25);    
+}    
+
+/**
+   Function used to monitored the heartbeat  
+   made to be called every 25 ms in the CAN reoccuring function
+ */
+bool CO_CheckCANHB(HeartBeatHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    
+    if (pHandle->bCANHeartBeatDelta == true) // Did we get an call from the callback ?
+    {        
+        if (pHandle->pCANODHeartbeat->Event > pHandle->MaxNbMissedHB)
+        {
+               pHandle->bConnectionLost = true;             
+        }
+        else if (pHandle->pCANODHeartbeat->State != CO_OPERATIONAL)  // Then it should be a state change
+        {
+            pHandle->bConnectionLost = true;
+        }         
+        
+        pHandle->bCANHeartBeatDelta = false;        
+    }
+    
+    
+    if (pHandle->pCANODHeartbeat->Event > 0)
+    {
+        
+        if (pHandle->OldEventNb != pHandle->pCANODHeartbeat->Event) // Did the event number change ?
+        {
+           pHandle->OldEventNb = pHandle->pCANODHeartbeat->Event;
+           pHandle->SafetyCounter = 0;
+        }
+                    
+        if (pHandle->SafetyCounter < pHandle->CANHBSafeMinNbPulse)
+        {    
+            pHandle->SafetyCounter ++;
+        }
+        else // If we didn't get an event in 1.5x the delay of a heartbeat it means we are receiving the heartbeat as expected
+        {
+            pHandle->SafetyCounter = 0;
+            pHandle->pCANODHeartbeat->Event = 0;
+            pHandle->OldEventNb = 0;
+            
+            if (pHandle->bConnectionLost == true)
+            {
+                pHandle->bConnectionLost = false;
+            }
+        }
+    }
+   
+    // Is the CAN screen operational and are we receiving the heartbeat ? 
+    if (pHandle->bConnectionLost == false && pHandle->pCANODHeartbeat->State == CO_OPERATIONAL)
+    {
+        pHandle->bHBPresent = true;
+        VC_Errors_ClearError(SCREEN_COMM_ERROR);
+        return pHandle->bHBPresent;  
+    }
+    else
+    {
+        pHandle->bHBPresent = false;
+        VC_Errors_RaiseError(SCREEN_COMM_ERROR,HOLD_UNTIL_CLEARED);
+        return pHandle->bHBPresent;         
+    }
 }

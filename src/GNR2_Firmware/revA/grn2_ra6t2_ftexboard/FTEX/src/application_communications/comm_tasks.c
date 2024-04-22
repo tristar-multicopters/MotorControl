@@ -15,7 +15,7 @@
 #include "board_hardware.h"
 #include "uCAL_GPIO.h"
 
-#include "delay.h"
+#include "vc_errors_management.h"
 
 // CANOpen includes
 #include "co_core.h"
@@ -52,7 +52,6 @@ uint16_t hCommErrors = COMM_NO_ERROR;  /* This global variable holds all error f
 
 bool bCANOpenTaskBootUpCompleted = false;
 
-Delay_Handle_t CANScreenTimeout;
 /********* PRIVATE MEMBERS *************/
 
 extern osThreadId_t CANOpenTaskHandle;
@@ -380,19 +379,14 @@ static void UpdateObjectDictionnary(void *p_arg)
             if(CanVehiInterface_CheckCANScreenSetup()) // If we are allowed to have a CAN screen
             {
                 uint16_t ExternalThrottleVal = 0;
-                uint8_t  CANScreenNotifier = 0;
                 uint8_t  ExternalCruiseControlState = 0;
                 static uint8_t LastCANCruiseState = 0;
                 
-                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 0)),  pNode, &CANScreenNotifier, sizeof(uint8_t));
-                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 1)),  pNode, &ExternalThrottleVal, sizeof(uint16_t));
-                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 2)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t));
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 1)),  pNode, &ExternalThrottleVal, sizeof(uint16_t));
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_CRUISE, 0)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t));
                 
-                
-                if(CANScreenNotifier == 1)
-                {
-                    Delay_Reset(&CANScreenTimeout);
-                                        
+                if(CO_CheckCANHB(&CanScreenHB) == true)// Is the screen heart beat active ?
+                {                                       
                     // Keep the throttle value up to date
                     CanVehiInterface_UpdateExternalThrottle(&VCInterfaceHandle,ExternalThrottleVal);
                     
@@ -402,7 +396,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                         { 
                            // Force the change on CAN
                            ExternalCruiseControlState = 0;
-                           COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 2)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t)); 
+                           COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_CRUISE, 0)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t)); 
                         }
                         else
                         {
@@ -418,23 +412,18 @@ static void UpdateObjectDictionnary(void *p_arg)
                     { 
                         CanVehiInterface_DisengageCruiseControl(&VCInterfaceHandle);
                         LastCANCruiseState = 0;
-                    }
-                
-                    CANScreenNotifier = 0; // Update the notifier to acknowledge we received the new value
-                    COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 0)),  pNode, &CANScreenNotifier, sizeof(uint8_t));                    
+                    }                          
                 }  
+                // If we haven't received anything from the screen and the heartbeat overflowed
                 else if (ExternalThrottleVal > 0 || ExternalCruiseControlState == 1)
-                {
-                    if(Delay_Update(&CANScreenTimeout)) // If we haven't received anything from the screen and the timeout overflowed
-                    {
-                        CanVehiInterface_UpdateExternalThrottle(&VCInterfaceHandle,0);
-                        CanVehiInterface_DisengageCruiseControl(&VCInterfaceHandle);
+                {                    
+                    CanVehiInterface_UpdateExternalThrottle(&VCInterfaceHandle,0);
+                    CanVehiInterface_DisengageCruiseControl(&VCInterfaceHandle);
                         
-                        ExternalThrottleVal = 0;    // Reflect the change on CAN
-                        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 1)),  pNode, &ExternalThrottleVal, sizeof(uint16_t));
-                        ExternalCruiseControlState = 0;
-                        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 2)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t));
-                    }   
+                    ExternalThrottleVal = 0;    // Reflect the change on CAN
+                    COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 1)),  pNode, &ExternalThrottleVal, sizeof(uint16_t));
+                    ExternalCruiseControlState = 0;
+                    COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_CRUISE, 0)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t));                    
                 }
             }   
             
@@ -477,8 +466,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                 }                    
             }
             
-                       
-            
+                                  
             /**************Write the repesctive OD ID, updating the OD that us read by the IOT module using SDO.*************/
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, M1)), pNode, &hSpeed, sizeof(uint8_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 0 )), pNode, &hDCPWR, sizeof(uint16_t));
@@ -809,10 +797,8 @@ void Comm_BootUp(void)
             LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
         case UART_DISABLE:
             // If we don;t use the UART assume we have a CAN screen
-            Delay_Init(&CANScreenTimeout,25,MIL_SEC); // Setup the timeout delay
-            Delay_SetTime(&CANScreenTimeout,250,MIL_SEC);
             CanVehiInterface_SetupCANScreen(&VCInterfaceHandle);
-            
+            CO_SetupCANHB(&CanScreenHB);
             break;
         default:
             //Dont initialise the euart
@@ -850,15 +836,30 @@ __NO_RETURN void ProcessUARTFrames (void * pvParameter)
                     break;
             }
             
-            uCAL_UART_ClearTaskFlag(&UART0Handle); 
+            uCAL_UART_ClearTaskFlag(&UART0Handle);
+            
+            if (UART0Handle.UARTProtocol != UART_DISABLE)
+            {
+                VC_Errors_ClearError(SCREEN_COMM_ERROR);
+            }                
         }
         else // We reached the timeout
         {
-            if (UART0Handle.UARTProtocol == UART_CLOUD_5S) 
-            {              
-                Throttle_UpdateExternal(pVCI->pPowertrain->pThrottle, 0); // Make sure we set the throttle to 0
-                PWRT_ForceDisengageCruiseControl(pVCI->pPowertrain);      // Make sure we exit cruise control if we were using it when we lost connection
-            }
+            switch(UART0Handle.UARTProtocol)
+            {
+                case UART_CLOUD_5S:
+                    Throttle_UpdateExternal(pVCI->pPowertrain->pThrottle, 0); // Make sure we set the throttle to 0
+                    PWRT_ForceDisengageCruiseControl(pVCI->pPowertrain);      // Make sure we exit cruise control if we were using it when we lost connection
+                
+                case UART_KD718:
+                case UART_APT:
+                    
+                    VC_Errors_RaiseError(SCREEN_COMM_ERROR,HOLD_UNTIL_CLEARED);
+                    break;
+                case UART_LOG_HS:
+                case UART_DISABLE:
+                    break;                    
+            }                
         }              
     }
 }

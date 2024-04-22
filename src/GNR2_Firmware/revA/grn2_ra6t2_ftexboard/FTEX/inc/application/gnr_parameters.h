@@ -53,6 +53,7 @@
 #define GNR2_MASTER_NODE_ID           0x01                /* Node-ID of ganrunner master */
 #define IOT_NODE_ID                   0x02                /* Node-ID of the IOT module(configured in the IOT firmware)*/ 
 #define GNR2_SLAVE_NODE_ID            0x03                /* Node-ID of ganrunner slave */
+#define CAN_SCREEN_ID                 0x04  
 
 #define SWD_CONTROL_ENABLE            0                   /* Enable controlling motor directly from debugging interface with vehicle control layer */
 #define DEBUGMODE_MOTOR_CONTROL       0                   /* Disable vehicle control and communications to debug only motor control layer */
