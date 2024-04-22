@@ -86,6 +86,8 @@ MotorParameters_t MotorParameters =
         .bHallSensorsPlacement          = HALL_SENSORS_PLACEMENT,
         .bHallAveragingFifoDepth        = HALL_AVERAGING_FIFO_DEPTH,
         .hHallPhaseShift                = HALL_PHASE_SHIFT,
+        
+        .bEnVibrationError              = EN_VIBRATION_ERROR,
     },
     .WheelSpeedSensorParameters =
     {

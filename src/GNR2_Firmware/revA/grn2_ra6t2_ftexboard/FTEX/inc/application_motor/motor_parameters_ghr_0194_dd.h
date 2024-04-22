@@ -67,7 +67,6 @@
 #define MEC_SPEED_FILTER_BUTTERWORTH_ALPHA  16.91F              // Alpha constant to configure Butterworth filter for mechanical speed filtering
 #define MEC_SPEED_FILTER_BUTTERWORTH_BETA   -14.91F             // Beta constant to configure Butterworth filter for mechanical speed filtering
 
-
 /************************** Temp Limit Parameters  ************************/
 
 #define MOTOR_TEMP_SENSOR_TYPE              VIRTUAL_SENSOR      // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
@@ -84,6 +83,8 @@
                                                                 // It can be either DEGREES_120 or DEGREES_60
 #define HALL_AVERAGING_FIFO_DEPTH           8                   // Depth of the FIFO used to average Hall sensor values
 #define HALL_PHASE_SHIFT                    60                  // Electrical phase shift in degrees between the low to high transition of signal H1 and the zero crossing of the Bemf induced between phase A and B
+
+#define EN_VIBRATION_ERROR                  false               // Enable or disable motor vibration error
 
 /************** Wheel Speed Sensor Parameters  *****************************/
 

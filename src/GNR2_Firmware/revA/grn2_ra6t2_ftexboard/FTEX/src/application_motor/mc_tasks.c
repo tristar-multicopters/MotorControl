@@ -891,7 +891,7 @@ uint8_t MC_HighFrequencyTask(void)
         
         /* here the code is checking last 16 records of direction, 
         if all last 16 records show vibration, then rasie the stuck protection error */
-        if ((HallPosSensorM1.wDirectionChangePattern & 0xFFFF) == VIBRATION_PATTERN)
+        if (((HallPosSensorM1.wDirectionChangePattern & 0xFFFF) == VIBRATION_PATTERN) && (MotorParameters.HallSensorParameters.bEnVibrationError == true))
         {
             MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }

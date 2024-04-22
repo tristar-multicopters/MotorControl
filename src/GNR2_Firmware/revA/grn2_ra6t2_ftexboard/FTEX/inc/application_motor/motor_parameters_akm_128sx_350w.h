@@ -90,6 +90,8 @@ These variables are used to configure the motor within the smart config tool.
                                                             // It can be either DEGREES_120 or DEGREES_60
 #define HALL_AVERAGING_FIFO_DEPTH           8               // Depth of the FIFO used to
 #define HALL_PHASE_SHIFT                    60              // Electrical phase shift in degree between the low to high
+
+#define EN_VIBRATION_ERROR                  false           // Enable or disable motor vibration error
                                       
 /************** Wheel Speed Sensor Parameters  *****************************/
 

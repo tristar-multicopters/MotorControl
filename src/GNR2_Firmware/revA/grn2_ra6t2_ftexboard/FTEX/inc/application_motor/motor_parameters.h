@@ -98,6 +98,8 @@ typedef struct
     uint8_t bHallAveragingFifoDepth;
     int16_t hHallPhaseShift;
     
+    uint8_t bEnVibrationError;
+    
 } HallSensorParameters_t;
 
 //Wheel speed sensor parameters
