@@ -429,10 +429,7 @@ extern "C" {
 //OD ID used to send an external throttle value to the vehicle
 // this object has 2 subindex
 //
-// 0 -> CAN screen Notifier 0 - 1
-// 1 -> External input for the throttle 0 - 65535
-// 2 -> External input for cruise control 0 - 1
-// 3 -> External input for switch between torque/cadence(algorithm choise).
+// 0 -> External input for switch between torque/cadence(algorithm choise)
 #define CO_OD_REG_CAN_SCREEN                   0x202B
 
 // Available                                   0x202C

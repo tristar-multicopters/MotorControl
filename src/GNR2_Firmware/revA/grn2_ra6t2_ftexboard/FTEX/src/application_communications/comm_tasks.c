@@ -320,7 +320,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             uint8_t CanOpenAlgorithm = 0;
             
             //read and check if PAS algorithm was changed by CANOPEN interface.
-            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 3)),  pNode, &CanOpenAlgorithm, sizeof(uint8_t));
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_SCREEN, 0)),  pNode, &CanOpenAlgorithm, sizeof(uint8_t));
             
             //verify if PAS algorithm must to be changed.
             if (((CanOpenAlgorithm  == TorqueSensorUse) || ((CanOpenAlgorithm  == CadenceSensorUse))) && (CanOpenAlgorithm != CanOpenSetAlgorithm) )

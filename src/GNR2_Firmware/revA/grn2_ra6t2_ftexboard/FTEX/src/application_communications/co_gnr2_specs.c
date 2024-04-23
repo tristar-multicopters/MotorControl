@@ -1781,7 +1781,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCanOpenSetAlgorithm};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCanOpenSetAlgorithm};
             //move to next OD index
             index++;
             
