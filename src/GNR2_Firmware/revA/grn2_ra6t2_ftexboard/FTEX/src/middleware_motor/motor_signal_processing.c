@@ -119,13 +119,13 @@ static void extractWheelSpeed(uint16_t signal)
     if ((signal < processingMotorSignal.minSignalThreshold) && (lowLevelDtectionFlag == false))
     {
         lowLevelDtectionFlag = true;
+        wheelSpeedPeriod = 0;
     }
     
     //
     if ((signal >= processingMotorSignal.minSignalThreshold) && (lowLevelDtectionFlag == true) && (startMeasureFlag == false))
     {
         startMeasureFlag = true;
-        wheelSpeedPeriod = 0;
     }
     
     //increment the period
@@ -277,7 +277,7 @@ uint8_t getMixedSignalRegConvIndex(void)
 
 float getExtractedWheelSpeed(void)
 {
-    return (((float)processingMotorSignal.wheelSpeedPeriod)*1.33f)/1000000.0f;
+    return (((float)processingMotorSignal.wheelSpeedPeriod)*1.0f)/1000000.0f;
 }
 
 /**

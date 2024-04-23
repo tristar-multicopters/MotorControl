@@ -33,7 +33,7 @@
 #define TEMPERATURE_MAX_PERIOD_US  1000000    
 
 //define the maximum timeout to considere the wheel speed zero.
-#define MAX_WHEELSPEED_PERIOD_US   2000000     
+#define MAX_WHEELSPEED_PERIOD_US   1000000     
 
 //this value is a raw value. the value range is between 65535 until 0.
 //this is the allowed minimum value to the processingMotorMixedSignal

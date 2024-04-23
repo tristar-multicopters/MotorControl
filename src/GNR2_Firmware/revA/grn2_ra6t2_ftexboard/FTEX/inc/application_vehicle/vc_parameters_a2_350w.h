@@ -56,14 +56,14 @@
 
 //Used to chose the pas detection mode on startup, torque or/and cadence,
 //torque only or cadence only.
-#define PAS_DETECTIONSTARTUP_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
+#define PAS_DETECTIONSTARTUP_ALGORITHM      HybridAndSensorUse /*noSensorUse = 0,
                                                             TorqueSensorUse,    // Torque sensor use define
                                                             CadenceSensorUse,   // Cadence sensor use define
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
 //Used to chose the pas detection mode on running, torque or/and cadence,
 //torque only or cadence only.
-#define PAS_DETECTIONRUNNING_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
+#define PAS_DETECTIONRUNNING_ALGORITHM      HybridOrSensorUse /*noSensorUse = 0,
                                                             TorqueSensorUse,    // Torque sensor use define
                                                             CadenceSensorUse,   // Cadence sensor use define
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
