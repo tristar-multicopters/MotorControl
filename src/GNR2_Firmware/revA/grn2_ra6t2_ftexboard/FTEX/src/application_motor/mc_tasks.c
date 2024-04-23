@@ -363,10 +363,6 @@ void MediumFrequencyTaskM1(void)
             pPWMCurrFdbk[M1]->IbFilter.pIIRFAInstance =NULL;
         }
  #endif    
-        if (MCInterface->bDriverEn == true)
-        {
-            Driver_Disable(&MCInterface->bDriverEn);
-        }
         
         //check for whether motor temp is in foldback region
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
@@ -438,7 +434,7 @@ void MediumFrequencyTaskM1(void)
     case M_START_RUN:
         FOC_InitAdditionalMethods(M1);
         FOC_CalcCurrRef(M1);
-
+        Driver_Enable(&MCInterface->bDriverEn);
         MCStateMachine_NextState(&MCStateMachine[M1], M_RUN);
         SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(pSpeedTorqCtrl[M1]); /* Init the reference speed to current speed */
         MCInterface_ExecBufferedCommands(oMCInterface[M1]);                /* Exec the speed ramp after changing of the speed sensor */
@@ -939,11 +935,6 @@ inline uint32_t FOC_CurrControllerM1(void)
     uint32_t wCodeError = 0;
     SpdPosFdbkHandle_t *speedHandle;
     
-    if (MCInterface->bDriverEn == false)
-    {
-        Driver_Enable(&MCInterface->bDriverEn);
-    }
-    
     speedHandle = SpdTorqCtrl_GetSpeedSensor(pSpeedTorqCtrl[M1]);
     hElAngle = SpdPosFdbk_GetElAngle(speedHandle);
 
@@ -981,22 +972,16 @@ inline uint32_t FOC_CurrControllerM1(void)
     if (pSpeedTorqCtrl[M1]->motorType == DIRECT_DRIVE)     
     {      
 
-      if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
+        if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
         {
             
-          if (abs(pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit) < RESET_SPEED)
-          {
+            if (abs(pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit) < RESET_SPEED)
+            {
             
-            Driver_Disable(&MCInterface->bDriverEn);
-            PID_SetIntegralTerm(pPIDIq[M1], (int32_t)0);
-            PID_SetIntegralTerm(pPIDId[M1], (int32_t)0);
-          }
+                PID_SetIntegralTerm(pPIDIq[M1], (int32_t)0);
+                PID_SetIntegralTerm(pPIDId[M1], (int32_t)0);
+            }
           
-        }
-        else if ((MCInterface->bDriverEn == false) && (MCInterface->hFinalTorque != 0))
-        {
-            Driver_Enable(&MCInterface->bDriverEn);
-            //FOC_InitAdditionalMethods(M1);
         }
       }
         
