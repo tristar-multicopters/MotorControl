@@ -78,6 +78,7 @@ static void UpdateObjectDictionnary(void *p_arg)
      int16_t hMotorTemp;
      int16_t hHeatsinkTemp;
      uint8_t bSOC;
+    uint8_t hBrakeStatus;
     uint32_t hErrorState;
     uint16_t hBusVoltage;
     // Read and write
@@ -108,6 +109,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         bSOC          = CanVehiInterface_GetVehicleSOC(pVCI);
         hErrorState   = CanVehiInterface_GetVehicleCurrentFaults(pVCI);
         hBusVoltage   = CanVehiInterface_GetBusVoltage(pVCI);
+        hBrakeStatus  = CanVehiInterface_GetBrakeStatus(pVCI);
         
         bPAS[VEHICLE_PARAM]             = CanVehiInterface_GetVehiclePAS(pVCI); 
         hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
@@ -486,7 +488,9 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 0)),pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));   
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
+
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BRAKE, 0)), pNode, &hBrakeStatus, sizeof(uint8_t));
             
             //Update pasLevelMinTorque
             CanVehiInterface_GetPasLevelMinTorque(&VCInterfaceHandle, pasLevelMinTorque);

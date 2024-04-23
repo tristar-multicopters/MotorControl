@@ -432,7 +432,12 @@ extern "C" {
 // 0 -> External input for switch between torque/cadence(algorithm choise)
 #define CO_OD_REG_CAN_SCREEN                   0x202B
 
-// Available                                   0x202C
+//OD ID used to get the current brake status
+//
+// 0 -> Brake status 0 - 1
+// 0 = Brake is not pressed/released
+// 1 = Brake is pressed
+#define CO_OD_REG_BRAKE                        0x202C
 
 //OD ID used to configure speed values for each filter band.
 // this object has 2 subindex

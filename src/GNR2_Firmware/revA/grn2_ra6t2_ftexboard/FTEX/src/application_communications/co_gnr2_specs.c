@@ -340,6 +340,8 @@ uint8_t bObjDataWalkModeAccelRampType       = 0;
 //variable associated with CO_OD_REG_WALK_MODE_SPEED.
 uint16_t bObjDataWalkModeAccelRampArg1      = 0;
 
+//variable associated with CO_OD_REG_BRAKE.
+uint8_t bObjDataBrakeStatus                 = 0;
 
 //variable associated with CO_OD_REG_BATTERY_VOLTAGE 0
 uint16_t bObjDataBatteryFullVoltage         = 0;
@@ -1782,6 +1784,10 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCanOpenSetAlgorithm};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_BRAKE, 0, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&bObjDataBrakeStatus};
             //move to next OD index
             index++;
             

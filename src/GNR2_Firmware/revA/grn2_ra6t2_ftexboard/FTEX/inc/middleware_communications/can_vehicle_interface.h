@@ -111,6 +111,13 @@ uint16_t CanVehiInterface_GetMaxDCPWR (VCI_Handle_t * pHandle);
 uint32_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle);
 
 /**
+  @brief  Get Current Break Status
+  @param  VCI_Handle_t handle
+  @return Get Current Brake Status in uint8_t format
+*/
+uint8_t CanVehiInterface_GetBrakeStatus (VCI_Handle_t * pHandle);
+
+/**
   @brief  Get FW Version function
   @param  None
   @return Firmware Version in uint16_t format

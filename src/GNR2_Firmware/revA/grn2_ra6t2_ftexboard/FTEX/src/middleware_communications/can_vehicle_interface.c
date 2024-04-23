@@ -141,6 +141,16 @@ uint32_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
 }
 
 /**
+ *  Getbit map of vehicle current faults
+ */
+uint8_t CanVehiInterface_GetBrakeStatus (VCI_Handle_t * pHandle)
+{   
+    ASSERT(pHandle != NULL);    
+    uint8_t brakeStatus = (uint8_t)BRK_IsPressed(pHandle->pPowertrain->pBrake);
+    return brakeStatus;
+}
+
+/**
  *  Get vehicle firmware version
  */
 uint16_t CanVehiInterface_GetVehicleFwVersion(void)
