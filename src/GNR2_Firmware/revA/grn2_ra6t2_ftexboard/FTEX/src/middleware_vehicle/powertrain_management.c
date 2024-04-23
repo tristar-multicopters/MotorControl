@@ -1521,3 +1521,10 @@ void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed)
     pHandle->sParameters.ScreenMaxSpeed = aSpeed;
 }
 
+/**
+ *  Get the bus voltage
+ */
+uint16_t PWRT_GetBusVoltagex100(PWRT_Handle_t * pHandle)
+{
+    return MDI_GetBusVoltageInVoltx100(pHandle->pMDI->pMCI);
+}

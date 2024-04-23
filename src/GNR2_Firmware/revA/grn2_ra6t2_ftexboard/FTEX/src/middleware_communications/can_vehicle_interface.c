@@ -370,3 +370,10 @@ void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAl
     PedalAssist_SetPASAlgorithm(pHandle->pPowertrain->pPAS, aPASAlgo);
 }    
 
+/**
+  Get bus voltage
+ */
+uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle)
+{
+    return PWRT_GetBusVoltagex100(pHandle->pPowertrain);
+}

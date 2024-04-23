@@ -249,5 +249,12 @@ bool CanVehiInterface_GetCruiseControlState(VCI_Handle_t * pHandle);
   @return none
  */
 void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
-    
+
+/**
+  @brief Get bus voltage
+  @param  pHandle: handle of the vehicle
+  @return bus voltage
+ */
+uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle);
+
 #endif /* __CAN_IOT_COMM_H */
