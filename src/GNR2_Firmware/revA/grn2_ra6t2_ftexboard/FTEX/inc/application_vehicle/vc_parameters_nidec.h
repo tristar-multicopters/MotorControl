@@ -78,7 +78,7 @@
 #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
 #define PAS_WALKMODE_OVER_THROTTLE          true       // If set to true walk mode has higher priority than throttle
 
-#define VEHICLE_TOP_SPEED_KMH   45    
+//#define VEHICLE_TOP_SPEED_KMH   45    
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 

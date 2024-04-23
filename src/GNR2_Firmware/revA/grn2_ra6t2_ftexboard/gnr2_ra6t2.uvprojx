@@ -485,6 +485,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_milebox.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_milebox.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
@@ -2650,6 +2655,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_milebox.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_milebox.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
@@ -4762,6 +4772,11 @@
               <FileName>vc_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_milebox.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_milebox.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_nidec.h</FileName>
@@ -6929,6 +6944,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_milebox.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_milebox.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
@@ -9094,6 +9114,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_milebox.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_milebox.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_nidec.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_nidec.h</FilePath>
@@ -11206,6 +11231,11 @@
               <FileName>vc_parameters_e_cells.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_e_cells.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_milebox.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_milebox.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_nidec.h</FileName>
