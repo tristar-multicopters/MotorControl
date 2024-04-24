@@ -185,6 +185,7 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.bTorqueGain[9] = PAS_9_TORQUE_GAIN,
     .sParameters.hMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
     .sParameters.WalkmodeOverThrottle = PAS_WALKMODE_OVER_THROTTLE,
+    .sParameters.PASOverThrottle = PAS_OVER_THROTTLE,
     .sParameters.PASMaxSpeed[0] = PAS_LEVEL_SPEED_0,
     .sParameters.PASMaxSpeed[1] = PAS_LEVEL_SPEED_1,
     .sParameters.PASMaxSpeed[2] = PAS_LEVEL_SPEED_2,

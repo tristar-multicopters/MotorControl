@@ -1127,4 +1127,22 @@ uint32_t UserConfigTask_GetMaxWheelSpeedPeriodUs(void);
 */
 void UserConfigTask_UpdateMaxWheelSpeedPeriodUs(uint32_t value);
 
+/**
+  @brief Function to get the PASOverThrottle, used to know what is 
+         higher priority between PAS and throttle
+  
+  @param void
+  @return uint8_t 1 to activate, 0 to desactivate
+*/
+uint8_t UserConfigTask_GetPASOverThrottle(void);
+
+/**
+  @brief Function to update the PASOverThrottle, used to know what is 
+         higher priority between PAS and throttle
+  
+  @param uint8_t 1 to activate, 0 to desactivate
+  @return none.
+*/
+void UserConfigTask_UpdatePASOverThrottle(uint8_t value);
+
 #endif

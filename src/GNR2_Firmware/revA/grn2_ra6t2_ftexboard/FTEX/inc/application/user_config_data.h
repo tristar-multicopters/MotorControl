@@ -102,6 +102,7 @@ typedef struct
 {
     uint8_t NumberOfPasLevels;
     uint8_t PasMaxTorqueRatio;
+    uint8_t PASOverThrottle;
     PAS_Startup_Detection_t PAS_Startup_Detection;
     PAS_Running_Detection_t PAS_Running_Detection;
     uint16_t TorqueSensorMultiplier[9];
