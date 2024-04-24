@@ -516,6 +516,10 @@
 #ifndef PAS_OVER_THROTTLE
     #define PAS_OVER_THROTTLE             false
 #endif
+
+#ifndef THROTTLE_TOP_SPEED
+    #define THROTTLE_TOP_SPEED VEHICLE_TOP_SPEED_KMH
+#endif
     
 #endif /*__VC_PARAMETERS_H*/
 
