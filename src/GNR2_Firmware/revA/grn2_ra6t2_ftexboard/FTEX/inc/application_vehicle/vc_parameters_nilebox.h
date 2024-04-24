@@ -97,6 +97,7 @@
 
 #define PAS_WALK_POWER_PERCENT                 70              // PAS walk has a ratio of 70%
 #define PAS_WALKMODE_OVER_THROTTLE           true            // If set to true walk mode has higher priority than throttle
+#define PAS_OVER_THROTTLE                    true
 
 #define PAS_LEVEL_SPEED_1  VEHICLE_TOP_SPEED_KMH
 #define PAS_LEVEL_SPEED_2  VEHICLE_TOP_SPEED_KMH
