@@ -259,6 +259,7 @@ void MC_BootUp(void)
     R_AID_ConfigSetVolterrCrntStep(10);       
     pAutoTune.TuningStatus=0;
     pAutoTune.bStartTuning=false;
+    pAutoTune.bEnAutotune = MotorParameters.bAutotuneEnable;
     MCTask_InitTuning();
     #endif
     
@@ -352,8 +353,9 @@ void MediumFrequencyTaskM1(void)
         }
 #endif
 #if AUTOTUNE_ENABLE
-        if ((MotorParameters.bAutotuneEnable == true) && (pAutoTune.bStartTuning == 1))
+        if ((pAutoTune.bEnAutotune == true) && (pAutoTune.bStartTuning == 1))
         {      
+            MotorParameters.bAutotuneEnable = false;
             PWMInsulCurrSensorFdbk_TurnOnLowSides(pPWMCurrFdbk[M1]);
             PWMInsulCurrSensorFdbk_SwitchOnPWM(pPWMCurrFdbk[M1]);            
             MCInterface_StartMotorTuning(oMCInterface[M1]);
@@ -583,6 +585,7 @@ void MediumFrequencyTaskM1(void)
                 pAutoTune.TuningStatus = TUNING_DONE;
             }
             pAutoTune.bStartTuning = false;
+            pAutoTune.bEnAutotune = false;
             MCStateMachine_NextState(&MCStateMachine[M1], M_IDLE);
         }
         break;
@@ -857,7 +860,7 @@ uint8_t MC_HighFrequencyTask(void)
     RotorPosObs_CalcElAngle(&RotorPosObsM1, 0);
     
 #if AUTOTUNE_ENABLE
-    if(MotorParameters.bAutotuneEnable == true)
+    if(pAutoTune.bEnAutotune == true)
     {
         Autotune_CalcPhaseCurrents(pPWMCurrFdbk[M1]);
         Driver_Enable(&MCInterface->bDriverEn);
