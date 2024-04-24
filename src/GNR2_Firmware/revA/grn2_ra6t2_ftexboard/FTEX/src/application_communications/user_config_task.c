@@ -36,6 +36,7 @@ static User_ConfigData_t userConfigData =
     .vehicle = VEHICLE_SELECTION,
     .PAS_ConfigData.NumberOfPasLevels = PAS_MAX_LEVEL,
     .PAS_ConfigData.PasMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
+    .PAS_ConfigData.PASOverThrottle = PAS_OVER_THROTTLE,
     .PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupSpeed = PTS_OFFSET_STARTUP_SPEED_KMH,
     .PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupThreshold = PTS_OFFSET_PTS2TORQUE_STARTUP,
     .PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupNumbPulses = PEDALSPEEDSENSOR_MIN_PULSE_STARTUP,
@@ -432,7 +433,7 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pPAS->sParameters.walkModeTorqueRatio = UserConfigTask_GetWalkmodeMaxTorque();
     paPowertrain->pPAS->sParameters.PasWalkmodeRamp.RampType = UserConfigTask_GetWalkmodeAccelRampType();
     paPowertrain->pPAS->sParameters.PasWalkmodeRamp.LinearParameters.Alpha =  UserConfigTask_GetWalkmodeAccelRampArg1();
-
+    paPowertrain->pPAS->sParameters.PASOverThrottle = UserConfigTask_GetPASOverThrottle();
     
     //update vehicle max speed(VEHICLE_TOP_SPEED_KMH).
     paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
@@ -2110,4 +2111,36 @@ uint32_t UserConfigTask_GetMaxWheelSpeedPeriodUs(void)
 void UserConfigTask_UpdateMaxWheelSpeedPeriodUs(uint32_t value)
 {
     userConfigData.Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = value; 
+}
+
+
+/**
+  @brief Function to get the PASOverThrottled, used to know what is 
+         higher priority between PAS and throttle
+  
+  @param void
+  @return uint8_t 1 to activate, 0 to desactivate
+*/
+uint8_t UserConfigTask_GetPASOverThrottle(void)
+{
+    return userConfigData.PAS_ConfigData.PASOverThrottle; 
+}
+
+/**
+  @brief Function to update the PASOverThrottle, used to know what is 
+         higher priority between PAS and throttle
+  
+  @param uint8_t 1 to activate, 0 to desactivate
+  @return none.
+*/
+void UserConfigTask_UpdatePASOverThrottle(uint8_t value)
+{
+    if ( value > 1)
+    {
+        userConfigData.PAS_ConfigData.PASOverThrottle = 1;
+    }
+    else
+    {
+        userConfigData.PAS_ConfigData.PASOverThrottle = value;    
+    }             
 }

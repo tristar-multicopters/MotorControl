@@ -78,7 +78,7 @@ static void UpdateObjectDictionnary(void *p_arg)
      int16_t hMotorTemp;
      int16_t hHeatsinkTemp;
      uint8_t bSOC;
-    uint8_t hBrakeStatus;
+    uint8_t  hBrakeStatus;
     uint32_t hErrorState;
     uint16_t hBusVoltage;
     // Read and write
@@ -544,6 +544,8 @@ static void UpdateObjectDictionnary(void *p_arg)
             uint8_t configPasDecelRampTypes[9];
             uint16_t configPasDecelRampArg1[9];
             
+            uint8_t configPasOverThrottle;
+            
             uint8_t  configWalkmodeMaxTorque;
             uint8_t  configWalkmodeAccelRampType;
             uint16_t configWalkmodeAccelRampArg1;
@@ -601,7 +603,9 @@ static void UpdateObjectDictionnary(void *p_arg)
                     COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DECEL_RAMP, P1)), pNode, &configPasDecelRampArg1[n], sizeof(uint16_t));                        
                                                                  
                  }
-        
+                
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_PAS_OVER_THROTTLE, 0)), pNode, &configPasOverThrottle, sizeof(uint8_t));
+                 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 1)), pNode, &configWalkmodeMaxTorque, sizeof(uint8_t));
@@ -682,6 +686,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                     UserConfigTask_UpdatePasDecelRampType(n,configPasDecelRampTypes[n-1]);
                     UserConfigTask_UpdatePasDecelRampArg1(n,configPasDecelRampArg1[n-1]);                      
                  }
+                 
+                 UserConfigTask_UpdatePASOverThrottle(configPasOverThrottle);
                  
                  UserConfigTask_UpdateBikeMaxSpeed(maxSpeed);
                  UserConfigTask_UpdateWalkmodeSpeed(walkModeSpeed);
@@ -998,6 +1004,8 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
                                               UserConfigTask_GetPasDecelRampArg1(PAS_6),UserConfigTask_GetPasDecelRampArg1(PAS_7),
                                               UserConfigTask_GetPasDecelRampArg1(PAS_8),UserConfigTask_GetPasDecelRampArg1(PAS_9)};
         
+        uint8_t  configPasOverThrottle       = UserConfigTask_GetPASOverThrottle();
+                                              
         uint8_t  configMaxSpeed              = UserConfigTask_GetBikeMaxSpeed();
         uint8_t  configWalkModeSpeed         = UserConfigTask_GetWalkmodeSpeed(); 
         uint8_t  configWalkmodeMaxTorque     = UserConfigTask_GetWalkmodeMaxTorque();
@@ -1094,6 +1102,8 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DECEL_RAMP, P0)), pNode, &configPasDecelRampTypes[n], sizeof(uint8_t)); 
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DECEL_RAMP, P1)), pNode, &configPasDecelRampArg1[n], sizeof(uint16_t));                        
         }
+
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_PAS_OVER_THROTTLE, 0)), pNode, &configPasOverThrottle, sizeof(uint8_t)); 
         
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)),       pNode, &configMaxSpeed, sizeof(uint8_t));                                 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &configWalkModeSpeed, sizeof(uint8_t)); 

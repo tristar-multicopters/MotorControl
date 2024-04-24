@@ -513,5 +513,9 @@
     #define THROTTLE_BLOCK_OFF            false        //If set to true, the throttle will be blocked.
 #endif
     
+#ifndef PAS_OVER_THROTTLE
+    #define PAS_OVER_THROTTLE             false
+#endif
+    
 #endif /*__VC_PARAMETERS_H*/
 

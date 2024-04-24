@@ -181,8 +181,15 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
            of the parameter WalkmodeOverThrottle  */    
                  
             /* Using PAS or walk mode */
-        if ((((PedalAssist_IsPASDetected(pHandle->pPAS) || (hAux < lastTorque)) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
-             (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (!Throttle_IsThrottleDetected(pHandle->pThrottle) || pHandle->pPAS->sParameters.WalkmodeOverThrottle))))
+        
+        bool ThrottleDetected = Throttle_IsThrottleDetected(pHandle->pThrottle);
+        bool PASDetected      = PedalAssist_IsPASDetected(pHandle->pPAS);
+        bool WalkDetected     = PedalAssist_IsWalkModeDetected(pHandle->pPAS);
+        bool WalkOverThrottle = pHandle->pPAS->sParameters.WalkmodeOverThrottle;
+        bool PASOverThrottle  = pHandle->pPAS->sParameters.PASOverThrottle;
+        
+        if (((PASDetected || (hAux < lastTorque)) && (!ThrottleDetected || PASOverThrottle)) || 
+             (WalkDetected && (!ThrottleDetected || WalkOverThrottle)))
         {             
             //get the last torque value.
             lastTorque = hAux;
@@ -1132,9 +1139,14 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
        Conditions are 
         - PAS Detetect & No throttle 
         - Walk Mode detected & Walk Mode over Throttle detected | No Throttle detected */
-        
-    if ((PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) || 
-        (PedalAssist_IsWalkModeDetected(pHandle->pPAS) && (pHandle->pPAS->sParameters.WalkmodeOverThrottle || !Throttle_IsThrottleDetected(pHandle->pThrottle))))
+    bool ThrottleDetected = Throttle_IsThrottleDetected(pHandle->pThrottle);
+    bool PASDetected      = PedalAssist_IsPASDetected(pHandle->pPAS);
+    bool WalkDetected     = PedalAssist_IsWalkModeDetected(pHandle->pPAS);
+    bool WalkOverThrottle = pHandle->pPAS->sParameters.WalkmodeOverThrottle;
+    bool PASOverThrottle  = pHandle->pPAS->sParameters.PASOverThrottle;
+    
+    if ((PASDetected  && (!ThrottleDetected || PASOverThrottle)) || 
+        (WalkDetected && (!ThrottleDetected || WalkOverThrottle)))
     {
         PASWasDetected = true;
                

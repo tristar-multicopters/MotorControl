@@ -471,6 +471,9 @@ extern "C" {
 //     Torque filter band 2 when speed is above the speed torque band.
 #define CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED   0x202E
 
+//OD ID to change the priority between PAS and throttle
+#define CO_OD_CONFIG_PAS_OVER_THROTTLE         0x202F
+
 //OD ID will be used to
 // receive data and commands during a firmware update.
 // the GNR doesn't have enough memory to receive

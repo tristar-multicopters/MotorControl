@@ -68,7 +68,8 @@ typedef struct
     int16_t  hMaxTorqueRatio;               // PAS maximum torque ratio
     
     bool WalkmodeOverThrottle;              // Flag used to decide if walk mode has higher priority than throttle          
-
+    bool PASOverThrottle;                   // Flag used to decide if pas has higher priority than throttle
+    
     uint8_t PASMaxSpeed[10];                  // Max speed to each PAS level.
     uint8_t PASMinTorqRatiosInPercentage[10]; // Min PAS Torque ratio in % for each level
     uint8_t PASMaxTorqRatiosInPercentage[10]; // Max PAS Torque ratio in % for each level
