@@ -440,14 +440,15 @@ uint8_t  bObjDataConfigThrottleAccelRampType  = 0;
 //variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 7
 uint16_t  bObjDataConfigThrottleAccelRampArg1 = 0;
 
+//variable associated with CO_OD_REG_CONTROLLER_THROTTLE subindex 8
+uint8_t bObjDataConfigPASOverThrottle = 0;
+
 //variable associated with CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER.
 uint16_t bObjDataConfigSpeedForTorqueFilter[2]    = {0};
 
 //variable associated with CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED.
 uint16_t bObjDataConfigTorqueFilterForSpeed[6]    = {0};
 
-//variable associated with CO_OD_CONFIG_PAS_OVER_THROTTLE
-uint8_t bObjDataConfigPASOverThrottle = 0;
 
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
@@ -1619,11 +1620,15 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigThrottleAccelRampType};
             //move to next OD index
             index++;
-            
+                        
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 7, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigThrottleAccelRampArg1};
             //move to next OD index
             index++;
             
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigPASOverThrottle};
+            //move to next OD index
+            index++;
+                        
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueRunningThreshold};
             //move to next OD index
             index++;
@@ -1823,10 +1828,6 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataConfigTorqueFilterForSpeed[5]};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CONFIG_PAS_OVER_THROTTLE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigPASOverThrottle};
             //move to next OD index
             index++;
                         

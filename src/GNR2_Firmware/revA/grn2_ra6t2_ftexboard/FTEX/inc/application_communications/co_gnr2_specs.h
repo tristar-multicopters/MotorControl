@@ -383,6 +383,7 @@ extern "C" {
 // 5 -> Throttle Max Speed
 // 6 -> Throttle Acceleration ramp type 
 // 7 -> Throttle Acceleration ramp argument 1 
+// 8 -> PAS over throttle
 #define CO_OD_REG_CONTROLLER_THROTTLE          0x2027
 
 //OD ID used to setup some PAS parameters on running condition.
@@ -471,8 +472,6 @@ extern "C" {
 //     Torque filter band 2 when speed is above the speed torque band.
 #define CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED   0x202E
 
-//OD ID to change the priority between PAS and throttle
-#define CO_OD_CONFIG_PAS_OVER_THROTTLE         0x202F
 
 //OD ID will be used to
 // receive data and commands during a firmware update.
