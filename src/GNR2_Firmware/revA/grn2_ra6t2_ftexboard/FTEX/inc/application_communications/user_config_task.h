@@ -1019,17 +1019,6 @@ uint16_t UserConfigTask_GetPasDecelRampArg1(uint8_t pasLevel);
 void UserConfigTask_UpdatePasDecelRampArg1(uint8_t pasLevel, uint16_t arg1);
 
 /**
-  @brief Function used to calculate a CRC 16 type using the same polynom 
-  used by the bluetooth protocol.CCITT 16 bits polynom.
-  
-  @param uint8_t * data pointer to the data buffer where the CRC must be done.
-  @param uint8_t length the length of the data to be calculated by the CRC algorithm.
-  @return uint16_t return the calculated CRC.
-
-*/
-uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length);
-
-/**
   @brief Function to get Throttle BlockOff Value
   read from data flash memory.
   
@@ -1127,6 +1116,22 @@ uint32_t UserConfigTask_GetMaxWheelSpeedPeriodUs(void);
 */
 void UserConfigTask_UpdateMaxWheelSpeedPeriodUs(uint32_t value);
 
+/*
+  @brief Function to get the MotorRpm, the current rpm of the motor.
+  
+  @param void
+  @return int16_t value is th current motor rpm
+*/
+int16_t UserConfigTask_GetMotorRpm(VCI_Handle_t * pVController);
+
+/**
+  @brief Function to get the MotorRpmWithGearRatio, the current rpm of the motor
+         with the gear rato.
+  @param void
+  @return int16_t value is th current motor rpm with the gear ratio
+*/
+int16_t UserConfigTask_GetMotorRpmWithGearRatio(VCI_Handle_t * pVController);
+
 /**
   @brief Function to get the PASOverThrottle, used to know what is 
          higher priority between PAS and throttle
@@ -1144,5 +1149,16 @@ uint8_t UserConfigTask_GetPASOverThrottle(void);
   @return none.
 */
 void UserConfigTask_UpdatePASOverThrottle(uint8_t value);
+
+/**
+  @brief Function used to calculate a CRC 16 type using the same polynom 
+  used by the bluetooth protocol.CCITT 16 bits polynom.
+  
+  @param uint8_t * data pointer to the data buffer where the CRC must be done.
+  @param uint8_t length the length of the data to be calculated by the CRC algorithm.
+  @return uint16_t return the calculated CRC.
+
+*/
+uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length);
 
 #endif

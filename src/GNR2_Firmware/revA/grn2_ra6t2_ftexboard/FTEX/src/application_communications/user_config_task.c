@@ -155,7 +155,6 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
     .Screen_ConfigData.TailLightDefault = POWERTRAIN_TAILLIGHT_DEFAULT,
     .Screen_ConfigData.TailLightBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,
-    .crc = 0x0000,
     .Screen_ConfigData.Throttle_ConfigData.ThrottleBlock = THROTTLE_BLOCK_OFF,
     .Screen_ConfigData.Throttle_ConfigData.MaxSpeed = THROTTLE_TOP_SPEED,
     .Screen_ConfigData.Throttle_ConfigData.AccelRampType = THROTTLE_ACCEL_RAMP_TYPE,
@@ -163,6 +162,8 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.Motor_Signal_Parameters.motorMixedSignal = MOTOR_TEMP_MIXED,
     .Screen_ConfigData.Motor_Signal_Parameters.minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
     .Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US,
+    
+    .crc = 0x0000,
 };
 
 //struct used to hold the values of the user configuration
@@ -1941,48 +1942,6 @@ void UserConfigTask_UpdatePasDecelRampArg1(uint8_t pasLevel, uint16_t arg1)
     } 
 }
 
-/**
-  @brief Function used to calculate a CRC 16 type using the same polynom 
-  used by the bluetooth protocol.CCITT 16 bits polynom.
-  
-  @param uint8_t * data pointer to the data buffer where the CRC must be done.
-  @param uint8_t length the length of the data to be calculated by the CRC algorithm.
-  @return uint16_t return the calculated CRC.
-
-*/
-uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length)
-{   
-    uint8_t i;
-    uint8_t n = 0;
-    uint8_t value;
-    uint16_t crc = 0x0000;
-    //calculate the crc to all buffer length
-    while(n < length)
-    {
-        //receive the next byte to be processed.
-        value = buffer[n];
-        
-        //loop that implement the crc algorithm to each byte.
-        for (i = 0; i < 8; i++) 
-        {
-            if (((crc & 0x8000) >> 8) ^ (value & 0x80))
-            {
-                crc = (uint16_t)(crc << 1) ^ CCITT_POLYNOM;
-            }
-            else
-            {
-                crc = (uint16_t)(crc << 1);
-            }
-
-            value <<= 1;
-        }
-        //increment the count.
-        n++;
-    }
-  
-    return crc;
-}
-
 
 /**
   @brief Function to get Throttle BlockOff Value
@@ -2113,6 +2072,28 @@ void UserConfigTask_UpdateMaxWheelSpeedPeriodUs(uint32_t value)
     userConfigData.Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = value; 
 }
 
+/**
+  @brief Function to get the MotorRpm, the current rpm of the motor.
+  
+  @param void
+  @return int16_t value is th current motor rpm
+*/
+int16_t UserConfigTask_GetMotorRpm(VCI_Handle_t * pVController)
+{
+    return -pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit;
+}
+
+/**
+  @brief Function to get the MotorRpmWithGearRatio, the current rpm of the motor
+         with the gear rato.
+  @param void
+  @return int16_t value is th current motor rpm with the gear ratio
+*/
+int16_t UserConfigTask_GetMotorRpmWithGearRatio(VCI_Handle_t * pVController)
+{
+    return (int16_t) (-pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit / pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->fGearRatio);
+}
+
 
 /**
   @brief Function to get the PASOverThrottled, used to know what is 
@@ -2142,5 +2123,47 @@ void UserConfigTask_UpdatePASOverThrottle(uint8_t value)
     else
     {
         userConfigData.PAS_ConfigData.PASOverThrottle = value;    
-    }             
+    }        
+}
+
+/**
+  @brief Function used to calculate a CRC 16 type using the same polynom 
+  used by the bluetooth protocol.CCITT 16 bits polynom.
+  
+  @param uint8_t * data pointer to the data buffer where the CRC must be done.
+  @param uint8_t length the length of the data to be calculated by the CRC algorithm.
+  @return uint16_t return the calculated CRC.
+
+*/
+uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length)
+{   
+    uint8_t i;
+    uint8_t n = 0;
+    uint8_t value;
+    uint16_t crc = 0x0000;
+    //calculate the crc to all buffer length
+    while(n < length)
+    {
+        //receive the next byte to be processed.
+        value = buffer[n];
+        
+        //loop that implement the crc algorithm to each byte.
+        for (i = 0; i < 8; i++) 
+        {
+            if (((crc & 0x8000) >> 8) ^ (value & 0x80))
+            {
+                crc = (uint16_t)(crc << 1) ^ CCITT_POLYNOM;
+            }
+            else
+            {
+                crc = (uint16_t)(crc << 1);
+            }
+
+            value <<= 1;
+        }
+        //increment the count.
+        n++;
+    }
+  
+    return crc;
 }

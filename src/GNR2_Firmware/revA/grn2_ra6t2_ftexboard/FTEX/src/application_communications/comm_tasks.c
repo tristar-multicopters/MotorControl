@@ -81,6 +81,8 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t  hBrakeStatus;
     uint32_t hErrorState;
     uint16_t hBusVoltage;
+    int16_t configMotorRpm;
+    int16_t configMotorRpmWithGearRatio;
     // Read and write
     uint8_t  bPAS[2];
     uint8_t  hWheelDiameter[2];
@@ -110,6 +112,9 @@ static void UpdateObjectDictionnary(void *p_arg)
         hErrorState   = CanVehiInterface_GetVehicleCurrentFaults(pVCI);
         hBusVoltage   = CanVehiInterface_GetBusVoltage(pVCI);
         hBrakeStatus  = CanVehiInterface_GetBrakeStatus(pVCI);
+        
+        configMotorRpm = UserConfigTask_GetMotorRpm(pVCI);
+        configMotorRpmWithGearRatio = UserConfigTask_GetMotorRpmWithGearRatio(pVCI);
         
         bPAS[VEHICLE_PARAM]             = CanVehiInterface_GetVehiclePAS(pVCI); 
         hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
@@ -492,6 +497,9 @@ static void UpdateObjectDictionnary(void *p_arg)
 
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BRAKE, 0)), pNode, &hBrakeStatus, sizeof(uint8_t));
             
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_RPM, 0)),      pNode, &configMotorRpm, sizeof(int16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_RPM, 1)),      pNode, &configMotorRpmWithGearRatio, sizeof(int16_t));           
+            
             //Update pasLevelMinTorque
             CanVehiInterface_GetPasLevelMinTorque(&VCInterfaceHandle, pasLevelMinTorque);
 
@@ -654,10 +662,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 2)),      pNode, &pasLowPassFilterBW1[1], sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 3)),      pNode, &pasLowPassFilterBW2[1], sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 4)),      pNode, &pasLowPassFilterBW1[2], sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),      pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));
-                 
-                 
-                 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),      pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));      
                  
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
