@@ -327,11 +327,18 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
                 }
             }
             
-            hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
-            pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
-            if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)
+            if (pHandle->motorType == DIRECT_DRIVE)
             {
-                hTorqueReference = pHandle->hTorqueReferenceSpdLim;
+                hTorqueReference = Foldback_ApplyFoldback(&pHandle->FoldbackLimitSpeed, hTorqueReference, abs(hMeasuredSpeed));      // Apply speed limit foldback
+            }
+            else
+            {
+                hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
+                pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
+                if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)
+                {
+                    hTorqueReference = pHandle->hTorqueReferenceSpdLim;
+                }
             }
         }
         
@@ -340,8 +347,8 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
         hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference, MotorParameters); // Apply motor torque foldbacks
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
-        
-        if (pHandle->motorType == DIRECT_DRIVE)
+
+         if (pHandle->motorType == DIRECT_DRIVE)
           
         {
           if (pHandle->pSPD->hIdcRegen)
@@ -374,8 +381,8 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
                 
                 
               }
-            }              
-      
+            }  
+
     }
     else
     {
