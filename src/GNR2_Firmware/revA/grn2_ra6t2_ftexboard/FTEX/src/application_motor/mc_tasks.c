@@ -264,6 +264,13 @@ void MC_BootUp(void)
     #endif
     
     bMCBootCompleted = 1;
+    
+    //check for the motor current is larger than the controller current
+    if (MotorParameters.ConfigParameters.hPeakCurrentMotorAmps > PEAK_CURRENT_CONTROLLER_amps)
+    {
+        MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_CURR_LIMIT_CONTROLLER, 0);    //Report the warning
+    }
+    
 }
 
 void MC_RunMotorControlTasks(void)
