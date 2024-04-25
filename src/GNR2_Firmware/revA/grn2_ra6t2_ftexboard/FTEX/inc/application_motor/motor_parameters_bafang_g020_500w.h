@@ -103,14 +103,14 @@ These variables are used to configure the motor within the smart config tool.
 #define IQ_KP_VS_SPEED_1                    171
 #define IQ_KP_VS_SPEED_2                    171
 
-#define IQ_KI_VS_SPEED_1                    48
-#define IQ_KI_VS_SPEED_2                    48
+#define IQ_KI_VS_SPEED_1                    10
+#define IQ_KI_VS_SPEED_2                    10
 
 #define ID_KP_VS_SPEED_1                    154
 #define ID_KP_VS_SPEED_2                    154
 
-#define ID_KI_VS_SPEED_1                    43
-#define ID_KI_VS_SPEED_2                    43
+#define ID_KI_VS_SPEED_1                    10
+#define ID_KI_VS_SPEED_2                    10
 
                                                             
 #endif /* __MOTOR_PARAMETERS_BAFANG_G020_500W_H */

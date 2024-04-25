@@ -80,6 +80,7 @@ typedef struct
     MotorTunerOutput_t  MotorTunerOutput;   //Autotune output values
     TuningStatus_t      TuningStatus;       //Autotune status
     bool bStartTuning;                      //If this variable is true this means we start autotune
+    bool bEnAutotune;                        //This variable puts the bike in autotune mode
 } AutoTune_Handle_t;
 
 /**
