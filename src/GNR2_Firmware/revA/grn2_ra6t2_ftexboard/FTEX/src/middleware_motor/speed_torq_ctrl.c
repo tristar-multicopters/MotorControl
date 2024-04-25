@@ -96,7 +96,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     }
     
     //the foldback is used to control speed for direct drives instead of the pid
-    if (MotorParameters.ConfigParameters.bMotorType == DIRECT_DRIVE)
+    if (pHandle->motorType == DIRECT_DRIVE)
     {
         Foldback_EnableFoldback(&pHandle->FoldbackLimitSpeed);
     }
