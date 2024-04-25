@@ -94,6 +94,12 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     {
         Foldback_DisableFoldback(&pHandle->FoldbackMotorTemperature);
     }
+    
+    //the foldback is used to control speed for direct drives instead of the pid
+    if (MotorParameters.ConfigParameters.bMotorType == DIRECT_DRIVE)
+    {
+        Foldback_EnableFoldback(&pHandle->FoldbackLimitSpeed);
+    }
    
     pHandle->TorqueRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
@@ -329,7 +335,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
             
             if (pHandle->motorType == DIRECT_DRIVE)
             {
-                hTorqueReference = Foldback_ApplyFoldback(&pHandle->FoldbackLimitSpeed, hTorqueReference, abs(hMeasuredSpeed));      // Apply speed limit foldback
+                hTorqueReference = Foldback_ApplyFoldback(&pHandle->FoldbackLimitSpeed, hTorqueReference, (int16_t) abs(hMeasuredSpeed));      // Apply speed limit foldback
             }
             else
             {
@@ -561,7 +567,6 @@ void SpdTorqCtrl_SetSpeedRampSlope(SpdTorqCtrlHandle_t * pHandle, uint32_t wSlop
 /*
     Apply all torque foldbacks and returns limited torque.
 */
-
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque, MotorParameters_t MotorParameters)
 {
     
@@ -605,8 +610,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
         pHandle->FoldbackMotorSpeed.hDecreasingRange = (MotorParameters.SpeedParameters.hFoldbackSpeedInterval / MotorParameters.SpeedParameters.hMaxAppliationSpeedRPM) * (uint16_t) pHandle->FoldbackMotorSpeed.hDecreasingEndValue;
     }
     
-    
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)abs(hMeasuredSpeed));    
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)abs(hMeasuredSpeed)); 
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
     
