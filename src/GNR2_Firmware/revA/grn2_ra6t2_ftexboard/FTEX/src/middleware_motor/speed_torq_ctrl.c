@@ -94,6 +94,12 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     {
         Foldback_DisableFoldback(&pHandle->FoldbackMotorTemperature);
     }
+    
+    //the foldback is used to control speed for direct drives instead of the pid
+    if (pHandle->motorType == DIRECT_DRIVE)
+    {
+        Foldback_EnableFoldback(&pHandle->FoldbackLimitSpeed);
+    }
    
     pHandle->TorqueRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
     pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
@@ -327,11 +333,18 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
                 }
             }
             
-            hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
-            pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
-            if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)
+            if (pHandle->motorType == DIRECT_DRIVE)
             {
-                hTorqueReference = pHandle->hTorqueReferenceSpdLim;
+                hTorqueReference = Foldback_ApplyFoldback(&pHandle->FoldbackLimitSpeed, hTorqueReference, (int16_t) abs(hMeasuredSpeed));      // Apply speed limit foldback
+            }
+            else
+            {
+                hError = pHandle->hSpdLimit - hMeasuredSpeed; // Compute speed error
+                pHandle->hTorqueReferenceSpdLim = PI_Controller(pHandle->pPISpeed, (int32_t)hError); // Compute torque value with PI controller
+                if (pHandle->hTorqueReferenceSpdLim < hTorqueReference)
+                {
+                    hTorqueReference = pHandle->hTorqueReferenceSpdLim;
+                }
             }
         }
         
@@ -340,8 +353,8 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
         hTorqueReference = SpdTorqCtrl_ApplyTorqueFoldback(pHandle, hTorqueReference, MotorParameters); // Apply motor torque foldbacks
         /* Store values in handle */
         pHandle->hCurrentTorqueRef = hTorqueReference;
-        
-        if (pHandle->motorType == DIRECT_DRIVE)
+
+         if (pHandle->motorType == DIRECT_DRIVE)
           
         {
           if (pHandle->pSPD->hIdcRegen)
@@ -374,8 +387,8 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
                 
                 
               }
-            }              
-      
+            }  
+
     }
     else
     {
@@ -554,7 +567,6 @@ void SpdTorqCtrl_SetSpeedRampSlope(SpdTorqCtrlHandle_t * pHandle, uint32_t wSlop
 /*
     Apply all torque foldbacks and returns limited torque.
 */
-
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque, MotorParameters_t MotorParameters)
 {
     
@@ -598,8 +610,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
         pHandle->FoldbackMotorSpeed.hDecreasingRange = (MotorParameters.SpeedParameters.hFoldbackSpeedInterval / MotorParameters.SpeedParameters.hMaxAppliationSpeedRPM) * (uint16_t) pHandle->FoldbackMotorSpeed.hDecreasingEndValue;
     }
     
-    
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)abs(hMeasuredSpeed));    
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)abs(hMeasuredSpeed)); 
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
     

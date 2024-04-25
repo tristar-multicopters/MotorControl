@@ -612,7 +612,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                                                                  
                  }
                 
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_PAS_OVER_THROTTLE, 0)), pNode, &configPasOverThrottle, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 8)), pNode, &configPasOverThrottle, sizeof(uint8_t));
                  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)), pNode, &maxSpeed, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &walkModeSpeed, sizeof(uint8_t));
@@ -1108,7 +1108,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DECEL_RAMP, P1)), pNode, &configPasDecelRampArg1[n], sizeof(uint16_t));                        
         }
 
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_PAS_OVER_THROTTLE, 0)), pNode, &configPasOverThrottle, sizeof(uint8_t)); 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 8)), pNode, &configPasOverThrottle, sizeof(uint8_t)); 
         
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_SPEED, 0)),       pNode, &configMaxSpeed, sizeof(uint8_t));                                 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 0)), pNode, &configWalkModeSpeed, sizeof(uint8_t)); 

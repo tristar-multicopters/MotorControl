@@ -361,7 +361,7 @@ ThrottleHandle_t ThrottleHandle =
 
         .hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
         
-        .DefaultMaxThrottleSpeedKMH = VEHICLE_TOP_SPEED_KMH,
+        .DefaultMaxThrottleSpeedKMH = THROTTLE_TOP_SPEED,
         .ThrottleRamps[0] =  {
                                  .RampDirection = ACCELERATION,
                                  .RampType = THROTTLE_ACCEL_RAMP_TYPE,

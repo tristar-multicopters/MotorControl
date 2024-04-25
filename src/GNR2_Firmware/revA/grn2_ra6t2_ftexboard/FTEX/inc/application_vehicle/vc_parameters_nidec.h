@@ -21,7 +21,7 @@
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-                                      
+#define VEHICLE_TOP_SPEED_KMH   45                                       
 /***************** THROTTLE SELECTION  ******************************/
 
 // Nidec has no throttle, but some defines needed regardless
@@ -76,9 +76,7 @@
 
 #define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
 #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
-#define PAS_WALKMODE_OVER_THROTTLE          true       // If set to true walk mode has higher priority than throttle
-
-#define VEHICLE_TOP_SPEED_KMH   45    
+#define PAS_WALKMODE_OVER_THROTTLE          true       // If set to true walk mode has higher priority than throttle   
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 

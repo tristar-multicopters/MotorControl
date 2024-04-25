@@ -12,20 +12,16 @@
 
 #define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters
 
-/************************** Controller Config  ************************/
-
-#define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters
-
 /************************** Motor Config Parameters ************************/
 
 #define MOTOR_GEAR_RATIO                    (float)1            // Motor gear ratio, the value is always X turns of the motor 
 #define MOTOR_TYPE                          DIRECT_DRIVE        // Motor type. Can be HUB_DRIVE or MID_DRIVE or DIRECT_DRIVE
 #define POLE_PAIR_NUM                       23                  // Number of motor pole pairs
-#define RS                                  0.1f                // Stator resistance , ohm
+#define RS_VAL                              0.1f                // Stator resistance , ohm
 #define LS                                  0.000235f           // Stator inductance, H   For I-PMSM it is equal to Lq
 #define MOTOR_MAGNET_FLUX                   0.0052f             // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
 #define MOTOR_VOLTAGE_CONSTANT              28.84f              // Volts RMS ph-ph /kRPM
-#define ST_Torque_Coef                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
+#define ST_TORQUE_COEF                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
 
 #define PEAK_CURRENT_MOTOR_amps                55               // peak current in amps
 
