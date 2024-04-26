@@ -21,7 +21,7 @@
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
 #define VEHICLE_TOP_SPEED_KMH   27    
-#define THROTTLE_TOP_SPEED       6
+#define THROTTLE_TOP_SPEED       9
 /***************** THROTTLE SELECTION  ******************************/
 
 #include "throttle_sensors/vc_velec_r48_throttle.h"

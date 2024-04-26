@@ -18,7 +18,7 @@
 #define SPEED_MARGIN  110
 #define DIV_PERCENTAGE 100
 #define DECC_RANGE_PW  100 //decceleration range
-#define DCC_RANGE 12  //decceleration range for walk mode
+#define DCC_RANGE 30  //decceleration range for walk mode
 static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque, MotorParameters_t MotorParameters);
 static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
 void SpdTorqCtrl_SetGearRatio(SpdTorqCtrlHandle_t * pHandle, int16_t hMeasuredSpeed);
@@ -359,7 +359,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
         {
           if (pHandle->pSPD->hIdcRegen)
               {
-                if (pHandle->hCurrentTorqueRef == 0)
+                if (pHandle->hCurrentTorqueRef == 0 && pHandle->pSPD->bActiveRegen)
                 {
                       if (abs(pHandle->pSPD->hAvrMecSpeedUnit) > MIN_REGEN_SPEED)
                         { 
