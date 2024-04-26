@@ -530,6 +530,24 @@ uint16_t UserConfigTask_GetWalkmodeAccelRampArg1(void);
 void UserConfigTask_UpdateWalkmodeAccelRampArg1(uint16_t arg1);
 
 /**
+  @brief Function to get the number of magnets for the 
+         wheel speed sensor
+  @param void
+  @return uint8_t value to be passed into the WheelSpeedSensorNbrMagnets
+
+*/
+uint8_t UserConfigTask_GetWheelSpeedSensorNbrMagnets(void);
+
+/**
+  @brief Function to update the number of magnets for the 
+         wheel speed sensor
+  @param uint8_t value to be passed into the WheelSpeedSensorNbrMagnets
+  @return void
+
+*/
+void UserConfigTask_UpdateWheelSpeedSensorNbrMagnets(uint8_t value);
+
+/**
   @brief Function to get Wheel Diameter
   read from data flash memory.
   

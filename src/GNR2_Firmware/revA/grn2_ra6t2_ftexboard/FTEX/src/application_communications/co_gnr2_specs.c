@@ -351,7 +351,7 @@ uint16_t bObjDataBatteryEmptyVoltage        = 0;
 //variable associated with CO_OD_REG_WHEELS 0
 uint8_t bObjDataWheelDiameter               = 0;
 //variable associated with CO_OD_REG_WHEELS 1 
-uint8_t bObjDataWheelPulsePerRotation       = 0;
+uint8_t bObjDataWheelSpeedSensorNbrMagnets       = 0;
 //variable associated with CO_OD_REG_WHEELS 2 
 uint8_t bObjDataWheelDiameterDefault        = 0;
 //variable associated with CO_OD_REG_WHEELS 4
@@ -1488,7 +1488,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WHEELS, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWheelPulsePerRotation};    
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_WHEELS, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataWheelSpeedSensorNbrMagnets};    
             //move to next OD index
             index++;
                     

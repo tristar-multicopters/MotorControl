@@ -15,6 +15,7 @@
 
 #include "user_config_task.h"
 #include "motor_signal_processing.h"
+#include "mc_config.h"
 
 #include "ASSERT_FTEX.h"
 #include "wheel.h"
@@ -150,6 +151,7 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.WalkmodeAccelRampType = WALKMODE_ACCEL_RAMP_TYPE,
     .Screen_ConfigData.WalkmodeAccelRampArg1 = WALKMODE_ACCEL_RAMP_ARG1,
     .Screen_ConfigData.MaxSpeed = VEHICLE_TOP_SPEED_KMH,
+    .Screen_ConfigData.WheelSpeedSensorNbrMagnets = WHEEL_SPEED_SENSOR_NBR_PER_ROTATION,
     .Screen_ConfigData.WheelDiameter = WHEEL_DIAMETER,
     .Screen_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
     .Screen_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
@@ -447,6 +449,7 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     //Throttle_ConfigData.walkMOdeSpeed(PAS_LEVEL_SPEED_WALK) is not passed
     //directly to any variable. Because of this is not updated here.
     
+    MotorParameters.WheelSpeedSensorParameters.bWheelSpeedSensorNbrPerRotation = UserConfigTask_GetWheelSpeedSensorNbrMagnets();
     
     Wheel_SetWheelDiameter(UserConfigTask_GetWheelDiameter()); 
     
@@ -1101,6 +1104,33 @@ uint16_t UserConfigTask_GetWalkmodeAccelRampArg1(void)
 void UserConfigTask_UpdateWalkmodeAccelRampArg1(uint16_t arg1)
 {
     userConfigData.Screen_ConfigData.WalkmodeAccelRampArg1 = arg1; 
+}
+
+/**
+  @brief Function to get the number of magnets for the 
+         wheel speed sensor
+  @param void
+  @return uint8_t value to be passed into the WheelSpeedSensorNbrMagnets
+
+*/
+uint8_t UserConfigTask_GetWheelSpeedSensorNbrMagnets(void)
+{
+    return userConfigData.Screen_ConfigData.WheelSpeedSensorNbrMagnets;
+}
+
+/**
+  @brief Function to update the number of magnets for the 
+         wheel speed sensor
+  @param uint8_t value to be passed into the WheelSpeedSensorNbrMagnets
+  @return void
+
+*/
+void UserConfigTask_UpdateWheelSpeedSensorNbrMagnets(uint8_t value)
+{
+    if ((value > 1) && (value <= 50))
+    {
+        userConfigData.Screen_ConfigData.WheelSpeedSensorNbrMagnets = value;
+    }
 }
 
 /**

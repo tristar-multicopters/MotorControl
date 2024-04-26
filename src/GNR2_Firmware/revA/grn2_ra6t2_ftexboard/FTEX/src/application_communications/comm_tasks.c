@@ -532,6 +532,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             uint16_t configPasTorqueInputMax = UserConfigTask_GetPasTorqueInputMax();
             uint16_t configPasTorqueInputMin = UserConfigTask_GetPasTorqueInputMin();
             
+            uint8_t configWheelSpeedSensorNbrMagnets;
             uint8_t configWheelDiameter;
             uint8_t configScreenProtocol;
             
@@ -629,6 +630,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 0)),        pNode, &configBatteryFullVoltage, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 1)),        pNode, &configBatteryEmptyVoltage, sizeof(uint16_t));
                  
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 1)),      pNode, &configWheelSpeedSensorNbrMagnets, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 2)),      pNode, &configWheelDiameter, sizeof(uint8_t)); 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SCREEN_PROTOCOL, 0)),   pNode, &configScreenProtocol, sizeof(uint8_t));
 
@@ -704,6 +706,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdatePasTorqueInputMax(configPasTorqueInputMax);
                  UserConfigTask_UpdatePasTorqueInputMin(configPasTorqueInputMin);
                                   
+                 UserConfigTask_UpdateWheelSpeedSensorNbrMagnets(configWheelSpeedSensorNbrMagnets);
                  UserConfigTask_UpdateWheelDiameter(configWheelDiameter);
                  UserConfigTask_UpdateScreenProtocol(configScreenProtocol);
                  
@@ -1025,6 +1028,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint16_t configBatteryFullVoltage  = UserConfigTask_GetBatteryFullVoltage();
         uint16_t configBatteryEmptyVoltage = UserConfigTask_GetBatteryEmptyVoltage();
                                               
+        uint8_t configWheelSpeedSensorNbrMagnets = UserConfigTask_GetWheelSpeedSensorNbrMagnets();
         uint8_t configWheelDiameter  =  UserConfigTask_GetWheelDiameter();
         uint8_t configScreenProtocol =  UserConfigTask_GetScreenProtocol();  
 
@@ -1074,6 +1078,8 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 3)), pNode, &PasAlgorithmRunning, sizeof(uint8_t)); 
         
         
+        // Initialise the number of magnets for the wheel speed sensor with the value in the user config 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 1)),       pNode, &configWheelDiameter, sizeof(uint8_t));
         // Initialise the wheel diameter with the value in the user config 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 0)),       pNode, &configWheelDiameter, sizeof(uint8_t));
         
@@ -1126,6 +1132,8 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 0)),        pNode, &configBatteryFullVoltage, sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BATTERY_VOLTAGE, 1)),        pNode, &configBatteryEmptyVoltage, sizeof(uint16_t));
         
+        // Show what is the default number of magnets for the wheel speed sensor in the user config 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 1)),        pNode, &configWheelSpeedSensorNbrMagnets, sizeof(uint8_t));         
         // Show what is the default wheel diameter in the user config 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 2)),        pNode, &configWheelDiameter, sizeof(uint8_t));         
         // Show the currently selected screen protocol

@@ -148,6 +148,7 @@ typedef struct
     uint8_t  WalkmodeAccelRampType;
     uint16_t WalkmodeAccelRampArg1;
     uint8_t  MaxSpeed;
+    uint8_t  WheelSpeedSensorNbrMagnets;
     uint8_t  WheelDiameter;
     uint8_t  ScreenProtocol;
     uint8_t  HeadLightDefault;      // Contains the default state of the head light (on or off)
