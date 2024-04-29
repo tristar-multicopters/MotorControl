@@ -19,7 +19,7 @@
 #define POLE_PAIR_NUM                       23                  // Number of motor pole pairs
 #define RS_VAL                              0.1f                // Stator resistance , ohm
 #define LS                                  0.000235f           // Stator inductance, H   For I-PMSM it is equal to Lq
-#define MOTOR_MAGNET_FLUX                   0.0052f             // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
+#define MOTOR_MAGNET_FLUX                   0.034657f           // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests
 #define MOTOR_VOLTAGE_CONSTANT              28.84f              // Volts RMS ph-ph /kRPM
 #define ST_TORQUE_COEF                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
 
@@ -27,7 +27,7 @@
 
 /************************** Power Limit Parameters ************************/
 
-#define ESTIMATED_EFFICIENCY                100                 // Percent efficiency of input compared to output power
+#define ESTIMATED_EFFICIENCY                70                  // Percent efficiency of input compared to output power
 
 
 /************************** Speed Limit Parameters ************************/
