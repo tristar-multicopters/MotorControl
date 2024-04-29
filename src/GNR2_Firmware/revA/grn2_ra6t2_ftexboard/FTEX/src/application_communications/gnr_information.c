@@ -64,23 +64,26 @@ void GnrInfo_Read(DataFlash_Handle_t * pDataFlashHandle)
 *        Only the first 8 bytes of the serial number are provide to
 *        from this function.
 */
-uint64_t  GnrInfo_GetSerialNumber(void)
+uint64_t GnrInfo_GetSerialNumber(void)
 {
     uint64_t serialNumber = 0;
-    uint8_t m = 0;
-    
-    //copy the serial number byte by byte to the variable.
-    //starting from the years byte until the last by of the batch number.
-    for(uint8_t n = 1; n <= GNR_INFO_SERIAL_LENGTH - 4; n++)
-    {
-        serialNumber = serialNumber | ((uint64_t)GnrInfoHandle.Gnr_serialNumber[GNR_INFO_SERIAL_LENGTH - n] << m*8);
-        
-        //increment to the next shift.
-        m++;
-    }
-    
-    return serialNumber;   
+    // Hardcoding "23490001" in ASCII directly into a uint64_t variable
+    serialNumber |= (uint64_t)'2' << 56; // Most significant byte (MSB)
+    serialNumber |= (uint64_t)'3' << 48;
+    serialNumber |= (uint64_t)'4' << 40;
+    serialNumber |= (uint64_t)'9' << 32;
+    serialNumber |= (uint64_t)'1' << 24;
+    serialNumber |= (uint64_t)'2' << 16;
+    serialNumber |= (uint64_t)'5' << 8;
+    serialNumber |= (uint64_t)'6'; // Least significant byte (LSB)
+    return serialNumber;
 }
+
+
+
+
+
+
 
 /**
 * @brief Function used to read GNR dfu pack version from the data flash.  
