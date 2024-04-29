@@ -359,7 +359,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
         {
           if (pHandle->pSPD->hIdcRegen)
               {
-                if (pHandle->hCurrentTorqueRef == 0)
+                if (pHandle->hCurrentTorqueRef == 0 && pHandle->pSPD->bActiveRegen)
                 {
                       if (abs(pHandle->pSPD->hAvrMecSpeedUnit) > MIN_REGEN_SPEED)
                         { 
