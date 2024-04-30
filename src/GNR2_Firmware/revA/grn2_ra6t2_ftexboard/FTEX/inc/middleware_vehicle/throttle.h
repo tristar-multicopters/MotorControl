@@ -33,7 +33,7 @@ typedef struct
     int16_t bDivisorTorque;             // Scaling factor of throttle vs torque   
     
     uint16_t hOffsetSpeed;              // Offset of throttle vs speed 
-    int16_t bSlopeSpeed;                // Gain factor of throttle vs speed   
+    float fSlopeSpeed;                  // Gain factor of throttle vs speed   
     uint16_t bDivisorSpeed;             // Scaling factor of throttle vs speed   
     
     float fFilterAlpha;                 // Alpha coefficient for low pass first order butterworth filter

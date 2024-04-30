@@ -106,7 +106,7 @@ int32_t VCI_ReadRegister(VCI_Handle_t* pHandle, uint16_t RegID)
             value = pHandle->pPowertrain->pThrottle->hParameters.hOffsetSpeed;
             break;
         case REG_SPEED_SLOPE:
-            value = pHandle->pPowertrain->pThrottle->hParameters.bSlopeSpeed;
+            value = (int32_t)pHandle->pPowertrain->pThrottle->hParameters.fSlopeSpeed;
             break;
         case REG_SPEED_DIVISOR:
             value = pHandle->pPowertrain->pThrottle->hParameters.bDivisorSpeed;
@@ -720,7 +720,7 @@ void VCI_SetRegister(VCI_Handle_t* pHandle, uint16_t RegID, int32_t value)
             pHandle->pPowertrain->pThrottle->hParameters.hOffsetSpeed = (uint16_t)value;
             break;
         case REG_SPEED_SLOPE:
-            pHandle->pPowertrain->pThrottle->hParameters.bSlopeSpeed = (int16_t) value;
+            pHandle->pPowertrain->pThrottle->hParameters.fSlopeSpeed = (int16_t) value;
             break;
         case REG_SPEED_DIVISOR:
             pHandle->pPowertrain->pThrottle->hParameters.bDivisorSpeed = (uint16_t)value;

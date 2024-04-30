@@ -241,7 +241,7 @@ uint16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
         wAux = 0;
     }
     
-    wAux = (int32_t)(pHandle->hParameters.bSlopeSpeed * wAux);
+    wAux = (int32_t)(pHandle->hParameters.fSlopeSpeed * (float) wAux);
     wAux /= pHandle->hParameters.bDivisorSpeed;
     
     if (wAux > INT16_MAX)
@@ -375,7 +375,7 @@ void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle)
    Throttle2Speed =  pHandle->hParameters.MaxThrottleSpeedKMH/Throttle2Speed;   // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
    Throttle2Speed *= THROTTLE_SLOPE_FACTOR;                                     // Multiply by the factor to create the numerator of a fraction 
     
-   pHandle->hParameters.bSlopeSpeed   = (int16_t) round(Throttle2Speed);        // Save the numerator
+   pHandle->hParameters.fSlopeSpeed   = Throttle2Speed;                         // Save the numerator
    pHandle->hParameters.bDivisorSpeed = THROTTLE_SLOPE_FACTOR;                  // and denominator 
 }
 
