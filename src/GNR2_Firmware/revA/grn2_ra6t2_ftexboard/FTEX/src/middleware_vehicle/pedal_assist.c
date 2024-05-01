@@ -23,9 +23,6 @@ static PasCadenceState_t PasCadenceState = CADENCE_DETECTION_STARTUP;
 #define PROTOTYPE_PAS_DETECTION true // Set to true to use the Prototype PAS detection
                                      // If set to false the regular pas detection applies 
 
-uint8_t RuntimeMinSpeed = 6;         // Value in km/h under which we assume we are in startup and equal 
-                                     // or above which assume we are in runtime 
-
 uint8_t PASAutoDetectMinSpeed = 10;   // Speed in km/h above which pas stays detected
 
 bool StartupANDLogic = false;        // Set to true if you want cadence startup AND torque startup
@@ -395,6 +392,17 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
         windowsDetectionLimite = windowsDetectionLimite + windowsIncrementTimeMs;
     }
     
+#if PROTOTYPE_PAS_DETECTION 
+    if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH)
+    {
+        PasCadenceState = CADENCE_DETECTION_STARTUP;
+    }
+    else
+    {
+        PasCadenceState = CADENCE_DETECTION_RUNNING;
+    }            
+#endif    
+    
     //state macchine to handle PAS cadence detection
     //on differents scenarios, as start, running and stop.
     switch(PasCadenceState)
@@ -669,6 +677,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
 
     if (PedalAssist_IsPASDetected(pHandle)) // This is the loop on the right side of the graph
     {
+        // Are we either above the min speed for auto detection or is cadence detected 
         if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < PASAutoDetectMinSpeed || pHandle->bCadenceRunningPASDetected == true)
         {
             PasDetected = true;
@@ -676,7 +685,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     }
     else // This is the loop on the center + left side of the graph
     {
-        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < RuntimeMinSpeed) // Are we in startup ?
+        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH) // Are we in startup ?
         {
             if (StartupANDLogic) 
             {
