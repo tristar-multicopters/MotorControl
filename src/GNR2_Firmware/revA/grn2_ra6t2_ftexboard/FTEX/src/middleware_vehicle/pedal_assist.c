@@ -5,6 +5,7 @@
   */
 
 #include "pedal_assist.h"
+#include "wheel.h"
 #include "ASSERT_FTEX.h"
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
@@ -19,6 +20,16 @@ uint8_t bPASCounterAct = 0; // Slow cadence PAS activation loop couter
 //
 static PasCadenceState_t PasCadenceState = CADENCE_DETECTION_STARTUP;
   
+#define PROTOTYPE_PAS_DETECTION true // Set to true to use the Prototype PAS detection
+                                     // If set to false the regular pas detection applies 
+
+uint8_t RuntimeMinSpeed = 6;         // Value in km/h under which we assume we are in startup and equal 
+                                     // or above which assume we are in runtime 
+
+uint8_t PASAutoDetectMinSpeed = 10;   // Speed in km/h above which pas stays detected
+
+bool StartupANDLogic = false;        // Set to true if you want cadence startup AND torque startup
+                                     // Set to false if you want cadence startup OR torque startup
 
 /* Functions ---------------------------------------------------- */
 
@@ -654,6 +665,43 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     bool PasDetected = false;
     
+#if PROTOTYPE_PAS_DETECTION 
+
+    if (PedalAssist_IsPASDetected(pHandle)) // This is the loop on the right side of the graph
+    {
+        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < PASAutoDetectMinSpeed || pHandle->bCadenceRunningPASDetected == true)
+        {
+            PasDetected = true;
+        }
+    }
+    else // This is the loop on the center + left side of the graph
+    {
+        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < RuntimeMinSpeed) // Are we in startup ?
+        {
+            if (StartupANDLogic) 
+            {
+                if (pHandle->bTorqueStartupPASDetected == true  && pHandle->bCadenceStartupPASDetected == true)
+                {
+                    PasDetected = true;
+                }                
+            }
+            else
+            {
+                if (pHandle->bTorqueStartupPASDetected == true || pHandle->bCadenceStartupPASDetected == true)
+                {
+                    PasDetected = true;
+                }
+            }
+        }
+        else
+        {
+            if (pHandle->bCadenceRunningPASDetected == true)
+            {
+                PasDetected = true;
+            }    
+        }
+    }   
+#else    
     //check if the condition to PAS detection, at startup,
     //has been met.
     switch (pHandle->bStartupPasAlgorithm)
@@ -738,7 +786,8 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
             ASSERT(false);        
         break;
     }
-
+#endif 
+    
     if (PasDetected)
     {
         PedalAssist_SetPASDetected(pHandle);
@@ -746,7 +795,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     else
     {
         PedalAssist_ResetPASDetected(pHandle);
-    }  
+    }   
 }
 
 /**
