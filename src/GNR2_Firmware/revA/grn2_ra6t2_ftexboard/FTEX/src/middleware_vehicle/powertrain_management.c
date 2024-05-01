@@ -5,6 +5,13 @@
   *
   */
 
+#define EXPERIMENTAL_PAS_SAFETY    true  // Set to true or false to enable or disable the experimental safety
+    
+#define MAX_TIME_NO_CADENCE_ACTIVITY 400 // This is the maximum amount of time for which we can push power 
+                                         // in torque sensor without any activity on the cadence sensor
+                                         // The units are in multiples of 5ms so 400 = 2 seconds
+
+
 // ============================= Includes ================================ //
 #include "powertrain_management.h"
 #include "vc_tasks.h"
@@ -1108,6 +1115,8 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
     return pHandle->sParameters.bUseMotorM2;
 }
 
+ static uint16_t PASSafetyCounter = 0;
+
 /**
   * @brief  Select Control assistance based on Throttle or PAS
   * @param  Powertrain handle
@@ -1154,6 +1163,36 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         if (!PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
+
+///////////////New safety code start////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
+#if EXPERIMENTAL_PAS_SAFETY
+            if (pHandle->hTorqueSelect > 0)
+            {                               
+                if (pHandle->pPAS->pPSS->bPedalSpeedActivity == true) // Do we have recent activity on the cadence ?
+                {
+                   pHandle->pPAS->pPSS->bPedalSpeedActivity = false; 
+                   PASSafetyCounter = 0;
+                }
+                else // If we don't have any activity keep pushing power but start counting
+                {
+                    
+                   if (PASSafetyCounter > MAX_TIME_NO_CADENCE_ACTIVITY)
+                   {
+                       pHandle->hTorqueSelect = 0; // Enagage the safety and cut the power
+                   }
+                   else
+                   {
+                       PASSafetyCounter ++;  
+                   }                       
+                }                    
+            }
+            else
+            {
+                PASSafetyCounter = 0;
+            }
+#endif            
+/////////////New safety code end////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
+        
         }                
         else
         {

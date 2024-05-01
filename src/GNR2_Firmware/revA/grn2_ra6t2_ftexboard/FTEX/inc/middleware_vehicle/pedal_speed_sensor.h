@@ -31,6 +31,8 @@ typedef struct {
     uint16_t hPedalSpeedSens_NumberOfPulses;    /*Detected Number of pulses from teh cadence signal*/
     uint32_t  wPedalSpeedSens_RPM;   /* Pedal Speed sensor RPM calculated value */
     
+    bool bPedalSpeedActivity; // Indicates when pulses are getting received
+    
 } PedalSpeedSensorHandle_t;
 
 // ==================== Public function prototypes ========================= //

@@ -24,9 +24,19 @@ void PedalSpdSensor_Init(PedalSpeedSensorHandle_t* pHandle)
     cadence signal/sesnor.
 */
 void PedalSpdSensor_ReadNumberOfPulses(PedalSpeedSensorHandle_t* pHandle)
-{    
+{   
+    static uint16_t OldNbPulses = 0; 
+    
     //PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
     pHandle->hPedalSpeedSens_NumberOfPulses = (uint16_t) pHandle->pPulseFrequency->hNumberOfPulse; 
+    
+    
+    if (OldNbPulses !=  pHandle->hPedalSpeedSens_NumberOfPulses)
+    {
+        pHandle->bPedalSpeedActivity = true;
+    }
+    
+    OldNbPulses = pHandle->hPedalSpeedSens_NumberOfPulses;
     
     //Initialize the number of pulses detected by the AGT Timer.
     pHandle->pPulseFrequency->hNumberOfPulse = 0;
