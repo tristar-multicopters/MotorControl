@@ -98,6 +98,11 @@ These variables are used to configure the motor within the smart config tool.
 
 #define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     4           // Wheel speed sensor cycle number for one wheel rotation
 
+/************************** DUAL Specific parameters  ************************/
+
+#define MASTER_DEFAULT_TORQUE_SLOPE_UP       4000           // Slope in cNm per second 
+#define SLAVE_DEFAULT_TORQUE_SLOPE_UP        2000           // Slope in cNm per second - the  value is less in comparison to the master because the slave should 
+
 /************** Current and Speed PID Parameters  *****************************/
 
 #define IQ_KP_VS_SPEED_1                    300
