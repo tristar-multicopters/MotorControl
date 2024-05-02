@@ -10,7 +10,7 @@
 #define __VC_PARAMETERS_R48_750W_H
 
 /******************* MOTOR SELECTION  *******************************/
-#define MOTOR_SELECTION    MOTOR_AKM_128SX_350W
+#define MOTOR_SELECTION    MOTOR_UTK_G250R_CA11_350W
 
 
 /******************* SCREEN SELECTION  *******************************/
@@ -109,7 +109,7 @@
   
 /***************** POWER ENABLE PARAMETERS  ******************************/
 
-#define POWER_ENABLE_ENABLE                 false            // True if power enable input is used to prevent powertrain start
+#define POWER_ENABLE_ENABLE                 true            // True if power enable input is used to prevent powertrain start
 
 /***************** POWERTRAIN MANAGEMENT ******************************/
 
