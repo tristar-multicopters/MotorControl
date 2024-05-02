@@ -1231,7 +1231,7 @@ bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed)
 
     bool retVal = false;
     PWMCurrFdbk_IqdMovingAverage(pHandle);
-    uint16_t MeanSquare = (uint16_t)sqrt((pHandle->Iqd_avg.q * pHandle->Iqd_avg.q) + (pHandle->Iqd_avg.d * pHandle->Iqd_avg.d));
+    uint16_t MeanSquare = (uint16_t)sqrt((pHandle->Iqd_avg.q * pHandle->Iqd_avg.q) + (pHandle->Iqd_avg.d * pHandle->Iqd_avg.d)) + PHASE_DISC_OFFSET;
     
     if ((MeanSquare < (abs(pHandle->Iqdref.q))) && (abs(MechSpeed) == 0))
     {

@@ -220,6 +220,7 @@
 /****** Phase Wire Disconnection Detection *******/
 #define CURRENT_AVG_WIN_SIZE            32          // the moving average window size
 #define PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE 100      // The time to wait and check before raising warning
+#define PHASE_DISC_OFFSET               300         // Offset to check for phase wire disconnection warning, in digital current
 
 /******** Stuck Protection Settings Section ********/
 #define STUCK_TIMER_MAX_TICKS           2000        // protection timeout in MC Layer ticks
