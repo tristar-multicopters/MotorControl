@@ -36,10 +36,26 @@
 #include "pedal_sensors/duratorq_autorq.h"
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
-#define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // Offset for pedal torque sensor to torque linear transformation during the startup in %
-#define PTS_OFFSET_STARTUP_SPEED_KMH         3              // Speed under which the Startup pedal torque sensor offset is used in km/h
-#define PTS_OFFSET_PTS2TORQUE               10              // Offset for pedal torque sensor to torque linear transformation in %
+#define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // (T1 in the graph) Offset for pedal torque sensor to torque linear transformation during the startup in %
+
+#define PTS_OFFSET_STARTUP_SPEED_KMH         3              // (Speed A in the graph) Speed under which the Startup pedal torque sensor offset is used in km/h 
+
+#define PTS_OFFSET_PTS2TORQUE               10    // (unused)          // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
+
+
+// Minimum Number of pulse, inside a specific time, to the detect PAS on cadence
+#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP  6       // (nbP1 in the graph)  
+    
+//cadence detection windows on ms when starting to use the pedal
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 500  // (TW1 in the graph)         
+
+// Minimum Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running 
+#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING  6     // (nbP2 in the graph) 
+    
+//cadence detection windows on ms when running. 
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 150  // (TW2 in the graph) 
+
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
 #define PTS_FILTER_BW1_1                      40              // BW coefficient for pedal torque sensor avereging for speed 1
@@ -81,11 +97,11 @@
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
                                                                
 #define PAS_0_MIN_TORQUE_PERCENT                0
-#define PAS_1_MIN_TORQUE_PERCENT               15
-#define PAS_2_MIN_TORQUE_PERCENT               15
-#define PAS_3_MIN_TORQUE_PERCENT               15
-#define PAS_4_MIN_TORQUE_PERCENT               15
-#define PAS_5_MIN_TORQUE_PERCENT               15 
+#define PAS_1_MIN_TORQUE_PERCENT                0
+#define PAS_2_MIN_TORQUE_PERCENT                0
+#define PAS_3_MIN_TORQUE_PERCENT                0
+#define PAS_4_MIN_TORQUE_PERCENT                0
+#define PAS_5_MIN_TORQUE_PERCENT                0 
 
 #define PAS_0_MAX_TORQUE_PERCENT               0
 #define PAS_1_MAX_TORQUE_PERCENT               20
@@ -96,8 +112,8 @@
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
 
-#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
-#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        2    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
+//#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
+//#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        2    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/

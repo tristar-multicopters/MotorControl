@@ -16,17 +16,20 @@
 /* Variables ---------------------------------------------------- */
 
 uint8_t bPASCounterAct = 0; // Slow cadence PAS activation loop couter
-
 //
 static PasCadenceState_t PasCadenceState = CADENCE_DETECTION_STARTUP;
+  
+////////////////////Prototype PAS /////////////////////////////////////////////////////////////////////////////////////  
   
 #define PROTOTYPE_PAS_DETECTION true // Set to true to use the Prototype PAS detection
                                      // If set to false the regular pas detection applies 
 
-uint8_t PASAutoDetectMinSpeed = 10;   // Speed in km/h above which pas stays detected
+uint8_t PASAutoDetectMinSpeed = 10;  // (Speed B in the graph) Speed in km/h above which pas stays detected 
 
 bool StartupANDLogic = false;        // Set to true if you want cadence startup AND torque startup
                                      // Set to false if you want cadence startup OR torque startup
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* Functions ---------------------------------------------------- */
 
@@ -391,7 +394,7 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
         //increment on each windowsIncrementTimeMs ms.
         windowsDetectionLimite = windowsDetectionLimite + windowsIncrementTimeMs;
     }
-    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 #if PROTOTYPE_PAS_DETECTION 
     if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH)
     {
@@ -402,7 +405,7 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
         PasCadenceState = CADENCE_DETECTION_RUNNING;
     }            
 #endif    
-    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
     //state macchine to handle PAS cadence detection
     //on differents scenarios, as start, running and stop.
     switch(PasCadenceState)
@@ -685,7 +688,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     }
     else // This is the loop on the center + left side of the graph
     {
-        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH) // Are we in startup ?
+        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH) // Are we in startup ? (checking speed A)
         {
             if (StartupANDLogic) 
             {
@@ -694,7 +697,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
                     PasDetected = true;
                 }                
             }
-            else
+            else // We are using OR logic
             {
                 if (pHandle->bTorqueStartupPASDetected == true || pHandle->bCadenceStartupPASDetected == true)
                 {
@@ -702,7 +705,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
                 }
             }
         }
-        else
+        else // If we are not in startup
         {
             if (pHandle->bCadenceRunningPASDetected == true)
             {
