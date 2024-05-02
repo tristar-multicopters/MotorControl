@@ -14,7 +14,7 @@
 
 
 /******************* SCREEN SELECTION  *******************************/
-#define SCREEN_PROTOCOL    UART_DISABLE
+#define SCREEN_PROTOCOL    UART_APT
 
 
                                                             // UART_DISABLE,
@@ -25,7 +25,7 @@
 
 /***************** THROTTLE SELECTION  ******************************/
 
-#include "throttle_sensors/vc_velec_r48_throttle.h"
+#include "throttle_sensors/vc_velec_throttle.h"
 
 /***************** THROTTLE FEEL PARAMETERS  ******************************/
 #define THROTTLE_OFFSET_THROTTLE2TORQUE        1            // Offset for throttle to torque linear transformation  */
@@ -121,7 +121,7 @@
 #define POWERTRAIN_START_THROTTLE_THRESHOLD 1000            // Throttle value to start powertrain
 #define POWERTRAIN_STOP_THROTTLE_THRESHOLD  100             // Throttle value to stop powertrain
 #define POWERTRAIN_STOP_SPEED_THRESHOLD     0               // Speed value to stop powertrain
-#define POWERTRAIN_DISABLE_THROTTLE_PAS_0   true            // If set the tru throttle is disabled when pas level is 0
+#define POWERTRAIN_DISABLE_THROTTLE_PAS_0   false            // If set the tru throttle is disabled when pas level is 0
 
 #define TORQUE_SPEED_LIMIT_GAIN               92            // Gain to be applied to the torque speed limit in %
 #define DYNAMIC_SPEED_LIMITATION            true            // Indicates if the the top speed change be changed dynamically or is fixed to the default value
@@ -139,7 +139,7 @@
     
 /******************************** BATTERY SELECTION ******************************/
 
-#include "batteries/velec_350w_battery.h"
+#include "batteries/velec_750w_battery.h"
                                             
 #endif                                            
 

@@ -486,7 +486,7 @@
 #endif
 
 #ifndef REAR_LIGHT_BLINK_ON_BRAKE
-    #define REAR_LIGHT_BLINK_ON_BRAKE     true // If set to true rear light will blink when brake is pressed
+    #define REAR_LIGHT_BLINK_ON_BRAKE     false // If set to true rear light will blink when brake is pressed
 #endif
     
 //cadence detection windows on ms when starting to use the pedal.
@@ -500,7 +500,7 @@
 #endif
     
 #ifndef THROTTLE_BLOCK_OFF
-    #define THROTTLE_BLOCK_OFF            true        //If set to true, the throttle will be blocked.
+    #define THROTTLE_BLOCK_OFF            false        //If set to true, the throttle will be blocked.
 #endif
     
 #endif /*__VC_PARAMETERS_H*/
