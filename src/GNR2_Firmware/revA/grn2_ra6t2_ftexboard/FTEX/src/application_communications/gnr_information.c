@@ -72,10 +72,10 @@ uint64_t  GnrInfo_GetSerialNumber(void)
     serialNumber |= (uint64_t)'3' << 48;
     serialNumber |= (uint64_t)'4' << 40;
     serialNumber |= (uint64_t)'9' << 32;
-    serialNumber |= (uint64_t)'1' << 24;
+    serialNumber |= (uint64_t)'0' << 24;
     serialNumber |= (uint64_t)'2' << 16;
-    serialNumber |= (uint64_t)'5' << 8;
-    serialNumber |= (uint64_t)'0'; // Least significant byte (LSB)
+    serialNumber |= (uint64_t)'4' << 8;
+    serialNumber |= (uint64_t)'3'; // Least significant byte (LSB)
     return serialNumber;
 }
 
