@@ -216,6 +216,23 @@ uint16_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle)
     return hmsgToSend;
 }
 
+/**
+ *  Get vehicle Speed decimals
+ */
+uint8_t CanVehiInterface_GetVehicleSpeedDec(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pPowertrain != NULL);
+    ASSERT(pHandle->pPowertrain->pPAS != NULL);
+    ASSERT(pHandle->pPowertrain->pPAS->pWSS != NULL);
+    
+    uint8_t hmsgToSend;
+
+    hmsgToSend = Wheel_GetVehicleSpeedDecFromWSS(pHandle->pPowertrain->pPAS->pWSS);
+
+    return hmsgToSend;
+}
+
 
 /**
  *  Get the current state of the front light 

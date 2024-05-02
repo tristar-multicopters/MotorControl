@@ -147,7 +147,12 @@ extern "C" {
 
 /* FTEX Application specific CANopen registers  */
 
-
+//OD ID used to read the real time speed of the vehicule computed from
+//the wheel speed.
+// This object has 2 subindex 
+//
+// 0 -> Whole units of the real-time speed in km/h computed from wheel speed
+// 1 -> Decimals of the speed in km/h computed from wheel speed
 #define CO_OD_REG_SPEED_MEASURE                0x2000 /**< OD ID for speed measure           >*/
 
 //OD ID used to hold the vehicle power/torque values

@@ -192,6 +192,7 @@ uint8_t  bObjDataMotor2FaultAck             = 0;
     
 /*****Allocate global variables for GNR-IOT objects*****/
 uint8_t  bObjDataSpeedMeas                  = 0;
+uint8_t  bObjDataSpeedDecMeas               = 0;
 uint8_t  bObjDataSOC                        = 0;
 uint8_t  bObjDataPAS                        = DEFAULT_PAS_LEVEL; // The default PAS level should be 1
 uint8_t  bObjDataMaxPAS                     = 0;
@@ -1146,6 +1147,10 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             //move to next OD index
             index++;
             
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SPEED_MEASURE, 1, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&bObjDataSpeedDecMeas}; 
+            //move to next OD index
+            index++;
+                        
             // Application - Inst Power
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_POWER_MEASURE, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataDCPowerMeas};  
             //move to next OD index

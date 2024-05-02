@@ -160,6 +160,13 @@ void CanVehiInterface_UpdateWheelDiameter(uint8_t aValue);
 uint16_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle);
 
 /**
+  @brief  Get Speed Decimals function
+  @param  VCI_Handle_t handle
+  @return Speed Decimals in uint8_t format
+*/
+uint8_t CanVehiInterface_GetVehicleSpeedDec(VCI_Handle_t * pHandle);
+
+/**
   @brief  Get the current state of the front light 
   @param  pHandle: handle of the vehicle
   @return State of the light (0 Off, 1 On)
