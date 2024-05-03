@@ -44,11 +44,11 @@
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
 #define PTS_FILTER_BW1_1                       55              // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW2_1                      250              // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW2_1                       70              // BW coefficient for pedal torque sensor avereging for speed 1
 #define PTS_FILTER_BW1_2                       55              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW2_2                      250              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW2_2                       70              // BW coefficient for pedal torque sensor avereging for speed 2
 #define PTS_FILTER_BW1_3                       55              // BW coefficient for pedal torque sensor avereging for speed 3
-#define PTS_FILTER_BW2_3                      250              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW2_3                       70              // BW coefficient for pedal torque sensor avereging for speed 3
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_LEVEL                       5            
