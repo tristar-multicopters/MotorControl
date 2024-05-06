@@ -96,6 +96,8 @@ typedef struct
     bool bTorqueStartupPASDetected2;               // Flag used to Torque PAS detection on startup state 2.
     bool bTorqueRunningPASDetected;               // Flag used to Torque PAS detection on running state. 
     
+    bool InStartupState;
+    
     PedalSpeedSensorHandle_t * pPSS;              // Pointer to Pedal Speed Sensor handle
     PedalTorqSensorHandle_t * pPTS;               // Pointer to Pedal Torque Sensor handle   
     WheelSpeedSensorHandle_t * pWSS;              // Pointer to Wheel Speed Sensor handle

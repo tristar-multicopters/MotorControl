@@ -11,7 +11,9 @@
                                          // in torque sensor without any activity on the cadence sensor
                                          // The units are in multiples of 5ms so 400 = 2 seconds
 
+//////// Pas Startup Acceleration ramp ///////////////
 
+#define ACCEPTABLE_TRQ_INCREASE      5
 // ============================= Includes ================================ //
 #include "powertrain_management.h"
 #include "vc_tasks.h"
@@ -1129,6 +1131,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     Ramps_Handle_t * pSelectedRampHandle = 0;
     uint8_t Direction = 0;
     static bool PASWasDetected = false;
+    static bool PASStartupRamp = false; 
     
     /* Disable the throttle output if we need to when PAS level is 0 */
     if(pHandle->sParameters.bPAS0DisableThrottle && PedalAssist_GetAssistLevel(pHandle->pPAS) == 0)
@@ -1163,7 +1166,26 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         if (!PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
-
+            
+            if ((pHandle->pPAS->InStartupState == true && pHandle->hOldTorqueSelect == 0 && pHandle->hTorqueSelect  > 0) || PASStartupRamp)
+            {
+                if (PASStartupRamp == false)
+                {
+                    PASStartupRamp = true;
+                }
+                
+                // Is the torque gain too high ?
+                if (pHandle->hTorqueSelect > (pHandle->hOldTorqueSelect + ACCEPTABLE_TRQ_INCREASE))
+                {
+                    // if yes restrict it
+                    pHandle->hTorqueSelect = pHandle->hOldTorqueSelect + ACCEPTABLE_TRQ_INCREASE;
+                }
+                else // If not it means we caught up to the live value and we exit the ramp
+                {
+                   PASStartupRamp = false;
+                }
+                
+            }            
 ///////////////New safety code start////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
 #if EXPERIMENTAL_PAS_SAFETY
             if (pHandle->hTorqueSelect > 0)

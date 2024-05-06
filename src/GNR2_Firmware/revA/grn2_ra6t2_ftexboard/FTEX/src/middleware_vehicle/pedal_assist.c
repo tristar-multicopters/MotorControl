@@ -215,6 +215,7 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     int16_t hRefTorqueS, hRefMinTorqueS, hReadTS, hMaxTorq_Temp, hMaxLevelTorq_Temp;
     
+
     /* Read the Pedal torque sensor */
     hReadTS = PedalTorqSensor_ToMotorTorque(pHandle->pPTS);
     /* Got the PAS from the screen */
@@ -686,7 +687,21 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     bool PasDetected = false;
     
 #if PROTOTYPE_PAS_DETECTION 
-
+    bool StartupState = false;
+    
+    // Moved the startup check at the start so I can also uodate the Handle flag
+    if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH)
+    {
+        StartupState = true;
+        pHandle->InStartupState = true;
+    }
+    else
+    {
+        StartupState = false;
+        pHandle->InStartupState = false;
+    }
+    
+    
     if (PedalAssist_IsPASDetected(pHandle)) // This is the loop on the right side of the graph
     {
         // Are we either above the min speed for auto detection or is cadence detected 
@@ -697,7 +712,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     }
     else // This is the loop on the center + left side of the graph
     {
-        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH) // Are we in startup ? (checking speed A)
+        if (StartupState) // Are we in startup ? (checking speed A)
         {
             if (StartupANDLogic) 
             {
