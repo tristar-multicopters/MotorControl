@@ -81,7 +81,8 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
 
         .hOffsetPTS = PTS_OFFSET_ADC2PTS,
         
-        .hOffsetMTStartup      = PTS_OFFSET_PTS2TORQUE_STARTUP,  
+        .hOffsetMTStartup      = PTS_OFFSET_PTS2TORQUE_STARTUP, 
+        .hOffsetMTStartup2     = PTS_OFFSET_PTS2TORQUE_STARTUP2,         
         .hStartupOffsetMTSpeedKMH = PTS_OFFSET_STARTUP_SPEED_KMH,
         .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
         .hOffsetMTSafety = PTS_OFFSET_PTS2TORQUE_SAFETY,

@@ -289,6 +289,7 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     uint16_t  hTorqueSens;
     uint16_t  hOffsetTemp;
+    uint16_t  hOffsetTemp2;
     uint16_t  hWheelRPM;
     uint16_t  hTorquePASThreshold;
     bool CalculateAverage = false;
@@ -302,6 +303,9 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
         hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
         pHandle->bTorqueStartupPASDetected = true;
         pHandle->bTorqueRunningPASDetected = false;
+        
+        hOffsetTemp2 = (pHandle->pPTS->hParameters.hOffsetMTStartup2 * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+        pHandle->bTorqueStartupPASDetected2 = true;
     }
     else
     {
@@ -355,6 +359,11 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
         pHandle->bTorqueStartupPASDetected = false;
         pHandle->bTorqueRunningPASDetected = false;
     }
+    
+    if (hTorquePASThreshold <= hOffsetTemp2)
+    {
+        pHandle->bTorqueStartupPASDetected2 = false;   
+    }   
 } 
 
 /**
@@ -692,14 +701,14 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
         {
             if (StartupANDLogic) 
             {
-                if (pHandle->bTorqueStartupPASDetected == true  && pHandle->bCadenceStartupPASDetected == true)
+                if (pHandle->bTorqueStartupPASDetected2 == true || (pHandle->bTorqueStartupPASDetected == true  && pHandle->bCadenceStartupPASDetected == true))
                 {
                     PasDetected = true;
                 }                
             }
             else // We are using OR logic
             {
-                if (pHandle->bTorqueStartupPASDetected == true || pHandle->bCadenceStartupPASDetected == true)
+                if (pHandle->bTorqueStartupPASDetected2 == true || pHandle->bTorqueStartupPASDetected == true || pHandle->bCadenceStartupPASDetected == true)
                 {
                     PasDetected = true;
                 }
@@ -863,6 +872,7 @@ void PedalAssist_ResetTorqueStartupPasDection(PAS_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     pHandle->bTorqueStartupPASDetected = false;
+    pHandle->bTorqueStartupPASDetected2 = false;
 }
 
 /**
@@ -874,6 +884,7 @@ void PedalAssist_SetTorqueStartupPasDection(PAS_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     pHandle->bTorqueStartupPASDetected = true;
+    pHandle->bTorqueStartupPASDetected2 = true;
 }
 
 /**
