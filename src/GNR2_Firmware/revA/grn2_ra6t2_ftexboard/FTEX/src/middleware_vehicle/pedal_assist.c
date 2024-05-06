@@ -681,7 +681,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     if (PedalAssist_IsPASDetected(pHandle)) // This is the loop on the right side of the graph
     {
         // Are we either above the min speed for auto detection or is cadence detected 
-        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < PASAutoDetectMinSpeed || pHandle->bCadenceRunningPASDetected == true)
+        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) > PASAutoDetectMinSpeed || pHandle->bCadenceRunningPASDetected == true)
         {
             PasDetected = true;
         }
