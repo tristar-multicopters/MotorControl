@@ -168,6 +168,12 @@ extern "C" {
 #define CO_OD_REG_MAX_PAS                      0x2004 /**< OD ID for maximum PAS level       >*/
 #define CO_OD_REG_MAX_DCPOWER                  0x2005 /**< OD ID for maximum power           >*/
 #define CO_OD_REG_ERR_STATE                    0x2006 /**< OD ID for error state             >*/
+
+//OD ID used to Serial Number, Nibles are inverted.
+//this object has 2 subindex
+//
+// 0 -> Serial High Nible
+// 1 -> Serial Lower Nible
 #define CO_OD_REG_SERIAL_NB                    0x2007 /**< OD ID for Serial number           >*/
 #define CO_OD_REG_FW_VERSION                   0x2008 /**< OD ID for firmware version        >*/
 
