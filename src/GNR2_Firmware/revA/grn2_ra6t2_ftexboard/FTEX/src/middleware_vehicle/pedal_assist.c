@@ -725,7 +725,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
         }
         else // If we are not in startup
         {
-            if (pHandle->bCadenceRunningPASDetected == true)
+            if (pHandle->bCadenceRunningPASDetected == true || pHandle->bTorqueRunningPASDetected)
             {
                 PasDetected = true;
             }    
