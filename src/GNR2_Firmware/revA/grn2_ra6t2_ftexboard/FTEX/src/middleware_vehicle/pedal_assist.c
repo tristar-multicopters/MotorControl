@@ -24,8 +24,6 @@ static PasCadenceState_t PasCadenceState = CADENCE_DETECTION_STARTUP;
 #define PROTOTYPE_PAS_DETECTION true // Set to true to use the Prototype PAS detection
                                      // If set to false the regular pas detection applies 
 
-uint8_t PASAutoDetectMinSpeed = 10;  // (Speed B in the graph) Speed in km/h above which pas stays detected 
-
 bool StartupANDLogic = false;        // Set to true if you want cadence startup AND torque startup
                                      // Set to false if you want cadence startup OR torque startup
 
@@ -677,26 +675,31 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     bool PasDetected = false;
     
-#if PROTOTYPE_PAS_DETECTION 
+#if PROTOTYPE_PAS_DETECTION
+    static bool StartupHysteresis = false;
     bool StartupState = false;
     
     // Moved the startup check at the start so I can also uodate the Handle flag
-    if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH)
-    {
+    if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH && StartupHysteresis == false)
+    {        
         StartupState = true;
         pHandle->InStartupState = true;
     }
-    else
-    {
+    else 
+    {   StartupHysteresis = true;        
         StartupState = false;
         pHandle->InStartupState = false;
     }
     
+    if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) == 0 && StartupHysteresis == true)
+    {
+        StartupHysteresis = false;
+    }  
     
     if (PedalAssist_IsPASDetected(pHandle)) // This is the loop on the right side of the graph
     {
         // Are we either above the min speed for auto detection or is cadence detected 
-        if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) > PASAutoDetectMinSpeed || pHandle->bCadenceRunningPASDetected == true)
+        if (pHandle->bCadenceRunningPASDetected == true)
         {
             PasDetected = true;
         }
