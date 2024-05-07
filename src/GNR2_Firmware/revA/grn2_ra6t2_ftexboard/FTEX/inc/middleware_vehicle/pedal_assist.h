@@ -93,7 +93,6 @@ typedef struct
     bool bCadenceStartupPASDetected;              // Flag used to Cadence PAS detection on startup state.
     bool bCadenceRunningPASDetected;              // Flag used to Cadence PAS detection on running state. 
     bool bTorqueStartupPASDetected;               // Flag used to Torque PAS detection on startup state.
-    bool bTorqueStartupPASDetected2;               // Flag used to Torque PAS detection on startup state 2.
     bool bTorqueRunningPASDetected;               // Flag used to Torque PAS detection on running state. 
     
     bool InStartupState;
