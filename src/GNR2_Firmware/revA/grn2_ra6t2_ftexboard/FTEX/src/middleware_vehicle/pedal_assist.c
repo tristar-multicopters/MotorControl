@@ -24,8 +24,8 @@ static PasCadenceState_t PasCadenceState = CADENCE_DETECTION_STARTUP;
 #define PROTOTYPE_PAS_DETECTION true // Set to true to use the Prototype PAS detection
                                      // If set to false the regular pas detection applies 
 
-bool StartupANDLogic = false;        // Set to true if you want cadence startup AND torque startup
-                                     // Set to false if you want cadence startup OR torque startup
+bool StartupANDLogic = true;        // Set to true if you want cadence startup AND torque startup
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -295,7 +295,7 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
     hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
     
     /* Calculate the offset based on ration percentage */
-    if(hWheelRPM <= pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset
+    if(pHandle->InStartupState == true) // If going at low speed use the startup offset
     {     
         CalculateAverage = true;  // Make sure we calculated the average to check for the threshold       
         hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
@@ -395,7 +395,7 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
 #if PROTOTYPE_PAS_DETECTION 
-    if (Wheel_GetVehicleSpeedFromWSS(pHandle->pWSS) < pHandle->pPTS->hParameters.hStartupOffsetMTSpeedKMH)
+    if (pHandle->InStartupState == true)
     {
         PasCadenceState = CADENCE_DETECTION_STARTUP;
     }
@@ -665,6 +665,10 @@ void PedalAssist_ResetCadenceStatePasDection(void)
     PasCadenceState = CADENCE_DETECTION_STARTUP;
 }
 
+
+    static bool StartupHysteresis = false;
+    
+
 /**
     * @brief  Try to detect PAS
     * @param  Pedal Assist handle
@@ -676,7 +680,6 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     bool PasDetected = false;
     
 #if PROTOTYPE_PAS_DETECTION
-    static bool StartupHysteresis = false;
     bool StartupState = false;
     
     // Moved the startup check at the start so I can also uodate the Handle flag
@@ -725,7 +728,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
         }
         else // If we are not in startup
         {
-            if (pHandle->bCadenceRunningPASDetected == true || pHandle->bTorqueRunningPASDetected)
+            if (pHandle->bCadenceRunningPASDetected == true || pHandle->bTorqueRunningPASDetected == true)
             {
                 PasDetected = true;
             }    

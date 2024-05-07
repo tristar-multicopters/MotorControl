@@ -7,13 +7,13 @@
 
 #define EXPERIMENTAL_PAS_SAFETY    true  // Set to true or false to enable or disable the experimental safety
     
-#define MAX_TIME_NO_CADENCE_ACTIVITY 400 // This is the maximum amount of time for which we can push power 
+#define MAX_TIME_NO_CADENCE_ACTIVITY 800 // This is the maximum amount of time for which we can push power 
                                          // in torque sensor without any activity on the cadence sensor
                                          // The units are in multiples of 5ms so 400 = 2 seconds
 
 //////// Pas Startup Acceleration ramp ///////////////
 
-#define ACCEPTABLE_TRQ_INCREASE      5
+#define ACCEPTABLE_TRQ_INCREASE     1000
 // ============================= Includes ================================ //
 #include "powertrain_management.h"
 #include "vc_tasks.h"
@@ -1167,7 +1167,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         {
             pHandle->hTorqueSelect = PedalAssist_GetTorqueFromTS(pHandle->pPAS);
             
-            if ((pHandle->pPAS->InStartupState == true && pHandle->hOldTorqueSelect == 0 && pHandle->hTorqueSelect  > 0) || PASStartupRamp)
+           /* if ((pHandle->pPAS->InStartupState == true && pHandle->hOldTorqueSelect == 0 && pHandle->hTorqueSelect  > 0) || PASStartupRamp)
             {
                 if (PASStartupRamp == false)
                 {
@@ -1185,7 +1185,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
                    PASStartupRamp = false;
                 }
                 
-            }            
+            }*/            
 ///////////////New safety code start////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////            
 #if EXPERIMENTAL_PAS_SAFETY
             if (pHandle->hTorqueSelect > 0)
