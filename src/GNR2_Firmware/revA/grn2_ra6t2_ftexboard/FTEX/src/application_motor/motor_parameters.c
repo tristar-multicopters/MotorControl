@@ -105,7 +105,7 @@ void PIDParameters_Init(MotorParameters_t * MotorParameters)
     MotorParameters->ParametersConversion.PIDInitMotorControl.hDefKpGain = FW_KP_GAIN;
     MotorParameters->ParametersConversion.PIDInitMotorControl.hDefKiGain = FW_KI_GAIN;
     MotorParameters->ParametersConversion.PIDInitMotorControl.wUpperIntegralLimit = 0;
-    MotorParameters->ParametersConversion.PIDInitMotorControl.wLowerIntegralLimit = -MotorParameters->ParametersConversion.hNominalTorque * FW_KIDIV;
+    MotorParameters->ParametersConversion.PIDInitMotorControl.wLowerIntegralLimit = (int32_t)(-MotorParameters->ParametersConversion.hNominalPeakCurrent) * (int32_t)FW_KIDIV;
     MotorParameters->ParametersConversion.PIDInitMotorControl.hUpperOutputLimit = 0;
     MotorParameters->ParametersConversion.PIDInitMotorControl.hKpDivisor = FW_KPDIV;
     MotorParameters->ParametersConversion.PIDInitMotorControl.hKiDivisor = FW_KIDIV;

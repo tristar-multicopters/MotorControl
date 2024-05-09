@@ -11,6 +11,17 @@
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
 
+/*
+     __      ____ _ _ __ _ __ (_)_ __   __ _ 
+     \ \ /\ / / _` | '__| '_ \| | '_ \ / _` |
+      \ V  V / (_| | |  | | | | | | | | (_| |
+       \_/\_/ \__,_|_|  |_| |_|_|_| |_|\__, |
+                                       |___/
+     If 4 additional int32 parameters are added to the existing PIDHandle structure,
+     the code may not function as expected.
+     Consider alternative approaches if additional parameters are needed.
+    
+*/
 
 typedef struct PID_Handle
 {
