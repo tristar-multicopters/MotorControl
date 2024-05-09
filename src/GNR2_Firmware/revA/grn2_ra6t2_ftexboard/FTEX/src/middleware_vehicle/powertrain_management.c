@@ -43,6 +43,7 @@ static Delay_Handle_t brakeDelay;    // Delay for Brake sensor stuck check while
 void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
 {
     ASSERT(pHandle != NULL);     
+    uint8_t motorWSSNbrPerRotation = MDI_GetWheelSpdSensorNbrPerRotation(pHandle->pMDI);
     
     // Initialize Delays for stuck conditions
     ThrottleDelay = pDelayArray[THROTTLE_DELAY];
@@ -59,12 +60,21 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
     
-    //use starting torque for dual motors, nominal torque  for all other motors
-    #if VEHICLE_SELECTION == VEHICLE_QUIETKAT || VEHICLE_SELECTION == VEHICLE_E_CELLS
-        PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), MDI_GetWheelSpdSensorNbrPerRotation(pHandle->pMDI));
-    #else
-        PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), MDI_GetWheelSpdSensorNbrPerRotation(pHandle->pMDI));    
-    #endif
+    //if we want to use external wss or if wss of motor has 0 magnets use external wss nbr of magnets value
+    if (pHandle->pPAS->pWSS->bWSSUseMotorPulsePerRotation == false || motorWSSNbrPerRotation <= 0)
+    {
+        PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION);
+    }
+    //if we want to use the motor's wss, use motor nbr of magnets value
+    else
+    {
+        //use starting torque for dual motors, nominal torque  for all other motors
+        #if VEHICLE_SELECTION == VEHICLE_QUIETKAT || VEHICLE_SELECTION == VEHICLE_E_CELLS
+            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), motorWSSNbrPerRotation);
+        #else
+            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation);    
+        #endif
+    }
 
     pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
     pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;

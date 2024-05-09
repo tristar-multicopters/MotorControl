@@ -91,7 +91,7 @@ MotorParameters_t MotorParameters =
     },
     .WheelSpeedSensorParameters =
     {
-        .bWheelSpeedSensorNbrPerRotation = WHEEL_SPEED_SENSOR_NBR_PER_ROTATION,
+        .bWheelSpeedSensorNbrPerRotation = MOTOR_WSS_NBR_PER_ROTATION,
     },
     .CurrentSpeedPID = 
     {

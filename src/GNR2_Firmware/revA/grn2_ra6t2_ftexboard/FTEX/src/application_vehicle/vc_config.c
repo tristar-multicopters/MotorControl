@@ -139,6 +139,7 @@ PedalSpeedSensorHandle_t PedalSpeedSensorHandle = {
 
 WheelSpeedSensorHandle_t WheelSpeedHandle =
 {
+    .bWSSUseMotorPulsePerRotation = WWS_USE_MOTOR_NBR_PER_ROTATION,
     .pPulseFrequency = &PulseFreqHandleWheel,
 };
 

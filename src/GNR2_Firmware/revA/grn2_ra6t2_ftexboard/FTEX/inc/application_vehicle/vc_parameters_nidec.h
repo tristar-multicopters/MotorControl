@@ -86,6 +86,11 @@
 
 #define POWER_ENABLE_ENABLE                 true            // True if power enable input is used to prevent powertrain start
 
+/***************** WHEEL SPEED SENSOR PARAMETERS  ******************************/
+
+#define WWS_USE_MOTOR_NBR_PER_ROTATION      false           // True if wheel speed sensor from the motor is used
+#define EXTERNAL_WSS_NBR_PER_ROTATION       1               // Number of magnets on external wheel speed sensor
+
 /***************** POWERTRAIN MANAGEMENT  ******************************/
 
 #define POWERTRAIN_USE_MOTOR1               true            // True if motor1 is used

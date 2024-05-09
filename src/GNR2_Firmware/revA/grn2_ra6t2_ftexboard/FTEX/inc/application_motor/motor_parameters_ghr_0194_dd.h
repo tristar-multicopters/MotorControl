@@ -84,7 +84,7 @@
 
 /************** Wheel Speed Sensor Parameters  *****************************/
 
-#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     46              // Wheel speed sensor cycle number for one wheel rotation
+#define MOTOR_WSS_NBR_PER_ROTATION          46                  // Wheel speed sensor cycle number for one wheel rotation
 
 /************** Current and Speed PID Parameters  *****************************/
 

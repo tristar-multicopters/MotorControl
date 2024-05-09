@@ -18,7 +18,7 @@
                                                             // UART_DISABLE,
                                                             // UART_APT,
                                                             // UART_KD718,
-                                                            // UART_CLOUD_5S,                                              
+                                                            // UART_CLOUD_5S,             
                                                             // UART_LOG_HS 
                                               
 /***************** THROTTLE SELECTION  ******************************/
@@ -90,6 +90,11 @@
 /***************** POWER ENABLE PARAMETERS  ******************************/
 
 #define POWER_ENABLE_ENABLE                 true            // True if power enable input is used to prevent powertrain start
+    
+/***************** WHEEL SPEED SENSOR PARAMETERS  ******************************/
+
+#define WWS_USE_MOTOR_NBR_PER_ROTATION      true            // True if wheel speed sensor from the motor is used
+#define EXTERNAL_WSS_NBR_PER_ROTATION       1               // Number of magnets on external wheel speed sensor
 
 /***************** POWERTRAIN MANAGEMENT ******************************/
 

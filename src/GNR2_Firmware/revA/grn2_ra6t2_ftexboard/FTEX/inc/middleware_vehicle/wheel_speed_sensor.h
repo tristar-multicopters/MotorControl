@@ -27,13 +27,14 @@
 // ================= Structure used to configure a pin ===================== //
 typedef struct {
     
-  PulseFrequencyHandle_t * pPulseFrequency;  /* Pointer to speed handle */
+    PulseFrequencyHandle_t * pPulseFrequency;  /* Pointer to speed handle */
 
-  uint8_t    bWheelSpeed_PulsePerRotation;  /* Nunber of pulse per rotation */
-  float wWheelSpeed_Read;    /* Wheel Speed Sensor Periode value*/
-  uint32_t wWheelSpeedFreq;     /* Wheel Speed sensor frequency calculated value */
-  int32_t wWheelSpeedRpm;       /* Wheel Speed sensor rotation per minute calculated value */
-  uint16_t wWheelSpeedTimeOut;  /*  variable used to count the maximum time before show time ris not working.  */
+    bool bWSSUseMotorPulsePerRotation;  /* Indicates whether the wheel speed sensor within the motor is used */
+    uint8_t    bWheelSpeed_PulsePerRotation;  /* Number of pulse per rotation */
+    float wWheelSpeed_Read;    /* Wheel Speed Sensor Periode value*/
+    uint32_t wWheelSpeedFreq;     /* Wheel Speed sensor frequency calculated value */
+    int32_t wWheelSpeedRpm;       /* Wheel Speed sensor rotation per minute calculated value */
+    uint16_t wWheelSpeedTimeOut;  /*  variable used to count the maximum time before show time ris not working.  */
     
 } WheelSpeedSensorHandle_t;
 

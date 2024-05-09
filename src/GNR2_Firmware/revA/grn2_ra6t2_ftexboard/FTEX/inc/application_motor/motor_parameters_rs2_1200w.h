@@ -92,11 +92,11 @@ These variables are used to configure the motor within the smart config tool.
 #define HALL_AVERAGING_FIFO_DEPTH           8                   // Depth of the FIFO used to average Hall sensor values
 #define HALL_PHASE_SHIFT                    60                  // Electrical phase shift in degrees between the low to high transition of signal H1 and the zero crossing of the Bemf induced between phase A and B
 
-#define EN_VIBRATION_ERROR                  false           // Enable or disable motor vibration error
+#define EN_VIBRATION_ERROR                  false               // Enable or disable motor vibration error
 
 /************** Wheel Speed Sensor Parameters  *****************************/
 
-#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     6               // Wheel speed sensor cycle number for one wheel rotation
+#define MOTOR_WSS_NBR_PER_ROTATION          6                   // Wheel speed sensor cycle number for one wheel rotation
 
 /************** Current and Speed PID Parameters  *****************************/
 
