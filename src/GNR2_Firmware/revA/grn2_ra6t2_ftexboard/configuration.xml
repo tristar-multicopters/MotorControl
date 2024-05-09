@@ -984,7 +984,7 @@
       <property id="module.driver.poeg.trigger" value="module.driver.poeg.trigger.trigger_pin"/>
       <property id="module.driver.poeg.polarity" value="module.driver.poeg.polarity.gtetrg_polarity_active_low"/>
       <property id="module.driver.poeg.noise_filter" value="module.driver.poeg.noise_filter.gtetrg_noise_filter_pclkb_div_32"/>
-      <property id="module.driver.poeg.p_callback" value="PWMBreak1_IRQHandler"/>
+      <property id="module.driver.poeg.p_callback" value="OvercurrentPOEG_IRQHandler"/>
       <property id="module.driver.poeg.ipl" value="board.icu.common.irq.priority0"/>
     </module>
     <module id="module.driver.poeg_on_poeg.1761000203">
@@ -1282,7 +1282,7 @@
       <property id="module.driver.external_irq.trigger" value="module.driver.external_irq.trigger.trig_falling"/>
       <property id="module.driver.external_irq.filter_enable" value="module.driver.external_irq.filter_enable.false"/>
       <property id="module.driver.external_irq.pclk_div" value="module.driver.external_irq.pclk_div.pclk_div_by_64"/>
-      <property id="module.driver.external_irq.p_callback" value="OCD1_IRQHandler"/>
+      <property id="module.driver.external_irq.p_callback" value="OvercurrentInterrupt_IRQHandler"/>
       <property id="module.driver.external_irq.ipl" value="board.icu.common.irq.priority0"/>
     </module>
     <context id="_hal.0">

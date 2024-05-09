@@ -220,12 +220,13 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
         if (sDebugVariables.FaultAck)
         {
             sDebugVariables.FaultAck = false;
-            MDI_FaultAcknowledged(pVCI->pPowertrain->pMDI, M1);
-            MDI_FaultAcknowledged(pVCI->pPowertrain->pMDI, M2);
+            MDI_CriticalFaultAcknowledged(pVCI->pPowertrain->pMDI, M1);
+            MDI_CriticalFaultAcknowledged(pVCI->pPowertrain->pMDI, M2);
         }
         
         #else
         StateVC = VCSTM_GetState(pVCI->pStateMachine);
+        PWRT_MotorErrorManagement(pVCI->pPowertrain);
         PWRT_MotorWarningManagement(pVCI->pPowertrain);
 
         switch (StateVC)
@@ -331,7 +332,7 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
                     PWRT_StopMotors(pVCI->pPowertrain); // Stop powertrain when fault happens
                     if (PWRT_IsPowertrainStopped(pVCI->pPowertrain)) // If powertrain is stopped, do fault management strategy.
                     {
-                        if (!PWRT_MotorFaultManagement(pVCI->pPowertrain)) // If motor fault management is successful, remove vehicle faults related to motors.
+                        if (!PWRT_MotorCriticalFaultManagement(pVCI->pPowertrain)) // If motor fault management is successful, remove vehicle faults related to motors.
                         {
                             VCSTM_FaultProcessing(pVCI->pStateMachine, 0, VC_M1_FAULTS); // Remove VC_M1_FAULTS flag
                             VCSTM_FaultProcessing(pVCI->pStateMachine, 0, VC_M2_FAULTS); // Remove VC_M2_FAULTS flag

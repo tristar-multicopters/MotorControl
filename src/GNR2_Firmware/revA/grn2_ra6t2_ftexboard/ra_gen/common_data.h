@@ -17,8 +17,8 @@ extern const external_irq_instance_t g_external_irq0;
 extern icu_instance_ctrl_t g_external_irq0_ctrl;
 extern const external_irq_cfg_t g_external_irq0_cfg;
 
-#ifndef OCD1_IRQHandler
-void OCD1_IRQHandler(external_irq_callback_args_t * p_args);
+#ifndef OvercurrentInterrupt_IRQHandler
+void OvercurrentInterrupt_IRQHandler(external_irq_callback_args_t * p_args);
 #endif
 /** ELC Instance */
 extern const elc_instance_t g_elc;

@@ -63,7 +63,7 @@ uint32_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, co
     {
         return MC_OCSP;
     }
-    return MC_NO_ERROR; 
+    return MC_NO_FAULT; 
 }
 
 /*
@@ -206,10 +206,22 @@ void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle)
 */
 uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle)
 {
-  uint32_t retVal = 0;  
-  retVal = pHandle->pFctIsOverCurrentOccurred(pHandle);
-  return retVal;
+    uint32_t retVal = 0;  
+    retVal = pHandle->pFctIsOverCurrentOccurred(pHandle);
+    return retVal;
 }
+
+/*
+    Check if OCD2 occured since last call.
+*/
+#if OCDX_POEG == OCD1_POEG
+uint32_t RegisterIsOCD2OccurredCallBack(PWMCurrFdbkHandle_t * pHandle)
+{
+    uint32_t retVal = 0;  
+    retVal = pHandle->pFctOCD2Occured(pHandle);
+    return retVal;
+}
+#endif
 
 
 bool PWMCurrFdbk_GetTurnOnLowSidesAction(PWMCurrFdbkHandle_t * pHandle)

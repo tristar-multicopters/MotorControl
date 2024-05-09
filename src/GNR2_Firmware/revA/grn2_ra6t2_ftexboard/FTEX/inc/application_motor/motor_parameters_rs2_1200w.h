@@ -23,8 +23,8 @@ These variables are used to configure the motor within the smart config tool.
 
 /************************** Controller Config  ************************/
 
-
 #define HARDWARE_SELECTION                 HARDWARE_EP1200      // Controller selection to adapt controller parameters
+
 
 /************************** Motor Config Parameters ************************/
 #define MOTOR_GEAR_RATIO                    (float)5            // Motor gear ratio, the value is always X turns of the motor

@@ -123,6 +123,9 @@ struct PWMCurrFdbkHandle
     PWMCurrFdbk_Generic_Cb_t                        pFctTurnOnLowSides;          /**< pointer on the function the component instance uses to turn low sides on */
     PWMCurrFdbk_SetSampPointSectX_Cb_t              pFctSetADCSampPointSectX;    /**< pointer on the function the component instance uses to set the ADC sampling point  */
     PWMCurrFdbk_OverCurr_Cb_t                       pFctIsOverCurrentOccurred;   /**< pointer on the function the component instance uses to return the over current status */
+    #if OCDX_POEG == OCD1_POEG
+        PWMCurrFdbk_OverCurr_Cb_t                       pFctOCD2Occured;   	         /**< pointer on the function the component instance uses to return the over current status */
+    #endif
     PWMCurrFdbk_Generic_Cb_t                        pFctRLDetectionModeEnable;   /**< pointer on the function the component instance uses to enable RL detection mode */
     PWMCurrFdbk_Generic_Cb_t                        pFctRLDetectionModeDisable;  /**< pointer on the function the component instance uses to disable RL detection mode */
     PWMCurrFdbk_RLDetectSetDuty_Cb_t                pFctRLDetectionModeSetDuty;  /**< pointer on the function the component instance uses to set the PWM duty cycle in RL detection mode */
@@ -239,7 +242,7 @@ uint32_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, co
   * the PWM Frequency is too high) results in the functions returning #MC_FOC_DURATION which entails a
   * motor Control fault that stops the motor.
   *
-  * @retval Returns #MC_NO_ERROR if no error occurred or #MC_FOC_DURATION if the duty cycles were
+  * @retval Returns MC_NO_FAULT if no error occurred or MC_FOC_DURATION if the duty cycles were
   *         set too late for being taken into account in the next PWM cycle (overrun condition).
   */
 uint32_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle,
@@ -279,7 +282,7 @@ void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle);
  *  @param  pHandle: Handle on the target instance of the PWMC component
  *    @retval Returns #MC_OCD1 or MC_OCD2 if an over current condition was detected on the power stage
  *         controlled by the PWMC component pointed by  @p pHandle, since the last call to this function;
- *         returns #MC_NO_FAULTS otherwise. */
+ *         returns #MC_NO_FAULT otherwise. */
 uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle);
 
 /**
@@ -306,7 +309,7 @@ void PWMCurrFdbk_RLDetectionModeDisable(PWMCurrFdbkHandle_t * pHandle);
   * @param  hDuty Duty cycle to apply
   *
   * @retval If the Duty Cycle could be applied on time for the next PWM period,
-  *         #MC_NO_ERROR is returned. Otherwise, #MC_FOC_DURATION is returned.
+  *         MC_NO_FAULT is returned. Otherwise, MC_FOC_DURATION is returned.
   */
 uint32_t PWMCurrFdbk_RLDetectionModeSetDuty(PWMCurrFdbkHandle_t * pHandle,
                                       uint16_t hDuty);
@@ -380,6 +383,17 @@ void PWMCurrFdbk_RegisterIsOverCurrentOccurredCallBack(PWMCurrFdbk_OverCurr_Cb_t
 
 
 /**
+ * @brief Sets the Callback that the PWMC component shall invoke to OCD2
+ * @param pCallBack pointer on the callback
+ * @param pHandle pointer on the handle structure of the PWMC instance
+ *
+ */
+#if OCDX_POEG == OCD1_POEG
+uint32_t RegisterIsOCD2OccurredCallBack(PWMCurrFdbkHandle_t * pHandle);
+#endif
+
+
+/**
  * @brief Sets the Callback that the PWMC component shall invoke to enable the R/L detection mode
  * @param pCallBack pointer on the callback
  * @param pHandle pointer on the handle structure of the PWMC instance
@@ -405,7 +419,6 @@ void PWMCurrFdbk_RegisterRLDetectionModeDisableCallBack(PWMCurrFdbk_Generic_Cb_t
  */
 void PWMCurrFdbk_RegisterRLDetectionModeSetDutyCallBack(PWMCurrFdbk_RLDetectSetDuty_Cb_t pCallBack,
     PWMCurrFdbkHandle_t * pHandle);
-
 
 #ifdef __cplusplus
 }

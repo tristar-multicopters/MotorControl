@@ -156,7 +156,7 @@ uint32_t ResDivVbusSensor_CalcAvVbus(ResDivVbusSensorHandle_t * pHandle)
 }
 
 /**
-* It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_ERROR depending on bus voltage and protection threshold values
+* It returns MC_OVER_VOLT, MC_UNDER_VOLT or MC_NO_FAULT depending on bus voltage and protection threshold values
 */
 uint32_t ResDivVbusSensor_CheckFaultState(ResDivVbusSensorHandle_t * pHandle)
 {
@@ -193,7 +193,7 @@ uint32_t ResDivVbusSensor_CheckFaultState(ResDivVbusSensorHandle_t * pHandle)
     }
     else
     {
-        fault = MC_NO_ERROR;
+        fault = MC_NO_FAULT;
     }
     return fault; // Return fault status, if any
 }

@@ -48,7 +48,7 @@ typedef struct
                                     This parameter is expressed in Celsius */
 
     NTCTempFaultStates_t hFaultState;        /**< Contains latest Fault code.
-                                    This parameter is set to MC_OVER_TEMP or MC_NO_ERROR */
+                                    This parameter is set to MC_OVER_TEMP or MC_NO_FAULT */
 
     uint16_t hLowPassFilterBw;   /**< used to configure the first order software filter bandwidth.
                                     hLowPassFilterBw = NTC_CalcBusReading call rate [Hz]/ FilterBandwidth[Hz] */
@@ -105,7 +105,7 @@ int16_t NTCTempSensor_GetAvTempCelcius(NTCTempSensorHandle_t * pHandle);
 /**
  * @brief  Returns Temperature measurement fault status
  * Fault status can be either MC_OVER_TEMP when measure exceeds the protection threshold values or
- * MC_NO_ERROR if it is inside authorized range.
+ * MC_NO_FAULT if it is inside authorized range.
  * @param pHandle: Pointer on Handle structure of TemperatureSensor component.
  * @retval Fault status : read internal fault state
  */

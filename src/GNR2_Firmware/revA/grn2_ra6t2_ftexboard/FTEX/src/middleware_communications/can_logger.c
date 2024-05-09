@@ -39,8 +39,8 @@ void CANLog_SendStatus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t 
     {
         msgToSend.Identifier = CAN_ID_STATUS_M1;
         status = MDI_GetSTMState(pHandle->pPowertrain->pMDI, bMotorSelection)                |
-                         (uint32_t)MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI, bMotorSelection)  <<  8 |
-                         (uint32_t)MDI_GetOccurredFaults(pHandle->pPowertrain->pMDI, bMotorSelection) << 16;
+                         (uint32_t)MDI_GetCurrentCriticalFaults(pHandle->pPowertrain->pMDI, bMotorSelection)  <<  8 |
+                         (uint32_t)MDI_GetOccurredCriticalFaults(pHandle->pPowertrain->pMDI, bMotorSelection) << 16;
         // Load data buffer
         msgToSend.Data[0] = status & 0xFF;     // Fault occurred
         msgToSend.Data[1] = (status >> 8)  & 0xFF; // Fault now
@@ -53,8 +53,8 @@ void CANLog_SendStatus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t 
     {
         msgToSend.Identifier = CAN_ID_STATUS_M2;
         status = MDI_GetSTMState(pHandle->pPowertrain->pMDI, bMotorSelection)                |
-                         (uint32_t)MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI, bMotorSelection)  <<  8 |
-                         (uint32_t)MDI_GetOccurredFaults(pHandle->pPowertrain->pMDI, bMotorSelection) << 16;
+                         (uint32_t)MDI_GetCurrentCriticalFaults(pHandle->pPowertrain->pMDI, bMotorSelection)  <<  8 |
+                         (uint32_t)MDI_GetOccurredCriticalFaults(pHandle->pPowertrain->pMDI, bMotorSelection) << 16;
         // Load data buffer
         msgToSend.Data[0] = status & 0xFF;     // Fault occurred
         msgToSend.Data[1] = (status >> 8)  & 0xFF; // Fault now

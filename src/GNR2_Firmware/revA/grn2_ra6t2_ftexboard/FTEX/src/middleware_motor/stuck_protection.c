@@ -26,7 +26,7 @@ uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
 {    
     ASSERT(pHandle != NULL); 
     
-    uint32_t wRetval = MC_NO_FAULTS;
+    uint32_t wRetval = MC_NO_FAULT;
 
     if ((AvrgMecSpeed == 0) && (hFinalTorqueRef > pHandle->min_torque))
     {
@@ -34,7 +34,7 @@ uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
         if (pHandle->counter < pHandle->timeout_general)
         {
             pHandle->counter++;
-            wRetval = MC_NO_FAULTS;
+            wRetval = MC_NO_FAULT;
         }
         //if stuck time is more that threshold, rasie error and cut the power
         else 
@@ -55,7 +55,7 @@ uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
     else
     {
         pHandle->counter = 0;
-        wRetval = MC_NO_FAULTS;
+        wRetval = MC_NO_FAULT;
     }
     return wRetval;
 }

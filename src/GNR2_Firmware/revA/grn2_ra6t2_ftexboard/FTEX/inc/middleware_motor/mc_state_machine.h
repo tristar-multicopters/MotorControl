@@ -95,7 +95,7 @@ typedef enum
                            executed. Following state is normally IDLE */
   M_FAULT_NOW = 10,       /*!< Persistent state, the state machine can be moved from
                            any condition directly to this state by
-                           MCStateMachine_FaultProcessing method. This method also manage
+                           MCStateMachine_CriticalFaultProcessing method. This method also manage
                            the passage to the only allowed following state that
                            is FAULT_OVER */
   M_FAULT_OVER = 11,       /*!< Persistent state where the application is intended to
@@ -122,14 +122,18 @@ typedef enum
   */
 typedef struct
 {
-  MotorState_t   bState;     /*!< Variable containing state machine current
+    MotorState_t   bState;     /*!< Variable containing state machine current
                                     state */
-  uint32_t  wFaultNow;       /*!< Bit fields variable containing faults
+    uint32_t  wCriticalFaultNow;       /*!< Bit fields variable containing critical faults
                                     currently present */
-  uint32_t  wFaultOccurred;  /*!< Bit fields variable containing faults
+    uint32_t  wCriticalFaultOccured;  /*!< Bit fields variable containing critical faults
                                     historically occurred since the state
                                     machine has been moved to FAULT_NOW state */
-  uint32_t  wWarnings;        /*!< containing warning that raised by MC Layer */
+    uint32_t  wErrors;             /*!< Bit fields variable containing errors
+                                    currently present */
+    bool      bErrorProcessing;    /*!< True if error is still being processed */
+    uint16_t hErrorProcessingTimer; /*< Timer used to process errors */
+    uint32_t  wWarnings;              /*!< contains warning that raised by MC Layer */
 } MotorStateMachineHandle_t;
 
 
@@ -153,7 +157,7 @@ void MCStateMachine_Init(MotorStateMachineHandle_t * pHandle);
   *        IDLE_ALIGNMENT or ANY_STOP, that corresponds with the user actions:
   *        Start Motor, Encoder Alignemnt and Stop Motor, the MC_SW_ERROR is
   *        not raised.
-  * @param pHanlde pointer of type  MotorStateMachineHandle_t.
+  * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @param bState New requested state
   * @retval bool It returns true if the state has been really set equal to
   *         bState, false if the requested state can't be reached
@@ -161,31 +165,45 @@ void MCStateMachine_Init(MotorStateMachineHandle_t * pHandle);
 bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t bState);
 
 /**
-  * @brief It clocks both HW and SW faults processing and update the state
+  * @brief It clocks both HW and SW critical faults processing and update the state
   *        machine accordingly with hSetErrors, hResetErrors and present state.
   *        Refer to MotorState_t description for more information about fault states.
-  * @param pHanlde pointer of type  MotorStateMachineHandle_t
-  * @param hSetErrors Bit field reporting faults currently present
-  * @param hResetErrors Bit field reporting faults to be cleared
+  * @param pHandle pointer of type  MotorStateMachineHandle_t
+  * @param wSetErrors Bit field reporting critical faults currently present
+  * @param wResetErrors Bit field reporting critical faults to be cleared
   * @retval MotorState_t New state machine state after fault processing
   */
-MotorState_t MCStateMachine_FaultProcessing(MotorStateMachineHandle_t * pHandle, uint32_t wSetErrors, uint32_t
+MotorState_t MCStateMachine_CriticalFaultProcessing(MotorStateMachineHandle_t * pHandle, uint32_t wSetErrors, uint32_t
                              wResetErrors);
 
 /**
+  * @brief It sets errors
+  * @param pHandle pointer of type  MotorStateMachineHandle_t
+  * @param wSetErrors Bit field reporting errors currently present
+  * @param wResetErrors Bit field reporting errors to be cleared
+  * @retval none.
+  */
+void MCStateMachine_SetError(MotorStateMachineHandle_t * pHandle, uint32_t wSetErrors, uint32_t wResetErrors);
+
+/**
+  * @brief It processes the error
+  * @param pHandle pointer of type  MotorStateMachineHandle_t
+  * @retval none.
+  */
+void MCStateMachine_ErrorProcessing(MotorStateMachineHandle_t * pHandle);
+
+/**
   * @brief It clocks both HW and SW warning processing
-  *        machine accordingly with hSetWarnings, hResetWarnings and present state.
-  *        Refer to MotorState_t description for more information about fault states.
-  * @param pHanlde pointer of type  MotorStateMachineHandle_t
-  * @param hSetWarnings Bit field reporting warnings currently present
-  * @param hResetWarnings Bit field reporting warnings to be cleared
+  * @param pHandle pointer of type  MotorStateMachineHandle_t
+  * @param wSetWarnings Bit field reporting warnings currently present
+  * @param wResetWarnings Bit field reporting warnings to be cleared
   * @retval none.
   */
 void MCStateMachine_WarningHandling(MotorStateMachineHandle_t * pHandle, uint32_t wSetWarnings, uint32_t  wResetWarnings);
 
 /**
   * @brief  Returns the current state machine state
-  * @param  pHanlde pointer of type  MotorStateMachineHandle_t
+  * @param  pHandle pointer of type  MotorStateMachineHandle_t
   * @retval MotorState_t Current state machine state
   */
 MotorState_t MCStateMachine_GetState(MotorStateMachineHandle_t * pHandle);
@@ -196,29 +214,44 @@ MotorState_t MCStateMachine_GetState(MotorStateMachineHandle_t * pHandle);
   *        then it is moved into STOP_IDLE and the bit field variable containing
   *        information about the faults historically occured is cleared.
   *        The method call is discarded if the state machine is not in FAULT_OVER
-  * @param pHanlde pointer of type  MotorStateMachineHandle_t
+  * @param pHandle pointer of type  MotorStateMachineHandle_t
   * @retval bool true if the state machine has been moved to IDLE, false if the
   *        method call had no effects
   */
-bool MCStateMachine_FaultAcknowledged(MotorStateMachineHandle_t * pHandle);
+bool MCStateMachine_CriticalFaultAcknowledged(MotorStateMachineHandle_t * pHandle);
 
 /**
-  * @brief It returns two 16 bit fields containing information about both faults
-  *        currently present and faults historically occurred since the state
+  * @brief It returns two 16 bit fields containing information about both critical faults
+  *        currently present and critical faults historically occurred since the state
   *        machine has been moved into state
-  * @param pHanlde pointer of type  MotorStateMachineHandle_t.
+  * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval uint32_t  Two 16 bit fields: in the most significant half are stored
-  *         the information about currently present faults. In the least
-  *         significant half are stored the information about the faults
+  *         the information about currently present critical faults. In the least
+  *         significant half are stored the information about the critical faults
   *         historically occurred since the state machine has been moved into
   *         FAULT_NOW state
   */
-uint64_t MCStateMachine_GetFaultState(MotorStateMachineHandle_t * pHandle);
+uint64_t MCStateMachine_GetCriticalFaultState(MotorStateMachineHandle_t * pHandle);
+
+/**
+  * @brief It returns a 16 bit fields containing information about errors
+  *        currently present 
+  * @param pHandle pointer of type  MotorStateMachineHandle_t.
+  * @retval uint32_t  a 16 bit field that shoing occured errors
+  */
+uint32_t MCStateMachine_GetErrorState(MotorStateMachineHandle_t * pHandle);
+
+/**
+  * @brief It returns a boolean indicating whether the error is still processing
+  * @param pHandle pointer of type  MotorStateMachineHandle_t.
+  * @retval boolean indicating whether error is processing
+  */
+bool MCStateMachine_IsErrorProcessing(MotorStateMachineHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings
   *        currently present 
-  * @param pHanlde pointer of type  MotorStateMachineHandle_t.
+  * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval uint32_t  a 16 bit field that shoing occured warning
   */
 uint32_t MCStateMachine_GetWarningState(MotorStateMachineHandle_t * pHandle);

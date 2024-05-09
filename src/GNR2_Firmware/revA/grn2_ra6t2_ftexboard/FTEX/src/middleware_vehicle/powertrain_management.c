@@ -734,41 +734,41 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
 }
 
 /**
-  * @brief  Manage motor faults. Check if faults are still present and send motor fault acknowledge when faults are gone.
+  * @brief  Manage motor critical faults. Check if critical faults are still present and send motor critical fault acknowledge when critical faults are gone.
   * @param  Powertrain handle
-  * @retval Returns true if a motor fault is still active, false if no more fault is present.
+  * @retval Returns true if a motor critical fault is still active, false if no more critical fault is present.
   */
-bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
+bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint32_t wM1FaultOccurredCode = MDI_GetOccurredFaults(pHandle->pMDI, M1);
-    uint32_t wM2FaultOccurredCode = MDI_GetOccurredFaults(pHandle->pMDI, M2);
+    uint32_t wM1FaultOccurredCode = MDI_GetOccurredCriticalFaults(pHandle->pMDI, M1);
+    uint32_t wM2FaultOccurredCode = MDI_GetOccurredCriticalFaults(pHandle->pMDI, M2);
 
-    uint32_t wFaultOccurred = wM1FaultOccurredCode | wM2FaultOccurredCode;
+    uint32_t wCriticalFaultOccured = wM1FaultOccurredCode | wM2FaultOccurredCode;
 
-    if (wFaultOccurred != MC_NO_ERROR)      // Raise Motor current error to the LCD
+    if (wCriticalFaultOccured != MC_NO_FAULT)      // Raise Motor current error to the LCD
     {
-        if ((wFaultOccurred & MC_OCD1)!= MC_NO_ERROR)
+        if ((wCriticalFaultOccured & MC_OCD1)!= MC_NO_FAULT)
         {
             VC_Errors_RaiseError(OVER_CURRENT, HOLD_UNTIL_CLEARED);
         }
-        if ((wFaultOccurred & MC_OVER_TEMP_CONTROLLER) != MC_NO_ERROR)
+        if ((wCriticalFaultOccured & MC_OVER_TEMP_CONTROLLER) != MC_NO_FAULT)
         {
             VC_Errors_RaiseError(CONTROLLER_OT_PROTECT, DEFAULT_HOLD_FRAMES);
         }
-        if ((wFaultOccurred & MC_OVER_TEMP_MOTOR) != MC_NO_ERROR)
+        if ((wCriticalFaultOccured & MC_OVER_TEMP_MOTOR) != MC_NO_FAULT)
         {
             VC_Errors_RaiseError(MOTOR_OT_PROTECT, DEFAULT_HOLD_FRAMES);
         }
-        if ((wFaultOccurred & MC_OVER_VOLT)!= MC_NO_ERROR)
+        if ((wCriticalFaultOccured & MC_OVER_VOLT)!= MC_NO_FAULT)
         {
             VC_Errors_RaiseError(OV_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
-        if ((wFaultOccurred & MC_UNDER_VOLT)!= MC_NO_ERROR)
+        if ((wCriticalFaultOccured & MC_UNDER_VOLT)!= MC_NO_FAULT)
         {
             VC_Errors_RaiseError(UV_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
-        if ((wFaultOccurred & MC_NTC_FREEZE_CONTROLLER)!= MC_NO_ERROR)
+        if ((wCriticalFaultOccured & MC_NTC_FREEZE_CONTROLLER)!= MC_NO_FAULT)
         {
             VC_Errors_RaiseError(UT_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
@@ -776,23 +776,24 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
     }
     if (PWRT_IsMotor1Used(pHandle))
     {// If there's an over current (OC) that has occurred but has already been cleared
-        if ((wM1FaultOccurredCode & MC_OCD2) || (wM1FaultOccurredCode & MC_OCSP))
-        {
-            if (pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the OC fault
-                wM1FaultOccurredCode &= ~MC_OCD2;
-                wM1FaultOccurredCode &= ~MC_OCSP;
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
-                if ((wFaultOccurred & MC_OCD1) == 0)
-                {
-                    VC_Errors_ClearError(OVER_CURRENT);
+        #if OCDX_POEG == OCD2_POEG
+            if (wM1FaultOccurredCode & MC_OCD2)
+            {
+                if (pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the OC fault
+                    wM1FaultOccurredCode &= ~MC_OCD2;
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
+                    if ((wCriticalFaultOccured & MC_OCD1) == 0)
+                    {
+                        VC_Errors_ClearError(OVER_CURRENT);
+                    }
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
                 }
             }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
-            }
-        }
+        #endif
 
         if (wM1FaultOccurredCode & MC_SPEED_FDBK)
         {// If there's a speed feedback (SF) that has occurred but has already been cleared
@@ -865,20 +866,20 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 
     if (PWRT_IsMotor2Used(pHandle))
     {
-        if ((wM2FaultOccurredCode & MC_OCD2) || (wM2FaultOccurredCode & MC_OCSP))
-        {
-            if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the OC fault
-                wM2FaultOccurredCode &= ~MC_OCD2;
-                wM2FaultOccurredCode &= ~MC_OCSP;
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
+        #if OCDX_POEG == OCD2_POEG
+            if ((wM2FaultOccurredCode & MC_OCD2))
+            {
+                if(pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the OC fault
+                    wM2FaultOccurredCode &= ~MC_OCD2;
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2]++;
+                }
             }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2]++;
-            }
-        }
-
+        #endif
         if ((wM2FaultOccurredCode & MC_SPEED_FDBK) != 0)
         {// If there's a speed feedback (SF) that has occurred but has already been cleared
             if(pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
@@ -951,13 +952,12 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
     // Verify if all fault occured have been cleared
     if (!wM1FaultOccurredCode)
     {
-        //todo: handle result from MDI_FaultAcknowledged below
-        MDI_FaultAcknowledged(pHandle->pMDI, M1);
+        MDI_CriticalFaultAcknowledged(pHandle->pMDI, M1);
     }
 
     if (!wM2FaultOccurredCode)
     {
-        MDI_FaultAcknowledged(pHandle->pMDI, M2);
+        MDI_CriticalFaultAcknowledged(pHandle->pMDI, M2);
     }
 
     bool bFaultOccured = wM1FaultOccurredCode | wM2FaultOccurredCode;
@@ -965,16 +965,56 @@ bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle)
 }
 
 /**
-  * @brief  Manage motor faults. Check if faults are still present and send motor fault acknowledge when faults are gone.
+  * @brief  Manage motor errors. Check if errors are still present and send motor errors acknowledge when errors are gone.
   * @param  Powertrain handle
-  * @retval Returns true if a motor fault is still active, false if no more fault is present.
+  * @retval Returns true if a motor error is still active, false if no more error is present.
+  */
+void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    uint32_t wErrorOccured = MDI_GetCurrentErrors(pHandle->pMDI, M1);
+    
+    #if OCDX_POEG == OCD1_POEG
+        if ((wErrorOccured & MC_OCD2) != MC_NO_WARNING)
+        {
+            if (pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+                {// If the timer has timeout, clear the OC fault
+                    wErrorOccured &= ~MC_OCD2;
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
+                }
+                else
+                {//Increase the counter one more tick
+                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
+                }
+        }
+    #endif
+    
+    if ((wErrorOccured & MC_OCSP) != MC_NO_WARNING)
+    {
+        if (pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+            {// If the timer has timeout, clear the OC fault
+                wErrorOccured &= ~MC_OCSP;
+                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
+            }
+            else
+            {//Increase the counter one more tick
+                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
+            }
+    }
+
+}
+
+/**
+  * @brief  Manage motor warnings. Check if faults are still present and send motor warnings acknowledge when warnings are gone.
+  * @param  Powertrain handle
+  * @retval Returns true if a motor warning is still active, false if no more warning is present.
   */
 void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     uint32_t wWarningOccurred = MDI_GetOccuredWarnings(pHandle->pMDI, M1);
     
-    if ((wWarningOccurred & MC_PHASE_DISC) != MC_NO_ERROR )
+    if ((wWarningOccurred & MC_PHASE_DISC) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(MOTOR_PHASE_ERROR, HOLD_UNTIL_CLEARED);
     }
@@ -983,7 +1023,7 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
         VC_Errors_ClearError(MOTOR_PHASE_ERROR);
     }
     
-    if ((wWarningOccurred & MC_HALL_DISC) != MC_NO_ERROR )
+    if ((wWarningOccurred & MC_HALL_DISC) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(MOTOR_HALL_ERROR, HOLD_UNTIL_CLEARED);
     }
@@ -992,7 +1032,7 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
         VC_Errors_ClearError(MOTOR_HALL_ERROR);
     }
         
-    if ((wWarningOccurred & MC_FOLDBACK_TEMP_MOTOR) != MC_NO_ERROR )
+    if ((wWarningOccurred & MC_FOLDBACK_TEMP_MOTOR) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(MOTOR_FOLDBACK_TEMP, HOLD_UNTIL_CLEARED);
     }
@@ -1001,7 +1041,7 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
         VC_Errors_ClearError(MOTOR_FOLDBACK_TEMP);
     }
     
-    if ((wWarningOccurred & MC_FOLDBACK_TEMP_CONTROLLER) != MC_NO_ERROR )
+    if ((wWarningOccurred & MC_FOLDBACK_TEMP_CONTROLLER) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(CONTROLLER_FOLDBACK_TEMP, HOLD_UNTIL_CLEARED);
     }
@@ -1010,7 +1050,7 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
         VC_Errors_ClearError(CONTROLLER_FOLDBACK_TEMP);
     }
     
-    if ((wWarningOccurred & MC_NTC_DISC_FREEZE_MOTOR) != MC_NO_ERROR )
+    if ((wWarningOccurred & MC_NTC_DISC_FREEZE_MOTOR) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(MOTOR_NTC_DISC_FREEZE, HOLD_UNTIL_CLEARED);
     }

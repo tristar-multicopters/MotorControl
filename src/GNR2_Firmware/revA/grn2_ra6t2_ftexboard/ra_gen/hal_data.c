@@ -702,7 +702,7 @@ const poeg_cfg_t g_poeg0_cfg =
     .noise_filter        = POEG_GTETRG_NOISE_FILTER_PCLKB_DIV_32,
     .channel             = 0,
     .ipl                 = (0),
-    .p_callback          = PWMBreak1_IRQHandler,
+    .p_callback          = OvercurrentPOEG_IRQHandler,
     .p_context           = NULL,
 #if defined(VECTOR_NUMBER_POEG0_EVENT)
     .irq       = VECTOR_NUMBER_POEG0_EVENT,

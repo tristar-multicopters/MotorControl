@@ -371,7 +371,7 @@ static bool GPTInit(void)
 2- uncomment following function definition 
 3- Check if the PC14 is still defined as PEOG functionality
 4- Check the PWMBreak1_IRQHandler() which is going to raise the MC_OCD1 or MC_OCD2 error
-5- Check the PWRT_MotorFaultManagement() if still includes handeling this error flag
+5- Check the PWRT_MotorCriticalFaultManagement() if still includes handeling this error flag
 6- Use the R_POEG_Open() function to bring back the PWM signal after error is handled
 */
 

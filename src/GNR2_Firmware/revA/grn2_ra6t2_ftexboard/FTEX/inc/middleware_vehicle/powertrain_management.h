@@ -212,7 +212,14 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle);
   * @param  Powertrain handle
   * @retval Returns true if a motor fault is still active, false if no more fault is present.
   */
-bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle);
+bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Manage motor errors.
+  * @param  Powertrain handle
+  * @retval none.
+  */
+void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle);
 
 /**
   * @brief  Manage motor warnings.

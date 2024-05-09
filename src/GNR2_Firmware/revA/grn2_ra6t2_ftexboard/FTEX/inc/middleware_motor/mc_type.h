@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "drive_parameters.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,10 +79,12 @@ extern "C" {
 #define M_NONE  (uint8_t)(0xFF) /*!< None motor.*/
 /** @} */
 
-/** @name Error source codes */
-/** @{ */
-#define  MC_NO_ERROR                (uint32_t)(0x00000000u)     /**< @brief No error.*/
-#define  MC_NO_FAULTS               (uint32_t)(0x00000000u)     /**< @brief No error.*/
+/** @name  Critical Faults source codes
+ *  @brief Critical faults go into the Fault state to cut the PWM immediately
+ *
+ ** @{ 
+ */
+#define  MC_NO_FAULT                (uint32_t)(0x00000000u)     /**< @brief No error.*/
 #define  MC_FOC_DURATION            (uint32_t)(0x00000001u)     /**< @brief Error: FOC rate to high.*/
 #define  MC_OVER_VOLT               (uint32_t)(0x00000002u)     /**< @brief Error: Software over voltage.*/
 #define  MC_UNDER_VOLT              (uint32_t)(0x00000004u)     /**< @brief Error: Software under voltage.*/
@@ -90,14 +93,29 @@ extern "C" {
 #define  MC_OVER_TEMP_MOTOR         (uint32_t)(0x00000020u)     /**< @brief Error: Software over temperature for motor.*/
 #define  MC_SPEED_FDBK              (uint32_t)(0x00000040u)     /**< @brief Error: Speed feedback.*/
 #define  MC_OCD1                    (uint32_t)(0x00000080u)     /**< @brief Error: Emergency input (Over current detection 1).*/
-#define  MC_OCD2                    (uint32_t)(0x00000100u)     /**< @brief Error: Emergency input (Over current detection 2).*/
+#if OCDX_POEG == OCD2_POEG
+    #define  MC_OCD2                (uint32_t)(0x00000100u)     /**< @brief Error: Emergency input (Over current detection 2).*/
+#endif
 #define  MC_SW_ERROR                (uint32_t)(0x00000200u)     /**< @brief Error: Software Error.*/
-#define  MC_OCSP                    (uint32_t)(0x00000400u)     /**< @brief Error: Overcurrent software protection.*/
-#define  MC_MSRP                    (uint32_t)(0x00000800u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
+#define  MC_MSRP                    (uint32_t)(0x00000400u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
 /** @} */
 
-/** @name Warning source codes */
-/** @{ */
+/** @name  Error source codes
+ *  @brief Errors sets the torque reference to 0 and waits a few seconds before you can push power to the vehicle again
+ ** @{
+ */
+#define  MC_NO_ERROR                (uint32_t)(0x00000000u)     /**< @brief No error.*/
+#if OCDX_POEG == OCD1_POEG
+    #define  MC_OCD2                    (uint32_t)(0x00000001u)     /**< @brief Error: Emergency input (Over current detection 2).*/
+#endif
+#define  MC_OCSP                    (uint32_t)(0x00000002u)     /**< @brief Error: Overcurrent software protection.*/
+/** @} */
+
+/** @name  Warning source codes
+  * @brief Warnings don't affect the functioning of the bike
+ ** @{
+ */
+#define  MC_NO_WARNING              (uint32_t)(0x00000000u)     /**< @brief No error.*/
 #define  MC_HALL_DISC               (uint32_t)(0x00000001u)     /**< @brief WARNING: disconnected Hall sensor detection */
 #define  MC_PHASE_DISC              (uint32_t)(0x00000002u)     /**< @brief WARNING: disconnected Phase cable detection */
 #define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00000004u)     /**< @brief WARNING: motor temp has entered foldback region.*/

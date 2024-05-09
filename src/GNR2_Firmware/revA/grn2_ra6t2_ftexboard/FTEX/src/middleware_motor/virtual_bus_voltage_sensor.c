@@ -10,7 +10,7 @@
 
 void VirtualBusVoltSensor_Init(VirtualBusVoltageSensorHandle_t * pHandle)
 {
-  pHandle->Super.wFaultState = MC_NO_ERROR;
+  pHandle->Super.wFaultState = MC_NO_FAULT;
   pHandle->Super.hLatestConv = pHandle->hExpectedVbusDigital;
   pHandle->Super.hAvBusVoltageDigital = pHandle->hExpectedVbusDigital;
 }
@@ -26,7 +26,7 @@ void VirtualBusVoltSensor_Clear(VirtualBusVoltageSensorHandle_t * pHandle)
 uint16_t VirtualBusVoltSensor_NoErrors(VirtualBusVoltageSensorHandle_t * pHandle)
 {
   UNUSED_PARAMETER(pHandle);
-  return (MC_NO_ERROR);
+  return (MC_NO_FAULT);
 }
 
 

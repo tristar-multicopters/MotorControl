@@ -160,8 +160,8 @@ static void UpdateObjectDictionnary(void *p_arg)
     /* Get data from motor control and vehicle control layer */
     int16_t hMotorSpeedMeas         = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
     uint16_t hMotorState            = MCInterface_GetSTMState(&MCInterface[0]);
-    uint32_t wMotorOccuredFaults    = MCInterface_GetOccurredFaults(&MCInterface[0]);
-    uint32_t wMotorCurrentFaults    = MCInterface_GetCurrentFaults(&MCInterface[0]);
+    uint32_t wMotorOccuredFaults    = MCInterface_GetOccurredCriticalFaults(&MCInterface[0]);
+    uint32_t wMotorCurrentFaults    = MCInterface_GetCurrentCriticalFaults(&MCInterface[0]);
     #endif
     
     //theses variables are only used
@@ -284,7 +284,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                     //critical section
                     COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
                     //end critical section
-                    MCInterface_FaultAcknowledged(&MCInterface[0]);
+                    MCInterface_CriticalFaultAcknowledged(&MCInterface[0]);
                 }
             
                 //clear heart beat flag error is was not cleared yet.

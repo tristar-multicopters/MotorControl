@@ -110,10 +110,10 @@ void Autotune_GetFiltPhaseCurrents( PWMCurrFdbkHandle_t * pHandle, ab_t * IabFil
   *
   * This function is used in the FOC frequency loop and needs to complete before the next PWM cycle starts
   * so that the duty cycles it computes can be taken into account. Failing to do so (for instance because
-  * the PWM Frequency is too high) results in the functions returning #MC_FOC_DURATION which entails a
+  * the PWM Frequency is too high) results in the functions returning MC_FOC_DURATION which entails a
   * motor Control fault that stops the motor.
   *
-  * @retval Returns #MC_NO_ERROR if no error occurred or #MC_FOC_DURATION if the duty cycles were
+  * @retval Returns MC_NO_FAULT if no error occurred or MC_FOC_DURATION if the duty cycles were
   *         set too late for being taken into account in the next PWM cycle (overrun condition).
   */
 uint32_t Autotune_SetDuties(PWMCurrFdbkHandle_t * pHandle,uint16_t hDutyA, uint16_t hDutyB, uint16_t hDutyC);

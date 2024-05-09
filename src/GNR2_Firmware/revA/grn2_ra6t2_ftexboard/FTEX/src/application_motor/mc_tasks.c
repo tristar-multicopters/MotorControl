@@ -49,11 +49,16 @@ void MC_ConfigureMotorTuner(void);
 #define OFFCALIBRWAITTICKS2 (uint16_t)((SYS_TICK_FREQUENCY * OFFCALIBRWAIT_MS2) / 1000)
 #define STOPPERMANENCY_TICKS (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS) / 1000)
 #define STOPPERMANENCY_TICKS2 (uint16_t)((SYS_TICK_FREQUENCY * STOPPERMANENCY_MS2) / 1000)
-#define VBUS_TEMP_ERR_MASK (uint32_t) ~(0 | MC_NO_ERROR)
+#define VBUS_TEMP_ERR_MASK (uint32_t) ~(0 | MC_NO_FAULT)
 #define DEFAULT_TEMP_MOTOR 0xFFF
 #define DEFAULT_TEMP_CONTROLLER 0x000
-#define OCD2_MAX 7
-#define OCD2_TIMER 10000 //~10 secs
+#if OCDX_POEG == OCD1_POEG
+    #define OCD2_MAX 4
+#elif OCDX_POEG == OCD2_POEG
+    #define OCD2_MAX 7
+#endif
+#define OCD2_TRIGGER_ERROR 3
+#define OCD2_CHECK_RESET 10000 //~10 secs
 #define DRIVER_TIMER 10000 //~.5 secs
 
 /* Private variables----------------------------------------------------------*/
@@ -81,6 +86,7 @@ static volatile uint16_t hMFTaskCounterM1 = 0;
 static volatile uint16_t hBootCapDelayCounterM1 = 0;
 static volatile uint16_t hStopPermanencyCounterM1 = 0;
 volatile uint8_t bOCCheck = 0;
+volatile uint16_t bOCNumOccur = 0;
 volatile uint16_t hOCCheckReset = 0;
 volatile uint16_t hDriverCounter = 0;
 uint8_t bMCBootCompleted = 0;
@@ -322,15 +328,18 @@ void MediumFrequencyTaskM1(void)
 {
     MotorState_t StateM1;
     int16_t wAux = 0;
-    if (hOCCheckReset < OCD2_TIMER)
+    if (hOCCheckReset < OCD2_CHECK_RESET)
     {
         hOCCheckReset++;
     }
-    else if (bOCCheck < OCD2_MAX)
+    else
     {
         hOCCheckReset = 0;
         bOCCheck = 0;
+        bOCNumOccur = 0;
     }
+    
+    MCStateMachine_ErrorProcessing(&MCStateMachine[M1]);
     
     #if HSLOG_BUTTON_LOG
     (void) BemfObsPll_CalcAvrgMecSpeedUnit(&BemfObserverPllM1, &wAux);
@@ -372,6 +381,7 @@ void MediumFrequencyTaskM1(void)
             pPWMCurrFdbk[M1]->IbFilter.pIIRFAInstance =NULL;
         }
  #endif    
+
         
         //check for whether motor temp is in foldback region
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
@@ -450,9 +460,9 @@ void MediumFrequencyTaskM1(void)
 #if !(BYPASS_POSITION_SENSOR)
         if (Check_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
                                     pSpeedTorqCtrl[M1]->hBusVoltage, pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit)
-                                    != MC_NO_FAULTS)
+                                    != MC_NO_FAULT)
         {
-            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }
 #endif
         
@@ -515,16 +525,16 @@ void MediumFrequencyTaskM1(void)
 #if !(BYPASS_POSITION_SENSOR)    
         if (Check_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
                                     pSpeedTorqCtrl[M1]->hBusVoltage, pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit)
-                                    != MC_NO_FAULTS)  
+                                    != MC_NO_FAULT)  
         { 
-            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }            
 #endif
 
 #if !(BYPASS_POSITION_SENSOR || BYPASS_CURRENT_CONTROL)
         if (!bIsSpeedReliable)
         {
-            //MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_SPEED_FDBK, 0);
+            //MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_SPEED_FDBK, 0);
         }
 #endif
         break;
@@ -748,6 +758,7 @@ void FOC_InitAdditionalMethods(uint8_t bMotor)
  * @param  bMotor related motor it can be M1 or M2
  * @retval none
  */
+
 void FOC_CalcCurrRef(uint8_t bMotor)
 {
     qd_t IqdTmp;
@@ -759,7 +770,15 @@ void FOC_CalcCurrRef(uint8_t bMotor)
     /* If current references iqref and idref are computed internally    */
     if (FOCVars[bMotor].bDriveInput == INTERNAL)
     {
-        FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSpeedTorqCtrl[bMotor], MotorParameters);
+        if (MCStateMachine_IsErrorProcessing(&MCStateMachine[M1]))
+        {
+            FOCVars[bMotor].hTeref = 0;
+        }
+        else
+        {
+            FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSpeedTorqCtrl[bMotor], MotorParameters);
+        }
+        
         FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
         FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
         
@@ -899,13 +918,13 @@ uint8_t MC_HighFrequencyTask(void)
         if all last 16 records show vibration, then rasie the stuck protection error */
         if (((HallPosSensorM1.wDirectionChangePattern & 0xFFFF) == VIBRATION_PATTERN) && (MotorParameters.HallSensorParameters.bEnVibrationError == true))
         {
-            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }
         
         wFOCreturn = FOC_CurrControllerM1();
         if (wFOCreturn == MC_FOC_DURATION)
         {
-            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_FOC_DURATION, 0);
+            MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_FOC_DURATION, 0);
         }
         else
         {
@@ -932,7 +951,7 @@ uint8_t MC_HighFrequencyTask(void)
  *        accordingly to the active speed sensor. It must be called periodically
  *        when new motor currents have been converted
  * @param this related object of class CFOC.
- * @retval int16_t It returns MC_NO_FAULTS if the FOC has been ended before
+ * @retval int16_t It returns MC_NO_FAULT if the FOC has been ended before
  *                 next PWM Update event, MC_FOC_DURATION otherwise
  */
 inline uint32_t FOC_CurrControllerM1(void)
@@ -1013,8 +1032,11 @@ inline uint32_t FOC_CurrControllerM1(void)
         // Check for overcurrent condition (software overcurrent protection)
         if (PWMCurrFdbk_CheckSoftwareOverCurrent(pPWMCurrFdbk[M1], &Iab, &FOCVars[M1].Iqdref))
         {
-            PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
-            MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_OCSP, 0);
+            MCStateMachine_SetError(&MCStateMachine[M1], MC_OCSP, 0);
+        }
+        else
+        {
+            MCStateMachine_SetError(&MCStateMachine[M1], 0, MC_OCSP);
         }
 
 #if ENABLE_MC_DAC_DEBUGGING
@@ -1047,7 +1069,7 @@ void MC_SafetyTask(void)
  */
 void SafetyTask_PWMOFF(uint8_t bMotor)
 {
-    uint32_t CodeReturn = MC_NO_ERROR;
+    uint32_t CodeReturn = MC_NO_FAULT;
     uint32_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
 
     // Check if Controller temperature is higher than the threshold, then raise the error
@@ -1062,29 +1084,57 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
         CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_MOTOR;
     }
     
+    //Check if controller temperature is lower than the threshold, then raise the error
     if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_FREEZE)
     {
         CodeReturn |= errMask[bMotor] & MC_NTC_FREEZE_CONTROLLER;
     }
     
-    CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_OCD1, MC_OCD2 or MC_NO_FAULTS
+    CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_OCD1, MC_OCD2 or MC_NO_FAULT
                                                                                     (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
-    if (((CodeReturn & MC_OCD2) == MC_OCD2) && (bOCCheck < OCD2_MAX))
-    {
-        bOCCheck++;
-        
-        if (bOCCheck == OCD2_MAX)
+    #if OCDX_POEG == OCD1_POEG
+        if (RegisterIsOCD2OccurredCallBack(pPWMCurrFdbk[bMotor]))
         {
-            CodeReturn |= errMask[bMotor] & MC_OCD1;
+            //if OCD2 is triggered more than OCD2_TRIGGER_ERROR, report the error and increase the # of times the error has been triggered
+            bOCCheck++;
+            if (bOCCheck >= OCD2_TRIGGER_ERROR)
+            {
+                MCStateMachine_SetError(&MCStateMachine[M1], MC_OCD2, 0);    //Report the error
+                bOCNumOccur++;
+                bOCCheck = 0;
+            }
+            //if OCD2 is triggered more than OCD2_MAX, report the OCD1 error 
+            if (bOCNumOccur >= OCD2_MAX)
+            {
+                CodeReturn |= errMask[bMotor] & MC_OCD1;
+                bOCCheck = 0;
+                bOCNumOccur = 0;
+            }
+            
         }
-    }
+        else
+        {
+            MCStateMachine_SetError(&MCStateMachine[M1], 0, MC_OCD2);    //Clear the error
+        }
+    #elif OCDX_POEG == OCD2_POEG
+        //if OCD2 is triggered more than the threshold, report OCD1 error
+        if ((CodeReturn & MC_OCD2) == MC_OCD2)
+        {
+            bOCCheck++;
+            
+            if (bOCCheck == OCD2_MAX)
+            {
+                CodeReturn |= errMask[bMotor] & MC_OCD1;
+            }
+        }
+    #endif
     
     if (bMotor == M1)
     {
         CodeReturn |= errMask[bMotor] & ResDivVbusSensor_CalcAvVbus(pBusSensorM1);
     }
     
-    MCStateMachine_FaultProcessing(&MCStateMachine[bMotor], CodeReturn, ~CodeReturn); /* Update the MCStateMachine according error code */
+    MCStateMachine_CriticalFaultProcessing(&MCStateMachine[bMotor], CodeReturn, ~CodeReturn); /* Update the MCStateMachine according error code */
     switch (MCStateMachine_GetState(&MCStateMachine[bMotor]))                         /* Acts on PWM outputs in case of faults */
     {
     case M_FAULT_NOW:
@@ -1151,7 +1201,7 @@ MotorControlTuningHandle_t *GetMCT(uint8_t bMotor)
 void MC_HardwareFaultTask(void)
 {
     PWMInsulCurrSensorFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
-    MCStateMachine_FaultProcessing(&MCStateMachine[M1], MC_SW_ERROR, 0);
+    MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_SW_ERROR, 0);
 }
 
 /* startMCMediumFrequencyTask function */

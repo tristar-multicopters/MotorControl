@@ -28,6 +28,8 @@ typedef struct
     MotorState_t bState;
     uint32_t wOccuredFaults;
     uint32_t wCurrentFaults;
+    uint32_t wErrors;
+    bool     bErrorProcessing;
     uint32_t wWarnings;
     int16_t hMotorSpeed;
     int16_t hMotorTemp;
@@ -117,7 +119,7 @@ bool SlaveMCInterface_StopMotor(SlaveMotorHandle_t * pHandle);
   * @retval bool It returns true if the command is successfully executed
   *         otherwise it return false.
   */
-bool SlaveMCInterface_FaultAcknowledged(SlaveMotorHandle_t * pHandle);
+bool SlaveMCInterface_CriticalFaultAcknowledged(SlaveMotorHandle_t * pHandle);
 
 /**
   * @brief  It returns information about the state of the related pSTM object.
@@ -127,26 +129,32 @@ bool SlaveMCInterface_FaultAcknowledged(SlaveMotorHandle_t * pHandle);
 MotorState_t  SlaveMCInterface_GetSTMState(SlaveMotorHandle_t * pHandle);
 
 /**
-  * @brief It returns a 16 bit fields containing information about faults
+  * @brief It returns a 16 bit fields containing information about critical faults
   *        historically occurred since the state machine has been moved into
   *        FAULT_NOW state.
-  * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
+  * \n\link Fault_generation_error_codes Returned critical fault codes are listed here \endlink
   * @param pHandle Pointer on the component instance to work on.
-  * @retval uint16_t  16 bit fields with information about the faults
+  * @retval uint16_t  16 bit fields with information about the critical faults
   *         historically occurred since the state machine has been moved into
   *         FAULT_NOW state.
-  * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
+  * \n\link Fault_generation_error_codes Returned critical fault codes are listed here \endlink
   */
-uint32_t SlaveMCInterface_GetOccurredFaults(SlaveMotorHandle_t * pHandle);
+uint32_t SlaveMCInterface_GetOccurredCriticalFaults(SlaveMotorHandle_t * pHandle);
 
 /**
-  * @brief It returns a 16 bit fields containing information about warnings
+  * @brief It returns a 16 bit fields containing information about errors
   *        historically occurred 
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   * @param pHandle Pointer on the component instance to work on.
-  * @retval uint16_t  16 bit fields with information about the faults
-  *         historically occurred
-  * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
+  * @retval uint16_t  16 bit fields with information about the errors
+  */
+uint32_t SlaveMCInterface_GetCurrentErrors(SlaveMotorHandle_t * pHandle);
+
+/**
+  * @brief It returns a 16 bit fields containing information about warnings
+  * \n\link Fault_generation_error_codes Returned warning codes are listed here \endlink
+  * @param pHandle Pointer on the component instance to work on.
+  * @retval uint16_t  16 bit fields with information about the warnings
   */
 uint32_t SlaveMCInterface_GetOccurredWarnings(SlaveMotorHandle_t * pHandle);
 
@@ -159,7 +167,7 @@ uint32_t SlaveMCInterface_GetOccurredWarnings(SlaveMotorHandle_t * pHandle);
   *         present faults.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint32_t SlaveMCInterface_GetCurrentFaults(SlaveMotorHandle_t * pHandle);
+uint32_t SlaveMCInterface_GetCurrentCriticalFaults(SlaveMotorHandle_t * pHandle);
 
 /**
   * @brief  Returns the last computed average mechanical speed, expressed in

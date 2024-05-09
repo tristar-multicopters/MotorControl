@@ -20,9 +20,10 @@
 #define OCSP_SAFETY_MARGIN_amps         125          // Measured current amplitude can be until SOCP_SAFETY_MARGIN higher        //NEEDS TO BE VERIFIED
 #define OCSP_MAX_CURRENT_amps           125          // Max current that can be reached before triggering software overcurrent   //NEEDS TO BE VERIFIED
 
-#define HARDWARE_OCD2    OCD2_DISABLED    // OCD2_ENABLED to completley disable PWM using PEOG in timer0                        //NEEDS TO BE VERIFIED
-                                          // OCD2_DISABLED to disable any Hardware OverCurrent handling
-
+#define HARDWARE_OCD2    OCD2_DISABLED    // OCD2_ENABLED to enable OCD2                                                      //NEEDS TO BE VERIFIED
+                                          // OCD2_DISABLED to disable OCD2
+#define OCDX_POEG        OCD1_POEG        //OCD1_POEG when OCD1 is connected to the POEG pin
+                                          //OCD2_POEG when OCD2 is connected to the POEG pin
 
 /************* Temperature and Overcurrent Protection Parameters *************/
 

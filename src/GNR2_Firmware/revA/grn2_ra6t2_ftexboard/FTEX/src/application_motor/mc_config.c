@@ -260,7 +260,8 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
 /**
   * @brief  Current sensor parameters Dual Drive Motor 1 - ICS, STM32G4xx
   */
-PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
+PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = 
+{
     {
         .pFctGetPhaseCurrents              = &PWMInsulCurrSensorFdbk_GetPhaseCurrents,
         .pFctSwitchOffPwm                  = &PWMInsulCurrSensorFdbk_SwitchOffPWM,
@@ -269,6 +270,9 @@ PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
         .pFctTurnOnLowSides                = &PWMInsulCurrSensorFdbk_TurnOnLowSides,
         .pFctSetADCSampPointSectX          = &PWMInsulCurrSensorFdbk_WriteTIMRegisters,
         .pFctIsOverCurrentOccurred         = &PWMInsulCurrSensorFdbk_IsOverCurrentOccurred,
+        #if OCDX_POEG == OCD1_POEG
+            .pFctOCD2Occured                   = &PWMInsulCurrSensorFdbk_OCD2Occurred,
+        #endif
         .pFctRLDetectionModeEnable         = MC_NULL,
         .pFctRLDetectionModeDisable        = MC_NULL,
         .pFctRLDetectionModeSetDuty        = MC_NULL,

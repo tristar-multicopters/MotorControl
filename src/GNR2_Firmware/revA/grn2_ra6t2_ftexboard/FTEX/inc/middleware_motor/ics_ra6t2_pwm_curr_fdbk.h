@@ -126,8 +126,8 @@ void PWMInsulCurrSensorFdbk_SwitchOffPWM(PWMCurrFdbkHandle_t * pHdl);
 
 /**
   * @brief  Function to update duty cycle registers.
-    * @param  pHdl: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component.
-* @retval Motor control error code: MC_FOC_DURATION if overrun occured, MC_NO_FAULTS otherwise.
+  * @param  pHdl: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component.
+  * @retval Motor control error code: MC_FOC_DURATION if overrun occured, MC_NO_FAULT otherwise.
   */
 uint32_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl);
 
@@ -140,7 +140,7 @@ uint32_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl);
 void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
 
 /**
-  * @brief  It is the routine to run when OCD2 trigger interrupt occured
+  * @brief  It is the routine to run when OCD1 trigger interrupt occured
   * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval Motor instance number
   */
@@ -158,10 +158,19 @@ void * PWMInsulCurrSensorFdbk_OCD2_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * p
   * @brief  It is used to check if an overcurrent occurred since last call.
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval uint16_t It returns MC_OCD1 or MC_OCD2 whether an overcurrent has been
-  *                  detected since last method call, MC_NO_FAULTS otherwise.
+  *                  detected since last method call, MC_NO_FAULT otherwise.
   */
 uint32_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl);
 
+#if OCDX_POEG == OCD1_POEG
+/**
+  * @brief  It is used to check if OCD2 occurred since last call.
+  * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval uint16_t It returns MC_OCD2 if OCD2 has been
+  *                  detected since last method call, MC_NO_FAULT otherwise.
+  */
+uint32_t PWMInsulCurrSensorFdbk_OCD2Occurred(PWMCurrFdbkHandle_t * pHdl);
+#endif
 
 #ifdef __cplusplus
 }

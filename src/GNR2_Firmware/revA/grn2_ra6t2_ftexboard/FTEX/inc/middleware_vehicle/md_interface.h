@@ -144,7 +144,7 @@ bool MDI_StopMotor(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
   * @retval bool It returns true if the command is successfully executed
   *         otherwise it return false.
   */
-bool MDI_FaultAcknowledged(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+bool MDI_CriticalFaultAcknowledged(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief  It returns information about the state of the related pSTM object.
@@ -166,7 +166,7 @@ MotorState_t  MDI_GetSTMState(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
   *         FAULT_NOW state.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint32_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetOccurredCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief It returns a 16 bit fields containing information about faults
@@ -178,7 +178,17 @@ uint32_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t
   *         present faults.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint32_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetCurrentCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+
+/**
+  * @brief It returns a 16 bit fields containing information about errors
+  *        currently present.
+  * @param pHandle Pointer on the component instance to work on.
+  * @param  bMotor is the target motor number
+  * @retval uint16_t  16 bit fields with information about about currently
+  *         present errors.
+  */
+uint32_t MDI_GetCurrentErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief It returns a 16 bit fields containing information about warning
@@ -186,7 +196,7 @@ uint32_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
   * @param pHandle Pointer on the component instance to work on.
   * @param  bMotor is the target motor number
   * @retval uint16_t  16 bit fields with information about about currently
-  *         present faults.
+  *         present warnings.
   */
 uint32_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 

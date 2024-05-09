@@ -117,7 +117,7 @@ bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle)
 
   if (MCStateMachine_GetState(pHandle->pSTM) == M_RUN)
   {
-      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_ANY_STOP );
+      bRetVal = MCStateMachine_NextState(pHandle->pSTM, M_ANY_STOP);
   }
   return bRetVal;
 }
@@ -125,10 +125,10 @@ bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-bool MCInterface_FaultAcknowledged(MotorControlInterfaceHandle_t * pHandle)
+bool MCInterface_CriticalFaultAcknowledged(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return MCStateMachine_FaultAcknowledged(pHandle->pSTM);
+  return MCStateMachine_CriticalFaultAcknowledged(pHandle->pSTM);
 }
 
 /*
@@ -209,10 +209,19 @@ MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-uint32_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle)
+uint32_t MCInterface_GetOccurredCriticalFaults(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return (uint32_t)(MCStateMachine_GetFaultState(pHandle->pSTM));
+  return (uint32_t)(MCStateMachine_GetCriticalFaultState(pHandle->pSTM));
+}
+
+/*
+* see function definition
+*/
+uint32_t MCInterface_GetCurrentErrors(MotorControlInterfaceHandle_t * pHandle)
+{
+  ASSERT(pHandle != NULL);
+  return MCStateMachine_GetErrorState(pHandle->pSTM);
 }
 
 /*
@@ -227,10 +236,10 @@ uint32_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-uint32_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle)
+uint32_t MCInterface_GetCurrentCriticalFaults(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return (uint32_t)(MCStateMachine_GetFaultState(pHandle->pSTM) >> 32);
+  return (uint32_t)(MCStateMachine_GetCriticalFaultState(pHandle->pSTM) >> 32);
 }
 
 /*

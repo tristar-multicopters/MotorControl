@@ -197,7 +197,7 @@ bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle);
   * @retval bool It returns true if the command is successfully executed
   *         otherwise it return false.
   */
-bool MCInterface_FaultAcknowledged(MotorControlInterfaceHandle_t * pHandle);
+bool MCInterface_CriticalFaultAcknowledged(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns information about the state of the last buffered command.
@@ -223,17 +223,24 @@ MCInterfaceCommandState_t  MCI_IsCommandAcknowledged(MotorControlInterfaceHandle
 MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle);
 
 /**
-  * @brief It returns a 16 bit fields containing information about faults
+  * @brief It returns a 16 bit fields containing information about critical faults
   *        historically occurred since the state machine has been moved into
   *        FAULT_NOW state.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   * @param pHandle Pointer on the component instance to work on.
-  * @retval uint16_t  16 bit fields with information about the faults
+  * @retval uint16_t  16 bit fields with information about the critical faults
   *         historically occurred since the state machine has been moved into
   *         FAULT_NOW state.
-  * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
+  * \n\link Fault_generation_error_codes Returned critical fault codes are listed here \endlink
   */
-uint32_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle);
+uint32_t MCInterface_GetOccurredCriticalFaults(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief It returns a 16 bit fields containing information about errors.
+  * @param pHandle Pointer on the component instance to work on.
+  * @retval uint16_t  16 bit fields with information about the errors
+  */
+uint32_t MCInterface_GetCurrentErrors(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings.
@@ -251,7 +258,7 @@ uint32_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle)
   *         present faults.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint32_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle);
+uint32_t MCInterface_GetCurrentCriticalFaults(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the modality of the speed and torque controller.

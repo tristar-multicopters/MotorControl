@@ -7,7 +7,7 @@ const external_irq_cfg_t g_external_irq0_cfg =
     .trigger             = EXTERNAL_IRQ_TRIG_FALLING,
     .filter_enable       = false,
     .pclk_div            = EXTERNAL_IRQ_PCLK_DIV_BY_64,
-    .p_callback          = OCD1_IRQHandler,
+    .p_callback          = OvercurrentInterrupt_IRQHandler,
     /** If NULL then do not add & */
 #if defined(NULL)
     .p_context           = NULL,

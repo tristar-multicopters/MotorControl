@@ -48,9 +48,9 @@ void VirtualBusVoltSensor_Init(VirtualBusVoltageSensorHandle_t * pHandle);
 void VirtualBusVoltSensor_Clear(VirtualBusVoltageSensorHandle_t * pHandle);
 
 /**
-  * @brief  It returns MC_NO_ERROR
+  * @brief  It returns MC_NO_FAULT
   * @param  pHandle related Handle of VirtualBusVoltageSensorHandle_t
-* @retval uint16_t Fault code error: MC_NO_ERROR
+* @retval uint16_t Fault code error: MC_NO_FAULT
   */
 uint16_t VirtualBusVoltSensor_NoErrors(VirtualBusVoltageSensorHandle_t * pHandle);
 

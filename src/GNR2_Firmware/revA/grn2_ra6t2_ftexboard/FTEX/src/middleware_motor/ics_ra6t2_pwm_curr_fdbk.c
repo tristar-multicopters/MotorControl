@@ -19,9 +19,25 @@
 
 
 /* Private function prototypes -----------------------------------------------*/
+
+/**
+  * @brief  Implementation of PWMCurrFdbk_GetPhaseCurrents to be performed during
+  *         calibration. It sum up injected conversion data into wPhaseAOffset and
+  *         wPhaseBOffset to compute the offset introduced in the current feedback
+  *         network. It is required to proper configure ADC inputs before to enable
+  *         the offset computation.
+    * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval It always returns {0,0} in ab_t format
+  */
 static void ICS_HFCurrentsPolarization(PWMCurrFdbkHandle_t * pHdl,ab_t * Iab);
 
+/* Public function prototypes -----------------------------------------------*/
 
+/**
+  * @brief  It initializes the module and its hardware components.
+  * @param  pHandle: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval true if initialization is successful
+  */
 bool PWMInsulCurrSensorFdbk_Init(PWMInsulCurrSensorFdbkHandle_t * pHandle)
 {
     bool bIsError = false;
@@ -31,6 +47,13 @@ bool PWMInsulCurrSensorFdbk_Init(PWMInsulCurrSensorFdbkHandle_t * pHandle)
     return bIsError;
 }
 
+/**
+  * @brief  This function starts the current sensor polarization routine. It stores into the provided handle 
+    *       the voltage present on Ia and Ib current feedback analog channels when no current is flowing into the
+  *         motor.
+  * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval none
+  */
 void PWMInsulCurrSensorFdbk_CurrentReadingPolarization(PWMCurrFdbkHandle_t * pHdl)
 {
     PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
@@ -71,6 +94,11 @@ void PWMInsulCurrSensorFdbk_CurrentReadingPolarization(PWMCurrFdbkHandle_t * pHd
     R_GPT_OutputEnable(pHandle->pParamsStructure->pThreePhaseHandle->p_cfg->p_timer_instance[THREE_PHASE_CHANNEL_W]->p_ctrl, GPT_IO_PIN_GTIOCA_AND_GTIOCB);
 }
 
+/**
+  * @brief  This function computes and return latest converted motor phase currents motor
+  * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval Ia and Ib current in ab_t format
+  */ 
 void PWMInsulCurrSensorFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHdl, ab_t * Iab)
 {
     PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
@@ -129,10 +157,15 @@ void PWMInsulCurrSensorFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHdl, ab_t * 
     pHandle->Super.Ic = -Iab->a - Iab->b;
 }
 
+/**
+  * @brief  Function to update duty cycle registers.
+  * @param  pHdl: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component.
+  * @retval Motor control error code: MC_FOC_DURATION if overrun occured, MC_NO_FAULT otherwise.
+  */
 uint32_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl)
 {
     PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
-    uint32_t hAux = MC_NO_ERROR;
+    uint32_t hAux = MC_NO_FAULT;
     three_phase_duty_cycle_t sDutyCycle;
     
     /* Set duty cycles according to values in base handle */
@@ -184,6 +217,13 @@ static void ICS_HFCurrentsPolarization(PWMCurrFdbkHandle_t * pHdl, ab_t * Iab)
     Iab->b = 0;
 }
 
+/**
+  * @brief  Function to turn on low sides switches. This function is intended to be
+  *         used for charging boot capacitors. It has to be
+  *         called at each motor start-up.
+  * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval none
+  */
 void PWMInsulCurrSensorFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHdl)
 {
     PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
@@ -203,6 +243,11 @@ void PWMInsulCurrSensorFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHdl)
     R_GPT_THREE_PHASE_Start(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl);
 }
 
+/**
+  * @brief  It enables PWM generation
+  * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval none
+  */
 void PWMInsulCurrSensorFdbk_SwitchOnPWM(PWMCurrFdbkHandle_t * pHdl)
 {
     PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
@@ -222,6 +267,11 @@ void PWMInsulCurrSensorFdbk_SwitchOnPWM(PWMCurrFdbkHandle_t * pHdl)
     R_GPT_THREE_PHASE_Start(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl);
 }
 
+/**
+  * @brief  It stops PWM generation
+  * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval none
+  */
 void PWMInsulCurrSensorFdbk_SwitchOffPWM(PWMCurrFdbkHandle_t * pHdl)
 {
     PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
@@ -232,6 +282,11 @@ void PWMInsulCurrSensorFdbk_SwitchOffPWM(PWMCurrFdbkHandle_t * pHdl)
     R_GPT_THREE_PHASE_Stop(pHandle->pParamsStructure->pThreePhaseHandle->p_ctrl);
 }
 
+/**
+  * @brief  It is the routine to run when PWM timer update event happens
+  * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval Motor instance number
+  */
 void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl)
 {
     /* Make ADC ready for next conversion, will be triggered by timer */
@@ -242,6 +297,11 @@ void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(PWMInsulCurrSensorFdbkHandle_t 
     return &(pHdl->Super.Motor);
 }
 
+/**
+  * @brief  It is the routine to run when OCD1 trigger interrupt occured
+  * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval Motor instance number
+  */
 void * PWMInsulCurrSensorFdbk_OCD1_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl)
 {
     pHdl->bOCD1Flag = true;
@@ -249,6 +309,11 @@ void * PWMInsulCurrSensorFdbk_OCD1_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * p
     return &(pHdl->Super.Motor);
 }
 
+/**
+  * @brief  It is the routine to run when OCD2 trigger interrupt occured
+  * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval Motor instance number
+  */
 void * PWMInsulCurrSensorFdbk_OCD2_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl)
 {    
     pHdl->bOCD2Flag = true;
@@ -256,24 +321,57 @@ void * PWMInsulCurrSensorFdbk_OCD2_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * p
     return &(pHdl->Super.Motor);
 }
 
+/**
+  * @brief  It is used to check if an overcurrent occurred since last call.
+  * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval uint16_t It returns MC_OCD1 or MC_OCD2 whether an overcurrent has been
+  *                  detected since last method call, MC_NO_FAULT otherwise.
+  */
 uint32_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl)
 {
     PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
     
-    uint32_t retVal = MC_NO_FAULTS;
+    uint32_t retVal = MC_NO_FAULT;
     
+    //reset OCD1 flag
     if (pHandle->bOCD1Flag == true)
     {
         retVal |= MC_OCD1;
     }
     
+    #if OCDX_POEG == OCD2_POEG
+        //reset OCD2 flag and the POEG
+        if (pHandle->bOCD2Flag == true)
+        {
+            retVal |= MC_OCD2;
+            pHandle->bOCD2Flag = false;
+            R_POEG_Reset((PWM_POEG0_HANDLE_ADDRESS)->p_ctrl);
+        }
+    #endif
+
+  return retVal;
+}
+
+#if OCDX_POEG == OCD1_POEG
+/**
+  * @brief  It is used to check if OCD2 occurred since last call.
+  * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval uint16_t It returns MC_OCD2 if OCD2 has been
+  *                  detected since last method call, MC_NO_FAULT otherwise.
+  */
+uint32_t PWMInsulCurrSensorFdbk_OCD2Occurred(PWMCurrFdbkHandle_t * pHdl)
+{
+    PWMInsulCurrSensorFdbkHandle_t * pHandle = (PWMInsulCurrSensorFdbkHandle_t *)pHdl;
+    uint32_t retVal = MC_NO_FAULT;
+    
+    //reset OCD2 flag
     if (pHandle->bOCD2Flag == true)
     {
         retVal |= MC_OCD2;
         pHandle->bOCD2Flag = false;
-        R_POEG_Reset((PWM_POEG0_HANDLE_ADDRESS)->p_ctrl);
     }
 
   return retVal;
 }
+#endif
 

@@ -97,8 +97,12 @@
 /****** Constants ******/
 #define MAX_CURRENT_LIMIT               1
 #define MAX_POWER_LIMIT                 2
+
 #define OCD2_DISABLE                    0
 #define OCD2_ENABLED                    1
+
+#define OCD1_POEG                       0
+#define OCD2_POEG                       1
 
 /****** Motor Parameters ******/
 #define MIN_APPLICATION_SPEED_RPM       0           // Min speed for the current application in mechanical rpm
