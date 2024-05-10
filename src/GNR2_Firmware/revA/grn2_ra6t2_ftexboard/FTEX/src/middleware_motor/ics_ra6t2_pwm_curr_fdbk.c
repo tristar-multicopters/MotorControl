@@ -49,7 +49,7 @@ bool PWMInsulCurrSensorFdbk_Init(PWMInsulCurrSensorFdbkHandle_t * pHandle)
 
 /**
   * @brief  This function starts the current sensor polarization routine. It stores into the provided handle 
-    *       the voltage present on Ia and Ib current feedback analog channels when no current is flowing into the
+  *         the voltage present on Ia and Ib current feedback analog channels when no current is flowing into the
   *         motor.
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval none
@@ -111,7 +111,7 @@ void PWMInsulCurrSensorFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHdl, ab_t * 
     /* Read ADC converted value and store it into handle  */
     R_ADC_B_Read(pHandle->pParamsStructure->pADCHandle->p_ctrl, pHandle->pParamsStructure->ADCChannelIa, &pHandle->hIaRaw);
     R_ADC_B_Read(pHandle->pParamsStructure->pADCHandle->p_ctrl, pHandle->pParamsStructure->ADCChannelIb, &pHandle->hIbRaw);
-  
+    
     /* Ia = (PHASE_A_ADC_CHANNEL value) - (hPhaseAOffset)  */
     reg = (uint16_t)(pHandle->hIaRaw);
     aux = (int32_t)(reg) - (int32_t)(pHandle->wPhaseAOffset);

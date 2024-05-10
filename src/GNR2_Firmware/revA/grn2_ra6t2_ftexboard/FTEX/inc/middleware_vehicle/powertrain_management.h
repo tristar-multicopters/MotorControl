@@ -99,7 +99,7 @@ typedef struct
     int16_t hTorqueSelect;                        // Select torque to feed for motor control
     int16_t hOldTorqueSelect;                     // Contaisn the preivous value of torque select that we sent, value can only be updated right before we send it to the MC layer
     
-    uint16_t aFaultManagementCounters[5][2];      /* Array of counter before acknowledging motor faults. First dimension is
+    uint16_t aFaultManagementCounters[6][2];      /* Array of counter before acknowledging motor faults. First dimension is
                                                      fault type in this order: Over current, startup, and speed feedback, Stuck Reverse. 
                                                      Second dimension is for motor number in this order: M1 and M2 */
 

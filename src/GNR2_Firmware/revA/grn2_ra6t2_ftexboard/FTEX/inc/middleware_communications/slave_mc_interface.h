@@ -28,8 +28,8 @@ typedef struct
     MotorState_t bState;
     uint32_t wOccuredFaults;
     uint32_t wCurrentFaults;
-    uint32_t wErrors;
-    bool     bErrorProcessing;
+    uint32_t wErrorsNow;
+    uint32_t wErrorsOccured;
     uint32_t wWarnings;
     int16_t hMotorSpeed;
     int16_t hMotorTemp;
@@ -148,7 +148,7 @@ uint32_t SlaveMCInterface_GetOccurredCriticalFaults(SlaveMotorHandle_t * pHandle
   * @param pHandle Pointer on the component instance to work on.
   * @retval uint16_t  16 bit fields with information about the errors
   */
-uint32_t SlaveMCInterface_GetCurrentErrors(SlaveMotorHandle_t * pHandle);
+uint32_t SlaveMCInterface_GetOccuredErrors(SlaveMotorHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings

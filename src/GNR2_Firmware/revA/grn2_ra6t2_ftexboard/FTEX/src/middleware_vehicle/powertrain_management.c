@@ -21,6 +21,7 @@
 #define SPEEDFEEDBACK_COUNTER       2
 #define STUCK_REVERSE_COUNTER       3
 #define UNDERVOLTAGE_COUNTER        4
+#define PHASE_DISC_COUNTER          5
 #define MOTOR_ERROR_TYPE_COUNT      7
 
 #define MAXCURRENT                  MAX_MEASURABLE_CURRENT /* Used for a generic conversion 
@@ -748,6 +749,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
   * @param  Powertrain handle
   * @retval Returns true if a motor critical fault is still active, false if no more critical fault is present.
   */
+
 bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
@@ -782,6 +784,11 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
         {
             VC_Errors_RaiseError(UT_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
+        if ((wCriticalFaultOccured & MC_PHASE_DISC) != MC_NO_WARNING)
+        {
+            VC_Errors_RaiseError(MOTOR_PHASE_ERROR, DEFAULT_HOLD_FRAMES);
+        }
+
                 
     }
     if (PWRT_IsMotor1Used(pHandle))
@@ -872,6 +879,21 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
         {
             wM1FaultOccurredCode &= ~MC_FOC_DURATION;
         }
+        if ((wM1FaultOccurredCode & MC_PHASE_DISC) != 0)
+        {
+            //if there's a phase disconection that occurred but has already been cleared
+            if(pHandle->aFaultManagementCounters[PHASE_DISC_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
+            {
+                //if the phase disconnection timer has cleared out, clear the phase disconnection fault
+                wM1FaultOccurredCode &= ~MC_PHASE_DISC;
+                pHandle->aFaultManagementCounters[PHASE_DISC_COUNTER][M1] = 0;
+            }
+            else
+            {
+                //increase the counter one more tick
+                pHandle->aFaultManagementCounters[PHASE_DISC_COUNTER][M1]++;
+            }
+        }
     }
 
     if (PWRT_IsMotor2Used(pHandle))
@@ -957,6 +979,21 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
         {
             wM2FaultOccurredCode &= ~MC_FOC_DURATION;
         }
+        if ((wM2FaultOccurredCode & MC_PHASE_DISC) != 0)
+        {
+            //if there's a phase disconnection that has occured but has already been cleared
+            if(pHandle->aFaultManagementCounters[PHASE_DISC_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
+            {
+                //if the phase disconnection timer has cleared out, clear the phase disconnection fault
+                wM2FaultOccurredCode &= ~MC_PHASE_DISC;
+                pHandle->aFaultManagementCounters[PHASE_DISC_COUNTER][M2] = 0;
+            }
+            else
+            {
+                //Increase the counter one more tick
+                pHandle->aFaultManagementCounters[PHASE_DISC_COUNTER][M2]++;
+            }
+        }
     }
 
     // Verify if all fault occured have been cleared
@@ -969,6 +1006,7 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
     {
         MDI_CriticalFaultAcknowledged(pHandle->pMDI, M2);
     }
+    
 
     bool bFaultOccured = wM1FaultOccurredCode | wM2FaultOccurredCode;
     return bFaultOccured;
@@ -982,35 +1020,27 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
 void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint32_t wErrorOccured = MDI_GetCurrentErrors(pHandle->pMDI, M1);
-    
-    #if OCDX_POEG == OCD1_POEG
-        if ((wErrorOccured & MC_OCD2) != MC_NO_WARNING)
-        {
-            if (pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-                {// If the timer has timeout, clear the OC fault
-                    wErrorOccured &= ~MC_OCD2;
-                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
-                }
-                else
-                {//Increase the counter one more tick
-                    pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
-                }
-        }
-    #endif
+    uint32_t wErrorOccured = MDI_GetOccuredErrors(pHandle->pMDI, M1);
     
     if ((wErrorOccured & MC_OCSP) != MC_NO_WARNING)
     {
-        if (pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the OC fault
-                wErrorOccured &= ~MC_OCSP;
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1]++;
-            }
+        VC_Errors_RaiseError(OVERCURRENT_COUNTER, HOLD_UNTIL_CLEARED);
     }
+    else
+    {
+        VC_Errors_ClearError(OVERCURRENT_COUNTER);
+    }
+    #if OCDX_POEG == OCD1_POEG
+        if ((wErrorOccured & MC_OCD2) != MC_NO_WARNING)
+        {
+            VC_Errors_RaiseError(OVERCURRENT_COUNTER, HOLD_UNTIL_CLEARED);
+        }
+        else
+        {
+            VC_Errors_ClearError(OVERCURRENT_COUNTER);
+        }
+    #endif
+    
 
 }
 
@@ -1023,15 +1053,6 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     uint32_t wWarningOccurred = MDI_GetOccuredWarnings(pHandle->pMDI, M1);
-    
-    if ((wWarningOccurred & MC_PHASE_DISC) != MC_NO_WARNING)
-    {
-        VC_Errors_RaiseError(MOTOR_PHASE_ERROR, HOLD_UNTIL_CLEARED);
-    }
-    else
-    {
-        VC_Errors_ClearError(MOTOR_PHASE_ERROR);
-    }
     
     if ((wWarningOccurred & MC_HALL_DISC) != MC_NO_WARNING)
     {

@@ -29,8 +29,8 @@ void MCStateMachine_Init(MotorStateMachineHandle_t * pHandle)
     pHandle->bState = M_IDLE;
     pHandle->wCriticalFaultNow = MC_NO_FAULT;
     pHandle->wCriticalFaultOccured = MC_NO_FAULT;
-    pHandle->wErrors = MC_NO_ERROR;
-    pHandle->bErrorProcessing = false;
+    pHandle->wErrorsNow = MC_NO_ERROR;
+    pHandle->wErrorsOccured = MC_NO_ERROR;
     pHandle->hErrorProcessingTimer = 0;
     pHandle->wWarnings = MC_NO_WARNING;
     
@@ -314,10 +314,10 @@ MotorState_t MCStateMachine_CriticalFaultProcessing(MotorStateMachineHandle_t * 
   */
 void MCStateMachine_SetError(MotorStateMachineHandle_t * pHandle, uint32_t wSetErrors, uint32_t wResetErrors)
 {
-    pHandle->wErrors = (pHandle->wErrors | wSetErrors) & (~wResetErrors);
-    if (pHandle->wErrors)
+    pHandle->wErrorsNow = (pHandle->wErrorsNow | wSetErrors) & (~wResetErrors);
+    if (pHandle->wErrorsNow)
     {
-        pHandle->bErrorProcessing = true;
+        pHandle->wErrorsOccured = pHandle->wErrorsNow;
     }   
 }
 
@@ -329,13 +329,13 @@ void MCStateMachine_SetError(MotorStateMachineHandle_t * pHandle, uint32_t wSetE
 void MCStateMachine_ErrorProcessing(MotorStateMachineHandle_t * pHandle)
 {
     //if errors are cleared, wait until end of timer before you are able to push power
-    if (pHandle->bErrorProcessing == true && !pHandle->wErrors)
+    if (pHandle->wErrorsOccured && !pHandle->wErrorsNow)
     {
         pHandle->hErrorProcessingTimer++;
         if (pHandle->hErrorProcessingTimer >= ERROR_TIMER)
         {
             pHandle->hErrorProcessingTimer = 0;
-            pHandle->bErrorProcessing = false;
+            pHandle->wErrorsOccured = MC_NO_ERROR;
         }
     }
 }
@@ -413,9 +413,9 @@ uint64_t MCStateMachine_GetCriticalFaultState(MotorStateMachineHandle_t * pHandl
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval uint32_t  a 16 bit field that shoing occured errors
   */
-uint32_t MCStateMachine_GetErrorState(MotorStateMachineHandle_t * pHandle)
+uint32_t MCStateMachine_GetCurrentErrorState(MotorStateMachineHandle_t * pHandle)
 {
-    return pHandle->wErrors;
+    return pHandle->wErrorsNow;
 }
 
 /**
@@ -423,9 +423,9 @@ uint32_t MCStateMachine_GetErrorState(MotorStateMachineHandle_t * pHandle)
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval boolean indicating whether error is processing
   */
-bool MCStateMachine_IsErrorProcessing(MotorStateMachineHandle_t * pHandle)
+uint32_t MCStateMachine_GetOccuredErrorState(MotorStateMachineHandle_t * pHandle)
 {
-    return pHandle->bErrorProcessing;
+    return pHandle->wErrorsOccured;
 }
 
 /**

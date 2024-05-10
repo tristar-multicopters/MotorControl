@@ -61,7 +61,7 @@
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
 #if !SWD_CONTROL_ENABLE
-#define AUTOTUNE_ENABLE               0                   /* Disable vehicle cotrol and activates functions needed for auto tuning */
+    #define AUTOTUNE_ENABLE           0                   /* Disable vehicle cotrol and activates functions needed for auto tuning */
 #endif
 
 //used to enable importants features
@@ -70,7 +70,7 @@
 #define FIRMWARE_RELEASE              0
 
 
-#define VEHICLE_SELECTION             VEHICLE_A2_500W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                            

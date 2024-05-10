@@ -129,10 +129,12 @@ typedef struct
     uint32_t  wCriticalFaultOccured;  /*!< Bit fields variable containing critical faults
                                     historically occurred since the state
                                     machine has been moved to FAULT_NOW state */
-    uint32_t  wErrors;             /*!< Bit fields variable containing errors
+    uint32_t  wErrorsNow;        /*!< Bit fields variable containing errors
                                     currently present */
-    bool      bErrorProcessing;    /*!< True if error is still being processed */
-    uint16_t hErrorProcessingTimer; /*< Timer used to process errors */
+    uint32_t  wErrorsOccured;        /*!< Bit fields variable containing errors
+                                    historically occured until timer the end of the error
+                                    processing timer*/
+    uint16_t  hErrorProcessingTimer; /*< Timer used to process errors */
     uint32_t  wWarnings;              /*!< contains warning that raised by MC Layer */
 } MotorStateMachineHandle_t;
 
@@ -239,14 +241,14 @@ uint64_t MCStateMachine_GetCriticalFaultState(MotorStateMachineHandle_t * pHandl
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval uint32_t  a 16 bit field that shoing occured errors
   */
-uint32_t MCStateMachine_GetErrorState(MotorStateMachineHandle_t * pHandle);
+uint32_t MCStateMachine_GetCurrentErrorState(MotorStateMachineHandle_t * pHandle);
 
 /**
   * @brief It returns a boolean indicating whether the error is still processing
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval boolean indicating whether error is processing
   */
-bool MCStateMachine_IsErrorProcessing(MotorStateMachineHandle_t * pHandle);
+uint32_t MCStateMachine_GetOccuredErrorState(MotorStateMachineHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings

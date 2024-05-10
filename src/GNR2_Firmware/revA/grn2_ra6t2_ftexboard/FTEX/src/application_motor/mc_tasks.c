@@ -113,7 +113,7 @@ void SetStopPermanencyTimeM1(uint16_t hTickCount);
 bool StopPermanencyTimeHasElapsedM1(void);
 void SafetyTask_PWMOFF(uint8_t motor);
 void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle);
-bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed);
+bool IsPhaseCableDisconnected(FOCVars_t * pHandle);
 
 /**
  * @brief It initializes the whole MC core according to user defined
@@ -324,6 +324,7 @@ void MC_Scheduler(void)
  * execution at a medium frequency rate (such as the speed controller for instance)
  * are executed here.
  */
+
 void MediumFrequencyTaskM1(void)
 {
     MotorState_t StateM1;
@@ -381,7 +382,6 @@ void MediumFrequencyTaskM1(void)
             pPWMCurrFdbk[M1]->IbFilter.pIIRFAInstance =NULL;
         }
  #endif    
-
         
         //check for whether motor temp is in foldback region
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
@@ -483,15 +483,6 @@ void MediumFrequencyTaskM1(void)
         MCInterface_ExecBufferedCommands(oMCInterface[M1]);
         FOC_CalcCurrRef(M1);
 
-        if (IsPhaseCableDisconnected(MCInterface->pFOCVars, MCInterface->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit) == true)
-        {
-            // raise MC_PHASE_DISC error if the ratio of measured Iqd and reference Iq is not reasoble
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_PHASE_DISC, 0);    //Report the warning
-        }
-        else
-        {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_PHASE_DISC);    //Clear the warning
-        }
         //check for whether motor temp is in foldback region
         if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
         {
@@ -623,10 +614,12 @@ void MediumFrequencyTaskM1(void)
 void FOC_Clear(uint8_t bMotor)
 {
     ab_t NULL_ab = {(int16_t)0, (int16_t)0};
+    abcMax_t NULL_abc = {(int16_t)0, (int16_t)0, (int16_t)0};
     qd_t NULL_qd = {(int16_t)0, (int16_t)0};
     AlphaBeta_t NULL_alphabeta = {(int16_t)0, (int16_t)0};
 
     FOCVars[bMotor].Iab = NULL_ab;
+    FOCVars[bMotor].IabcMax = NULL_abc;
     FOCVars[bMotor].Ialphabeta = NULL_alphabeta;
     FOCVars[bMotor].Iqd = NULL_qd;
     FOCVars[bMotor].Iqdref = NULL_qd;
@@ -770,7 +763,7 @@ void FOC_CalcCurrRef(uint8_t bMotor)
     /* If current references iqref and idref are computed internally    */
     if (FOCVars[bMotor].bDriveInput == INTERNAL)
     {
-        if (MCStateMachine_IsErrorProcessing(&MCStateMachine[M1]))
+        if (MCStateMachine_GetOccuredErrorState(&MCStateMachine[M1]))
         {
             FOCVars[bMotor].hTeref = 0;
         }
@@ -904,6 +897,12 @@ uint8_t MC_HighFrequencyTask(void)
 #endif
     else
     {
+        if (IsPhaseCableDisconnected(MCInterface->pFOCVars) == true)
+        {
+            // raise MC_PHASE_DISC critical fault if the ratio of measured Iqd and reference Iq is not reasoble
+            MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_PHASE_DISC, 0);
+        }
+
         // Check if the Hall Sensors are disconneted and raise the error
         if (HallSensor_IsDisconnected(&HallPosSensorM1) == true)
         {
@@ -1274,35 +1273,65 @@ void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle)
  * @param  pHandle pointer on the handle structure of the FOCVars
  * @retval bool: true if diconnection detected,
 **/
-
-bool IsPhaseCableDisconnected(FOCVars_t * pHandle, int16_t MechSpeed)
+bool IsPhaseCableDisconnected(FOCVars_t * pHandle)
 {
     static uint16_t Timer_Disc, Timer_Conn;
 
     bool retVal = false;
     PWMCurrFdbk_IqdMovingAverage(pHandle);
+    
+    //Calculate mean square of Iq and Id
     uint16_t MeanSquare = (uint16_t)sqrt((pHandle->Iqd_avg.q * pHandle->Iqd_avg.q) + (pHandle->Iqd_avg.d * pHandle->Iqd_avg.d)) + PHASE_DISC_OFFSET;
     
-    if ((MeanSquare < (abs(pHandle->Iqdref.q))) && (abs(MechSpeed) == 0))
+    //Set the max value for Ia
+    if (abs(pHandle->Iab.a) > pHandle->IabcMax.a)
+    {
+        pHandle->IabcMax.a = (uint16_t)abs(pHandle->Iab.a);
+    }
+    //Set the max value for Ib
+    if (abs(pHandle->Iab.b) > pHandle->IabcMax.b)
+    {
+        pHandle->IabcMax.b = (uint16_t)abs(pHandle->Iab.b);
+    }
+    //Set the max value for Ic
+    if (abs(abs(pHandle->Iab.a) - abs(pHandle->Iab.b)) > pHandle->IabcMax.c)
+    {
+        pHandle->IabcMax.c = (uint16_t)abs(abs(pHandle->Iab.a) - abs(pHandle->Iab.b));
+    }
+    
+    //if mean square is less than Iqref and IaMax or IbMax is less than MIN_PHASE_DISC_VALUE or the max value of one of the phases is less than
+    //a fifth of the max value of the other three phases, increase the disconnecton timer. Else increase the connection timer.
+    if (MeanSquare < abs(pHandle->Iqdref.q) &&
+            (pHandle->IabcMax.a <= MIN_PHASE_DISC_VALUE || pHandle->IabcMax.b <= MIN_PHASE_DISC_VALUE ||
+            pHandle->IabcMax.a < (pHandle->IabcMax.b/PHASE_DISC_DIVISOR) || pHandle->IabcMax.b < (pHandle->IabcMax.a/PHASE_DISC_DIVISOR) ||
+            pHandle->IabcMax.c < (pHandle->IabcMax.b/PHASE_DISC_DIVISOR) || pHandle->IabcMax.c < (pHandle->IabcMax.a/PHASE_DISC_DIVISOR)))
     {
         Timer_Disc++;
         Timer_Conn = 0;
     }
     else
     {
-        Timer_Disc = 0;
         Timer_Conn++;
     }
     
+    //if the timers reach their max values, reset the timers and return whether there was a phase disconnection
     if (Timer_Disc > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
     {
         retVal = true;
         Timer_Conn = 0;
+        Timer_Disc = 0;
+        pHandle->IabcMax.a = 0;
+        pHandle->IabcMax.b = 0;
+        pHandle->IabcMax.c = 0;
     }
     else if (Timer_Conn > PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE)
     {
-        Timer_Disc = 0;
         retVal = false;
+        Timer_Conn = 0;
+        Timer_Disc = 0;
+        pHandle->IabcMax.a = 0;
+        pHandle->IabcMax.b = 0;
+        pHandle->IabcMax.c = 0;
     }
     return retVal;
 }

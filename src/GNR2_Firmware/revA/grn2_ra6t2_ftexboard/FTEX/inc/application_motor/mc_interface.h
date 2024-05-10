@@ -25,53 +25,53 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 typedef enum
 {
-  MCI_BUFFER_EMPTY,                  /*!< If no buffered command has been
+    MCI_BUFFER_EMPTY,                  /*!< If no buffered command has been
                                             called.*/
-  MCI_COMMAND_NOT_ALREADY_EXECUTED,  /*!< If the buffered command condition
+    MCI_COMMAND_NOT_ALREADY_EXECUTED,  /*!< If the buffered command condition
                                             hasn't already occurred.*/
-  MCI_COMMAND_EXECUTED_SUCCESFULLY,  /*!< If the buffered command has been
+    MCI_COMMAND_EXECUTED_SUCCESFULLY,  /*!< If the buffered command has been
                                             executed successfully.*/
-  MCI_COMMAND_EXECUTED_UNSUCCESFULLY /*!< If the buffered command has been
+    MCI_COMMAND_EXECUTED_UNSUCCESFULLY /*!< If the buffered command has been
                                             executed unsuccessfully.*/
 } MCInterfaceCommandState_t ;
 
 typedef enum
 {
-  MCI_NOCOMMANDSYET,        /*!< No command has been set by the user.*/
-  MCI_EXECSPEEDRAMP,        /*!< ExecSpeedRamp command coming from the user.*/
-  MCI_EXECTORQUERAMP,       /*!< ExecTorqueRamp command coming from the user.*/
-  MCI_SETCURRENTREFERENCES, /*!< SetCurrentReferences command coming from the
+    MCI_NOCOMMANDSYET,        /*!< No command has been set by the user.*/
+    MCI_EXECSPEEDRAMP,        /*!< ExecSpeedRamp command coming from the user.*/
+    MCI_EXECTORQUERAMP,       /*!< ExecTorqueRamp command coming from the user.*/
+    MCI_SETCURRENTREFERENCES, /*!< SetCurrentReferences command coming from the
                                  user.*/
 } MCInterfaceUserCommands_t;
 
 typedef struct
 {
-  float Gain_Torque_IQRef;
-  float MaxMeasurableCurrent;    
+    float Gain_Torque_IQRef;
+    float MaxMeasurableCurrent;    
 
 } ConversionFactors_t; /* Contaisn conversion factors that we want to pass to vehicle control */
 
 typedef struct
 {
-  MotorStateMachineHandle_t * pSTM;             /*!< State machine object used by MCI.*/
-  SpdTorqCtrlHandle_t * pSpeedTorqCtrl;         /*!< Speed and torque controller object used by MCI.*/
-  pFOCVars_t pFOCVars;                          /*!< Pointer to FOC vars used by MCI.*/
-  ResDivVbusSensorHandle_t  *pResDivVbusSensor; /*!< Used to raise the resistor dividor bus voltage sensor to the vehicle layer*/
-  MCInterfaceUserCommands_t LastCommand;        /*!< Last command coming from the user.*/
-  MCConfigHandle_t          *pMCConfig;
-    
-  int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
-  int16_t hFinalTorque;       /*!< Final torque of last ExecTorqueRamp command.*/
-                                   
-  qd_t Iqdref;                /*!< Current component of last
-                                   SetCurrentReferences command.*/
-    
-  bool bDriverEn;             /*!< Status of Driver Enable pin */
+    MotorStateMachineHandle_t * pSTM;             /*!< State machine object used by MCI.*/
+    SpdTorqCtrlHandle_t * pSpeedTorqCtrl;         /*!< Speed and torque controller object used by MCI.*/
+    pFOCVars_t pFOCVars;                          /*!< Pointer to FOC vars used by MCI.*/
+    ResDivVbusSensorHandle_t  *pResDivVbusSensor; /*!< Used to raise the resistor dividor bus voltage sensor to the vehicle layer*/
+    MCInterfaceUserCommands_t LastCommand;        /*!< Last command coming from the user.*/
+    MCConfigHandle_t          *pMCConfig;
 
-  MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
-  STCModality_t LastModalitySetByUser;    /*!< The last STCModality_t set by the user. */
+    int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
+    int16_t hFinalTorque;       /*!< Final torque of last ExecTorqueRamp command.*/
+                                   
+    qd_t Iqdref;                /*!< Current component of last
+                                   SetCurrentReferences command.*/
+
+    bool bDriverEn;             /*!< Status of Driver Enable pin */
+
+    MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
+    STCModality_t LastModalitySetByUser;    /*!< The last STCModality_t set by the user. */
                                              
-  ConversionFactors_t MCIConvFactors;     /* Used to sent conversion factors that are in motor control to vehicle control */
+    ConversionFactors_t MCIConvFactors;     /* Used to sent conversion factors that are in motor control to vehicle control */
 } MotorControlInterfaceHandle_t;
 
 /* Exported functions ------------------------------------------------------- */
@@ -240,7 +240,7 @@ uint32_t MCInterface_GetOccurredCriticalFaults(MotorControlInterfaceHandle_t * p
   * @param pHandle Pointer on the component instance to work on.
   * @retval uint16_t  16 bit fields with information about the errors
   */
-uint32_t MCInterface_GetCurrentErrors(MotorControlInterfaceHandle_t * pHandle);
+uint32_t MCInterface_GetOccuredErrors(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings.

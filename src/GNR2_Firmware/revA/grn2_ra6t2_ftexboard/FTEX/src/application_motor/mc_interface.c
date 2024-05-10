@@ -218,10 +218,10 @@ uint32_t MCInterface_GetOccurredCriticalFaults(MotorControlInterfaceHandle_t * p
 /*
 * see function definition
 */
-uint32_t MCInterface_GetCurrentErrors(MotorControlInterfaceHandle_t * pHandle)
+uint32_t MCInterface_GetOccuredErrors(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return MCStateMachine_GetErrorState(pHandle->pSTM);
+  return MCStateMachine_GetOccuredErrorState(pHandle->pSTM);
 }
 
 /*

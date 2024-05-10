@@ -182,13 +182,13 @@ uint32_t MDI_GetCurrentCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle, 
 
 /**
   * @brief It returns a 16 bit fields containing information about errors
-  *        currently present.
+  *        that historically occured.
   * @param pHandle Pointer on the component instance to work on.
   * @param  bMotor is the target motor number
   * @retval uint16_t  16 bit fields with information about about currently
   *         present errors.
   */
-uint32_t MDI_GetCurrentErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetOccuredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief It returns a 16 bit fields containing information about warning

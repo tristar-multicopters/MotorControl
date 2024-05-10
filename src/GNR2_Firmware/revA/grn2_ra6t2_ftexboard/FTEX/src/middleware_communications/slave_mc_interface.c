@@ -151,10 +151,10 @@ uint32_t SlaveMCInterface_GetOccurredCriticalFaults(SlaveMotorHandle_t * pHandle
 /*
 * see function definition
 */
-uint32_t SlaveMCInterface_GetCurrentErrors(SlaveMotorHandle_t * pHandle)
+uint32_t SlaveMCInterface_GetOccuredErrors(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    return pHandle->Feedback.wErrors;
+    return pHandle->Feedback.wErrorsOccured;
 }
 
 /*
