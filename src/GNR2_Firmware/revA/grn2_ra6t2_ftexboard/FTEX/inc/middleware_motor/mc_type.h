@@ -112,6 +112,8 @@ extern "C" {
     #define  MC_OCD2                    (uint32_t)(0x00000001u) /**< @brief Error: Emergency input (Over current detection 2).*/
 #endif
 #define  MC_OCSP                    (uint32_t)(0x00000002u)     /**< @brief Error: Overcurrent software protection.*/
+#define  MC_HALL_DISC               (uint32_t)(0x00000004u)     /**< @brief WARNING: disconnected Hall sensor detection */
+
 
 /** @} */
 
@@ -120,11 +122,10 @@ extern "C" {
  ** @{
  */
 #define  MC_NO_WARNING              (uint32_t)(0x00000000u)     /**< @brief No error.*/
-#define  MC_HALL_DISC               (uint32_t)(0x00000001u)     /**< @brief WARNING: disconnected Hall sensor detection */
-#define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00000002u)     /**< @brief WARNING: motor temp has entered foldback region.*/
-#define  MC_NTC_DISC_FREEZE_MOTOR   (uint32_t)(0x00000004u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
-#define  MC_FOLDBACK_TEMP_CONTROLLER     (uint32_t)(0x00000008u)     /**< @brief WARNING: controller temp has entered foldback region.*/
-#define  MC_CURR_LIMIT_CONTROLLER   (uint32_t)(0x00000010u)     /**< @brief WARNING: the current is limited by the controller, motor current is not used */
+#define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00000001u)     /**< @brief WARNING: motor temp has entered foldback region.*/
+#define  MC_NTC_DISC_FREEZE_MOTOR   (uint32_t)(0x00000002u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
+#define  MC_FOLDBACK_TEMP_CONTROLLER     (uint32_t)(0x00000004u)     /**< @brief WARNING: controller temp has entered foldback region.*/
+#define  MC_CURR_LIMIT_CONTROLLER   (uint32_t)(0x00000008u)     /**< @brief WARNING: the current is limited by the controller, motor current is not used */
 /** @} */
 
 

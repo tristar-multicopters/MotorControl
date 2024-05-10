@@ -906,11 +906,11 @@ uint8_t MC_HighFrequencyTask(void)
         // Check if the Hall Sensors are disconneted and raise the error
         if (HallSensor_IsDisconnected(&HallPosSensorM1) == true)
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], MC_HALL_DISC, 0);
+            MCStateMachine_SetError(&MCStateMachine[M1], MC_HALL_DISC, 0);
         }
         else
         {
-            MCStateMachine_WarningHandling(&MCStateMachine[M1], 0, MC_HALL_DISC);
+            MCStateMachine_SetError(&MCStateMachine[M1], 0, MC_HALL_DISC);
         }
         
         /* here the code is checking last 16 records of direction, 

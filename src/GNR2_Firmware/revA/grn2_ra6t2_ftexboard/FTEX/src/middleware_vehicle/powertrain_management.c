@@ -1022,24 +1022,38 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     uint32_t wErrorOccured = MDI_GetOccuredErrors(pHandle->pMDI, M1);
     
+    //if OCSP error occurs, raise to vc layer
     if ((wErrorOccured & MC_OCSP) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(OVERCURRENT_COUNTER, HOLD_UNTIL_CLEARED);
     }
+    //else clear the error
     else
     {
         VC_Errors_ClearError(OVERCURRENT_COUNTER);
     }
     #if OCDX_POEG == OCD1_POEG
+        //if OCD2 error occurs, raise to vc layer
         if ((wErrorOccured & MC_OCD2) != MC_NO_WARNING)
         {
             VC_Errors_RaiseError(OVERCURRENT_COUNTER, HOLD_UNTIL_CLEARED);
         }
+        //else clear the error
         else
         {
             VC_Errors_ClearError(OVERCURRENT_COUNTER);
         }
     #endif
+    //if hall sensor error occurs, raise to vc layer
+    if ((wErrorOccured & MC_HALL_DISC) != MC_NO_WARNING)
+    {
+        VC_Errors_RaiseError(MOTOR_HALL_ERROR, HOLD_UNTIL_CLEARED);
+    }
+    //else clear the error
+    else
+    {
+        VC_Errors_ClearError(MOTOR_HALL_ERROR);
+    }
     
 
 }
@@ -1053,38 +1067,35 @@ void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     uint32_t wWarningOccurred = MDI_GetOccuredWarnings(pHandle->pMDI, M1);
-    
-    if ((wWarningOccurred & MC_HALL_DISC) != MC_NO_WARNING)
-    {
-        VC_Errors_RaiseError(MOTOR_HALL_ERROR, HOLD_UNTIL_CLEARED);
-    }
-    else
-    {
-        VC_Errors_ClearError(MOTOR_HALL_ERROR);
-    }
         
+    //if motor temperature foldback warning occurs, raise to vc layer
     if ((wWarningOccurred & MC_FOLDBACK_TEMP_MOTOR) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(MOTOR_FOLDBACK_TEMP, HOLD_UNTIL_CLEARED);
     }
+    //else clear the warning
     else
     {
         VC_Errors_ClearError(MOTOR_FOLDBACK_TEMP);
     }
     
+    //if controller temperature foldback warning occurs, raise to vc layer
     if ((wWarningOccurred & MC_FOLDBACK_TEMP_CONTROLLER) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(CONTROLLER_FOLDBACK_TEMP, HOLD_UNTIL_CLEARED);
     }
+    //else clear the warning
     else
     {
         VC_Errors_ClearError(CONTROLLER_FOLDBACK_TEMP);
     }
     
+    //if motor disconnection or freeze warning occurs, raise to vc layer
     if ((wWarningOccurred & MC_NTC_DISC_FREEZE_MOTOR) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(MOTOR_NTC_DISC_FREEZE, HOLD_UNTIL_CLEARED);
     }
+    //else clear the warning
     else
     {
         VC_Errors_ClearError(MOTOR_NTC_DISC_FREEZE);
