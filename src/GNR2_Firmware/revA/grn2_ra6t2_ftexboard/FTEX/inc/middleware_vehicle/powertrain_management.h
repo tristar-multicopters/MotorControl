@@ -22,6 +22,9 @@
 
 // ============================== Defines =============================== // 
 
+#define NBR_CRITICAL_FAULT_COUNTERS 3
+#define NBR_MOTORS                  2
+
 // ======================== Configuration enums ======================== // 
 typedef enum
 {
@@ -93,13 +96,13 @@ typedef struct
     PWREN_Handle_t * pPWREN;                      // Pointer to power enable pin handle
 
     uint8_t bMainMotor;                           // Main motor selection. It is updated by user using motor selector switch
-    int16_t aTorque[2];                           // Array of torque reference, first element is for M1, second is for M2
-    int16_t aSpeed[2];                            // Array of speed reference, first element is for M1, second is for M2
+    int16_t aTorque[NBR_MOTORS];                  // Array of torque reference, first element is for M1, second is for M2
+    int16_t aSpeed[NBR_MOTORS];                   // Array of speed reference, first element is for M1, second is for M2
     
     int16_t hTorqueSelect;                        // Select torque to feed for motor control
     int16_t hOldTorqueSelect;                     // Contaisn the preivous value of torque select that we sent, value can only be updated right before we send it to the MC layer
     
-    uint16_t aFaultManagementCounters[6][2];      /* Array of counter before acknowledging motor faults. First dimension is
+    uint16_t aFaultManagementCounters[NBR_CRITICAL_FAULT_COUNTERS][NBR_MOTORS];      /* Array of counter before acknowledging motor faults. First dimension is
                                                      fault type in this order: Over current, startup, and speed feedback, Stuck Reverse. 
                                                      Second dimension is for motor number in this order: M1 and M2 */
 

@@ -86,19 +86,14 @@ extern "C" {
  */
 #define  MC_NO_FAULT                (uint32_t)(0x00000000u)     /**< @brief No fault.*/
 #define  MC_FOC_DURATION            (uint32_t)(0x00000001u)     /**< @brief Critical fault: FOC rate to high.*/
-#define  MC_OVER_VOLT               (uint32_t)(0x00000002u)     /**< @brief Critical fault: Software over voltage.*/
-#define  MC_UNDER_VOLT              (uint32_t)(0x00000004u)     /**< @brief Critical fault: Software under voltage.*/
-#define  MC_OVER_TEMP_CONTROLLER    (uint32_t)(0x00000008u)     /**< @brief Critical fault: Software over temperature for controller.*/
-#define  MC_NTC_FREEZE_CONTROLLER   (uint32_t)(0x00000010u)     /**< @brief Critical fault: Controller NTC Freezing protection.*/
-#define  MC_OVER_TEMP_MOTOR         (uint32_t)(0x00000020u)     /**< @brief Critical fault: Software over temperature for motor.*/
-#define  MC_SPEED_FDBK              (uint32_t)(0x00000040u)     /**< @brief Critical fault: Speed feedback.*/
-#define  MC_OCD1                    (uint32_t)(0x00000080u)     /**< @brief Critical fault: Emergency input (Over current detection 1).*/
+#define  MC_OVER_VOLT               (uint32_t)(0x00000002u)     /**< @brief Critical fault: Software over voltage (different numerical value from MC_UNDER_VOLT)*/
+#define  MC_SPEED_FDBK              (uint32_t)(0x00000004u)     /**< @brief Critical fault: Speed feedback.*/
+#define  MC_OCD1                    (uint32_t)(0x00000008u)     /**< @brief Critical fault: Emergency input (Over current detection 1).*/
 #if OCDX_POEG == OCD2_POEG
-    #define  MC_OCD2                (uint32_t)(0x00000100u)     /**< @brief Critical fault: Emergency input (Over current detection 2).*/
+    #define  MC_OCD2                (uint32_t)(0x00000010u)     /**< @brief Critical fault: Emergency input (Over current detection 2).*/
 #endif
-#define  MC_SW_ERROR                (uint32_t)(0x00000200u)     /**< @brief Critical fault: Software Error.*/
-#define  MC_MSRP                    (uint32_t)(0x00000400u)     /**< @brief Critical fault: Motor Stuck & Reverse Protection.*/
-#define  MC_PHASE_DISC              (uint32_t)(0x00000800u)     /**< @brief Critical fault: disconnected Phase cable detection */
+#define  MC_SW_ERROR                (uint32_t)(0x00000020u)     /**< @brief Critical fault: Software Error.*/
+#define  MC_PHASE_DISC              (uint32_t)(0x00000040u)     /**< @brief Critical fault: disconnected Phase cable detection */
 
 
 /** @} */
@@ -112,7 +107,12 @@ extern "C" {
     #define  MC_OCD2                    (uint32_t)(0x00000001u) /**< @brief Error: Emergency input (Over current detection 2).*/
 #endif
 #define  MC_OCSP                    (uint32_t)(0x00000002u)     /**< @brief Error: Overcurrent software protection.*/
-#define  MC_HALL_DISC               (uint32_t)(0x00000004u)     /**< @brief WARNING: disconnected Hall sensor detection */
+#define  MC_HALL_DISC               (uint32_t)(0x00000004u)     /**< @brief Error: disconnected Hall sensor detection */
+#define  MC_OVER_TEMP_CONTROLLER    (uint32_t)(0x00000008u)     /**< @brief Error: Software over temperature for controller.*/
+#define  MC_NTC_FREEZE_CONTROLLER   (uint32_t)(0x00000010u)     /**< @brief Error: Controller NTC Freezing protection.*/
+#define  MC_OVER_TEMP_MOTOR         (uint32_t)(0x00000020u)     /**< @brief Error: Software over temperature for motor.*/
+#define  MC_UNDER_VOLT              (uint32_t)(0x00000040u)     /**< @brief Error: Software under voltage (different numerical value from MC_OVER_VOLT)*/
+#define  MC_MSRP                    (uint32_t)(0x00000080u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
 
 
 /** @} */
@@ -121,7 +121,7 @@ extern "C" {
   * @brief Warnings don't affect the functioning of the bike
  ** @{
  */
-#define  MC_NO_WARNING              (uint32_t)(0x00000000u)     /**< @brief No error.*/
+#define  MC_NO_WARNING              (uint32_t)(0x00000000u)     /**< @brief No warning.*/
 #define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00000001u)     /**< @brief WARNING: motor temp has entered foldback region.*/
 #define  MC_NTC_DISC_FREEZE_MOTOR   (uint32_t)(0x00000002u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
 #define  MC_FOLDBACK_TEMP_CONTROLLER     (uint32_t)(0x00000004u)     /**< @brief WARNING: controller temp has entered foldback region.*/

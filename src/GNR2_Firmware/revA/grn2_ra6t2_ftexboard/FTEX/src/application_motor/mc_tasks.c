@@ -462,7 +462,7 @@ void MediumFrequencyTaskM1(void)
                                     pSpeedTorqCtrl[M1]->hBusVoltage, pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit)
                                     != MC_NO_FAULT)
         {
-            MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_SetError(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }
 #endif
         
@@ -518,7 +518,7 @@ void MediumFrequencyTaskM1(void)
                                     pSpeedTorqCtrl[M1]->hBusVoltage, pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit)
                                     != MC_NO_FAULT)  
         { 
-            MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_SetError(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }            
 #endif
 
@@ -917,7 +917,7 @@ uint8_t MC_HighFrequencyTask(void)
         if all last 16 records show vibration, then rasie the stuck protection error */
         if (((HallPosSensorM1.wDirectionChangePattern & 0xFFFF) == VIBRATION_PATTERN) && (MotorParameters.HallSensorParameters.bEnVibrationError == true))
         {
-            MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
+            MCStateMachine_SetError(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }
         
         wFOCreturn = FOC_CurrControllerM1();
@@ -1068,28 +1068,11 @@ void MC_SafetyTask(void)
  */
 void SafetyTask_PWMOFF(uint8_t bMotor)
 {
-    uint32_t CodeReturn = MC_NO_FAULT;
+    uint32_t CodeReturnErrors = MC_NO_ERROR;
+    uint32_t CodeReturnCriticalFaults = MC_NO_FAULT;
     uint32_t errMask[NBR_OF_MOTORS] = {VBUS_TEMP_ERR_MASK};
-
-    // Check if Controller temperature is higher than the threshold, then raise the error
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_OT)
-    {
-        CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_CONTROLLER;
-    }
-
-    // Check if Motor temperature is higher than the threshold, then raise the error
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]) == NTC_OT)
-    {
-        CodeReturn |= errMask[bMotor] & MC_OVER_TEMP_MOTOR;
-    }
     
-    //Check if controller temperature is lower than the threshold, then raise the error
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_FREEZE)
-    {
-        CodeReturn |= errMask[bMotor] & MC_NTC_FREEZE_CONTROLLER;
-    }
-    
-    CodeReturn |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_OCD1, MC_OCD2 or MC_NO_FAULT
+    CodeReturnCriticalFaults |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_OCD1, MC_OCD2 or MC_NO_FAULT
                                                                                     (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
     #if OCDX_POEG == OCD1_POEG
         if (RegisterIsOCD2OccurredCallBack(pPWMCurrFdbk[bMotor]))
@@ -1105,7 +1088,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
             //if OCD2 is triggered more than OCD2_MAX, report the OCD1 error 
             if (bOCNumOccur >= OCD2_MAX)
             {
-                CodeReturn |= errMask[bMotor] & MC_OCD1;
+                CodeReturnCriticalFaults |= errMask[bMotor] & MC_OCD1;
                 bOCCheck = 0;
                 bOCNumOccur = 0;
             }
@@ -1116,24 +1099,58 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
             MCStateMachine_SetError(&MCStateMachine[M1], 0, MC_OCD2);    //Clear the error
         }
     #elif OCDX_POEG == OCD2_POEG
-        //if OCD2 is triggered more than the threshold, report OCD1 error
-        if ((CodeReturn & MC_OCD2) == MC_OCD2)
+        //if OCD2 is triggered more than the threshold, report OCD1 critical fault
+        if ((CodeReturnCriticalFaults & MC_OCD2) == MC_OCD2)
         {
             bOCCheck++;
             
             if (bOCCheck == OCD2_MAX)
             {
-                CodeReturn |= errMask[bMotor] & MC_OCD1;
+                CodeReturnCriticalFaults |= errMask[bMotor] & MC_OCD1;
             }
         }
     #endif
     
     if (bMotor == M1)
     {
-        CodeReturn |= errMask[bMotor] & ResDivVbusSensor_CalcAvVbus(pBusSensorM1);
+        uint32_t voltFaults = ResDivVbusSensor_CalcAvVbus(pBusSensorM1);
+        CodeReturnCriticalFaults |= errMask[bMotor] & (voltFaults & MC_OVER_VOLT);
+        CodeReturnErrors |= voltFaults & MC_UNDER_VOLT;
     }
     
-    MCStateMachine_CriticalFaultProcessing(&MCStateMachine[bMotor], CodeReturn, ~CodeReturn); /* Update the MCStateMachine according error code */
+    // Check if Controller temperature is higher than the threshold, then raise the error
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_OT)
+    {
+        CodeReturnErrors |= MC_OVER_TEMP_CONTROLLER;
+    }
+    else
+    {
+        CodeReturnErrors &= ~MC_OVER_TEMP_CONTROLLER;
+    }
+
+    // Check if Motor temperature is higher than the threshold, then raise the error
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]) == NTC_OT)
+    {
+        CodeReturnErrors |= MC_OVER_TEMP_MOTOR;
+    }
+    else
+    {
+        CodeReturnErrors &= ~MC_OVER_TEMP_MOTOR; 
+    }
+    
+    //Check if controller temperature is lower than the threshold, then raise the error
+    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_FREEZE)
+    {
+        CodeReturnErrors |= MC_NTC_FREEZE_CONTROLLER;
+    }
+    else
+    {
+        CodeReturnErrors &= ~MC_NTC_FREEZE_CONTROLLER; 
+    }
+    
+    MCStateMachine_CriticalFaultProcessing(&MCStateMachine[bMotor], CodeReturnCriticalFaults, ~CodeReturnCriticalFaults); /* Update the MCStateMachine according critical fault code */
+    MCStateMachine_SetError(&MCStateMachine[bMotor], CodeReturnErrors, ~CodeReturnErrors); /* Update the MCStateMachine according error code */
+    
     switch (MCStateMachine_GetState(&MCStateMachine[bMotor]))                         /* Acts on PWM outputs in case of faults */
     {
     case M_FAULT_NOW:

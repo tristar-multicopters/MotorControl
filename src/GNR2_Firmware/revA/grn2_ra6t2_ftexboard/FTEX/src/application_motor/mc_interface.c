@@ -100,9 +100,9 @@ bool MCInterface_StartMotor(MotorControlInterfaceHandle_t * pHandle)
   ASSERT(pHandle != NULL);
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE)
+  if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE && !MCStateMachine_GetOccuredErrorState(pHandle->pSTM))
   {
-      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_IDLE_START );
+      bRetVal = MCStateMachine_NextState(pHandle->pSTM, M_IDLE_START);
   }
   return bRetVal;
 }

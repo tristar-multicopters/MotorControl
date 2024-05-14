@@ -17,12 +17,8 @@
 
 // ============================= Defines ================================ //
 #define OVERCURRENT_COUNTER         0
-#define STARTUP_COUNTER             1
-#define SPEEDFEEDBACK_COUNTER       2
-#define STUCK_REVERSE_COUNTER       3
-#define UNDERVOLTAGE_COUNTER        4
-#define PHASE_DISC_COUNTER          5
-#define MOTOR_ERROR_TYPE_COUNT      7
+#define SPEEDFEEDBACK_COUNTER       1
+#define PHASE_DISC_COUNTER          2
 
 #define MAXCURRENT                  MAX_MEASURABLE_CURRENT /* Used for a generic conversion 
                                                               from current ref to actual amps */
@@ -80,9 +76,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
     pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
-    pHandle->aFaultManagementCounters[STARTUP_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STARTUP_COUNTER][M2] = 0;
     pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M2] = 0;
-    pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;   
     
     pHandle->sParameters.CruiseForceDisengage = false;
     
@@ -764,29 +758,13 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
         {
             VC_Errors_RaiseError(OVER_CURRENT, HOLD_UNTIL_CLEARED);
         }
-        if ((wCriticalFaultOccured & MC_OVER_TEMP_CONTROLLER) != MC_NO_FAULT)
+        if ((wCriticalFaultOccured & MC_PHASE_DISC) != MC_NO_WARNING)
         {
-            VC_Errors_RaiseError(CONTROLLER_OT_PROTECT, DEFAULT_HOLD_FRAMES);
-        }
-        if ((wCriticalFaultOccured & MC_OVER_TEMP_MOTOR) != MC_NO_FAULT)
-        {
-            VC_Errors_RaiseError(MOTOR_OT_PROTECT, DEFAULT_HOLD_FRAMES);
+            VC_Errors_RaiseError(MOTOR_PHASE_ERROR, DEFAULT_HOLD_FRAMES);
         }
         if ((wCriticalFaultOccured & MC_OVER_VOLT)!= MC_NO_FAULT)
         {
             VC_Errors_RaiseError(OV_PROTECTION, DEFAULT_HOLD_FRAMES);
-        }
-        if ((wCriticalFaultOccured & MC_UNDER_VOLT)!= MC_NO_FAULT)
-        {
-            VC_Errors_RaiseError(UV_PROTECTION, DEFAULT_HOLD_FRAMES);
-        }
-        if ((wCriticalFaultOccured & MC_NTC_FREEZE_CONTROLLER)!= MC_NO_FAULT)
-        {
-            VC_Errors_RaiseError(UT_PROTECTION, DEFAULT_HOLD_FRAMES);
-        }
-        if ((wCriticalFaultOccured & MC_PHASE_DISC) != MC_NO_WARNING)
-        {
-            VC_Errors_RaiseError(MOTOR_PHASE_ERROR, DEFAULT_HOLD_FRAMES);
         }
 
                 
@@ -824,55 +802,11 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
                 pHandle->aFaultManagementCounters[SPEEDFEEDBACK_COUNTER][M1]++;
             }
         }
-        
-        if ((wM1FaultOccurredCode & MC_OVER_TEMP_CONTROLLER) != 0)
-        {
-            // In case of controller overtemperature, clear the OT fault
-            wM1FaultOccurredCode &= ~MC_OVER_TEMP_CONTROLLER;
-        }
-        
-        if ((wM1FaultOccurredCode & MC_OVER_TEMP_MOTOR) != 0)
-        {
-            // In case of motor overtemperature, clear the OT fault
-            wM1FaultOccurredCode &= ~MC_OVER_TEMP_MOTOR;
-        }
 
         if ((wM1FaultOccurredCode & MC_OVER_VOLT) != 0)
         {
             // In case of DCbus overvoltage, clear the OV fault
             wM1FaultOccurredCode &= ~MC_OVER_VOLT;
-        }
-
-        if ((wM1FaultOccurredCode & MC_UNDER_VOLT) != 0)
-        {
-            if(pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-            {
-                // If the timer has timeout, clear the UV fault
-                wM1FaultOccurredCode &= ~MC_UNDER_VOLT;
-                pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M1]++;
-            }
-        }
-
-        if ((wM1FaultOccurredCode & MC_MSRP) != 0)
-        {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
-            if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the MSRP fault
-                wM1FaultOccurredCode &= ~MC_MSRP;
-                pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M1]++;
-            }
-        }
-
-        if ((wM1FaultOccurredCode & MC_NTC_FREEZE_CONTROLLER) != 0)
-        {
-            wM1FaultOccurredCode &= ~MC_NTC_FREEZE_CONTROLLER;
         }
 
         if ((wM1FaultOccurredCode & MC_FOC_DURATION) != 0)
@@ -925,54 +859,10 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
             }
         }
 
-        if ((wM2FaultOccurredCode & MC_OVER_TEMP_CONTROLLER) != 0)
-        {
-            /* In case of controller overtemperature... */
-            wM2FaultOccurredCode &= ~MC_OVER_TEMP_CONTROLLER;
-        }
-        
-        if ((wM2FaultOccurredCode & MC_OVER_TEMP_MOTOR) != 0)
-        {
-            /* In case of motor overtemperature... */
-            wM2FaultOccurredCode &= ~MC_OVER_TEMP_MOTOR;
-        }
-
         if (wM2FaultOccurredCode & MC_OVER_VOLT)
         {
             /* In case of DCbus overvoltage... */
             wM2FaultOccurredCode &= ~MC_OVER_VOLT;
-        }
-
-        if ((wM2FaultOccurredCode & MC_UNDER_VOLT) != 0)
-        {
-            if(pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {
-                // If the timer has timeout, clear the UV fault
-                wM2FaultOccurredCode &= ~MC_UNDER_VOLT;
-                pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[UNDERVOLTAGE_COUNTER][M2]++;
-            }
-        }
-
-        if ((wM2FaultOccurredCode & MC_MSRP) != 0)
-        {// If there's a Motor StuckReverse feedback (MSRP) that has occurred but has already been cleared
-            if(pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
-            {// If the timer has timeout, clear the MSRP fault
-                wM2FaultOccurredCode &= ~MC_MSRP;
-                pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2] = 0;
-            }
-            else
-            {//Increase the counter one more tick
-                pHandle->aFaultManagementCounters[STUCK_REVERSE_COUNTER][M2]++;
-            }
-        }
-
-        if ((wM2FaultOccurredCode & MC_NTC_FREEZE_CONTROLLER) != 0)
-        {
-            wM2FaultOccurredCode &= ~MC_NTC_FREEZE_CONTROLLER;
         }
 
         if ((wM2FaultOccurredCode & MC_FOC_DURATION) != 0)
@@ -1032,6 +922,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
     {
         VC_Errors_ClearError(OVERCURRENT_COUNTER);
     }
+    
     #if OCDX_POEG == OCD1_POEG
         //if OCD2 error occurs, raise to vc layer
         if ((wErrorOccured & MC_OCD2) != MC_NO_WARNING)
@@ -1044,6 +935,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
             VC_Errors_ClearError(OVERCURRENT_COUNTER);
         }
     #endif
+    
     //if hall sensor error occurs, raise to vc layer
     if ((wErrorOccured & MC_HALL_DISC) != MC_NO_WARNING)
     {
@@ -1055,6 +947,49 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
         VC_Errors_ClearError(MOTOR_HALL_ERROR);
     }
     
+    //if over temp controller error occurs, raise to vc layer
+    if ((wErrorOccured & MC_OVER_TEMP_CONTROLLER)!= MC_NO_FAULT)
+    {
+        VC_Errors_RaiseError(CONTROLLER_OT_PROTECT, DEFAULT_HOLD_FRAMES);
+    }
+    //else clear the error
+    else
+    {
+        VC_Errors_ClearError(CONTROLLER_OT_PROTECT);
+    }
+    
+    //if under temp controller error occurs, raise to vc layer
+    if ((wErrorOccured & MC_NTC_FREEZE_CONTROLLER)!= MC_NO_FAULT)
+    {
+        VC_Errors_RaiseError(UT_PROTECTION, DEFAULT_HOLD_FRAMES);
+    }
+    //else clear the error
+    else
+    {
+        VC_Errors_ClearError(UT_PROTECTION);
+    }
+    
+    //if over temp motor error occurs, raise to vc layer
+    if ((wErrorOccured & MC_OVER_TEMP_MOTOR) != MC_NO_FAULT)
+    {
+        VC_Errors_RaiseError(MOTOR_OT_PROTECT, DEFAULT_HOLD_FRAMES);
+    }
+    //else clear the error
+    else
+    {
+        VC_Errors_ClearError(MOTOR_OT_PROTECT);
+    }
+    
+    //if undervoltage error occurs, raise to vc layer
+    if ((wErrorOccured & MC_UNDER_VOLT) != MC_NO_FAULT)
+    {
+        VC_Errors_RaiseError(UV_PROTECTION, DEFAULT_HOLD_FRAMES);
+    }
+    //else clear the error
+    else
+    {
+        VC_Errors_ClearError(UV_PROTECTION);
+    }
 
 }
 
