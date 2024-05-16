@@ -151,7 +151,11 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.WalkmodeAccelRampType = WALKMODE_ACCEL_RAMP_TYPE,
     .Screen_ConfigData.WalkmodeAccelRampArg1 = WALKMODE_ACCEL_RAMP_ARG1,
     .Screen_ConfigData.MaxSpeed = VEHICLE_TOP_SPEED_KMH,
-    .Screen_ConfigData.WheelSpeedSensorNbrMagnets = MOTOR_WSS_NBR_PER_ROTATION,
+    #if WWS_USE_MOTOR_NBR_PER_ROTATION == true || EXTERNAL_WSS_NBR_PER_ROTATION == 0
+        .Screen_ConfigData.WheelSpeedSensorNbrMagnets = MOTOR_WSS_NBR_PER_ROTATION,
+    #else
+        .Screen_ConfigData.WheelSpeedSensorNbrMagnets = EXTERNAL_WSS_NBR_PER_ROTATION,
+    #endif
     .Screen_ConfigData.WheelDiameter = WHEEL_DIAMETER,
     .Screen_ConfigData.ScreenProtocol = SCREEN_PROTOCOL,
     .Screen_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
@@ -1127,7 +1131,7 @@ uint8_t UserConfigTask_GetWheelSpeedSensorNbrMagnets(void)
 */
 void UserConfigTask_UpdateWheelSpeedSensorNbrMagnets(uint8_t value)
 {
-    if ((value > 1) && (value <= 50))
+    if ((value > 0) && (value <= 50))
     {
         userConfigData.Screen_ConfigData.WheelSpeedSensorNbrMagnets = value;
     }
