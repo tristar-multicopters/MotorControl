@@ -761,3 +761,22 @@ bool MCInterface_StopMotorTuning(MotorControlInterfaceHandle_t * pHandle)
   return bRetVal;
 }
 #endif
+
+/**
+  *  This command enables the flux weakening logic.
+  */
+void MCInterface_EnableFluxWeakening(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->bFluxWeakeningEn = true;
+}
+
+/**
+  *  This command disables the flux weakening logic.
+  */
+
+void MCInterface_DisableFluxWeakening(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->bFluxWeakeningEn = false;
+}

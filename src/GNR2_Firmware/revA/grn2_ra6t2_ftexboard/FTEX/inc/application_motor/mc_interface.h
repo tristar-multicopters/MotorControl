@@ -568,7 +568,19 @@ uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation(MotorControlInterfaceHandle_
   */
 bool MCInterface_GetMotorTempSensorMixed(MotorControlInterfaceHandle_t * pHandle);
 
+/**
+  * @brief  Enable flux weakening 
+  * @param  pHandle : handle of the MCI interface,
+  * @retval enabling flux weakening feature
+  */
+void MCInterface_EnableFluxWeakening(SpdTorqCtrlHandle_t * pHandle);
 
+/**
+  * @brief  Disable flux weakening 
+  * @param  pHandle : handle of the MCI interface,
+  * @retval Disabling flux weakening feature
+  */
+void MCInterface_DisableFluxWeakening(SpdTorqCtrlHandle_t * pHandle);
 
 #if AUTOTUNE_ENABLE
 /**
