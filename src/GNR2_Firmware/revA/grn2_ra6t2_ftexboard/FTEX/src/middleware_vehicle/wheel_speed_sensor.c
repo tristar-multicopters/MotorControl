@@ -15,11 +15,12 @@
 /**
     Wheel Speed Sensor Initialization
 */
-void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle, uint8_t wheelSpdSensorNbrPerRotation)
+void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle, uint8_t wheelSpdSensorNbrPerRotation, float WSSTimeOnOneMagnetPercent)
 {
     ASSERT(pHandle != NULL);
     
     pHandle->bWheelSpeed_PulsePerRotation = wheelSpdSensorNbrPerRotation;
+    pHandle->fWheelSpeed_TimeOnOneMagnetPercent = WSSTimeOnOneMagnetPercent;
     
     //get GPT timer information
     PulseFrequency_GetTimerInfo(pHandle->pPulseFrequency);
@@ -69,7 +70,7 @@ void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle, bool
             //update basic wheel speed information.
             PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
             //get the time used by the wheel to complet a revolution.
-            pHandle->wWheelSpeed_Read = pHandle->pPulseFrequency->wSecondPeriod;   
+            pHandle->wWheelSpeed_Read = pHandle->pPulseFrequency->wSecondPeriod * (100 + (pHandle->fWheelSpeed_TimeOnOneMagnetPercent * pHandle->bWheelSpeed_PulsePerRotation)) / 100;   
         }
     }
     else

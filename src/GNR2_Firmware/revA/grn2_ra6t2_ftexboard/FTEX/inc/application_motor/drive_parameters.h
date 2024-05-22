@@ -210,6 +210,7 @@
 #define RESET_SPEED                     25        //  speed for reseting the PIDs
 #define MAX_NEG_DC_CURRENT              -5        // maximum negative DC currnet to battery in amps
 #define REGEN_TORQUE_RAMP               -2        // the rate of increasing the regenerative current in Nm/msec
+
 /****** Rotor Position Observer Parameters ******/
 #define ROTOR_POS_OBS_KP                1250        // Rotor position observer default gain
 #define ROTOR_POS_OBS_KI                0           // Rotor position observer default gain
@@ -239,6 +240,11 @@
 /******** Hall Sensor factors ********/
 #define VIBRATION_PATTERN               0xAAAA      // = 0b1010101010101010 which is 8 time of direction change
                                         
+/******** Wheel Speed Sensor Parameters ********/
+#ifndef MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT
+    #define MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT    (float)5    //Percentage of time that the wheel speed sensor spends on each magnet
+#endif
+
 /******** Speed Control Settings Section ********/
 #define SPDCTRL_UPPER_INTEGRAL_LIMIT    2097152     // =2^21 The maximum allowed value for Integral Term of Speed Control PID
 

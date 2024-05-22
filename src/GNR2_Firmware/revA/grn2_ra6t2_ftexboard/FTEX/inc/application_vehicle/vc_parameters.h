@@ -79,6 +79,11 @@
     #define VEHICLE_TOP_SPEED_KMH   32    
 #endif
 
+//Percentage of time that the wheel speed sensor spends on each magnet
+#ifndef EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT
+    #define EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT (float)5
+#endif
+
 // PAS sensor Torque power in % default values
 
 #ifndef PAS_0_TORQUE_GAIN

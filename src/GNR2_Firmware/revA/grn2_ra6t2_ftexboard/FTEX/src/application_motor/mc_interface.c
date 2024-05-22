@@ -721,6 +721,15 @@ uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation(MotorControlInterfaceHandle_
 }
 
 /**
+  *  Get the percentage of time that the wheel speed sensor spends on each magnet
+  */
+float MCInterface_GetMotorWSSTimeOnOneMagnetPercent(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pMCConfig->fMotorWSSTimeOnOneMagnetPercent;
+}
+
+/**
   *  Get whether the motor sensor type is mixed or not
   */
 bool MCInterface_GetMotorTempSensorMixed(MotorControlInterfaceHandle_t * pHandle)

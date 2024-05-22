@@ -30,7 +30,8 @@ typedef struct {
     PulseFrequencyHandle_t * pPulseFrequency;  /* Pointer to speed handle */
 
     bool bWSSUseMotorPulsePerRotation;  /* Indicates whether the wheel speed sensor within the motor is used */
-    uint8_t    bWheelSpeed_PulsePerRotation;  /* Number of pulse per rotation */
+    uint8_t bWheelSpeed_PulsePerRotation;  /* Number of pulse per rotation */
+    float fWheelSpeed_TimeOnOneMagnetPercent; /* Percentage of time that the wheel speed sensor spends on each magnet */
     float wWheelSpeed_Read;    /* Wheel Speed Sensor Periode value*/
     uint32_t wWheelSpeedFreq;     /* Wheel Speed sensor frequency calculated value */
     int32_t wWheelSpeedRpm;       /* Wheel Speed sensor rotation per minute calculated value */
@@ -43,9 +44,11 @@ typedef struct {
 /**
   @brief  Function to initialize wheel speed sensor handle
   @param  WheelSpeedSensorHandle_t handle
+          Number of magnets per rotation on WSS
+          Percentage of time the WSS spends on one magnet
   @return None
 */
-void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle, uint8_t wheelSpdSensorNbrPerRotation);
+void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle, uint8_t wheelSpdSensorNbrPerRotation, float WSSTimeOnOneMagnetPercent);
 
 /**
   @brief  Function to calculate the wheel speed sensor value

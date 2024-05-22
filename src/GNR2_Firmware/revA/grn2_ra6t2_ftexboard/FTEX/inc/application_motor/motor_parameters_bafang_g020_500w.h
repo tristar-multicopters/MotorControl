@@ -96,7 +96,8 @@ These variables are used to configure the motor within the smart config tool.
 
 /************** Wheel Speed Sensor Parameters  *****************************/
 
-#define MOTOR_WSS_NBR_PER_ROTATION          4                   // Wheel speed sensor cycle number for one wheel rotation
+#define MOTOR_WSS_NBR_PER_ROTATION          6                   // Wheel speed sensor cycle number for one wheel rotation
+#define MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT    (float)4.53     // Percentage of time that the wheel speed sensor spends on each magnet
 
 /************** Current and Speed PID Parameters  *****************************/
 

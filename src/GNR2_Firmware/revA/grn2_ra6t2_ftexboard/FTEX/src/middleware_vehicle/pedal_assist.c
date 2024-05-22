@@ -30,7 +30,7 @@ void AssertIsValidLevel(PasLevel_t level);
     * @param  Pedal Assist handle & Delay Handle
     * @retval None
     */
-void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation)
+void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation, float WSSTimeOnOneMagnetPercent)
 {
     ASSERT(pHandle != NULL);
     
@@ -62,7 +62,7 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, u
     pHandle->sParameters.hPASMaxTorque = (int16_t)maxTorque;
 
     PedalSpdSensor_Init(pHandle->pPSS);
-    WheelSpdSensor_Init(pHandle->pWSS, wheelSpdSensorNbrPerRotation);
+    WheelSpdSensor_Init(pHandle->pWSS, wheelSpdSensorNbrPerRotation, WSSTimeOnOneMagnetPercent);
     PedalTorqSensor_Init(pHandle->pPTS, pPTSstuckDelay, maxTorque);
     
     pHandle->bCurrentAssistLevel = DEFAULT_PAS_LEVEL;

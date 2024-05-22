@@ -466,6 +466,13 @@ float MDI_GetRS(MultipleDriveInterfaceHandle_t * pHandle);
 uint8_t MDI_GetWheelSpdSensorNbrPerRotation(MultipleDriveInterfaceHandle_t * pHandle);
 
 /**
+  * @brief  Get the percentage of time that the wheel speed sensor spends on each magnet
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Percentage of time that the wheel speed sensor spends on each magnet
+  */
+float MDI_GetMotorWSSTimeOnOneMagnetPercent(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
   * @brief  Get whether the motor temp sensor is mixed
   * @param  pHandle Pointer on the component instance to work on.
   * @retval Whether the motor temp sensor is mixed

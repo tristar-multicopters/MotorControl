@@ -92,6 +92,7 @@ MotorParameters_t MotorParameters =
     .WheelSpeedSensorParameters =
     {
         .bWheelSpeedSensorNbrPerRotation = MOTOR_WSS_NBR_PER_ROTATION,
+        .fMotorWSSTimeOnOneMagnetPercent = MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT,
     },
     .CurrentSpeedPID = 
     {
