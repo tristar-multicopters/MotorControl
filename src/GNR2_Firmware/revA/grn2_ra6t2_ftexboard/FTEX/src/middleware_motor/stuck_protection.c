@@ -28,7 +28,7 @@ uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
     
     uint32_t wRetval = MC_NO_FAULT;
 
-    if ((AvrgMecSpeed == 0) && (hFinalTorqueRef > pHandle->min_torque))
+    if ((AvrgMecSpeed == 0) && (hFinalTorqueRef > pHandle->min_torque) && (hBusVoltage > pHandle->low_battery_voltage))
     {
         // strt a timer to count time motor got stuck
         if (pHandle->counter < pHandle->timeout_general)
