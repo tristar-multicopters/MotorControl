@@ -69,8 +69,8 @@ void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle, bool
         {
             //update basic wheel speed information.
             PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
-            //get the time used by the wheel to complet a revolution.
-            pHandle->wWheelSpeed_Read = pHandle->pPulseFrequency->wSecondPeriod * (100 + (pHandle->fWheelSpeed_TimeOnOneMagnetPercent * pHandle->bWheelSpeed_PulsePerRotation)) / 100;   
+            //get the total period time including when the wheel is on the magnet
+            pHandle->wWheelSpeed_Read = pHandle->pPulseFrequency->wSecondPeriod / ((100 - (pHandle->fWheelSpeed_TimeOnOneMagnetPercent * pHandle->bWheelSpeed_PulsePerRotation)) / 100);
         }
     }
     else
