@@ -37,7 +37,7 @@
 //to syncronize power off sequency.
 #define HEARTBEAT_PRODUCE_PERIOD_MS         2500                     /* Period of the heartbeat frame */
 
-#define HEARTBEAT_CONSUME_PERIOD_MS           50                     /* Max time to wait for receiving next heartbeat */  
+#define HEARTBEAT_CONSUME_PERIOD_MS          100                     /* Max time to wait for receiving next heartbeat */  
 /* Allocate global variables for runtime value of objects */
 CO_HBCONS CANScreenHbConsumer = {
     .Time   = HEARTBEAT_CONSUME_PERIOD_MS,

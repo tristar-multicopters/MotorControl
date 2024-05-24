@@ -69,8 +69,7 @@
 //as WDT and etc.
 #define FIRMWARE_RELEASE              0
 
-
-#define VEHICLE_SELECTION             VEHICLE_A2_500W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                            

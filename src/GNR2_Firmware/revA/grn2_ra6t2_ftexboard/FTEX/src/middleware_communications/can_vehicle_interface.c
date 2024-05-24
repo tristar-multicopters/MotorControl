@@ -329,7 +329,7 @@ void CanVehiInterface_SetupCANScreen(VCI_Handle_t * pHandle)
    ASSERT(pHandle != NULL);
    ASSERT(UART0Handle.UARTProtocol == UART_DISABLE);  // We can only call this when no UART screen is present
     
-   Throttle_SetupExternal(pHandle->pPowertrain->pThrottle,65535,0); 
+   Throttle_SetupExternal(pHandle->pPowertrain->pThrottle,10000,0); 
    CANScreenSetup = true; 
 }
 
