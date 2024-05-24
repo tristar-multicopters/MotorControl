@@ -70,6 +70,10 @@
 
 #include "motor_parameters_ghr_0194_dd.h"
 
+#elif MOTOR_SELECTION == MOTOR_SUPER73_500W
+
+#include "motor_parameters_super73_500w.h"
+
 #endif
 
 

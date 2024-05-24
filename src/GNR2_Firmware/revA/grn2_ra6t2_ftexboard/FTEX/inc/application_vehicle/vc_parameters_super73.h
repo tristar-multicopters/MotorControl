@@ -10,7 +10,7 @@
 #define __VC_PARAMETERS_SUPER73_H
 
 /******************* MOTOR SELECTION  *******************************/
-#define MOTOR_SELECTION    MOTOR_RS2_1200W
+#define MOTOR_SELECTION    MOTOR_SUPER73_500W
 
 
 /******************* SCREEN SELECTION  *******************************/
