@@ -81,23 +81,45 @@
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
                                                                
 #define PAS_0_MIN_TORQUE_PERCENT                0
-#define PAS_1_MIN_TORQUE_PERCENT               15
-#define PAS_2_MIN_TORQUE_PERCENT               15
-#define PAS_3_MIN_TORQUE_PERCENT               15
-#define PAS_4_MIN_TORQUE_PERCENT               15
-#define PAS_5_MIN_TORQUE_PERCENT               15 
+#define PAS_1_MIN_TORQUE_PERCENT                0
+#define PAS_2_MIN_TORQUE_PERCENT                0
+#define PAS_3_MIN_TORQUE_PERCENT                0
+#define PAS_4_MIN_TORQUE_PERCENT                0
+#define PAS_5_MIN_TORQUE_PERCENT                0 
 
-#define PAS_0_MAX_TORQUE_PERCENT               0
-#define PAS_1_MAX_TORQUE_PERCENT               20
-#define PAS_2_MAX_TORQUE_PERCENT               35
-#define PAS_3_MAX_TORQUE_PERCENT               45
-#define PAS_4_MAX_TORQUE_PERCENT               70
-#define PAS_5_MAX_TORQUE_PERCENT               100 
+#define PAS_0_MAX_TORQUE_PERCENT                0
+#define PAS_1_MAX_TORQUE_PERCENT               60
+#define PAS_2_MAX_TORQUE_PERCENT               67
+#define PAS_3_MAX_TORQUE_PERCENT               80
+#define PAS_4_MAX_TORQUE_PERCENT               88
+#define PAS_5_MAX_TORQUE_PERCENT              100 
 
-#define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
+#define PAS_WALK_POWER_PERCENT                 70              // PAS walk has a ratio of 70%
 
-#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
-#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        2    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
+#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP              5    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
+//cadence detection windows on ms when starting to use the pedal.
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 1000           
+
+#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING               1    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running    
+//cadence detection windows on ms when running. 
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS  150
+
+                                                    // Values commented are the settings used to make the cadence feel very similar to velec release
+#define PAS1_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
+#define PAS1_ACCEL_RAMP_ARG1                    1   //     15
+
+#define PAS2_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR
+#define PAS2_ACCEL_RAMP_ARG1                    1   //     25
+
+#define PAS3_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
+#define PAS3_ACCEL_RAMP_ARG1                    1   //     55
+
+#define PAS4_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
+#define PAS4_ACCEL_RAMP_ARG1                    1   //     55
+
+#define PAS5_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
+#define PAS5_ACCEL_RAMP_ARG1                    1   //     65      
+
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
