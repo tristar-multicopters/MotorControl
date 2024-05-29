@@ -62,9 +62,9 @@
 
 #include "vc_parameters_r48_750w.h"
 
-#elif VEHICLE_SELECTION ==  VEHICLE_SUPER73
+#elif VEHICLE_SELECTION ==  VEHICLE_SUPER73_Z
 
-#include "vc_parameters_super73.h"
+#include "vc_parameters_super73_z.h"
 
 #elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
 
@@ -77,7 +77,7 @@
 #endif
 
 #ifndef  VEHICLE_TOP_SPEED_KMH
-    #define VEHICLE_TOP_SPEED_KMH   32    
+    #define VEHICLE_TOP_SPEED_KMH   32 
 #endif
 
 //Percentage of time that the wheel speed sensor spends on each magnet

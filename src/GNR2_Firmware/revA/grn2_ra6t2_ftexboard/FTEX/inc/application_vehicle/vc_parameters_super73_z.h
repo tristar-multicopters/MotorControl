@@ -1,13 +1,13 @@
 /**
-  * @file    vc_parameters_super73.h
-  * @brief   This file contains the parameters needed in order to configure the motor of VEHICLE_R48_750W bike.
+  * @file    vc_parameters_super73_z.h
+  * @brief   This file contains the parameters needed in order to configure the motor of VEHICLE_SUPER73_Z bike.
   *
   */
 
 /* Define to prevent recursive inclusion --- 
 ----------------------------------*/
-#ifndef __VC_PARAMETERS_SUPER73_H
-#define __VC_PARAMETERS_SUPER73_H
+#ifndef __VC_PARAMETERS_SUPER73_Z_H
+#define __VC_PARAMETERS_SUPER73_Z_H
 
 /******************* MOTOR SELECTION  *******************************/
 #define MOTOR_SELECTION    MOTOR_SUPER73_500W
@@ -21,9 +21,10 @@
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
 
+#define DEFAULT_WHEEL_DIAMETER_OVERRIDE 23
 /***************** THROTTLE SELECTION  ******************************/
 
-#include "throttle_sensors/vc_velec_r48_throttle.h"
+#include "throttle_sensors/super73_270X.h"
 
 /***************** THROTTLE FEEL PARAMETERS  ******************************/
 #define THROTTLE_OFFSET_THROTTLE2TORQUE        1            // Offset for throttle to torque linear transformation  */
@@ -33,7 +34,7 @@
 
 /***************** PEDAL SENSOR SELECTION  ******************************/
 
-#include "pedal_sensors/duratorq_autorq.h"                  //NOTE: there is no torque sensor on the super73
+#include "pedal_sensors/BBSS24-L50L-02.h"                  //NOTE: there is no torque sensor on the super73
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
 #define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // Offset for pedal torque sensor to torque linear transformation during the startup in %
@@ -81,26 +82,34 @@
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
                                                                
 #define PAS_0_MIN_TORQUE_PERCENT               0
-#define PAS_1_MIN_TORQUE_PERCENT               20
-#define PAS_2_MIN_TORQUE_PERCENT               35
+#define PAS_1_MIN_TORQUE_PERCENT               15
+#define PAS_2_MIN_TORQUE_PERCENT               25
 #define PAS_3_MIN_TORQUE_PERCENT               45
-#define PAS_4_MIN_TORQUE_PERCENT               70
+#define PAS_4_MIN_TORQUE_PERCENT               75
 #define PAS_5_MIN_TORQUE_PERCENT               100
 
 #define PAS_0_MAX_TORQUE_PERCENT               0
-#define PAS_1_MAX_TORQUE_PERCENT               20
-#define PAS_2_MAX_TORQUE_PERCENT               35
+#define PAS_1_MAX_TORQUE_PERCENT               15
+#define PAS_2_MAX_TORQUE_PERCENT               25
 #define PAS_3_MAX_TORQUE_PERCENT               45
-#define PAS_4_MAX_TORQUE_PERCENT               70
+#define PAS_4_MAX_TORQUE_PERCENT               75
 #define PAS_5_MAX_TORQUE_PERCENT               100 
 
-#define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
+#define PAS_WALK_POWER_PERCENT                 70      // PAS walk has a ratio of 70%
 
-#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        3    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
-#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        3    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
-#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 300
+#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        4    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 750
+#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        1    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 200
 
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
+
+
+#define PAS_LEVEL_SPEED_1   VEHICLE_TOP_SPEED_KMH
+#define PAS_LEVEL_SPEED_2   VEHICLE_TOP_SPEED_KMH
+#define PAS_LEVEL_SPEED_3   VEHICLE_TOP_SPEED_KMH
+#define PAS_LEVEL_SPEED_4   VEHICLE_TOP_SPEED_KMH
+#define PAS_LEVEL_SPEED_5   VEHICLE_TOP_SPEED_KMH
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
@@ -141,7 +150,7 @@
     
 /******************************** BATTERY SELECTION ******************************/
 
-#include "batteries/super73_battery.h" //CHECK!!!
+#include "batteries/super73_battery_EZ-ALC-25_13S2P.h" 
                                             
 #endif                                            
 

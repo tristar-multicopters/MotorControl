@@ -510,9 +510,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_super73.h</FileName>
+              <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
@@ -2685,9 +2685,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_super73.h</FileName>
+              <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
@@ -4809,9 +4809,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_super73.h</FileName>
+              <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
@@ -6984,9 +6984,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_super73.h</FileName>
+              <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
@@ -9159,9 +9159,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_super73.h</FileName>
+              <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
@@ -11283,9 +11283,9 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
-              <FileName>vc_parameters_super73.h</FileName>
+              <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
