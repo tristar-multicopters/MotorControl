@@ -38,7 +38,7 @@
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
 #define PTS_OFFSET_PTS2TORQUE_STARTUP       10              // (T1 in the graph) Offset for pedal torque sensor to torque linear transformation during the startup in %
 
-#define PTS_OFFSET_STARTUP_SPEED_KMH         3              // (Speed A in the graph) Speed under which the Startup pedal torque sensor offset is used in km/h 
+#define PTS_OFFSET_STARTUP_SPEED_KMH        10              // (Speed A in the graph) Speed under which the Startup pedal torque sensor offset is used in km/h 
 
 #define PTS_OFFSET_PTS2TORQUE                1             // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
