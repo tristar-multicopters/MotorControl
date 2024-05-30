@@ -665,10 +665,6 @@ void PedalAssist_ResetCadenceStatePasDection(void)
     PasCadenceState = CADENCE_DETECTION_STARTUP;
 }
 
-
-    static bool StartupHysteresis = false;
-    
-
 /**
     * @brief  Try to detect PAS
     * @param  Pedal Assist handle
@@ -680,6 +676,7 @@ void PedalAssist_PasDetection(PAS_Handle_t * pHandle)
     bool PasDetected = false;
     
 #if PROTOTYPE_PAS_DETECTION
+    static bool StartupHysteresis = false;
     bool StartupState = false;
     
     // Moved the startup check at the start so I can also uodate the Handle flag
