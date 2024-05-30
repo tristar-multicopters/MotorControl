@@ -160,8 +160,11 @@ static void UpdateObjectDictionnary(void *p_arg)
     /* Get data from motor control and vehicle control layer */
     int16_t hMotorSpeedMeas         = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
     uint16_t hMotorState            = MCInterface_GetSTMState(&MCInterface[0]);
-    uint32_t wMotorOccuredFaults    = MCInterface_GetOccurredCriticalFaults(&MCInterface[0]);
+    uint32_t wMotorOccurredFaults    = MCInterface_GetOccurredCriticalFaults(&MCInterface[0]);
     uint32_t wMotorCurrentFaults    = MCInterface_GetCurrentCriticalFaults(&MCInterface[0]);
+    uint32_t wMotorCurrentErrorsNow        = MCInterface_GetCurrentErrors(&MCInterface[0]);
+    uint32_t wMotorOccurredErrors    = MCInterface_GetOccurredErrors(&MCInterface[0]);
+    uint32_t wMotorWarnings         = MCInterface_GetOccurredWarning(&MCInterface[0]);
     #endif
     
     //theses variables are only used
@@ -193,8 +196,11 @@ static void UpdateObjectDictionnary(void *p_arg)
             /* Update M1 feedback data to CANOpen object dictionnary */
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(hMotorSpeedMeas));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, sizeof(hMotorState));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &wMotorOccuredFaults, sizeof(wMotorOccuredFaults));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &wMotorCurrentFaults, sizeof(wMotorCurrentFaults));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 0)), pNode, &wMotorWarnings, sizeof(wMotorWarnings));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 2)), pNode, &wMotorCurrentErrorsNow, sizeof(wMotorCurrentErrorsNow));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 4)), pNode, &wMotorOccurredErrors, sizeof(wMotorOccurredErrors));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 6)), pNode, &wMotorCurrentFaults, sizeof(wMotorCurrentFaults));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 8)), pNode, &wMotorOccurredFaults, sizeof(wMotorOccurredFaults));
             
             /* Update virtual motor 2 structure used by vehicle control layer */
             SlaveMCInterface_UpdateFeedback(&SlaveM2);
@@ -227,13 +233,16 @@ static void UpdateObjectDictionnary(void *p_arg)
         {
             /* Check if no heartbeat was missed from slave  */
             if (!VCFaultManagment_MasterSlaveCommunicationLost())
-            {
+            {   
                 /* Update M1 feedback data to CANOpen object dictionnary */
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SPEED, M1)), pNode, &hMotorSpeedMeas, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M1)), pNode, &hMotorState, sizeof(uint16_t));
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M1)), pNode, &wMotorOccuredFaults, sizeof(uint32_t));
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M1)), pNode, &wMotorCurrentFaults, sizeof(uint32_t));
-
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 0)), pNode, &wMotorWarnings, sizeof(uint32_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 2)), pNode, &wMotorCurrentErrorsNow, sizeof(uint32_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 4)), pNode, &wMotorOccurredErrors, sizeof(uint32_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 6)), pNode, &wMotorCurrentFaults, sizeof(uint32_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 8)), pNode, &wMotorOccurredFaults, sizeof(uint32_t));
+                
                 /* Update virtual motor 2 structure used by vehicle control layer */
                 SlaveMCInterface_UpdateFeedback(&SlaveM2);
             
@@ -266,9 +275,12 @@ static void UpdateObjectDictionnary(void *p_arg)
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2)), pNode, &hBusVoltage, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2)), pNode, &hHeatsinkTemp, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_STATE, M2)), pNode, &hMotorState, sizeof(uint16_t));
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2)), pNode, &wMotorOccuredFaults, sizeof(uint32_t));
-                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2)), pNode, &wMotorCurrentFaults, sizeof(uint32_t));
-
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 1)), pNode, &wMotorWarnings, sizeof(uint32_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 3)), pNode, &wMotorCurrentErrorsNow, sizeof(uint32_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 5)), pNode, &wMotorOccurredErrors, sizeof(uint32_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 7)), pNode, &wMotorCurrentFaults, sizeof(uint32_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 9)), pNode, &wMotorOccurredFaults, sizeof(uint32_t));
+                
                 /* Read commands in CANOpen object dictionnary received by RPDO */
                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, sizeof(uint16_t));
                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, sizeof(uint8_t));
@@ -787,8 +799,11 @@ void Comm_BootUp(void)
     {
         .wRegAddrMotorSpeed = CO_DEV(CO_OD_REG_MOTOR_SPEED, M2),
         .wRegAddrBusVoltage = CO_DEV(CO_OD_REG_BUS_VOLTAGE, M2),
-        .wRegAddrCurrentFaults = CO_DEV(CO_OD_REG_MOTOR_CUR_FAULTS, M2),
-        .wRegAddrOccuredFaults = CO_DEV(CO_OD_REG_MOTOR_OCC_FAULTS, M2),
+        .wRegAddrWarnings = CO_DEV(CO_OD_REG_MOTOR_FAULTS, 1),
+        .wRegAddrCurrentErrorsNow = CO_DEV(CO_OD_REG_MOTOR_FAULTS, 3),
+        .wRegAddrOccurredErrors = CO_DEV(CO_OD_REG_MOTOR_FAULTS, 5),
+        .wRegAddrCurrentFaults = CO_DEV(CO_OD_REG_MOTOR_FAULTS, 7),
+        .wRegAddrOccurredFaults = CO_DEV(CO_OD_REG_MOTOR_FAULTS, 9),
         .wRegAddrState = CO_DEV(CO_OD_REG_MOTOR_STATE, M2),
         .wRegAddrMotorTemp = CO_DEV(CO_OD_REG_MOTOR_TEMP, M2),
         .wRegAddrHeatsinkTemp = CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2),

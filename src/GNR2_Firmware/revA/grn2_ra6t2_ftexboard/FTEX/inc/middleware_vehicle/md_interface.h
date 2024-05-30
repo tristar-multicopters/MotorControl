@@ -182,13 +182,13 @@ uint32_t MDI_GetCurrentCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle, 
 
 /**
   * @brief It returns a 16 bit fields containing information about errors
-  *        that historically occured.
+  *        that historically occurred.
   * @param pHandle Pointer on the component instance to work on.
   * @param  bMotor is the target motor number
   * @retval uint16_t  16 bit fields with information about about currently
   *         present errors.
   */
-uint32_t MDI_GetOccuredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetOccurredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief It returns a 16 bit fields containing information about warning
@@ -198,7 +198,7 @@ uint32_t MDI_GetOccuredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
   * @retval uint16_t  16 bit fields with information about about currently
   *         present warnings.
   */
-uint32_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetOccurredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief  It returns the modality of the speed and torque controller.

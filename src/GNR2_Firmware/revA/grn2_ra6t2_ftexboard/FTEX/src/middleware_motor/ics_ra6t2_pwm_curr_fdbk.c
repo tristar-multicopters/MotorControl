@@ -160,7 +160,7 @@ void PWMInsulCurrSensorFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHdl, ab_t * 
 /**
   * @brief  Function to update duty cycle registers.
   * @param  pHdl: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component.
-  * @retval Motor control error code: MC_FOC_DURATION if overrun occured, MC_NO_FAULT otherwise.
+  * @retval Motor control error code: MC_FOC_DURATION if overrun occurred, MC_NO_FAULT otherwise.
   */
 uint32_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl)
 {
@@ -298,7 +298,7 @@ void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(PWMInsulCurrSensorFdbkHandle_t 
 }
 
 /**
-  * @brief  It is the routine to run when OCD1 trigger interrupt occured
+  * @brief  It is the routine to run when OCD1 trigger interrupt occurred
   * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval Motor instance number
   */
@@ -310,7 +310,7 @@ void * PWMInsulCurrSensorFdbk_OCD1_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * p
 }
 
 /**
-  * @brief  It is the routine to run when OCD2 trigger interrupt occured
+  * @brief  It is the routine to run when OCD2 trigger interrupt occurred
   * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval Motor instance number
   */

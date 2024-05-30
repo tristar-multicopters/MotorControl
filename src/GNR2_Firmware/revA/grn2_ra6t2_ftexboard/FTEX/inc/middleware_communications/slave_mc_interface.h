@@ -26,10 +26,10 @@
 typedef struct
 {
     MotorState_t bState;
-    uint32_t wOccuredFaults;
+    uint32_t wOccurredFaults;
     uint32_t wCurrentFaults;
-    uint32_t wErrorsNow;
-    uint32_t wErrorsOccured;
+    uint32_t wCurrentErrorsNow;
+    uint32_t wOccurredErrors;
     uint32_t wWarnings;
     int16_t hMotorSpeed;
     int16_t hMotorTemp;
@@ -43,8 +43,11 @@ typedef struct
 typedef struct
 {
     uint32_t wRegAddrState;             // Object dictionnary address to get slave motor state
-    uint32_t wRegAddrOccuredFaults;     // Object dictionnary address to get slave occured faults
     uint32_t wRegAddrCurrentFaults;     // Object dictionnary address to get slave current faults
+    uint32_t wRegAddrOccurredFaults;    // Object dictionnary address to get slave occurred faults   
+    uint32_t wRegAddrCurrentErrorsNow;  // Object dictionnary address to get slave errors now   
+    uint32_t wRegAddrOccurredErrors;    // Object dictionnary address to get slave errors occurred
+    uint32_t wRegAddrWarnings;          // Object dictionnary address to get slave warnings   
     uint32_t wRegAddrMotorSpeed;        // Object dictionnary address to get slave motor speed
     uint32_t wRegAddrMotorTemp;         // Object dictionnary address to get slave motor temperature
     uint32_t wRegAddrHeatsinkTemp;      // Object dictionnary address to get slave heatsink temperature
@@ -142,13 +145,21 @@ MotorState_t  SlaveMCInterface_GetSTMState(SlaveMotorHandle_t * pHandle);
 uint32_t SlaveMCInterface_GetOccurredCriticalFaults(SlaveMotorHandle_t * pHandle);
 
 /**
+  * @brief It returns a 16 bit fields containing information about current errors
+  * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
+  * @param pHandle Pointer on the component instance to work on.
+  * @retval uint16_t  16 bit fields with information about the errors
+  */
+uint32_t SlaveMCInterface_GetCurrentErrors(SlaveMotorHandle_t * pHandle);
+
+/**
   * @brief It returns a 16 bit fields containing information about errors
   *        historically occurred 
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   * @param pHandle Pointer on the component instance to work on.
   * @retval uint16_t  16 bit fields with information about the errors
   */
-uint32_t SlaveMCInterface_GetOccuredErrors(SlaveMotorHandle_t * pHandle);
+uint32_t SlaveMCInterface_GetOccurredErrors(SlaveMotorHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings

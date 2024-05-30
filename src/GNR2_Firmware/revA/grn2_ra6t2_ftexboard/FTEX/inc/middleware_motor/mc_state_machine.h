@@ -126,13 +126,13 @@ typedef struct
                                     state */
     uint32_t  wCriticalFaultNow;       /*!< Bit fields variable containing critical faults
                                     currently present */
-    uint32_t  wCriticalFaultOccured;  /*!< Bit fields variable containing critical faults
+    uint32_t  wCriticalFaultOccurred;  /*!< Bit fields variable containing critical faults
                                     historically occurred since the state
                                     machine has been moved to FAULT_NOW state */
-    uint32_t  wErrorsNow;        /*!< Bit fields variable containing errors
+    uint32_t  wCurrentErrorsNow;        /*!< Bit fields variable containing errors
                                     currently present */
-    uint32_t  wErrorsOccured;        /*!< Bit fields variable containing errors
-                                    historically occured until timer the end of the error
+    uint32_t  wOccurredErrors;        /*!< Bit fields variable containing errors
+                                    historically occurred until timer the end of the error
                                     processing timer*/
     uint16_t  hErrorProcessingTimer; /*< Timer used to process errors */
     uint32_t  wWarnings;              /*!< contains warning that raised by MC Layer */
@@ -214,7 +214,7 @@ MotorState_t MCStateMachine_GetState(MotorStateMachineHandle_t * pHandle);
   * @brief It reports to the state machine that the fault state has been
   *        acknowledged by the user. If the state machine is in FAULT_OVER state
   *        then it is moved into STOP_IDLE and the bit field variable containing
-  *        information about the faults historically occured is cleared.
+  *        information about the faults historically occurred is cleared.
   *        The method call is discarded if the state machine is not in FAULT_OVER
   * @param pHandle pointer of type  MotorStateMachineHandle_t
   * @retval bool true if the state machine has been moved to IDLE, false if the
@@ -239,7 +239,7 @@ uint64_t MCStateMachine_GetCriticalFaultState(MotorStateMachineHandle_t * pHandl
   * @brief It returns a 16 bit fields containing information about errors
   *        currently present 
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
-  * @retval uint32_t  a 16 bit field that shoing occured errors
+  * @retval uint32_t  a 16 bit field that shoing occurred errors
   */
 uint32_t MCStateMachine_GetCurrentErrorState(MotorStateMachineHandle_t * pHandle);
 
@@ -248,13 +248,13 @@ uint32_t MCStateMachine_GetCurrentErrorState(MotorStateMachineHandle_t * pHandle
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval boolean indicating whether error is processing
   */
-uint32_t MCStateMachine_GetOccuredErrorState(MotorStateMachineHandle_t * pHandle);
+uint32_t MCStateMachine_GetOccurredErrorState(MotorStateMachineHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings
   *        currently present 
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
-  * @retval uint32_t  a 16 bit field that shoing occured warning
+  * @retval uint32_t  a 16 bit field that shoing occurred warning
   */
 uint32_t MCStateMachine_GetWarningState(MotorStateMachineHandle_t * pHandle);
 

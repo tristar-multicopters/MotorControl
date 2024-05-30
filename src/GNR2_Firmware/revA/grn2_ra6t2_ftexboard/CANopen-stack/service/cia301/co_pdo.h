@@ -40,13 +40,13 @@ extern "C" {
 #define CO_RPDO_COBID_OFF    ((uint32_t)1 << 31)    /*!< marked as unused    */
 #define CO_RPDO_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */
 
-#define CO_TPDO_FLG___E     0x01   /*!< PDO event occured                    */
+#define CO_TPDO_FLG___E     0x01   /*!< PDO event occurred                    */
 #define CO_TPDO_FLG__I_     0x02   /*!< PDO TX inhibited                     */
-#define CO_TPDO_FLG__IE     0x03   /*!< PDO event occured + TX inhibited     */
+#define CO_TPDO_FLG__IE     0x03   /*!< PDO event occurred + TX inhibited     */
 #define CO_TPDO_FLG_S__     0x04   /*!< PDO synced                           */
-#define CO_TPDO_FLG_S_E     0x05   /*!< PDO synced + event occured           */
+#define CO_TPDO_FLG_S_E     0x05   /*!< PDO synced + event occurred           */
 #define CO_TPDO_FLG_SI_     0x06   /*!< PDO synced + TX inhibited            */
-#define CO_TPDO_FLG_SIE     0x07   /*!< PDO synved + event occured + TX inh. */
+#define CO_TPDO_FLG_SIE     0x07   /*!< PDO synved + event occurred + TX inh. */
 
 #define CO_RPDO_FLG__E      0x01                    /*!< enabled RPDO        */
 #define CO_RPDO_FLG_S_      0x02                    /*!< synchronized RPDO   */

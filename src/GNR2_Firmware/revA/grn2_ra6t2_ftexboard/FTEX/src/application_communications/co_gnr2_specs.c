@@ -67,13 +67,16 @@ HeartBeatHandle_t CanScreenHB =
 
 
 #define USE_RPDO                1           /* Use or not RPDO. 1 for yes, 0 for no. */
-#define MASTER_STD_ID_RPDO1     0x300       /* Standard ID of RPDO 1 */
-#define MASTER_STD_ID_RPDO2     0x301       /* Standard ID of TPDO 2 */
+#define MASTER_STD_ID_RPDO1     0x300       /* Standard ID of RPDO 1, for slave state, speed and warnings */
+#define MASTER_STD_ID_RPDO2     0x301       /* Standard ID of TPDO 2, for slave current and occurred errors */
+#define MASTER_STD_ID_RPDO3     0x302       /* Standard ID of TPDO 3, for slave current and occurred critical faults */
 #define MASTER_RPDO_TRANSMISSION_TYPE  254   /* RPDO transmission type. Event-driven (manufacturer-specific) is chosen */
 #define MASTER_RPDO_PERIOD_MS          50          /* Period in ms for RPDO processing */
 
 #define USE_TPDO                1           /* Use or not TPDO. 1 for yes, 0 for no. */
-#define MASTER_STD_ID_TPDO1     0x400        /* Standard ID of TPDO 1 */
+#define MASTER_STD_ID_TPDO1     0x400        /* Standard ID of TPDO 1 for slave state, speed and warnings */
+#define MASTER_STD_ID_TPDO2     0x401        /* Standard ID of TPDO 2 for slave current and occurred errors */
+#define MASTER_STD_ID_TPDO3     0x402        /* Standard ID of TPDO 3 for slave current and occurred critical faults */
 #define MASTER_TPDO_TRANSMISSION_TYPE  254         /* TPDO transmission type. Event-driven (manufacturer-specific) is chosen */
 #define MASTER_TPDO_PERIOD_MS          50          /* Period in ms for TPDO transmission */
 
@@ -85,10 +88,15 @@ HeartBeatHandle_t CanScreenHB =
 #define SLAVE_SYNC_PERIOD_US          0           /* SYNC frame period in us */
 
 #define SLAVE_STD_ID_RPDO1            0x400        /* Standard ID of RPDO 1 */
+#define SLAVE_STD_ID_RPDO2            0x401        /* Standard ID of RPDO 1 */
+#define SLAVE_STD_ID_RPDO3            0x402        /* Standard ID of RPDO 1 */
+
 #define SLAVE_RPDO_TRANSMISSION_TYPE  0           /* RPDO transmission type. Synchronous after SYNC is chosen */
 #define SLAVE_RPDO_PERIOD_MS          0           /* Period in ms for RPDO processing. Not applicable for synchronous transmission type */
 
 #define SLAVE_STD_ID_TPDO1      0x300        /* Standard ID of TPDO 1 */
+#define SLAVE_STD_ID_TPDO2      0x301
+#define SLAVE_STD_ID_TPDO3      0x302
 #define SLAVE_TPDO_TRANSMISSION_TYPE  1           /* Period in ms for TPDO transmission. Not applicable for synchronous transmission type */
 #define SLAVE_TPDO_PERIOD_MS          0           /* Period in ms for RPDO processing. Not applicable for synchronous transmission type� */
 
@@ -121,10 +129,18 @@ CO_OD_IDENTITY_OBJECT,
 CO_OD_SDO_SERVER,
 CO_OD_SDO_CLIENT_01, 
 CO_OD_SDO_CLIENT_02, 
-CO_OD_RPOD, 
-CO_OD_RPOD_MAPPING, 
-CO_OD_TPDO_COMMUNICATION, 
-CO_OD_TPOD_MAPPING, 
+CO_OD_RPOD1, 
+CO_OD_RPOD2,
+CO_OD_RPOD3,
+CO_OD_RPOD1_MAPPING, 
+CO_OD_RPOD2_MAPPING,
+CO_OD_RPOD3_MAPPING,
+CO_OD_TPDO1_COMMUNICATION, 
+CO_OD_TPDO2_COMMUNICATION, 
+CO_OD_TPDO3_COMMUNICATION, 
+CO_OD_TPOD1_MAPPING, 
+CO_OD_TPOD2_MAPPING,
+CO_OD_TPOD3_MAPPING,
 CO_OD_COMMUM_ENTRIES};
 
 //array used to hold the MASTER <--> SLAVE OD configuration.
@@ -138,10 +154,18 @@ CO_OD_REG_HB_PRODUCER,
 CO_OD_IDENTITY_OBJECT, 
 CO_OD_SDO_SERVER, 
 CO_OD_SDO_CLIENT_01, 
-CO_OD_RPOD, 
-CO_OD_RPOD_MAPPING, 
-CO_OD_TPDO_COMMUNICATION, 
-CO_OD_TPOD_MAPPING, 
+CO_OD_RPOD1, 
+CO_OD_RPOD2,
+CO_OD_RPOD3,
+CO_OD_RPOD1_MAPPING, 
+CO_OD_RPOD2_MAPPING,
+CO_OD_RPOD3_MAPPING,
+CO_OD_TPDO1_COMMUNICATION, 
+CO_OD_TPDO2_COMMUNICATION, 
+CO_OD_TPDO3_COMMUNICATION, 
+CO_OD_TPOD1_MAPPING, 
+CO_OD_TPOD2_MAPPING,
+CO_OD_TPOD3_MAPPING,
 CO_OD_COMMUM_ENTRIES};
 
 //array used to hold the SLAVE <--> MASTER OD configuration.
@@ -155,10 +179,18 @@ CO_OD_REG_HB_PRODUCER,
 CO_OD_IDENTITY_OBJECT, 
 CO_OD_SDO_SERVER, 
 CO_OD_SDO_CLIENT_01,
-CO_OD_RPOD, 
-CO_OD_RPOD_MAPPING, 
-CO_OD_TPDO_COMMUNICATION, 
-CO_OD_TPOD_MAPPING, 
+CO_OD_RPOD1, 
+CO_OD_RPOD2,
+CO_OD_RPOD3,
+CO_OD_RPOD1_MAPPING, 
+CO_OD_RPOD2_MAPPING,
+CO_OD_RPOD3_MAPPING,
+CO_OD_TPDO1_COMMUNICATION, 
+CO_OD_TPDO2_COMMUNICATION, 
+CO_OD_TPDO3_COMMUNICATION, 
+CO_OD_TPOD1_MAPPING, 
+CO_OD_TPOD2_MAPPING,
+CO_OD_TPOD3_MAPPING,
 CO_OD_COMMUM_ENTRIES};
 
 
@@ -171,16 +203,22 @@ uint16_t hObjDataMotor1BusVoltage           = 0;
 int16_t  hObjDataMotor1Temp                 = 0;
 int16_t  hObjDataHeatsink1Temp              = 0;
 uint16_t hObjDataMotor1State                = 0;
-uint16_t hObjDataMotor1OccuredFaults        = 0;
-uint16_t hObjDataMotor1CurrentFaults        = 0;
+uint32_t wObjDataMotor1OccurredFaults       = 0;
+uint32_t wObjDataMotor1CurrentFaults        = 0;
+uint32_t wObjDataMotor1CurrentErrorsNow     = 0;
+uint32_t wObjDataMotor1OccurredErrors       = 0;
+uint32_t wObjDataMotor1Warnings             = 0;
 
 int16_t  hObjDataMotor2SpeedMeas            = 0;
 uint16_t hObjDataMotor2BusVoltage           = 0;
 int16_t  hObjDataMotor2Temp                 = 0;
 int16_t  hObjDataHeatsink2Temp              = 0;
 uint16_t hObjDataMotor2State                = 0;
-uint16_t hObjDataMotor2OccuredFaults        = 0;
-uint16_t hObjDataMotor2CurrentFaults        = 0;
+uint32_t wObjDataMotor2OccurredFaults       = 0;
+uint32_t wObjDataMotor2CurrentFaults        = 0;
+uint32_t wObjDataMotor2CurrentErrorsNow     = 0;
+uint32_t wObjDataMotor2OccurredErrors       = 0;
+uint32_t wObjDataMotor2Warnings             = 0;
 
 uint8_t  bObjDataMotor1Start                = 0;
 int16_t  hObjDataMotor1TorqRef              = 0;
@@ -902,30 +940,30 @@ static void CO_addObj(uint16_t objId, bool deviceType)
         break;
             
         //RPDO communication parameter
-        case CO_OD_RPOD:
+        case CO_OD_RPOD1:
             
             //if true use master config
             if (deviceType == true)
             { 
                 // RPDO1 Parameter - Highest Sub Index
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5};
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Parameter - COB-ID RPDO        
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, MASTER_STD_ID_RPDO1)};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, MASTER_STD_ID_RPDO1)};
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Parameter - Transmission type
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_RPDO_TRANSMISSION_TYPE};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_RPDO_TRANSMISSION_TYPE};    
         
                 //move to next OD index
                 index++;// RPDO1 Parameter - Event period
         
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, MASTER_RPDO_PERIOD_MS};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, MASTER_RPDO_PERIOD_MS};
         
                 //move to next OD index
                 index++; 
@@ -933,25 +971,142 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             else
             {
                 // RPDO1 Parameter - Highest Sub Index
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5};
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Parameter - COB-ID RPDO        
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, SLAVE_STD_ID_RPDO1)};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, SLAVE_STD_ID_RPDO1)};
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Parameter - Transmission type
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_RPDO_TRANSMISSION_TYPE};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_RPDO_TRANSMISSION_TYPE};    
         
                 //move to next OD index
                 index++;
                 
                 // RPDO1 Parameter - Event period
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, SLAVE_RPDO_PERIOD_MS};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, SLAVE_RPDO_PERIOD_MS};
+        
+                //move to next OD index
+                index++;
+            }
+            
+        break;
+            
+            
+        case CO_OD_RPOD2:
+            
+            //if true use master config
+            if (deviceType == true)
+            { 
+                // RPDO2 Parameter - Highest Sub Index
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5};
+        
+                //move to next OD index
+                index++;
+        
+                // RPDO2 Parameter - COB-ID RPDO        
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, MASTER_STD_ID_RPDO2)};
+        
+                //move to next OD index
+                index++;
+        
+                // RPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_RPDO_TRANSMISSION_TYPE};    
+        
+                //move to next OD index
+                index++;
+                
+                // RPDO2 Parameter - Event period
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, MASTER_RPDO_PERIOD_MS};
+        
+                //move to next OD index
+                index++; 
+            }
+            else
+            {
+                // RPDO2 Parameter - Highest Sub Index
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5};
+        
+                //move to next OD index
+                index++;
+        
+                // RPDO2 Parameter - COB-ID RPDO        
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, SLAVE_STD_ID_RPDO2)};
+        
+                //move to next OD index
+                index++;
+        
+                // RPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_RPDO_TRANSMISSION_TYPE};    
+        
+                //move to next OD index
+                index++;
+                
+                // RPDO2 Parameter - Event period
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, SLAVE_RPDO_PERIOD_MS};
+        
+                //move to next OD index
+                index++;
+            }
+            
+        break;
+            
+        case CO_OD_RPOD3:
+            
+            //if true use master config
+            if (deviceType == true)
+            { 
+                // RPDO2 Parameter - Highest Sub Index
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5};
+        
+                //move to next OD index
+                index++;
+        
+                // RPDO2 Parameter - COB-ID RPDO        
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, MASTER_STD_ID_RPDO3)};
+        
+                //move to next OD index
+                index++;
+        
+                // RPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_RPDO_TRANSMISSION_TYPE};    
+        
+                //move to next OD index
+                index++;
+                
+                // RPDO2 Parameter - Event period
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, MASTER_RPDO_PERIOD_MS};
+        
+                //move to next OD index
+                index++; 
+            }
+            else
+            {
+                // RPDO2 Parameter - Highest Sub Index
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)5};
+        
+                //move to next OD index
+                index++;
+        
+                // RPDO2 Parameter - COB-ID RPDO        
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_RPDO_STD(USE_RPDO, SLAVE_STD_ID_RPDO3)};
+        
+                //move to next OD index
+                index++;
+        
+                // RPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_RPDO_TRANSMISSION_TYPE};    
+        
+                //move to next OD index
+                index++;
+                
+                // RPDO2 Parameter - Event period
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, SLAVE_RPDO_PERIOD_MS};
         
                 //move to next OD index
                 index++;
@@ -960,37 +1115,31 @@ static void CO_addObj(uint16_t objId, bool deviceType)
         break;
             
         //RPDO mapping parameter
-        case CO_OD_RPOD_MAPPING:
+        case CO_OD_RPOD1_MAPPING:
             
             //if true use master config
             if (deviceType == true)
             { 
                 // RPDO1 Mapping - Number of mapped object in PDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)3};    
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)};    
         
                 //move to next OD index
                 index++;
-        
+
                 // RPDO1 Mapping - Object 2
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)};    
-        
-                //move to next OD index
-                index++;
-        
-                // RPDO1 Mapping - Object 3
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)};            
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)};        
                 
                 //move to next OD index
                 index++;
                 
-                // RPDO1 Mapping - Object 4
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)};        
+                // RPDO2 Mapping - Object 3
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 1, 32)};            
                 
                 //move to next OD index
                 index++;
@@ -998,20 +1147,92 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             else
             {
                  // RPDO1 Mapping - Number of mapped object in PDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};    
         
                 //move to next OD index
                 index++;
         
                 // RPDO1 Mapping - Object 2        
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)};                
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)};                
         
+                //move to next OD index
+                index++;
+            }
+            
+        break;
+        
+        //RPDO mapping parameter
+        case CO_OD_RPOD2_MAPPING:
+            
+            //if true use master config
+            if (deviceType == true)
+            { 
+                // RPDO2 Mapping - Number of mapped object in PDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};
+
+                //move to next OD index
+                index++;
+        
+                // RPDO2 Mapping - Object 1
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 3, 32)};            
+                
+                //move to next OD index
+                index++;
+                
+                // RPDO2 Mapping - Object 2
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 5, 32)};    
+
+                //move to next OD index
+                index++;
+                
+            }
+            else
+            {
+                 // RPDO2 Mapping - Number of mapped object in PDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD2_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)1};
+                
+                //move to next OD index
+                index++;
+            }
+            
+        break;
+            
+        //RPDO mapping parameter
+        case CO_OD_RPOD3_MAPPING:
+            
+            //if true use master config
+            if (deviceType == true)
+            { 
+                // RPDO3 Mapping - Number of mapped object in PDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};
+
+                //move to next OD index
+                index++;
+        
+                // RPDO3 Mapping - Object 1
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 7, 32)};            
+                
+                //move to next OD index
+                index++;
+                
+                // RPDO3 Mapping - Object 2
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 9, 32)};    
+
+                //move to next OD index
+                index++;
+                
+            }
+            else
+            {
+                 // RPDO2 Mapping - Number of mapped object in PDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD3_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)1};
+                
                 //move to next OD index
                 index++;
             }
@@ -1019,38 +1240,38 @@ static void CO_addObj(uint16_t objId, bool deviceType)
         break;
             
         //TPDO communication parameter
-        case CO_OD_TPDO_COMMUNICATION:
+        case CO_OD_TPDO1_COMMUNICATION:
             
             //if true use master config
             if (deviceType == true)
             {
                 // TPDO 1
                 // TPDO1 Parameter - Highest Sub Index
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6};
                 
                 //move to next OD index
                 index++;
                 
                 // TPDO1 Parameter - COB-ID TPDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, MASTER_STD_ID_TPDO1)};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, MASTER_STD_ID_TPDO1)};
                 
                 //move to next OD index
                 index++;
                 
                 // TPDO1 Parameter - Transmission type
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_TPDO_TRANSMISSION_TYPE};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_TPDO_TRANSMISSION_TYPE};
                 
                 //move to next OD index
                 index++;
                 
                 // TPDO1 Parameter - Transmission type
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, MASTER_TPDO_PERIOD_MS};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, MASTER_TPDO_PERIOD_MS};
                 
                 //move to next OD index
                 index++;
         
                 // TPDO1 Parameter - SYNC start value
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
                 
                 //move to next OD index
                 index++;
@@ -1059,31 +1280,177 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             {
                 // TPDO 1
                 // TPDO1 Parameter - Highest Sub Index
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6};
                 
                 //move to next OD index
                 index++;
         
                 // TPDO1 Parameter - COB-ID TPDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, SLAVE_STD_ID_TPDO1)};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, SLAVE_STD_ID_TPDO1)};
                 
                 //move to next OD index
                 index++;
                 
                 // TPDO1 Parameter - Transmission type
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_TPDO_TRANSMISSION_TYPE};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_TPDO_TRANSMISSION_TYPE};
                 
                 //move to next OD index
                 index++;
                 
                 // TPDO1 Parameter - Transmission type
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, SLAVE_TPDO_PERIOD_MS};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, SLAVE_TPDO_PERIOD_MS};
                 
                 //move to next OD index
                 index++;
                 
                 // TPDO1 Parameter - SYNC start value
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO1_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
+                
+                //move to next OD index
+                index++;
+            }
+        
+        break;
+        
+        //TPDO communication parameter
+        case CO_OD_TPDO2_COMMUNICATION:
+            
+            //if true use master config
+            if (deviceType == true)
+            {
+                // TPDO 2
+                // TPDO2 Parameter - Highest Sub Index
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - COB-ID TPDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, MASTER_STD_ID_TPDO2)};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_TPDO_TRANSMISSION_TYPE};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, MASTER_TPDO_PERIOD_MS};
+                
+                //move to next OD index
+                index++;
+        
+                // TPDO2 Parameter - SYNC start value
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
+                
+                //move to next OD index
+                index++;
+            }
+            else
+            {
+                // TPDO 2
+                // TPDO2 Parameter - Highest Sub Index
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6};
+                
+                //move to next OD index
+                index++;
+        
+                // TPDO2 Parameter - COB-ID TPDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, SLAVE_STD_ID_TPDO2)};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_TPDO_TRANSMISSION_TYPE};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, SLAVE_TPDO_PERIOD_MS};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - SYNC start value
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO2_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
+                
+                //move to next OD index
+                index++;
+            }
+        
+        break;
+         
+        //TPDO communication parameter
+        case CO_OD_TPDO3_COMMUNICATION:
+            
+            //if true use master config
+            if (deviceType == true)
+            {
+                // TPDO 2
+                // TPDO2 Parameter - Highest Sub Index
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - COB-ID TPDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, MASTER_STD_ID_TPDO3)};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, MASTER_TPDO_TRANSMISSION_TYPE};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, MASTER_TPDO_PERIOD_MS};
+                
+                //move to next OD index
+                index++;
+        
+                // TPDO2 Parameter - SYNC start value
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
+                
+                //move to next OD index
+                index++;
+            }
+            else
+            {
+                // TPDO 2
+                // TPDO2 Parameter - Highest Sub Index
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)6};
+                
+                //move to next OD index
+                index++;
+        
+                // TPDO2 Parameter - COB-ID TPDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_COBID_TPDO_STD(USE_TPDO, SLAVE_STD_ID_TPDO3)};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 2, CO_OBJ_D___R_), CO_TUNSIGNED8, SLAVE_TPDO_TRANSMISSION_TYPE};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - Transmission type
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 5, CO_OBJ_D___R_), CO_TUNSIGNED16, SLAVE_TPDO_PERIOD_MS};
+                
+                //move to next OD index
+                index++;
+                
+                // TPDO2 Parameter - SYNC start value
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPDO3_COMMUNICATION, 6, CO_OBJ_D___R_), CO_TUNSIGNED8, 0};        
                 
                 //move to next OD index
                 index++;
@@ -1092,21 +1459,21 @@ static void CO_addObj(uint16_t objId, bool deviceType)
         break;
             
         //TPDO mapping parameter
-        case CO_OD_TPOD_MAPPING:
+        case CO_OD_TPOD1_MAPPING:
             
             //if true use master config
             if (deviceType == true)
             {
-                // RPDO1 Mapping - Number of mapped object in PDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};
+                // TPDO1 Mapping - Number of mapped object in PDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};
                 //move to next OD index
                 index++;
-                // RPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};    
+                // TPDO1 Mapping - Object 1
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};    
                 //move to next OD index
                 index++;
-                // RPDO1 Mapping - Object 2        
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)};                
+                // TPDO1 Mapping - Object 2        
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_START, 1, 8)};                
                 //move to next OD index
                 index++;
                 
@@ -1114,23 +1481,81 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             else
             {
                 // TPDO1 Mapping - Number of mapped object in PDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)4};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)3};    
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_STATE, 1, 16)};    
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 2
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_OCC_FAULTS, 1, 16)};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)};        
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 3
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_CUR_FAULTS, 1, 16)};            
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 1, 32)};            
                 //move to next OD index
                 index++;
-                // TPDO1 Mapping - Object 4
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD_MAPPING, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_SPEED, 1, 16)};        
+                
+            }
+        
+        break;
+        
+        //TPDO mapping parameter
+        case CO_OD_TPOD2_MAPPING:
+            
+            //if true use master config
+            if (deviceType == true)
+            {
+                // TPDO2 Mapping - Number of mapped object in PDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD2_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)0};
+                //move to next OD index
+                index++;
+                
+            }
+            else
+            {
+                // TPDO2 Mapping - Number of mapped object in PDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD2_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};    
+                //move to next OD index
+                index++;
+                // TPDO2 Mapping - Object 1
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD2_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 3, 32)};            
+                //move to next OD index
+                index++;
+                // TPDO2 Mapping - Object 2
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD2_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 5, 32)};    
+                //move to next OD index
+                index++;
+                
+            }
+        
+        break;
+            
+        //TPDO mapping parameter
+        case CO_OD_TPOD3_MAPPING:
+            
+            //if true use master config
+            if (deviceType == true)
+            {
+                // TPDO2 Mapping - Number of mapped object in PDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD3_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)0};
+                //move to next OD index
+                index++;
+                
+            }
+            else
+            {
+                // TPDO2 Mapping - Number of mapped object in PDO
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD3_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};    
+                //move to next OD index
+                index++;
+                // TPDO2 Mapping - Object 1
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD3_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 7, 32)};            
+                //move to next OD index
+                index++;
+                // TPDO2 Mapping - Object 2
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD3_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_FAULTS, 9, 32)};    
                 //move to next OD index
                 index++;
                 
@@ -1244,22 +1669,49 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_STATE, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2State};                        
             //move to next OD index
             index++;
-        
-            // Application - Motor faults of master
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1OccuredFaults};
+            
+            // Application - Motor warnings of master
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 0, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor1Warnings};
             //move to next OD index
             index++;
-            // Application - Motor faults of slave 1
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_OCC_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2OccuredFaults};        
+            // Application - Motor warnings of slave 1
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor2Warnings};        
             //move to next OD index
             index++;
-        
-            // Application - Motor faults of master
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 0, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor1CurrentFaults};
+            
+            // Application - Motor current errors of master
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor1CurrentErrorsNow};
             //move to next OD index
             index++;
-            // Application - Motor faults of slave 1
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_CUR_FAULTS, 1, CO_OBJ_____R_), CO_TUNSIGNED16, (CO_DATA)&hObjDataMotor2CurrentFaults};        
+            // Application - Motor current errors of slave 1
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor2CurrentErrorsNow};        
+            //move to next OD index
+            index++;
+           
+            // Application - Motor occurred errors of master
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 4, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor1OccurredErrors};
+            //move to next OD index
+            index++;
+            // Application - Motor occurred errors of slave 1
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 5, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor2OccurredErrors};        
+            //move to next OD index
+            index++;
+            
+            // Application - Motor current critical faults of master
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 6, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor1CurrentFaults};
+            //move to next OD index
+            index++;
+            // Application - Motor current critical faults of slave 1
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 7, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor2CurrentFaults};        
+            //move to next OD index
+            index++;
+           
+            // Application - Motor occurred faults of master
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 8, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor1OccurredFaults};
+            //move to next OD index
+            index++;
+            // Application - Motor occurred faults of slave 1
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 9, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor2OccurredFaults};        
             //move to next OD index
             index++;
         

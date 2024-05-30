@@ -96,7 +96,7 @@ VC_State_t VCSTM_GetState(VCSTM_Handle_t * pHandle);
 /*    Function to get the current fault (if there's any) of the vehicle*/
 uint16_t VCSTM_getCurrentFaults(VCSTM_Handle_t * pHandle);
 
-/*    Function to get faults that occured of the vehicle    */
+/*    Function to get faults that occurred of the vehicle    */
 uint16_t VCSTM_getOccurredFaults(VCSTM_Handle_t * pHandle);
 
 /**

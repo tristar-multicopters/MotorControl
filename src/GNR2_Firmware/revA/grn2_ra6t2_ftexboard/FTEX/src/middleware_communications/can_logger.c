@@ -20,7 +20,7 @@ void CANLog_SendStatus(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t 
     uint32_t status = 0;
     // Prepare Header of CAN message 
     msgToSend.DLC = 3;
-    // Get status, fault now and occured faults
+    // Get status, fault now and occurred faults
     if(bMotorSelection == M_NONE)
     {
         msgToSend.Identifier = CAN_ID_STATUS_VC;

@@ -202,7 +202,7 @@ void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle)
 
 
 /*
-    Check if hardware overcurrent occured since last call.
+    Check if hardware overcurrent occurred since last call.
 */
 uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle)
 {
@@ -212,13 +212,13 @@ uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle)
 }
 
 /*
-    Check if OCD2 occured since last call.
+    Check if OCD2 occurred since last call.
 */
 #if OCDX_POEG == OCD1_POEG
 uint32_t RegisterIsOCD2OccurredCallBack(PWMCurrFdbkHandle_t * pHandle)
 {
     uint32_t retVal = 0;  
-    retVal = pHandle->pFctOCD2Occured(pHandle);
+    retVal = pHandle->pFctOCD2Occurred(pHandle);
     return retVal;
 }
 #endif

@@ -83,7 +83,7 @@ These variables are used to configure the motor within the smart config tool.
 #define MOTOR_TEMP_MIXED                    false            // true if the motor temperature signal is mixed with wheelspeed.
     
 #define OV_TEMP_MOTOR_THRESHOLD_C           150              // Maximum temperature in degree C
-#define OV_TEMP_MOTOR_HYSTERESIS_C          5                // Temperature to decrease after an overtemp fault occured before clearing the fault, in degree C
+#define OV_TEMP_MOTOR_HYSTERESIS_C          5                // Temperature to decrease after an overtemp fault occurred before clearing the fault, in degree C
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        45               // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
 /************************** Hall Sensor Parameters ******************************/

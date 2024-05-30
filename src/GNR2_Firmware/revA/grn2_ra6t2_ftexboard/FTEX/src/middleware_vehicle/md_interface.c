@@ -212,7 +212,7 @@ uint32_t MDI_GetOccurredCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle,
 /*
 * see function definition
 */
-uint32_t MDI_GetOccuredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+uint32_t MDI_GetCurrentErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
     uint32_t wReturnValue = 0;
@@ -220,10 +220,10 @@ uint32_t MDI_GetOccuredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
     switch (bMotor)
     {
         case M1:
-            wReturnValue = MCInterface_GetOccuredErrors(pHandle->pMCI);
+            wReturnValue = MCInterface_GetCurrentErrors(pHandle->pMCI);
             break;
         case M2:
-            wReturnValue = SlaveMCInterface_GetOccuredErrors(pHandle->pSlaveM2);
+            wReturnValue = SlaveMCInterface_GetCurrentErrors(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -235,7 +235,30 @@ uint32_t MDI_GetOccuredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
 /*
 * see function definition
 */
-uint32_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+uint32_t MDI_GetOccurredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+{
+    ASSERT(pHandle != NULL);
+    uint32_t wReturnValue = 0;
+
+    switch (bMotor)
+    {
+        case M1:
+            wReturnValue = MCInterface_GetOccurredErrors(pHandle->pMCI);
+            break;
+        case M2:
+            wReturnValue = SlaveMCInterface_GetOccurredErrors(pHandle->pSlaveM2);
+            break;
+        default:
+            break;
+    }
+
+    return wReturnValue;
+}
+
+/*
+* see function definition
+*/
+uint32_t MDI_GetOccurredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
     uint32_t wReturnValue = 0;

@@ -77,7 +77,7 @@ typedef struct
 
     uint32_t  wElPeriodSum; /* Period accumulator used to speed up the average speed computation*/
 
-    uint32_t  wMaxElSum; /* maximum sum of periods, used to check if timoout has occured or not */
+    uint32_t  wMaxElSum; /* maximum sum of periods, used to check if timoout has occurred or not */
 
     int16_t hPrevRotorFreq; /*!< Used to store the last valid rotor electrical
                        speed in dpp used when HALL_MAX_PSEUDO_SPEED

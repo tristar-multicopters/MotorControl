@@ -90,7 +90,7 @@ typedef uint32_t (*PWMCurrFdbk_SetSampPointSectX_Cb_t)(PWMCurrFdbkHandle_t * pHa
 
 /**
   * @brief Pointer on the function provided by the PMWC component instance to check if an over current
-  *        condition has occured.
+  *        condition has occurred.
   *
   * This type is needed because the actual function to use can change at run-time
   * (See PWMCurrFdbkHandle::pFctIsOverCurrentOccurred).
@@ -124,7 +124,7 @@ struct PWMCurrFdbkHandle
     PWMCurrFdbk_SetSampPointSectX_Cb_t              pFctSetADCSampPointSectX;    /**< pointer on the function the component instance uses to set the ADC sampling point  */
     PWMCurrFdbk_OverCurr_Cb_t                       pFctIsOverCurrentOccurred;   /**< pointer on the function the component instance uses to return the over current status */
     #if OCDX_POEG == OCD1_POEG
-        PWMCurrFdbk_OverCurr_Cb_t                       pFctOCD2Occured;   	         /**< pointer on the function the component instance uses to return the over current status */
+        PWMCurrFdbk_OverCurr_Cb_t                       pFctOCD2Occurred;   	         /**< pointer on the function the component instance uses to return the over current status */
     #endif
     PWMCurrFdbk_Generic_Cb_t                        pFctRLDetectionModeEnable;   /**< pointer on the function the component instance uses to enable RL detection mode */
     PWMCurrFdbk_Generic_Cb_t                        pFctRLDetectionModeDisable;  /**< pointer on the function the component instance uses to disable RL detection mode */
@@ -278,7 +278,7 @@ bool PWMCurrFdbk_CurrentReadingCalibr(PWMCurrFdbkHandle_t * pHandle);
   */
 void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle);
 
-/** @brief Check if hardware overcurrent occured since last call.
+/** @brief Check if hardware overcurrent occurred since last call.
  *  @param  pHandle: Handle on the target instance of the PWMC component
  *    @retval Returns #MC_OCD1 or MC_OCD2 if an over current condition was detected on the power stage
  *         controlled by the PWMC component pointed by  @p pHandle, since the last call to this function;

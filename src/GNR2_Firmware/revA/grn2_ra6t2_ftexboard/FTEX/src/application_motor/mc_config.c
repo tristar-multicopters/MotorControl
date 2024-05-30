@@ -272,7 +272,7 @@ PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 =
         .pFctSetADCSampPointSectX          = &PWMInsulCurrSensorFdbk_WriteTIMRegisters,
         .pFctIsOverCurrentOccurred         = &PWMInsulCurrSensorFdbk_IsOverCurrentOccurred,
         #if OCDX_POEG == OCD1_POEG
-            .pFctOCD2Occured                   = &PWMInsulCurrSensorFdbk_OCD2Occurred,
+            .pFctOCD2Occurred                   = &PWMInsulCurrSensorFdbk_OCD2Occurred,
         #endif
         .pFctRLDetectionModeEnable         = MC_NULL,
         .pFctRLDetectionModeDisable        = MC_NULL,

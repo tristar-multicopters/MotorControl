@@ -753,19 +753,19 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
     uint32_t wM1FaultOccurredCode = MDI_GetOccurredCriticalFaults(pHandle->pMDI, M1);
     uint32_t wM2FaultOccurredCode = MDI_GetOccurredCriticalFaults(pHandle->pMDI, M2);
 
-    uint32_t wCriticalFaultOccured = wM1FaultOccurredCode | wM2FaultOccurredCode;
+    uint32_t wCriticalFaultOccurred = wM1FaultOccurredCode | wM2FaultOccurredCode;
 
-    if (wCriticalFaultOccured != MC_NO_FAULT)      // Raise Motor current error to the LCD
+    if (wCriticalFaultOccurred != MC_NO_FAULT)      // Raise Motor current error to the LCD
     {
-        if ((wCriticalFaultOccured & MC_OCD1)!= MC_NO_FAULT)
+        if ((wCriticalFaultOccurred & MC_OCD1)!= MC_NO_FAULT)
         {
             VC_Errors_RaiseError(OVER_CURRENT, HOLD_UNTIL_CLEARED);
         }
-        if ((wCriticalFaultOccured & MC_PHASE_DISC) != MC_NO_WARNING)
+        if ((wCriticalFaultOccurred & MC_PHASE_DISC) != MC_NO_WARNING)
         {
             VC_Errors_RaiseError(MOTOR_PHASE_ERROR, DEFAULT_HOLD_FRAMES);
         }
-        if ((wCriticalFaultOccured & MC_OVER_VOLT)!= MC_NO_FAULT)
+        if ((wCriticalFaultOccurred & MC_OVER_VOLT)!= MC_NO_FAULT)
         {
             VC_Errors_RaiseError(OV_PROTECTION, DEFAULT_HOLD_FRAMES);
         }
@@ -781,7 +781,7 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
                 {// If the timer has timeout, clear the OC fault
                     wM1FaultOccurredCode &= ~MC_OCD2;
                     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0;
-                    if ((wCriticalFaultOccured & MC_OCD1) == 0)
+                    if ((wCriticalFaultOccurred & MC_OCD1) == 0)
                     {
                         VC_Errors_ClearError(OVER_CURRENT);
                     }
@@ -874,7 +874,7 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
         }
         if ((wM2FaultOccurredCode & MC_PHASE_DISC) != 0)
         {
-            //if there's a phase disconnection that has occured but has already been cleared
+            //if there's a phase disconnection that has occurred but has already been cleared
             if(pHandle->aFaultManagementCounters[PHASE_DISC_COUNTER][M2] >= pHandle->sParameters.hFaultManagementTimeout)
             {
                 //if the phase disconnection timer has cleared out, clear the phase disconnection fault
@@ -889,7 +889,7 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
         }
     }
 
-    // Verify if all fault occured have been cleared
+    // Verify if all fault occurred have been cleared
     if (!wM1FaultOccurredCode)
     {
         MDI_CriticalFaultAcknowledged(pHandle->pMDI, M1);
@@ -901,8 +901,8 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
     }
     
 
-    bool bFaultOccured = wM1FaultOccurredCode | wM2FaultOccurredCode;
-    return bFaultOccured;
+    bool bFaultOccurred = wM1FaultOccurredCode | wM2FaultOccurredCode;
+    return bFaultOccurred;
 }
 
 /**
@@ -913,10 +913,10 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
 void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint32_t wErrorOccured = MDI_GetOccuredErrors(pHandle->pMDI, M1);
+    uint32_t wErrorOccurred = MDI_GetOccurredErrors(pHandle->pMDI, M1);
     
     //if OCSP error occurs, raise to vc layer
-    if ((wErrorOccured & MC_OCSP) != MC_NO_WARNING)
+    if ((wErrorOccurred & MC_OCSP) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(OVERCURRENT_COUNTER, HOLD_UNTIL_CLEARED);
     }
@@ -928,7 +928,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
     
     #if OCDX_POEG == OCD1_POEG
         //if OCD2 error occurs, raise to vc layer
-        if ((wErrorOccured & MC_OCD2) != MC_NO_WARNING)
+        if ((wErrorOccurred & MC_OCD2) != MC_NO_WARNING)
         {
             VC_Errors_RaiseError(OVERCURRENT_COUNTER, HOLD_UNTIL_CLEARED);
         }
@@ -940,7 +940,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
     #endif
     
     //if hall sensor error occurs, raise to vc layer
-    if ((wErrorOccured & MC_HALL_DISC) != MC_NO_WARNING)
+    if ((wErrorOccurred & MC_HALL_DISC) != MC_NO_WARNING)
     {
         VC_Errors_RaiseError(MOTOR_HALL_ERROR, HOLD_UNTIL_CLEARED);
     }
@@ -951,7 +951,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
     }
     
     //if over temp controller error occurs, raise to vc layer
-    if ((wErrorOccured & MC_OVER_TEMP_CONTROLLER)!= MC_NO_FAULT)
+    if ((wErrorOccurred & MC_OVER_TEMP_CONTROLLER)!= MC_NO_FAULT)
     {
         VC_Errors_RaiseError(CONTROLLER_OT_PROTECT, DEFAULT_HOLD_FRAMES);
     }
@@ -962,7 +962,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
     }
     
     //if under temp controller error occurs, raise to vc layer
-    if ((wErrorOccured & MC_NTC_FREEZE_CONTROLLER)!= MC_NO_FAULT)
+    if ((wErrorOccurred & MC_NTC_FREEZE_CONTROLLER)!= MC_NO_FAULT)
     {
         VC_Errors_RaiseError(UT_PROTECTION, DEFAULT_HOLD_FRAMES);
     }
@@ -973,7 +973,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
     }
     
     //if over temp motor error occurs, raise to vc layer
-    if ((wErrorOccured & MC_OVER_TEMP_MOTOR) != MC_NO_FAULT)
+    if ((wErrorOccurred & MC_OVER_TEMP_MOTOR) != MC_NO_FAULT)
     {
         VC_Errors_RaiseError(MOTOR_OT_PROTECT, DEFAULT_HOLD_FRAMES);
     }
@@ -984,7 +984,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
     }
     
     //if undervoltage error occurs, raise to vc layer
-    if ((wErrorOccured & MC_UNDER_VOLT) != MC_NO_FAULT)
+    if ((wErrorOccurred & MC_UNDER_VOLT) != MC_NO_FAULT)
     {
         VC_Errors_RaiseError(UV_PROTECTION, DEFAULT_HOLD_FRAMES);
     }
@@ -1004,7 +1004,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
 void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint32_t wWarningOccurred = MDI_GetOccuredWarnings(pHandle->pMDI, M1);
+    uint32_t wWarningOccurred = MDI_GetOccurredWarnings(pHandle->pMDI, M1);
         
     //if motor temperature foldback warning occurs, raise to vc layer
     if ((wWarningOccurred & MC_FOLDBACK_TEMP_MOTOR) != MC_NO_WARNING)

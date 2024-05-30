@@ -533,7 +533,7 @@ void * HallPosSensor_TIMx_UP_IRQHandler(void * pHandleVoid)
     HallPosSensorHandle_t * pHandle = (HallPosSensorHandle_t *) pHandleVoid;
     if (pHandle->bSensorIsReliable)
     {
-        /* an update event occured for this interrupt request generation */
+        /* an update event occurred for this interrupt request generation */
         pHandle->hOVFCounter++;
         if (pHandle->hOVFCounter >= (pHandle->hHallMaxRatio))
         {

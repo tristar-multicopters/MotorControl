@@ -35,9 +35,9 @@ extern "C" {
 //Number of entries to each OD configuration
 
 #define MASTER_IOT_SIZE       11
-#define MASTER_IOT_SLAVE_SIZE 15
-#define MASTER_SLAVE_SIZE     14
-#define SLAVE_MASTER_SIZE     14
+#define MASTER_IOT_SLAVE_SIZE 23
+#define MASTER_SLAVE_SIZE     22
+#define SLAVE_MASTER_SIZE     22
 
 //Mandatory Object Entries address
 
@@ -105,7 +105,9 @@ extern "C" {
 // 1 -> COB-ID used by RPDO
 // 2 -> Transmission type  
 // 5 -> Event timer
-#define CO_OD_RPOD                             0x1400
+#define CO_OD_RPOD1                            0x1400
+#define CO_OD_RPOD2                            0x1401
+#define CO_OD_RPOD3                            0x1402
 
 //OD ID used for RPDO mapping parameters
 // this object can have up to 8 subindex 
@@ -117,7 +119,9 @@ extern "C" {
 // 4 -> Application object 4
 // .....
 // 8 -> Application object 8
-#define CO_OD_RPOD_MAPPING                     0x1600
+#define CO_OD_RPOD1_MAPPING                    0x1600
+#define CO_OD_RPOD2_MAPPING                    0x1601
+#define CO_OD_RPOD3_MAPPING                    0x1602
 
 //OD ID used for TPDO communication parameter
 // this object can have up to 8 subindex 
@@ -127,7 +131,9 @@ extern "C" {
 // 2 -> Transmission type 
 // 5 -> Event timer
 // 6 -> SYNC start value
-#define CO_OD_TPDO_COMMUNICATION               0x1800
+#define CO_OD_TPDO1_COMMUNICATION              0x1800
+#define CO_OD_TPDO2_COMMUNICATION              0x1801
+#define CO_OD_TPDO3_COMMUNICATION              0x1802
 
 //OD ID used for RPDO mapping parameter
 // this object can have up to 8 subindex
@@ -139,7 +145,10 @@ extern "C" {
 // 4 -> Application object 4
 // .....
 // 8 -> Application object 8
-#define CO_OD_TPOD_MAPPING                     0x1A00
+#define CO_OD_TPOD1_MAPPING                    0x1A00
+#define CO_OD_TPOD2_MAPPING                    0x1A01
+#define CO_OD_TPOD3_MAPPING                    0x1A02
+
 
 //OD ID used for communn entries, used by all configuration.
 #define CO_OD_COMMUM_ENTRIES                   0x5000
@@ -183,8 +192,22 @@ extern "C" {
 #define CO_OD_REG_MOTOR_TEMP                   0x200B
 #define CO_OD_REG_HEATSINK_TEMP                0x200C
 #define CO_OD_REG_MOTOR_STATE                  0x200D
-#define CO_OD_REG_MOTOR_OCC_FAULTS             0x200E
-#define CO_OD_REG_MOTOR_CUR_FAULTS             0x200F
+
+    //OD ID used to hold the motor faults
+    //this object has 10 subindex
+    //
+    // 0 -> motor warnings master
+    // 1 -> motor warnings slave
+    // 2 -> motor current errors master
+    // 3 -> motor current errors slave
+    // 4 -> motor occurred errors master
+    // 5 -> motor occurred errors slave
+    // 6 -> motor current critical faults master
+    // 7 -> motor current critical faults slave
+    // 8 -> motor occurred critical faults master
+    // 9 -> motor occurred critical faults slave
+#define CO_OD_REG_MOTOR_FAULTS                 0x200E
+
 #define CO_OD_REG_MOTOR_TORQUE_REF             0x2010
 #define CO_OD_REG_MOTOR_START                  0x2011
 #define CO_OD_REG_FAULT_ACK                    0x2012

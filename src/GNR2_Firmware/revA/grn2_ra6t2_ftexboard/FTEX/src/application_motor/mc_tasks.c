@@ -776,7 +776,7 @@ void FOC_CalcCurrRef(uint8_t bMotor)
     /* If current references iqref and idref are computed internally    */
     if (FOCVars[bMotor].bDriveInput == INTERNAL)
     {
-        if (MCStateMachine_GetOccuredErrorState(&MCStateMachine[M1]))
+        if (MCStateMachine_GetOccurredErrorState(&MCStateMachine[M1]))
         {
             FOCVars[bMotor].hTeref = 0;
         }
