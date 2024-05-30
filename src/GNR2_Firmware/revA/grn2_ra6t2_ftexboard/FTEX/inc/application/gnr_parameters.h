@@ -15,7 +15,8 @@
 #define VEHICLE_NIDEC                 7   
 #define VEHICLE_VELEC_CITI_500W       8
 #define VEHICLE_SUPER73_Z             9
-#define VEHICLE_MILEBOX              10
+#define VEHICLE_MILEBOX               10
+#define VEHICLE_VELEC21_500W          11
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 
@@ -70,7 +71,7 @@
 #define FIRMWARE_RELEASE              0
 
 
-#define VEHICLE_SELECTION             VEHICLE_SUPER73_Z     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_VELEC21_500W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                            

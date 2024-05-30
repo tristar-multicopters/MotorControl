@@ -89,7 +89,7 @@
             <nStopA1X>2</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>1</SelectedForBatchBuild>
+          <SelectedForBatchBuild>0</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -513,6 +513,11 @@
               <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_vel21_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_vel21_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
@@ -2269,7 +2274,7 @@
             <nStopA1X>0</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>1</SelectedForBatchBuild>
+          <SelectedForBatchBuild>0</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -2693,6 +2698,11 @@
               <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_vel21_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_vel21_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
@@ -4824,6 +4834,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_vel21_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_vel21_500w.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
@@ -6627,7 +6642,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -7002,6 +7017,11 @@
               <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_vel21_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_vel21_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
@@ -8751,7 +8771,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>C:\Users\bruno.alves_ftex\Documents\firmwares\GNR_firmware\src\GNR2_Firmware\revA\grn2_ra6t2_ftexboard\scripts\sign_and_merge_mcu_512k.bat</UserProg1Name>
+            <UserProg1Name>".\scripts\sign_and_merge_mcu_512k.bat"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -8807,7 +8827,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -9182,6 +9202,11 @@
               <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_vel21_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_vel21_500w.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
@@ -11313,6 +11338,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_vel21_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_vel21_500w.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_velec_citi_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_velec_citi_500w.h</FilePath>
@@ -13055,7 +13085,7 @@
           <targetInfo name="APP_UPLOAD(JUST UPLOAD)_512K"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cclass="CMSIS" Cgroup="RTOS" Csub="Keil RTX5" Cvendor="ARM" Cversion="5.5.4" condition="RTOS RTX5">
+      <component Capiversion="2.1.3" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.5.4" condition="RTOS2 RTX5">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>
@@ -13066,7 +13096,7 @@
           <targetInfo name="APP_UPLOAD(JUST UPLOAD)_512K"/>
         </targetInfos>
       </component>
-      <component Capiversion="2.1.3" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.5.4" condition="RTOS2 RTX5">
+      <component Capiversion="1.0.0" Cclass="CMSIS" Cgroup="RTOS" Csub="Keil RTX5" Cvendor="ARM" Cversion="5.5.4" condition="RTOS RTX5">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>

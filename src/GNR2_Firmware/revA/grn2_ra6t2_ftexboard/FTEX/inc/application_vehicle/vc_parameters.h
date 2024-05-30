@@ -75,6 +75,10 @@
 
 #include "vc_parameters_milebox.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_VELEC21_500W
+
+#include "vc_parameters_vel21_500w.h"
+
 #endif
 
 #ifndef  VEHICLE_TOP_SPEED_KMH

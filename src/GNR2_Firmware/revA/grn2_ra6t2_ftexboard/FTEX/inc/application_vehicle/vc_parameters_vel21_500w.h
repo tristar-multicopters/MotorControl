@@ -1,27 +1,26 @@
 /**
-  * @file    vc_parameters_milebox.h
-  * @brief   This file contains the parameters needed in order to configure the motor of VEHICLE_MILEBOX bike.
+  * @file    vc_parameters_vel21_500w.h
+  * @brief   This file contains the parameters needed in order to configure the motor of VEHICLE_VEL21_500W bike.
   *
   */
 
 /* Define to prevent recursive inclusion --- 
 ----------------------------------*/
-#ifndef __VC_PARAMETERS_MILEBOX_H
-#define __VC_PARAMETERS_MILEBOX_H
+#ifndef __VC_PARAMETERS_VEL21_500W_H
+#define __VC_PARAMETERS_VEL21_500W_H
 
 /******************* MOTOR SELECTION  *******************************/
-#define MOTOR_SELECTION    MOTOR_GHR_0194_DD
+#define MOTOR_SELECTION    MOTOR_AKM_128SX_500W
 
 
 /******************* SCREEN SELECTION  *******************************/
-#define SCREEN_PROTOCOL    UART_APT       
+#define SCREEN_PROTOCOL    UART_CLOUD_5S       
                                                             // UART_DISABLE,
-                                                            // UART_APT,    
+                                                            // UART_APT,
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-#define VEHICLE_TOP_SPEED_KMH   27    
-#define THROTTLE_TOP_SPEED       6
+
 /***************** THROTTLE SELECTION  ******************************/
 
 #include "throttle_sensors/vc_velec_r48_throttle.h"
@@ -38,50 +37,49 @@
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
 #define PTS_OFFSET_PTS2TORQUE_STARTUP       80              // Offset for pedal torque sensor to torque linear transformation during the startup in %
-#define PTS_OFFSET_STARTUP_SPEED_KMH         1              // Speed under which the Startup pedal torque sensor offset is used in km/h
+#define PTS_OFFSET_STARTUP_SPEED_KMH         3              // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE               10              // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
-#define PTS_FILTER_BW1_1                       55              // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW2_1                       70              // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW1_2                       55              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW2_2                       70              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW1_3                       55              // BW coefficient for pedal torque sensor avereging for speed 3
-#define PTS_FILTER_BW2_3                       70              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW1_1                      40              // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW2_1                      90              // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW1_2                      40              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW2_2                      90              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW1_3                      40              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW2_3                      90              // BW coefficient for pedal torque sensor avereging for speed 3
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
-#define PAS_MAX_LEVEL                       5            
+#define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
 
-// Maximum PAS Level given by the screen
 #define PAS_0_TORQUE_GAIN                   0               // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
-#define PAS_1_TORQUE_GAIN                   850             // Torque sensor PAS Gain in % on PAS 1
-#define PAS_2_TORQUE_GAIN                   850             // Torque sensor PAS Gain in % on PAS 2                
-#define PAS_3_TORQUE_GAIN                   850             // Torque sensor PAS Gain in % on PAS 3
-#define PAS_4_TORQUE_GAIN                   850             // Torque sensor PAS Gain in % on PAS 4
-#define PAS_5_TORQUE_GAIN                   850             // Torque sensor PAS Gain in % on PAS 5
-#define PAS_6_TORQUE_GAIN                   850             // Torque sensor PAS Gain in % on PAS 6
-#define PAS_7_TORQUE_GAIN                   850             // Torque sensor PAS Gain in % on PAS 7 
-#define PAS_8_TORQUE_GAIN                   850             // Torque sensor PAS Gain in % on PAS 8 
-#define PAS_9_TORQUE_GAIN                   850             // Torque sensor PAS Gain in % on PAS 9 
+#define PAS_1_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 1
+#define PAS_2_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 2                
+#define PAS_3_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 3
+#define PAS_4_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 4
+#define PAS_5_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 5
+#define PAS_6_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 6
+#define PAS_7_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 7 
+#define PAS_8_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 8 
+#define PAS_9_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 9 
 
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
 
 //Used to chose the pas detection mode on startup, torque or/and cadence,
 //torque only or cadence only.
-#define PAS_DETECTIONSTARTUP_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
+#define PAS_DETECTIONSTARTUP_ALGORITHM      CadenceSensorUse /*noSensorUse = 0,
                                                             TorqueSensorUse,    // Torque sensor use define
                                                             CadenceSensorUse,   // Cadence sensor use define
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
 //Used to chose the pas detection mode on running, torque or/and cadence,
 //torque only or cadence only.
-#define PAS_DETECTIONRUNNING_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
+#define PAS_DETECTIONRUNNING_ALGORITHM      CadenceSensorUse /*noSensorUse = 0,
                                                             TorqueSensorUse,    // Torque sensor use define
                                                             CadenceSensorUse,   // Cadence sensor use define
                                                             HybridAndSensorUse, // Torque AND Cadence sensor use define
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
-    
+                                                               
 #define PAS_0_MIN_TORQUE_PERCENT                0
 #define PAS_1_MIN_TORQUE_PERCENT                0
 #define PAS_2_MIN_TORQUE_PERCENT                0
@@ -90,22 +88,39 @@
 #define PAS_5_MIN_TORQUE_PERCENT                0 
 
 #define PAS_0_MAX_TORQUE_PERCENT                0
-#define PAS_1_MAX_TORQUE_PERCENT               40
-#define PAS_2_MAX_TORQUE_PERCENT               55
-#define PAS_3_MAX_TORQUE_PERCENT               70
-#define PAS_4_MAX_TORQUE_PERCENT               85
+#define PAS_1_MAX_TORQUE_PERCENT               60
+#define PAS_2_MAX_TORQUE_PERCENT               67
+#define PAS_3_MAX_TORQUE_PERCENT               80
+#define PAS_4_MAX_TORQUE_PERCENT               88
 #define PAS_5_MAX_TORQUE_PERCENT              100 
 
 #define PAS_WALK_POWER_PERCENT                 70              // PAS walk has a ratio of 70%
-#define PAS_WALKMODE_OVER_THROTTLE           true            // If set to true walk mode has higher priority than throttle
-#define PAS_OVER_THROTTLE                    true
 
-#define PAS_LEVEL_SPEED_1  VEHICLE_TOP_SPEED_KMH
-#define PAS_LEVEL_SPEED_2  VEHICLE_TOP_SPEED_KMH
-#define PAS_LEVEL_SPEED_3  VEHICLE_TOP_SPEED_KMH
-#define PAS_LEVEL_SPEED_4  VEHICLE_TOP_SPEED_KMH
-#define PAS_LEVEL_SPEED_5  VEHICLE_TOP_SPEED_KMH
+#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP              5    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
+//cadence detection windows on ms when starting to use the pedal.
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 1000           
 
+#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING               1    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running    
+//cadence detection windows on ms when running. 
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS  150
+
+                                                    // Values commented are the settings used to make the cadence feel very similar to velec release
+#define PAS1_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
+#define PAS1_ACCEL_RAMP_ARG1                    1   //     15
+
+#define PAS2_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR
+#define PAS2_ACCEL_RAMP_ARG1                    1   //     25
+
+#define PAS3_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
+#define PAS3_ACCEL_RAMP_ARG1                    1   //     55
+
+#define PAS4_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
+#define PAS4_ACCEL_RAMP_ARG1                    1   //     55
+
+#define PAS5_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
+#define PAS5_ACCEL_RAMP_ARG1                    1   //     65      
+
+#define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
@@ -119,6 +134,7 @@
 
 #define WWS_USE_MOTOR_NBR_PER_ROTATION      true            // True if wheel speed sensor from the motor is used
 #define EXTERNAL_WSS_NBR_PER_ROTATION       1               // Number of magnets on external wheel speed sensor
+#define DEFAULT_WHEEL_DIAMETER_OVERRIDE     26              // Overrides the default wheel diameter value 
 
 /***************** POWERTRAIN MANAGEMENT ******************************/
 
@@ -132,21 +148,22 @@
 #define POWERTRAIN_STOP_SPEED_THRESHOLD     0               // Speed value to stop powertrain
 #define POWERTRAIN_DISABLE_THROTTLE_PAS_0   true            // If set the tru throttle is disabled when pas level is 0
 
-#define TORQUE_SPEED_LIMIT_GAIN             92              // Gain to be applied to the torque speed limit in %
-#define DYNAMIC_SPEED_LIMITATION            false           // Indicates if the the top speed change be changed dynamically or is fixed to the default value
+#define TORQUE_SPEED_LIMIT_GAIN               92            // Gain to be applied to the torque speed limit in %
+#define DYNAMIC_SPEED_LIMITATION            true            // Indicates if the the top speed change be changed dynamically or is fixed to the default value
 
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT 200             /*  Number of task ticks to wait after a fault occurs to
                                                                 attempt a powertrain restart (OC, SF and SU faults)   */
-
-#define POWERTRAIN_MAX_MOTOR_TORQUE         STARTING_TORQUE // Maximum motor torque to apply with powertrain management
 
 /***************** BIKE LIGHT SETTINGS  ******************************/
     
 #define POWERTRAIN_HEADLIGHT_DEFAULT        false           // Parameter that sets the default headlight state when the bike is powered on
 
 #define POWERTRAIN_TAILLIGHT_DEFAULT        true            // Parameter that sets the default tail light state when the bike is powered on
+    
 /******************************** BATTERY SELECTION ******************************/
 
-#include "batteries/milebox_battery.h"
+#include "batteries/velec_500w_battery.h"
                                             
-#endif              
+#endif                                            
+
+

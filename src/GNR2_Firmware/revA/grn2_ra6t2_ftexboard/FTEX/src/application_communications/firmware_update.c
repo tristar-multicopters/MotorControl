@@ -21,6 +21,8 @@
 static FirmwareUpdateStateMachine_t FirmwareUpdateStateMachine = CHECK_START;
 
 //Initialize the struct used to control/implement firmware update.
+#include "../../../ra/fsp/src/bsp/mcu/all/bsp_delay.h" // Flex Software:Components:ra
+
 static FirmwareUpdateControl_t FirmwareUpdateControl = {.otaCommand = NO_COMMAND,.otaStatus = NO_ERROS,.updating = false,
                                                         .firstDataFrameReceived = false,.frameCount = 0,.frameControl = 0,
                                                         .serialFlashInit = false,.dataFrameReceived = false};
