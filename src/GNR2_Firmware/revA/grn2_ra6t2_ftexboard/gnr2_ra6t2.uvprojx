@@ -540,9 +540,9 @@
           <GroupName>Application/Vehicle/Peripherals</GroupName>
           <Files>
             <File>
-              <FileName>super73_battery.h</FileName>
+              <FileName>super73_battery_EZ-ALC-25_13S2P.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery_EZ-ALC-25_13S2P.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -822,6 +822,11 @@
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -2715,9 +2720,9 @@
           <GroupName>Application/Vehicle/Peripherals</GroupName>
           <Files>
             <File>
-              <FileName>super73_battery.h</FileName>
+              <FileName>super73_battery_EZ-ALC-25_13S2P.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery_EZ-ALC-25_13S2P.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -2997,6 +3002,11 @@
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -4839,9 +4849,9 @@
           <GroupName>Application/Vehicle/Peripherals</GroupName>
           <Files>
             <File>
-              <FileName>super73_battery.h</FileName>
+              <FileName>super73_battery_EZ-ALC-25_13S2P.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery_EZ-ALC-25_13S2P.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -5121,6 +5131,11 @@
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -7014,9 +7029,9 @@
           <GroupName>Application/Vehicle/Peripherals</GroupName>
           <Files>
             <File>
-              <FileName>super73_battery.h</FileName>
+              <FileName>super73_battery_EZ-ALC-25_13S2P.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery_EZ-ALC-25_13S2P.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -7296,6 +7311,11 @@
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -9189,9 +9209,9 @@
           <GroupName>Application/Vehicle/Peripherals</GroupName>
           <Files>
             <File>
-              <FileName>super73_battery.h</FileName>
+              <FileName>super73_battery_EZ-ALC-25_13S2P.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery_EZ-ALC-25_13S2P.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -9471,6 +9491,11 @@
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -11313,9 +11338,9 @@
           <GroupName>Application/Vehicle/Peripherals</GroupName>
           <Files>
             <File>
-              <FileName>super73_battery.h</FileName>
+              <FileName>super73_battery_EZ-ALC-25_13S2P.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery.h</FilePath>
+              <FilePath>.\FTEX\inc\application_vehicle\batteries\super73_battery_EZ-ALC-25_13S2P.h</FilePath>
             </File>
             <File>
               <FileName>utk_350w_battery.h</FileName>
@@ -11595,6 +11620,11 @@
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>

@@ -74,8 +74,11 @@
 
 #include "motor_parameters_super73_500w.h"
 
-#endif
+#elif MOTOR_SELECTION == MOTOR_SUPER73_1200W
 
+#include "motor_parameters_super73_1200w.h"
+
+#endif
 
 
 

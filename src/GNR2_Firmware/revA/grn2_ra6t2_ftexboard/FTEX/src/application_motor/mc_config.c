@@ -168,7 +168,8 @@ MCConfigHandle_t MCConfig =
     .hDefaultFwVoltRef       = (int16_t)FW_VOLTAGE_REF,
     .hDemagCurrent          = ID_DEMAG,
     .hVqdLowPassFilterBw    = M1_VQD_SW_FILTER_BW_FACTOR,
-    .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG,           
+    .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG,
+    .hFlDir                 = FLUX_DIRECTION,
 };
 
 /**

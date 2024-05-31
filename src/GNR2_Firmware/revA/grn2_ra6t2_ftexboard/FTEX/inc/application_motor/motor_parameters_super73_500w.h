@@ -66,7 +66,7 @@ These variables are used to configure the motor within the smart config tool.
 #define PID_FLUX_KI_DEFAULT                 1000                // Default gain if adaptive gain feature is not used
 
 #define FLUX_WEAKENING_ENABLE               false               // enable or disable flux weakening
-
+#define FLUX_DIRECTION                      1               // direction of demagnetization current  1 clockwise, -1 counter clockwise
 /************************** Ramp Manager Parameters  ************************/
 
 #define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second

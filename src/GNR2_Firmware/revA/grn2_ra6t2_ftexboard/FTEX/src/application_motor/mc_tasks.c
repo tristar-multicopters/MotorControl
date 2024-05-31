@@ -738,6 +738,18 @@ void FOC_UpdatePIDGains(uint8_t bMotor)
         PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
     }
 #endif
+#if MOTOR_SELECTION == MOTOR_SUPER73_1200W    
+    // this PID update is for correct IqKI for imidietly stop when release trottle
+    if (FOCVars[bMotor].hTeref == 0.0)
+    {
+        PID_SetKI(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
+        PID_SetKP(pPIDIq[bMotor], No_Load_PID_KIq_Gain);
+    }
+    else
+    {
+        PID_SetKI(pPIDIq[bMotor], (int16_t)LookupTable_CalcOutput(&LookupTableM1IqKi, abs(hM1SpeedUnit)));
+    }
+#endif
 }
 
 /**

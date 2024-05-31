@@ -29,6 +29,7 @@
 #define MOTOR_RS2_1200W              12
 #define MOTOR_GHR_0194_DD            13
 #define MOTOR_SUPER73_500W           14
+#define MOTOR_SUPER73_1200W          15
 
 #if VEHICLE_SELECTION == VEHICLE_DEFAULT 
 
