@@ -58,6 +58,8 @@
 #define JD_PRV_MEASURE_SEQ_RLS      (3)
 #define JD_PRV_MEASURE_SEQ_DFT      (4)
 #define JD_PRV_MEASURE_SEQ_COMP     (5)
+#define JD_MAXIMUM              5.0E-2f // Maximum motor inertia value in Kg.m2
+#define JD_MINIMUM              0.1E-6f // Minimum motor inertia value in Kg.m2
 
 /***********************************************************************************************************************
  Typedef definitions
@@ -443,8 +445,8 @@ static void jd_seq_init(void)
     aidf_rls_init(g_f4_aid_jd_rls_init, g_f4_aid_jd_rls_forget_k);
 #endif
 
-    aid_st_jd.f4_j_min = 0.1E-6f;
-    aid_st_jd.f4_j_max = 5.0E-3f;
+    aid_st_jd.f4_j_min = JD_MINIMUM;
+    aid_st_jd.f4_j_max = JD_MAXIMUM;
     aid_st_jd.f4_j_pi_ctrl = gs_f4_cfg_assumed_inertia;
 
     aid_st_jd.u1_j_seq = JD_PRV_MEASURE_SEQ_KE;
