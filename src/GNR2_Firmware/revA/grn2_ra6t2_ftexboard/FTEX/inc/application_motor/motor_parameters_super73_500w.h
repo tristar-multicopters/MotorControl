@@ -29,7 +29,7 @@ These variables are used to configure the motor within the smart config tool.
 
 /************************** Motor Config Parameters ************************/
 
-#define MOTOR_GEAR_RATIO                    (float)5            // Motor gear ratio, the value is always X turns of the motor 
+#define MOTOR_GEAR_RATIO                   (float)6.74          // Motor gear ratio, the value is always X turns of the motor 
 #define MOTOR_TYPE                          HUB_DRIVE           // Motor type. Can be HUB_DRIVE or MID_DRIVE or DIRECT_DRIVE
 #define POLE_PAIR_NUM                       8                   // Number of motor pole pairs
 #define RS_VAL                              0.045f              // Stator resistance , ohm
@@ -49,7 +49,7 @@ These variables are used to configure the motor within the smart config tool.
 #define MAX_APPLICATION_SPEED_RPM           4000                // Max speed for the current application in mechanical rpm
 
 #define ENABLE_SPEED_LIMIT_CONTROL          true                // Enable or disable speed limit control
-#define PID_SPEED_KP_DEFAULT                40                  // Default gain for speed control loop
+#define PID_SPEED_KP_DEFAULT                100                  // Default gain for speed control loop
 #define PID_SPEED_KI_DEFAULT                4                   // Default gain for speed control loop
 #define SP_KIDIV                            4096                // Speed control gain divider, to allow decimal value
 #define SP_KIDIV_LOG                        LOG2(4096)          // Speed control gain divider log2, to allow decimal value

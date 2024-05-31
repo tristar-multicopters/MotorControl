@@ -104,6 +104,7 @@
 
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
+#define VEHICLE_TOP_SPEED_KMH   99
 
 #define PAS_LEVEL_SPEED_1   VEHICLE_TOP_SPEED_KMH
 #define PAS_LEVEL_SPEED_2   VEHICLE_TOP_SPEED_KMH
