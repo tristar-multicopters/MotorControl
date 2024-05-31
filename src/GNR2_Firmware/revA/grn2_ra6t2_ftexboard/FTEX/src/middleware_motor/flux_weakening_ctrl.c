@@ -23,6 +23,7 @@ void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDH
     
     pHandle->bWheelSpdSensorNbrPerRotation = MotorParameters.WheelSpeedSensorParameters.bWheelSpeedSensorNbrPerRotation;
     pHandle->fMotorWSSTimeOnOneMagnetPercent = MotorParameters.WheelSpeedSensorParameters.fMotorWSSTimeOnOneMagnetPercent;
+    pHandle->hFlDir = MotorParameters.FluxParameters.hFlDirection;
     
     pHandle->hFwVoltRef = pHandle->hDefaultFwVoltRef;
 

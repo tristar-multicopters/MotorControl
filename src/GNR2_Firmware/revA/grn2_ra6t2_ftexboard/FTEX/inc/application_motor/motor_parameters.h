@@ -61,7 +61,7 @@ typedef struct
 typedef struct
 {
     uint8_t bFluxWeakeningEnable;
-    
+    int16_t hFlDirection;
     int16_t hPIDFluxKPDefault;
     int16_t hPIDFluxKIDefault;
 } FluxParameters_t;
