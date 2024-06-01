@@ -34,19 +34,19 @@ These variables are used to configure the motor within the smart config tool.
 #define LS                                  0.000235f       // Stator inductance, H (For I-PMSM it is equal to Lq)
 #define MOTOR_MAGNET_FLUX                   0.0195f         // Flux of Permanent magnets used in the motor, derived by performing motor tests
 #define MOTOR_VOLTAGE_CONSTANT              28.84f          // Volts RMS ph-ph /kRPM
-#define ST_TORQUE_COEF                      1.2f            // Coefficient to keep the starting torque higher than the nominal torque
+#define ST_TORQUE_COEF                      1.5f            // Coefficient to keep the starting torque higher than the nominal torque
 
 #define PEAK_CURRENT_MOTOR_amps             50              // Peak current in amps
 
 /************************** Power Limit Parameters ************************/
 
-#define ESTIMATED_EFFICIENCY                100             // Percent efficiency of input compared to output power
+#define ESTIMATED_EFFICIENCY                95             // Percent efficiency of input compared to output power
 
 /************************** Speed Limit Parameters ************************/
 
 #define MAX_APPLICATION_SPEED_RPM           4000            // Max speed for the current application in mechanical rpm
 
-#define ENABLE_SPEED_LIMIT_CONTROL          false
+#define ENABLE_SPEED_LIMIT_CONTROL          true
 #define PID_SPEED_KP_DEFAULT                100             // Default gain speed control loop
 #define PID_SPEED_KI_DEFAULT                10              // Default gain speed control loop
 #define SP_KIDIV                            16384           // Speed control gain divider, to allow decimal value
@@ -67,7 +67,7 @@ These variables are used to configure the motor within the smart config tool.
 
 /************************** Ramp Manager Parameters  ************************/
 
-#define DEFAULT_TORQUE_SLOPE_UP             3000            // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_UP             5000            // Slope in cNm per second
 #define DEFAULT_TORQUE_SLOPE_DOWN           10000           // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP              500             // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN            500             // Slope in #SPEED_UNIT per second
@@ -95,7 +95,7 @@ These variables are used to configure the motor within the smart config tool.
                                       
 /************** Wheel Speed Sensor Parameters  *****************************/
 
-#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     1           // Wheel speed sensor cycle number for one wheel rotation
+#define WHEEL_SPEED_SENSOR_NBR_PER_ROTATION     8           // Wheel speed sensor cycle number for one wheel rotation
 
 /************** Current and Speed PID Parameters  *****************************/
 

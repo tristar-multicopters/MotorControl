@@ -10,7 +10,7 @@
 #define __VC_PARAMETERS_R48_750W_H
 
 /******************* MOTOR SELECTION  *******************************/
-#define MOTOR_SELECTION    MOTOR_AKM_128SX_750W
+#define MOTOR_SELECTION    MOTOR_AKM_128SX_350W
 
 
 /******************* SCREEN SELECTION  *******************************/
@@ -45,35 +45,36 @@
 
 
 // Minimum Number of pulse, inside a specific time, to the detect PAS on cadence
-#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP  6       // (nbP1 in the graph)  
+#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP  1       // (nbP1 in the graph)  
     
 //cadence detection windows on ms when starting to use the pedal
 #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 500  // (TW1 in the graph)         
 
 // Minimum Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running 
-#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING  6     // (nbP2 in the graph) 
+#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING  1     // (nbP2 in the graph) 
     
 //cadence detection windows on ms when running. 
-#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 150  // (TW2 in the graph) 
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 350  // (TW2 in the graph) 
 
 
 /***************** TORQUE SENSOR FILTERING  ******************************/
-#define PTS_FILTER_BW1_1                      40              // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW2_1                      90              // BW coefficient for pedal torque sensor avereging for speed 1
-#define PTS_FILTER_BW1_2                      40              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW2_2                      90              // BW coefficient for pedal torque sensor avereging for speed 2
-#define PTS_FILTER_BW1_3                      40              // BW coefficient for pedal torque sensor avereging for speed 3
-#define PTS_FILTER_BW2_3                      90              // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW1_1                      7             // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW2_1                      30             // BW coefficient for pedal torque sensor avereging for speed 1
+#define PTS_FILTER_BW1_2                      10              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW2_2                      40              // BW coefficient for pedal torque sensor avereging for speed 2
+#define PTS_FILTER_BW1_3                      10             // BW coefficient for pedal torque sensor avereging for speed 3
+#define PTS_FILTER_BW2_3                      40              // BW coefficient for pedal torque sensor avereging for speed 3
+
 
 /***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
 
 #define PAS_0_TORQUE_GAIN                   0               // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
-#define PAS_1_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 1
-#define PAS_2_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 2                
-#define PAS_3_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 3
+#define PAS_1_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 1
+#define PAS_2_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 2                
+#define PAS_3_TORQUE_GAIN                   100             // Torque sensor PAS Gain in % on PAS 3
 #define PAS_4_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 4
-#define PAS_5_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 5
+#define PAS_5_TORQUE_GAIN                   150             // Torque sensor PAS Gain in % on PAS 5
 #define PAS_6_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 6
 #define PAS_7_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 7 
 #define PAS_8_TORQUE_GAIN                   125             // Torque sensor PAS Gain in % on PAS 8 
@@ -97,17 +98,17 @@
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
                                                                
 #define PAS_0_MIN_TORQUE_PERCENT                0
-#define PAS_1_MIN_TORQUE_PERCENT                0
-#define PAS_2_MIN_TORQUE_PERCENT                0
-#define PAS_3_MIN_TORQUE_PERCENT                0
-#define PAS_4_MIN_TORQUE_PERCENT                0
-#define PAS_5_MIN_TORQUE_PERCENT                0 
+#define PAS_1_MIN_TORQUE_PERCENT                10
+#define PAS_2_MIN_TORQUE_PERCENT                10
+#define PAS_3_MIN_TORQUE_PERCENT                10
+#define PAS_4_MIN_TORQUE_PERCENT                10
+#define PAS_5_MIN_TORQUE_PERCENT                10
 
 #define PAS_0_MAX_TORQUE_PERCENT               0
 #define PAS_1_MAX_TORQUE_PERCENT               20
 #define PAS_2_MAX_TORQUE_PERCENT               35
 #define PAS_3_MAX_TORQUE_PERCENT               45
-#define PAS_4_MAX_TORQUE_PERCENT               70
+#define PAS_4_MAX_TORQUE_PERCENT               100
 #define PAS_5_MAX_TORQUE_PERCENT               100 
 
 #define PAS_WALK_POWER_PERCENT              70              // PAS walk has a ratio of 70%
@@ -137,7 +138,7 @@
 #define POWERTRAIN_DISABLE_THROTTLE_PAS_0   true            // If set the tru throttle is disabled when pas level is 0
 
 #define TORQUE_SPEED_LIMIT_GAIN               92            // Gain to be applied to the torque speed limit in %
-#define DYNAMIC_SPEED_LIMITATION            true            // Indicates if the the top speed change be changed dynamically or is fixed to the default value
+#define DYNAMIC_SPEED_LIMITATION            false            // Indicates if the the top speed change be changed dynamically or is fixed to the default value
 
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT 200             /*  Number of task ticks to wait after a fault occurs to
                                                                 attempt a powertrain restart (OC, SF and SU faults)   */
@@ -150,7 +151,7 @@
     
 /******************************** BATTERY SELECTION ******************************/
 
-#include "batteries/velec_750w_battery.h"
+#include "batteries/velec_350w_battery.h"
                                             
 #endif                                            
 
