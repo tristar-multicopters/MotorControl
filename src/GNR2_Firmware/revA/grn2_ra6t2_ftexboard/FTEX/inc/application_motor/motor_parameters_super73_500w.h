@@ -30,6 +30,9 @@ These variables are used to configure the motor within the smart config tool.
 /************************** Motor Config Parameters ************************/
 
 #define MOTOR_GEAR_RATIO                   (float)6.74          // Motor gear ratio, the value is always X turns of the motor 
+                                                                // Note: The gear ratio value mentioned in the datasheet is 5. 
+                                                                // However, after the calculations, the gear ratio was found to be 6.74
+
 #define MOTOR_TYPE                          HUB_DRIVE           // Motor type. Can be HUB_DRIVE or MID_DRIVE or DIRECT_DRIVE
 #define POLE_PAIR_NUM                       8                   // Number of motor pole pairs
 #define RS_VAL                              0.045f              // Stator resistance , ohm
