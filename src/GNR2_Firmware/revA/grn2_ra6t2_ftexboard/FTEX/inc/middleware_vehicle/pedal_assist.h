@@ -18,6 +18,7 @@
 
 #define TORQUE_THRESHOLD_AVG_NB   10  /* Number of values we use to do an average to check for Torque PAS threshold */
 
+#define TORQUE_SENSOR_TIMEOUT_THRESHOLD 200  // Number of tick before signaling no pedal activity (Approx. 200*5ms = 1sec).  
 
 // ======================== Configuration enums ======================== // 
 typedef enum
@@ -95,12 +96,15 @@ typedef struct
     bool bTorqueStartupPASDetected;               // Flag used to Torque PAS detection on startup state.
     bool bTorqueRunningPASDetected;               // Flag used to Torque PAS detection on running state. 
     
+    uint16_t torqueSensorIssueTimer;              // Number of tick before we trigger the torque sensor issue flag
+    bool bTorqueSensorIssue;                      // Flag used to detect if there is torque sensor issue detected.
+
     PedalSpeedSensorHandle_t * pPSS;              // Pointer to Pedal Speed Sensor handle
     PedalTorqSensorHandle_t * pPTS;               // Pointer to Pedal Torque Sensor handle   
     WheelSpeedSensorHandle_t * pWSS;              // Pointer to Wheel Speed Sensor handle
         
     PAS_Parameters_t sParameters;                 // Structure for powertrain parameters
-    
+ 
 } PAS_Handle_t;
 
 // ======================== Public Functions ======================== //
@@ -338,5 +342,11 @@ void PedalAssist_SetTorqueRunningPasDection(PAS_Handle_t * pHandle);
     */
 void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
 
-#endif /*__PEDAL_ASSIST_H*/
+/**
+    * @brief  Check if a torque sensor issue is detected
+    * @param  Pedal Assist handle
+    * @retval True if torque sensor issue is detected
+    */
+bool PedalAssist_TorqueSensorIssueDetected(PAS_Handle_t * pHandle);
 
+#endif /*__PEDAL_ASSIST_H*/

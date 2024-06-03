@@ -38,6 +38,7 @@ typedef enum
     CONTROLLER_ERROR  = 0x11, // Controller in unrecoverable state
     BRAKE_ERROR       = 0x12, // Brake cutoff sensor abnormal
     SCREEN_COMM_ERROR = 0x13, // We we lose connection with the screen
+    TORQUE_SENSOR_ERROR = 0x14, // Torque sensor input value is stuck on higher voltage than threshold
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
 ErrorCodes_t; 

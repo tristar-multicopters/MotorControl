@@ -18,7 +18,7 @@ uint8_t bPASCounterAct = 0; // Slow cadence PAS activation loop couter
 
 //
 static PasCadenceState_t PasCadenceState = CADENCE_DETECTION_STARTUP;
-  
+
 
 /* Functions ---------------------------------------------------- */
 
@@ -869,8 +869,43 @@ void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo
         //setup the system to make a torque behavior(power calculation)
         for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
         {    
-            pHandle->sParameters.PASMinTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMinTorque(n);;
-            
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMinTorque(n);; 
         }
     }
+}
+
+/**
+    * @brief  Check if a torque sensor issue is detected
+    * @param  Pedal Assist handle
+    * @retval True if torque sensor issue is detected
+    */
+bool PedalAssist_TorqueSensorIssueDetected(PAS_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+
+    // Calculate a torque sensor issue threshold by adding PETAL_TORQUE_SENSOR_ERROR_OFFSET % to the current hOffsetPTS
+    uint16_t torqueSensorThreshold = pHandle->pPTS->hParameters.hOffsetPTS * (uint16_t)(1.0 + (float)PETAL_TORQUE_SENSOR_ERROR_OFFSET/100);
+
+    // If the torque sensor value is smaller than threshold or we have pedal pulse detected
+    if(PedalTorqSensor_GetAvValue(pHandle->pPTS) < torqueSensorThreshold || PedalSpdSensor_NewPedalPulsesDetected(pHandle->pPSS))
+    {
+        // Reset the pedal pulse timer and return no error
+        pHandle->torqueSensorIssueTimer = 0;
+        pHandle->bTorqueSensorIssue = false;
+    }
+ 
+    // If the torque sensor issue timer is triggered by the set timeout value
+    if(pHandle->torqueSensorIssueTimer >= TORQUE_SENSOR_TIMEOUT_THRESHOLD)
+    {
+        pHandle->bTorqueSensorIssue = true;
+    }
+
+    // If we have a high torque sensor value with no pedalling activity, we increment the timer
+    if(PedalTorqSensor_GetAvValue(pHandle->pPTS) >= torqueSensorThreshold && !PedalSpdSensor_NewPedalPulsesDetected(pHandle->pPSS))
+    {
+        pHandle->torqueSensorIssueTimer++;
+        pHandle->bTorqueSensorIssue = false;
+    }
+
+    return pHandle->bTorqueSensorIssue;
 }

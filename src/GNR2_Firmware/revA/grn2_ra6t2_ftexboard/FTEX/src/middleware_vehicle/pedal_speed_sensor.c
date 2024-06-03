@@ -16,12 +16,12 @@
 */
 void PedalSpdSensor_Init(PedalSpeedSensorHandle_t* pHandle)
 {
-    ASSERT(pHandle != NULL);    
+    ASSERT(pHandle != NULL);
 }
 
 /**
     Pedal Speed Sensor capture the number of pulses detected from the 
-    cadence signal/sesnor.
+    cadence signal/sensor.
 */
 void PedalSpdSensor_ReadNumberOfPulses(PedalSpeedSensorHandle_t* pHandle)
 {    
@@ -67,7 +67,6 @@ void PedalSpdSensor_ClearWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
     pHandle->bPedalSpeedSens_ResetWindowsFlag = false;
 }
 
-
 /**
     Get windows reset flag
 */
@@ -84,3 +83,19 @@ uint32_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle)
     return pHandle->wPedalSpeedSens_RPM;
 }
 
+/**
+    Check if we have a new number of pulses detected from the previous number of pulses detected 
+*/
+bool PedalSpdSensor_NewPedalPulsesDetected(PedalSpeedSensorHandle_t* pHandle)
+{
+    ASSERT(pHandle != NULL);
+
+    // Validate if we have new pulses detected, compared to the previous number of pulses
+    if(pHandle->hPreviousNumberOfPulse != pHandle->pPulseFrequency->hNumberOfPulse)
+    {
+        // Update the previous number of pulse with the current one   
+        pHandle->hPreviousNumberOfPulse = pHandle->pPulseFrequency->hNumberOfPulse;
+        return true;
+    }
+    return false;   
+}

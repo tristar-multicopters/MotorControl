@@ -601,11 +601,13 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
         case NO_ERROR:
             ConvertedError = CLOUD_5S_NO_ERROR; 
             break;
+        // TODO : Split those error when we have a screen protocol redifinition
         case PAS_BOOT_ERROR:
+        case TORQUE_SENSOR_ERROR:
             ConvertedError = CLOUD_5S_PAS_BOOT_ERROR; 
             break;
         case CONTROLLER_ERROR:
-            ConvertedError = CLOUD_5S_PAS_BOOT_ERROR; 
+            ConvertedError = CLOUD_5S_CNTL_ERROR; 
             break;
         case MOTOR_PHASE_ERROR:
             ConvertedError = CLOUD_5S_PHASE_ERROR; 
@@ -647,6 +649,7 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
             break;
         case OVER_CURRENT:
             ConvertedError = CLOUD_5S_CNTL_ERROR;
+            
         case UNMAPPED_ERROR: // Errors that Cloud 5S has but that we currently don't flag
             break;        
         default: // Cloud drive doesn't supports sending other error codes

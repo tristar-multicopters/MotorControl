@@ -1135,7 +1135,7 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle)
   */
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 {      
-    ASSERT(pHandle != NULL);
+    ASSERT(pHandle != NULL); 
     
     Ramps_Handle_t * pSelectedRampHandle = 0;
     uint8_t Direction = 0;
@@ -1190,7 +1190,22 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         }
         
         // Link the correct PAS ramp as the ramp to apply
-        pSelectedRampHandle = PedalAssist_GetRamp(pHandle->pPAS, Direction);       
+        pSelectedRampHandle = PedalAssist_GetRamp(pHandle->pPAS, Direction); 
+
+        // Check if there is any torque sensor issue detected
+        pHandle->pPAS->bTorqueSensorIssue = PedalAssist_TorqueSensorIssueDetected(pHandle->pPAS); 
+        // If we have a torque sensor issue detected and we are supposed to give torque
+        if(pHandle->pPAS->bTorqueSensorIssue && pHandle->hTorqueSelect != 0)
+        {
+            // Cut power because we have detected a torque sensor issue
+            pHandle->hTorqueSelect = 0;
+            VC_Errors_RaiseError(TORQUE_SENSOR_ERROR, HOLD_UNTIL_CLEARED); 
+        }
+        // No issues detected, we clear the error 
+        else
+        {
+            VC_Errors_ClearError(TORQUE_SENSOR_ERROR);
+        }      
     }        
     /* Using throttle */
     else 
@@ -1225,8 +1240,6 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         
     pHandle->hTorqueSelect = (int16_t) Ramps_ApplyRamp(pSelectedRampHandle, (uint16_t)pHandle->hTorqueSelect);
     
-    
-
     return pHandle->hTorqueSelect;
 }
 

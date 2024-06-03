@@ -16,8 +16,8 @@
 //#include "pedal_torque_sensor.h"
 
 // ================= Structure used to configure a pin ===================== //
-typedef struct {
-    
+typedef struct 
+{    
     PulseFrequencyHandle_t * pPulseFrequency;   /* Pointer to pedal handle */
     uint16_t hPedalSpeedSens_MinPulseStartup;   //It has the minimum number of pulses, on startup, 
                                                 //to detect PAS from cadence sensor
@@ -28,9 +28,9 @@ typedef struct {
     uint32_t wPedalSpeedSens_WindowsRunning;    //Maximum time, on ms, to verify the Detected Number of pulses
                                                 //from the cadence sensor when on run mode.
     bool bPedalSpeedSens_ResetWindowsFlag;      //Used to 
-    uint16_t hPedalSpeedSens_NumberOfPulses;    /*Detected Number of pulses from teh cadence signal*/
-    uint32_t  wPedalSpeedSens_RPM;   /* Pedal Speed sensor RPM calculated value */
-    
+    uint16_t hPedalSpeedSens_NumberOfPulses;    /*Detected Number of pulses from the cadence signal*/
+    uint32_t wPedalSpeedSens_RPM;               /* Pedal Speed sensor RPM calculated value */
+    uint16_t hPreviousNumberOfPulse;            // Number of pulses since the last pedalling activity check
 } PedalSpeedSensorHandle_t;
 
 // ==================== Public function prototypes ========================= //
@@ -90,5 +90,13 @@ bool PedalSpdSensor_GetWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
   @retval Speed in rpm
 */
 uint32_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle);
+
+/**
+  @brief Check if we have a new number of pulses detected 
+         from the previous number of pulses detected 
+  @param  PedalSpeedSensorHandle_t handle
+  @return True if new pedal sensor pulses were detected since last function call
+*/
+bool PedalSpdSensor_NewPedalPulsesDetected(PedalSpeedSensorHandle_t* pHandle);
 
 #endif

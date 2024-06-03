@@ -32,6 +32,8 @@
 //hFilterSpeed array size.
 #define FILTERSPEED_ARRAY_SIZE       (BW_ARRAY_SIZE - 1)
 
+#define PETAL_TORQUE_SENSOR_ERROR_OFFSET (float) 30 // Value added to the hOffsetPTS (in %) before we trigger a torque sensor issue 
+
 // ======================= Public strutures ============================= //
 
 typedef struct

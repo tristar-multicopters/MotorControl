@@ -134,6 +134,7 @@ PedalSpeedSensorHandle_t PedalSpeedSensorHandle = {
     .hPedalSpeedSens_MinPulseRunning = PEDALSPEEDSENSOR_MIN_PULSE_RUNNING,
     .wPedalSpeedSens_WindowsRunning = PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS,
     .bPedalSpeedSens_ResetWindowsFlag = false,
+    .hPreviousNumberOfPulse = 0,
 };
 
 
@@ -329,6 +330,10 @@ PAS_Handle_t PedalAssistHandle =
 
     .bStartupPasAlgorithm = PAS_DETECTIONSTARTUP_ALGORITHM,
     .bRunningPasAlgorithm = PAS_DETECTIONRUNNING_ALGORITHM,
+    
+    .torqueSensorIssueTimer = 0,
+    .bTorqueSensorIssue = false,
+    
     .pPSS = &PedalSpeedSensorHandle,
     .pPTS = &PedalTorqueSensorHandle,
     .pWSS = &WheelSpeedHandle,       
