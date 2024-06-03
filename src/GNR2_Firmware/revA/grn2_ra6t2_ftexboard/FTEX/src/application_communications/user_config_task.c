@@ -235,12 +235,12 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
     userConfigHandle->pVController = pVCIHandle;
     
     //try to open flash memory
-    if(uCAL_Flash_Open(userConfigHandle->pDataFlash_Handle) == true)
+    if(uCAL_Data_Flash_Open(userConfigHandle->pDataFlash_Handle) == true)
     {   
         //get date from data flash memory(backup)
         uCAL_Data_Flash_Read(userConfigHandle->pDataFlash_Handle, data, FLASH_HP_DF_BLOCK_4, USER_DATA_CONFIG_LENGTH);
         
-        //caclualte the crc to verify integrit of the data excluding crc bytes.
+        //calculate the crc to verify integrity of the data excluding crc bytes.
         crc = UserConfigTask_CalculateCRC(data, USER_DATA_CONFIG_LENGTH - 2);
         
         //Check data header, bike type and crc.if they one of them are different 
@@ -294,7 +294,7 @@ void UserConfigTask_InitUserConfigFromDataFlash(UserConfigHandle_t * userConfigH
     }
     
     //Close data flash memory access.
-    uCAL_Flash_Close(userConfigHandle->pDataFlash_Handle);
+    uCAL_Data_Flash_Close(userConfigHandle->pDataFlash_Handle);
 }
 
 /**
@@ -317,7 +317,7 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
     uint16_t crc = 0x0000;
     
     //try to open flash memory
-    if (uCAL_Flash_Open(userConfigHandle->pDataFlash_Handle) == true)
+    if (uCAL_Data_Flash_Open(userConfigHandle->pDataFlash_Handle) == true)
     {
             
         //try max three times to erase data flash memory.
@@ -362,7 +362,7 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
     }
     
     //Close data flash memory access.
-    uCAL_Flash_Close(userConfigHandle->pDataFlash_Handle);
+    uCAL_Data_Flash_Close(userConfigHandle->pDataFlash_Handle);
     
     //do a software reset to update the system with the new user configuration.
     NVIC_SystemReset();

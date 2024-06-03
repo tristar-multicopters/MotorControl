@@ -170,12 +170,12 @@ void gnr_main(void)
     //load user config from the data flash.
     UserConfigTask_InitUserConfigFromDataFlash(&UserConfigHandle,&DataFlashHandle,&VCInterfaceHandle);
     
-    //fucntion to pass the user configuration read from the memory to
+    //function to pass the user configuration read from the memory to
     //VCInterfaceHandle
     UserConfigTask_UpdateUserConfigData(&UserConfigHandle);
     
-    //get all information from the GNR controller, as serial number, firmware and dfu pack version.
-    GnrInfo_Read(&DataFlashHandle);  
+    //Init all information from the GNR controller, as serial number, firmware and dfu pack version.
+    GnrInfo_Init(&DataFlashHandle,&EFlash_Storage_Handle);  
 
     //if GRN is set to be master
     //call VC_BootUp.

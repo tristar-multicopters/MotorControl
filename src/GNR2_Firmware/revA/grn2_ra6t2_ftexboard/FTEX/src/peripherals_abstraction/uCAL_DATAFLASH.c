@@ -44,7 +44,7 @@
     parameters.
   @return bool return true if operation was a success.
 */
-bool uCAL_Flash_Open(DataFlash_Handle_t * pHandle)
+bool uCAL_Data_Flash_Open(DataFlash_Handle_t * pHandle)
 {
     
     //verify if the pointer is not null. 
@@ -83,7 +83,7 @@ bool uCAL_Flash_Open(DataFlash_Handle_t * pHandle)
     parameters.
   @return bool return true if operation was a success.
 */
-bool uCAL_Flash_Close(DataFlash_Handle_t * pHandle)
+bool uCAL_Data_Flash_Close(DataFlash_Handle_t * pHandle)
 {
     
     //verify if the pointer is not null. 

@@ -23,9 +23,15 @@
 *********************************************/
 //define the length on bytes of the GNR serial number.
 #define GNR_INFO_SERIAL_LENGTH     12 
-
+//define the length off bytes in the GNR serial Header "EPC"
+#define GNR_INFO_SERIAL_HEADER_LENGTH     3 
 //define the length on bytes of the GNR serial number.
 #define GNR_DFUPACK_VERSION_LENGTH  4 
+
+/******External FLash address to store the serial **********************/
+
+#define EXT_FLASH_OTP_SERIAL_ADDRESS MX25L3233F_OTP_START_ADDRESS
+
 
 /*********************************************
           Data Struct Definition
@@ -36,10 +42,10 @@
 //in the data flash.
 typedef struct 
 {
-    uint8_t  Gnr_DfuPackVersion[4];
-    uint8_t  Gnr_serialNumber[12];
-    DataFlash_Handle_t *pDataFlash_Handle;
-    
+    uint8_t  Gnr_DfuPackVersion[GNR_DFUPACK_VERSION_LENGTH];
+    uint8_t  Gnr_serialNumber[GNR_INFO_SERIAL_LENGTH];
+    DataFlash_Handle_t * pDataFlash_Handle;
+    EFlash_Storage_Handle_t * pEFlashStorageHandle;
 }GnrInfoHandle_t;
 
 //========================= EXTERN TYPES ==========================//
@@ -55,8 +61,8 @@ typedef struct
 *        data flash init.
 * @return void
 */
-void GnrInfo_Read(DataFlash_Handle_t * pDataFlashHandle);
-
+void GnrInfo_Init(DataFlash_Handle_t * pDataFlashHandle, 
+                  EFlash_Storage_Handle_t * pEFlashStorageHandle);
 /**
 * @brief Function used to read GNR serial number from the data flash.
 * @param none

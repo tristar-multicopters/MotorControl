@@ -32,6 +32,12 @@
 #define MX25L3233F_PAGE_SIZE                   ((uint32_t) 256)                    /* 256 Bytes per page */
 #define MX25L3233F_SECURE_OTP_SIZE             ((uint32_t)   4 * 1024 / 8)         /*!< 4K-bit => Bytes secured OTP */
 
+/* Device One time programmable (OTP) serial address *************/
+
+#define MX25L3233F_CLEAR_VALUE     0xFF
+#define MX25L3233F_OTP_END_ADDRESS 0x01FF
+#define MX25L3233F_OTP_START_ADDRESS 0x0000
+
 /**
   * MX25L3233F Configuration
   * CS# Deselect Time :
@@ -191,7 +197,7 @@ typedef enum
 
 typedef struct
 {
-  uint32_t FlashSize;            /*!< Size of the flash */
+  uint32_t FlashSize;           /*!< Size of the flash */
   uint32_t EraseSectorSize;     /*!< Size of sectors for the erase operation */
   uint32_t EraseSectorsNumber;  /*!< Number of sectors for the erase operation */
   uint32_t ProgPageSize;        /*!< Size of pages for the program operation */
@@ -288,6 +294,22 @@ int32_t MX25L3233F_ResetEnable(MX25_Handle_t *pHandle);
   * @retval SPI memory status
   */
 int32_t MX25L3233F_ResetMemory(MX25_Handle_t *pHandle);
+
+/**
+  * @brief  Flash Enter One time programmable memory
+  * @param  MX25_Handle_t : MX25 driver handler
+  * @retval SPI memory status
+  */
+
+int32_t MX25L3233F_EnterOTP(MX25_Handle_t *pHandle);
+
+/**
+  * @brief  Flash Exit One time programmable memory
+  * @param  MX25_Handle_t : MX25 driver handler
+  * @retval SPI memory status
+  */
+
+int32_t MX25L3233F_ExitOTP(MX25_Handle_t *pHandle);
 
 #endif /*__MX25L3233F_DRIVER_H*/
 
