@@ -27,8 +27,8 @@
 
 /************* Temperature and Overcurrent Protection Parameters *************/
 
-#define OV_TEMP_CONTROLLER_THRESHOLD_C  75         // Heatsink overtemperature threshold before thermal shutdown. Celsius degrees               //NEEDS TO BE VERIFIED
-#define OV_TEMP_CONTROLLER_HYSTERESIS_C 15         // Heatsink overtemperature hysteresis after a thermal shutdown occurred. Celsius degrees    //NEEDS TO BE VERIFIED
+#define OV_TEMP_CONTROLLER_THRESHOLD_C  90         // Heatsink overtemperature threshold before thermal shutdown. Celsius degrees   
+#define OV_TEMP_CONTROLLER_HYSTERESIS_C 15         // Heatsink overtemperature hysteresis after a thermal shutdown occurred. Celsius degrees
 
 
 /************* Switching Parameters *************/
