@@ -48,7 +48,7 @@
 #define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP  1       // (nbP1 in the graph)  
     
 //cadence detection windows on ms when starting to use the pedal
-#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 500  // (TW1 in the graph)         
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 1000  // (TW1 in the graph)         
 
 // Minimum Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running 
 #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING  1     // (nbP2 in the graph) 
