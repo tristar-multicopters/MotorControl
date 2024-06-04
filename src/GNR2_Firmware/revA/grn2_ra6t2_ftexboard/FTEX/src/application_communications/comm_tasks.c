@@ -84,6 +84,8 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint16_t hBusVoltage;
     int16_t configMotorRpm;
     int16_t configMotorRpmWithGearRatio;
+    int16_t hPhaseCurrentSensor1;
+    int16_t hPhaseCurrentSensor2;
     // Read and write
     uint8_t  bPAS[2];
     uint8_t  hWheelDiameter[2];
@@ -102,18 +104,20 @@ static void UpdateObjectDictionnary(void *p_arg)
     //only master can access theses parameters.
     if (VcAutodeter_GetGnrState())
     {
-        hSpeed        = (uint8_t) CanVehiInterface_GetVehicleSpeed(pVCI);
-        hSpeedDec     = CanVehiInterface_GetVehicleSpeedDec(pVCI);
-        hDCPWR        = CanVehiInterface_GetVehicleDCPower(pVCI);
-        hTorque       = CanVehiInterface_GetVehicleTorque(pVCI);
-        hPWR          = CanVehiInterface_GetVehiclePower(pVCI);
-        hMaxDCPwr     = CanVehiInterface_GetMaxDCPWR(pVCI);
-        hMotorTemp    = CanVehiInterface_GetMotorTemp(pVCI);
-        hHeatsinkTemp = CanVehiInterface_GetControllerTemp(pVCI);
-        bSOC          = CanVehiInterface_GetVehicleSOC(pVCI);
-        hErrorState   = CanVehiInterface_GetVehicleCurrentFaults(pVCI);
-        hBusVoltage   = CanVehiInterface_GetBusVoltage(pVCI);
-        hBrakeStatus  = CanVehiInterface_GetBrakeStatus(pVCI);
+        hSpeed               = (uint8_t) CanVehiInterface_GetVehicleSpeed(pVCI);
+        hSpeedDec            = CanVehiInterface_GetVehicleSpeedDec(pVCI);
+        hDCPWR               = CanVehiInterface_GetVehicleDCPower(pVCI);
+        hTorque              = CanVehiInterface_GetVehicleTorque(pVCI);
+        hPWR                 = CanVehiInterface_GetVehiclePower(pVCI);
+        hMaxDCPwr            = CanVehiInterface_GetMaxDCPWR(pVCI);
+        hMotorTemp           = CanVehiInterface_GetMotorTemp(pVCI);
+        hHeatsinkTemp        = CanVehiInterface_GetControllerTemp(pVCI);
+        bSOC                 = CanVehiInterface_GetVehicleSOC(pVCI);
+        hErrorState          = CanVehiInterface_GetVehicleCurrentFaults(pVCI);
+        hBusVoltage          = CanVehiInterface_GetBusVoltage(pVCI);
+        hBrakeStatus         = CanVehiInterface_GetBrakeStatus(pVCI);
+        hPhaseCurrentSensor1 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(pVCI, CURRENT_SENSOR_1);
+        hPhaseCurrentSensor2 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(pVCI, CURRENT_SENSOR_2);
         
         configMotorRpm = UserConfigTask_GetMotorRpm(pVCI);
         configMotorRpmWithGearRatio = UserConfigTask_GetMotorRpmWithGearRatio(pVCI);
@@ -513,7 +517,10 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_BRAKE, 0)), pNode, &hBrakeStatus, sizeof(uint8_t));
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_RPM, 0)),      pNode, &configMotorRpm, sizeof(int16_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_RPM, 1)),      pNode, &configMotorRpmWithGearRatio, sizeof(int16_t));           
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_RPM, 1)),      pNode, &configMotorRpmWithGearRatio, sizeof(int16_t));
+
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SENSOR_CURRENT, 0)), pNode, &hPhaseCurrentSensor1, sizeof(int16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SENSOR_CURRENT, 1)), pNode, &hPhaseCurrentSensor2, sizeof(int16_t));          
             
             //Update pasLevelMinTorque
             CanVehiInterface_GetPasLevelMinTorque(&VCInterfaceHandle, pasLevelMinTorque);

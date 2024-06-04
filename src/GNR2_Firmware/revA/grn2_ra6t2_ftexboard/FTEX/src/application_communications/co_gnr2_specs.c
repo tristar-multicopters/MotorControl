@@ -220,6 +220,11 @@ uint32_t wObjDataMotor2CurrentErrorsNow     = 0;
 uint32_t wObjDataMotor2OccurredErrors       = 0;
 uint32_t wObjDataMotor2Warnings             = 0;
 
+//variable associated with CO_OD_REG_MOTOR_SENSOR_CURRENT subindex 0
+int16_t  hObjPhaseCurrentSensor1            = 0;
+//variable associated with CO_OD_REG_MOTOR_SENSOR_CURRENT subindex 1
+int16_t  hObjPhaseCurrentSensor2            = 0;
+
 uint8_t  bObjDataMotor1Start                = 0;
 int16_t  hObjDataMotor1TorqRef              = 0;
 uint8_t  bObjDataMotor1FaultAck             = 0;
@@ -1712,6 +1717,15 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             // Application - Motor occurred faults of slave 1
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_FAULTS, 9, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&wObjDataMotor2OccurredFaults};        
+            //move to next OD index
+            index++;
+
+            // Application - Motor current measurement from sensor 1
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_SENSOR_CURRENT, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjPhaseCurrentSensor1};        
+            //move to next OD index
+            index++;
+            // Application - Motor current measurement from sensor 2
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_SENSOR_CURRENT, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjPhaseCurrentSensor2};        
             //move to next OD index
             index++;
         

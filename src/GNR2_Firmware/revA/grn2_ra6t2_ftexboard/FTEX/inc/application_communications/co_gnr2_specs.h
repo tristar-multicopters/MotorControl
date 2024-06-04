@@ -208,6 +208,13 @@ extern "C" {
     // 9 -> motor occurred critical faults slave
 #define CO_OD_REG_MOTOR_FAULTS                 0x200E
 
+//OD ID used to read sensor current values.
+// this object has 2 subindex 
+//
+// 0 -> Current value from sensor 1.
+// 1 -> Current value from sensor 2.
+#define CO_OD_REG_MOTOR_SENSOR_CURRENT         0x200F
+
 #define CO_OD_REG_MOTOR_TORQUE_REF             0x2010
 #define CO_OD_REG_MOTOR_START                  0x2011
 #define CO_OD_REG_FAULT_ACK                    0x2012

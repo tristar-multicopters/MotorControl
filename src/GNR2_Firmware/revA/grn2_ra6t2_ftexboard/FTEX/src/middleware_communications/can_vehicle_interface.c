@@ -18,8 +18,6 @@
 #include "user_config_task.h"
 #pragma clang diagnostic pop
 
-
-
 bool CANScreenSetup = false;
 
 // ==================== Public function prototypes ======================== //
@@ -250,7 +248,6 @@ void CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aSta
 {
     ASSERT(pHandle!= NULL);
     
-
     if(aState)
     {        
         Light_Enable(pHandle->pPowertrain->pHeadLight);
@@ -403,4 +400,68 @@ void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAl
 uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle)
 {
     return PWRT_GetBusVoltagex100(pHandle->pPowertrain);
+}
+
+/**
+  Get the RMS current read on a phase current sensor
+ */
+int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uint8_t sensorNumber)
+{
+    static int16_t sensor1Values[SENSOR_VALUES_BUFFER_SIZE] = { 0 };
+    static int16_t sensor2Values[SENSOR_VALUES_BUFFER_SIZE] = { 0 };
+    static int16_t sensor1CurrentPeak = 0;
+    static int16_t sensor2CurrentPeak = 0;
+    static uint8_t bufferValueIndex = 0;
+
+    // Get current peak current per sensor
+    ab_t currentAB = MCInterface_GetIab(pHandle->pPowertrain->pMDI->pMCI);
+
+    // Fill values if buffer is not full
+    if(bufferValueIndex < SENSOR_VALUES_BUFFER_SIZE - 1)
+    {
+        sensor1Values[bufferValueIndex] = currentAB.a;
+        sensor2Values[bufferValueIndex] = currentAB.b;
+        bufferValueIndex++;
+    }
+
+    if(bufferValueIndex == SENSOR_VALUES_BUFFER_SIZE - 1)
+    {
+        // Remove previous maximums
+        sensor1CurrentPeak = 0;
+        sensor2CurrentPeak = 0;
+
+        // Find the maximum peak detected within value buffers
+        for(uint8_t i = 0; i < SENSOR_VALUES_BUFFER_SIZE; i++)
+        {
+            if(abs(sensor1Values[i]) > sensor1CurrentPeak)
+            {
+                sensor1CurrentPeak = (int16_t)abs(sensor1Values[i]);
+            }
+
+            if(abs(sensor2Values[i]) > sensor2CurrentPeak)
+            {
+                sensor2CurrentPeak = (int16_t)abs(sensor1Values[i]);                
+            }
+        } 
+
+        // Reset values buffer
+        bufferValueIndex = 0;
+    }
+
+    // Return the RMS currents with 2 decimals precision
+    if(sensorNumber == CURRENT_SENSOR_1)
+    {
+        // Convert the digital current value to real AMP value
+        double currentPeakValue1 = ((sensor1CurrentPeak/DIGITAL_CURRENT_VALUE_MAX) * ANALOG_CURRENT_VALUE_MAX * AMPERE_TIMES_100);
+        // Return the RMS value, formatted in int16_t
+        return (int16_t)(currentPeakValue1/sqrt(2));
+    } 
+    if(sensorNumber == CURRENT_SENSOR_2)
+    {
+        // Convert the digital current value to real AMP value
+        double currentPeakValue2 = ((sensor2CurrentPeak/DIGITAL_CURRENT_VALUE_MAX) * ANALOG_CURRENT_VALUE_MAX * AMPERE_TIMES_100);
+        // Return the RMS value, formatted in int16_t
+        return (int16_t)(currentPeakValue2/sqrt(2));
+    } 
+    return (int16_t)0;
 }

@@ -39,10 +39,16 @@
 
 
 /* Other definitions */
-#define BYTE_1_INDEX         1      /**< Index of Byte 1 of the data frame in a CAN message */
-#define BYTE_4_INDEX         4      /**< Index of Byte 4 of the data frame in a CAN message */
-#define MAX_DATA_IN_INIT     4      /**< Maxime data to send in a reply init                */
-#define MAX_DATA_IN_SEG      8      /**< Maxime data to send in a reply segment             */
+#define BYTE_1_INDEX                1      /**< Index of Byte 1 of the data frame in a CAN message */
+#define BYTE_4_INDEX                4      /**< Index of Byte 4 of the data frame in a CAN message */
+#define MAX_DATA_IN_INIT            4      /**< Maxime data to send in a reply init                */
+#define MAX_DATA_IN_SEG             8      /**< Maxime data to send in a reply segment             */
+#define CURRENT_SENSOR_1            1      /**< Current sensor 1                                   */
+#define CURRENT_SENSOR_2            2      /**< Current sensor 2                                   */
+#define SENSOR_VALUES_BUFFER_SIZE   128    /**< Buffer size used for sensor current samples        */
+#define DIGITAL_CURRENT_VALUE_MAX   65535  /**< Maximum possible value for digital current         */
+#define ANALOG_CURRENT_VALUE_MAX    327.67 /**< Maximum possible value for analog current          */
+#define AMPERE_TIMES_100            100    /**< Factor to multiply current value by 100            */
 
 // ==================== Public function prototypes ========================= //
 
@@ -270,5 +276,13 @@ void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAl
   @return bus voltage
  */
 uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle);
+
+/**
+  @brief Get the RMS current read on a phase current sensor 
+  @param  pHandle: handle of the vehicle
+  @param  sensorNumber : Sensor selected, 1 for sensor 1, 2 for sensor 2
+  @return Average RMS current read on sensor
+ */
+int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uint8_t sensorNumber);
 
 #endif /* __CAN_IOT_COMM_H */
