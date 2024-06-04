@@ -38,17 +38,17 @@
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
 #define PTS_OFFSET_PTS2TORQUE_STARTUP       10              // (T1 in the graph) Offset for pedal torque sensor to torque linear transformation during the startup in %
 
-#define PTS_OFFSET_STARTUP_SPEED_KMH         3              // (Speed A in the graph) Speed under which the Startup pedal torque sensor offset is used in km/h 
+#define PTS_OFFSET_STARTUP_SPEED_KMH         0              // (Speed A in the graph) Speed under which the Startup pedal torque sensor offset is used in km/h 
 
 #define PTS_OFFSET_PTS2TORQUE                1             // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
 
 
 // Minimum Number of pulse, inside a specific time, to the detect PAS on cadence
-#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP  1       // (nbP1 in the graph)  
+#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP  2      // (nbP1 in the graph)  
     
 //cadence detection windows on ms when starting to use the pedal
-#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 1000  // (TW1 in the graph)         
+#define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 700  // (TW1 in the graph)         
 
 // Minimum Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running 
 #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING  1     // (nbP2 in the graph) 
