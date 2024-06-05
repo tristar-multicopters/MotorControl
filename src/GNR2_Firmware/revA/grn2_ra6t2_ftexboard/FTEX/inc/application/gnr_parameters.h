@@ -71,7 +71,7 @@
 #define FIRMWARE_RELEASE              0
 
 
-#define VEHICLE_SELECTION             VEHICLE_VELEC21_500W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_SUPER73_Z     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
                                                            

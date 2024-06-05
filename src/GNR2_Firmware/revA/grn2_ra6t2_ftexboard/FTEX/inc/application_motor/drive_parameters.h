@@ -231,9 +231,9 @@
 
 /****** Phase Wire Disconnection Detection *******/
 #define CURRENT_AVG_WIN_SIZE            32          // the moving average window size
-#define PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE 1000      // The time to wait and check before raising the error
+#define PHASE_WIRE_DISCONNECT_WAIT_MCCYCLE 3000      // The time to wait and check before raising the error
 #define PHASE_DISC_OFFSET               300         // Offset to check for phase wire disconnection error, in digital current
-#define MIN_PHASE_DISC_VALUE            100         // If current on one phase is under this value for a certain period of time,
+#define MIN_PHASE_DISC_VALUE            120         // If current on one phase is under this value for a certain period of time,
                                                     // raise the error. In digital current
 #define PHASE_DISC_DIVISOR              5           // If current on one phase is under a fifth of other phase currents, raise the error
 
