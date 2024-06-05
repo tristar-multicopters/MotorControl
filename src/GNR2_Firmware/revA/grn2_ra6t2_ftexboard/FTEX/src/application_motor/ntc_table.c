@@ -49,7 +49,7 @@ int32_t NTCControllerTemperatureTable[NTC_CONTROLLER_LUT_SIZE] =        //revise
 #if MOTOR_SELECTION == MOTOR_AKM_128SX_750W
 
 int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
-{                                                                   //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
+{                                                             //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
     144,
     104,
     90,
@@ -93,7 +93,7 @@ int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calc
 #elif MOTOR_SELECTION == MOTOR_NIDEC_B900_V3
 
 int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
-{                                                                                                                                     //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
+{                                                             //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
     150,
     113,
     96,
@@ -137,7 +137,7 @@ int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calc
 #elif MOTOR_SELECTION == MOTOR_AKM_128SX_500W
 
 int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
-{                                                                   //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
+{                                                             //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
     144,
     104,
     90,
@@ -176,6 +176,50 @@ int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calc
     -22,
     -28,
     -34,
+};
+
+#elif (MOTOR_SELECTION == MOTOR_SUPER73_500W || MOTOR_SELECTION == MOTOR_SUPER73_1200W)
+
+int32_t NTCMotorTemperatureTable[NTC_MOTOR_LUT_SIZE] =        //function to calculate temperature values of the motor
+{                                                             //table calculated here: https://docs.google.com/spreadsheets/d/1fEv8Z7ZyeggrdsOoPRL44zLIx-ng7lT2qx_m4sxkFug/edit#gid=0
+    128,
+    104,
+    91,
+    81,
+    74,
+    67,
+    62,
+    58,
+    54,
+    50,
+    47,
+    44,
+    41,
+    38,
+    35,
+    33,
+    30,
+    28,
+    26,
+    23,
+    21,
+    19,
+    17,
+    14,
+    12,
+    10,
+    8,
+    5,
+    3,
+    0,
+    -3,
+    -6,
+    -9,
+    -13,
+    -17,
+    -22,
+    -29,
+    -38,
 };
 
 #else 
