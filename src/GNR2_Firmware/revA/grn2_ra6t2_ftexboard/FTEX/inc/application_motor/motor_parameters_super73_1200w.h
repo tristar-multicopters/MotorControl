@@ -38,7 +38,7 @@ These variables are used to configure the motor within the smart config tool.
 #define MOTOR_VOLTAGE_CONSTANT              28.84f              // Volts RMS ph-ph /kRPM
 #define ST_TORQUE_COEF                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps             70                  // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps             100                 // peak current in amps
 
 /************************** Power Limit Parameters ************************/
 
@@ -49,7 +49,7 @@ These variables are used to configure the motor within the smart config tool.
 #define MAX_APPLICATION_SPEED_RPM           4000                // Max speed for the current application in mechanical rpm
 
 #define ENABLE_SPEED_LIMIT_CONTROL          true                // Enable or disable speed limit control
-#define PID_SPEED_KP_DEFAULT                40                  // Default gain for speed control loop
+#define PID_SPEED_KP_DEFAULT                110                 // Default gain for speed control loop
 #define PID_SPEED_KI_DEFAULT                4                   // Default gain for speed control loop
 #define SP_KIDIV                            4096                // Speed control gain divider, to allow decimal value
 #define SP_KIDIV_LOG                        LOG2(4096)          // Speed control gain divider log2, to allow decimal value
