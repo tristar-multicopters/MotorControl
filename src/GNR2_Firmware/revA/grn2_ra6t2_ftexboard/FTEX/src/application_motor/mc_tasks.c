@@ -53,11 +53,11 @@ void MC_ConfigureMotorTuner(void);
 #define DEFAULT_TEMP_MOTOR 0xFFF
 #define DEFAULT_TEMP_CONTROLLER 0x000
 #if OCDX_POEG == OCD1_POEG
-    #define OCD2_MAX 4
+    #define OCD2_MAX 10
 #elif OCDX_POEG == OCD2_POEG
     #define OCD2_MAX 7
 #endif
-#define OCD2_TRIGGER_ERROR 3
+#define OCD2_TRIGGER_ERROR 7
 #define OCD2_CHECK_RESET 10000 //~10 secs
 #define DRIVER_TIMER 10000 //~.5 secs
 
@@ -1099,7 +1099,8 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     
     CodeReturnCriticalFaults |= PWMCurrFdbk_CheckOverCurrent(pPWMCurrFdbk[bMotor]);               /* check for fault. It return MC_OCD1, MC_OCD2 or MC_NO_FAULT
                                                                                     (for STM32F30x can return MC_OVER_VOLT in case of HW Overvoltage) */
-    #if OCDX_POEG == OCD1_POEG
+    
+    #if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
         if (RegisterIsOCD2OccurredCallBack(pPWMCurrFdbk[bMotor]))
         {
             //if OCD2 is triggered more than OCD2_TRIGGER_ERROR, report the error and increase the # of times the error has been triggered
@@ -1315,6 +1316,7 @@ void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle)
  * @param  pHandle pointer on the handle structure of the FOCVars
  * @retval bool: true if diconnection detected,
 **/
+
 bool IsPhaseCableDisconnected(FOCVars_t * pHandle)
 {
     static uint16_t Timer_Disc, Timer_Conn;

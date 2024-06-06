@@ -352,7 +352,7 @@ uint32_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl
   return retVal;
 }
 
-#if OCDX_POEG == OCD1_POEG
+#if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
 /**
   * @brief  It is used to check if OCD2 occurred since last call.
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component

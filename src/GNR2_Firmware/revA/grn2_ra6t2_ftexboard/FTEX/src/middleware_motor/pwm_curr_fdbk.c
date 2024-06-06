@@ -214,7 +214,7 @@ uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle)
 /*
     Check if OCD2 occurred since last call.
 */
-#if OCDX_POEG == OCD1_POEG
+#if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
 uint32_t RegisterIsOCD2OccurredCallBack(PWMCurrFdbkHandle_t * pHandle)
 {
     uint32_t retVal = 0;  

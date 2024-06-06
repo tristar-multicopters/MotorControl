@@ -39,7 +39,7 @@ extern void PWREN_TurnoffSlaveTask (void * pvParameter);
 static bool ADCInit(void);
 static bool GPTInit(void);
 
-#if HARDWARE_OCD2 == OCD2_ENABLED
+#if HARDWARE_OCD2 == OCD2_ENABLED || OCDX_POEG == OCD1_POEG
 static bool POEGInit(void); //please read the describtion on function definition before enablenig this
 #endif
 static bool DACInit(void);
@@ -140,7 +140,7 @@ void gnr_main(void)
     /* Hardware initialization */
     ADCInit();
     GPTInit();
-#if HARDWARE_OCD2 == OCD2_ENABLED
+#if HARDWARE_OCD2 == OCD2_ENABLED || OCDX_POEG == OCD1_POEG
     POEGInit(); //Read the describtion on the Function before enabling it
 #endif
     DACInit();
@@ -375,7 +375,7 @@ static bool GPTInit(void)
 6- Use the R_POEG_Open() function to bring back the PWM signal after error is handled
 */
 
-#if HARDWARE_OCD2 == OCD2_ENABLED
+#if HARDWARE_OCD2 == OCD2_ENABLED || OCDX_POEG == OCD1_POEG
 static bool POEGInit(void)
 {
     bool bIsError = false;

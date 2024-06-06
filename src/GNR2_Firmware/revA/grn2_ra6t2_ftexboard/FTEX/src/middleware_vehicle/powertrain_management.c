@@ -926,7 +926,7 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
         VC_Errors_ClearError(OVERCURRENT_COUNTER);
     }
     
-    #if OCDX_POEG == OCD1_POEG
+    #if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
         //if OCD2 error occurs, raise to vc layer
         if ((wErrorOccurred & MC_OCD2) != MC_NO_WARNING)
         {

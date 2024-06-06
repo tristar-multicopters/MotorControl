@@ -103,7 +103,7 @@ extern "C" {
  ** @{
  */
 #define  MC_NO_ERROR                (uint32_t)(0x00000000u)     /**< @brief No error.*/
-#if OCDX_POEG == OCD1_POEG
+#if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
     #define  MC_OCD2                    (uint32_t)(0x00000001u) /**< @brief Error: Emergency input (Over current detection 2).*/
 #endif
 #define  MC_OCSP                    (uint32_t)(0x00000002u)     /**< @brief Error: Overcurrent software protection.*/

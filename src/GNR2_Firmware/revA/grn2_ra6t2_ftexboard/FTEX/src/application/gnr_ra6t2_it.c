@@ -16,6 +16,7 @@
 #include "mc_tasks.h"
 #include "firmware_update.h"
 #include "motor_signal_processing.h"
+#include "pwm_common.h"
 
 /**
   * @brief  Interrupt routine of ADC hardware.
@@ -64,7 +65,7 @@ void OvercurrentInterrupt_IRQHandler(external_irq_callback_args_t * p_args)
 {
     if(NULL != p_args)
     {
-        
+                
         #if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
             
             /* Run motor control PWM break routine */
@@ -89,10 +90,13 @@ void OvercurrentInterrupt_IRQHandler(external_irq_callback_args_t * p_args)
   */
 void OvercurrentPOEG_IRQHandler(poeg_callback_args_t * p_args)
 {
+        
     if(NULL != p_args)
     {
         #if OCDX_POEG == OCD1_POEG
-        
+            
+            /* Disable the driver */
+            Driver_Disable(&MCInterface->bDriverEn);
             /* Switch off PWM */
             MC_PWM_OFF_M1();
             /* Run motor control PWM break routine */

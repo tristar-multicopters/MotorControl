@@ -123,7 +123,7 @@ struct PWMCurrFdbkHandle
     PWMCurrFdbk_Generic_Cb_t                        pFctTurnOnLowSides;          /**< pointer on the function the component instance uses to turn low sides on */
     PWMCurrFdbk_SetSampPointSectX_Cb_t              pFctSetADCSampPointSectX;    /**< pointer on the function the component instance uses to set the ADC sampling point  */
     PWMCurrFdbk_OverCurr_Cb_t                       pFctIsOverCurrentOccurred;   /**< pointer on the function the component instance uses to return the over current status */
-    #if OCDX_POEG == OCD1_POEG
+    #if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
         PWMCurrFdbk_OverCurr_Cb_t                       pFctOCD2Occurred;   	         /**< pointer on the function the component instance uses to return the over current status */
     #endif
     PWMCurrFdbk_Generic_Cb_t                        pFctRLDetectionModeEnable;   /**< pointer on the function the component instance uses to enable RL detection mode */
@@ -388,7 +388,7 @@ void PWMCurrFdbk_RegisterIsOverCurrentOccurredCallBack(PWMCurrFdbk_OverCurr_Cb_t
  * @param pHandle pointer on the handle structure of the PWMC instance
  *
  */
-#if OCDX_POEG == OCD1_POEG
+#if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
 uint32_t RegisterIsOCD2OccurredCallBack(PWMCurrFdbkHandle_t * pHandle);
 #endif
 
