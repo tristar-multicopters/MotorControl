@@ -510,6 +510,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_super73_s.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_s.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
@@ -2695,6 +2700,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_super73_s.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_s.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
@@ -4827,6 +4837,11 @@
               <FileName>vc_parameters_r48_750w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>vc_parameters_super73_s.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_s.h</FilePath>
             </File>
             <File>
               <FileName>vc_parameters_super73_z.h</FileName>
@@ -7014,6 +7029,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_super73_s.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_s.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
@@ -9199,6 +9219,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_super73_s.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_s.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
@@ -11333,6 +11358,11 @@
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_r48_750w.h</FilePath>
             </File>
             <File>
+              <FileName>vc_parameters_super73_s.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_s.h</FilePath>
+            </File>
+            <File>
               <FileName>vc_parameters_super73_z.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_vehicle\vc_parameters_super73_z.h</FilePath>
@@ -13085,7 +13115,7 @@
           <targetInfo name="APP_UPLOAD(JUST UPLOAD)_512K"/>
         </targetInfos>
       </component>
-      <component Capiversion="2.1.3" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.5.4" condition="RTOS2 RTX5">
+      <component Capiversion="1.0.0" Cclass="CMSIS" Cgroup="RTOS" Csub="Keil RTX5" Cvendor="ARM" Cversion="5.5.4" condition="RTOS RTX5">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>
@@ -13096,7 +13126,7 @@
           <targetInfo name="APP_UPLOAD(JUST UPLOAD)_512K"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cclass="CMSIS" Cgroup="RTOS" Csub="Keil RTX5" Cvendor="ARM" Cversion="5.5.4" condition="RTOS RTX5">
+      <component Capiversion="2.1.3" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.5.4" condition="RTOS2 RTX5">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>

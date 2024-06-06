@@ -67,6 +67,10 @@
 
 #include "vc_parameters_super73_z.h"
 
+#elif VEHICLE_SELECTION == VEHICLE_SUPER73_S
+
+#include "vc_parameters_super73_s.h"
+
 #elif VEHICLE_SELECTION == VEHICLE_VELEC_CITI_500W
 
 #include "vc_parameters_velec_citi_500w.h"
