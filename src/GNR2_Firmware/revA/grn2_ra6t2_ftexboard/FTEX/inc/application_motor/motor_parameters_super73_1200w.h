@@ -65,7 +65,7 @@ These variables are used to configure the motor within the smart config tool.
 #define PID_FLUX_KP_DEFAULT                 100                 // Default gain if adaptive gain feature is not used
 #define PID_FLUX_KI_DEFAULT                 1000                // Default gain if adaptive gain feature is not used
 
-#define FLUX_WEAKENING_ENABLE               false               // enable or disable flux weakening
+#define FLUX_WEAKENING_ENABLE               true               // enable or disable flux weakening
 #define FLUX_DIRECTION                      -1                  // direction of demagnetization current  1 clockwise, -1 counter clockwise
 /************************** Ramp Manager Parameters  ************************/
 
@@ -103,17 +103,17 @@ These variables are used to configure the motor within the smart config tool.
 
 /************** Current and Speed PID Parameters  *****************************/
 
-#define IQ_KP_VS_SPEED_1                    68
-#define IQ_KP_VS_SPEED_2                    68
+#define IQ_KP_VS_SPEED_1                    300
+#define IQ_KP_VS_SPEED_2                    300
 
-#define IQ_KI_VS_SPEED_1                    10
-#define IQ_KI_VS_SPEED_2                    10
+#define IQ_KI_VS_SPEED_1                    200
+#define IQ_KI_VS_SPEED_2                    200
 
-#define ID_KP_VS_SPEED_1                    53
-#define ID_KP_VS_SPEED_2                    53
+#define ID_KP_VS_SPEED_1                    300
+#define ID_KP_VS_SPEED_2                    300
 
-#define ID_KI_VS_SPEED_1                    10
-#define ID_KI_VS_SPEED_2                    10
+#define ID_KI_VS_SPEED_1                    200
+#define ID_KI_VS_SPEED_2                    200
 
 
 #endif /* __MOTOR_PARAMETERS_SUPER73_1200W_H */
