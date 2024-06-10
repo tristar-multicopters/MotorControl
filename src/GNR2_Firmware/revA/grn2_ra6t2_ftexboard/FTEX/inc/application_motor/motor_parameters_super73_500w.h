@@ -73,7 +73,7 @@ These variables are used to configure the motor within the smart config tool.
 /************************** Ramp Manager Parameters  ************************/
 
 #define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second
-#define DEFAULT_TORQUE_SLOPE_DOWN           10000               // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_DOWN           5000               // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP              10000               // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN            10000               // Slope in #SPEED_UNIT per second
 
@@ -106,17 +106,17 @@ These variables are used to configure the motor within the smart config tool.
 
 /************** Current and Speed PID Parameters  *****************************/
 
-#define IQ_KP_VS_SPEED_1                    106
-#define IQ_KP_VS_SPEED_2                    106
+#define IQ_KP_VS_SPEED_1                    60
+#define IQ_KP_VS_SPEED_2                    60
 
-#define IQ_KI_VS_SPEED_1                    10
-#define IQ_KI_VS_SPEED_2                    10
+#define IQ_KI_VS_SPEED_1                    20
+#define IQ_KI_VS_SPEED_2                    20
 
-#define ID_KP_VS_SPEED_1                    105
-#define ID_KP_VS_SPEED_2                    105
+#define ID_KP_VS_SPEED_1                    50
+#define ID_KP_VS_SPEED_2                    50
 
-#define ID_KI_VS_SPEED_1                    10
-#define ID_KI_VS_SPEED_2                    10
+#define ID_KI_VS_SPEED_1                    20
+#define ID_KI_VS_SPEED_2                    20
 
 
 #endif /* __MOTOR_PARAMETERS_SUPER73_500W_H */
