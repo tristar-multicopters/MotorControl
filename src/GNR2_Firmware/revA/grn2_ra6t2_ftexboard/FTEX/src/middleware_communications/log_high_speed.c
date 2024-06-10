@@ -201,8 +201,7 @@ void LogHS_LogMotorVals(LogHighSpeed_Handle_t *pHandle)
             (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][3] = FOCCopy->Iqd.q;    // Iq Actual 
             (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][4] = FOCCopy->Iqdref.d; // Id target 
             (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][5] = FOCCopy->Iqdref.q; // Iq target 
-            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][6] = pHandle->pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit
-; //FOCCopy->hElAngle; // Electrical position    
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][6] = pHandle->pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit; //FOCCopy->hElAngle; // Electrical position    
             (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][7] = (int16_t)pHandle->pVController->pStateMachine->hVFaultOccurred; // Fault    
 
             if (pHandle->LogHSBufferIndex >= LOGHS_NB_SAMPLE_POINT-1)

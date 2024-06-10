@@ -836,6 +836,7 @@ void Comm_BootUp(void)
             break; 
         case UART_LOG_HS:
             LogHS_Init(&LogHS_handle, &VCInterfaceHandle, &UART0Handle);
+            break;
         case UART_DISABLE:
             // If we don;t use the UART assume we have a CAN screen
             CanVehiInterface_SetupCANScreen(&VCInterfaceHandle);
