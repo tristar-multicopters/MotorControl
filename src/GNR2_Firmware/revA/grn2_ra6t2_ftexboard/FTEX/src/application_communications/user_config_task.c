@@ -680,7 +680,7 @@ void UserConfigTask_UpdatePasCadenceStartupWindows(uint16_t value)
 {
     //verify if value is in the range.
     //range on ms.
-    if((value >= 200) && (value <= 10000))
+    if((value >= 100) && (value <= 10000))
     {
         userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasCadenceStartupWindows = value;
     }   
@@ -1804,7 +1804,7 @@ void UserConfigTask_UpdatePasCadenceRunningWindows(uint16_t value)
 {
     //verify if value is in the range.
     //range on ms.
-    if((value >= 200) && (value <= 10000))
+    if((value >= 100) && (value <= 10000))
     {
         userConfigData.PAS_ConfigData.PAS_Running_Detection.pasCadenceRunningWindows = value;
     }   
