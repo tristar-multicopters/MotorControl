@@ -112,6 +112,8 @@ typedef struct
 
 typedef struct
 {
+    uint16_t currentPIDLutSpeed2;
+    uint16_t currentPIDLutSpeed1;
     int32_t IqKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE];
     int32_t IqKiVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE];
     int32_t IdKpVsSpeedTable[CURRENT_PID_VS_SPEED_LUT_SIZE];

@@ -819,16 +819,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
@@ -837,6 +827,16 @@
               <FileName>motor_parameters_super73_1200w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -3009,16 +3009,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
@@ -3027,6 +3017,16 @@
               <FileName>motor_parameters_super73_1200w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -5148,16 +5148,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
@@ -5166,6 +5156,16 @@
               <FileName>motor_parameters_super73_1200w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -7338,16 +7338,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
@@ -7356,6 +7346,16 @@
               <FileName>motor_parameters_super73_1200w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -9528,16 +9528,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
@@ -9546,6 +9536,16 @@
               <FileName>motor_parameters_super73_1200w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
@@ -11667,16 +11667,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
               <FileName>motor_parameters_super73_500w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
@@ -11685,6 +11675,16 @@
               <FileName>motor_parameters_super73_1200w.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
               <FileName>hardware_parameters_EP1200.h</FileName>

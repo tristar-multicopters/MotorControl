@@ -14,9 +14,6 @@
 
 #define CURRENT_PID_VS_SPEED_LUT_SIZE                 2
 
-#define CURRENT_PID_LUT_SPEED_STEP                    700
-#define CURRENT_PID_LUT_SPEED_FIRST_VALUE             300
-
 extern LookupTableHandle_t LookupTableM1IqKp;
 
 extern LookupTableHandle_t LookupTableM1IqKi;

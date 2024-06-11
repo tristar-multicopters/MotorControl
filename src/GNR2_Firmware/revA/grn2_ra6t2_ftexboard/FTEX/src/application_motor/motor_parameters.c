@@ -53,9 +53,20 @@ void MotorParameters_Init(MotorParameters_t * MotorParameters)
     NTCParameters_Init(MotorParameters);
     
     //Init Iq and Id's Kp and Ki
+    LookupTableM1IqKp.wXDataFirstValue = MotorParameters->CurrentSpeedPID.currentPIDLutSpeed1;
+    LookupTableM1IqKp.hXDataStep = MotorParameters->CurrentSpeedPID.currentPIDLutSpeed2;
     LookupTableM1IqKp.pOutputTable = MotorParameters->CurrentSpeedPID.IqKpVsSpeedTable;
+    
+    LookupTableM1IqKi.wXDataFirstValue = MotorParameters->CurrentSpeedPID.currentPIDLutSpeed1;
+    LookupTableM1IqKi.hXDataStep = MotorParameters->CurrentSpeedPID.currentPIDLutSpeed2;
     LookupTableM1IqKi.pOutputTable = MotorParameters->CurrentSpeedPID.IqKiVsSpeedTable;
+    
+    LookupTableM1IdKp.wXDataFirstValue = MotorParameters->CurrentSpeedPID.currentPIDLutSpeed1;
+    LookupTableM1IdKp.hXDataStep = MotorParameters->CurrentSpeedPID.currentPIDLutSpeed2;
     LookupTableM1IdKp.pOutputTable = MotorParameters->CurrentSpeedPID.IdKpVsSpeedTable;
+    
+    LookupTableM1IdKi.wXDataFirstValue = MotorParameters->CurrentSpeedPID.currentPIDLutSpeed1;
+    LookupTableM1IdKi.hXDataStep = MotorParameters->CurrentSpeedPID.currentPIDLutSpeed2;
     LookupTableM1IdKi.pOutputTable = MotorParameters->CurrentSpeedPID.IdKiVsSpeedTable;
 
 }

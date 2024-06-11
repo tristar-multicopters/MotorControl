@@ -96,6 +96,8 @@ MotorParameters_t MotorParameters =
     },
     .CurrentSpeedPID = 
     {
+        .currentPIDLutSpeed1 = CURRENT_PID_LUT_SPEED_1,
+        .currentPIDLutSpeed2 = CURRENT_PID_LUT_SPEED_2,
         .IqKpVsSpeedTable =
         {
             IQ_KP_VS_SPEED_1,

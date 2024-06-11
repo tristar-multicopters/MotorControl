@@ -105,6 +105,9 @@ These variables are used to configure the motor within the smart config tool.
 
 /************** Current and Speed PID Parameters  *****************************/
 
+#define CURRENT_PID_LUT_SPEED_1             250
+#define CURRENT_PID_LUT_SPEED_2             700
+
 #define IQ_KP_VS_SPEED_1                    300
 #define IQ_KP_VS_SPEED_2                    300
 
