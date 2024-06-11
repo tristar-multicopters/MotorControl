@@ -38,7 +38,7 @@
 
 #define FILTERSPEED_ARRAY_SIZE       (BW_ARRAY_SIZE - 1)
 
-#define DIGITAL33_0_7_VOLTS 13900 // Value of 0.7 volts when you have a 0-65535 digital value where 65535 = 3.3V
+#define DIGITAL33_0_25_VOLTS 4965 // Value of 0.25 volts when you have a 0-65535 digital value where 65535 = 3.3V
 #define DIGITAL5_0_8_VOLTS  10500 // Value of 0.8 volts when you have a 0-65535 digital value where 65535 = 5.0V
 
 //it need to be updated if this struct is modified : PasAlgorithm_t

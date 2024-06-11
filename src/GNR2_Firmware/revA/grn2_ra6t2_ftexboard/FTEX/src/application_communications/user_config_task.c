@@ -926,9 +926,9 @@ void UserConfigTask_UpdatePasTorqueInputMax(uint16_t value)
 {
     if (value > userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMin)
     {    
-        if (value < DIGITAL33_0_7_VOLTS)
+        if (value < DIGITAL33_0_25_VOLTS)
         {
-            value = DIGITAL33_0_7_VOLTS;
+            value = DIGITAL33_0_25_VOLTS;
         }
     
         userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMax = value;   
@@ -960,9 +960,9 @@ void UserConfigTask_UpdatePasTorqueInputMin(uint16_t value)
 {
     if (value < userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMax)
     {    
-        if (value < DIGITAL33_0_7_VOLTS)
+        if (value < DIGITAL33_0_25_VOLTS)
         {
-            value = DIGITAL33_0_7_VOLTS;
+            value = DIGITAL33_0_25_VOLTS;
         }
     
         userConfigData.PAS_ConfigData.PasSensorConfig.pasTorqueInputMin = value;   
