@@ -1,13 +1,13 @@
 /**
-  * @file    vc_parameters_super73_s.h
-  * @brief   This file contains the parameters needed in order to configure the motor of VEHICLE_SUPER73_S bike.
+  * @file    vc_parameters_super73_r.h
+  * @brief   This file contains the parameters needed in order to configure the motor of VEHICLE_SUPER73_R bike.
   *
   */
 
 /* Define to prevent recursive inclusion --- 
 ----------------------------------*/
-#ifndef __VC_PARAMETERS_SUPER73_S_H
-#define __VC_PARAMETERS_SUPER73_S_H
+#ifndef __VC_PARAMETERS_SUPER73_R_H
+#define __VC_PARAMETERS_SUPER73_R_H
 
 /******************* MOTOR SELECTION  *******************************/
 #define MOTOR_SELECTION    MOTOR_SUPER73_1200W

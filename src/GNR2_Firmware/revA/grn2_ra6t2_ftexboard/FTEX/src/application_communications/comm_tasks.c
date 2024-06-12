@@ -946,7 +946,7 @@ bool Comm_CheckIotUsage(void)
     if (VEHICLE_SELECTION == VEHICLE_NIDEC      || 
         VEHICLE_SELECTION == VEHICLE_PEGATRON   || 
         VEHICLE_SELECTION == VEHICLE_SUPER73_Z  ||
-        VEHICLE_SELECTION == VEHICLE_SUPER73_S)
+        VEHICLE_SELECTION == VEHICLE_SUPER73_R)
     {
         return false;
     }
