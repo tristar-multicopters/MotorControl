@@ -77,7 +77,7 @@ These variables are used to configure the motor within the smart config tool.
  /************************** Temp Limit Parameters  ************************/
 
 #define MOTOR_TEMP_SENSOR_TYPE              REAL_SENSOR      // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
-#define MOTOR_TEMP_MIXED                    true             // true if the motor temperature signal is mixed with wheelspeed.
+#define MOTOR_TEMP_MIXED                    false            // true if the motor temperature signal is mixed with wheelspeed.
     
 #define OV_TEMP_MOTOR_THRESHOLD_C           70               // Maximum temperature in degree C
 #define OV_TEMP_MOTOR_HYSTERESIS_C          10               // Temperature to decrease after an overtemp fault occurred before clearing the fault, in degree C
