@@ -31,41 +31,43 @@ typedef enum
   
 typedef struct
 {
-    SensorType_t  bSensorType;   /**< Type of instanced temperature.
-                                    This parameter can be REAL_SENSOR or VIRTUAL_SENSOR */
+    SensorType_t  bSensorType;           /**< Type of instanced temperature.
+                                         This parameter can be REAL_SENSOR or VIRTUAL_SENSOR */
 
     bool          bSensorMixed;
 
     RegConv_t      TempRegConv;
 
-    uint16_t hAvTempDigital;          /**< It contains latest available average temperature.
-                                    This parameter is expressed in u16Celsius */
-    int16_t hAvTempCelcius;            /**< It contains latest computation of temperature in Celcius */
+    uint16_t hAvTempDigital;             /**< It contains latest available average temperature.
+                                         This parameter is expressed in u16Celsius */
+    int16_t hAvTempCelcius;              /**< It contains latest computation of temperature in Celcius */
 
-    uint16_t hExpectedTempDigital;    /**< Default set when no sensor available (ie virtual sensor) */
+    uint16_t hExpectedTempDigital;       /**< Default set when no sensor available (ie virtual sensor) */
 
-    uint16_t hExpectedTempCelcius;    /**< Default value when no sensor available (ie virtual sensor).
-                                    This parameter is expressed in Celsius */
+    uint16_t hExpectedTempCelcius;       /**< Default value when no sensor available (ie virtual sensor).
+                                         This parameter is expressed in Celsius */
 
-    NTCTempFaultStates_t hFaultState;        /**< Contains latest Fault code.
-                                    This parameter is set to MC_OVER_TEMP or MC_NO_FAULT */
+    NTCTempFaultStates_t hFaultState;    /**< Contains latest Fault code.
+                                         This parameter is set to MC_OVER_TEMP or MC_NO_FAULT */
 
-    uint16_t hLowPassFilterBw;   /**< used to configure the first order software filter bandwidth.
-                                    hLowPassFilterBw = NTC_CalcBusReading call rate [Hz]/ FilterBandwidth[Hz] */
-    int16_t hOverTempThreshold;         /**< Represents the over voltage protection intervention threshold.
-                                      This parameter is expressed in degC */
-    int16_t hOverTempDeactThreshold;    /**< Temperature threshold below which an active over temperature fault is cleared.
+    uint16_t hLowPassFilterBw;           /**< used to configure the first order software filter bandwidth.
+                                         hLowPassFilterBw = NTC_CalcBusReading call rate [Hz]/ FilterBandwidth[Hz] */
+    int16_t hOverTempThreshold;          /**< Represents the over voltage protection intervention threshold.
                                          This parameter is expressed in degC */
-    int16_t hFoldbackStartTemp;              /**< Temperature at which the foldback starts.
+    int16_t hOverTempDeactThreshold;     /**< Temperature threshold below which an active over temperature fault is cleared.
+                                         This parameter is expressed in degC */
+    int16_t hFoldbackStartTemp;          /**< Temperature at which the foldback starts.
                                          This parameter is expressed in degC */
                                            
-    uint8_t bConvHandle;                /**< handle to the regular conversion */
+    uint8_t bConvHandle;                 /**< handle to the regular conversion */
 
-    uint16_t hTimer;                    /**< timer value used to ignore first values in initialization and to check for sensor disconnections */
-
-    LookupTableHandle_t * pNTCLookupTable;   /**< Lookup table handle with NTC data (NTC digital voltage to expected degree Celcius) */
-
-    bool *OutsideTable;                 /**< Will be set to true if the current temp value is outside the table so it defaults to the nearest value */
+    uint16_t hTimer;                     /**< timer value used to ignore first values in initialization and to check for sensor disconnections */
+    
+    uint16_t hNTCBetaCoef;               // Beta coefficient of the NTC thermistor, used for temperature calculation
+    
+    uint16_t hNTCRatedRes;               // Rated resistance of the NTC thermistor at a specific temperature (25¡ãC)
+    
+    uint8_t  bNTCSource;                 // Source identifier for the NTC sensor, indicating which NTC sensor is being used
   
 } NTCTempSensorHandle_t;
 
@@ -110,6 +112,30 @@ int16_t NTCTempSensor_GetAvTempCelcius(NTCTempSensorHandle_t * pHandle);
  * @retval Fault status : read internal fault state
  */
 uint16_t NTCTempSensor_GetFaultState(NTCTempSensorHandle_t * pHandle);
+
+/**
+ * @brief Calculate the motor temperature from the input ADC data.
+ * 
+ * This function converts the ADC input data to a temperature reading 
+ * based on the characteristics of an NTC thermistor. The calculation 
+ * uses the Beta coefficient method to determine the temperature.
+ * 
+ * @param pHandle: Pointer on Handle structure of TemperatureSensor component.
+ * @param wInputdata The raw ADC input data.
+ * @return uint16_t The calculated temperature in Celsius.
+ */
+uint16_t NTCTempSensor_CalcMotorTemp(NTCTempSensorHandle_t * pHandle, int32_t wInputdata);
+
+/**
+ * @brief Calculate the heat sink temperature from the input ADC data.
+ * This function converts the ADC input data to a temperature reading 
+ * based on the characteristics of an NTC thermistor. The calculation 
+ * uses the Beta coefficient method to determine the temperature.
+ * @param pHandle: Pointer on Handle structure of TemperatureSensor component.
+ * @param wInputdata The raw ADC input data.
+ * @return uint16_t The calculated temperature in Celsius.
+ */
+uint16_t NTCTempSensor_CalcHeatSinkTemp(NTCTempSensorHandle_t * pHandle, int32_t wInputdata);
 
 
 #ifdef __cplusplus
