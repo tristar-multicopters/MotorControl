@@ -944,9 +944,7 @@ bool Comm_CheckIotUsage(void)
     //return false to indicate that vehicle doesn't need
     //a specific functionality from IOT setup.
     if (VEHICLE_SELECTION == VEHICLE_NIDEC      || 
-        VEHICLE_SELECTION == VEHICLE_PEGATRON   || 
-        VEHICLE_SELECTION == VEHICLE_SUPER73_Z  ||
-        VEHICLE_SELECTION == VEHICLE_SUPER73_R)
+        VEHICLE_SELECTION == VEHICLE_PEGATRON)
     {
         return false;
     }
