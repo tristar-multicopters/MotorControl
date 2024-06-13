@@ -75,12 +75,16 @@ void GnrInfo_Init(DataFlash_Handle_t * pDataFlashHandle,
     //try to open flash memory
     if(uCAL_Data_Flash_Open(GnrInfoHandle.pDataFlash_Handle) == true)
     {
-        //get GNR serial number from data flash memory, on the block FLASH_HP_DF_BLOCK_2.
+        //get GNR serial number from data flash memory, in the block FLASH_HP_DF_BLOCK_2.
         uCAL_Data_Flash_Read(GnrInfoHandle.pDataFlash_Handle, GnrInfoHandle.Gnr_serialNumber, FLASH_HP_DF_BLOCK_2, GNR_INFO_SERIAL_LENGTH);
-            
+                
         //get GNR dfu pack version from data flash memory, on the block FLASH_HP_DF_BLOCK_3.
         uCAL_Data_Flash_Read(GnrInfoHandle.pDataFlash_Handle, GnrInfoHandle.Gnr_DfuPackVersion, FLASH_HP_DF_BLOCK_3, GNR_DFUPACK_VERSION_LENGTH);
+        
+        //get GNR odometer from data flash memory, in the block FLASH_HP_DF_BLOCK_49.
+        uCAL_Data_Flash_Read(GnrInfoHandle.pDataFlash_Handle,GnrInfoHandle.Gnr_Odometer,GNR_INFO_ODOMETER_ADDR ,GNR_INFO_ODOMETER_LENGTH);
     }
+    
     //Close data flash memory access.
     uCAL_Data_Flash_Close(GnrInfoHandle.pDataFlash_Handle);
     
@@ -172,6 +176,68 @@ uint32_t  GnrInfo_GetDFuPackVersion(void)
     }
     
     return dfuPackVersion;   
+}
+
+/**
+* @brief Function used to read GNR odometer the data flash. 
+*        CRC is also checked to make sure we have a valid odometer value
+*/
+uint32_t GnrInfo_GetOdometer(void)
+{
+    uint32_t odometer = 0;
+    uint8_t CRC = 0;
+    
+    CRC = GnrInfoHandle.Gnr_Odometer[0] + GnrInfoHandle.Gnr_Odometer[1] + GnrInfoHandle.Gnr_Odometer[2] + GnrInfoHandle.Gnr_Odometer[3];  
+    
+    
+    if (CRC == GnrInfoHandle.Gnr_Odometer[4])
+    {      
+        odometer += (uint32_t)(GnrInfoHandle.Gnr_Odometer[0]);
+        odometer += (uint32_t)(GnrInfoHandle.Gnr_Odometer[1] << 8);
+        odometer += (uint32_t)(GnrInfoHandle.Gnr_Odometer[2] << 16);
+        odometer += (uint32_t)(GnrInfoHandle.Gnr_Odometer[3] << 24);
+    }
+    
+    return odometer;   
+}
+
+    
+    uint8_t OpenResult;
+    uint8_t EraseResult;
+    uint8_t WriteResult;
+    uint8_t CloseResult;
+/**
+* @brief Function used to write GNR odometer on the data flash. 
+*        CRC is also checked to make sure we have a valid odometer value
+*/
+void GnrInfo_DownloadOdometer(uint32_t new_odometer)
+{
+    uint8_t odometer[GNR_INFO_ODOMETER_LENGTH];
+    // Split the uint32 in 4 bytes
+    odometer[0] = (uint8_t) (new_odometer & 0x000000FF);
+    odometer[1] = (uint8_t)((new_odometer & 0x0000FF00) >> 8);
+    odometer[2] = (uint8_t)((new_odometer & 0x00FF0000) >> 16);
+    odometer[3] = (uint8_t)((new_odometer & 0xFF000000) >> 24);
+    
+    // Compute the CRC
+    odometer[4] = odometer[0] + odometer[1] + odometer[2] + odometer[3];
+    
+    odometer[5] = 0;
+    odometer[6] = 0;
+    odometer[7] = 0;
+    
+    OpenResult = uCAL_Data_Flash_Open(GnrInfoHandle.pDataFlash_Handle);
+    
+    if (OpenResult)
+    {
+        EraseResult = uCAL_Data_Flash_Erase(GnrInfoHandle.pDataFlash_Handle,FLASH_HP_DF_BLOCK_49,1);
+        if (EraseResult)
+        {             
+            WriteResult = uCAL_Data_Flash_Write(GnrInfoHandle.pDataFlash_Handle,odometer,GNR_INFO_ODOMETER_ADDR,GNR_INFO_ODOMETER_LENGTH);
+        }
+        
+        CloseResult = uCAL_Data_Flash_Close(GnrInfoHandle.pDataFlash_Handle);        
+    }    
 }
 
 //=================Private functions ===========================//

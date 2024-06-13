@@ -285,4 +285,11 @@ uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle);
  */
 int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uint8_t sensorNumber);
 
+/**
+  @brief  Get the Odometer travelled distance
+  @return odometer travelled distance
+ */
+uint32_t CanVehiInterface_GetOdometerDistance();
+
+
 #endif /* __CAN_IOT_COMM_H */

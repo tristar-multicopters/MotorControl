@@ -49,6 +49,7 @@ typedef enum
   THROTTLE_DELAY = 0,
   PTS_DELAY,
   BRAKE_DELAY,
+  ODOMETER_DELAY,  
 } PowertrainDelays_t;
 
 // ======================== Configuration structures ======================== // 
@@ -448,6 +449,12 @@ void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed);
  * @retval Bus voltage x100 
  */ 
 uint16_t PWRT_GetBusVoltagex100(PWRT_Handle_t * pHandle);
+
+/**
+ * @brief  Get the travelled distance
+ * @retval the travelled distance
+ */ 
+uint32_t PWRT_GetDistanceTravelled();
 
 #endif /*__POWERTRAIN_MANAGEMENT_H*/
 

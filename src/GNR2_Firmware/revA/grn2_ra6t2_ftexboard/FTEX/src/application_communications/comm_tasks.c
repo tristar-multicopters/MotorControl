@@ -83,6 +83,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint32_t hErrorState;
     uint16_t hBusVoltage;
     int16_t configMotorRpm;
+		uint32_t odometerDistance;
     int16_t configMotorRpmWithGearRatio;
     int16_t hPhaseCurrentSensor1;
     int16_t hPhaseCurrentSensor2;
@@ -118,6 +119,8 @@ static void UpdateObjectDictionnary(void *p_arg)
         hBrakeStatus         = CanVehiInterface_GetBrakeStatus(pVCI);
         hPhaseCurrentSensor1 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(pVCI, CURRENT_SENSOR_1);
         hPhaseCurrentSensor2 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(pVCI, CURRENT_SENSOR_2);
+			
+				odometerDistance		 = CanVehiInterface_GetOdometerDistance();
         
         configMotorRpm = UserConfigTask_GetMotorRpm(pVCI);
         configMotorRpmWithGearRatio = UserConfigTask_GetMotorRpmWithGearRatio(pVCI);
@@ -518,6 +521,9 @@ static void UpdateObjectDictionnary(void *p_arg)
             
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_RPM, 0)),      pNode, &configMotorRpm, sizeof(int16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_RPM, 1)),      pNode, &configMotorRpmWithGearRatio, sizeof(int16_t));
+						
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ODOMETER_DISTANCE, 0)),      pNode, &odometerDistance                                                             , sizeof(uint32_t));
+						
 
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SENSOR_CURRENT, 0)), pNode, &hPhaseCurrentSensor1, sizeof(int16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SENSOR_CURRENT, 1)), pNode, &hPhaseCurrentSensor2, sizeof(int16_t));          

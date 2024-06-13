@@ -1110,6 +1110,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\ramps.c</FilePath>
             </File>
+            <File>
+              <FileName>odometer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3299,6 +3304,11 @@
               <FileName>ramps.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\ramps.c</FilePath>
+            </File>
+            <File>
+              <FileName>odometer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5490,6 +5500,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\ramps.c</FilePath>
             </File>
+            <File>
+              <FileName>odometer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -7628,6 +7643,11 @@
               <FileName>ramps.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\ramps.c</FilePath>
+            </File>
+            <File>
+              <FileName>odometer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -9819,6 +9839,11 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\ramps.c</FilePath>
             </File>
+            <File>
+              <FileName>odometer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -12008,6 +12033,11 @@
               <FileName>ramps.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\ramps.c</FilePath>
+            </File>
+            <File>
+              <FileName>odometer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
             </File>
           </Files>
         </Group>

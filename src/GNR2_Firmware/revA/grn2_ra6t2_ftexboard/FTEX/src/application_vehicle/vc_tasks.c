@@ -11,8 +11,7 @@
 #include "comm_tasks.h"
 #include "mc_interface.h"
 #include "vc_autodetermination.h"
-
-
+#include "odometer.h"
 
 /************* DEBUG ****************/
 
@@ -29,7 +28,7 @@ struct {
 } sDebugVariables;
 #endif
 
-
+bool OdometerSaved = false;
 /************* DEFINES ****************/
 
 #define DELAY_AFTER_BOOTUP                   500    /* 500 RTOS ticks delay to prevent starting motors just after system bootup */
@@ -64,12 +63,12 @@ void VC_BootUp(void)
 {    
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     
-    Delay_Handle_t DelayArray[3];
+    Delay_Handle_t DelayArray[4];
     
     Delay_Init(&DelayArray[THROTTLE_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // Initialising the time base for the throttle stuck delay
     Delay_Init(&DelayArray[PTS_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // // Initialize the time base for the Pedal Torque sensor stuck delay
     Delay_Init(&DelayArray[BRAKE_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC); // // Initialize the time base for the brake sensor stuck delay
-    
+    Delay_Init(&DelayArray[ODOMETER_DELAY],TASK_VCFASTLOOP_SAMPLE_TIME_TICK * 500,MIC_SEC);
     /* Initialize MC layer, vehicle controller state machine and powertrain components */
     VCSTM_Init(pVCI->pStateMachine);
     PWRT_Init(pVCI->pPowertrain,DelayArray);
@@ -155,6 +154,9 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         
         // Update Mc layer wheel speed
         PWRT_SetWheelRPM(pVCI->pPowertrain);
+        
+        Odometer_Update();  
+        
         
         #if ENABLE_VC_DAC_DEBUGGING
         R_DAC_Write((DEBUG1_DAC_HANDLE_ADDRESS)->p_ctrl, pVCI->pPowertrain->pThrottle->hInstADCValue);

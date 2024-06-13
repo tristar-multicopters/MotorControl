@@ -231,6 +231,14 @@ uint8_t CanVehiInterface_GetVehicleSpeedDec(VCI_Handle_t * pHandle)
     return hmsgToSend;
 }
 
+/**
+ *  Get vehicle Speed decimals
+ */
+uint32_t CanVehiInterface_GetOdometerDistance()
+{
+    return PWRT_GetDistanceTravelled();
+}
+
 
 /**
  *  Get the current state of the front light 

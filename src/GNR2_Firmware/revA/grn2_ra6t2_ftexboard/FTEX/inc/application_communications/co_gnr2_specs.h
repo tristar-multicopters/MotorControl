@@ -521,6 +521,10 @@ extern "C" {
 #define CO_OD_REG_MOTOR_RPM                    0x202F
 
 //OD ID will be used to
+// receive data about the travelled distance
+#define CO_OD_REG_ODOMETER_DISTANCE            0x2030
+
+//OD ID will be used to
 // receive data and commands during a firmware update.
 // the GNR doesn't have enough memory to receive
 // all bytes and needs to receive some bytes(more than 4)

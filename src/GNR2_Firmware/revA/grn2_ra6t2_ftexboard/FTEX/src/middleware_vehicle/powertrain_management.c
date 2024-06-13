@@ -14,6 +14,7 @@
 #include "wheel.h"
 #include "ramps.h"
 #include "vc_constants.h"
+#include "odometer.h"
 
 // ============================= Defines ================================ //
 #define OVERCURRENT_COUNTER         0
@@ -28,7 +29,7 @@ bool isPWMCleared;
 static Delay_Handle_t ThrottleDelay; // Delay for Throttle stuck check while initialization
 static Delay_Handle_t PTSensorDelay; // Delay for Pedal Torque sensor stuck check while initialization
 static Delay_Handle_t brakeDelay;    // Delay for Brake sensor stuck check while initialization
-
+static Delay_Handle_t OdometerDelay; // Delay for the odometer
 
 // ==================== Public function prototypes ======================== //
 
@@ -45,8 +46,9 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     // Initialize Delays for stuck conditions
     ThrottleDelay = pDelayArray[THROTTLE_DELAY];
     PTSensorDelay = pDelayArray[PTS_DELAY];
-    brakeDelay = pDelayArray[BRAKE_DELAY];
-
+    brakeDelay    = pDelayArray[BRAKE_DELAY];
+    OdometerDelay = pDelayArray[ODOMETER_DELAY];
+    
     // Initilaize peripherals
     Wheel_Init();
     Throttle_Init(pHandle->pThrottle, &ThrottleDelay, MDI_GetStartingTorque(pHandle->pMDI));
@@ -54,6 +56,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     BatMonitor_Init(pHandle->pBatMonitorHandle);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
+    Odometer_Init(&OdometerDelay,pHandle->pPAS->pWSS,1000); // Time interval is 1 sec for now
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
     
@@ -1572,4 +1575,12 @@ void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed)
 uint16_t PWRT_GetBusVoltagex100(PWRT_Handle_t * pHandle)
 {
     return MDI_GetBusVoltageInVoltx100(pHandle->pMDI->pMCI);
+}
+
+/**
+ *  Get the traveled distance
+ */
+uint32_t PWRT_GetDistanceTravelled()
+{
+    return Odometer_GetDistanceTravelled();
 }

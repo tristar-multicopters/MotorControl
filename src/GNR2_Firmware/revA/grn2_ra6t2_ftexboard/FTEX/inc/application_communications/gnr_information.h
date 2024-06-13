@@ -21,11 +21,18 @@
 /*********************************************
                 Defines
 *********************************************/
-//define the length on bytes of the GNR serial number.
-#define GNR_INFO_SERIAL_LENGTH     12 
+//define the length of bytes of the GNR serial number.
+#define GNR_INFO_SERIAL_LENGTH     12
 //define the length off bytes in the GNR serial Header "EPC"
 #define GNR_INFO_SERIAL_HEADER_LENGTH     3 
-//define the length on bytes of the GNR serial number.
+
+
+#define GNR_INFO_ODOMETER_ADDR      FLASH_HP_DF_BLOCK_49
+//define the lenght of bytes of the odomoeter value
+//Lenght is 5 because 4 bytes for the value and 1 byte for crc (3 empty bytes)
+#define GNR_INFO_ODOMETER_LENGTH    8
+
+//define the length of bytes of the dfu pack version.
 #define GNR_DFUPACK_VERSION_LENGTH  4 
 
 /******External FLash address to store the serial **********************/
@@ -43,7 +50,9 @@
 typedef struct 
 {
     uint8_t  Gnr_DfuPackVersion[GNR_DFUPACK_VERSION_LENGTH];
-    uint8_t  Gnr_serialNumber[GNR_INFO_SERIAL_LENGTH];
+    uint8_t  Gnr_serialNumber[GNR_INFO_SERIAL_LENGTH]; 
+    uint8_t  Gnr_Odometer[GNR_INFO_ODOMETER_LENGTH];
+    
     DataFlash_Handle_t * pDataFlash_Handle;
     EFlash_Storage_Handle_t * pEFlashStorageHandle;
 }GnrInfoHandle_t;
@@ -76,5 +85,9 @@ uint64_t GnrInfo_GetSerialNumber(void);
 * @return uint32_t GNR dfu pack version.
 */
 uint32_t  GnrInfo_GetDFuPackVersion(void);
+
+uint32_t GnrInfo_GetOdometer(void);
+
+void GnrInfo_DownloadOdometer(uint32_t new_odometer);
 
 #endif

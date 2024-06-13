@@ -499,6 +499,9 @@ int16_t bObjDataMotorRpm = 0;
 //variable associated with CO_OD_REG_MOTOR_RPM subindex 1
 int16_t bObjDataMotorRpmWithGearRatio = 0;
 
+//variable associated with CO_OD_REG_MOTOR_RPM subindex 1
+uint32_t bObjOdometerDistanceKM = 0;
+
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
 
@@ -2312,6 +2315,10 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_RPM, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&bObjDataMotorRpmWithGearRatio};
+            //move to next OD index
+            index++;
+						
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_ODOMETER_DISTANCE, 0, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&bObjOdometerDistanceKM};
             //move to next OD index
             index++;
                         

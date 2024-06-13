@@ -12,6 +12,7 @@
 #include "vc_autodetermination.h"
 #include "vc_fault_management.h"
 #include "vc_errors_management.h"
+#include "odometer.h"
 #include "uCAL_GPIO.h"
 #include "ASSERT_FTEX.h"
 
@@ -211,7 +212,7 @@ void PWREN_TurnOffSystem(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
     switch(PWREN_PowerOffSequencyState)
     {
         //wait for the goingoff flag to became true.
-        //this means thta I power off was requested.
+        //this means that I power off was requested.
         case PWREN_IDLE:
             //verify if the device is enabled to start the turn off
             //sequency.
@@ -457,11 +458,14 @@ void PWREN_TurnOffSystem(CO_NODE  *pNode, PWREN_Handle_t * pHandle)
         
         //state where the device is turnned off.
         case PWREN_TURNOFF:
+               
+            Odometer_Save();
+        
             //stop the node to stops CANOPEN msg on the can bus.
             CONodeStop(pNode);
-        
+            
             //wait 350 ms before turn off the device.
-            //thsi give sometime to IOT and SLAVE
+            //this give sometime to IOT and SLAVE
             //process the turn off sequency and avoid
             //new CANOPEN msgs.
             osDelay(7*POWEROFF_WAITTIME_50MS);
