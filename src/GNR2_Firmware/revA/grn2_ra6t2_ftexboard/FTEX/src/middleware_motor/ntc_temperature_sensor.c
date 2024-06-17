@@ -15,7 +15,6 @@
 #define INIT_IGNORE_TIMER   1000    /* Timer for ignoring first NTC values in initialization */
 #define DISC_DIGITAL        60000   /* NTC digital value at which temp sensor disconnects at */
 
-
 /* the minimum acceptable value for NTC - any lower value means 
 sensor is disconnected or temeprature is very low
 outuput voltage of 10K (resisotr on PCB) || 200K (NTC at -30degrees) on 3.3V = 0.157
@@ -79,12 +78,14 @@ void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, NTCTempSensorHandle_t N
     pHandle->hOverTempThreshold = NTCInit.hOverTempDeactThreshold;
     pHandle->hOverTempDeactThreshold = NTCInit.hOverTempThreshold;
     pHandle->hFoldbackStartTemp = NTCInit.hFoldbackStartTemp;
-    pHandle->hNTCBetaCoef = NTCInit.hNTCBetaCoef;
-    pHandle->hNTCRatedRes = NTCInit.hNTCRatedRes;
-    pHandle->bNTCSource = NTCInit.bNTCSource;
     
     if (pHandle->bSensorType == REAL_SENSOR)
     {
+        if(pHandle->pNTCLookupTable != NULL)
+        {
+            LookupTable_Init(pHandle->pNTCLookupTable); 
+            pHandle->OutsideTable = &(pHandle->pNTCLookupTable->OutsideTable); // Link the OutsideTable flag
+        }
         pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->TempRegConv);  // Need to be register with RegularConvManager
         pHandle->hTimer = INIT_IGNORE_TIMER;
         NTCTempSensor_Clear(pHandle, defaultTemp);
@@ -101,6 +102,7 @@ void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp)
 {
     pHandle->hAvTempDigital = defaultTemp;
 }
+
 
 uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
 {
@@ -131,15 +133,11 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
     {
         pHandle->hFaultState = NTC_NO_ERRORS;
     }
-    
+  
     int32_t wTemp;  // temporary 32 bit variable for calculation
-    if((pHandle->bSensorType == REAL_SENSOR) && (pHandle->bNTCSource == MOTOR_NTC)) // Checks for sensor type and sensor channel
+    if ((pHandle->bSensorType == REAL_SENSOR) && (pHandle->pNTCLookupTable != NULL))  // Checks for sensor type
     {
-        wTemp = NTCTempSensor_CalcMotorTemp(pHandle ,pHandle->hAvTempDigital);
-    }
-    else if ((pHandle->bSensorType == REAL_SENSOR) && (pHandle->bNTCSource == HEATSINK_NTC))  // Checks for sensor type and sensor channel
-    {
-        wTemp = NTCTempSensor_CalcHeatSinkTemp (pHandle , pHandle->hAvTempDigital);
+        wTemp = LookupTable_CalcOutput(pHandle->pNTCLookupTable, pHandle->hAvTempDigital);          
     }
     else
     {
@@ -175,58 +173,5 @@ int16_t NTCTempSensor_GetAvTempCelcius(NTCTempSensorHandle_t * pHandle)
 uint16_t NTCTempSensor_GetFaultState(NTCTempSensorHandle_t * pHandle)
 {
     return pHandle->hFaultState;
-}
-
-//Calculate the motor temperature from the input ADC data.
-uint16_t NTCTempSensor_CalcMotorTemp(NTCTempSensorHandle_t * pHandle, int32_t wInputdata)
-{
-    double wtemp = 0;
-
-    // Convert ADC input data to voltage
-    wtemp = (double)wInputdata / ADC_BYTE_TO_TICS;
-    wtemp *= ADC_REFERENCE_VOLTAGE;
-    wtemp /= ADC_MAXIMUM_VALUE;
-
-    // Calculate the resistance of the NTC thermistor
-    wtemp = (MOTOR_NTC_PULLUP_RESISTOR * wtemp) / (ADC_REFERENCE_VOLTAGE - wtemp);
-    wtemp -= MOTOR_NTC_SERIES_PULLDOWN_RESISTOR;
-
-    // Apply Beta coefficient method to calculate temperature
-    wtemp *= exp(pHandle->hNTCBetaCoef / (TEMP_25_CELSIUS_IN_KELVIN)) / pHandle->hNTCRatedRes;
-    wtemp = log(wtemp);
-    wtemp = pHandle->hNTCBetaCoef / wtemp;
-
-    // Convert temperature from Kelvin to Celsius
-    wtemp -= CELSIUS_TO_KELVIN;
-
-    // Return the calculated temperature as an unsigned 16-bit integer
-    return (uint16_t)wtemp;
-}
-
-//Calculate the heat sink temperature from the input ADC data.
-uint16_t NTCTempSensor_CalcHeatSinkTemp(NTCTempSensorHandle_t * pHandle,int32_t wInputdata)
-{
-    double wtemp = 0;
-
-    // Convert ADC input data to voltage
-    wtemp = (double)wInputdata / ADC_BYTE_TO_TICS;
-
-    // Calculate the resistance of the NTC thermistor
-    wtemp = (HEATSINK_NTC_PULLDOWN_RESISTOR * ADC_MAXIMUM_VALUE) / wtemp;
-    wtemp -= HEATSINK_NTC_PULLDOWN_RESISTOR;
-
-    // Apply Beta coefficient method to calculate temperature
-    wtemp *= exp(pHandle->hNTCBetaCoef / (TEMP_25_CELSIUS_IN_KELVIN)) / pHandle->hNTCRatedRes;
-    wtemp = log(wtemp);
-    wtemp = pHandle->hNTCBetaCoef / wtemp;
-
-    // Convert temperature from Kelvin to Celsius
-    wtemp -= CELSIUS_TO_KELVIN;
-
-    // Adjust temperature for NTC drift characteristics
-    wtemp = wtemp - (wtemp * HEATSINK_NTC_DRIFT_SLOPE - HEATSINK_NTC_DRIFT_INTERCEPT);
-
-    // Return the calculated temperature as an unsigned 16-bit integer
-    return (uint16_t)wtemp;
 }
 

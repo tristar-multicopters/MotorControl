@@ -734,6 +734,11 @@
               <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
             </File>
             <File>
+              <FileName>ntc_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
+            </File>
+            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -834,11 +839,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
@@ -849,14 +849,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP350.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
@@ -2929,6 +2929,11 @@
               <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
             </File>
             <File>
+              <FileName>ntc_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
+            </File>
+            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -3029,11 +3034,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
@@ -3044,14 +3044,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP350.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
@@ -5073,6 +5073,11 @@
               <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
             </File>
             <File>
+              <FileName>ntc_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
+            </File>
+            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -5173,11 +5178,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
@@ -5188,14 +5188,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP350.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
@@ -7268,6 +7268,11 @@
               <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
             </File>
             <File>
+              <FileName>ntc_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
+            </File>
+            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -7368,11 +7373,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
@@ -7383,14 +7383,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP350.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
@@ -9463,6 +9463,11 @@
               <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
             </File>
             <File>
+              <FileName>ntc_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
+            </File>
+            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -9563,11 +9568,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
@@ -9578,14 +9578,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP350.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
@@ -11607,6 +11607,11 @@
               <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
             </File>
             <File>
+              <FileName>ntc_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\application_motor\ntc_table.c</FilePath>
+            </File>
+            <File>
               <FileName>parameters_conversion.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
@@ -11707,11 +11712,6 @@
               <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP1200.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
@@ -11722,14 +11722,14 @@
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
             </File>
             <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
               <FileName>hardware_parameters_EP350.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
@@ -13145,7 +13145,7 @@
           <targetInfo name="APP_UPLOAD(JUST UPLOAD)_512K"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cclass="CMSIS" Cgroup="RTOS" Csub="Keil RTX5" Cvendor="ARM" Cversion="5.5.4" condition="RTOS RTX5">
+      <component Capiversion="2.1.3" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.5.4" condition="RTOS2 RTX5">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>
@@ -13156,7 +13156,7 @@
           <targetInfo name="APP_UPLOAD(JUST UPLOAD)_512K"/>
         </targetInfos>
       </component>
-      <component Capiversion="2.1.3" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.5.4" condition="RTOS2 RTX5">
+      <component Capiversion="1.0.0" Cclass="CMSIS" Cgroup="RTOS" Csub="Keil RTX5" Cvendor="ARM" Cversion="5.5.4" condition="RTOS RTX5">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>

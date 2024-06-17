@@ -11,7 +11,11 @@
 
 #include "gnr_parameters.h"
 #include "vc_parameters.h"
-#include "hardware_parameters.h"
+
+#define HARDWARE_EP1200       0
+#define HARDWARE_EP600        1
+#define HARDWARE_EP350        2
+#define HARDWARE_EP700        3
 
 
 #if MOTOR_SELECTION == MOTOR_AKM_128SX_350W
@@ -246,12 +250,6 @@
 /******** Wheel Speed Sensor Parameters ********/
 #ifndef MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT
     #define MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT    (float)5    //Percentage of time that the wheel speed sensor spends on each magnet
-#endif
-#ifndef MOTOR_NTC_BETA_COEFFICIENT
-    #define MOTOR_NTC_BETA_COEFFICIENT                     0    //Beta coefficient value as specified in the datasheet
-#endif
-#ifndef MOTOR_NTC_RATED_RESISTANCE
-    #define MOTOR_NTC_RATED_RESISTANCE                     0    //NTC resistance at 25 degree celsius
 #endif
 
 /******** Speed Control Settings Section ********/

@@ -11,6 +11,7 @@
 #include "motor_signal_processing.h"
 #include "board_hardware.h"
 #include "ASSERT_FTEX.h"
+#include "ntc_table.h"
 #include "drive_parameters.h"
 
 

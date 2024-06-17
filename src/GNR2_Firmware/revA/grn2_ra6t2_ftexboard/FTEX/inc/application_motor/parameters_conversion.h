@@ -36,15 +36,8 @@
 #include "pid_regulator.h"
 #include "ntc_temperature_sensor.h"
 
+#define ADC_REFERENCE_VOLTAGE  3.30
 
-/****** ADC Parameters ******/
-#define ADC_REFERENCE_VOLTAGE           3.30                       // Reference voltage for the ADC (Analog-to-Digital Converter) in volts.
-#define ADC_BYTE_TO_TICS                     16                         // Number of tics in the ADC resolution.
-#define ADC_MAXIMUM_VALUE               4096                       // Maximum digital value output by the ADC (for a 12-bit ADC, 2^12 = 4096).
-
-/****** Temperature Parameters ******/
-#define CELSIUS_TO_KELVIN               273.15                     // Conversion constant for converting Celsius to Kelvin.
-#define TEMP_25_CELSIUS_IN_KELVIN       25 + CELSIUS_TO_KELVIN     // Conversion constant for 25 degrees Celsius to Kelvin.
 
 /************************* CONTROL FREQUENCIES & DELAIES **********************/
 #define TF_REGULATION_RATE     (uint32_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE))
