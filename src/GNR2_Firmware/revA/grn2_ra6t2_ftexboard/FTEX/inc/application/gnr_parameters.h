@@ -73,11 +73,13 @@
 #define FIRMWARE_RELEASE              0
 
 
-#define VEHICLE_SELECTION             VEHICLE_SUPER73_R     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_MILEBOX     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
-                                                           
-                                                                                                               
+//Enable or Disable the IOT BOARD Communication
+
+#define ENABLE_IOT_BOARD               1
+
 //define responsible to enable some debug features as:
 //hardware fault catch 
 //#define HFAULTDEBUG
