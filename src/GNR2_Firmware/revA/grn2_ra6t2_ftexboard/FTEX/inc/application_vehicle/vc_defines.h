@@ -24,7 +24,7 @@
 #define     VC_START_TIMEOUT                (uint16_t)(0x0080u)     /**< @brief Error: Startup procedure reached timeout.*/
 #define     VC_STOP_TIMEOUT                (uint16_t)(0x0100u)     /**< @brief Error: Stop procedure reached timeout.*/
 //Set to 1 to display error and 0 to disable it
-#define VC_IOT_ERROR_DISPLAY                 1
+#define VC_IOT_ERROR_DISPLAY                 0
 /** @} */
 
 
