@@ -588,8 +588,12 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             ConvertedError = APT_UT_PROTECTION;
             break;
         case IOT_COMM_ERROR: // Both theses errors transflat eto a generic comm error
-        case DUAL_COMM_ERROR:    
-            ConvertedError = APT_COMM_ERROR;
+        case DUAL_COMM_ERROR:  
+            #if VC_IOT_ERROR_DISPLAY == 1
+                ConvertedError = APT_COMM_ERROR;
+            #else
+                ConvertedError = APT_NO_ERROR;
+            #endif
             break;      
         case MOTOR_PHASE_ERROR:
             ConvertedError = APT_THREE_PHASE_ERROR;

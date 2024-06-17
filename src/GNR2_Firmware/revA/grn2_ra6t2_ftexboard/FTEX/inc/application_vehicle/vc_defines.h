@@ -23,6 +23,8 @@
 #define     VC_M2_UNEXPECTED_BEHAVIOR       (uint16_t)(0x0040u)     /**< @brief Error: Unexpected behavior of M2, i.e. when state is not what it's supposed to be*/
 #define     VC_START_TIMEOUT                (uint16_t)(0x0080u)     /**< @brief Error: Startup procedure reached timeout.*/
 #define     VC_STOP_TIMEOUT                (uint16_t)(0x0100u)     /**< @brief Error: Stop procedure reached timeout.*/
+//Set to 1 to display error and 0 to disable it
+#define VC_IOT_ERROR_DISPLAY                 1
 /** @} */
 
 
