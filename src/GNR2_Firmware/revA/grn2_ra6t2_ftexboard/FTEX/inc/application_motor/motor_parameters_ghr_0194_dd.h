@@ -27,7 +27,7 @@
 
 /************************** Power Limit Parameters ************************/
 
-#define ESTIMATED_EFFICIENCY                70                  // Percent efficiency of input compared to output power
+#define ESTIMATED_EFFICIENCY                 70              // Percent efficiency of input compared to output power. Default value 95%.
 
 
 /************************** Speed Limit Parameters ************************/

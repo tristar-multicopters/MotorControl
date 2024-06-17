@@ -41,7 +41,7 @@ These variables are used to configure the motor within the smart config tool.
 
 /************************** Power Limit Parameters ************************/
 
-#define ESTIMATED_EFFICIENCY                100                 // Percent efficiency of input compared to output power
+#define ESTIMATED_EFFICIENCY                 85              // Percent efficiency of input compared to output power. Default value 85%.
 
 /************************** Speed Limit Parameters ************************/
 
