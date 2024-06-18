@@ -9,6 +9,7 @@
 #include "board_hardware.h"
 #include "vc_parameters.h"
 #include "hal_data.h"
+#include "pas_tuning.h"
 
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
@@ -81,7 +82,7 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
 
         .hOffsetPTS = PTS_OFFSET_ADC2PTS,
         
-        .hOffsetMTStartup      = PTS_OFFSET_PTS2TORQUE_STARTUP,  
+        .hOffsetMTStartup      = TORQUE_STARTUP_VALUE_THRESHOLD,  
         .hStartupOffsetMTSpeedKMH = PTS_OFFSET_STARTUP_SPEED_KMH,
         .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
         .hOffsetMTSafety = PTS_OFFSET_PTS2TORQUE_SAFETY,
@@ -129,10 +130,10 @@ PulseFrequencyHandle_t PulseFreqHandleWheel =
  */
 PedalSpeedSensorHandle_t PedalSpeedSensorHandle = {
     .pPulseFrequency = &PulseFreqHandlePedal,
-    .hPedalSpeedSens_MinPulseStartup = PEDALSPEEDSENSOR_MIN_PULSE_STARTUP,
-    .wPedalSpeedSens_WindowsStartup = PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS,
-    .hPedalSpeedSens_MinPulseRunning = PEDALSPEEDSENSOR_MIN_PULSE_RUNNING,
-    .wPedalSpeedSens_WindowsRunning = PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS,
+    .hPedalSpeedSens_MinPulseStartup = STARTUP_PULSE_NUMBER,
+    .wPedalSpeedSens_WindowsStartup = STARTUP_TIME_WINDOW,
+    .hPedalSpeedSens_MinPulseRunning = RUNTIME_PULSE_NUMBER,
+    .wPedalSpeedSens_WindowsRunning = RUNTIME_TIME_WINDOW,
     .bPedalSpeedSens_ResetWindowsFlag = false,
     .hPreviousNumberOfPulse = 0,
 };
@@ -327,6 +328,10 @@ PAS_Handle_t PedalAssistHandle =
                                  .RampType = WALKMODE_ACCEL_RAMP_TYPE,
                                  .LinearParameters.Alpha = WALKMODE_ACCEL_RAMP_ARG1,
                                },    
+
+    .bPASPowerEnable = false,
+    .bPASCadenceRunningOverride = false,
+    .bPASTorqueRunningOverride = false,
 
     .bStartupPasAlgorithm = PAS_DETECTIONSTARTUP_ALGORITHM,
     .bRunningPasAlgorithm = PAS_DETECTIONRUNNING_ALGORITHM,

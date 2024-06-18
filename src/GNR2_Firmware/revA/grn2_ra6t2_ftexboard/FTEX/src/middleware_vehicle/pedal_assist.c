@@ -221,8 +221,7 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     {
        return pHandle->sParameters.walkModeTorqueRatio;
     }
-        
-    
+         
     // Multiple gain on the motor torque
     hRefTorqueS = ((hReadTS * pHandle->sParameters.bTorqueGain[currentLevel])/PAS_PERCENTAGE);
     
@@ -269,6 +268,50 @@ int16_t PedalAssist_GetWalkmodeTorque(PAS_Handle_t * pHandle)
 }
 
 /**
+    * @brief  Update the PAS Handle power according to Cadence and Torque overrides
+    * @param  Pedal Assist handle
+    */
+void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
+{
+    ASSERT(pHandle != NULL);
+    uint16_t currentRPM = WheelSpdSensor_GetSpeedRPM(pHandle->pWSS); 
+    float RPMToKMHFactor = FTEX_PI * Wheel_GetWheelDiameter() * MINUTES_PER_HOUR / FTEX_KM_TO_INCH;
+    float currentSpeed = currentRPM * RPMToKMHFactor;
+
+    if(!pHandle->bPASPowerEnable)
+    {
+        if(currentSpeed < STARTUP_PAS_SPEED_THRESHOLD)
+        {
+            if(pHandle->bCadenceStartupPASDetected || pHandle->bTorqueStartupPASDetected) pHandle->bPASPowerEnable = true;
+            else pHandle->bPASPowerEnable = false;
+        }
+        else
+        {
+            if(pHandle->bCadenceRunningPASDetected || pHandle->bTorqueRunningPASDetected) pHandle->bPASPowerEnable = true;
+            else pHandle->bPASPowerEnable = false;
+        }
+    }
+    else
+    {
+        if(pHandle->bCadenceRunningPASDetected || pHandle->bTorqueRunningPASDetected) pHandle->bPASPowerEnable = true;
+        else pHandle->bPASPowerEnable = false;
+    }
+}
+
+/**
+    * @brief  Check if the user is currently in cadence state, is currently pedalling
+    * @param  Pedal Assist handle
+    * @retval True if cadence(pedalling activity) is detected
+    */
+bool PedalAssist_IsCadenceDetected(PAS_Handle_t *pHandle)
+{
+    ASSERT(pHandle != NULL);
+    if(pHandle->bPASPowerEnable && (pHandle->bCadenceRunningPASDetected || pHandle->bCadenceStartupPASDetected))
+        return true;
+    return false;
+}
+
+/**
     * @brief  Check the PAS Presence Flag based on torque detection
     * @param  Pedal Assist handle
     * @retval None
@@ -291,6 +334,7 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
         hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
         pHandle->bTorqueStartupPASDetected = true;
         pHandle->bTorqueRunningPASDetected = false;
+        pHandle->bPASTorqueRunningOverride = true;
     }
     else
     {
@@ -298,6 +342,7 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
         hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
         pHandle->bTorqueStartupPASDetected = false;
         pHandle->bTorqueRunningPASDetected = true;
+        pHandle->bPASTorqueRunningOverride = true;
     }        
     
     hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
@@ -343,6 +388,7 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
     {      
         pHandle->bTorqueStartupPASDetected = false;
         pHandle->bTorqueRunningPASDetected = false;
+        pHandle->bPASTorqueRunningOverride = false;
     }
 } 
 
@@ -387,8 +433,7 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
     //state macchine to handle PAS cadence detection
     //on differents scenarios, as start, running and stop.
     switch(PasCadenceState)
-    {
-        
+    { 
         //used to detect PAS from cadence when PAS was not yet detected yet.
         //this happen when the pedal start to be used.
         case CADENCE_DETECTION_STARTUP:
@@ -418,6 +463,7 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
                 {
                     pHandle->bCadenceStartupPASDetected = true;
                     pHandle->bCadenceRunningPASDetected = false;
+                    pHandle->bPASCadenceRunningOverride = true;
                     //move to the run state detection
                     PasCadenceState = CADENCE_DETECTION_RUNNING;
                 }
@@ -425,6 +471,7 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
                 {
                     pHandle->bCadenceStartupPASDetected = false;
                     pHandle->bCadenceRunningPASDetected = false;
+                    pHandle->bPASCadenceRunningOverride = false;
                 }
             }
         
@@ -458,27 +505,26 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
                 {
                     pHandle->bCadenceStartupPASDetected = false;
                     pHandle->bCadenceRunningPASDetected = true;
+                    pHandle->bPASCadenceRunningOverride = true;
                 }
                 else
                 {
                     pHandle->bCadenceStartupPASDetected = false;
                     pHandle->bCadenceRunningPASDetected = false;
+                    pHandle->bPASCadenceRunningOverride = false;
+
                     //move to the startup state detection
                     //because PAS was not detected anymore.
                     PasCadenceState = CADENCE_DETECTION_STARTUP;
                 }
             }
-        
         break;
         
         //must not go into this state.
         default:
-            
             //reset the system using a software reset
             ASSERT(false);
-        
-        break;
-        
+        break; 
     }
 }
 
@@ -531,6 +577,18 @@ bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle)
     {
         return false;    
     }       
+}
+
+/**
+    * @brief  Return if PAS Power Enable is active
+    * @param  Pedal Assist handle
+    * @retval True if PAS Power Enable is detected, false otherwise
+    */
+bool PedalAssist_IsPowerEnableDetected(PAS_Handle_t *pHandle)
+{
+    ASSERT(pHandle != NULL);
+    if(pHandle->bPASPowerEnable) return true;
+    return false;
 }
 
 /**
@@ -869,7 +927,7 @@ void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo
         //setup the system to make a torque behavior(power calculation)
         for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
         {    
-            pHandle->sParameters.PASMinTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMinTorque(n);; 
+            pHandle->sParameters.PASMinTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMinTorque(n); 
         }
     }
 }
