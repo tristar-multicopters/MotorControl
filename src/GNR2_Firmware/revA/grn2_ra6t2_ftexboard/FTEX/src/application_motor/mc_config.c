@@ -8,8 +8,6 @@
 #include "pqd_motor_power_measurement.h"
 #include "mc_config.h"
 #include "board_hardware.h"
-#include "ntc_table.h"
-#include "board_hardware.h"
 #include "motor_parameters.h"
 
 #define OFFCALIBRWAIT_MS     0
@@ -407,8 +405,6 @@ NTCTempSensorHandle_t TempSensorMotorM1 =
         .hChannel = MOTOR_TEMP_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
-
-    .pNTCLookupTable = &MotorNTCLookupTable,
 };
 
 /**
@@ -421,8 +417,6 @@ NTCTempSensorHandle_t TempSensorControllerM1 =
         .hChannel = HEATSINK_TEMP_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
-
-    .pNTCLookupTable = &ControllerNTCLookupTable,
 };
 
 /* Bus voltage sensor value filter buffer */
