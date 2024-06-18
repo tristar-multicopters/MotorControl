@@ -113,7 +113,7 @@ typedef struct
     * @param  Pedal Assist handle & Delay Handle
     * @retval None
     */
-void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation, float WSSTimeOnOneMagnetPercent);
+void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation);
 
 /**
     * @brief  Set pedal assist level

@@ -569,13 +569,6 @@ float MCInterface_GetRS(MotorControlInterfaceHandle_t * pHandle);
 uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation(MotorControlInterfaceHandle_t * pHandle);
 
 /**
-* @brief  Get the percentage of time that the wheel speed sensor spends on each magnet
-* @param  pHandle : handle of the MCI interface, Motor of which we want the reference
-* @retval percentage of time that the wheel speed sensor spends on each magnet
-*/
-float MCInterface_GetMotorWSSTimeOnOneMagnetPercent(MotorControlInterfaceHandle_t * pHandle);
-
-/**
   * @brief  Get whether the motor temp sensor is mixed
   * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
   * @retval whether the motor temp sensor is mixed

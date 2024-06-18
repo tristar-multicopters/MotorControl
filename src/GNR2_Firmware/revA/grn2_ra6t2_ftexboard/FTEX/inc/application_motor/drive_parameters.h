@@ -247,11 +247,6 @@
 /******** Hall Sensor factors ********/
 #define VIBRATION_PATTERN               0xAAAA      // = 0b1010101010101010 which is 8 time of direction change
                                         
-/******** Wheel Speed Sensor Parameters ********/
-#ifndef MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT
-    #define MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT    (float)5    //Percentage of time that the wheel speed sensor spends on each magnet
-#endif
-
 /******** Speed Control Settings Section ********/
 #define SPDCTRL_UPPER_INTEGRAL_LIMIT    2097152     // =2^21 The maximum allowed value for Integral Term of Speed Control PID
 
