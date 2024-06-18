@@ -150,7 +150,7 @@ void MC_BootUp(void)
     /******************************************************/
     /*     Main speed sensor component initialization     */
     /******************************************************/
-    #if VEHICLE_SELECTION == VEHICLE_QUIETKAT || VEHICLE_SELECTION == VEHICLE_E_CELLS
+    #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
     //used to update wTorqueSlopePerSecondUp with the correct
     //value, based on the auto master/slave detection.
     if (VcAutodeter_GetGnrState())

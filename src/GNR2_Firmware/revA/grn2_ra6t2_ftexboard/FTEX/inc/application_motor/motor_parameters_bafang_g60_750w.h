@@ -23,7 +23,7 @@ These variables are used to configure the motor within the smart config tool.
 
 /************************** Controller Config  ************************/
 
-#define HARDWARE_SELECTION                 HARDWARE_EP700   // Controller selection to adapt controller parameters
+#define HARDWARE_SELECTION                 HARDWARE_EP1200   // Controller selection to adapt controller parameters
 
 /************************** Motor Config Parameters ************************/
 
@@ -36,12 +36,11 @@ These variables are used to configure the motor within the smart config tool.
 #define MOTOR_VOLTAGE_CONSTANT                 24.5f        // Volts RMS ph-ph /kRPM
 #define ST_TORQUE_COEF                         1.2f         // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps                55           // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps                85           // peak current in amps
 
 /************************** Power Limit Parameters ************************/
 
-#define ESTIMATED_EFFICIENCY                 85              // Percent efficiency of input compared to output power. Default value 85%.
-
+#define ESTIMATED_EFFICIENCY                85             // Percent efficiency of input compared to output power
 
 /************************** Speed Limit Parameters ************************/
 
@@ -93,11 +92,13 @@ These variables are used to configure the motor within the smart config tool.
 #define HALL_AVERAGING_FIFO_DEPTH           10              // Depth of the FIFO used to
 #define HALL_PHASE_SHIFT                    60              // Electrical phase shift in degrees between the low to high transition of signal H1 and the zero crossing of the Bemf induced between phase A and B
 
-#define EN_VIBRATION_ERROR                  true            // Enable or disable motor vibration error
+#define EN_VIBRATION_ERROR                  false            // Enable or disable motor vibration error
 
 /************** Wheel Speed Sensor Parameters  *****************************/
 
-#define MOTOR_WSS_NBR_PER_ROTATION          4               // Wheel speed sensor cycle number for one wheel rotation
+#define MOTOR_WSS_NBR_PER_ROTATION          6               // Wheel speed sensor cycle number for one wheel rotation
+#define MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT    (float)3.97 // Percentage of time that the wheel speed sensor spends on each magnet
+                                                            //found by comparing wheels speed to actual speed
 
 /************************** DUAL Specific parameters  ************************/
 
@@ -106,19 +107,19 @@ These variables are used to configure the motor within the smart config tool.
 
 /************** Current and Speed PID Parameters  *****************************/
 
-#define CURRENT_PID_LUT_SPEED_1             250
-#define CURRENT_PID_LUT_SPEED_2             700
+#define CURRENT_PID_LUT_SPEED_1             100
+#define CURRENT_PID_LUT_SPEED_2             300
 
 #define IQ_KP_VS_SPEED_1                    300
 #define IQ_KP_VS_SPEED_2                    300
 
 #define IQ_KI_VS_SPEED_1                    15
-#define IQ_KI_VS_SPEED_2                    200
+#define IQ_KI_VS_SPEED_2                    100
 
-#define ID_KP_VS_SPEED_1                    300
-#define ID_KP_VS_SPEED_2                    300
+#define ID_KP_VS_SPEED_1                    100
+#define ID_KP_VS_SPEED_2                    100
 
-#define ID_KI_VS_SPEED_1                    10
+#define ID_KI_VS_SPEED_1                    50
 #define ID_KI_VS_SPEED_2                    200
 
 
