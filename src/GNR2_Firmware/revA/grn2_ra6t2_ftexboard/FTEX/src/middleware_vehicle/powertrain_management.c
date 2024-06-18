@@ -915,7 +915,10 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
 void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint32_t wErrorOccurred = MDI_GetOccurredErrors(pHandle->pMDI, M1);
+    uint32_t wM1ErrorOccurred = MDI_GetOccurredErrors(pHandle->pMDI, M1);
+    uint32_t wM2ErrorOccurred = MDI_GetOccurredErrors(pHandle->pMDI, M2);
+    
+    uint32_t wErrorOccurred = wM1ErrorOccurred | wM2ErrorOccurred;
     
     //if OCSP error occurs, raise to vc layer
     if ((wErrorOccurred & MC_OCSP) != MC_NO_WARNING)
@@ -1005,8 +1008,11 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
 void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint32_t wWarningOccurred = MDI_GetOccurredWarnings(pHandle->pMDI, M1);
+    uint32_t wM1WarningOccurred = MDI_GetOccurredWarnings(pHandle->pMDI, M1);
+    uint32_t wM2WarningOccurred = MDI_GetOccurredWarnings(pHandle->pMDI, M2);
         
+    uint32_t wWarningOccurred = wM1WarningOccurred | wM2WarningOccurred;
+    
     //if motor temperature foldback warning occurs, raise to vc layer
     if ((wWarningOccurred & MC_FOLDBACK_TEMP_MOTOR) != MC_NO_WARNING)
     {

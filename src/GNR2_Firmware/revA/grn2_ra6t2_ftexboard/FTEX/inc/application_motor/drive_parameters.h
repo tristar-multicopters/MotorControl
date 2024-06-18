@@ -238,7 +238,7 @@
 #define PHASE_DISC_DIVISOR              5           // If current on one phase is under a fifth of other phase currents, raise the error
 
 /******** Stuck Protection Settings Section ********/
-#define STUCK_TIMER_MAX_TICKS           2000        // protection timeout in MC Layer ticks
+#define STUCK_TIMER_MAX_TICKS           1500        // protection timeout in MC Layer ticks
 #define STUCK_TIMER_MAX_COUNTS          STUCK_TIMER_MAX_TICKS *SPEED_LOOP_FREQUENCY_HZ / 1000u - 1u     // protection timeout
 #define STUCK_MIN_TORQUE                200         // minimum torque that can cause the protection to get activated
 #define STUCK_LOW_VOLTAGE_THRESHOLD     42          // this parameter is used to reduce protection timeout when battery SoC is low
