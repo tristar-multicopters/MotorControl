@@ -150,7 +150,7 @@ void MC_BootUp(void)
     /******************************************************/
     /*     Main speed sensor component initialization     */
     /******************************************************/
-    #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
+    #if POWERTRAIN_USE_MOTOR2 == true
     //used to update wTorqueSlopePerSecondUp with the correct
     //value, based on the auto master/slave detection.
     if (VcAutodeter_GetGnrState())
