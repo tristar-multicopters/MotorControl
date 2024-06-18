@@ -65,7 +65,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     {
         //use starting torque for dual motors, nominal torque  for all other motors
         #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION, EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT);
+            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION);
         #else
             PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION, EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT);    
         #endif
@@ -75,7 +75,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     {        
         //use starting torque for dual motors, nominal torque  for all other motors
         #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), motorWSSNbrPerRotation, motorWSSTimeOnOneMagnetPercent);
+            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), motorWSSNbrPerRotation);
         #else
             PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation);    
         #endif
