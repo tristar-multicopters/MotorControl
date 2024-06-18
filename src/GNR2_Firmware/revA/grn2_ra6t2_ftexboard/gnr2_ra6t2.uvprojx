@@ -9349,7 +9349,7 @@
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal -Wno-comment</MiscControls>
               <Define>LFS_NO_MALLOC,LFS_NO_DEBUG,LFS_NO_ERROR,LFS_NO_WARN</Define>
               <Undefine></Undefine>
-              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\core;.\CANopen-stack\hal;.\CANopen-stack\object\basic;.\CANopen-stack\object\cia301;.\CANopen-stack\service\cia301;.\CANopen-stack\include;.\libraries\littlefs;.\FTEX\inc\middleware autotune</IncludePath>
+              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\core;.\CANopen-stack\hal;.\CANopen-stack\object\basic;.\CANopen-stack\object\cia301;.\CANopen-stack\service\cia301;.\CANopen-stack\include;.\libraries\littlefs;.\FTEX\inc\middleware autotune;.\FTEX\inc\application_vehicle\pas</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -11563,7 +11563,7 @@
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal -Wno-comment</MiscControls>
               <Define>LFS_NO_MALLOC,LFS_NO_DEBUG,LFS_NO_ERROR,LFS_NO_WARN</Define>
               <Undefine></Undefine>
-              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\core;.\CANopen-stack\hal;.\CANopen-stack\object\basic;.\CANopen-stack\object\cia301;.\CANopen-stack\service\cia301;.\CANopen-stack\include;.\libraries\littlefs</IncludePath>
+              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\core;.\CANopen-stack\hal;.\CANopen-stack\object\basic;.\CANopen-stack\object\cia301;.\CANopen-stack\service\cia301;.\CANopen-stack\include;.\libraries\littlefs;.\FTEX\inc\application_vehicle\pas</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
