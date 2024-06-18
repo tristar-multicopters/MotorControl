@@ -48,12 +48,6 @@ static uint8_t ExtFLash_WriteSerial(EFlash_Storage_Handle_t * pEFlashStorageHand
                                    uint8_t * data,
                                    uint32_t adress, 
                                    uint32_t size);
-/**
-    Verify if the serial exist
-    The clear value for a flash memory is 0xFF
-*/
-
-static bool SerialExist(uint8_t * pSerial);
 
 // ==================== Public Functions ======================== //// ==================== Public Functions ======================== //
 /**
@@ -89,16 +83,22 @@ void GnrInfo_Init(DataFlash_Handle_t * pDataFlashHandle,
     uCAL_Data_Flash_Close(GnrInfoHandle.pDataFlash_Handle);
     
     //*****OPT verification
-    bool serial_exist = SerialExist(&GnrInfoHandle.Gnr_serialNumber[0]);
+    bool serial_exist = false;
+    if(GnrInfoHandle.Gnr_serialNumber[0] == 'E' && 
+       GnrInfoHandle.Gnr_serialNumber[1] == 'P' && 
+       GnrInfoHandle.Gnr_serialNumber[2] == 'C')
+    {
+        serial_exist = true;
+    }
     
     uint8_t OTP_Serial[GNR_INFO_SERIAL_LENGTH] = {0};
-    bool OTP_serial_exist;
-    ExtFLash_ReadSerial(GnrInfoHandle.pEFlashStorageHandle,
-                        OTP_Serial,
-                        EXT_FLASH_OTP_SERIAL_ADDRESS,
-                        GNR_INFO_SERIAL_LENGTH);
-    
-    OTP_serial_exist = SerialExist(&OTP_Serial[0]);
+    ExtFLash_ReadSerial(GnrInfoHandle.pEFlashStorageHandle, &OTP_Serial[0], EXT_FLASH_OTP_SERIAL_ADDRESS, GNR_INFO_SERIAL_LENGTH);
+    bool OTP_serial_exist = false;
+    //OTP_serial_exist = SerialExist(&OTP_Serial[0]);
+    if(OTP_Serial[0] == 'E' && OTP_Serial[1] == 'P' && OTP_Serial[2] == 'C')
+    {
+        OTP_serial_exist = true;
+    }
     // Check if the serial exists in the data flash
     if (serial_exist) 
     {
@@ -257,21 +257,4 @@ static uint8_t ExtFLash_ReadSerial(EFlash_Storage_Handle_t * pEFlashStorageHandl
                                    uint32_t size)
 {
     return Serial_Flash_OTP_ReadData(&pEFlashStorageHandle->eFlashStorage, data, address, size);
-}
-
-
-static bool SerialExist(uint8_t * pSerial)
-{
-    ASSERT(pSerial != NULL);
-    ASSERT(GNR_INFO_SERIAL_LENGTH > GNR_INFO_SERIAL_HEADER_LENGTH);
-    
-    //The serial number includes the acronym for:
-    // (E) Evionics, (P) Power, (C) Controller
-    // Flash Erase do not clear to 0xFF in the data flash
-    bool ret = false;
-    if(pSerial[0] == 'E' && pSerial[1] == 'P' && pSerial[2] == 'C')
-    {
-        ret = true;
-    }    
-    return ret;
 }
