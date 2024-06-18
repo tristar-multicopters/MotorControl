@@ -89,28 +89,30 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
     static bool bLightInitalised = false;
     
     while (true)
-    {   
+    { 
         //Try to detect PAS from a cadence signal(sensor).
         //this function must increment , input number 2, with the same frequency of the task where he is being 
         //called.
         //This task runs each 5 ms(TASK_VCFASTLOOP_SAMPLE_TIME_TICK/2).
-        PedalAssist_CadencePASDetection(pVCI->pPowertrain->pPAS, (uint16_t)TASK_VCFASTLOOP_SAMPLE_TIME_TICK/2); 
-        
+        PedalAssist_CadencePASDetection(pVCI->pPowertrain->pPAS, (uint16_t)TASK_VCFASTLOOP_SAMPLE_TIME_TICK/2);
+
         // Wheel Speed sensor reading period.
         // Must to be called before PedalAssist_TorquePASDetection to syncronize all actions.
         WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pPAS->pWSS, MDI_GetMotorTempSensorMixed(pVCI->pPowertrain->pMDI));
-            
+
         // Check PAS activation based on torque
         PedalAssist_TorquePASDetection(pVCI->pPowertrain->pPAS);
-        
+
         //PAS detection based on the pas detection algorithm used by the system
         PedalAssist_PasDetection(pVCI->pPowertrain->pPAS);
-        
+
+        // Force PAS Power Enable on if we respect the speed threshold during runtime 
+        PedalAssist_PASPowerDetection(pVCI->pPowertrain->pPAS);
+
         //needs to be after pas detection to syncronize all actions.
         PWRT_UpdatePowertrainPeripherals(pVCI->pPowertrain);
         PWRT_CalcMotorTorqueSpeed(pVCI->pPowertrain);
-        
-        
+           
         // VC_SlowLoop execute in the MediumFreq loop
         //The if conditon is actived each 250ms.
         //TASK_VCSLOWLOOP_SAMPLE_TIME_TICK = 50.
