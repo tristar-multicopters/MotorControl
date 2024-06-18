@@ -295,6 +295,13 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle);
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle);
 
 /**
+  * @brief  Get minimum power required on cadence power enable
+  * @param  Powertrain handle
+  * @retval Torque power value calculated according to min power                                                                                     
+  */
+int16_t PWRT_EnableCadencePower(PWRT_Handle_t *pHandle);
+
+/**
   * @brief  Periodic check of the powerlock signal
   * @param  Powertrain handle
   * @retval None                                                                                  

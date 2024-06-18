@@ -11,7 +11,9 @@
 #include "pedal_speed_sensor.h"
 #include "pedal_torque_sensor.h"
 #include "wheel_speed_sensor.h"
+#include "pas_tuning.h"
 #include "ramps.h"
+#include "wheel.h"
 
 // ============================== Defines =============================== // 
 #define PAS_PERCENTAGE          (uint8_t)100    /* Percentage for PAS use */
@@ -52,10 +54,8 @@ typedef enum
 //on differents situation.
 typedef enum 
 {
-    
   CADENCE_DETECTION_STARTUP, 
-  CADENCE_DETECTION_RUNNING,    
-    
+  CADENCE_DETECTION_RUNNING,
 }PasCadenceState_t;
 
 // ======================== Configuration structures ======================== // 
@@ -89,7 +89,10 @@ typedef struct
     PasAlgorithm_t  bStartupPasAlgorithm;         // Current PAS used Algorithm
     PasAlgorithm_t  bRunningPasAlgorithm;         // Current PAS used Algorithm
     uint16_t hPASSelectedSpeed;                   // current PAS speed selected by user 
-   
+
+    bool bPASPowerEnable;                         // Flag used to validate if PAS needs to push power
+    bool bPASCadenceRunningOverride;              // Flag used to override the power delivery mechanism on cadence
+    bool bPASTorqueRunningOverride;               // Flag used to override the power delivery mechanism on torque
     bool bPASDetected;                            // Use PAS flag  for detection
     bool bCadenceStartupPASDetected;              // Flag used to Cadence PAS detection on startup state.
     bool bCadenceRunningPASDetected;              // Flag used to Cadence PAS detection on running state. 
@@ -131,6 +134,19 @@ void PedalAssist_SetAssistLevel(PAS_Handle_t * pHandle, uint8_t bLevel);
 uint8_t PedalAssist_GetAssistLevel(PAS_Handle_t * pHandle);
 
 /**
+    * @brief  Update the PAS Handle power according to Cadence and Torque overrides
+    * @param  Pedal Assist handle
+    */
+void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle);
+
+/**
+    * @brief  Check if the user is currently in cadence state, is currently pedalling
+    * @param  Pedal Assist handle
+    * @retval True if cadence(pedalling activity) is detected
+    */
+bool PedalAssist_IsCadenceDetected(PAS_Handle_t *pHandle);
+
+/**
     * @brief  Set Pedal Assist standard torque based on screen informations
     * @param  Pedal Assist handle
     * @retval pRefTorque in int16
@@ -138,7 +154,7 @@ uint8_t PedalAssist_GetAssistLevel(PAS_Handle_t * pHandle);
 int16_t PedalAssist_GetPASTorque(PAS_Handle_t * pHandle);
 
 /**
-    * @brief  Set Pedal Assist standard torque based on screen informations
+    * @brief  Set Pedal Assist standard cadence based on screen informations
     *         for Cadence PAS base
     * @param  Pedal Assist handle
     * @retval pRefTorque in int16
@@ -222,6 +238,13 @@ void PedalAssist_SetPASDetected(PAS_Handle_t * pHandle);
     * @retval True if walk mode is detected, false otherwise
     */
 bool PedalAssist_IsWalkModeDetected(PAS_Handle_t * pHandle);
+
+/**
+    * @brief  Return if PAS Power Enable is active
+    * @param  Pedal Assist handle
+    * @retval True if PAS Power Enable is detected, false otherwise
+    */
+bool PedalAssist_IsPowerEnableDetected(PAS_Handle_t *pHandle);
 
 /**
     * @brief  Reset the PAS Prameters

@@ -215,8 +215,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                 int16_t BandwidthUp = 35; //Bandwidth CANNOT be set to 0
                 int16_t BandwidthDown = 75;    
                 int16_t Bandwidth = 0;
-                
-                    
+                   
                 if(abs(PowerAvg - hAux * 100) > ((pHandle->pPAS->sParameters.hPASMaxTorque * 100)/25)) // Sudden acceleration or decelration ? 
                 {                                                                      
                     BandwidthUp = 60;
@@ -913,7 +912,10 @@ bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle)
 void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint32_t wErrorOccurred = MDI_GetOccurredErrors(pHandle->pMDI, M1);
+    uint32_t wM1ErrorOccurred = MDI_GetOccurredErrors(pHandle->pMDI, M1);
+    uint32_t wM2ErrorOccurred = MDI_GetOccurredErrors(pHandle->pMDI, M2);
+    
+    uint32_t wErrorOccurred = wM1ErrorOccurred | wM2ErrorOccurred;
     
     //if OCSP error occurs, raise to vc layer
     if ((wErrorOccurred & MC_OCSP) != MC_NO_WARNING)
@@ -993,7 +995,6 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
     {
         VC_Errors_ClearError(UV_PROTECTION);
     }
-
 }
 
 /**
@@ -1004,8 +1005,11 @@ void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle)
 void PWRT_MotorWarningManagement(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint32_t wWarningOccurred = MDI_GetOccurredWarnings(pHandle->pMDI, M1);
+    uint32_t wM1WarningOccurred = MDI_GetOccurredWarnings(pHandle->pMDI, M1);
+    uint32_t wM2WarningOccurred = MDI_GetOccurredWarnings(pHandle->pMDI, M2);
         
+    uint32_t wWarningOccurred = wM1WarningOccurred | wM2WarningOccurred;
+    
     //if motor temperature foldback warning occurs, raise to vc layer
     if ((wWarningOccurred & MC_FOLDBACK_TEMP_MOTOR) != MC_NO_WARNING)
     {
@@ -1162,11 +1166,13 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     bool ThrottleDetected = Throttle_IsThrottleDetected(pHandle->pThrottle);
     bool PASDetected      = PedalAssist_IsPASDetected(pHandle->pPAS);
     bool WalkDetected     = PedalAssist_IsWalkModeDetected(pHandle->pPAS);
+    bool PowerEnable      = PedalAssist_IsPowerEnableDetected(pHandle->pPAS);
     bool WalkOverThrottle = pHandle->pPAS->sParameters.WalkmodeOverThrottle;
     bool PASOverThrottle  = pHandle->pPAS->sParameters.PASOverThrottle;
     
     if ((PASDetected  && (!ThrottleDetected || PASOverThrottle)) || 
-        (WalkDetected && (!ThrottleDetected || WalkOverThrottle)))
+        (WalkDetected && (!ThrottleDetected || WalkOverThrottle))||
+        (PowerEnable && (!ThrottleDetected || PASOverThrottle)))
     {
         PASWasDetected = true;
                
@@ -1190,7 +1196,12 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         }
         
         // Link the correct PAS ramp as the ramp to apply
-        pSelectedRampHandle = PedalAssist_GetRamp(pHandle->pPAS, Direction); 
+        pSelectedRampHandle = PedalAssist_GetRamp(pHandle->pPAS, Direction);
+
+        if(PedalAssist_IsCadenceDetected(pHandle->pPAS))
+        {
+            pHandle->hTorqueSelect = PWRT_EnableCadencePower(pHandle);
+        }
 
         // Check if there is any torque sensor issue detected
         pHandle->pPAS->bTorqueSensorIssue = PedalAssist_TorqueSensorIssueDetected(pHandle->pPAS); 
@@ -1205,7 +1216,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         else
         {
             VC_Errors_ClearError(TORQUE_SENSOR_ERROR);
-        }      
+        }
     }        
     /* Using throttle */
     else 
@@ -1221,25 +1232,40 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         {
             Direction = DECELERATION;
         }
-        
-        
+         
         // Link the throttle ramp as the ramp to apply
         pSelectedRampHandle = Throttle_GetRamp(pHandle->pThrottle, Direction);
     }
     
     if (PASWasDetected && PedalAssist_IsPASDetected(pHandle->pPAS) == false && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If pas was detected but we switched to throttle, reset the ramps
     {
-            PASWasDetected = false;
-            for(uint8_t i = 0; i < 10; i++)
-            {
-                 Ramps_ResetRamp(&(pHandle->pPAS->sParameters.PasRamps[0][i]));  // We can't know if we wer ein walkmode so reset the ramp to be sure      
-                 Ramps_ResetRamp(&(pHandle->pPAS->sParameters.PasRamps[1][i]));
-            }
-            Ramps_ResetRamp(&(pHandle->pPAS->sParameters.PasWalkmodeRamp));        
+        PASWasDetected = false;
+        for(uint8_t i = 0; i < 10; i++)
+        {
+            Ramps_ResetRamp(&(pHandle->pPAS->sParameters.PasRamps[0][i]));  // We can't know if we wer ein walkmode so reset the ramp to be sure      
+            Ramps_ResetRamp(&(pHandle->pPAS->sParameters.PasRamps[1][i]));
+        }
+        Ramps_ResetRamp(&(pHandle->pPAS->sParameters.PasWalkmodeRamp));        
     }
         
     pHandle->hTorqueSelect = (int16_t) Ramps_ApplyRamp(pSelectedRampHandle, (uint16_t)pHandle->hTorqueSelect);
     
+    return pHandle->hTorqueSelect;
+}
+
+/**
+  * @brief  Get minimum power required on cadence power enable
+  * @param  Powertrain handle
+  * @retval Torque power value calculated according to min power                                                                                     
+  */
+int16_t PWRT_EnableCadencePower(PWRT_Handle_t *pHandle)
+{
+    int16_t maxTorquePower = pHandle->pPAS->sParameters.hPASMaxTorque;
+    uint8_t currentPASLevel = pHandle->pPAS->bCurrentAssistLevel;
+    float minPowerPercentage = pHandle->pPAS->sParameters.PASMinTorqRatiosInPercentage[currentPASLevel];
+    int16_t tempPower = (int16_t)((float)maxTorquePower * (minPowerPercentage / 100));
+    
+    if(tempPower > pHandle->hTorqueSelect) return tempPower;
     return pHandle->hTorqueSelect;
 }
 
