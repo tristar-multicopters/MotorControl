@@ -105,9 +105,7 @@ typedef struct
 //Wheel speed sensor parameters
 typedef struct
 {
-    uint8_t bWheelSpeedSensorNbrPerRotation;
-    float   fMotorWSSTimeOnOneMagnetPercent;
-      
+    uint8_t bWheelSpeedSensorNbrPerRotation;      
 } WheelSpeedSensorParameters_t;
 
 typedef struct

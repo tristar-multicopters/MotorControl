@@ -11,11 +11,7 @@
 
 #include "gnr_parameters.h"
 #include "vc_parameters.h"
-
-#define HARDWARE_EP1200       0
-#define HARDWARE_EP600        1
-#define HARDWARE_EP350        2
-#define HARDWARE_EP700        3
+#include "hardware_parameters.h"
 
 
 #if MOTOR_SELECTION == MOTOR_AKM_128SX_350W
@@ -247,9 +243,13 @@
 /******** Hall Sensor factors ********/
 #define VIBRATION_PATTERN               0xAAAA      // = 0b1010101010101010 which is 8 time of direction change
                                         
-/******** Wheel Speed Sensor Parameters ********/
-#ifndef MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT
-    #define MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT    (float)5    //Percentage of time that the wheel speed sensor spends on each magnet
+/******** NTC Sensor Parameters ********/
+#ifndef MOTOR_NTC_BETA_COEFFICIENT
+    #define MOTOR_NTC_BETA_COEFFICIENT                     0    //Beta coefficient value as specified in the datasheet
+#endif
+#ifndef MOTOR_NTC_RESISTANCE_COEF
+    #define MOTOR_NTC_RESISTANCE_COEF                     0    //This value is calculated based on this formula: exp(NTCBetaCoef / TEMP_25_CELSIUS_IN_KELVIN) / NTC Rated Resistance.
+                                                               //NTC Rated Resistance = NTC resistance at 25 degree celsius in ohm
 #endif
 
 /******** Speed Control Settings Section ********/

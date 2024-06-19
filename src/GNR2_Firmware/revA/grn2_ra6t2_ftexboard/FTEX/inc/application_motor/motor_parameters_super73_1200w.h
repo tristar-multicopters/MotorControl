@@ -79,8 +79,11 @@ These variables are used to configure the motor within the smart config tool.
 
 /************************** Temp Limit Parameters  ************************/
 
-#define MOTOR_TEMP_SENSOR_TYPE              VIRTUAL_SENSOR      // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
+#define MOTOR_TEMP_SENSOR_TYPE              REAL_SENSOR         // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
 #define MOTOR_TEMP_MIXED                    false               // true if the motor temperature signal is mixed with wheelspeed.
+#define MOTOR_NTC_BETA_COEFFICIENT          3950                //Beta coefficient value as specified in the datasheet
+#define MOTOR_NTC_RESISTANCE_COEF           56.2f               //This value is calculated based on this formula: exp(NTCBetaCoef / TEMP_25_CELSIUS_IN_KELVIN) / NTC Rated Resistance.
+                                                                //NTC Rated Resistance = NTC resistance at 25 degree celsius in ohm
     
 #define OV_TEMP_MOTOR_THRESHOLD_C           110                 // Maximum temperature in degree C
 #define OV_TEMP_MOTOR_HYSTERESIS_C          5                   // Temperature to decrease after an overtemp fault occured before clearing the fault, in degree C
@@ -99,7 +102,6 @@ These variables are used to configure the motor within the smart config tool.
 /************** Wheel Speed Sensor Parameters  *****************************/
 
 #define MOTOR_WSS_NBR_PER_ROTATION          6                   // Wheel speed sensor cycle number for one wheel rotation
-#define MOTOR_WSS_TIME_ON_ONE_MAGNET_PERCENT    (float)2.93     // Percentage of time that the wheel speed sensor spends on each magnet
 
 /************** Current and Speed PID Parameters  *****************************/
 

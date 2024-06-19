@@ -63,19 +63,21 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     //if we want to use external wss or if wss of motor has 0 magnets use external wss nbr of magnets value
     if (pHandle->pPAS->pWSS->bWSSUseMotorPulsePerRotation == false || motorWSSNbrPerRotation <= 0)
     {
-        PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION, EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT);
+        //use starting torque for dual motors, nominal torque  for all other motors
+        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
+            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION);
+        #else
+            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION, EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT);    
+        #endif
     }
     //if we want to use the motor's wss, use motor nbr of magnets value
     else
-    {
-        //get the percentage of time that the wheel speed sensor spends on each magnet
-        float motorWSSTimeOnOneMagnetPercent = MDI_GetMotorWSSTimeOnOneMagnetPercent(pHandle->pMDI);
-        
+    {        
         //use starting torque for dual motors, nominal torque  for all other motors
-        #if VEHICLE_SELECTION == VEHICLE_QUIETKAT || VEHICLE_SELECTION == VEHICLE_E_CELLS
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), motorWSSNbrPerRotation, motorWSSTimeOnOneMagnetPercent);
+        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
+            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), motorWSSNbrPerRotation);
         #else
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation, motorWSSTimeOnOneMagnetPercent);    
+            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation);    
         #endif
     }
 
