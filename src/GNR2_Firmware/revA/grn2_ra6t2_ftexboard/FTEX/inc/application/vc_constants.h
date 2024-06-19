@@ -9,7 +9,7 @@
 #define FTEX_PI            (float)3.1415927  
 #define FTEX_INCH_TO_CM    2.54 // 1 Inch = 2.54 centimeters   
 #define FTEX_KM_TO_INCH    (float)39370.1 // 1 Km = 39370.1 inches
-#define WHEEL_DIAMETER_DEFAULT 28.0 // Default wheel diam
+#define WHEEL_DIAMETER_DEFAULT 26.0 // Default wheel diam
 #define MINUTES_PER_HOUR 60
 
 

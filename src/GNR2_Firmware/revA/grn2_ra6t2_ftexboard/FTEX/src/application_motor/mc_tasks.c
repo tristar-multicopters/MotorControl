@@ -925,7 +925,7 @@ uint8_t MC_HighFrequencyTask(void)
         if (IsPhaseCableDisconnected(MCInterface->pFOCVars) == true)
         {
             // raise MC_PHASE_DISC critical fault if the ratio of measured Iqd and reference Iq is not reasoble
-            MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_PHASE_DISC, 0);
+            //MCStateMachine_CriticalFaultProcessing(&MCStateMachine[M1], MC_PHASE_DISC, 0);
         }
 
         // Check if the Hall Sensors are disconneted and raise the error

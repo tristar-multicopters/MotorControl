@@ -35,7 +35,7 @@
 #define MAX_APPLICATION_SPEED_RPM           4000                // Max speed for the current application in mechanical rpm
 
 #define ENABLE_SPEED_LIMIT_CONTROL          true                // Enable or disable speed limit control
-#define PID_SPEED_KP_DEFAULT                40                  // Default gain for speed control loop
+#define PID_SPEED_KP_DEFAULT                120                  // Default gain for speed control loop
 #define PID_SPEED_KI_DEFAULT                4                   // Default gain for speed control loop
 #define SP_KIDIV                            4096                // Speed control gain divider, to allow decimal value
 #define SP_KIDIV_LOG                        LOG2(4096)          // Speed control gain divider log2, to allow decimal value
@@ -55,7 +55,7 @@
 #define FLUX_DIRECTION                      1               // direction of demagnetization current  1 clockwise, -1 counter clockwise
 /************************** Ramp Manager Parameters  ************************/
 
-#define DEFAULT_TORQUE_SLOPE_UP             1000                // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second
 #define DEFAULT_TORQUE_SLOPE_DOWN           10000               // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP              10000               // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN            10000               // Slope in #SPEED_UNIT per second
@@ -84,7 +84,7 @@
 
 /************** Wheel Speed Sensor Parameters  *****************************/
 
-#define MOTOR_WSS_NBR_PER_ROTATION          46                  // Wheel speed sensor cycle number for one wheel rotation
+#define MOTOR_WSS_NBR_PER_ROTATION          23                  // Wheel speed sensor cycle number for one wheel rotation
 
 /************** Current and Speed PID Parameters  *****************************/
 
