@@ -1175,9 +1175,8 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     bool WalkOverThrottle = pHandle->pPAS->sParameters.WalkmodeOverThrottle;
     bool PASOverThrottle  = pHandle->pPAS->sParameters.PASOverThrottle;
     
-    if ((PASDetected  && (!ThrottleDetected || PASOverThrottle)) || 
-        (WalkDetected && (!ThrottleDetected || WalkOverThrottle))||
-        (PowerEnable && (!ThrottleDetected || PASOverThrottle)))
+    if (((PASDetected && PowerEnable)  && (!ThrottleDetected || PASOverThrottle)) || 
+        (WalkDetected && (!ThrottleDetected || WalkOverThrottle)))
     {
         PASWasDetected = true;
                
