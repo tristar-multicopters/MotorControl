@@ -30,7 +30,7 @@ void AssertIsValidLevel(PasLevel_t level);
     * @param  Pedal Assist handle & Delay Handle
     * @retval None
     */
-void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation, float WSSTimeOnOneMagnetPercent)
+void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation)
 {
     ASSERT(pHandle != NULL);
     
@@ -62,7 +62,7 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, u
     pHandle->sParameters.hPASMaxTorque = (int16_t)maxTorque;
 
     PedalSpdSensor_Init(pHandle->pPSS);
-    WheelSpdSensor_Init(pHandle->pWSS, wheelSpdSensorNbrPerRotation, WSSTimeOnOneMagnetPercent);
+    WheelSpdSensor_Init(pHandle->pWSS, wheelSpdSensorNbrPerRotation);
     PedalTorqSensor_Init(pHandle->pPTS, pPTSstuckDelay, maxTorque);
     
     pHandle->bCurrentAssistLevel = DEFAULT_PAS_LEVEL;
@@ -277,23 +277,32 @@ void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
     uint16_t currentRPM = WheelSpdSensor_GetSpeedRPM(pHandle->pWSS); 
     float RPMToKMHFactor = FTEX_PI * Wheel_GetWheelDiameter() * MINUTES_PER_HOUR / FTEX_KM_TO_INCH;
     float currentSpeed = currentRPM * RPMToKMHFactor;
+    
+    // Validate the PAS Power Enable depending on the value of CADENCE_AND_OR_TORQUE (PAS Power AND/OR)
+    bool StartupPowerEnable = ((pHandle->bCadenceStartupPASDetected | pHandle->bTorqueStartupPASDetected) & ~(CADENCE_AND_OR_TORQUE)) | 
+                              ((pHandle->bCadenceStartupPASDetected & pHandle->bTorqueStartupPASDetected) & CADENCE_AND_OR_TORQUE);
+    
+    bool RuntimePowerEnable = ((pHandle->bCadenceRunningPASDetected | pHandle->bTorqueRunningPASDetected) & ~(CADENCE_AND_OR_TORQUE)) | 
+                              ((pHandle->bCadenceRunningPASDetected & pHandle->bTorqueRunningPASDetected) & CADENCE_AND_OR_TORQUE);
+    
+    bool PowerEnable = StartupPowerEnable | RuntimePowerEnable;
 
     if(!pHandle->bPASPowerEnable)
     {
         if(currentSpeed < STARTUP_PAS_SPEED_THRESHOLD)
         {
-            if(pHandle->bCadenceStartupPASDetected || pHandle->bTorqueStartupPASDetected) pHandle->bPASPowerEnable = true;
+            if(PowerEnable) pHandle->bPASPowerEnable = true;
             else pHandle->bPASPowerEnable = false;
         }
         else
         {
-            if(pHandle->bCadenceRunningPASDetected || pHandle->bTorqueRunningPASDetected) pHandle->bPASPowerEnable = true;
+            if(PowerEnable) pHandle->bPASPowerEnable = true;
             else pHandle->bPASPowerEnable = false;
         }
     }
     else
     {
-        if(pHandle->bCadenceRunningPASDetected || pHandle->bTorqueRunningPASDetected) pHandle->bPASPowerEnable = true;
+        if(PowerEnable) pHandle->bPASPowerEnable = true;
         else pHandle->bPASPowerEnable = false;
     }
 }

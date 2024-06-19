@@ -871,14 +871,6 @@ uint8_t MDI_GetWheelSpdSensorNbrPerRotation(MultipleDriveInterfaceHandle_t * pHa
     ASSERT(pHandle != NULL);
     return MCInterface_GetWheelSpdSensorNbrPerRotation(pHandle->pMCI);
 }
-/**
-  *  Get the percentage of time that the wheel speed sensor spends on each magnet
-  */
-float MDI_GetMotorWSSTimeOnOneMagnetPercent(MultipleDriveInterfaceHandle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-    return MCInterface_GetMotorWSSTimeOnOneMagnetPercent(pHandle->pMCI);
-}
 
 /**
   *  Get whether the motor temp sensor is mixed

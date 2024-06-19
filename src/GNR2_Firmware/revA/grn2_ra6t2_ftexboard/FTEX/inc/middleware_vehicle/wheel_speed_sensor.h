@@ -48,7 +48,7 @@ typedef struct {
           Percentage of time the WSS spends on one magnet
   @return None
 */
-void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle, uint8_t wheelSpdSensorNbrPerRotation, float WSSTimeOnOneMagnetPercent);
+void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle, uint8_t wheelSpdSensorNbrPerRotation);
 
 /**
   @brief  Function to calculate the wheel speed sensor value

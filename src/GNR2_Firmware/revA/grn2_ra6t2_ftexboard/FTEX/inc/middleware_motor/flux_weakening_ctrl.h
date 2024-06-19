@@ -60,7 +60,6 @@ typedef struct
                                                must be 9 because 2^9 = 512 */    
     float           fRS;                    /**< Stator resistance, in ohms */
     uint8_t         bWheelSpdSensorNbrPerRotation;      /**< Number of magnets on the wheel speed sensor */
-    float           fMotorWSSTimeOnOneMagnetPercent;    /**< Percentage of time that the wheel speed sensor spends on each magnet */
     int16_t         hFlDir;                   /**< the dirction of demagnetization current Id */    
 } MCConfigHandle_t;
 
