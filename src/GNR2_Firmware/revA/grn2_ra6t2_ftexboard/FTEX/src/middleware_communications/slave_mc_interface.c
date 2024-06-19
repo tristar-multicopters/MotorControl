@@ -56,8 +56,8 @@ void SlaveMCInterface_UpdateFeedback(SlaveMotorHandle_t * pHandle)
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccurredErrors), pHandle->pCONode, &pHandle->Feedback.wOccurredErrors, sizeof(pHandle->Feedback.wOccurredErrors));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrWarnings), pHandle->pCONode, &pHandle->Feedback.wWarnings, sizeof(pHandle->Feedback.wWarnings));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrMotorSpeed), pHandle->pCONode, &pHandle->Feedback.hMotorSpeed, sizeof(pHandle->Feedback.hMotorSpeed));
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrIq), pHandle->pCONode, &pHandle->Feedback.hIq, sizeof(pHandle->Feedback.hIq));
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrId), pHandle->pCONode, &pHandle->Feedback.hId, sizeof(pHandle->Feedback.hId));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrIq), pHandle->pCONode, &pHandle->Feedback.hIqRef, sizeof(pHandle->Feedback.hIqRef));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrId), pHandle->pCONode, &pHandle->Feedback.hIdRef, sizeof(pHandle->Feedback.hIdRef));
     
 }
 
@@ -210,4 +210,24 @@ int16_t SlaveMCInterface_GetAvrgMecSpeedUnit(SlaveMotorHandle_t * pHandle)
     hReturnValue = pHandle->Feedback.hMotorSpeed;
 
     return hReturnValue;
+}
+
+/*
+* see function definition
+*/
+int16_t SlaveMCInterface_GetIqRef(SlaveMotorHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+
+    return pHandle->Feedback.hIqRef;
+}
+
+/*
+* see function definition
+*/
+int16_t SlaveMCInterface_GetIdRef(SlaveMotorHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+
+    return pHandle->Feedback.hIdRef;
 }

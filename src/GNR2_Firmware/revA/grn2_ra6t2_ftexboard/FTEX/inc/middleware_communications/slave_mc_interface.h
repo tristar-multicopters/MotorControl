@@ -35,8 +35,8 @@ typedef struct
     int16_t hMotorTemp;
     int16_t hHeatsinkTemp;
     uint16_t hBusVoltage;
-    int16_t hIq;
-    int16_t hId;
+    int16_t hIqRef;
+    int16_t hIdRef;
 } SlaveMotorFeedback_t;
 
 /*
@@ -191,5 +191,17 @@ uint32_t SlaveMCInterface_GetCurrentCriticalFaults(SlaveMotorHandle_t * pHandle)
   * @param  pHandle Pointer on the component instance to work on.
   */
 int16_t SlaveMCInterface_GetAvrgMecSpeedUnit(SlaveMotorHandle_t * pHandle);
+
+/**
+  * @brief  Returns the Iq of the slave
+  * @param  pHandle Pointer on the component instance to work on.
+  */
+int16_t SlaveMCInterface_GetIqRef(SlaveMotorHandle_t * pHandle);
+
+/**
+  * @brief  Returns the Id of the slave
+  * @param  pHandle Pointer on the component instance to work on.
+  */
+int16_t SlaveMCInterface_GetIdRef(SlaveMotorHandle_t * pHandle);
 
 #endif /* __SLAVE_MC_INTERFACE_H */

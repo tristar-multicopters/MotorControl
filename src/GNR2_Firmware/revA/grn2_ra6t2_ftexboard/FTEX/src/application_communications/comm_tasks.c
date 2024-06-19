@@ -62,8 +62,6 @@ extern osThreadId_t CANOpenTaskHandle;
 *           object dictionary.
 */
 
-volatile int16_t iq, id;
-
 static void UpdateObjectDictionnary(void *p_arg)
 {
 
@@ -181,9 +179,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     int16_t  hMotorIq               = MCInterface_GetIqdref(&MCInterface[0]).q;
     int16_t  hMotorId               = MCInterface_GetIqdref(&MCInterface[0]).d;
     #endif
-    
-    iq = hMotorIq;
-    id = hMotorId;
     
     //theses variables are only used
     //when device is on slave configuration
