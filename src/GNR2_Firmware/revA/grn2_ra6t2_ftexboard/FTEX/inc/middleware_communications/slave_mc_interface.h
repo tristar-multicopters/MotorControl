@@ -35,6 +35,8 @@ typedef struct
     int16_t hMotorTemp;
     int16_t hHeatsinkTemp;
     uint16_t hBusVoltage;
+    int16_t hIq;
+    int16_t hId;
 } SlaveMotorFeedback_t;
 
 /*
@@ -52,6 +54,8 @@ typedef struct
     uint32_t wRegAddrMotorTemp;         // Object dictionnary address to get slave motor temperature
     uint32_t wRegAddrHeatsinkTemp;      // Object dictionnary address to get slave heatsink temperature
     uint32_t wRegAddrBusVoltage;        // Object dictionnary address to get slave bus voltage
+    uint32_t wRegAddrIq;                // Object dictionnary address to get slave Iq
+    uint32_t wRegAddrId;                // Object dictionnary address to get slave Id
     uint32_t wRegAddrStartMotor;        // Object dictionnary address to write slave motor start bit
     uint32_t wRegAddrTorqueRef;         // Object dictionnary address to write slave motor torque reference
     uint32_t wRegAddrFaultAck;          // Object dictionnary address to write slave motor fault acknowledge bit

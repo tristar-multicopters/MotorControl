@@ -126,12 +126,12 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         switch (bMotorSelection) // Change powertrain mode and main motor depending on motor selection
         {
             case M1_SELECTED:
-                pHandle->sParameters.bMode = SINGLE_MOTOR;
-                pHandle->bMainMotor = M1;
+                pHandle->sParameters.bMode = DUAL_MOTOR;
+                pHandle->bMainMotor = pHandle->sParameters.bDefaultMainMotor;
                 break;
             case M2_SELECTED:
-                pHandle->sParameters.bMode = SINGLE_MOTOR;
-                pHandle->bMainMotor = M2;
+                pHandle->sParameters.bMode = DUAL_MOTOR;
+                pHandle->bMainMotor = pHandle->sParameters.bDefaultMainMotor;
                 break;
             case ALL_MOTOR_SELECTED:
                 pHandle->sParameters.bMode = DUAL_MOTOR;
@@ -1372,13 +1372,13 @@ uint16_t PWRT_GetDCCurrent(PWRT_Handle_t * pHandle)
     
     if (pHandle->pBatMonitorHandle->VBatAvg > 0)
     {
-        DCCurrent = (DCPower * 100)/ pHandle->pBatMonitorHandle->VBatAvg;
+        DCCurrent = (DCPower * 100) / pHandle->pBatMonitorHandle->VBatAvg;
     }
     else
     {
         DCCurrent = 0;
     }
-    
+ 
     return (uint16_t) round(DCCurrent);
 }
 

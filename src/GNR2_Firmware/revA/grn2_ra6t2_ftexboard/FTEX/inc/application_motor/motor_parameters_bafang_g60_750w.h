@@ -36,7 +36,7 @@ These variables are used to configure the motor within the smart config tool.
 #define MOTOR_VOLTAGE_CONSTANT                 24.5f        // Volts RMS ph-ph /kRPM
 #define ST_TORQUE_COEF                         1.2f         // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps                55           // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps                85           // peak current in amps
 
 /************************** Power Limit Parameters ************************/
 

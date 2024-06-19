@@ -35,9 +35,9 @@ extern "C" {
 //Number of entries to each OD configuration
 
 #define MASTER_IOT_SIZE       11
-#define MASTER_IOT_SLAVE_SIZE 23
-#define MASTER_SLAVE_SIZE     22
-#define SLAVE_MASTER_SIZE     22
+#define MASTER_IOT_SLAVE_SIZE 27
+#define MASTER_SLAVE_SIZE     26
+#define SLAVE_MASTER_SIZE     26
 
 //Mandatory Object Entries address
 
@@ -108,6 +108,7 @@ extern "C" {
 #define CO_OD_RPOD1                            0x1400
 #define CO_OD_RPOD2                            0x1401
 #define CO_OD_RPOD3                            0x1402
+#define CO_OD_RPOD4                            0x1403
 
 //OD ID used for RPDO mapping parameters
 // this object can have up to 8 subindex 
@@ -122,6 +123,7 @@ extern "C" {
 #define CO_OD_RPOD1_MAPPING                    0x1600
 #define CO_OD_RPOD2_MAPPING                    0x1601
 #define CO_OD_RPOD3_MAPPING                    0x1602
+#define CO_OD_RPOD4_MAPPING                    0x1603
 
 //OD ID used for TPDO communication parameter
 // this object can have up to 8 subindex 
@@ -134,6 +136,7 @@ extern "C" {
 #define CO_OD_TPDO1_COMMUNICATION              0x1800
 #define CO_OD_TPDO2_COMMUNICATION              0x1801
 #define CO_OD_TPDO3_COMMUNICATION              0x1802
+#define CO_OD_TPDO4_COMMUNICATION              0x1803
 
 //OD ID used for RPDO mapping parameter
 // this object can have up to 8 subindex
@@ -148,6 +151,7 @@ extern "C" {
 #define CO_OD_TPOD1_MAPPING                    0x1A00
 #define CO_OD_TPOD2_MAPPING                    0x1A01
 #define CO_OD_TPOD3_MAPPING                    0x1A02
+#define CO_OD_TPOD4_MAPPING                    0x1A03
 
 
 //OD ID used for communn entries, used by all configuration.
@@ -209,15 +213,24 @@ extern "C" {
 #define CO_OD_REG_MOTOR_FAULTS                 0x200E
 
 //OD ID used to read sensor current values.
+// this object has 4 subindex 
+//
+// 0 -> Master Iq value
+// 1 -> Slave Iq value
+// 2 -> Master Id value
+// 3 -> Slave Id value
+#define CO_OD_REG_MOTOR_IQD                    0x200F
+
+//OD ID used to read sensor current values.
 // this object has 2 subindex 
 //
 // 0 -> Current value from sensor 1.
 // 1 -> Current value from sensor 2.
-#define CO_OD_REG_MOTOR_SENSOR_CURRENT         0x200F
+#define CO_OD_REG_MOTOR_SENSOR_CURRENT         0x2010
 
-#define CO_OD_REG_MOTOR_TORQUE_REF             0x2010
-#define CO_OD_REG_MOTOR_START                  0x2011
-#define CO_OD_REG_FAULT_ACK                    0x2012
+#define CO_OD_REG_MOTOR_TORQUE_REF             0x2011
+#define CO_OD_REG_MOTOR_START                  0x2012
+#define CO_OD_REG_FAULT_ACK                    0x2013
 
 /*used by Power off sequency.*********/
 
@@ -225,7 +238,7 @@ extern "C" {
 //IOT module must implement the same address on their side and 
 //read this register periodocally(less than 1 second)
 //to know if the master will turn off or not.
-#define CO_OD_REG_DEVICE_TURNNING_OFF          0x2013
+#define CO_OD_REG_DEVICE_TURNNING_OFF          0x2014
 
 /* User Data configuration for the Gnr */
 
@@ -234,7 +247,7 @@ extern "C" {
 //
 // 0 -> KEY_USER_DATA_CONFIG_BEING_UPDATED   0xD5A3 : indicate memory being upadted
 // 1 -> KEY_USER_DATA_CONFIG_UPDATED         0xC2E5 : indicate memory was updated
-#define CO_OD_REG_KEY_USER_DATA_CONFIG         0x2014
+#define CO_OD_REG_KEY_USER_DATA_CONFIG         0x2015
 
 /********************************************************/ 
 

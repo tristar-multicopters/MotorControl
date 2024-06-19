@@ -56,6 +56,9 @@ void SlaveMCInterface_UpdateFeedback(SlaveMotorHandle_t * pHandle)
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccurredErrors), pHandle->pCONode, &pHandle->Feedback.wOccurredErrors, sizeof(pHandle->Feedback.wOccurredErrors));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrWarnings), pHandle->pCONode, &pHandle->Feedback.wWarnings, sizeof(pHandle->Feedback.wWarnings));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrMotorSpeed), pHandle->pCONode, &pHandle->Feedback.hMotorSpeed, sizeof(pHandle->Feedback.hMotorSpeed));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrIq), pHandle->pCONode, &pHandle->Feedback.hIq, sizeof(pHandle->Feedback.hIq));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrId), pHandle->pCONode, &pHandle->Feedback.hId, sizeof(pHandle->Feedback.hId));
+    
 }
 
 
