@@ -29,8 +29,9 @@ typedef struct
                                                 //from the cadence sensor when on run mode.
     bool bPedalSpeedSens_ResetWindowsFlag;      //Used to 
     uint16_t hPedalSpeedSens_NumberOfPulses;    /*Detected Number of pulses from the cadence signal*/
-    uint32_t wPedalSpeedSens_RPM;               /* Pedal Speed sensor RPM calculated value */
+    uint16_t wPedalSpeedSens_RPM;               /* Pedal Speed sensor RPM calculated value */
     uint16_t hPreviousNumberOfPulse;            // Number of pulses since the last pedalling activity check
+    uint8_t bNB_magnets;                        // Number of magnets or encoder resolution
 } PedalSpeedSensorHandle_t;
 
 // ==================== Public function prototypes ========================= //
@@ -89,7 +90,7 @@ bool PedalSpdSensor_GetWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
   @param  PedalSpeedSensorHandle_t handle
   @retval Speed in rpm
 */
-uint32_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle);
+uint16_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle);
 
 /**
   @brief Check if we have a new number of pulses detected 
@@ -98,5 +99,10 @@ uint32_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle);
   @return True if new pedal sensor pulses were detected since last function call
 */
 bool PedalSpdSensor_NewPedalPulsesDetected(PedalSpeedSensorHandle_t* pHandle);
+
+/**
+   Pedal Speed Sensor calculate RPM
+*/
+void PedalSpdSensor_CalculateRPM(PedalSpeedSensorHandle_t* pHandle);
 
 #endif

@@ -270,7 +270,7 @@
 #endif
 
 
-// PAS Torque sesnor parameters as default values
+// PAS Torque sensor parameters as default values
 
 #ifndef PTS_FILTER_ALPHA
     #define PTS_FILTER_ALPHA              2.27F    // Butterworth alpha coefficient pedal torque sensor filtering
@@ -331,6 +331,12 @@
 
 #ifndef PTS_FILTER_BW2_3
     #define PTS_FILTER_BW2_3                   25    // BW coefficient for pedal torque sensor avereging
+#endif
+
+//PEDAL ASSIST SENSOR CADENCE PARAMETERS
+
+#ifndef PAS_NB_MAGNETS_PER_TURN
+    #define PAS_NB_MAGNETS_PER_TURN                  0  //No PAS CADENCE SENSOR INSTALLED
 #endif
 
 //PAS ramps default values

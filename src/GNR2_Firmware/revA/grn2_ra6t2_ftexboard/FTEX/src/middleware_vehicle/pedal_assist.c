@@ -439,7 +439,7 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
         windowsDetectionLimite = windowsDetectionLimite + windowsIncrementTimeMs;
     }
     
-    //state macchine to handle PAS cadence detection
+    //state machine to handle PAS cadence detection
     //on differents scenarios, as start, running and stop.
     switch(PasCadenceState)
     { 

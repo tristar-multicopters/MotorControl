@@ -430,7 +430,7 @@ uint8_t bObjDataMasterSlavePresent          = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 0 (Placeholder currently not implemented) 
 uint16_t bObjDataPasPedalRPM                = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 1 (Placeholder currently not implemented) 
-uint8_t  bObjDataPasTorqueForcePercent      = 0;
+uint8_t  bObjDataPasTorquePercent      = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 2 (Placeholder currently not implemented) 
 uint16_t bObjDataPasTorqueForceWatts        = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 3
@@ -2026,7 +2026,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             //User to master and/or slave write showing it is present(no lost on master/slave communication).
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 1, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueForcePercent};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 1, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorquePercent};
             //move to next OD index
             index++;
             

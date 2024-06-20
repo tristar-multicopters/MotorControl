@@ -2,6 +2,7 @@
 #define __DURATORQ_AUTORQ_H
 
 // Currently choosen torque sensor for Velec
+//https://www.autorq.com/duratorq-torque-sensor-ebikes
 
 /***************** PEDAL TORQUE SENSOR PARAMETERS  ******************************/
 
@@ -11,11 +12,9 @@
 
 #define PTS_OFFSET_ADC2PTS              16000   // Offset for ADC to pedal torque sensor linear transformation
 
-/***************** PEDAL TORQUE SENSOR CADENCE PARAMETERS  ******************************/
+/***************** PEDAL ASSIST CADENCE PARAMETERS  ******************************/
 
-#define PAS_SLOW_PEDAL_COUNT            0       // Loop wait counter to update the PAS detection function
-
-
+#define PAS_NB_MAGNETS_PER_TURN                  36       //Number of magnets / pulses per rev / Poles
 
 
 #endif

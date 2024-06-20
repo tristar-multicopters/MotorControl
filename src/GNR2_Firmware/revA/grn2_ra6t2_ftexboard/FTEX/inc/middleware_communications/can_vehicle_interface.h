@@ -291,5 +291,20 @@ int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uin
  */
 uint32_t CanVehiInterface_GetOdometerDistance();
 
+/**
+  @brief  Get Pedal RPM function
+  @param  VCI_Handle_t handle
+  @return RPM in uint16_t format with one decimal place (return value/10) to convert
+*/
+uint16_t CanVehiInterface_GetVehiclePedalRPM(VCI_Handle_t * pHandle);
+
+
+/**
+  @brief  Get Pedal torque value in percentage
+  @param  VCI_Handle_t handle
+  @return torque percentage in uint8_t format
+*/
+uint8_t CanVehiInterface_GetPedalTorqPercentage(VCI_Handle_t * pHandle);
+
 
 #endif /* __CAN_IOT_COMM_H */

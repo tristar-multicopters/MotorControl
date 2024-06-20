@@ -4,8 +4,8 @@
 // Currently choosen cadence sensor for super 73 Z
 
 
-/***************** PEDAL SENSOR CADENCE PARAMETERS  ******************************/
+/***************** PEDAL ASSIST CADENCE PARAMETERS  ******************************/
 
-#define NB_MAGNETS 12 // For now we don't use this information but we still want to keep it as a known value
+#define PAS_NB_MAGNETS_PER_TURN                  12       //Number of magnets / pulses per turn / Poles
 
 #endif

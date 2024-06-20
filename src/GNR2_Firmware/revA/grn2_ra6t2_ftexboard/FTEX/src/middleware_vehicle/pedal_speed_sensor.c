@@ -10,6 +10,11 @@
 #include "pedal_speed_sensor.h"
 #include "ASSERT_FTEX.h"
 
+
+//===================== Defines =========================================== //
+
+#define MAX_ALLOWED_PERIOD_SEC     120  //Period of measurement for RMP in sec, two minutes
+
 // ==================== Public function prototypes ======================== //
 /**
     Pedal Speed Sensor module Initialization
@@ -17,6 +22,7 @@
 void PedalSpdSensor_Init(PedalSpeedSensorHandle_t* pHandle)
 {
     ASSERT(pHandle != NULL);
+    PulseFrequency_GetTimerInfo(pHandle->pPulseFrequency);
 }
 
 /**
@@ -78,7 +84,7 @@ bool PedalSpdSensor_GetWindowsFlag(PedalSpeedSensorHandle_t* pHandle)
 /**
     Pedal Speed Sensor RPM Get value
 */
-uint32_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle)
+uint16_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle)
 {    
     return pHandle->wPedalSpeedSens_RPM;
 }
@@ -98,4 +104,30 @@ bool PedalSpdSensor_NewPedalPulsesDetected(PedalSpeedSensorHandle_t* pHandle)
         return true;
     }
     return false;   
+}
+
+
+/**
+    Pedal Speed Sensor calculate periode value
+*/
+void PedalSpdSensor_CalculateRPM(PedalSpeedSensorHandle_t* pHandle)
+{
+    //check input conditions
+    ASSERT(pHandle != NULL);
+    //update basic wheel speed information.
+    //Calculate the basic parameters of the Input PAS Sensor
+    PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
+    // Get the total period time. Since the timer is configured to measure the pulse width
+    float period = pHandle->pPulseFrequency->wSecondPeriod;
+    // Prevent division by zero.    
+    static const float EPSILON = 1e-6f;
+    static const uint16_t ONE_DECIMAL_PLACE = 10; 
+    if (period > EPSILON && period < MAX_ALLOWED_PERIOD_SEC && pHandle->bNB_magnets > 0)
+    {
+        pHandle->wPedalSpeedSens_RPM = (uint16_t)(((float)(RPMCOEFF*ONE_DECIMAL_PLACE))/(period*pHandle->bNB_magnets));
+    }
+    else
+    {
+        pHandle->wPedalSpeedSens_RPM = 0; 
+    }
 }

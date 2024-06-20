@@ -127,7 +127,7 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.PasDecelRampArg1[7] = PAS8_DECEL_RAMP_ARG1,
     .PAS_ConfigData.PasDecelRampArg1[8] = PAS9_DECEL_RAMP_ARG1,   
     
-    .PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn = 0, // To update
+    .PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn = PAS_NB_MAGNETS_PER_TURN,
     .PAS_ConfigData.PasSensorConfig.pasTorqueInputMax = PTS_MAX_PTSVALUE,
     .PAS_ConfigData.PasSensorConfig.pasTorqueInputMin = PTS_OFFSET_ADC2PTS,
     .PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[0] = PTS_SPEED_FILTER_1,
@@ -399,7 +399,6 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     //paPowertrain->pPAS->pPSS->hPedalSpeedSens_MinPulseStartup(PEDALSPEEDSENSOR_MIN_PULSE_STARTUP)
     paPowertrain->pPAS->pPSS->hPedalSpeedSens_MinPulseStartup = UserConfigTask_GetPasCadenceStartupNumbPulses();
-    
     //update userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_WindowsStartup(PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS)
     paPowertrain->pPAS->pPSS->wPedalSpeedSens_WindowsStartup = UserConfigTask_GetPasCadenceStartupWindows();
     
@@ -445,8 +444,8 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     //update vehicle max speed(VEHICLE_TOP_SPEED_KMH).
     paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
 
-    //Magnets per pedal turn doesn't exist in vc layer yet so there is nothing to initialise
-  
+    //Get PAS sensor values
+    paPowertrain->pPAS->pPSS->bNB_magnets = UserConfigTask_GetPasNbMagnetsPerTurn();
     paPowertrain->pPAS->pPTS->hParameters.hOffsetPTS = UserConfigTask_GetPasTorqueInputMin();
     paPowertrain->pPAS->pPTS->hParameters.hMax       = UserConfigTask_GetPasTorqueInputMax();
     

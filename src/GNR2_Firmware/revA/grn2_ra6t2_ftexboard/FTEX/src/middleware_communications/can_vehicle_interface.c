@@ -239,6 +239,34 @@ uint32_t CanVehiInterface_GetOdometerDistance()
     return PWRT_GetDistanceTravelled();
 }
 
+/**
+  @brief  Get Pedal RPM function
+  @param  VCI_Handle_t handle
+  @return RPM in uint16_t format with one decimal place (return value/10) to convert
+*/
+uint16_t CanVehiInterface_GetVehiclePedalRPM(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pPowertrain != NULL);
+    ASSERT(pHandle->pPowertrain->pPAS != NULL);
+    ASSERT(pHandle->pPowertrain->pPAS->pPSS != NULL);
+    return PedalSpdSensor_GetSpeedRPM(pHandle->pPowertrain->pPAS->pPSS);
+}
+
+/**
+  @brief  Get Pedal torque value in percentage
+  @param  VCI_Handle_t handle
+  @return torque percentage in uint8_t format
+*/
+uint8_t CanVehiInterface_GetPedalTorqPercentage(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pPowertrain != NULL);
+    ASSERT(pHandle->pPowertrain->pPAS != NULL);
+    ASSERT(pHandle->pPowertrain->pPAS->pPTS != NULL);
+    return PedalTorqSensor_GetPercentTorqueValue(pHandle->pPowertrain->pPAS->pPTS);
+}
+
 
 /**
  *  Get the current state of the front light 
