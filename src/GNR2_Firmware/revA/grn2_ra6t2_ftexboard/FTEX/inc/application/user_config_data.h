@@ -61,6 +61,15 @@ typedef struct
     
 }Motor_Signal_Parameters_t;
 
+//struct used to hold information about motor temperature parameters
+typedef struct 
+{
+    uint8_t  motorSensorType;
+    uint16_t motorNTCBetaCoef;
+    uint16_t motorNTCResistanceCoef;
+    
+}Motor_Temperature_Parameters_t;
+
 typedef struct
 {
     uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE];
@@ -164,6 +173,7 @@ typedef struct
 {
     uint8_t dataHeader[2];
     uint8_t vehicle;
+    Motor_Temperature_Parameters_t  Motor_Temperature_Parameters;
     PAS_ConfigData_t      PAS_ConfigData;
     Battery_ConfigData_t  Battery_ConfigData; 
     Screen_ConfigData_t   Screen_ConfigData;

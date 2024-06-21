@@ -611,6 +611,10 @@ static void UpdateObjectDictionnary(void *p_arg)
             uint8_t  configThrottleAccelRampType;
             uint16_t configThrottleAccelRampArg1;
             
+            uint8_t motorTempSensorType;
+            uint16_t motorNTCBetaCoef;
+            uint16_t motorNTCResistanceCoef;
+            
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
              {
@@ -700,11 +704,20 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 2)),      pNode, &pasLowPassFilterBW1[1], sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 3)),      pNode, &pasLowPassFilterBW2[1], sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 4)),      pNode, &pasLowPassFilterBW1[2], sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),      pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));      
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),      pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));    
+
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 0)),    pNode, &motorTempSensorType, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 1)),    pNode, &motorNTCBetaCoef, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 2)),    pNode, &motorNTCResistanceCoef, sizeof(uint16_t));
                  
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
                  //upadat Throttle/Pedal Assist variables that will be write into the user data flash.
+                 
+                 UserConfigTask_UpdateMotorSensorType(motorTempSensorType);
+                 UserConfigTask_UpdateMotorNTCBetaCoef(motorNTCBetaCoef);
+                 UserConfigTask_UpdateMotorNTCResistanceCoef(motorNTCResistanceCoef);
+                 
                  UserConfigTask_UpdateNumberPasLevels(maxPAS);
                  UserConfigTask_UpdatePasMaxTorqueRatio(pasMaxTorqueRatio);
                  UserConfigTask_UpdatePasTorqueStartupThreshold(pasTorqueStartupThreshold);
@@ -1101,6 +1114,9 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW1), UserConfigTask_GetFilterBwValue(1, BW1), UserConfigTask_GetFilterBwValue(2, BW1)};
         uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW2), UserConfigTask_GetFilterBwValue(1, BW2), UserConfigTask_GetFilterBwValue(2, BW2)};
         
+        uint8_t motorTempSensorType = UserConfigTask_GetMotorSensorType();
+        uint16_t motorNTCBetaCoef = UserConfigTask_GetMotorNTCBetaCoef();
+        uint16_t motorNTCResistanceCoef = UserConfigTask_GetMotorNTCResistanceCoef();
                                               
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow));     
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSerialNbHigh,  sizeof(fSerialNbHigh));  
@@ -1212,6 +1228,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 3)),    pNode, &pasLowPassFilterBW2[1], sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 4)),    pNode, &pasLowPassFilterBW1[2], sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),    pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));
+        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 0)),    pNode, &motorTempSensorType, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 1)),    pNode, &motorNTCBetaCoef, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 2)),    pNode, &motorNTCResistanceCoef, sizeof(uint16_t));
+
    }           
 }
 

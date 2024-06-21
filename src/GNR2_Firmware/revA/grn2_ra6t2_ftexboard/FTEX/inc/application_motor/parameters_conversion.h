@@ -45,6 +45,8 @@
 /****** Temperature Parameters ******/
 #define CELSIUS_TO_KELVIN               273.15                     // Conversion constant for converting Celsius to Kelvin.
 #define TEMP_25_CELSIUS_IN_KELVIN       25 + CELSIUS_TO_KELVIN     // Conversion constant for 25 degrees Celsius to Kelvin.
+#define MOTOR_NTC_RESISTANCE_COEF_X_100 (uint16_t)(100*MOTOR_NTC_RESISTANCE_COEF) // Since we cannot add a float parameter to the object dictionary, we multiply it by 100.
+                                                                                  // In calculations, when we want to use it, we first divide it by 100.
 
 /************************* CONTROL FREQUENCIES & DELAIES **********************/
 #define TF_REGULATION_RATE     (uint32_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE))

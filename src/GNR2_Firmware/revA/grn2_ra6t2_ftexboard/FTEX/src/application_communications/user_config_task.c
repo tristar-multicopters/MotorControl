@@ -125,6 +125,10 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.Motor_Signal_Parameters.minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
     .Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US,
     
+    .Motor_Temperature_Parameters.motorSensorType = REAL_SENSOR,
+    .Motor_Temperature_Parameters.motorNTCBetaCoef = MOTOR_NTC_BETA_COEFFICIENT,
+    .Motor_Temperature_Parameters.motorNTCResistanceCoef =MOTOR_NTC_RESISTANCE_COEF_X_100,
+    
     .crc = 0x0000,
 };
 
@@ -423,6 +427,10 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pBatMonitorHandle->VBatMax = UserConfigTask_GetBatteryFullVoltage();
     paPowertrain->pBatMonitorHandle->VBatMin = UserConfigTask_GetBatteryEmptyVoltage();
     
+    /******************************************************************************************/
+    // These lines should be removed when DEV-1022 task is being worked on.
+    // https://tristarmulticopters.atlassian.net/browse/DEV-1022
+    
     paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->hMaxBusCurrent = UserConfigTask_GetBatteryMaxPeakDCCurrent();
 
     paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->hMaxContinuousCurrent = UserConfigTask_GetBatteryContinuousDCCurrent();
@@ -430,6 +438,13 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingEndValue  = UserConfigTask_GetBatteryPeakCurrentMaxDuration() + UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
     
     paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingRange = UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
+    
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->bSensorType = UserConfigTask_GetMotorSensorType();
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->hNTCBetaCoef = UserConfigTask_GetMotorNTCBetaCoef();
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->hNTCResCoef = (float)UserConfigTask_GetMotorNTCResistanceCoef();
+    
+    /******************************************************************************************/
+    
 
     //
     for (uint8_t n = 0; n < FILTERSPEED_ARRAY_SIZE; n++)
@@ -2101,6 +2116,72 @@ void UserConfigTask_UpdatePASOverThrottle(uint8_t value)
     {
         userConfigData.PAS_ConfigData.PASOverThrottle = value;    
     }        
+}
+
+/**
+  @brief Function to get the MotorSensorType, used to know if it is REAL_SENSOR or VIRTUAL_SENSOR
+  
+  @param void
+  @return uint8_t 1 to VIRTUAL_SENSOR, 0 to REAL_SENSOR
+*/
+uint8_t UserConfigTask_GetMotorSensorType(void)
+{
+    return userConfigData.Motor_Temperature_Parameters.motorSensorType; 
+}
+
+/**
+  @brief Function to update the MotorSensorType, used to update sensor type to REAL_SENSOR or VIRTUAL_SENSOR
+  
+  @param uint8_t 1 to VIRTUAL_SENSOR, 0 to REAL_SENSOR
+  @return none.
+*/
+void UserConfigTask_UpdateMotorSensorType(uint8_t value)
+{
+    userConfigData.Motor_Temperature_Parameters.motorSensorType = value;    
+}
+
+/**
+  @brief Function to get the Motor NTC Beta Coefficient, used to calculate motor temperature
+  
+  @param void
+  @return uint16_t value of motor NTC Beta Coefficient
+*/
+uint16_t UserConfigTask_GetMotorNTCBetaCoef(void)
+{
+    return userConfigData.Motor_Temperature_Parameters.motorNTCBetaCoef; 
+}
+
+/**
+  @brief Function to update the Motor NTC Beta Coefficient, used to calculate motor temperature
+  
+  @param uint16_t value of motor NTC Beta Coefficient
+  @return none.
+*/
+void UserConfigTask_UpdateMotorNTCBetaCoef(uint16_t value)
+{
+    userConfigData.Motor_Temperature_Parameters.motorNTCBetaCoef = value;   
+}
+
+/**
+  @brief Function to get the Motor NTC Rated Resistance, used to calculate motor temperature
+  
+  @param void
+  @return uint16_t value of motor NTC rated resistance
+*/
+uint16_t UserConfigTask_GetMotorNTCResistanceCoef(void)
+{
+    return (uint16_t)(userConfigData.Motor_Temperature_Parameters.motorNTCResistanceCoef); 
+}
+
+/**
+  @brief Function to update the Motor NTC Rated Resistance, used to calculate motor temperature
+  
+  @param uint16_t value of motor NTC rated resistance
+  @return none.
+*/
+void UserConfigTask_UpdateMotorNTCResistanceCoef(uint16_t value)
+{
+    userConfigData.Motor_Temperature_Parameters.motorNTCResistanceCoef = value;  
 }
 
 /**

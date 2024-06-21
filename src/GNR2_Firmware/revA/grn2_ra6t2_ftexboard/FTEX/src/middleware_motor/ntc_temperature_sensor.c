@@ -192,7 +192,7 @@ uint16_t NTCTempSensor_CalcMotorTemp(NTCTempSensorHandle_t * pHandle, int32_t wI
     wtemp -= MOTOR_NTC_SERIES_PULLDOWN_RESISTOR;
 
     // Apply Beta coefficient method to calculate temperature
-    wtemp *= pHandle->hNTCResCoef;
+    wtemp *= (pHandle->hNTCResCoef  / 100);
     wtemp = log(wtemp);
     wtemp = pHandle->hNTCBetaCoef / wtemp;
 

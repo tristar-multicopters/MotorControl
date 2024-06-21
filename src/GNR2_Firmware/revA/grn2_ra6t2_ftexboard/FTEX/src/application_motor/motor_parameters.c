@@ -201,6 +201,6 @@ void NTCParameters_Init(MotorParameters_t * MotorParameters)
     MotorParameters->ParametersConversion.MotorNTCInit.hOverTempThreshold = MotorParameters->TempParameters.hOverTempMotorThresholdC - MotorParameters->TempParameters.hOverTempMotorHysteresisC;
     MotorParameters->ParametersConversion.MotorNTCInit.hFoldbackStartTemp = (int16_t)(MotorParameters->TempParameters.hOverTempMotorThresholdC - MotorParameters->TempParameters.hFoldbackMotorTempInterval);
     MotorParameters->ParametersConversion.MotorNTCInit.hNTCBetaCoef = MOTOR_NTC_BETA_COEFFICIENT;
-    MotorParameters->ParametersConversion.MotorNTCInit.hNTCResCoef = MOTOR_NTC_RESISTANCE_COEF;
+    MotorParameters->ParametersConversion.MotorNTCInit.hNTCResCoef = MOTOR_NTC_RESISTANCE_COEF_X_100;
     MotorParameters->ParametersConversion.MotorNTCInit.bNTCSource = MOTOR_NTC;
 }
