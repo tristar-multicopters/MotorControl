@@ -127,3 +127,19 @@ uint8_t Wheel_GetVehicleSpeedDecFromWSS(WheelSpeedSensorHandle_t * pHandle)
     uint16_t IntegerPart = (uint16_t)speed;
     return (uint8_t) ((speed-IntegerPart) * DEC_PREC_FACTOR);
 }
+
+/**
+  * @brief  Get the vehicle speed integral and decimal in km/h using the wheel speed sensor
+  * @param  Handle of the wheel speed sensor
+  * @retval Speed in km/h as float
+  */
+float Wheel_GetVehicleSpeedFloatFromWSS(WheelSpeedSensorHandle_t *pHandle)
+{
+    ASSERT(pHandle != NULL);
+    // Get the current wheel RPM
+    uint16_t currentRPM = WheelSpdSensor_GetSpeedRPM(pHandle); 
+    // Get the current ratio between the wheel diameter and RPM to km/h
+    float RPMToKMHFactor = FTEX_PI * Wheel_GetWheelDiameter() * MINUTES_PER_HOUR / FTEX_KM_TO_INCH;
+    // Apply the RPM ratio to the RPM speed measured
+    return currentRPM * RPMToKMHFactor; 
+}

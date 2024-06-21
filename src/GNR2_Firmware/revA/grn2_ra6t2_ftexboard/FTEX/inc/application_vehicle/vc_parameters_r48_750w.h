@@ -65,6 +65,35 @@
 
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
 
+// Global PAS Params
+#define RUNTIME_PAS_SPEED_THRESHOLD                 5.0f    // Speed threshold to enable startup PAS power in km/h 
+#define STARTUP_PAS_SPEED_THRESHOLD                 1.0f    // Speed threshold to enable runtime PAS power in km/h
+#define TORQUE_STARTUP_VALUE_THRESHOLD    (uint16_t)1       // Torque value (%) that needs to be provided to have a startup detection
+#define STARTUP_PULSE_NUMBER              (uint32_t)2       // Number of pulses that needs to be detected to trigger startup detection
+#define STARTUP_TIME_WINDOW               (uint16_t)1000    // Time window (ms) in which the startup pulse number is counted
+#define RUNTIME_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger runtime detection
+#define RUNTIME_TIME_WINDOW               (uint16_t)500     // Time window (ms) in which the runtime pulse number is counted
+
+// Flag used to detect PAS with cadence AND torque.
+// 0: Cadence OR Torque
+// 1: Cadence AND Torque
+#define CADENCE_AND_OR_TORQUE    1
+
+// Select the ramp type from the enum in file _ramp.h_
+#define PAS_RAMP_SELECTION  DYNAMIC_DECELERATION_RAMP
+
+// Dynamic Deceleration Ramp Params
+#define DYNAMIC_DECEL_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
+#define DYNAMIC_DECEL_RAMP_END                32.0f         // Max speed(km/h) where the dynamic deceleration ramp ends
+#define DYNAMIC_DECEL_RAMP_POWER_MIN_SPEED    0.5f          // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
+#define DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
+
+// High Speed Power Limiting Ramp Params
+#define HIGH_SPEED_POWER_LIMITING_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
+#define HIGH_SPEED_POWER_LIMITING_RAMP_END                32.0f         // Max speed(km/h) where the dynamic deceleration ramp ends
+#define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED    50.0f         // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
+#define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
+
 //Used to chose the pas detection mode on startup, torque or/and cadence,
 //torque only or cadence only.
 #define PAS_DETECTIONSTARTUP_ALGORITHM      CadenceSensorUse /*noSensorUse = 0,
@@ -85,7 +114,7 @@
 #define PAS_2_MIN_TORQUE_PERCENT                0
 #define PAS_3_MIN_TORQUE_PERCENT                0
 #define PAS_4_MIN_TORQUE_PERCENT                0
-#define PAS_5_MIN_TORQUE_PERCENT                0 
+#define PAS_5_MIN_TORQUE_PERCENT                20 
 
 #define PAS_0_MAX_TORQUE_PERCENT                0
 #define PAS_1_MAX_TORQUE_PERCENT               60
@@ -103,22 +132,6 @@
 #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING               1    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running    
 //cadence detection windows on ms when running. 
 #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS  150
-
-                                                    // Values commented are the settings used to make the cadence feel very similar to velec release
-#define PAS1_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
-#define PAS1_ACCEL_RAMP_ARG1                    1   //     15
-
-#define PAS2_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR
-#define PAS2_ACCEL_RAMP_ARG1                    1   //     25
-
-#define PAS3_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
-#define PAS3_ACCEL_RAMP_ARG1                    1   //     55
-
-#define PAS4_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
-#define PAS4_ACCEL_RAMP_ARG1                    1   //     55
-
-#define PAS5_ACCEL_RAMP_TYPE              NO_RAMP   // LINEAR    
-#define PAS5_ACCEL_RAMP_ARG1                    1   //     65      
 
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 

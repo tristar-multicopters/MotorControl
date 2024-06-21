@@ -85,47 +85,7 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.PasLevelMaxTorque[5] = PAS_6_MAX_TORQUE_PERCENT,
     .PAS_ConfigData.PasLevelMaxTorque[6] = PAS_7_MAX_TORQUE_PERCENT,
     .PAS_ConfigData.PasLevelMaxTorque[7] = PAS_8_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.PasLevelMaxTorque[8] = PAS_9_MAX_TORQUE_PERCENT,
-    
-    .PAS_ConfigData.PasAccelRampType[0] = PAS1_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[1] = PAS2_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[2] = PAS3_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[3] = PAS4_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[4] = PAS5_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[5] = PAS6_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[6] = PAS7_ACCEL_RAMP_TYPE,
-    .PAS_ConfigData.PasAccelRampType[7] = PAS8_ACCEL_RAMP_TYPE,
-    .PAS_ConfigData.PasAccelRampType[8] = PAS9_ACCEL_RAMP_TYPE,
-    
-    .PAS_ConfigData.PasAccelRampArg1[0] = PAS1_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[1] = PAS2_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[2] = PAS3_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[3] = PAS4_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[4] = PAS5_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[5] = PAS6_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[6] = PAS7_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[7] = PAS8_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[8] = PAS9_ACCEL_RAMP_ARG1,
-    
-    .PAS_ConfigData.PasDecelRampType[0] = PAS1_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[1] = PAS2_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[2] = PAS3_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[3] = PAS4_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[4] = PAS5_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[5] = PAS6_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[6] = PAS7_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[7] = PAS8_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[8] = PAS9_DECEL_RAMP_TYPE,
-    
-    .PAS_ConfigData.PasDecelRampArg1[0] = PAS1_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[1] = PAS2_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[2] = PAS3_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[3] = PAS4_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[4] = PAS5_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[5] = PAS6_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[6] = PAS7_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[7] = PAS8_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[8] = PAS9_DECEL_RAMP_ARG1,   
+    .PAS_ConfigData.PasLevelMaxTorque[8] = PAS_9_MAX_TORQUE_PERCENT,  
     
     .PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn = PAS_NB_MAGNETS_PER_TURN,
     .PAS_ConfigData.PasSensorConfig.pasTorqueInputMax = PTS_MAX_PTSVALUE,
@@ -148,8 +108,6 @@ static User_ConfigData_t userConfigData =
     .Battery_ConfigData.PeakCurrentMaxDuration = MAX_POWER_LIMIT_TIMEOUT,
     .Screen_ConfigData.WalkmodeSpeed = PAS_LEVEL_SPEED_WALK,
     .Screen_ConfigData.WalkmodeMaxTorque = PAS_WALK_POWER_PERCENT,
-    .Screen_ConfigData.WalkmodeAccelRampType = WALKMODE_ACCEL_RAMP_TYPE,
-    .Screen_ConfigData.WalkmodeAccelRampArg1 = WALKMODE_ACCEL_RAMP_ARG1,
     .Screen_ConfigData.MaxSpeed = VEHICLE_TOP_SPEED_KMH,
     #if WWS_USE_MOTOR_NBR_PER_ROTATION == true || EXTERNAL_WSS_NBR_PER_ROTATION == 0
         .Screen_ConfigData.WheelSpeedSensorNbrMagnets = MOTOR_WSS_NBR_PER_ROTATION,
@@ -163,8 +121,6 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.TailLightBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,
     .Screen_ConfigData.Throttle_ConfigData.ThrottleBlock = THROTTLE_BLOCK_OFF,
     .Screen_ConfigData.Throttle_ConfigData.MaxSpeed = THROTTLE_TOP_SPEED,
-    .Screen_ConfigData.Throttle_ConfigData.AccelRampType = THROTTLE_ACCEL_RAMP_TYPE,
-    .Screen_ConfigData.Throttle_ConfigData.AccelRampArg1 = THROTTLE_ACCEL_RAMP_ARG1, 
     .Screen_ConfigData.Motor_Signal_Parameters.motorMixedSignal = MOTOR_TEMP_MIXED,
     .Screen_ConfigData.Motor_Signal_Parameters.minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
     .Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US,
@@ -427,18 +383,10 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
         //
         paPowertrain->pPAS->sParameters.PASMinTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMinTorque(n);
         //
-        paPowertrain->pPAS->sParameters.PASMaxTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMaxTorque(n);
-        
-        paPowertrain->pPAS->sParameters.PasRamps[0][n].RampType = UserConfigTask_GetPasAccelRampType(n);
-        paPowertrain->pPAS->sParameters.PasRamps[1][n].RampType = UserConfigTask_GetPasDecelRampType(n);
-        
-        paPowertrain->pPAS->sParameters.PasRamps[0][n].LinearParameters.Alpha = UserConfigTask_GetPasAccelRampArg1(n);
-        paPowertrain->pPAS->sParameters.PasRamps[1][n].LinearParameters.Alpha = UserConfigTask_GetPasDecelRampArg1(n);
+        paPowertrain->pPAS->sParameters.PASMaxTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMaxTorque(n); 
     }
     
     paPowertrain->pPAS->sParameters.walkModeTorqueRatio = UserConfigTask_GetWalkmodeMaxTorque();
-    paPowertrain->pPAS->sParameters.PasWalkmodeRamp.RampType = UserConfigTask_GetWalkmodeAccelRampType();
-    paPowertrain->pPAS->sParameters.PasWalkmodeRamp.LinearParameters.Alpha =  UserConfigTask_GetWalkmodeAccelRampArg1();
     paPowertrain->pPAS->sParameters.PASOverThrottle = UserConfigTask_GetPASOverThrottle();
     
     //update vehicle max speed(VEHICLE_TOP_SPEED_KMH).
@@ -471,11 +419,7 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();  
     paPowertrain->pThrottle->BlockOffThrottle = UserConfigTask_GetThrottleBlockOff();
     paPowertrain->pThrottle->hParameters.DefaultMaxThrottleSpeedKMH= UserConfigTask_GetThrottleMaxSpeed();
-    
-    paPowertrain->pThrottle->hParameters.ThrottleRamps[0].RampType = UserConfigTask_GetThrottleAccelRampType();
-    paPowertrain->pThrottle->hParameters.ThrottleRamps[0].LinearParameters.Alpha = UserConfigTask_GetThrottleAccelRampArg1();
-
-    
+     
     paPowertrain->pBatMonitorHandle->VBatMax = UserConfigTask_GetBatteryFullVoltage();
     paPowertrain->pBatMonitorHandle->VBatMin = UserConfigTask_GetBatteryEmptyVoltage();
     
