@@ -174,7 +174,7 @@ typedef struct
 typedef enum
 {
     REAL_SENSOR,
-    VIRTUAL_SENSOR,
+    NO_SENSOR,
 } SensorType_t;
 
 /**

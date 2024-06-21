@@ -89,7 +89,7 @@ void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, NTCTempSensorHandle_t N
         pHandle->hTimer = INIT_IGNORE_TIMER;
         NTCTempSensor_Clear(pHandle, defaultTemp);
     }
-    else  // VIRTUAL_SENSOR
+    else  // NO_SENSOR
     {
         pHandle->hFaultState = NTC_NO_ERRORS;
         pHandle->hAvTempDigital = pHandle->hExpectedTempDigital;
@@ -127,7 +127,7 @@ uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle)
         wtemp /= (uint32_t)(pHandle->hLowPassFilterBw);
         pHandle->hAvTempDigital = (uint16_t) wtemp;
     }
-    else  // VIRTUAL_SENSOR
+    else  // NO_SENSOR
     {
         pHandle->hFaultState = NTC_NO_ERRORS;
     }

@@ -14,7 +14,7 @@
 
 typedef struct
 {
-    SensorType_t SensorType;  // It contains the information about the type of instanced bus voltage sensor object. It can be equal to REAL_SENSOR or VIRTUAL_SENSOR
+    SensorType_t SensorType;  // It contains the information about the type of instanced bus voltage sensor object. It can be equal to REAL_SENSOR or NO_SENSOR
     uint16_t hConversionFactor;  // It is used to convert bus voltage from u16Volts into real Volts (V). u16Volt = 65536/hConversionFactor Volts
                                 // For real sensors hConversionFactor it's equal to the product between the expected MCU voltage and the voltage sensing network
                                 // attenuation. For virtual sensors it must be equal to 500
