@@ -120,7 +120,7 @@
   
 /***************** POWER ENABLE PARAMETERS  ******************************/
 
-#define POWER_ENABLE_ENABLE                 true            // True if power enable input is used to prevent powertrain start
+#define POWER_ENABLE_ENABLE                 false            // True if power enable input is used to prevent powertrain start
 
 /***************** WHEEL SPEED SENSOR PARAMETERS  ******************************/
 
