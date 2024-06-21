@@ -37,7 +37,7 @@ typedef enum
 } PasLevel_t;
 
 
-#define DEFAULT_PAS_LEVEL PAS_LEVEL_0
+#define DEFAULT_PAS_LEVEL PAS_LEVEL_5
 
 typedef enum
 {
