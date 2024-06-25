@@ -577,6 +577,8 @@ qd_t MDI_GetIqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
             ReturnValue = MCInterface_GetIqdref(pHandle->pMCI);
             break;
         case M2:
+            ReturnValue.q = SlaveMCInterface_GetIqRef(pHandle->pSlaveM2);
+            ReturnValue.d = SlaveMCInterface_GetIdRef(pHandle->pSlaveM2);
             break;
         default:
             break;

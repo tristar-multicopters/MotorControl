@@ -623,7 +623,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             ConvertedError = APT_TURN_ERROR;
             ConvertedError = APT_CONTROL_PROTEC;
             break;        
-       /* default: // If it's not a standard APT error just consider it a custom error or a debugging error
+        default: // If it's not a standard APT error just consider it a custom error or a debugging error
             
             if (aError < 0x9F && aError != 0x30) // For custom errors we need a value less or equal to 0x9F but that isn't 0x30,  
             {
@@ -633,7 +633,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             {
                 ConvertedError = 0x9F;
             }  
-          break; */
+          break;
     }
     
     return ConvertedError;
