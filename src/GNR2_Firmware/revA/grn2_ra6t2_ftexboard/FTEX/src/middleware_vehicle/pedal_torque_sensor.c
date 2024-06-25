@@ -175,6 +175,33 @@ uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle)
 }
 
 /**
+  @brief  Pedal torque Sensor Value in percentage
+  @param  PedalTorqSensorHandle_t handle
+  @return Torque value in percentage in uin8_t format
+*/
+uint8_t PedalTorqSensor_GetPercentTorqueValue(PedalTorqSensorHandle_t * pHandle)
+{
+    //Calculate the percentage according to torque sensor offset and max value
+    uint32_t temp = (pHandle->hAvADCValue - pHandle->hParameters.hOffsetPTS) * PTS_PERCENTAGE;
+    uint16_t denominator = pHandle->hParameters.hMax - pHandle->hParameters.hOffsetPTS;
+    //Prevent zero div.
+    if (denominator > 0)
+    {
+        temp = temp/denominator;
+    }
+    else
+    {
+        temp = 0;
+    }
+    
+    //Max value is 100 percent or more if hMax is lower than 65535 and av value > hMax, trim value
+    if (temp > PTS_PERCENTAGE)
+        temp = PTS_PERCENTAGE;
+    //it is safe to cast to 8-bit value is between 0 - 100 %
+    return (uint8_t) temp;
+}
+
+/**
     Pedal torque Sensor Reset ADC value
 */
 void   PedalTorqSensor_ResetAvValue(PedalTorqSensorHandle_t * pHandle)

@@ -78,7 +78,7 @@ These variables are used to configure the motor within the smart config tool.
 
 /************************** Temp Limit Parameters  ************************/
 
-#define MOTOR_TEMP_SENSOR_TYPE              REAL_SENSOR         // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
+#define MOTOR_TEMP_SENSOR_TYPE              REAL_SENSOR         // Real or no sensor. Can be REAL_SENSOR or NO_SENSOR
 #define MOTOR_TEMP_MIXED                    false               // true if the motor temperature signal is mixed with wheelspeed.
 #define MOTOR_NTC_BETA_COEFFICIENT          3950                //Beta coefficient value as specified in the datasheet
 #define MOTOR_NTC_RESISTANCE_COEF           56.2f               //This value is calculated based on this formula: exp(NTCBetaCoef / TEMP_25_CELSIUS_IN_KELVIN) / NTC Rated Resistance.

@@ -85,49 +85,9 @@ static User_ConfigData_t userConfigData =
     .PAS_ConfigData.PasLevelMaxTorque[5] = PAS_6_MAX_TORQUE_PERCENT,
     .PAS_ConfigData.PasLevelMaxTorque[6] = PAS_7_MAX_TORQUE_PERCENT,
     .PAS_ConfigData.PasLevelMaxTorque[7] = PAS_8_MAX_TORQUE_PERCENT,
-    .PAS_ConfigData.PasLevelMaxTorque[8] = PAS_9_MAX_TORQUE_PERCENT,
+    .PAS_ConfigData.PasLevelMaxTorque[8] = PAS_9_MAX_TORQUE_PERCENT,  
     
-    .PAS_ConfigData.PasAccelRampType[0] = PAS1_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[1] = PAS2_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[2] = PAS3_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[3] = PAS4_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[4] = PAS5_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[5] = PAS6_ACCEL_RAMP_TYPE, 
-    .PAS_ConfigData.PasAccelRampType[6] = PAS7_ACCEL_RAMP_TYPE,
-    .PAS_ConfigData.PasAccelRampType[7] = PAS8_ACCEL_RAMP_TYPE,
-    .PAS_ConfigData.PasAccelRampType[8] = PAS9_ACCEL_RAMP_TYPE,
-    
-    .PAS_ConfigData.PasAccelRampArg1[0] = PAS1_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[1] = PAS2_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[2] = PAS3_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[3] = PAS4_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[4] = PAS5_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[5] = PAS6_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[6] = PAS7_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[7] = PAS8_ACCEL_RAMP_ARG1,
-    .PAS_ConfigData.PasAccelRampArg1[8] = PAS9_ACCEL_RAMP_ARG1,
-    
-    .PAS_ConfigData.PasDecelRampType[0] = PAS1_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[1] = PAS2_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[2] = PAS3_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[3] = PAS4_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[4] = PAS5_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[5] = PAS6_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[6] = PAS7_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[7] = PAS8_DECEL_RAMP_TYPE,
-    .PAS_ConfigData.PasDecelRampType[8] = PAS9_DECEL_RAMP_TYPE,
-    
-    .PAS_ConfigData.PasDecelRampArg1[0] = PAS1_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[1] = PAS2_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[2] = PAS3_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[3] = PAS4_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[4] = PAS5_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[5] = PAS6_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[6] = PAS7_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[7] = PAS8_DECEL_RAMP_ARG1,
-    .PAS_ConfigData.PasDecelRampArg1[8] = PAS9_DECEL_RAMP_ARG1,   
-    
-    .PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn = 0, // To update
+    .PAS_ConfigData.PasSensorConfig.pasNbMagnetsPerTurn = PAS_NB_MAGNETS_PER_TURN,
     .PAS_ConfigData.PasSensorConfig.pasTorqueInputMax = PTS_MAX_PTSVALUE,
     .PAS_ConfigData.PasSensorConfig.pasTorqueInputMin = PTS_OFFSET_ADC2PTS,
     .PAS_ConfigData.PAS_Torque_Filter_Configuration.FilterSpeed[0] = PTS_SPEED_FILTER_1,
@@ -148,8 +108,6 @@ static User_ConfigData_t userConfigData =
     .Battery_ConfigData.PeakCurrentMaxDuration = MAX_POWER_LIMIT_TIMEOUT,
     .Screen_ConfigData.WalkmodeSpeed = PAS_LEVEL_SPEED_WALK,
     .Screen_ConfigData.WalkmodeMaxTorque = PAS_WALK_POWER_PERCENT,
-    .Screen_ConfigData.WalkmodeAccelRampType = WALKMODE_ACCEL_RAMP_TYPE,
-    .Screen_ConfigData.WalkmodeAccelRampArg1 = WALKMODE_ACCEL_RAMP_ARG1,
     .Screen_ConfigData.MaxSpeed = VEHICLE_TOP_SPEED_KMH,
     #if WWS_USE_MOTOR_NBR_PER_ROTATION == true || EXTERNAL_WSS_NBR_PER_ROTATION == 0
         .Screen_ConfigData.WheelSpeedSensorNbrMagnets = MOTOR_WSS_NBR_PER_ROTATION,
@@ -163,11 +121,13 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.TailLightBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,
     .Screen_ConfigData.Throttle_ConfigData.ThrottleBlock = THROTTLE_BLOCK_OFF,
     .Screen_ConfigData.Throttle_ConfigData.MaxSpeed = THROTTLE_TOP_SPEED,
-    .Screen_ConfigData.Throttle_ConfigData.AccelRampType = THROTTLE_ACCEL_RAMP_TYPE,
-    .Screen_ConfigData.Throttle_ConfigData.AccelRampArg1 = THROTTLE_ACCEL_RAMP_ARG1, 
     .Screen_ConfigData.Motor_Signal_Parameters.motorMixedSignal = MOTOR_TEMP_MIXED,
     .Screen_ConfigData.Motor_Signal_Parameters.minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
     .Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US,
+    
+    .Motor_Temperature_Parameters.motorSensorType = MOTOR_TEMP_SENSOR_TYPE,
+    .Motor_Temperature_Parameters.motorNTCBetaCoef = MOTOR_NTC_BETA_COEFFICIENT,
+    .Motor_Temperature_Parameters.motorNTCResistanceCoef =MOTOR_NTC_RESISTANCE_COEF_X_100,
     
     .crc = 0x0000,
 };
@@ -399,7 +359,6 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     //paPowertrain->pPAS->pPSS->hPedalSpeedSens_MinPulseStartup(PEDALSPEEDSENSOR_MIN_PULSE_STARTUP)
     paPowertrain->pPAS->pPSS->hPedalSpeedSens_MinPulseStartup = UserConfigTask_GetPasCadenceStartupNumbPulses();
-    
     //update userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_WindowsStartup(PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS)
     paPowertrain->pPAS->pPSS->wPedalSpeedSens_WindowsStartup = UserConfigTask_GetPasCadenceStartupWindows();
     
@@ -428,25 +387,17 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
         //
         paPowertrain->pPAS->sParameters.PASMinTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMinTorque(n);
         //
-        paPowertrain->pPAS->sParameters.PASMaxTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMaxTorque(n);
-        
-        paPowertrain->pPAS->sParameters.PasRamps[0][n].RampType = UserConfigTask_GetPasAccelRampType(n);
-        paPowertrain->pPAS->sParameters.PasRamps[1][n].RampType = UserConfigTask_GetPasDecelRampType(n);
-        
-        paPowertrain->pPAS->sParameters.PasRamps[0][n].LinearParameters.Alpha = UserConfigTask_GetPasAccelRampArg1(n);
-        paPowertrain->pPAS->sParameters.PasRamps[1][n].LinearParameters.Alpha = UserConfigTask_GetPasDecelRampArg1(n);
+        paPowertrain->pPAS->sParameters.PASMaxTorqRatiosInPercentage[n] = UserConfigTask_GetPasLevelMaxTorque(n); 
     }
     
     paPowertrain->pPAS->sParameters.walkModeTorqueRatio = UserConfigTask_GetWalkmodeMaxTorque();
-    paPowertrain->pPAS->sParameters.PasWalkmodeRamp.RampType = UserConfigTask_GetWalkmodeAccelRampType();
-    paPowertrain->pPAS->sParameters.PasWalkmodeRamp.LinearParameters.Alpha =  UserConfigTask_GetWalkmodeAccelRampArg1();
     paPowertrain->pPAS->sParameters.PASOverThrottle = UserConfigTask_GetPASOverThrottle();
     
     //update vehicle max speed(VEHICLE_TOP_SPEED_KMH).
     paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
 
-    //Magnets per pedal turn doesn't exist in vc layer yet so there is nothing to initialise
-  
+    //Get PAS sensor values
+    paPowertrain->pPAS->pPSS->bNB_magnets = UserConfigTask_GetPasNbMagnetsPerTurn();
     paPowertrain->pPAS->pPTS->hParameters.hOffsetPTS = UserConfigTask_GetPasTorqueInputMin();
     paPowertrain->pPAS->pPTS->hParameters.hMax       = UserConfigTask_GetPasTorqueInputMax();
     
@@ -472,13 +423,13 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pThrottle->hParameters.hMaxThrottle    = UserConfigTask_GetThrottleAdcMax();  
     paPowertrain->pThrottle->BlockOffThrottle = UserConfigTask_GetThrottleBlockOff();
     paPowertrain->pThrottle->hParameters.DefaultMaxThrottleSpeedKMH= UserConfigTask_GetThrottleMaxSpeed();
-    
-    paPowertrain->pThrottle->hParameters.ThrottleRamps[0].RampType = UserConfigTask_GetThrottleAccelRampType();
-    paPowertrain->pThrottle->hParameters.ThrottleRamps[0].LinearParameters.Alpha = UserConfigTask_GetThrottleAccelRampArg1();
-
-    
+     
     paPowertrain->pBatMonitorHandle->VBatMax = UserConfigTask_GetBatteryFullVoltage();
     paPowertrain->pBatMonitorHandle->VBatMin = UserConfigTask_GetBatteryEmptyVoltage();
+    
+    /******************************************************************************************/
+    // These lines should be removed when DEV-1022 task is being worked on.
+    // https://tristarmulticopters.atlassian.net/browse/DEV-1022
     
     paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->hMaxBusCurrent = UserConfigTask_GetBatteryMaxPeakDCCurrent();
 
@@ -487,6 +438,13 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingEndValue  = UserConfigTask_GetBatteryPeakCurrentMaxDuration() + UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
     
     paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingRange = UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
+    
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->bSensorType = UserConfigTask_GetMotorSensorType();
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->hNTCBetaCoef = UserConfigTask_GetMotorNTCBetaCoef();
+    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->hNTCResCoef = (float)UserConfigTask_GetMotorNTCResistanceCoef();
+    
+    /******************************************************************************************/
+    
 
     //
     for (uint8_t n = 0; n < FILTERSPEED_ARRAY_SIZE; n++)
@@ -2158,6 +2116,72 @@ void UserConfigTask_UpdatePASOverThrottle(uint8_t value)
     {
         userConfigData.PAS_ConfigData.PASOverThrottle = value;    
     }        
+}
+
+/**
+  @brief Function to get the MotorSensorType, used to know if it is REAL_SENSOR or VIRTUAL_SENSOR
+  
+  @param void
+  @return uint8_t 1 to VIRTUAL_SENSOR, 0 to REAL_SENSOR
+*/
+uint8_t UserConfigTask_GetMotorSensorType(void)
+{
+    return userConfigData.Motor_Temperature_Parameters.motorSensorType; 
+}
+
+/**
+  @brief Function to update the MotorSensorType, used to update sensor type to REAL_SENSOR or VIRTUAL_SENSOR
+  
+  @param uint8_t 1 to VIRTUAL_SENSOR, 0 to REAL_SENSOR
+  @return none.
+*/
+void UserConfigTask_UpdateMotorSensorType(uint8_t value)
+{
+    userConfigData.Motor_Temperature_Parameters.motorSensorType = value;    
+}
+
+/**
+  @brief Function to get the Motor NTC Beta Coefficient, used to calculate motor temperature
+  
+  @param void
+  @return uint16_t value of motor NTC Beta Coefficient
+*/
+uint16_t UserConfigTask_GetMotorNTCBetaCoef(void)
+{
+    return userConfigData.Motor_Temperature_Parameters.motorNTCBetaCoef; 
+}
+
+/**
+  @brief Function to update the Motor NTC Beta Coefficient, used to calculate motor temperature
+  
+  @param uint16_t value of motor NTC Beta Coefficient
+  @return none.
+*/
+void UserConfigTask_UpdateMotorNTCBetaCoef(uint16_t value)
+{
+    userConfigData.Motor_Temperature_Parameters.motorNTCBetaCoef = value;   
+}
+
+/**
+  @brief Function to get the Motor NTC Rated Resistance, used to calculate motor temperature
+  
+  @param void
+  @return uint16_t value of motor NTC rated resistance
+*/
+uint16_t UserConfigTask_GetMotorNTCResistanceCoef(void)
+{
+    return (uint16_t)(userConfigData.Motor_Temperature_Parameters.motorNTCResistanceCoef); 
+}
+
+/**
+  @brief Function to update the Motor NTC Rated Resistance, used to calculate motor temperature
+  
+  @param uint16_t value of motor NTC rated resistance
+  @return none.
+*/
+void UserConfigTask_UpdateMotorNTCResistanceCoef(uint16_t value)
+{
+    userConfigData.Motor_Temperature_Parameters.motorNTCResistanceCoef = value;  
 }
 
 /**

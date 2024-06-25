@@ -8,147 +8,97 @@
 #include <math.h>
 
 /**
-  Function used to initialise ramps, calls the proper function for the type of the ramp used
-*/
-void Ramps_Init(Ramps_Handle_t * pHandle)
-{  
-    ASSERT(pHandle != NULL);    
-    switch(pHandle->RampType)
+  * @brief  Dynamic deceleration ramp. 
+  * Linear ramp thats reduce the amount of deceleration according
+  * to the current speed of the bike. The fastest the bike goes,
+  * the slower the deceleration. The ramp parameters can be change
+  * in the vc_parameters_bike.h under the "Dynamic Deceleration Ramp Params"
+  * @param currentSpeed : current bike speed during the ramp filtering
+  * @param input : Torque power delivered before the ramp filtering
+  * @retval Torque power delivered after the ramp filtering                                                                                    
+  */
+int16_t Ramps_DynamicDecelerationRamp(float currentSpeed, int16_t input);
+
+/**
+  * @brief  High speed power limiting ramp. 
+  * Linear ramp thats reduce the amount of power delivered according
+  * to the current speed of the bike. The fastest the bike goes,
+  * the less power we deliver. The ramp parameters can be change
+  * in the vc_parameters_bike.h under the "High Speed Power Limiting Ramp Param"
+  * @param currentSpeed : current bike speed during the ramp filtering
+  * @param input : Torque power delivered before the ramp filtering
+  * @retval Torque power delivered after the ramp filtering                                                                                    
+  */
+int16_t Ramps_HighSpeedPowerLimitingRamp(float currentSpeed, int16_t input);
+
+
+/**
+  * @brief  Apply the ramp to power delivered
+*/ 
+int16_t Ramps_ApplyRamp(RampType_t rampType, float currentSpeed, int16_t input)
+{
+    switch (rampType)
     {
-        case LINEAR:
-            Ramps_LinearInit(pHandle);
-            break;
-        case NO_RAMP:           
+        case NO_RAMP_SELECTED:
+            return input;
+        case DYNAMIC_DECELERATION_RAMP:
+            return Ramps_DynamicDecelerationRamp(currentSpeed, input);
+        case HIGH_SPEED_POWER_LIMITING_RAMP:
+            return Ramps_HighSpeedPowerLimitingRamp(currentSpeed, input);
         default:
-            // Nothing to initialize
-        break;   
-    }    
+            return input;
+    }
 }
 
 /**
-  Function used to initialise linear ramps
+  * @brief  Dynamic deceleration ramp. 
+  * Linear ramp thats reduce the amount of deceleration according
+  * to the current speed of the bike. The fastest the bike goes,
+  * the slower the deceleration. The ramp parameters can be change
 */
-void Ramps_LinearInit(Ramps_Handle_t * pHandle)
+int16_t Ramps_DynamicDecelerationRamp(float currentSpeed, int16_t input)
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->RampType == LINEAR);
-    
-    if (pHandle->LinearParameters.Alpha <= 0) // Make sure alpha isn;t 0 as this would break the ramp
-    {
-        pHandle->LinearParameters.Alpha = 1; 
-    }
-    
-    pHandle->LinearParameters.MaxDelta = pHandle->RampMax/pHandle->LinearParameters.Alpha; // Compute the Max delta
-    pHandle->PreviousValue = 0;    
+    static float prevSpeed = 0;
+    static int16_t prevInput = 0;
+    int16_t output = 0;
+
+    // If we are accelerating
+    if(currentSpeed >= prevSpeed) output = input;
+
+    // Calculate the minimum amount of power we can deliver so we do not decelerate too fast
+    float currentDecelerationAmplitude = (DYNAMIC_DECEL_RAMP_POWER_MIN_SPEED - DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED)
+                                         /(DYNAMIC_DECEL_RAMP_END - DYNAMIC_DECEL_RAMP_START);
+    float minOutput = prevInput * (1 - fabsf(currentDecelerationAmplitude/DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED));
+
+    // If the input is lower than the minimum output, we return the minimum output
+    if(input < minOutput) output = (int16_t)minOutput;
+    else output = input;
+
+    prevInput = input;
+    prevSpeed = currentSpeed;
+    return output;
 }
 
 /**
-  Function used to apply a ramp
+  * @brief  High speed power limiting ramp. 
+  * Linear ramp thats reduce the amount of power delivered according
+  * to the current speed of the bike. The fastest the bike goes,
+  * the less power we deliver. The ramp parameters can be change
+  * in the vc_parameters_bike.h under the "High Speed Power Limiting Ramp Param"
 */
-uint16_t Ramps_ApplyRamp(Ramps_Handle_t * pHandle, uint16_t Input)
+int16_t Ramps_HighSpeedPowerLimitingRamp(float currentSpeed, int16_t input)
 {
-    ASSERT(pHandle != NULL);
-    uint16_t ValueOut = 0;
-    
-    static Ramps_Handle_t * LastModifiedRamp = 0;
-    
-    if (LastModifiedRamp !=  pHandle || LastModifiedRamp == 0) // Did we switch to a different ramp ?
-    {
-        if (LastModifiedRamp != 0)
-        {
-           // Transfer the latest value to the new ramp for a smooth transition
-           pHandle->PreviousValue =  LastModifiedRamp->PreviousValue;
-           Ramps_ResetRamp(LastModifiedRamp);  
-        }
-                
-        LastModifiedRamp = pHandle;         
-    }    
-    
-    static uint16_t Counter = 0; 
-    
-    switch(pHandle->RampType)
-    {
-       case LINEAR:
-           ValueOut = Ramps_ApplyLinearRamp(pHandle,Input);
-           break;
-       case NO_RAMP:
-       default:
-           ValueOut = Input;
-           break;
-    }  
-    
-    // We need to slow down the ramp to ensure we have time between set points
-    // but if we receive a request to cut the power, we don't wait
-    
-    if (Counter > RAMP_TIMESCALE_COUNTER || ValueOut == 0 || pHandle->RampType == NO_RAMP) 
-    {                                                      
-        Counter = 0; // If its time for a new setpoint reset the counter and dont overwrite the value
-    }
-    else
-    {
-        Counter ++;  // If it's not the time keep counting and overwrite with the previous value
-        ValueOut = pHandle->PreviousValue;
-    } 
-    
-    pHandle->PreviousValue = ValueOut; // Updated the last value
-    
-    return ValueOut; 
-}
+    if(currentSpeed < HIGH_SPEED_POWER_LIMITING_RAMP_START)
+        return input;
 
-/**
-  Function used to apply a linear ramp
-*/
-uint16_t Ramps_ApplyLinearRamp(Ramps_Handle_t * pHandle, uint16_t Input)
-{
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->RampType == LINEAR); 
-   
-    uint16_t ValOut = 0; 
-     
-    
-    if (Input == 0) // If we need to cut the power don't check the next value of the ramp simply apply it
-    {    
-        ValOut = Input; 
-    }
-    // Do we need to apply the restriction  for accelerating ?
-    else if (Input > (pHandle->PreviousValue + pHandle->LinearParameters.MaxDelta) && pHandle->RampDirection == ACCELERATION) 
-    {
-        ValOut = (uint16_t)round(pHandle->PreviousValue + pHandle->LinearParameters.MaxDelta);  // Apply the restricted value      
-    }
-    // Do we need to apply the restriction  for decelerating ?
-    else if (Input < (pHandle->PreviousValue - pHandle->LinearParameters.MaxDelta) && pHandle->RampDirection == DECELERATION)
-    {            
-        if ((pHandle->PreviousValue - pHandle->LinearParameters.MaxDelta) < 0) // make sure we saturate at 0 power
-        {
-            ValOut = 0;  
-        }    
-        else
-        {
-            ValOut = (uint16_t)round(pHandle->PreviousValue - pHandle->LinearParameters.MaxDelta); // Apply the restricted value 
-        }
-    }
-    else // If the value is within the max range then simply apply it
-    {
-        ValOut = Input;    
-    }
-    
-    return ValOut;    
-}
+    if(currentSpeed > HIGH_SPEED_POWER_LIMITING_RAMP_END)
+        return (int16_t)((float)input * ((float)HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED/100.0));        
 
-/**
-  Function used reset a ramp
-*/
-void Ramps_ResetRamp(Ramps_Handle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-    switch(pHandle->RampType)
-    {
-       case LINEAR:
-           pHandle->PreviousValue = 0;
-           break;
-       case NO_RAMP:
-       default:
-            // Do nothing
-           break;
-    } 
+    // We calculate the amount (% of max power) that needs to be trimmed off from the input 
+    int16_t output = 0;
+    float decelerationRampFactor = (HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED - HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED)
+                                    /(HIGH_SPEED_POWER_LIMITING_RAMP_END - HIGH_SPEED_POWER_LIMITING_RAMP_START);
+    output = (int16_t)(input - fabsf(((decelerationRampFactor * currentSpeed) / 100) * input)); 
+    
+    return output;
 }

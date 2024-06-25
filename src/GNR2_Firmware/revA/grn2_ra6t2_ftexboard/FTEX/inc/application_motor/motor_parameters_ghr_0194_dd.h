@@ -65,9 +65,12 @@
 
 /************************** Temp Limit Parameters  ************************/
 
-#define MOTOR_TEMP_SENSOR_TYPE              VIRTUAL_SENSOR      // Real or virtual sensor. Can be REAL_SENSOR or VIRTUAL_SENSOR
+#define MOTOR_TEMP_SENSOR_TYPE              NO_SENSOR           // Real or no sensor. Can be REAL_SENSOR or NO_SENSOR
 #define MOTOR_TEMP_MIXED                    false               // true if the motor temperature signal is mixed with wheelspeed.
-    
+#define MOTOR_NTC_BETA_COEFFICIENT          3450                //Beta coefficient value as specified in the datasheet
+#define MOTOR_NTC_RESISTANCE_COEF           10.6f               //This value is calculated based on this formula: exp(NTCBetaCoef / TEMP_25_CELSIUS_IN_KELVIN) / NTC Rated Resistance.
+                                                                //NTC Rated Resistance = NTC resistance at 25 degree celsius in ohm
+
 #define OV_TEMP_MOTOR_THRESHOLD_C           125                 // Maximum temperature in degree C
 #define OV_TEMP_MOTOR_HYSTERESIS_C          5                   // Temperature to decrease after an overtemp fault occurred before clearing the fault, in degree C
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        10                  // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature

@@ -89,7 +89,8 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
     static bool bLightInitalised = false;
     
     while (true)
-    { 
+    {   
+        PedalSpdSensor_CalculateRPM(pVCI->pPowertrain->pPAS->pPSS);
         //Try to detect PAS from a cadence signal(sensor).
         //this function must increment , input number 2, with the same frequency of the task where he is being 
         //called.

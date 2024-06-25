@@ -538,6 +538,16 @@ extern "C" {
 #define CO_OD_REG_ODOMETER_DISTANCE            0x2030
 
 //OD ID will be used to
+// receive data about the motor NTC
+// 0 -> Enable or Disable NTC sensor.
+//
+// 1 -> NTC Beta coefficient value
+//
+// 2 -> Motor_NTC_Resistance_Coef * 100 (because we need this value as a float, but we cannot add a float to the OD)
+//      Motor_NTC_Resistance_Coef = exp(NTCBetaCoef / TEMP_25_CELSIUS_IN_KELVIN) / NTC Rated Resistance.
+#define CO_OD_REG_MOTOR_TEMPERATURE            0x2031
+
+//OD ID will be used to
 // receive data and commands during a firmware update.
 // the GNR doesn't have enough memory to receive
 // all bytes and needs to receive some bytes(more than 4)

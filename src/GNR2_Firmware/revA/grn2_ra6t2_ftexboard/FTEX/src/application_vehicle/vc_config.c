@@ -9,7 +9,6 @@
 #include "board_hardware.h"
 #include "vc_parameters.h"
 #include "hal_data.h"
-#include "pas_tuning.h"
 
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
@@ -221,114 +220,6 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.PASMaxTorqRatiosInPercentage[8] = PAS_8_MAX_TORQUE_PERCENT,
     .sParameters.PASMaxTorqRatiosInPercentage[9] = PAS_9_MAX_TORQUE_PERCENT,
     
-    //Deceleration ramps
-    .sParameters.PasRamps[0][0] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = NO_RAMP,
-                               },
-    .sParameters.PasRamps[0][1] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = PAS1_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS1_ACCEL_RAMP_ARG1, 
-                               },
-    .sParameters.PasRamps[0][2] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = PAS2_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS2_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[0][3] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = PAS3_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS3_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[0][4] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = PAS4_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS4_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[0][5] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = PAS5_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS5_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[0][6] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = PAS6_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS6_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[0][7] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = PAS7_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS7_ACCEL_RAMP_ARG1,        
-                               },
-    .sParameters.PasRamps[0][8] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = PAS8_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS8_ACCEL_RAMP_ARG1, 
-                               },
-    .sParameters.PasRamps[0][9] = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = PAS9_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS9_ACCEL_RAMP_ARG1, 
-                               },
-    
-    //Deceleration ramps
-    .sParameters.PasRamps[1][0] = {
-                                 .RampDirection = DECELERATION, 
-                                 .RampType = NO_RAMP,
-                               },
-    .sParameters.PasRamps[1][1] = {
-                                 .RampDirection = DECELERATION,
-                                 .RampType = PAS1_DECEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS1_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[1][2] = {
-                                 .RampDirection = DECELERATION,
-                                 .RampType = PAS2_DECEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS2_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[1][3] = {
-                                 .RampDirection = DECELERATION,
-                                 .RampType = PAS3_DECEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS3_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[1][4] = {                          
-                                 .RampDirection = DECELERATION,
-                                 .RampType = PAS4_DECEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS4_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[1][5] = {
-                                 .RampDirection = DECELERATION,
-                                 .RampType = PAS5_DECEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS5_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[1][6] = {
-                                 .RampDirection = DECELERATION,
-                                 .RampType = PAS6_DECEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS6_ACCEL_RAMP_ARG1, 
-                               },
-    .sParameters.PasRamps[1][7] = {
-                                 .RampDirection = DECELERATION,
-                                 .RampType = PAS7_DECEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS7_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[1][8] = {
-                                 .RampDirection = DECELERATION,
-                                 .RampType = PAS8_DECEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS8_ACCEL_RAMP_ARG1,
-                               },
-    .sParameters.PasRamps[1][9] = {
-                                 .RampDirection = DECELERATION, 
-                                 .RampType = PAS9_DECEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = PAS9_ACCEL_RAMP_ARG1,
-                               },
-    
-    .sParameters.PasWalkmodeRamp = {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = WALKMODE_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = WALKMODE_ACCEL_RAMP_ARG1,
-                               },    
-
     .bPASPowerEnable = false,
     .bPASCadenceRunningOverride = false,
     .bPASTorqueRunningOverride = false,
@@ -373,15 +264,6 @@ ThrottleHandle_t ThrottleHandle =
         .hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
         
         .DefaultMaxThrottleSpeedKMH = THROTTLE_TOP_SPEED,
-        .ThrottleRamps[0] =  {
-                                 .RampDirection = ACCELERATION,
-                                 .RampType = THROTTLE_ACCEL_RAMP_TYPE,
-                                 .LinearParameters.Alpha = THROTTLE_ACCEL_RAMP_ARG1,
-                             },
-        .ThrottleRamps[1] =  {
-                                 .RampDirection = DECELERATION,
-                                 .RampType = NO_RAMP,
-                              },
     },
 };
 

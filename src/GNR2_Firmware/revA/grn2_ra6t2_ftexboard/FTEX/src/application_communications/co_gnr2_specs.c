@@ -450,7 +450,7 @@ uint8_t bObjDataMasterSlavePresent          = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 0 (Placeholder currently not implemented) 
 uint16_t bObjDataPasPedalRPM                = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 1 (Placeholder currently not implemented) 
-uint8_t  bObjDataPasTorqueForcePercent      = 0;
+uint8_t  bObjDataPasTorquePercent      = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 2 (Placeholder currently not implemented) 
 uint16_t bObjDataPasTorqueForceWatts        = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 3
@@ -521,6 +521,15 @@ int16_t bObjDataMotorRpmWithGearRatio = 0;
 
 //variable associated with CO_OD_REG_MOTOR_RPM subindex 1
 uint32_t bObjOdometerDistanceKM = 0;
+
+//variable associated with CO_OD_REG_MOTOR_TEMPERATURE subindex 0
+uint8_t bObjSensorType=0;
+
+//variable associated with CO_OD_REG_MOTOR_TEMPERATURE subindex 1
+uint16_t bObjNTCBetaCoef=0;
+
+//variable associated with CO_OD_REG_MOTOR_TEMPERATURE subindex 2
+uint16_t bObjNTCRatedResistance=0;
 
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
@@ -2262,7 +2271,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             //User to master and/or slave write showing it is present(no lost on master/slave communication).
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 1, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueForcePercent};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(COD_OD_REG_PAS_SENSOR, 1, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorquePercent};
             //move to next OD index
             index++;
             
@@ -2557,7 +2566,16 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_ODOMETER_DISTANCE, 0, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)&bObjOdometerDistanceKM};
             //move to next OD index
             index++;
-                        
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TEMPERATURE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjSensorType};
+            //move to next OD index
+            index++;
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TEMPERATURE, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjNTCBetaCoef};
+            //move to next OD index
+            index++;  
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TEMPERATURE, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjNTCRatedResistance};
+            //move to next OD index
+            index++;  
             
             //Application - Used to control the firmware update procedure.
             //subindex 0 is used to receive command from the IOT module to control the DFU process.

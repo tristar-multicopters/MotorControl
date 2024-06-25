@@ -1169,6 +1169,54 @@ uint8_t UserConfigTask_GetPASOverThrottle(void);
 void UserConfigTask_UpdatePASOverThrottle(uint8_t value);
 
 /**
+  @brief Function to get the MotorSensorType, used to know if it is REAL_SENSOR or VIRTUAL_SENSOR
+  
+  @param void
+  @return uint8_t 1 to VIRTUAL_SENSOR, 0 to REAL_SENSOR
+*/
+uint8_t UserConfigTask_GetMotorSensorType(void);
+
+/**
+  @brief Function to update the MotorSensorType, used to update sensor type to REAL_SENSOR or VIRTUAL_SENSOR
+  
+  @param uint8_t 1 to VIRTUAL_SENSOR, 0 to REAL_SENSOR
+  @return none.
+*/
+void UserConfigTask_UpdateMotorSensorType(uint8_t value);
+
+/**
+  @brief Function to get the Motor NTC Beta Coefficient, used to calculate motor temperature
+  
+  @param void
+  @return uint16_t value of motor NTC Beta Coefficient
+*/
+uint16_t UserConfigTask_GetMotorNTCBetaCoef(void);
+
+/**
+  @brief Function to update the Motor NTC Beta Coefficient, used to calculate motor temperature
+  
+  @param uint16_t value of motor NTC Beta Coefficient
+  @return none.
+*/
+void UserConfigTask_UpdateMotorNTCBetaCoef(uint16_t value);
+
+/**
+  @brief Function to get the Motor NTC Rated Resistance, used to calculate motor temperature
+  
+  @param void
+  @return uint16_t value of motor NTC rated resistance
+*/
+uint16_t UserConfigTask_GetMotorNTCResistanceCoef(void);
+
+/**
+  @brief Function to update the Motor NTC Rated Resistance, used to calculate motor temperature
+  
+  @param uint16_t value of motor NTC rated resistance
+  @return none.
+*/
+void UserConfigTask_UpdateMotorNTCResistanceCoef(uint16_t value);
+
+/**
   @brief Function used to calculate a CRC 16 type using the same polynom 
   used by the bluetooth protocol.CCITT 16 bits polynom.
   

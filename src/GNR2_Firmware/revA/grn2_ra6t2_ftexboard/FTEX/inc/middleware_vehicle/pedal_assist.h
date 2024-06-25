@@ -11,7 +11,6 @@
 #include "pedal_speed_sensor.h"
 #include "pedal_torque_sensor.h"
 #include "wheel_speed_sensor.h"
-#include "pas_tuning.h"
 #include "ramps.h"
 #include "wheel.h"
 
@@ -74,11 +73,7 @@ typedef struct
     uint8_t PASMaxSpeed[10];                  // Max speed to each PAS level.
     uint8_t PASMinTorqRatiosInPercentage[10]; // Min PAS Torque ratio in % for each level
     uint8_t PASMaxTorqRatiosInPercentage[10]; // Max PAS Torque ratio in % for each level
-    int16_t walkModeTorqueRatio;              // Torque ratio in % for walk mode
-    
-    Ramps_Handle_t PasRamps[2][10];           // Acceleration and deceleration ramps for each pas level
-    Ramps_Handle_t PasWalkmodeRamp;   
-    
+    int16_t walkModeTorqueRatio;              // Torque ratio in % for walk mode    
 } PAS_Parameters_t;
 
 typedef struct
@@ -280,13 +275,6 @@ void PedalAssist_SetStartupPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t a
     * @retval None
     */
 void PedalAssist_SetRunningPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
-
-/**
-    * @brief  Get the ramp that should be applied
-    * @param  Pedal Assist handle, Ramp to apply
-    * @retval void
-    */
-Ramps_Handle_t * PedalAssist_GetRamp(PAS_Handle_t * pHandle, uint8_t Direction);
 
 /**
     * @brief  Reset Cadence State Pas Dection

@@ -20,7 +20,7 @@ void MS_Init(MS_Handle_t * pHandle)
     struct GPIOConfig PinConfig;
    
     PinConfig.PinDirection = INPUT;
-    PinConfig.PinPull      = UP; 
+    PinConfig.PinPull      = NONE; 
     PinConfig.PinOutput    = PUSH_PULL; 
     
     uCAL_GPIO_ReInit(pHandle->wM1SelectPinNumber, PinConfig);
@@ -34,7 +34,13 @@ MotorSelection_t MS_CheckSelection(MS_Handle_t* pHandle)
     {
         bool bM1Select = uCAL_GPIO_Read(pHandle->wM1SelectPinNumber);
         bool bM2Select = uCAL_GPIO_Read(pHandle->wM2SelectPinNumber);
-        bool bBothSelect = bM1Select && bM2Select;
+        bool bBothSelect = false;
+        
+        //Pins for the motor selector of M1 and M2 read 0 when both are selected
+        if (bM1Select == bM2Select)
+        {
+            bBothSelect = true;
+        }
         
         if (bBothSelect)
         {

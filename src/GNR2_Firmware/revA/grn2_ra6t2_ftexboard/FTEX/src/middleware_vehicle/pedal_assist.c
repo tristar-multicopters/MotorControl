@@ -35,30 +35,8 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, u
     ASSERT(pHandle != NULL);
     
     //init pas torque ramps
-    pHandle->sParameters.PasRamps[0][0].RampMax = (PAS_0_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[0][1].RampMax = (PAS_1_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[0][2].RampMax = (PAS_2_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[0][3].RampMax = (PAS_3_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[0][4].RampMax = (PAS_4_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[0][5].RampMax = (PAS_5_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[0][6].RampMax = (PAS_6_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[0][7].RampMax = (PAS_7_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[0][8].RampMax = (PAS_8_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[0][9].RampMax = (PAS_9_MAX_TORQUE_PERCENT * maxTorque)/100;
-    
-    pHandle->sParameters.PasRamps[1][0].RampMax = (PAS_0_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[1][1].RampMax = (PAS_1_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[1][2].RampMax = (PAS_2_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[1][3].RampMax = (PAS_3_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[1][4].RampMax = (PAS_4_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[1][5].RampMax = (PAS_5_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[1][6].RampMax = (PAS_6_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[1][7].RampMax = (PAS_7_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[1][8].RampMax = (PAS_8_MAX_TORQUE_PERCENT * maxTorque)/100;
-    pHandle->sParameters.PasRamps[1][9].RampMax = (PAS_9_MAX_TORQUE_PERCENT * maxTorque)/100;
-
+	
     //init walkmode ramp amd pas max torque
-    pHandle->sParameters.PasWalkmodeRamp.RampMax = (PAS_WALK_POWER_PERCENT * maxTorque)/100;
     pHandle->sParameters.hPASMaxTorque = (int16_t)maxTorque;
 
     PedalSpdSensor_Init(pHandle->pPSS);
@@ -72,15 +50,6 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, u
     PedalAssist_ResetTorqueStartupPasDection(pHandle);
     PedalAssist_ResetTorqueRunningPasDection(pHandle);
     PedalAssist_PASUpdateMaxSpeed(pHandle);
-    
-    for( int i = 0; i < 10 ; i++) 
-    {   
-        Ramps_Init(&(pHandle->sParameters.PasRamps[0][i]));
-        Ramps_Init(&(pHandle->sParameters.PasRamps[1][i]));
-    }
-    
-    Ramps_Init(&(pHandle->sParameters.PasWalkmodeRamp));
-
 }
 
 /**
@@ -274,9 +243,7 @@ int16_t PedalAssist_GetWalkmodeTorque(PAS_Handle_t * pHandle)
 void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
-    uint16_t currentRPM = WheelSpdSensor_GetSpeedRPM(pHandle->pWSS); 
-    float RPMToKMHFactor = FTEX_PI * Wheel_GetWheelDiameter() * MINUTES_PER_HOUR / FTEX_KM_TO_INCH;
-    float currentSpeed = currentRPM * RPMToKMHFactor;
+    float currentSpeed = Wheel_GetVehicleSpeedFloatFromWSS(pHandle->pWSS);
     
     // Validate the PAS Power Enable depending on the value of CADENCE_AND_OR_TORQUE (PAS Power AND/OR)
     bool StartupPowerEnable = ((pHandle->bCadenceStartupPASDetected | pHandle->bTorqueStartupPASDetected) & ~(CADENCE_AND_OR_TORQUE)) | 
@@ -439,7 +406,7 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
         windowsDetectionLimite = windowsDetectionLimite + windowsIncrementTimeMs;
     }
     
-    //state macchine to handle PAS cadence detection
+    //state machine to handle PAS cadence detection
     //on differents scenarios, as start, running and stop.
     switch(PasCadenceState)
     { 
@@ -680,25 +647,6 @@ void PedalAssist_SetRunningPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t a
     ASSERT(pHandle != NULL);
     
     pHandle->bRunningPasAlgorithm = aPASAlgo;
-}
-
-/**
-    * @brief  Get the ramp that should be applied when using PAS
-    * @param  Pedal Assist handle, Ramp to apply
-    * @retval void
-    */
-Ramps_Handle_t * PedalAssist_GetRamp(PAS_Handle_t * pHandle, uint8_t Direction)
-{
-    ASSERT(pHandle != NULL);
-        
-    if (pHandle->bCurrentAssistLevel != PAS_LEVEL_WALK)
-    {       
-        return &(pHandle->sParameters.PasRamps[Direction][pHandle->bCurrentAssistLevel]);        
-    }
-    else
-    {        
-        return &(pHandle->sParameters.PasWalkmodeRamp);        
-    }      
 }
 
 /**
@@ -956,23 +904,24 @@ bool PedalAssist_TorqueSensorIssueDetected(PAS_Handle_t * pHandle)
     // If the torque sensor value is smaller than threshold or we have pedal pulse detected
     if(PedalTorqSensor_GetAvValue(pHandle->pPTS) < torqueSensorThreshold || PedalSpdSensor_NewPedalPulsesDetected(pHandle->pPSS))
     {
-        // Reset the pedal pulse timer and return no error
         pHandle->torqueSensorIssueTimer = 0;
-        pHandle->bTorqueSensorIssue = false;
+        return false;
     }
- 
+
     // If the torque sensor issue timer is triggered by the set timeout value
     if(pHandle->torqueSensorIssueTimer >= TORQUE_SENSOR_TIMEOUT_THRESHOLD)
     {
-        pHandle->bTorqueSensorIssue = true;
+        //pHandle->bTorqueSensorIssue = true;
+        return true;
     }
 
     // If we have a high torque sensor value with no pedalling activity, we increment the timer
     if(PedalTorqSensor_GetAvValue(pHandle->pPTS) >= torqueSensorThreshold && !PedalSpdSensor_NewPedalPulsesDetected(pHandle->pPSS))
     {
         pHandle->torqueSensorIssueTimer++;
-        pHandle->bTorqueSensorIssue = false;
+        //pHandle->bTorqueSensorIssue = false;
+        return false;
     }
 
-    return pHandle->bTorqueSensorIssue;
+    return false;
 }

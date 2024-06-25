@@ -32,7 +32,7 @@ typedef enum
 typedef struct
 {
     SensorType_t  bSensorType;           /**< Type of instanced temperature.
-                                         This parameter can be REAL_SENSOR or VIRTUAL_SENSOR */
+                                         This parameter can be REAL_SENSOR or NO_SENSOR */
 
     bool          bSensorMixed;
 

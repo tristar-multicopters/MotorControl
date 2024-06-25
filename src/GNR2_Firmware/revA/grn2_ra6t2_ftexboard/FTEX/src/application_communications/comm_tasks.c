@@ -71,28 +71,30 @@ static void UpdateObjectDictionnary(void *p_arg)
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     // Get Bike Parameters 
     // Read only
-    uint8_t  hSpeed;
-    uint8_t  hSpeedDec;
-    uint16_t hDCPWR;    
-    uint16_t hTorque;
-    uint16_t hPWR;
-    uint16_t hMaxDCPwr;
-     int16_t hMotorTemp;
-     int16_t hHeatsinkTemp;
-     uint8_t bSOC;
-    uint8_t  hBrakeStatus;
-    uint32_t hErrorState;
-    uint16_t hBusVoltage;
-    int16_t configMotorRpm;
-		uint32_t odometerDistance;
-    int16_t configMotorRpmWithGearRatio;
-    int16_t hPhaseCurrentSensor1;
-    int16_t hPhaseCurrentSensor2;
+    uint8_t     hSpeed;
+    uint8_t     hSpeedDec;
+    uint16_t    hDCPWR;    
+    uint16_t    hTorque;
+    uint16_t    hPWR;
+    uint16_t    hMaxDCPwr;
+     int16_t    hMotorTemp;
+     int16_t    hHeatsinkTemp;
+     uint8_t    bSOC;
+    uint8_t     hBrakeStatus;
+    uint32_t    hErrorState;
+    uint16_t    hBusVoltage;
+    int16_t     configMotorRpm;
+    uint32_t    odometerDistance;
+    int16_t     configMotorRpmWithGearRatio;
+    int16_t     hPhaseCurrentSensor1;
+    int16_t     hPhaseCurrentSensor2;
+    uint16_t    PedalRPM;
+    uint8_t     PerdalTorqPercent;
     // Read and write
-    uint8_t  bPAS[2];
-    uint8_t  hWheelDiameter[2];
-    uint8_t  hFrontLightState[2];
-    uint8_t  hRearLightState[2];
+    uint8_t     bPAS[2];
+    uint8_t     hWheelDiameter[2];
+    uint8_t     hFrontLightState[2];
+    uint8_t     hRearLightState[2];
 
     //canopen algorithm selection
     static uint8_t CanOpenSetAlgorithm = 0;
@@ -121,7 +123,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         hPhaseCurrentSensor1 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(pVCI, CURRENT_SENSOR_1);
         hPhaseCurrentSensor2 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(pVCI, CURRENT_SENSOR_2);
 			
-				odometerDistance		 = CanVehiInterface_GetOdometerDistance();
+		odometerDistance	 = CanVehiInterface_GetOdometerDistance();
         
         configMotorRpm = UserConfigTask_GetMotorRpm(pVCI);
         configMotorRpmWithGearRatio = UserConfigTask_GetMotorRpmWithGearRatio(pVCI);
@@ -130,6 +132,8 @@ static void UpdateObjectDictionnary(void *p_arg)
         hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
         hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
+        PedalRPM                        = CanVehiInterface_GetVehiclePedalRPM(pVCI);
+        PerdalTorqPercent               = CanVehiInterface_GetPedalTorqPercentage(pVCI);
 
     }
     else
@@ -534,11 +538,16 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_RPM, 0)),      pNode, &configMotorRpm, sizeof(int16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_RPM, 1)),      pNode, &configMotorRpmWithGearRatio, sizeof(int16_t));
 						
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ODOMETER_DISTANCE, 0)),      pNode, &odometerDistance                                                             , sizeof(uint32_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_ODOMETER_DISTANCE, 0)),      pNode, &odometerDistance, sizeof(uint32_t));
 						
 
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SENSOR_CURRENT, 0)), pNode, &hPhaseCurrentSensor1, sizeof(int16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SENSOR_CURRENT, 1)), pNode, &hPhaseCurrentSensor2, sizeof(int16_t));          
+            
+            
+            //PAS sensor information
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 0 )), pNode, &PedalRPM, sizeof(uint16_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 1 )), pNode, &PerdalTorqPercent, sizeof(uint8_t));
             
             //Update pasLevelMinTorque
             CanVehiInterface_GetPasLevelMinTorque(&VCInterfaceHandle, pasLevelMinTorque);
@@ -567,7 +576,6 @@ static void UpdateObjectDictionnary(void *p_arg)
         }
         else
         {
-            
             uint8_t  configPasNbMagnetsPerTurn = UserConfigTask_GetPasNbMagnetsPerTurn();                                     
             uint16_t configPasTorqueInputMax = UserConfigTask_GetPasTorqueInputMax();
             uint16_t configPasTorqueInputMin = UserConfigTask_GetPasTorqueInputMin();
@@ -614,6 +622,10 @@ static void UpdateObjectDictionnary(void *p_arg)
             uint8_t  configThrottleMaxSpeed;
             uint8_t  configThrottleAccelRampType;
             uint16_t configThrottleAccelRampArg1;
+            
+            uint8_t motorTempSensorType;
+            uint16_t motorNTCBetaCoef;
+            uint16_t motorNTCResistanceCoef;
             
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
@@ -662,7 +674,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WALK_MODE_SPEED, 3)), pNode, &configWalkmodeAccelRampArg1, sizeof(uint16_t));
                 
                  // Config 
-                 // Subindex 0-2 have place holder but have not been implemented yet.
+                 // Subindex 0-2 are read only and not in the memory section, placeholder for index 2 is not implemented yet.
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 3)),       pNode, &configPasNbMagnetsPerTurn, sizeof(uint8_t));  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 4)),       pNode, &configPasTorqueInputMin, sizeof(uint16_t));  
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 5)),       pNode, &configPasTorqueInputMax, sizeof(uint16_t)); 
@@ -704,11 +716,20 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 2)),      pNode, &pasLowPassFilterBW1[1], sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 3)),      pNode, &pasLowPassFilterBW2[1], sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 4)),      pNode, &pasLowPassFilterBW1[2], sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),      pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));      
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),      pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));    
+
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 0)),    pNode, &motorTempSensorType, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 1)),    pNode, &motorNTCBetaCoef, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 2)),    pNode, &motorNTCResistanceCoef, sizeof(uint16_t));
                  
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
                  //upadat Throttle/Pedal Assist variables that will be write into the user data flash.
+                 
+                 UserConfigTask_UpdateMotorSensorType(motorTempSensorType);
+                 UserConfigTask_UpdateMotorNTCBetaCoef(motorNTCBetaCoef);
+                 UserConfigTask_UpdateMotorNTCResistanceCoef(motorNTCResistanceCoef);
+                 
                  UserConfigTask_UpdateNumberPasLevels(maxPAS);
                  UserConfigTask_UpdatePasMaxTorqueRatio(pasMaxTorqueRatio);
                  UserConfigTask_UpdatePasTorqueStartupThreshold(pasTorqueStartupThreshold);
@@ -1107,6 +1128,9 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW1), UserConfigTask_GetFilterBwValue(1, BW1), UserConfigTask_GetFilterBwValue(2, BW1)};
         uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW2), UserConfigTask_GetFilterBwValue(1, BW2), UserConfigTask_GetFilterBwValue(2, BW2)};
         
+        uint8_t motorTempSensorType = UserConfigTask_GetMotorSensorType();
+        uint16_t motorNTCBetaCoef = UserConfigTask_GetMotorNTCBetaCoef();
+        uint16_t motorNTCResistanceCoef = UserConfigTask_GetMotorNTCResistanceCoef();
                                               
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow));     
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSerialNbHigh,  sizeof(fSerialNbHigh));  
@@ -1218,6 +1242,11 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 3)),    pNode, &pasLowPassFilterBW2[1], sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 4)),    pNode, &pasLowPassFilterBW1[2], sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_TORQUE_FILTER_FOR_SPEED, 5)),    pNode, &pasLowPassFilterBW2[2], sizeof(uint16_t));
+        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 0)),    pNode, &motorTempSensorType, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 1)),    pNode, &motorNTCBetaCoef, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 2)),    pNode, &motorNTCResistanceCoef, sizeof(uint16_t));
+
    }           
 }
 

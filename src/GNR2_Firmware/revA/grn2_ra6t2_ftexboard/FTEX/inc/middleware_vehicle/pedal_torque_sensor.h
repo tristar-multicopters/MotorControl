@@ -117,6 +117,13 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle,uint8_t speed
 uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle);
 
 /**
+  @brief  Pedal torque Sensor Value in percentage
+  @param  PedalTorqSensorHandle_t handle
+  @return Torque value in percentage in uin8_t format
+*/
+uint8_t PedalTorqSensor_GetPercentTorqueValue(PedalTorqSensorHandle_t * pHandle);
+
+/**
   @brief  Pedal torque Sensor Reset ADC value
   @param  PedalTorqSensorHandle_t handle
   @return None
