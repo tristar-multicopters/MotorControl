@@ -270,6 +270,7 @@ typedef struct
 typedef struct 
 {
     BatteryPower_Setup_t    BatteryPowerSetup;
+    bool                    bEnSpeedLimit;
     
 } MC_Setup_t;
 

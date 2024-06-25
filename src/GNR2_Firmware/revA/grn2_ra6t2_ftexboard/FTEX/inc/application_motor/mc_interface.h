@@ -98,6 +98,8 @@ void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachine
   */
 void MCInterface_PowerInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup);
 
+void MCInterface_SpeedLimitEnInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup);
+
 /**
   * @brief  This is usually a method managed by task. It must be called
   *         periodically in order to check the status of the related pSTM object

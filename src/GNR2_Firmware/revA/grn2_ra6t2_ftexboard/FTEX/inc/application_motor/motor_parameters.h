@@ -42,7 +42,6 @@ typedef struct
 {
     uint16_t hMaxAppliationSpeedRPM;
     
-    bool bEnableSpeedLimitControl;
     int16_t hPIDSpeedKpDefault;
     int16_t hPIDSpeedKiDefault;
     uint16_t hSpKiDiv;

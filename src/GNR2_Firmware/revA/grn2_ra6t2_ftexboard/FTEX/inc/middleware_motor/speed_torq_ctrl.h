@@ -168,6 +168,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
   */
 void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup, MotorParameters_t MotorParameters);
 
+void SpdTorqCtrl_SpeedLimitEnInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup);
 
 /**
   * @brief  It should be called before each motor restart. If STC is set in

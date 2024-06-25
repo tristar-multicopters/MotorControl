@@ -21,6 +21,10 @@
                                                             // UART_CLOUD_5S,             
                                                             // UART_LOG_HS 
                                               
+/******************* SPEED LIMIT PARAMETERS  *******************************/
+
+#define ENABLE_SPEED_LIMIT                  false           // Enable or disable speed limit (default speed limit is 32km/hr)
+    
 /***************** THROTTLE SELECTION  ******************************/
 
 #include "throttle_sensors/vc_velec_throttle.h"
@@ -51,7 +55,7 @@
 #define PTS_FILTER_BW1_3                      10              // BW coefficient for pedal torque sensor avereging for speed 3
 #define PTS_FILTER_BW2_3                      25              // BW coefficient for pedal torque sensor avereging for speed 3
 
-/***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
+/***************** PEDAL ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
 #define PAS_TORQUE_GAIN                     100             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
@@ -106,7 +110,7 @@
 #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
-/***************** PEDDLE ASSIST SYSTEM FILTER PARAMETERS  ***************************/
+/***************** PEDAL ASSIST SYSTEM FILTER PARAMETERS  ***************************/
 
 #define FOLDBACK_SLOW_START_BANDWIDTH       500             // Fold Back slow start filter bandwidth coefficient for slow ramp to the PAS Control
 #define FOLDBACK_SLOW_STOP_BANDWIDTH        155             // Fold Back slow stop filter bandwidth coefficient for slow ramp to the PAS Control

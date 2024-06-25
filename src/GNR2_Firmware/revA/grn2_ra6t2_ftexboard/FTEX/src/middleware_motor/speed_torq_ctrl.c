@@ -48,9 +48,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     pHandle->hMaxAppNegativeMecSpeedUnit = (int16_t)(- MotorParameters.ParametersConversion.hMaxApplicationSpeedUnit);
     pHandle->hSpdLimit = (int16_t)(MotorParameters.ParametersConversion.hMaxApplicationSpeedUnit);
     pHandle->hSpdLimitWheelRpm = MotorParameters.ParametersConversion.hMaxApplicationSpeedUnit;
-    
-    pHandle->bEnableSpdLimitControl = MotorParameters.SpeedParameters.bEnableSpeedLimitControl;
-    
+        
     pHandle->hMaxPositivePower = (uint16_t)(DEFAULT_MAX_APPLICATION_POSITIVE_POWER * MotorParameters.PowerParameters.hEstimatedEfficiency / 100);
     pHandle->hMinNegativePower = -(int16_t)(DEFAULT_MAX_APPLICATION_POSITIVE_POWER * MotorParameters.PowerParameters.hEstimatedEfficiency / 100);
     pHandle->hEstimatedEfficiencyPercent = MotorParameters.PowerParameters.hEstimatedEfficiency;
@@ -166,6 +164,10 @@ void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup, Mo
     Foldback_Init(&pHandle->FoldbackDynamicMaxPower, FoldbackInitPower);
 }
 
+void SpdTorqCtrl_SpeedLimitEnInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup)
+{
+    pHandle->bEnableSpdLimitControl = MCSetup.bEnSpeedLimit;
+}
 
 void SpdTorqCtrl_SetSpeedSensor(SpdTorqCtrlHandle_t * pHandle, SpdPosFdbkHandle_t * SPD_Handle)
 {

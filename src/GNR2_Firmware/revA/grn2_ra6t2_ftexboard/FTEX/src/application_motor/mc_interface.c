@@ -58,6 +58,15 @@ void MCInterface_PowerInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t M
 /*
 * see function definition
 */
+void MCInterface_SpeedLimitEnInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup)
+{
+    ASSERT(pHandle != NULL);
+    SpdTorqCtrl_SpeedLimitEnInit(pHandle->pSpeedTorqCtrl, MCSetup);
+}
+
+/*
+* see function definition
+*/
 void MCInterface_ExecSpeedRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalSpeed)
 {
   ASSERT(pHandle != NULL);

@@ -207,10 +207,13 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             //get the last torque value.
             lastTorque = hAux;
             
-             // Make sure we have the most up-to-date desired top speed
-            uint16_t TopSpeed = PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS);
-            
-            PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed       
+            if (pHandle->sParameters.bEnableSpeedLimit)
+            {
+                 // Make sure we have the most up-to-date desired top speed
+                uint16_t TopSpeed = PedalAssist_PASUpdateMaxSpeed(pHandle->pPAS);
+                
+                PWRT_SetNewTopSpeed(pHandle,TopSpeed);        // Tell motor control what is our desired top speed       
+            }
 
             #if VEHICLE_SELECTION == VEHICLE_NIDEC || VEHICLE_SELECTION == VEHICLE_PEGATRON
             if (!PedalAssist_IsWalkModeDetected(pHandle->pPAS))
@@ -242,7 +245,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             }
             #endif
         }                            
-        else if(Throttle_IsThrottleDetected(pHandle->pThrottle))
+        else if(Throttle_IsThrottleDetected(pHandle->pThrottle) && pHandle->sParameters.bEnableSpeedLimit)
         {
             uint16_t TopSpeed = 0;
                           
@@ -738,7 +741,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     {
         bCheckStart3 = true;
     }
-    if(wheelSpeed < pHandle->sParameters.VehicleMaxSpeed) //Check if the wheel speed does not exceeds the speed limit
+    if(wheelSpeed < pHandle->sParameters.VehicleMaxSpeed || !(pHandle->sParameters.bEnableSpeedLimit)) //Check if the wheel speed does not exceeds the speed limit
     {
         bCheckStart4 = true;
     }
