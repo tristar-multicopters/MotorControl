@@ -58,24 +58,20 @@ int16_t Ramps_ApplyRamp(RampType_t rampType, float currentSpeed, int16_t input)
 */
 int16_t Ramps_DynamicDecelerationRamp(float currentSpeed, int16_t input)
 {
-    static float prevSpeed = 0;
     static int16_t prevInput = 0;
     int16_t output = 0;
 
-    // If we are accelerating
-    if(currentSpeed >= prevSpeed) output = input;
-
     // Calculate the minimum amount of power we can deliver so we do not decelerate too fast
-    float currentDecelerationAmplitude = (DYNAMIC_DECEL_RAMP_POWER_MIN_SPEED - DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED)
-                                         /(DYNAMIC_DECEL_RAMP_END - DYNAMIC_DECEL_RAMP_START);
+    float currentDecelerationAmplitude = currentSpeed * (DYNAMIC_DECEL_RAMP_POWER_MIN_SPEED - DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED)
+                                         /(DYNAMIC_DECEL_RAMP_END - DYNAMIC_DECEL_RAMP_START) + DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED;
+
     float minOutput = prevInput * (1 - fabsf(currentDecelerationAmplitude/DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED));
 
     // If the input is lower than the minimum output, we return the minimum output
     if(input < minOutput) output = (int16_t)minOutput;
     else output = input;
 
-    prevInput = input;
-    prevSpeed = currentSpeed;
+    prevInput = output;
     return output;
 }
 

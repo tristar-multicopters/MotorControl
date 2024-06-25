@@ -19,7 +19,7 @@
 
 #define TORQUE_THRESHOLD_AVG_NB   10  /* Number of values we use to do an average to check for Torque PAS threshold */
 
-#define TORQUE_SENSOR_TIMEOUT_THRESHOLD 200  // Number of tick before signaling no pedal activity (Approx. 200*5ms = 1sec).  
+#define TORQUE_SENSOR_TIMEOUT_THRESHOLD 400  // Number of tick before signaling no pedal activity (Approx. 400*5ms = 2sec).
 
 // ======================== Configuration enums ======================== // 
 typedef enum

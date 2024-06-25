@@ -72,7 +72,7 @@
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%
 
 // Global PAS Params
-#define RUNTIME_PAS_SPEED_THRESHOLD                 5.0f    // Speed threshold to enable startup PAS power in km/h 
+#define RUNTIME_PAS_SPEED_THRESHOLD                 2.0f    // Speed threshold to enable startup PAS power in km/h
 #define STARTUP_PAS_SPEED_THRESHOLD                 1.0f    // Speed threshold to enable runtime PAS power in km/h
 #define TORQUE_STARTUP_VALUE_THRESHOLD    (uint16_t)1       // Torque value (%) that needs to be provided to have a startup detection
 #define STARTUP_PULSE_NUMBER              (uint32_t)2       // Number of pulses that needs to be detected to trigger startup detection
@@ -83,7 +83,7 @@
 // Flag used to detect PAS with cadence AND torque.
 // 0: Cadence OR Torque
 // 1: Cadence AND Torque
-#define CADENCE_AND_OR_TORQUE    1
+#define CADENCE_AND_OR_TORQUE    0
 
 // Select the ramp type from the enum in file _ramp.h_
 #define PAS_RAMP_SELECTION  DYNAMIC_DECELERATION_RAMP
