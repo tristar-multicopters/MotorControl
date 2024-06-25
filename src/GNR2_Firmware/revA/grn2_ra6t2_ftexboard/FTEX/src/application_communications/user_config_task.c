@@ -125,7 +125,7 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.Motor_Signal_Parameters.minSignalThreshold = MINIMUM_SIGNAL_THRESHOLD,
     .Screen_ConfigData.Motor_Signal_Parameters.maxWheelSpeedPeriodUs = MAX_WHEELSPEED_PERIOD_US,
     
-    .Motor_Temperature_Parameters.motorSensorType = REAL_SENSOR,
+    .Motor_Temperature_Parameters.motorSensorType = MOTOR_TEMP_SENSOR_TYPE,
     .Motor_Temperature_Parameters.motorNTCBetaCoef = MOTOR_NTC_BETA_COEFFICIENT,
     .Motor_Temperature_Parameters.motorNTCResistanceCoef =MOTOR_NTC_RESISTANCE_COEF_X_100,
     
