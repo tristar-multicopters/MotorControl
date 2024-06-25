@@ -1442,11 +1442,11 @@
     </config>
   </raModuleConfiguration>
   <raPinConfiguration>
+    <symbolicName propertyId="p001.symbolic_name" value="M2_MOTOR_SELECT"/>
     <symbolicName propertyId="pa00.symbolic_name" value="M1_CURR_U"/>
     <symbolicName propertyId="pa02.symbolic_name" value="M1_CURR_V"/>
     <symbolicName propertyId="pa06.symbolic_name" value="VBUS_SENSE_M1"/>
-    <symbolicName propertyId="pa07.symbolic_name" value="M1_MOT_TEMP"/>
-    <symbolicName propertyId="pa09.symbolic_name" value="M1_SLCT"/>
+    <symbolicName propertyId="pa07.symbolic_name" value="M1_MOTOR_SELECT"/>
     <symbolicName propertyId="pb00.symbolic_name" value="M1_HS_TEMP"/>
     <symbolicName propertyId="pb01.symbolic_name" value="THROTTLE"/>
     <symbolicName propertyId="pb04.symbolic_name" value="CAN_STBY_N"/>
@@ -1464,7 +1464,6 @@
     <symbolicName propertyId="pd04.symbolic_name" value="LIGHT_FRONT"/>
     <symbolicName propertyId="pd07.symbolic_name" value="CAN_EN"/>
     <symbolicName propertyId="pd10.symbolic_name" value="LIGHT_BACK"/>
-    <symbolicName propertyId="pd15.symbolic_name" value="M2_SLCT"/>
     <symbolicName propertyId="pe00.symbolic_name" value="STATUS1"/>
     <symbolicName propertyId="pe01.symbolic_name" value="STATUS2"/>
     <symbolicName propertyId="pe08.symbolic_name" value="PAS_TORQUE"/>
@@ -1478,7 +1477,6 @@
       <configSetting altId="adc12.an000.pa00" configurationId="adc12.an000"/>
       <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
       <configSetting altId="adc12.an006.pa06" configurationId="adc12.an006"/>
-      <configSetting altId="adc12.an007.pa07" configurationId="adc12.an007"/>
       <configSetting altId="adc12.an008.pb00" configurationId="adc12.an008"/>
       <configSetting altId="adc12.an009.pb01" configurationId="adc12.an009"/>
       <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
@@ -1523,19 +1521,18 @@
       <configSetting altId="p000.input" configurationId="p000"/>
       <configSetting altId="p000.gpio_irq.gpio_irq_enabled" configurationId="p000.gpio_irq"/>
       <configSetting altId="p000.gpio_mode.gpio_mode_in" configurationId="p000.gpio_mode"/>
+      <configSetting altId="p001.input" configurationId="p001"/>
+      <configSetting altId="p001.gpio_mode.gpio_mode_in" configurationId="p001.gpio_mode"/>
       <configSetting altId="pa00.adc12.an000" configurationId="pa00"/>
       <configSetting altId="pa00.gpio_mode.gpio_mode_an" configurationId="pa00.gpio_mode"/>
       <configSetting altId="pa02.adc12.an002" configurationId="pa02"/>
       <configSetting altId="pa02.gpio_mode.gpio_mode_an" configurationId="pa02.gpio_mode"/>
       <configSetting altId="pa06.adc12.an006" configurationId="pa06"/>
       <configSetting altId="pa06.gpio_mode.gpio_mode_an" configurationId="pa06.gpio_mode"/>
-      <configSetting altId="pa07.adc12.an007" configurationId="pa07"/>
-      <configSetting altId="pa07.gpio_mode.gpio_mode_an" configurationId="pa07.gpio_mode"/>
+      <configSetting altId="pa07.input" configurationId="pa07"/>
+      <configSetting altId="pa07.gpio_mode.gpio_mode_in" configurationId="pa07.gpio_mode"/>
       <configSetting altId="pa08.agt0.agtio0" configurationId="pa08"/>
       <configSetting altId="pa08.gpio_mode.gpio_mode_peripheral" configurationId="pa08.gpio_mode"/>
-      <configSetting altId="pa09.input" configurationId="pa09"/>
-      <configSetting altId="pa09.gpio_mode.gpio_mode_in" configurationId="pa09.gpio_mode"/>
-      <configSetting altId="pa09.gpio_pupd.gpio_pupd_ip_up" configurationId="pa09.gpio_pupd"/>
       <configSetting altId="pa10.gpt9.gtioc9b" configurationId="pa10"/>
       <configSetting altId="pa10.gpio_mode.gpio_mode_peripheral" configurationId="pa10.gpio_mode"/>
       <configSetting altId="pa13.jtag_fslash_swd.tms" configurationId="pa13"/>
@@ -1604,9 +1601,6 @@
       <configSetting altId="pd10.output.low" configurationId="pd10"/>
       <configSetting altId="pd10.gpio_speed.gpio_speed_h" configurationId="pd10.gpio_drivecapacity"/>
       <configSetting altId="pd10.gpio_mode.gpio_mode_out.low" configurationId="pd10.gpio_mode"/>
-      <configSetting altId="pd15.input" configurationId="pd15"/>
-      <configSetting altId="pd15.gpio_mode.gpio_mode_in" configurationId="pd15.gpio_mode"/>
-      <configSetting altId="pd15.gpio_pupd.gpio_pupd_ip_up" configurationId="pd15.gpio_pupd"/>
       <configSetting altId="pe08.adc12.an020" configurationId="pe08"/>
       <configSetting altId="pe08.gpio_mode.gpio_mode_an" configurationId="pe08.gpio_mode"/>
       <configSetting altId="pe09.adc12.an021" configurationId="pe09"/>

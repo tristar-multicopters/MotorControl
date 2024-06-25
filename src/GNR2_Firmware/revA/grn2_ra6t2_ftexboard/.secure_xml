@@ -60,7 +60,6 @@
       <configSetting altId="adc12.an000.pa00" configurationId="adc12.an000"/>
       <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
       <configSetting altId="adc12.an006.pa06" configurationId="adc12.an006"/>
-      <configSetting altId="adc12.an007.pa07" configurationId="adc12.an007"/>
       <configSetting altId="adc12.an008.pb00" configurationId="adc12.an008"/>
       <configSetting altId="adc12.an009.pb01" configurationId="adc12.an009"/>
       <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
@@ -87,7 +86,8 @@
       <configSetting altId="jtag_fslash_swd.tdo.pb03" configurationId="jtag_fslash_swd.tdo"/>
       <configSetting altId="jtag_fslash_swd.tms.pa13" configurationId="jtag_fslash_swd.tms"/>
       <configSetting altId="p000.input" configurationId="p000"/>
-      <configSetting altId="pa09.input" configurationId="pa09"/>
+      <configSetting altId="p001.input" configurationId="p001"/>
+      <configSetting altId="pa07.input" configurationId="pa07"/>
       <configSetting altId="pb04.output.low" configurationId="pb04"/>
       <configSetting altId="pb08.input" configurationId="pb08"/>
       <configSetting altId="pb10.output.high" configurationId="pb10"/>
@@ -96,7 +96,6 @@
       <configSetting altId="pd04.output.low" configurationId="pd04"/>
       <configSetting altId="pd07.output.low" configurationId="pd07"/>
       <configSetting altId="pd10.output.low" configurationId="pd10"/>
-      <configSetting altId="pd15.input" configurationId="pd15"/>
       <configSetting altId="sci9.rxd9.pd06" configurationId="sci9.rxd9" isUsedByDriver="true"/>
       <configSetting altId="sci9.txd9.pd05" configurationId="sci9.txd9" isUsedByDriver="true"/>
       <configSetting altId="spi1.miso1.pc11" configurationId="spi1.miso1" isUsedByDriver="true"/>
