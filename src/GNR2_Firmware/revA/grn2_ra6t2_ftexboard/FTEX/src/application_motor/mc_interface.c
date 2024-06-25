@@ -606,16 +606,10 @@ void  MCInterface_SetWheelRPM(MotorControlInterfaceHandle_t * pHandle, uint16_t 
 /**
   *  Get the current torq reference 
   */
-int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, uint8_t Motor)
+int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle)
 {
-    if (Motor == 0)
-    {
-        return pHandle->pFOCVars[M1].hTeref;
-    }
-    else
-    {
-        return pHandle->pFOCVars[M2].hTeref;
-    }          
+    ASSERT(pHandle != NULL);
+    return pHandle->pFOCVars[M1].hTeref; 
 }
 
 /**

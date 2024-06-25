@@ -1248,7 +1248,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 index++;
         
                 // RPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE, 1, 16)};    
         
                 //move to next OD index
                 index++;
@@ -1673,7 +1673,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE_REF, 1, 16)};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE, 1, 16)};    
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 2        
@@ -1978,11 +1978,11 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
         
             // Application - Reference torque to master motor
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1TorqRef};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE, 0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1TorqRef};
             //move to next OD index
             index++;
             // Application - Reference torque to slave motor 1        
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE_REF, 1, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2TorqRef};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE, 1, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2TorqRef};
             //move to next OD index
             index++;
         

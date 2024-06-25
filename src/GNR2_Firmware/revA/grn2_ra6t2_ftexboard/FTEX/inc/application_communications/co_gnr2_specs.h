@@ -228,7 +228,7 @@ extern "C" {
 // 1 -> Current value from sensor 2.
 #define CO_OD_REG_MOTOR_SENSOR_CURRENT         0x2010
 
-#define CO_OD_REG_MOTOR_TORQUE_REF             0x2011
+#define CO_OD_REG_MOTOR_TORQUE             0x2011
 #define CO_OD_REG_MOTOR_START                  0x2012
 #define CO_OD_REG_FAULT_ACK                    0x2013
 

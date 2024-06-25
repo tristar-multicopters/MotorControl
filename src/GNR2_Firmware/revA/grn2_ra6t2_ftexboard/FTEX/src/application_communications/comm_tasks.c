@@ -305,7 +305,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_IQD, 3)), pNode, &hMotorId, sizeof(uint16_t));
                 
                 /* Read commands in CANOpen object dictionnary received by RPDO */
-                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2)), pNode, &hMotor2TorqRef, sizeof(uint16_t));
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE, M2)), pNode, &hMotor2TorqRef, sizeof(uint16_t));
                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, sizeof(uint8_t));
                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
                 
@@ -855,9 +855,10 @@ void Comm_BootUp(void)
         .wRegAddrHeatsinkTemp = CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2),
         .wRegAddrIq = CO_DEV(CO_OD_REG_MOTOR_IQD, 1),
         .wRegAddrId = CO_DEV(CO_OD_REG_MOTOR_IQD, 3),
+        .wRegAddrTeRef = ,
         .wRegAddrStartMotor = CO_DEV(CO_OD_REG_MOTOR_START, M2),
         .wRegAddrFaultAck = CO_DEV(CO_OD_REG_FAULT_ACK, M2),
-        .wRegAddrTorqueRef = CO_DEV(CO_OD_REG_MOTOR_TORQUE_REF, M2),       
+        .wRegAddrTorqueRamp = CO_DEV(CO_OD_REG_MOTOR_TORQUE, M2),       
     };
     SlaveMCInterface_Init(&SlaveM2, &CONodeGNR, M2RegAddr);
     #endif

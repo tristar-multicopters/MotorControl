@@ -482,7 +482,7 @@ void  MCInterface_SetWheelRPM(MotorControlInterfaceHandle_t * pHandle, uint16_t 
   * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
   * @retval nothing
   */
-int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, uint8_t Motor);
+int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  Get the max application power
