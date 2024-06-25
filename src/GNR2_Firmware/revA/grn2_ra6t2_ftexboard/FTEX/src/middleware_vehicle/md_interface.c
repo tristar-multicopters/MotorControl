@@ -766,10 +766,9 @@ uint16_t MDI_GetMotorTorqueReference(MultipleDriveInterfaceHandle_t * pHandle, u
     switch (bMotor)
     {
         case M1:            
-            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M1));
+            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI));
             break;
         case M2:
-            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M2));
             break;
         default:
             break;

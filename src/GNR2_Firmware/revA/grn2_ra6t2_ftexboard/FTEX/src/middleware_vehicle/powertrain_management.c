@@ -128,12 +128,12 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         switch (bMotorSelection) // Change powertrain mode and main motor depending on motor selection
         {
             case M1_SELECTED:
-                pHandle->sParameters.bMode = DUAL_MOTOR;
-                pHandle->bMainMotor = pHandle->sParameters.bDefaultMainMotor;
+                pHandle->sParameters.bMode = SINGLE_MOTOR;
+                pHandle->bMainMotor = M1;
                 break;
             case M2_SELECTED:
-                pHandle->sParameters.bMode = DUAL_MOTOR;
-                pHandle->bMainMotor = pHandle->sParameters.bDefaultMainMotor;
+                pHandle->sParameters.bMode = SINGLE_MOTOR;
+                pHandle->bMainMotor = M2;
                 break;
             case ALL_MOTOR_SELECTED:
                 pHandle->sParameters.bMode = DUAL_MOTOR;
@@ -1287,7 +1287,7 @@ uint16_t PWRT_GetTotalMotorsPower(PWRT_Handle_t * pHandle)
     TotalMotorPower  = M1Rpm * RPM_TO_RAD_PERSEC  * (M1TorqueRef/100);
     
     //if using dual motors add dual motor's power
-    if(pHandle->sParameters.bMode == DUAL_MOTOR)
+    if(pHandle->sParameters.bMode == DUAL_MOTOR || pHandle->bMainMotor == M2)
     {
         uint16_t M2Rpm = (uint16_t) abs(MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2));
         float M2TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M2);
@@ -1313,7 +1313,7 @@ uint16_t PWRT_GetDCPower(PWRT_Handle_t * pHandle)
     qd_t IqdrefM1 = MDI_GetIqdref(pHandle->pMDI, M1);
         
     //if using dual add the dual motor's current
-    if(pHandle->sParameters.bMode == DUAL_MOTOR)
+    if(pHandle->sParameters.bMode == DUAL_MOTOR || pHandle->bMainMotor == M2)
     {
         qd_t IqdrefM2 = MDI_GetIqdref(pHandle->pMDI, M2);
         IqRef = (uint16_t) (abs(IqdrefM1.q) + abs (IqdrefM2.q));
