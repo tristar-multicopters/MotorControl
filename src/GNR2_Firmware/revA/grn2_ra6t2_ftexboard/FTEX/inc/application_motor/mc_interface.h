@@ -93,11 +93,17 @@ void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachine
   * @brief  Initializes the parameters related to the battery (max power, max current,
   *         undervoltage threshold)
   * @param  pHandle: pointer on the component instance to operate on.
-  * @param  pBatteryPower: battery power parameters to initialize the power in the MC layer
+  * @param  MCSetup: VC parameters used to initialize the MC layer
   * @retval none.
   */
 void MCInterface_PowerInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup);
 
+/**
+  * @brief  Initializes the speed limit enable
+  * @param  pHandle: pointer on the component instance to operate on.
+  * @param  MCSetup: VC parameters used to initialize the MC layer
+  * @retval none.
+  */
 void MCInterface_SpeedLimitEnInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup);
 
 /**

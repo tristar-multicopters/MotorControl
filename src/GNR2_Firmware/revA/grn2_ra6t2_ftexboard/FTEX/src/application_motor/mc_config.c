@@ -246,7 +246,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     .hMinAppPositiveMecSpeedUnit =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
     .hMinAppNegativeMecSpeedUnit =    (int16_t)(-MIN_APPLICATION_SPEED_UNIT),
     .ModeDefault =                    DEFAULT_CONTROL_MODE,
-    .fGainTorqueIdref =             GAIN_TORQUE_IDREF,\
+    .fGainTorqueIdref =             GAIN_TORQUE_IDREF,
     .bEnableSpdLimitControl =       false,
     .PISpeedLimit =
     {
