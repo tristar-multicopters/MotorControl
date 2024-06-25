@@ -23,7 +23,7 @@
 #define MOTOR_VOLTAGE_CONSTANT              28.84f              // Volts RMS ph-ph /kRPM
 #define ST_TORQUE_COEF                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps             90                  // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps             60                  // peak current in amps
 
 /************************** Power Limit Parameters ************************/
 
