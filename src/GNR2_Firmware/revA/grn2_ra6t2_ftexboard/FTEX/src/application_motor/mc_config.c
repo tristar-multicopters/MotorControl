@@ -40,7 +40,6 @@ MotorParameters_t MotorParameters =
         
         .hMaxAppliationSpeedRPM         = MAX_APPLICATION_SPEED_RPM,
         
-        .bEnableSpeedLimitControl       = ENABLE_SPEED_LIMIT_CONTROL,
         .hPIDSpeedKpDefault             = PID_SPEED_KP_DEFAULT,
         .hPIDSpeedKiDefault             = PID_SPEED_KI_DEFAULT,
         .hSpKiDiv                       = SP_KIDIV,
@@ -248,6 +247,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     .hMinAppNegativeMecSpeedUnit =    (int16_t)(-MIN_APPLICATION_SPEED_UNIT),
     .ModeDefault =                    DEFAULT_CONTROL_MODE,
     .fGainTorqueIdref =             GAIN_TORQUE_IDREF,
+    .bEnableSpdLimitControl =       false,
     .PISpeedLimit =
     {
         .hLowerOutputLimit    = 0,

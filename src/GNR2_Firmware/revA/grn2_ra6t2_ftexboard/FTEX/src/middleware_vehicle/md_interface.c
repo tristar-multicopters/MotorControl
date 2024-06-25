@@ -23,6 +23,7 @@ void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHan
     
     //Power initialization is not supported with dual motor, will have to change default values in MC layer to initialize the parameters that come from the battery
     MCInterface_PowerInit(pHandle->pMCI, MCSetup);
+    MCInterface_SpeedLimitEnInit(pHandle->pMCI, MCSetup);
     
 }
 

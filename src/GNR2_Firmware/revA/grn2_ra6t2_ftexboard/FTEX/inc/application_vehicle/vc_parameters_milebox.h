@@ -20,8 +20,13 @@
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-#define VEHICLE_TOP_SPEED_KMH   27    
-#define THROTTLE_TOP_SPEED       6
+
+/******************* SPEED LIMIT PARAMETERS  *******************************/
+
+#define ENABLE_SPEED_LIMIT                     true         // Enable or disable speed limit (default speed limit is 32km/hr)
+#define VEHICLE_TOP_SPEED_KMH                  27    
+#define THROTTLE_TOP_SPEED                     6
+
 /***************** THROTTLE SELECTION  ******************************/
 
 #include "throttle_sensors/vc_velec_r48_throttle.h"
@@ -50,7 +55,7 @@
 #define PTS_FILTER_BW1_3                       55              // BW coefficient for pedal torque sensor avereging for speed 3
 #define PTS_FILTER_BW2_3                       70              // BW coefficient for pedal torque sensor avereging for speed 3
 
-/***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
+/***************** PEDAL ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_LEVEL                       5            
 
 // Maximum PAS Level given by the screen

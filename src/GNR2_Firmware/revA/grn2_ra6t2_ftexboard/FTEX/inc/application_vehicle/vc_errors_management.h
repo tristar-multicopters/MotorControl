@@ -34,7 +34,7 @@ typedef enum
     DUAL_COMM_ERROR   = 0x0D, // Master lost comm with slave or slave lost comm with master
     OVER_CURRENT      = 0x0E, // Over Current protection - HW & SW
     BATT_LOW          = 0x0F, // Battery is low
-    PAS_BOOT_ERROR    = 0x10, // Peddle Assist error
+    PAS_BOOT_ERROR    = 0x10, // Pedal Assist error
     CONTROLLER_ERROR  = 0x11, // Controller in unrecoverable state
     BRAKE_ERROR       = 0x12, // Brake cutoff sensor abnormal
     SCREEN_COMM_ERROR = 0x13, // We we lose connection with the screen
