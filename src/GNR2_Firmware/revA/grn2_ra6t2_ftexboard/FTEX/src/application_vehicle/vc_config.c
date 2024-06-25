@@ -282,6 +282,7 @@ PWRT_Handle_t PowertrainHandle =
     .sParameters.bPAS0DisableThrottle = POWERTRAIN_DISABLE_THROTTLE_PAS_0,
     
     .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
+    .sParameters.bEnableSpeedLimit = ENABLE_SPEED_LIMIT,
     .sParameters.VehicleMaxSpeed = VEHICLE_TOP_SPEED_KMH,    
     .sParameters.TorqueSpeedLimitGain = TORQUE_SPEED_LIMIT_GAIN,
     .pMDI = &MDInterfaceHandle,
@@ -311,10 +312,10 @@ MC_Setup_t MCSetup =
     */
     .BatteryPowerSetup =
     {
-        .bPowerLimitRef = POWER_LIMIT_REF,                              // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
-        .hMaxApplicationPositivePower = MAX_APPLICATION_POSITIVE_POWER, // Maximum power in watts that drive can push to the motor
-        .hMaxApplicationNegativePower = MAX_APPLICATION_NEGATIVE_POWER, // Maximum power in watts that drive can accept from the motor
-        .hMaxApplicationCurrent = MAX_APPLICATION_CURRENT,              // Maximum battery current in amps that drive can accept from the motor
+        .bPowerLimitRef                 = POWER_LIMIT_REF,                // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+        .hMaxApplicationPositivePower   = MAX_APPLICATION_POSITIVE_POWER, // Maximum power in watts that drive can push to the motor
+        .hMaxApplicationNegativePower   = MAX_APPLICATION_NEGATIVE_POWER, // Maximum power in watts that drive can accept from the motor
+        .hMaxApplicationCurrent         = MAX_APPLICATION_CURRENT,        // Maximum battery current in amps that drive can accept from the motor
         
         .bEnableLVTorqueLimit           = ENABLE_LV_TORQUE_LIMIT,
         .hLowVoltageThresholdPercentage = LOW_VOLTAGE_THRESHOLD_PERCENTAGE,
@@ -326,6 +327,8 @@ MC_Setup_t MCSetup =
         .hMaxBMSPositivePower           = MAX_BMS_POSITIVE_POWER,
         .hMaxBMSContinuousCurrent       = MAX_BMS_CONTINUOUS_CURRENT,
         
-        .hUndervoltageThreshold = UD_VOLTAGE_THRESHOLD_BATT_V,
-    }
+        .hUndervoltageThreshold         = UD_VOLTAGE_THRESHOLD_BATT_V,
+    },
+    
+    .bEnSpeedLimit                      = ENABLE_SPEED_LIMIT,
 };

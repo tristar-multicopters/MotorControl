@@ -21,7 +21,13 @@
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-#define VEHICLE_TOP_SPEED_KMH   45                                       
+
+/******************* SPEED LIMIT PARAMETERS  *******************************/
+
+#define ENABLE_SPEED_LIMIT                     true         // Enable or disable speed limit (default speed limit is 32km/hr)
+#define VEHICLE_TOP_SPEED_KMH                  45    
+#define THROTTLE_TOP_SPEED                     VEHICLE_TOP_SPEED_KMH                         
+
 /***************** THROTTLE SELECTION  ******************************/
 
 // Nidec has no throttle, but some defines needed regardless
@@ -51,7 +57,7 @@
 #define PTS_FILTER_BW1_3                      10              // BW coefficient for pedal torque sensor avereging for speed 3
 #define PTS_FILTER_BW2_3                      5              // BW coefficient for pedal torque sensor avereging for speed 3
 
-/***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
+/***************** PEDAL ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
 
 #define PAS_TORQUE_GAIN                     250             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)

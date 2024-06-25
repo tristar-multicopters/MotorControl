@@ -158,16 +158,22 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
   * @brief  Initializes the parameters related to the battery (max power, max current,
   *         undervoltage threshold)
   * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @param  powerRef: indicates whether to use the max power or max current parameter
-  *         to determine the max power
-  * @param  maxPosPower: max power that can be sent to the motor
-  * @param  maxNegPower: max power that can be recieved from the motor
-  * @param  maxCurr: max DC current of the battery
-  * @param  UVThresh: undervoltage threshold of the battery
+  * @param  MCSetup: VC parameters used to initialize the MC layer
+  * @param  MotorParameters: used to initialize motor parameters
   * @retval none.
   */
 void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup, MotorParameters_t MotorParameters);
 
+/**
+  * @brief  Initializes the parameters related to the battery (max power, max current,
+  *         undervoltage threshold)
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  MCSetup: VC parameters used to initialize the MC layer
+  * @param  MotorParameters: used to initialize motor parameters
+  * @retval none.
+  */
+
+void SpdTorqCtrl_SpeedLimitEnInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup);
 
 /**
   * @brief  It should be called before each motor restart. If STC is set in

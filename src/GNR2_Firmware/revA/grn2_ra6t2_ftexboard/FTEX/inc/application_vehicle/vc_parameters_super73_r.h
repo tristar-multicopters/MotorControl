@@ -23,7 +23,11 @@
 
 #define DEFAULT_WHEEL_DIAMETER_OVERRIDE 23
 
-#define VEHICLE_TOP_SPEED_KMH           99
+/******************* SPEED LIMIT PARAMETERS  *******************************/
+
+#define ENABLE_SPEED_LIMIT                     true         // Enable or disable speed limit (default speed limit is 32km/hr)
+#define VEHICLE_TOP_SPEED_KMH                  99
+#define THROTTLE_TOP_SPEED                     VEHICLE_TOP_SPEED_KMH
 
 /***************** THROTTLE SELECTION  ******************************/
 
@@ -53,7 +57,7 @@
 #define PTS_FILTER_BW1_3                      40              // BW coefficient for pedal torque sensor avereging for speed 3
 #define PTS_FILTER_BW2_3                      90              // BW coefficient for pedal torque sensor avereging for speed 3
 
-/***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
+/***************** PEDAL ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_LEVEL                       5               // Maximum PAS Level given by the screen
 
 #define PAS_0_TORQUE_GAIN                   0               // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power)

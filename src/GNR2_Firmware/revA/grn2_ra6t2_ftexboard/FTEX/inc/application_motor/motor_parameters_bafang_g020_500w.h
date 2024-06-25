@@ -46,7 +46,6 @@ These variables are used to configure the motor within the smart config tool.
 
 #define MAX_APPLICATION_SPEED_RPM           1500                // Max speed for the current application in mechanical rpm
 
-#define ENABLE_SPEED_LIMIT_CONTROL          true                // Enable or disable speed limit control
 #define PID_SPEED_KP_DEFAULT                100                 // Default gain for speed control loop
 #define PID_SPEED_KI_DEFAULT                10                  // Default gain for speed control loop
 #define SP_KIDIV                            256                 // Speed control gain divider, to allow decimal value

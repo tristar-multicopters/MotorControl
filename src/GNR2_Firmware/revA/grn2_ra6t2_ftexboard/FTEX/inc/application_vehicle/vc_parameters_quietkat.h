@@ -21,6 +21,12 @@
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
                                               
+/******************* SPEED LIMIT PARAMETERS  *******************************/
+
+#define ENABLE_SPEED_LIMIT                     false        // Enable or disable speed limit (default speed limit is 32km/hr)
+#define VEHICLE_TOP_SPEED_KMH                  32    
+#define THROTTLE_TOP_SPEED                     VEHICLE_TOP_SPEED_KMH
+
 /***************** THROTTLE SELECTION  ******************************/
 
 #include "throttle_sensors/wuxing_130x.h"
@@ -35,7 +41,7 @@
 
 #include "pedal_sensors/dashi_p14l.h"
 
-/***************** PEDDLE ASSIST SYSTEM PARAMETERS  ******************************/
+/***************** PEDAL ASSIST SYSTEM PARAMETERS  ******************************/
 #define PAS_MAX_LEVEL                         5             // Maximum PAS Level given by the screen   
 #define PAS_TORQUE_GAIN                     100             // Torque sensor PAS Gain in % (100% is normal, < 100% is a reduction, > 100% is an increase in power) 
 #define PAS_MAX_TORQUE_RATIO                100             // Maximum PAS Torque feed ration in 100%    

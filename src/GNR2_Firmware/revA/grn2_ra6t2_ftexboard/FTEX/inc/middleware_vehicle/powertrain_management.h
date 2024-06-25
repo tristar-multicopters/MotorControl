@@ -78,9 +78,11 @@ typedef struct
     uint16_t hStoppingSpeed;             // Minimum speed to stop powertrain
     
     uint16_t hFaultManagementTimeout;    // Number of ticks the state machine should stay on fault state before restart
-   
-    uint16_t ScreenMaxSpeed;             // Contains the max speed specified by the screen   
+    
+    bool bEnableSpeedLimit;              // Enable or disable speed limit
+    
     uint16_t VehicleMaxSpeed;            // Contains the max speed that the vehicle can push power (no matter what)
+    uint16_t ScreenMaxSpeed;             // Contains the max speed specified by the screen   
         
 } PWRT_Parameters_t;
 
