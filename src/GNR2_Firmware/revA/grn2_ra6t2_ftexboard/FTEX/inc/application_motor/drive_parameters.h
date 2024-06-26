@@ -138,11 +138,6 @@
 #define CURRENT_FILTER_ALPHA            2.273F      // Alpha constant used in butterworth filter for current filtering
 #define CURRENT_FILTER_BETA             -0.273F     // Beta constant used in butterworth filter for current filtering
 
-/****** Over and Under Voltage Parameters ******/
-#define OV_VOLTAGE_THRESHOLD_V             75                   // Over-voltage threshold
-
-#define UD_VOLTAGE_THRESHOLD_CONT_V        32         //Undervoltage threshold for board to work
-
 /****** Power Parameters ******/
 #define DEFAULT_MAX_APPLICATION_CURRENT             PEAK_CURRENT_CONTROLLER_amps * 0.8          //Make default max DC current about 80% of the peak phase current
 #define DEFAULT_MAX_APPLICATION_POSITIVE_POWER      DEFAULT_MAX_APPLICATION_CURRENT * OV_VOLTAGE_THRESHOLD_V

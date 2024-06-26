@@ -31,6 +31,12 @@
 #define OV_TEMP_CONTROLLER_HYSTERESIS_C 15         // Heatsink overtemperature hysteresis after a thermal shutdown occurred. Celsius degrees    //NEEDS TO BE VERIFIED
 
 
+/****** Over and Under Voltage Parameters ******/
+
+#define OV_VOLTAGE_THRESHOLD_V             75                   // Over-voltage threshold
+#define UD_VOLTAGE_THRESHOLD_CONT_V        29         //Undervoltage threshold for board to work
+
+
 /************* Switching Parameters *************/
 
 #define DEADTIME_NS                  250         // Dead-time to be inserted by FW                                                              //NEEDS TO BE VERIFIED
