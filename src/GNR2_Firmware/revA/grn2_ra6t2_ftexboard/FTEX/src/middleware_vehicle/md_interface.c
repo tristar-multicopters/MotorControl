@@ -656,28 +656,6 @@ int16_t MDI_GetElAngledpp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMot
 /*
 * see function definition
 */
-int16_t MDI_GetTeref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
-{
-    ASSERT(pHandle != NULL);
-    int16_t hReturnValue = 0;
-
-    switch (bMotor)
-    {
-        case M1:
-            hReturnValue = MCInterface_GetTeref(pHandle->pMCI);
-            break;
-        case M2:
-            break;
-        default:
-            break;
-    }
-
-    return hReturnValue;
-}
-
-/*
-* see function definition
-*/
 int16_t MDI_GetPhaseCurrentAmplitude(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
@@ -766,10 +744,10 @@ uint16_t MDI_GetMotorTorqueReference(MultipleDriveInterfaceHandle_t * pHandle, u
     switch (bMotor)
     {
         case M1:            
-            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M1));
+            MotorTorqueRef = (uint16_t) abs(MCInterface_GetMotorTorqueRef(pHandle->pMCI));
             break;
         case M2:
-            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M2));
+            MotorTorqueRef = (uint16_t) abs(SlaveMCInterface_GetMotorTorqueRef(pHandle->pSlaveM2));
             break;
         default:
             break;

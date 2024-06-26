@@ -197,19 +197,19 @@ extern "C" {
 #define CO_OD_REG_HEATSINK_TEMP                0x200C
 #define CO_OD_REG_MOTOR_STATE                  0x200D
 
-    //OD ID used to hold the motor faults
-    //this object has 10 subindex
-    //
-    // 0 -> motor warnings master
-    // 1 -> motor warnings slave
-    // 2 -> motor current errors master
-    // 3 -> motor current errors slave
-    // 4 -> motor occurred errors master
-    // 5 -> motor occurred errors slave
-    // 6 -> motor current critical faults master
-    // 7 -> motor current critical faults slave
-    // 8 -> motor occurred critical faults master
-    // 9 -> motor occurred critical faults slave
+//OD ID used to hold the motor faults
+//this object has 10 subindex
+//
+// 0 -> motor warnings master
+// 1 -> motor warnings slave
+// 2 -> motor current errors master
+// 3 -> motor current errors slave
+// 4 -> motor occurred errors master
+// 5 -> motor occurred errors slave
+// 6 -> motor current critical faults master
+// 7 -> motor current critical faults slave
+// 8 -> motor occurred critical faults master
+// 9 -> motor occurred critical faults slave
 #define CO_OD_REG_MOTOR_FAULTS                 0x200E
 
 //OD ID used to read sensor current values.
@@ -228,7 +228,14 @@ extern "C" {
 // 1 -> Current value from sensor 2.
 #define CO_OD_REG_MOTOR_SENSOR_CURRENT         0x2010
 
-#define CO_OD_REG_MOTOR_TORQUE_REF             0x2011
+//OD ID used to read and write torque values
+// this object has 4 subindex 
+//
+// 0 -> Master torque reference.
+// 1 -> Slave torque reference.
+// 2 -> Master input torque to execute ramps.
+// 4 -> Slave input torque to execute ramps.
+#define CO_OD_REG_MOTOR_TORQUE                 0x2011
 #define CO_OD_REG_MOTOR_START                  0x2012
 #define CO_OD_REG_FAULT_ACK                    0x2013
 

@@ -340,15 +340,6 @@ AlphaBeta_t MDI_GetValphabeta(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
 int16_t MDI_GetElAngledpp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
-  * @brief  It returns the reference eletrical torque, fed to derived class for
-  *         Iqref and Idref computation
-  * @param  pHandle Pointer on the component instance to work on.
-  * @param  bMotor is the target motor number
-  * @retval int16_t Teref
-  */
-int16_t MDI_GetTeref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
-
-/**
   * @brief  It returns the motor phase current amplitude (0-to-peak) in s16A
   *         To convert s16A into Ampere following formula must be used:
   *         Current(Amp) = [Current(s16A) * Vdd micro] / [65536 * Rshunt * Aop]
