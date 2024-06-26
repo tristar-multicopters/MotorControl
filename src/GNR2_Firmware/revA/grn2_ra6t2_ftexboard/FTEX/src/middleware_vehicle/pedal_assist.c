@@ -243,7 +243,6 @@ int16_t PedalAssist_GetWalkmodeTorque(PAS_Handle_t * pHandle)
 void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
-    float currentSpeed = Wheel_GetVehicleSpeedFloatFromWSS(pHandle->pWSS);
     
     // Validate the PAS Power Enable depending on the value of CADENCE_AND_OR_TORQUE (PAS Power AND/OR)
     bool StartupPowerEnable = ((pHandle->bCadenceStartupPASDetected | pHandle->bTorqueStartupPASDetected) & ~(CADENCE_AND_OR_TORQUE)) | 
@@ -254,24 +253,8 @@ void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
     
     bool PowerEnable = StartupPowerEnable | RuntimePowerEnable;
 
-    if(!pHandle->bPASPowerEnable)
-    {
-        if(currentSpeed < STARTUP_PAS_SPEED_THRESHOLD)
-        {
-            if(PowerEnable) pHandle->bPASPowerEnable = true;
-            else pHandle->bPASPowerEnable = false;
-        }
-        else
-        {
-            if(PowerEnable) pHandle->bPASPowerEnable = true;
-            else pHandle->bPASPowerEnable = false;
-        }
-    }
-    else
-    {
-        if(PowerEnable) pHandle->bPASPowerEnable = true;
-        else pHandle->bPASPowerEnable = false;
-    }
+    if(PowerEnable) pHandle->bPASPowerEnable = true;
+    else pHandle->bPASPowerEnable = false;
 }
 
 /**
@@ -282,7 +265,7 @@ void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
 bool PedalAssist_IsCadenceDetected(PAS_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
-    if(pHandle->bPASPowerEnable && (pHandle->bCadenceRunningPASDetected || pHandle->bCadenceStartupPASDetected))
+    if(pHandle->bCadenceRunningPASDetected || pHandle->bCadenceStartupPASDetected)
         return true;
     return false;
 }

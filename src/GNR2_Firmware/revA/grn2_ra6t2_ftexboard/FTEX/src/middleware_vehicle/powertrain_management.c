@@ -31,6 +31,7 @@ static Delay_Handle_t PTSensorDelay; // Delay for Pedal Torque sensor stuck chec
 static Delay_Handle_t brakeDelay;    // Delay for Brake sensor stuck check while initialization
 static Delay_Handle_t OdometerDelay; // Delay for the odometer
 
+
 // ==================== Public function prototypes ======================== //
 
 /**
@@ -1149,8 +1150,6 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 {      
     ASSERT(pHandle != NULL); 
     
-    static bool PASWasDetected = false;
-    
     /* Disable the throttle output if we need to when PAS level is 0 */
     if(pHandle->sParameters.bPAS0DisableThrottle && PedalAssist_GetAssistLevel(pHandle->pPAS) == 0)
     {
@@ -1179,8 +1178,6 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     if (((PASDetected || PowerEnable)  && (!ThrottleDetected || PASOverThrottle)) ||
         (WalkDetected && (!ThrottleDetected || WalkOverThrottle)))
     {
-        PASWasDetected = true;
-               
         /* Torque sensor enabled */
         if (!PedalAssist_IsWalkModeDetected(pHandle->pPAS))
         {
@@ -1190,17 +1187,14 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         {
             pHandle->hTorqueSelect = PedalAssist_GetWalkmodeTorque(pHandle->pPAS);
         }
-        
-        // Link the correct PAS ramp as the ramp to apply
-        //pSelectedRampHandle = PedalAssist_GetRamp(pHandle->pPAS, Direction);
 
         if(PedalAssist_IsCadenceDetected(pHandle->pPAS))
         {
             pHandle->hTorqueSelect = PWRT_EnableCadencePower(pHandle);
         }
 
-        pHandle->hTorqueSelect = Ramps_ApplyRamp(PAS_RAMP_SELECTION, Wheel_GetVehicleSpeedFloatFromWSS(pHandle->pPAS->pWSS), pHandle->hTorqueSelect); 
-
+        // Apply ramp filtering on the predicted torque output
+        pHandle->hTorqueSelect = Ramps_ApplyRamp(PAS_RAMP_SELECTION, Wheel_GetVehicleSpeedFloatFromWSS(pHandle->pPAS->pWSS), pHandle->hTorqueSelect);
     }
     /* Using throttle */
     else 
@@ -1208,6 +1202,10 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         /* Throttle value convert to torque */        
         pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);    
     }
+
+    // Smooth transition between PAS change
+    pHandle->hTorqueSelect = PWRT_TransitionStartupRuntimeTorque(pHandle->hTorqueSelect, PedalAssist_IsCadenceDetected(pHandle->pPAS),
+                                                                 PowerEnable, ThrottleDetected, WalkDetected);
 
     // Check if there is any torque sensor issue detected
     pHandle->pPAS->bTorqueSensorIssue = PedalAssist_TorqueSensorIssueDetected(pHandle->pPAS);
@@ -1224,6 +1222,38 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         VC_Errors_ClearError(TORQUE_SENSOR_ERROR);
     }
     return pHandle->hTorqueSelect;
+}
+
+/**
+  * @brief  Create a smooth transition between Startup and Runtime
+  * @param  inputTorque : Power delivered before the smoothing as input
+  * @param  cadenceDetected : Flag if the cadence activity is detected
+  * @param  PASPowerEnable : Flag if PAS power is enabled
+  * @param  throttleOverride : Flag if throttle is activated
+  * @param  walkOverPAS : Flag if walk mode is activated
+  * @retval pHandle->pTorqueSelect in int16
+  */
+int16_t PWRT_TransitionStartupRuntimeTorque(int16_t inputTorque, bool cadenceDetected, bool PASPowerEnable,
+                                            bool throttleOverride, bool walkOverPAS)
+{
+    static float prevTorque = 0;
+    float output = 0;
+
+    // Torque Power Without Cadence
+    if(PASPowerEnable && !cadenceDetected && !throttleOverride && !walkOverPAS && !CADENCE_AND_OR_TORQUE)
+    {
+        if(inputTorque > prevTorque) prevTorque = (float)inputTorque;
+        output = prevTorque * (1.0f - (1.0f / TORQUE_DECAY));
+        prevTorque = output;
+    }
+
+    // Torque Power With Cadence, Typical Pedaling Activity
+    else
+    {
+        prevTorque = 0;
+        return inputTorque;
+    }
+    return (int16_t)output;
 }
 
 /**

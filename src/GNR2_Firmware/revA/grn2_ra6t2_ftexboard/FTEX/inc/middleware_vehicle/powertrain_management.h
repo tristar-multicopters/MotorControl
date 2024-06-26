@@ -24,6 +24,7 @@
 
 #define NBR_CRITICAL_FAULT_COUNTERS 3
 #define NBR_MOTORS                  2
+#define TORQUE_DECAY                1000
 
 // ======================== Configuration enums ======================== // 
 typedef enum
@@ -296,6 +297,17 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle);
   */
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle);
 
+/**
+  * @brief  Create a smooth transition between Startup and Runtime
+  * @param  inputTorque : Power delivered before the smoothing as input
+  * @param  cadenceDetected : Flag if the cadence activity is detected
+  * @param  PASPowerEnable : Flag if PAS power is enabled
+  * @param  throttleOverride : Flag if throttle is activated
+  * @param  walkOverPAS : Flag if walk mode is activated
+  * @retval pHandle->pTorqueSelect in int16
+  */
+int16_t PWRT_TransitionStartupRuntimeTorque(int16_t inputTorque, bool cadenceDetected, bool PASPowerEnable,
+                                            bool throttleOverride, bool walkOverPAS);
 /**
   * @brief  Get minimum power required on cadence power enable
   * @param  Powertrain handle
