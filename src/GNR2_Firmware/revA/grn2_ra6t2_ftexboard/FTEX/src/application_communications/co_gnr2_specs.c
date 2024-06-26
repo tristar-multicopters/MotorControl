@@ -224,8 +224,9 @@ uint32_t wObjDataMotor1CurrentFaults        = 0;
 uint32_t wObjDataMotor1CurrentErrorsNow     = 0;
 uint32_t wObjDataMotor1OccurredErrors       = 0;
 uint32_t wObjDataMotor1Warnings             = 0;
-int16_t  wObjDataMotor1Iq                   = 0;
-int16_t  wObjDataMotor1Id                   = 0;
+int16_t  hObjDataMotor1Iq                   = 0;
+int16_t  hObjDataMotor1Id                   = 0;
+int16_t  hObjDataMotor1TeRef                = 0;
 
 int16_t  hObjDataMotor2SpeedMeas            = 0;
 uint16_t hObjDataMotor2BusVoltage           = 0;
@@ -237,8 +238,9 @@ uint32_t wObjDataMotor2CurrentFaults        = 0;
 uint32_t wObjDataMotor2CurrentErrorsNow     = 0;
 uint32_t wObjDataMotor2OccurredErrors       = 0;
 uint32_t wObjDataMotor2Warnings             = 0;
-int16_t  wObjDataMotor2Iq                   = 0;
-int16_t  wObjDataMotor2Id                   = 0;
+int16_t  hObjDataMotor2Iq                   = 0;
+int16_t  hObjDataMotor2Id                   = 0;
+int16_t  hObjDataMotor2TeRef                = 0;
 
 //variable associated with CO_OD_REG_MOTOR_SENSOR_CURRENT subindex 0
 int16_t  hObjPhaseCurrentSensor1            = 0;
@@ -246,11 +248,11 @@ int16_t  hObjPhaseCurrentSensor1            = 0;
 int16_t  hObjPhaseCurrentSensor2            = 0;
 
 uint8_t  bObjDataMotor1Start                = 0;
-int16_t  hObjDataMotor1TorqRef              = 0;
+int16_t  hObjDataMotor1TorqRamp             = 0;
 uint8_t  bObjDataMotor1FaultAck             = 0;
 
 uint8_t  bObjDataMotor2Start                = 0;
-int16_t  hObjDataMotor2TorqRef              = 0;
+int16_t  hObjDataMotor2TorqRamp             = 0;
 uint8_t  bObjDataMotor2FaultAck             = 0;
     
 /*****Allocate global variables for GNR-IOT objects*****/
@@ -1248,7 +1250,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 index++;
         
                 // RPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE, 1, 16)};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE, 3, 16)};    
         
                 //move to next OD index
                 index++;
@@ -1341,7 +1343,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             if (deviceType == true)
             { 
                 // RPDO4 Mapping - Number of mapped object in PDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD4_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD4_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)3};
 
                 //move to next OD index
                 index++;
@@ -1354,6 +1356,12 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 
                 // RPDO4 Mapping - Object 2
                 GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD4_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_IQD, 3, 16)};    
+
+                //move to next OD index
+                index++;
+                
+                // RPDO4 Mapping - Object 3
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_RPOD4_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE, 1, 16)};    
 
                 //move to next OD index
                 index++;
@@ -1673,7 +1681,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 1
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE, 1, 16)};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD1_MAPPING, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE, 3, 16)};    
                 //move to next OD index
                 index++;
                 // TPDO1 Mapping - Object 2        
@@ -1782,7 +1790,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             else
             {
                 // TPDO4 Mapping - Number of mapped object in PDO
-                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD4_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)2};    
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD4_MAPPING, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)3};    
                 //move to next OD index
                 index++;
                 // TPDO4 Mapping - Object 1
@@ -1791,6 +1799,10 @@ static void CO_addObj(uint16_t objId, bool deviceType)
                 index++;
                 // TPDO4 Mapping - Object 2
                 GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD4_MAPPING, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_IQD, 3, 16)};    
+                //move to next OD index
+                index++;
+                // TPDO4 Mapping - Object 3
+                GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TPOD4_MAPPING, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, CO_LINK(CO_OD_REG_MOTOR_TORQUE, 1, 16)};    
                 //move to next OD index
                 index++;
                 
@@ -1951,20 +1963,20 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
             
             // Application - Iq of master
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&wObjDataMotor1Iq};        
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1Iq};        
             //move to next OD index
             index++;
             // Application - Iq of slave
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&wObjDataMotor2Iq};        
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2Iq};        
             //move to next OD index
             index++;
             
             // Application - Id of master
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 2, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&wObjDataMotor1Id};        
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 2, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1Id};        
             //move to next OD index
             index++;
             // Application - Id of slave
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 3, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&wObjDataMotor2Id};        
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 3, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2Id};        
             //move to next OD index
             index++;
 
@@ -1976,13 +1988,21 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_SENSOR_CURRENT, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjPhaseCurrentSensor2};        
             //move to next OD index
             index++;
-        
+            
             // Application - Reference torque to master motor
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE, 0, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1TorqRef};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE, 0, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1TeRef};
             //move to next OD index
             index++;
             // Application - Reference torque to slave motor 1        
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE, 1, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2TorqRef};
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2TeRef};
+            //move to next OD index
+            index++;
+            // Application - Ramp torque to master motor
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE, 2, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1TorqRamp};
+            //move to next OD index
+            index++;
+            // Application - Ramp torque to slave motor 1        
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TORQUE, 3, CO_OBJ_____RW), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2TorqRamp};
             //move to next OD index
             index++;
         

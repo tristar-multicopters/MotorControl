@@ -173,15 +173,16 @@ static void UpdateObjectDictionnary(void *p_arg)
     
     
     
-    int16_t  hMotorSpeedMeas         = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
+    int16_t  hMotorSpeedMeas        = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
     uint16_t hMotorState            = MCInterface_GetSTMState(&MCInterface[0]);
-    uint32_t wMotorOccurredFaults    = MCInterface_GetOccurredCriticalFaults(&MCInterface[0]);
+    uint32_t wMotorOccurredFaults   = MCInterface_GetOccurredCriticalFaults(&MCInterface[0]);
     uint32_t wMotorCurrentFaults    = MCInterface_GetCurrentCriticalFaults(&MCInterface[0]);
-    uint32_t wMotorCurrentErrorsNow        = MCInterface_GetCurrentErrors(&MCInterface[0]);
-    uint32_t wMotorOccurredErrors    = MCInterface_GetOccurredErrors(&MCInterface[0]);
+    uint32_t wMotorCurrentErrorsNow = MCInterface_GetCurrentErrors(&MCInterface[0]);
+    uint32_t wMotorOccurredErrors   = MCInterface_GetOccurredErrors(&MCInterface[0]);
     uint32_t wMotorWarnings         = MCInterface_GetOccurredWarning(&MCInterface[0]);
     int16_t  hMotorIq               = MCInterface_GetIqdref(&MCInterface[0]).q;
     int16_t  hMotorId               = MCInterface_GetIqdref(&MCInterface[0]).d;
+    int16_t  hMotorTeRef            = MCInterface_GetTeref(&MCInterface[0]);
     #endif
     
     //theses variables are only used
@@ -220,6 +221,7 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 8)), pNode, &wMotorOccurredFaults, sizeof(wMotorOccurredFaults));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_IQD, 0)), pNode, &hMotorIq, sizeof(hMotorIq));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_IQD, 2)), pNode, &hMotorId, sizeof(hMotorId));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE, 1)), pNode, &hMotorTeRef, sizeof(hMotorTeRef));
             
             /* Update virtual motor 2 structure used by vehicle control layer */
             SlaveMCInterface_UpdateFeedback(&SlaveM2);
@@ -263,6 +265,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 8)), pNode, &wMotorOccurredFaults, sizeof(uint32_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_IQD, 0)), pNode, &hMotorIq, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_IQD, 2)), pNode, &hMotorId, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE, 0)), pNode, &hMotorTeRef, sizeof(uint16_t));
                 
                 /* Update virtual motor 2 structure used by vehicle control layer */
                 SlaveMCInterface_UpdateFeedback(&SlaveM2);
@@ -303,9 +306,10 @@ static void UpdateObjectDictionnary(void *p_arg)
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_FAULTS, 9)), pNode, &wMotorOccurredFaults, sizeof(uint32_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_IQD, 1)), pNode, &hMotorIq, sizeof(uint16_t));
                 COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_IQD, 3)), pNode, &hMotorId, sizeof(uint16_t));
+                COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE, 1)), pNode, &hMotorTeRef, sizeof(uint16_t));
                 
                 /* Read commands in CANOpen object dictionnary received by RPDO */
-                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE, M2)), pNode, &hMotor2TorqRef, sizeof(uint16_t));
+                COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TORQUE, 3)), pNode, &hMotor2TorqRef, sizeof(uint16_t));
                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_START, M2)), pNode, &bMotor2Start, sizeof(uint8_t));
                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
                 
@@ -855,10 +859,10 @@ void Comm_BootUp(void)
         .wRegAddrHeatsinkTemp = CO_DEV(CO_OD_REG_HEATSINK_TEMP, M2),
         .wRegAddrIq = CO_DEV(CO_OD_REG_MOTOR_IQD, 1),
         .wRegAddrId = CO_DEV(CO_OD_REG_MOTOR_IQD, 3),
-        .wRegAddrTeRef = ,
+        .wRegAddrTeRef = CO_DEV(CO_OD_REG_MOTOR_TORQUE, 1),
         .wRegAddrStartMotor = CO_DEV(CO_OD_REG_MOTOR_START, M2),
         .wRegAddrFaultAck = CO_DEV(CO_OD_REG_FAULT_ACK, M2),
-        .wRegAddrTorqueRamp = CO_DEV(CO_OD_REG_MOTOR_TORQUE, M2),       
+        .wRegAddrTorqueRamp = CO_DEV(CO_OD_REG_MOTOR_TORQUE, 3),       
     };
     SlaveMCInterface_Init(&SlaveM2, &CONodeGNR, M2RegAddr);
     #endif

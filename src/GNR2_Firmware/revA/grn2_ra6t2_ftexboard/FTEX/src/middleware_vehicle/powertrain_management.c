@@ -1290,7 +1290,7 @@ uint16_t PWRT_GetTotalMotorsPower(PWRT_Handle_t * pHandle)
     if(pHandle->sParameters.bMode == DUAL_MOTOR || pHandle->bMainMotor == M2)
     {
         uint16_t M2Rpm = (uint16_t) abs(MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2));
-        float M2TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M2);
+        float M2TorqueRef = MDI_GetTeref(pHandle->pMDI, M2);
         TotalMotorPower += M2Rpm * RPM_TO_RAD_PERSEC  * (M2TorqueRef/100);
     }
     

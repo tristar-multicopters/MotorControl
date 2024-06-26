@@ -667,6 +667,7 @@ int16_t MDI_GetTeref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
             hReturnValue = MCInterface_GetTeref(pHandle->pMCI);
             break;
         case M2:
+            hReturnValue = SlaveMCInterface_GetTeRef(pHandle->pSlaveM2);
             break;
         default:
             break;

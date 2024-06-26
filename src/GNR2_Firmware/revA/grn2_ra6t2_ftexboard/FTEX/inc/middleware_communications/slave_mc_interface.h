@@ -37,6 +37,7 @@ typedef struct
     uint16_t hBusVoltage;
     int16_t hIqRef;
     int16_t hIdRef;
+    int16_t hTeRef;
 } SlaveMotorFeedback_t;
 
 /*
@@ -204,5 +205,7 @@ int16_t SlaveMCInterface_GetIqRef(SlaveMotorHandle_t * pHandle);
   * @param  pHandle Pointer on the component instance to work on.
   */
 int16_t SlaveMCInterface_GetIdRef(SlaveMotorHandle_t * pHandle);
+
+int16_t SlaveMCInterface_GetTeRef(SlaveMotorHandle_t * pHandle);
 
 #endif /* __SLAVE_MC_INTERFACE_H */

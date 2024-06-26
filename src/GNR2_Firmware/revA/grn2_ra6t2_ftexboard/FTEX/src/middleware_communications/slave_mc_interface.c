@@ -231,3 +231,13 @@ int16_t SlaveMCInterface_GetIdRef(SlaveMotorHandle_t * pHandle)
 
     return pHandle->Feedback.hIdRef;
 }
+
+/*
+* see function definition
+*/
+int16_t SlaveMCInterface_GetTeRef(SlaveMotorHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+
+    return pHandle->Feedback.hTeRef;
+}
