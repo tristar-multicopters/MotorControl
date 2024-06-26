@@ -1176,7 +1176,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     bool WalkOverThrottle = pHandle->pPAS->sParameters.WalkmodeOverThrottle;
     bool PASOverThrottle  = pHandle->pPAS->sParameters.PASOverThrottle;
     
-    if (((PASDetected && PowerEnable)  && (!ThrottleDetected || PASOverThrottle)) || 
+    if (((PASDetected || PowerEnable)  && (!ThrottleDetected || PASOverThrottle)) ||
         (WalkDetected && (!ThrottleDetected || WalkOverThrottle)))
     {
         PASWasDetected = true;
@@ -1201,33 +1201,28 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 
         pHandle->hTorqueSelect = Ramps_ApplyRamp(PAS_RAMP_SELECTION, Wheel_GetVehicleSpeedFloatFromWSS(pHandle->pPAS->pWSS), pHandle->hTorqueSelect); 
 
-        // Check if there is any torque sensor issue detected
-        pHandle->pPAS->bTorqueSensorIssue = PedalAssist_TorqueSensorIssueDetected(pHandle->pPAS); 
-        // If we have a torque sensor issue detected and we are supposed to give torque
-        if(pHandle->pPAS->bTorqueSensorIssue && pHandle->hTorqueSelect != 0)
-        {
-            // Cut power because we have detected a torque sensor issue
-            pHandle->hTorqueSelect = 0;
-            VC_Errors_RaiseError(TORQUE_SENSOR_ERROR, HOLD_UNTIL_CLEARED); 
-        }
-        // No issues detected, we clear the error 
-        else
-        {
-            VC_Errors_ClearError(TORQUE_SENSOR_ERROR);
-        }
-    }        
+    }
     /* Using throttle */
     else 
     {        
         /* Throttle value convert to torque */        
         pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);    
     }
-    
-    if (PASWasDetected && PedalAssist_IsPASDetected(pHandle->pPAS) == false && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If pas was detected but we switched to throttle
+
+    // Check if there is any torque sensor issue detected
+    pHandle->pPAS->bTorqueSensorIssue = PedalAssist_TorqueSensorIssueDetected(pHandle->pPAS);
+    // If we have a torque sensor issue detected and we are supposed to give torque
+    if(pHandle->pPAS->bTorqueSensorIssue && pHandle->hTorqueSelect != 0)
     {
-        PASWasDetected = false;       
+        // Cut power because we have detected a torque sensor issue
+        pHandle->hTorqueSelect = 0;
+        VC_Errors_RaiseError(TORQUE_SENSOR_ERROR, HOLD_UNTIL_CLEARED);
     }
-        
+    // No issues detected, we clear the error
+    else
+    {
+        VC_Errors_ClearError(TORQUE_SENSOR_ERROR);
+    }
     return pHandle->hTorqueSelect;
 }
 

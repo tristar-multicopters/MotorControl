@@ -27,6 +27,7 @@
 
 #define ENABLE_SPEED_LIMIT                     true         // Enable or disable speed limit (default speed limit is 32km/hr)
 #define VEHICLE_TOP_SPEED_KMH                  99
+#define THROTTLE_TOP_SPEED                     VEHICLE_TOP_SPEED_KMH
 
 /***************** THROTTLE SELECTION  ******************************/
 

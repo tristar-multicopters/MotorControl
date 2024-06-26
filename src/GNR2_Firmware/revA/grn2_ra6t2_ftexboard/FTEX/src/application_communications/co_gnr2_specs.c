@@ -1970,7 +1970,6 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 1, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor2Iq};        
             //move to next OD index
             index++;
-            
             // Application - Id of master
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_IQD, 2, CO_OBJ_____R_), CO_TSIGNED16, (CO_DATA)&hObjDataMotor1Id};        
             //move to next OD index

@@ -59,6 +59,7 @@ void SlaveMCInterface_UpdateFeedback(SlaveMotorHandle_t * pHandle)
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrIq), pHandle->pCONode, &pHandle->Feedback.hIqRef, sizeof(pHandle->Feedback.hIqRef));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrId), pHandle->pCONode, &pHandle->Feedback.hIdRef, sizeof(pHandle->Feedback.hIdRef));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrTeRef), pHandle->pCONode, &pHandle->Feedback.hTeRef, sizeof(pHandle->Feedback.hTeRef));
+
 }
 
 
@@ -241,3 +242,4 @@ int16_t SlaveMCInterface_GetTeRef(SlaveMotorHandle_t * pHandle)
 
     return pHandle->Feedback.hTeRef;
 }
+

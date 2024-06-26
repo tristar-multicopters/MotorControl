@@ -24,7 +24,7 @@
 #define MAX_TIME_BMS_TOLERANT               20000           // End time of derating for BMS protection in ms
 #define MAX_POWER_LIMIT_TIMEOUT             10000           // Start time of derating for BMS protection in ms
 #define MAX_BMS_POSITIVE_POWER              750             // Maximum Power at the end point of foldback
-#define MAX_BMS_CONTINUOUS_CURRENT          10              // Maximum Power at the end point of foldback in amps
+#define MAX_BMS_CONTINUOUS_CURRENT          15              // Maximum Power at the end point of foldback in amps
 
 /******************************** BATTERY  PARAMETERS ******************************/
 
