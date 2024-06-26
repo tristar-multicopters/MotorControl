@@ -16,6 +16,10 @@
 #define MOTOR_NTC             0
 #define HEATSINK_NTC          1
 
+/****** Over and Under Voltage Parameters ******/
+#define OV_VOLTAGE_THRESHOLD_V             75                   // Over-voltage threshold
+#define UD_VOLTAGE_THRESHOLD_CONT_V        29         //Undervoltage threshold for board to work
+
 /****** NTC Parameters ******/
 #define HEATSINK_NTC_BETA_COEFFICIENT         4100                       //Beta coefficient value as specified in the datasheet
 #define HEATSINK_NTC_RESISTANCE_COEF          93.6f                      //This value is calculated based on this formula: exp(NTCBetaCoef / TEMP_25_CELSIUS_IN_KELVIN) / NTC Rated Resistance.
