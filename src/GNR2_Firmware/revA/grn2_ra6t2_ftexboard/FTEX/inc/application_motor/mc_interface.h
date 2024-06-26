@@ -404,7 +404,7 @@ int16_t MCInterface_GetElAngledpp(MotorControlInterfaceHandle_t * pHandle);
   * @param  pHandle Pointer on the component instance to work on.
   * @retval int16_t Teref
   */
-int16_t MCInterface_GetTeref(MotorControlInterfaceHandle_t * pHandle);
+int16_t MCInterface_GetMotorTorqueRef(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the motor phase current amplitude (0-to-peak) in s16A
@@ -477,12 +477,6 @@ void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, i
   * @retval nothing
   */
 void  MCInterface_SetWheelRPM(MotorControlInterfaceHandle_t * pHandle, uint16_t aWheelRPM);
-
-/** @brief  Get the current torq reference 
-  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
-  * @retval nothing
-  */
-int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  Get the max application power

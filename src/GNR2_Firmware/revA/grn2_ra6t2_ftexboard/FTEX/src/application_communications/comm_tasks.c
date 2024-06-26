@@ -182,7 +182,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint32_t wMotorWarnings         = MCInterface_GetOccurredWarning(&MCInterface[0]);
     int16_t  hMotorIq               = MCInterface_GetIqdref(&MCInterface[0]).q;
     int16_t  hMotorId               = MCInterface_GetIqdref(&MCInterface[0]).d;
-    int16_t  hMotorTeRef            = MCInterface_GetTeref(&MCInterface[0]);
+    int16_t  hMotorTeRef            = MCInterface_GetMotorTorqueRef(&MCInterface[0]);
     #endif
     
     //theses variables are only used

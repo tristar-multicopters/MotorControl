@@ -458,7 +458,7 @@ int16_t MCInterface_GetElAngledpp(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-int16_t MCInterface_GetTeref(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetMotorTorqueRef(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
   ASSERT(pHandle->pFOCVars != NULL);
@@ -602,15 +602,6 @@ void  MCInterface_SetWheelRPM(MotorControlInterfaceHandle_t * pHandle, uint16_t 
   pHandle->pSpeedTorqCtrl->pSPD->wheelRPM = aWheelRPM;
     
 }   
-
-/**
-  *  Get the current torq reference 
-  */
-int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-    return pHandle->pFOCVars[M1].hTeref; 
-}
 
 /**
   *  Get the max application power

@@ -236,7 +236,7 @@ int16_t SlaveMCInterface_GetIdRef(SlaveMotorHandle_t * pHandle)
 /*
 * see function definition
 */
-int16_t SlaveMCInterface_GetTeRef(SlaveMotorHandle_t * pHandle)
+int16_t SlaveMCInterface_GetMotorTorqueRef(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 

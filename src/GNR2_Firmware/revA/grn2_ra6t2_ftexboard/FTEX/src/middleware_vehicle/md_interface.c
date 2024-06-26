@@ -664,10 +664,10 @@ int16_t MDI_GetTeref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
     switch (bMotor)
     {
         case M1:
-            hReturnValue = MCInterface_GetTeref(pHandle->pMCI);
+            hReturnValue = MCInterface_GetMotorTorqueRef(pHandle->pMCI);
             break;
         case M2:
-            hReturnValue = SlaveMCInterface_GetTeRef(pHandle->pSlaveM2);
+            hReturnValue = SlaveMCInterface_GetMotorTorqueRef(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -767,9 +767,10 @@ uint16_t MDI_GetMotorTorqueReference(MultipleDriveInterfaceHandle_t * pHandle, u
     switch (bMotor)
     {
         case M1:            
-            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI));
+            MotorTorqueRef = (uint16_t) abs(MCInterface_GetMotorTorqueRef(pHandle->pMCI));
             break;
         case M2:
+            MotorTorqueRef = (uint16_t) abs(SlaveMCInterface_GetMotorTorqueRef(pHandle->pSlaveM2));
             break;
         default:
             break;
