@@ -308,6 +308,15 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle);
   */
 int16_t PWRT_TransitionStartupRuntimeTorque(int16_t inputTorque, bool cadenceDetected, bool PASPowerEnable,
                                             bool throttleOverride, bool walkOverPAS);
+
+/**
+  * @brief  Scale the input torque according to the current pedal RPM
+  * @param  inputTorque : Torque value to scale
+  * @param  currentPedalRPM : Current pedal RPM measured
+  * @retval Output torque scaled from the pedal RPM
+  */
+int16_t PWRT_ApplyTorqueGainScaling(int16_t inputTorque, uint16_t currentPedalRPM);
+
 /**
   * @brief  Get minimum power required on cadence power enable
   * @param  Powertrain handle

@@ -1193,6 +1193,11 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
             pHandle->hTorqueSelect = PWRT_EnableCadencePower(pHandle);
         }
 
+        if(TORQUE_SCALING_ACTIVATED)
+        {
+            pHandle->hTorqueSelect = PWRT_ApplyTorqueGainScaling(pHandle->hTorqueSelect, PedalSpdSensor_GetSpeedRPM(pHandle->pPAS->pPSS));
+        }
+
         // Apply ramp filtering on the predicted torque output
         pHandle->hTorqueSelect = Ramps_ApplyRamp(PAS_RAMP_SELECTION, Wheel_GetVehicleSpeedFloatFromWSS(pHandle->pPAS->pWSS), pHandle->hTorqueSelect);
     }
@@ -1254,6 +1259,33 @@ int16_t PWRT_TransitionStartupRuntimeTorque(int16_t inputTorque, bool cadenceDet
         return inputTorque;
     }
     return (int16_t)output;
+}
+
+/**
+  * @brief  Scale the input torque according to the current pedal RPM
+  * @param  inputTorque : Torque value to scale
+  * @param  currentPedalRPM : Current pedal RPM measured
+  * @retval Output torque scaled from the pedal RPM
+  */
+int16_t PWRT_ApplyTorqueGainScaling(int16_t inputTorque, uint16_t currentPedalRPM)
+{
+    // Current RPM is on the lower constant part of scaling ramp
+    if(currentPedalRPM <= MIN_RPM_SCALING)
+    {
+        return (int16_t)(inputTorque * (GAIN_AT_MIN_RPM/100.0f));
+    }
+
+    // Current RPM is on the upper constant part of scaling ramp
+    if(currentPedalRPM >= MAX_RPM_SCALING)
+    {
+        return (int16_t)(inputTorque * (GAIN_AT_MAX_RPM/100.0f));
+    }
+
+    // Current RPM is on the scaling ramp
+    // Get current torque gain variation based of current pedal RPM
+    float scalingVariation = (GAIN_AT_MAX_RPM - GAIN_AT_MIN_RPM)/(MAX_RPM_SCALING - MIN_RPM_SCALING);
+    float scaledGain = currentPedalRPM * scalingVariation + GAIN_AT_MIN_RPM;
+    return (int16_t)(inputTorque * (scaledGain/100.0f));
 }
 
 /**

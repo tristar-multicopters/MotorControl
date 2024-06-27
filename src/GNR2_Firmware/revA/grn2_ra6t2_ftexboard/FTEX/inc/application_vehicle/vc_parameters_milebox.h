@@ -101,6 +101,19 @@
 #define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED    50.0f         // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
 #define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
 
+// Torque Scaling by Pedaling RPM Options
+
+// Flag used to activate the torque scaling option
+// true : option will be activated
+// false : option will be decativated/bypassed
+#define TORQUE_SCALING_ACTIVATED    true
+
+#define MIN_RPM_SCALING    (uint16_t)2          // Minimum pedaling RPM where the torque gain scaling starts
+#define MAX_RPM_SCALING    (uint16_t)50         // Maximum pedaling RPM where the torque gain scaling stops
+#define GAIN_AT_MIN_RPM              100.0f     // Torque scaling gain (in %) applied at min RPM
+#define GAIN_AT_MAX_RPM              300.0f     // Torque scaling gain (in %) applied at max RPM
+
+
 //Used to chose the pas detection mode on startup, torque or/and cadence,
 //torque only or cadence only.
 #define PAS_DETECTIONSTARTUP_ALGORITHM      TorqueSensorUse /*noSensorUse = 0,
@@ -183,4 +196,4 @@
 
 #include "batteries/milebox_battery.h"
                                             
-#endif              
+#endif
