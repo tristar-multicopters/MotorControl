@@ -24,8 +24,8 @@
 /******************* SPEED LIMIT PARAMETERS  *******************************/
 
 #define ENABLE_SPEED_LIMIT                     true         // Enable or disable speed limit (default speed limit is 32km/hr)
-#define VEHICLE_TOP_SPEED_KMH                  27    
-#define THROTTLE_TOP_SPEED                     6
+#define VEHICLE_TOP_SPEED_KMH                  32
+#define THROTTLE_TOP_SPEED                     32
 
 /***************** THROTTLE SELECTION  ******************************/
 
@@ -76,10 +76,10 @@
 #define RUNTIME_PAS_SPEED_THRESHOLD                 5.0f    // Speed threshold to enable startup PAS power in km/h 
 #define STARTUP_PAS_SPEED_THRESHOLD                 1.0f    // Speed threshold to enable runtime PAS power in km/h
 #define TORQUE_STARTUP_VALUE_THRESHOLD    (uint16_t)10      // Torque value (%) that needs to be provided to have a startup detection
-#define STARTUP_PULSE_NUMBER              (uint32_t)5       // Number of pulses that needs to be detected to trigger startup detection
+#define STARTUP_PULSE_NUMBER              (uint32_t)2       // Number of pulses that needs to be detected to trigger startup detection
 #define STARTUP_TIME_WINDOW               (uint16_t)1000    // Time window (ms) in which the startup pulse number is counted
 #define RUNTIME_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger runtime detection
-#define RUNTIME_TIME_WINDOW               (uint16_t)150     // Time window (ms) in which the runtime pulse number is counted
+#define RUNTIME_TIME_WINDOW               (uint16_t)400     // Time window (ms) in which the runtime pulse number is counted
 
 // Flag used to detect PAS with cadence AND torque.
 // 0: Cadence OR Torque
@@ -87,7 +87,7 @@
 #define CADENCE_AND_OR_TORQUE    0
 
 // Select the ramp type from the enum in file _ramp.h_
-#define PAS_RAMP_SELECTION  HIGH_SPEED_POWER_LIMITING_RAMP
+#define PAS_RAMP_SELECTION  DYNAMIC_DECELERATION_RAMP
 
 // Dynamic Deceleration Ramp Params
 #define DYNAMIC_DECEL_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
@@ -106,7 +106,7 @@
 // Flag used to activate the torque scaling option
 // true : option will be activated
 // false : option will be decativated/bypassed
-#define TORQUE_SCALING_ACTIVATED    true
+#define TORQUE_SCALING_ACTIVATED    false
 
 #define MIN_RPM_SCALING    (uint16_t)2          // Minimum pedaling RPM where the torque gain scaling starts
 #define MAX_RPM_SCALING    (uint16_t)50         // Maximum pedaling RPM where the torque gain scaling stops
@@ -130,11 +130,11 @@
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
     
 #define PAS_0_MIN_TORQUE_PERCENT                0
-#define PAS_1_MIN_TORQUE_PERCENT                0
-#define PAS_2_MIN_TORQUE_PERCENT                0
-#define PAS_3_MIN_TORQUE_PERCENT                0
-#define PAS_4_MIN_TORQUE_PERCENT                0
-#define PAS_5_MIN_TORQUE_PERCENT                0 
+#define PAS_1_MIN_TORQUE_PERCENT               12
+#define PAS_2_MIN_TORQUE_PERCENT               16
+#define PAS_3_MIN_TORQUE_PERCENT               21
+#define PAS_4_MIN_TORQUE_PERCENT               25
+#define PAS_5_MIN_TORQUE_PERCENT               30
 
 #define PAS_0_MAX_TORQUE_PERCENT                0
 #define PAS_1_MAX_TORQUE_PERCENT               40

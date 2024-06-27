@@ -76,7 +76,13 @@
 #define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
-                                                           
+
+// Enable or disable the IoT board communication.
+// Note: To enable or disable IoT error status on the screen,
+//       use the VC_IOT_ERROR_DISPLAY define in vc_defines.h.
+
+#define ENABLE_IOT_BOARD               1
+
                                                                                                                
 //define responsible to enable some debug features as:
 //hardware fault catch 
