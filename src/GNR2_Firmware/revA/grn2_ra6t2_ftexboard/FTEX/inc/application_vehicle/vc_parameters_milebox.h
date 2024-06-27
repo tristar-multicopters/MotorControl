@@ -37,7 +37,7 @@
 #include "pedal_sensors/duratorq_autorq.h"
 
 /***************** TORQUE SENSOR FEEL PARAMETERS  ******************************/
-#define PTS_OFFSET_PTS2TORQUE_STARTUP       10              // Offset for pedal torque sensor to torque linear transformation during the startup in %
+#define PTS_OFFSET_PTS2TORQUE_STARTUP       5              // Offset for pedal torque sensor to torque linear transformation during the startup in %
 #define PTS_OFFSET_STARTUP_SPEED_KMH         1              // Speed under which the Startup pedal torque sensor offset is used in km/h
 #define PTS_OFFSET_PTS2TORQUE               10              // Offset for pedal torque sensor to torque linear transformation in %
 #define PTS_OFFSET_PTS2TORQUE_SAFETY        40              // Offset for pedal torque sensor to torque linear transformation that is considered safe in %
@@ -83,11 +83,11 @@
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
     
 #define PAS_0_MIN_TORQUE_PERCENT                0
-#define PAS_1_MIN_TORQUE_PERCENT                0
-#define PAS_2_MIN_TORQUE_PERCENT                0
-#define PAS_3_MIN_TORQUE_PERCENT                0
-#define PAS_4_MIN_TORQUE_PERCENT                0
-#define PAS_5_MIN_TORQUE_PERCENT                0 
+#define PAS_1_MIN_TORQUE_PERCENT                12
+#define PAS_2_MIN_TORQUE_PERCENT                16
+#define PAS_3_MIN_TORQUE_PERCENT                21
+#define PAS_4_MIN_TORQUE_PERCENT                25
+#define PAS_5_MIN_TORQUE_PERCENT                30 
 
 #define PAS_0_MAX_TORQUE_PERCENT                0
 #define PAS_1_MAX_TORQUE_PERCENT               40

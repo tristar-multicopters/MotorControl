@@ -282,18 +282,18 @@ void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
     {
         if(currentSpeed < STARTUP_PAS_SPEED_THRESHOLD)
         {
-            if(pHandle->bCadenceStartupPASDetected || pHandle->bTorqueStartupPASDetected) pHandle->bPASPowerEnable = true;
+            if(pHandle->bCadenceStartupPASDetected && pHandle->bTorqueStartupPASDetected) pHandle->bPASPowerEnable = true;
             else pHandle->bPASPowerEnable = false;
         }
         else
         {
-            if(pHandle->bCadenceRunningPASDetected || pHandle->bTorqueRunningPASDetected) pHandle->bPASPowerEnable = true;
+            if(pHandle->bCadenceRunningPASDetected && pHandle->bTorqueRunningPASDetected) pHandle->bPASPowerEnable = true;
             else pHandle->bPASPowerEnable = false;
         }
     }
     else
     {
-        if(pHandle->bCadenceRunningPASDetected || pHandle->bTorqueRunningPASDetected) pHandle->bPASPowerEnable = true;
+        if(pHandle->bCadenceRunningPASDetected && pHandle->bTorqueRunningPASDetected) pHandle->bPASPowerEnable = true;
         else pHandle->bPASPowerEnable = false;
     }
 }
