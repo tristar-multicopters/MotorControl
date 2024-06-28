@@ -70,7 +70,7 @@
 //used to enable importants features
 //used on the final version of the firmware,
 //as WDT and etc.
-#define FIRMWARE_RELEASE              0
+#define FIRMWARE_RELEASE              1
 
 
 #define VEHICLE_SELECTION             VEHICLE_MILEBOX     /* Vehicle selection to adapt motor/vehicle parameters.
