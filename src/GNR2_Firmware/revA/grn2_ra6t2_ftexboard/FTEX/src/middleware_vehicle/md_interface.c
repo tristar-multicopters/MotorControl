@@ -769,7 +769,7 @@ uint16_t MDI_GetMaxPositivePower(MultipleDriveInterfaceHandle_t * pHandle)
   *  Function sets the torque control speed limit does the conversion from desired 
   *  wheel speed in kmH to motor rpm.Is also the wrapper for the function SpdTorqCtrl_SetSpeedLimit
   */
-void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t speedKMH, uint16_t gain)
+void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t speedKMH)
 {
     ASSERT(pHandle != NULL);
     ASSERT(pHandle->pMCI->pSpeedTorqCtrl);
@@ -782,7 +782,6 @@ void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t 
     
     desiredMotorRPM = (int16_t) round(gearRatio * wheelRpm);  // Convert desired wheel rpm to desired motor rpm
     
-    desiredMotorRPM = (desiredMotorRPM * gain)/ MDI_PERCENT;
     
     SpdTorqCtrl_SetSpeedLimit(pHandle->pMCI->pSpeedTorqCtrl, desiredMotorRPM); // Set the torque control speed limitation
 

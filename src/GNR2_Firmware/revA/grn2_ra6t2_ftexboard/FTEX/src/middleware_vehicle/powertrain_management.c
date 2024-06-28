@@ -1538,7 +1538,7 @@ void PWRT_SetNewTopSpeed(PWRT_Handle_t * pHandle, uint16_t topSpeed)
         NewTopSpeed = topSpeed;
     }        
    
-    MDI_SetTorqueSpeedLimit(pHandle->pMDI,NewTopSpeed,pHandle->sParameters.TorqueSpeedLimitGain);
+    MDI_SetTorqueSpeedLimit(pHandle->pMDI,NewTopSpeed);
 }
 
 
