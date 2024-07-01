@@ -577,8 +577,6 @@ qd_t MDI_GetIqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
             ReturnValue = MCInterface_GetIqdref(pHandle->pMCI);
             break;
         case M2:
-            ReturnValue.q = SlaveMCInterface_GetIqRef(pHandle->pSlaveM2);
-            ReturnValue.d = SlaveMCInterface_GetIdRef(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -643,6 +641,28 @@ int16_t MDI_GetElAngledpp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMot
     {
         case M1:
             hReturnValue = MCInterface_GetElAngledpp(pHandle->pMCI);
+            break;
+        case M2:
+            break;
+        default:
+            break;
+    }
+
+    return hReturnValue;
+}
+
+/*
+* see function definition
+*/
+int16_t MDI_GetTeref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+{
+    ASSERT(pHandle != NULL);
+    int16_t hReturnValue = 0;
+
+    switch (bMotor)
+    {
+        case M1:
+            hReturnValue = MCInterface_GetTeref(pHandle->pMCI);
             break;
         case M2:
             break;
@@ -744,10 +764,10 @@ uint16_t MDI_GetMotorTorqueReference(MultipleDriveInterfaceHandle_t * pHandle, u
     switch (bMotor)
     {
         case M1:            
-            MotorTorqueRef = (uint16_t) abs(MCInterface_GetMotorTorqueRef(pHandle->pMCI));
+            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M1));
             break;
         case M2:
-            MotorTorqueRef = (uint16_t) abs(SlaveMCInterface_GetMotorTorqueRef(pHandle->pSlaveM2));
+            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M2));
             break;
         default:
             break;

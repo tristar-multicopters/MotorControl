@@ -26,7 +26,7 @@
 #define ENABLE_SPEED_LIMIT                  false           // Enable or disable speed limit (default speed limit is 32km/hr)
 #define VEHICLE_TOP_SPEED_KMH               32    
 #define THROTTLE_TOP_SPEED                  VEHICLE_TOP_SPEED_KMH
-
+    
 /***************** THROTTLE SELECTION  ******************************/
 
 #include "throttle_sensors/vc_velec_throttle.h"

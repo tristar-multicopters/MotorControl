@@ -423,7 +423,7 @@ void MediumFrequencyTaskM1(void)
     case M_CHARGE_BOOT_CAP:
         if (ChargeBootCapDelayHasElapsedM1())
         {
-            MCStateMachine_NextState(&MCStateMachine[M1], M_OFFSET_CALIB);                                                
+            MCStateMachine_NextState(&MCStateMachine[M1], M_OFFSET_CALIB);
         }
         break;
 
