@@ -75,7 +75,7 @@
 // Global PAS Params
 #define RUNTIME_PAS_SPEED_THRESHOLD                 5.0f    // Speed threshold to enable startup PAS power in km/h 
 #define STARTUP_PAS_SPEED_THRESHOLD                 1.0f    // Speed threshold to enable runtime PAS power in km/h
-#define TORQUE_STARTUP_VALUE_THRESHOLD    (uint16_t)40      // Torque value (%) that needs to be provided to have a startup detection
+#define TORQUE_STARTUP_VALUE_THRESHOLD    (uint16_t)80      // Torque value (%) that needs to be provided to have a startup detection
 #define STARTUP_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger startup detection
 #define STARTUP_TIME_WINDOW               (uint16_t)1000    // Time window (ms) in which the startup pulse number is counted
 #define RUNTIME_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger runtime detection
@@ -84,7 +84,7 @@
 // Flag used to detect PAS with cadence AND torque.
 // 0: Cadence OR Torque
 // 1: Cadence AND Torque
-#define CADENCE_AND_OR_TORQUE    1
+#define CADENCE_AND_OR_TORQUE    0
 
 // Select the ramp type from the enum in file _ramp.h_
 #define PAS_RAMP_SELECTION  HIGH_SPEED_POWER_LIMITING_RAMP
@@ -130,8 +130,8 @@
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
     
 #define PAS_0_MIN_TORQUE_PERCENT                0
-#define PAS_1_MIN_TORQUE_PERCENT                5
-#define PAS_2_MIN_TORQUE_PERCENT               10
+#define PAS_1_MIN_TORQUE_PERCENT               15
+#define PAS_2_MIN_TORQUE_PERCENT               15
 #define PAS_3_MIN_TORQUE_PERCENT               15
 #define PAS_4_MIN_TORQUE_PERCENT               22
 #define PAS_5_MIN_TORQUE_PERCENT               30
