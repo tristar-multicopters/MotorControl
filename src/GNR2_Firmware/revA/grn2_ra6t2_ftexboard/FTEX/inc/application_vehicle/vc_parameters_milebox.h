@@ -24,7 +24,7 @@
 /******************* SPEED LIMIT PARAMETERS  *******************************/
 
 #define ENABLE_SPEED_LIMIT                     true         // Enable or disable speed limit (default speed limit is 32km/hr)
-#define VEHICLE_TOP_SPEED_KMH                  32
+#define VEHICLE_TOP_SPEED_KMH                  37
 #define THROTTLE_TOP_SPEED                     32
 
 /***************** THROTTLE SELECTION  ******************************/
@@ -87,7 +87,7 @@
 #define CADENCE_AND_OR_TORQUE    1
 
 // Select the ramp type from the enum in file _ramp.h_
-#define PAS_RAMP_SELECTION  DYNAMIC_DECELERATION_RAMP
+#define PAS_RAMP_SELECTION  HIGH_SPEED_POWER_LIMITING_RAMP
 
 // Dynamic Deceleration Ramp Params
 #define DYNAMIC_DECEL_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
@@ -96,9 +96,9 @@
 #define DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
 
 // High Speed Power Limiting Ramp Params
-#define HIGH_SPEED_POWER_LIMITING_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
-#define HIGH_SPEED_POWER_LIMITING_RAMP_END                32.0f         // Max speed(km/h) where the dynamic deceleration ramp ends
-#define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED    50.0f         // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
+#define HIGH_SPEED_POWER_LIMITING_RAMP_START              27.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
+#define HIGH_SPEED_POWER_LIMITING_RAMP_END                37.0f         // Max speed(km/h) where the dynamic deceleration ramp ends
+#define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED    10.0f         // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
 #define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
 
 // Torque Scaling by Pedaling RPM Options
