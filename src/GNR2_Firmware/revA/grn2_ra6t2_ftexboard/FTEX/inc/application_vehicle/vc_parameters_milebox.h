@@ -79,7 +79,7 @@
 #define STARTUP_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger startup detection
 #define STARTUP_TIME_WINDOW               (uint16_t)1000    // Time window (ms) in which the startup pulse number is counted
 #define RUNTIME_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger runtime detection
-#define RUNTIME_TIME_WINDOW               (uint16_t)400     // Time window (ms) in which the runtime pulse number is counted
+#define RUNTIME_TIME_WINDOW               (uint16_t)1000     // Time window (ms) in which the runtime pulse number is counted
 
 // Flag used to detect PAS with cadence AND torque.
 // 0: Cadence OR Torque
@@ -96,8 +96,8 @@
 #define DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
 
 // High Speed Power Limiting Ramp Params
-#define HIGH_SPEED_POWER_LIMITING_RAMP_START              27.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
-#define HIGH_SPEED_POWER_LIMITING_RAMP_END                37.0f         // Max speed(km/h) where the dynamic deceleration ramp ends
+#define HIGH_SPEED_POWER_LIMITING_RAMP_START              24.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
+#define HIGH_SPEED_POWER_LIMITING_RAMP_END                35.0f         // Max speed(km/h) where the dynamic deceleration ramp ends
 #define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED    10.0f         // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
 #define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
 
