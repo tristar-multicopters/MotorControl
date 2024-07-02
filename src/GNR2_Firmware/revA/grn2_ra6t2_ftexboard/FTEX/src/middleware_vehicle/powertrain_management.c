@@ -1338,18 +1338,14 @@ uint16_t PWRT_GetTotalMotorsPower(PWRT_Handle_t * pHandle)
     
     float TotalMotorPower = 0;
     uint16_t M1Rpm = (uint16_t) abs(MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M1));
+   // uint16_t M2Rpm = (uint16_t) abs(MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2)); // dual not supported for now
     
     float M1TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M1);
+    //float M2TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M2);
     
     TotalMotorPower  = M1Rpm * RPM_TO_RAD_PERSEC  * (M1TorqueRef/100);
-    
-    //if using dual motors add dual motor's power
-    if(pHandle->sParameters.bMode == DUAL_MOTOR || pHandle->bMainMotor == M2)
-    {
-        uint16_t M2Rpm = (uint16_t) abs(MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2));
-        float M2TorqueRef = (float) (MDI_GetMotorTorqueReference(pHandle->pMDI, M2));
-        TotalMotorPower += M2Rpm * RPM_TO_RAD_PERSEC  * (M2TorqueRef/100);
-    }
+                
+   // TotalMotorPower += M2Rpm * RPM_TO_RAD_PERSEC  * (M2TorqueRef/100);
     
     return  (uint16_t)round(TotalMotorPower);   
 
@@ -1367,27 +1363,17 @@ uint16_t PWRT_GetDCPower(PWRT_Handle_t * pHandle)
     float Amps = 0;
     float Loss = 0;
     uint16_t IqRef = 0;
-    qd_t IqdrefM1 = MDI_GetIqdref(pHandle->pMDI, M1);
-        
-    //if using dual add the dual motor's current
-    if(pHandle->sParameters.bMode == DUAL_MOTOR || pHandle->bMainMotor == M2)
-    {
-        qd_t IqdrefM2 = MDI_GetIqdref(pHandle->pMDI, M2);
-        IqRef = (uint16_t) (abs(IqdrefM1.q) + abs (IqdrefM2.q));
-    }
-    else
-    {
-        // Get Iqref
-        IqRef = (uint16_t) abs(IqdrefM1.q);
-    }
+    qd_t Iqdref = MDI_GetIqdref(pHandle->pMDI,M1);
+    
+    
+    // Get Iqref
+    IqRef = (uint16_t) abs(Iqdref.q);
     
     // Convert to amps using amps = iqref *(2 * MAX_MEASURABLE_CURRENT)/65535;
     Amps = (float)(IqRef *(2 * MAX_MEASURABLE_CURRENT)/65535);
     
     // Aprox motor loss with 3*Rs*amps^2;
     Loss = 3 * MDI_GetRS(pHandle->pMDI) * Amps * Amps;
-    
-    
     
     // Total power is mech power + loss    
     return (uint16_t) round(PWRT_GetTotalMotorsPower(pHandle) + Loss);
@@ -1418,13 +1404,13 @@ uint16_t PWRT_GetDCCurrent(PWRT_Handle_t * pHandle)
     
     if (pHandle->pBatMonitorHandle->VBatAvg > 0)
     {
-        DCCurrent = (DCPower * 100) / pHandle->pBatMonitorHandle->VBatAvg;
+        DCCurrent = (DCPower * 100)/ pHandle->pBatMonitorHandle->VBatAvg;
     }
     else
     {
         DCCurrent = 0;
     }
- 
+    
     return (uint16_t) round(DCCurrent);
 }
 
@@ -1433,7 +1419,6 @@ uint16_t PWRT_GetDCCurrent(PWRT_Handle_t * pHandle)
   * @param  Powertrain handle
   * @retval torque in nm uin16_t                                                                                   
   */
-
 uint16_t PWRT_GetTotalMotorsTorque(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL); 
@@ -1441,11 +1426,11 @@ uint16_t PWRT_GetTotalMotorsTorque(PWRT_Handle_t * pHandle)
     float TotalMotorTorque = 0;
     
     uint16_t M1TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M1);
-    uint16_t M2TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M2);
+    //uint16_t M2TorqueRef = MDI_GetMotorTorqueReference(pHandle->pMDI, M2);
     
     TotalMotorTorque  = M1TorqueRef;
                 
-    TotalMotorTorque += M2TorqueRef;
+   // TotalMotorTorque += M2TorqueRef/100; // For now not supporting dual
     
     return  (uint16_t)round(TotalMotorTorque);   
 
@@ -1538,7 +1523,7 @@ void PWRT_SetNewTopSpeed(PWRT_Handle_t * pHandle, uint16_t topSpeed)
         NewTopSpeed = topSpeed;
     }        
    
-    MDI_SetTorqueSpeedLimit(pHandle->pMDI,NewTopSpeed,pHandle->sParameters.TorqueSpeedLimitGain);
+    MDI_SetTorqueSpeedLimit(pHandle->pMDI,NewTopSpeed);
 }
 
 

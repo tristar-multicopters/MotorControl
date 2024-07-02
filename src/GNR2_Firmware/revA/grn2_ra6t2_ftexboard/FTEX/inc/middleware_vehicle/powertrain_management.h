@@ -68,7 +68,6 @@ typedef struct
     
     bool bPAS0DisableThrottle;           // Will disable the throttle when we are in PAS level 0
     bool bTopSpeedRestrictionEnable;     // Will determine if we must restrict vehicle speed
-    uint16_t TorqueSpeedLimitGain;       // Used to adjuste the accuracy for torque speed limit
     
     bool CruiseForceDisengage;
     PasAlgorithm_t PreCruiseControlStartupPASAlgo;  // Keeps track of the startup pas algorithmed used when we engaged cruise control

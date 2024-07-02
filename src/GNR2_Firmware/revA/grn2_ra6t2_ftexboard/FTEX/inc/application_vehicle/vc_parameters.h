@@ -331,9 +331,6 @@
     #define PTS_FILTER_BW2_3                   25    // BW coefficient for pedal torque sensor avereging
 #endif
 
-#ifndef TORQUE_SPEED_LIMIT_GAIN
-    #define TORQUE_SPEED_LIMIT_GAIN 100
-#endif
 
 #ifndef REAR_LIGHT_BLINK_ON_BRAKE
     #define REAR_LIGHT_BLINK_ON_BRAKE     true // If set to true rear light will blink when brake is pressed

@@ -150,8 +150,6 @@
 #define PAS_2_MAX_TORQUE_PERCENT      55
 #define PAS_3_MAX_TORQUE_PERCENT     100
 
-#define VEHICLE_TOP_SPEED_KMH   45    
-
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
 #define MOTOR_SELECTOR_ENABLE               false           // True if active motor can be changed using 3 way switch

@@ -28,7 +28,7 @@ These variables are used to configure the motor within the smart config tool.
 /************************** Motor Config Parameters ************************/
 #define MOTOR_GEAR_RATIO                    (float)6            // Motor gear ratio, the value is always X turns of the motor 
 #define MOTOR_TYPE                          HUB_DRIVE           // Motor type. Can be HUB_DRIVE or MID_DRIVE or DIRECT_DRIVE
-#define POLE_PAIR_NUM                       8                   // Number of motor pole pairs
+#define POLE_PAIR_NUM                       10                  // Number of motor pole pairs
 #define RS_VAL                              0.071f              // Stator resistance , ohm
 #define LS                                  0.00015f            // Stator inductance, H   For I-PMSM it is equal to Lq
 #define MOTOR_MAGNET_FLUX                   0.0175f             // Refers to the Flux of Permanent magnets used in the motor, derived by performing motor tests

@@ -56,10 +56,6 @@ void SlaveMCInterface_UpdateFeedback(SlaveMotorHandle_t * pHandle)
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccurredErrors), pHandle->pCONode, &pHandle->Feedback.wOccurredErrors, sizeof(pHandle->Feedback.wOccurredErrors));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrWarnings), pHandle->pCONode, &pHandle->Feedback.wWarnings, sizeof(pHandle->Feedback.wWarnings));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrMotorSpeed), pHandle->pCONode, &pHandle->Feedback.hMotorSpeed, sizeof(pHandle->Feedback.hMotorSpeed));
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrIq), pHandle->pCONode, &pHandle->Feedback.hIqRef, sizeof(pHandle->Feedback.hIqRef));
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrId), pHandle->pCONode, &pHandle->Feedback.hIdRef, sizeof(pHandle->Feedback.hIdRef));
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrTeRef), pHandle->pCONode, &pHandle->Feedback.hTeRef, sizeof(pHandle->Feedback.hTeRef));
-
 }
 
 
@@ -70,9 +66,9 @@ void SlaveMCInterface_ExecTorqueRamp(SlaveMotorHandle_t * pHandle, int16_t hFina
 {
     ASSERT(pHandle != NULL);
 
-    int16_t tRamp = hFinalTorque;
+    int16_t Tref = hFinalTorque;
 
-    COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrTorqueRamp), pHandle->pCONode, &tRamp, sizeof(tRamp));
+    COObjWrValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrTorqueRef), pHandle->pCONode, &Tref, sizeof(Tref));
 }
 
 
@@ -212,34 +208,3 @@ int16_t SlaveMCInterface_GetAvrgMecSpeedUnit(SlaveMotorHandle_t * pHandle)
 
     return hReturnValue;
 }
-
-/*
-* see function definition
-*/
-int16_t SlaveMCInterface_GetIqRef(SlaveMotorHandle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-
-    return pHandle->Feedback.hIqRef;
-}
-
-/*
-* see function definition
-*/
-int16_t SlaveMCInterface_GetIdRef(SlaveMotorHandle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-
-    return pHandle->Feedback.hIdRef;
-}
-
-/*
-* see function definition
-*/
-int16_t SlaveMCInterface_GetMotorTorqueRef(SlaveMotorHandle_t * pHandle)
-{
-    ASSERT(pHandle != NULL);
-
-    return pHandle->Feedback.hTeRef;
-}
-

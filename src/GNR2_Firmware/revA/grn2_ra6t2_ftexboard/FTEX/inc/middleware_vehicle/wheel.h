@@ -10,6 +10,7 @@
 #include "stdbool.h"
 #include "wheel_speed_sensor.h"
 #include "vc_constants.h"
+#include "vc_parameters.h"
 
 #ifdef DEFAULT_WHEEL_DIAMETER_OVERRIDE
     #define WHEEL_DIAMETER  DEFAULT_WHEEL_DIAMETER_OVERRIDE

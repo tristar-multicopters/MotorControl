@@ -284,7 +284,6 @@ PWRT_Handle_t PowertrainHandle =
     .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
     .sParameters.bEnableSpeedLimit = ENABLE_SPEED_LIMIT,
     .sParameters.VehicleMaxSpeed = VEHICLE_TOP_SPEED_KMH,    
-    .sParameters.TorqueSpeedLimitGain = TORQUE_SPEED_LIMIT_GAIN,
     .pMDI = &MDInterfaceHandle,
     .pThrottle = &ThrottleHandle,
     .pBrake = &BrakeHandle,

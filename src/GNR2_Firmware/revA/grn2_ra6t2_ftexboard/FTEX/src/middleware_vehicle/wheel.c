@@ -7,7 +7,6 @@
 #include "wheel.h"
 #include "vc_constants.h"
 #include "ASSERT_FTEX.h"
-#include "vc_parameters.h"
 
 /************* DEFINES ****************/
 #define DEC_PREC_FACTOR 100 // Decimal Places Multiplier, for 8_bits register use 100

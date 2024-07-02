@@ -21,12 +21,12 @@
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
 
-#define DEFAULT_WHEEL_DIAMETER_OVERRIDE 23
+#define DEFAULT_WHEEL_DIAMETER_OVERRIDE 24
 
 /******************* SPEED LIMIT PARAMETERS  *******************************/
 
 #define ENABLE_SPEED_LIMIT                     true         // Enable or disable speed limit (default speed limit is 32km/hr)
-#define VEHICLE_TOP_SPEED_KMH                  32    
+#define VEHICLE_TOP_SPEED_KMH                  99    
 #define THROTTLE_TOP_SPEED                     VEHICLE_TOP_SPEED_KMH
 
 /***************** THROTTLE SELECTION  ******************************/
@@ -153,8 +153,6 @@
 
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
-#define VEHICLE_TOP_SPEED_KMH   99
-
 #define PAS_LEVEL_SPEED_1   VEHICLE_TOP_SPEED_KMH
 #define PAS_LEVEL_SPEED_2   VEHICLE_TOP_SPEED_KMH
 #define PAS_LEVEL_SPEED_3   VEHICLE_TOP_SPEED_KMH
@@ -186,7 +184,6 @@
 #define POWERTRAIN_STOP_SPEED_THRESHOLD     0               // Speed value to stop powertrain
 #define POWERTRAIN_DISABLE_THROTTLE_PAS_0   true            // If set the tru throttle is disabled when pas level is 0
 
-#define TORQUE_SPEED_LIMIT_GAIN               92            // Gain to be applied to the torque speed limit in %
 #define DYNAMIC_SPEED_LIMITATION            false            // Indicates if the the top speed change be changed dynamically or is fixed to the default value
 
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT 200             /*  Number of task ticks to wait after a fault occurs to

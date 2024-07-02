@@ -179,7 +179,6 @@
 #define POWERTRAIN_STOP_SPEED_THRESHOLD     0               // Speed value to stop powertrain
 #define POWERTRAIN_DISABLE_THROTTLE_PAS_0   true            // If set the tru throttle is disabled when pas level is 0
 
-#define TORQUE_SPEED_LIMIT_GAIN             92              // Gain to be applied to the torque speed limit in %
 #define DYNAMIC_SPEED_LIMITATION            false           // Indicates if the the top speed change be changed dynamically or is fixed to the default value
 
 #define POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT 200             /*  Number of task ticks to wait after a fault occurs to
