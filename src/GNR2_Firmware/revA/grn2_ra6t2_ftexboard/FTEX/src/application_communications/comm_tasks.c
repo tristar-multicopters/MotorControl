@@ -954,10 +954,10 @@ void CANOpenTask(void)
 
    /* Use CANopen software timer to create a cyclic function
      * call to the callback function 'UpdateObjectDictionnary()' with a period
-     * of 25ms.
+     * of CO_TIMER_INTERVAL in ms.
      */
     uint32_t ticks;
-    ticks = COTmrGetTicks(&CONodeGNR.Tmr, 200U, (uint32_t)CO_TMR_UNIT_1MS);
+    ticks = COTmrGetTicks(&CONodeGNR.Tmr, CO_TIMER_INTERVAL, (uint32_t)CO_TMR_UNIT_1MS);
     COTmrCreate(&CONodeGNR.Tmr, 0, ticks, UpdateObjectDictionnary, &CONodeGNR);
 }
 
