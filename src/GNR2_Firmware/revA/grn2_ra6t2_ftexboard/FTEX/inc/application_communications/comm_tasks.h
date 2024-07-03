@@ -17,8 +17,9 @@
 
 /**************************************/
 
-extern bool bCANOpenTaskBootUpCompleted;
+#define CO_TIMER_INTERVAL 100U
 
+extern bool bCANOpenTaskBootUpCompleted;
 
 /**
   * @brief  It initializes the vehicle control application. Needs to be called before using
