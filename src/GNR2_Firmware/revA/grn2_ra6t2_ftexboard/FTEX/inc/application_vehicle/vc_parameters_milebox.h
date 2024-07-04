@@ -79,7 +79,7 @@
 #define STARTUP_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger startup detection
 #define STARTUP_TIME_WINDOW               (uint16_t)1000    // Time window (ms) in which the startup pulse number is counted
 #define RUNTIME_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger runtime detection
-#define RUNTIME_TIME_WINDOW               (uint16_t)1000     // Time window (ms) in which the runtime pulse number is counted
+#define RUNTIME_TIME_WINDOW               (uint16_t)500     // Time window (ms) in which the runtime pulse number is counted
 
 // Flag used to detect PAS with cadence AND torque.
 // 0: Cadence OR Torque

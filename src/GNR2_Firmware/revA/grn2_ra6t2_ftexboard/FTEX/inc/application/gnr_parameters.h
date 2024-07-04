@@ -1,3 +1,5 @@
+
+
 /**
   * @file    gnr_parameters.h
   * @brief   This file contains general parameters used by ganrunner firmware
