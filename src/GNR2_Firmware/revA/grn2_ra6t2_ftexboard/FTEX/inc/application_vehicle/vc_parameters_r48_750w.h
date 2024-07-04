@@ -86,7 +86,7 @@
 #define CADENCE_AND_OR_TORQUE    0
 
 // Select the ramp type from the enum in file _ramp.h_
-#define PAS_RAMP_SELECTION  DYNAMIC_DECELERATION_RAMP
+#define PAS_RAMP_SELECTION  HIGH_SPEED_POWER_LIMITING_RAMP
 
 // Dynamic Deceleration Ramp Params
 #define DYNAMIC_DECEL_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
@@ -95,7 +95,7 @@
 #define DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
 
 // High Speed Power Limiting Ramp Params
-#define HIGH_SPEED_POWER_LIMITING_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
+#define HIGH_SPEED_POWER_LIMITING_RAMP_START              24.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
 #define HIGH_SPEED_POWER_LIMITING_RAMP_END                32.0f         // Max speed(km/h) where the dynamic deceleration ramp ends
 #define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED    50.0f         // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
 #define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
