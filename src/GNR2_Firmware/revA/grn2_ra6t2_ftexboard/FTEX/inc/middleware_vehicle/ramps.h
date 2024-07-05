@@ -11,6 +11,8 @@
 #include "stdbool.h"
 #include "vc_parameters.h"
 
+#define FLOAT_PERCENTAGE_DIVIDER 100.0f
+
 // List of all available ramps
 typedef enum RampType_t
 {
