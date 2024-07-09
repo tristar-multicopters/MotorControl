@@ -80,7 +80,7 @@
 // Flag used to activate the torque scaling option
 // true : option will be activated
 // false : option will be decativated/bypassed
-#define TORQUE_SCALING_ACTIVATED    false
+#define TORQUE_SCALING_PEDAL_RPM    false
 
 #define MIN_RPM_SCALING    (uint16_t)2          // Minimum pedaling RPM where the torque gain scaling starts
 #define MAX_RPM_SCALING    (uint16_t)50         // Maximum pedaling RPM where the torque gain scaling stops

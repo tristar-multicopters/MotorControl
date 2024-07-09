@@ -1193,7 +1193,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
             pHandle->hTorqueSelect = PWRT_EnableCadencePower(pHandle);
         }
 
-        if(TORQUE_SCALING_ACTIVATED)
+        if(TORQUE_SCALING_PEDAL_RPM)
         {
             pHandle->hTorqueSelect = PWRT_ApplyTorqueGainScaling(pHandle->hTorqueSelect, PedalSpdSensor_GetSpeedRPM(pHandle->pPAS->pPSS));
         }
