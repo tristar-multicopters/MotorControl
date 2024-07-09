@@ -55,7 +55,7 @@
 /************************** Ramp Manager Parameters  ************************/
 
 #define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second
-#define DEFAULT_TORQUE_SLOPE_DOWN           10000               // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_DOWN           100000               // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP              10000               // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN            10000               // Slope in #SPEED_UNIT per second
 
