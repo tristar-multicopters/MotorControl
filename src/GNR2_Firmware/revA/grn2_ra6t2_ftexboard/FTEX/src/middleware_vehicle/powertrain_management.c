@@ -1360,23 +1360,48 @@ uint16_t PWRT_GetDCPower(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    float Amps = 0;
-    float Loss = 0;
-    uint16_t IqRef = 0;
-    qd_t Iqdref = MDI_GetIqdref(pHandle->pMDI,M1);
+    if(pHandle->bMainMotor == M1)
+    {
+        float Amps = 0;
+        float Loss = 0;
+        uint16_t IqRef = 0;
+        qd_t Iqdref = MDI_GetIqdref(pHandle->pMDI,M1);
+        
+        // Get Iqref
+        IqRef = (uint16_t) abs(Iqdref.q);
+        
+        // Convert to amps using amps = iqref *(2 * MAX_MEASURABLE_CURRENT)/65535;
+        Amps = (float)(IqRef * (2 * MAX_MEASURABLE_CURRENT)/65535);
+        
+        // Aprox motor loss with 3*Rs*amps^2;
+        Loss = 3 * MDI_GetRS(pHandle->pMDI) * Amps * Amps;
+        
+        // Total power is mech power + loss    
+        return (uint16_t) round(PWRT_GetTotalMotorsPower(pHandle) + Loss);
+        
+        if (pHandle->sParameters.bMode == SINGLE_MOTOR)
+        {
+            // Total power is mech power + loss    
+            return (uint16_t) round(PWRT_GetTotalMotorsPower(pHandle) + Loss);
+        }
+        else
+        {
+            // Total power is mech power + loss * 2
+            return (uint16_t) (round(PWRT_GetTotalMotorsPower(pHandle) + Loss) * 2);
+        }
+    }
+    else //fix for dual motors, needs to be reworked
+    {
+        float TotalMotorPower = 0;
+        uint16_t M1Rpm = (uint16_t) abs(MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2));
     
+        float M1TorqueRef = pHandle->aTorque[M2];
     
-    // Get Iqref
-    IqRef = (uint16_t) abs(Iqdref.q);
-    
-    // Convert to amps using amps = iqref *(2 * MAX_MEASURABLE_CURRENT)/65535;
-    Amps = (float)(IqRef *(2 * MAX_MEASURABLE_CURRENT)/65535);
-    
-    // Aprox motor loss with 3*Rs*amps^2;
-    Loss = 3 * MDI_GetRS(pHandle->pMDI) * Amps * Amps;
-    
-    // Total power is mech power + loss    
-    return (uint16_t) round(PWRT_GetTotalMotorsPower(pHandle) + Loss);
+        TotalMotorPower  = M1Rpm * RPM_TO_RAD_PERSEC  * (M1TorqueRef/100);
+        
+        return  (uint16_t)round(TotalMotorPower);   
+    }
+
 }
 
 /**
