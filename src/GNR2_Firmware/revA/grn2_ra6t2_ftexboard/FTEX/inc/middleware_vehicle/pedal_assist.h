@@ -99,7 +99,6 @@ typedef struct
 
     PedalSpeedSensorHandle_t * pPSS;              // Pointer to Pedal Speed Sensor handle
     PedalTorqSensorHandle_t * pPTS;               // Pointer to Pedal Torque Sensor handle   
-    WheelSpeedSensorHandle_t * pWSS;              // Pointer to Wheel Speed Sensor handle
         
     PAS_Parameters_t sParameters;                 // Structure for powertrain parameters
  

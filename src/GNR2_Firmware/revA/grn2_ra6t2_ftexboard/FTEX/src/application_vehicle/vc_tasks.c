@@ -99,7 +99,7 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
 
         // Wheel Speed sensor reading period.
         // Must to be called before PedalAssist_TorquePASDetection to syncronize all actions.
-        WheelSpdSensor_CalculatePeriodValue(pVCI->pPowertrain->pPAS->pWSS, MDI_GetMotorTempSensorMixed(pVCI->pPowertrain->pMDI));
+        WSSCalculatePeriodValue(MDI_GetMotorTempSensorMixed(pVCI->pPowertrain->pMDI));
 
         // Check PAS activation based on torque
         PedalAssist_TorquePASDetection(pVCI->pPowertrain->pPAS);

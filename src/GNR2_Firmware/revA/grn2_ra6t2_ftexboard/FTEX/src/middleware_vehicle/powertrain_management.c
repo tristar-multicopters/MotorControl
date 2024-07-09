@@ -57,12 +57,12 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     BatMonitor_Init(pHandle->pBatMonitorHandle);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
-    Odometer_Init(&OdometerDelay,pHandle->pPAS->pWSS,1000); // Time interval is 1 sec for now
+    Odometer_Init(&OdometerDelay, 1000); // Time interval is 1 sec for now
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
     
     //if we want to use external wss or if wss of motor has 0 magnets use external wss nbr of magnets value
-    if (pHandle->pPAS->pWSS->bWSSUseMotorPulsePerRotation == false || motorWSSNbrPerRotation <= 0)
+    if (!WSSGetUseMotorPulsePerRotation()|| motorWSSNbrPerRotation <= 0)
     {
         //use starting torque for dual motors, nominal torque  for all other motors
         #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
@@ -154,7 +154,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
     {   
         // Calculate the pedal assist torque sensor value
-        PedalTorqSensor_CalcAvValue(pHandle->pPAS->pPTS, (uint8_t)Wheel_GetVehicleSpeedFromWSS(pHandle->pPAS->pWSS)); 
+        PedalTorqSensor_CalcAvValue(pHandle->pPAS->pPTS, (uint8_t)Wheel_GetVehicleSpeedFromWSS()); 
         
         hTorqueRef = PWRT_CalcSelectedTorque(pHandle); // Compute torque to motor depending on either throttle or PAS
         hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on brake state.
@@ -720,7 +720,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     bool bCheckStart4 = false;
 
     uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
-    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pHandle->pPAS->pWSS));
+    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM());
     
     //check if a firmware update is going. firmware update true block start condition.
     if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
@@ -1199,7 +1199,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         }
 
         // Apply ramp filtering on the predicted torque output
-        pHandle->hTorqueSelect = Ramps_ApplyRamp(PAS_RAMP_SELECTION, Wheel_GetVehicleSpeedFloatFromWSS(pHandle->pPAS->pWSS), pHandle->hTorqueSelect);
+        pHandle->hTorqueSelect = Ramps_ApplyRamp(PAS_RAMP_SELECTION, Wheel_GetVehicleSpeedFloatFromWSS(), pHandle->hTorqueSelect);
     }
     /* Using throttle */
     else 
@@ -1613,7 +1613,7 @@ void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle)
 void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle)
 { 
     ASSERT(pHandle != NULL);
-    uint16_t wheelRPM = WheelSpdSensor_GetSpeedRPM(pHandle->pPAS->pWSS);
+    uint16_t wheelRPM = WheelSpdSensor_GetSpeedRPM();
     
     MDI_SetWheelRPM(pHandle->pMDI, wheelRPM);
 }

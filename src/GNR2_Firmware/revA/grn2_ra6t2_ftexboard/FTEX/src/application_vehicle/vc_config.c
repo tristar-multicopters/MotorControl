@@ -111,19 +111,6 @@ PulseFrequencyHandle_t PulseFreqHandlePedal =
     }
 };
 
-/**@brief Pulse Frequency initializing Parameters.
- */
-PulseFrequencyHandle_t PulseFreqHandleWheel =
-{        
-    .TimerType = GPT_TIMER,
-    .measuring = false, 
-    .wCaptureCount = 0,
-    .wCaptureOverflow = 0,    
-    .PulseFreqParam =
-    {
-        .PF_Timer = WHEEL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
-    }
-};
 
 /**@brief Pedal assist initializing Parameters.
  */
@@ -135,13 +122,6 @@ PedalSpeedSensorHandle_t PedalSpeedSensorHandle = {
     .wPedalSpeedSens_WindowsRunning = RUNTIME_TIME_WINDOW,
     .bPedalSpeedSens_ResetWindowsFlag = false,
     .hPreviousNumberOfPulse = 0,
-};
-
-
-WheelSpeedSensorHandle_t WheelSpeedHandle =
-{
-    .bWSSUseMotorPulsePerRotation = WWS_USE_MOTOR_NBR_PER_ROTATION,
-    .pPulseFrequency = &PulseFreqHandleWheel,
 };
 
 
@@ -232,7 +212,6 @@ PAS_Handle_t PedalAssistHandle =
     
     .pPSS = &PedalSpeedSensorHandle,
     .pPTS = &PedalTorqueSensorHandle,
-    .pWSS = &WheelSpeedHandle,       
 };
 
 /**@brief Throttle initializing Parameters.

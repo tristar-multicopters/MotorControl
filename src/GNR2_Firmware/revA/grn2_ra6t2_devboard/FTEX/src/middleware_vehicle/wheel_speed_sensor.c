@@ -48,7 +48,7 @@ uint32_t WSS_GetPeriodValue(WheelSpeedSens_Handle_t* pHandle)
 */
 void WSS_CalculateSpeedFreq(WheelSpeedSens_Handle_t* pHandle)
 {	
-	pHandle->wWheelSpeedFreq = WCOEFFREQ / WSS_GetPeriodValue(pHandle);
+	pHandle->frequency = WCOEFFREQ / WSS_GetPeriodValue(pHandle);
 }
 
 /**
@@ -56,7 +56,7 @@ void WSS_CalculateSpeedFreq(WheelSpeedSens_Handle_t* pHandle)
 */
 uint32_t WSS_GetSpeedFreq(WheelSpeedSens_Handle_t* pHandle)
 {
-	return pHandle->wWheelSpeedFreq;
+	return pHandle->frequency;
 }
 
 /**
@@ -64,7 +64,7 @@ uint32_t WSS_GetSpeedFreq(WheelSpeedSens_Handle_t* pHandle)
 */
 void WSS_CalculateSpeedRPM(WheelSpeedSens_Handle_t* pHandle)
 {		
-	pHandle->wWheelSpeedRpm = (((WSS_GetSpeedFreq(pHandle) / pHandle->bWSPulseNumb_pr)* WRPMCOEFF)/WPRECISIONCOEFF);
+	pHandle->speedRPM = (((WSS_GetSpeedFreq(pHandle) / pHandle->bWSPulseNumb_pr)* WRPMCOEFF)/WPRECISIONCOEFF);
 }
 
 /**
@@ -72,7 +72,7 @@ void WSS_CalculateSpeedRPM(WheelSpeedSens_Handle_t* pHandle)
 */
 int32_t WSS_GetSpeedRPM(WheelSpeedSens_Handle_t* pHandle)
 {
-	return pHandle->wWheelSpeedRpm;
+	return pHandle->speedRPM;
 }
 
 /**

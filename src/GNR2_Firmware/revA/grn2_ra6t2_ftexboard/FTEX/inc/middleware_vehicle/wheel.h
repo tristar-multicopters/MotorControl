@@ -71,20 +71,20 @@ uint16_t Wheel_GetWheelRpmFromSpeed(uint16_t speed);
   * @param  Handle of the wheel speed sensor
   * @retval Speed in km/h
   */
-uint16_t Wheel_GetVehicleSpeedFromWSS(WheelSpeedSensorHandle_t * pHandle);
+uint16_t Wheel_GetVehicleSpeedFromWSS(void);
 
 /**
   * @brief  Get the vehicle speed decimals in kmh using the wheel speed sensor
   * @param  Handle of the wheel speed sensor
   * @retval Speed decimals in km/h
   */
-uint8_t Wheel_GetVehicleSpeedDecFromWSS(WheelSpeedSensorHandle_t * pHandle);
+uint8_t Wheel_GetVehicleSpeedDecFromWSS(void);
 
 /**
   * @brief  Get the vehicle speed integral and decimal in km/h using the wheel speed sensor
   * @param  Handle of the wheel speed sensor
   * @retval Speed in km/h as float
   */
-float Wheel_GetVehicleSpeedFloatFromWSS(WheelSpeedSensorHandle_t *pHandle);
+float Wheel_GetVehicleSpeedFloatFromWSS(void);
 
 #endif

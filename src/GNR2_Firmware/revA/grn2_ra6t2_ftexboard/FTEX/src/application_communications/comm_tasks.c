@@ -102,13 +102,12 @@ static void UpdateObjectDictionnary(void *p_arg)
     ASSERT(pVCI != NULL);
     ASSERT(pVCI->pPowertrain != NULL);
     ASSERT(pVCI->pPowertrain->pPAS != NULL);
-    ASSERT(pVCI->pPowertrain->pPAS->pWSS != NULL);
     
     //only master can access theses parameters.
     if (VcAutodeter_GetGnrState())
     {
-        hSpeed               = (uint8_t) CanVehiInterface_GetVehicleSpeed(pVCI);
-        hSpeedDec            = CanVehiInterface_GetVehicleSpeedDec(pVCI);
+        hSpeed               = (uint8_t) CanVehiInterface_GetVehicleSpeed();
+        hSpeedDec            = CanVehiInterface_GetVehicleSpeedDec();
         hDCPWR               = CanVehiInterface_GetVehicleDCPower(pVCI);
         hTorque              = CanVehiInterface_GetVehicleTorque(pVCI);
         hPWR                 = CanVehiInterface_GetVehiclePower(pVCI);

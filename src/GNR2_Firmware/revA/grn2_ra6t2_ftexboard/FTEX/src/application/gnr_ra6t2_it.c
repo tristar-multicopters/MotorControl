@@ -200,12 +200,12 @@ void WheelSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
             {
                 case TIMER_EVENT_CAPTURE_B :
                     /* Call ISR GPT Capture function */
-										R_GPT9->GTCR_b.CST = 1;						// start timer manually after it stopped automatically by the falling edge
-										PulseFrequency_IsrCallUpdate(VCInterfaceHandle.pPowertrain->pPAS->pWSS->pPulseFrequency, p_args->capture);
+					R_GPT9->GTCR_b.CST = 1;						// start timer manually after it stopped automatically by the falling edge
+                    WSSUpdatePulseFromISR(p_args->capture);
                     break;
                 case TIMER_EVENT_CYCLE_END:
                     /* An overflow occurred during capture. */
-                    PulseFrequency_ISROverflowUpdate(VCInterfaceHandle.pPowertrain->pPAS->pWSS->pPulseFrequency); 
+                    WSSOverflowPulseFromISR();
                     break;
                 default:
                     break;
