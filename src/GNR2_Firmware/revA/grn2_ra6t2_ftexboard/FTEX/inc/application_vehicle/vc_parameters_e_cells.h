@@ -20,7 +20,8 @@
                                                             // UART_KD718,
                                                             // UART_CLOUD_5S,                                              
                                                             // UART_LOG_HS 
-                                              
+ 
+#define DEFAULT_WHEEL_DIAMETER_OVERRIDE 29 
 /******************* SPEED LIMIT PARAMETERS  *******************************/
 
 #define ENABLE_SPEED_LIMIT                     false        // Enable or disable speed limit (default speed limit is 32km/hr)
