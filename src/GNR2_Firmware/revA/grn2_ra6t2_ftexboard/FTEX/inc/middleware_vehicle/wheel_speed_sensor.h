@@ -58,7 +58,7 @@ float WSSGetPeriodValue(void);
   @brief  Function to return speed in rpm
   @return Speed in rpm
 */
-uint16_t WheelSpdSensor_GetSpeedRPM(void);
+uint16_t WSSGetSpeedRPM(void);
 
 /**
   @brief  Update the pulse capture value coming from the ISR

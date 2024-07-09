@@ -104,7 +104,7 @@ float WSSGetPeriodValue()
 /**
     Wheel Speed Sensor retrun RPM in tr/min
 */
-uint16_t WheelSpdSensor_GetSpeedRPM()
+uint16_t WSSGetSpeedRPM()
 {
     float wSpeed = WSSGetPeriodValue();
     

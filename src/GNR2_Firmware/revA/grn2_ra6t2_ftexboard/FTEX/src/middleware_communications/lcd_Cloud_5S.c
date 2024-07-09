@@ -381,7 +381,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
         
             if((CruiseCtrlState > 0) && (PWRT_GetForceDisengageState(pPowertrainHandle) == false))
             {
-                uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM());
+                uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WSSGetSpeedRPM());
                 
                 //check if the throttle max speed is inside of the max speed limit
                 //if not used MaxThrottleSpeedKMH as cruise control speed.
@@ -441,7 +441,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             replyFrame.Buffer[5] = (toSend & 0x000000FF); //Power 0.5 A/unit maxed out at 80 = 0x50 (40 amps)
            
             /* Condition use for wheel speed sensor rpm to send */
-            toSend = WheelSpdSensor_GetSpeedRPM(); // Getting RPM from Wheel Speed Module
+            toSend = WSSGetSpeedRPM(); // Getting RPM from Wheel Speed Module
                   
             toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
          

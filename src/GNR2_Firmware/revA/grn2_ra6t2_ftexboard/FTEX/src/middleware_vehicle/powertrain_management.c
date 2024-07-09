@@ -720,7 +720,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     bool bCheckStart4 = false;
 
     uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
-    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM());
+    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WSSGetSpeedRPM());
     
     //check if a firmware update is going. firmware update true block start condition.
     if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
@@ -1638,7 +1638,7 @@ void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle)
 void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle)
 { 
     ASSERT(pHandle != NULL);
-    uint16_t wheelRPM = WheelSpdSensor_GetSpeedRPM();
+    uint16_t wheelRPM = WSSGetSpeedRPM();
     
     MDI_SetWheelRPM(pHandle->pMDI, wheelRPM);
 }
