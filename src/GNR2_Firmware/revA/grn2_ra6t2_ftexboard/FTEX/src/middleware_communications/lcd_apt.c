@@ -295,7 +295,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         replyFrame.Buffer[1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
 
         /* Condition use for wheel speed sensor rpm to send */
-        toSend = WSSGetSpeedRPM(); // Getting RPM from Wheel Speed Module
+        toSend = WSS_GetSpeedRPM(); // Getting RPM from Wheel Speed Module
                    
         toSend =  LCD_APT_ApplySpeedFilter((uint16_t) toSend);
                   

@@ -296,7 +296,7 @@ uint32_t CanVehiInterface_GetOdometerDistance();
   @param  VCI_Handle_t handle
   @return RPM in uint16_t format with one decimal place (return value/10) to convert
 */
-uint16_t CanVehiInterface_GetVehiclePedalRPM(VCI_Handle_t * pHandle);
+uint16_t CanVehiInterface_GetVehiclePedalRPM();
 
 
 /**

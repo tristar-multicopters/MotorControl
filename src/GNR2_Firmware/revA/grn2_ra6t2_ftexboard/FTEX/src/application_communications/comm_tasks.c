@@ -130,7 +130,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
         hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
-        PedalRPM                        = CanVehiInterface_GetVehiclePedalRPM(pVCI);
+        PedalRPM                        = CanVehiInterface_GetVehiclePedalRPM();
         PerdalTorqPercent               = CanVehiInterface_GetPedalTorqPercentage(pVCI);
 
     }

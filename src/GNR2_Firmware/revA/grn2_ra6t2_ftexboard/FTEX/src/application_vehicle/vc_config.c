@@ -98,32 +98,6 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
     }
 };
 
-/**@brief Pulse Frequency initializing Parameters.
- */
-PulseFrequencyHandle_t PulseFreqHandlePedal =
-{    
-    .TimerType = AGT_TIMER,    
-    .measuring = false, 
-    .hNumberOfPulse = 0,        
-    .PulseFreqParam =
-    {
-        .PF_Timer = PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
-    }
-};
-
-
-/**@brief Pedal assist initializing Parameters.
- */
-PedalSpeedSensorHandle_t PedalSpeedSensorHandle = {
-    .pPulseFrequency = &PulseFreqHandlePedal,
-    .hPedalSpeedSens_MinPulseStartup = STARTUP_PULSE_NUMBER,
-    .wPedalSpeedSens_WindowsStartup = STARTUP_TIME_WINDOW,
-    .hPedalSpeedSens_MinPulseRunning = RUNTIME_PULSE_NUMBER,
-    .wPedalSpeedSens_WindowsRunning = RUNTIME_TIME_WINDOW,
-    .bPedalSpeedSens_ResetWindowsFlag = false,
-    .hPreviousNumberOfPulse = 0,
-};
-
 
 MS_Handle_t MotorSelectorHandle =
 {
@@ -210,7 +184,6 @@ PAS_Handle_t PedalAssistHandle =
     .torqueSensorIssueTimer = 0,
     .bTorqueSensorIssue = false,
     
-    .pPSS = &PedalSpeedSensorHandle,
     .pPTS = &PedalTorqueSensorHandle,
 };
 
