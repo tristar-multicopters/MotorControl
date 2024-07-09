@@ -40,7 +40,7 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, u
     pHandle->sParameters.hPASMaxTorque = (int16_t)maxTorque;
 
     PedalSpdSensor_Init(pHandle->pPSS);
-    WheelSpdSensor_Init(pHandle->pWSS, wheelSpdSensorNbrPerRotation);
+    WSSInit(wheelSpdSensorNbrPerRotation);
     PedalTorqSensor_Init(pHandle->pPTS, pPTSstuckDelay, maxTorque);
     
     pHandle->bCurrentAssistLevel = DEFAULT_PAS_LEVEL;
@@ -284,7 +284,7 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
     uint16_t  hTorquePASThreshold;
     bool CalculateAverage = false;
     
-    hWheelRPM = (uint16_t) WheelSpdSensor_GetSpeedRPM(pHandle->pWSS);
+    hWheelRPM = (uint16_t) WSSGetSpeedRPM();
     
     /* Calculate the offset based on ration percentage */
     if(hWheelRPM <= pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset

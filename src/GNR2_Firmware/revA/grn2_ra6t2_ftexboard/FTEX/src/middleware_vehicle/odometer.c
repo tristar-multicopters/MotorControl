@@ -13,16 +13,14 @@ OdometerHandle_t Odometer;
 /**
    Initializes Odometer function
  */
-void Odometer_Init(Delay_Handle_t * pOdometerDelay, WheelSpeedSensorHandle_t * pWSS, uint16_t TimeIntervalMS)
+void Odometer_Init(Delay_Handle_t * pOdometerDelay, uint16_t TimeIntervalMS)
 {
     ASSERT(pOdometerDelay != NULL);
-    ASSERT(pWSS           != NULL);    
     ASSERT(TimeIntervalMS  > 0);
     
-    Odometer.pWSS = pWSS;
     Odometer.pOdometerDelay = pOdometerDelay;
     
-    Delay_SetTime(Odometer.pOdometerDelay,1, SEC);
+    Delay_SetTime(Odometer.pOdometerDelay, 1, SEC);
     
     Odometer.TimeIntervalMS = TimeIntervalMS;
     
@@ -42,7 +40,7 @@ void Odometer_Update(void)
     
    if (Delay_Update(Odometer.pOdometerDelay)) // Check if it's time to compute the travelled distance
    {
-        SpeedEnd = Wheel_GetVehicleSpeedFromWSS(Odometer.pWSS);
+        SpeedEnd = Wheel_GetVehicleSpeedFromWSS();
        
         if (SpeedStart > 0 || SpeedEnd > 0) // Check if the bike has moved at all
         {   

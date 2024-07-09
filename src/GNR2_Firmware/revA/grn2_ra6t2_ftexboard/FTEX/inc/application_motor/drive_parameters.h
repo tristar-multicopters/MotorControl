@@ -195,7 +195,7 @@
 #define FW_KIDIV                        32768       // Flux weakening gain divider, to allow decimal value
 #define FW_KPDIV_LOG                    LOG2(32768) // Flux weakening gain divider log2, to allow decimal value
 #define FW_KIDIV_LOG                    LOG2(32768) // Flux weakening gain divider log2, to allow decimal value
-#define ID_DEMAG_amps                   -20          // Demagnetization current
+#define ID_DEMAG_amps                   -30          // Demagnetization current
 
 /****** Feedforward Parameters ******/
 #define CONSTANT1_Q                     0           // Feedforward Iq related gain

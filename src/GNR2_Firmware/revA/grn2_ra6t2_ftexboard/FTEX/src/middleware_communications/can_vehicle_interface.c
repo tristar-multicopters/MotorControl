@@ -200,35 +200,17 @@ void CanVehiInterface_UpdateWheelDiameter(uint8_t aDiameterInInches)
 /**
  *  Get vehicle Speed
  */
-uint16_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetVehicleSpeed()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pPowertrain != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS->pWSS != NULL);
-    
-    uint16_t hmsgToSend;
-
-    hmsgToSend = Wheel_GetVehicleSpeedFromWSS(pHandle->pPowertrain->pPAS->pWSS);
-
-    return hmsgToSend;
+    return Wheel_GetVehicleSpeedFromWSS();
 }
 
 /**
  *  Get vehicle Speed decimals
  */
-uint8_t CanVehiInterface_GetVehicleSpeedDec(VCI_Handle_t * pHandle)
+uint8_t CanVehiInterface_GetVehicleSpeedDec()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pPowertrain != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS->pWSS != NULL);
-    
-    uint8_t hmsgToSend;
-
-    hmsgToSend = Wheel_GetVehicleSpeedDecFromWSS(pHandle->pPowertrain->pPAS->pWSS);
-
-    return hmsgToSend;
+    return Wheel_GetVehicleSpeedDecFromWSS();
 }
 
 /**
@@ -394,7 +376,7 @@ void CanVehiInterface_UpdateExternalThrottle(VCI_Handle_t * pHandle, uint16_t aN
  */
 void CanVehiInterface_EngageCruiseControl(VCI_Handle_t * pHandle)
 {
-     uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pHandle->pPowertrain->pPAS->pWSS));
+     uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WSSGetSpeedRPM());
                 
      //check if the current speed is inside of the max speed limit
      //if not used MaxThrottleSpeedKMH as cruise control speed.

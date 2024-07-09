@@ -25,10 +25,8 @@ typedef struct
     uint16_t hExtLatestVal;          // Contains the latest external throttle value 
     float   TimeIntervalMS;
     uint32_t OdometerDistance;
-    WheelSpeedSensorHandle_t * pWSS;
     
-    Delay_Handle_t * pOdometerDelay;
-    
+    Delay_Handle_t * pOdometerDelay; 
 } OdometerHandle_t;
 
 
@@ -37,7 +35,7 @@ typedef struct
  * @param  pHandle : Pointer on Handle of the odometer
  * @retval void
  */
-void Odometer_Init(Delay_Handle_t * pOdometerDelay, WheelSpeedSensorHandle_t * pWSS, uint16_t TimeIntervalMS);
+void Odometer_Init(Delay_Handle_t * pOdometerDelay, uint16_t TimeIntervalMS);
 
 void Odometer_Update(void);
 

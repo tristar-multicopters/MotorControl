@@ -281,7 +281,7 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
             case R_SPEED:
                 replyFrame.Size = 3;
             
-                toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
+                toSend = WSSGetSpeedRPM(); // Getting RPM from Wheel Speed Module
                   
                 //No filtering needed for this LCD
             

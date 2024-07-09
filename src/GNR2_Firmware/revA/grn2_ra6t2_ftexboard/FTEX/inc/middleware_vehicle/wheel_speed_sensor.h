@@ -7,8 +7,6 @@
   *
   ******************************************************************************
 */
-
-
 #ifndef __WHEEL_SPEED_SENSOR_H
 #define __WHEEL_SPEED_SENSOR_H
 
@@ -16,7 +14,6 @@
 #include "pulse_frequency.h"
 
 //-------------------------------- Defines ----------------------------------- //
-
 //timeout when measuring the time off(not running) of the timer.
 #define WHEELSPEED_TIMEOUT_MS          4000
 
@@ -26,50 +23,60 @@
 
 // ================= Structure used to configure a pin ===================== //
 typedef struct {
-    
-    PulseFrequencyHandle_t * pPulseFrequency;  /* Pointer to speed handle */
-
-    bool bWSSUseMotorPulsePerRotation;  /* Indicates whether the wheel speed sensor within the motor is used */
-    uint8_t bWheelSpeed_PulsePerRotation;  /* Number of pulse per rotation */
-    float fWheelSpeed_TimeOnOneMagnetPercent; /* Percentage of time that the wheel speed sensor spends on each magnet */
-    float wWheelSpeed_Read;    /* Wheel Speed Sensor Periode value*/
-    uint32_t wWheelSpeedFreq;     /* Wheel Speed sensor frequency calculated value */
-    int32_t wWheelSpeedRpm;       /* Wheel Speed sensor rotation per minute calculated value */
-    uint16_t wWheelSpeedTimeOut;  /*  variable used to count the maximum time before show time ris not working.  */
-    
+    PulseFrequencyHandle_t * pPulseFrequency;   /* Pointer to speed handle */
+    bool useMotorPulsePerRotation;              /* Indicates whether the wheel speed sensor within the motor is used */
+    uint8_t pulsePerRotation;                   /* Number of pulse per rotation */
+    float timeOnOneMagnetPercent;               /* Percentage of time that the wheel speed sensor spends on each magnet */
+    float periodValue;                          /* Wheel Speed Sensor Periode value*/
+    uint32_t frequency;                         /* Wheel Speed sensor frequency calculated value */
+    int32_t speedRPM;                           /* Wheel Speed sensor rotation per minute calculated value */
+    uint16_t timeout;                           /*  variable used to count the maximum time before show time ris not working.  */ 
 } WheelSpeedSensorHandle_t;
 
 // ==================== Public function prototypes ========================= //
-
 /**
   @brief  Function to initialize wheel speed sensor handle
-  @param  WheelSpeedSensorHandle_t handle
-          Number of magnets per rotation on WSS
-          Percentage of time the WSS spends on one magnet
+  @param  magnetsPerRotation Number of magnets per rotation on WSS
   @return None
 */
-void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle, uint8_t wheelSpdSensorNbrPerRotation);
+void WSSInit(uint8_t magnetsPerRotation);
 
 /**
   @brief  Function to calculate the wheel speed sensor value
-  @param  WheelSpeedSensorHandle_t handle
+  @param  motorTempSensorMixed flag if bike has a mixed temp/wheel speed sensor
   @return None
 */
-void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle, bool motorTempSensorMixed);
+void WSSCalculatePeriodValue(bool motorTempSensorMixed);
 
 /**
   @brief  Function to Get periode value in usec
-  @param  WheelSpeedSensorHandle_t handle
   @return Speed in rpm
 */
-float WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle);
+float WSSGetPeriodValue(void);
 
 /**
   @brief  Function to return speed in rpm
-  @param  WheelSpeedSensorHandle_t handle
   @return Speed in rpm
 */
-uint16_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle);
+uint16_t WSSGetSpeedRPM(void);
 
+/**
+  @brief  Update the pulse capture value coming from the ISR
+  @param  Capture : Value capture by the ISR
+  @return None
+*/
+void WSSUpdatePulseFromISR(uint32_t capture);
+
+/**
+  @brief  Update the overflow coming from ISR
+  @return None
+*/
+void WSSOverflowPulseFromISR(void);
+
+/**
+  @brief  Getter for WSS flag : useMotorPulsePerRotation
+  @return Value of useMotorPulsePerRotation
+*/
+bool WSSGetUseMotorPulsePerRotation(void);
 
 #endif

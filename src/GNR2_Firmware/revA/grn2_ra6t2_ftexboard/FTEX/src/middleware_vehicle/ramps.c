@@ -31,6 +31,15 @@ int16_t Ramps_DynamicDecelerationRamp(float currentSpeed, int16_t input);
   */
 int16_t Ramps_HighSpeedPowerLimitingRamp(float currentSpeed, int16_t input);
 
+/**
+  * @brief This function ensures that the value of torque,
+  *        calculated by a ramp, is a positive value.
+  * @param originalInput : Original input provided in the ramp function
+  * @param torqueToValidate : Value that needs > 0 validation
+  * @retval If torque to validate > 0, return torqueToValidate, otherwise originalInput
+  */
+int16_t NegativeTorqueProtection(int16_t originalInput, int16_t torqueToValidate);
+
 
 /**
   * @brief  Apply the ramp to power delivered
@@ -84,17 +93,44 @@ int16_t Ramps_DynamicDecelerationRamp(float currentSpeed, int16_t input)
 */
 int16_t Ramps_HighSpeedPowerLimitingRamp(float currentSpeed, int16_t input)
 {
-    if(currentSpeed < HIGH_SPEED_POWER_LIMITING_RAMP_START)
-        return input;
-
-    if(currentSpeed > HIGH_SPEED_POWER_LIMITING_RAMP_END)
-        return (int16_t)((float)input * ((float)HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED/100.0));        
-
-    // We calculate the amount (% of max power) that needs to be trimmed off from the input 
     int16_t output = 0;
-    float decelerationRampFactor = (HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED - HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED)
-                                    /(HIGH_SPEED_POWER_LIMITING_RAMP_END - HIGH_SPEED_POWER_LIMITING_RAMP_START);
-    output = (int16_t)(input - fabsf(((decelerationRampFactor * currentSpeed) / 100) * input)); 
-    
-    return output;
+
+    // Check if the speed is in the left most constant part of the ramp
+    if(currentSpeed < HIGH_SPEED_POWER_LIMITING_RAMP_START)
+    {
+        output = (int16_t)((float)input * ((float)HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED/FLOAT_PERCENTAGE_DIVIDER));
+        return NegativeTorqueProtection(input, output);
+    }
+
+    // Check if the speed is in the right most constant part of the ramp
+    if(currentSpeed > HIGH_SPEED_POWER_LIMITING_RAMP_END)
+    {
+        output = (int16_t)((float)input * ((float)HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED/FLOAT_PERCENTAGE_DIVIDER));
+        return NegativeTorqueProtection(input, output);
+    }
+
+    // Calculate the variation within the linear ramp part
+    float powerLimiterVariation = (HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED - HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED)
+                                  /(HIGH_SPEED_POWER_LIMITING_RAMP_END - HIGH_SPEED_POWER_LIMITING_RAMP_START);
+
+    // Get the current speed value within the linear ramp part
+    float speedInRamp = currentSpeed - HIGH_SPEED_POWER_LIMITING_RAMP_START;
+
+    // Calculate the linear power limiting factor
+    float powerLimiterFactor = powerLimiterVariation * speedInRamp + HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED;
+
+    // Apply the limiting factor to the input
+    output = (int16_t)((float)input * powerLimiterFactor/FLOAT_PERCENTAGE_DIVIDER);
+
+    return NegativeTorqueProtection(input, output);
+}
+
+/**
+  * @brief This function ensures that the value of torque,
+  *        calculated by a ramp, is a positive value.
+*/
+int16_t NegativeTorqueProtection(int16_t originalInput, int16_t torqueToValidate)
+{
+    if(torqueToValidate < 0) return originalInput;
+    return torqueToValidate;
 }

@@ -57,12 +57,12 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     BatMonitor_Init(pHandle->pBatMonitorHandle);
     MS_Init(pHandle->pMS);
     PWREN_Init(pHandle->pPWREN);
-    Odometer_Init(&OdometerDelay,pHandle->pPAS->pWSS,1000); // Time interval is 1 sec for now
+    Odometer_Init(&OdometerDelay, 1000); // Time interval is 1 sec for now
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
     
     //if we want to use external wss or if wss of motor has 0 magnets use external wss nbr of magnets value
-    if (pHandle->pPAS->pWSS->bWSSUseMotorPulsePerRotation == false || motorWSSNbrPerRotation <= 0)
+    if (!WSSGetUseMotorPulsePerRotation()|| motorWSSNbrPerRotation <= 0)
     {
         //use starting torque for dual motors, nominal torque  for all other motors
         #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
@@ -154,7 +154,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
     {   
         // Calculate the pedal assist torque sensor value
-        PedalTorqSensor_CalcAvValue(pHandle->pPAS->pPTS, (uint8_t)Wheel_GetVehicleSpeedFromWSS(pHandle->pPAS->pWSS)); 
+        PedalTorqSensor_CalcAvValue(pHandle->pPAS->pPTS, (uint8_t)Wheel_GetVehicleSpeedFromWSS()); 
         
         hTorqueRef = PWRT_CalcSelectedTorque(pHandle); // Compute torque to motor depending on either throttle or PAS
         hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on brake state.
@@ -720,7 +720,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     bool bCheckStart4 = false;
 
     uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
-    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pHandle->pPAS->pWSS));
+    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WSSGetSpeedRPM());
     
     //check if a firmware update is going. firmware update true block start condition.
     if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
@@ -1193,13 +1193,13 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
             pHandle->hTorqueSelect = PWRT_EnableCadencePower(pHandle);
         }
 
-        if(TORQUE_SCALING_ACTIVATED)
+        if(TORQUE_SCALING_PEDAL_RPM)
         {
             pHandle->hTorqueSelect = PWRT_ApplyTorqueGainScaling(pHandle->hTorqueSelect, PedalSpdSensor_GetSpeedRPM(pHandle->pPAS->pPSS));
         }
 
         // Apply ramp filtering on the predicted torque output
-        pHandle->hTorqueSelect = Ramps_ApplyRamp(PAS_RAMP_SELECTION, Wheel_GetVehicleSpeedFloatFromWSS(pHandle->pPAS->pWSS), pHandle->hTorqueSelect);
+        pHandle->hTorqueSelect = Ramps_ApplyRamp(PAS_RAMP_SELECTION, Wheel_GetVehicleSpeedFloatFromWSS(), pHandle->hTorqueSelect);
     }
 			/* Using throttle */
 			else 
@@ -1360,23 +1360,48 @@ uint16_t PWRT_GetDCPower(PWRT_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     
-    float Amps = 0;
-    float Loss = 0;
-    uint16_t IqRef = 0;
-    qd_t Iqdref = MDI_GetIqdref(pHandle->pMDI,M1);
+    if(pHandle->bMainMotor == M1)
+    {
+        float Amps = 0;
+        float Loss = 0;
+        uint16_t IqRef = 0;
+        qd_t Iqdref = MDI_GetIqdref(pHandle->pMDI,M1);
+        
+        // Get Iqref
+        IqRef = (uint16_t) abs(Iqdref.q);
+        
+        // Convert to amps using amps = iqref *(2 * MAX_MEASURABLE_CURRENT)/65535;
+        Amps = (float)(IqRef * (2 * MAX_MEASURABLE_CURRENT)/65535);
+        
+        // Aprox motor loss with 3*Rs*amps^2;
+        Loss = 3 * MDI_GetRS(pHandle->pMDI) * Amps * Amps;
+        
+        // Total power is mech power + loss    
+        return (uint16_t) round(PWRT_GetTotalMotorsPower(pHandle) + Loss);
+        
+        if (pHandle->sParameters.bMode == SINGLE_MOTOR)
+        {
+            // Total power is mech power + loss    
+            return (uint16_t) round(PWRT_GetTotalMotorsPower(pHandle) + Loss);
+        }
+        else
+        {
+            // Total power is mech power + loss * 2
+            return (uint16_t) (round(PWRT_GetTotalMotorsPower(pHandle) + Loss) * 2);
+        }
+    }
+    else //fix for dual motors, needs to be reworked
+    {
+        float TotalMotorPower = 0;
+        uint16_t M1Rpm = (uint16_t) abs(MDI_GetAvrgMecSpeedUnit(pHandle->pMDI, M2));
     
+        float M1TorqueRef = pHandle->aTorque[M2];
     
-    // Get Iqref
-    IqRef = (uint16_t) abs(Iqdref.q);
-    
-    // Convert to amps using amps = iqref *(2 * MAX_MEASURABLE_CURRENT)/65535;
-    Amps = (float)(IqRef *(2 * MAX_MEASURABLE_CURRENT)/65535);
-    
-    // Aprox motor loss with 3*Rs*amps^2;
-    Loss = 3 * MDI_GetRS(pHandle->pMDI) * Amps * Amps;
-    
-    // Total power is mech power + loss    
-    return (uint16_t) round(PWRT_GetTotalMotorsPower(pHandle) + Loss);
+        TotalMotorPower  = M1Rpm * RPM_TO_RAD_PERSEC  * (M1TorqueRef/100);
+        
+        return  (uint16_t)round(TotalMotorPower);   
+    }
+
 }
 
 /**
@@ -1613,7 +1638,7 @@ void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle)
 void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle)
 { 
     ASSERT(pHandle != NULL);
-    uint16_t wheelRPM = WheelSpdSensor_GetSpeedRPM(pHandle->pPAS->pWSS);
+    uint16_t wheelRPM = WSSGetSpeedRPM();
     
     MDI_SetWheelRPM(pHandle->pMDI, wheelRPM);
 }

@@ -44,7 +44,7 @@ These variables are used to configure the motor within the smart config tool.
 
 /************************** Speed Limit Parameters ************************/
 
-#define MAX_APPLICATION_SPEED_RPM           2000            // Max speed for the current application in mechanical rpm
+#define MAX_APPLICATION_SPEED_RPM           4000            // Max speed for the current application in mechanical rpm
 
 #define PID_SPEED_KP_DEFAULT                100             // Default gain speed control loop
 #define PID_SPEED_KI_DEFAULT                10              // Default gain speed control loop
@@ -62,12 +62,13 @@ These variables are used to configure the motor within the smart config tool.
 #define PID_FLUX_KP_DEFAULT                 600             // Default gain if adaptative gain feature is not used
 #define PID_FLUX_KI_DEFAULT                 3000            // Default gain if adaptative gain feature is not used
 
-#define FLUX_WEAKENING_ENABLE               false           // enable or disable flux weakening
+#define FLUX_WEAKENING_ENABLE               true           // enable or disable flux weakening
 #define FLUX_DIRECTION                      1               // direction of demagnetization current  1 clockwise, -1 counter clockwise
+
 /************************** Ramp Manager Parameters  ************************/
 
 #define DEFAULT_TORQUE_SLOPE_UP             5000            // Slope in cNm per second
-#define DEFAULT_TORQUE_SLOPE_DOWN           10000           // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_DOWN           2000           // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP              500             // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN            500             // Slope in #SPEED_UNIT per second
 

@@ -85,17 +85,17 @@
 #define DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
 
 // High Speed Power Limiting Ramp Params
-#define HIGH_SPEED_POWER_LIMITING_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
-#define HIGH_SPEED_POWER_LIMITING_RAMP_END                32.0f         // Max speed(km/h) where the dynamic deceleration ramp ends
-#define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED    50.0f         // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
-#define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
+#define HIGH_SPEED_POWER_LIMITING_RAMP_START              28.0f        // Min speed(km/h) where the dynamic deceleration ramp starts
+#define HIGH_SPEED_POWER_LIMITING_RAMP_END                32.0f        // Max speed(km/h) where the dynamic deceleration ramp ends
+#define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED    100.0f       // Power allowed (in % of MAX power) at ramp start min speed(km/h)
+#define HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED    50.0f        // Power allowed (in % of MAX power) at ramp end max speed(km/h)
 
 // Torque Scaling by Pedaling RPM Options
 
 // Flag used to activate the torque scaling option
 // true : option will be activated
 // false : option will be decativated/bypassed
-#define TORQUE_SCALING_ACTIVATED    true
+#define TORQUE_SCALING_PEDAL_RPM    false
 
 #define MIN_RPM_SCALING    (uint16_t)2          // Minimum pedaling RPM where the torque gain scaling starts
 #define MAX_RPM_SCALING    (uint16_t)50         // Maximum pedaling RPM where the torque gain scaling stops
