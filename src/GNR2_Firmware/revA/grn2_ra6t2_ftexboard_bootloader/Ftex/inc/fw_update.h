@@ -18,6 +18,8 @@
 
 #define INTERNAL_ADDRESS_0  0x00;   // Internal Flash memory start adress
 
+#define IMAGE_SIZE_MCU_512K 0x70000
+
 /************** CRC32 Macros ******************/
 //
 #define FLASH_READ_DWORD(x) (*(uint32_t*)(x))

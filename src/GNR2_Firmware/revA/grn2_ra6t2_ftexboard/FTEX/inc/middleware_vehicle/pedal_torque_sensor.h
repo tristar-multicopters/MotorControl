@@ -13,9 +13,7 @@
 #define __PEDAL_TORQUE_SENSOR_H
 
 // ============================ Includes ================================= //
-
 #include "regular_conversion_manager.h"
-#include "vc_errors_management.h"
 #include "signal_filtering.h"
 #include "delay.h"
 
@@ -28,6 +26,13 @@
                                  // If factor == 100 then 1.25f would make a 125/100 fraction 
                                  
 #define PTS_PERCENTAGE    (uint8_t)100    /* Percentage for PTS use */
+    
+//hLowPassFilterBW1 and 2 array size.
+#define BW_ARRAY_SIZE        3
+//hFilterSpeed array size.
+#define FILTERSPEED_ARRAY_SIZE       (BW_ARRAY_SIZE - 1)
+
+#define PETAL_TORQUE_SENSOR_ERROR_OFFSET (float) 40 // Value added to the hOffsetPTS (in %) before we trigger a torque sensor issue 
 
 // ======================= Public strutures ============================= //
 
@@ -37,6 +42,7 @@ typedef struct
     float fFilterBeta;      /* Beta coefficient for low pass first order butterworth filter */
     
     uint16_t    hOffsetPTS;     /* Offset of the torque sensor signal when at lowest position */
+    uint16_t    hMax;               /* torque signal when at maximum position */
     uint16_t    bSlopePTS;      /* Gain factor of ADC value vs torque sensor */
     uint16_t    bDivisorPTS;    /* Scaling factor of ADC value vs torque sensor */
     
@@ -49,11 +55,13 @@ typedef struct
     int16_t     bSlopeMT;       /* Gain factor of torque sensor vs torque */
     int16_t     bDivisorMT;     /* Scaling factor of torque sensor vs torque */
     
-    uint16_t    hMax;               /* torque signal when at maximum position */
+
     uint16_t    PasMaxOutputTorque; /* max motor torque that PAS is allowed to use */
     
-    uint16_t    hLowPassFilterBW1;      /* used to configure the first coefficient software filter bandwidth */
-    uint16_t    hLowPassFilterBW2;      /* used to configure the second coefficient software filter bandwidth */ 
+    uint16_t    hLowPassFilterBW1[BW_ARRAY_SIZE];      /* used to configure the first coefficient software filter bandwidth */
+    uint16_t    hLowPassFilterBW2[BW_ARRAY_SIZE];      /* used to configure the second coefficient software filter bandwidth */ 
+    
+    uint8_t     hFilterSpeed[FILTERSPEED_ARRAY_SIZE];   /* speed value used to decide what filter band will be used.*/
         
 } PTS_Param_t;
 
@@ -86,7 +94,7 @@ typedef struct
   @param  PedalTorqSensorHandle_t handle & Delay_Handle_t pPTSstuckDelay
   @return None
 */
-void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay);
+void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque);
 /**
   @brief  Pedal torque Sensor ADC hardware values clear
   @param  PedalTorqSensorHandle_t handle
@@ -99,7 +107,7 @@ void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle);
   @param  PedalTorqSensorHandle_t handle
   @return None
 */
-void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle);
+void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle,uint8_t speed);
 
 /**
   @brief  Pedal torque Sensor return ADC value
@@ -107,6 +115,13 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle);
   @return hAvTorqueValue in uin16_t format
 */
 uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle);
+
+/**
+  @brief  Pedal torque Sensor Value in percentage
+  @param  PedalTorqSensorHandle_t handle
+  @return Torque value in percentage in uin8_t format
+*/
+uint8_t PedalTorqSensor_GetPercentTorqueValue(PedalTorqSensorHandle_t * pHandle);
 
 /**
   @brief  Pedal torque Sensor Reset ADC value
@@ -133,5 +148,13 @@ bool PedalTorqSensor_IsDetected (PedalTorqSensorHandle_t * pHandle);
   @return void
 */
 void PedalTorqSensor_ComputeSlopes(PedalTorqSensorHandle_t * pHandle);
+
+/**
+  @brief  Select the index of the bw buffer based on the bike speed.
+  @param  PedalTorqSensorHandle_t handle
+  @param  uint8_t speed to be compared.
+  @return void
+*/
+uint8_t PedalTorqSensor_GetBwUsingSpeed(PedalTorqSensorHandle_t * pHandle, uint8_t speed);
 
 #endif

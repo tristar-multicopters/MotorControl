@@ -41,7 +41,7 @@ typedef struct
   * @param  pHandle related Handle of struct RampMngr_Handle_t
   * @retval none.
   */
-void DynamicPower_Init(DynamicPowerHandle_t * pHandle);
+void DynamicPower_Init(DynamicPowerHandle_t * pHandle, uint16_t hDynamicMaxPower, uint16_t hEstimatedEfficiency);
 
 #endif /* __DYNAMICPOWER_H */
 

@@ -40,8 +40,8 @@ Light_Handle_t HeadLightHandle =
     .bIsInvertedLogic = false,
     .bLightIsBlinking = false,
     .BlinkPeriode     = 0,
-    .bLightStateLocked = POWERTRAIN_HEADLIGHT_LOCKED,
-    .bDefaultLightState = POWERTRAIN_HEADLIGHT_DEFAULT,     
+    .bDefaultLightState = POWERTRAIN_HEADLIGHT_DEFAULT,
+    .bBlinkOnBrake = false,    
 };
 
 Light_Handle_t TailLightHandle =
@@ -50,18 +50,17 @@ Light_Handle_t TailLightHandle =
     .bIsInvertedLogic = false,
     .bLightIsBlinking = false, 
     .BlinkPeriode     = 50,
-    .bLightStateLocked = POWERTRAIN_TAILLIGHT_LOCKED,
-    .bDefaultLightState = POWERTRAIN_TAILLIGHT_DEFAULT,   
+    .bDefaultLightState = POWERTRAIN_TAILLIGHT_DEFAULT,
+    .bBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,    
 };    
 
 BatMonitor_Handle_t BatMonitorHandle = 
 {
-    .VBatMin = BATTERY_EMPTY_VOLT,  // Values that represent a fully charged battery and an empty one
-    .VBatMax = BATTERY_FULL_VOLT,   // Set in the VC_parameters_xxxxx.h of each bike
-    .LowBatSOC = BATTERY_SOC_LOW_PERCENT,        // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
-    .RechargedBatSOC = BATTERY_SOC_OK_PERCENT,   // Battery SOC in % for which we clear the battery low flag
+    .VBatMin = BATTERY_EMPTY_VOLT_X_100,                            // Values that represent a fully charged battery and an empty one
+    .VBatMax = BATTERY_FULL_VOLT_X_100,                             // Set in the VC_parameters_xxxxx.h of each bike
+    .LowBatSOC = BATTERY_SOC_LOW_PERCENT,                           // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
+    .RechargedBatSOC = BATTERY_SOC_OK_PERCENT,                      // Battery SOC in % for which we clear the battery low flag
 };
-
 
 /**@brief Pedal torque sensor initializing Parameters.
  */
@@ -82,56 +81,21 @@ PedalTorqSensorHandle_t PedalTorqueSensorHandle =
 
         .hOffsetPTS = PTS_OFFSET_ADC2PTS,
         
-        .hOffsetMTStartup      = PTS_OFFSET_PTS2TORQUE_STARTUP,  
+        .hOffsetMTStartup      = TORQUE_STARTUP_VALUE_THRESHOLD,  
         .hStartupOffsetMTSpeedKMH = PTS_OFFSET_STARTUP_SPEED_KMH,
         .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
         .hOffsetMTSafety = PTS_OFFSET_PTS2TORQUE_SAFETY,
        
         .hMax = PTS_MAX_PTSVALUE,
-        .hLowPassFilterBW1 = PTS_FILTER_BW1,
-        .hLowPassFilterBW2 = PTS_FILTER_BW2,
-        .PasMaxOutputTorque = PAS_MAX_TORQUE,
+        .hFilterSpeed[0] = PTS_SPEED_FILTER_1,
+        .hFilterSpeed[1] = PTS_SPEED_FILTER_2,
+        .hLowPassFilterBW1[0] = PTS_FILTER_BW1_1,
+        .hLowPassFilterBW2[0] = PTS_FILTER_BW2_1,
+        .hLowPassFilterBW1[1] = PTS_FILTER_BW1_2,
+        .hLowPassFilterBW2[1] = PTS_FILTER_BW2_2,
+        .hLowPassFilterBW1[2] = PTS_FILTER_BW1_3,
+        .hLowPassFilterBW2[2] = PTS_FILTER_BW2_3,
     }
-};
-
-/**@brief Pulse Frequency initializing Parameters.
- */
-PulseFrequencyHandle_t PulseFreqHandlePedal =
-{    
-    .TimerType = AGT_TIMER,    
-    .start_measurement = false,    
-    .PulseFreqParam =
-    {
-        .PF_Timer = PEDAL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
-    }
-};
-
-/**@brief Pulse Frequency initializing Parameters.
- */
-PulseFrequencyHandle_t PulseFreqHandleWheel =
-{        
-    .TimerType = GPT_TIMER,
-    .start_measurement = false,    
-    .PulseFreqParam =
-    {
-        .PF_Timer = WHEEL_SPEED_SENSOR_TIMER_HANDLE_ADDRESS,
-    }
-};
-
-/**@brief Pedal assist initializing Parameters.
- */
-PedalSpeedSensorHandle_t PedalSpeedSensorHandle = {
-    .pPulseFrequency = &PulseFreqHandlePedal,
-};
-
-
-WheelSpeedSensorHandle_t WheelSpeedHandle =
-{
-    .pPulseFrequency = &PulseFreqHandleWheel,
-    .bPulsePerRotation = WHEEL_SPEED_SENSOR_NBR_PER_ROTATION,
-    .bSpeedslowDetect = WHEEL_SPEED_SLOW_LOOP_DETECT,
-    .bSlowDetectCountValue = WHEEL_SPEED_SLOW_LOOP_COUNT, 
-    .bSpeedslowDetectCorrection = WHEEL_SPEED_SENSOR_CORRECTION_FACTOR
 };
 
 
@@ -160,42 +124,67 @@ PWREN_Handle_t PowerEnableHandle =
     .bSystemReady = false,
 };
 
+
 PAS_Handle_t PedalAssistHandle = 
 {
-    .sParameters.hPASMaxTorque = PAS_MAX_TORQUE,
     .sParameters.bMaxLevel = PAS_MAX_LEVEL,
-    .sParameters.TorquePasMaxSpeed = VEHICLE_TOP_SPEED_KMH,
-    .sParameters.bTorqueGain = PAS_TORQUE_GAIN,
+    .sParameters.PasMaxSpeed = VEHICLE_TOP_SPEED_KMH,
+    .sParameters.bTorqueGain[0] = PAS_0_TORQUE_GAIN,
+    .sParameters.bTorqueGain[1] = PAS_1_TORQUE_GAIN,
+    .sParameters.bTorqueGain[2] = PAS_2_TORQUE_GAIN,
+    .sParameters.bTorqueGain[3] = PAS_3_TORQUE_GAIN,
+    .sParameters.bTorqueGain[4] = PAS_4_TORQUE_GAIN,
+    .sParameters.bTorqueGain[5] = PAS_5_TORQUE_GAIN,
+    .sParameters.bTorqueGain[6] = PAS_6_TORQUE_GAIN,
+    .sParameters.bTorqueGain[7] = PAS_7_TORQUE_GAIN,
+    .sParameters.bTorqueGain[8] = PAS_8_TORQUE_GAIN,
+    .sParameters.bTorqueGain[9] = PAS_9_TORQUE_GAIN,
     .sParameters.hMaxTorqueRatio = PAS_MAX_TORQUE_RATIO,
-    .sParameters.bPASCountSafe = PAS_MIN_PEDAL_COUNT_SAFE,
-    .sParameters.bPASCountActivation = PAS_SLOW_PEDAL_COUNT,
     .sParameters.WalkmodeOverThrottle = PAS_WALKMODE_OVER_THROTTLE,
-    .sParameters.PASCTorqRatiosInPercentage[0] = PAS_C_0_POWER_PERCENT,
-    .sParameters.PASCTorqRatiosInPercentage[1] = PAS_C_1_POWER_PERCENT,
-    .sParameters.PASCTorqRatiosInPercentage[2] = PAS_C_2_POWER_PERCENT,
-    .sParameters.PASCTorqRatiosInPercentage[3] = PAS_C_3_POWER_PERCENT,
-    .sParameters.PASCTorqRatiosInPercentage[4] = PAS_C_4_POWER_PERCENT,
-    .sParameters.PASCTorqRatiosInPercentage[5] = PAS_C_5_POWER_PERCENT,
-    .sParameters.PASCTorqRatiosInPercentage[6] = PAS_C_6_POWER_PERCENT,
-    .sParameters.PASCTorqRatiosInPercentage[7] = PAS_C_7_POWER_PERCENT,
-    .sParameters.PASCTorqRatiosInPercentage[8] = PAS_C_8_POWER_PERCENT,
-    .sParameters.PASCTorqRatiosInPercentage[9] = PAS_C_9_POWER_PERCENT,
+    .sParameters.PASOverThrottle = PAS_OVER_THROTTLE,
+    .sParameters.PASMaxSpeed[0] = PAS_LEVEL_SPEED_0,
+    .sParameters.PASMaxSpeed[1] = PAS_LEVEL_SPEED_1,
+    .sParameters.PASMaxSpeed[2] = PAS_LEVEL_SPEED_2,
+    .sParameters.PASMaxSpeed[3] = PAS_LEVEL_SPEED_3,
+    .sParameters.PASMaxSpeed[4] = PAS_LEVEL_SPEED_4,
+    .sParameters.PASMaxSpeed[5] = PAS_LEVEL_SPEED_5,
+    .sParameters.PASMaxSpeed[6] = PAS_LEVEL_SPEED_6,
+    .sParameters.PASMaxSpeed[7] = PAS_LEVEL_SPEED_7,
+    .sParameters.PASMaxSpeed[8] = PAS_LEVEL_SPEED_8,
+    .sParameters.PASMaxSpeed[9] = PAS_LEVEL_SPEED_9,
     .sParameters.walkModeTorqueRatio = PAS_WALK_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[0] = PAS_T_0_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[1] = PAS_T_1_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[2] = PAS_T_2_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[3] = PAS_T_3_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[4] = PAS_T_4_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[5] = PAS_T_5_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[6] = PAS_T_6_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[7] = PAS_T_7_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[8] = PAS_T_8_POWER_PERCENT,
-    .sParameters.PASTTorqRatiosInPercentage[9] = PAS_T_9_POWER_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[0] = PAS_0_MIN_TORQUE_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[1] = PAS_1_MIN_TORQUE_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[2] = PAS_2_MIN_TORQUE_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[3] = PAS_3_MIN_TORQUE_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[4] = PAS_4_MIN_TORQUE_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[5] = PAS_5_MIN_TORQUE_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[6] = PAS_6_MIN_TORQUE_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[7] = PAS_7_MIN_TORQUE_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[8] = PAS_8_MIN_TORQUE_PERCENT,
+    .sParameters.PASMinTorqRatiosInPercentage[9] = PAS_9_MIN_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[0] = PAS_0_MAX_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[1] = PAS_1_MAX_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[2] = PAS_2_MAX_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[3] = PAS_3_MAX_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[4] = PAS_4_MAX_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[5] = PAS_5_MAX_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[6] = PAS_6_MAX_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[7] = PAS_7_MAX_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[8] = PAS_8_MAX_TORQUE_PERCENT,
+    .sParameters.PASMaxTorqRatiosInPercentage[9] = PAS_9_MAX_TORQUE_PERCENT,
+    
+    .bPASPowerEnable = false,
+    .bPASCadenceRunningOverride = false,
+    .bPASTorqueRunningOverride = false,
 
-    .bCurrentPasAlgorithm = PAS_ALGORITHM,
-    .pPSS = &PedalSpeedSensorHandle,
+    .bStartupPasAlgorithm = PAS_DETECTIONSTARTUP_ALGORITHM,
+    .bRunningPasAlgorithm = PAS_DETECTIONRUNNING_ALGORITHM,
+    
+    .torqueSensorIssueTimer = 0,
+    .bTorqueSensorIssue = false,
+    
     .pPTS = &PedalTorqueSensorHandle,
-    .pWSS = &WheelSpeedHandle,       
 };
 
 /**@brief Throttle initializing Parameters.
@@ -210,6 +199,7 @@ ThrottleHandle_t ThrottleHandle =
     {
         .pIIRFAInstance = NULL, // NULL to apply software filtering, no hardware accelerator
     },
+    .BlockOffThrottle = THROTTLE_BLOCK_OFF,
     .hParameters =
     {
         .fFilterAlpha = THROTTLE_FILTER_ALPHA,
@@ -225,9 +215,8 @@ ThrottleHandle_t ThrottleHandle =
 
         .hDetectionThreshold = THROTTLE_DETECTION_THRESHOLD,
         
-        .DefaultMaxThrottleSpeedKMH = VEHICLE_TOP_SPEED_KMH,
-        .ThrottleMaxTorque = POWERTRAIN_MAX_MOTOR_TORQUE,
-    }
+        .DefaultMaxThrottleSpeedKMH = THROTTLE_TOP_SPEED,
+    },
 };
 
 PWRT_Handle_t PowertrainHandle =
@@ -245,8 +234,8 @@ PWRT_Handle_t PowertrainHandle =
     .sParameters.bPAS0DisableThrottle = POWERTRAIN_DISABLE_THROTTLE_PAS_0,
     
     .sParameters.hFaultManagementTimeout = POWERTRAIN_FAULT_MANAGEMENT_TIMEOUT,
+    .sParameters.bEnableSpeedLimit = ENABLE_SPEED_LIMIT,
     .sParameters.VehicleMaxSpeed = VEHICLE_TOP_SPEED_KMH,    
-    .sParameters.TorqueSpeedLimitGain = TORQUE_SPEED_LIMIT_GAIN,
     .pMDI = &MDInterfaceHandle,
     .pThrottle = &ThrottleHandle,
     .pBrake = &BrakeHandle,
@@ -263,4 +252,34 @@ VCI_Handle_t VCInterfaceHandle =
     .pStateMachine = &VCStateMachineHandle,
     .pPowertrain = &PowertrainHandle,
     .pFirmwareUpdateDomainObj = &bObjFirmwareUpdateDomain,
+};
+
+
+/**@brief MC setup initializing parameters.
+ */
+MC_Setup_t MCSetup = 
+{
+    /**@brief Battery power initializing parameters.
+    */
+    .BatteryPowerSetup =
+    {
+        .bPowerLimitRef                 = POWER_LIMIT_REF,                // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+        .hMaxApplicationPositivePower   = MAX_APPLICATION_POSITIVE_POWER, // Maximum power in watts that drive can push to the motor
+        .hMaxApplicationNegativePower   = MAX_APPLICATION_NEGATIVE_POWER, // Maximum power in watts that drive can accept from the motor
+        .hMaxApplicationCurrent         = MAX_APPLICATION_CURRENT,        // Maximum battery current in amps that drive can accept from the motor
+        
+        .bEnableLVTorqueLimit           = ENABLE_LV_TORQUE_LIMIT,
+        .hLowVoltageThresholdPercentage = LOW_VOLTAGE_THRESHOLD_PERCENTAGE,
+        .hLowBatteryTorque              = LOW_BATTERY_TORQUE,
+        
+        .bEnableMaxPowerLimit           = ENABLE_MAX_POWER_LIMIT,
+        .wMaxTimeBMSTolerant            = MAX_TIME_BMS_TOLERANT,
+        .hMaxPowerLimitTimeout          = MAX_POWER_LIMIT_TIMEOUT,
+        .hMaxBMSPositivePower           = MAX_BMS_POSITIVE_POWER,
+        .hMaxBMSContinuousCurrent       = MAX_BMS_CONTINUOUS_CURRENT,
+        
+        .hUndervoltageThreshold         = UD_VOLTAGE_THRESHOLD_BATT_V,
+    },
+    
+    .bEnSpeedLimit                      = ENABLE_SPEED_LIMIT,
 };

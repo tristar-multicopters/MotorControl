@@ -15,6 +15,8 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
+#include "uCAL_GPIO.h"
+#include "board_hardware.h"
 #define NB_CONVERSIONS 16u
 
 
@@ -26,6 +28,21 @@ extern "C" {
  * @retval none
  */
 void waitForPolarizationEnd(volatile uint8_t *cnt);
+
+/**
+ * @brief  It disables the driver for the GANs
+ * @param  Driver enable flag
+ * @retval none
+ */
+void Driver_Disable(bool *bDriverEn);
+
+/**
+ * @brief  It enables the driver for the GANs
+ * @param  Driver enable flag
+ * @retval none
+ */
+void Driver_Enable(bool *bDriverEn);
+
 
 
 #ifdef __cplusplus

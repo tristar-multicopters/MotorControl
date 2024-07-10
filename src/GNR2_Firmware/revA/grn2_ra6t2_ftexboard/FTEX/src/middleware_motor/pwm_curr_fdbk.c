@@ -28,23 +28,23 @@ bool PWMCurrFdbk_Init( PWMCurrFdbkHandle_t * pHandle)
     SignalFiltering_Init(&pHandle->IbFilter);
     SignalFiltering_ConfigureButterworthFOLP(&pHandle->IbFilter, pHandle->fCurrentFilterAlpha, pHandle->fCurrentFilterBeta);
 
-	return bIsError;
+    return bIsError;
 }
 
 /*
     Returns the phase current of the motor (in s16A unit).
-	To call in order to compute Ia, Ib and Ic and store into handle.
+    To call in order to compute Ia, Ib and Ic and store into handle.
 */
 void PWMCurrFdbk_GetPhaseCurrents( PWMCurrFdbkHandle_t * pHandle, ab_t * Iab )
 {
-  pHandle->pFctGetPhaseCurrents(pHandle, Iab);
+    pHandle->pFctGetPhaseCurrents(pHandle, Iab);
 }
 
 /*
     Execute software overcurrent protection algorithm. Must be called periodically to update current filters.
 */
 uint32_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, const ab_t * Iab, const qd_t * Iqdref)
-{
+{    
     int16_t IaFiltered, IbFiltered, IcFiltered;
 
     IaFiltered = SignalFiltering_CalcOutputI16(&pHandle->IaFilter, Iab->a);
@@ -63,7 +63,7 @@ uint32_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, co
     {
         return MC_OCSP;
     }
-    return MC_NO_ERROR;
+    return MC_NO_FAULT; 
 }
 
 /*
@@ -183,7 +183,7 @@ bool PWMCurrFdbk_CurrentReadingCalibr(PWMCurrFdbkHandle_t * pHandle)
 {
   bool retVal = true;
 
-	PWMCurrFdbk_SwitchOffPWM(pHandle);
+    PWMCurrFdbk_SwitchOffPWM(pHandle);
 
   pHandle->pFctCurrReadingCalib(pHandle);
 
@@ -202,14 +202,26 @@ void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle)
 
 
 /*
-    Check if hardware overcurrent occured since last call.
+    Check if hardware overcurrent occurred since last call.
 */
 uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle)
 {
-  uint32_t retVal = 0;  
-  retVal = pHandle->pFctIsOverCurrentOccurred(pHandle);
-  return retVal;
+    uint32_t retVal = 0;  
+    retVal = pHandle->pFctIsOverCurrentOccurred(pHandle);
+    return retVal;
 }
+
+/*
+    Check if OCD2 occurred since last call.
+*/
+#if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
+uint32_t RegisterIsOCD2OccurredCallBack(PWMCurrFdbkHandle_t * pHandle)
+{
+    uint32_t retVal = 0;  
+    retVal = pHandle->pFctOCD2Occurred(pHandle);
+    return retVal;
+}
+#endif
 
 
 bool PWMCurrFdbk_GetTurnOnLowSidesAction(PWMCurrFdbkHandle_t * pHandle)

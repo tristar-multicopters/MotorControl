@@ -90,7 +90,7 @@ typedef uint32_t (*PWMCurrFdbk_SetSampPointSectX_Cb_t)(PWMCurrFdbkHandle_t * pHa
 
 /**
   * @brief Pointer on the function provided by the PMWC component instance to check if an over current
-  *        condition has occured.
+  *        condition has occurred.
   *
   * This type is needed because the actual function to use can change at run-time
   * (See PWMCurrFdbkHandle::pFctIsOverCurrentOccurred).
@@ -114,47 +114,58 @@ typedef uint32_t (*PWMCurrFdbk_RLDetectSetDuty_Cb_t)(PWMCurrFdbkHandle_t * pHand
   */
 struct PWMCurrFdbkHandle
 {
-  PWMCurrFdbk_Generic_Cb_t                      pFctInitialize;              /**< pointer on the function the component instance uses to initialize PWM&Curr feedback module */
-  PWMCurrFdbk_IrqHandler_Cb_t 					pFctIrqHandler;              /**< pointer on the interrupt handling function. */
-  PWMCurrFdbk_GetPhaseCurr_Cb_t 				pFctGetPhaseCurrents;        /**< pointer on the function the component instance uses to retrieve pahse currents */
-  PWMCurrFdbk_Generic_Cb_t 						pFctSwitchOffPwm;            /**< pointer on the function the component instance uses to switch PWM off */
-  PWMCurrFdbk_Generic_Cb_t 						pFctSwitchOnPwm;             /**< pointer on the function the component instance uses to switch PWM on */
-  PWMCurrFdbk_Generic_Cb_t 						pFctCurrReadingCalib;        /**< pointer on the function the component instance uses to calibrate the current reading ADC(s) */
-  PWMCurrFdbk_Generic_Cb_t 						pFctTurnOnLowSides;          /**< pointer on the function the component instance uses to turn low sides on */
-  PWMCurrFdbk_SetSampPointSectX_Cb_t 	pFctSetADCSampPointSectX;  	 /**< pointer on the function the component instance uses to set the ADC sampling point  */
-  PWMCurrFdbk_OverCurr_Cb_t 						pFctIsOverCurrentOccurred;   /**< pointer on the function the component instance uses to return the over current status */
-  PWMCurrFdbk_Generic_Cb_t 						pFctRLDetectionModeEnable;   /**< pointer on the function the component instance uses to enable RL detection mode */
-  PWMCurrFdbk_Generic_Cb_t 						pFctRLDetectionModeDisable;  /**< pointer on the function the component instance uses to disable RL detection mode */
-  PWMCurrFdbk_RLDetectSetDuty_Cb_t 		pFctRLDetectionModeSetDuty;  /**< pointer on the function the component instance uses to set the PWM duty cycle in RL detection mode */
+    PWMCurrFdbk_Generic_Cb_t                        pFctInitialize;              /**< pointer on the function the component instance uses to initialize PWM&Curr feedback module */
+    PWMCurrFdbk_IrqHandler_Cb_t                     pFctIrqHandler;              /**< pointer on the interrupt handling function. */
+    PWMCurrFdbk_GetPhaseCurr_Cb_t                   pFctGetPhaseCurrents;        /**< pointer on the function the component instance uses to retrieve pahse currents */
+    PWMCurrFdbk_Generic_Cb_t                        pFctSwitchOffPwm;            /**< pointer on the function the component instance uses to switch PWM off */
+    PWMCurrFdbk_Generic_Cb_t                        pFctSwitchOnPwm;             /**< pointer on the function the component instance uses to switch PWM on */
+    PWMCurrFdbk_Generic_Cb_t                        pFctCurrReadingCalib;        /**< pointer on the function the component instance uses to calibrate the current reading ADC(s) */
+    PWMCurrFdbk_Generic_Cb_t                        pFctTurnOnLowSides;          /**< pointer on the function the component instance uses to turn low sides on */
+    PWMCurrFdbk_SetSampPointSectX_Cb_t              pFctSetADCSampPointSectX;    /**< pointer on the function the component instance uses to set the ADC sampling point  */
+    PWMCurrFdbk_OverCurr_Cb_t                       pFctIsOverCurrentOccurred;   /**< pointer on the function the component instance uses to return the over current status */
+    #if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
+        PWMCurrFdbk_OverCurr_Cb_t                       pFctOCD2Occurred;   	         /**< pointer on the function the component instance uses to return the over current status */
+    #endif
+    PWMCurrFdbk_Generic_Cb_t                        pFctRLDetectionModeEnable;   /**< pointer on the function the component instance uses to enable RL detection mode */
+    PWMCurrFdbk_Generic_Cb_t                        pFctRLDetectionModeDisable;  /**< pointer on the function the component instance uses to disable RL detection mode */
+    PWMCurrFdbk_RLDetectSetDuty_Cb_t                pFctRLDetectionModeSetDuty;  /**< pointer on the function the component instance uses to set the PWM duty cycle in RL detection mode */
 
-  uint16_t  hT_Sqrt3;                                    /**< a constant utilized by PWM algorithm (@f$\sqrt{3}@f$) */
-  uint16_t  hCntPhA;                                     /**< PWM Duty cycle for phase A */
-  uint16_t  hCntPhB;                                     /**< PWM Duty cycle for phase B */
-  uint16_t  hCntPhC;                                     /**< PWM Duty cycle for phase C */
-  uint16_t  hSWerror;                                     /**< Contains status about SW error */
-  uint8_t   Sector;                                     /**< the space vector sector number */
-  uint16_t  hLowDuty;
-  uint16_t  hMidDuty;
-  uint16_t  hHighDuty;
-  bool 			hTurnOnLowSidesAction;                  /**< true if TurnOnLowSides action is active,
+    uint16_t  hT_Sqrt3;                                    /**< a constant utilized by PWM algorithm (@f$\sqrt{3}@f$) */
+    uint16_t  hCntPhA;                                     /**< PWM Duty cycle for phase A */
+    uint16_t  hCntPhB;                                     /**< PWM Duty cycle for phase B */
+    uint16_t  hCntPhC;                                     /**< PWM Duty cycle for phase C */
+    uint16_t  hSWerror;                                    /**< Contains status about SW error */
+    uint8_t   Sector;                                      /**< the space vector sector number */
+    uint16_t  hLowDuty;
+    uint16_t  hMidDuty;
+    uint16_t  hHighDuty;
+    bool      hTurnOnLowSidesAction;                     /**< true if TurnOnLowSides action is active,
                                                               false otherwise. */
-  uint8_t   Motor;                                      /**< Motor reference number */
-  bool      bRLDetectionMode;                           /**< true if enabled, false if disabled. */
-  int16_t   Ia;                                         /**< Last @f$I_{A}@f$ measurement. */
-  int16_t   Ib;                                         /**< Last @f$I_{B}@f$ measurement. */
-  int16_t   Ic;                                         /**< Last @f$I_{C}@f$ measurement. */
+    uint8_t   Motor;                                      /**< Motor reference number */
+    bool      bRLDetectionMode;                           /**< true if enabled, false if disabled. */
+    int16_t   Ia;                                         /**< Last Ia measurement. */
+    int16_t   Ib;                                         /**< Last Ib measurement. */
+    int16_t   Ic;                                         /**< Last Ic measurement. */                         
+    uint16_t hPWMperiod;                                  /**< PWM period expressed in timer clock cycles unit:
+                                                            *  PWMPeriod = TimerFreq_{CLK} / F_{PWM}    */
+    SignalFilteringHandle_t IaFilter;                     /* Pointer to filter instance used for filtering Ia signal (only for software ocp) */
+    SignalFilteringHandle_t IbFilter;                     /* Pointer to filter instance used for filtering Ib signal (only for software ocp) */
+    float fCurrentFilterAlpha;
+    float fCurrentFilterBeta;
 
-  uint16_t hPWMperiod;                                   /**< PWM period expressed in timer clock cycles unit:
-                                                           *  @f$hPWMPeriod = TimerFreq_{CLK} / F_{PWM}@f$    */
-
-  SignalFilteringHandle_t IaFilter;                  /* Pointer to filter instance used for filtering Ia signal (only for software ocp) */
-  SignalFilteringHandle_t IbFilter;                  /* Pointer to filter instance used for filtering Ib signal (only for software ocp) */
-  float fCurrentFilterAlpha;
-  float fCurrentFilterBeta;
-
-  int16_t hSoftwareOCPMarginCurrent;                   /* Measured current amplitude can be until hSoftwareOCPMarginCurrent higher
+    int16_t hSoftwareOCPMarginCurrent;                    /* Measured current amplitude can be until hSoftwareOCPMarginCurrent higher
                                                             than reference current before overcurrent software protection triggers */
-  int16_t hSoftwareOCPMaximumCurrent;                   /* Max current that can be reached before triggering software overcurrent */
+    int16_t hSoftwareOCPMaximumCurrent;                   /* Max current that can be reached before triggering software overcurrent */
+    
+    /*******************************************************/
+    /*     Motor tuner pwm current feedback parameters     */
+    /*******************************************************/
+    int16_t   IaFilt;                                     /** Filtered Ia measurement. */
+    int16_t   IbFilt;                                     /** Filtered Ib measurement. */
+    int16_t   IcFilt;                                     /** Filtered Ic measurement. */
+    uint16_t hPWMDeadtime;                                /**< PWM deadtime expressed in timer clock cycles unit */
+    float fCurrentConversionFactor;                       /* Conversion factor to get current in ampere from digital unit. */
+    float fCycle2SecondConversionFactor;                  /* Conversion factor to get a value in seconds from timer cycles */
 
 };
 
@@ -168,7 +179,7 @@ bool PWMCurrFdbk_Init( PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief Returns the phase current of the motor (in s16A unit).
-	*					To call in order to compute Ia, Ib and Ic and store into handle.
+    *                    To call in order to compute Ia, Ib and Ic and store into handle.
   * @param  pHandle: handle on the target PWMC component
   * @param  Iab: Pointer to the structure that will receive motor current
   *         of phase A and B in s16A unit.
@@ -183,7 +194,7 @@ void PWMCurrFdbk_GetPhaseCurrents(PWMCurrFdbkHandle_t * pHandle,
 */
 static inline int16_t PWMCurrFdbk_GetIa(PWMCurrFdbkHandle_t * pHandle)
 {
-  return pHandle->Ia;
+    return pHandle->Ia;
 }
 
 /**
@@ -193,7 +204,7 @@ static inline int16_t PWMCurrFdbk_GetIa(PWMCurrFdbkHandle_t * pHandle)
 */
 static inline int16_t PWMCurrFdbk_GetIb(PWMCurrFdbkHandle_t * pHandle)
 {
-  return pHandle->Ib;
+    return pHandle->Ib;
 }
 
 /**
@@ -203,7 +214,7 @@ static inline int16_t PWMCurrFdbk_GetIb(PWMCurrFdbkHandle_t * pHandle)
 */
 static inline int16_t PWMCurrFdbk_GetIc(PWMCurrFdbkHandle_t * pHandle)
 {
-  return pHandle->Ic;
+    return pHandle->Ic;
 }
 
 /**
@@ -231,7 +242,7 @@ uint32_t PWMCurrFdbk_CheckSoftwareOverCurrent( PWMCurrFdbkHandle_t * pHandle, co
   * the PWM Frequency is too high) results in the functions returning #MC_FOC_DURATION which entails a
   * motor Control fault that stops the motor.
   *
-  * @retval Returns #MC_NO_ERROR if no error occurred or #MC_FOC_DURATION if the duty cycles were
+  * @retval Returns MC_NO_FAULT if no error occurred or MC_FOC_DURATION if the duty cycles were
   *         set too late for being taken into account in the next PWM cycle (overrun condition).
   */
 uint32_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle,
@@ -239,21 +250,21 @@ uint32_t PWMCurrFdbk_SetPhaseVoltage(PWMCurrFdbkHandle_t * pHandle,
 
 /**
   * @brief  Switches PWM generation off
-	* @param  pHandle: Handle on the target instance of the PWMC component
+    * @param  pHandle: Handle on the target instance of the PWMC component
   */
 void PWMCurrFdbk_SwitchOffPWM(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief  Switches PWM generation on
-	* @param  pHandle: Handle on the target instance of the PWMC component
+    * @param  pHandle: Handle on the target instance of the PWMC component
   */
 void PWMCurrFdbk_SwitchOnPWM(PWMCurrFdbkHandle_t * pHandle);
 
 /**
   * @brief  Calibrates ADC current conversions by reading the offset voltage
   *         present on ADC pins when no motor current is flowing in. This function
-	*					should be called before each motor start-up.
-	* @param  pHandle: Handle on the target instance of the PWMC component
+    *                    should be called before each motor start-up.
+    * @param  pHandle: Handle on the target instance of the PWMC component
   * @retval true if the current calibration has been completed, false if it is
   *         still ongoing.
   */
@@ -267,11 +278,11 @@ bool PWMCurrFdbk_CurrentReadingCalibr(PWMCurrFdbkHandle_t * pHandle);
   */
 void PWMCurrFdbk_TurnOnLowSides(PWMCurrFdbkHandle_t * pHandle);
 
-/** @brief Check if hardware overcurrent occured since last call.
+/** @brief Check if hardware overcurrent occurred since last call.
  *  @param  pHandle: Handle on the target instance of the PWMC component
- *	@retval Returns #MC_BREAK_IN if an over current condition was detected on the power stage
+ *    @retval Returns #MC_OCD1 or MC_OCD2 if an over current condition was detected on the power stage
  *         controlled by the PWMC component pointed by  @p pHandle, since the last call to this function;
- *         returns #MC_NO_FAULTS otherwise. */
+ *         returns #MC_NO_FAULT otherwise. */
 uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle);
 
 /**
@@ -283,12 +294,12 @@ uint32_t PWMCurrFdbk_CheckOverCurrent(PWMCurrFdbkHandle_t * pHandle);
 bool PWMCurrFdbk_GetTurnOnLowSidesAction(PWMCurrFdbkHandle_t * pHandle);
 
 /** @brief Enables the RL detection mode on the power stage controlled by the @p pHandle PWMC component.
-	* @param  pHandle: Handle on the target instance of the PWMC component
+    * @param  pHandle: Handle on the target instance of the PWMC component
 */
 void PWMCurrFdbk_RLDetectionModeEnable(PWMCurrFdbkHandle_t * pHandle);
 
 /** @brief Disables the RL detection mode on the power stage controlled by the @p pHandle PWMC component.
-	* @param  pHandle: Handle on the target instance of the PWMC component
+    * @param  pHandle: Handle on the target instance of the PWMC component
 */
 void PWMCurrFdbk_RLDetectionModeDisable(PWMCurrFdbkHandle_t * pHandle);
 
@@ -298,7 +309,7 @@ void PWMCurrFdbk_RLDetectionModeDisable(PWMCurrFdbkHandle_t * pHandle);
   * @param  hDuty Duty cycle to apply
   *
   * @retval If the Duty Cycle could be applied on time for the next PWM period,
-  *         #MC_NO_ERROR is returned. Otherwise, #MC_FOC_DURATION is returned.
+  *         MC_NO_FAULT is returned. Otherwise, MC_FOC_DURATION is returned.
   */
 uint32_t PWMCurrFdbk_RLDetectionModeSetDuty(PWMCurrFdbkHandle_t * pHandle,
                                       uint16_t hDuty);
@@ -372,6 +383,17 @@ void PWMCurrFdbk_RegisterIsOverCurrentOccurredCallBack(PWMCurrFdbk_OverCurr_Cb_t
 
 
 /**
+ * @brief Sets the Callback that the PWMC component shall invoke to OCD2
+ * @param pCallBack pointer on the callback
+ * @param pHandle pointer on the handle structure of the PWMC instance
+ *
+ */
+#if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
+uint32_t RegisterIsOCD2OccurredCallBack(PWMCurrFdbkHandle_t * pHandle);
+#endif
+
+
+/**
  * @brief Sets the Callback that the PWMC component shall invoke to enable the R/L detection mode
  * @param pCallBack pointer on the callback
  * @param pHandle pointer on the handle structure of the PWMC instance
@@ -397,7 +419,6 @@ void PWMCurrFdbk_RegisterRLDetectionModeDisableCallBack(PWMCurrFdbk_Generic_Cb_t
  */
 void PWMCurrFdbk_RegisterRLDetectionModeSetDutyCallBack(PWMCurrFdbk_RLDetectSetDuty_Cb_t pCallBack,
     PWMCurrFdbkHandle_t * pHandle);
-
 
 #ifdef __cplusplus
 }

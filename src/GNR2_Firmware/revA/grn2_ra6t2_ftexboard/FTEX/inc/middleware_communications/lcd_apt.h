@@ -6,18 +6,12 @@
   *
   ******************************************************************************
 */
-	
+    
 #ifndef __LCD_APT_H
 #define __LCD_APT_H
 
 #include "vc_interface.h"
-#include "powertrain_management.h"
-#include "can_vehicle_interface.h"
-#include "vc_errors_management.h"
-#include "vc_constants.h"
 #include "uCAL_UART.h"
-#include "gnr_main.h"
-#include "vc_constants.h"
 
 /**************************** DEFINITIONS AND STRUCTS ****************************/
 // Commands
@@ -69,6 +63,8 @@ typedef enum
     APT_MOTOR_OT_PROTECT   = 0x0F, // Motor over temperature
     APT_TURN_ERROR         = 0x10, // Check turn to connect
     APT_DUAL_COMM_ERROR    = 0x11, // Check the cable connection
+    APT_CONTROLLER_TEMP_FOLDBACK = 0x12, //Controller in temp foldback region
+    APT_TORQUE_SENSOR_ISSUE = 0x13, // Torque sensor output value is stuck in high state
 
     // Custom FTEX errors
     // From 0x08 to 0x9F EXCLUDING 0x30
@@ -85,11 +81,11 @@ typedef struct
 }APT_frame_t;
 
 typedef struct
-{	
-    UART_Handle_t *pUART_handle;           // Pointer to uart									
+{    
+    UART_Handle_t *pUART_handle;           // Pointer to uart                                    
     VCI_Handle_t  *pVController;           // Pointer to vehicle
-    APT_frame_t rx_frame; 		   	       // Frame for data reception
-    APT_frame_t tx_frame; 		   	       // Frame for send response    
+    APT_frame_t rx_frame;                       // Frame for data reception
+    APT_frame_t tx_frame;                       // Frame for send response    
 
     uint8_t RxBuffer[RX_BYTE_BUFFER_SIZE]; // Hold bytes to be process by the APT task function
     uint8_t RxCount;                       // Counts how many bytes we are holding
@@ -97,7 +93,6 @@ typedef struct
     uint8_t OldPAS;                        // Used to keep track of the current PAs levle on the screen
 
     bool APTChangePasFlag;                 // Used to tell the Can interfacne that the screen changed the PAS    
-    bool APTStabilizing;                   // Used while the APT values are inconsistent
     
 }APT_Handle_t;
 

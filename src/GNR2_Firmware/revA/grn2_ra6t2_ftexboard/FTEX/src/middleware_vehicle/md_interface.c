@@ -12,14 +12,28 @@
 /*
 * see function definition
 */
-void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2)
+void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2, MC_Setup_t MCSetup)
 {
     ASSERT(pHandle != NULL);
     ASSERT(pMCI != NULL);
     ASSERT(pSlaveM2 != NULL);
-    
+
     pHandle->pMCI = pMCI;
     pHandle->pSlaveM2 = pSlaveM2;
+    
+    //Power initialization is not supported with dual motor, will have to change default values in MC layer to initialize the parameters that come from the battery
+    MCInterface_PowerInit(pHandle->pMCI, MCSetup);
+    MCInterface_SpeedLimitEnInit(pHandle->pMCI, MCSetup);
+    
+}
+
+/*
+* see function definition
+*/
+uint16_t MDI_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetBusVoltageInVoltx100(pHandle);
 }
 
 /*
@@ -130,7 +144,7 @@ bool MDI_StopMotor(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 /*
 * see function definition
 */
-bool MDI_FaultAcknowledged(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+bool MDI_CriticalFaultAcknowledged(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
     bool bReturnValue = 0;
@@ -138,10 +152,10 @@ bool MDI_FaultAcknowledged(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMo
     switch (bMotor)
     {
         case M1:
-            bReturnValue = MCInterface_FaultAcknowledged(pHandle->pMCI);
+            bReturnValue = MCInterface_CriticalFaultAcknowledged(pHandle->pMCI);
             break;
         case M2:
-            bReturnValue = SlaveMCInterface_FaultAcknowledged(pHandle->pSlaveM2);
+            bReturnValue = SlaveMCInterface_CriticalFaultAcknowledged(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -176,7 +190,7 @@ MotorState_t  MDI_GetSTMState(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
 /*
 * see function definition
 */
-uint32_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+uint32_t MDI_GetOccurredCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
     uint32_t wReturnValue = 0;
@@ -184,10 +198,10 @@ uint32_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t
     switch (bMotor)
     {
         case M1:
-            wReturnValue = MCInterface_GetOccurredFaults(pHandle->pMCI);
+            wReturnValue = MCInterface_GetOccurredCriticalFaults(pHandle->pMCI);
             break;
         case M2:
-            wReturnValue = SlaveMCInterface_GetOccurredFaults(pHandle->pSlaveM2);
+            wReturnValue = SlaveMCInterface_GetOccurredCriticalFaults(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -199,7 +213,53 @@ uint32_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t
 /*
 * see function definition
 */
-uint32_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+uint32_t MDI_GetCurrentErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+{
+    ASSERT(pHandle != NULL);
+    uint32_t wReturnValue = 0;
+
+    switch (bMotor)
+    {
+        case M1:
+            wReturnValue = MCInterface_GetCurrentErrors(pHandle->pMCI);
+            break;
+        case M2:
+            wReturnValue = SlaveMCInterface_GetCurrentErrors(pHandle->pSlaveM2);
+            break;
+        default:
+            break;
+    }
+
+    return wReturnValue;
+}
+
+/*
+* see function definition
+*/
+uint32_t MDI_GetOccurredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+{
+    ASSERT(pHandle != NULL);
+    uint32_t wReturnValue = 0;
+
+    switch (bMotor)
+    {
+        case M1:
+            wReturnValue = MCInterface_GetOccurredErrors(pHandle->pMCI);
+            break;
+        case M2:
+            wReturnValue = SlaveMCInterface_GetOccurredErrors(pHandle->pSlaveM2);
+            break;
+        default:
+            break;
+    }
+
+    return wReturnValue;
+}
+
+/*
+* see function definition
+*/
+uint32_t MDI_GetOccurredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
     uint32_t wReturnValue = 0;
@@ -222,7 +282,7 @@ uint32_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_
 /*
 * see function definition
 */
-uint32_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+uint32_t MDI_GetCurrentCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 {
     ASSERT(pHandle != NULL);
     uint32_t wReturnValue = 0;
@@ -230,10 +290,10 @@ uint32_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
     switch (bMotor)
     {
         case M1:
-            wReturnValue = MCInterface_GetCurrentFaults(pHandle->pMCI);
+            wReturnValue = MCInterface_GetCurrentCriticalFaults(pHandle->pMCI);
             break;
         case M2:
-            wReturnValue = SlaveMCInterface_GetCurrentFaults(pHandle->pSlaveM2);
+            wReturnValue = SlaveMCInterface_GetCurrentCriticalFaults(pHandle->pSlaveM2);
             break;
         default:
             break;
@@ -657,6 +717,24 @@ int16_t MDI_GetPhaseVoltageAmplitude(MultipleDriveInterfaceHandle_t * pHandle, u
     return hReturnValue;
 }
 
+/**
+  *  Getting the controller NTC temperature value
+  */
+int16_t MDI_GetControllerTemp(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetControllerTemp(pHandle->pMCI);
+}
+
+/**
+  *  Getting the controller NTC temperature value
+  */
+int16_t MDI_GetMotorTemp(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMotorTemp(pHandle->pMCI);
+}
+
 /*
 * see function definition
 */
@@ -666,7 +744,7 @@ void MDI_Clear_Iqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
     switch (bMotor)
     {
         case M1:
-            MCInterface_GetCurrentFaults(pHandle->pMCI);
+            MCInterface_GetCurrentCriticalFaults(pHandle->pMCI);
             break;
         case M2:
             break;
@@ -676,23 +754,127 @@ void MDI_Clear_Iqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
 }
 
 /**
+  *  Obtain the motor torque referenece for a motor
+  */
+uint16_t MDI_GetMotorTorqueReference(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor)
+{
+    ASSERT(pHandle != NULL);
+    
+    uint16_t MotorTorqueRef = 0;
+    switch (bMotor)
+    {
+        case M1:            
+            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M1));
+            break;
+        case M2:
+            MotorTorqueRef = (uint16_t) abs(MCInterface_GetTorqueReference(pHandle->pMCI, M2));
+            break;
+        default:
+            break;
+    }
+    
+    return MotorTorqueRef;
+}
+
+/**
+  *  Obtain the max application power
+  */
+uint16_t MDI_GetMaxPositivePower(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMaxPositivePower(pHandle->pMCI);
+}
+
+/**
   *  Function sets the torque control speed limit does the conversion from desired 
   *  wheel speed in kmH to motor rpm.Is also the wrapper for the function SpdTorqCtrl_SetSpeedLimit
   */
-void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t speedKMH, uint16_t gain)
+void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t speedKMH)
 {
     ASSERT(pHandle != NULL);
     ASSERT(pHandle->pMCI->pSpeedTorqCtrl);
     
-    int16_t DesiredMotorRPM;
+    int16_t desiredMotorRPM;
     float gearRatio = pHandle->pMCI->pSpeedTorqCtrl->fGearRatio;
     uint16_t wheelRpm = (uint16_t) Wheel_GetWheelRpmFromSpeed(speedKMH);  // Convert desired wheel speed in kmH to desired wheel RPM
     
+    SpdTorqCtrl_SetSpeedLimitWheelRpm(pHandle->pMCI->pSpeedTorqCtrl, wheelRpm);
     
-    DesiredMotorRPM = (int16_t) round(gearRatio * wheelRpm);  // Convert desired wheel rpm to desired motor rpm
+    desiredMotorRPM = (int16_t) round(gearRatio * wheelRpm);  // Convert desired wheel rpm to desired motor rpm
     
-    DesiredMotorRPM = (DesiredMotorRPM * gain)/ MDI_PERCENT;
     
-    SpdTorqCtrl_SetSpeedLimit(pHandle->pMCI->pSpeedTorqCtrl, DesiredMotorRPM); // Set the torqeu control speed limitation
+    SpdTorqCtrl_SetSpeedLimit(pHandle->pMCI->pSpeedTorqCtrl, desiredMotorRPM); // Set the torque control speed limitation
 
 }    
+
+/**
+  *  Function sets the wheel speed limit. Used for mid-drives. Is also the wrapper for the function SpdTorqCtrl_SetSpeedLimitWheelRpm
+  */
+void MDI_SetWheelRPM(MultipleDriveInterfaceHandle_t * pHandle, uint16_t aWheelRPM)
+{
+    ASSERT(pHandle != NULL);
+    MCInterface_SetWheelRPM(pHandle->pMCI, aWheelRPM);
+}  
+
+/**
+  *  Get the motor gear ratio
+  */
+float MDI_GetMotorGearRatio(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMotorGearRatio(pHandle->pMCI);
+}
+
+/**
+  *  Get the motor type
+  */
+MotorType_t MDI_GetMotorType(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMotorType(pHandle->pMCI);
+}
+
+/**
+  *  Get the nominal torque
+  */
+uint16_t MDI_GetNominalTorque(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetNominalTorque(pHandle->pMCI);
+}
+
+/**
+  *  Get the starting torque
+  */
+uint16_t MDI_GetStartingTorque(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetStartingTorque(pHandle->pMCI);
+}
+
+/**
+  *  Get the RS value
+  */
+float MDI_GetRS(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetRS(pHandle->pMCI);
+}
+
+/**
+  *  Get the number of magnets on the wheel speed sensor
+  */
+uint8_t MDI_GetWheelSpdSensorNbrPerRotation(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetWheelSpdSensorNbrPerRotation(pHandle->pMCI);
+}
+
+/**
+  *  Get whether the motor temp sensor is mixed
+  */
+bool MDI_GetMotorTempSensorMixed(MultipleDriveInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MCInterface_GetMotorTempSensorMixed(pHandle->pMCI);
+}

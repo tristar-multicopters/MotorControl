@@ -78,23 +78,23 @@ uint8_t RegConvMng_RegisterRegConv(RegConv_t * regConv)
  */
 void RegConvMng_ExecuteGroupRegularConv(const adc_group_mask_t ADCGroupMask)
 {
-		ASSERT(!(ADCGroupMask & ADC_GROUP_MASK_0)); // Input scan group cannot contain group 0, since it is reserved for PWM module
-		ASSERT(ADCGroupMask <= ADC_GROUP_MASK_ALL); // Input scan cannot be higher than ADC_GROUP_MASK_ALL
-	
-		adc_status_t ADCStatus;
-		
-		R_ADC_B_StatusGet(g_adc0.p_ctrl, &ADCStatus);
-		
-//		while (ADCStatus.state != ADC_STATE_IDLE)
-//		{
-//		}
-		
-		// Issue here to start conversion with R_ADC_B_ScanGroupStart function. Group 2 works but not group 1.
-		// As quick workaround, we use direct register manipulation with ADTRGENR and ADSYSTR.
-		R_ADC_B->ADTRGENR |= ADCGroupMask;
-		R_ADC_B->ADSYSTR |= ADCGroupMask;
-		
-		//R_ADC_B_ScanGroupStart(g_adc.p_ctrl, ADCGroupMask);
+        ASSERT(!(ADCGroupMask & ADC_GROUP_MASK_0)); // Input scan group cannot contain group 0, since it is reserved for PWM module
+        ASSERT(ADCGroupMask <= ADC_GROUP_MASK_ALL); // Input scan cannot be higher than ADC_GROUP_MASK_ALL
+    
+        adc_status_t ADCStatus;
+        
+        R_ADC_B_StatusGet(g_adc0.p_ctrl, &ADCStatus);
+        
+//        while (ADCStatus.state != ADC_STATE_IDLE)
+//        {
+//        }
+        
+        // Issue here to start conversion with R_ADC_B_ScanGroupStart function. Group 2 works but not group 1.
+        // As quick workaround, we use direct register manipulation with ADTRGENR and ADSYSTR.
+        R_ADC_B->ADTRGENR |= ADCGroupMask;
+        R_ADC_B->ADSYSTR |= ADCGroupMask;
+        
+        //R_ADC_B_ScanGroupStart(g_adc.p_ctrl, ADCGroupMask);
 }
 
 /**
@@ -102,10 +102,10 @@ void RegConvMng_ExecuteGroupRegularConv(const adc_group_mask_t ADCGroupMask)
  */
 uint16_t RegConvMng_ReadConv(uint8_t handle)
 {
-	uint16_t hConvResult = 0;
-	
-	R_ADC_B_Read(g_adc0.p_ctrl, RCM_handle_array[handle]->hChannel, &hConvResult);
-	
-	return hConvResult;
+    uint16_t hConvResult = 0;
+    
+    R_ADC_B_Read(g_adc0.p_ctrl, RCM_handle_array[handle]->hChannel, &hConvResult);
+    
+    return hConvResult;
 }
 

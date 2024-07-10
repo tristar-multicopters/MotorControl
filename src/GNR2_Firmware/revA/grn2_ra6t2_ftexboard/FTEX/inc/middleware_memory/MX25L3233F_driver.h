@@ -32,6 +32,12 @@
 #define MX25L3233F_PAGE_SIZE                   ((uint32_t) 256)                    /* 256 Bytes per page */
 #define MX25L3233F_SECURE_OTP_SIZE             ((uint32_t)   4 * 1024 / 8)         /*!< 4K-bit => Bytes secured OTP */
 
+/* Device One time programmable (OTP) serial address *************/
+
+#define MX25L3233F_CLEAR_VALUE     0xFF
+#define MX25L3233F_OTP_END_ADDRESS 0x01FF
+#define MX25L3233F_OTP_START_ADDRESS 0x0000
+
 /**
   * MX25L3233F Configuration
   * CS# Deselect Time :
@@ -86,7 +92,7 @@
 #define MX25L3233F_PROG_ERASE_RESUME_CMD1               0x7A   // PGM/ERS Resume, Resumes Program/Erase; SPI/QPI 1-0-0/4-0-0
 
 #define MX25L3233F_DEEP_POWER_DOWN_CMD                  0xB9   // DP, Deep power down; SPI/QPI 1-0-0/4-0-0
-#define MX25L3233F_RELEASE_DEEP_POWER_DOWN_CMD      		0xAB   // RDP, Release from Deep power down; SPI/QPI 1-0-0/4-0-0
+#define MX25L3233F_RELEASE_DEEP_POWER_DOWN_CMD              0xAB   // RDP, Release from Deep power down; SPI/QPI 1-0-0/4-0-0
 
 #define MX25L3233F_SET_BURST_LENGTH_CMD                 0x77   // SBL, Set burst length; SPI/QPI 1-0-1/4-0-4
 #define MX25L3233F_SET_BURST_LENGTH_CMD1                0xC0   // SBL, Set burst length; SPI/QPI 1-0-1/4-0-4
@@ -191,7 +197,7 @@ typedef enum
 
 typedef struct
 {
-  uint32_t FlashSize;			/*!< Size of the flash */
+  uint32_t FlashSize;           /*!< Size of the flash */
   uint32_t EraseSectorSize;     /*!< Size of sectors for the erase operation */
   uint32_t EraseSectorsNumber;  /*!< Number of sectors for the erase operation */
   uint32_t ProgPageSize;        /*!< Size of pages for the program operation */
@@ -205,7 +211,7 @@ typedef struct
 
 typedef struct
 {
-	SPI_Handle_t * uCALSPI;
+    SPI_Handle_t * uCALSPI;
 } MX25_Handle_t;
 
 // ==================== Public function prototypes ========================= //
@@ -233,7 +239,7 @@ int32_t MX25L3233F_ChipErase(MX25_Handle_t *pHandle);
 
 /**
   * @brief  Reads an amount of data from the SPI memory on STR mode.
-  * @param	MX25_Handle_t : MX25 driver handler  
+  * @param    MX25_Handle_t : MX25 driver handler  
   * @param  pData: Pointer to data to be read
   * @param  Address: Read start address
   * @param  Size: Size of data to read
@@ -243,7 +249,7 @@ int32_t MX25L3233F_Read(MX25_Handle_t *pHandle, uint8_t *pData, uint32_t Address
 
 /**
   * @brief  Writes an amount of data to the QSPI memory.
-  * @param	MX25_Handle_t : MX25 driver handler  
+  * @param    MX25_Handle_t : MX25 driver handler  
   * @param  pData: Pointer to data to be written
   * @param  Address: Write start address
   * @param  Size: Size of data to write. Range 1 ~ 256
@@ -254,7 +260,7 @@ int32_t MX25L3233F_PageProgram(MX25_Handle_t *pHandle, uint8_t *pData, uint32_t 
 /**
   * @brief  Erases the specified block of the QSPI memory.
   *         MX25L3233F support 4K, 32K, 64K size block erase commands.
-  * @param	MX25_Handle_t : MX25 driver handler
+  * @param    MX25_Handle_t : MX25 driver handler
   * @param  BlockAddress: Block address to erase
   * @retval SPI memory status
   */
@@ -262,14 +268,14 @@ int32_t MX25L3233F_BlockErase(MX25_Handle_t *pHandle, uint32_t BlockAddress, MX2
 
 /**
   * @brief  Write Register/Setting Commands
-  * @param	MX25_Handle_t : MX25 driver handler
+  * @param    MX25_Handle_t : MX25 driver handler
   * @retval SPI memory status
   */
 int32_t MX25L3233F_WriteEnable(MX25_Handle_t *pHandle);
 
 /**
   * @brief  Read Flash 3 Byte IDs.
-  * @param	MX25_Handle_t : MX25 driver handler
+  * @param    MX25_Handle_t : MX25 driver handler
   * @param  Component object pointer
   * @retval SPI memory status
   */
@@ -277,17 +283,33 @@ int32_t MX25L3233F_ReadID(MX25_Handle_t *pHandle, uint8_t *ID);
 
 /**
   * @brief  Flash Reset
-  * @param	MX25_Handle_t : MX25 driver handler
+  * @param    MX25_Handle_t : MX25 driver handler
   * @retval SPI memory status
   */
 int32_t MX25L3233F_ResetEnable(MX25_Handle_t *pHandle);
 
 /**
   * @brief  Flash Reset memory
-  * @param	MX25_Handle_t : MX25 driver handler
+  * @param    MX25_Handle_t : MX25 driver handler
   * @retval SPI memory status
   */
 int32_t MX25L3233F_ResetMemory(MX25_Handle_t *pHandle);
+
+/**
+  * @brief  Flash Enter One time programmable memory
+  * @param  MX25_Handle_t : MX25 driver handler
+  * @retval SPI memory status
+  */
+
+int32_t MX25L3233F_EnterOTP(MX25_Handle_t *pHandle);
+
+/**
+  * @brief  Flash Exit One time programmable memory
+  * @param  MX25_Handle_t : MX25 driver handler
+  * @retval SPI memory status
+  */
+
+int32_t MX25L3233F_ExitOTP(MX25_Handle_t *pHandle);
 
 #endif /*__MX25L3233F_DRIVER_H*/
 

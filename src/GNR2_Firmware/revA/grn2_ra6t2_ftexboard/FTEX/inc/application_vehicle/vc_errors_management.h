@@ -8,8 +8,8 @@
 #ifndef __VC_ERRORS_MANAGEMENT_H
 #define __VC_ERRORS_MANAGEMENT_H
 
-#include "gnr_main.h"
-
+#include "stdint.h"
+#include "stdbool.h"
 
 #define ERROR_BUFFER_SIZE       20
 #define DEFAULT_CYCLE_LENGTH    6 
@@ -27,15 +27,18 @@ typedef enum
     MOTOR_FOLDBACK_TEMP = 0x06, // Foldback for motor temp has been initiated
     MOTOR_NTC_DISC_FREEZE    = 0x07,    // Motor temperature sensor is disconnected or cold warning
     CONTROLLER_OT_PROTECT  = 0x08, // Controller over temperature protection
-    MOTOR_HALL_ERROR  = 0x09, // We can't read motor hall sensor
-    MOTOR_PHASE_ERROR = 0x0A, // Motor phase wiring is faulty
-    IOT_COMM_ERROR    = 0x0B, // Controller loses communication with IOT module
-    DUAL_COMM_ERROR   = 0x0C, // Master lost comm with slave or slave lost comm with master
-    OVER_CURRENT      = 0x0D, // Over Current protection - HW & SW
-    BATT_LOW          = 0x0E, // Battery is low
-    PAS_BOOT_ERROR    = 0x0F, // Peddle Assist error
-    CONTROLLER_ERROR  = 0x10, // Controller in unrecoverable state
-    BRAKE_ERROR       = 0x11, // Brake cutoff sensor abnormal
+    CONTROLLER_FOLDBACK_TEMP = 0x09, //Foldback for controller temp has been initiated
+    MOTOR_HALL_ERROR  = 0x0A, // We can't read motor hall sensor
+    MOTOR_PHASE_ERROR = 0x0B, // Motor phase wiring is faulty
+    IOT_COMM_ERROR    = 0x0C, // Controller loses communication with IOT module
+    DUAL_COMM_ERROR   = 0x0D, // Master lost comm with slave or slave lost comm with master
+    OVER_CURRENT      = 0x0E, // Over Current protection - HW & SW
+    BATT_LOW          = 0x0F, // Battery is low
+    PAS_BOOT_ERROR    = 0x10, // Pedal Assist error
+    CONTROLLER_ERROR  = 0x11, // Controller in unrecoverable state
+    BRAKE_ERROR       = 0x12, // Brake cutoff sensor abnormal
+    SCREEN_COMM_ERROR = 0x13, // We we lose connection with the screen
+    TORQUE_SENSOR_ERROR = 0x14, // Torque sensor input value is stuck on higher voltage than threshold
     UNMAPPED_ERROR    = 0xFF, // DO NOT FLAG used to fill in for errors we don't flag    
 }
 ErrorCodes_t; 
@@ -100,6 +103,16 @@ ErrorCodes_t VC_Errors_CycleError(void);
  * @return nothing
  */
 void VC_Errors_SetCycleLength(uint8_t aCycle);
+
+/**@brief Function used to get the current error states with each bit 
+ * of a 32 bit variable representing the state of one error      
+ *
+ * @param[in] nothing
+ *                 
+ *
+ * @return a 32 bitmap of the errors
+ */
+uint32_t VC_Errors_GetErrorBitMap(void);
 
 #endif /* __VC_ERRORS_MANAGEMENT_H */
 

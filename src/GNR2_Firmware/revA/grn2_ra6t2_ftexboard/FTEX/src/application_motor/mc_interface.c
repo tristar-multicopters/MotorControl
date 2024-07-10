@@ -9,7 +9,8 @@
 #include "mc_math.h"
 #include "speed_torq_ctrl.h"
 #include "mc_interface.h"
-
+#include "pwm_common.h"
+#include "mc_config.h"
 
 
 /* Private macros ------------------------------------------------------------*/
@@ -23,20 +24,44 @@
 /*
 * see function definition
 */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, MCConfigHandle_t *pMCConfig)
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars,
+                        ResDivVbusSensorHandle_t * pResDivVbusSensor, MCConfigHandle_t *pMCConfig)
 {
-  ASSERT(pHandle != NULL);
-  pHandle->pSTM = pSTM;
-  pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
-  pHandle->pFOCVars = pFOCVars;
-  pHandle->pBusVoltageSensor = pBusVoltageSensor;
-  pHandle->pMCConfig = pMCConfig;
+    ASSERT(pHandle != NULL);
+    pHandle->pSTM = pSTM;
+    pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
+    pHandle->pFOCVars = pFOCVars;
+    pHandle->pResDivVbusSensor = pResDivVbusSensor;
+    pHandle->pMCConfig = pMCConfig;
+
+    /* Buffer related initialization */
+    pHandle->LastCommand = MCI_NOCOMMANDSYET;
+    pHandle->hFinalSpeed = 0;
+    pHandle->hFinalTorque = 0;
+    pHandle->CommandState = MCI_BUFFER_EMPTY;
     
-  /* Buffer related initialization */
-  pHandle->LastCommand = MCI_NOCOMMANDSYET;
-  pHandle->hFinalSpeed = 0;
-  pHandle->hFinalTorque = 0;
-  pHandle->CommandState = MCI_BUFFER_EMPTY;
+    /*Initialize driver */
+    Driver_Disable(&pHandle->bDriverEn);
+    
+}
+
+/*
+* see function definition
+*/
+void MCInterface_PowerInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup)
+{
+    ASSERT(pHandle != NULL);
+    SpdTorqCtrl_PowerInit(pHandle->pSpeedTorqCtrl, MCSetup, MotorParameters);
+    ResDivVbusSensor_UVInit(pHandle->pResDivVbusSensor, MCSetup);
+}
+
+/*
+* see function definition
+*/
+void MCInterface_SpeedLimitEnInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup)
+{
+    ASSERT(pHandle != NULL);
+    SpdTorqCtrl_SpeedLimitEnInit(pHandle->pSpeedTorqCtrl, MCSetup);
 }
 
 /*
@@ -84,9 +109,9 @@ bool MCInterface_StartMotor(MotorControlInterfaceHandle_t * pHandle)
   ASSERT(pHandle != NULL);
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE)
+  if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE && !MCStateMachine_GetOccurredErrorState(pHandle->pSTM))
   {
-      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_IDLE_START );
+      bRetVal = MCStateMachine_NextState(pHandle->pSTM, M_IDLE_START);
   }
   return bRetVal;
 }
@@ -101,7 +126,7 @@ bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle)
 
   if (MCStateMachine_GetState(pHandle->pSTM) == M_RUN)
   {
-      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_ANY_STOP );
+      bRetVal = MCStateMachine_NextState(pHandle->pSTM, M_ANY_STOP);
   }
   return bRetVal;
 }
@@ -109,10 +134,10 @@ bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-bool MCInterface_FaultAcknowledged(MotorControlInterfaceHandle_t * pHandle)
+bool MCInterface_CriticalFaultAcknowledged(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return MCStateMachine_FaultAcknowledged(pHandle->pSTM);
+  return MCStateMachine_CriticalFaultAcknowledged(pHandle->pSTM);
 }
 
 /*
@@ -193,10 +218,28 @@ MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-uint32_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle)
+uint32_t MCInterface_GetOccurredCriticalFaults(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return (uint32_t)(MCStateMachine_GetFaultState(pHandle->pSTM));
+  return (uint32_t)(MCStateMachine_GetCriticalFaultState(pHandle->pSTM));
+}
+
+/*
+* see function definition
+*/
+uint32_t MCInterface_GetCurrentErrors(MotorControlInterfaceHandle_t * pHandle)
+{
+  ASSERT(pHandle != NULL);
+  return MCStateMachine_GetCurrentErrorState(pHandle->pSTM);
+}
+
+/*
+* see function definition
+*/
+uint32_t MCInterface_GetOccurredErrors(MotorControlInterfaceHandle_t * pHandle)
+{
+  ASSERT(pHandle != NULL);
+  return MCStateMachine_GetOccurredErrorState(pHandle->pSTM);
 }
 
 /*
@@ -211,10 +254,10 @@ uint32_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-uint32_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle)
+uint32_t MCInterface_GetCurrentCriticalFaults(MotorControlInterfaceHandle_t * pHandle)
 {
   ASSERT(pHandle != NULL);
-  return (uint32_t)(MCStateMachine_GetFaultState(pHandle->pSTM) >> 32);
+  return (uint32_t)(MCStateMachine_GetCriticalFaultState(pHandle->pSTM) >> 32);
 }
 
 /*
@@ -486,8 +529,8 @@ uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHa
     uint32_t VoltageConverted = 0;
     uint16_t ConversionFactor = 0;
     
-    ConversionFactor = pHandle->pBusVoltageSensor->hConversionFactor;
-    VoltageConverted = VbusSensor_GetAvBusVoltageDigital(pHandle->pBusVoltageSensor);
+    ConversionFactor = pHandle->pResDivVbusSensor->Super.hConversionFactor;
+    VoltageConverted = VbusSensor_GetAvBusVoltageDigital(&(pHandle->pResDivVbusSensor->Super));
     VoltageConverted = VoltageConverted * ConversionFactor * 100u;
     VoltageConverted = VoltageConverted/65536u;
          
@@ -525,7 +568,7 @@ int16_t MCInterface_GetMaxCurrent(MotorControlInterfaceHandle_t * pHandle)
     ASSERT(pHandle != NULL);
     ASSERT(pHandle->pMCConfig != NULL);
     
-    return pHandle->pMCConfig->wNominalCurr;
+    return pHandle->pMCConfig->hNominalCurr;
 }
 
 /**
@@ -548,4 +591,210 @@ void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, i
     ASSERT(pHandle->pMCConfig != NULL);
     
     pHandle->pMCConfig->wUsrMaxCurr = aCurrent;
+}
+
+/**
+  *  Set the wheel RPM
+  */
+void  MCInterface_SetWheelRPM(MotorControlInterfaceHandle_t * pHandle, uint16_t aWheelRPM)
+{
+  ASSERT(pHandle != NULL);  
+  pHandle->pSpeedTorqCtrl->pSPD->wheelRPM = aWheelRPM;
+    
+}   
+
+/**
+  *  Get the current torq reference 
+  */
+int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, uint8_t Motor)
+{
+    if (Motor == 0)
+    {
+        return pHandle->pFOCVars[M1].hTeref;
+    }
+    else
+    {
+        return pHandle->pFOCVars[M2].hTeref;
+    }          
+}
+
+/**
+  *  Get the max application power
+  */
+uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->hMaxPositivePower;
+}
+
+/**
+  *  enable the regen feature,
+  */
+void MCInterface_Enableregen(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pSPD != NULL);
+    
+    pHandle->pSPD->bActiveRegen = true;
+}
+
+/**
+  *  disable the regen feature,
+  */
+void MCInterface_Disableregen(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    ASSERT(pHandle->pSPD != NULL);
+    
+    pHandle->pSPD->bActiveRegen = false;
+}
+
+/**
+  *  Get the max negative battery current in amps
+  */
+int16_t MCInterface_GetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSPD->hIdcRegen;
+}
+
+/**
+  *  Set the max negative battery current in amps
+  */
+void MCInterface_SetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle, int16_t Idc_Negative)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->pSPD->hIdcRegen = Idc_Negative;
+}
+
+/**
+  *  Get the rate of increasing the negative Torque in mili Nm per milisecond or Nm/sec
+  */
+int16_t MCInterface_GetMaxNegativeTorqueRate(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSPD->hDeltaT;
+}
+
+/**
+  *  Get the regenerative torque value in mili Nm
+  */
+int16_t MCInterface_GetRegenTorque(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSPD->hTorqueRegen;
+}
+/**
+  *  Get the motor gear ratio
+  */
+float MCInterface_GetMotorGearRatio(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->fGearRatio;
+}
+
+/**
+  *  Get the motor type
+  */
+MotorType_t MCInterface_GetMotorType(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->motorType;
+}
+
+/**
+  *  Get the nominal torque
+  */
+uint16_t MCInterface_GetNominalTorque(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->hMaxPositiveTorque;
+}
+
+/**
+  *  Get the starting torque
+  */
+uint16_t MCInterface_GetStartingTorque(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->hStartingTorque;
+}
+
+/**
+  *  Get the RS torque
+  */
+float MCInterface_GetRS(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pMCConfig->fRS;
+}
+
+/**
+  *  Get the number of magnets on the wheel speed sensor
+  */
+uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pMCConfig->bWheelSpdSensorNbrPerRotation;
+}
+
+/**
+  *  Get whether the motor sensor type is mixed or not
+  */
+bool MCInterface_GetMotorTempSensorMixed(MotorControlInterfaceHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->pSpeedTorqCtrl->pMotorTempSensor->bSensorMixed;
+}
+
+#if AUTOTUNE_ENABLE
+
+/**
+  *  This command enters motor tuning mode.
+  *  Commands to the motor tuner are only processed in this mode.
+  */
+bool MCInterface_StartMotorTuning(MotorControlInterfaceHandle_t * pHandle)
+{
+  bool bRetVal = false;
+
+  if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE)
+  {
+      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_AUTOTUNE_ENTER_IDENTIFICATION );
+  }
+  return bRetVal;
+}
+
+/**
+  *  This command exits motor tuning mode.
+  *  Commands to the motor tuner are only processed in this mode.
+  */
+bool MCInterface_StopMotorTuning(MotorControlInterfaceHandle_t * pHandle)
+{
+  bool bRetVal = false;
+
+  if (MCStateMachine_GetState(pHandle->pSTM) == M_AUTOTUNE_IDENTIFICATION)
+  {
+      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_AUTOTUNE_ANY_STOP_IDENTIFICATION );
+  }
+  return bRetVal;
+}
+#endif
+
+/**
+  *  This command enables the flux weakening logic.
+  */
+void MCInterface_EnableFluxWeakening(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->bFluxWeakeningEn = true;
+}
+
+/**
+  *  This command disables the flux weakening logic.
+  */
+
+void MCInterface_DisableFluxWeakening(SpdTorqCtrlHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->bFluxWeakeningEn = false;
 }

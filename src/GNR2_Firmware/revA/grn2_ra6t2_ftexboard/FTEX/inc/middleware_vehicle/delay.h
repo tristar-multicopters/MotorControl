@@ -3,7 +3,7 @@
   * @brief   This module handles delays based on counters
   *
   */
-	
+    
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __Delay_H
 #define __Delay_H
@@ -22,15 +22,15 @@ typedef enum
 }DelayUnits_t;
 
 /**
-  * @brief Generic structure contianing the information inside the handle of a delay 
+  * @brief Generic structure containing the information inside the handle of a delay 
   */
 typedef struct
 {                  
-        uint32_t TimePerPulse;       // States how much time per pulse ex if 1 pulse is 5 ms then thos variable wpuld be 5
+    uint32_t TimePerPulse;       // States how much time per pulse ex if 1 pulse is 5 ms then thos variable wpuld be 5
     DelayUnits_t TimePerPulseUnits;  // States in which units os the time per pulse, if you hate 5 ms then this would be set to MIL_SECS 
     
     uint32_t DelayTimePulse;     // Represents how many pulse we need to wait for to achieve the desired Delay
-	uint32_t DelayCounter;       // Keeps track of the Delay count 
+    uint32_t DelayCounter;       // Keeps track of the Delay count 
     
     bool DelayInitialized;  
     

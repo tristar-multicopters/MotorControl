@@ -19,55 +19,59 @@ extern "C" {
 #include "mc_state_machine.h"
 #include "speed_torq_ctrl.h"
 #include "bus_voltage_sensor.h"
+#include "r_divider_bus_voltage_sensor.h"
+#include "gnr_parameters.h"
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum
 {
-  MCI_BUFFER_EMPTY,                  /*!< If no buffered command has been
+    MCI_BUFFER_EMPTY,                  /*!< If no buffered command has been
                                             called.*/
-  MCI_COMMAND_NOT_ALREADY_EXECUTED,  /*!< If the buffered command condition
+    MCI_COMMAND_NOT_ALREADY_EXECUTED,  /*!< If the buffered command condition
                                             hasn't already occurred.*/
-  MCI_COMMAND_EXECUTED_SUCCESFULLY,  /*!< If the buffered command has been
+    MCI_COMMAND_EXECUTED_SUCCESFULLY,  /*!< If the buffered command has been
                                             executed successfully.*/
-  MCI_COMMAND_EXECUTED_UNSUCCESFULLY /*!< If the buffered command has been
+    MCI_COMMAND_EXECUTED_UNSUCCESFULLY /*!< If the buffered command has been
                                             executed unsuccessfully.*/
 } MCInterfaceCommandState_t ;
 
 typedef enum
 {
-  MCI_NOCOMMANDSYET,        /*!< No command has been set by the user.*/
-  MCI_EXECSPEEDRAMP,        /*!< ExecSpeedRamp command coming from the user.*/
-  MCI_EXECTORQUERAMP,       /*!< ExecTorqueRamp command coming from the user.*/
-  MCI_SETCURRENTREFERENCES, /*!< SetCurrentReferences command coming from the
+    MCI_NOCOMMANDSYET,        /*!< No command has been set by the user.*/
+    MCI_EXECSPEEDRAMP,        /*!< ExecSpeedRamp command coming from the user.*/
+    MCI_EXECTORQUERAMP,       /*!< ExecTorqueRamp command coming from the user.*/
+    MCI_SETCURRENTREFERENCES, /*!< SetCurrentReferences command coming from the
                                  user.*/
 } MCInterfaceUserCommands_t;
 
 typedef struct
 {
-  float Gain_Torque_IQRef;
-  float MaxMeasurableCurrent;    
+    float Gain_Torque_IQRef;
+    float MaxMeasurableCurrent;    
 
 } ConversionFactors_t; /* Contaisn conversion factors that we want to pass to vehicle control */
 
 typedef struct
 {
-  MotorStateMachineHandle_t * pSTM;            /*!< State machine object used by MCI.*/
-  SpdTorqCtrlHandle_t * pSpeedTorqCtrl;        /*!< Speed and torque controller object used by MCI.*/
-  pFOCVars_t pFOCVars;                         /*!< Pointer to FOC vars used by MCI.*/
-  BusVoltageSensorHandle_t *pBusVoltageSensor; // Used to raise the bus voltage sensor to the vehicle layer 
-  MCInterfaceUserCommands_t LastCommand;       /*!< Last command coming from the user.*/
-  MCConfigHandle_t          *pMCConfig;
-    
-  int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
-  int16_t hFinalTorque;       /*!< Final torque of last ExecTorqueRamp command.*/
+    MotorStateMachineHandle_t * pSTM;             /*!< State machine object used by MCI.*/
+    SpdTorqCtrlHandle_t * pSpeedTorqCtrl;         /*!< Speed and torque controller object used by MCI.*/
+    pFOCVars_t pFOCVars;                          /*!< Pointer to FOC vars used by MCI.*/
+    ResDivVbusSensorHandle_t  *pResDivVbusSensor; /*!< Used to raise the resistor dividor bus voltage sensor to the vehicle layer*/
+    MCInterfaceUserCommands_t LastCommand;        /*!< Last command coming from the user.*/
+    MCConfigHandle_t          *pMCConfig;
+
+    int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
+    int16_t hFinalTorque;       /*!< Final torque of last ExecTorqueRamp command.*/
                                    
-  qd_t Iqdref;                /*!< Current component of last
+    qd_t Iqdref;                /*!< Current component of last
                                    SetCurrentReferences command.*/
 
-  MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
-  STCModality_t LastModalitySetByUser;    /*!< The last STCModality_t set by the user. */
+    bool bDriverEn;             /*!< Status of Driver Enable pin */
+
+    MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
+    STCModality_t LastModalitySetByUser;    /*!< The last STCModality_t set by the user. */
                                              
-  ConversionFactors_t MCIConvFactors;     /* Used to sent conversion factors that are in motor control to vehicle control */
+    ConversionFactors_t MCIConvFactors;     /* Used to sent conversion factors that are in motor control to vehicle control */
 } MotorControlInterfaceHandle_t;
 
 /* Exported functions ------------------------------------------------------- */
@@ -83,7 +87,24 @@ typedef struct
   * @param  pFOCVars pointer to FOC vars to be used by MCI.
   * @retval none.
   */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, BusVoltageSensorHandle_t * pBusVoltageSensor, MCConfigHandle_t *pMCConfig);
+void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars, ResDivVbusSensorHandle_t * pResDivVbusSensor, MCConfigHandle_t *pMCConfig);
+
+/**
+  * @brief  Initializes the parameters related to the battery (max power, max current,
+  *         undervoltage threshold)
+  * @param  pHandle: pointer on the component instance to operate on.
+  * @param  MCSetup: VC parameters used to initialize the MC layer
+  * @retval none.
+  */
+void MCInterface_PowerInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup);
+
+/**
+  * @brief  Initializes the speed limit enable
+  * @param  pHandle: pointer on the component instance to operate on.
+  * @param  MCSetup: VC parameters used to initialize the MC layer
+  * @retval none.
+  */
+void MCInterface_SpeedLimitEnInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup);
 
 /**
   * @brief  This is usually a method managed by task. It must be called
@@ -184,7 +205,7 @@ bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle);
   * @retval bool It returns true if the command is successfully executed
   *         otherwise it return false.
   */
-bool MCInterface_FaultAcknowledged(MotorControlInterfaceHandle_t * pHandle);
+bool MCInterface_CriticalFaultAcknowledged(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns information about the state of the last buffered command.
@@ -210,17 +231,31 @@ MCInterfaceCommandState_t  MCI_IsCommandAcknowledged(MotorControlInterfaceHandle
 MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle);
 
 /**
-  * @brief It returns a 16 bit fields containing information about faults
+  * @brief It returns a 16 bit fields containing information about critical faults
   *        historically occurred since the state machine has been moved into
   *        FAULT_NOW state.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   * @param pHandle Pointer on the component instance to work on.
-  * @retval uint16_t  16 bit fields with information about the faults
+  * @retval uint16_t  16 bit fields with information about the critical faults
   *         historically occurred since the state machine has been moved into
   *         FAULT_NOW state.
-  * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
+  * \n\link Fault_generation_error_codes Returned critical fault codes are listed here \endlink
   */
-uint32_t MCInterface_GetOccurredFaults(MotorControlInterfaceHandle_t * pHandle);
+uint32_t MCInterface_GetOccurredCriticalFaults(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief It returns a 16 bit fields containing information about current errors.
+  * @param pHandle Pointer on the component instance to work on.
+  * @retval uint16_t  16 bit fields with information about the errors
+  */
+uint32_t MCInterface_GetCurrentErrors(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief It returns a 16 bit fields containing information about occurred errors.
+  * @param pHandle Pointer on the component instance to work on.
+  * @retval uint16_t  16 bit fields with information about the errors
+  */
+uint32_t MCInterface_GetOccurredErrors(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief It returns a 16 bit fields containing information about warnings.
@@ -238,7 +273,7 @@ uint32_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle)
   *         present faults.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint32_t MCInterface_GetCurrentFaults(MotorControlInterfaceHandle_t * pHandle);
+uint32_t MCInterface_GetCurrentCriticalFaults(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  It returns the modality of the speed and torque controller.
@@ -436,10 +471,155 @@ int16_t MCInterface_GetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle
   */
 void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, int16_t aCurrent);
 
+/**
+  * @brief  update the wheelRPM in the speed position feedback handle 
+  * @param  pHandle : handle of the MCI interface
+  * @retval nothing
+  */
+void  MCInterface_SetWheelRPM(MotorControlInterfaceHandle_t * pHandle, uint16_t aWheelRPM);
 
+/** @brief  Get the current torq reference 
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval nothing
+  */
+int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, uint8_t Motor);
+
+/**
+  * @brief  Get the max application power
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval max app power
+  */
+uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Enable regen 
+  * @param  pHandle : handle of the MCI interface,
+  * @retval enabling regenerative feature for direct drive
+  */
+void MCInterface_EnableRegen(SpdTorqCtrlHandle_t * pHandle);
+
+/**
+  * @brief  Disable regen 
+  * @param  pHandle : handle of the MCI interface,
+  * @retval Disabling regenerative feature for Hub drive and mid drive
+  */
+void MCInterface_DisableRegen(SpdTorqCtrlHandle_t * pHandle);
+
+/**
+  * @brief  Get the max negative battery current in amps
+  * @param  pHandle : handle of the MCI interface,
+  * @retval max negative current
+  */
+int16_t MCInterface_GetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle);
+
+/**
+  * @brief  set the max negative battery current in amps
+  * @param  pHandle : handle of the MCI interface,
+  * @retval max negative current
+  */
+void MCInterface_SetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle, int16_t Idc_Negative);
+
+/**
+  * @brief  Get the increasing rate of max negative battery current in Nm per second
+  * @param  pHandle : handle of the MCI interface,
+  * @retval rate of negative current
+  */
+int16_t MCInterface_GetMaxNegativeTorqueRate(SpdTorqCtrlHandle_t * pHandle);
+
+
+/**
+  * @brief  Get the value of regenerative torque in milli Nm
+  * @param  pHandle : handle of the MCI interface,
+  * @retval Get the value of regenerative torque
+  */
+int16_t MCInterface_GetRegenTorque(SpdTorqCtrlHandle_t * pHandle);
+
+/**
+  * @brief  Get the motor gear ratio
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval motor gear ratio
+  */
+float MCInterface_GetMotorGearRatio(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the motor type
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval motor type
+  */
+MotorType_t MCInterface_GetMotorType(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the nominal torque
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval nominal torque
+  */
+uint16_t MCInterface_GetNominalTorque(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the starting torque
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval starting torque
+  */
+uint16_t MCInterface_GetStartingTorque(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the RS value
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval RS
+  */
+float MCInterface_GetRS(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the number of magnets on the wheel speed sensor
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval number of magnets on the wheel speed sensor
+  */
+uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get whether the motor temp sensor is mixed
+  * @param  pHandle : handle of the MCI interface, Motor of which we want the reference
+  * @retval whether the motor temp sensor is mixed
+  */
+bool MCInterface_GetMotorTempSensorMixed(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Enable flux weakening 
+  * @param  pHandle : handle of the MCI interface,
+  * @retval enabling flux weakening feature
+  */
+void MCInterface_EnableFluxWeakening(SpdTorqCtrlHandle_t * pHandle);
+
+/**
+  * @brief  Disable flux weakening 
+  * @param  pHandle : handle of the MCI interface,
+  * @retval Disabling flux weakening feature
+  */
+void MCInterface_DisableFluxWeakening(SpdTorqCtrlHandle_t * pHandle);
+
+#if AUTOTUNE_ENABLE
+/**
+  * @brief  This is a user command used to enter motor tuning mode.
+  *         Commands to motor tuner (using the motor identification API) are only processed when motor is in this mode.
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval bool It returns true if the command is successfully executed
+  *         otherwise it return false.
+  */
+  
+bool MCInterface_StartMotorTuning(MotorControlInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  This is a user command used to exit motor tuning mode.
+  *         Commands to motor tuner (using the motor identification API) are only processed when motor is in this mode.
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval bool It returns true if the command is successfully executed
+  *         otherwise it return false.
+  */
+bool MCInterface_StopMotorTuning(MotorControlInterfaceHandle_t * pHandle);
+#endif
 
 #ifdef __cplusplus
-}
+
 #endif /* __cpluplus */
 
 #endif /* __MC_INTERFACE_H */

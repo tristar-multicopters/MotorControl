@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "drive_parameters.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,30 +79,53 @@ extern "C" {
 #define M_NONE  (uint8_t)(0xFF) /*!< None motor.*/
 /** @} */
 
-/** @name Error source codes */
-/** @{ */
+/** @name  Critical Faults source codes
+ *  @brief Critical faults go into the Fault state to cut the PWM immediately
+ *
+ ** @{ 
+ */
+#define  MC_NO_FAULT                (uint32_t)(0x00000000u)     /**< @brief No fault.*/
+#define  MC_FOC_DURATION            (uint32_t)(0x00000001u)     /**< @brief Critical fault: FOC rate to high.*/
+#define  MC_OVER_VOLT               (uint32_t)(0x00000002u)     /**< @brief Critical fault: Software over voltage (different numerical value from MC_UNDER_VOLT)*/
+#define  MC_SPEED_FDBK              (uint32_t)(0x00000004u)     /**< @brief Critical fault: Speed feedback.*/
+#define  MC_OCD1                    (uint32_t)(0x00000008u)     /**< @brief Critical fault: Emergency input (Over current detection 1).*/
+#if OCDX_POEG == OCD2_POEG
+    #define  MC_OCD2                (uint32_t)(0x00000010u)     /**< @brief Critical fault: Emergency input (Over current detection 2).*/
+#endif
+#define  MC_SW_ERROR                (uint32_t)(0x00000020u)     /**< @brief Critical fault: Software Error.*/
+#define  MC_PHASE_DISC              (uint32_t)(0x00000040u)     /**< @brief Critical fault: disconnected Phase cable detection */
+
+
+/** @} */
+
+/** @name  Error source codes
+ *  @brief Errors sets the torque reference to 0 and waits a few seconds before you can push power to the vehicle again
+ ** @{
+ */
 #define  MC_NO_ERROR                (uint32_t)(0x00000000u)     /**< @brief No error.*/
-#define  MC_NO_FAULTS               (uint32_t)(0x00000000u)     /**< @brief No error.*/
-#define  MC_FOC_DURATION            (uint32_t)(0x00000001u)     /**< @brief Error: FOC rate to high.*/
-#define  MC_OVER_VOLT               (uint32_t)(0x00000002u)     /**< @brief Error: Software over voltage.*/
-#define  MC_UNDER_VOLT              (uint32_t)(0x00000004u)     /**< @brief Error: Software under voltage.*/
+#if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
+    #define  MC_OCD2                    (uint32_t)(0x00000001u) /**< @brief Error: Emergency input (Over current detection 2).*/
+#endif
+#define  MC_OCSP                    (uint32_t)(0x00000002u)     /**< @brief Error: Overcurrent software protection.*/
+#define  MC_HALL_DISC               (uint32_t)(0x00000004u)     /**< @brief Error: disconnected Hall sensor detection */
 #define  MC_OVER_TEMP_CONTROLLER    (uint32_t)(0x00000008u)     /**< @brief Error: Software over temperature for controller.*/
 #define  MC_NTC_FREEZE_CONTROLLER   (uint32_t)(0x00000010u)     /**< @brief Error: Controller NTC Freezing protection.*/
 #define  MC_OVER_TEMP_MOTOR         (uint32_t)(0x00000020u)     /**< @brief Error: Software over temperature for motor.*/
-#define  MC_START_UP                (uint32_t)(0x00000040u)     /**< @brief Error: Startup failed.*/
-#define  MC_SPEED_FDBK              (uint32_t)(0x00000080u)     /**< @brief Error: Speed feedback.*/
-#define  MC_BREAK_IN                (uint32_t)(0x00000100u)     /**< @brief Error: Emergency input (Over current).*/
-#define  MC_SW_ERROR                (uint32_t)(0x00000200u)     /**< @brief Error: Software Error.*/
-#define  MC_OCSP                    (uint32_t)(0x00000400u)     /**< @brief Error: Overcurrent software protection.*/
-#define  MC_MSRP                    (uint32_t)(0x00000800u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
+#define  MC_UNDER_VOLT              (uint32_t)(0x00000040u)     /**< @brief Error: Software under voltage (different numerical value from MC_OVER_VOLT)*/
+#define  MC_MSRP                    (uint32_t)(0x00000080u)     /**< @brief Error: Motor Stuck & Reverse Protection.*/
+
+
 /** @} */
 
-/** @name Warning source codes */
-/** @{ */
-#define  MC_HALL_DISC               (uint32_t)(0x00000001u)     /**< @brief WARNING: disconnected Hall sensor detection */
-#define  MC_PHASE_DISC              (uint32_t)(0x00000002u)     /**< @brief WARNING: disconnected Phase cable detection */
-#define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00000004u)     /**< @brief WARNING: motor temp has entered foldback region.*/
-#define  MC_NTC_DISC_FREEZE_MOTOR   (uint32_t)(0x00000008u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
+/** @name  Warning source codes
+  * @brief Warnings don't affect the functioning of the bike
+ ** @{
+ */
+#define  MC_NO_WARNING              (uint32_t)(0x00000000u)     /**< @brief No warning.*/
+#define  MC_FOLDBACK_TEMP_MOTOR     (uint32_t)(0x00000001u)     /**< @brief WARNING: motor temp has entered foldback region.*/
+#define  MC_NTC_DISC_FREEZE_MOTOR   (uint32_t)(0x00000002u)     /**< @brief WARNING: disconnected temperature sensor or freeze warning */
+#define  MC_FOLDBACK_TEMP_CONTROLLER     (uint32_t)(0x00000004u)     /**< @brief WARNING: controller temp has entered foldback region.*/
+#define  MC_CURR_LIMIT_CONTROLLER   (uint32_t)(0x00000008u)     /**< @brief WARNING: the current is limited by the controller, motor current is not used */
 /** @} */
 
 
@@ -110,8 +134,8 @@ extern "C" {
   */
 typedef struct
 {
-  int16_t q; // if this data type changes (eg. change to int32), check everywhere it's called to ensure the casts where it is used are good
-  int16_t d;
+    int16_t q; // if this data type changes (eg. change to int32), check everywhere it's called to ensure the casts where it is used are good
+    int16_t d;
 } qd_t;
 
 /**
@@ -119,17 +143,27 @@ typedef struct
   */
 typedef struct
 {
-  int16_t a;
-  int16_t b;
+    int16_t a;
+    int16_t b;
 } ab_t;
+
+/**
+  * @brief Three components a,b,c type definition
+  */
+typedef struct
+{
+    uint16_t a;
+    uint16_t b;
+    uint16_t c;
+} abcMax_t;
 
 /**
   * @brief Two components alpha, beta type definition
   */
 typedef struct
 {
-  int16_t alpha;
-  int16_t beta;
+    int16_t alpha;
+    int16_t beta;
 } AlphaBeta_t;
 
 
@@ -139,8 +173,19 @@ typedef struct
   */
 typedef enum
 {
-  REAL_SENSOR, VIRTUAL_SENSOR
+    REAL_SENSOR,
+    NO_SENSOR,
 } SensorType_t;
+
+/**
+  * @brief  MotorType_t type definition, it's used in speed_torque_control to specify the type of motor used.
+  */
+typedef enum
+{
+    HUB_DRIVE,
+    MID_DRIVE,
+    DIRECT_DRIVE,
+} MotorType_t;
 
 
 /**
@@ -149,8 +194,8 @@ typedef enum
   */
 typedef enum
 {
-  STC_TORQUE_MODE, /**< @brief Torque mode.*/
-  STC_SPEED_MODE   /**< @brief Speed mode.*/
+    STC_TORQUE_MODE, /**< @brief Torque mode.*/
+    STC_SPEED_MODE   /**< @brief Speed mode.*/
 } STCModality_t;
 
 
@@ -159,9 +204,9 @@ typedef enum
   */
 typedef struct
 {
-  int32_t wConst1D;
-  int32_t wConst1Q;
-  int32_t wConst2;
+    int32_t wConst1D;
+    int32_t wConst1Q;
+    int32_t wConst2;
 } FeedforwardTuningStruct_t;
 
 /**
@@ -169,7 +214,7 @@ typedef struct
   */
 typedef enum
 {
-  INTERNAL, EXTERNAL
+    INTERNAL, EXTERNAL
 } CurrRefSource_t ;
 
 /**
@@ -177,34 +222,57 @@ typedef enum
   */
 typedef struct
 {
-  ab_t Iab;                    /**< @brief Stator current on stator reference frame abc */
-  AlphaBeta_t Ialphabeta;      /**< @brief Stator current on stator reference frame alfa-beta*/
-  qd_t IqdHF;                  /**< @brief Stator current on stator reference frame alfa-beta*/
-  qd_t Iqd;                    /**< @brief Stator current on rotor reference frame qd */
-  qd_t Iqd_avg;                /**< @brief Stator average current on rotor reference frame qd */   
-  qd_t Iqdref;                 /**< @brief Stator current on rotor reference frame qd */
-  int16_t UserIdref;           /**< @brief User value for the Idref stator current */
-  qd_t Vqd;                    /**< @brief Phase voltage on rotor reference frame qd */
-  AlphaBeta_t Valphabeta;      /**< @brief Phase voltage on stator reference frame alpha-beta*/
-  int16_t hTeref;              /**< @brief Reference torque */
-  int16_t hElAngle;            /**< @brief Electrical angle used for reference frame transformation  */
-  uint32_t wCodeError;         /**< @brief error message */
-  CurrRefSource_t bDriveInput; /**< @brief It specifies whether the current reference source must be
-                                 *         #INTERNAL or #EXTERNAL*/
+    ab_t Iab;                    /**< @brief Stator current on stator reference frame abc */
+    abcMax_t IabcMax;            /**< @brief Max stator current on stator reference frame abc */
+    AlphaBeta_t Ialphabeta;      /**< @brief Stator current on stator reference frame alfa-beta*/
+    qd_t IqdHF;                  /**< @brief Stator current on stator reference frame alfa-beta*/
+    qd_t Iqd;                    /**< @brief Stator current on rotor reference frame qd */
+    qd_t Iqd_avg;                /**< @brief Stator average current on rotor reference frame qd */   
+    qd_t Iqdref;                 /**< @brief Stator current on rotor reference frame qd */
+    int16_t UserIdref;           /**< @brief User value for the Idref stator current */
+    qd_t Vqd;                    /**< @brief Phase voltage on rotor reference frame qd */
+    AlphaBeta_t Valphabeta;      /**< @brief Phase voltage on stator reference frame alpha-beta*/
+    int16_t hTeref;              /**< @brief Reference torque */
+    int16_t hElAngle;            /**< @brief Electrical angle used for reference frame transformation  */
+    uint32_t wCodeError;         /**< @brief error message */
+    CurrRefSource_t bDriveInput; /**< @brief It specifies whether the current reference source must be*/
+    int16_t I_regen;             /**< @brief it shows the regenerative current value
+                                  *          #INTERNAL or #EXTERNAL*/
 } FOCVars_t, *pFOCVars_t;
 
 /**
-  * @brief  This structure is used to handle an instance of the
-  *         OverCurrentDetection_t component.
+  * @brief  Battery power variables structure
   */
 typedef struct
 {
-    bool bIsOverCurrentDetected;      /*< Status of OCD2 pin which connected to OCD2 of current sensot*/
-    uint16_t OverCurrentStatus;
-    float OCDPowerDeratingSlope;
-    float OCDPowerDearatingGain;
-    uint16_t OCDTimeInterval;
-} HWOverCurrentDetection_t;
+    uint8_t bPowerLimitRef;                              // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+    uint16_t hMaxApplicationPositivePower;               // Maximum power in watts that drive can push to the motor
+    uint16_t hMaxApplicationNegativePower;               // Maximum power in watts that drive can accept from the motor
+    uint16_t hMaxApplicationCurrent;                     // Maximum battery current in amps that drive can accept from the motor
+    
+    bool bEnableLVTorqueLimit;
+    uint16_t hLowVoltageThresholdPercentage;
+    int16_t hLowBatteryTorque;
+    
+    bool bEnableMaxPowerLimit;
+    int32_t wMaxTimeBMSTolerant;
+    uint16_t hMaxPowerLimitTimeout;
+    uint16_t hMaxBMSPositivePower;
+    uint16_t hMaxBMSContinuousCurrent;
+    
+    uint16_t hUndervoltageThreshold;                     // Undervoltage threshold of the battery
+    
+} BatteryPower_Setup_t;
+
+/**
+  * @brief  MC Setup structure
+  */
+typedef struct 
+{
+    BatteryPower_Setup_t    BatteryPowerSetup;
+    bool                    bEnSpeedLimit;
+    
+} MC_Setup_t;
 
 /** @name Utility macros definitions */
 /** @{ */

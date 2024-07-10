@@ -14,8 +14,9 @@
 #include "comm_tasks.h"
 #include "core_cm33.h"
 #include "mc_tasks.h"
-
 #include "firmware_update.h"
+#include "motor_signal_processing.h"
+#include "pwm_common.h"
 
 /**
   * @brief  Interrupt routine of ADC hardware.
@@ -23,15 +24,15 @@
   */
 void ADC_IRQHandler(adc_callback_args_t * p_args)
 {
-	if (p_args->event == ADC_EVENT_SCAN_COMPLETE && p_args->group_mask == ADC_GROUP_MASK_0)
-	{
-		/* Run motor control high frequency task */
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_HIGH);
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_LOW);
-		MC_HighFrequencyTask();
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_HIGH);
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_LOW);
-	}
+    if (p_args->event == ADC_EVENT_SCAN_COMPLETE && p_args->group_mask == ADC_GROUP_MASK_0)
+    {
+        /* Run motor control high frequency task */
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_HIGH);
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_LOW);
+        MC_HighFrequencyTask();
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_HIGH);
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_01, BSP_IO_LEVEL_LOW);
+    }
 
 }
 
@@ -41,42 +42,84 @@ void ADC_IRQHandler(adc_callback_args_t * p_args)
   */
 void PWMTimer_IRQHandler(timer_callback_args_t * p_args)
 {
-	if (p_args->event == TIMER_EVENT_TROUGH)
-	{
-	}
+    if (p_args->event == TIMER_EVENT_TROUGH)
+    {
+    }
 
-	if (p_args->event == TIMER_EVENT_CREST)
-	{
-		/* Run motor control timer update routine */
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_HIGH);
-		//R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_LOW);
-		PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
-	}
+    if (p_args->event == TIMER_EVENT_CREST)
+    {
+        /* Run motor control timer update routine */
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_HIGH);
+        //R_IOPORT_PinWrite(g_ioport.p_ctrl, BSP_IO_PORT_13_PIN_02, BSP_IO_LEVEL_LOW);
+        PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
+    }
 }
 
 /**
-  * @brief  Interrupt routine when POEG pin is pulled down. It means an overcurrent
-	*					condition is detected and consequently PWM outputs were forcefully stopped.
-  * @param  p_args: POEG callback function arguments, not used.
+  * @brief  Interrupt routine when hardware overcurrent interrupt pin is pulled down. It means an overcurrent
+    *                    condition is detected and consequently PWM outputs will be stopped or the torque will
+                         be set to 0.
+  * @param  p_args: IRQ callback functions
   */
-void PWMBreak1_IRQHandler(poeg_callback_args_t * p_args)
+void OvercurrentInterrupt_IRQHandler(external_irq_callback_args_t * p_args)
 {
     if(NULL != p_args)
     {
-#if HARDWARE_OCD == OCD_PWM_OFF
-        /* Stop POEG module so it does not reenter the interrupt twice */
-        R_POEG_Reset((PWM_POEG0_HANDLE_ADDRESS)->p_ctrl);
-        /* Run motor control PWM break routine */
-        PWMInsulCurrSensorFdbk_BRK_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
+                
+        #if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
+            
+            /* Run motor control PWM break routine */
+            PWMInsulCurrSensorFdbk_OCD2_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
         
-#endif
+        #elif OCDX_POEG == OCD2_POEG
+        
+            /* Switch off PWM */
+            MC_PWM_OFF_M1();
+            /* Run motor control PWM break routine */
+            PWMInsulCurrSensorFdbk_OCD1_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
+        
+        #endif
+    }
+}
+
+
+/**
+  * @brief  Interrupt routine when hardware overcurrent POEG pin is pulled down. It means an overcurrent
+    *                    condition is detected and consequently PWM outputs were forcefully stopped.
+  * @param  p_args: POEG callback function arguments, not used.
+  */
+void OvercurrentPOEG_IRQHandler(poeg_callback_args_t * p_args)
+{
+        
+    if(NULL != p_args)
+    {
+        #if OCDX_POEG == OCD1_POEG
+            
+            /* Disable the driver */
+            Driver_Disable(&MCInterface->bDriverEn);
+            /* Switch off PWM */
+            MC_PWM_OFF_M1();
+            /* Run motor control PWM break routine */
+            PWMInsulCurrSensorFdbk_OCD1_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
+            /* Stop POEG module so it does not reenter the interrupt twice */
+            R_POEG_Reset((PWM_POEG0_HANDLE_ADDRESS)->p_ctrl);
+        
+        #elif OCDX_POEG == OCD2_POEG && HARDWARE_OCD2 == OCD2_ENABLED
+        
+            /* Switch off PWM */
+            MC_PWM_OFF_M1();
+            /* Run motor control PWM break routine */
+            PWMInsulCurrSensorFdbk_OCD2_IRQHandler(&PWMInsulCurrSensorFdbkHandleM1);
+            /* Stop POEG module so it does not reenter the interrupt twice */
+            R_POEG_Reset((PWM_POEG0_HANDLE_ADDRESS)->p_ctrl);
+        
+        #endif
         
     }
 }
 
 /**
-  * @brief  Interrupt routine when POEG pin is pulled down. It means an overcurrent
-	*					condition is detected and consequently PWM outputs were forcefully stopped.
+  * @brief  Interrupt routine not used
   * @param  p_args: POEG callback function arguments, not used.
   */
 void PWMBreak2_IRQHandler(poeg_callback_args_t * p_args)
@@ -123,11 +166,11 @@ void PedalSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
         {
             case TIMER_EVENT_CAPTURE_A :
                 /* Call ISR AGT Capture function */
-                PulseFrequency_IsrCallUpdate(VCInterfaceHandle.pPowertrain->pPAS->pPSS->pPulseFrequency,p_args->capture);				
+                PedalSpeedSensor_UpdatePulseFromISR(p_args->capture);
                 break;
             case TIMER_EVENT_CYCLE_END:
                 /* An overflow occurred during capture. */
-                PulseFrequency_ISROverflowUpdate(VCInterfaceHandle.pPowertrain->pPAS->pPSS->pPulseFrequency);
+                PedalSpeedSensor_OverflowPulseFromISR();
                 break;
             default:
                 break;
@@ -157,16 +200,17 @@ void WheelSpeedTimer_IRQHandler(timer_callback_args_t * p_args)
             {
                 case TIMER_EVENT_CAPTURE_B :
                     /* Call ISR GPT Capture function */
-                    PulseFrequency_IsrCallUpdate(VCInterfaceHandle.pPowertrain->pPAS->pWSS->pPulseFrequency, p_args->capture);	 					
+					R_GPT9->GTCR_b.CST = 1;						// start timer manually after it stopped automatically by the falling edge
+                    WheelSpeedSensor_UpdatePulseFromISR(p_args->capture);
                     break;
                 case TIMER_EVENT_CYCLE_END:
                     /* An overflow occurred during capture. */
-                    PulseFrequency_ISROverflowUpdate(VCInterfaceHandle.pPowertrain->pPAS->pWSS->pPulseFrequency); 
+                    WheelSpeedSensor_OverflowPulseFromISR();
                     break;
                 default:
                     break;
             }
-    }		
+    }        
 }
 
 /**
@@ -274,6 +318,21 @@ void CANTimer_IRQHandler(timer_callback_args_t * p_args)
     //try to detect master at the first 1000 ms. if not detected, turn off because 
     //was a wrong turn on.
     PWREN_TurnoffWhenMasterIsNotDetected(&CONodeGNR, VCInterfaceHandle.pPowertrain->pPWREN);
+    
+    //initialize ADC conversion to throttle and temperature analog channels.
+    //adc sample will be done each 0.5 ms.
+    //this is necessary to the extract temperature and wheel speed from the mixed signal
+    //comming from the motor.
+    RegConvMng_ExecuteGroupRegularConv(FIRST_REG_CONV_ADC_GROUP_MASK | SECOND_REG_CONV_ADC_GROUP_MASK);
+    
+    //if the current motor has mixed signal, use the lines below to measure motor temperature
+    //and wheel speed.
+    if (isMotorMixedSignal() == true)
+    {   
+        //fucntion responsible to extract and measure motor temperature and wheel speed from a mixed signal.
+        processingMotorMixedSignal();  
+    }
+    
 }
 
 /**
@@ -304,3 +363,4 @@ void spi_callback(spi_callback_args_t * p_args)
         SPI1Handle.bSPI_transfer_complete = true;
     }
 }
+

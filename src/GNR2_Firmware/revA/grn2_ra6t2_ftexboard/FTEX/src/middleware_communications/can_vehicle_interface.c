@@ -8,13 +8,17 @@
 */
 
 #include "can_vehicle_interface.h"
+#include "vc_errors_management.h"
 #include "ASSERT_FTEX.h"
 #include "Utilities.h"
+#include "wheel.h"
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpragma-pack"
 #include "user_config_task.h"
 #pragma clang diagnostic pop
+
+bool CANScreenSetup = false;
 
 // ==================== Public function prototypes ======================== //
 
@@ -40,24 +44,38 @@ void CanVehiInterface_sendLongMsgs(uint8_t * message, uint8_t * dataToSend, uint
 // ==================== Public function prototypes ======================== //
 
 /**
+ *  Get vehicle DC power
+ */
+uint16_t CanVehiInterface_GetVehicleDCPower(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle!= NULL);    
+    return PWRT_GetDCPower(pHandle->pPowertrain);
+}
+
+/**
+ *  Get vehicle torque
+ */
+uint16_t CanVehiInterface_GetVehicleTorque(VCI_Handle_t * pHandle)
+{
+    float TotalVehicleTorque = 0;
+    ASSERT(pHandle!= NULL);
+    
+    // Add up motor torque reference from both motors
+    TotalVehicleTorque = (float)PWRT_GetTotalMotorsTorque(pHandle->pPowertrain);
+    
+    TotalVehicleTorque = TotalVehicleTorque * MDI_GetMotorGearRatio(pHandle->pPowertrain->pMDI);
+    
+    return (uint16_t)round(TotalVehicleTorque/100);
+}
+
+/**
  *  Get vehicle power
  */
 uint16_t CanVehiInterface_GetVehiclePower(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle!= NULL);
     uint16_t hmsgToSend;
-    
-    // Get Current from motor drive layer
-    uint16_t current = PWRT_ConvertDigitalCurrentToAMPS(pHandle->pPowertrain, (uint16_t) pHandle->pPowertrain->pMDI->pMCI->pFOCVars->Iqdref.q);   
-    
-    // Get Voltage from motor drive layer
-    uint16_t voltage = MCInterface_GetBusVoltageInVoltx100(pHandle->pPowertrain->pMDI->pMCI)/100;
-    
-    // Calculate the power
-    uint16_t power = current * voltage;
-    
-    // Load data buffer
-    hmsgToSend = power;   
+    hmsgToSend = PWRT_GetTotalMotorsPower(pHandle->pPowertrain);
     return hmsgToSend;
 }
 
@@ -93,15 +111,6 @@ void CanVehiInterface_SetVehiclePAS (VCI_Handle_t * pHandle, uint8_t Set_PAS)
 }
 
 /**
- *  Get PAS Algorithm 
- */
-uint8_t CanVehiInterface_GetVehiclePASAlgorithm (VCI_Handle_t * pHandle)
-{
-    ASSERT(pHandle!= NULL);
-    return pHandle->pPowertrain->pPAS->bCurrentPasAlgorithm;    
-}
-
-/**
  *  Get vehicle maximum PAS
  */
 uint8_t CanVehiInterface_GetVehicleMaxPAS (void)
@@ -112,63 +121,31 @@ uint8_t CanVehiInterface_GetVehicleMaxPAS (void)
 }
 
 /**
- *  Get vehicle max power
+ *  Get max DC power
  */
-uint16_t CanVehiInterface_GetVehicleMaxPWR (VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetMaxDCPWR (VCI_Handle_t * pHandle)
 {
-    uint16_t bMaxPWR;
-    bMaxPWR = (MCInterface_GetBusVoltageInVoltx100(pHandle->pPowertrain->pMDI->pMCI)/100) * PWRT_GetOngoingMaxCurrent(pHandle->pPowertrain);
-    return bMaxPWR;
+    ASSERT(pHandle!= NULL); 
+    return PWRT_GetMaxDCPower(pHandle->pPowertrain);
 }
 
 /**
- *  Get vehicle current faults
+ *  Getbit map of vehicle current faults
  */
-uint16_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
-{
-    ASSERT(pHandle!= NULL);
-    uint32_t wCurrFault;
-    wCurrFault = MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI,M1)|
-                 MDI_GetCurrentFaults(pHandle->pPowertrain->pMDI,M2);
-    
-    uint16_t stateToSend = MC_NO_ERROR;
-      
-    if(wCurrFault != MC_NO_ERROR)
-    {
-        // Motor over temperature fault
-        if(wCurrFault & MC_OVER_TEMP_CONTROLLER)
-        {
-            stateToSend |= CONTROLLER_OVER_T_FAULT;
-        }
-        // Motor start up fault
-        if(wCurrFault & MC_START_UP)
-        {
-            stateToSend |= MOTOR_START_U_FAULT;
-        }
-        // Motor over current fault
-        if(wCurrFault & MC_BREAK_IN)
-        {
-            stateToSend |= MOTOR_OVER_C_FAULT;
-        }
-        
-        
-        // Motor speed feedback fault
-        if(wCurrFault & MC_SPEED_FDBK)
-        {
-            stateToSend |= HALL_SENSOR_FAULT;
-        }
-        // Motor over voltage fault
-        if(wCurrFault & MC_OVER_VOLT)
-        {
-            stateToSend |= CONTROL_OVER_V;
-        }
-        // Motor under voltage
-        if(wCurrFault & MC_UNDER_VOLT)
-        {
-            stateToSend |= CONTROL_UNDER_V;
-        }
-    }
-    return stateToSend;
+uint32_t CanVehiInterface_GetVehicleCurrentFaults (VCI_Handle_t * pHandle)
+{   
+    ASSERT(pHandle!= NULL);    
+    return VC_Errors_GetErrorBitMap();
+}
+
+/**
+ *  Getbit map of vehicle current faults
+ */
+uint8_t CanVehiInterface_GetBrakeStatus (VCI_Handle_t * pHandle)
+{   
+    ASSERT(pHandle != NULL);    
+    uint8_t brakeStatus = (uint8_t)BRK_IsPressed(pHandle->pPowertrain->pBrake);
+    return brakeStatus;
 }
 
 /**
@@ -216,25 +193,56 @@ void CanVehiInterface_UpdateWheelDiameter(uint8_t aDiameterInInches)
 {
     if (10 < aDiameterInInches && aDiameterInInches < 40) // Temporary safety net until CAN screen integration is complete
     {
-        Wheel_SetWheelDiameter(aDiameterInInches);
+       Wheel_ExternalSetWheelDiameter(aDiameterInInches);
     }        
 }
 
 /**
  *  Get vehicle Speed
  */
-uint16_t CanVehiInterface_GetVehicleSpeed(VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetVehicleSpeed()
+{
+    return Wheel_GetVehicleSpeedFromWSS();
+}
+
+/**
+ *  Get vehicle Speed decimals
+ */
+uint8_t CanVehiInterface_GetVehicleSpeedDec()
+{
+    return Wheel_GetVehicleSpeedDecFromWSS();
+}
+
+/**
+ *  Get vehicle Speed decimals
+ */
+uint32_t CanVehiInterface_GetOdometerDistance()
+{
+    return PWRT_GetDistanceTravelled();
+}
+
+/**
+  @brief  Get Pedal RPM function
+  @param  VCI_Handle_t handle
+  @return RPM in uint16_t format with one decimal place (return value/10) to convert
+*/
+uint16_t CanVehiInterface_GetVehiclePedalRPM()
+{
+    return PedalSpeedSensor_GetSpeedRPM();
+}
+
+/**
+  @brief  Get Pedal torque value in percentage
+  @param  VCI_Handle_t handle
+  @return torque percentage in uint8_t format
+*/
+uint8_t CanVehiInterface_GetPedalTorqPercentage(VCI_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     ASSERT(pHandle->pPowertrain != NULL);
     ASSERT(pHandle->pPowertrain->pPAS != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS->pWSS != NULL);
-    
-    uint16_t hmsgToSend;
-
-    hmsgToSend = Wheel_GetVehicleSpeedFromWSS(pHandle->pPowertrain->pPAS->pWSS);
-
-    return hmsgToSend;
+    ASSERT(pHandle->pPowertrain->pPAS->pPTS != NULL);
+    return PedalTorqSensor_GetPercentTorqueValue(pHandle->pPowertrain->pPAS->pPTS);
 }
 
 
@@ -253,14 +261,17 @@ uint8_t CanVehiInterface_GetFrontLightState(VCI_Handle_t * pHandle)
 void CanVehiInterface_ChangeFrontLightState(VCI_Handle_t * pHandle, uint8_t aState)
 {
     ASSERT(pHandle!= NULL);
-    if(aState == true)
+    
+    if(aState)
     {        
         Light_Enable(pHandle->pPowertrain->pHeadLight);
+        Light_ClearInternalUpdateFlag(pHandle->pPowertrain->pHeadLight);
     }
     else
     {
         Light_Disable(pHandle->pPowertrain->pHeadLight);
-    }        
+        Light_ClearInternalUpdateFlag(pHandle->pPowertrain->pHeadLight);
+    }      
 }
 
 /**
@@ -278,13 +289,193 @@ uint8_t CanVehiInterface_GetRearLightState(VCI_Handle_t * pHandle)
 void CanVehiInterface_ChangeRearLightState(VCI_Handle_t * pHandle, uint8_t aState)
 {
     ASSERT(pHandle!= NULL);
+          
     if(aState)
     {        
         Light_Enable(pHandle->pPowertrain->pTailLight);
+        Light_ClearInternalUpdateFlag(pHandle->pPowertrain->pTailLight);
     }
     else
     {
         Light_Disable(pHandle->pPowertrain->pTailLight);
+        Light_ClearInternalUpdateFlag(pHandle->pPowertrain->pTailLight);
     }
+}
+
+/**
+  *  Getting the controller NTC temperature value
+  */
+int16_t CanVehiInterface_GetControllerTemp(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MDI_GetControllerTemp(pHandle->pPowertrain->pMDI);
+}
+
+/**
+  *  Getting the motor NTC temperature value
+  */
+int16_t CanVehiInterface_GetMotorTemp(VCI_Handle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return MDI_GetMotorTemp(pHandle->pPowertrain->pMDI);
+}
+
+/**
+ *  Pass by reference all PAS values of the minimum torque percentage
+ */
+void CanVehiInterface_GetPasLevelMinTorque(VCI_Handle_t * pHandle, uint8_t * pasLevelMinTorque)
+{
+   ASSERT(pHandle != NULL); 
+   for(uint8_t n = PAS_LEVEL_0;n <= PAS_LEVEL_9;n++)
+   {
+        pasLevelMinTorque[n] = pHandle->pPowertrain->pPAS->sParameters.PASMinTorqRatiosInPercentage[n];
+   }
+}
+
+/**
+  Setup the vehicle to use a CAN screen
+ */
+void CanVehiInterface_SetupCANScreen(VCI_Handle_t * pHandle)
+{
+   ASSERT(pHandle != NULL);
+   ASSERT(UART0Handle.UARTProtocol == UART_DISABLE);  // We can only call this when no UART screen is present
     
+   Throttle_SetupExternal(pHandle->pPowertrain->pThrottle,10000,0); 
+   CANScreenSetup = true; 
+}
+
+/**
+  Check if we are setup for a CAN screen
+ */
+bool CanVehiInterface_CheckCANScreenSetup(void)
+{
+    return CANScreenSetup;
+}
+
+/**
+  Provide the vc layer with an updated Throttle value
+ */
+void CanVehiInterface_UpdateExternalThrottle(VCI_Handle_t * pHandle, uint16_t aNewThrottleVal)
+{
+   if(CANScreenSetup) // Check if we are expecting a CAN screen
+   {
+       Throttle_UpdateExternal(pHandle->pPowertrain->pThrottle,aNewThrottleVal);
+   }       
+   else
+   {
+       ASSERT(false);
+   }
+}
+
+/**
+  Enables the can layer to engage cruise control
+ */
+void CanVehiInterface_EngageCruiseControl(VCI_Handle_t * pHandle)
+{
+     uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpeedSensor_GetSpeedRPM());
+                
+     //check if the current speed is inside of the max speed limit
+     //if not used MaxThrottleSpeedKMH as cruise control speed.
+     if (currentSpeed > pHandle->pPowertrain->pThrottle->hParameters.MaxThrottleSpeedKMH)
+     {
+         currentSpeed = (uint8_t)pHandle->pPowertrain->pThrottle->hParameters.MaxThrottleSpeedKMH;
+     }
+                
+     PWRT_EngageCruiseControl(pHandle->pPowertrain,currentSpeed);
+}
+
+/**
+  Enables the can layer to disengage cruise control
+ */
+void CanVehiInterface_DisengageCruiseControl(VCI_Handle_t * pHandle)
+{
+    PWRT_DisengageCruiseControl(pHandle->pPowertrain);
+}
+
+/**
+  Gives the can layer acces to the current state of the cruise control
+ */
+bool CanVehiInterface_GetCruiseControlState(VCI_Handle_t * pHandle)
+{
+    return PWRT_GetCruiseControlState(pHandle->pPowertrain);
+}  
+
+/**
+  Set New PAS algorithm
+ */
+void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAlgo)
+{
+    PedalAssist_SetPASAlgorithm(pHandle->pPowertrain->pPAS, aPASAlgo);
+}    
+
+/**
+  Get bus voltage
+ */
+uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle)
+{
+    return PWRT_GetBusVoltagex100(pHandle->pPowertrain);
+}
+
+/**
+  Get the RMS current read on a phase current sensor
+ */
+int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uint8_t sensorNumber)
+{
+    static int16_t sensor1Values[SENSOR_VALUES_BUFFER_SIZE] = { 0 };
+    static int16_t sensor2Values[SENSOR_VALUES_BUFFER_SIZE] = { 0 };
+    static int16_t sensor1CurrentPeak = 0;
+    static int16_t sensor2CurrentPeak = 0;
+    static uint8_t bufferValueIndex = 0;
+
+    // Get current peak current per sensor
+    ab_t currentAB = MCInterface_GetIab(pHandle->pPowertrain->pMDI->pMCI);
+
+    // Fill values if buffer is not full
+    if(bufferValueIndex < SENSOR_VALUES_BUFFER_SIZE - 1)
+    {
+        sensor1Values[bufferValueIndex] = currentAB.a;
+        sensor2Values[bufferValueIndex] = currentAB.b;
+        bufferValueIndex++;
+    }
+
+    if(bufferValueIndex == SENSOR_VALUES_BUFFER_SIZE - 1)
+    {
+        // Remove previous maximums
+        sensor1CurrentPeak = 0;
+        sensor2CurrentPeak = 0;
+
+        // Find the maximum peak detected within value buffers
+        for(uint8_t i = 0; i < SENSOR_VALUES_BUFFER_SIZE; i++)
+        {
+            if(abs(sensor1Values[i]) > sensor1CurrentPeak)
+            {
+                sensor1CurrentPeak = (int16_t)abs(sensor1Values[i]);
+            }
+
+            if(abs(sensor2Values[i]) > sensor2CurrentPeak)
+            {
+                sensor2CurrentPeak = (int16_t)abs(sensor1Values[i]);                
+            }
+        } 
+
+        // Reset values buffer
+        bufferValueIndex = 0;
+    }
+
+    // Return the RMS currents with 2 decimals precision
+    if(sensorNumber == CURRENT_SENSOR_1)
+    {
+        // Convert the digital current value to real AMP value
+        double currentPeakValue1 = ((sensor1CurrentPeak/DIGITAL_CURRENT_VALUE_MAX) * ANALOG_CURRENT_VALUE_MAX * AMPERE_TIMES_100);
+        // Return the RMS value, formatted in int16_t
+        return (int16_t)(currentPeakValue1/sqrt(2));
+    } 
+    if(sensorNumber == CURRENT_SENSOR_2)
+    {
+        // Convert the digital current value to real AMP value
+        double currentPeakValue2 = ((sensor2CurrentPeak/DIGITAL_CURRENT_VALUE_MAX) * ANALOG_CURRENT_VALUE_MAX * AMPERE_TIMES_100);
+        // Return the RMS value, formatted in int16_t
+        return (int16_t)(currentPeakValue2/sqrt(2));
+    } 
+    return (int16_t)0;
 }

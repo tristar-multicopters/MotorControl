@@ -11,6 +11,7 @@
 #include "r_gpt.h"
 #include "r_timer_api.h"
 #include "signal_filtering.h"
+#include "motor_parameters.h"
 
 #define HALL_SPEED_FIFO_SIZE  ((uint8_t)18)
 #define DEGREES_120 0u
@@ -76,7 +77,7 @@ typedef struct
 
     uint32_t  wElPeriodSum; /* Period accumulator used to speed up the average speed computation*/
 
-    uint32_t  wMaxElSum; /* maximum sum of periods, used to check if timoout has occured or not */
+    uint32_t  wMaxElSum; /* maximum sum of periods, used to check if timoout has occurred or not */
 
     int16_t hPrevRotorFreq; /*!< Used to store the last valid rotor electrical
                        speed in dpp used when HALL_MAX_PSEUDO_SPEED
@@ -176,7 +177,7 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid, uint32_t* pCapture);
   * @param  pHandle: handler of the current instance of the hall_speed_pos_fdbk component
   * @retval none
   */
-void HallPosSensor_Init(HallPosSensorHandle_t * pHandle);
+void HallPosSensor_Init(HallPosSensorHandle_t * pHandle, MotorParameters_t MotorParameters);
 
 
 void HallPosSensor_Clear(HallPosSensorHandle_t * pHandle);

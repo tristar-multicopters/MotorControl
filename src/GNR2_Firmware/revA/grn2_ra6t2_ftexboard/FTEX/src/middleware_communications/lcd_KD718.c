@@ -8,7 +8,11 @@
 */
     
 #include "lcd_KD718.h"
+#include "wheel.h"
 #include "ASSERT_FTEX.h"
+#include "gnr_main.h"
+#include "vc_errors_management.h"
+#include "vc_constants.h"
 
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
@@ -60,6 +64,7 @@ void LCD_KD718_RX_IRQ_Handler(void *pVoidHandle)
     pHandle->RxBuffer[pHandle->RxCount] = pHandle->RxByte;
     pHandle->RxCount++;
     
+    uCAL_UART_SetTaskFlag(pHandle->pUART_handle);  // Tell the task that we unblocked the task
     osThreadFlagsSet(COMM_Uart_handle, UART_FLAG); // Notify task that a byte has been received 
     uCAL_UART_Receive(pHandle->pUART_handle, &(pHandle->RxByte), sizeof(pHandle->RxByte));    
 }
@@ -250,7 +255,7 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
               break;                                                                      
             case R_CURRENT:
                          //Get the amount of amps we are currently pushing 
-                toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain); 
+                toSend = PWRT_GetDCCurrent(pHandle->pVController->pPowertrain); 
           
                 //No filtering needed for this LCD
             
@@ -276,7 +281,7 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
             case R_SPEED:
                 replyFrame.Size = 3;
             
-                toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
+                toSend = WheelSpeedSensor_GetSpeedRPM(); // Getting RPM from Wheel Speed Module
                   
                 //No filtering needed for this LCD
             
@@ -369,7 +374,7 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                  
                 if (CRC == pHandle->rx_frame.Buffer[4]) // If the CRC is good update the new Speed limit
                 {
-                    #if DYNAMIC_SPEED_LIMITATION
+            #if DYNAMIC_SPEED_LIMITATION
                     uint16_t SpeedLimit = 0;
                     SpeedLimit += (pHandle->rx_frame.Buffer[2] << 8);
                     SpeedLimit +=  pHandle->rx_frame.Buffer[3];
@@ -377,9 +382,8 @@ void LCD_KD718_ProcessFrame(KD718_Handle_t *pHandle)
                     SpeedLimit = Wheel_GetSpeedFromWheelRpm(SpeedLimit);
                     
                     // setting the max for any speed limits
-                    Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,SpeedLimit); 
-                    PedalAssist_SetTorquePASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,SpeedLimit); 
-                    #endif                     
+                    PWRT_SetScreenMaxSpeed(pHandle->pVController->pPowertrain,(uint8_t)SpeedLimit); 
+            #endif                     
                 }
               break;                
           default:

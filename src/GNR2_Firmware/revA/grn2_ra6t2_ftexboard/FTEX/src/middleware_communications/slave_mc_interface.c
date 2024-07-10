@@ -44,14 +44,17 @@ void SlaveMCInterface_Init(SlaveMotorHandle_t * pHandle, CO_NODE * pNode, SlaveM
 /*
 * see function definition
 */
+
 void SlaveMCInterface_UpdateFeedback(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrState), pHandle->pCONode, &pHandle->Feedback.bState,  sizeof(uint16_t));
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccuredFaults), pHandle->pCONode, &pHandle->Feedback.wOccuredFaults, sizeof(pHandle->Feedback.wOccuredFaults));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccurredFaults), pHandle->pCONode, &pHandle->Feedback.wOccurredFaults, sizeof(pHandle->Feedback.wOccurredFaults));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrCurrentFaults), pHandle->pCONode, &pHandle->Feedback.wCurrentFaults, sizeof(pHandle->Feedback.wCurrentFaults));
-    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrCurrentFaults), pHandle->pCONode, &pHandle->Feedback.wWarnings, sizeof(pHandle->Feedback.wWarnings));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrCurrentErrorsNow), pHandle->pCONode, &pHandle->Feedback.wCurrentErrorsNow, sizeof(pHandle->Feedback.wCurrentErrorsNow));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrOccurredErrors), pHandle->pCONode, &pHandle->Feedback.wOccurredErrors, sizeof(pHandle->Feedback.wOccurredErrors));
+    COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrWarnings), pHandle->pCONode, &pHandle->Feedback.wWarnings, sizeof(pHandle->Feedback.wWarnings));
     COObjRdValue(CODictFind(&pHandle->pCONode->Dict, pHandle->RegisterAddr.wRegAddrMotorSpeed), pHandle->pCONode, &pHandle->Feedback.hMotorSpeed, sizeof(pHandle->Feedback.hMotorSpeed));
 }
 
@@ -106,7 +109,7 @@ bool SlaveMCInterface_StopMotor(SlaveMotorHandle_t * pHandle)
 /*
 * see function definition
 */
-bool SlaveMCInterface_FaultAcknowledged(SlaveMotorHandle_t * pHandle)
+bool SlaveMCInterface_CriticalFaultAcknowledged(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     bool bRetVal = true;
@@ -138,14 +141,32 @@ MotorState_t  SlaveMCInterface_GetSTMState(SlaveMotorHandle_t * pHandle)
 /*
 * see function definition
 */
-uint32_t SlaveMCInterface_GetOccurredFaults(SlaveMotorHandle_t * pHandle)
+uint32_t SlaveMCInterface_GetOccurredCriticalFaults(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     uint32_t wReturnValue = 0;
 
-    wReturnValue = pHandle->Feedback.wOccuredFaults;
+    wReturnValue = pHandle->Feedback.wOccurredFaults;
 
     return wReturnValue;
+}
+
+/*
+* see function definition
+*/
+uint32_t SlaveMCInterface_GetCurrentErrors(SlaveMotorHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->Feedback.wCurrentErrorsNow;
+}
+
+/*
+* see function definition
+*/
+uint32_t SlaveMCInterface_GetOccurredErrors(SlaveMotorHandle_t * pHandle)
+{
+    ASSERT(pHandle != NULL);
+    return pHandle->Feedback.wOccurredErrors;
 }
 
 /*
@@ -164,7 +185,7 @@ uint32_t SlaveMCInterface_GetOccurredWarnings(SlaveMotorHandle_t * pHandle)
 /*
 * see function definition
 */
-uint32_t SlaveMCInterface_GetCurrentFaults(SlaveMotorHandle_t * pHandle)
+uint32_t SlaveMCInterface_GetCurrentCriticalFaults(SlaveMotorHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
     uint32_t wReturnValue = 0;

@@ -9,19 +9,22 @@
 #ifndef __POWERTRAIN_MANAGEMENT_H
 #define __POWERTRAIN_MANAGEMENT_H
 
+#include "stdbool.h"
+#include "stdint.h"
 #include "md_interface.h"
+#include "pedal_assist.h"
 #include "throttle.h"
 #include "brake.h"
 #include "lights.h"
 #include "motor_selection.h"
-#include "vc_defines.h"
-#include "power_enable.h"
 #include "battery_monitoring.h"
-#include "pedal_assist.h"
-#include "wheel.h"
-#include "vc_constants.h"
+#include "power_enable.h"
 
 // ============================== Defines =============================== // 
+
+#define NBR_CRITICAL_FAULT_COUNTERS 3
+#define NBR_MOTORS                  2
+#define TORQUE_DECAY                1000
 
 // ======================== Configuration enums ======================== // 
 typedef enum
@@ -47,6 +50,7 @@ typedef enum
   THROTTLE_DELAY = 0,
   PTS_DELAY,
   BRAKE_DELAY,
+  ODOMETER_DELAY,  
 } PowertrainDelays_t;
 
 // ======================== Configuration structures ======================== // 
@@ -64,10 +68,10 @@ typedef struct
     
     bool bPAS0DisableThrottle;           // Will disable the throttle when we are in PAS level 0
     bool bTopSpeedRestrictionEnable;     // Will determine if we must restrict vehicle speed
-    uint16_t TorqueSpeedLimitGain;       // Used to adjuste the accuracy for torque speed limit
     
     bool CruiseForceDisengage;
-    PasAlgorithm_t PreCruiseControlPAS;  // Keeps track of the pas algorithmed used when we engaged cruise control
+    PasAlgorithm_t PreCruiseControlStartupPASAlgo;  // Keeps track of the startup pas algorithmed used when we engaged cruise control
+    PasAlgorithm_t PreCruiseControlRunningPASAlgo;  // Keeps track of the run time pas algorithmed used when we engaged cruise control
     
     uint16_t hStartingThrottle;          // Minimum torque to start powertrain
     uint16_t hStoppingThrottle;          // Minimum torque to stop powertrain
@@ -75,8 +79,11 @@ typedef struct
     
     uint16_t hFaultManagementTimeout;    // Number of ticks the state machine should stay on fault state before restart
     
+    bool bEnableSpeedLimit;              // Enable or disable speed limit
+    
     uint16_t VehicleMaxSpeed;            // Contains the max speed that the vehicle can push power (no matter what)
-		
+    uint16_t ScreenMaxSpeed;             // Contains the max speed specified by the screen   
+        
 } PWRT_Parameters_t;
 
 typedef struct
@@ -92,12 +99,13 @@ typedef struct
     PWREN_Handle_t * pPWREN;                      // Pointer to power enable pin handle
 
     uint8_t bMainMotor;                           // Main motor selection. It is updated by user using motor selector switch
-    int16_t aTorque[2];                           // Array of torque reference, first element is for M1, second is for M2
-    int16_t aSpeed[2];                            // Array of speed reference, first element is for M1, second is for M2
+    int16_t aTorque[NBR_MOTORS];                  // Array of torque reference, first element is for M1, second is for M2
+    int16_t aSpeed[NBR_MOTORS];                   // Array of speed reference, first element is for M1, second is for M2
     
     int16_t hTorqueSelect;                        // Select torque to feed for motor control
+    int16_t hOldTorqueSelect;                     // Contaisn the preivous value of torque select that we sent, value can only be updated right before we send it to the MC layer
     
-    uint16_t aFaultManagementCounters[5][2];      /* Array of counter before acknowledging motor faults. First dimension is
+    uint16_t aFaultManagementCounters[NBR_CRITICAL_FAULT_COUNTERS][NBR_MOTORS];      /* Array of counter before acknowledging motor faults. First dimension is
                                                      fault type in this order: Over current, startup, and speed feedback, Stuck Reverse. 
                                                      Second dimension is for motor number in this order: M1 and M2 */
 
@@ -112,7 +120,7 @@ typedef struct
   * @param  Motor control interface handle for M1
   * @retval None
   */
-void PWRT_Init(PWRT_Handle_t * pHandle, MotorControlInterfaceHandle_t * pMci_M1, SlaveMotorHandle_t * pSlaveM2, Delay_Handle_t pDelayArray[]);
+void PWRT_Init(PWRT_Handle_t * pHandle, Delay_Handle_t pDelayArray[]);
 
 /**
   * @brief  Update current value of powertrain peripherals, such as throttle. To be called periodically.
@@ -210,7 +218,14 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle);
   * @param  Powertrain handle
   * @retval Returns true if a motor fault is still active, false if no more fault is present.
   */
-bool PWRT_MotorFaultManagement(PWRT_Handle_t * pHandle);
+bool PWRT_MotorCriticalFaultManagement(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Manage motor errors.
+  * @param  Powertrain handle
+  * @retval none.
+  */
+void PWRT_MotorErrorManagement(PWRT_Handle_t * pHandle);
 
 /**
   * @brief  Manage motor warnings.
@@ -282,6 +297,33 @@ bool PWRT_IsMotor2Used(PWRT_Handle_t * pHandle);
 int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle);
 
 /**
+  * @brief  Create a smooth transition between Startup and Runtime
+  * @param  inputTorque : Power delivered before the smoothing as input
+  * @param  cadenceDetected : Flag if the cadence activity is detected
+  * @param  PASPowerEnable : Flag if PAS power is enabled
+  * @param  throttleOverride : Flag if throttle is activated
+  * @param  walkOverPAS : Flag if walk mode is activated
+  * @retval pHandle->pTorqueSelect in int16
+  */
+int16_t PWRT_TransitionStartupRuntimeTorque(int16_t inputTorque, bool cadenceDetected, bool PASPowerEnable,
+                                            bool throttleOverride, bool walkOverPAS);
+
+/**
+  * @brief  Scale the input torque according to the current pedal RPM
+  * @param  inputTorque : Torque value to scale
+  * @param  currentPedalRPM : Current pedal RPM measured
+  * @retval Output torque scaled from the pedal RPM
+  */
+int16_t PWRT_ApplyTorqueGainScaling(int16_t inputTorque, uint16_t currentPedalRPM);
+
+/**
+  * @brief  Get minimum power required on cadence power enable
+  * @param  Powertrain handle
+  * @retval Torque power value calculated according to min power                                                                                     
+  */
+int16_t PWRT_EnableCadencePower(PWRT_Handle_t *pHandle);
+
+/**
   * @brief  Periodic check of the powerlock signal
   * @param  Powertrain handle
   * @retval None                                                                                  
@@ -294,6 +336,41 @@ void PWRT_CheckPwrEnable(PWRT_Handle_t * pHandle);
   * @retval current in amps uin16_t                                                                                   
   */
 uint16_t PWRT_GetTotalMotorsCurrent(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Get the total amount of power the motors are pushing
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetTotalMotorsPower(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Get the approximate DC power (motor power + losses)
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetDCPower(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Get the max DC power (motor power + losses)
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetMaxDCPower(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Get the approximate DC current (motor current + losses)
+  * @param  Powertrain handle
+  * @retval power in watts uin16_t                                                                                   
+  */
+uint16_t PWRT_GetDCCurrent(PWRT_Handle_t * pHandle);
+
+/**
+  * @brief  Get the total amount of torque the motors are pushing
+  * @param  Powertrain handle
+  * @retval power in nm uin16_t                                                                                   
+  */
+uint16_t PWRT_GetTotalMotorsTorque(PWRT_Handle_t * pHandle);
 
 /**
   * @brief  Get the max safe current we can push
@@ -380,6 +457,33 @@ bool PWRT_GetForceDisengageState(PWRT_Handle_t * pHandle);
  * @retval nothing 
  */
 void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle);
+
+/**
+ * @brief  Update the wheel RPM to the MC layer
+ * @param  Powertrain handle
+ * @retval nothing 
+ */
+void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle);
+
+/**
+ * @brief  Updates the top speed of the screen
+ * @param  Powertrain handle
+ * @retval nothing 
+ */
+void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed);
+
+/**
+ * @brief  Get the bus voltage
+ * @param  Powertrain handle
+ * @retval Bus voltage x100 
+ */ 
+uint16_t PWRT_GetBusVoltagex100(PWRT_Handle_t * pHandle);
+
+/**
+ * @brief  Get the travelled distance
+ * @retval the travelled distance
+ */ 
+uint32_t PWRT_GetDistanceTravelled();
 
 #endif /*__POWERTRAIN_MANAGEMENT_H*/
 

@@ -11,6 +11,17 @@
 /* Includes ------------------------------------------------------------------*/
 #include "mc_type.h"
 
+/*
+     __      ____ _ _ __ _ __ (_)_ __   __ _ 
+     \ \ /\ / / _` | '__| '_ \| | '_ \ / _` |
+      \ V  V / (_| | |  | | | | | | | | (_| |
+       \_/\_/ \__,_|_|  |_| |_|_|_| |_|\__, |
+                                       |___/
+     If 4 additional int32 parameters are added to the existing PIDHandle structure,
+     the code may not function as expected.
+     Consider alternative approaches if additional parameters are needed.
+    
+*/
 
 typedef struct PID_Handle
 {
@@ -70,9 +81,11 @@ typedef struct PID_Handle
 /**
  * @brief  It initializes the handle
  * @param  pHandle: handler of the current instance of the PID component
+ *         hDefKpGain: default Kp gain
+ *         hDefKiGain: default Ki gain
  * @retval None
  */
-void PID_Init(PIDHandle_t * pHandle);
+void PID_Init(PIDHandle_t * pHandle, PIDHandle_t PIDInit);
 
 /**
  * @brief  It updates the Kp gain

@@ -17,6 +17,7 @@ extern "C" {
 #include "speed_pos_fdbk.h"
 #include "sto_speed_pos_fdbk.h"
 #include "pid_regulator.h"
+#include "motor_parameters.h"
 #include "ASSERT_FTEX.h"
 /* Exported types ------------------------------------------------------------*/
 
@@ -162,7 +163,7 @@ typedef struct
   * @param  pHandle: handler of the current instance of the BemfObserver component
   * @retval none
   */
-void BemfObsPll_Init(BemfObserverPllHandle_t * pHandle);
+void BemfObsPll_Init(BemfObserverPllHandle_t * pHandle, MotorParameters_t MotorParameters);
 
 /**
   * @brief  It only returns, necessary to implement fictitious IRQ_Handler

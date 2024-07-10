@@ -9,11 +9,10 @@
 #define __THROTTLE_H
 
 #include "regular_conversion_manager.h"
-#include <math.h>
 #include "signal_filtering.h"
 #include "delay.h"
-#include "vc_errors_management.h"
-#include "vc_parameters.h"
+#include "ramps.h"
+
     
 #define THROTTLE_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
                                       // If factor == 100 then 1.25f would make a 125/100 fraction 
@@ -34,7 +33,7 @@ typedef struct
     int16_t bDivisorTorque;             // Scaling factor of throttle vs torque   
     
     uint16_t hOffsetSpeed;              // Offset of throttle vs speed 
-    int16_t bSlopeSpeed;                // Gain factor of throttle vs speed   
+    float fSlopeSpeed;                  // Gain factor of throttle vs speed   
     uint16_t bDivisorSpeed;             // Scaling factor of throttle vs speed   
     
     float fFilterAlpha;                 // Alpha coefficient for low pass first order butterworth filter
@@ -45,8 +44,7 @@ typedef struct
     uint16_t ThrottleMaxTorque;
     
     uint16_t DefaultMaxThrottleSpeedKMH;// Maximum KM/H speed that is the default value
-    uint16_t MaxThrottleSpeedKMH;       // Maximum KM/H speed that is the current value for the bike
-  
+    uint16_t MaxThrottleSpeedKMH;       // Maximum KM/H speed that is the current value for the bike 
 } ThrottleParameters_t;
 
 /**
@@ -65,6 +63,8 @@ typedef struct
     bool DisableThrottleOutput;      // Used to prevent the throttle value from requesting power 
                                      // We still read the throttle but simply set the output as 0
     
+    bool BlockOffThrottle;           //If this variable is true this means we block throttle
+    
     bool extThrottleEnable;          // If this variable is true this means we should ignore adc values and only use throttle injected from a function call
     
     bool SafeStart;                  // Stuck throttle check on start
@@ -77,7 +77,7 @@ typedef struct
     ThrottleParameters_t hParameters;
     
     Delay_Handle_t * pThrottleStuckDelay;
-	
+    
 } ThrottleHandle_t;
 
 
@@ -86,7 +86,7 @@ typedef struct
  * @param  pHandle : Pointer on Handle of the throttle
  * @retval void
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay);
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay, uint16_t maxTorque);
 
 /**
  * @brief Initializes internal average throttle computed value
@@ -213,4 +213,3 @@ void Throttle_DisengageCruiseControl(ThrottleHandle_t * pHandle);
 int16_t Throttle_ApplyCruiseFilter(ThrottleHandle_t * pHandle, int16_t aTorque);
 
 #endif /*__THROTTLE_H*/
-

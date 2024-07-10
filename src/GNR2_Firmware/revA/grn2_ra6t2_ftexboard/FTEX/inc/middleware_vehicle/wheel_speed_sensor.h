@@ -7,84 +7,76 @@
   *
   ******************************************************************************
 */
-
-
 #ifndef __WHEEL_SPEED_SENSOR_H
 #define __WHEEL_SPEED_SENSOR_H
 
 // =============================== Includes ================================== //
 #include "pulse_frequency.h"
 
+//-------------------------------- Defines ----------------------------------- //
+//timeout when measuring the time off(not running) of the timer.
+#define WHEELSPEED_TIMEOUT_MS          4000
+
+//steps used to increment the variable used to
+//measure the time interval where timer is not working.
+#define WHEELSPEED_TIME_INCREMENT_MS   5
+
 // ================= Structure used to configure a pin ===================== //
 typedef struct {
-    
-  PulseFrequencyHandle_t * pPulseFrequency;  /* Pointer to speed handle */
-
-  uint8_t	bPulsePerRotation;  /* Nunber of pulse per rotation */
-		
-  uint32_t wWheelSpeed_Read;    /* Wheel Speed Sensor Periode value*/
-  uint32_t wWheelSpeedFreq;     /* Wheel Speed sensor frequency calculated value */
-  int32_t wWheelSpeedRpm;       /* Wheel Speed sensor rotation per minute calculated value */
-  
-  bool bSpeedDetected;          /* True if speed is detected */
-  bool bSpeedslowDetect;        /* Use Wheel speed sensor flag  for slow detection */
-
-  uint8_t bSlowDetectCount;      /* Wheel speed sensor flag  variable for slow loop detection*/	
-  uint8_t bSlowDetectCountValue; /*Wheel speed sensor flag  last variable count for slow loop detection*/	
-  uint8_t bSpeedslowDetectCorrection; /*Wheel speed /correction factor for slow loop detection on Velec*/
-	
+    PulseFrequencyHandle_t * pulseFrequency;   /* Pointer to speed handle */
+    bool useMotorPulsePerRotation;              /* Indicates whether the wheel speed sensor within the motor is used */
+    uint8_t pulsePerRotation;                   /* Number of pulse per rotation */
+    float timeOnOneMagnetPercent;               /* Percentage of time that the wheel speed sensor spends on each magnet */
+    float periodValue;                          /* Wheel Speed Sensor Periode value*/
+    uint32_t frequency;                         /* Wheel Speed sensor frequency calculated value */
+    int32_t speedRPM;                           /* Wheel Speed sensor rotation per minute calculated value */
+    uint16_t timeout;                           /*  variable used to count the maximum time before show time ris not working.  */ 
 } WheelSpeedSensorHandle_t;
 
 // ==================== Public function prototypes ========================= //
-
 /**
   @brief  Function to initialize wheel speed sensor handle
-  @param  WheelSpeedSensorHandle_t handle
+  @param  magnetsPerRotation Number of magnets per rotation on WSS
   @return None
 */
-void WheelSpdSensor_Init(WheelSpeedSensorHandle_t* pHandle);
+void WheelSpeedSensor_Init(uint8_t magnetsPerRotation);
 
 /**
   @brief  Function to calculate the wheel speed sensor value
-  @param  WheelSpeedSensorHandle_t handle
+  @param  motorTempSensorMixed flag if bike has a mixed temp/wheel speed sensor
   @return None
 */
-void WheelSpdSensor_CalculatePeriodValue(WheelSpeedSensorHandle_t* pHandle);
+void WheelSpeedSensor_CalculatePeriodValue(bool motorTempSensorMixed);
 
 /**
   @brief  Function to Get periode value in usec
-  @param  WheelSpeedSensorHandle_t handle
   @return Speed in rpm
 */
-uint32_t WheelSpdSensor_GetPeriodValue(WheelSpeedSensorHandle_t* pHandle);
-
-/**
-  @brief  Function to  return the wheel speed frequency in mHz
-  @param  WheelSpeedSensorHandle_t handle
-  @return Speed in rpm
-*/
-uint32_t WheelSpdSensor_GetSpeedFreq(WheelSpeedSensorHandle_t* pHandle);
+float WheelSpeedSensor_GetPeriodValue(void);
 
 /**
   @brief  Function to return speed in rpm
-  @param  WheelSpeedSensorHandle_t handle
   @return Speed in rpm
 */
-uint16_t WheelSpdSensor_GetSpeedRPM(WheelSpeedSensorHandle_t* pHandle);
+uint16_t WheelSpeedSensor_GetSpeedRPM(void);
 
 /**
-  @brief  Function to check if speed is detected
-  @param  WheelSpeedSensorHandle_t handle
+  @brief  Update the pulse capture value coming from the ISR
+  @param  Capture : Value capture by the ISR
   @return None
 */
-void WheelSpdSensor_UpdateWSSDetection (WheelSpeedSensorHandle_t * pHandle);
+void WheelSpeedSensor_UpdatePulseFromISR(uint32_t capture);
 
 /**
-  @brief  Function to return the Wheel speed boolean detection
-  @param  WheelSpeedSensorHandle_t handle
-  @return True if speed is detected
+  @brief  Update the overflow coming from ISR
+  @return None
 */
-bool WheelSpdSensor_IsSpeedDetected(WheelSpeedSensorHandle_t * pHandle);
+void WheelSpeedSensor_OverflowPulseFromISR(void);
 
+/**
+  @brief  Getter for WSS flag : useMotorPulsePerRotation
+  @return Value of useMotorPulsePerRotation
+*/
+bool WheelSpeedSensor_GetUseMotorPulsePerRotation(void);
 
 #endif

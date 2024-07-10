@@ -9,10 +9,10 @@
 #define PTS_FILTER_BETA                 -0.27F  // Butterworth beta coefficient pedal torque sensor filtering
 #define PTS_MAX_PTSVALUE                42000   // Maximum analog value to reach
 
-#define PTS_OFFSET_ADC2PTS              10000   // Offset for ADC to pedal torque sensor linear transformation
+#define PTS_OFFSET_ADC2PTS              20000   // Offset for ADC to pedal torque sensor linear transformation
 
-/***************** PEDAL TORQUE SENSOR CADENCE PARAMETERS  ******************************/
+/***************** PEDAL ASSIST CADENCE PARAMETERS  ******************************/
 
-#define PAS_SLOW_PEDAL_COUNT            1       // Loop wait counter to update the PAS detection function
+#define PAS_NB_MAGNETS_PER_TURN                  0       //Number of magnets / pulses per turn / Poles
 
 #endif

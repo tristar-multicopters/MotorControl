@@ -14,13 +14,23 @@
 #include "mc_type.h"
 
 
-void PID_Init(PIDHandle_t * pHandle)
+void PID_Init(PIDHandle_t * pHandle, PIDHandle_t PIDInit)
 {
-  pHandle->hKpGain =  pHandle->hDefKpGain;
-  pHandle->hKiGain =  pHandle->hDefKiGain;
-  pHandle->hKdGain =  pHandle->hDefKdGain;
-  pHandle->wIntegralTerm = 0x00000000UL;
-  pHandle->wPrevProcessVarError = 0x00000000UL;
+    pHandle->hDefKpGain = PIDInit.hDefKpGain;
+    pHandle->hDefKiGain = PIDInit.hDefKiGain;
+    pHandle->wUpperIntegralLimit = PIDInit.wUpperIntegralLimit;
+    pHandle->wLowerIntegralLimit = PIDInit.wLowerIntegralLimit;
+    pHandle->hUpperOutputLimit = PIDInit.hUpperOutputLimit;
+    pHandle->hKpDivisor = PIDInit.hKpDivisor;
+    pHandle->hKiDivisor = PIDInit.hKiDivisor;
+    pHandle->hKiDivisorPOW2 = PIDInit.hKiDivisorPOW2;
+    pHandle->hKpDivisorPOW2 = PIDInit.hKpDivisorPOW2;
+    
+    pHandle->hKpGain =  pHandle->hDefKpGain;
+    pHandle->hKiGain =  pHandle->hDefKiGain;
+    pHandle->hKdGain =  pHandle->hDefKdGain;
+    pHandle->wIntegralTerm = 0x00000000UL;
+    pHandle->wPrevProcessVarError = 0x00000000UL;
 }
 
 

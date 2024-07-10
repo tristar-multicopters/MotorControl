@@ -16,7 +16,7 @@
 #include "hal_data.h"
 
 // =============================== Defines ================================= //
-#define SPI_TRANSFER_SIZE			16
+#define SPI_TRANSFER_SIZE            16
 
 //max timeout to wait a spi response on us.
 #define SPI_INTERRUPTION_TIMEOUT_500US    500
@@ -25,13 +25,13 @@
 typedef struct
 {
     spi_b_instance_ctrl_t * pSPI_Instance;
-	
+    
     const spi_bit_width_t pSPI_BitWidth;
-	
+    
     uint16_t hSPI_FrameLength;
     uint8_t tx_buffer[SPI_TRANSFER_SIZE];
     uint8_t rx_buffer[SPI_TRANSFER_SIZE];
-	
+    
     volatile bool bSPI_transfer_complete;
     volatile bool bSPI_transfer_failed;
 } SPI_Handle_t;
@@ -81,4 +81,4 @@ void uCAL_SPI_Enable(void);
 */
 bool uCAL_SPI_IO_GetSpiFailedFlag(SPI_Handle_t * pHandle);
 
-#endif	/*__UCAL_SPI_H*/
+#endif    /*__UCAL_SPI_H*/

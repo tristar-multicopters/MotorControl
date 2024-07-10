@@ -35,3 +35,16 @@ Once you've gotten all these things installed follow these steps to finally setu
 https://tristarmulticopters.atlassian.net/wiki/spaces/DT/pages/410026781/CREATING+EDITING+Keil+PROJECT+ENVIRONMENT+FOR+RENESAS+uC
 
 Note that creating a new project is unnecessary, you can generate with the Smart Configurator the code for this repository.
+
+# Python Requirements
+This repository uses a code signing process in python. If you don't have the python requirements no errors is risen except a failure to sign the package and create an image with the bootloader. To make sure this doesn't happen make sure to install imgtool.
+
+pip install imgtool
+
+# Open Source and Third Party Libraries
+Renesas Electronics Corporation Library
+
+This software includes a library provided by Renesas Electronics Corporation. The use of this library is subject to the following disclaimer:
+http://www.renesas.com/disclaimer
+
+We contacted Vikas Sharma from Renesas (vikas.sharma.aj@renesas.com) regarding their product library, and he kindly provided us with the necessary files.

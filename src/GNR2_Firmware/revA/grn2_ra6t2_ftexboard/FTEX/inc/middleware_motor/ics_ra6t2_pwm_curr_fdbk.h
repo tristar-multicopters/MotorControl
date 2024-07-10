@@ -31,14 +31,14 @@ extern "C" {
 typedef const struct
 {
   /* HW parameters -----------------------------*/
-	const adc_instance_t * pADCHandle;										/*!< Pointer to ADC instance */
-	const adc_channel_t ADCChannelIa;											/*!< ADC channel for Ia */
-	const adc_channel_t ADCChannelIb;											/*!< ADC channel for Ib */
-	const adc_group_mask_t ADCGroupMask; 									/*!< ADC group mask used for triggered conversion.
-																														Need to use a group with 2 ADC channels for triggered
-																														ADC conversion. .*/
+    const adc_instance_t * pADCHandle;                                        /*!< Pointer to ADC instance */
+    const adc_channel_t ADCChannelIa;                                            /*!< ADC channel for Ia */
+    const adc_channel_t ADCChannelIb;                                            /*!< ADC channel for Ib */
+    const adc_group_mask_t ADCGroupMask;                                     /*!< ADC group mask used for triggered conversion.
+                                                                                                                        Need to use a group with 2 ADC channels for triggered
+                                                                                                                        ADC conversion. .*/
   const three_phase_instance_t * pThreePhaseHandle;     /*!< Pointer to three phase instance used for PWM generation.*/
-	const poeg_instance_t * pPOEGHandle;
+    const poeg_instance_t * pPOEGHandle;
   
   /* PWM Driving signals initialization ----------------------------------------*/
   uint8_t  bRepetitionCounter;         /*!< It expresses the number of PWM
@@ -46,7 +46,7 @@ typedef const struct
                                             registers are updated again. In
                                             particular:
                                             bRepetitionCounter= (2* #PWM periods)-1*/
-																	 																	  																					                                     
+                                                                                                                                                                                                                                                                    
 } PWMInsulCurrSensorFdbkParams_t, *pPWMInsulCurrSensorFdbkParams_t;
 
 /**
@@ -55,22 +55,24 @@ typedef const struct
   */
 typedef struct
 {
-  PWMCurrFdbkHandle_t Super;     /*!< Base handle  */
-	
-	uint16_t hIaRaw;					/*!< Latest conversion value for Ia  */
-	uint16_t hIbRaw;					/*!< Latest conversion value for Ib  */
-	
-	volatile bool bOverrunFlag;
-	
-  uint32_t wPhaseAOffset;   	/*!< Offset of Phase A current sensing network  */
-  uint32_t wPhaseBOffset;   	/*!< Offset of Phase B current sensing network  */
-  uint16_t hHalfPWMPeriod;  /*!< Half PWM Period in timer clock counts */
-  volatile uint8_t bPolarizationCounter;
+    PWMCurrFdbkHandle_t Super;     /*!< Base handle  */
 
-  volatile bool bOverCurrentFlag;     /*!< This flag is used to check if overcurrent occured */
-	
-  pPWMInsulCurrSensorFdbkParams_t pParamsStructure; /*!< PWM component parameters*/
-	
+    uint16_t hIaRaw;                    /*!< Latest conversion value for Ia  */
+    uint16_t hIbRaw;                    /*!< Latest conversion value for Ib  */
+
+    volatile bool bOverrunFlag;
+
+    uint32_t wPhaseAOffset;       /*!< Offset of Phase A current sensing network  */
+    uint32_t wPhaseBOffset;       /*!< Offset of Phase B current sensing network  */
+    uint16_t hHalfPWMPeriod;  /*!< Half PWM Period in timer clock counts */
+    volatile uint8_t bPolarizationCounter;
+
+    volatile bool bOCD1Flag;     /*!< This flag is used to check if OCD1 was triggered */
+    volatile bool bOCD2Flag;     /*!< This flag is used to check if OCD2 was triggered */
+
+
+    pPWMInsulCurrSensorFdbkParams_t pParamsStructure; /*!< PWM component parameters*/
+    
 } PWMInsulCurrSensorFdbkHandle_t;
 
 
@@ -85,7 +87,7 @@ bool PWMInsulCurrSensorFdbk_Init(PWMInsulCurrSensorFdbkHandle_t * pHandle);
 
 /**
   * @brief  This function starts the current sensor polarization routine. It stores into the provided handle 
-	*					the voltage present on Ia and Ib current feedback analog channels when no current is flowing into the
+    *                    the voltage present on Ia and Ib current feedback analog channels when no current is flowing into the
   *         motor.
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval none
@@ -124,8 +126,8 @@ void PWMInsulCurrSensorFdbk_SwitchOffPWM(PWMCurrFdbkHandle_t * pHdl);
 
 /**
   * @brief  Function to update duty cycle registers.
-	* @param  pHdl: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component.
-* @retval Motor control error code: MC_FOC_DURATION if overrun occured, MC_NO_FAULTS otherwise.
+  * @param  pHdl: handle of the current instance of the PWMInsulCurrSensorFdbkHandle_t component.
+  * @retval Motor control error code: MC_FOC_DURATION if overrun occurred, MC_NO_FAULT otherwise.
   */
 uint32_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl);
 
@@ -138,20 +140,37 @@ uint32_t PWMInsulCurrSensorFdbk_WriteTIMRegisters(PWMCurrFdbkHandle_t * pHdl);
 void * PWMInsulCurrSensorFdbk_TIMx_UP_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
 
 /**
-  * @brief  It is the routine to run when overcurrent trigger interrupt occured
+  * @brief  It is the routine to run when OCD1 trigger interrupt occurred
   * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
   * @retval Motor instance number
   */
-void * PWMInsulCurrSensorFdbk_BRK_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
+void * PWMInsulCurrSensorFdbk_OCD1_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
+
+
+/**
+  * @brief  It is the routine to run when OCD2 trigger interrupt occurred
+  * @param  pHandle: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval Motor instance number
+  */
+void * PWMInsulCurrSensorFdbk_OCD2_IRQHandler(PWMInsulCurrSensorFdbkHandle_t * pHdl);
 
 /**
   * @brief  It is used to check if an overcurrent occurred since last call.
   * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
-  * @retval uint16_t It returns MC_BREAK_IN whether an overcurrent has been
-  *                  detected since last method call, MC_NO_FAULTS otherwise.
+  * @retval uint16_t It returns MC_OCD1 or MC_OCD2 whether an overcurrent has been
+  *                  detected since last method call, MC_NO_FAULT otherwise.
   */
 uint32_t PWMInsulCurrSensorFdbk_IsOverCurrentOccurred(PWMCurrFdbkHandle_t * pHdl);
 
+#if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
+/**
+  * @brief  It is used to check if OCD2 occurred since last call.
+  * @param  pHdl: handler of the current instance of the PWMInsulCurrSensorFdbkHandle_t component
+  * @retval uint16_t It returns MC_OCD2 if OCD2 has been
+  *                  detected since last method call, MC_NO_FAULT otherwise.
+  */
+uint32_t PWMInsulCurrSensorFdbk_OCD2Occurred(PWMCurrFdbkHandle_t * pHdl);
+#endif
 
 #ifdef __cplusplus
 }

@@ -3,7 +3,7 @@
   * @brief   This file provides the functions that implement the circle
   *          limitation feature of the STM32 Motor Control application.
   *
-	*/
+    */
 
 /* Includes ------------------------------------------------------------------*/
 #include "circle_limitation.h"

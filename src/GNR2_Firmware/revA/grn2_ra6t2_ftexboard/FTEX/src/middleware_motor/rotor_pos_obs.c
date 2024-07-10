@@ -1,6 +1,6 @@
 /**
   * @file       rotor_pos_obs.c
-  * @brief     	This file provides firmware functions that implement the features
+  * @brief         This file provides firmware functions that implement the features
   *               of the Angle Observer component .
   *
  **/
@@ -13,108 +13,115 @@
 #include "mc_type.h"
 
 
-void RotorPosObs_Init(RotorPositionObserverHandle_t * pHandle)
+void RotorPosObs_Init(RotorPositionObserverHandle_t * pHandle, MotorParameters_t MotorParameters)
 {
-	pHandle->hKpGain = pHandle->hKpGainDef;
-	pHandle->hKdGain = pHandle->hKdGainDef;
-	pHandle->hKiGain = pHandle->hKiGainDef;
+    pHandle->Super.hMaxReliableMecSpeedUnit = (uint16_t)(MotorParameters.ParametersConversion.hMaxApplicationSpeedUnit * 1.5);
+    
+    pHandle->fFilterAlpha = MotorParameters.RampManagerParameters.fMecSpeedFilterButterworthAlpha;
+    pHandle->fFilterBeta = MotorParameters.RampManagerParameters.fMecSpeedFilterButterworthBeta;
+    
+    pHandle->Super.bElToMecRatio = MotorParameters.ConfigParameters.bPolePairNum;
+    
+    pHandle->hKpGain = pHandle->hKpGainDef;
+    pHandle->hKdGain = pHandle->hKdGainDef;
+    pHandle->hKiGain = pHandle->hKiGainDef;
     
     SignalFiltering_Init(&pHandle->SpeedFilter);
     SignalFiltering_ConfigureButterworthFOLP(&pHandle->SpeedFilter,
                                                 pHandle->fFilterAlpha,
                                                     pHandle->fFilterBeta);
-	
-	return;
+    
+    return;
 }
 
 void RotorPosObs_Clear(RotorPositionObserverHandle_t * pHandle)
-{	
-	pHandle->hEstElAngle = pHandle->pHallSensor->Super.hElAngle;
-	pHandle->hEstElSpeedDpp = pHandle->pHallSensor->Super.hElSpeedDpp;
-	pHandle->hEstMechTorque = 0;
+{    
+    pHandle->hEstElAngle = pHandle->pHallSensor->Super.hElAngle;
+    pHandle->hEstElSpeedDpp = pHandle->pHallSensor->Super.hElSpeedDpp;
+    pHandle->hEstMechTorque = 0;
 
-	pHandle->wEstElAngle = pHandle->pHallSensor->Super.hElAngle*INT16_MAX;
-	pHandle->wEstElSpeedDpp = pHandle->pHallSensor->Super.hElSpeedDpp*INT16_MAX;
-	pHandle->wEstMechTorque = 0;
+    pHandle->wEstElAngle = pHandle->pHallSensor->Super.hElAngle*INT16_MAX;
+    pHandle->wEstElSpeedDpp = pHandle->pHallSensor->Super.hElSpeedDpp*INT16_MAX;
+    pHandle->wEstMechTorque = 0;
     
     SignalFiltering_Clear(&pHandle->SpeedFilter);
-	
-	return;
+    
+    return;
 }
 
 int16_t RotorPosObs_CalcElAngle(RotorPositionObserverHandle_t * pHandle, int16_t hElTorque)
 {
-	int64_t dAux; int32_t wAux;
-	int16_t hErrorSin;
-	int32_t wEstElAngle_Next, wEstElSpeed_Next, wEstMechTorque_Next;
-	
-	hErrorSin = MCMath_TrigFunctions(pHandle->pHallSensor->Super.hElAngle - pHandle->hEstElAngle).hSin;
-	
-	wAux = pHandle->hKdGainDef;
-	if (wAux > INT16_MAX)
-		wAux = INT16_MAX;
-	if (wAux < -INT16_MAX)
-		wAux = -INT16_MAX;
-	pHandle->hKdGain = (int16_t) wAux;
-	wAux = (pHandle->hKdGain * hErrorSin) >> pHandle->hKdDivisorPOW2;
-	wEstElAngle_Next = pHandle->wEstElAngle +	pHandle->wEstElSpeedDpp + wAux;
-	
-	int32_t wElTorque = hElTorque * INT16_MAX;
-	wAux = (pHandle->hKpGain * hErrorSin) >> pHandle->hKpDivisorPOW2;
-	dAux = pHandle->wEstElSpeedDpp + (wElTorque - pHandle->wEstMechTorque) + wAux;
-	if (dAux > INT32_MAX)
-		dAux = INT32_MAX;
-	if (dAux < -INT32_MAX)
-		dAux = -INT32_MAX;
-	wEstElSpeed_Next = (int32_t) dAux;
-	
-	wAux = (pHandle->hKiGain * hErrorSin) >> pHandle->hKiDivisorPOW2;
-	dAux = pHandle->wEstMechTorque + wAux;
-	if (dAux > INT32_MAX)
-		dAux = INT32_MAX;
-	if (dAux < -INT32_MAX)
-		dAux = -INT32_MAX;
-	wEstMechTorque_Next = (int32_t) dAux;
+    int64_t dAux; int32_t wAux;
+    int16_t hErrorSin;
+    int32_t wEstElAngle_Next, wEstElSpeed_Next, wEstMechTorque_Next;
+    
+    hErrorSin = MCMath_TrigFunctions(pHandle->pHallSensor->Super.hElAngle - pHandle->hEstElAngle).hSin;
+    
+    wAux = pHandle->hKdGainDef;
+    if (wAux > INT16_MAX)
+        wAux = INT16_MAX;
+    if (wAux < -INT16_MAX)
+        wAux = -INT16_MAX;
+    pHandle->hKdGain = (int16_t) wAux;
+    wAux = (pHandle->hKdGain * hErrorSin) >> pHandle->hKdDivisorPOW2;
+    wEstElAngle_Next = pHandle->wEstElAngle +    pHandle->wEstElSpeedDpp + wAux;
+    
+    int32_t wElTorque = hElTorque * INT16_MAX;
+    wAux = (pHandle->hKpGain * hErrorSin) >> pHandle->hKpDivisorPOW2;
+    dAux = pHandle->wEstElSpeedDpp + (wElTorque - pHandle->wEstMechTorque) + wAux;
+    if (dAux > INT32_MAX)
+        dAux = INT32_MAX;
+    if (dAux < -INT32_MAX)
+        dAux = -INT32_MAX;
+    wEstElSpeed_Next = (int32_t) dAux;
+    
+    wAux = (pHandle->hKiGain * hErrorSin) >> pHandle->hKiDivisorPOW2;
+    dAux = pHandle->wEstMechTorque + wAux;
+    if (dAux > INT32_MAX)
+        dAux = INT32_MAX;
+    if (dAux < -INT32_MAX)
+        dAux = -INT32_MAX;
+    wEstMechTorque_Next = (int32_t) dAux;
 
-	pHandle->wEstElAngle = wEstElAngle_Next;
-	pHandle->wEstElSpeedDpp = wEstElSpeed_Next;
-	pHandle->wEstMechTorque = wEstMechTorque_Next;
-	
-	pHandle->hEstElAngle = (int16_t)(pHandle->wEstElAngle / INT16_MAX);
-	pHandle->hEstElSpeedDpp =(int16_t)(pHandle->wEstElSpeedDpp / INT16_MAX);
-	pHandle->hEstMechTorque = (int16_t)(pHandle->wEstMechTorque / INT16_MAX);
-	
-	pHandle->Super.hElAngle = pHandle->hEstElAngle;
-	pHandle->Super.hElSpeedDpp = pHandle->hEstElSpeedDpp;
-	
-	return pHandle->hEstElAngle;
+    pHandle->wEstElAngle = wEstElAngle_Next;
+    pHandle->wEstElSpeedDpp = wEstElSpeed_Next;
+    pHandle->wEstMechTorque = wEstMechTorque_Next;
+    
+    pHandle->hEstElAngle = (int16_t)(pHandle->wEstElAngle / INT16_MAX);
+    pHandle->hEstElSpeedDpp =(int16_t)(pHandle->wEstElSpeedDpp / INT16_MAX);
+    pHandle->hEstMechTorque = (int16_t)(pHandle->wEstMechTorque / INT16_MAX);
+    
+    pHandle->Super.hElAngle = pHandle->hEstElAngle;
+    pHandle->Super.hElSpeedDpp = pHandle->hEstElSpeedDpp;
+    
+    return pHandle->hEstElAngle;
 }
 
 
 bool RotorPosObs_CalcMecSpeedUnit(RotorPositionObserverHandle_t * pHandle, int16_t * pMecSpeedUnit)
 {
-	bool bIsReliable = SpdPosFdbk_GetReliability(&pHandle->pHallSensor->Super);
-	bIsReliable &= SpdPosFdbk_CalcReliability (&pHandle->Super, pMecSpeedUnit);
+    bool bIsReliable = SpdPosFdbk_GetReliability(&pHandle->pHallSensor->Super);
+    bIsReliable &= SpdPosFdbk_CalcReliability (&pHandle->Super, pMecSpeedUnit);
     
     pHandle->hFiltElSpeedDpp = SignalFiltering_CalcOutputI16(&pHandle->SpeedFilter, pHandle->hEstElSpeedDpp);
-	
+    
     /* Convert el_dpp to MecUnit */
     *pMecSpeedUnit = (int16_t)(( pHandle->hFiltElSpeedDpp * (int32_t)pHandle->Super.hMeasurementFrequency * (int32_t) SPEED_UNIT) /
                                                             ((int32_t) pHandle->Super.DPPConvFactor * (int32_t)pHandle->Super.bElToMecRatio));
 
-	pHandle->Super.hAvrMecSpeedUnit = *pMecSpeedUnit;
-	
-	return bIsReliable;
+    pHandle->Super.hAvrMecSpeedUnit = *pMecSpeedUnit;
+    
+    return bIsReliable;
 }
 
 
 int16_t RotorPosObs_GetElAngle(RotorPositionObserverHandle_t * pHandle)
 {
-	return pHandle->hEstElAngle;
+    return pHandle->hEstElAngle;
 }
 
 int16_t RotorPosObs_GetElSpeed(RotorPositionObserverHandle_t * pHandle)
 {
-	return pHandle->hEstElSpeedDpp;
+    return pHandle->hEstElSpeedDpp;
 }
 

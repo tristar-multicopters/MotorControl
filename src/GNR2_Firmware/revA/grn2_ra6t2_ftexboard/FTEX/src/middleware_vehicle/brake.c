@@ -6,6 +6,8 @@
 
 #include "brake.h"
 #include "ASSERT_FTEX.h"
+#include "uCAL_GPIO.h"
+#include "vc_errors_management.h"
 
 // ============================= Variables ================================ //
 static uint16_t hSafeCounter = 0;
@@ -17,7 +19,7 @@ static bool brakeStuck = false;
  *  Initializes brake sensor module
  */
 void BRK_Init(BRK_Handle_t * pHandle, Delay_Handle_t * pBrakeDelay)
-{	
+{    
     ASSERT(pHandle != NULL); 
     struct GPIOConfig PinConfig;
    
@@ -30,7 +32,7 @@ void BRK_Init(BRK_Handle_t * pHandle, Delay_Handle_t * pBrakeDelay)
     pHandle->pBrakeStuckDelay = pBrakeDelay;
       
     ASSERT(pHandle->pBrakeStuckDelay->DelayInitialized); // Delay should be initialized in the task to specify at which 
-                                                            // frequence the update delay function will eb called
+                                                            // frequence the update delay function will be called
     Delay_SetTime(pHandle->pBrakeStuckDelay, 5, SEC); // Set a 5 seconds delay to detect a stuck throttle
     Delay_Reset(pHandle->pBrakeStuckDelay);           // Make sure the counter is reset 
 }
@@ -40,13 +42,13 @@ void BRK_Init(BRK_Handle_t * pHandle, Delay_Handle_t * pBrakeDelay)
  */
 bool BRK_IsPressed(BRK_Handle_t * pHandle)
 {
-	ASSERT(pHandle != NULL); 
+    ASSERT(pHandle != NULL); 
 
     bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
     
     pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
-	
-	return pHandle->bIsPressed;
+    
+    return pHandle->bIsPressed;
 }
 
 /**
@@ -55,7 +57,7 @@ bool BRK_IsPressed(BRK_Handle_t * pHandle)
  */
 bool BRK_IsPressedSafety(BRK_Handle_t * pHandle)
 {
-	ASSERT(pHandle != NULL); 
+    ASSERT(pHandle != NULL); 
 
     bool bAux = uCAL_GPIO_Read(pHandle->wPinNumber);
     pHandle->bIsPressed = bAux ^ pHandle-> bIsInvertedLogic;
@@ -88,6 +90,6 @@ bool BRK_IsPressedSafety(BRK_Handle_t * pHandle)
             }
         }            
     }
-	
-	return pHandle->bIsPressed;
+    
+    return pHandle->bIsPressed;
 }

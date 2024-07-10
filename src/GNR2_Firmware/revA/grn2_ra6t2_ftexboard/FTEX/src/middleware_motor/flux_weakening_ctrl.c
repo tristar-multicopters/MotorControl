@@ -11,15 +11,26 @@
 
 #include "mc_type.h"
 #include "pid_regulator.h"
+#define MARGIN_COEF     9  // voltage margin coefficient for flux weakening
 
-
-void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle)
+void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle, MotorParameters_t MotorParameters)
 {
-  pHandle->hFwVoltRef = pHandle->hDefaultFwVoltRef;
+    pHandle->fRS = MotorParameters.ConfigParameters.fRS;
+    
+    pHandle->hNominalCurr = MotorParameters.ParametersConversion.hNominalPeakCurrent;
+    pHandle->wNominalSqCurr = MotorParameters.ParametersConversion.hNominalPeakCurrent * MotorParameters.ParametersConversion.hNominalPeakCurrent;
+    pHandle->wUsrMaxCurr = MotorParameters.ParametersConversion.hNominalPeakCurrent;
+    
+    pHandle->bWheelSpdSensorNbrPerRotation = MotorParameters.WheelSpeedSensorParameters.bWheelSpeedSensorNbrPerRotation;
+    pHandle->hFlDir = MotorParameters.FluxParameters.hFlDirection;
+    
+    pHandle->hFwVoltRef = pHandle->hDefaultFwVoltRef;
 
-  pHandle->pMotorControlPID = pPIDMotorControlHandle;
+    pHandle->pMotorControlPID = pPIDMotorControlHandle;
 
-  pHandle->pSpeedPID = pPIDSpeed;
+    pHandle->pSpeedPID = pPIDSpeed;
+
+    
 }
 
 
@@ -41,8 +52,8 @@ qd_t FluxWkng_CalcCurrRef(MCConfigHandle_t * pHandle, qd_t Iqdref)
   int16_t hId_fw;
 
   /* Computation of the Id contribution coming from flux weakening algorithm */
-  wVoltLimit_Ref = ((uint32_t)(pHandle->hFwVoltRef) * pHandle->hMaxModule)
-                   / 1000u;
+  wVoltLimit_Ref = ((uint32_t)(pHandle->hFwVoltRef) * pHandle->hMaxModule * MARGIN_COEF)
+                   / 10000u;
   wAux1 = (int32_t)(pHandle->AvVoltQd.q) *
           pHandle->AvVoltQd.q;
   wAux2 = (int32_t)(pHandle->AvVoltQd.d) *
@@ -79,7 +90,7 @@ qd_t FluxWkng_CalcCurrRef(MCConfigHandle_t * pHandle, qd_t Iqdref)
     wIdRef =  pHandle->hDemagCurrent;
   }
 
-  Iqdref.d = -(int16_t)wIdRef;
+  Iqdref.d = -(int16_t)wIdRef * pHandle->hFlDir;
 
   /* New saturation for Iqref */
   wIqSatSq =  pHandle->wNominalSqCurr - wIdRef * wIdRef;

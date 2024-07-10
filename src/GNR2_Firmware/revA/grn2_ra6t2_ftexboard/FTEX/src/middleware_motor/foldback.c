@@ -1,12 +1,12 @@
 /**
     * @file    foldback.c
-	* @author  Jorge Andres Polo, FTEX
-	* @author  Sami Bouzid, FTEX
+    * @author  Jorge Andres Polo, FTEX
+    * @author  Sami Bouzid, FTEX
     * @author  Ronak NemaDE, FTEX
     * @brief   This module implement a negative ramp to limit an input value based on another variable.
     *
 */
-	
+    
 #include "foldback.h"
 #include "ASSERT_FTEX.h"
 /**
@@ -22,9 +22,15 @@ static int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hContr
   * Refer to function definition
   **/
 
-void Foldback_Init( Foldback_Handle_t * pHandle )
+void Foldback_Init(Foldback_Handle_t * pHandle, Foldback_Handle_t FoldbackInit)
 {
     ASSERT(pHandle != NULL);
+    pHandle->bEnableFoldback = FoldbackInit.bEnableFoldback;
+    pHandle->hDefaultOutputLimitHigh = FoldbackInit.hDefaultOutputLimitHigh;
+    pHandle->hDefaultOutputLimitLow = FoldbackInit.hDefaultOutputLimitLow;
+    pHandle->hDecreasingEndValue = FoldbackInit.hDecreasingEndValue;
+    pHandle->hDecreasingRange = FoldbackInit.hDecreasingRange;
+    
     pHandle->hMaxOutputLimitHigh = (int16_t) pHandle->hDefaultOutputLimitHigh;
     pHandle->hMaxOutputLimitLow = (int16_t) pHandle->hDefaultOutputLimitLow;
 }
@@ -32,7 +38,7 @@ void Foldback_Init( Foldback_Handle_t * pHandle )
 int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
 {
     ASSERT(pHandle != NULL); 
-	int16_t hMaxOutput = 0;
+    int16_t hMaxOutput = 0;
     int32_t hStartValue;
     uint32_t wAux;
     
@@ -53,7 +59,7 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
     {
         pHandle->bIsInverted = false;
     }
-		
+        
     if (!pHandle->bIsInverted)
     {
         // If hValue is in the foldback range
@@ -94,8 +100,8 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
             hMaxOutput =  pHandle->hMaxOutputLimitLow;        // Pass lower threshold if input is higher than control range
         }
     }
-	
-	return hMaxOutput;
+    
+    return hMaxOutput;
 }
 
 
@@ -104,8 +110,8 @@ int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariab
     ASSERT(pHandle != NULL); 
     int16_t hMaxOutput,hOutputVariable = 0;
     
-	if (pHandle->bEnableFoldback)
-	{
+    if (pHandle->bEnableFoldback)
+    {
         if(pHandle->FoldbackConfig == TRIM) // Test if foldback instance is used to trim the inputs.
         {
             hMaxOutput =  Foldback_GetMaxOutput(pHandle, hValue);
@@ -132,7 +138,7 @@ int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariab
     {
         hOutputVariable = hInputVariable;
     }
-	return hOutputVariable;
+    return hOutputVariable;
 }
 
 /**
@@ -161,7 +167,7 @@ void Foldback_SetDecreasingRangeEndValue(Foldback_Handle_t * pHandle, int16_t hD
     ASSERT(pHandle != NULL); 
     int16_t hInterval, hEndval;
     /* Add the Interval Value to the Start Value */
-	hInterval = pHandle->hDecreasingInterval;
+    hInterval = pHandle->hDecreasingInterval;
     hEndval = hInterval + hDecreasingRange;
     pHandle->hDecreasingEndValue = hEndval;
 }
@@ -194,6 +200,19 @@ void Foldback_UpdateMaxValue(Foldback_Handle_t * pHandle, int16_t hMaxValue)
     if(pHandle->FoldbackConfig == TRIM)
     {
         pHandle->hMaxOutputLimitHigh = hMaxValue; 
+    }
+    
+}
+
+/**
+ * Check function definition
+ **/
+void Foldback_UpdateLimitValue(Foldback_Handle_t * pHandle, int16_t hLimitValue)
+{
+    ASSERT(pHandle != NULL); 
+    if(pHandle->FoldbackConfig == TRIM)
+    {
+        pHandle->hMaxOutputLimitLow = hLimitValue; 
     }
     
 }

@@ -5,15 +5,20 @@
   */
 
 #include "throttle.h"
-#include "wheel.h"
 #include "ASSERT_FTEX.h"
+#include "vc_errors_management.h"
+
 /* Functions ---------------------------------------------------- */
 /**
    Initializes throttle sensing conversions
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay)
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay, uint16_t maxTorque)
 {
     ASSERT(pHandle != NULL);
+    
+    //init throttle max torque
+    pHandle->hParameters.ThrottleMaxTorque = maxTorque;
+    
     pHandle->DisableThrottleOutput = false;
     pHandle->extThrottleEnable = false;    
     
@@ -40,7 +45,7 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     /* Need to be register with RegularConvManager */
     pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
     Throttle_Clear(pHandle);
-    Throttle_ComputeSlopes(pHandle); // Used to calculate values to calibrate ADC value to a standard value
+    Throttle_ComputeSlopes(pHandle); // Used to calculate values to calibrate ADC value to a standard value     
 }
 
 /**
@@ -65,11 +70,11 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
     uint32_t wAux;
     uint16_t hAux;
     
-	static bool ThrottleStuck = false;
+    static bool ThrottleStuck = false;
     
-    if(pHandle->DisableThrottleOutput) // Test if we want to disable the throttle on PAS 0
+    if(pHandle->DisableThrottleOutput || pHandle->BlockOffThrottle) // Test if we want to disable the throttle on PAS 0 or the throttle BlockOff
     {
-        hAux = 0;  // We are in PAS level 0 so the throttle is disabled
+        hAux = 0;  //The throttle is blocked or We are in PAS level 0 so the throttle is disabled
     } 
     else if(pHandle->extThrottleEnable == false)
     {    
@@ -122,7 +127,7 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle)
         hAux = (uint16_t)wAux;    
     }
     
-	pHandle->hAvThrottleValue = hAux;
+    pHandle->hAvThrottleValue = hAux;
     
     // Throttle stuck on startup verification
     if(!pHandle->SafeStart && !pHandle->DisableThrottleOutput) 
@@ -228,7 +233,7 @@ uint16_t Throttle_ThrottleToSpeed(ThrottleHandle_t * pHandle)
         wAux = 0;
     }
     
-    wAux = (int32_t)(pHandle->hParameters.bSlopeSpeed * wAux);
+    wAux = (int32_t)(pHandle->hParameters.fSlopeSpeed * (float) wAux);
     wAux /= pHandle->hParameters.bDivisorSpeed;
     
     if (wAux > INT16_MAX)
@@ -362,7 +367,7 @@ void Throttle_ComputeSlopes(ThrottleHandle_t * pHandle)
    Throttle2Speed =  pHandle->hParameters.MaxThrottleSpeedKMH/Throttle2Speed;   // Calculate the gain needed to scale that value to a 0-hMaxOutputLimitHigh
    Throttle2Speed *= THROTTLE_SLOPE_FACTOR;                                     // Multiply by the factor to create the numerator of a fraction 
     
-   pHandle->hParameters.bSlopeSpeed   = (int16_t) round(Throttle2Speed);        // Save the numerator
+   pHandle->hParameters.fSlopeSpeed   = Throttle2Speed;                         // Save the numerator
    pHandle->hParameters.bDivisorSpeed = THROTTLE_SLOPE_FACTOR;                  // and denominator 
 }
 

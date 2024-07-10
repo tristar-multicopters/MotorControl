@@ -6,17 +6,12 @@
   *
   ******************************************************************************
 */
-	
+    
 #ifndef __LCD_KD718_H
 #define __LCD_KD718_H
 
 #include "vc_interface.h"
-#include "powertrain_management.h"
-#include "can_vehicle_interface.h"
-#include "vc_errors_management.h"
-#include "vc_constants.h"
 #include "uCAL_UART.h"
-#include "gnr_main.h"
 
 /**************************** DEFINITIONS AND STRUCTS ****************************/
 #define KD718_RX_BYTE_BUFFER_SIZE 8
@@ -84,11 +79,11 @@ typedef struct
 }KD718_frame_t;
 
 typedef struct
-{	
-	UART_Handle_t *pUART_handle;           // Pointer to uart									
-	VCI_Handle_t  *pVController;           // Pointer to vehicle
-    KD718_frame_t rx_frame; 		   	   // Frame for data reception
-	KD718_frame_t tx_frame; 		   	   // Frame for send response
+{    
+    UART_Handle_t *pUART_handle;           // Pointer to uart                                    
+    VCI_Handle_t  *pVController;           // Pointer to vehicle
+    KD718_frame_t rx_frame;                   // Frame for data reception
+    KD718_frame_t tx_frame;                   // Frame for send response
     
     uint8_t RxBuffer[KD718_RX_BYTE_BUFFER_SIZE]; // Hold bytes to be process by the KD718 task function
     uint8_t RxCount;                       // Counts how many bytes we are holding

@@ -12,7 +12,6 @@
 #include "mc_interface.h"
 #include "slave_mc_interface.h"
 
-
 #define MDI_PERCENT 100 // Used to apply a % based gain
 
 /*
@@ -29,15 +28,16 @@ typedef struct
   * @param  pHandle Pointer on the component instance to operate on.
   * @param  pMCI Pointer to the MotorControlInterface handle of M1 (local motor controller of this ganrunner device)
   * @param  pSlaveM2 Pointer to the SlaveMotorControlInterface handle of M2 (motor controller outside this ganrunner device)
+  * @param  pBatteryPower to the BatteryPower handle
   * @retval none.
   */
-void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2);
+void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2, MC_Setup_t MCSetup);
 
 /**
   * @brief  This function update the virtual motor handle with the provided feedback.
   * @param  pHandle Pointer on the component instance to operate on.
   * @param  bMotor Motor number. Must be higher than M2
-	*	@param	pFeedback pointer to a virtual motor feedback structure. Data will be copied in pHandle.
+    *    @param    pFeedback pointer to a virtual motor feedback structure. Data will be copied in pHandle.
   * @retval none.
   */
 void MDI_UpdateVirtualMotorFeedback(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, SlaveMotorFeedback_t Feedback);
@@ -50,7 +50,7 @@ void MDI_UpdateVirtualMotorFeedback(MultipleDriveInterfaceHandle_t * pHandle, ui
   * @param  pHandle Pointer on the component instance to operate on.
   * @param  hFinalSpeed is the value of mechanical rotor speed reference at the
   *         end of the ramp expressed in tenths of HZ.
-	*	@param	bMotor is the target motor number
+  * @param    bMotor is the target motor number
   * @retval none.
   */
 void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, int16_t hFinalSpeed);
@@ -63,10 +63,17 @@ void MDI_ExecSpeedRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor,
   * @param  pHandle Pointer on the component instance to work on.
   * @param  hFinalTorque is the value of motor torque reference at the end of
   *         the ramp in cNm (Nm/100).
-	*	@param	bMotor is the target motor number
+  * @param    bMotor is the target motor number
   * @retval none.
   */
 void MDI_ExecTorqueRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor, int16_t hFinalTorque);
+
+/**
+  * @brief  This function gets the bus voltage in volts x100
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval The bus voltage in volts x 100.
+  */
+uint16_t MDI_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHandle);
 
 /**
   * @brief  This is a buffered command to set directly the motor current
@@ -137,7 +144,7 @@ bool MDI_StopMotor(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
   * @retval bool It returns true if the command is successfully executed
   *         otherwise it return false.
   */
-bool MDI_FaultAcknowledged(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+bool MDI_CriticalFaultAcknowledged(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief  It returns information about the state of the related pSTM object.
@@ -159,7 +166,7 @@ MotorState_t  MDI_GetSTMState(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
   *         FAULT_NOW state.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint32_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetOccurredCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief It returns a 16 bit fields containing information about faults
@@ -171,7 +178,17 @@ uint32_t MDI_GetOccurredFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t
   *         present faults.
   * \n\link Fault_generation_error_codes Returned error codes are listed here \endlink
   */
-uint32_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetCurrentCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+
+/**
+  * @brief It returns a 16 bit fields containing information about errors
+  *        that historically occurred.
+  * @param pHandle Pointer on the component instance to work on.
+  * @param  bMotor is the target motor number
+  * @retval uint16_t  16 bit fields with information about about currently
+  *         present errors.
+  */
+uint32_t MDI_GetOccurredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief It returns a 16 bit fields containing information about warning
@@ -179,9 +196,9 @@ uint32_t MDI_GetCurrentFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t 
   * @param pHandle Pointer on the component instance to work on.
   * @param  bMotor is the target motor number
   * @retval uint16_t  16 bit fields with information about about currently
-  *         present faults.
+  *         present warnings.
   */
-uint32_t MDI_GetOccuredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+uint32_t MDI_GetOccurredWarnings(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
   * @brief  It returns the modality of the speed and torque controller.
@@ -352,12 +369,41 @@ int16_t MDI_GetPhaseCurrentAmplitude(MultipleDriveInterfaceHandle_t * pHandle, u
 int16_t MDI_GetPhaseVoltageAmplitude(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
+  * @brief  Getting the controller NTC temperature value
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval int16_t temperature
+  */
+int16_t MDI_GetControllerTemp(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Getting the motor NTC temperature value
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval int16_t temperature
+  */
+int16_t MDI_GetMotorTemp(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
   * @brief  It re-initializes Iqdref variables with their default values.
   * @param  pHandle Pointer on the component instance to work on.
   * @param  bMotor is the target motor number
   * @retval none
   */
 void MDI_Clear_Iqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+
+/**
+  * @brief  Obtain the motor torque referenece for a motor
+  * @param  pHandle Pointer on the component instance to work on.
+  * @param  bMotor is the target motor number
+  * @retval none
+  */
+uint16_t MDI_GetMotorTorqueReference(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+
+/**
+  * @brief  Obtain the max application power
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the max app power
+  */
+uint16_t MDI_GetMaxPositivePower(MultipleDriveInterfaceHandle_t * pHandle);
 
 /**
   * @brief  Function sets the torque control speed limit does the conversion from desired 
@@ -367,6 +413,63 @@ void MDI_Clear_Iqdref(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
   * @param  speedKMH is the gain that ahs to be appllied in %
   * @retval none
   */
-void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t speedKMH, uint16_t gain);
+void MDI_SetTorqueSpeedLimit(MultipleDriveInterfaceHandle_t * pHandle, uint16_t speedKMH);
+
+/**
+  * @brief  Update the wheel RPM value
+  * @param  pHandle .
+  * @param  aWheelRPM
+  * @retval none
+  */
+void MDI_SetWheelRPM(MultipleDriveInterfaceHandle_t * pHandle, uint16_t aWheelRPM);
+
+/**
+  * @brief  Get the motor gear ratio
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the motor gear raio
+  */
+float MDI_GetMotorGearRatio(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the motor type
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the motor gear raio
+  */
+MotorType_t MDI_GetMotorType(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the nominal torque
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the nominal torque
+  */
+uint16_t MDI_GetNominalTorque(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the starting torque
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of the starting torque
+  */
+uint16_t MDI_GetStartingTorque(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the RS value
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Value of RS
+  */
+float MDI_GetRS(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get the number of magnets on the wheel speed sensor
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Number of magnets on the wheel speed
+  */
+uint8_t MDI_GetWheelSpdSensorNbrPerRotation(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get whether the motor temp sensor is mixed
+  * @param  pHandle Pointer on the component instance to work on.
+  * @retval Whether the motor temp sensor is mixed
+  */
+bool MDI_GetMotorTempSensorMixed(MultipleDriveInterfaceHandle_t * pHandle);
 
 #endif /* __MD_INTERFACE_H */

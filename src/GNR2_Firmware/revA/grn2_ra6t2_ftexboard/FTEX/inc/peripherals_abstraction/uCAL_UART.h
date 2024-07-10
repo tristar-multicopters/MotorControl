@@ -31,8 +31,8 @@ typedef enum
 {
     UART_DISABLE,
     UART_APT,
-    UART_KD718,
-    UART_CLOUD_5S,    
+    UART_CLOUD_5S, 
+    UART_KD718,   
     UART_LOG_HS 
 
 } uCAL_Protocol_t;
@@ -44,6 +44,7 @@ typedef struct
     
     uCAL_BaudRate_t    UARTBaudrate;
     uCAL_Protocol_t    UARTProtocol;
+    bool TaskFlag;  // Used to synchronise with the task 
     uint8_t            OpenRecpBuffer[30];
     void* Super;                    /* Pointer to the higher handle that is using the uart port
                                        MUST be initialized before using. */
@@ -101,5 +102,30 @@ void uCAL_UART_IRQHandler(UART_Handle_t *pHandle,uart_callback_args_t * p_args);
   @return void
 */
 void uCAL_UART_SendDefault(UART_Handle_t *pHandle);
+
+/**
+  @brief Function used to set the task flag to 1
+    
+  @param Receives UART handle
+  @return void
+*/
+void uCAL_UART_SetTaskFlag(UART_Handle_t *pHandle);
+
+/**
+  @brief Function used to read the task flag
+    
+  @param Receives UART handle
+  @return bool state of the flag
+*/
+bool uCAL_UART_GetTaskFlag(UART_Handle_t *pHandle);
+
+/**
+  @brief Function used to clear the task flag to 0
+    
+  @param Receives UART handle
+  @return void
+*/
+void uCAL_UART_ClearTaskFlag(UART_Handle_t *pHandle);
+
 
 #endif

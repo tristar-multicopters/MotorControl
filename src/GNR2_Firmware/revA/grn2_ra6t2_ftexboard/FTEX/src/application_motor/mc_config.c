@@ -5,18 +5,118 @@
 
 #include "gnr_main.h"
 #include "mc_type.h"
-#include "parameters_conversion.h"
-#include "mc_parameters.h"
 #include "pqd_motor_power_measurement.h"
 #include "mc_config.h"
 #include "board_hardware.h"
-#include "ntc_table.h"
-#include "board_hardware.h"
-
+#include "motor_parameters.h"
 
 #define OFFCALIBRWAIT_MS     0
-#define MAX_DUTY     				 30000 /* INT16_MAX is 100% duty cycle */
 
+/**
+  * @brief  Motor Parameters to initialize the motor
+  */
+MotorParameters_t MotorParameters =
+{
+    .ConfigParameters =
+    {
+        .fMotorGearRatio                = MOTOR_GEAR_RATIO,
+        .bMotorType                     = MOTOR_TYPE,
+        .bPolePairNum                   = POLE_PAIR_NUM,
+        .fRS                            = RS_VAL,
+        .fLS                            = LS,
+        .fMotorMagnetFlux               = MOTOR_MAGNET_FLUX,
+        .fMotorVotlageConstant          = MOTOR_VOLTAGE_CONSTANT,
+        .fSTTorqueCoef                  = ST_TORQUE_COEF, 
+        
+        .hPeakCurrentMotorAmps          = PEAK_CURRENT_MOTOR_amps,
+
+    },
+    .PowerParameters =
+    {   
+        .hEstimatedEfficiency           = ESTIMATED_EFFICIENCY,
+    },
+    .SpeedParameters =
+    {
+        
+        .hMaxAppliationSpeedRPM         = MAX_APPLICATION_SPEED_RPM,
+        
+        .hPIDSpeedKpDefault             = PID_SPEED_KP_DEFAULT,
+        .hPIDSpeedKiDefault             = PID_SPEED_KI_DEFAULT,
+        .hSpKiDiv                       = SP_KIDIV,
+        .hSpKiDivLog                    = (uint16_t) SP_KIDIV_LOG,
+        
+        .hFoldbackSpeedInterval         = FOLDBACK_SPEED_INTERVAL,
+    
+    },
+    .TorqueParameters = 
+    {
+        .hPIDTorqueKpDefault            = PID_TORQUE_KP_DEFAULT,
+    },
+    .FluxParameters = 
+    {
+        .bFluxWeakeningEnable           = FLUX_WEAKENING_ENABLE,
+        .hFlDirection                   = FLUX_DIRECTION,
+        .hPIDFluxKPDefault              = PID_FLUX_KP_DEFAULT,
+        .hPIDFluxKIDefault              = PID_FLUX_KI_DEFAULT,
+    },
+    .RampManagerParameters =
+    {
+        .wDefaultTorqueSlopeUp          = DEFAULT_TORQUE_SLOPE_UP,
+        .wDefaultTorqueSlopeDown        = DEFAULT_TORQUE_SLOPE_DOWN,
+        .wDefaultSpeedSlopeUp           = DEFAULT_SPEED_SLOPE_UP,
+        .wDefaultSpeedSlopeDown         = DEFAULT_SPEED_SLOPE_DOWN,
+        
+        .fMecSpeedFilterButterworthAlpha = MEC_SPEED_FILTER_BUTTERWORTH_ALPHA,
+        .fMecSpeedFilterButterworthBeta  = MEC_SPEED_FILTER_BUTTERWORTH_BETA,
+    },
+    .TempParameters =
+    {
+        .bMotorTempSensorType           = MOTOR_TEMP_SENSOR_TYPE,
+        .bMotorTempMixed                = MOTOR_TEMP_MIXED,
+        
+        .hOverTempMotorThresholdC       = OV_TEMP_MOTOR_THRESHOLD_C,
+        .hOverTempMotorHysteresisC      = OV_TEMP_MOTOR_HYSTERESIS_C,
+        .hFoldbackMotorTempInterval     = FOLDBACK_MOTOR_TEMP_INTERVAL,
+    },
+    .HallSensorParameters =
+    {
+        .bHallSensorsPlacement          = HALL_SENSORS_PLACEMENT,
+        .bHallAveragingFifoDepth        = HALL_AVERAGING_FIFO_DEPTH,
+        .hHallPhaseShift                = HALL_PHASE_SHIFT,
+        
+        .bEnVibrationError              = EN_VIBRATION_ERROR,
+    },
+    .WheelSpeedSensorParameters =
+    {
+        .bWheelSpeedSensorNbrPerRotation = MOTOR_WSS_NBR_PER_ROTATION,
+    },
+    .CurrentSpeedPID = 
+    {
+        .currentPIDLutSpeed1 = CURRENT_PID_LUT_SPEED_1,
+        .currentPIDLutSpeed2 = CURRENT_PID_LUT_SPEED_2,
+        .IqKpVsSpeedTable =
+        {
+            IQ_KP_VS_SPEED_1,
+            IQ_KP_VS_SPEED_2,
+        },
+        .IqKiVsSpeedTable =
+        {
+            IQ_KI_VS_SPEED_1,   /* old PI = 50 parameter tunning for Vibration */ 
+            IQ_KI_VS_SPEED_2,   /* old PI = 50 parameter tunning for Vibration */
+        },
+        .IdKpVsSpeedTable =
+        {
+            ID_KP_VS_SPEED_1,
+            ID_KP_VS_SPEED_2,    
+        },
+        .IdKiVsSpeedTable =
+        {
+            ID_KI_VS_SPEED_1,     /* old PI = 50 parameter tunning for Vibration */
+            ID_KI_VS_SPEED_2,     /* old PI = 50 parameter tunning for Vibration */
+        },
+    },
+    .bAutotuneEnable = false,
+};
 
 MotorPowerQDHandle_t PQDMotorPowMeasM1 =
 {
@@ -29,16 +129,7 @@ MotorPowerQDHandle_t *pPQD_MotorPowMeasM1 = &PQDMotorPowMeasM1;
   */
 PIDHandle_t PIDSpeedHandleM1 =
 {
-  .hDefKpGain           = (int16_t)PID_SPEED_KP_DEFAULT,
-  .hDefKiGain           = (int16_t)PID_SPEED_KI_DEFAULT,
-  .wUpperIntegralLimit  = (int32_t)SPDCTRL_UPPER_INTEGRAL_LIMIT,
-  .wLowerIntegralLimit  = 0, //-(int32_t)SPD_CTRL_MAX_TORQUE * (int32_t)SP_KIDIV,
-  .hUpperOutputLimit    = (int32_t)SPDCTRL_UPPER_INTEGRAL_LIMIT,
   .hLowerOutputLimit    = 0, // -(int16_t)SPD_CTRL_MAX_TORQUE,
-  .hKpDivisor           = (uint16_t)SP_KPDIV,
-  .hKiDivisor           = (uint16_t)SP_KIDIV,
-  .hKpDivisorPOW2       = (uint16_t)SP_KPDIV_LOG,
-  .hKiDivisorPOW2       = (uint16_t)SP_KIDIV_LOG,
   .hDefKdGain           = 0x0000U,
   .hKdDivisor           = 0x0000U,
   .hKdDivisorPOW2       = 0x0000U,
@@ -49,16 +140,7 @@ PIDHandle_t PIDSpeedHandleM1 =
   */
 PIDHandle_t PIDIqHandleM1 =
 {
-    .hDefKpGain          = (int16_t)PID_TORQUE_KP_DEFAULT,
-    .hDefKiGain          = (int16_t)PID_TORQUE_KI_DEFAULT,
-    .wUpperIntegralLimit = (int32_t)MAX_DUTY * TF_KIDIV,
-    .wLowerIntegralLimit = (int32_t)-MAX_DUTY * TF_KIDIV,
-    .hUpperOutputLimit       = MAX_DUTY,
     .hLowerOutputLimit       = -MAX_DUTY,
-    .hKpDivisor          = (uint16_t)TF_KPDIV,
-    .hKiDivisor          = (uint16_t)TF_KIDIV,
-    .hKpDivisorPOW2      = (uint16_t)TF_KPDIV_LOG,
-    .hKiDivisorPOW2      = (uint16_t)TF_KIDIV_LOG,
     .hDefKdGain           = 0x0000U,
     .hKdDivisor           = 0x0000U,
     .hKdDivisorPOW2       = 0x0000U,
@@ -69,16 +151,7 @@ PIDHandle_t PIDIqHandleM1 =
   */
 PIDHandle_t PIDIdHandleM1 =
 {
-    .hDefKpGain          = (int16_t)PID_FLUX_KP_DEFAULT,
-    .hDefKiGain          = (int16_t)PID_FLUX_KI_DEFAULT,
-    .wUpperIntegralLimit = (int32_t)MAX_DUTY * TF_KIDIV,
-    .wLowerIntegralLimit = (int32_t)-MAX_DUTY * TF_KIDIV,
-    .hUpperOutputLimit       = MAX_DUTY,
     .hLowerOutputLimit       = -MAX_DUTY,
-    .hKpDivisor          = (uint16_t)TF_KPDIV,
-    .hKiDivisor          = (uint16_t)TF_KIDIV,
-    .hKpDivisorPOW2      = (uint16_t)TF_KPDIV_LOG,
-    .hKiDivisorPOW2      = (uint16_t)TF_KIDIV_LOG,
     .hDefKdGain           = 0x0000U,
     .hKdDivisor           = 0x0000U,
     .hKdDivisorPOW2       = 0x0000U,
@@ -92,11 +165,8 @@ MCConfigHandle_t MCConfig =
     .hMaxModule             = MAX_MODULE,
     .hDefaultFwVoltRef       = (int16_t)FW_VOLTAGE_REF,
     .hDemagCurrent          = ID_DEMAG,
-    .wNominalCurr           = (int32_t)NOMINAL_PEAK_CURRENT,
-    .wNominalSqCurr         = ((int32_t)NOMINAL_PEAK_CURRENT*(int32_t)NOMINAL_PEAK_CURRENT),
-    .wUsrMaxCurr            = NOMINAL_PEAK_CURRENT,                  //initially programmed with Nominal value
     .hVqdLowPassFilterBw    = M1_VQD_SW_FILTER_BW_FACTOR,
-    .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG,           
+    .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG,
 };
 
 /**
@@ -104,17 +174,10 @@ MCConfigHandle_t MCConfig =
   */
 PIDHandle_t PIDMotorControlM1 =
 {
-    .hDefKpGain          = (int16_t)FW_KP_GAIN,
-    .hDefKiGain          = (int16_t)FW_KI_GAIN,
-    .wUpperIntegralLimit = 0,
-    .wLowerIntegralLimit = (int32_t)(-NOMINAL_PEAK_CURRENT) * (int32_t)FW_KIDIV,
-    .hUpperOutputLimit       = 0,
     .hLowerOutputLimit       = -INT16_MAX,
-    .hKpDivisor          = (uint16_t)FW_KPDIV,
-    .hKiDivisor          = (uint16_t)FW_KIDIV,
-    .hKpDivisorPOW2      = (uint16_t)FW_KPDIV_LOG,
-    .hKiDivisorPOW2      = (uint16_t)FW_KIDIV_LOG,
     .hDefKdGain           = 0x0000U,
+    
+    
     .hKdDivisor           = 0x0000U,
     .hKdDivisorPOW2       = 0x0000U,
 };
@@ -146,65 +209,26 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     },
         .FoldbackMotorSpeed =
     {
-        .bEnableFoldback = true,
         .FoldbackConfig = TRIM,
-        .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
-        .hDefaultOutputLimitLow = 0,
-        .hDecreasingEndValue = 10 * FOLDBACK_SPEED_END_VALUE,
-        .hDecreasingRange = 10 * FOLDBACK_SPEED_INTERVAL,
     },
         .FoldbackMotorTemperature =
     {
-        .bEnableFoldback = true,
         .FoldbackConfig = TRIM,
-        .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
-        .hDefaultOutputLimitLow = 0,
-        .hDecreasingEndValue = 100 * FOLDBACK_MOTOR_TEMP_END_VALUE,
-        .hDecreasingRange = 100 * FOLDBACK_MOTOR_TEMP_INTERVAL,
     },
         .FoldbackHeatsinkTemperature =
     {
-        .bEnableFoldback = true,
         .FoldbackConfig = TRIM,
-        .hDefaultOutputLimitHigh = NOMINAL_TORQUE,
-        .hDefaultOutputLimitLow = 0,
-        .hDecreasingEndValue = 100 * FOLDBACK_HS_TEMP_END_VALUE, 
-        .hDecreasingRange = 100 * FOLDBACK_HS_TEMP_INTERVAL,
     },
     .FoldbackDynamicMaxPower =
     {
-        .bEnableFoldback = ENABLE_MAX_POWER_LIMIT,
         .FoldbackConfig = TRIM,
-        .hDefaultOutputLimitHigh = MAX_APPLICATION_POSITIVE_POWER,
-        .hDefaultOutputLimitLow = MAX_BMS_POSITIVE_POWER,
-        .hDecreasingEndValue = MAX_TIME_BMS_TOLERANT,
-        .hDecreasingRange = MAX_POWER_LIMIT_TIMEOUT,
     },
     .FoldbackDynamicMaxTorque = 
     {
-        .bEnableFoldback = true,
         .FoldbackConfig = SET_THRESHOLD,
-        .hDefaultOutputLimitHigh = STARTING_TORQUE,
-        .hDefaultOutputLimitLow =  NOMINAL_TORQUE,
-        .hDecreasingRange = 10 * DYNAMICTORQUE_THRESHOLD_SPEED,
-        .hDecreasingEndValue = 10 * DYNAMICTORQUE_THRESHOLD_SPEED,
-    },
-    .OCD2_Handle =
-    {
-        .wPinNumber = CURRENT_SENSOR_OCD2,    // PC14
-        .bIsInvertedLogic = true,             //pin is ACTIVE LOW
-    },
-    .HWOverCurrentDetection = 
-    {
-        .OCDPowerDeratingSlope = OCD_POWER_DERATING_SLOPE,
-        .OCDTimeInterval = OCD_TIME_INTERVAL_COUNTS,
-        .OCDPowerDearatingGain = 1,
-        .bIsOverCurrentDetected = false,
-        .OverCurrentStatus = HARDWARE_OCD
     },
     .DynamicPowerHandle =
     {
-        .hDynamicMaxPower = MAX_APPLICATION_POSITIVE_POWER,
         .hBelowMaxPowerTimeout = MAX_POWER_RECOVER_TIMEOUT,  
         .hOverMaxPowerTimeout = 0,    // since using foldback this parameter is not needed
         .hBelowMaxPowerTimer = 0,
@@ -218,100 +242,95 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
         .low_battery_voltage = STUCK_LOW_VOLTAGE_THRESHOLD
     },  
     .hSTCFrequencyHz =              MEDIUM_FREQUENCY_TASK_RATE,
-    .hMaxBusCurrent =               (uint16_t)(MAX_APPLICATION_CURRENT),
-    .hBatteryLowVoltage =           (uint16_t)(LOW_BATTERY_VOLTAGE_THRESHOLD), 
-    .hMaxAppPositiveMecSpeedUnit =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT),
-    .hMinAppPositiveMecSpeedUnit =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-    .hMaxAppNegativeMecSpeedUnit =	(int16_t)(-MAX_APPLICATION_SPEED_UNIT),
-    .hMinAppNegativeMecSpeedUnit =	(int16_t)(-MIN_APPLICATION_SPEED_UNIT),
-    .hMaxPositiveTorque =           (int16_t)NOMINAL_TORQUE,
-    .hMinNegativeTorque =           -(int16_t)NOMINAL_TORQUE,
-    .hMaxPositivePower =            (int16_t)MAX_APPLICATION_POSITIVE_POWER,
-    .hMinNegativePower =            -(int16_t)MAX_APPLICATION_NEGATIVE_POWER,
-    .ModeDefault =					DEFAULT_CONTROL_MODE,
-    .wTorqueSlopePerSecondUp =      DEFAULT_TORQUE_SLOPE_UP,
-    .wTorqueSlopePerSecondDown =    DEFAULT_TORQUE_SLOPE_DOWN,
-    .wSpeedSlopePerSecondUp =       DEFAULT_SPEED_SLOPE_UP,
-    .wSpeedSlopePerSecondDown =     DEFAULT_SPEED_SLOPE_DOWN,
-    .fGainTorqueIqref =             GAIN_TORQUE_IQREF,
+    .hMaxBusCurrent =               (uint16_t)(DEFAULT_MAX_APPLICATION_CURRENT),
+    .hMinAppPositiveMecSpeedUnit =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+    .hMinAppNegativeMecSpeedUnit =    (int16_t)(-MIN_APPLICATION_SPEED_UNIT),
+    .ModeDefault =                    DEFAULT_CONTROL_MODE,
     .fGainTorqueIdref =             GAIN_TORQUE_IDREF,
-    .fGearRatio =                   MOTOR_GEAR_RATIO,  
-    .bEnableSpdLimitControl = ENABLE_SPEED_LIMIT_CONTROL,
-    .hSpdLimit = MAX_APPLICATION_SPEED_UNIT,
+    .bEnableSpdLimitControl =       false,
     .PISpeedLimit =
     {
-      .hDefKpGain           = (int16_t)PID_SPEEDLIMIT_KP_DEFAULT,
-      .hDefKiGain           = (int16_t)PID_SPEEDLIMIT_KI_DEFAULT,
-      .wUpperIntegralLimit  = STARTING_TORQUE * SP_KIDIV,
-      .wLowerIntegralLimit  = 0,
-      .hUpperOutputLimit    = STARTING_TORQUE,
-      .hLowerOutputLimit    = 0,
-      .hKpDivisor           = (uint16_t)SP_KPDIV,
-      .hKiDivisor           = (uint16_t)SP_KIDIV,
-      .hKpDivisorPOW2       = (uint16_t)SP_KPDIV_LOG,
-      .hKiDivisorPOW2       = (uint16_t)SP_KIDIV_LOG,
-      .hDefKdGain           = 0x0000U,
-      .hKdDivisor           = 0x0000U,
-      .hKdDivisorPOW2       = 0x0000U,
+        .hLowerOutputLimit    = 0,
+        .hDefKdGain           = 0x0000U,
+        .hKdDivisor           = 0x0000U,
+        .hKdDivisorPOW2       = 0x0000U,
     },
 };
 
 /**
   * @brief  Current sensor parameters Dual Drive Motor 1 - ICS, STM32G4xx
   */
-PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
-  {
-    .pFctGetPhaseCurrents              = &PWMInsulCurrSensorFdbk_GetPhaseCurrents,
-    .pFctSwitchOffPwm                  = &PWMInsulCurrSensorFdbk_SwitchOffPWM,
-    .pFctSwitchOnPwm                   = &PWMInsulCurrSensorFdbk_SwitchOnPWM,
-    .pFctCurrReadingCalib              = &PWMInsulCurrSensorFdbk_CurrentReadingPolarization,
-    .pFctTurnOnLowSides                = &PWMInsulCurrSensorFdbk_TurnOnLowSides,
-    .pFctSetADCSampPointSectX          = &PWMInsulCurrSensorFdbk_WriteTIMRegisters,
-    .pFctIsOverCurrentOccurred         = &PWMInsulCurrSensorFdbk_IsOverCurrentOccurred,
-    .pFctRLDetectionModeEnable         = MC_NULL,
-    .pFctRLDetectionModeDisable        = MC_NULL,
-    .pFctRLDetectionModeSetDuty        = MC_NULL,
-    .hT_Sqrt3 = (PWM_PERIOD_CYCLES*SQRT3FACTOR)/16384u,
-    .Sector = 0,
-    .hCntPhA = 0,
-    .hCntPhB = 0,
-    .hCntPhC = 0,
-    .hSWerror = 0,
-    .hTurnOnLowSidesAction = false,
-    .Motor = M1,
-    .bRLDetectionMode = false,
-    .Ia = 0,
-    .Ib = 0,
-    .Ic = 0,
-    .hPWMperiod          = PWM_PERIOD_CYCLES,
-
-    .IaFilter =
+PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = 
+{
     {
-        .pIIRFAInstance = SOCP_IA_IIRFA_HANDLE_ADDRESS,
+        .pFctGetPhaseCurrents              = &PWMInsulCurrSensorFdbk_GetPhaseCurrents,
+        .pFctSwitchOffPwm                  = &PWMInsulCurrSensorFdbk_SwitchOffPWM,
+        .pFctSwitchOnPwm                   = &PWMInsulCurrSensorFdbk_SwitchOnPWM,
+        .pFctCurrReadingCalib              = &PWMInsulCurrSensorFdbk_CurrentReadingPolarization,
+        .pFctTurnOnLowSides                = &PWMInsulCurrSensorFdbk_TurnOnLowSides,
+        .pFctSetADCSampPointSectX          = &PWMInsulCurrSensorFdbk_WriteTIMRegisters,
+        .pFctIsOverCurrentOccurred         = &PWMInsulCurrSensorFdbk_IsOverCurrentOccurred,
+        #if OCDX_POEG == OCD1_POEG && HARDWARE_OCD2 == OCD2_ENABLED
+            .pFctOCD2Occurred                   = &PWMInsulCurrSensorFdbk_OCD2Occurred,
+        #endif
+        .pFctRLDetectionModeEnable         = MC_NULL,
+        .pFctRLDetectionModeDisable        = MC_NULL,
+        .pFctRLDetectionModeSetDuty        = MC_NULL,
+        .hT_Sqrt3 = (PWM_PERIOD_CYCLES*SQRT3FACTOR)/16384u,
+        .Sector = 0,
+        .hCntPhA = 0,
+        .hCntPhB = 0,
+        .hCntPhC = 0,
+        .hSWerror = 0,
+        .hTurnOnLowSidesAction = false,
+        .Motor = M1,
+        .bRLDetectionMode = false,
+        .Ia = 0,
+        .Ib = 0,
+        .Ic = 0,
+        
+        .hPWMperiod          = PWM_PERIOD_CYCLES,
+        
+
+        .IaFilter =
+        {
+            .pIIRFAInstance = SOCP_IA_IIRFA_HANDLE_ADDRESS,
+        },
+        .IbFilter =
+        {
+            .pIIRFAInstance = SOCP_IB_IIRFA_HANDLE_ADDRESS,
+        },
+        .fCurrentFilterAlpha = CURRENT_FILTER_ALPHA,
+        .fCurrentFilterBeta  = CURRENT_FILTER_BETA,
+
+        .hSoftwareOCPMarginCurrent = OCSP_SAFETY_MARGIN,
+        .hSoftwareOCPMaximumCurrent = OCSP_MAX_CURRENT,
+        /*******************************************************/
+        /*     Motor tuner pwm current feedback parameters     */
+        /*******************************************************/
+       #if AUTOTUNE_ENABLE
+        .IaFilt = 0,
+        .IbFilt = 0,
+        .IcFilt = 0,
+        .hPWMDeadtime = DEAD_TIME_COUNTS,
+        .fCurrentConversionFactor =  (float)ADC_REFERENCE_VOLTAGE / (65536.0f * (float)AMPLIFICATION_GAIN),
+        .fCycle2SecondConversionFactor = 1.0f / ((float)PWM_TIM_CLK_MHz * 1000000.0f),
+       #endif
+
     },
-    .IbFilter =
-    {
-        .pIIRFAInstance = SOCP_IB_IIRFA_HANDLE_ADDRESS,
-    },
-    .fCurrentFilterAlpha = CURRENT_FILTER_ALPHA,
-    .fCurrentFilterBeta  = CURRENT_FILTER_BETA,
+    .hIaRaw = 0,
+    .hIbRaw = 0,
 
-    .hSoftwareOCPMarginCurrent = OCSP_SAFETY_MARGIN,
-    .hSoftwareOCPMaximumCurrent = OCSP_MAX_CURRENT,
+    .bOverrunFlag = false,
 
-  },
-	.hIaRaw = 0,
-	.hIbRaw = 0,
+    .wPhaseAOffset = 0,
+    .wPhaseBOffset = 0,
+    .hHalfPWMPeriod = PWM_PERIOD_CYCLES/2u,
+    .bPolarizationCounter = 0,
+    .bOCD1Flag = false,
+    .bOCD2Flag = false,
 
-	.bOverrunFlag = false,
-
-  .wPhaseAOffset = 0,
-  .wPhaseBOffset = 0,
-  .hHalfPWMPeriod = PWM_PERIOD_CYCLES/2u,
-  .bPolarizationCounter = 0,
-  .bOverCurrentFlag = false,
-
-  .pParamsStructure = &PWMICSParamsM1
+    .pParamsStructure = &PWMICSParamsM1
 };
 
 /**
@@ -320,51 +339,36 @@ PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1 = {
 BemfObserverPllHandle_t BemfObserverPllM1 =
 {
     .Super = {
-        .bElToMecRatio                     =	POLE_PAIR_NUM,
         .bSpeedUnit                         =    SPEED_UNIT,
-        .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
-        .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-        .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
-        .hMaxReliableMecAccelUnitP         =	65535,
-        .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
+        .hMinReliableMecSpeedUnit          =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+        .bMaximumSpeedErrorsNumber         =    MEAS_ERRORS_BEFORE_FAULTS,
+        .hMaxReliableMecAccelUnitP         =    65535,
+        .hMeasurementFrequency             =    TF_REGULATION_RATE_SCALED,
         .DPPConvFactor                     =  DPP_CONV_FACTOR,
     },
-    .hC1                         =	(int16_t) C1,
-    .hC2                         =	C2,
-    .hC3                         =	(int16_t) C3,
-    .hC4                         =	C4,
-    .hC5                         =	(int16_t) C5,
-    .hF1                         =	F1,
-    .hF2                         =	F2,
+    .hC2                         =    C2,
+    .hC4                         =    C4,
+    .hF1                         =    F1,
+    .hF2                         =    F2,
     .PIRegulator = {
-        .hDefKpGain = PLL_KP_GAIN,
-        .hDefKiGain = PLL_KI_GAIN,
         .hDefKdGain = 0x0000U,
-        .hKpDivisor = PLL_KPDIV,
-        .hKiDivisor = PLL_KIDIV,
         .hKdDivisor = 0x0000U,
-        .wUpperIntegralLimit = INT32_MAX,
-        .wLowerIntegralLimit = -INT32_MAX,
-        .hUpperOutputLimit = INT16_MAX,
         .hLowerOutputLimit = -INT16_MAX,
-        .hKpDivisorPOW2 = (uint16_t)PLL_KPDIV_LOG,
-        .hKiDivisorPOW2 = (uint16_t)PLL_KIDIV_LOG,
         .hKdDivisorPOW2       = 0x0000U,
     },
-    .bSpeedBufferSizeUnit                =	STO_FIFO_DEPTH_UNIT,
-    .bSpeedBufferSizeDpp                 =	STO_FIFO_DEPTH_DPP,
-    .hVariancePercentage                 =	PERCENTAGE_FACTOR,
-    .bSpeedValidationBandHigh              =	SPEED_BAND_UPPER_LIMIT,
-    .bSpeedValidationBandLow              =	SPEED_BAND_LOWER_LIMIT,
-    .hMinStartUpValidSpeed               =	OBS_MINIMUM_SPEED_UNIT,
-    .bStartUpConsistThreshold            =	NB_CONSECUTIVE_TESTS,
-    .bReliabilityHysteresys             =	OBS_MEAS_ERRORS_BEFORE_FAULTS,
-    .bBemfConsistencyCheck               =	BEMF_CONSISTENCY_TOL,
-    .bBemfConsistencyGain                =	BEMF_CONSISTENCY_GAIN,
-    .hMaxAppPositiveMecSpeedUnit         =	(uint16_t)(MAX_APPLICATION_SPEED_UNIT*1.15),
-    .hF1Log                              =	(uint16_t)F1_LOG,
-    .hF2Log                              =	(uint16_t)F2_LOG,
-    .hSpeedBufferSizeDppLog              =	(uint16_t)STO_FIFO_DEPTH_DPP_LOG,
+    .bSpeedBufferSizeUnit                =    STO_FIFO_DEPTH_UNIT,
+    .bSpeedBufferSizeDpp                 =    STO_FIFO_DEPTH_DPP,
+    .hVariancePercentage                 =    PERCENTAGE_FACTOR,
+    .bSpeedValidationBandHigh              =    SPEED_BAND_UPPER_LIMIT,
+    .bSpeedValidationBandLow              =    SPEED_BAND_LOWER_LIMIT,
+    .hMinStartUpValidSpeed               =    OBS_MINIMUM_SPEED_UNIT,
+    .bStartUpConsistThreshold            =    NB_CONSECUTIVE_TESTS,
+    .bReliabilityHysteresys             =    OBS_MEAS_ERRORS_BEFORE_FAULTS,
+    .bBemfConsistencyCheck               =    BEMF_CONSISTENCY_TOL,
+    .bBemfConsistencyGain                =    BEMF_CONSISTENCY_GAIN,
+    .hF1Log                              =    (uint16_t)F1_LOG,
+    .hF2Log                              =    (uint16_t)F2_LOG,
+    .hSpeedBufferSizeDppLog              =    (uint16_t)STO_FIFO_DEPTH_DPP_LOG,
     .hForcedDirection                   =  0x0000U
 }; BemfObserverPllHandle_t *pBemfObserverPllM1 = &BemfObserverPllM1;
 
@@ -375,27 +379,20 @@ HallPosSensorHandle_t HallPosSensorM1 =
 {
     .Super = 
     {
-        .bElToMecRatio                     =	POLE_PAIR_NUM,
-        .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
-        .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-        .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
-        .hMaxReliableMecAccelUnitP         =	65535,
-        .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
+        .hMinReliableMecSpeedUnit          =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+        .bMaximumSpeedErrorsNumber         =    MEAS_ERRORS_BEFORE_FAULTS,
+        .hMaxReliableMecAccelUnitP         =    65535,
+        .hMeasurementFrequency             =    TF_REGULATION_RATE_SCALED,
         .DPPConvFactor                     =  DPP_CONV_FACTOR,
     },
     .TIMx                = HALL_POSITION_TIMER_HANDLE_ADDRESS,
-    .bSensorPlacement     = HALL_SENSORS_PLACEMENT,
-    .hPhaseShift          = (int16_t)(HALL_PHASE_SHIFT * 65536/360),
     .hSpeedSamplingFreqHz = MEDIUM_FREQUENCY_TASK_RATE,
-    .bSpeedBufferSize     = HALL_AVERAGING_FIFO_DEPTH,
     .wTIMClockFreq       = HALL_TIM_CLK,
     .bPWMFreqScaling      = PWM_FREQ_SCALING,
     .bHallMtpa            = HALL_MTPA,
     .H1PortPin = HALL_POSITION_HU_GPIO_PIN,
     .H2PortPin = HALL_POSITION_HV_GPIO_PIN,
     .H3PortPin = HALL_POSITION_HW_GPIO_PIN,
-    .fFilterAlpha = MEC_SPEED_FILTER_BUTTERWORTH_ALPHA,
-    .fFilterBeta = MEC_SPEED_FILTER_BUTTERWORTH_BETA,
 };
 
 /**
@@ -403,19 +400,11 @@ HallPosSensorHandle_t HallPosSensorM1 =
   */
 NTCTempSensorHandle_t TempSensorMotorM1 =
 {
-    .bSensorType = MOTOR_TEMP_SENSOR_TYPE,
     .TempRegConv =
     {
         .hChannel = MOTOR_TEMP_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
-
-
-    .hOverTempThreshold      = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C),
-    .hOverTempDeactThreshold = (int16_t)(OV_TEMP_MOTOR_THRESHOLD_C - OV_TEMP_MOTOR_HYSTERESIS_C),
-    .hFoldbackStartTemp = (int16_t)(FOLDBACK_MOTOR_TEMP_END_VALUE - FOLDBACK_MOTOR_TEMP_INTERVAL),
-
-    .pNTCLookupTable = &MotorNTCLookupTable,
 };
 
 /**
@@ -423,17 +412,11 @@ NTCTempSensorHandle_t TempSensorMotorM1 =
   */
 NTCTempSensorHandle_t TempSensorControllerM1 =
 {
-    .bSensorType = REAL_SENSOR,
     .TempRegConv =
     {
         .hChannel = HEATSINK_TEMP_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
-    .hOverTempThreshold      = (int16_t)(OV_TEMP_CONTROLLER_THRESHOLD_C),
-    .hOverTempDeactThreshold = (int16_t)(OV_TEMP_CONTROLLER_THRESHOLD_C - OV_TEMP_CONTROLLER_HYSTERESIS_C),
-    .hFoldbackStartTemp = (int16_t)(FOLDBACK_HS_TEMP_END_VALUE - FOLDBACK_HS_TEMP_INTERVAL),
-
-    .pNTCLookupTable = &ControllerNTCLookupTable,
 };
 
 /* Bus voltage sensor value filter buffer */
@@ -455,8 +438,8 @@ ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1 =
         .hChannel = BUS_VOLTAGE_ANALOG_CHANNEL,
     },
     .hLowPassFilterBw       =  M1_VBUS_SW_FILTER_BW_FACTOR,
-    .hOverVoltageThreshold  = OVERVOLTAGE_THRESHOLD_d,
-    .hUnderVoltageThreshold =  UNDERVOLTAGE_THRESHOLD_d,
+    .hOverVoltageThreshold  =  OVERVOLTAGE_THRESHOLD_d,
+    .hUnderVoltageThreshold =  DEFAULT_UNDERVOLTAGE_THRESHOLD_d,
     .aBuffer = RealBusVoltageSensorFilterBufferM1,
 };
 
@@ -466,7 +449,7 @@ ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1 =
 CircleLimitationHandle_t CircleLimitationM1 =
 {
     .hMaxModule          = MAX_MODULE,
-    .hMaxVd          	  = (uint16_t)(MAX_MODULE * FW_VOLTAGE_REF / 1000),
+    .hMaxVd                = (uint16_t)(MAX_MODULE * FW_VOLTAGE_REF / 1000),
     .CircleLimitTable = MMITABLE,
     .bStartIndex        = START_INDEX,
 };
@@ -474,12 +457,10 @@ CircleLimitationHandle_t CircleLimitationM1 =
 RotorPositionObserverHandle_t RotorPosObsM1 =
 {
     .Super = {
-    .bElToMecRatio                     =	POLE_PAIR_NUM,
-    .hMaxReliableMecSpeedUnit          =	(uint16_t)(1.5*MAX_APPLICATION_SPEED_UNIT),
-    .hMinReliableMecSpeedUnit          =	(uint16_t)(MIN_APPLICATION_SPEED_UNIT),
-    .bMaximumSpeedErrorsNumber         =	MEAS_ERRORS_BEFORE_FAULTS,
-    .hMaxReliableMecAccelUnitP         =	65535,
-    .hMeasurementFrequency             =	TF_REGULATION_RATE_SCALED,
+    .hMinReliableMecSpeedUnit          =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
+    .bMaximumSpeedErrorsNumber         =    MEAS_ERRORS_BEFORE_FAULTS,
+    .hMaxReliableMecAccelUnitP         =    65535,
+    .hMeasurementFrequency             =    TF_REGULATION_RATE_SCALED,
     .DPPConvFactor                     =  DPP_CONV_FACTOR,
     },
 
@@ -494,6 +475,4 @@ RotorPositionObserverHandle_t RotorPosObsM1 =
     .hKdGainDef = ROTOR_POS_OBS_KD,
     .hKdDivisorPOW2 = (uint16_t) ROTOR_POS_OBS_KDDIV_LOG,
 
-    .fFilterAlpha = MEC_SPEED_FILTER_BUTTERWORTH_ALPHA,
-    .fFilterBeta = MEC_SPEED_FILTER_BUTTERWORTH_BETA,
 };

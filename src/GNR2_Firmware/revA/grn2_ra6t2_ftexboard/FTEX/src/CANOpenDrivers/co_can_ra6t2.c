@@ -124,8 +124,8 @@ const canfd_afl_entry_t CANFD_FilterListArray[CANFD_CFG_AFL_CH0_RULE_NUM] =
 static void CANo_DrvInit(void)
 {
     R_CANFD_ModeTransition(&g_canfd0_ctrl,CAN_OPERATION_MODE_HALT, CAN_TEST_MODE_DISABLED);
-    		
-  	//osDelay(10); //WTF WHY
+            
+      //osDelay(10); //WTF WHY
 }
 
 /**
@@ -133,10 +133,10 @@ static void CANo_DrvInit(void)
 */
 static void CANo_DrvEnable(uint32_t baudrate)
 {
-	(void)baudrate;
+    (void)baudrate;
 
-	/* TODO: set the given baudrate to the CAN controller */
-	R_CANFD_ModeTransition(&g_canfd0_ctrl, CAN_OPERATION_MODE_NORMAL, CAN_TEST_MODE_DISABLED);
+    /* TODO: set the given baudrate to the CAN controller */
+    R_CANFD_ModeTransition(&g_canfd0_ctrl, CAN_OPERATION_MODE_NORMAL, CAN_TEST_MODE_DISABLED);
 }
 
 /**
@@ -156,13 +156,13 @@ static int16_t CANo_DrvSend(CO_IF_FRM *frm)
     }
     
     //feed the can frame with the basic configuration.
-	can_frame_t tx_frame =
-	{
-		.id = frm->Identifier,
-		.id_mode = CAN_ID_MODE_STANDARD,
-		.type = CAN_FRAME_TYPE_DATA,
-		.data_length_code = frm->DLC
-	};
+    can_frame_t tx_frame =
+    {
+        .id = frm->Identifier,
+        .id_mode = CAN_ID_MODE_STANDARD,
+        .type = CAN_FRAME_TYPE_DATA,
+        .data_length_code = frm->DLC
+    };
     
     //copy the data payload to the can frame to be sent.
     memcpy(tx_frame.data, frm->Data, 8);
@@ -191,7 +191,7 @@ static int16_t CANo_DrvSend(CO_IF_FRM *frm)
     //in the circular buffer.
     CAN_SendNextFrame();
     
-	return (0);
+    return (0);
 }
 
 /**
@@ -203,12 +203,12 @@ static int16_t CANo_DrvRead (CO_IF_FRM *frm)
     
     R_CANFD_Read(&g_canfd0_ctrl, CANFD_RX_BUFFER_MB_0, &rx_frame);
     
-	frm->Identifier = rx_frame.id;
-	frm->DLC = rx_frame.data_length_code;
-	
-	memcpy(frm->Data, rx_frame.data, 8);
-	
-	return (sizeof(CO_IF_FRM));
+    frm->Identifier = rx_frame.id;
+    frm->DLC = rx_frame.data_length_code;
+    
+    memcpy(frm->Data, rx_frame.data, 8);
+    
+    return (sizeof(CO_IF_FRM));
 }
 
 /**
@@ -225,9 +225,9 @@ static void CANo_DrvReset(void)
 */
 static void CANo_DrvClose(void)
 {
-	/* TODO: remove CAN controller from CAN network */
+    /* TODO: remove CAN controller from CAN network */
     R_CANFD_ModeTransition(&g_canfd0_ctrl, CAN_OPERATION_MODE_RESET, CAN_TEST_MODE_DISABLED);
-	R_CANFD_Close(&g_canfd0_ctrl);
+    R_CANFD_Close(&g_canfd0_ctrl);
 }
 
 // ================================== Public Functions Definitions ================================== //

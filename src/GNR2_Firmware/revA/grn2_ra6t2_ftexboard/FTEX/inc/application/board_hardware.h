@@ -4,8 +4,8 @@
   * @author  Sami Bouzid, FTEX
   * @brief   This module defines the hardware (pins, peripherals, ...) used by the board. 
   *
-	******************************************************************************
-	*/
+    ******************************************************************************
+    */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __BOARD_HARDWARE_H
@@ -23,12 +23,13 @@ uint32_t GetChipID(uint8_t ID_Half);
 #define CAN_ENABLE_N_GPIO_PIN                               0xd7
 #define BRAKE_GPIO_PIN                                      0xc0
 #define REVERSE_GPIO_PIN                                    0x01
-#define M1SELECT_GPIO_PIN                                   0xa9
-#define M2SELECT_GPIO_PIN                                   0xdf
+#define M1SELECT_GPIO_PIN                                   0xa7
+#define M2SELECT_GPIO_PIN                                   0x01
 #define PWR_ENABLE_GPIO_PIN                                 0xb8
 #define PWRSTG_ENABLE_GPIO_PIN                              0xe9
 #define FRONT_LIGHT_PIN                                     0xd4
 #define BACK_LIGHT_PIN                                      0xda
+#define DRIVER_EN_PIN                                       0xba
 
 
 /* Hall position sensor ---------------------------------------------*/

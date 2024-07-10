@@ -9,7 +9,12 @@
     
 #include "lcd_Cloud_5S.h"
 #include "ASSERT_FTEX.h"
-
+#include "wheel.h"
+#include "gnr_main.h"
+#include "vc_errors_management.h"
+#include "vc_constants.h"
+#include "vc_parameters.h"
+#include "can_vehicle_interface.h"
 
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
@@ -37,7 +42,8 @@ void LCD_Cloud_5S_init(Cloud_5S_Handle_t *pHandle,VCI_Handle_t *pVCIHandle, UART
     ASSERT(pHandle     != NULL);
     ASSERT(pVCIHandle  != NULL);
     ASSERT(pUARTHandle != NULL);
-    pHandle->isScreenSlave = true;  // Start as a slave to force pas to start at 1 on boot.
+    pHandle->isScreenSlave = true;  // Start as a slave to force pas to start at default pas on boot.
+    pHandle->pasController = 0;
     
     pHandle->pVController = pVCIHandle;        // Pointer to VController
     pHandle->pUART_handle = pUARTHandle;       // Pointer to UART instance  
@@ -74,6 +80,7 @@ void LCD_Cloud_5S_RX_IRQ_Handler(void *pVoidHandle)
     pHandle->RxBuffer[pHandle->RxCount] = pHandle->RxByte;
     pHandle->RxCount++;
     
+    uCAL_UART_SetTaskFlag(pHandle->pUART_handle);  // Tell the task that we unblocked the task
     osThreadFlagsSet(COMM_Uart_handle, UART_FLAG); // Notify task that a byte has been received 
     uCAL_UART_Receive(pHandle->pUART_handle, &(pHandle->RxByte), sizeof(pHandle->RxByte));    
 }
@@ -266,17 +273,17 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             
             if(AssistType == CLOUD_TORQ_ASSIST_TYPE) // Check if we want torque or cadence PAS and apply the change to the module
             {
-                PedalAssist_SetPASAlgorithm(pPASHandle, TorqueSensorUse);
+                CanVehiInterface_SetAlgorithm(pHandle->pVController, TorqueSensorUse);
             }
             else if (AssistType == CLOUD_CADE_ASSIST_TYPE)
             {
-                PedalAssist_SetPASAlgorithm(pPASHandle, CadenceSensorUse);
+                CanVehiInterface_SetAlgorithm(pHandle->pVController, CadenceSensorUse);
             }
             else
             {
                 ASSERT(false); // unexpected AssistType
-            }            
-            
+            }        
+
             //pHandle->rx_frame.Buffer[5] // assitance sensor type
             //pHandle->rx_frame.Buffer[6] // Magnets/ low speed behavior
             //pHandle->rx_frame.Buffer[7] // System undervoltage value
@@ -284,18 +291,16 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             
             HandshakeIndex = pHandle->rx_frame.Buffer[9]; // handshake byte     
             
-            #if DYNAMIC_SPEED_LIMITATION
-            uint16_t  speedLimit    = 0;
+        #if DYNAMIC_SPEED_LIMITATION
+            uint8_t  speedLimit    = 0;
             //Reading the Speed limit
             speedLimit = pHandle->rx_frame.Buffer[10]; // speed limit       
             
             // setting the max RPMs for any speed limits
-            Throttle_SetMaxSpeed(pThrottleHandle,speedLimit);        
-            PedalAssist_SetTorquePASMaxSpeed(pPASHandle,speedLimit);
-            
-            #endif    
+            PWRT_SetScreenMaxSpeed(pHandle->pVController->pPowertrain,speedLimit);        
+        #endif    
            
-            #ifdef SCREENPOWERCONTROL        
+        #ifdef SCREENPOWERCONTROL        
             // Reading the Current limit          
             uint16_t CurrentLimit;
             CurrentLimit = pHandle->rx_frame.Buffer[11];  // current limit
@@ -303,7 +308,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             CurrentLimit /=2; // Transform from 0.5 amps perunit to 1 amps per unit 
             
             PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);        
-            #endif
+        #endif
            
             WheelDiameter = Cloud_5S_WheelDiameterInch[pHandle->rx_frame.Buffer[12]]; // wheel diameter 
                                                                                     
@@ -341,6 +346,12 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             // Therefore we skip setting the Cloud Drive PAS to our PAS because 
             // we will be updating the Cloud Drive right after parsing this message
             // Otherwise check if the pas has changed to update the app and set the new pas
+            // As long as the app pas has been confirmed.
+            if(pHandle->isScreenSlave && (currentPAS == pHandle->pasController))
+            {
+                pHandle->isScreenSlave = false;
+            }
+
             if (!pHandle->isScreenSlave)
             {
                 if (pasLevel != currentPAS)
@@ -350,9 +361,11 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
                 }
             }
             
-            LightStatus = (pHandle->rx_frame.Buffer[5]) & 0x80; // bit7: headlight. 0: light off, 1: light on
-         
-            if (LightStatus == true) //Operate the light according to what the screne tells us
+            LightStatus = pHandle->rx_frame.Buffer[5]; 
+            
+            LightStatus = (LightStatus & 0x80); // bit7: headlight. 0: light off, 1: light on
+            
+            if (LightStatus > 0) //Operate the light according to what the screen tells us
             {
                 Light_Enable(pHandle->pVController->pPowertrain->pHeadLight);  
                 Light_Enable(pHandle->pVController->pPowertrain->pTailLight); 
@@ -368,7 +381,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
         
             if((CruiseCtrlState > 0) && (PWRT_GetForceDisengageState(pPowertrainHandle) == false))
             {
-                uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpdSensor_GetSpeedRPM(pPASHandle->pWSS));
+                uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpeedSensor_GetSpeedRPM());
                 
                 //check if the throttle max speed is inside of the max speed limit
                 //if not used MaxThrottleSpeedKMH as cruise control speed.
@@ -413,11 +426,14 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             replyFrame.Buffer[1] = CLOUD_SLAVE_ID;
             replyFrame.Buffer[2] = CLOUD_RUNTIME;
             replyFrame.Buffer[3] = 6; // Data length of this frame
-            replyFrame.Buffer[4] = LCD_Cloud_5S_ConvertPASLevelToCloud_5S(PedalAssist_GetAssistLevel(pPASHandle)); // PAS 
+            uint8_t controllerPas = PedalAssist_GetAssistLevel(pPASHandle);
+            replyFrame.Buffer[4] = LCD_Cloud_5S_ConvertPASLevelToCloud_5S(controllerPas); // PAS 
             if (pHandle->isScreenSlave == true)
-                pHandle->isScreenSlave = false;
+            {
+                pHandle->pasController = controllerPas;
+            }
 
-            toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);             
+            toSend = PWRT_GetDCCurrent(pHandle->pVController->pPowertrain);             
             toSend = LCD_Cloud_5S_ApplyPowerFilter((uint16_t)toSend);  
           
             toSend = toSend * 2; //Covert from amps to 0.5 amps; 
@@ -425,7 +441,7 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
             replyFrame.Buffer[5] = (toSend & 0x000000FF); //Power 0.5 A/unit maxed out at 80 = 0x50 (40 amps)
            
             /* Condition use for wheel speed sensor rpm to send */
-            toSend = WheelSpdSensor_GetSpeedRPM(pPASHandle->pWSS); // Getting RPM from Wheel Speed Module
+            toSend = WheelSpeedSensor_GetSpeedRPM(); // Getting RPM from Wheel Speed Module
                   
             toSend = toSend * 500; //Converion from RPM to period in ms, 500 is used as scaling to conserve precision          
          
@@ -480,8 +496,20 @@ void LCD_Cloud_5S_ProcessFrame(Cloud_5S_Handle_t * pHandle)
 uint16_t LCD_Cloud_5S_ApplyPowerFilter(uint16_t aInstantPowerInAmps)
 {
    static uint16_t PowerAvg; 
-   uint16_t Bandwidth = 5; //Bandwidth CANNOT be set to 0
-        
+   uint16_t BandwidthUp   = 1; //Bandwidth CANNOT be set to 0
+   uint16_t BandwidthDown = 5;   
+
+   uint16_t Bandwidth = 0;
+
+   if (aInstantPowerInAmps >= PowerAvg)
+   {
+       Bandwidth = BandwidthUp;
+   }
+   else
+   {
+       Bandwidth = BandwidthDown;
+   }       
+    
    PowerAvg = (((Bandwidth-1) * PowerAvg + aInstantPowerInAmps)/Bandwidth);
    
    return (PowerAvg); 
@@ -573,11 +601,13 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
         case NO_ERROR:
             ConvertedError = CLOUD_5S_NO_ERROR; 
             break;
+        // TODO : Split those error when we have a screen protocol redifinition
         case PAS_BOOT_ERROR:
+        case TORQUE_SENSOR_ERROR:
             ConvertedError = CLOUD_5S_PAS_BOOT_ERROR; 
             break;
         case CONTROLLER_ERROR:
-            ConvertedError = CLOUD_5S_PAS_BOOT_ERROR; 
+            ConvertedError = CLOUD_5S_CNTL_ERROR; 
             break;
         case MOTOR_PHASE_ERROR:
             ConvertedError = CLOUD_5S_PHASE_ERROR; 
@@ -598,6 +628,7 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
             ConvertedError = CLOUD_5S_UT_ERROR;
             break;            
         case CONTROLLER_OT_PROTECT:
+        case CONTROLLER_FOLDBACK_TEMP:
             ConvertedError = CLOUD_5S_OT_ERROR;
             break;            
         case IOT_COMM_ERROR:
@@ -614,8 +645,11 @@ uint8_t LCD_Cloud_5S_ErrorConversionFTEXToCloud_5S(uint8_t aError)
             ConvertedError = CLOUD_5S_LOW_BAT;
             break;            
         case MOTOR_NTC_DISC_FREEZE:
-             ConvertedError = CLOUD_5S_TEMP_DISC;
-             break;
+            ConvertedError = CLOUD_5S_TEMP_DISC;
+            break;
+        case OVER_CURRENT:
+            ConvertedError = CLOUD_5S_CNTL_ERROR;
+            
         case UNMAPPED_ERROR: // Errors that Cloud 5S has but that we currently don't flag
             break;        
         default: // Cloud drive doesn't supports sending other error codes

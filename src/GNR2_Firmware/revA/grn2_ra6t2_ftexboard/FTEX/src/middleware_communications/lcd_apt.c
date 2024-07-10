@@ -9,12 +9,12 @@
     
 #include "lcd_apt.h"
 #include "ASSERT_FTEX.h"
-
+#include "wheel.h"
+#include "gnr_main.h"
+#include "vc_constants.h"
+#include "vc_errors_management.h"
 #include <stdint.h>
-#include <stdio.h>
 #include <stdbool.h>
-#include <stdlib.h> 
-
 
 extern osThreadId_t COMM_Uart_handle; // Task Id for UART
 
@@ -64,6 +64,7 @@ void LCD_APT_RX_IRQ_Handler(void *pVoidHandle)
     pHandle->RxBuffer[pHandle->RxCount] = pHandle->RxByte;
     pHandle->RxCount++;
     
+    uCAL_UART_SetTaskFlag(pHandle->pUART_handle);  // Tell the task that we unblocked the task
     osThreadFlagsSet(COMM_Uart_handle, UART_FLAG); // Notify task that a byte has been received 
     uCAL_UART_Receive(pHandle->pUART_handle, &(pHandle->RxByte), sizeof(pHandle->RxByte));    
 }
@@ -173,13 +174,11 @@ void LCD_APT_Task(APT_Handle_t *pHandle)
  *  This is executed in a comm task that gets unblocked when a complete frame is received.
  *
  */
-
-static uint8_t framesSinceSync = 0; // Count frames since the last pas sync to the screen to send repeatedly.
-
 void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
 {
     APT_frame_t replyFrame = {0};
     static bool walkmodeTransition = false;
+    static bool DefaultPasInitiliased = false;
     static uint8_t pasLvlBeforeWalk = 0;
     int32_t  toSend      = 0;
     uint32_t Check       = 0;
@@ -225,59 +224,49 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         uint8_t maxLevels = pHandle->pVController->pPowertrain->pPAS->sParameters.bMaxLevel;
         uint8_t currentPas = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
         uint8_t standardizedPas = LCD_APT_ConvertPASLevelFromAPT(pasLvl,maxLevels);
-
-        // Checking if the PAS from the APT has given a rational value
-        bool isPasSane = true;
-        if ((pasLvl != PAS_UNCHANGED) && (currentPas != (standardizedPas + 1)) && (currentPas != (standardizedPas - 1)) && (standardizedPas != PAS_LEVEL_WALK))
+        
+        if(standardizedPas == DEFAULT_PAS_LEVEL && DefaultPasInitiliased == false) 
         {
-           isPasSane = false;
+            DefaultPasInitiliased = true;
         }
-
-        if (pHandle->APTStabilizing && (pasLvl == PAS_UNCHANGED))
-        {
-            pHandle->APTStabilizing = false;
-            pHandle->OldPAS = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
-        }
-        // The PAS value being sent by the screen is the old PAS value for a while
-        // So we wait for it to tell us that PAS has finished changing so we know it is now stable.
-        if (isPasSane)
-        {
-            if ((!pHandle->APTChangePasFlag && (pasLvl != PAS_UNCHANGED) && (standardizedPas != pHandle->OldPAS)) || (standardizedPas == PAS_LEVEL_WALK))
-            {                  
-                if((pasLvl == PAS_LEVEL_WALK) && (walkmodeTransition == false)) // when we switch to walk mode we need to remember our previous state
-                {
-                    walkmodeTransition = true;
-                    pasLvlBeforeWalk = currentPas;
-                }                    
-
-                PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,standardizedPas);         
-                pHandle->APTChangePasFlag = true;
-                pHandle->APTStabilizing = true;
-                framesSinceSync = 0;
-            }
-            else if (walkmodeTransition && (standardizedPas != PAS_LEVEL_WALK)) // If we were in walkmode we need to restore the previous pas level
+        
+        
+        if ((pasLvl != PAS_UNCHANGED && (standardizedPas != pHandle->OldPAS)) || (standardizedPas == PAS_LEVEL_WALK))
+        {                  
+            if((pasLvl == PAS_LEVEL_WALK) && (walkmodeTransition == false)) // when we switch to walk mode we need to remember our previous state
             {
-                walkmodeTransition = false;
+                walkmodeTransition = true;
+                pasLvlBeforeWalk = currentPas;
+            }                    
                 
-                PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,pasLvlBeforeWalk);         
+            if(DefaultPasInitiliased)
+            {    
+                PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,standardizedPas);   
+                pHandle->OldPAS = standardizedPas;                 
                 pHandle->APTChangePasFlag = true;
-                pHandle->APTStabilizing = true;
-                framesSinceSync = 0;
-            }                
-        }
+            }
+         }
+         else if (walkmodeTransition && (standardizedPas != PAS_LEVEL_WALK)) // If we were in walkmode we need to restore the previous pas level
+         {
+            walkmodeTransition = false;
+                
+            PedalAssist_SetAssistLevel(pHandle->pVController->pPowertrain->pPAS,pasLvlBeforeWalk);         
+            pHandle->APTChangePasFlag = true;
+         }                
 
-        #if DYNAMIC_SPEED_LIMITATION   
 
-        uint16_t speedLimit;
+    #if DYNAMIC_SPEED_LIMITATION   
+
+        uint8_t speedLimit;
         //Reading the Speed limit
         speedLimit = pHandle->rx_frame.Buffer[SPEED];        
         
         // setting the max speed for any speed limits
-        Throttle_SetMaxSpeed(pHandle->pVController->pPowertrain->pThrottle,speedLimit);
-        PedalAssist_SetTorquePASMaxSpeed(pHandle->pVController->pPowertrain->pPAS,speedLimit);
-        #endif 
+        PWRT_SetScreenMaxSpeed(pHandle->pVController->pPowertrain,speedLimit);
         
-        #ifdef SCREENPOWERCONTROL
+    #endif 
+        
+    #ifdef SCREENPOWERCONTROL
         
         // Reading the Current limit          
         uint16_t CurrentLimit;
@@ -285,7 +274,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         
         PWRT_SetOngoingMaxCurrent(pHandle->pVController->pPowertrain, CurrentLimit);
         
-        #endif
+    #endif
 
         //Reading and updating the wheel diameter 
         uint8_t diameterFromScreen = LCD_APT_CalculateWheelDiameter(pHandle->rx_frame.Buffer[WHEELD]);
@@ -297,7 +286,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         replyFrame.Buffer[ 0] = APT_START; //Start
       
         //Get the amount of amps we are currently pushing 
-        toSend = PWRT_GetTotalMotorsCurrent(pHandle->pVController->pPowertrain);
+        toSend = PWRT_GetDCCurrent(pHandle->pVController->pPowertrain);
          
         toSend = LCD_APT_ApplyPowerFilter((uint16_t)toSend);  
           
@@ -306,7 +295,7 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
         replyFrame.Buffer[1] = (toSend & 0x000000FF); //Power 0.5 A/unit         
 
         /* Condition use for wheel speed sensor rpm to send */
-        toSend = WheelSpdSensor_GetSpeedRPM(pHandle->pVController->pPowertrain->pPAS->pWSS); // Getting RPM from Wheel Speed Module
+        toSend = WheelSpeedSensor_GetSpeedRPM(); // Getting RPM from Wheel Speed Module
                    
         toSend =  LCD_APT_ApplySpeedFilter((uint16_t) toSend);
                   
@@ -330,17 +319,13 @@ void LCD_APT_ProcessFrame(APT_Handle_t *pHandle)
          
         // If we want to change the PAS level we need to change it here
         replyFrame.Buffer[7] = PAS_UNCHANGED; // Send 0x0A unless we want to change the PAS on the screen  
-         
-        if (!pHandle->APTChangePasFlag && (pasLvl == PAS_UNCHANGED) && !pHandle->APTStabilizing && (framesSinceSync >= MINIMUM_FRAMES_TO_SYNC_PAS))
-        {
-            currentPas = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
-            framesSinceSync = 0;
+        
+        currentPas = PedalAssist_GetAssistLevel(pHandle->pVController->pPowertrain->pPAS);
+        if ((!pHandle->APTChangePasFlag && (pasLvl == PAS_UNCHANGED) && currentPas != pHandle->OldPAS) || DefaultPasInitiliased == false)
+        {           
+           // framesSinceSync = 0;
             replyFrame.Buffer[7] = currentPas;
             pHandle->OldPAS = currentPas;
-        }
-        else
-        {
-            framesSinceSync++;
         }
                                
         replyFrame.Buffer[8] = 0x00;
@@ -596,13 +581,16 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
         case CONTROLLER_OT_PROTECT:
             ConvertedError = APT_CONTROLLER_OT_PROTECT;
             break;
+         case CONTROLLER_FOLDBACK_TEMP:
+            ConvertedError = APT_CONTROLLER_TEMP_FOLDBACK;
+            break;
         case UT_PROTECTION:
             ConvertedError = APT_UT_PROTECTION;
             break;
-       /* case IOT_COMM_ERROR: // Both theses errors transflat eto a generic comm error
+        case IOT_COMM_ERROR: // Both theses errors transflat eto a generic comm error
         case DUAL_COMM_ERROR:    
             ConvertedError = APT_COMM_ERROR;
-            break;*/      
+            break;      
         case MOTOR_PHASE_ERROR:
             ConvertedError = APT_THREE_PHASE_ERROR;
             break;
@@ -623,12 +611,14 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             break;         
         case BRAKE_ERROR:
             ConvertedError = APT_BRAKE_ERROR;
-            break;         
-      /*case MOTOR_OT_PROTECT:
+            break;        
+        case TORQUE_SENSOR_ERROR:
+            ConvertedError = APT_TORQUE_SENSOR_ISSUE; 
+        case MOTOR_OT_PROTECT:
         case MOTOR_NTC_DISC_FREEZE:
         case MOTOR_FOLDBACK_TEMP:
             ConvertedError = APT_MOTOR_OT_PROTECT;
-            break;  */      
+            break;              
         case UNMAPPED_ERROR: // Errors that APT has but that we currently don't flag            
             ConvertedError = APT_TURN_ERROR;
             ConvertedError = APT_CONTROL_PROTEC;

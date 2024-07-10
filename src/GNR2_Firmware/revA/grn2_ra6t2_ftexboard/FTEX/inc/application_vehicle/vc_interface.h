@@ -1,7 +1,7 @@
 /**
   * @file    vc_interface.h
   * @brief   This module offers an interface to interact with vehicle properties
-	*/
+    */
 
 #ifndef __VC_INTERFACE_H
 #define __VC_INTERFACE_H
@@ -11,15 +11,15 @@
 #include "vc_state_machine.h"
 
 typedef struct {
-	PWRT_Handle_t * pPowertrain;
-	VCSTM_Handle_t * pStateMachine;
+    PWRT_Handle_t * pPowertrain;
+    VCSTM_Handle_t * pStateMachine;
     CO_OBJ_DOM * pFirmwareUpdateDomainObj;
 } VCI_Handle_t;
 
 // Register tables
 typedef enum
 {
-    /* Vehicle parameters (0-255)	 */
+    /* Vehicle parameters (0-255)     */
     REG_PWRTRAIN_TYPE = 0,              /*< Powertrain type (hub, middrive, etc)                              */
     REG_DUALMOTOR,                      /*< Register for determine if the controller is a dual or a single    */
     REG_MAINMOTOR,                      /*< Parameter that saves the motor selected in a dualmotor controller */
@@ -82,7 +82,7 @@ typedef enum
     REG_BAT_CURRENT_MAX,
     REG_SLOW_OVERVOLT_THR,
     REG_SLOW_UNDERVOLT_THR,
-		
+        
     /* Motor parameters (768-1023)*/
     // Motor no. 1
     REG_M1_ENABLE = 768,                        /*< To set once, true if motor 1 is used */
@@ -223,7 +223,7 @@ typedef enum
     REG_M2_FWRATIO_MAX,
     /* Communication parameters (1024-1279)*/
     REG_EUART_PROTOCOL = 1024,
-		REG_UART_BAUDRATE,       /*< Register for choose the UART protocol for communicate whether with EVionics tool or with a screen */
+        REG_UART_BAUDRATE,       /*< Register for choose the UART protocol for communicate whether with EVionics tool or with a screen */
     REG_CAN_BAUDRATE,
     REG_CAN_HEARTBEAT_PERIOD,
     REG_CAN_ID,
@@ -232,8 +232,8 @@ typedef enum
     REG_TEST_MODE = 1280,
     REG_FIRMVER,
     REG_BOOTCOUNTER,
-		REG_DEVICE_ID_LOW,
-		REG_DEVICE_ID_HIGH
+        REG_DEVICE_ID_LOW,
+        REG_DEVICE_ID_HIGH
 } VCI_RegID_t;
 
 /* Function for reading the value of a register for the drive train */

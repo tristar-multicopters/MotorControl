@@ -12,8 +12,8 @@
 #include "vc_interface.h"
 #include "co_gnr2_specs.h"
 
-
 extern VCI_Handle_t VCInterfaceHandle;
+extern MC_Setup_t MCSetup;
 
 
 #endif /* __VC_CONFIG_H */

@@ -31,14 +31,25 @@
 
 #include "mc_math.h"
 #include "parameters_conversion_ra6t2.h"
-#include "pmsm_motor_parameters.h"
 #include "drive_parameters.h"
-#include "power_stage_parameters.h"
+#include "foldback.h"
+#include "pid_regulator.h"
+#include "ntc_temperature_sensor.h"
 
-#define ADC_REFERENCE_VOLTAGE  3.30
+
+/****** ADC Parameters ******/
+#define ADC_REFERENCE_VOLTAGE           3.30                       // Reference voltage for the ADC (Analog-to-Digital Converter) in volts.
+#define ADC_BYTE_TO_TICS                16                         // Number of tics in the ADC resolution.
+#define ADC_MAXIMUM_VALUE               4096                       // Maximum digital value output by the ADC (for a 12-bit ADC, 2^12 = 4096).
+
+/****** Temperature Parameters ******/
+#define CELSIUS_TO_KELVIN               273.15                     // Conversion constant for converting Celsius to Kelvin.
+#define TEMP_25_CELSIUS_IN_KELVIN       25 + CELSIUS_TO_KELVIN     // Conversion constant for 25 degrees Celsius to Kelvin.
+#define MOTOR_NTC_RESISTANCE_COEF_X_100 (uint16_t)(100*MOTOR_NTC_RESISTANCE_COEF) // Since we cannot add a float parameter to the object dictionary, we multiply it by 100.
+                                                                                  // In calculations, when we want to use it, we first divide it by 100.
 
 /************************* CONTROL FREQUENCIES & DELAIES **********************/
-#define TF_REGULATION_RATE 	(uint32_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE))
+#define TF_REGULATION_RATE     (uint32_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE))
 
 /* TF_REGULATION_RATE_SCALED is TF_REGULATION_RATE divided by PWM_FREQ_SCALING to allow more dynamic */
 #define TF_REGULATION_RATE_SCALED (uint16_t) ((uint32_t)(PWM_FREQUENCY)/(REGULATION_EXECUTION_RATE*PWM_FREQ_SCALING))
@@ -46,14 +57,14 @@
 /* DPP_CONV_FACTOR is introduce to compute the right DPP with TF_REGULATOR_SCALED  */
 #define DPP_CONV_FACTOR (65536/PWM_FREQ_SCALING)
 
-#define REP_COUNTER 			(uint16_t) ((REGULATION_EXECUTION_RATE *2u)-1u)
+#define REP_COUNTER             (uint16_t) ((REGULATION_EXECUTION_RATE *2u)-1u)
 
 #define SYS_TICK_FREQUENCY          2000
 #define UI_TASK_FREQUENCY_HZ        10
 #define SERIAL_COM_TIMEOUT_INVERSE  25
 #define SERIAL_COM_ATR_TIME_MS 20
 
-#define MEDIUM_FREQUENCY_TASK_RATE	(uint16_t)SPEED_LOOP_FREQUENCY_HZ
+#define MEDIUM_FREQUENCY_TASK_RATE    (uint16_t)SPEED_LOOP_FREQUENCY_HZ
 
 #define INRUSH_CURRLIMIT_DELAY_COUNTS  (uint16_t)(INRUSH_CURRLIMIT_DELAY_MS * \
                                   ((uint16_t)SPEED_LOOP_FREQUENCY_HZ)/1000u -1u)
@@ -65,57 +76,35 @@
 #define SERIALCOM_ATR_TIME_TICKS (uint16_t)(((SYS_TICK_FREQUENCY * SERIAL_COM_ATR_TIME_MS) / 1000u) - 1u)
 
 /************************* COMMON OBSERVER PARAMETERS **************************/
-#define MAX_BEMF_VOLTAGE  (uint16_t)((MAX_APPLICATION_SPEED_RPM * 1.2 *\
-                           MOTOR_VOLTAGE_CONSTANT*SQRT_2)/(1000u*SQRT_3))
 /*max phase voltage, 0-peak Volts*/
 #define MAX_VOLTAGE (int16_t)((ADC_REFERENCE_VOLTAGE/SQRT_3)/VBUS_PARTITIONING_FACTOR)
 
 /* The maximum current from Current Sensor with AMPLIFICATION_GAIN that we can measure using ADC with ADC_REFERENCE_VOLTAGE */
 #define current_correction_factor   0.85  /* correction factor for the current sensor range */
-#define MAX_MEASURABLE_CURRENT  (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN)* current_correction_factor)  
-#define NOMINAL_PEAK_CURRENT    (uint16_t)(PEAK_CURRENT_amps * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Maximum current amplitude that can be injected per phase in digital Amps */
-#define ID_DEMAG        (uint16_t)(ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
+#define MAX_MEASURABLE_CURRENT      (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN)* current_correction_factor)
+#define ID_DEMAG                    (int16_t)(ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
+#define IQ_REGEN                    (int16_t)(IQ_REGEN_AMPS  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
 
-#define OCSP_SAFETY_MARGIN 	            (uint16_t)(OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))	/* Measured current amplitude can be until SOCP_SAFETY_MARGIN higher
+#define OCSP_SAFETY_MARGIN                 (uint16_t)(OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))    /* Measured current amplitude can be until OCSP_SAFETY_MARGIN higher
                                                 than reference current before overcurrent software protection triggers */
 #define OCSP_MAX_CURRENT                (uint16_t)(OCSP_MAX_CURRENT_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))   /* Max current that can be reached before triggering software overcurrent */
 
 #define OBS_MINIMUM_SPEED_UNIT    (uint16_t) ((OBS_MINIMUM_SPEED_RPM*SPEED_UNIT)/_RPM)
 
-#define MAX_APPLICATION_SPEED_UNIT ((MAX_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM)
 #define MIN_APPLICATION_SPEED_UNIT ((MIN_APPLICATION_SPEED_RPM*SPEED_UNIT)/_RPM)
 
-/************************* OCD Power Derating factors **************************/
-
-#define OCD_DISABLE                     0
-#define OCD_POWER_DERATING              1
-#define OCD_PWM_OFF                     2
-#define HARDWARE_OCD    OCD_PWM_OFF     /* OCD_POWER_DERATING to derate final torque in Interval (configuration is following) */
-                                        /* OCD_PWM_OFF to completley disable PWM using PEOG in timer0 */
-                                        /* OCD_DISABLED to disable any Hardware OverCurrent handling */
-
-#define OCD_POWER_DERATING_SLOPE    0.8f    // the factor we multiply to the Maximum Torque at OCD occurance
-#define OCD_TIME_INTERVAL_MS        50      // the time interval of multipying derating factor of OCD is still occured
-#define OCD_TIME_INTERVAL_COUNTS    (uint16_t)OCD_TIME_INTERVAL_MS * (uint16_t)SPEED_LOOP_FREQUENCY_HZ/1000u - 1u
-
 /************************* PLL PARAMETERS **************************/
-#define C1 (int32_t)((((int16_t)F1)*RS)/(LS*TF_REGULATION_RATE))
 #define C2 (int32_t) GAIN1
-#define C3 (int32_t)((((int16_t)F1)*MAX_BEMF_VOLTAGE)/(LS*MAX_MEASURABLE_CURRENT*TF_REGULATION_RATE))
 #define C4 (int32_t) GAIN2
-#define C5 (int32_t)((((int16_t)F1)*MAX_VOLTAGE)/(LS*MAX_MEASURABLE_CURRENT*TF_REGULATION_RATE))
 
 #define PERCENTAGE_FACTOR    (uint16_t)(VARIANCE_THRESHOLD*128u)
 #define HFI_MINIMUM_SPEED    (uint16_t) (HFI_MINIMUM_SPEED_RPM/6u)
 
-#define MAX_APPLICATION_SPEED_UNIT2 ((MAX_APPLICATION_SPEED_RPM2*SPEED_UNIT)/_RPM)
-#define MIN_APPLICATION_SPEED_UNIT2 ((MIN_APPLICATION_SPEED_RPM2*SPEED_UNIT)/_RPM)
-
 /**************************   VOLTAGE CONVERSIONS  Motor 1 *************************/
-#define OVERVOLTAGE_THRESHOLD_d   (uint16_t)(OV_VOLTAGE_THRESHOLD_V*65535/\
-                                  (ADC_REFERENCE_VOLTAGE/VBUS_PARTITIONING_FACTOR))
-#define UNDERVOLTAGE_THRESHOLD_d  (uint16_t)((UD_VOLTAGE_THRESHOLD_V*65535)/\
-                                  ((uint16_t)(ADC_REFERENCE_VOLTAGE/\
+#define OVERVOLTAGE_THRESHOLD_d            (uint16_t)(OV_VOLTAGE_THRESHOLD_V*65535/\
+                                           (ADC_REFERENCE_VOLTAGE/VBUS_PARTITIONING_FACTOR))
+#define DEFAULT_UNDERVOLTAGE_THRESHOLD_d   (uint16_t)((UD_VOLTAGE_THRESHOLD_CONT_V*65535)/\
+                                           ((uint16_t)(ADC_REFERENCE_VOLTAGE/\
                                                            VBUS_PARTITIONING_FACTOR)))
 #define INT_SUPPLY_VOLTAGE          (uint16_t)(65536/ADC_REFERENCE_VOLTAGE)
 
@@ -123,8 +112,6 @@
 
 /*************** Timer for PWM generation & currenst sensing parameters  ******/
 #define PWM_PERIOD_CYCLES (uint16_t)((PWM_TIM_CLK_MHz*(uint32_t)1000000u/((uint32_t)(PWM_FREQUENCY)))&0xFFFE)
-
-#define DEADTIME_NS  SW_DEADTIME_NS
 
 #define DEAD_TIME_ADV_TIM_CLK_MHz (PWM_TIM_CLK_MHz)
 #define DEAD_TIME_COUNTS_1  (DEAD_TIME_ADV_TIM_CLK_MHz * DEADTIME_NS/1000uL)
@@ -148,9 +135,7 @@
 #define TOFF (uint16_t)((TOFF_NS * PWM_TIM_CLK_MHz) / 2000)
 
 /*************** Current vs torque ratio ******/
-// #define MOTOR_MAGNET_FLUX              (float) MOTOR_VOLTAGE_CONSTANT*60/(2*POLE_PAIR_NUM*1000*SQRT_3*PI_)     /*!< In weber rms */
 
-#define GAIN_TORQUE_IQREF              (float) (1/(100*3*POLE_PAIR_NUM*MOTOR_MAGNET_FLUX*MAX_MEASURABLE_CURRENT/(UINT16_MAX))) 
 #define GAIN_TORQUE_IDREF              0
 
 
@@ -229,6 +214,42 @@
 #define SAMPLING_CYCLE_CORRECTION 0.5 /* Add half cycle required by STM32G431CBUx ADC */
 #define LL_ADC_SAMPLINGTIME_1CYCLES_5 LL_ADC_SAMPLINGTIME_1CYCLE_5
 #define LL_ADC_SAMPLING_CYCLE(CYCLE) LL_ADC_SAMPLINGTIME_ ## CYCLE ## CYCLES_5
+
+//Parameters to convert that are based on motor-specific parameters
+typedef struct 
+{
+    uint16_t hPeakCurrentAmps;
+    int16_t hNominalPeakCurrent;
+    
+    int16_t hMaxBEMFVoltage;
+    
+    uint16_t hMaxApplicationSpeedUnit;
+    
+    uint16_t hNominalTorque;
+    uint16_t hStartingTorque;
+    float fGainTorqueIqRef;
+    
+    int16_t hC1;
+    int16_t hC3;
+    int16_t hC5;
+    
+    Foldback_Handle_t FoldbackInitSpeed;
+    Foldback_Handle_t FoldbackInitTorque;
+    Foldback_Handle_t FoldbackInitHeatsinkTemp;
+    Foldback_Handle_t FoldbackInitMotorTemp;
+    
+    PIDHandle_t PIDInitSpeedLimit;
+    PIDHandle_t PIDInitSpeed;
+    PIDHandle_t PIDInitIq;
+    PIDHandle_t PIDInitId;
+    PIDHandle_t PIDInitMotorControl;
+    PIDHandle_t PIDInitBemfObserverPl;
+    
+    NTCTempSensorHandle_t HeatsinkNTCInit;
+    NTCTempSensorHandle_t MotorNTCInit;
+    
+} ParametersConversion_t;
+
 
 #endif /*__PARAMETERS_CONVERSION_H*/
 

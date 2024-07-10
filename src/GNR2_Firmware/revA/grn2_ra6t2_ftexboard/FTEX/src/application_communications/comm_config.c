@@ -7,7 +7,7 @@
 #include "comm_config.h"
 #include "gnr_parameters.h"
 #include "co_gnr2_specs.h"
-
+#include "vc_parameters.h"
 // Handle of the CANOpen node
 CO_NODE CONodeGNR;
 
@@ -50,9 +50,9 @@ LogHighSpeed_Handle_t LogHS_handle;
 //Handle to control the data flash initialisation 
 DataFlash_Handle_t DataFlashHandle =
 {
-	
-	.pFlashInstance = &g_flash0,
-	.dataFlashOpenFlag = false,
+    
+    .pFlashInstance = &g_flash0,
+    .dataFlashOpenFlag = false,
 
 };
 

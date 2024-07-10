@@ -88,8 +88,8 @@ static void CANo_TIM_Init(uint32_t freq)
 {
     COTimerCounter = 0;
     // g_timer_a1_ctrl handle must be set to periodic mode prior to initialization. The period is then set below.
-	R_AGT_Stop(&g_timer_a1_ctrl);
-	R_AGT_Reset(&g_timer_a1_ctrl);
+    R_AGT_Stop(&g_timer_a1_ctrl);
+    R_AGT_Reset(&g_timer_a1_ctrl);
     R_AGT_PeriodSet(&g_timer_a1_ctrl, CO_HARDWARE_TIMER_FREQ_HZ/freq);
     R_AGT_Enable(&g_timer_a1_ctrl);
 }
@@ -99,7 +99,7 @@ static void CANo_TIM_Init(uint32_t freq)
 */
 static void CANo_TIM_Start(void)
 {
-	R_AGT_Start(&g_timer_a1_ctrl);
+    R_AGT_Start(&g_timer_a1_ctrl);
 }
 
 /**
@@ -107,18 +107,18 @@ static void CANo_TIM_Start(void)
 */
 static uint8_t CANo_TIM_Update(void)
 {
-	uint8_t elapsed = 0;
+    uint8_t elapsed = 0;
     
-	if(COTimerCounter >= (COTimerPeriod-1))
-	{
-		elapsed = 1;
-	}
-	else
-	{
-		elapsed = 0;
-	}
+    if(COTimerCounter >= (COTimerPeriod-1))
+    {
+        elapsed = 1;
+    }
+    else
+    {
+        elapsed = 0;
+    }
 
-	return elapsed;
+    return elapsed;
 }
 
 /**
@@ -126,14 +126,14 @@ static uint8_t CANo_TIM_Update(void)
 */
 static uint32_t CANo_TIM_Delay(void)
 {
-	if(COTimerPeriod > COTimerCounter)
-	{
-		return (COTimerPeriod - COTimerCounter - 1);
-	}
-	else
-	{
-		return 0;
-	}
+    if(COTimerPeriod > COTimerCounter)
+    {
+        return (COTimerPeriod - COTimerCounter - 1);
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 /**
@@ -149,8 +149,8 @@ static void CANo_TIM_Reload(uint32_t reload)
 */
 static void CANo_TIM_Stop(void)
 {
-	R_AGT_Stop(&g_timer_a1_ctrl);
-	R_AGT_Reset(&g_timer_a1_ctrl);
+    R_AGT_Stop(&g_timer_a1_ctrl);
+    R_AGT_Reset(&g_timer_a1_ctrl);
     COTimerCounter = 0;
 }
 
@@ -169,7 +169,7 @@ void COTimerCallback(CO_TMR *tmr)
         
         //initialize the counter
         COTimerCounter = 0;
-	}
+    }
     else
     {
         COTimerCounter++;

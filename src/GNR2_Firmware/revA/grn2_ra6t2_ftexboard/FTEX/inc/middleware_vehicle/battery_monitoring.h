@@ -9,7 +9,7 @@
 #define __BAT_MONITOR_H
 
 #include "stdbool.h"
-#include "uCAL_GPIO.h"
+#include "stdint.h"
 #include "mc_interface.h"
 
 #define NB_SAMPLES_4_AVG 20 // Obtained through trial and error
@@ -20,21 +20,26 @@
   */
 typedef struct
 {          
-  uint16_t VBatMin; // Value in volts that the battery has when it's empty
-  uint16_t VBatMax; // Value in volts that the battery has when it's fully charged
-  uint16_t VBatAvg; // Value in volts of the average voltage present in the battery.  
-  
-  MotorControlInterfaceHandle_t * pMCI;  
+    uint16_t VBatMin; // Value in volts x100 that the battery has when it's empty
+    uint16_t VBatMax; // Value in volts x100 that the battery has when it's fully charged
+    uint16_t VBatAvg; // Value in volts x100 of the average voltage present in the battery.  
+
+    uint8_t  bPowerLimitRef;                         // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
+    uint16_t hMaxApplicationPositivePower;          // Maximum power in watts that drive can push to the motor
+    uint16_t hMaxApplicationNegativePower;          // Maximum power in watts that drive can accept from the motor
+    uint16_t hMaxApplicationCurrent;                // Maximum battery current in amps that drive can accept from the motor
     
-  uint16_t VBatLog[NB_SAMPLES_4_AVG]; // Used to calculate the last NB_SAMPLES_4_AVG values of VBat to get an average. 
-  uint16_t ValCount;                  // Used as a cursor for keep track of where we are in VBatLog
-  uint16_t Transition_count;          // Used to determin when the SOC changes
-  uint16_t SOC;                       // Contains the state of charge of the battery
-  bool StartupDone;                   // Tells us if we have read less than NB_SAMPLES_4_AVG values
-  
-  bool LowBattery;                    // Flag that when set to true indicates a low battery    
-  uint16_t LowBatSOC;                 // Tells us the value of SOC that when reached means we have a low battery
-  uint16_t RechargedBatSOC;           // Tells us the upper SOC value where the low battery flag should be cleared                 
+    uint16_t hUndervoltageThreshold;
+
+    uint16_t VBatLog[NB_SAMPLES_4_AVG]; // Used to calculate the last NB_SAMPLES_4_AVG values of VBat to get an average. 
+    uint16_t ValCount;                  // Used as a cursor for keep track of where we are in VBatLog
+    uint16_t Transition_count;          // Used to determin when the SOC changes
+    uint16_t SOC;                       // Contains the state of charge of the battery
+    bool StartupDone;                   // Tells us if we have read less than NB_SAMPLES_4_AVG values
+
+    bool LowBattery;                    // Flag that when set to true indicates a low battery    
+    uint16_t LowBatSOC;                 // Tells us the value of SOC that when reached means we have a low battery
+    uint16_t RechargedBatSOC;           // Tells us the upper SOC value where the low battery flag should be cleared                 
     
 } BatMonitor_Handle_t;
 
@@ -42,13 +47,13 @@ typedef struct
  * @brief Initializes the battery monitoring module
  * @param pHandle : Pointer on Handle structure of the battery monitoring module
  */
-void BatMonitor_Init(BatMonitor_Handle_t * pHandle, MotorControlInterfaceHandle_t *pMCI);
+void BatMonitor_Init(BatMonitor_Handle_t * pHandle);
 
 /**
  * @brief Updates the VBat average with a new value
  * @param pHandle : Pointer on Handle structure of the battery monitoring module
  */
-void BatMonitor_UpdateAvg(BatMonitor_Handle_t * pHandle);
+void BatMonitor_UpdateAvg(BatMonitor_Handle_t * pHandle, uint16_t busVoltageVoltx100);
 
 /**
  * @brief Calculate the SOC based on the voltage average and checks the value over
@@ -62,7 +67,7 @@ void BatMonitor_ComputeSOC(BatMonitor_Handle_t * pHandle);
  *        (simply calls updateAvg and ComputeSOC)
  * @param pHandle : Pointer on Handle structure of the battery monitoring module
  */
-void BatMonitor_UpdateSOC(BatMonitor_Handle_t * pHandle);
+void BatMonitor_UpdateSOC(BatMonitor_Handle_t * pHandle, uint16_t busVoltageVoltx100);
 
 /**
  * @brief Get the current SOC value
@@ -76,5 +81,6 @@ uint16_t BatMonitor_GetSOC(BatMonitor_Handle_t * pHandle);
  */
 uint16_t BatMonitor_GetLowBatFlag(BatMonitor_Handle_t * pHandle);
 
-#endif /*__BAT_MONITOR_H*/
+#endif
+
 

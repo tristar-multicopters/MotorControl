@@ -16,11 +16,7 @@
 
 #include "uCAL_DATAFLASH.h"
 
-// disable warning about user_config_data modifying the pragma pack value
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpragma-pack"
-#include "user_config_data.h"
-#pragma clang diagnostic pop
+
 
 #include "comm_config.h"
 #include "vc_parameters.h"
@@ -29,22 +25,32 @@
 /*********************************************
                 Defines
 *********************************************/
+#define PAS_0  0
+#define PAS_1  1
+#define PAS_2  2
+#define PAS_3  3
+#define PAS_4  4
+#define PAS_5  5
+#define PAS_6  6
+#define PAS_7  7
+#define PAS_8  8
+#define PAS_9  9
 
 #define NUMBER_OF_BYTES_IN_THE_BLOCK    64U
 
 //first byte used to show that data memory
 //has user configuration
-#define ID0_DATA_FLASH                 0xB5
+#define ID0_DATA_FLASH                 0x01
 
 //second byte used to show that data memory
 //has user configuration
-#define ID1_DATA_FLASH                 0xC3
+#define ID1_DATA_FLASH                 0x03
 
 //definition used to control how many
 //blocks of the data flash memory are being
 //used to hold the user configuration.
 //each block has 64 bytes.
-#define NUMBER_OF_BLOCKS_USED  1
+#define NUMBER_OF_BLOCKS_USED             7
 
 //code used to indicate that data flash
 //memory(user configuration) is being updated by an external
@@ -67,6 +73,13 @@
 //CRC-16-CCITT polynom
 #define CCITT_POLYNOM 0x1021
 
+//
+#define BW1             0
+#define BW2             1
+
+#define MAXTHROTTLEVOLTX100   330
+
+#define VOLT_TO_DIGITAL    UINT16_MAX/MAXTHROTTLEVOLTX100
 
 /*********************************************
           Data Struct Definition
@@ -77,14 +90,15 @@
 //state machine.
 typedef enum
 {
-	IDLE,
-	OPEN,
-	CLOSE,
-	READ,
-	ERASE,
-	WRITE,
-	ERROR,
+    IDLE,
+    OPEN,
+    CLOSE,
+    READ,
+    ERASE,
+    WRITE,
+    ERROR,
 } UserConfigStateMachine_t;
+
 
 //
 typedef struct 
@@ -103,7 +117,7 @@ extern UserConfigHandle_t UserConfigHandle;
 // ==================== Public function prototypes ========================= //
 /**
   @brief Function to verify if data flash memory is empty or not.
-	If it's empty write default configuration in the data memory.
+    If it's empty write default configuration in the data memory.
     If it's not empty read the configuration from the data memory.
     NOTE: on this first version this function will be used to test 
     the task:
@@ -139,24 +153,6 @@ void UserConfigTask_WriteUserConfigIntoDataFlash(UserConfigHandle_t * userConfig
 void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle);
 
 /**
-  @brief Function to get PasAlgorithm
-  read from data flash memory.
-  
-  @param void
-  @return uint8_t a number que represent pas algorithm type.
-*/
-uint8_t UserConfigTask_GetPasAlgorithm(void);
-
-/**
-  @brief Function to update PasAlgorithm value
-  read from data flash memory.
-  
-  @param uint8_t value to be passed into the pasAlgorithm  variable.
-  @return void
-*/
-void UserConfigTask_UpdataPasAlgorithm(uint8_t value);
-
-/**
   @brief Function to get number Of Pas Levels
   read from data flash memory.
   
@@ -175,23 +171,23 @@ uint8_t UserConfigTask_GetNumberPasLevels(void);
 void UserConfigTask_UpdateNumberPasLevels(uint8_t value);
 
 /**
-  @brief Function to get Pas Max Power
+  @brief Function to get Pas Max Torque Ratio
   read from data flash memory.
   
   @param void
   @return uint8_t a number that represent Pas Max Power
   on %(0 until 100).
 */
-uint8_t UserConfigTask_GetPasMaxPower(void);
+uint8_t UserConfigTask_GetPasMaxTorqueRatio(void);
 
 /**
-  @brief Function to update Pas Max Power value
+  @brief Function to update Pas Max Torque Ratio value
   read from data flash memory.
   
   @param uint8_t
   @return  void
 */
-void UserConfigTask_UpdatePasMaxPower(uint8_t value);
+void UserConfigTask_UpdatePasMaxTorqueRatio(uint8_t value);
 
 /**
   @brief Function to update Torque Minimum Threshold Startup
@@ -201,7 +197,7 @@ void UserConfigTask_UpdatePasMaxPower(uint8_t value);
   @return void
  
 */
-uint8_t UserConfigTask_GetTorqueMinimumThresholdStartup(void);
+uint8_t UserConfigTask_GetPasTorqueStartupSpeed(void);
 
 /**
   @brief Function to get Torque Minimum Threshold Startup
@@ -211,7 +207,7 @@ uint8_t UserConfigTask_GetTorqueMinimumThresholdStartup(void);
   @return uint8_t a number that represent Torque Minimum Threshold
   on %(0 until 100).
 */
-void UserConfigTask_UpdateTorqueMinimumThresholdStartup(uint8_t value);
+void UserConfigTask_UpdatePasTorqueStartupSpeed(uint8_t value);
 
 /**
   @brief Function to get Startup Offset Minimum Threshold Speed
@@ -221,7 +217,7 @@ void UserConfigTask_UpdateTorqueMinimumThresholdStartup(uint8_t value);
   @return uint8_t a number that represent Startup Offset Minimum Threshold Speed
   in RPM.
 */
-uint8_t UserConfigTask_GetStartupOffsetMinimumThresholdSpeed(void);
+uint8_t UserConfigTask_GetPasTorqueStartupThreshold(void);
 
 /**
   @brief Function to update Startup Offset Minimum Threshold Speed
@@ -231,57 +227,97 @@ uint8_t UserConfigTask_GetStartupOffsetMinimumThresholdSpeed(void);
   @return void
  
 */
-void UserConfigTask_UpdateStartupOffsetMinimumThresholdSpeed(uint8_t value);
+void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value);
+
 
 /**
-  @brief Function to get Torque Minimum Threshold
+  @brief Function to get pasCadenceStartupNumbPulses
   read from data flash memory.
   
   @param void
-  @return uint8_t a number that represent Torque Minimum Threshold
-  on %(0 until 100).
+  @return uint16_t a number that represent pasCadenceStartupNumbPulses.
 */
-uint8_t UserConfigTask_GetTorqueMinimumThreshold(void);
+uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void);
 
 /**
-  @brief Function to update Torque Minimum Threshold value
+  @brief Function to update pasCadenceStartupNumbPulses
   read from data flash memory.
   
-  @param uint8_t value to be passed into the Torque Minimum Threshold
+  @param uint16_t value to be passed into the pasCadenceStartupNumbPulses
   @return void
  
 */
-void UserConfigTask_UpdateTorqueMinimumThreshold(uint8_t value);
+void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint16_t value);
 
 /**
-  @brief Function to get Torque Sensor Multiplier
+  @brief Function to get time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory.
+  
+  @param void
+  @return uint16_t a number that represent time windows used to check the number of
+  pulses.
+*/
+uint16_t UserConfigTask_GetPasCadenceStartupWindows(void);
+
+/**
+  @brief Function to update time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory.
+  
+  @param uint16_t value to be passed into the time windows used to check the number of
+  pulses.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasCadenceStartupWindows(uint16_t value);
+
+/**
+  @brief Function to get pas algorithm detection used on startup state
+  read from data flash memory.
+  
+  @param void
+  @return uint23_t pas algorithm detection used on startup state.
+*/
+uint8_t UserConfigTask_GetPasAlgorithmStartup(void);
+
+/**
+  @brief Function to update pas algorithm detection used on startup state
+  read from data flash memory.
+  
+  @param uint32_t value equivalent to the pas algorithm detection that must be used.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasPasAlgorithmStartup(uint8_t value);
+
+/**
+  @brief Function to get Torque Sensor Multiplier(GAIN)by PAS level
   read from data flash memory.
   
   @param void
   @return uint8_t a number that represent Torque Sensor Multiplier
   between 1 and 3.
 */
-uint8_t UserConfigTask_GetTorqueSensorMultiplier(void);
+uint16_t UserConfigTask_GetTorqueSensorMultiplier(uint8_t pasLevel);
 
 /**
-  @brief Function to update Torque Sensor Multiplier value
+  @brief Function to update Torque Sensor Multiplier value(GAIN) by PAS level
   read from data flash memory.
   
   @param uint8_t value to be passed into the Torque Sensor Multiplier
   @return void
 
 */
-void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t value);
+void UserConfigTask_UpdateTorqueSensorMultiplier(uint8_t pasLevel, uint16_t value);
 
 /**
-  @brief Function to get torque Max Speed
+  @brief Function to get speed to the current Pas Level
   read from data flash memory.
   
   @param void
-  @return uint8_t !!!!range will be defined.
+  @return uint8_t range will be defined.
 
 */
-uint8_t UserConfigTask_GetTorqueMaxSpeed(void);
+uint8_t UserConfigTask_GetPasLevelMinTorque(uint8_t pasLevel);
 
 /**
   @brief Function to update torque Max Speed avlue
@@ -291,7 +327,7 @@ uint8_t UserConfigTask_GetTorqueMaxSpeed(void);
   @return void
 
 */
-void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value);
+void UserConfigTask_UpdatePasLevelMinTorque(uint8_t pasLevel, uint8_t value);
 
 /**
   @brief Function to get cadence Level Speed
@@ -302,20 +338,20 @@ void UserConfigTask_UpdateTorqueMaxSpeed(uint8_t value);
           range bewteen 0-40.
 
 */
-uint8_t UserConfigTask_GetCadenceLevelSpeed(uint8_t pasLevel);
+uint8_t UserConfigTask_GetPasLevelSpeed(uint8_t pasLevel);
 
 /**
-  @brief Function to update cadence Level Speed value
+  @brief Function to update speed to the current Pas Level
   read from data flash memory.
   
   @param uint8_t value to be passed into the
   @return void
 
 */
-void UserConfigTask_UpdateCadenceLevelSpeed(uint8_t pasLevel, uint8_t value);
+void UserConfigTask_UpdatePasLevelSpeed(uint8_t pasLevel, uint8_t value);
 
 /**
-  @brief Function to get torqueLevelPower
+  @brief Function to get pasLevelMaxTorque
   read from data flash memory.
   
   @param void
@@ -323,17 +359,77 @@ void UserConfigTask_UpdateCadenceLevelSpeed(uint8_t pasLevel, uint8_t value);
           range bewteen 0-x.
 
 */
-uint8_t UserConfigTask_GetTorqueLevelPower(uint8_t pasLevel);
+uint8_t UserConfigTask_GetPasLevelMaxTorque(uint8_t pasLevel);
 
 /**
-  @brief Function to update torqueLevelPower value
+  @brief Function to update pasLevelMaxTorque value
   read from data flash memory.
   
-  @param uint8_t value to be passed into the torqueLevelPower
+  @param uint8_t value to be passed into the pasLevelMaxTorque
   @return void
 
 */
-void UserConfigTask_UpdateTorqueLevelPower(uint8_t pasLevel, uint8_t value);
+void UserConfigTask_UpdatePasLevelMaxTorque(uint8_t pasLevel, uint8_t value);
+
+/**
+  @brief Function to get Pas Nb Magnets Per Turn
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Number of magnets per pedal rotation, cannot be 0
+
+*/
+uint8_t UserConfigTask_GetPasNbMagnetsPerTurn(void);
+
+/**
+  @brief Function to update Pas Nb Magnets Per Turn value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Pas Nb Pulse Per Turn cannot be 0
+  @return void
+
+*/
+void UserConfigTask_UpdatePasNbMagnetsPerTurn(uint8_t value);
+
+/**
+  @brief Function to get Pas Torque Input Max
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Pas Torque Input Max
+
+*/
+uint16_t UserConfigTask_GetPasTorqueInputMax(void);
+
+/**
+  @brief Function to update Pas Torque Input Max value
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Pas Torque Input Max value
+  @return void
+
+*/
+void UserConfigTask_UpdatePasTorqueInputMax(uint16_t value);
+
+/**
+  @brief Function to get Pas Torque Input Min
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Pas Torque Input Min
+
+*/
+uint16_t UserConfigTask_GetPasTorqueInputMin(void);
+
+/**
+  @brief Function to update Pas Torque Input Min
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Pas Torque Input Min
+  @return void
+
+*/
+void UserConfigTask_UpdatePasTorqueInputMin(uint16_t value);
 
 /**
   @brief Function to get bike max speed
@@ -365,7 +461,7 @@ void UserConfigTask_UpdateBikeMaxSpeed(uint8_t value);
           range bewteen 0-10.
 
 */
-uint8_t UserConfigTask_GetWalkModeSpeed(void);
+uint8_t UserConfigTask_GetWalkmodeSpeed(void);
 
 /**
   @brief Function to update bike speed on walk mode value
@@ -375,7 +471,750 @@ uint8_t UserConfigTask_GetWalkModeSpeed(void);
   @return void
 
 */
-void UserConfigTask_UpdateWalkModeSpeed(uint8_t value);
+void UserConfigTask_UpdateWalkmodeSpeed(uint8_t value);
+
+/**
+  @brief Function to get max torque on walk mode
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t max torque in % that the walk mode of the vehicle goes up to.
+
+*/
+uint8_t UserConfigTask_GetWalkmodeMaxTorque(void);
+
+/**
+  @brief Function to update max torque on walk mode value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the walk mode max torque in %
+  @return void
+
+*/
+void UserConfigTask_UpdateWalkmodeMaxTorque(uint8_t value);
+
+/**
+  @brief Function to get walkmode acceleration ramp type read from data flash memory.
+  
+  @param  void
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetWalkmodeAccelRampType(void);
+
+/**
+  @brief Function to update the walkmode acceleration ramp type read from data flash memory.
+  
+  @param uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateWalkmodeAccelRampType(uint8_t rampType);
+
+/**
+  @brief Function to get walkmode acceleration ramp argument 1 read from data flash memory.
+  
+  @param  void
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetWalkmodeAccelRampArg1(void);
+
+/**
+  @brief Function to update the walkmode acceleration ramp argument 1 read from data flash memory.
+  
+  @param uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateWalkmodeAccelRampArg1(uint16_t arg1);
+
+/**
+  @brief Function to get the number of magnets for the 
+         wheel speed sensor
+  @param void
+  @return uint8_t value to be passed into the WheelSpeedSensorNbrMagnets
+
+*/
+uint8_t UserConfigTask_GetWheelSpeedSensorNbrMagnets(void);
+
+/**
+  @brief Function to update the number of magnets for the 
+         wheel speed sensor
+  @param uint8_t value to be passed into the WheelSpeedSensorNbrMagnets
+  @return void
+
+*/
+void UserConfigTask_UpdateWheelSpeedSensorNbrMagnets(uint8_t value);
+
+/**
+  @brief Function to get Wheel Diameter
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Wheel Diameter
+
+*/
+uint8_t UserConfigTask_GetWheelDiameter(void);
+
+/**
+  @brief Function to update bike Wheel Diameter value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the WheelDiameter
+  @return void
+
+*/
+void UserConfigTask_UpdateWheelDiameter(uint8_t value);
+
+/**
+  @brief Function to get Screen Protocol
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Wheel Diameter
+
+*/
+uint8_t UserConfigTask_GetScreenProtocol(void);
+
+/**
+  @brief Function to update bike Screen Protocol value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the WheelDiameter
+  @return void
+
+*/
+void UserConfigTask_UpdateScreenProtocol(uint8_t value);
+
+/**
+  @brief Function to get HeadLight Default
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t HeadLight Default
+
+*/
+uint8_t UserConfigTask_GetHeadLightDefault(void);
+
+/**
+  @brief Function to update bike HeadLight Default value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the HeadLight Default
+  @return void
+
+*/
+void UserConfigTask_UpdateHeadLightDefault(uint8_t value);
+
+/**
+  @brief Function to get TailLight Default
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t TailLight Default
+
+*/
+uint8_t UserConfigTask_GetTailLightDefault(void);
+
+/**
+  @brief Function to update bike TailLight Default value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the TailLight Default
+  @return void
+
+*/
+void UserConfigTask_UpdateTailLightDefault(uint8_t value);
+
+/**
+  @brief Function to get TailLight Blink On Brake
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t TailLight Blink On Brake
+
+*/
+uint8_t UserConfigTask_GetTailLightBlinkOnBrake(void);
+
+/**
+  @brief Function to update bike TailLight Blink On Brake value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the TailLight Blink On Brake
+  @return void
+
+*/
+void UserConfigTask_UpdateTailLightBlinkOnBrake(uint8_t value);
+
+/**
+  @brief Function to get Throttle Adc Offset
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Throttle Adc Offset
+
+*/
+uint16_t UserConfigTask_GetThrottleAdcOffset(void);
+
+/**
+  @brief Function to update Throttle Adc Offset
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Throttle Adc Offset
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleAdcOffset(uint16_t value);
+
+/**
+  @brief Function to get Throttle Adc Max
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Throttle Adc Max
+
+*/
+uint16_t UserConfigTask_GetThrottleAdcMax(void);
+
+/**
+  @brief Function to update Throttle Adc Max
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Throttle Adc Max
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleAdcMax(uint16_t value);
+
+/**
+  @brief Function to get throttle acceleration ramp type read from data flash memory.
+  
+  @param  void
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetThrottleAccelRampType(void);
+
+/**
+  @brief Function to update the throttle acceleration ramp type read from data flash memory.
+  
+  @param uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateThrottleAccelRampType(uint8_t rampType);
+
+/**
+  @brief Function to get throttle acceleration ramp argument 1 read from data flash memory.
+  
+  @param  void
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetThrottleAccelRampArg1(void);
+
+/**
+  @brief Function to update the throttle acceleration ramp argument 1 read from data flash memory.
+  
+  @param uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdateThrottleAccelRampArg1(uint16_t arg1);
+
+/**
+  @brief Function to get Battery Full Voltage
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Full Voltage in Volts x100
+
+*/
+uint16_t UserConfigTask_GetBatteryFullVoltage(void);
+
+/**
+  @brief Function to update Battery Full Voltage
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Full Voltage in Volts x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryFullVoltage(uint16_t value);
+
+/**
+  @brief Function to get Battery Empty Voltage 
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Empty Voltage in Volts x100
+
+*/
+uint16_t UserConfigTask_GetBatteryEmptyVoltage(void);
+
+/**
+  @brief Function to update Battery Empty Voltage
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Empty Voltage in Volts x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryEmptyVoltage(uint16_t value);
+
+/**
+  @brief Function to get Battery Max Peak DC Current
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Max Peak DC Current in Amps x100
+
+*/
+uint16_t UserConfigTask_GetBatteryMaxPeakDCCurrent(void);
+
+/**
+  @brief Function to update Battery Max Peak DC Current 
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Max Peak DC Current in Amps x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryMaxPeakDCCurrent(uint16_t value);
+
+/**
+  @brief Function to get Battery Continuous DC Current
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Continuous DC Current Amps x100
+
+*/
+uint16_t UserConfigTask_GetBatteryContinuousDCCurrent(void);
+
+/**
+  @brief Function to update Battery Continuous DC Current
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Continuous DC Current Amps x100
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryContinuousDCCurrent(uint16_t value);
+
+/**
+  @brief Function to get Battery Peak Current Derating Duration
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Peak Current Derating Duration In Seconds x10
+
+*/
+uint16_t UserConfigTask_GetBatteryPeakCurrentDeratingDuration(void);
+
+/**
+  @brief Function to update Battery Peak Current Derating Duration
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery PeakCurrent Derating Duration Seconds x10
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryPeakCurrentDeratingDuration(uint16_t value);
+
+/**
+  @brief Function to get Battery Peak Current Max Duration
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t Battery Peak Current Max Duration Seconds x10
+
+*/
+uint16_t UserConfigTask_GetBatteryPeakCurrentMaxDuration(void);
+
+/**
+  @brief Function to update Battery Peak Current Max Duration
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the Battery Peak Current Max Duration Seconds x10
+  @return void
+
+*/
+void UserConfigTask_UpdateBatteryPeakCurrentMaxDuration(uint16_t value);
+
+/**
+  @brief Function to get FilterSpeed value
+  read from data flash memory.
+  @param uint8_t index number of the speed to get.
+  @return uint8_t Speed value
+
+*/
+uint8_t UserConfigTask_GetFilterSpeed(uint8_t index);
+
+/**
+  @brief Function to update FilterSpeed value
+  read from data flash memory.
+  @param uint8_t index number of the speed to get.
+  @param uint8_t speed value to be passed into FilterSpeed.
+  @return void
+
+*/
+void UserConfigTask_UpdateFilterSpeed(uint8_t index, uint8_t value);
+
+/**
+  @brief Function to get bw filter value
+  read from data flash memory.
+  @param uint8_t index number of the bw filter to get.
+  @param uint8_t type of the filer to be get.
+  @return uint8_t bw filter value.
+
+*/
+uint16_t UserConfigTask_GetFilterBwValue(uint8_t index, uint8_t bwType);
+
+/**
+  @brief Function to chnage bw filter value
+  read from data flash memory.
+  @param uint8_t index of the bw filter to be changed.
+  @param uint8_t type of the filer to be changed.
+  @param uint16_t new bw filter value 
+  @return void
+
+*/
+void UserConfigTask_UpdateFilterBwValue(uint8_t index, uint8_t bwType, uint16_t value);
+
+/**
+  @brief Function to get Minimum Torque Threshold
+  read from data flash memory on running mode.
+  
+  @param void
+  @return uint8_t a number that represent Minimum Torque Threshold.
+
+*/
+uint8_t UserConfigTask_GetPasTorqueRunningThreshold(void);
+
+/**
+  @brief Function to update Minimum Torque Threshold
+  read from data flash memory on running mode.
+  
+  @param uint8_t value to be passed into the  Minimum Torque Threshold.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasTorqueRunningThreshold(uint8_t value);
+
+/**
+  @brief Function to get pasCadenceRunningNumbPulses
+  read from data flash memory.
+  
+  @param void
+  @return uint16_t a number that represent pasCadenceRunningNumbPulses.
+*/
+uint16_t UserConfigTask_GetPasCadenceRunningNumbPulses(void);
+
+/**
+  @brief Function to update pasCadenceRunningNumbPulses
+  read from data flash memory.
+  
+  @param uint16_t value to be passed into the pasCadenceRunningNumbPulses
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint16_t value);
+
+/**
+  @brief Function to get time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory
+  on run mode.
+  
+  @param void
+  @return uint16_t a number that represent time windows used to check the number of
+  pulses.
+*/
+uint16_t UserConfigTask_GetPasCadenceRunningWindows(void);
+
+/**
+  @brief Function to update time windows used to check the number of
+  pulses detected from the cadence sensor read from data flash memory
+  on run mode.
+  
+  @param uint32_t value to be passed into the time windows used to check the number of
+  pulses.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasCadenceRunningWindows(uint16_t value);
+
+/**
+  @brief Function to get pas algorithm detection used on running state
+  read from data flash memory.
+  
+  @param void
+  @return uint23_t pas algorithm detection used on running state.
+*/
+uint8_t UserConfigTask_GetPasAlgorithmRunning(void);
+
+/**
+  @brief Function to update pas algorithm detection used on running state
+  read from data flash memory.
+  
+  @param uint32_t value equivalent to the pas algorithm detection that must be used.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasPasAlgorithmRunning(uint8_t value);
+
+/**
+  @brief Function to get pas acceleration ramp type read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetPasAccelRampType(uint8_t pasLevel);
+
+/**
+  @brief Function to update the pas acceleration ramp type read from data flash memory.
+  
+  @param uint8_t pasLevel, uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasAccelRampType(uint8_t pasLevel, uint8_t rampType);
+
+/**
+  @brief Function to get pas acceleration ramp argument 1 read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetPasAccelRampArg1(uint8_t pasLevel);
+
+/**
+  @brief Function to update the pas acceleration ramp argument 1 read from data flash memory.
+  
+  @param uint8_t pasLevel, uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasAccelRampArg1(uint8_t pasLevel, uint16_t arg1);
+
+/**
+  @brief Function to get pas deceleration ramp type read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint8_t type of ramp.
+ 
+*/
+uint8_t UserConfigTask_GetPasDecelRampType(uint8_t pasLevel);
+
+/**
+  @brief Function to update the pas deceleration ramp type read from data flash memory.
+  
+  @param uint8_t pasLevel, uint8_t type of ramp.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasDecelRampType(uint8_t pasLevel, uint8_t rampType);
+
+/**
+  @brief Function to get pas deceleration ramp argument 1 read from data flash memory.
+  
+  @param  uint8_t pasLevel
+  @return uint16_t argument 1
+ 
+*/
+uint16_t UserConfigTask_GetPasDecelRampArg1(uint8_t pasLevel);
+
+/**
+  @brief Function to update the pas deceleration ramp argument 1 read from data flash memory.
+  
+  @param uint8_t pasLevel, uint16_t argument 1.
+  @return void
+ 
+*/
+void UserConfigTask_UpdatePasDecelRampArg1(uint8_t pasLevel, uint16_t arg1);
+
+/**
+  @brief Function to get Throttle BlockOff Value
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Throttle Block Off
+
+*/
+uint8_t UserConfigTask_GetThrottleBlockOff(void);
+
+/**
+  @brief Function to update Throttle BlockOff Value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Throttle Block Off
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleBlockOff(uint8_t value);
+
+/**
+  @brief Function to get Throttle Max Speed Value
+  read from data flash memory.
+  
+  @param void
+  @return uint8_t Throttle Max Speed
+
+*/
+uint8_t UserConfigTask_GetThrottleMaxSpeed(void);
+
+/**
+  @brief Function to update Throttle Max Speed Value
+  read from data flash memory.
+  
+  @param uint8_t value to be passed into the Throttle Max Speed
+  @return void
+
+*/
+void UserConfigTask_UpdateThrottleMaxSpeed(uint8_t value);
+
+/**
+  @brief Function to get the mixed motor signal state(true or false)
+  read from data flash memory.
+  
+  @param void
+  @return bool true if motor signals are mixed, false if not.
+*/
+bool UserConfigTask_GetMotorMixedSignalState(void);
+
+/**
+  @brief Function to update the mixed motor signal state(true or false)
+  read from data flash memory.
+  
+  @param bool new value
+  @return none.
+*/
+void UserConfigTask_UpdateMotorMixedSignalState(bool value);
+
+/**
+  @brief Function to get the minimal threshold to detect motor temperature
+  and high logic 1 on wheel speed.
+  
+  @param void
+  @return uint16_t minimum value used to detect max motor temperature
+  and high level on wheel speed signal.
+*/
+uint16_t UserConfigTask_GetMinSignalThreshold(void);
+
+/**
+  @brief Function to update the minimal threshold to detect motor temperature
+  and high logic 1 on wheel speed..
+  
+  @param uint16_t value is the minimal threshold to detect motor temperature
+  and high logic 1 on wheel speed.
+  @return none.
+*/
+void UserConfigTask_UpdateMinSignalThreshold(uint16_t value);
+
+/**
+  @brief Function to get the MaxWheelSpeedPeriodUs, used to as limit to detect when
+  wheel speed must be considered zero.
+  
+  @param void
+  @return uint32_t maximum value used to as limit to detect when
+  wheel speed must be considered zero.
+*/
+uint32_t UserConfigTask_GetMaxWheelSpeedPeriodUs(void);
+
+/**
+  @brief Function to update the MaxWheelSpeedPeriodUs, used to as limit to detect when
+  wheel speed must be considered zero.
+  
+  @param uint32_t value maximum value used to as limit to detect when
+  wheel speed must be considered zero.
+  @return none.
+*/
+void UserConfigTask_UpdateMaxWheelSpeedPeriodUs(uint32_t value);
+
+/*
+  @brief Function to get the MotorRpm, the current rpm of the motor.
+  
+  @param void
+  @return int16_t value is th current motor rpm
+*/
+int16_t UserConfigTask_GetMotorRpm(VCI_Handle_t * pVController);
+
+/**
+  @brief Function to get the MotorRpmWithGearRatio, the current rpm of the motor
+         with the gear rato.
+  @param void
+  @return int16_t value is th current motor rpm with the gear ratio
+*/
+int16_t UserConfigTask_GetMotorRpmWithGearRatio(VCI_Handle_t * pVController);
+
+/**
+  @brief Function to get the PASOverThrottle, used to know what is 
+         higher priority between PAS and throttle
+  
+  @param void
+  @return uint8_t 1 to activate, 0 to desactivate
+*/
+uint8_t UserConfigTask_GetPASOverThrottle(void);
+
+/**
+  @brief Function to update the PASOverThrottle, used to know what is 
+         higher priority between PAS and throttle
+  
+  @param uint8_t 1 to activate, 0 to desactivate
+  @return none.
+*/
+void UserConfigTask_UpdatePASOverThrottle(uint8_t value);
+
+/**
+  @brief Function to get the MotorSensorType, used to know if it is REAL_SENSOR or VIRTUAL_SENSOR
+  
+  @param void
+  @return uint8_t 1 to VIRTUAL_SENSOR, 0 to REAL_SENSOR
+*/
+uint8_t UserConfigTask_GetMotorSensorType(void);
+
+/**
+  @brief Function to update the MotorSensorType, used to update sensor type to REAL_SENSOR or VIRTUAL_SENSOR
+  
+  @param uint8_t 1 to VIRTUAL_SENSOR, 0 to REAL_SENSOR
+  @return none.
+*/
+void UserConfigTask_UpdateMotorSensorType(uint8_t value);
+
+/**
+  @brief Function to get the Motor NTC Beta Coefficient, used to calculate motor temperature
+  
+  @param void
+  @return uint16_t value of motor NTC Beta Coefficient
+*/
+uint16_t UserConfigTask_GetMotorNTCBetaCoef(void);
+
+/**
+  @brief Function to update the Motor NTC Beta Coefficient, used to calculate motor temperature
+  
+  @param uint16_t value of motor NTC Beta Coefficient
+  @return none.
+*/
+void UserConfigTask_UpdateMotorNTCBetaCoef(uint16_t value);
+
+/**
+  @brief Function to get the Motor NTC Rated Resistance, used to calculate motor temperature
+  
+  @param void
+  @return uint16_t value of motor NTC rated resistance
+*/
+uint16_t UserConfigTask_GetMotorNTCResistanceCoef(void);
+
+/**
+  @brief Function to update the Motor NTC Rated Resistance, used to calculate motor temperature
+  
+  @param uint16_t value of motor NTC rated resistance
+  @return none.
+*/
+void UserConfigTask_UpdateMotorNTCResistanceCoef(uint16_t value);
 
 /**
   @brief Function used to calculate a CRC 16 type using the same polynom 

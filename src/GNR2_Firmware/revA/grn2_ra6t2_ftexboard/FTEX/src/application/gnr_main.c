@@ -39,7 +39,7 @@ extern void PWREN_TurnoffSlaveTask (void * pvParameter);
 static bool ADCInit(void);
 static bool GPTInit(void);
 
-#if HARDWARE_OCD == OCD_PWM_OFF
+#if HARDWARE_OCD2 == OCD2_ENABLED || OCDX_POEG == OCD1_POEG
 static bool POEGInit(void); //please read the describtion on function definition before enablenig this
 #endif
 static bool DACInit(void);
@@ -83,9 +83,9 @@ static const osThreadAttr_t ThAtt_MC_MediumFrequencyTask = {
 };
 
 static const osThreadAttr_t ThAtt_PowerOffSequence = {
-	.name = "VC_PowerOffSequence",
-	.stack_size = 512,
-	.priority = osPriorityBelowNormal
+    .name = "VC_PowerOffSequence",
+    .stack_size = 512,
+    .priority = osPriorityBelowNormal
 };
 
 
@@ -110,15 +110,15 @@ static const osThreadAttr_t ThAtt_CANLogger = {
 #endif
 
 static const osThreadAttr_t ThAtt_UART = {
-	.name = "TSK_UART",
-	.stack_size = 512,
-	.priority = osPriorityBelowNormal
+    .name = "TSK_UART",
+    .stack_size = 512,
+    .priority = osPriorityBelowNormal
 };
 
 static const osThreadAttr_t ThAtt_Watchdog = {
-	.name = "TSK_Watchdog",
-	.stack_size = 256,
-	.priority = osPriorityLow2
+    .name = "TSK_Watchdog",
+    .stack_size = 256,
+    .priority = osPriorityLow2
 };
 
 #endif
@@ -140,7 +140,7 @@ void gnr_main(void)
     /* Hardware initialization */
     ADCInit();
     GPTInit();
-#if HARDWARE_OCD == OCD_PWM_OFF
+#if HARDWARE_OCD2 == OCD2_ENABLED || OCDX_POEG == OCD1_POEG
     POEGInit(); //Read the describtion on the Function before enabling it
 #endif
     DACInit();
@@ -162,19 +162,21 @@ void gnr_main(void)
     
     // Bootloader app to marks the image with index 0 in the primary slot as confirmed
     boot_set_confirmed();
-
+    
+    MC_BootUp();
+    
+    MD_BootUp();
+    
     //load user config from the data flash.
     UserConfigTask_InitUserConfigFromDataFlash(&UserConfigHandle,&DataFlashHandle,&VCInterfaceHandle);
     
-    //fucntion to pass the user configuration read from the memory to
+    //function to pass the user configuration read from the memory to
     //VCInterfaceHandle
     UserConfigTask_UpdateUserConfigData(&UserConfigHandle);
     
-    //get all information from the GNR controller, as serial number, firmware and dfu pack version.
-    GnrInfo_Read(&DataFlashHandle);  
+    //Init all information from the GNR controller, as serial number, firmware and dfu pack version.
+    GnrInfo_Init(&DataFlashHandle,&EFlash_Storage_Handle);  
 
-    MC_BootUp();
-    
     //if GRN is set to be master
     //call VC_BootUp.
     if (VcAutodeter_GetGnrState())
@@ -257,7 +259,7 @@ void gnr_main(void)
                                       &ThAtt_Watchdog);
     //verify if the task was correctly created.              
     ASSERT(Watchdog_handle != NULL);
-	
+    
     #endif
     
     //if is a slave add the task below.
@@ -368,12 +370,12 @@ static bool GPTInit(void)
 1- uncomment bool POEGInit() decleration in first rows of this file
 2- uncomment following function definition 
 3- Check if the PC14 is still defined as PEOG functionality
-4- Check the PWMBreak1_IRQHandler() which is going to raise the MC_BREAK_IN error
-5- Check the PWRT_MotorFaultManagement() if still includes handeling this error flag
+4- Check the PWMBreak1_IRQHandler() which is going to raise the MC_OCD1 or MC_OCD2 error
+5- Check the PWRT_MotorCriticalFaultManagement() if still includes handeling this error flag
 6- Use the R_POEG_Open() function to bring back the PWM signal after error is handled
 */
 
-#if HARDWARE_OCD == OCD_PWM_OFF
+#if HARDWARE_OCD2 == OCD2_ENABLED || OCDX_POEG == OCD1_POEG
 static bool POEGInit(void)
 {
     bool bIsError = false;
@@ -381,6 +383,7 @@ static bool POEGInit(void)
     return bIsError;
 }
 #endif
+
 
 /**
   * @brief  Initialize DAC (Digital Analog Converter) hardware
@@ -417,7 +420,11 @@ static bool ELCInit(void)
 static bool ICUInit(void)
 {
     bool bIsError = false;
-
+    
+    /* Configure external interrupt for OCD1  */
+    bIsError |= g_external_irq0.p_api->open(g_external_irq0.p_ctrl, g_external_irq0.p_cfg);
+    bIsError |= g_external_irq0.p_api->enable(g_external_irq0.p_ctrl);
+        
     /* Configure external interrupts for hall sensing  */
     bIsError |= R_ICU_ExternalIrqOpen(g_external_irq3.p_ctrl,g_external_irq3.p_cfg);
     bIsError |= R_ICU_ExternalIrqOpen(g_external_irq4.p_ctrl,g_external_irq4.p_cfg);
@@ -432,19 +439,18 @@ static bool ICUInit(void)
 static bool AGTInit(void)
 {
     bool bIsError = false;
-	  /* ________________________
+      /* ________________________
      *        AGT0
      * ________________________ */
     // Initialize the low power timer for capture mode
     bIsError |= R_AGT_Open(g_timer_a0.p_ctrl, g_timer_a0.p_cfg);
     // Enable external event triggers that start the AGT
     bIsError |= R_AGT_Enable(g_timer_a0.p_ctrl);
-	  /* ________________________
+      /* ________________________
      *        AGT1
      * ________________________ */
-		// Initialize the low power timer 1 as timer for CANOpen
+        // Initialize the low power timer 1 as timer for CANOpen
     bIsError |= R_AGT_Open(g_timer_a1.p_ctrl, g_timer_a1.p_cfg);
-
 
     return bIsError;
 }

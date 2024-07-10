@@ -58,6 +58,9 @@ uint32_t m_file_position = 0;
 // Stores computed file size
 uint32_t m_pack_size = 0;
 
+//stores computed GNR firmware size
+uint32_t m_gnr_size = 0;
+
 //used to hold the DFU pack size(except the 4 crc 
 //bytes added by the GNR when compying the received
 //dfu to a external memory)
@@ -165,6 +168,9 @@ uint8_t FW_Storage_StartPackRead()
         
         //get DFU pack size(STM32 + renesas + GNR)
         m_dfu_pack_size = hdr.data.ble_fw_size + hdr.data.ren_fw_size + hdr.data.gnr_fw_size + HEADER_SIZE;
+        
+        //get gnr firmware size
+        m_gnr_size = hdr.data.gnr_fw_size;
         
         //set the file position to where the GNR firmware begin.
         lfs_file_seek(&lfs, &file, hdr.data.ren_fw_size + hdr.data.ble_fw_size + HEADER_SIZE, LFS_SEEK_SET);
@@ -360,8 +366,8 @@ int16_t FW_Storage_ReadBytes(uint8_t* data, uint8_t size)
 */
 void FW_Storage_SetFileToGnrFirmw(void)
 {
-    //
-    m_file_position = 0;
+    //set the counter variable to the righ position
+    m_file_position = m_dfu_pack_size - m_gnr_size;
     
     //set the file position to where the GNR firmware begin.
     lfs_file_seek(&lfs, &file, hdr.data.ren_fw_size + hdr.data.ble_fw_size + HEADER_SIZE, LFS_SEEK_SET);

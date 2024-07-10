@@ -12,13 +12,8 @@
 /*********************************************
                Includes                       
 *********************************************/
-
-#include "ASSERT_FTEX.h"
 #include "co_gnr2_specs.h"
 #include "vc_state_machine.h"
-#include "power_enable.h"
-#include "vc_autodetermination.h"
-
 /*********************************************
                 Defines
 *********************************************/

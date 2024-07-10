@@ -9,7 +9,11 @@
 // =============================== Includes ================================= //
 #include "MX25L3233F_driver.h"
 // =============================== Defines ================================= //
-#define CLOCK_FOR_READ	0x55	/* For generate read clock */
+#define CLOCK_FOR_READ    0x55    /* For generate read clock */
+
+// ==================== Private function prototypes ======================== //
+
+static inline int32_t MX25L3233F_SendCommand(MX25_Handle_t *pHandle, uint8_t cmd);
 
 // ==================== Public function prototypes ======================== //
 
@@ -34,17 +38,17 @@ int32_t MX25L3233F_GetFlashInfo(MX25L3233F_Info_t *pInfo)
 }
 
 /**
-	Polling Write In Progress bit to Get Flash information
+    Polling Write In Progress bit to Get Flash information
     A memory status will be returned
 */
 int32_t MX25L3233F_AutoPollingMemReady(MX25_Handle_t *pHandle, uint32_t Timeout)
 {
     uint32_t Time;
     int ret = MX25L3233F_OK;
-	
+    
     /*!< Select the FLASH: Chip Select low */
     uCAL_SPI_Enable();
-	
+    
     /*!< Send "RDID " instruction */
     uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, MX25L3233F_READ_STATUS_REG_CMD);
 
@@ -74,7 +78,7 @@ int32_t MX25L3233F_AutoPollingMemReady(MX25_Handle_t *pHandle, uint32_t Timeout)
 
     /*!< Deselect the FLASH: Chip Select high */
     uCAL_SPI_Disable();
-	
+    
     return ret;
 }
 
@@ -83,29 +87,22 @@ int32_t MX25L3233F_AutoPollingMemReady(MX25_Handle_t *pHandle, uint32_t Timeout)
 */
 int32_t MX25L3233F_ChipErase(MX25_Handle_t *pHandle)
 {
-    /*!< Select the FLASH: Chip Select low */
-    uCAL_SPI_Enable();
-    /*!< Send "Write Enable" instruction */
-    /* Read/Write Array Commands (3/4 Byte Address Command Set) */
-    uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, MX25L3233F_CHIP_ERASE_CMD);
-	
-    /*!< Deselect the FLASH: Chip Select high */
-    uCAL_SPI_Disable();
-    return MX25L3233F_OK;
+    /*!< Send "Chip erase" instruction */
+    return MX25L3233F_SendCommand(pHandle, MX25L3233F_CHIP_ERASE_CMD);
 }
 
 /**
     Reads an amount of data from the SPI Memory on STR mode
 */
 int32_t MX25L3233F_Read(MX25_Handle_t *pHandle, uint8_t *pData, uint32_t Address, uint32_t Size)
-{	
+{    
     if (Size == 0) 
         return MX25L3233F_ERROR_PARAMETER;
     /*!< Select the FLASH: Chip Select low */
     uCAL_SPI_Enable();
-	
+    
     /* Read/Write Array Commands (4 Byte Address Command Set) */
-    /*!< Send "Write Enable" instruction */
+    /*!< Send "Read Command" instruction */
     uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, MX25L3233F_READ_CMD);
  
     /*!< Send SectorAddr high address byte */
@@ -120,12 +117,12 @@ int32_t MX25L3233F_Read(MX25_Handle_t *pHandle, uint8_t *pData, uint32_t Address
 
     /*!< Deselect the FLASH: Chip Select high */
     uCAL_SPI_Disable();
-	
+    
     return MX25L3233F_OK;
 }
 
 /**
-	Writes an amount of data to the QSPI memory
+    Writes an amount of data to the QSPI memory
 */
 int32_t MX25L3233F_PageProgram(MX25_Handle_t *pHandle, uint8_t *pData, uint32_t Address, uint32_t Size)
 {
@@ -145,7 +142,7 @@ int32_t MX25L3233F_PageProgram(MX25_Handle_t *pHandle, uint8_t *pData, uint32_t 
     uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, Address & 0xFF);
 
     for(uint32_t i = 0; i < Size; i++) uCAL_SPI_IO_WriteByte(pHandle->uCALSPI,*(pData++));
-	
+    
     /*!< Deselect the FLASH: Chip Select high */
     uCAL_SPI_Disable();
 
@@ -188,7 +185,7 @@ int32_t MX25L3233F_BlockErase(MX25_Handle_t *pHandle, uint32_t BlockAddress, MX2
     uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, (BlockAddress >> 8) & 0xFF);
     /*!< Send SectorAddr low address byte */
     uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, BlockAddress & 0xFF);
-	
+    
     /*!< Deselect the FLASH: Chip Select high */
     uCAL_SPI_Disable();
 
@@ -199,15 +196,9 @@ int32_t MX25L3233F_BlockErase(MX25_Handle_t *pHandle, uint32_t BlockAddress, MX2
     Write Register/Setting Commands 
 */
 int32_t MX25L3233F_WriteEnable(MX25_Handle_t *pHandle)
-{  	
-    /*!< Select the FLASH: Chip Select low */
-    uCAL_SPI_Enable();
+{      
     /*!< Send "Write Enable" instruction */
-    uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, MX25L3233F_WRITE_ENABLE_CMD);
-
-    /*!< Deselect the FLASH: Chip Select high */
-    uCAL_SPI_Disable();
-    return MX25L3233F_OK;
+    return MX25L3233F_SendCommand(pHandle, MX25L3233F_WRITE_ENABLE_CMD);
 }
 
 /**
@@ -238,24 +229,45 @@ int32_t MX25L3233F_ReadID(MX25_Handle_t *pHandle, uint8_t *ID)
 */
 int32_t MX25L3233F_ResetEnable(MX25_Handle_t *pHandle)
 {
-    /*!< Select the FLASH: Chip Select low */
-    uCAL_SPI_Enable();
     /*!< Send "Reset Enable" instruction */
-    uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, MX25L3233F_RESET_ENABLE_CMD);
-    /*!< Deselect the FLASH: Chip Select high */
-    uCAL_SPI_Disable();	
-    return MX25L3233F_OK;
+    return MX25L3233F_SendCommand(pHandle, MX25L3233F_RESET_ENABLE_CMD);
 }
 /**
     External SPI Flash Reset memory
 */
 int32_t MX25L3233F_ResetMemory(MX25_Handle_t *pHandle)
 {
+    /*!< Send "Reset Enable" instruction */
+    return MX25L3233F_SendCommand(pHandle, MX25L3233F_RESET_MEMORY_CMD);
+}
+
+/**
+    External SPI Flash memory send command 
+*/
+
+static inline int32_t MX25L3233F_SendCommand(MX25_Handle_t *pHandle, uint8_t cmd)
+{
     /*!< Select the FLASH: Chip Select low */
     uCAL_SPI_Enable();
     /*!< Send "Reset Enable" instruction */
-    uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, MX25L3233F_RESET_MEMORY_CMD);
+    uCAL_SPI_IO_WriteByte(pHandle->uCALSPI, cmd);
     /*!< Deselect the FLASH: Chip Select high */
     uCAL_SPI_Disable();
     return MX25L3233F_OK;
 }
+
+/***************************************************************************
+*   One time programmable mode functions
+******************************************************************/
+
+int32_t MX25L3233F_EnterOTP(MX25_Handle_t *pHandle)
+{
+    return MX25L3233F_SendCommand(pHandle, MX25L3233F_ENTER_SECURED_OTP_CMD);
+}
+
+int32_t MX25L3233F_ExitOTP(MX25_Handle_t *pHandle)
+{
+    return MX25L3233F_SendCommand(pHandle, MX25L3233F_EXIT_SECURED_OTP_CMD);
+}
+
+

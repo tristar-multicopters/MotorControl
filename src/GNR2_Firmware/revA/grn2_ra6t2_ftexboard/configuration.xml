@@ -233,11 +233,15 @@
     <eventProduced event="event.icu.irq3"/>
     <eventProduced event="event.icu.irq4"/>
     <eventProduced event="event.icu.irq5"/>
+    <eventProduced event="event.icu.irq0"/>
     <eventConsumed event="event.icu.irq3" link="link.gpth"/>
     <eventConsumed event="event.icu.irq4" link="link.gptg"/>
     <eventConsumed event="event.icu.irq5" link="link.gptf"/>
+    <eventConsumed event="event.icu.irq0" link="link.gpte"/>
   </raElcConfiguration>
-  <raIcuConfiguration/>
+  <raIcuConfiguration>
+    <interrupt event="event.icu.irq0" isr="r_icu_isr"/>
+  </raIcuConfiguration>
   <raModuleConfiguration>
     <module id="module.driver.ioport_on_ioport.0">
       <property id="module.driver.ioport.name" value="g_ioport"/>
@@ -980,7 +984,7 @@
       <property id="module.driver.poeg.trigger" value="module.driver.poeg.trigger.trigger_pin"/>
       <property id="module.driver.poeg.polarity" value="module.driver.poeg.polarity.gtetrg_polarity_active_low"/>
       <property id="module.driver.poeg.noise_filter" value="module.driver.poeg.noise_filter.gtetrg_noise_filter_pclkb_div_32"/>
-      <property id="module.driver.poeg.p_callback" value="PWMBreak1_IRQHandler"/>
+      <property id="module.driver.poeg.p_callback" value="OvercurrentPOEG_IRQHandler"/>
       <property id="module.driver.poeg.ipl" value="board.icu.common.irq.priority0"/>
     </module>
     <module id="module.driver.poeg_on_poeg.1761000203">
@@ -1158,7 +1162,7 @@
       <property id="module.driver.timer.measurement_mode" value="module.driver.timer.measurement_mode.measure_pulse_period"/>
       <property id="module.driver.timer.agtio_filter" value="module.driver.timer.agtio_filter.agtio_filter_pclkb_div_32"/>
       <property id="module.driver.timer.enable_pin" value="module.driver.timer.enable_pin.enable_pin_not_used"/>
-      <property id="module.driver.timer.trigger_edge" value="module.driver.timer.trigger_edge.trigger_edge_rising"/>
+      <property id="module.driver.timer.trigger_edge" value="module.driver.timer.trigger_edge.trigger_edge_falling"/>
       <property id="module.driver.timer.p_callback" value="PedalSpeedTimer_IRQHandler"/>
       <property id="module.driver.timer.ipl" value="board.icu.common.irq.priority3"/>
     </module>
@@ -1166,7 +1170,7 @@
       <property id="module.driver.timer.name" value="g_timer9"/>
       <property id="module.driver.timer.channel" value="9"/>
       <property id="module.driver.timer.mode" value="module.driver.timer.mode.mode_periodic"/>
-      <property id="module.driver.timer.period" value="0x100000000"/>
+      <property id="module.driver.timer.period" value="120000000"/>
       <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_raw_counts"/>
       <property id="module.driver.timer.gtior.gtioa.initial_output_level" value="module.driver.timer.gtior.gtioa.initial_output_level.low"/>
       <property id="module.driver.timer.gtior.gtioa.cycle_end_output_level" value="module.driver.timer.gtior.gtioa.cycle_end_output_level.retain"/>
@@ -1272,6 +1276,15 @@
       <property id="module.driver.transfer.activation_source" value="_disabled"/>
     </module>
     <module id="module.middleware.mcuboot_image_utilities.1998204525"/>
+    <module id="module.driver.external_irq_on_icu.728950937">
+      <property id="module.driver.external_irq.name" value="g_external_irq0"/>
+      <property id="module.driver.external_irq.channel" value="0"/>
+      <property id="module.driver.external_irq.trigger" value="module.driver.external_irq.trigger.trig_falling"/>
+      <property id="module.driver.external_irq.filter_enable" value="module.driver.external_irq.filter_enable.false"/>
+      <property id="module.driver.external_irq.pclk_div" value="module.driver.external_irq.pclk_div.pclk_div_by_64"/>
+      <property id="module.driver.external_irq.p_callback" value="OvercurrentInterrupt_IRQHandler"/>
+      <property id="module.driver.external_irq.ipl" value="board.icu.common.irq.priority0"/>
+    </module>
     <context id="_hal.0">
       <stack module="module.driver.ioport_on_ioport.0"/>
       <stack module="module.driver.three_phase_on_gpt_three_phase.566906103">
@@ -1303,6 +1316,7 @@
       <stack module="module.middleware.mcuboot_image_utilities.1998204525">
         <stack module="module.driver.flash_on_flash_hp.1598203811" requires="module.middleware.mcuboot_image_utilities.requires.flash"/>
       </stack>
+      <stack module="module.driver.external_irq_on_icu.728950937"/>
     </context>
     <config id="config.driver.flash_hp">
       <property id="config.driver.flash_hp.param_checking_enable" value="config.flash_hp.param_checking_enable.bsp"/>
@@ -1428,11 +1442,11 @@
     </config>
   </raModuleConfiguration>
   <raPinConfiguration>
+    <symbolicName propertyId="p001.symbolic_name" value="M2_MOTOR_SELECT"/>
     <symbolicName propertyId="pa00.symbolic_name" value="M1_CURR_U"/>
     <symbolicName propertyId="pa02.symbolic_name" value="M1_CURR_V"/>
     <symbolicName propertyId="pa06.symbolic_name" value="VBUS_SENSE_M1"/>
-    <symbolicName propertyId="pa07.symbolic_name" value="M1_MOT_TEMP"/>
-    <symbolicName propertyId="pa09.symbolic_name" value="M1_SLCT"/>
+    <symbolicName propertyId="pa07.symbolic_name" value="M1_MOTOR_SELECT"/>
     <symbolicName propertyId="pb00.symbolic_name" value="M1_HS_TEMP"/>
     <symbolicName propertyId="pb01.symbolic_name" value="THROTTLE"/>
     <symbolicName propertyId="pb04.symbolic_name" value="CAN_STBY_N"/>
@@ -1440,6 +1454,7 @@
     <symbolicName propertyId="pb06.symbolic_name" value="M1_ENC_V"/>
     <symbolicName propertyId="pb07.symbolic_name" value="M1_ENC_W"/>
     <symbolicName propertyId="pb08.symbolic_name" value="PWREN_GPIO_PIN"/>
+    <symbolicName propertyId="pb10.symbolic_name" value="DRIVER_EN"/>
     <symbolicName propertyId="pc00.symbolic_name" value="BRAKE"/>
     <symbolicName propertyId="pc04.symbolic_name" value="DEBUG1_DAC"/>
     <symbolicName propertyId="pc05.symbolic_name" value="DEBUG2_DAC"/>
@@ -1449,7 +1464,6 @@
     <symbolicName propertyId="pd04.symbolic_name" value="LIGHT_FRONT"/>
     <symbolicName propertyId="pd07.symbolic_name" value="CAN_EN"/>
     <symbolicName propertyId="pd10.symbolic_name" value="LIGHT_BACK"/>
-    <symbolicName propertyId="pd15.symbolic_name" value="M2_SLCT"/>
     <symbolicName propertyId="pe00.symbolic_name" value="STATUS1"/>
     <symbolicName propertyId="pe01.symbolic_name" value="STATUS2"/>
     <symbolicName propertyId="pe08.symbolic_name" value="PAS_TORQUE"/>
@@ -1463,7 +1477,6 @@
       <configSetting altId="adc12.an000.pa00" configurationId="adc12.an000"/>
       <configSetting altId="adc12.an002.pa02" configurationId="adc12.an002"/>
       <configSetting altId="adc12.an006.pa06" configurationId="adc12.an006"/>
-      <configSetting altId="adc12.an007.pa07" configurationId="adc12.an007"/>
       <configSetting altId="adc12.an008.pb00" configurationId="adc12.an008"/>
       <configSetting altId="adc12.an009.pb01" configurationId="adc12.an009"/>
       <configSetting altId="adc12.an020.pe08" configurationId="adc12.an020"/>
@@ -1493,6 +1506,7 @@
       <configSetting altId="gpt9.mode.gtiocaorgtiocb.free" configurationId="gpt9.mode"/>
       <configSetting altId="gpt_poega.gtetrga.pc14" configurationId="gpt_poega.gtetrga"/>
       <configSetting altId="gpt_poega.mode.enabled.free" configurationId="gpt_poega.mode"/>
+      <configSetting altId="icu0.mode.enabled.free" configurationId="icu0.mode"/>
       <configSetting altId="icu3.irq3_dash_ds.pb05" configurationId="icu3.irq3_dash_ds"/>
       <configSetting altId="icu3.mode.enabled.free" configurationId="icu3.mode"/>
       <configSetting altId="icu4.irq4_dash_ds.pb06" configurationId="icu4.irq4_dash_ds"/>
@@ -1504,19 +1518,21 @@
       <configSetting altId="jtag_fslash_swd.tdi.pa15" configurationId="jtag_fslash_swd.tdi"/>
       <configSetting altId="jtag_fslash_swd.tdo.pb03" configurationId="jtag_fslash_swd.tdo"/>
       <configSetting altId="jtag_fslash_swd.tms.pa13" configurationId="jtag_fslash_swd.tms"/>
+      <configSetting altId="p000.input" configurationId="p000"/>
+      <configSetting altId="p000.gpio_irq.gpio_irq_enabled" configurationId="p000.gpio_irq"/>
+      <configSetting altId="p000.gpio_mode.gpio_mode_in" configurationId="p000.gpio_mode"/>
+      <configSetting altId="p001.input" configurationId="p001"/>
+      <configSetting altId="p001.gpio_mode.gpio_mode_in" configurationId="p001.gpio_mode"/>
       <configSetting altId="pa00.adc12.an000" configurationId="pa00"/>
       <configSetting altId="pa00.gpio_mode.gpio_mode_an" configurationId="pa00.gpio_mode"/>
       <configSetting altId="pa02.adc12.an002" configurationId="pa02"/>
       <configSetting altId="pa02.gpio_mode.gpio_mode_an" configurationId="pa02.gpio_mode"/>
       <configSetting altId="pa06.adc12.an006" configurationId="pa06"/>
       <configSetting altId="pa06.gpio_mode.gpio_mode_an" configurationId="pa06.gpio_mode"/>
-      <configSetting altId="pa07.adc12.an007" configurationId="pa07"/>
-      <configSetting altId="pa07.gpio_mode.gpio_mode_an" configurationId="pa07.gpio_mode"/>
+      <configSetting altId="pa07.input" configurationId="pa07"/>
+      <configSetting altId="pa07.gpio_mode.gpio_mode_in" configurationId="pa07.gpio_mode"/>
       <configSetting altId="pa08.agt0.agtio0" configurationId="pa08"/>
       <configSetting altId="pa08.gpio_mode.gpio_mode_peripheral" configurationId="pa08.gpio_mode"/>
-      <configSetting altId="pa09.input" configurationId="pa09"/>
-      <configSetting altId="pa09.gpio_mode.gpio_mode_in" configurationId="pa09.gpio_mode"/>
-      <configSetting altId="pa09.gpio_pupd.gpio_pupd_ip_up" configurationId="pa09.gpio_pupd"/>
       <configSetting altId="pa10.gpt9.gtioc9b" configurationId="pa10"/>
       <configSetting altId="pa10.gpio_mode.gpio_mode_peripheral" configurationId="pa10.gpio_mode"/>
       <configSetting altId="pa13.jtag_fslash_swd.tms" configurationId="pa13"/>
@@ -1545,6 +1561,9 @@
       <configSetting altId="pb07.gpio_mode.gpio_mode_irq" configurationId="pb07.gpio_mode"/>
       <configSetting altId="pb08.input" configurationId="pb08"/>
       <configSetting altId="pb08.gpio_mode.gpio_mode_in" configurationId="pb08.gpio_mode"/>
+      <configSetting altId="pb10.output.high" configurationId="pb10"/>
+      <configSetting altId="pb10.gpio_mode.gpio_mode_out.high" configurationId="pb10.gpio_mode"/>
+      <configSetting altId="pb10.gpio_otype.gpio_otype_n_ch_od" configurationId="pb10.gpio_otype"/>
       <configSetting altId="pb12.canfd0.crx0" configurationId="pb12"/>
       <configSetting altId="pb12.gpio_mode.gpio_mode_peripheral" configurationId="pb12.gpio_mode"/>
       <configSetting altId="pb13.canfd0.ctx0" configurationId="pb13"/>
@@ -1582,9 +1601,6 @@
       <configSetting altId="pd10.output.low" configurationId="pd10"/>
       <configSetting altId="pd10.gpio_speed.gpio_speed_h" configurationId="pd10.gpio_drivecapacity"/>
       <configSetting altId="pd10.gpio_mode.gpio_mode_out.low" configurationId="pd10.gpio_mode"/>
-      <configSetting altId="pd15.input" configurationId="pd15"/>
-      <configSetting altId="pd15.gpio_mode.gpio_mode_in" configurationId="pd15.gpio_mode"/>
-      <configSetting altId="pd15.gpio_pupd.gpio_pupd_ip_up" configurationId="pd15.gpio_pupd"/>
       <configSetting altId="pe08.adc12.an020" configurationId="pe08"/>
       <configSetting altId="pe08.gpio_mode.gpio_mode_an" configurationId="pe08.gpio_mode"/>
       <configSetting altId="pe09.adc12.an021" configurationId="pe09"/>

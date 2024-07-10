@@ -1,7 +1,7 @@
 /**
     * @file    foldback.h
-	* @author  Jorge Andres Polo, FTEX
-	* @author  Sami Bouzid, FTEX
+    * @author  Jorge Andres Polo, FTEX
+    * @author  Sami Bouzid, FTEX
     * @author  Ronak Nemade, FTEX
     * @brief   This module implement a negative ramp to limit an input value based on another variable.
     *
@@ -36,9 +36,9 @@ typedef struct
     FoldbackConfig_t FoldbackConfig;                     // Check flag if the foldback handle is configured to trim the input or set the thresholds. 
     
     int32_t  hDecreasingEndValue;        // Maximum of control variable beyond which input variable is trimmed to lower limit. 
-	uint16_t hDecreasingRange;          // Decreasing range of control variable.
+    uint16_t hDecreasingRange;          // Decreasing range of control variable.
     int16_t  hDecreasingInterval;       // Range of control variable beyond which input variable is trimmed to lower limit. 
-	int16_t  hMaxOutputLimitHigh;       // Higher threshold of maximum value that input variable can take, this variable changes depending upon operating conditions.
+    int16_t  hMaxOutputLimitHigh;       // Higher threshold of maximum value that input variable can take, this variable changes depending upon operating conditions.
     int16_t  hMaxOutputLimitLow;        // Lower threshold of maximum value that input variable can take, this variable changes depending upon operating conditions.
     uint16_t hDefaultOutputLimitHigh;   // Higher threshold of maximum value that input variable can take.
     uint16_t hDefaultOutputLimitLow;    // Lower threshold of maximum value that input variable can take.
@@ -49,7 +49,7 @@ typedef struct
   * @brief  Function for Initialializing foldback
   * @param  pHandle: handler of the current instance of the Foldback component
   */
-void Foldback_Init( Foldback_Handle_t * pHandle );
+void Foldback_Init(Foldback_Handle_t * pHandle, Foldback_Handle_t FoldbackInit);
 
 /**
   * @brief  Function for applying the limitation based on the control variable
@@ -67,6 +67,15 @@ int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariab
   * @retval None
   */
 void Foldback_UpdateMaxValue(Foldback_Handle_t * pHandle, int16_t hMaxValue);
+
+/**
+  * @brief  Function for updating the thresholds between which the input needs to be trimmed. 
+  * @param  pHandle: handler of the current instance of the Foldback component
+  * @param  hDefaultOutputLimitLow: End value of decreasing output limit
+  * @retval None
+  */
+void Foldback_UpdateLimitValue(Foldback_Handle_t * pHandle, int16_t hLimitValue);
+
 
 /**
   * @brief  Function for setting the range of the control variable from when output limit starts to decrease until lower limit

@@ -13,9 +13,11 @@
 /* 
     It reset the state variable to zero.
 */
-void DynamicPower_Init(DynamicPowerHandle_t * pHandle)
+
+void DynamicPower_Init(DynamicPowerHandle_t * pHandle, uint16_t hDynamicMaxPower, uint16_t hEstimatedEfficiency)
 {
     ASSERT(pHandle != NULL);
+    pHandle->hDynamicMaxPower = hDynamicMaxPower * hEstimatedEfficiency / 100;
     pHandle->hOverMaxPowerTimer = 0;
     pHandle->hBelowMaxPowerTimer = 0;
 }

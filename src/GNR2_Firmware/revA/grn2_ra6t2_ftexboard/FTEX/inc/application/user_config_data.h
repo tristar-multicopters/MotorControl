@@ -6,6 +6,7 @@
 *********************************************/
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /*********************************************
                   Defines
@@ -18,7 +19,7 @@
 //the user data flash). write operation on data flash must be to be multiple of 4.
 #define NUMBER_OF_BYTES_MULT_4_TO_BE_WRITTEN  (((USER_DATA_CONFIG_LENGTH%4) == (0)) ? (USER_DATA_CONFIG_LENGTH) : (USER_DATA_CONFIG_LENGTH + 4 - (USER_DATA_CONFIG_LENGTH%4)))
     
-//defines used to access cadenceLevelSpeed[] array
+//defines used to access PasLevelSpeed[] array
 //each position in the array is associated with a PAS level
 //index 0 PAS level 0 and etc.
 #define PAS_0  0
@@ -32,19 +33,16 @@
 #define PAS_8  8
 #define PAS_9  9
 
-//defines used to access torqueLevelPower[] array
-//each position in the array is associated with a torque level
-#define TORQUE_LEVEL_0  0
-#define TORQUE_LEVEL_1  1
-#define TORQUE_LEVEL_2  2
-#define TORQUE_LEVEL_3  3
-#define TORQUE_LEVEL_4  4
-#define TORQUE_LEVEL_5  5
-#define TORQUE_LEVEL_6  6
-#define TORQUE_LEVEL_7  7
-#define TORQUE_LEVEL_8  8
-#define TORQUE_LEVEL_9  9
+//
+#define BW_ARRAY_SIZE        3
 
+#define FILTERSPEED_ARRAY_SIZE       (BW_ARRAY_SIZE - 1)
+
+#define DIGITAL33_0_25_VOLTS 4965 // Value of 0.25 volts when you have a 0-65535 digital value where 65535 = 3.3V
+#define DIGITAL5_0_8_VOLTS  10500 // Value of 0.8 volts when you have a 0-65535 digital value where 65535 = 5.0V
+
+//it need to be updated if this struct is modified : PasAlgorithm_t
+#define MAX_PASALGORITHM_VALUE    4
 
 /*********************************************
             Data Struct Definition
@@ -54,30 +52,120 @@
 //avoid padding bytes.
 #pragma pack(1)
 
+//struct used to hold information about motor mixed signal
+typedef struct 
+{
+    bool motorMixedSignal;
+    uint16_t minSignalThreshold;
+    uint32_t maxWheelSpeedPeriodUs;
+    
+}Motor_Signal_Parameters_t;
+
+//struct used to hold information about motor temperature parameters
+typedef struct 
+{
+    uint8_t  motorSensorType;
+    uint16_t motorNTCBetaCoef;
+    uint16_t motorNTCResistanceCoef;
+    
+}Motor_Temperature_Parameters_t;
+
+typedef struct
+{
+    uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE];
+    uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE];
+    uint8_t  FilterSpeed[FILTERSPEED_ARRAY_SIZE];
+}PAS_Torque_Filter_Configuration_t;
+
+typedef struct
+{
+    uint16_t pasPedalRPM;           // PlaceHolder Currently not supported          
+    uint8_t  pasTorqueForcePercent; // PlaceHolder Currently not supported  
+    uint16_t pasTorqueForceWatts;   // PlaceHolder Currently not supported  
+    uint8_t  pasNbMagnetsPerTurn;      
+    uint16_t pasTorqueInputMin;  
+    uint16_t pasTorqueInputMax;
+} PAS_Sensor_Configuration_t;
+
+typedef struct
+{
+    uint8_t pasTorqueStartupSpeed;
+    uint8_t pasTorqueStartupThreshold;    
+    uint16_t pasCadenceStartupNumbPulses;
+    uint16_t pasCadenceStartupWindows;
+    uint8_t PasAlgorithmStartup;
+} PAS_Startup_Detection_t;
+
+typedef struct
+{
+    uint8_t pasTorqueRunningThreshold;    
+    uint16_t pasCadenceRunningNumbPulses;
+    uint16_t pasCadenceRunningWindows;
+    uint8_t PasAlgorithmRunning;
+} PAS_Running_Detection_t;
+
+
 //struct used to hold the configuration
 //associated with PAS(pedal Assist System).
 typedef struct 
 {
-    uint8_t pasAlgorithm;
-    uint8_t numberOfPasLevels;
-    uint8_t pasMaxPower;
-    uint8_t torqueMinimumThresholdStartup;    
-    uint8_t startupTorqueMinimumThresholdSpeed;
-    uint8_t torqueMinimumThreshold;
-    uint8_t torqueSensorMultiplier;
-    uint8_t torqueMaxSpeed;
-    uint8_t cadenceLevelSpeed[10];
-    uint8_t torqueLevelPower[10];
-    
+    uint8_t NumberOfPasLevels;
+    uint8_t PasMaxTorqueRatio;
+    uint8_t PASOverThrottle;
+    PAS_Startup_Detection_t PAS_Startup_Detection;
+    PAS_Running_Detection_t PAS_Running_Detection;
+    uint16_t TorqueSensorMultiplier[9];
+    uint8_t PasLevelSpeed[9];
+    uint8_t PasLevelMaxTorque[9];
+    uint8_t PasLevelMinTorque[9];
+    uint8_t PasAccelRampType[9];
+    uint16_t PasAccelRampArg1[9];
+    uint8_t PasDecelRampType[9];
+    uint16_t PasDecelRampArg1[9];
+    PAS_Torque_Filter_Configuration_t PAS_Torque_Filter_Configuration;
+    PAS_Sensor_Configuration_t PasSensorConfig;    
 } PAS_ConfigData_t;
 
 //struct used to hold the configuration
 //associated with Throttle.
 typedef struct
 {
-    uint8_t maxSpeed;
-    uint8_t walkModeSpeed;
+    uint16_t AdcOffset;
+    uint16_t AdcMax; 
+    uint8_t  ThrottleBlock;
+    uint8_t  MaxSpeed;
+    uint8_t  AccelRampType;
+    uint16_t AccelRampArg1;
 } Throttle_ConfigData_t;
+
+typedef struct
+{
+    uint16_t FullVoltage;                 // In Volts x100
+    uint16_t EmptyVoltage;                // In Volts x100
+    uint16_t MaxPeakDCCurrent;            // In Amps x100
+    uint16_t ContinuousDCCurrent;         // in Amps x100
+    uint16_t PeakCurrentMaxDuration;      // In Seconds x10
+    uint16_t PeakCurrentDeratingDuration; // In seconds x10
+} Battery_ConfigData_t;
+
+//struct used to hold the configuration
+//associated with the Vehicle.
+typedef struct
+{
+    uint8_t  WalkmodeSpeed;
+    uint8_t  WalkmodeMaxTorque;
+    uint8_t  WalkmodeAccelRampType;
+    uint16_t WalkmodeAccelRampArg1;
+    uint8_t  MaxSpeed;
+    uint8_t  WheelSpeedSensorNbrMagnets;
+    uint8_t  WheelDiameter;
+    uint8_t  ScreenProtocol;
+    uint8_t  HeadLightDefault;      // Contains the default state of the head light (on or off)
+    uint8_t  TailLightDefault;      // Contains the default state of the tail light (on or off)      
+    uint8_t  TailLightBlinkOnBrake;    
+    Throttle_ConfigData_t Throttle_ConfigData;
+    Motor_Signal_Parameters_t Motor_Signal_Parameters;
+} Screen_ConfigData_t;
 
 //struct used to hold all structs associated 
 //with user configuration data.
@@ -85,10 +173,13 @@ typedef struct
 {
     uint8_t dataHeader[2];
     uint8_t vehicle;
-    PAS_ConfigData_t PAS_ConfigData;
-    Throttle_ConfigData_t Throttle_ConfigData;
+    Motor_Temperature_Parameters_t  Motor_Temperature_Parameters;
+    PAS_ConfigData_t      PAS_ConfigData;
+    Battery_ConfigData_t  Battery_ConfigData; 
+    Screen_ConfigData_t   Screen_ConfigData;
     uint16_t crc;
 } User_ConfigData_t;
+
 
 //ends 1 bytes alignment.
 #pragma pack(0)

@@ -170,8 +170,8 @@ extern const poeg_instance_t g_poeg0;
 extern poeg_instance_ctrl_t g_poeg0_ctrl;
 extern const poeg_cfg_t g_poeg0_cfg;
 
-#ifndef PWMBreak1_IRQHandler
-void PWMBreak1_IRQHandler(poeg_callback_args_t * p_args);
+#ifndef OvercurrentPOEG_IRQHandler
+void OvercurrentPOEG_IRQHandler(poeg_callback_args_t * p_args);
 #endif
 /** DAC on DAC Instance. */
 extern const dac_instance_t g_dac3;

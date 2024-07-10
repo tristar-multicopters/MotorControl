@@ -3,16 +3,22 @@
   * @brief   This file contains general parameters used by ganrunner firmware
 */
 
+//Version to bike lookup table for defines below: https://tristarmulticopters.atlassian.net/wiki/spaces/ERR/pages/607420452/Bike+Model+Versions+for+firmware+pack
+
 #define VEHICLE_DEFAULT               0
-#define VEHICLE_E_CELLS               1
-#define VEHICLE_R48_750W              2
-#define VEHICLE_TSUGAWA               3
-#define VEHICLE_NIDEC                 4
-#define VEHICLE_QUIETKAT              5
-#define VEHICLE_VELEC_CITI_500W       6 
-#define VEHICLE_A2_350W               7
-#define VEHICLE_UTK_350W              8
-#define VEHICLE_A2_500W               9
+#define VEHICLE_R48_750W              1
+#define VEHICLE_A2_350W               2
+#define VEHICLE_A2_500W               3
+#define VEHICLE_QUIETKAT              4
+#define VEHICLE_PEGATRON              5
+#define VEHICLE_E_CELLS               6
+#define VEHICLE_NIDEC                 7   
+#define VEHICLE_VELEC_CITI_500W       8
+#define VEHICLE_SUPER73_Z             9
+#define VEHICLE_SUPER73_R            10
+#define VEHICLE_MILEBOX              11
+#define VEHICLE_VELEC21_500W         12
+
 /*______________________________________________________*/
 /* Change parameter below to quickly configure firmware */
 
@@ -51,20 +57,26 @@
 #define GNR2_MASTER_NODE_ID           0x01                /* Node-ID of ganrunner master */
 #define IOT_NODE_ID                   0x02                /* Node-ID of the IOT module(configured in the IOT firmware)*/ 
 #define GNR2_SLAVE_NODE_ID            0x03                /* Node-ID of ganrunner slave */
+#define CAN_SCREEN_ID                 0x04  
 
 #define SWD_CONTROL_ENABLE            0                   /* Enable controlling motor directly from debugging interface with vehicle control layer */
 #define DEBUGMODE_MOTOR_CONTROL       0                   /* Disable vehicle control and communications to debug only motor control layer */
 #define ENABLE_MC_DAC_DEBUGGING       0                   /* Update DAC outputs during FOC interrupt */
 #define ENABLE_VC_DAC_DEBUGGING       0                   /* Update DAC outputs during VC medium frequency task */
+#if !SWD_CONTROL_ENABLE
+    #define AUTOTUNE_ENABLE           0                   /* Disable vehicle cotrol and activates functions needed for auto tuning */
+#endif
 
 //used to enable importants features
 //used on the final version of the firmware,
 //as WDT and etc.
 #define FIRMWARE_RELEASE              0
 
+
 #define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
+                                                           
                                                                                                                
 //define responsible to enable some debug features as:
 //hardware fault catch 

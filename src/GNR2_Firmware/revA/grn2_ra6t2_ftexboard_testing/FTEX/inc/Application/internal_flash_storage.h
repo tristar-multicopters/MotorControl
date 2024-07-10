@@ -17,10 +17,10 @@
 // =============================== Defines ================================= //
 
 
+// Maximum Serial unit Length
+#define SERIAL_LENGTH                   12U
 
-
-
-
+// Internal Flahs blcok bytes number
 #define NUMBER_OF_BYTES_IN_THE_BLOCK    64U
 
 //first byte used to show that data memory
@@ -68,7 +68,7 @@
            to give access to other structs like DataFlash_Handle_t and VCI_Handle_t.
   * @return void
 */
-void InternalMemory_WriteSerialNumber(uint8_t SaveData[13]);
+void InternalMemory_WriteSerialNumber(uint8_t SaveData[SERIAL_LENGTH]);
 
 
 void InternalMemory_ReadSerialNumber(void);

@@ -212,9 +212,9 @@ const gpt_extended_cfg_t g_timer9_extend =
     .gtiocb = { .output_enabled = false,
                 .stop_level     = GPT_PIN_LEVEL_LOW
               },
-    .start_source        = (gpt_source_t) (GPT_SOURCE_GTIOCB_RISING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
+    .start_source        = (gpt_source_t) ( GPT_SOURCE_NONE),
     .stop_source         = (gpt_source_t) (GPT_SOURCE_GTIOCB_FALLING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
-    .clear_source        = (gpt_source_t) (GPT_SOURCE_GTIOCB_RISING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
+    .clear_source        = (gpt_source_t) (GPT_SOURCE_GTIOCB_FALLING_WHILE_GTIOCA_LOW |  GPT_SOURCE_NONE),
     .count_up_source     = (gpt_source_t) ( GPT_SOURCE_NONE),
     .count_down_source   = (gpt_source_t) ( GPT_SOURCE_NONE),
     .capture_a_source    = (gpt_source_t) ( GPT_SOURCE_NONE),
@@ -260,7 +260,7 @@ const gpt_extended_cfg_t g_timer9_extend =
 const timer_cfg_t g_timer9_cfg =
 {
     .mode                = TIMER_MODE_PERIODIC,
-    /* Actual period: 35.791394133333334 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0x100000000, .duty_cycle_counts = 0x80000000, .source_div = (timer_source_div_t)0,
+    /* Actual period: 1 seconds. Actual duty: 50%. */ .period_counts = (uint32_t) 0x7270e00, .duty_cycle_counts = 0x3938700, .source_div = (timer_source_div_t)0,
     .channel             = 9,
     .p_callback          = WheelSpeedTimer_IRQHandler,
     /** If NULL then do not add & */
@@ -294,7 +294,7 @@ const agt_extended_cfg_t g_timer_a0_extend =
     .measurement_mode        = AGT_MEASURE_PULSE_PERIOD,
     .agtio_filter            = AGT_AGTIO_FILTER_PCLKB_DIV_32,
     .enable_pin              = AGT_ENABLE_PIN_NOT_USED,
-    .trigger_edge            = AGT_TRIGGER_EDGE_RISING,
+    .trigger_edge            = AGT_TRIGGER_EDGE_FALLING,
 };
 const timer_cfg_t g_timer_a0_cfg =
 {
@@ -702,7 +702,7 @@ const poeg_cfg_t g_poeg0_cfg =
     .noise_filter        = POEG_GTETRG_NOISE_FILTER_PCLKB_DIV_32,
     .channel             = 0,
     .ipl                 = (0),
-    .p_callback          = PWMBreak1_IRQHandler,
+    .p_callback          = OvercurrentPOEG_IRQHandler,
     .p_context           = NULL,
 #if defined(VECTOR_NUMBER_POEG0_EVENT)
     .irq       = VECTOR_NUMBER_POEG0_EVENT,

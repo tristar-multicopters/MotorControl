@@ -9,20 +9,22 @@
 #ifndef __COMM_CONFIG_H
 #define __COMM_CONFIG_H
 
-#include "vc_interface.h"
+#include "vc_interface.h" // Needed for Slave motor handle
+
+// UART
 #include "uCAL_UART.h"
 #include "lcd_apt.h"
 #include "lcd_KD718.h"
 #include "lcd_Cloud_5S.h"
 #include "log_high_speed.h"
+
+// CAN 
 #include "co_can_ra6t2.h"
 #include "co_timer_ra6t2.h"
-#include "board_hardware.h"
-#include "uCAL_DATAFLASH.h"
 
+// Data and external flash
+#include "uCAL_DATAFLASH.h"
 #include "uCAL_SPI.h"
-#include "MX25L3233F_driver.h"
-#include "serial_flash.h"
 #include "serial_flash_storage.h"
 
 //============================ DEFINES ============================//
@@ -40,7 +42,7 @@ extern UART_Handle_t  UART0Handle;
 extern LogHighSpeed_Handle_t LogHS_handle;
 extern DataFlash_Handle_t DataFlashHandle;
 
-extern SPI_Handle_t	SPI1Handle;
+extern SPI_Handle_t    SPI1Handle;
 extern EFlash_Storage_Handle_t EFlash_Storage_Handle;
 
 #endif /* __COMM_CONFIG_H */

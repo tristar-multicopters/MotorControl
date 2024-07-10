@@ -10,8 +10,8 @@
 #include "pedal_torque_sensor.h"
 #include "wheel.h"
 #include "ASSERT_FTEX.h"
+#include "vc_errors_management.h"
 
-#include "gnr_parameters.h"
 
 
 // ============================= Variables ================================ //
@@ -24,10 +24,13 @@ static bool PTSsensorStuck = false;
 /**
     Pedal torque Sensor conversion Initialization
 */
-void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
+void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque)
 {    
     
     ASSERT(pHandle != NULL);
+    
+    //init pas max output
+    pHandle->hParameters.PasMaxOutputTorque = maxTorque;
    
     pHandle->bSafeStart = false; 
         
@@ -50,6 +53,7 @@ void PedalTorqSensor_Init(PedalTorqSensorHandle_t * pHandle, Delay_Handle_t * pP
     PedalTorqSensor_ComputeSlopes(pHandle);
     
     pHandle->hParameters.hStartupOffsetMTSpeedRPM = Wheel_GetWheelRpmFromSpeed(pHandle->hParameters.hStartupOffsetMTSpeedKMH);
+
 }
 
 
@@ -65,30 +69,36 @@ void PedalTorqSensor_Clear(PedalTorqSensorHandle_t * pHandle)
 /**
     Pedal torque Sensor ADC value calculation and filtering
 */
-void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
+void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle, uint8_t speed)
 {
     uint32_t wAux;
     uint16_t hAux;
     uint16_t hBandwidth;
+    
+    //get the index of the bw to be used. this is speed dependent.
+    uint8_t n = PedalTorqSensor_GetBwUsingSpeed(pHandle,speed);
 
     /* Use the Read conversion Manager for ADC read*/
     hAux = RegConvMng_ReadConv(pHandle->bConvHandle);
     pHandle->hInstTorque = hAux;
     /* Select the filter coefficient based on start or stop condition*/
     if (pHandle->hInstTorque > pHandle->hAvADCValue)
-        hBandwidth = pHandle->hParameters.hLowPassFilterBW1;
+        hBandwidth = pHandle->hParameters.hLowPassFilterBW1[n];
     else
-        hBandwidth = pHandle->hParameters.hLowPassFilterBW2;
+        hBandwidth = pHandle->hParameters.hLowPassFilterBW2[n];
     /* Check if the variable not exceeding the limit*/
-    if (hAux != 0xFFFFu)
+    if (hAux == 0xFFFFu)
     {
-        wAux =  (uint32_t) (hBandwidth - 1u); // Affect Bandwidth to the output value
-        wAux *= (uint32_t) (pHandle->hAvADCValue); // Multiply the Avrg value with the coefficient
-        wAux += hAux;
-        wAux /= ( uint32_t )( hBandwidth );// Devide the output value  with the coefficient for a new avrg value
-        /* Affect the average value to the hAvADCValue */
-        pHandle->hAvADCValue = (uint16_t) wAux;
+        hAux = 0xFFFE;
     }
+        
+    wAux =  (uint32_t) (hBandwidth - 1u); // Affect Bandwidth to the output value
+    wAux *= (uint32_t) (pHandle->hAvADCValue); // Multiply the Avrg value with the coefficient
+    wAux += hAux;
+    wAux /= ( uint32_t )( hBandwidth );// Devide the output value  with the coefficient for a new avrg value
+    /* Affect the average value to the hAvADCValue */
+    pHandle->hAvADCValue = (uint16_t) wAux;
+    
 
     /* Compute torque sensor value (between 0 and 65535) */
     hAux = (pHandle->hAvADCValue > pHandle->hParameters.hOffsetPTS) ? 
@@ -112,7 +122,7 @@ void PedalTorqSensor_CalcAvValue(PedalTorqSensorHandle_t * pHandle)
         uint16_t TorqueSens;
         uint32_t OffsetSafe;
         
-        TorqueSens = PedalTorqSensor_GetAvValue(pHandle);
+        TorqueSens = hAux;
         
         // We include the startup threshold to check if throttle is detected
         // Be cause it is in % 
@@ -165,6 +175,33 @@ uint16_t PedalTorqSensor_GetAvValue(PedalTorqSensorHandle_t * pHandle)
 }
 
 /**
+  @brief  Pedal torque Sensor Value in percentage
+  @param  PedalTorqSensorHandle_t handle
+  @return Torque value in percentage in uin8_t format
+*/
+uint8_t PedalTorqSensor_GetPercentTorqueValue(PedalTorqSensorHandle_t * pHandle)
+{
+    //Calculate the percentage according to torque sensor offset and max value
+    uint32_t temp = (pHandle->hAvADCValue - pHandle->hParameters.hOffsetPTS) * PTS_PERCENTAGE;
+    uint16_t denominator = pHandle->hParameters.hMax - pHandle->hParameters.hOffsetPTS;
+    //Prevent zero div.
+    if (denominator > 0)
+    {
+        temp = temp/denominator;
+    }
+    else
+    {
+        temp = 0;
+    }
+    
+    //Max value is 100 percent or more if hMax is lower than 65535 and av value > hMax, trim value
+    if (temp > PTS_PERCENTAGE)
+        temp = PTS_PERCENTAGE;
+    //it is safe to cast to 8-bit value is between 0 - 100 %
+    return (uint8_t) temp;
+}
+
+/**
     Pedal torque Sensor Reset ADC value
 */
 void   PedalTorqSensor_ResetAvValue(PedalTorqSensorHandle_t * pHandle)
@@ -202,8 +239,9 @@ int16_t PedalTorqSensor_ToMotorTorque(PedalTorqSensorHandle_t * pHandle)
     }
     else if (tAux < INT16_MIN)
     {
-        tAux = INT16_MIN;
+        tAux = 0;
     }
+    
     return (int16_t)tAux;
 }
 
@@ -251,4 +289,37 @@ void PedalTorqSensor_ComputeSlopes(PedalTorqSensorHandle_t * pHandle)
    pHandle->hParameters.bSlopeMT   = (int16_t) round(TorqueSensor2Torq);    // Save the numerator
    pHandle->hParameters.bDivisorMT = PTS_SLOPE_FACTOR;                      // and denominator 
     
+}
+
+/**
+    Select the index of the bw buffer based on the bike speed.
+*/
+uint8_t PedalTorqSensor_GetBwUsingSpeed(PedalTorqSensorHandle_t * pHandle, uint8_t speed)
+{
+    //get array size
+    uint8_t size = sizeof(pHandle->hParameters.hFilterSpeed)/sizeof(pHandle->hParameters.hFilterSpeed[0]);
+    
+    //
+    for (uint8_t n = 0; n < size; n++)
+    {
+        //edge case 1.
+        if ((speed < pHandle->hParameters.hFilterSpeed[n]) && (n == 0))
+        {
+            return n;
+        }
+        
+        //edge case 2.
+        if ((n + 1) == (size))
+        {
+            return size;
+        }
+        
+        //middle condtion.
+        if ((speed >= pHandle->hParameters.hFilterSpeed[n]) && ((speed < pHandle->hParameters.hFilterSpeed[n + 1])))
+        {
+           return n + 1; 
+        }
+    }
+    
+    return 0;
 }

@@ -11,12 +11,7 @@
 #define __LCD_CLOUD_5S_H
 
 #include "vc_interface.h"
-#include "powertrain_management.h"
-#include "can_vehicle_interface.h"
-#include "vc_errors_management.h"
-#include "vc_constants.h"
 #include "uCAL_UART.h"
-#include "gnr_main.h"
 
 /**************************** DEFINITIONS AND STRUCTS ****************************/
 // Commands
@@ -67,7 +62,7 @@ typedef enum
     CLOUD_5S_UT_ERROR       = 0x08, // controller undertemperature error
     CLOUD_5S_OT_ERROR       = 0x09, // controller overtemperature error
     CLOUD_5S_IOT_COMM_ERROR = 0x0A, // iot communication error
-    CLOUD_5S_MOT_ERROR      = 0x0B, // controller overtemperature error
+    CLOUD_5S_MOT_ERROR      = 0x0B, // motor overtemperature error
     CLOUD_5S_OV_ERROR       = 0x0C, // DC bus goes over the safe voltage operating range of the controller
     CLOUD_5S_LOW_BAT        = 0x0D, // low battery error
     CLOUD_5S_TEMP_DISC      = 0X0E, // temp sensor disconnected
@@ -98,6 +93,7 @@ typedef struct
     bool cloud5SChangePasFlag;              // Used to tell the Can interfacne that the screen changed the PAS    
     bool isScreenSlave;                     // Listening to the screen for pas changes, unless the app changes it
                                             // At that point the screen will become slave to the controller until it's updated.
+    uint8_t pasController;
     
 }Cloud_5S_Handle_t;
 

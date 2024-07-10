@@ -26,15 +26,15 @@ uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
 {    
     ASSERT(pHandle != NULL); 
     
-    uint32_t wRetval = MC_NO_FAULTS;
+    uint32_t wRetval = MC_NO_FAULT;
 
-    if ((AvrgMecSpeed == 0) && (hFinalTorqueRef > pHandle->min_torque))
+    if ((AvrgMecSpeed == 0) && (hFinalTorqueRef > pHandle->min_torque) && (hBusVoltage > 0))
     {
         // strt a timer to count time motor got stuck
         if (pHandle->counter < pHandle->timeout_general)
         {
             pHandle->counter++;
-            wRetval = MC_NO_FAULTS;
+            wRetval = MC_NO_FAULT;
         }
         //if stuck time is more that threshold, rasie error and cut the power
         else 
@@ -42,7 +42,7 @@ uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
             pHandle->counter = 0;
             wRetval = MC_MSRP;
         }
-        #if VEHICLE_SELECTION == VEHICLE_QUIETKAT
+        #if MOTOR_SELECTION == MOTOR_BAFANG_G062_750W
         // this part checks if the battery SoC is low, rasies sooner to prevent unknown motor issue that causes controller burn
         // for now, only spotted on QiuetKat, more tests are needed for other bikes
         if ((hBusVoltage < pHandle->low_battery_voltage) && (pHandle->counter > pHandle->timeout_low_battery))
@@ -55,7 +55,7 @@ uint32_t Check_MotorStuckReverse(StuckProtection_t * pHandle, int16_t hFinalTorq
     else
     {
         pHandle->counter = 0;
-        wRetval = MC_NO_FAULTS;
+        wRetval = MC_NO_FAULT;
     }
     return wRetval;
 }

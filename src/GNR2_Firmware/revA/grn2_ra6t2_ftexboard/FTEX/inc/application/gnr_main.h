@@ -1,7 +1,7 @@
 /**
   * @file    gnr_main.h
   * @brief   This file is the main application of the ganrunner motor controller firmware
-	*/
+    */
 
 #ifndef __GNR_MAIN_H
 #define __GNR_MAIN_H
@@ -17,7 +17,7 @@
 #include <rtx_os.h>
 //#include "EventRecorder.h"
 
-#include "parameters_conversion.h"
+#include "motor_parameters.h"
 
 
 

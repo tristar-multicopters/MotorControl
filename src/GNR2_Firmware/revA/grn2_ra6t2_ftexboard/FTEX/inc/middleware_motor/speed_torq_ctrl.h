@@ -20,9 +20,9 @@ extern "C" {
 #include "ramp_mngr.h"
 #include "foldback.h"
 #include "ntc_temperature_sensor.h"
-#include "HardwareOverCurrentDetection.h"
 #include "dynamic_power.h"
 #include "stuck_protection.h"
+#include "motor_parameters.h"
 
 
 /* Exported types ------------------------------------------------------------*/
@@ -36,10 +36,11 @@ typedef struct
     RampMngr_Handle_t SpeedRampMngr;                    /* Ramp management structure for speed reference */
 
     Foldback_Handle_t FoldbackMotorSpeed;               /* Foldback structure used to limit maximum motor speed */
+
+    Foldback_Handle_t FoldbackLimitSpeed;               /* Foldback structure used to limit the speed regarding the speed limit value */
     Foldback_Handle_t FoldbackMotorTemperature;         /* Foldback structure used to limit maximum motor temperature */
     Foldback_Handle_t FoldbackHeatsinkTemperature;      /* Foldback structure used to limit maximum heatsink temperature */
     Foldback_Handle_t FoldbackDynamicMaxPower;         /* Foldback structure used to limit maximum Power after a period of time */
-
     
     Foldback_Handle_t FoldbackDynamicMaxTorque;      /* Foldback structure used to limit maximum Torque to other foldbacks */   
 
@@ -50,6 +51,8 @@ typedef struct
 
     int16_t hFinalTorqueRef;
     int16_t hFinalSpeedRef;
+    
+    MotorType_t motorType;                          /* Type of motor, can be HUB_DRIVE or MID_DRIVE */
 
     STCModality_t                   Mode;        /*!< Modality of STC. It can be one of these two
                                                 settings: STC_TORQUE_MODE to enable the
@@ -60,8 +63,6 @@ typedef struct
                                      regulation.*/
     NTCTempSensorHandle_t           * pHeatsinkTempSensor; /* Temperature sensor used to monitor heatsink temperature */
     NTCTempSensorHandle_t           * pMotorTempSensor; /* Temperature sensor used to monitor motor temperature */
-    OCD2_Handle_t                   OCD2_Handle;
-    HWOverCurrentDetection_t        HWOverCurrentDetection; /*< Status of OCD2 pin which connected to OCD2 of current sensot*/    
     StuckProtection_t               StuckProtection; /* parameters of Stcuk Protection */
     uint16_t hSTCFrequencyHz;               /*!< Frequency on which the user updates
                                              the torque reference calling
@@ -69,9 +70,13 @@ typedef struct
                                              expressed in Hz */
     uint16_t hBusVoltage;                   /* the Bus Voltage coming from Voltage Sensor
                                              in voltage unit                                            */    
-    uint16_t hMaxBusCurrent;                /*!< Application maximum Current
+    uint16_t hMaxBusCurrent;                /*!< Application maximum Peak Current
                                              of the rotor mechanical speed. Expressed in Amps 
                                              */
+    uint16_t hMaxContinuousCurrent;         /*!< Application maximumContinouse Current
+                                             of the rotor mechanical speed. Expressed in Amps 
+                                             */
+    bool bEnableLVtorqueLimit;              /* Enable or disable the low voltage torque limit*/ 
     uint16_t hBatteryLowVoltage;            /* Application maximum voltage that the MC layer can 
                                               operate with maximum torque
                                               */
@@ -90,11 +95,19 @@ typedef struct
     uint16_t hMaxPositiveTorque;            /*!< Maximum positive value of motor
                                              torque in cNm.*/
     int16_t  hMinNegativeTorque;            /*!< Minimum negative value of motor
-                                             torque in cNm.*/                         
+                                             torque in cNm.*/                     
+    uint16_t hStartingTorque;               /*!< Maximum starting torque to apply
+                                             to motor in cNm  Only used for Heavy bikes */
+    uint8_t  bPowerRef;
+
     uint16_t hMaxPositivePower;             /*!< Maximum positive value of motor
+                                             power in W.*/
+    uint16_t hMaxContinuousPower;           /*!< Maximum positive value of motor
                                              power in W.*/
     int16_t hMinNegativePower;              /*!< Minimum negative value of motor
                                              power in W.*/
+    int16_t hLowBatteryTorque;              /*!< Max torque when low battery.*/
+    uint16_t hEstimatedEfficiencyPercent;     /*! < Power losses from input to output power in percent. */
     STCModality_t ModeDefault;              /*!< Default STC modality.*/
     uint32_t wTorqueSlopePerSecondUp;       /*!< Slope in cNm per second when ramping up torque. */
     uint32_t wTorqueSlopePerSecondDown;     /*!< Slope in cNm per second when ramping down torque. */
@@ -107,10 +120,12 @@ typedef struct
     float fGearRatio;                  /* fGearRatio Contians the gear ratio of the motor as defined in drive_parameters_xxx*/    
     
     bool bEnableSpdLimitControl;
-    int16_t hSpdLimit;
+    int16_t hSpdLimit;                /* Speed limit of motor rpm */
+    uint16_t hSpdLimitWheelRpm;       /* Speed limit of wheel rpm */
     int16_t hTorqueReferenceSpdLim;
     PIDHandle_t PISpeedLimit;               /*!< The regulator used to perform the speed limit control loop.*/
     
+    bool bFluxWeakeningEn;           /* Enable flux weakening */
     
 } SpdTorqCtrlHandle_t;
 
@@ -137,7 +152,28 @@ typedef struct
   * @retval none.
   */
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
-                        NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor);
+                        NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor, MotorParameters_t MotorParameters);
+
+/**
+  * @brief  Initializes the parameters related to the battery (max power, max current,
+  *         undervoltage threshold)
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  MCSetup: VC parameters used to initialize the MC layer
+  * @param  MotorParameters: used to initialize motor parameters
+  * @retval none.
+  */
+void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup, MotorParameters_t MotorParameters);
+
+/**
+  * @brief  Initializes the parameters related to the battery (max power, max current,
+  *         undervoltage threshold)
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  MCSetup: VC parameters used to initialize the MC layer
+  * @param  MotorParameters: used to initialize motor parameters
+  * @retval none.
+  */
+
+void SpdTorqCtrl_SpeedLimitEnInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup);
 
 /**
   * @brief  It should be called before each motor restart. If STC is set in
@@ -230,7 +266,7 @@ void SpdTorqCtrl_StopRamp(SpdTorqCtrlHandle_t * pHandle);
   * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
   * @retval int16_t motor torque reference in cNm (Nm/100).
   */
-int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle);
+int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorParameters_t MotorParameters);
 
 /**
   * @brief  Returns the Application maximum positive value of rotor speed. Expressed in the unit defined by #SPEED_UNIT.
@@ -331,13 +367,6 @@ int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
 void SpdTorqCtrl_ApplyCurrentLimitation_Iq(qd_t * pHandle, int16_t NominalCurr, int16_t UsrMaxCurr);
 
 /**
-  * @brief  Clear  the motor stcuk timer
-  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
-  * @retval 
-  */
-int16_t SpdTorqCtrl_ApplyIncrementalPowerDerating(SpdTorqCtrlHandle_t * pHandle, int16_t hInputTorque);
-
-/**
   * @brief  Sets Motor Max Power based if it is defined to be based on Battery SoC
   * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
   * @retval 
@@ -351,6 +380,14 @@ void MC_AdaptiveMaxPower(SpdTorqCtrlHandle_t * pHandle);
   * @retval 
   */
 void SpdTorqCtrl_SetSpeedLimit(SpdTorqCtrlHandle_t * pHandle, int16_t hSpdLimUnit);
+
+/**
+  * @brief  Sets wheel speed limit for speed limit controller (only for torque mode and mid-drives).
+  * @param  pHandle: handler of the current instance of the SpeednTorqCtrl component
+  * @param  hSpdLim: Speed limit in unit specified by SPEED_UNIT (rpm, Hz, ...)
+  * @retval 
+  */
+void SpdTorqCtrl_SetSpeedLimitWheelRpm(SpdTorqCtrlHandle_t * pHandle, uint16_t hSpdLimUnit);
 
 #ifdef __cplusplus
 }
