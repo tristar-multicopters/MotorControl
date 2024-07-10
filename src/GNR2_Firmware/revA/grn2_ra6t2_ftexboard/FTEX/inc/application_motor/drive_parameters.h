@@ -14,7 +14,11 @@
 #include "hardware_parameters.h"
 
 
-#if MOTOR_SELECTION == MOTOR_AKM_128SX_350W
+#if MOTOR_SELECTION == MOTOR_DEFAULT
+
+#include "motor_parameters_default.h"
+
+#elif MOTOR_SELECTION == MOTOR_AKM_128SX_350W
 
 #include "motor_parameters_akm_128sx_350w.h"
 

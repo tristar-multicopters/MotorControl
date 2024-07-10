@@ -13,6 +13,7 @@
 #include "gnr_parameters.h"
 #include "ramps.h"
 
+#define MOTOR_DEFAULT                 0
 #define MOTOR_AKM_128SX_750W          1
 #define MOTOR_AKM_128SX_500W          2
 #define MOTOR_AKM_128SX_350W          3
