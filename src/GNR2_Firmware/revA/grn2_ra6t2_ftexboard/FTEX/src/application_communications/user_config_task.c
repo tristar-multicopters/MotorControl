@@ -358,10 +358,10 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pPAS->pPTS->hParameters.hOffsetMTStartup = UserConfigTask_GetPasTorqueStartupThreshold();
 
     // Update the pedal speed sensor (PSS) window detection values
-	PSS_SetStartupPulsesCount(UserConfigTask_GetPasCadenceStartupNumbPulses());
-    PSS_SetStartupWindow(UserConfigTask_GetPasCadenceStartupWindows());
-    PSS_SetRunningPulsesCount(UserConfigTask_GetPasCadenceRunningNumbPulses());
-    PSS_SetRunningWindow(UserConfigTask_GetPasCadenceRunningWindows());
+	PedalSpeedSensor_SetStartupPulsesCount(UserConfigTask_GetPasCadenceStartupNumbPulses());
+    PedalSpeedSensor_SetStartupWindow(UserConfigTask_GetPasCadenceStartupWindows());
+    PedalSpeedSensor_SetRunningPulsesCount(UserConfigTask_GetPasCadenceRunningNumbPulses());
+    PedalSpeedSensor_SetRunningWindow(UserConfigTask_GetPasCadenceRunningWindows());
 
     //passe to the system the pas detection algorithm on startup condition
     paPowertrain->pPAS->bStartupPasAlgorithm = UserConfigTask_GetPasAlgorithmStartup();
@@ -392,7 +392,7 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
 
     //Get PAS sensor values
-    PSS_SetNumberOfMagnets(UserConfigTask_GetPasNbMagnetsPerTurn());
+    PedalSpeedSensor_SetNumberOfMagnets(UserConfigTask_GetPasNbMagnetsPerTurn());
     paPowertrain->pPAS->pPTS->hParameters.hOffsetPTS = UserConfigTask_GetPasTorqueInputMin();
     paPowertrain->pPAS->pPTS->hParameters.hMax       = UserConfigTask_GetPasTorqueInputMax();
     

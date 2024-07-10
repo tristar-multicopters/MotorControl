@@ -35,7 +35,7 @@ WheelSpeedSensorHandle_t wss =
 /**
     Wheel Speed Sensor Initialization
 */
-void WSS_Init(uint8_t magnetsPerRotation)
+void WheelSpeedSensor_Init(uint8_t magnetsPerRotation)
 {
     wss.pulsePerRotation = magnetsPerRotation;
     //get GPT timer information
@@ -45,7 +45,7 @@ void WSS_Init(uint8_t magnetsPerRotation)
 /**
     Wheel Speed Sensor calculate periode value
 */
-void WSS_CalculatePeriodValue(bool motorTempSensorMixed)
+void WheelSpeedSensor_CalculatePeriodValue(bool motorTempSensorMixed)
 {
     //if motor doesn't have a mixed temperature/wheelspeed siganl,
     //get wheel speed period from the capture timer. 
@@ -96,7 +96,7 @@ void WSS_CalculatePeriodValue(bool motorTempSensorMixed)
 /**
     Wheel Speed Sensor Get periode value in seconds.
 */
-float WSS_GetPeriodValue()
+float WheelSpeedSensor_GetPeriodValue()
 {
     return wss.periodValue;
 }
@@ -104,9 +104,9 @@ float WSS_GetPeriodValue()
 /**
     Wheel Speed Sensor retrun RPM in tr/min
 */
-uint16_t WSS_GetSpeedRPM()
+uint16_t WheelSpeedSensor_GetSpeedRPM()
 {
-    float wSpeed = WSS_GetPeriodValue();
+    float wSpeed = WheelSpeedSensor_GetPeriodValue();
     
     if (wSpeed != 0.0f) // Div by 0 protection
     {
@@ -122,7 +122,7 @@ uint16_t WSS_GetSpeedRPM()
 /**
     Update the pulse capture value coming from the ISR
 */
-void WSS_UpdatePulseFromISR(uint32_t capture)
+void WheelSpeedSensor_UpdatePulseFromISR(uint32_t capture)
 {
 	PulseFrequency_IsrCallUpdate(wss.pulseFrequency, capture);
 }
@@ -130,7 +130,7 @@ void WSS_UpdatePulseFromISR(uint32_t capture)
 /**
     Update the overflow coming from ISR
 */
-void WSS_OverflowPulseFromISR()
+void WheelSpeedSensor_OverflowPulseFromISR()
 {
     PulseFrequency_ISROverflowUpdate(wss.pulseFrequency); 
 }
@@ -138,7 +138,7 @@ void WSS_OverflowPulseFromISR()
 /**
     Getter for WSS flag : useMotorPulsePerRotation
 */
-bool WSS_GetUseMotorPulsePerRotation(void)
+bool WheelSpeedSensor_GetUseMotorPulsePerRotation(void)
 {
     return wss.useMotorPulsePerRotation;
 }

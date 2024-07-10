@@ -41,7 +41,7 @@ PedalSpeedSensorHandle_t pss =
 /**
     Pedal Speed Sensor module Initialization
 */
-void PSS_Init()
+void PedalSpeedSensor_Init()
 {
     PulseFrequency_GetTimerInfo(pss.pPulseFrequency);
 }
@@ -50,7 +50,7 @@ void PSS_Init()
     Pedal Speed Sensor capture the number of pulses detected from the 
     cadence signal/sensor.
 */
-void PSS_ReadNumberOfPulses()
+void PedalSpeedSensor_ReadNumberOfPulses()
 {    
     //PulseFrequency_ReadInputCapture (pHandle->pPulseFrequency); 
     pss.numberOfPulses = (uint16_t) pss.pPulseFrequency->hNumberOfPulse;  
@@ -61,7 +61,7 @@ void PSS_ReadNumberOfPulses()
 /**
     Pedal Speed Sensor Periode Get value
 */
-uint16_t PSS_GetNumberOfPulses()
+uint16_t PedalSpeedSensor_GetNumberOfPulses()
 {   
     return pss.numberOfPulses; 
 }
@@ -70,7 +70,7 @@ uint16_t PSS_GetNumberOfPulses()
     Reset all variables used to hold the number of pulses measured
     by the AGT timer.
 */
-void PSS_ResetValue()
+void PedalSpeedSensor_ResetValue()
 {
     pss.numberOfPulses = 0;
     //Initialize the number of pulses detected by the AGT Timer.
@@ -80,7 +80,7 @@ void PSS_ResetValue()
 /**
     Set windows reset flag 
 */
-void PSS_SetWindowsFlag()
+void PedalSpeedSensor_SetWindowsFlag()
 {    
     pss.resetWindowsFlag = true;
 }
@@ -88,7 +88,7 @@ void PSS_SetWindowsFlag()
 /**
     Clear windows reset flag
 */
-void PSS_ClearWindowsFlag()
+void PedalSpeedSensor_ClearWindowsFlag()
 {    
     pss.resetWindowsFlag = false;
 }
@@ -96,7 +96,7 @@ void PSS_ClearWindowsFlag()
 /**
     Get windows reset flag
 */
-bool PSS_GetWindowsFlag()
+bool PedalSpeedSensor_GetWindowsFlag()
 {    
     return pss.resetWindowsFlag;
 }
@@ -104,7 +104,7 @@ bool PSS_GetWindowsFlag()
 /**
     Pedal Speed Sensor RPM Get value
 */
-uint16_t PSS_GetSpeedRPM()
+uint16_t PedalSpeedSensor_GetSpeedRPM()
 {    
     return pss.RPM;
 }
@@ -112,7 +112,7 @@ uint16_t PSS_GetSpeedRPM()
 /**
     Check if we have a new number of pulses detected from the previous number of pulses detected 
 */
-bool PSS_NewPedalPulsesDetected()
+bool PedalSpeedSensor_NewPedalPulsesDetected()
 {
     // Validate if we have new pulses detected, compared to the previous number of pulses
     if(pss.previousNumberOfPulses != pss.pPulseFrequency->hNumberOfPulse)
@@ -128,7 +128,7 @@ bool PSS_NewPedalPulsesDetected()
 /**
     Pedal Speed Sensor calculate periode value
 */
-void PSS_CalculateRPM()
+void PedalSpeedSensor_CalculateRPM()
 {
     //update basic wheel speed information.
     //Calculate the basic parameters of the Input PAS Sensor
@@ -151,7 +151,7 @@ void PSS_CalculateRPM()
 /**
     Getter for the pss startup window
  */
-uint16_t PSS_GetStartupWindow(void)
+uint16_t PedalSpeedSensor_GetStartupWindow(void)
 {
     return pss.windowStartup;
 }
@@ -160,7 +160,7 @@ uint16_t PSS_GetStartupWindow(void)
     Getter for the number of pulses
     required for startup activation
  */
-uint32_t PSS_GetStartupPulsesCount(void)
+uint32_t PedalSpeedSensor_GetStartupPulsesCount(void)
 {
     return pss.minPulsesStartup;
 }
@@ -168,7 +168,7 @@ uint32_t PSS_GetStartupPulsesCount(void)
 /**
     Getter for the pss running window
  */
-uint16_t PSS_GetRunningWindow(void)
+uint16_t PedalSpeedSensor_GetRunningWindow(void)
 {
     return pss.windowRunning;
 }
@@ -177,7 +177,7 @@ uint16_t PSS_GetRunningWindow(void)
     Getter for the number of pulses
     required for running activation
  */
-uint32_t PSS_GetRunningPulsesCount(void)
+uint32_t PedalSpeedSensor_GetRunningPulsesCount(void)
 {
     return pss.minPulsesRunning;
 }
@@ -185,7 +185,7 @@ uint32_t PSS_GetRunningPulsesCount(void)
 /**
     Setter for the pss startup window
  */
-void PSS_SetStartupWindow(uint16_t value)
+void PedalSpeedSensor_SetStartupWindow(uint16_t value)
 {
     pss.windowStartup = value;
 }
@@ -194,7 +194,7 @@ void PSS_SetStartupWindow(uint16_t value)
     Setter for the number of pulses
     required for startup activation
  */
-void PSS_SetStartupPulsesCount(uint32_t value)
+void PedalSpeedSensor_SetStartupPulsesCount(uint32_t value)
 {
     pss.minPulsesStartup = value; 
 }
@@ -202,7 +202,7 @@ void PSS_SetStartupPulsesCount(uint32_t value)
 /**
     Setter for the pss running window
  */
-void PSS_SetRunningWindow(uint16_t value)
+void PedalSpeedSensor_SetRunningWindow(uint16_t value)
 {
     pss.windowRunning = value;
 }
@@ -211,7 +211,7 @@ void PSS_SetRunningWindow(uint16_t value)
     Setter for the number of pulses
     required for running activation
  */
-void PSS_SetRunningPulsesCount(uint32_t value)
+void PedalSpeedSensor_SetRunningPulsesCount(uint32_t value)
 {
     pss.minPulsesRunning = value;
 }
@@ -219,7 +219,7 @@ void PSS_SetRunningPulsesCount(uint32_t value)
 /**
     Setter to update the number of magnet
  */
-void PSS_SetNumberOfMagnets(uint8_t value)
+void PedalSpeedSensor_SetNumberOfMagnets(uint8_t value)
 {
     pss.magnetsCount = value;
 }
@@ -227,7 +227,7 @@ void PSS_SetNumberOfMagnets(uint8_t value)
 /**
     Update the pulse capture value coming from the ISR
 */
-void PSS_UpdatePulseFromISR(uint32_t capture)
+void PedalSpeedSensor_UpdatePulseFromISR(uint32_t capture)
 {
     PulseFrequency_IsrCallUpdate(pss.pPulseFrequency, capture);
 }
@@ -235,7 +235,7 @@ void PSS_UpdatePulseFromISR(uint32_t capture)
 /**
     Update the overflow coming from ISR
 */
-void PSS_OverflowPulseFromISR()
+void PedalSpeedSensor_OverflowPulseFromISR()
 {
     PulseFrequency_ISROverflowUpdate(pss.pPulseFrequency); 
 }

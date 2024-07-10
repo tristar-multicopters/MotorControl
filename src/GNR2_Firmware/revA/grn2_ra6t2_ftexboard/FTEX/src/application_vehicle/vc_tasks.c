@@ -90,7 +90,7 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
     
     while (true)
     {   
-        PSS_CalculateRPM();
+        PedalSpeedSensor_CalculateRPM();
         //Try to detect PAS from a cadence signal(sensor).
         //this function must increment , input number 2, with the same frequency of the task where he is being 
         //called.
@@ -99,7 +99,7 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
 
         // Wheel Speed sensor reading period.
         // Must to be called before PedalAssist_TorquePASDetection to syncronize all actions.
-        WSS_CalculatePeriodValue(MDI_GetMotorTempSensorMixed(pVCI->pPowertrain->pMDI));
+        WheelSpeedSensor_CalculatePeriodValue(MDI_GetMotorTempSensorMixed(pVCI->pPowertrain->pMDI));
 
         // Check PAS activation based on torque
         PedalAssist_TorquePASDetection(pVCI->pPowertrain->pPAS);

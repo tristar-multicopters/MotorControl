@@ -228,7 +228,7 @@ uint32_t CanVehiInterface_GetOdometerDistance()
 */
 uint16_t CanVehiInterface_GetVehiclePedalRPM()
 {
-    return PSS_GetSpeedRPM();
+    return PedalSpeedSensor_GetSpeedRPM();
 }
 
 /**
@@ -372,7 +372,7 @@ void CanVehiInterface_UpdateExternalThrottle(VCI_Handle_t * pHandle, uint16_t aN
  */
 void CanVehiInterface_EngageCruiseControl(VCI_Handle_t * pHandle)
 {
-     uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WSS_GetSpeedRPM());
+     uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpeedSensor_GetSpeedRPM());
                 
      //check if the current speed is inside of the max speed limit
      //if not used MaxThrottleSpeedKMH as cruise control speed.

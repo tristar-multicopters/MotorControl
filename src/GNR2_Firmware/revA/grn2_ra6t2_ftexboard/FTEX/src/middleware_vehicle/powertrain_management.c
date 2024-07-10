@@ -62,7 +62,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     Light_Init(pHandle->pTailLight);
     
     //if we want to use external wss or if wss of motor has 0 magnets use external wss nbr of magnets value
-    if (!WSS_GetUseMotorPulsePerRotation()|| motorWSSNbrPerRotation <= 0)
+    if (!WheelSpeedSensor_GetUseMotorPulsePerRotation()|| motorWSSNbrPerRotation <= 0)
     {
         //use starting torque for dual motors, nominal torque  for all other motors
         #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
@@ -720,7 +720,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     bool bCheckStart4 = false;
 
     uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
-    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WSS_GetSpeedRPM());
+    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WheelSpeedSensor_GetSpeedRPM());
     
     //check if a firmware update is going. firmware update true block start condition.
     if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
@@ -1195,7 +1195,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 
         if(TORQUE_SCALING_PEDAL_RPM)
         {
-            pHandle->hTorqueSelect = PWRT_ApplyTorqueGainScaling(pHandle->hTorqueSelect, PSS_GetSpeedRPM());
+            pHandle->hTorqueSelect = PWRT_ApplyTorqueGainScaling(pHandle->hTorqueSelect, PedalSpeedSensor_GetSpeedRPM());
         }
 
         // Apply ramp filtering on the predicted torque output
@@ -1638,7 +1638,7 @@ void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle)
 void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle)
 { 
     ASSERT(pHandle != NULL);
-    uint16_t wheelRPM = WSS_GetSpeedRPM();
+    uint16_t wheelRPM = WheelSpeedSensor_GetSpeedRPM();
     
     MDI_SetWheelRPM(pHandle->pMDI, wheelRPM);
 }

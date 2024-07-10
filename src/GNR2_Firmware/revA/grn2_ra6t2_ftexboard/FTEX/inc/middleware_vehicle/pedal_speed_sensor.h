@@ -39,21 +39,21 @@ typedef struct
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PSS_Init(void);
+void PedalSpeedSensor_Init(void);
 
 /**
   @brief  Function to capture pedal speed sensor Periode
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PSS_ReadNumberOfPulses(void);
+void PedalSpeedSensor_ReadNumberOfPulses(void);
 
 /**
   @brief  Function to Get the Pedal Speed Sensor Periode
   @param  PedalSpeedSensorHandle_t handle
   @return wPedal_Sensor_Read in unit32_t
 */
-uint16_t PSS_GetNumberOfPulses(void);
+uint16_t PedalSpeedSensor_GetNumberOfPulses(void);
 
 /**
   @brief  Function to reset all variables used to hold the number of pulses measured
@@ -61,35 +61,35 @@ uint16_t PSS_GetNumberOfPulses(void);
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PSS_ResetValue(void);
+void PedalSpeedSensor_ResetValue(void);
 
 /**
   @brief  Set windows reset flag
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PSS_SetWindowsFlag(void);
+void PedalSpeedSensor_SetWindowsFlag(void);
 
 /**
   @brief  Clear windows reset flag
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PSS_ClearWindowsFlag(void);
+void PedalSpeedSensor_ClearWindowsFlag(void);
 
 /**
   @brief  Get windows reset flag
   @param  PedalSpeedSensorHandle_t handle
   @return bool resetWindowsFlag
 */
-bool PSS_GetWindowsFlag(void);
+bool PedalSpeedSensor_GetWindowsFlag(void);
 
 /**
   @brief  Function to return speed in rpm
   @param  PedalSpeedSensorHandle_t handle
   @retval Speed in rpm
 */
-uint16_t PSS_GetSpeedRPM(void);
+uint16_t PedalSpeedSensor_GetSpeedRPM(void);
 
 /**
   @brief Check if we have a new number of pulses detected 
@@ -97,45 +97,45 @@ uint16_t PSS_GetSpeedRPM(void);
   @param  PedalSpeedSensorHandle_t handle
   @return True if new pedal sensor pulses were detected since last function call
 */
-bool PSS_NewPedalPulsesDetected(void);
+bool PedalSpeedSensor_NewPedalPulsesDetected(void);
 
 /**
    Pedal Speed Sensor calculate RPM
 */
-void PSS_CalculateRPM(void);
+void PedalSpeedSensor_CalculateRPM(void);
 
 /**
  * @brief Getter for the pss startup window
  * @return Value of the startup window
  */
-uint16_t PSS_GetStartupWindow(void);
+uint16_t PedalSpeedSensor_GetStartupWindow(void);
 
 /**
  * @brief Getter for the number of pulses
  *        required for startup activation
  * @return Number of required pulses count
  */
-uint32_t PSS_GetStartupPulsesCount(void);
+uint32_t PedalSpeedSensor_GetStartupPulsesCount(void);
 
 /**
  * @brief Getter for the pss running window
  * @return Value of the running window
  */
-uint16_t PSS_GetRunningWindow(void);
+uint16_t PedalSpeedSensor_GetRunningWindow(void);
 
 /**
  * @brief Getter for the number of pulses
  *        required for running activation
  * @return Number of required pulses count
  */
-uint32_t PSS_GetRunningPulsesCount(void);
+uint32_t PedalSpeedSensor_GetRunningPulsesCount(void);
 
 /**
  * @brief Setter for the pss startup window
  * @param value : New updated value to set
  * @return None
  */
-void PSS_SetStartupWindow(uint16_t value);
+void PedalSpeedSensor_SetStartupWindow(uint16_t value);
 
 /**
  * @brief Setter for the number of pulses
@@ -143,14 +143,14 @@ void PSS_SetStartupWindow(uint16_t value);
  * @param value : New updated value to set
  * @return None
  */
-void PSS_SetStartupPulsesCount(uint32_t value);
+void PedalSpeedSensor_SetStartupPulsesCount(uint32_t value);
 
 /**
  * @brief Setter for the pss running window
  * @param value : New updated value to set
  * @return None
  */
-void PSS_SetRunningWindow(uint16_t value);
+void PedalSpeedSensor_SetRunningWindow(uint16_t value);
 
 /**
  * @brief Setter for the number of pulses
@@ -158,26 +158,26 @@ void PSS_SetRunningWindow(uint16_t value);
  * @param value : New updated value to set
  * @return None
  */
-void PSS_SetRunningPulsesCount(uint32_t value);
+void PedalSpeedSensor_SetRunningPulsesCount(uint32_t value);
 
 /**
  * @brief Setter to update the number of magnet
  * @param value : New updated value to set
  * @return None
  */
-void PSS_SetNumberOfMagnets(uint8_t value);
+void PedalSpeedSensor_SetNumberOfMagnets(uint8_t value);
 
 /**
   @brief  Update the pulse capture value coming from the ISR
   @param  Capture : Value capture by the ISR
   @return None
 */
-void PSS_UpdatePulseFromISR(uint32_t capture);
+void PedalSpeedSensor_UpdatePulseFromISR(uint32_t capture);
 
 /**
   @brief  Update the overflow coming from ISR
   @return None
 */
-void PSS_OverflowPulseFromISR(void);
+void PedalSpeedSensor_OverflowPulseFromISR(void);
 
 #endif

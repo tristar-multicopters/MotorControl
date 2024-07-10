@@ -39,44 +39,44 @@ typedef struct {
   @param  magnetsPerRotation Number of magnets per rotation on WSS
   @return None
 */
-void WSS_Init(uint8_t magnetsPerRotation);
+void WheelSpeedSensor_Init(uint8_t magnetsPerRotation);
 
 /**
   @brief  Function to calculate the wheel speed sensor value
   @param  motorTempSensorMixed flag if bike has a mixed temp/wheel speed sensor
   @return None
 */
-void WSS_CalculatePeriodValue(bool motorTempSensorMixed);
+void WheelSpeedSensor_CalculatePeriodValue(bool motorTempSensorMixed);
 
 /**
   @brief  Function to Get periode value in usec
   @return Speed in rpm
 */
-float WSS_GetPeriodValue(void);
+float WheelSpeedSensor_GetPeriodValue(void);
 
 /**
   @brief  Function to return speed in rpm
   @return Speed in rpm
 */
-uint16_t WSS_GetSpeedRPM(void);
+uint16_t WheelSpeedSensor_GetSpeedRPM(void);
 
 /**
   @brief  Update the pulse capture value coming from the ISR
   @param  Capture : Value capture by the ISR
   @return None
 */
-void WSS_UpdatePulseFromISR(uint32_t capture);
+void WheelSpeedSensor_UpdatePulseFromISR(uint32_t capture);
 
 /**
   @brief  Update the overflow coming from ISR
   @return None
 */
-void WSS_OverflowPulseFromISR(void);
+void WheelSpeedSensor_OverflowPulseFromISR(void);
 
 /**
   @brief  Getter for WSS flag : useMotorPulsePerRotation
   @return Value of useMotorPulsePerRotation
 */
-bool WSS_GetUseMotorPulsePerRotation(void);
+bool WheelSpeedSensor_GetUseMotorPulsePerRotation(void);
 
 #endif
