@@ -12,6 +12,9 @@
 /******************* MOTOR SELECTION  *******************************/
 #define MOTOR_SELECTION    MOTOR_BAFANG_G062_750W
 
+/******************* IOT ENABELING  *******************************/
+#define ENABLE_IOT_BOARD        1
+#define VC_IOT_ERROR_DISPLAY    0      //Set to 1 to display error and 0 to disable it
 
 /******************* SCREEN SELECTION  *******************************/
 #define SCREEN_PROTOCOL    UART_APT       
