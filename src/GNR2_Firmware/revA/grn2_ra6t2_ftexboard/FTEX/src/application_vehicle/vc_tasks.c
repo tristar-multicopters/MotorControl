@@ -52,6 +52,7 @@ void MD_BootUp(void)
 {
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
     MDI_Init(pVCI->pPowertrain->pMDI, &SlaveM2, MCSetup);
+    PWRT_Init_MC(pVCI->pPowertrain);
 }
 /**
   * @brief  It initializes the vehicle control application. Needs to be called before using

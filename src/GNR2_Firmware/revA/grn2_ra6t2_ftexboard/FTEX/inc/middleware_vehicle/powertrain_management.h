@@ -122,6 +122,8 @@ typedef struct
   */
 void PWRT_Init(PWRT_Handle_t * pHandle, Delay_Handle_t pDelayArray[]);
 
+void PWRT_Init_MC(PWRT_Handle_t * pHandle);
+
 /**
   * @brief  Update current value of powertrain peripherals, such as throttle. To be called periodically.
   * @param  Powertrain handle

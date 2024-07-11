@@ -107,8 +107,15 @@ typedef struct
     * @param  Pedal Assist handle & Delay Handle
     * @retval None
     */
-void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation);
+void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay);
 
+/**
+    * @brief  Rest of module initialization after MC has been initialized, to be called once before using it
+    * @param  Pedal Assist handle, max torque & wheel speed sensor number of magnets per rotation
+    * @retval None
+    */
+void PedalAssist_InitTorqueAndWheelSpeedSensor(PAS_Handle_t * pHandle, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation);
+    
 /**
     * @brief  Set pedal assist level
     * @param  Pedal Assist handle

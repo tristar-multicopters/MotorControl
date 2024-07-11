@@ -42,7 +42,6 @@ static Delay_Handle_t OdometerDelay; // Delay for the odometer
 void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
 {
     ASSERT(pHandle != NULL);     
-    uint8_t motorWSSNbrPerRotation = MDI_GetWheelSpdSensorNbrPerRotation(pHandle->pMDI);
     
     // Initialize Delays for stuck conditions
     ThrottleDelay = pDelayArray[THROTTLE_DELAY];
@@ -52,7 +51,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     
     // Initilaize peripherals
     Wheel_Init();
-    Throttle_Init(pHandle->pThrottle, &ThrottleDelay, MDI_GetStartingTorque(pHandle->pMDI));
+    Throttle_Init(pHandle->pThrottle, &ThrottleDelay);
     BRK_Init(pHandle->pBrake, &brakeDelay);
     BatMonitor_Init(pHandle->pBatMonitorHandle);
     MS_Init(pHandle->pMS);
@@ -60,28 +59,8 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     Odometer_Init(&OdometerDelay, 1000); // Time interval is 1 sec for now
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
+    PedalAssist_Init(pHandle->pPAS, &PTSensorDelay);
     
-    //if we want to use external wss or if wss of motor has 0 magnets use external wss nbr of magnets value
-    if (!WheelSpeedSensor_GetUseMotorPulsePerRotation()|| motorWSSNbrPerRotation <= 0)
-    {
-        //use starting torque for dual motors, nominal torque  for all other motors
-        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION);
-        #else
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION, EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT);    
-        #endif
-    }
-    //if we want to use the motor's wss, use motor nbr of magnets value
-    else
-    {        
-        //use starting torque for dual motors, nominal torque  for all other motors
-        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), motorWSSNbrPerRotation);
-        #else
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation);    
-        #endif
-    }
-
     pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
     pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
@@ -90,6 +69,34 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     pHandle->sParameters.CruiseForceDisengage = false;
     
     pHandle->sParameters.ScreenMaxSpeed = pHandle->sParameters.VehicleMaxSpeed;
+}
+
+
+void PWRT_Init_MC(PWRT_Handle_t * pHandle)
+{
+    
+    uint8_t motorWSSNbrPerRotation = MDI_GetWheelSpdSensorNbrPerRotation(pHandle->pMDI);
+    Throttle_Init_Torque(pHandle->pThrottle, MDI_GetStartingTorque(pHandle->pMDI));
+    
+    if (!WheelSpeedSensor_GetUseMotorPulsePerRotation()|| motorWSSNbrPerRotation <= 0)
+    {
+        //use starting torque for dual motors, nominal torque  for all other motors
+        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
+            PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, MDI_GetStartingTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION);
+        #else
+            PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION, EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT);    
+        #endif
+    }
+    //if we want to use the motor's wss, use motor nbr of magnets value
+    else
+    {        
+        //use starting torque for dual motors, nominal torque  for all other motors
+        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
+            PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, MDI_GetStartingTorque(pHandle->pMDI), motorWSSNbrPerRotation);
+        #else
+            PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation);    
+        #endif
+    }
 }
 
 /**

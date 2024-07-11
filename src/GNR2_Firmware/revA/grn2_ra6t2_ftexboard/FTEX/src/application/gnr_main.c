@@ -163,10 +163,6 @@ void gnr_main(void)
     // Bootloader app to marks the image with index 0 in the primary slot as confirmed
     boot_set_confirmed();
     
-    MC_BootUp();
-    
-    MD_BootUp();
-    
     //load user config from the data flash.
     UserConfigTask_InitUserConfigFromDataFlash(&UserConfigHandle,&DataFlashHandle,&VCInterfaceHandle);
     
@@ -176,13 +172,17 @@ void gnr_main(void)
     
     //Init all information from the GNR controller, as serial number, firmware and dfu pack version.
     GnrInfo_Init(&DataFlashHandle,&EFlash_Storage_Handle);  
-
+    
     //if GRN is set to be master
     //call VC_BootUp.
     if (VcAutodeter_GetGnrState())
     {
         VC_BootUp();
     }
+    
+    MC_BootUp();
+    
+    MD_BootUp();
     
     Comm_BootUp();
     

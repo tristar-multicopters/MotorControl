@@ -30,19 +30,15 @@ void AssertIsValidLevel(PasLevel_t level);
     * @param  Pedal Assist handle & Delay Handle
     * @retval None
     */
-void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation)
+void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay)
 {
     ASSERT(pHandle != NULL);
     
     //init pas torque ramps
 	
     //init walkmode ramp amd pas max torque
-    pHandle->sParameters.hPASMaxTorque = (int16_t)maxTorque;
-
 	PedalSpeedSensor_Init();
-    WheelSpeedSensor_Init(wheelSpdSensorNbrPerRotation);
-    PedalTorqueSensor_Init(pPTSstuckDelay, maxTorque);
-    
+    PedalTorqueSensor_Init(pPTSstuckDelay);
     pHandle->bCurrentAssistLevel = DEFAULT_PAS_LEVEL;
     PedalAssist_ResetPASDetected(pHandle);
     PedalAssist_ResetCadenceStartupPasDection(pHandle);
@@ -50,6 +46,19 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, u
     PedalAssist_ResetTorqueStartupPasDection(pHandle);
     PedalAssist_ResetTorqueRunningPasDection(pHandle);
     PedalAssist_PASUpdateMaxSpeed(pHandle);
+}
+
+/**
+    * @brief  Rest of module initialization after MC has been initialized, to be called once before using it
+    * @param  Pedal Assist handle, max torque & wheel speed sensor number of magnets per rotation
+    * @retval None
+    */
+void PedalAssist_InitTorqueAndWheelSpeedSensor(PAS_Handle_t * pHandle, uint16_t maxTorque, uint8_t wheelSpdSensorNbrPerRotation)
+{
+    pHandle->sParameters.hPASMaxTorque = (int16_t)maxTorque;
+    WheelSpeedSensor_Init(wheelSpdSensorNbrPerRotation);
+    PedalTorqueSensor_InitTorque(maxTorque);
+
 }
 
 /**

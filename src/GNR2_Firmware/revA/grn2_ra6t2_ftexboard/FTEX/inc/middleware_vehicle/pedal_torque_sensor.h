@@ -73,11 +73,19 @@ typedef struct
 // ==================== Public function prototypes ========================= //
 
 /**
-  @brief  Pedal torque Sensor conversion Initialization
-  @param  PedalTorqSensorHandle_t handle & Delay_Handle_t pPTSstuckDelay
+  @brief  Pedal torque sensor conversion initialization
+  @param  Delay_Handle_t pPTSstuckDelay
   @return None
 */
-void PedalTorqueSensor_Init(Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque);
+void PedalTorqueSensor_Init(Delay_Handle_t * pPTSstuckDelay);
+
+/**
+  @brief  The rest of pedal torque sensor conversion initialization after MC initialization
+  @param  Max torque
+  @return None
+*/
+void PedalTorqueSensor_InitTorque(uint16_t maxTorque);
+
 /**
   @brief  Pedal torque Sensor ADC hardware values clear
   @param  PedalTorqSensorHandle_t handle

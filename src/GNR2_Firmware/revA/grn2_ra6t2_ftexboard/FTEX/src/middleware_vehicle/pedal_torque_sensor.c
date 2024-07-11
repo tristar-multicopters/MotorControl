@@ -52,11 +52,11 @@ PedalTorqueSensorHandle_t pts =
 
 // ==================== Public function prototypes ======================== //
 /**
-    Pedal torque Sensor conversion Initialization
+    Pedal torque sensor conversion initialization
 */
-void PedalTorqueSensor_Init(Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque)
+
+void PedalTorqueSensor_Init(Delay_Handle_t * pPTSstuckDelay)
 {     
-    pts.parameters.PasMaxOutputTorque = maxTorque;
     pts.safeStart = false; 
     pts.pPTSstuckDelay = pPTSstuckDelay;
   
@@ -73,12 +73,20 @@ void PedalTorqueSensor_Init(Delay_Handle_t * pPTSstuckDelay, uint16_t maxTorque)
                                                     pts.parameters.filterBeta);  
     pts.convHandle = RegConvMng_RegisterRegConv(&pts.PTSRegConv);
     PedalTorqueSensor_Clear();
-    
-    PedalTorqueSensor_ComputeSlopes();
  
     pts.parameters.startupOffsetSpeedRPM = Wheel_GetWheelRpmFromSpeed(pts.parameters.startupOffsetSpeedKMH);
 }
 
+/**
+    The rest of pedal torque sensor conversion initialization after MC initialization
+*/
+void PedalTorqueSensor_InitTorque(uint16_t maxTorque)
+{
+    //init pas max output
+    pts.parameters.PasMaxOutputTorque = maxTorque;
+    PedalTorqueSensor_ComputeSlopes();
+   
+}
 
 /**
     Pedal torque Sensor ADC hardware values clear

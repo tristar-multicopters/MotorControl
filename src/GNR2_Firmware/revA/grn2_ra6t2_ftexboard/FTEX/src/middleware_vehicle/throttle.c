@@ -12,12 +12,9 @@
 /**
    Initializes throttle sensing conversions
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay, uint16_t maxTorque)
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay)
 {
     ASSERT(pHandle != NULL);
-    
-    //init throttle max torque
-    pHandle->hParameters.ThrottleMaxTorque = maxTorque;
     
     pHandle->DisableThrottleOutput = false;
     pHandle->extThrottleEnable = false;    
@@ -45,6 +42,15 @@ void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDe
     /* Need to be register with RegularConvManager */
     pHandle->bConvHandle = RegConvMng_RegisterRegConv(&pHandle->Throttle_RegConv);
     Throttle_Clear(pHandle);
+}
+
+/**
+   Initializes the rest of throttle sensing conversions after MC initialization
+ */
+void Throttle_Init_Torque(ThrottleHandle_t * pHandle, uint16_t maxTorque)
+{
+    //init throttle max torque
+    pHandle->hParameters.ThrottleMaxTorque = maxTorque;
     Throttle_ComputeSlopes(pHandle); // Used to calculate values to calibrate ADC value to a standard value     
 }
 
