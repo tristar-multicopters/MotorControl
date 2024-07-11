@@ -10,7 +10,7 @@
 
 #include "stdbool.h"
 #include "stdint.h"
-#include "mc_interface.h"
+#include "md_interface.h"
 
 #define NB_SAMPLES_4_AVG 20 // Obtained through trial and error
                             // Keeps the SOC stable  

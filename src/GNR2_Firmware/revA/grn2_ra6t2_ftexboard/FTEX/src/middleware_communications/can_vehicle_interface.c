@@ -407,15 +407,15 @@ void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAl
 /**
   Get bus voltage
  */
-uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetBusVoltage()
 {
-    return PWRT_GetBusVoltagex100(pHandle->pPowertrain);
+    return PWRT_GetBusVoltagex100();
 }
 
 /**
   Get the RMS current read on a phase current sensor
  */
-int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uint8_t sensorNumber)
+int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(uint8_t sensorNumber)
 {
     static int16_t sensor1Values[SENSOR_VALUES_BUFFER_SIZE] = { 0 };
     static int16_t sensor2Values[SENSOR_VALUES_BUFFER_SIZE] = { 0 };
@@ -424,7 +424,7 @@ int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uin
     static uint8_t bufferValueIndex = 0;
 
     // Get current peak current per sensor
-    ab_t currentAB = MCInterface_GetIab(pHandle->pPowertrain->pMDI->pMCI);
+    ab_t currentAB = MDI_GetIab(M1);
 
     // Fill values if buffer is not full
     if(bufferValueIndex < SENSOR_VALUES_BUFFER_SIZE - 1)

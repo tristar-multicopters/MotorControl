@@ -9,7 +9,6 @@
 #ifndef __MD_INTERFACE_H
 #define __MD_INTERFACE_H
 
-#include "mc_interface.h"
 #include "slave_mc_interface.h"
 
 #define MDI_PERCENT 100 // Used to apply a % based gain
@@ -19,7 +18,6 @@
 */
 typedef struct
 {
-    MotorControlInterfaceHandle_t * pMCI;
     SlaveMotorHandle_t * pSlaveM2;
 } MultipleDriveInterfaceHandle_t;
 
@@ -31,7 +29,7 @@ typedef struct
   * @param  pBatteryPower to the BatteryPower handle
   * @retval none.
   */
-void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, MotorControlInterfaceHandle_t * pMCI, SlaveMotorHandle_t * pSlaveM2, MC_Setup_t MCSetup);
+void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, SlaveMotorHandle_t * pSlaveM2, MC_Setup_t MCSetup);
 
 /**
   * @brief  This function update the virtual motor handle with the provided feedback.
@@ -73,7 +71,7 @@ void MDI_ExecTorqueRamp(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor
   * @param  pHandle Pointer on the component instance to work on.
   * @retval The bus voltage in volts x 100.
   */
-uint16_t MDI_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHandle);
+uint16_t MDI_GetBusVoltageInVoltx100();
 
 /**
   * @brief  This is a buffered command to set directly the motor current
@@ -181,12 +179,21 @@ uint32_t MDI_GetOccurredCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle,
 uint32_t MDI_GetCurrentCriticalFaults(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
 /**
-  * @brief It returns a 16 bit fields containing information about errors
-  *        that historically occurred.
+  * @brief It returns a 16 bit fields containing information about current errors
   * @param pHandle Pointer on the component instance to work on.
   * @param  bMotor is the target motor number
   * @retval uint16_t  16 bit fields with information about about currently
   *         present errors.
+  */
+uint32_t MDI_GetCurrentErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+
+/**
+  * @brief It returns a 16 bit fields containing information about errors
+  *        that historically occurred.
+  * @param pHandle Pointer on the component instance to work on.
+  * @param  bMotor is the target motor number
+  * @retval uint16_t  16 bit fields with information about about historically
+  *         occurred errors.
   */
 uint32_t MDI_GetOccurredErrors(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
 
@@ -279,7 +286,7 @@ int16_t MDI_GetMecSpeedRefUnit(MultipleDriveInterfaceHandle_t * pHandle, uint8_t
   * @param  bMotor is the target motor number
   * @retval ab_t Stator current Iab
   */
-ab_t MDI_GetIab(MultipleDriveInterfaceHandle_t * pHandle, uint8_t bMotor);
+ab_t MDI_GetIab(uint8_t bMotor);
 
 /**
   * @brief  It returns stator current Ialphabeta in AlphaBeta_t format
@@ -471,5 +478,107 @@ uint8_t MDI_GetWheelSpdSensorNbrPerRotation(MultipleDriveInterfaceHandle_t * pHa
   * @retval Whether the motor temp sensor is mixed
   */
 bool MDI_GetMotorTempSensorMixed(MultipleDriveInterfaceHandle_t * pHandle);
+
+/**
+  * @brief  Get max current
+  * @retval Max current
+  */
+int16_t MDI_GetMaxCurrent();
+
+/**
+  * @brief  Get the maximum ongoing current,
+  * @retval Max ongoing current
+  */
+int16_t MDI_GetOngoingMaxCurrent();
+
+/**
+  * @brief  Set the maximum ongoing current,
+  * @param  Max ongoing current
+  */
+void MDI_SetOngoingMaxCurrent(int16_t aCurrent);
+/**
+  * @brief  Set speed limit of the wheel 
+  * @param  Wheel Rpm
+  */
+void MDI_SetSpeedLimitWheelRpm(uint16_t wheelRpm);
+
+/**
+  * @brief  Set speed limit of the motor 
+  * @param  Motor Rpm
+  */
+void MDI_SetSpeedLimit(int16_t desiredMotorRPM);
+
+/**
+  * @brief  Get max measurable current
+  * @retval Max measurable current
+  */
+float MDI_GetMaxMeasurableCurrent();
+
+/**
+  * @brief  Set max bus current
+  * @param  Max bus current
+  */
+void MDI_SetMaxBusCurrent(uint16_t maxBusCurrent);
+
+/**
+  * @brief  Set max continuous current
+  * @param  Max continuous current
+  */
+void MDI_SetMaxContinuousCurrent(uint16_t maxContinuousCurrent);
+
+/**
+  * @brief  Set power foldback end value
+  * @param  Power foldback end value
+  */
+void MDI_SetPowerFoldbackEndValue(int32_t endValue);
+
+/**
+  * @brief  Set power foldback range
+  * @param  Power foldback range
+  */
+void MDI_SetPowerFoldbackRange(uint16_t range);
+
+/**
+  * @brief  Set motor temp sensor type
+  * @param  Motor temp sensor type
+  */
+void MDI_SetMotorTempSensorType(uint8_t sensorType);
+
+/**
+  * @brief  Set motor NTC Beta coefficient
+  * @param  Motor NTC Beta coefficient
+  */
+void MDI_SetMotorNTCBetaCoef(uint16_t NTCBetaCoef);
+
+/**
+  * @brief  Set motor NTC resistance coefficient
+  * @param  Motor NTC resistance coefficient
+  */
+void MDI_SetMotorNTCResistanceCoef(float NTCResCoef);
+
+
+/**
+  * @brief  Set is motor signal mixed
+  * @param  Is motor signal mixed
+  */
+void MDI_SetIsMotorSignalMixed(bool value);
+
+/**
+  * @brief  Set is min signal threshold value for mixed WSS and temp signals
+  * @param  Min signal threshold value
+  */
+void MDI_SetMinSignalThresholdValueMixed(uint16_t value);
+
+/**
+  * @brief  Set max wheel speed period for mixed WSS and temp signals
+  * @param  Max wheel speed period
+  */
+void MDI_SetMaxWheelSpeedPeriodUsValueMixed(uint32_t value);
+
+/**
+  * @brief  Get extracted wheel speed from mixed WSS and temp signals
+  * @retval Wheel speed
+  */
+float MDI_GetExtractedWheelSpeedMixed(void);
 
 #endif /* __MD_INTERFACE_H */

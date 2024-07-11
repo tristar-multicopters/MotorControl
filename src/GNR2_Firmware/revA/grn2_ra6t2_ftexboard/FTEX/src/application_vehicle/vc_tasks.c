@@ -7,9 +7,8 @@
 #include "vc_config.h"
 #include "comm_config.h"
 #include "vc_tasks.h"
-#include "mc_tasks.h"
 #include "comm_tasks.h"
-#include "mc_interface.h"
+#include "md_interface.h"
 #include "vc_autodetermination.h"
 #include "odometer.h"
 
@@ -52,7 +51,7 @@ uint16_t TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT = 0;
 void MD_BootUp(void)
 {
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
-    MDI_Init(pVCI->pPowertrain->pMDI, &MCInterface[M1], &SlaveM2, MCSetup);
+    MDI_Init(pVCI->pPowertrain->pMDI, &SlaveM2, MCSetup);
 }
 /**
   * @brief  It initializes the vehicle control application. Needs to be called before using
@@ -134,7 +133,7 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
             // Check if we still have power enabled
             PWREN_MonitorPowerEnable(pVCI->pPowertrain->pPWREN);          
             
-            busVoltageVoltx100 = MDI_GetBusVoltageInVoltx100(pVCI->pPowertrain->pMDI->pMCI);
+            busVoltageVoltx100 = MDI_GetBusVoltageInVoltx100();
             
             // Update the SOC voltage reference
             BatMonitor_UpdateSOC(pVCI->pPowertrain->pBatMonitorHandle, busVoltageVoltx100);
@@ -382,7 +381,7 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         osThreadFlagsWait(POWEROFFSEQUENCE_FLAG, osFlagsWaitAny, osWaitForever); // Task is blocked until we have to power down        
         MDI_StopMotor(pVCI->pPowertrain->pMDI,M1);
         //if motor is not in idle state , wait.
-        while(MCInterface_GetSTMState(pVCI->pPowertrain->pMDI->pMCI) != M_IDLE)
+        while(MDI_GetSTMState(pVCI->pPowertrain->pMDI, M1) != M_IDLE)
         {    
             osDelay(STOP_LOOPTICKS);
         }

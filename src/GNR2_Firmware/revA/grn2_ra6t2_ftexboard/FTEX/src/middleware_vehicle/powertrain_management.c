@@ -1468,7 +1468,7 @@ uint16_t PWRT_GetMaxSafeCurrent(PWRT_Handle_t * pHandle)
     ASSERT(pHandle != NULL);    
     uint16_t CurrentInAMPS;
     
-    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MCInterface_GetMaxCurrent(pHandle->pMDI->pMCI));
+    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MDI_GetMaxCurrent());
     
     return  CurrentInAMPS;
 }
@@ -1481,7 +1481,7 @@ uint16_t PWRT_GetOngoingMaxCurrent(PWRT_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     uint16_t CurrentInAMPS;
     
-    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MCInterface_GetOngoingMaxCurrent(pHandle->pMDI->pMCI));
+    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MDI_GetOngoingMaxCurrent());
     
     return  CurrentInAMPS;    
 }
@@ -1496,7 +1496,7 @@ void PWRT_SetOngoingMaxCurrent(PWRT_Handle_t * pHandle, uint16_t aCurrent)
     
     DigitalConv = PWRT_ConvertAMPSToDigitalCurrent(pHandle, aCurrent);   
     
-    MCInterface_SetOngoingMaxCurrent(pHandle->pMDI->pMCI,(int16_t) DigitalConv);    
+    MDI_SetOngoingMaxCurrent((int16_t) DigitalConv);    
 }
 
 /**
@@ -1505,7 +1505,7 @@ void PWRT_SetOngoingMaxCurrent(PWRT_Handle_t * pHandle, uint16_t aCurrent)
 uint16_t PWRT_ConvertDigitalCurrentToAMPS(PWRT_Handle_t * pHandle, uint16_t aDigitalCurrent)
 {
     ASSERT(pHandle != NULL);
-    return  (uint16_t) round(aDigitalCurrent / (65535/(pHandle->pMDI->pMCI->MCIConvFactors.MaxMeasurableCurrent * 2)));
+    return  (uint16_t) round(aDigitalCurrent / (65535/(MDI_GetMaxMeasurableCurrent() * 2)));
 }
 
 /**
@@ -1514,7 +1514,7 @@ uint16_t PWRT_ConvertDigitalCurrentToAMPS(PWRT_Handle_t * pHandle, uint16_t aDig
 uint16_t PWRT_ConvertAMPSToDigitalCurrent(PWRT_Handle_t * pHandle, uint16_t aAMPSCurrent)
 {
     ASSERT(pHandle != NULL); 
-    return  (uint16_t) round(aAMPSCurrent * (65535/(pHandle->pMDI->pMCI->MCIConvFactors.MaxMeasurableCurrent * 2)));
+    return  (uint16_t) round(aAMPSCurrent * (65535/(MDI_GetMaxMeasurableCurrent() * 2)));
 }
 
 /**
@@ -1655,9 +1655,9 @@ void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed)
 /**
  *  Get the bus voltage
  */
-uint16_t PWRT_GetBusVoltagex100(PWRT_Handle_t * pHandle)
+uint16_t PWRT_GetBusVoltagex100()
 {
-    return MDI_GetBusVoltageInVoltx100(pHandle->pMDI->pMCI);
+    return MDI_GetBusVoltageInVoltx100();
 }
 
 /**

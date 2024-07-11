@@ -174,15 +174,17 @@ void CANLog_SendSpeed(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t *
 /* Function for sending the measured temperature */
 void CANLog_SendTemperature(const CO_IF_CAN_DRV * pCANOpenCANInterface, VCI_Handle_t * pHandle, uint8_t bMotorSelection)
 {
+    
+    ASSERT(pHandle != NULL);
     CO_IF_FRM msgToSend;
     
     // Prepare Header of CAN message 
     if(bMotorSelection == M1)
     {
-        int16_t temperature = MCInterface_GetControllerTemp(pHandle->pPowertrain->pMDI->pMCI);
+        int16_t temperature = MDI_GetControllerTemp(pHandle->pPowertrain->pMDI);
         
         // todo: support negative temperatures, in case of motor startup in cold weather
-        // adding this assignment for now because MCInterface_GetControllerTemp used to return uint_16 and we must test
+        // adding this assignment for now because MDI_GetControllerTemp used to return uint_16 and we must test
         // again now that it's returning a signed value
         if (temperature < 0)
         {

@@ -11,6 +11,7 @@
 #include "ASSERT_FTEX.h"
 #include <stdlib.h>
 #include "gnr_parameters.h"
+#include "md_interface.h"
 
 
 volatile uint8_t HSLog_ResolutionCounter;
@@ -187,21 +188,18 @@ void LogHS_SendDataStateMachine(LogHighSpeed_Handle_t *pHandle)
 void LogHS_LogMotorVals(LogHighSpeed_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
-    
-    pFOCVars_t FOCCopy;
-    FOCCopy = pHandle->pVController->pPowertrain->pMDI->pMCI->pFOCVars;
       
     ASSERT(pHandle != NULL); 
     if(pHandle->LogHSEnable && pHandle->DumpInProgress == false)
     {
             //Write these values in the logging array 
-            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][0] = FOCCopy->Iab.a;    // Current A    
-            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][1] = FOCCopy->Iab.b;    // Current B
-            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][2] = FOCCopy->Iqd.d;    // Id actual 
-            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][3] = FOCCopy->Iqd.q;    // Iq Actual 
-            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][4] = FOCCopy->Iqdref.d; // Id target 
-            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][5] = FOCCopy->Iqdref.q; // Iq target 
-            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][6] = pHandle->pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit; //FOCCopy->hElAngle; // Electrical position    
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][0] = MDI_GetIab(M1).a;    // Current A    
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][1] = MDI_GetIab(M1).b;    // Current B
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][2] = MDI_GetIqd(pHandle->pVController->pPowertrain->pMDI, M1).d;    // Id actual 
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][3] = MDI_GetIqd(pHandle->pVController->pPowertrain->pMDI, M1).q;    // Iq Actual 
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][4] = MDI_GetIqdref(pHandle->pVController->pPowertrain->pMDI, M1).d; // Id target 
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][5] = MDI_GetIqdref(pHandle->pVController->pPowertrain->pMDI, M1).q; // Iq target 
+            (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][6] = MDI_GetAvrgMecSpeedUnit(pHandle->pVController->pPowertrain->pMDI, M1); //FOCCopy->hElAngle; // Electrical position    
             (*(pHandle->pLogHSBuffer))[pHandle->LogHSBufferIndex][7] = (int16_t)pHandle->pVController->pStateMachine->hVFaultOccurred; // Fault    
 
             if (pHandle->LogHSBufferIndex >= LOGHS_NB_SAMPLE_POINT-1)

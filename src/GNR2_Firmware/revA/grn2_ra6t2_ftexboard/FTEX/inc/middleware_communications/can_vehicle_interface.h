@@ -275,7 +275,7 @@ void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAl
   @param  pHandle: handle of the vehicle
   @return bus voltage
  */
-uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle);
+uint16_t CanVehiInterface_GetBusVoltage();
 
 /**
   @brief Get the RMS current read on a phase current sensor 
@@ -283,7 +283,7 @@ uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle);
   @param  sensorNumber : Sensor selected, 1 for sensor 1, 2 for sensor 2
   @return Average RMS current read on sensor
  */
-int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uint8_t sensorNumber);
+int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(uint8_t sensorNumber);
 
 /**
   @brief  Get the Odometer travelled distance

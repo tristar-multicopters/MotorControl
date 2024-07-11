@@ -8,10 +8,10 @@
 */
 #include "wheel_speed_sensor.h"
 #include "ASSERT_FTEX.h"
-#include "motor_signal_processing.h"
 #include "vc_parameters.h"
 #include "hal_data.h"
 #include "board_hardware.h"
+#include "md_interface.h"
 
 PulseFrequencyHandle_t wssPulseFrequency = 
 {
@@ -89,7 +89,7 @@ void WheelSpeedSensor_CalculatePeriodValue(bool motorTempSensorMixed)
     else
     {
         //get directly from the mixed signal, using analogic input.
-        wss.periodValue = (float)getExtractedWheelSpeed();
+        wss.periodValue = MDI_GetExtractedWheelSpeedMixed();
     }
 }
 

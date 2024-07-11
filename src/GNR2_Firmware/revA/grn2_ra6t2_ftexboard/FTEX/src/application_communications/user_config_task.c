@@ -14,7 +14,6 @@
 #pragma clang diagnostic pop
 
 #include "user_config_task.h"
-#include "motor_signal_processing.h"
 #include "mc_config.h"
 
 #include "ASSERT_FTEX.h"
@@ -419,20 +418,18 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pBatMonitorHandle->VBatMin = UserConfigTask_GetBatteryEmptyVoltage();
     
     /******************************************************************************************/
-    // These lines should be removed when DEV-1022 task is being worked on.
-    // https://tristarmulticopters.atlassian.net/browse/DEV-1022
     
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->hMaxBusCurrent = UserConfigTask_GetBatteryMaxPeakDCCurrent();
+    MDI_SetMaxBusCurrent(UserConfigTask_GetBatteryMaxPeakDCCurrent());
 
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->hMaxContinuousCurrent = UserConfigTask_GetBatteryContinuousDCCurrent();
+    MDI_SetMaxContinuousCurrent(UserConfigTask_GetBatteryContinuousDCCurrent());
 
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingEndValue  = UserConfigTask_GetBatteryPeakCurrentMaxDuration() + UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
+    MDI_SetPowerFoldbackEndValue(UserConfigTask_GetBatteryPeakCurrentMaxDuration() + UserConfigTask_GetBatteryPeakCurrentDeratingDuration());
     
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingRange = UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
+    MDI_SetPowerFoldbackRange(UserConfigTask_GetBatteryPeakCurrentDeratingDuration());
     
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->bSensorType = UserConfigTask_GetMotorSensorType();
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->hNTCBetaCoef = UserConfigTask_GetMotorNTCBetaCoef();
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->hNTCResCoef = (float)UserConfigTask_GetMotorNTCResistanceCoef();
+    MDI_SetMotorTempSensorType(UserConfigTask_GetMotorSensorType());
+    MDI_SetMotorNTCBetaCoef(UserConfigTask_GetMotorNTCBetaCoef());
+    MDI_SetMotorNTCResistanceCoef((float)UserConfigTask_GetMotorNTCResistanceCoef());
     
     /******************************************************************************************/
     
@@ -447,9 +444,9 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
         PedalTorqueSensor_SetBWFilter2(UserConfigTask_GetFilterBwValue(n,BW2), n);
     }
     
-    updateisMotorMixedSignalValue(UserConfigTask_GetMotorMixedSignalState());
-    updateMinSignalThresholdValue(UserConfigTask_GetMinSignalThreshold());
-    updateMaxWheelSpeedPeriodUsValue(UserConfigTask_GetMaxWheelSpeedPeriodUs()); 
+    MDI_SetIsMotorSignalMixed(UserConfigTask_GetMotorMixedSignalState());
+    MDI_SetMinSignalThresholdValueMixed(UserConfigTask_GetMinSignalThreshold());
+    MDI_SetMaxWheelSpeedPeriodUsValueMixed(UserConfigTask_GetMaxWheelSpeedPeriodUs());
 }
 
 
@@ -2059,7 +2056,7 @@ void UserConfigTask_UpdateMaxWheelSpeedPeriodUs(uint32_t value)
 */
 int16_t UserConfigTask_GetMotorRpm(VCI_Handle_t * pVController)
 {
-    return -pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit;
+    return -MDI_GetAvrgMecSpeedUnit(pVController->pPowertrain->pMDI, M1);
 }
 
 /**
@@ -2070,7 +2067,7 @@ int16_t UserConfigTask_GetMotorRpm(VCI_Handle_t * pVController)
 */
 int16_t UserConfigTask_GetMotorRpmWithGearRatio(VCI_Handle_t * pVController)
 {
-    return (int16_t) (-pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit / pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->fGearRatio);
+    return (int16_t) (-MDI_GetAvrgMecSpeedUnit(pVController->pPowertrain->pMDI, M1) / MDI_GetMotorGearRatio(pVController->pPowertrain->pMDI));
 }
 
 

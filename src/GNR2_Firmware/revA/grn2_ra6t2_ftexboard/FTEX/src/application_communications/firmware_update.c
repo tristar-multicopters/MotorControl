@@ -388,7 +388,7 @@ void FirmwareUpdate_Control (CO_NODE  *pNode, VCI_Handle_t * pVCI)
         case PREPARE_SYSTEM_TO_UPDATE:
         
             //wait maximum 500 ms to motors stop and go to idle state.
-            if (MCInterface_GetSTMState(pVCI->pPowertrain->pMDI->pMCI) == M_IDLE)
+            if (MDI_GetSTMState(pVCI->pPowertrain->pMDI, M1) == M_IDLE)
             {
  
                 //move to the next state.

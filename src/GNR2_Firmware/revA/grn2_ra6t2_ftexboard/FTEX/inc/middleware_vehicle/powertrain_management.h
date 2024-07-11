@@ -477,7 +477,7 @@ void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed);
  * @param  Powertrain handle
  * @retval Bus voltage x100 
  */ 
-uint16_t PWRT_GetBusVoltagex100(PWRT_Handle_t * pHandle);
+uint16_t PWRT_GetBusVoltagex100();
 
 /**
  * @brief  Get the travelled distance
