@@ -62,42 +62,6 @@ BatMonitor_Handle_t BatMonitorHandle =
     .RechargedBatSOC = BATTERY_SOC_OK_PERCENT,                      // Battery SOC in % for which we clear the battery low flag
 };
 
-/**@brief Pedal torque sensor initializing Parameters.
- */
-PedalTorqSensorHandle_t PedalTorqueSensorHandle =
-{
-    .PTSRegConv =
-    {
-        .hChannel = PEDAL_TORQUE_SENSOR_ANALOG_CHANNEL,
-    },
-    .TorqSensorFilter = 
-    {
-        .pIIRFAInstance = NULL, // NULL to apply software filtering, no hardware accelerator
-    },
-    .hParameters =
-    {
-        .fFilterAlpha = PTS_FILTER_ALPHA,
-        .fFilterBeta = PTS_FILTER_BETA,
-
-        .hOffsetPTS = PTS_OFFSET_ADC2PTS,
-        
-        .hOffsetMTStartup      = TORQUE_STARTUP_VALUE_THRESHOLD,  
-        .hStartupOffsetMTSpeedKMH = PTS_OFFSET_STARTUP_SPEED_KMH,
-        .hOffsetMT = PTS_OFFSET_PTS2TORQUE,
-        .hOffsetMTSafety = PTS_OFFSET_PTS2TORQUE_SAFETY,
-       
-        .hMax = PTS_MAX_PTSVALUE,
-        .hFilterSpeed[0] = PTS_SPEED_FILTER_1,
-        .hFilterSpeed[1] = PTS_SPEED_FILTER_2,
-        .hLowPassFilterBW1[0] = PTS_FILTER_BW1_1,
-        .hLowPassFilterBW2[0] = PTS_FILTER_BW2_1,
-        .hLowPassFilterBW1[1] = PTS_FILTER_BW1_2,
-        .hLowPassFilterBW2[1] = PTS_FILTER_BW2_2,
-        .hLowPassFilterBW1[2] = PTS_FILTER_BW1_3,
-        .hLowPassFilterBW2[2] = PTS_FILTER_BW2_3,
-    }
-};
-
 
 MS_Handle_t MotorSelectorHandle =
 {
@@ -183,8 +147,6 @@ PAS_Handle_t PedalAssistHandle =
     
     .torqueSensorIssueTimer = 0,
     .bTorqueSensorIssue = false,
-    
-    .pPTS = &PedalTorqueSensorHandle,
 };
 
 /**@brief Throttle initializing Parameters.

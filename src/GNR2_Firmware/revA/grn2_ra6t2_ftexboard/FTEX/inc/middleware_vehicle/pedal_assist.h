@@ -96,8 +96,6 @@ typedef struct
     
     uint16_t torqueSensorIssueTimer;              // Number of tick before we trigger the torque sensor issue flag
     bool bTorqueSensorIssue;                      // Flag used to detect if there is torque sensor issue detected.
-
-    PedalTorqSensorHandle_t * pPTS;               // Pointer to Pedal Torque Sensor handle   
         
     PAS_Parameters_t sParameters;                 // Structure for powertrain parameters
  

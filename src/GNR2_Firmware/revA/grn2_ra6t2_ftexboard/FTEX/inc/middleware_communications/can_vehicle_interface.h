@@ -304,7 +304,7 @@ uint16_t CanVehiInterface_GetVehiclePedalRPM();
   @param  VCI_Handle_t handle
   @return torque percentage in uint8_t format
 */
-uint8_t CanVehiInterface_GetPedalTorqPercentage(VCI_Handle_t * pHandle);
+uint8_t CanVehiInterface_GetPedalTorqPercentage();
 
 
 #endif /* __CAN_IOT_COMM_H */

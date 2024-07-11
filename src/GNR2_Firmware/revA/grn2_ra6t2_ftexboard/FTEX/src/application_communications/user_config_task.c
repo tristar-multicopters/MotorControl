@@ -350,13 +350,12 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     //update userConfigData.PAS_ConfigData.pasMaxTorqueRatio(PAS_MAX_TORQUE_RATIO)
     paPowertrain->pPAS->sParameters.hMaxTorqueRatio = UserConfigTask_GetPasMaxTorqueRatio();
+
+    // Update the pedal torque sensor (PTS) offset values    
+    PedalTorqueSensor_SetStartupOffsetMTSpeedKMH((uint16_t)UserConfigTask_GetPasTorqueStartupSpeed());
+    PedalTorqueSensor_SetOffsetMTStartup(UserConfigTask_GetPasTorqueStartupThreshold());
+    PedalTorqueSensor_SetOffsetMT(UserConfigTask_GetPasTorqueRunningThreshold());
     
-    //update userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupSpeed(PTS_OFFSET_STARTUP_SPEED_KMH)
-    paPowertrain->pPAS->pPTS->hParameters.hStartupOffsetMTSpeedKMH = (uint16_t)UserConfigTask_GetPasTorqueStartupSpeed();
-
-    //update userConfigData.PAS_ConfigData.pasTorqueStartupThreshold(PTS_OFFSET_PTS2TORQUE_STARTUP)
-    paPowertrain->pPAS->pPTS->hParameters.hOffsetMTStartup = UserConfigTask_GetPasTorqueStartupThreshold();
-
     // Update the pedal speed sensor (PSS) window detection values
 	PedalSpeedSensor_SetStartupPulsesCount(UserConfigTask_GetPasCadenceStartupNumbPulses());
     PedalSpeedSensor_SetStartupWindow(UserConfigTask_GetPasCadenceStartupWindows());
@@ -366,13 +365,9 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     //passe to the system the pas detection algorithm on startup condition
     paPowertrain->pPAS->bStartupPasAlgorithm = UserConfigTask_GetPasAlgorithmStartup();
     
-     //update userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasTorqueRunningThreshold(PTS_OFFSET_PTS2TORQUE)
-    paPowertrain->pPAS->pPTS->hParameters.hOffsetMT = UserConfigTask_GetPasTorqueRunningThreshold();
-     
     //passe to the system the pas detection algorithm on running condition
     paPowertrain->pPAS->bRunningPasAlgorithm = UserConfigTask_GetPasAlgorithmRunning();
-    
-      
+       
     for(uint8_t n = PAS_1;n <= PAS_9;n++)
     {
         //update PAS_ConfigData.torqueSensorMultiplier(PAS_TORQUE_GAIN) 
@@ -392,10 +387,11 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
 
     //Get PAS sensor values
-    PedalSpeedSensor_SetNumberOfMagnets(UserConfigTask_GetPasNbMagnetsPerTurn());
-    paPowertrain->pPAS->pPTS->hParameters.hOffsetPTS = UserConfigTask_GetPasTorqueInputMin();
-    paPowertrain->pPAS->pPTS->hParameters.hMax       = UserConfigTask_GetPasTorqueInputMax();
+    PedalSpeedSensor_SetNumberOfMagnets(UserConfigTask_GetPasNbMagnetsPerTurn()); 
     
+    PedalTorqueSensor_SetSensorOffset(UserConfigTask_GetPasTorqueInputMin());
+    PedalTorqueSensor_SetMaxTorqueValue(UserConfigTask_GetPasTorqueInputMax());
+
     //Throttle_ConfigData.walkMOdeSpeed(PAS_LEVEL_SPEED_WALK) is not passed
     //directly to any variable. Because of this is not updated here.
     
@@ -440,24 +436,20 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     /******************************************************************************************/
     
-
-    //
     for (uint8_t n = 0; n < FILTERSPEED_ARRAY_SIZE; n++)
     {
-        paPowertrain->pPAS->pPTS->hParameters.hFilterSpeed[n] = UserConfigTask_GetFilterSpeed(n);
+        PedalTorqueSensor_SetFilterSpeed(UserConfigTask_GetFilterSpeed(n), n);
     }
     
-    //
     for (uint8_t n = 0; n < BW_ARRAY_SIZE; n++)
     {
-        paPowertrain->pPAS->pPTS->hParameters.hLowPassFilterBW1[n] = UserConfigTask_GetFilterBwValue(n,BW1);
-        paPowertrain->pPAS->pPTS->hParameters.hLowPassFilterBW2[n] = UserConfigTask_GetFilterBwValue(n,BW2);
+        PedalTorqueSensor_SetBWFilter1(UserConfigTask_GetFilterBwValue(n,BW1), n);
+        PedalTorqueSensor_SetBWFilter2(UserConfigTask_GetFilterBwValue(n,BW2), n);
     }
     
     updateisMotorMixedSignalValue(UserConfigTask_GetMotorMixedSignalState());
     updateMinSignalThresholdValue(UserConfigTask_GetMinSignalThreshold());
-    updateMaxWheelSpeedPeriodUsValue(UserConfigTask_GetMaxWheelSpeedPeriodUs());
-    
+    updateMaxWheelSpeedPeriodUsValue(UserConfigTask_GetMaxWheelSpeedPeriodUs()); 
 }
 
 

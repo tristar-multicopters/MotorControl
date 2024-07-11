@@ -236,13 +236,9 @@ uint16_t CanVehiInterface_GetVehiclePedalRPM()
   @param  VCI_Handle_t handle
   @return torque percentage in uint8_t format
 */
-uint8_t CanVehiInterface_GetPedalTorqPercentage(VCI_Handle_t * pHandle)
+uint8_t CanVehiInterface_GetPedalTorqPercentage()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pPowertrain != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS->pPTS != NULL);
-    return PedalTorqSensor_GetPercentTorqueValue(pHandle->pPowertrain->pPAS->pPTS);
+    return PedalTorqueSensor_GetPercentTorqueValue();
 }
 
 

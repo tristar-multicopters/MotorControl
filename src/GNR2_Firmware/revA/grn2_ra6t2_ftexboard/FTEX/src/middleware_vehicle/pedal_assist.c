@@ -41,7 +41,7 @@ void PedalAssist_Init(PAS_Handle_t * pHandle, Delay_Handle_t * pPTSstuckDelay, u
 
 	PedalSpeedSensor_Init();
     WheelSpeedSensor_Init(wheelSpdSensorNbrPerRotation);
-    PedalTorqSensor_Init(pHandle->pPTS, pPTSstuckDelay, maxTorque);
+    PedalTorqueSensor_Init(pPTSstuckDelay, maxTorque);
     
     pHandle->bCurrentAssistLevel = DEFAULT_PAS_LEVEL;
     PedalAssist_ResetPASDetected(pHandle);
@@ -174,7 +174,7 @@ int16_t PedalAssist_GetTorqueFromTS(PAS_Handle_t * pHandle)
     int16_t hRefTorqueS, hRefMinTorqueS, hReadTS, hMaxTorq_Temp, hMaxLevelTorq_Temp;
     
     /* Read the Pedal torque sensor */
-    hReadTS = PedalTorqSensor_ToMotorTorque(pHandle->pPTS);
+    hReadTS = PedalTorqueSensor_ToMotorTorque();
     /* Got the PAS from the screen */
     PasLevel_t currentLevel = PedalAssist_GetAssistLevel(pHandle);
     
@@ -287,10 +287,10 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
     hWheelRPM = (uint16_t) WheelSpeedSensor_GetSpeedRPM();
     
     /* Calculate the offset based on ration percentage */
-    if(hWheelRPM <= pHandle->pPTS->hParameters.hStartupOffsetMTSpeedRPM) // If going at low speed use the startup offset
+    if(hWheelRPM <= PedalTorqueSensor_GetStartupOffsetMTSpeedRPM()) // If going at low speed use the startup offset
     {     
         CalculateAverage = true;  // Make sure we calculated the average to check for the threshold       
-        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMTStartup * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+        hOffsetTemp = (PedalTorqueSensor_GetOffsetMTStartup() * PedalTorqueSensor_GetMaxTorqueValue()) / PAS_PERCENTAGE;
         pHandle->bTorqueStartupPASDetected = true;
         pHandle->bTorqueRunningPASDetected = false;
         pHandle->bPASTorqueRunningOverride = true;
@@ -298,13 +298,13 @@ void PedalAssist_TorquePASDetection (PAS_Handle_t * pHandle)
     else
     {
         CalculateAverage = false; // No need for the average      
-        hOffsetTemp = (pHandle->pPTS->hParameters.hOffsetMT * pHandle->pPTS->hParameters.hMax) / PAS_PERCENTAGE;
+        hOffsetTemp = (PedalTorqueSensor_GetOffsetMTStartup() * PedalTorqueSensor_GetMaxTorqueValue()) / PAS_PERCENTAGE;
         pHandle->bTorqueStartupPASDetected = false;
         pHandle->bTorqueRunningPASDetected = true;
         pHandle->bPASTorqueRunningOverride = true;
     }        
     
-    hTorqueSens = PedalTorqSensor_GetAvValue(pHandle->pPTS);
+    hTorqueSens = PedalTorqueSensor_GetAvValue();
    
     static uint16_t hThresholdCheckAvg[TORQUE_THRESHOLD_AVG_NB];
     static uint8_t AvgIndex = 0; 
@@ -558,7 +558,7 @@ bool PedalAssist_IsPowerEnableDetected(PAS_Handle_t *pHandle)
 void PedalAssist_ResetParameters (PAS_Handle_t * pHandle) 
 {
     ASSERT(pHandle != NULL);
-    PedalTorqSensor_ResetAvValue(pHandle->pPTS);  
+    PedalTorqueSensor_ResetAvValue();  
     //reset the number of pulses
     PedalSpeedSensor_ResetValue();   
     //reset the pulse windows time.
@@ -881,11 +881,11 @@ bool PedalAssist_TorqueSensorIssueDetected(PAS_Handle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
 
-    // Calculate a torque sensor issue threshold by adding PETAL_TORQUE_SENSOR_ERROR_OFFSET % to the current hOffsetPTS
-    uint16_t torqueSensorThreshold = pHandle->pPTS->hParameters.hOffsetPTS * (uint16_t)(1.0 + (float)PETAL_TORQUE_SENSOR_ERROR_OFFSET/100);
+    // Calculate a torque sensor issue threshold by adding PETAL_TORQUE_SENSOR_ERROR_OFFSET % to the current idleSensorOffset
+    uint16_t torqueSensorThreshold = PedalTorqueSensor_GetSensorOffset() * (uint16_t)(1.0 + (float)PETAL_TORQUE_SENSOR_ERROR_OFFSET/100);
 
     // If the torque sensor value is smaller than threshold or we have pedal pulse detected
-    if(PedalTorqSensor_GetAvValue(pHandle->pPTS) < torqueSensorThreshold || PedalSpeedSensor_NewPedalPulsesDetected())
+    if(PedalTorqueSensor_GetAvValue() < torqueSensorThreshold || PedalSpeedSensor_NewPedalPulsesDetected())
     {
         pHandle->torqueSensorIssueTimer = 0;
         return false;
@@ -899,7 +899,7 @@ bool PedalAssist_TorqueSensorIssueDetected(PAS_Handle_t * pHandle)
     }
 
     // If we have a high torque sensor value with no pedalling activity, we increment the timer
-    if(PedalTorqSensor_GetAvValue(pHandle->pPTS) >= torqueSensorThreshold && !PedalSpeedSensor_NewPedalPulsesDetected())
+    if(PedalTorqueSensor_GetAvValue() >= torqueSensorThreshold && !PedalSpeedSensor_NewPedalPulsesDetected())
     {
         pHandle->torqueSensorIssueTimer++;
         //pHandle->bTorqueSensorIssue = false;
