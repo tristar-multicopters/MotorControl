@@ -10,7 +10,7 @@
 #define __VC_PARAMETERS_DEFAULT_H
 
 /******************* MOTOR SELECTION  *******************************/
-#define MOTOR_SELECTION    MOTOR_DEFAULT
+#define MOTOR_SELECTION    MOTOR_AKM_128SX_350W
 
 
 /******************* SCREEN SELECTION  *******************************/
