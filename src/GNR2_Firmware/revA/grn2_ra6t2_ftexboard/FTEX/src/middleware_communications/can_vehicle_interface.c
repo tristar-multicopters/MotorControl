@@ -475,3 +475,17 @@ int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(uint8_t sensorNumber)
     } 
     return (int16_t)0;
 }
+
+/**
+    Set new lock/unlock status
+ */
+void CanVehiInterface_SetPowertrainLockStatus(VCI_Handle_t * pHandle, uint8_t lockStatus)
+{
+    ASSERT(pHandle != NULL);
+    if(!lockStatus)
+    {
+        pHandle->pPowertrain->powertrainLockStatus = false;
+        return;   
+    }
+    pHandle->pPowertrain->powertrainLockStatus = true;
+}

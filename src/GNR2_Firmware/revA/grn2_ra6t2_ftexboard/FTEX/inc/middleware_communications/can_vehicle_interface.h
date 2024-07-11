@@ -298,7 +298,6 @@ uint32_t CanVehiInterface_GetOdometerDistance();
 */
 uint16_t CanVehiInterface_GetVehiclePedalRPM();
 
-
 /**
   @brief  Get Pedal torque value in percentage
   @param  VCI_Handle_t handle
@@ -306,5 +305,12 @@ uint16_t CanVehiInterface_GetVehiclePedalRPM();
 */
 uint8_t CanVehiInterface_GetPedalTorqPercentage();
 
+/**
+  @brief Set new lock/unlock status
+  @param  pHandle: handle of the vehicle
+  @param  lockStatus: Current lock/unlock status read on CAN
+  @return none
+ */
+void CanVehiInterface_SetPowertrainLockStatus(VCI_Handle_t * pHandle, uint8_t lockStatus);
 
 #endif /* __CAN_IOT_COMM_H */

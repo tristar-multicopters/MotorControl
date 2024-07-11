@@ -110,7 +110,7 @@ typedef struct
                                                      Second dimension is for motor number in this order: M1 and M2 */
 
     PWRT_Parameters_t sParameters;                // Structure for powertrain parameters
-    
+    bool powertrainLockStatus;                    // Check if the powertrain lock is on 
 } PWRT_Handle_t;
 
 // ======================== Public Functions ======================== //

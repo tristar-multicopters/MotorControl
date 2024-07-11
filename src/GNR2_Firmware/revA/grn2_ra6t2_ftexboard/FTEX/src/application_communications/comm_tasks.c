@@ -87,6 +87,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     int16_t     hPhaseCurrentSensor2;
     uint16_t    PedalRPM;
     uint8_t     PerdalTorqPercent;
+    uint8_t     PowertrainLockUnlock;
     // Read and write
     uint8_t     bPAS[2];
     uint8_t     hWheelDiameter[2];
@@ -130,7 +131,6 @@ static void UpdateObjectDictionnary(void *p_arg)
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
         PedalRPM                        = CanVehiInterface_GetVehiclePedalRPM();
         PerdalTorqPercent               = CanVehiInterface_GetPedalTorqPercentage(pVCI);
-
     }
     else
     {
@@ -344,6 +344,10 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
+
+            // Set the lock/unlock status over CAN
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_LOCK_UNLOCK_POWERTRAIN, 0)),  pNode, &PowertrainLockUnlock, sizeof(uint8_t));
+            CanVehiInterface_SetPowertrainLockStatus(pVCI, PowertrainLockUnlock);
             
             //used to get the current algorithm in the OD.
             uint8_t CanOpenAlgorithm = 0;

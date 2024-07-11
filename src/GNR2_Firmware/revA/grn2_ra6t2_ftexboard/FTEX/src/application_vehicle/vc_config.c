@@ -206,7 +206,8 @@ PWRT_Handle_t PowertrainHandle =
     .pBatMonitorHandle = &BatMonitorHandle,
     .pMS = &MotorSelectorHandle,
     .pPWREN = &PowerEnableHandle,
-    .pPAS = &PedalAssistHandle,    
+    .pPAS = &PedalAssistHandle,
+    .powertrainLockStatus = false    
 };
 
 VCI_Handle_t VCInterfaceHandle =

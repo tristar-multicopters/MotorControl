@@ -535,6 +535,10 @@ extern "C" {
 #define CO_OD_REG_MOTOR_TEMPERATURE            0x2031
 
 //OD ID will be used to
+// Lock/Unlock the motor power delivery feature on a bike
+#define CO_OD_REG_LOCK_UNLOCK_POWERTRAIN       0x2032
+
+//OD ID will be used to
 // receive data and commands during a firmware update.
 // the GNR doesn't have enough memory to receive
 // all bytes and needs to receive some bytes(more than 4)
