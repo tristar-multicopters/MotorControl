@@ -12,6 +12,9 @@
 /******************* MOTOR SELECTION  *******************************/
 #define MOTOR_SELECTION    MOTOR_AKM_128SX_750W
 
+/******************* IOT ENABELING  *******************************/
+#define ENABLE_IOT_BOARD        1
+#define VC_IOT_ERROR_DISPLAY    1      //Set to 1 to display error and 0 to disable it
 
 /******************* SCREEN SELECTION  *******************************/
 #define SCREEN_PROTOCOL    UART_CLOUD_5S       
