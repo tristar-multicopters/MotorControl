@@ -110,7 +110,7 @@ typedef struct
                                                      Second dimension is for motor number in this order: M1 and M2 */
 
     PWRT_Parameters_t sParameters;                // Structure for powertrain parameters
-    
+    bool powertrainLockStatus;                    // Check if the powertrain lock is on 
 } PWRT_Handle_t;
 
 // ======================== Public Functions ======================== //
@@ -121,6 +121,8 @@ typedef struct
   * @retval None
   */
 void PWRT_Init(PWRT_Handle_t * pHandle, Delay_Handle_t pDelayArray[]);
+
+void PWRT_Init_MC(PWRT_Handle_t * pHandle);
 
 /**
   * @brief  Update current value of powertrain peripherals, such as throttle. To be called periodically.
@@ -477,7 +479,7 @@ void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed);
  * @param  Powertrain handle
  * @retval Bus voltage x100 
  */ 
-uint16_t PWRT_GetBusVoltagex100(PWRT_Handle_t * pHandle);
+uint16_t PWRT_GetBusVoltagex100();
 
 /**
  * @brief  Get the travelled distance

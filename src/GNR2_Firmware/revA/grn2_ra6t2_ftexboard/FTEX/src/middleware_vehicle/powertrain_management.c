@@ -42,7 +42,6 @@ static Delay_Handle_t OdometerDelay; // Delay for the odometer
 void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
 {
     ASSERT(pHandle != NULL);     
-    uint8_t motorWSSNbrPerRotation = MDI_GetWheelSpdSensorNbrPerRotation(pHandle->pMDI);
     
     // Initialize Delays for stuck conditions
     ThrottleDelay = pDelayArray[THROTTLE_DELAY];
@@ -52,7 +51,7 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     
     // Initilaize peripherals
     Wheel_Init();
-    Throttle_Init(pHandle->pThrottle, &ThrottleDelay, MDI_GetStartingTorque(pHandle->pMDI));
+    Throttle_Init(pHandle->pThrottle, &ThrottleDelay);
     BRK_Init(pHandle->pBrake, &brakeDelay);
     BatMonitor_Init(pHandle->pBatMonitorHandle);
     MS_Init(pHandle->pMS);
@@ -60,28 +59,8 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     Odometer_Init(&OdometerDelay, 1000); // Time interval is 1 sec for now
     Light_Init(pHandle->pHeadLight);
     Light_Init(pHandle->pTailLight);
+    PedalAssist_Init(pHandle->pPAS, &PTSensorDelay);
     
-    //if we want to use external wss or if wss of motor has 0 magnets use external wss nbr of magnets value
-    if (!WSSGetUseMotorPulsePerRotation()|| motorWSSNbrPerRotation <= 0)
-    {
-        //use starting torque for dual motors, nominal torque  for all other motors
-        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION);
-        #else
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION, EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT);    
-        #endif
-    }
-    //if we want to use the motor's wss, use motor nbr of magnets value
-    else
-    {        
-        //use starting torque for dual motors, nominal torque  for all other motors
-        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetStartingTorque(pHandle->pMDI), motorWSSNbrPerRotation);
-        #else
-            PedalAssist_Init(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation);    
-        #endif
-    }
-
     pHandle->aTorque[M1] = 0; pHandle->aTorque[M2] = 0;
     pHandle->aSpeed[M1] = 0; pHandle->aSpeed[M2] = 0;
     pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M1] = 0; pHandle->aFaultManagementCounters[OVERCURRENT_COUNTER][M2] = 0;
@@ -90,6 +69,34 @@ void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
     pHandle->sParameters.CruiseForceDisengage = false;
     
     pHandle->sParameters.ScreenMaxSpeed = pHandle->sParameters.VehicleMaxSpeed;
+}
+
+
+void PWRT_Init_MC(PWRT_Handle_t * pHandle)
+{
+    
+    uint8_t motorWSSNbrPerRotation = MDI_GetWheelSpdSensorNbrPerRotation(pHandle->pMDI);
+    Throttle_Init_Torque(pHandle->pThrottle, MDI_GetStartingTorque(pHandle->pMDI));
+    
+    if (!WheelSpeedSensor_GetUseMotorPulsePerRotation()|| motorWSSNbrPerRotation <= 0)
+    {
+        //use starting torque for dual motors, nominal torque  for all other motors
+        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
+            PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, MDI_GetStartingTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION);
+        #else
+            PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), EXTERNAL_WSS_NBR_PER_ROTATION, EXTERNAL_WSS_TIME_ON_ONE_MAGNET_PERCENT);    
+        #endif
+    }
+    //if we want to use the motor's wss, use motor nbr of magnets value
+    else
+    {        
+        //use starting torque for dual motors, nominal torque  for all other motors
+        #if POWERTRAIN_DEFAULT_MODE == DUAL_MOTOR
+            PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, MDI_GetStartingTorque(pHandle->pMDI), motorWSSNbrPerRotation);
+        #else
+            PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation);    
+        #endif
+    }
 }
 
 /**
@@ -154,7 +161,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
     if (pHandle->sParameters.bCtrlType == TORQUE_CTRL) // If torque control
     {   
         // Calculate the pedal assist torque sensor value
-        PedalTorqSensor_CalcAvValue(pHandle->pPAS->pPTS, (uint8_t)Wheel_GetVehicleSpeedFromWSS()); 
+        PedalTorqueSensor_CalcAvValue((uint8_t)Wheel_GetVehicleSpeedFromWSS()); 
         
         hTorqueRef = PWRT_CalcSelectedTorque(pHandle); // Compute torque to motor depending on either throttle or PAS
         hAux = hTorqueRef; //hAux is used as auxialiary variable for final torque computation. Will be reduced depending on brake state.
@@ -720,7 +727,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     bool bCheckStart4 = false;
 
     uint16_t hThrottleValue = Throttle_GetAvThrottleValue(pHandle->pThrottle);
-    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WSSGetSpeedRPM());
+    uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WheelSpeedSensor_GetSpeedRPM());
     
     //check if a firmware update is going. firmware update true block start condition.
     if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
@@ -1195,7 +1202,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 
         if(TORQUE_SCALING_PEDAL_RPM)
         {
-            pHandle->hTorqueSelect = PWRT_ApplyTorqueGainScaling(pHandle->hTorqueSelect, PedalSpdSensor_GetSpeedRPM(pHandle->pPAS->pPSS));
+            pHandle->hTorqueSelect = PWRT_ApplyTorqueGainScaling(pHandle->hTorqueSelect, PedalSpeedSensor_GetSpeedRPM());
         }
 
         // Apply ramp filtering on the predicted torque output
@@ -1468,7 +1475,7 @@ uint16_t PWRT_GetMaxSafeCurrent(PWRT_Handle_t * pHandle)
     ASSERT(pHandle != NULL);    
     uint16_t CurrentInAMPS;
     
-    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MCInterface_GetMaxCurrent(pHandle->pMDI->pMCI));
+    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MDI_GetMaxCurrent());
     
     return  CurrentInAMPS;
 }
@@ -1481,7 +1488,7 @@ uint16_t PWRT_GetOngoingMaxCurrent(PWRT_Handle_t * pHandle)
     ASSERT(pHandle != NULL);
     uint16_t CurrentInAMPS;
     
-    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MCInterface_GetOngoingMaxCurrent(pHandle->pMDI->pMCI));
+    CurrentInAMPS = PWRT_ConvertDigitalCurrentToAMPS(pHandle,(uint16_t) MDI_GetOngoingMaxCurrent());
     
     return  CurrentInAMPS;    
 }
@@ -1496,7 +1503,7 @@ void PWRT_SetOngoingMaxCurrent(PWRT_Handle_t * pHandle, uint16_t aCurrent)
     
     DigitalConv = PWRT_ConvertAMPSToDigitalCurrent(pHandle, aCurrent);   
     
-    MCInterface_SetOngoingMaxCurrent(pHandle->pMDI->pMCI,(int16_t) DigitalConv);    
+    MDI_SetOngoingMaxCurrent((int16_t) DigitalConv);    
 }
 
 /**
@@ -1505,7 +1512,7 @@ void PWRT_SetOngoingMaxCurrent(PWRT_Handle_t * pHandle, uint16_t aCurrent)
 uint16_t PWRT_ConvertDigitalCurrentToAMPS(PWRT_Handle_t * pHandle, uint16_t aDigitalCurrent)
 {
     ASSERT(pHandle != NULL);
-    return  (uint16_t) round(aDigitalCurrent / (65535/(pHandle->pMDI->pMCI->MCIConvFactors.MaxMeasurableCurrent * 2)));
+    return  (uint16_t) round(aDigitalCurrent / (65535/(MDI_GetMaxMeasurableCurrent() * 2)));
 }
 
 /**
@@ -1514,7 +1521,7 @@ uint16_t PWRT_ConvertDigitalCurrentToAMPS(PWRT_Handle_t * pHandle, uint16_t aDig
 uint16_t PWRT_ConvertAMPSToDigitalCurrent(PWRT_Handle_t * pHandle, uint16_t aAMPSCurrent)
 {
     ASSERT(pHandle != NULL); 
-    return  (uint16_t) round(aAMPSCurrent * (65535/(pHandle->pMDI->pMCI->MCIConvFactors.MaxMeasurableCurrent * 2)));
+    return  (uint16_t) round(aAMPSCurrent * (65535/(MDI_GetMaxMeasurableCurrent() * 2)));
 }
 
 /**
@@ -1638,7 +1645,7 @@ void PWRT_ClearForceDisengage(PWRT_Handle_t * pHandle)
 void PWRT_SetWheelRPM(PWRT_Handle_t * pHandle)
 { 
     ASSERT(pHandle != NULL);
-    uint16_t wheelRPM = WSSGetSpeedRPM();
+    uint16_t wheelRPM = WheelSpeedSensor_GetSpeedRPM();
     
     MDI_SetWheelRPM(pHandle->pMDI, wheelRPM);
 }
@@ -1655,9 +1662,9 @@ void PWRT_SetScreenMaxSpeed(PWRT_Handle_t * pHandle, uint8_t aSpeed)
 /**
  *  Get the bus voltage
  */
-uint16_t PWRT_GetBusVoltagex100(PWRT_Handle_t * pHandle)
+uint16_t PWRT_GetBusVoltagex100()
 {
-    return MDI_GetBusVoltageInVoltx100(pHandle->pMDI->pMCI);
+    return MDI_GetBusVoltageInVoltx100();
 }
 
 /**

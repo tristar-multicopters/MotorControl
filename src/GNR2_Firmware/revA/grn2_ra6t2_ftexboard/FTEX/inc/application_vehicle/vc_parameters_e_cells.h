@@ -27,8 +27,8 @@
 #define DEFAULT_WHEEL_DIAMETER_OVERRIDE 29 
 /******************* SPEED LIMIT PARAMETERS  *******************************/
 
-#define ENABLE_SPEED_LIMIT                     false        // Enable or disable speed limit (default speed limit is 32km/hr)
-#define VEHICLE_TOP_SPEED_KMH                  32    
+#define ENABLE_SPEED_LIMIT                     true        // Enable or disable speed limit (default speed limit is 32km/hr)
+#define VEHICLE_TOP_SPEED_KMH                  63    
 #define THROTTLE_TOP_SPEED                     VEHICLE_TOP_SPEED_KMH
 
 /***************** THROTTLE SELECTION  ******************************/

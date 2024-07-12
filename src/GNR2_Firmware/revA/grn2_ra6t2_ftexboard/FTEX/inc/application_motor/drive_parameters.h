@@ -250,4 +250,22 @@
 /******** Speed Control Settings Section ********/
 #define SPDCTRL_UPPER_INTEGRAL_LIMIT    2097152     // =2^21 The maximum allowed value for Integral Term of Speed Control PID
 
+
+/******** Wheel Speed and Temp Sensor Mixed Section ********/
+
+
+#define MAX_WHEELSPEED_PERIOD_US   4000000          //define the maximum timeout to considere the wheel speed zero.
+
+
+#define MINIMUM_SIGNAL_THRESHOLD   4000             //this value is a raw value. the value range is between 65535 until 0.
+                                                    //this is the allowed minimum value to the processingMotorMixedSignal
+                                                    //function extract and measure motor temperature and wheel speed.
+                                                    //if it is necessary to measure wheel speed above 32Km/h, this value
+                                                    //must to be reduced.
+                                                    //this value ha a direct correction with ADC reference, 3.0 Volts.
+                                                    //65535                    ---> 3.0 volts 
+                                                    //MINIMUM_SIGNAL_THRESHOLD ---> X 
+                                                    //On this case 4000 = 0.18 votls.
+
+
 #endif  /*__DRIVE_PARAMETERS_H*/

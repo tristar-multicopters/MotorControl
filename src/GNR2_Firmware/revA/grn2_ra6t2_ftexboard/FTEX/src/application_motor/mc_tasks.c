@@ -9,7 +9,6 @@
 #include "mc_type.h"
 #include "mc_math.h"
 #include "regular_conversion_manager.h"
-#include "mc_interface.h"
 #include "mc_tuning.h"
 #include "mc_state_machine.h"
 #include "pwm_common.h"
@@ -101,6 +100,7 @@ int16_t hOpenloopSpeed = -10;
 #endif
 
 /* Private functions ---------------------------------------------------------*/
+void MCInterface_Init(void);
 void MediumFrequencyTaskM1(void);
 void FOC_Clear(uint8_t bMotor);
 void FOC_UpdatePIDGains(uint8_t bMotor);
@@ -224,7 +224,7 @@ void MC_BootUp(void)
     oMCInterface[M1] = &MCInterface[M1];
     
     
-    MCInterface_Init(oMCInterface[M1], &MCStateMachine[M1], pSpeedTorqCtrl[M1], &FOCVars[M1], pBusSensorM1, &MCConfig);
+    MCInterface_Init();
     
     /* Section where we initialise conversion factors that need to be available to vehicle control */
     oMCInterface[M1]->MCIConvFactors.Gain_Torque_IQRef = MotorParameters.ParametersConversion.fGainTorqueIqRef;
@@ -278,6 +278,33 @@ void MC_BootUp(void)
     }
     
 }
+
+/**
+  * @brief  Initializes all the object variables, usually it has to be called
+  *         once right after object creation. It is also used to assign the
+  *         state machine object, the speed and torque controller, and the FOC
+  *         drive object to be used by MC Interface.
+  * @retval none.
+  */
+void MCInterface_Init()
+{
+    oMCInterface[M1]->pSTM = &MCStateMachine[M1];
+    oMCInterface[M1]->pSpeedTorqCtrl = pSpeedTorqCtrl[M1];
+    oMCInterface[M1]->pFOCVars = &FOCVars[M1];
+    oMCInterface[M1]->pResDivVbusSensor = pBusSensorM1;
+    oMCInterface[M1]->pMCConfig = &MCConfig;
+
+    /* Buffer related initialization */
+    oMCInterface[M1]->LastCommand = MCI_NOCOMMANDSYET;
+    oMCInterface[M1]->hFinalSpeed = 0;
+    oMCInterface[M1]->hFinalTorque = 0;
+    oMCInterface[M1]->CommandState = MCI_BUFFER_EMPTY;
+    
+    /*Initialize driver */
+    Driver_Disable(&oMCInterface[M1]->bDriverEn);
+    
+}
+
 
 void MC_RunMotorControlTasks(void)
 {

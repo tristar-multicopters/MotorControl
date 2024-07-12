@@ -4,7 +4,6 @@
   *
   */
 #include "comm_tasks.h"
-#include "mc_tasks.h"
 #include "vc_tasks.h"
 
 #include "comm_config.h"
@@ -35,7 +34,6 @@
 #include "user_config_task.h"
 #pragma clang diagnostic pop
 
-#include "motor_signal_processing.h"
 
 /************* DEFINES ****************/
 
@@ -89,6 +87,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     int16_t     hPhaseCurrentSensor2;
     uint16_t    PedalRPM;
     uint8_t     PerdalTorqPercent;
+    uint8_t     PowertrainLockUnlock;
     // Read and write
     uint8_t     bPAS[2];
     uint8_t     hWheelDiameter[2];
@@ -116,10 +115,10 @@ static void UpdateObjectDictionnary(void *p_arg)
         hHeatsinkTemp        = CanVehiInterface_GetControllerTemp(pVCI);
         bSOC                 = CanVehiInterface_GetVehicleSOC(pVCI);
         hErrorState          = CanVehiInterface_GetVehicleCurrentFaults(pVCI);
-        hBusVoltage          = CanVehiInterface_GetBusVoltage(pVCI);
+        hBusVoltage          = CanVehiInterface_GetBusVoltage();
         hBrakeStatus         = CanVehiInterface_GetBrakeStatus(pVCI);
-        hPhaseCurrentSensor1 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(pVCI, CURRENT_SENSOR_1);
-        hPhaseCurrentSensor2 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(pVCI, CURRENT_SENSOR_2);
+        hPhaseCurrentSensor1 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(CURRENT_SENSOR_1);
+        hPhaseCurrentSensor2 = CanVehiculeInterface_GetSensorPhaseCurrentRMS(CURRENT_SENSOR_2);
 			
 		odometerDistance	 = CanVehiInterface_GetOdometerDistance();
         
@@ -130,9 +129,8 @@ static void UpdateObjectDictionnary(void *p_arg)
         hFrontLightState[VEHICLE_PARAM] = CanVehiInterface_GetFrontLightState(pVCI);
         hRearLightState[VEHICLE_PARAM]  = CanVehiInterface_GetRearLightState(pVCI);
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
-        PedalRPM                        = CanVehiInterface_GetVehiclePedalRPM(pVCI);
+        PedalRPM                        = CanVehiInterface_GetVehiclePedalRPM();
         PerdalTorqPercent               = CanVehiInterface_GetPedalTorqPercentage(pVCI);
-
     }
     else
     {
@@ -168,13 +166,13 @@ static void UpdateObjectDictionnary(void *p_arg)
     //
     #if SUPPORT_SLAVE_ON_IOT | !GNR_IOT
     /* Get data from motor control and vehicle control layer */
-    int16_t hMotorSpeedMeas         = MCInterface_GetAvrgMecSpeedUnit(&MCInterface[0]);
-    uint16_t hMotorState            = MCInterface_GetSTMState(&MCInterface[0]);
-    uint32_t wMotorOccurredFaults    = MCInterface_GetOccurredCriticalFaults(&MCInterface[0]);
-    uint32_t wMotorCurrentFaults    = MCInterface_GetCurrentCriticalFaults(&MCInterface[0]);
-    uint32_t wMotorCurrentErrorsNow        = MCInterface_GetCurrentErrors(&MCInterface[0]);
-    uint32_t wMotorOccurredErrors    = MCInterface_GetOccurredErrors(&MCInterface[0]);
-    uint32_t wMotorWarnings         = MCInterface_GetOccurredWarning(&MCInterface[0]);
+    int16_t hMotorSpeedMeas         = MDI_GetAvrgMecSpeedUnit(pVCI->pPowertrain->pMDI, M1);
+    uint16_t hMotorState            = MDI_GetSTMState(pVCI->pPowertrain->pMDI, M1);
+    uint32_t wMotorOccurredFaults    = MDI_GetOccurredCriticalFaults(pVCI->pPowertrain->pMDI, M1);
+    uint32_t wMotorCurrentFaults    = MDI_GetCurrentCriticalFaults(pVCI->pPowertrain->pMDI, M1);
+    uint32_t wMotorCurrentErrorsNow        = MDI_GetCurrentErrors(pVCI->pPowertrain->pMDI, M1);
+    uint32_t wMotorOccurredErrors    = MDI_GetOccurredErrors(pVCI->pPowertrain->pMDI, M1);
+    uint32_t wMotorWarnings         = MDI_GetOccurredWarnings(pVCI->pPowertrain->pMDI, M1);
     #endif
     
     //theses variables are only used
@@ -297,8 +295,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
                 
                 /* Execute received commands using motor control api */
-                MCInterface_ExecTorqueRamp(&MCInterface[0], hMotor2TorqRef);
-                bMotor2Start ? MCInterface_StartMotor(&MCInterface[0]) : MCInterface_StopMotor(&MCInterface[0]);
+                MDI_ExecTorqueRamp(pVCI->pPowertrain->pMDI, M1, hMotor2TorqRef);
+                bMotor2Start ? MDI_StartMotor(pVCI->pPowertrain->pMDI, M1) : MDI_StopMotor(pVCI->pPowertrain->pMDI, M1);
                 if (bMotor2FaultAck)
                 {
                     // Reset fault ack after reception
@@ -306,7 +304,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                     //critical section
                     COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FAULT_ACK, M2)), pNode, &bMotor2FaultAck, sizeof(uint8_t));
                     //end critical section
-                    MCInterface_CriticalFaultAcknowledged(&MCInterface[0]);
+                    MDI_CriticalFaultAcknowledged(pVCI->pPowertrain->pMDI, M1);
                 }
             
                 //clear heart beat flag error is was not cleared yet.
@@ -324,7 +322,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                 {
                     // Master not present anymore, stop motor
                     hCommErrors |= MASTER_SLAVE_NO_HEARTBEAT;
-                    MCInterface_StopMotor(&MCInterface[0]);
+                    MDI_StopMotor(pVCI->pPowertrain->pMDI, M1);
                 }
             }
         }
@@ -346,6 +344,10 @@ static void UpdateObjectDictionnary(void *p_arg)
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 0)),     pNode, &hWheelDiameter[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_FRONT_LIGHT, 0)), pNode, &hFrontLightState[CAN_PARAM], sizeof(uint8_t));
             COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_REAR_LIGHT, 0)),  pNode, &hRearLightState[CAN_PARAM], sizeof(uint8_t));
+
+            // Set the lock/unlock status over CAN
+            COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_LOCK_UNLOCK_POWERTRAIN, 0)),  pNode, &PowertrainLockUnlock, sizeof(uint8_t));
+            CanVehiInterface_SetPowertrainLockStatus(pVCI, PowertrainLockUnlock);
             
             //used to get the current algorithm in the OD.
             uint8_t CanOpenAlgorithm = 0;

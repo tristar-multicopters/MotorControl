@@ -14,7 +14,6 @@
 #pragma clang diagnostic pop
 
 #include "user_config_task.h"
-#include "motor_signal_processing.h"
 #include "mc_config.h"
 
 #include "ASSERT_FTEX.h"
@@ -350,34 +349,24 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     
     //update userConfigData.PAS_ConfigData.pasMaxTorqueRatio(PAS_MAX_TORQUE_RATIO)
     paPowertrain->pPAS->sParameters.hMaxTorqueRatio = UserConfigTask_GetPasMaxTorqueRatio();
-    
-    //update userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasTorqueStartupSpeed(PTS_OFFSET_STARTUP_SPEED_KMH)
-    paPowertrain->pPAS->pPTS->hParameters.hStartupOffsetMTSpeedKMH = (uint16_t)UserConfigTask_GetPasTorqueStartupSpeed();
 
-    //update userConfigData.PAS_ConfigData.pasTorqueStartupThreshold(PTS_OFFSET_PTS2TORQUE_STARTUP)
-    paPowertrain->pPAS->pPTS->hParameters.hOffsetMTStartup = UserConfigTask_GetPasTorqueStartupThreshold();
+    // Update the pedal torque sensor (PTS) offset values    
+    PedalTorqueSensor_SetStartupOffsetMTSpeedKMH((uint16_t)UserConfigTask_GetPasTorqueStartupSpeed());
+    PedalTorqueSensor_SetOffsetMTStartup(UserConfigTask_GetPasTorqueStartupThreshold());
+    PedalTorqueSensor_SetOffsetMT(UserConfigTask_GetPasTorqueRunningThreshold());
     
-    //paPowertrain->pPAS->pPSS->hPedalSpeedSens_MinPulseStartup(PEDALSPEEDSENSOR_MIN_PULSE_STARTUP)
-    paPowertrain->pPAS->pPSS->hPedalSpeedSens_MinPulseStartup = UserConfigTask_GetPasCadenceStartupNumbPulses();
-    //update userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_WindowsStartup(PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS)
-    paPowertrain->pPAS->pPSS->wPedalSpeedSens_WindowsStartup = UserConfigTask_GetPasCadenceStartupWindows();
-    
+    // Update the pedal speed sensor (PSS) window detection values
+	PedalSpeedSensor_SetStartupPulsesCount(UserConfigTask_GetPasCadenceStartupNumbPulses());
+    PedalSpeedSensor_SetStartupWindow(UserConfigTask_GetPasCadenceStartupWindows());
+    PedalSpeedSensor_SetRunningPulsesCount(UserConfigTask_GetPasCadenceRunningNumbPulses());
+    PedalSpeedSensor_SetRunningWindow(UserConfigTask_GetPasCadenceRunningWindows());
+
     //passe to the system the pas detection algorithm on startup condition
     paPowertrain->pPAS->bStartupPasAlgorithm = UserConfigTask_GetPasAlgorithmStartup();
     
-     //update userConfigData.PAS_ConfigData.PAS_Startup_Detection.pasTorqueRunningThreshold(PTS_OFFSET_PTS2TORQUE)
-    paPowertrain->pPAS->pPTS->hParameters.hOffsetMT = UserConfigTask_GetPasTorqueRunningThreshold();
-    
-    //paPowertrain->pPAS->pPSS->hPedalSpeedSens_MinPulseRunning(PEDALSPEEDSENSOR_MIN_PULSE_RUNNING)
-    paPowertrain->pPAS->pPSS->hPedalSpeedSens_MinPulseRunning = UserConfigTask_GetPasCadenceRunningNumbPulses();
-    
-    //update userConfigHandle->pVController->pPowertrain->pPAS->pPSS->wPedalSpeedSens_WindowsRunning(PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS)
-    paPowertrain->pPAS->pPSS->wPedalSpeedSens_WindowsRunning = UserConfigTask_GetPasCadenceRunningWindows();
-    
     //passe to the system the pas detection algorithm on running condition
     paPowertrain->pPAS->bRunningPasAlgorithm = UserConfigTask_GetPasAlgorithmRunning();
-    
-      
+       
     for(uint8_t n = PAS_1;n <= PAS_9;n++)
     {
         //update PAS_ConfigData.torqueSensorMultiplier(PAS_TORQUE_GAIN) 
@@ -397,10 +386,11 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->sParameters.VehicleMaxSpeed = UserConfigTask_GetBikeMaxSpeed();
 
     //Get PAS sensor values
-    paPowertrain->pPAS->pPSS->bNB_magnets = UserConfigTask_GetPasNbMagnetsPerTurn();
-    paPowertrain->pPAS->pPTS->hParameters.hOffsetPTS = UserConfigTask_GetPasTorqueInputMin();
-    paPowertrain->pPAS->pPTS->hParameters.hMax       = UserConfigTask_GetPasTorqueInputMax();
+    PedalSpeedSensor_SetNumberOfMagnets(UserConfigTask_GetPasNbMagnetsPerTurn()); 
     
+    PedalTorqueSensor_SetSensorOffset(UserConfigTask_GetPasTorqueInputMin());
+    PedalTorqueSensor_SetMaxTorqueValue(UserConfigTask_GetPasTorqueInputMax());
+
     //Throttle_ConfigData.walkMOdeSpeed(PAS_LEVEL_SPEED_WALK) is not passed
     //directly to any variable. Because of this is not updated here.
     
@@ -428,41 +418,35 @@ void UserConfigTask_UpdateUserConfigData(UserConfigHandle_t * userConfigHandle)
     paPowertrain->pBatMonitorHandle->VBatMin = UserConfigTask_GetBatteryEmptyVoltage();
     
     /******************************************************************************************/
-    // These lines should be removed when DEV-1022 task is being worked on.
-    // https://tristarmulticopters.atlassian.net/browse/DEV-1022
     
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->hMaxBusCurrent = UserConfigTask_GetBatteryMaxPeakDCCurrent();
+    MDI_SetMaxBusCurrent(UserConfigTask_GetBatteryMaxPeakDCCurrent());
 
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->hMaxContinuousCurrent = UserConfigTask_GetBatteryContinuousDCCurrent();
+    MDI_SetMaxContinuousCurrent(UserConfigTask_GetBatteryContinuousDCCurrent());
 
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingEndValue  = UserConfigTask_GetBatteryPeakCurrentMaxDuration() + UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
+    MDI_SetPowerFoldbackEndValue(UserConfigTask_GetBatteryPeakCurrentMaxDuration() + UserConfigTask_GetBatteryPeakCurrentDeratingDuration());
     
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingRange = UserConfigTask_GetBatteryPeakCurrentDeratingDuration();
+    MDI_SetPowerFoldbackRange(UserConfigTask_GetBatteryPeakCurrentDeratingDuration());
     
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->bSensorType = UserConfigTask_GetMotorSensorType();
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->hNTCBetaCoef = UserConfigTask_GetMotorNTCBetaCoef();
-    paPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pMotorTempSensor->hNTCResCoef = (float)UserConfigTask_GetMotorNTCResistanceCoef();
+    MDI_SetMotorTempSensorType(UserConfigTask_GetMotorSensorType());
+    MDI_SetMotorNTCBetaCoef(UserConfigTask_GetMotorNTCBetaCoef());
+    MDI_SetMotorNTCResistanceCoef((float)UserConfigTask_GetMotorNTCResistanceCoef());
     
     /******************************************************************************************/
     
-
-    //
     for (uint8_t n = 0; n < FILTERSPEED_ARRAY_SIZE; n++)
     {
-        paPowertrain->pPAS->pPTS->hParameters.hFilterSpeed[n] = UserConfigTask_GetFilterSpeed(n);
+        PedalTorqueSensor_SetFilterSpeed(UserConfigTask_GetFilterSpeed(n), n);
     }
     
-    //
     for (uint8_t n = 0; n < BW_ARRAY_SIZE; n++)
     {
-        paPowertrain->pPAS->pPTS->hParameters.hLowPassFilterBW1[n] = UserConfigTask_GetFilterBwValue(n,BW1);
-        paPowertrain->pPAS->pPTS->hParameters.hLowPassFilterBW2[n] = UserConfigTask_GetFilterBwValue(n,BW2);
+        PedalTorqueSensor_SetBWFilter1(UserConfigTask_GetFilterBwValue(n,BW1), n);
+        PedalTorqueSensor_SetBWFilter2(UserConfigTask_GetFilterBwValue(n,BW2), n);
     }
     
-    updateisMotorMixedSignalValue(UserConfigTask_GetMotorMixedSignalState());
-    updateMinSignalThresholdValue(UserConfigTask_GetMinSignalThreshold());
-    updateMaxWheelSpeedPeriodUsValue(UserConfigTask_GetMaxWheelSpeedPeriodUs());
-    
+    MDI_SetIsMotorSignalMixed(UserConfigTask_GetMotorMixedSignalState());
+    MDI_SetMinSignalThresholdValueMixed(UserConfigTask_GetMinSignalThreshold());
+    MDI_SetMaxWheelSpeedPeriodUsValueMixed(UserConfigTask_GetMaxWheelSpeedPeriodUs());
 }
 
 
@@ -2072,7 +2056,7 @@ void UserConfigTask_UpdateMaxWheelSpeedPeriodUs(uint32_t value)
 */
 int16_t UserConfigTask_GetMotorRpm(VCI_Handle_t * pVController)
 {
-    return -pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit;
+    return -MDI_GetAvrgMecSpeedUnit(pVController->pPowertrain->pMDI, M1);
 }
 
 /**
@@ -2083,7 +2067,7 @@ int16_t UserConfigTask_GetMotorRpm(VCI_Handle_t * pVController)
 */
 int16_t UserConfigTask_GetMotorRpmWithGearRatio(VCI_Handle_t * pVController)
 {
-    return (int16_t) (-pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->pSPD->hAvrMecSpeedUnit / pVController->pPowertrain->pMDI->pMCI->pSpeedTorqCtrl->fGearRatio);
+    return (int16_t) (-MDI_GetAvrgMecSpeedUnit(pVController->pPowertrain->pMDI, M1) / MDI_GetMotorGearRatio(pVController->pPowertrain->pMDI));
 }
 
 

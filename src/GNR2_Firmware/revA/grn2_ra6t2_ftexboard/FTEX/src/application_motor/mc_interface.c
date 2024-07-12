@@ -11,6 +11,8 @@
 #include "mc_interface.h"
 #include "pwm_common.h"
 #include "mc_config.h"
+#include "mc_tasks.h"
+#include "motor_signal_processing.h"
 
 
 /* Private macros ------------------------------------------------------------*/
@@ -24,94 +26,64 @@
 /*
 * see function definition
 */
-void MCInterface_Init(MotorControlInterfaceHandle_t * pHandle, MotorStateMachineHandle_t * pSTM, SpdTorqCtrlHandle_t * pSpeedTorqCtrl, pFOCVars_t pFOCVars,
-                        ResDivVbusSensorHandle_t * pResDivVbusSensor, MCConfigHandle_t *pMCConfig)
+void MCInterface_PowerInit(MC_Setup_t MCSetup)
 {
-    ASSERT(pHandle != NULL);
-    pHandle->pSTM = pSTM;
-    pHandle->pSpeedTorqCtrl = pSpeedTorqCtrl;
-    pHandle->pFOCVars = pFOCVars;
-    pHandle->pResDivVbusSensor = pResDivVbusSensor;
-    pHandle->pMCConfig = pMCConfig;
-
-    /* Buffer related initialization */
-    pHandle->LastCommand = MCI_NOCOMMANDSYET;
-    pHandle->hFinalSpeed = 0;
-    pHandle->hFinalTorque = 0;
-    pHandle->CommandState = MCI_BUFFER_EMPTY;
-    
-    /*Initialize driver */
-    Driver_Disable(&pHandle->bDriverEn);
-    
+    SpdTorqCtrl_PowerInit(MCInterface[M1].pSpeedTorqCtrl, MCSetup, MotorParameters);
+    ResDivVbusSensor_UVInit(MCInterface[M1].pResDivVbusSensor, MCSetup);
 }
 
 /*
 * see function definition
 */
-void MCInterface_PowerInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup)
+void MCInterface_SpeedLimitEnInit(MC_Setup_t MCSetup)
 {
-    ASSERT(pHandle != NULL);
-    SpdTorqCtrl_PowerInit(pHandle->pSpeedTorqCtrl, MCSetup, MotorParameters);
-    ResDivVbusSensor_UVInit(pHandle->pResDivVbusSensor, MCSetup);
+    SpdTorqCtrl_SpeedLimitEnInit(MCInterface[M1].pSpeedTorqCtrl, MCSetup);
 }
 
 /*
 * see function definition
 */
-void MCInterface_SpeedLimitEnInit(MotorControlInterfaceHandle_t * pHandle, MC_Setup_t MCSetup)
+void MCInterface_ExecSpeedRamp(int16_t hFinalSpeed)
 {
-    ASSERT(pHandle != NULL);
-    SpdTorqCtrl_SpeedLimitEnInit(pHandle->pSpeedTorqCtrl, MCSetup);
+  MCInterface[M1].LastCommand = MCI_EXECSPEEDRAMP;
+  MCInterface[M1].hFinalSpeed = hFinalSpeed;
+  MCInterface[M1].CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
+  MCInterface[M1].LastModalitySetByUser = STC_SPEED_MODE;
 }
 
 /*
 * see function definition
 */
-void MCInterface_ExecSpeedRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalSpeed)
+void MCInterface_ExecTorqueRamp(int16_t hFinalTorque)
 {
-  ASSERT(pHandle != NULL);
-  pHandle->LastCommand = MCI_EXECSPEEDRAMP;
-  pHandle->hFinalSpeed = hFinalSpeed;
-  pHandle->CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
-  pHandle->LastModalitySetByUser = STC_SPEED_MODE;
+  MCInterface[M1].LastCommand = MCI_EXECTORQUERAMP;
+  MCInterface[M1].hFinalTorque = hFinalTorque;
+  MCInterface[M1].CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
+  MCInterface[M1].LastModalitySetByUser = STC_TORQUE_MODE;
 }
 
 /*
 * see function definition
 */
-void MCInterface_ExecTorqueRamp(MotorControlInterfaceHandle_t * pHandle,  int16_t hFinalTorque)
+void MCInterface_SetCurrentReferences(qd_t Iqdref)
 {
-  ASSERT(pHandle != NULL);
-  pHandle->LastCommand = MCI_EXECTORQUERAMP;
-  pHandle->hFinalTorque = hFinalTorque;
-  pHandle->CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
-  pHandle->LastModalitySetByUser = STC_TORQUE_MODE;
+  MCInterface[M1].LastCommand = MCI_SETCURRENTREFERENCES;
+  MCInterface[M1].Iqdref.q = Iqdref.q;
+  MCInterface[M1].Iqdref.d = Iqdref.d;
+  MCInterface[M1].CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
+  MCInterface[M1].LastModalitySetByUser = STC_TORQUE_MODE;
 }
 
 /*
 * see function definition
 */
-void MCInterface_SetCurrentReferences(MotorControlInterfaceHandle_t * pHandle, qd_t Iqdref)
+bool MCInterface_StartMotor()
 {
-  ASSERT(pHandle != NULL);
-  pHandle->LastCommand = MCI_SETCURRENTREFERENCES;
-  pHandle->Iqdref.q = Iqdref.q;
-  pHandle->Iqdref.d = Iqdref.d;
-  pHandle->CommandState = MCI_COMMAND_NOT_ALREADY_EXECUTED;
-  pHandle->LastModalitySetByUser = STC_TORQUE_MODE;
-}
-
-/*
-* see function definition
-*/
-bool MCInterface_StartMotor(MotorControlInterfaceHandle_t * pHandle)
-{
-  ASSERT(pHandle != NULL);
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE && !MCStateMachine_GetOccurredErrorState(pHandle->pSTM))
+  if (MCStateMachine_GetState(MCInterface[M1].pSTM) == M_IDLE && !MCStateMachine_GetOccurredErrorState(MCInterface[M1].pSTM))
   {
-      bRetVal = MCStateMachine_NextState(pHandle->pSTM, M_IDLE_START);
+      bRetVal = MCStateMachine_NextState(MCInterface[M1].pSTM, M_IDLE_START);
   }
   return bRetVal;
 }
@@ -119,14 +91,13 @@ bool MCInterface_StartMotor(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle)
+bool MCInterface_StopMotor()
 {
-  ASSERT(pHandle != NULL);
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(pHandle->pSTM) == M_RUN)
+  if (MCStateMachine_GetState(MCInterface[M1].pSTM) == M_RUN)
   {
-      bRetVal = MCStateMachine_NextState(pHandle->pSTM, M_ANY_STOP);
+      bRetVal = MCStateMachine_NextState(MCInterface[M1].pSTM, M_ANY_STOP);
   }
   return bRetVal;
 }
@@ -134,387 +105,341 @@ bool MCInterface_StopMotor(MotorControlInterfaceHandle_t * pHandle)
 /*
 * see function definition
 */
-bool MCInterface_CriticalFaultAcknowledged(MotorControlInterfaceHandle_t * pHandle)
+bool MCInterface_CriticalFaultAcknowledged()
 {
-  ASSERT(pHandle != NULL);
-  return MCStateMachine_CriticalFaultAcknowledged(pHandle->pSTM);
+  return MCStateMachine_CriticalFaultAcknowledged(MCInterface[M1].pSTM);
 }
 
 /*
 * see function definition
 */
-void MCInterface_ExecBufferedCommands(MotorControlInterfaceHandle_t * pHandle)
+void MCInterface_ExecBufferedCommands()
 {
-  ASSERT(pHandle != NULL);
-  if (pHandle != MC_NULL)
-  {
-    if (pHandle->CommandState == MCI_COMMAND_NOT_ALREADY_EXECUTED)
+    if (MCInterface[M1].CommandState == MCI_COMMAND_NOT_ALREADY_EXECUTED)
     {
-      bool commandHasBeenExecuted = false;
-      switch (pHandle->LastCommand)
-      {
+        bool commandHasBeenExecuted = false;
+        switch (MCInterface[M1].LastCommand)
+        {
+            case MCI_EXECSPEEDRAMP:
+            {
+                MCInterface[M1].pFOCVars->bDriveInput = INTERNAL;
+                SpdTorqCtrl_SetControlMode(MCInterface[M1].pSpeedTorqCtrl, STC_SPEED_MODE);
+                commandHasBeenExecuted = SpdTorqCtrl_ExecRamp(MCInterface[M1].pSpeedTorqCtrl, MCInterface[M1].hFinalSpeed);
+            }                               
+            break;
+            case MCI_EXECTORQUERAMP:
+            {
+                MCInterface[M1].pFOCVars->bDriveInput = INTERNAL;
+                SpdTorqCtrl_SetControlMode(MCInterface[M1].pSpeedTorqCtrl, STC_TORQUE_MODE);
+                commandHasBeenExecuted = SpdTorqCtrl_ExecRamp(MCInterface[M1].pSpeedTorqCtrl, MCInterface[M1].hFinalTorque);
+            }
+            break;
+            case MCI_SETCURRENTREFERENCES:
+            {
+                MCInterface[M1].pFOCVars->bDriveInput = EXTERNAL;
+                MCInterface[M1].pFOCVars->Iqdref = MCInterface[M1].Iqdref;
+                commandHasBeenExecuted = true;
+            }
+            break;
+            default:
+            break;
+        }
+
+        if (commandHasBeenExecuted)
+        {
+            MCInterface[M1].CommandState = MCI_COMMAND_EXECUTED_SUCCESFULLY;
+        }
+        else
+        {
+            MCInterface[M1].CommandState = MCI_COMMAND_EXECUTED_UNSUCCESFULLY;
+        }
+    }       
+}
+
+/*
+* see function definition
+*/
+MotorState_t  MCInterface_GetSTMState()
+{
+    return MCStateMachine_GetState(MCInterface[M1].pSTM);
+}
+
+/*
+* see function definition
+*/
+uint32_t MCInterface_GetOccurredCriticalFaults()
+{
+    return (uint32_t)(MCStateMachine_GetCriticalFaultState(MCInterface[M1].pSTM));
+}
+
+/*
+* see function definition
+*/
+uint32_t MCInterface_GetCurrentErrors()
+{
+    return MCStateMachine_GetCurrentErrorState(MCInterface[M1].pSTM);
+}
+
+/*
+* see function definition
+*/
+uint32_t MCInterface_GetOccurredErrors()
+{
+    return MCStateMachine_GetOccurredErrorState(MCInterface[M1].pSTM);
+}
+
+/*
+* see function definition
+*/
+uint32_t MCInterface_GetOccurredWarning()
+{
+    return MCStateMachine_GetWarningState(MCInterface[M1].pSTM);
+}
+
+/*
+* see function definition
+*/
+uint32_t MCInterface_GetCurrentCriticalFaults()
+{
+    return (uint32_t)(MCStateMachine_GetCriticalFaultState(MCInterface[M1].pSTM) >> 32);
+}
+
+/*
+* see function definition
+*/
+STCModality_t MCInterface_GetControlMode()
+{
+    return MCInterface[M1].LastModalitySetByUser;
+}
+
+/*
+* see function definition
+*/
+int16_t MCInterface_GetImposedMotorDirection()
+{
+    int16_t retVal = 1;
+
+    switch (MCInterface[M1].LastCommand)
+    {
         case MCI_EXECSPEEDRAMP:
-        {
-          pHandle->pFOCVars->bDriveInput = INTERNAL;
-          SpdTorqCtrl_SetControlMode(pHandle->pSpeedTorqCtrl, STC_SPEED_MODE);
-          commandHasBeenExecuted = SpdTorqCtrl_ExecRamp(pHandle->pSpeedTorqCtrl, pHandle->hFinalSpeed);
-        }
-        break;
+          if (MCInterface[M1].hFinalSpeed < 0)
+          {
+            retVal = -1;
+          }
+          break;
         case MCI_EXECTORQUERAMP:
-        {
-          pHandle->pFOCVars->bDriveInput = INTERNAL;
-          SpdTorqCtrl_SetControlMode(pHandle->pSpeedTorqCtrl, STC_TORQUE_MODE);
-          commandHasBeenExecuted = SpdTorqCtrl_ExecRamp(pHandle->pSpeedTorqCtrl, pHandle->hFinalTorque);
-        }
-        break;
+          if (MCInterface[M1].hFinalTorque < 0)
+          {
+            retVal = -1;
+          }
+          break;
         case MCI_SETCURRENTREFERENCES:
-        {
-          pHandle->pFOCVars->bDriveInput = EXTERNAL;
-          pHandle->pFOCVars->Iqdref = pHandle->Iqdref;
-          commandHasBeenExecuted = true;
-        }
-        break;
+          if (MCInterface[M1].Iqdref.q < 0)
+          {
+            retVal = -1;
+          }
+          break;
         default:
           break;
-      }
-
-      if (commandHasBeenExecuted)
-      {
-        pHandle->CommandState = MCI_COMMAND_EXECUTED_SUCCESFULLY;
-      }
-      else
-      {
-        pHandle->CommandState = MCI_COMMAND_EXECUTED_UNSUCCESFULLY;
-      }
     }
-  }
+    return retVal;
 }
 
 /*
 * see function definition
 */
-MCInterfaceCommandState_t  MCI_IsCommandAcknowledged(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetLastRampFinalSpeed()
 {
-  ASSERT(pHandle != NULL);
-  MCInterfaceCommandState_t retVal = pHandle->CommandState;
+    int16_t hRetVal = 0;
 
-  if ((retVal == MCI_COMMAND_EXECUTED_SUCCESFULLY) |
-       (retVal == MCI_COMMAND_EXECUTED_UNSUCCESFULLY))
-  {
-    pHandle->CommandState = MCI_BUFFER_EMPTY;
-  }
-  return retVal;
+    /* Examine the last buffered commands */
+    if (MCInterface[M1].LastCommand == MCI_EXECSPEEDRAMP)
+    {
+        hRetVal = MCInterface[M1].hFinalSpeed;
+    }
+    return hRetVal;
 }
 
 /*
 * see function definition
 */
-MotorState_t  MCInterface_GetSTMState(MotorControlInterfaceHandle_t * pHandle)
+bool MCInterface_IsRampCompleted()
 {
-  ASSERT(pHandle != NULL);
-  return MCStateMachine_GetState(pHandle->pSTM);
+    bool retVal = false;
+
+    if ((MCStateMachine_GetState(MCInterface[M1].pSTM)) == M_RUN)
+    {
+        retVal = SpdTorqCtrl_IsRampCompleted(MCInterface[M1].pSpeedTorqCtrl);
+    }
+
+    return retVal;
 }
 
 /*
 * see function definition
 */
-uint32_t MCInterface_GetOccurredCriticalFaults(MotorControlInterfaceHandle_t * pHandle)
+void MCInterface_StopRamp()
 {
-  ASSERT(pHandle != NULL);
-  return (uint32_t)(MCStateMachine_GetCriticalFaultState(pHandle->pSTM));
+    SpdTorqCtrl_StopRamp(MCInterface[M1].pSpeedTorqCtrl);
 }
 
 /*
 * see function definition
 */
-uint32_t MCInterface_GetCurrentErrors(MotorControlInterfaceHandle_t * pHandle)
+bool MCInterface_GetSpdSensorReliability()
 {
-  ASSERT(pHandle != NULL);
-  return MCStateMachine_GetCurrentErrorState(pHandle->pSTM);
+    SpdPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(MCInterface[M1].pSpeedTorqCtrl);
+
+    return (SpdPosFdbk_GetReliability(SpeedSensor));
 }
 
 /*
 * see function definition
 */
-uint32_t MCInterface_GetOccurredErrors(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetAvrgMecSpeedUnit()
 {
-  ASSERT(pHandle != NULL);
-  return MCStateMachine_GetOccurredErrorState(pHandle->pSTM);
-}
-
-/*
-* see function definition
-*/
-uint32_t MCInterface_GetOccurredWarning(MotorControlInterfaceHandle_t * pHandle)
-{
-  ASSERT(pHandle != NULL);
-  return MCStateMachine_GetWarningState(pHandle->pSTM);
-}
-
-/*
-* see function definition
-*/
-uint32_t MCInterface_GetCurrentCriticalFaults(MotorControlInterfaceHandle_t * pHandle)
-{
-  ASSERT(pHandle != NULL);
-  return (uint32_t)(MCStateMachine_GetCriticalFaultState(pHandle->pSTM) >> 32);
-}
-
-/*
-* see function definition
-*/
-STCModality_t MCInterface_GetControlMode(MotorControlInterfaceHandle_t * pHandle)
-{
-  ASSERT(pHandle != NULL);
-  return pHandle->LastModalitySetByUser;
-}
-
-/*
-* see function definition
-*/
-int16_t MCInterface_GetImposedMotorDirection(MotorControlInterfaceHandle_t * pHandle)
-{
-  ASSERT(pHandle != NULL);
-  int16_t retVal = 1;
-
-  switch (pHandle->LastCommand)
-  {
-    case MCI_EXECSPEEDRAMP:
-      if (pHandle->hFinalSpeed < 0)
-      {
-        retVal = -1;
-      }
-      break;
-    case MCI_EXECTORQUERAMP:
-      if (pHandle->hFinalTorque < 0)
-      {
-        retVal = -1;
-      }
-      break;
-    case MCI_SETCURRENTREFERENCES:
-      if (pHandle->Iqdref.q < 0)
-      {
-        retVal = -1;
-      }
-      break;
-    default:
-      break;
-  }
-  return retVal;
-}
-
-/*
-* see function definition
-*/
-int16_t MCInterface_GetLastRampFinalSpeed(MotorControlInterfaceHandle_t * pHandle)
-{
-  ASSERT(pHandle != NULL);
-  int16_t hRetVal = 0;
-
-  /* Examine the last buffered commands */
-  if (pHandle->LastCommand == MCI_EXECSPEEDRAMP)
-  {
-    hRetVal = pHandle->hFinalSpeed;
-  }
-  return hRetVal;
-}
-
-/*
-* see function definition
-*/
-bool MCInterface_IsRampCompleted(MotorControlInterfaceHandle_t * pHandle)
-{
-  ASSERT(pHandle != NULL);
-  bool retVal = false;
-
-  if ((MCStateMachine_GetState(pHandle->pSTM)) == M_RUN)
-  {
-    retVal = SpdTorqCtrl_IsRampCompleted(pHandle->pSpeedTorqCtrl);
-  }
-
-  return retVal;
-}
-
-/*
-* see function definition
-*/
-void MCInterface_StopRamp(MotorControlInterfaceHandle_t * pHandle)
-{
-   ASSERT(pHandle != NULL);
-   SpdTorqCtrl_StopRamp(pHandle->pSpeedTorqCtrl);
-}
-
-/*
-* see function definition
-*/
-bool MCInterface_GetSpdSensorReliability(MotorControlInterfaceHandle_t * pHandle)
-{
-  ASSERT(pHandle != NULL);
-  SpdPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
-
-  return (SpdPosFdbk_GetReliability(SpeedSensor));
-}
-
-/*
-* see function definition
-*/
-int16_t MCInterface_GetAvrgMecSpeedUnit(MotorControlInterfaceHandle_t * pHandle)
-{
-  ASSERT(pHandle != NULL);
-  SpdPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(pHandle->pSpeedTorqCtrl);
+    SpdPosFdbkHandle_t * SpeedSensor = SpdTorqCtrl_GetSpeedSensor(MCInterface[M1].pSpeedTorqCtrl);
     
-  return (SpdPosFdbk_GetAvrgMecSpeedUnit(SpeedSensor));
+    return (SpdPosFdbk_GetAvrgMecSpeedUnit(SpeedSensor));
 }
 
 /*
 * see function definition
 */
-int16_t MCInterface_GetMecSpeedRefUnit(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetMecSpeedRefUnit()
 {
-  ASSERT(pHandle != NULL);
-  return (SpdTorqCtrl_GetMecSpeedRefUnit(pHandle->pSpeedTorqCtrl));
+    return (SpdTorqCtrl_GetMecSpeedRefUnit(MCInterface[M1].pSpeedTorqCtrl));
 }
 
 /*
 * see function definition
 */
-ab_t MCInterface_GetIab(MotorControlInterfaceHandle_t * pHandle)
+ab_t MCInterface_GetIab()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  return (pHandle->pFOCVars->Iab);
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
+    return (MCInterface[M1].pFOCVars->Iab);
 }
 
 /*
 * see function definition
 */
-AlphaBeta_t MCInterface_GetIalphabeta(MotorControlInterfaceHandle_t * pHandle)
+AlphaBeta_t MCInterface_GetIalphabeta()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  return (pHandle->pFOCVars->Ialphabeta);
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
+    return (MCInterface[M1].pFOCVars->Ialphabeta);
 }
 
 /*
 * see function definition
 */
-qd_t MCInterface_GetIqd(MotorControlInterfaceHandle_t * pHandle)
+qd_t MCInterface_GetIqd()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  return (pHandle->pFOCVars->Iqd);
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
+    return (MCInterface[M1].pFOCVars->Iqd);
 }
 
 /*
 * see function definition
 */
-qd_t MCInterface_GetIqdHF(MotorControlInterfaceHandle_t * pHandle)
+qd_t MCInterface_GetIqdHF()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  return (pHandle->pFOCVars->IqdHF);
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
+    return (MCInterface[M1].pFOCVars->IqdHF);
 }
 
 /*
 * see function definition
 */
-qd_t MCInterface_GetIqdref(MotorControlInterfaceHandle_t * pHandle)
+qd_t MCInterface_GetIqdref()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  return (pHandle->pFOCVars->Iqdref);
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
+    return (MCInterface[M1].pFOCVars->Iqdref);
 }
 
 /*
 * see function definition
 */
-qd_t MCInterface_GetVqd(MotorControlInterfaceHandle_t * pHandle)
+qd_t MCInterface_GetVqd()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  return (pHandle->pFOCVars->Vqd);
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
+    return (MCInterface[M1].pFOCVars->Vqd);
 }
 
 /*
 * see function definition
 */
-AlphaBeta_t MCInterface_GetValphabeta(MotorControlInterfaceHandle_t * pHandle)
+AlphaBeta_t MCInterface_GetValphabeta()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  return (pHandle->pFOCVars->Valphabeta);
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
+    return (MCInterface[M1].pFOCVars->Valphabeta);
 }
 
 /*
 * see function definition
 */
-int16_t MCInterface_GetElAngledpp(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetElAngledpp()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  return (pHandle->pFOCVars->hElAngle);
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
+    return (MCInterface[M1].pFOCVars->hElAngle);
 }
 
 /*
 * see function definition
 */
-int16_t MCInterface_GetTeref(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetTeref()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  return (pHandle->pFOCVars->hTeref);
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
+    return (MCInterface[M1].pFOCVars->hTeref);
 }
 
 /*
 * see function definition
 */
-int16_t MCInterface_GetPhaseCurrentAmplitude(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetPhaseCurrentAmplitude()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-    
-  AlphaBeta_t Local_Curr;
-  int32_t wAux1, wAux2;
+    ASSERT(MCInterface[M1].pFOCVars != NULL);
 
-  Local_Curr = pHandle->pFOCVars->Ialphabeta;
-  wAux1 = (int32_t)(Local_Curr.alpha) * Local_Curr.alpha;
-  wAux2 = (int32_t)(Local_Curr.beta) * Local_Curr.beta;
+    AlphaBeta_t Local_Curr;
+    int32_t wAux1, wAux2;
 
-  wAux1 += wAux2;
-  wAux1 = MCMath_Sqrt(wAux1);
+    Local_Curr = MCInterface[M1].pFOCVars->Ialphabeta;
+    wAux1 = (int32_t)(Local_Curr.alpha) * Local_Curr.alpha;
+    wAux2 = (int32_t)(Local_Curr.beta) * Local_Curr.beta;
 
-  if (wAux1 > INT16_MAX)
-  {
-    wAux1 = (int32_t) INT16_MAX;
-  }
+    wAux1 += wAux2;
+    wAux1 = MCMath_Sqrt(wAux1);
 
-  return ((int16_t)wAux1);
+    if (wAux1 > INT16_MAX)
+    {
+        wAux1 = (int32_t) INT16_MAX;
+    }
+
+    return ((int16_t)wAux1);
 }
 
 /*
 * see function definition
 */
-int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetPhaseVoltageAmplitude()
 {
-  ASSERT(pHandle != NULL);
-  ASSERT(pHandle->pFOCVars != NULL);
-  
-  AlphaBeta_t Local_Voltage;
-  int32_t wAux1, wAux2;
+      ASSERT(MCInterface[M1].pFOCVars != NULL);
+      
+      AlphaBeta_t Local_Voltage;
+      int32_t wAux1, wAux2;
 
-  Local_Voltage = pHandle->pFOCVars->Valphabeta;
-  wAux1 = (int32_t)(Local_Voltage.alpha) * Local_Voltage.alpha;
-  wAux2 = (int32_t)(Local_Voltage.beta) * Local_Voltage.beta;
+      Local_Voltage = MCInterface[M1].pFOCVars->Valphabeta;
+      wAux1 = (int32_t)(Local_Voltage.alpha) * Local_Voltage.alpha;
+      wAux2 = (int32_t)(Local_Voltage.beta) * Local_Voltage.beta;
 
-  wAux1 += wAux2;
-  wAux1 = MCMath_Sqrt(wAux1);
+      wAux1 += wAux2;
+      wAux1 = MCMath_Sqrt(wAux1);
 
-  if (wAux1 > INT16_MAX)
-  {
-    wAux1 = (int32_t) INT16_MAX;
-  }
+      if (wAux1 > INT16_MAX)
+      {
+            wAux1 = (int32_t) INT16_MAX;
+      }
 
-  return ((int16_t) wAux1);
+      return ((int16_t) wAux1);
 }
 
 /**
@@ -522,229 +447,207 @@ int16_t MCInterface_GetPhaseVoltageAmplitude(MotorControlInterfaceHandle_t * pHa
   *  Function has been added to enable the battery monitoring module in 
   *  vehicle control to have acces to the bus voltage.
   */
-uint16_t MCInterface_GetBusVoltageInVoltx100(MotorControlInterfaceHandle_t * pHandle)
-{ 
-    ASSERT(pHandle != NULL);
-    
+uint16_t MCInterface_GetBusVoltageInVoltx100()
+{   
     uint32_t VoltageConverted = 0;
     uint16_t ConversionFactor = 0;
     
-    ConversionFactor = pHandle->pResDivVbusSensor->Super.hConversionFactor;
-    VoltageConverted = VbusSensor_GetAvBusVoltageDigital(&(pHandle->pResDivVbusSensor->Super));
+    ConversionFactor = MCInterface[M1].pResDivVbusSensor->Super.hConversionFactor;
+    VoltageConverted = VbusSensor_GetAvBusVoltageDigital(&(MCInterface[M1].pResDivVbusSensor->Super));
     VoltageConverted = VoltageConverted * ConversionFactor * 100u;
     VoltageConverted = VoltageConverted/65536u;
          
-   return (uint16_t) VoltageConverted; // Return voltage * 100 so 49.63 V will be 4963.0
+    return (uint16_t) VoltageConverted; // Return voltage * 100 so 49.63 V will be 4963.0
                                        // This is done to keep precision 
 }
 
 /**
   *  Getting the controller NTC temperature value
   */
-int16_t MCInterface_GetControllerTemp(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetControllerTemp()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pSpeedTorqCtrl->pHeatsinkTempSensor != NULL);
+    ASSERT(MCInterface[M1].pSpeedTorqCtrl->pHeatsinkTempSensor != NULL);
     
-    return pHandle->pSpeedTorqCtrl->pHeatsinkTempSensor->hAvTempCelcius;
+    return MCInterface[M1].pSpeedTorqCtrl->pHeatsinkTempSensor->hAvTempCelcius;
 }
 
 /**
   *  Getting the motor NTC temperature value
   */
-int16_t MCInterface_GetMotorTemp(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetMotorTemp()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pSpeedTorqCtrl->pMotorTempSensor != NULL);
+    ASSERT(MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor != NULL);
     
-    return pHandle->pSpeedTorqCtrl->pMotorTempSensor->hAvTempCelcius;
+    return MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->hAvTempCelcius;
 }
 
 /**
   *  Get the Max safe current from motor control.
   */
-int16_t MCInterface_GetMaxCurrent(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetMaxCurrent()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pMCConfig != NULL);
+    ASSERT(MCInterface[M1].pMCConfig != NULL);
     
-    return pHandle->pMCConfig->hNominalCurr;
+    return MCInterface[M1].pMCConfig->hNominalCurr;
 }
 
 /**
   *  Get the maximum ongoing current,
   */
-int16_t MCInterface_GetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle)
+int16_t MCInterface_GetOngoingMaxCurrent()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pMCConfig != NULL);
+    ASSERT(MCInterface[M1].pMCConfig != NULL);
     
-    return pHandle->pMCConfig->wUsrMaxCurr;
+    return MCInterface[M1].pMCConfig->wUsrMaxCurr;
 }
 
 /**
   *  Set the maximum ongoing current, 
   */
-void MCInterface_SetOngoingMaxCurrent(MotorControlInterfaceHandle_t * pHandle, int16_t aCurrent)
+void MCInterface_SetOngoingMaxCurrent(int16_t aCurrent)
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pMCConfig != NULL);
+    ASSERT(MCInterface[M1].pMCConfig != NULL);
     
-    pHandle->pMCConfig->wUsrMaxCurr = aCurrent;
+    MCInterface[M1].pMCConfig->wUsrMaxCurr = aCurrent;
 }
 
 /**
   *  Set the wheel RPM
   */
-void  MCInterface_SetWheelRPM(MotorControlInterfaceHandle_t * pHandle, uint16_t aWheelRPM)
+void  MCInterface_SetWheelRPM(uint16_t aWheelRPM)
 {
-  ASSERT(pHandle != NULL);  
-  pHandle->pSpeedTorqCtrl->pSPD->wheelRPM = aWheelRPM;
+    MCInterface[M1].pSpeedTorqCtrl->pSPD->wheelRPM = aWheelRPM;
     
 }   
 
 /**
   *  Get the current torq reference 
   */
-int16_t MCInterface_GetTorqueReference(MotorControlInterfaceHandle_t * pHandle, uint8_t Motor)
+int16_t MCInterface_GetTorqueReference(uint8_t Motor)
 {
     if (Motor == 0)
     {
-        return pHandle->pFOCVars[M1].hTeref;
+        return MCInterface[M1].pFOCVars[M1].hTeref;
     }
     else
     {
-        return pHandle->pFOCVars[M2].hTeref;
+        return MCInterface[M1].pFOCVars[M2].hTeref;
     }          
 }
 
 /**
   *  Get the max application power
   */
-uint16_t MCInterface_GetMaxPositivePower(MotorControlInterfaceHandle_t * pHandle)
+uint16_t MCInterface_GetMaxPositivePower()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pSpeedTorqCtrl->hMaxPositivePower;
+    return MCInterface[M1].pSpeedTorqCtrl->hMaxPositivePower;
 }
 
 /**
   *  enable the regen feature,
   */
-void MCInterface_Enableregen(SpdTorqCtrlHandle_t * pHandle)
+void MCInterface_Enableregen()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pSPD != NULL);
+    ASSERT(MCInterface[M1].pSpeedTorqCtrl->pSPD != NULL);
     
-    pHandle->pSPD->bActiveRegen = true;
+    MCInterface[M1].pSpeedTorqCtrl->pSPD->bActiveRegen = true;
 }
 
 /**
   *  disable the regen feature,
   */
-void MCInterface_Disableregen(SpdTorqCtrlHandle_t * pHandle)
+void MCInterface_Disableregen()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pSPD != NULL);
+    ASSERT(MCInterface[M1].pSpeedTorqCtrl->pSPD != NULL);
     
-    pHandle->pSPD->bActiveRegen = false;
+    MCInterface[M1].pSpeedTorqCtrl->pSPD->bActiveRegen = false;
 }
 
 /**
   *  Get the max negative battery current in amps
   */
-int16_t MCInterface_GetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle)
+int16_t MCInterface_GetMaxNegativeCurrent()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pSPD->hIdcRegen;
+    return MCInterface[M1].pSpeedTorqCtrl->pSPD->hIdcRegen;
 }
 
 /**
   *  Set the max negative battery current in amps
   */
-void MCInterface_SetMaxNegativeCurrent(SpdTorqCtrlHandle_t * pHandle, int16_t Idc_Negative)
+void MCInterface_SetMaxNegativeCurrent(int16_t Idc_Negative)
 {
-    ASSERT(pHandle != NULL);
-    pHandle->pSPD->hIdcRegen = Idc_Negative;
+    MCInterface[M1].pSpeedTorqCtrl->pSPD->hIdcRegen = Idc_Negative;
 }
 
 /**
   *  Get the rate of increasing the negative Torque in mili Nm per milisecond or Nm/sec
   */
-int16_t MCInterface_GetMaxNegativeTorqueRate(SpdTorqCtrlHandle_t * pHandle)
+int16_t MCInterface_GetMaxNegativeTorqueRate()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pSPD->hDeltaT;
+    return MCInterface[M1].pSpeedTorqCtrl->pSPD->hDeltaT;
 }
 
 /**
   *  Get the regenerative torque value in mili Nm
   */
-int16_t MCInterface_GetRegenTorque(SpdTorqCtrlHandle_t * pHandle)
+int16_t MCInterface_GetRegenTorque()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pSPD->hTorqueRegen;
+    return MCInterface[M1].pSpeedTorqCtrl->pSPD->hTorqueRegen;
 }
 /**
   *  Get the motor gear ratio
   */
-float MCInterface_GetMotorGearRatio(MotorControlInterfaceHandle_t * pHandle)
+float MCInterface_GetMotorGearRatio()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pSpeedTorqCtrl->fGearRatio;
+    return MCInterface[M1].pSpeedTorqCtrl->fGearRatio;
 }
 
 /**
   *  Get the motor type
   */
-MotorType_t MCInterface_GetMotorType(MotorControlInterfaceHandle_t * pHandle)
+MotorType_t MCInterface_GetMotorType()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pSpeedTorqCtrl->motorType;
+    return MCInterface[M1].pSpeedTorqCtrl->motorType;
 }
 
 /**
   *  Get the nominal torque
   */
-uint16_t MCInterface_GetNominalTorque(MotorControlInterfaceHandle_t * pHandle)
+uint16_t MCInterface_GetNominalTorque()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pSpeedTorqCtrl->hMaxPositiveTorque;
+    return MCInterface[M1].pSpeedTorqCtrl->hMaxPositiveTorque;
 }
 
 /**
   *  Get the starting torque
   */
-uint16_t MCInterface_GetStartingTorque(MotorControlInterfaceHandle_t * pHandle)
+uint16_t MCInterface_GetStartingTorque()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pSpeedTorqCtrl->hStartingTorque;
+    return MCInterface[M1].pSpeedTorqCtrl->hStartingTorque;
 }
 
 /**
   *  Get the RS torque
   */
-float MCInterface_GetRS(MotorControlInterfaceHandle_t * pHandle)
+float MCInterface_GetRS()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pMCConfig->fRS;
+    return MCInterface[M1].pMCConfig->fRS;
 }
 
 /**
   *  Get the number of magnets on the wheel speed sensor
   */
-uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation(MotorControlInterfaceHandle_t * pHandle)
+uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pMCConfig->bWheelSpdSensorNbrPerRotation;
+    return MCInterface[M1].pMCConfig->bWheelSpdSensorNbrPerRotation;
 }
 
 /**
   *  Get whether the motor sensor type is mixed or not
   */
-bool MCInterface_GetMotorTempSensorMixed(MotorControlInterfaceHandle_t * pHandle)
+bool MCInterface_GetMotorTempSensorMixed()
 {
-    ASSERT(pHandle != NULL);
-    return pHandle->pSpeedTorqCtrl->pMotorTempSensor->bSensorMixed;
+    return MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->bSensorMixed;
 }
 
 #if AUTOTUNE_ENABLE
@@ -753,13 +656,13 @@ bool MCInterface_GetMotorTempSensorMixed(MotorControlInterfaceHandle_t * pHandle
   *  This command enters motor tuning mode.
   *  Commands to the motor tuner are only processed in this mode.
   */
-bool MCInterface_StartMotorTuning(MotorControlInterfaceHandle_t * pHandle)
+bool MCInterface_StartMotorTuning()
 {
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(pHandle->pSTM) == M_IDLE)
+  if (MCStateMachine_GetState(MCInterface[M1].pSTM) == M_IDLE)
   {
-      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_AUTOTUNE_ENTER_IDENTIFICATION );
+      bRetVal = MCStateMachine_NextState( MCInterface[M1].pSTM, M_AUTOTUNE_ENTER_IDENTIFICATION );
   }
   return bRetVal;
 }
@@ -768,13 +671,13 @@ bool MCInterface_StartMotorTuning(MotorControlInterfaceHandle_t * pHandle)
   *  This command exits motor tuning mode.
   *  Commands to the motor tuner are only processed in this mode.
   */
-bool MCInterface_StopMotorTuning(MotorControlInterfaceHandle_t * pHandle)
+bool MCInterface_StopMotorTuning()
 {
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(pHandle->pSTM) == M_AUTOTUNE_IDENTIFICATION)
+  if (MCStateMachine_GetState(MCInterface[M1].pSTM) == M_AUTOTUNE_IDENTIFICATION)
   {
-      bRetVal = MCStateMachine_NextState( pHandle->pSTM, M_AUTOTUNE_ANY_STOP_IDENTIFICATION );
+      bRetVal = MCStateMachine_NextState( MCInterface[M1].pSTM, M_AUTOTUNE_ANY_STOP_IDENTIFICATION );
   }
   return bRetVal;
 }
@@ -783,18 +686,128 @@ bool MCInterface_StopMotorTuning(MotorControlInterfaceHandle_t * pHandle)
 /**
   *  This command enables the flux weakening logic.
   */
-void MCInterface_EnableFluxWeakening(SpdTorqCtrlHandle_t * pHandle)
+void MCInterface_EnableFluxWeakening()
 {
-    ASSERT(pHandle != NULL);
-    pHandle->bFluxWeakeningEn = true;
+    MCInterface[M1].pSpeedTorqCtrl->bFluxWeakeningEn = true;
 }
 
 /**
   *  This command disables the flux weakening logic.
   */
 
-void MCInterface_DisableFluxWeakening(SpdTorqCtrlHandle_t * pHandle)
+void MCInterface_DisableFluxWeakening()
 {
-    ASSERT(pHandle != NULL);
-    pHandle->bFluxWeakeningEn = false;
+    MCInterface[M1].pSpeedTorqCtrl->bFluxWeakeningEn = false;
+}
+
+/*
+    set speed limit of wheel
+*/
+void MCInterface_SetSpeedLimitWheelRpm(uint16_t wheelRpm)
+{
+    SpdTorqCtrl_SetSpeedLimitWheelRpm(MCInterface[M1].pSpeedTorqCtrl, wheelRpm);
+}
+
+/*
+    set speed limit of motor
+*/
+void MCInterface_SetSpeedLimit(int16_t desiredMotorRPM)
+{
+    SpdTorqCtrl_SetSpeedLimit(MCInterface[M1].pSpeedTorqCtrl, desiredMotorRPM);
+}
+
+/*
+    get max measurable current
+*/
+float MCInterface_GetMaxMeasurableCurrent()
+{
+    return MCInterface[M1].MCIConvFactors.MaxMeasurableCurrent;
+}
+
+/*
+    set max bus current
+*/
+void MCInterface_SetMaxBusCurrent(uint16_t maxBusCurrent)
+{
+    MCInterface[M1].pSpeedTorqCtrl->hMaxBusCurrent = maxBusCurrent;
+}
+
+/*
+    set max continuous current
+*/
+void MCInterface_SetMaxContinuousCurrent(uint16_t maxContinuousCurrent)
+{
+    MCInterface[M1].pSpeedTorqCtrl->hMaxContinuousCurrent = maxContinuousCurrent;
+}
+
+/*
+    set power foldback end value
+*/
+void MCInterface_SetPowerFoldbackEndValue(int32_t endValue)
+{
+    MCInterface[M1].pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingEndValue = endValue;
+}
+
+/*
+    set power foldback range
+*/
+void MCInterface_SetPowerFoldbackRange(uint16_t range)
+{
+    MCInterface[M1].pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingRange = range;
+}
+
+/*
+    set motor temp sensor type
+*/
+void MCInterface_SetMotorTempSensorType(uint8_t sensorType)
+{
+    MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->bSensorType = sensorType;
+}
+
+/*
+    set motor NTC Beta coefficient
+*/
+void MCInterface_SetMotorNTCBetaCoef(uint16_t NTCBetaCoef)
+{
+    MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->hNTCBetaCoef = NTCBetaCoef;
+}
+
+/*
+    set motor NTC resistance coefficient
+*/
+void MCInterface_SetMotorNTCResistanceCoef(float NTCResCoef)
+{
+    MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->hNTCResCoef = NTCResCoef;
+}
+
+/*
+    set is motor signal mixed
+*/
+void MCInterface_SetIsMotorSignalMixed(bool value)
+{
+    updateisMotorMixedSignalValue(value);
+}
+
+/*
+    set minimum signal threshold value
+*/
+void MCInterface_SetMinSignalThresholdValueMixed(uint16_t value)
+{
+    updateMinSignalThresholdValue(value);
+}
+
+/*
+    set wheel speed period for mixed signal
+*/
+void MCInterface_SetMaxWheelSpeedPeriodUsValueMixed(uint32_t value)
+{
+    updateMaxWheelSpeedPeriodUsValue(value);
+}
+
+/*
+    get extracted wheel speed from mixed signal
+*/
+float MCInterface_GetExtractedWheelSpeedMixed(void)
+{
+    return getExtractedWheelSpeed();
 }

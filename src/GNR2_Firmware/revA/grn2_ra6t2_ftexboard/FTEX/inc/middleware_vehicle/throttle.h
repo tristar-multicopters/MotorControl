@@ -86,7 +86,14 @@ typedef struct
  * @param  pHandle : Pointer on Handle of the throttle
  * @retval void
  */
-void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay, uint16_t maxTorque);
+void Throttle_Init(ThrottleHandle_t * pHandle, Delay_Handle_t * pThrottleStuckDelay);
+
+/**
+ * @brief Initializes the rest of throttle sensing conversions after MC initialization
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval void
+ */
+void Throttle_Init_Torque(ThrottleHandle_t * pHandle, uint16_t maxTorque);
 
 /**
  * @brief Initializes internal average throttle computed value

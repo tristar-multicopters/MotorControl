@@ -7,9 +7,8 @@
 #include "vc_config.h"
 #include "comm_config.h"
 #include "vc_tasks.h"
-#include "mc_tasks.h"
 #include "comm_tasks.h"
-#include "mc_interface.h"
+#include "md_interface.h"
 #include "vc_autodetermination.h"
 #include "odometer.h"
 
@@ -52,7 +51,8 @@ uint16_t TASK_VCSLOWLOOP_SAMPLE_LOOP_COUNT = 0;
 void MD_BootUp(void)
 {
     VCI_Handle_t * pVCI = &VCInterfaceHandle;
-    MDI_Init(pVCI->pPowertrain->pMDI, &MCInterface[M1], &SlaveM2, MCSetup);
+    MDI_Init(pVCI->pPowertrain->pMDI, &SlaveM2, MCSetup);
+    PWRT_Init_MC(pVCI->pPowertrain);
 }
 /**
   * @brief  It initializes the vehicle control application. Needs to be called before using
@@ -89,31 +89,34 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
     static bool bLightInitalised = false;
     
     while (true)
-    {   
-        PedalSpdSensor_CalculateRPM(pVCI->pPowertrain->pPAS->pPSS);
-        //Try to detect PAS from a cadence signal(sensor).
-        //this function must increment , input number 2, with the same frequency of the task where he is being 
-        //called.
-        //This task runs each 5 ms(TASK_VCFASTLOOP_SAMPLE_TIME_TICK/2).
-        PedalAssist_CadencePASDetection(pVCI->pPowertrain->pPAS, (uint16_t)TASK_VCFASTLOOP_SAMPLE_TIME_TICK/2);
+    {  
+        if(!pVCI->pPowertrain->powertrainLockStatus)
+        {
+            PedalSpeedSensor_CalculateRPM();
+            //Try to detect PAS from a cadence signal(sensor).
+            //this function must increment , input number 2, with the same frequency of the task where he is being 
+            //called.
+            //This task runs each 5 ms(TASK_VCFASTLOOP_SAMPLE_TIME_TICK/2).
+            PedalAssist_CadencePASDetection(pVCI->pPowertrain->pPAS, (uint16_t)TASK_VCFASTLOOP_SAMPLE_TIME_TICK/2);
 
-        // Wheel Speed sensor reading period.
-        // Must to be called before PedalAssist_TorquePASDetection to syncronize all actions.
-        WSSCalculatePeriodValue(MDI_GetMotorTempSensorMixed(pVCI->pPowertrain->pMDI));
+            // Wheel Speed sensor reading period.
+            // Must to be called before PedalAssist_TorquePASDetection to syncronize all actions.
+            WheelSpeedSensor_CalculatePeriodValue(MDI_GetMotorTempSensorMixed(pVCI->pPowertrain->pMDI));
 
-        // Check PAS activation based on torque
-        PedalAssist_TorquePASDetection(pVCI->pPowertrain->pPAS);
+            // Check PAS activation based on torque
+            PedalAssist_TorquePASDetection(pVCI->pPowertrain->pPAS);
 
-        //PAS detection based on the pas detection algorithm used by the system
-        PedalAssist_PasDetection(pVCI->pPowertrain->pPAS);
+            //PAS detection based on the pas detection algorithm used by the system
+            PedalAssist_PasDetection(pVCI->pPowertrain->pPAS);
 
-        // Force PAS Power Enable on if we respect the speed threshold during runtime 
-        PedalAssist_PASPowerDetection(pVCI->pPowertrain->pPAS);
+            // Force PAS Power Enable on if we respect the speed threshold during runtime 
+            PedalAssist_PASPowerDetection(pVCI->pPowertrain->pPAS);
 
-        //needs to be after pas detection to syncronize all actions.
-        PWRT_UpdatePowertrainPeripherals(pVCI->pPowertrain);
-        PWRT_CalcMotorTorqueSpeed(pVCI->pPowertrain);
-           
+            //needs to be after pas detection to syncronize all actions.
+            PWRT_UpdatePowertrainPeripherals(pVCI->pPowertrain);
+            PWRT_CalcMotorTorqueSpeed(pVCI->pPowertrain);
+        }
+ 
         // VC_SlowLoop execute in the MediumFreq loop
         //The if conditon is actived each 250ms.
         //TASK_VCSLOWLOOP_SAMPLE_TIME_TICK = 50.
@@ -134,7 +137,7 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
             // Check if we still have power enabled
             PWREN_MonitorPowerEnable(pVCI->pPowertrain->pPWREN);          
             
-            busVoltageVoltx100 = MDI_GetBusVoltageInVoltx100(pVCI->pPowertrain->pMDI->pMCI);
+            busVoltageVoltx100 = MDI_GetBusVoltageInVoltx100();
             
             // Update the SOC voltage reference
             BatMonitor_UpdateSOC(pVCI->pPowertrain->pBatMonitorHandle, busVoltageVoltx100);
@@ -382,7 +385,7 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         osThreadFlagsWait(POWEROFFSEQUENCE_FLAG, osFlagsWaitAny, osWaitForever); // Task is blocked until we have to power down        
         MDI_StopMotor(pVCI->pPowertrain->pMDI,M1);
         //if motor is not in idle state , wait.
-        while(MCInterface_GetSTMState(pVCI->pPowertrain->pMDI->pMCI) != M_IDLE)
+        while(MDI_GetSTMState(pVCI->pPowertrain->pMDI, M1) != M_IDLE)
         {    
             osDelay(STOP_LOOPTICKS);
         }

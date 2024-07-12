@@ -226,13 +226,9 @@ uint32_t CanVehiInterface_GetOdometerDistance()
   @param  VCI_Handle_t handle
   @return RPM in uint16_t format with one decimal place (return value/10) to convert
 */
-uint16_t CanVehiInterface_GetVehiclePedalRPM(VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetVehiclePedalRPM()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pPowertrain != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS->pPSS != NULL);
-    return PedalSpdSensor_GetSpeedRPM(pHandle->pPowertrain->pPAS->pPSS);
+    return PedalSpeedSensor_GetSpeedRPM();
 }
 
 /**
@@ -240,13 +236,9 @@ uint16_t CanVehiInterface_GetVehiclePedalRPM(VCI_Handle_t * pHandle)
   @param  VCI_Handle_t handle
   @return torque percentage in uint8_t format
 */
-uint8_t CanVehiInterface_GetPedalTorqPercentage(VCI_Handle_t * pHandle)
+uint8_t CanVehiInterface_GetPedalTorqPercentage()
 {
-    ASSERT(pHandle != NULL);
-    ASSERT(pHandle->pPowertrain != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS != NULL);
-    ASSERT(pHandle->pPowertrain->pPAS->pPTS != NULL);
-    return PedalTorqSensor_GetPercentTorqueValue(pHandle->pPowertrain->pPAS->pPTS);
+    return PedalTorqueSensor_GetPercentTorqueValue();
 }
 
 
@@ -376,7 +368,7 @@ void CanVehiInterface_UpdateExternalThrottle(VCI_Handle_t * pHandle, uint16_t aN
  */
 void CanVehiInterface_EngageCruiseControl(VCI_Handle_t * pHandle)
 {
-     uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WSSGetSpeedRPM());
+     uint8_t currentSpeed = (uint8_t)Wheel_GetSpeedFromWheelRpm(WheelSpeedSensor_GetSpeedRPM());
                 
      //check if the current speed is inside of the max speed limit
      //if not used MaxThrottleSpeedKMH as cruise control speed.
@@ -415,15 +407,15 @@ void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAl
 /**
   Get bus voltage
  */
-uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle)
+uint16_t CanVehiInterface_GetBusVoltage()
 {
-    return PWRT_GetBusVoltagex100(pHandle->pPowertrain);
+    return PWRT_GetBusVoltagex100();
 }
 
 /**
   Get the RMS current read on a phase current sensor
  */
-int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uint8_t sensorNumber)
+int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(uint8_t sensorNumber)
 {
     static int16_t sensor1Values[SENSOR_VALUES_BUFFER_SIZE] = { 0 };
     static int16_t sensor2Values[SENSOR_VALUES_BUFFER_SIZE] = { 0 };
@@ -432,7 +424,7 @@ int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uin
     static uint8_t bufferValueIndex = 0;
 
     // Get current peak current per sensor
-    ab_t currentAB = MCInterface_GetIab(pHandle->pPowertrain->pMDI->pMCI);
+    ab_t currentAB = MDI_GetIab(M1);
 
     // Fill values if buffer is not full
     if(bufferValueIndex < SENSOR_VALUES_BUFFER_SIZE - 1)
@@ -482,4 +474,18 @@ int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uin
         return (int16_t)(currentPeakValue2/sqrt(2));
     } 
     return (int16_t)0;
+}
+
+/**
+    Set new lock/unlock status
+ */
+void CanVehiInterface_SetPowertrainLockStatus(VCI_Handle_t * pHandle, uint8_t lockStatus)
+{
+    ASSERT(pHandle != NULL);
+    if(!lockStatus)
+    {
+        pHandle->pPowertrain->powertrainLockStatus = false;
+        return;   
+    }
+    pHandle->pPowertrain->powertrainLockStatus = true;
 }

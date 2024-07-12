@@ -511,6 +511,9 @@ uint16_t bObjNTCBetaCoef=0;
 //variable associated with CO_OD_REG_MOTOR_TEMPERATURE subindex 2
 uint16_t bObjNTCRatedResistance=0;
 
+//variable associated with CO_OD_REG_LOCK_UNLOCK_POWERTRAIN subindex 0
+uint8_t bObjLockUnlockPowertrain = 0;
+
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
 
@@ -2339,7 +2342,13 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;  
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_MOTOR_TEMPERATURE, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjNTCRatedResistance};
             //move to next OD index
-            index++;  
+            index++; 
+
+            // LOCK - UNLOCK 
+            //Application - Used to control the lock/unlock powertrain feature
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_LOCK_UNLOCK_POWERTRAIN, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjLockUnlockPowertrain};
+            //move to next OD index
+            index++;
             
             //Application - Used to control the firmware update procedure.
             //subindex 0 is used to receive command from the IOT module to control the DFU process.

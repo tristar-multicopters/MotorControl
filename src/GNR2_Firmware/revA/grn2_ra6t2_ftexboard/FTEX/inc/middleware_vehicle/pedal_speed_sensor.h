@@ -13,25 +13,24 @@
 
 // =============================== Includes ================================== //
 #include "pulse_frequency.h"
-//#include "pedal_torque_sensor.h"
 
 // ================= Structure used to configure a pin ===================== //
 typedef struct 
 {    
     PulseFrequencyHandle_t * pPulseFrequency;   /* Pointer to pedal handle */
-    uint16_t hPedalSpeedSens_MinPulseStartup;   //It has the minimum number of pulses, on startup, 
+    uint32_t minPulsesStartup;                  //It has the minimum number of pulses, on startup, 
                                                 //to detect PAS from cadence sensor
-    uint32_t wPedalSpeedSens_WindowsStartup;    //Maximum time, on ms, to verify the Detected Number of pulses
+    uint16_t windowStartup;                     //Maximum time, on ms, to verify the Detected Number of pulses
                                                 //from the cadence sensor when starts to pedal.
-    uint16_t hPedalSpeedSens_MinPulseRunning;   //It has the minimum number of pulses, on running, 
+    uint32_t minPulsesRunning;                  //It has the minimum number of pulses, on running, 
                                                 //to detect PAS from cadence sensor
-    uint32_t wPedalSpeedSens_WindowsRunning;    //Maximum time, on ms, to verify the Detected Number of pulses
+    uint16_t windowRunning;                     //Maximum time, on ms, to verify the Detected Number of pulses
                                                 //from the cadence sensor when on run mode.
-    bool bPedalSpeedSens_ResetWindowsFlag;      //Used to 
-    uint16_t hPedalSpeedSens_NumberOfPulses;    /*Detected Number of pulses from the cadence signal*/
-    uint16_t wPedalSpeedSens_RPM;               /* Pedal Speed sensor RPM calculated value */
-    uint16_t hPreviousNumberOfPulse;            // Number of pulses since the last pedalling activity check
-    uint8_t bNB_magnets;                        // Number of magnets or encoder resolution
+    bool resetWindowsFlag;                      
+    uint16_t numberOfPulses;                    /*Detected Number of pulses from the cadence signal*/
+    uint16_t previousNumberOfPulses;            // Number of pulses since the last pedalling activity check
+    uint16_t RPM;                               /* Pedal Speed sensor RPM calculated value */
+    uint8_t magnetsCount;                       // Number of magnets or encoder resolution
 } PedalSpeedSensorHandle_t;
 
 // ==================== Public function prototypes ========================= //
@@ -40,21 +39,21 @@ typedef struct
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PedalSpdSensor_Init(PedalSpeedSensorHandle_t* pHandle);
+void PedalSpeedSensor_Init(void);
 
 /**
   @brief  Function to capture pedal speed sensor Periode
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PedalSpdSensor_ReadNumberOfPulses(PedalSpeedSensorHandle_t* pHandle);
+void PedalSpeedSensor_ReadNumberOfPulses(void);
 
 /**
   @brief  Function to Get the Pedal Speed Sensor Periode
   @param  PedalSpeedSensorHandle_t handle
   @return wPedal_Sensor_Read in unit32_t
 */
-uint16_t PedalSpdSensor_GetNumberOfPulses(PedalSpeedSensorHandle_t* pHandle);
+uint16_t PedalSpeedSensor_GetNumberOfPulses(void);
 
 /**
   @brief  Function to reset all variables used to hold the number of pulses measured
@@ -62,35 +61,35 @@ uint16_t PedalSpdSensor_GetNumberOfPulses(PedalSpeedSensorHandle_t* pHandle);
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PedalSpdSensor_ResetValue(PedalSpeedSensorHandle_t* pHandle);
+void PedalSpeedSensor_ResetValue(void);
 
 /**
   @brief  Set windows reset flag
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PedalSpdSensor_SetWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
+void PedalSpeedSensor_SetWindowsFlag(void);
 
 /**
   @brief  Clear windows reset flag
   @param  PedalSpeedSensorHandle_t handle
   @return None
 */
-void PedalSpdSensor_ClearWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
+void PedalSpeedSensor_ClearWindowsFlag(void);
 
 /**
   @brief  Get windows reset flag
   @param  PedalSpeedSensorHandle_t handle
-  @return bool bPedalSpeedSens_ResetWindowsFlag
+  @return bool resetWindowsFlag
 */
-bool PedalSpdSensor_GetWindowsFlag(PedalSpeedSensorHandle_t* pHandle);
+bool PedalSpeedSensor_GetWindowsFlag(void);
 
 /**
   @brief  Function to return speed in rpm
   @param  PedalSpeedSensorHandle_t handle
   @retval Speed in rpm
 */
-uint16_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle);
+uint16_t PedalSpeedSensor_GetSpeedRPM(void);
 
 /**
   @brief Check if we have a new number of pulses detected 
@@ -98,11 +97,87 @@ uint16_t PedalSpdSensor_GetSpeedRPM(PedalSpeedSensorHandle_t* pHandle);
   @param  PedalSpeedSensorHandle_t handle
   @return True if new pedal sensor pulses were detected since last function call
 */
-bool PedalSpdSensor_NewPedalPulsesDetected(PedalSpeedSensorHandle_t* pHandle);
+bool PedalSpeedSensor_NewPedalPulsesDetected(void);
 
 /**
    Pedal Speed Sensor calculate RPM
 */
-void PedalSpdSensor_CalculateRPM(PedalSpeedSensorHandle_t* pHandle);
+void PedalSpeedSensor_CalculateRPM(void);
+
+/**
+ * @brief Getter for the pss startup window
+ * @return Value of the startup window
+ */
+uint16_t PedalSpeedSensor_GetStartupWindow(void);
+
+/**
+ * @brief Getter for the number of pulses
+ *        required for startup activation
+ * @return Number of required pulses count
+ */
+uint32_t PedalSpeedSensor_GetStartupPulsesCount(void);
+
+/**
+ * @brief Getter for the pss running window
+ * @return Value of the running window
+ */
+uint16_t PedalSpeedSensor_GetRunningWindow(void);
+
+/**
+ * @brief Getter for the number of pulses
+ *        required for running activation
+ * @return Number of required pulses count
+ */
+uint32_t PedalSpeedSensor_GetRunningPulsesCount(void);
+
+/**
+ * @brief Setter for the pss startup window
+ * @param value : New updated value to set
+ * @return None
+ */
+void PedalSpeedSensor_SetStartupWindow(uint16_t value);
+
+/**
+ * @brief Setter for the number of pulses
+ *        required for startup activation
+ * @param value : New updated value to set
+ * @return None
+ */
+void PedalSpeedSensor_SetStartupPulsesCount(uint32_t value);
+
+/**
+ * @brief Setter for the pss running window
+ * @param value : New updated value to set
+ * @return None
+ */
+void PedalSpeedSensor_SetRunningWindow(uint16_t value);
+
+/**
+ * @brief Setter for the number of pulses
+ *        required for running activation
+ * @param value : New updated value to set
+ * @return None
+ */
+void PedalSpeedSensor_SetRunningPulsesCount(uint32_t value);
+
+/**
+ * @brief Setter to update the number of magnet
+ * @param value : New updated value to set
+ * @return None
+ */
+void PedalSpeedSensor_SetNumberOfMagnets(uint8_t value);
+
+/**
+  @brief  Update the pulse capture value coming from the ISR
+  @param  Capture : Value capture by the ISR
+  @return None
+*/
+void PedalSpeedSensor_UpdatePulseFromISR(uint32_t capture);
+
+/**
+  @brief  Update the overflow coming from ISR
+  @return None
+*/
+void PedalSpeedSensor_OverflowPulseFromISR(void);
 
 #endif

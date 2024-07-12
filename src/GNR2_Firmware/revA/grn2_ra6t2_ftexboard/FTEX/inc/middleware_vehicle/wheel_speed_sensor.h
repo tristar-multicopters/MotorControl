@@ -23,7 +23,7 @@
 
 // ================= Structure used to configure a pin ===================== //
 typedef struct {
-    PulseFrequencyHandle_t * pPulseFrequency;   /* Pointer to speed handle */
+    PulseFrequencyHandle_t * pulseFrequency;   /* Pointer to speed handle */
     bool useMotorPulsePerRotation;              /* Indicates whether the wheel speed sensor within the motor is used */
     uint8_t pulsePerRotation;                   /* Number of pulse per rotation */
     float timeOnOneMagnetPercent;               /* Percentage of time that the wheel speed sensor spends on each magnet */
@@ -39,44 +39,44 @@ typedef struct {
   @param  magnetsPerRotation Number of magnets per rotation on WSS
   @return None
 */
-void WSSInit(uint8_t magnetsPerRotation);
+void WheelSpeedSensor_Init(uint8_t magnetsPerRotation);
 
 /**
   @brief  Function to calculate the wheel speed sensor value
   @param  motorTempSensorMixed flag if bike has a mixed temp/wheel speed sensor
   @return None
 */
-void WSSCalculatePeriodValue(bool motorTempSensorMixed);
+void WheelSpeedSensor_CalculatePeriodValue(bool motorTempSensorMixed);
 
 /**
   @brief  Function to Get periode value in usec
   @return Speed in rpm
 */
-float WSSGetPeriodValue(void);
+float WheelSpeedSensor_GetPeriodValue(void);
 
 /**
   @brief  Function to return speed in rpm
   @return Speed in rpm
 */
-uint16_t WSSGetSpeedRPM(void);
+uint16_t WheelSpeedSensor_GetSpeedRPM(void);
 
 /**
   @brief  Update the pulse capture value coming from the ISR
   @param  Capture : Value capture by the ISR
   @return None
 */
-void WSSUpdatePulseFromISR(uint32_t capture);
+void WheelSpeedSensor_UpdatePulseFromISR(uint32_t capture);
 
 /**
   @brief  Update the overflow coming from ISR
   @return None
 */
-void WSSOverflowPulseFromISR(void);
+void WheelSpeedSensor_OverflowPulseFromISR(void);
 
 /**
   @brief  Getter for WSS flag : useMotorPulsePerRotation
   @return Value of useMotorPulsePerRotation
 */
-bool WSSGetUseMotorPulsePerRotation(void);
+bool WheelSpeedSensor_GetUseMotorPulsePerRotation(void);
 
 #endif

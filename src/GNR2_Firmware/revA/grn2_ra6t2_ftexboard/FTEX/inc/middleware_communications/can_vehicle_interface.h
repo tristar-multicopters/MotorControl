@@ -275,7 +275,7 @@ void CanVehiInterface_SetAlgorithm(VCI_Handle_t * pHandle, PasAlgorithm_t aPASAl
   @param  pHandle: handle of the vehicle
   @return bus voltage
  */
-uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle);
+uint16_t CanVehiInterface_GetBusVoltage();
 
 /**
   @brief Get the RMS current read on a phase current sensor 
@@ -283,7 +283,7 @@ uint16_t CanVehiInterface_GetBusVoltage(VCI_Handle_t * pHandle);
   @param  sensorNumber : Sensor selected, 1 for sensor 1, 2 for sensor 2
   @return Average RMS current read on sensor
  */
-int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(VCI_Handle_t *pHandle, uint8_t sensorNumber);
+int16_t CanVehiculeInterface_GetSensorPhaseCurrentRMS(uint8_t sensorNumber);
 
 /**
   @brief  Get the Odometer travelled distance
@@ -296,15 +296,21 @@ uint32_t CanVehiInterface_GetOdometerDistance();
   @param  VCI_Handle_t handle
   @return RPM in uint16_t format with one decimal place (return value/10) to convert
 */
-uint16_t CanVehiInterface_GetVehiclePedalRPM(VCI_Handle_t * pHandle);
-
+uint16_t CanVehiInterface_GetVehiclePedalRPM();
 
 /**
   @brief  Get Pedal torque value in percentage
   @param  VCI_Handle_t handle
   @return torque percentage in uint8_t format
 */
-uint8_t CanVehiInterface_GetPedalTorqPercentage(VCI_Handle_t * pHandle);
+uint8_t CanVehiInterface_GetPedalTorqPercentage();
 
+/**
+  @brief Set new lock/unlock status
+  @param  pHandle: handle of the vehicle
+  @param  lockStatus: Current lock/unlock status read on CAN
+  @return none
+ */
+void CanVehiInterface_SetPowertrainLockStatus(VCI_Handle_t * pHandle, uint8_t lockStatus);
 
 #endif /* __CAN_IOT_COMM_H */
