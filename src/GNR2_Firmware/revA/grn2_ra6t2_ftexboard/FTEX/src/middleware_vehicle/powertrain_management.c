@@ -1208,12 +1208,12 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         // Apply ramp filtering on the predicted torque output
         pHandle->hTorqueSelect = Ramps_ApplyRamp(PAS_RAMP_SELECTION, Wheel_GetVehicleSpeedFloatFromWSS(), pHandle->hTorqueSelect);
     }
-			/* Using throttle */
-			else 
-			{        
-					/* Throttle value convert to torque */        
-					pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);    
-			}
+    /* Using throttle */
+    else 
+    {        
+        /* Throttle value convert to torque */        
+        pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);    
+    }
 
     // Smooth transition between PAS change
     pHandle->hTorqueSelect = PWRT_TransitionStartupRuntimeTorque(pHandle->hTorqueSelect, PedalAssist_IsCadenceDetected(pHandle->pPAS),
