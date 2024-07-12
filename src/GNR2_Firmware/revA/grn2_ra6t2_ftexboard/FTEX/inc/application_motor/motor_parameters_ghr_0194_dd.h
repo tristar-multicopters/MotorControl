@@ -10,7 +10,7 @@
 
 /************************** Controller Config  ************************/
 
-#define HARDWARE_SELECTION                 HARDWARE_EP700    // Controller selection to adapt controller parameters
+#define HARDWARE_SELECTION                 HARDWARE_EP1200    // Controller selection to adapt controller parameters
 
 /************************** Motor Config Parameters ************************/
 
@@ -23,7 +23,7 @@
 #define MOTOR_VOLTAGE_CONSTANT              28.84f              // Volts RMS ph-ph /kRPM
 #define ST_TORQUE_COEF                      1.2f                // this coeficient always keeps the starting torque higher than the nominal torque
 
-#define PEAK_CURRENT_MOTOR_amps             55                  // peak current in amps
+#define PEAK_CURRENT_MOTOR_amps             90                  // peak current in amps
 
 /************************** Power Limit Parameters ************************/
 
@@ -34,7 +34,7 @@
 
 #define MAX_APPLICATION_SPEED_RPM           4000                // Max speed for the current application in mechanical rpm
 
-#define PID_SPEED_KP_DEFAULT                40                  // Default gain for speed control loop
+#define PID_SPEED_KP_DEFAULT                120                  // Default gain for speed control loop
 #define PID_SPEED_KI_DEFAULT                4                   // Default gain for speed control loop
 #define SP_KIDIV                            4096                // Speed control gain divider, to allow decimal value
 #define SP_KIDIV_LOG                        LOG2(4096)          // Speed control gain divider log2, to allow decimal value
@@ -54,8 +54,8 @@
 #define FLUX_DIRECTION                      1               // direction of demagnetization current  1 clockwise, -1 counter clockwise
 /************************** Ramp Manager Parameters  ************************/
 
-#define DEFAULT_TORQUE_SLOPE_UP             1000                // Slope in cNm per second
-#define DEFAULT_TORQUE_SLOPE_DOWN           10000               // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second
+#define DEFAULT_TORQUE_SLOPE_DOWN           50000               // Slope in cNm per second
 #define DEFAULT_SPEED_SLOPE_UP              10000               // Slope in #SPEED_UNIT per second
 #define DEFAULT_SPEED_SLOPE_DOWN            10000               // Slope in #SPEED_UNIT per second
 
@@ -70,7 +70,7 @@
 #define MOTOR_NTC_RESISTANCE_COEF           10.6f               //This value is calculated based on this formula: exp(NTCBetaCoef / TEMP_25_CELSIUS_IN_KELVIN) / NTC Rated Resistance.
                                                                 //NTC Rated Resistance = NTC resistance at 25 degree celsius in ohm
 
-#define OV_TEMP_MOTOR_THRESHOLD_C           125                 // Maximum temperature in degree C
+#define OV_TEMP_MOTOR_THRESHOLD_C           120                 // Maximum temperature in degree C
 #define OV_TEMP_MOTOR_HYSTERESIS_C          5                   // Temperature to decrease after an overtemp fault occurred before clearing the fault, in degree C
 #define FOLDBACK_MOTOR_TEMP_INTERVAL        10                  // Temperature interval (degree C) of the decreasing torque ramp to limit motor temperature
 
@@ -86,7 +86,7 @@
 
 /************** Wheel Speed Sensor Parameters  *****************************/
 
-#define MOTOR_WSS_NBR_PER_ROTATION          46                  // Wheel speed sensor cycle number for one wheel rotation
+#define MOTOR_WSS_NBR_PER_ROTATION          23                  // Wheel speed sensor cycle number for one wheel rotation
 
 /************** Current and Speed PID Parameters  *****************************/
 

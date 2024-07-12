@@ -1,3 +1,5 @@
+
+
 /**
   * @file    gnr_parameters.h
   * @brief   This file contains general parameters used by ganrunner firmware
@@ -72,12 +74,10 @@
 //as WDT and etc.
 #define FIRMWARE_RELEASE              0
 
-
-#define VEHICLE_SELECTION             VEHICLE_R48_750W     /* Vehicle selection to adapt motor/vehicle parameters.
+#define VEHICLE_SELECTION             VEHICLE_MILEBOX     /* Vehicle selection to adapt motor/vehicle parameters.
                                                            Will be changed in the future for a more flexible way
                                                            of parametrization. */
-                                                           
-                                                                                                               
+                                                                                                              
 //define responsible to enable some debug features as:
 //hardware fault catch 
 //#define HFAULTDEBUG
