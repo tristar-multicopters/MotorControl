@@ -12,9 +12,6 @@
 /******************* MOTOR SELECTION  *******************************/
 #define MOTOR_SELECTION    MOTOR_AKM_128SX_750W
 
-/******************* IOT ENABELING  *******************************/
-#define ENABLE_IOT_BOARD        1
-#define VC_IOT_ERROR_DISPLAY    0      //Set to 1 to display error and 0 to disable it
 
 /******************* SCREEN SELECTION  *******************************/
 #define SCREEN_PROTOCOL    UART_CLOUD_5S       
@@ -77,11 +74,11 @@
 // Global PAS Params
 #define RUNTIME_PAS_SPEED_THRESHOLD                 2.0f    // Speed threshold to enable startup PAS power in km/h
 #define STARTUP_PAS_SPEED_THRESHOLD                 1.0f    // Speed threshold to enable runtime PAS power in km/h
-#define TORQUE_STARTUP_VALUE_THRESHOLD    (uint16_t)80      // Torque value (%) that needs to be provided to have a startup detection
-#define STARTUP_PULSE_NUMBER              (uint32_t)2       // Number of pulses that needs to be detected to trigger startup detection
+#define TORQUE_STARTUP_VALUE_THRESHOLD    (uint16_t)1       // Torque value (%) that needs to be provided to have a startup detection
+#define STARTUP_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger startup detection
 #define STARTUP_TIME_WINDOW               (uint16_t)1000    // Time window (ms) in which the startup pulse number is counted
 #define RUNTIME_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger runtime detection
-#define RUNTIME_TIME_WINDOW               (uint16_t)400     // Time window (ms) in which the runtime pulse number is counted
+#define RUNTIME_TIME_WINDOW               (uint16_t)500     // Time window (ms) in which the runtime pulse number is counted
 
 // Flag used to detect PAS with cadence AND torque.
 // 0: Cadence OR Torque
@@ -132,11 +129,11 @@
                                                             HybridOrSensorUse,  // Torque OR Cadence sensor use define*/
                                                                
 #define PAS_0_MIN_TORQUE_PERCENT                0
-#define PAS_1_MIN_TORQUE_PERCENT               	5
-#define PAS_2_MIN_TORQUE_PERCENT               10
-#define PAS_3_MIN_TORQUE_PERCENT               15
-#define PAS_4_MIN_TORQUE_PERCENT               22
-#define PAS_5_MIN_TORQUE_PERCENT               30
+#define PAS_1_MIN_TORQUE_PERCENT                0
+#define PAS_2_MIN_TORQUE_PERCENT                0
+#define PAS_3_MIN_TORQUE_PERCENT                0
+#define PAS_4_MIN_TORQUE_PERCENT                0
+#define PAS_5_MIN_TORQUE_PERCENT                20 
 
 #define PAS_0_MAX_TORQUE_PERCENT                0
 #define PAS_1_MAX_TORQUE_PERCENT               60
@@ -198,5 +195,4 @@
 #include "batteries/velec_750w_battery.h"
                                             
 #endif                                            
-
 
