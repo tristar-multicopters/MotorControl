@@ -24,7 +24,7 @@
 
 #define NBR_CRITICAL_FAULT_COUNTERS 3
 #define NBR_MOTORS                  2
-#define TORQUE_DECAY                500
+#define TORQUE_DECAY                1000
 
 // ======================== Configuration enums ======================== // 
 typedef enum
