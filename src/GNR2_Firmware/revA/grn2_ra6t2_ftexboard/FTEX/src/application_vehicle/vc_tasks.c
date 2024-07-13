@@ -35,7 +35,7 @@ bool OdometerSaved = false;
 #define TASK_VCSTM_SAMPLE_TIME_TICK          10     /* VC_StateMachine execute every (10*0.5us ticks) = 5ms */
 #define TASK_VCSLOWLOOP_SAMPLE_TIME_TICK     50     /* VC_SlowLoop execute every (50*10*0.5us ticks)= 250ms called in the MedFreq Task*/
 #define RETURN_TO_STANDBY_LOOPTICKS          0      // Max number of ticks to stay in run while stop conditions are met
-#define START_MOTORS_LOOPTICKS               2      // Max number of ticks to stay in standby while start conditions are met
+#define START_MOTORS_LOOPTICKS               1      // Max number of ticks to stay in standby while start conditions are met
 #define START_LOOPTICKS                      500    // Max number of ticks to stay in start state
 #define STOP_LOOPTICKS                       500    // Max number of ticks to stay in stop state
 
@@ -105,9 +105,6 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
 
             // Check PAS activation based on torque
             PedalAssist_TorquePASDetection(pVCI->pPowertrain->pPAS);
-
-            //PAS detection based on the pas detection algorithm used by the system
-            PedalAssist_PasDetection(pVCI->pPowertrain->pPAS);
 
             // Force PAS Power Enable on if we respect the speed threshold during runtime 
             PedalAssist_PASPowerDetection(pVCI->pPowertrain->pPAS);
@@ -252,16 +249,8 @@ __NO_RETURN void THR_VC_StateMachine (void * pvParameter)
                     VCSTM_FaultProcessing(pVCI->pStateMachine, hVehicleFault, 0); // If motor state check fails, triggers vehicle fault.
                     if (PWRT_CheckStartConditions(pVCI->pPowertrain)) // If powertrain start conditions are met, increase counter.
                     {
-                        wCounter++;
-                    }
-                    else
-                    {
-                        wCounter = 0;
-                    }
-                    if (wCounter > START_MOTORS_LOOPTICKS) // If counter reach target, start powertrain. 
-                    {
-                        wCounter = 0;
                         VCSTM_NextState(pVCI->pStateMachine, V_STANDBY_START);
+                        wCounter++;
                     }
                     break;
             

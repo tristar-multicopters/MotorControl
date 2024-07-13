@@ -39,7 +39,7 @@ static Delay_Handle_t OdometerDelay; // Delay for the odometer
   * @param  Powertrain handle
   * @retval None
   */
-void PWRT_Init(PWRT_Handle_t * pHandle,Delay_Handle_t pDelayArray[])
+void PWRT_Init(PWRT_Handle_t * pHandle, Delay_Handle_t pDelayArray[])
 {
     ASSERT(pHandle != NULL);     
     
@@ -177,6 +177,10 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             PedalAssist_ResetTorqueStartupPasDection(pHandle->pPAS);
             PedalAssist_ResetTorqueRunningPasDection(pHandle->pPAS);
             PedalAssist_ResetCadenceStatePasDection();
+
+            pHandle->pPAS->bPASTorqueRunningOverride = false;
+            pHandle->pPAS->bPASCadenceRunningOverride = false;
+            pHandle->pPAS->bPASPowerEnable = false;
             
             // Reset All the Pedal Assist Parameters
             PedalAssist_ResetParameters(pHandle->pPAS);
@@ -184,7 +188,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         }
         
         // If the user pedals while were are in cruise
-        if((PedalAssist_IsPASDetected(pHandle->pPAS) == true) && (PWRT_GetCruiseControlState(pHandle) == true))
+        if(pHandle->pPAS->bPASPowerEnable && (PWRT_GetCruiseControlState(pHandle) == true))
         {
             hAux = 0;                                  // Exit cruise control
             PedalAssist_ResetPASDetected(pHandle->pPAS);
@@ -204,12 +208,11 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             /* Using PAS or walk mode */
         
         bool ThrottleDetected = Throttle_IsThrottleDetected(pHandle->pThrottle);
-        bool PASDetected      = PedalAssist_IsPASDetected(pHandle->pPAS);
         bool WalkDetected     = PedalAssist_IsWalkModeDetected(pHandle->pPAS);
         bool WalkOverThrottle = pHandle->pPAS->sParameters.WalkmodeOverThrottle;
         bool PASOverThrottle  = pHandle->pPAS->sParameters.PASOverThrottle;
         
-        if (((PASDetected || (hAux < lastTorque)) && (!ThrottleDetected || PASOverThrottle)) || 
+        if (((pHandle->pPAS->bPASPowerEnable || (hAux < lastTorque)) && (!ThrottleDetected || PASOverThrottle)) || 
              (WalkDetected && (!ThrottleDetected || WalkOverThrottle)))
         {             
             //get the last torque value.
@@ -259,8 +262,8 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
                           
             TopSpeed = Throttle_GetMaxSpeed(pHandle->pThrottle);   // Get the current desired top speed for throttle
             PWRT_SetNewTopSpeed(pHandle,TopSpeed);                 // Tell motor control what is our desired top speed 
-        }   
-        
+        }
+
         // Store powertrain target torque value in handle
         pHandle->aTorque[pHandle->bMainMotor] = hAux;
         
@@ -698,7 +701,7 @@ bool PWRT_CheckStopConditions(PWRT_Handle_t * pHandle)
         bCheckStop3 = true;
     }
 
-    if (!pHandle->pPAS->bPASDetected && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If there is no PAS  or walk mode detected
+    if (!pHandle->pPAS->bPASPowerEnable && !PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If there is no PAS  or walk mode detected
     {
         bCheckStop5 = true;
     }
@@ -730,7 +733,7 @@ bool PWRT_CheckStartConditions(PWRT_Handle_t * pHandle)
     uint16_t wheelSpeed = Wheel_GetSpeedFromWheelRpm(WheelSpeedSensor_GetSpeedRPM());
     
     //check if a firmware update is going. firmware update true block start condition.
-    if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASDetected) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
+    if ((hThrottleValue > pHandle->sParameters.hStartingThrottle) || (pHandle->pPAS->bPASPowerEnable) || PedalAssist_IsWalkModeDetected(pHandle->pPAS)) // If throttle is higher than starting throttle parameter
     {
         bCheckStart1 = true;
     }
@@ -1176,13 +1179,12 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
         - PAS Detetect & No throttle 
         - Walk Mode detected & Walk Mode over Throttle detected | No Throttle detected */
     bool ThrottleDetected = Throttle_IsThrottleDetected(pHandle->pThrottle);
-    bool PASDetected      = PedalAssist_IsPASDetected(pHandle->pPAS);
     bool WalkDetected     = PedalAssist_IsWalkModeDetected(pHandle->pPAS);
     bool PowerEnable      = PedalAssist_IsPowerEnableDetected(pHandle->pPAS);
     bool WalkOverThrottle = pHandle->pPAS->sParameters.WalkmodeOverThrottle;
     bool PASOverThrottle  = pHandle->pPAS->sParameters.PASOverThrottle;
     
-    if (((PASDetected || PowerEnable)  && (!ThrottleDetected || PASOverThrottle)) ||
+    if (((PowerEnable)  && (!ThrottleDetected || PASOverThrottle)) ||
         (WalkDetected && (!ThrottleDetected || WalkOverThrottle)))
     {
         /* Torque sensor enabled */
@@ -1197,7 +1199,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
 
         if(PedalAssist_IsCadenceDetected(pHandle->pPAS))
         {
-            pHandle->hTorqueSelect = PWRT_EnableCadencePower(pHandle);
+            pHandle->hTorqueSelect = PWRT_EnableCadencePower(pHandle);            
         }
 
         if(TORQUE_SCALING_PEDAL_RPM)
@@ -1210,7 +1212,7 @@ int16_t PWRT_CalcSelectedTorque(PWRT_Handle_t * pHandle)
     }
     /* Using throttle */
     else 
-    {        
+    {       
         /* Throttle value convert to torque */        
         pHandle->hTorqueSelect = Throttle_ThrottleToTorque(pHandle->pThrottle);    
     }

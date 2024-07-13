@@ -141,6 +141,7 @@ PAS_Handle_t PedalAssistHandle =
     .bPASPowerEnable = false,
     .bPASCadenceRunningOverride = false,
     .bPASTorqueRunningOverride = false,
+    .cadenceAndOrTorqueFlag = CADENCE_AND_OR_TORQUE,
 
     .bStartupPasAlgorithm = PAS_DETECTIONSTARTUP_ALGORITHM,
     .bRunningPasAlgorithm = PAS_DETECTIONRUNNING_ALGORITHM,

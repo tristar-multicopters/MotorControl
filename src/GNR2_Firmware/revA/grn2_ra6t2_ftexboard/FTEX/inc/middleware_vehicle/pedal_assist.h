@@ -93,10 +93,11 @@ typedef struct
     bool bCadenceRunningPASDetected;              // Flag used to Cadence PAS detection on running state. 
     bool bTorqueStartupPASDetected;               // Flag used to Torque PAS detection on startup state.
     bool bTorqueRunningPASDetected;               // Flag used to Torque PAS detection on running state. 
-    
+    bool cadenceAndOrTorqueFlag;
+
     uint16_t torqueSensorIssueTimer;              // Number of tick before we trigger the torque sensor issue flag
     bool bTorqueSensorIssue;                      // Flag used to detect if there is torque sensor issue detected.
-        
+
     PAS_Parameters_t sParameters;                 // Structure for powertrain parameters
  
 } PAS_Handle_t;

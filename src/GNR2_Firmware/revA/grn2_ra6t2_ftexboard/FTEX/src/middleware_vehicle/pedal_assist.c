@@ -249,21 +249,63 @@ int16_t PedalAssist_GetWalkmodeTorque(PAS_Handle_t * pHandle)
     * @brief  Update the PAS Handle power according to Cadence and Torque overrides
     * @param  Pedal Assist handle
     */
+// NOTE : This will be refactor during my next task : PAS Code Cleanup
 void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
-    
-    // Validate the PAS Power Enable depending on the value of CADENCE_AND_OR_TORQUE (PAS Power AND/OR)
-    bool StartupPowerEnable = ((pHandle->bCadenceStartupPASDetected | pHandle->bTorqueStartupPASDetected) & ~(CADENCE_AND_OR_TORQUE)) | 
-                              ((pHandle->bCadenceStartupPASDetected & pHandle->bTorqueStartupPASDetected) & CADENCE_AND_OR_TORQUE);
-    
-    bool RuntimePowerEnable = ((pHandle->bCadenceRunningPASDetected | pHandle->bTorqueRunningPASDetected) & ~(CADENCE_AND_OR_TORQUE)) | 
-                              ((pHandle->bCadenceRunningPASDetected & pHandle->bTorqueRunningPASDetected) & CADENCE_AND_OR_TORQUE);
-    
-    bool PowerEnable = StartupPowerEnable | RuntimePowerEnable;
+    float currentSpeed = Wheel_GetVehicleSpeedFloatFromWSS();
 
-    if(PowerEnable) pHandle->bPASPowerEnable = true;
-    else pHandle->bPASPowerEnable = false;
+    // PAS Power Enable is ON and we are in runtime above speed threshold
+    if(pHandle->bPASPowerEnable && currentSpeed > RUNTIME_PAS_SPEED_THRESHOLD)
+    {
+        if(pHandle->bPASCadenceRunningOverride)
+        {
+            pHandle->bPASPowerEnable = true;
+        }
+    }
+    
+    // PAS Power Enable is OFF and we are in startup condition
+    else if(!pHandle->bPASPowerEnable && currentSpeed < STARTUP_PAS_SPEED_THRESHOLD)
+    {
+        if(pHandle->cadenceAndOrTorqueFlag == 0)
+        {
+            if(pHandle->bPASCadenceRunningOverride || pHandle->bPASTorqueRunningOverride)
+            {
+                pHandle->bPASPowerEnable = true;
+            }
+            else
+            {
+                pHandle->bPASPowerEnable = false;
+            }
+        }
+        if(pHandle->cadenceAndOrTorqueFlag == 1)
+        {
+            if(pHandle->bPASCadenceRunningOverride && pHandle->bPASTorqueRunningOverride)
+            {
+                pHandle->bPASPowerEnable = true;
+            }
+            else
+            {
+                pHandle->bPASPowerEnable = false;
+            }
+        }
+    }
+    
+    // PAS Power Enable is ON but the current speed is lower than the runtime speed threshold
+    //                                   -- OR --
+    // PAS Power Enable is OFF but the current speed is higher than the startup speed threshold
+    else
+    {
+        if(pHandle->cadenceAndOrTorqueFlag == 0)
+        {
+            pHandle->bPASPowerEnable = pHandle->bPASCadenceRunningOverride | pHandle->bPASTorqueRunningOverride;
+        }
+        else
+        {
+            pHandle->bPASPowerEnable = pHandle->bPASCadenceRunningOverride;
+        }
+    }
+
 }
 
 /**
