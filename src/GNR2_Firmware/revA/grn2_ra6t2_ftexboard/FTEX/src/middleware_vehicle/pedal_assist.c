@@ -262,6 +262,10 @@ void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
         {
             pHandle->bPASPowerEnable = true;
         }
+        else
+        {
+            pHandle->bPASPowerEnable = false;
+        }
     }
     
     // PAS Power Enable is OFF and we are in startup condition
@@ -316,7 +320,7 @@ void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
 bool PedalAssist_IsCadenceDetected(PAS_Handle_t *pHandle)
 {
     ASSERT(pHandle != NULL);
-    if(pHandle->bCadenceRunningPASDetected || pHandle->bCadenceStartupPASDetected)
+    if(pHandle->bPASCadenceRunningOverride)
         return true;
     return false;
 }
