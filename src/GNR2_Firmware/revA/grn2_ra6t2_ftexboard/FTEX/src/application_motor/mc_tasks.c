@@ -114,6 +114,9 @@ bool StopPermanencyTimeHasElapsedM1(void);
 void SafetyTask_PWMOFF(uint8_t motor);
 void PWMCurrFdbk_IqdMovingAverage(FOCVars_t * pHandle);
 bool IsPhaseCableDisconnected(FOCVars_t * pHandle);
+#if MOTOR_SELECTION == MOTOR_GHR_0194_DD
+    void MC_HandleGHR0194DDVibration(void);
+#endif
 
 /**
  * @brief It initializes the whole MC core according to user defined
@@ -972,6 +975,17 @@ uint8_t MC_HighFrequencyTask(void)
             MCStateMachine_SetError(&MCStateMachine[M1], MC_MSRP, 0);    //Report the Fault and change bstate to FaultNow
         }
         
+        #if MOTOR_SELECTION == MOTOR_GHR_0194_DD
+            MC_HandleGHR0194DDVibration();
+            // If the occurred errors in the state machine include the MSR (motor stuck) error
+            if (MCStateMachine->wOccurredErrors == MC_MSRP)
+            {
+                // Reset both the vibration direction change counter and position sensor cycle counter
+                HallPosSensorM1.hVibrationDirectionChangeCounter =0 ;
+                HallPosSensorM1.PositionSensorCycleCounter = 0;
+            }
+        #endif
+        
         wFOCreturn = FOC_CurrControllerM1();
         if (wFOCreturn == MC_FOC_DURATION)
         {
@@ -1406,6 +1420,31 @@ bool IsPhaseCableDisconnected(FOCVars_t * pHandle)
     }
     return retVal;
 }
+
+#if MOTOR_SELECTION == MOTOR_GHR_0194_DD
+
+/**
+ * @brief Checks and handles motor vibration for MOTOR_GHR_0194_DD.
+ * 
+ * This function monitors the position sensor and vibration direction change counters.
+ * If the vibration exceeds defined thresholds, it raises a stuck error.
+ */
+void MC_HandleGHR0194DDVibration(void)
+{    
+    // Check if the position sensor cycle counter exceeds the threshold
+    if(HallPosSensorM1.PositionSensorCycleCounter > NBR_POSITION_SENSOR_CYCLE)
+    {
+        // Check if the vibration direction change counter exceeds the threshold
+        if(HallPosSensorM1.hVibrationDirectionChangeCounter>NBR_VIBRATION_DIRECTION_CHANGE)
+        {
+            MCStateMachine_SetError(&MCStateMachine[M1], MC_MSRP, 0); //raise a stuck error.
+            HallPosSensorM1.hVibrationDirectionChangeCounter =0 ;
+        }
+        HallPosSensorM1.PositionSensorCycleCounter = 0;
+    }
+}
+#endif
+
 
 #if AUTOTUNE_ENABLE
 /*************************** TUNING ************************************/

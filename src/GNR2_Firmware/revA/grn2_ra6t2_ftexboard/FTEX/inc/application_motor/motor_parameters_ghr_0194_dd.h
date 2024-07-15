@@ -83,7 +83,10 @@
 #define HALL_PHASE_SHIFT                    60                  // Electrical phase shift in degrees between the low to high transition of signal H1 and the zero crossing of the Bemf induced between phase A and B
 
 #define EN_VIBRATION_ERROR                  false               // Enable or disable motor vibration error
-
+#define POSITION_SENSOR_CYCLE_TIME_MS       4.369f              // The cycle time of the position sensor timer in milliseconds
+#define VIBRATION_DIRECTION_CHANGE_TIME_MS  2000                // The time interval for detecting vibration in milliseconds
+#define NBR_POSITION_SENSOR_CYCLE           VIBRATION_DIRECTION_CHANGE_TIME_MS / POSITION_SENSOR_CYCLE_TIME_MS // Calculates the number of position sensor cycles within the vibration time interval
+#define NBR_VIBRATION_DIRECTION_CHANGE      60                  // The number of direction changes to be tracked for vibration analysis (60 changes)
 /************** Wheel Speed Sensor Parameters  *****************************/
 
 #define MOTOR_WSS_NBR_PER_ROTATION          23                  // Wheel speed sensor cycle number for one wheel rotation

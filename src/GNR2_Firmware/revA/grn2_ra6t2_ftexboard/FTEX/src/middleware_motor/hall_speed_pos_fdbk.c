@@ -411,6 +411,9 @@ void * HallPosSensor_TIMx_CC_IRQHandler(void * pHandleVoid , uint32_t * pCapture
         if (pHandle->bDirection != PrevDirection)
         {
             pHandle->bDirectionChangeCounter++;
+            #if MOTOR_SELECTION == MOTOR_GHR_0194_DD
+                pHandle->hVibrationDirectionChangeCounter++;
+            #endif
         }
         else
         {
@@ -564,7 +567,11 @@ void * HallPosSensor_TIMx_UP_IRQHandler(void * pHandleVoid)
 * Read the logic level of the three Hall sensor and individuates in this way the position of the rotor (+/- 30???). Electrical angle is then initialized.
 */
 static void HALL_Init_Electrical_Angle(HallPosSensorHandle_t * pHandle)
-{
+{   
+    #if MOTOR_SELECTION == MOTOR_GHR_0194_DD
+        pHandle->PositionSensorCycleCounter++;
+    #endif
+    
     if (pHandle->bSensorPlacement == DEGREES_120)
     {
         pHandle->bHallState  = (uint8_t) (R_BSP_PinRead(pHandle->H3PortPin) << 2 | R_BSP_PinRead(pHandle->H2PortPin) << 1 | R_BSP_PinRead(pHandle->H1PortPin));

@@ -143,13 +143,15 @@ typedef struct
     int16_t SectorStartAngle[7];
     int16_t SectorDestinationAngle[7];
     int16_t SectorMiddleAngle[7];
-    int8_t bDirectionChangeCounter;
+    int8_t bDirectionChangeCounter;     // Counter for tracking the number of direction changes, used for calculating the angle and checking if the direction change is reliable or not
     int32_t wDirectionChangePattern;    // record last 32 spin direction detected by hall sensors (0 for NEGATIVE and 1 for POSITIVE)
 
     SignalFilteringHandle_t SpeedFilter;
     float fFilterAlpha;                 // Alpha coefficient for low pass first order butterworth filter
     float fFilterBeta;                  // Beta coefficient for low pass first order butterworth filter
     int16_t hFiltElSpeedDpp;
+    uint16_t PositionSensorCycleCounter;        // Counter for tracking the number of cycles completed when the hall sensors position changes
+    uint16_t hVibrationDirectionChangeCounter;  // Counter for tracking the number of direction changes, used for checking vibration
 
 } HallPosSensorHandle_t;
 
