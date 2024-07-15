@@ -581,4 +581,39 @@ void MDI_SetMaxWheelSpeedPeriodUsValueMixed(uint32_t value);
   */
 float MDI_GetExtractedWheelSpeedMixed(void);
 
+/** 
+ * @brief Enable Motor Regen
+  * @param bMotor Motor number
+  */
+
+void MDI_EnableRegen(uint8_t bMotor);
+
+/**
+  * @brief Disable Motor Regen
+  * @param bMotor Motor number
+  */
+void MDI_DisableRegen(uint8_t bMotor);
+
+/** 
+  * @brief Set Regen Max Current
+    * @param bMotor Motor number
+    * @param maxCurrent Max current
+    */
+void MDI_SetRegenMaxCurrent(uint8_t bMotor, int16_t maxCurrent);
+
+/**
+  * @brief Set Regen Min Speed
+  * @param bMotor Motor number
+  * @param minSpeed Min speed Regen starts
+  */
+void MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minSpeed);
+
+/** 
+  * @brief Set Regen Reset Speed
+  * @param bMotor Motor number
+  * @param resetSpeed PID parameetrs Reset speed
+  */
+void MDI_SetRegenResetSpeed(uint8_t bMotor, int16_t resetSpeed);
+
+
 #endif /* __MD_INTERFACE_H */

@@ -169,6 +169,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         if (bIsBrakePressed)
         {
             hAux = 0;
+            MDI_EnableRegen(M1);
             
             //Reset passed detection
             PedalAssist_ResetPASDetected(pHandle->pPAS);
@@ -185,6 +186,10 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
             // Reset All the Pedal Assist Parameters
             PedalAssist_ResetParameters(pHandle->pPAS);
             PWRT_ForceDisengageCruiseControl(pHandle);
+        }
+        else
+        {
+            MDI_DisableRegen(M1);
         }
         
         // If the user pedals while were are in cruise
