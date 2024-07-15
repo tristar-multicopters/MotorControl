@@ -562,6 +562,36 @@ bool MCInterface_StartMotorTuning();
 bool MCInterface_StopMotorTuning();
 #endif
 
+/**
+  * @brief  This is a user command used to enter motor tuning mode.
+  *         Commands to motor tuner (using the motor identification API) are only processed when motor is in this mode.
+  */
+void MCInterface_EnableRegen(void);
+
+/**
+  * @brief  Disable regen 
+  */
+void MCInterface_DisableRegen(void);
+
+/**
+  * @brief  Set the max negative battery current in amps
+  * @param maxCurrent max negative current 
+  */
+void MCInterface_SetRegenMaxCurrent(int16_t maxCurrent);
+
+/**
+  * @brief  Get the max negative battery current in amps
+  * @param minSpeed min speed regen applies
+  */
+void MCInterface_SetRegenMinSpeed(int16_t minSpeed);
+
+/**
+  * @brief  Get the increasing rate of max negative battery current in Nm per second
+  * @param resetSpeed Speed for reseting regen PIDs
+  */
+void MCInterface_SetRegenResetSpeed(int16_t resetSpeed);
+
+
 #ifdef __cplusplus
 
 #endif /* __cpluplus */

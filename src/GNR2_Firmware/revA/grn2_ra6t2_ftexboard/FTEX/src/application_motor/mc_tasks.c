@@ -1055,7 +1055,7 @@ inline uint32_t FOC_CurrControllerM1(void)
         if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
         {
             
-            if (abs(pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit) < RESET_SPEED)
+            if (abs(pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit) < pSpeedTorqCtrl[M1]->pSPD->hRegenResetSpeed)
             {
             
                 PID_SetIntegralTerm(pPIDIq[M1], (int32_t)0);

@@ -71,10 +71,18 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     pHandle->pSPD = SPD_Handle;
     pHandle->pSPD->gearMAFiltPos = 0;
     pHandle->pSPD->hTorqueRegenMax = 0;
+
+#ifdef REGEN_ENABLE 
     pHandle->pSPD->hDeltaT = REGEN_TORQUE_RAMP;
     pHandle->pSPD->hTorqueRegen = 0;
     pHandle->pSPD->hIdcRegen = MAX_NEG_DC_CURRENT;
-    pHandle->pSPD->bActiveRegen = 0;
+    pHandle->pSPD->hRegenMinSpeed = REGEN_MIN_SPEED;
+    pHandle->pSPD->hRegenResetSpeed = REGEN_RESET_SPEED;
+#if REGEN_ENABLE == true
+    pHandle->pSPD->bActiveRegen = true;
+#endif
+#endif
+
     for(uint16_t count = 0; count < GEAR_FILTER_SIZE; count++)
     {
         pHandle->pSPD->gearArray[count] = 0;
@@ -363,7 +371,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
              {
                  if (pHandle->hCurrentTorqueRef == 0 && pHandle->pSPD->bActiveRegen)
                  {
-                      if (abs(pHandle->pSPD->hAvrMecSpeedUnit) > MIN_REGEN_SPEED)
+                      if (abs(pHandle->pSPD->hAvrMecSpeedUnit) > pHandle->pSPD->hRegenMinSpeed)
                       { 
                           pHandle->pSPD->hTorqueRegenMax = (int16_t)((pHandle->pSPD->hIdcRegen * pHandle->hBusVoltage * 100)/(abs(pHandle->pSPD->hAvrMecSpeedUnit)*PI_/30));
                           if (pHandle->pSPD->hTorqueRegen < pHandle->pSPD->hTorqueRegenMax)

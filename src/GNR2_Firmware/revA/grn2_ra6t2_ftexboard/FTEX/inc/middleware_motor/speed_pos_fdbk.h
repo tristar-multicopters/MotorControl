@@ -81,6 +81,10 @@ typedef struct
     
     int16_t hIdcRegen;      /* the max.regenerative current in amps */
 
+    int16_t hRegenMinSpeed; /* the min speed regen applies*/
+
+    int16_t hRegenResetSpeed; /* Speed for reseting regen PIDs*/
+    
     bool bActiveRegen;      /* TO ENABLE REGEN FOR VC */
 
 } SpdPosFdbkHandle_t;

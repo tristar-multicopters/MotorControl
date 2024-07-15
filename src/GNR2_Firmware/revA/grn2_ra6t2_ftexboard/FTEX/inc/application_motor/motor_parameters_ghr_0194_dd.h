@@ -52,6 +52,14 @@
 
 #define FLUX_WEAKENING_ENABLE               false               // enable or disable flux weakening
 #define FLUX_DIRECTION                      1               // direction of demagnetization current  1 clockwise, -1 counter clockwise
+
+/***********Regen Parameters *********/
+#define REGEN_ENABLE                    true
+#define IQ_REGEN_AMPS                   -25         // regeneration current
+#define REGEN_MIN_SPEED                 50         // minimum speed for activating the regen
+#define REGEN_RESET_SPEED               25        //  speed for reseting the PIDs
+#define MAX_NEG_DC_CURRENT              -5        // maximum negative DC currnet to battery in amps
+#define REGEN_TORQUE_RAMP               -2        // the rate of increasing the regenerative current in Nm/msec
 /************************** Ramp Manager Parameters  ************************/
 
 #define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second

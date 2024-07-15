@@ -1012,3 +1012,83 @@ float MDI_GetExtractedWheelSpeedMixed(void)
     return MCInterface_GetExtractedWheelSpeedMixed();
 }
 
+/**
+  *  Get extracted motor temp from mixed WSS and temp signals
+  */
+void MDI_EnableRegen(uint8_t bMotor)
+{
+    switch (bMotor)
+    {
+    case M1:
+        MCInterface_EnableRegen();
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+}
+
+/**
+  *  Get extracted motor temp from mixed WSS and temp signals
+  */
+void MDI_DisableRegen(uint8_t bMotor)
+{
+    switch (bMotor)
+    {
+    case M1:
+        MCInterface_DisableRegen();
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+}
+
+/**
+  *  Get extracted motor temp from mixed WSS and temp signals
+  */
+void MDI_SetRegenMaxCurrent(uint8_t bMotor, int16_t maxCurrent)
+{
+    switch (bMotor)
+    {
+    case M1: 
+        MCInterface_SetRegenMaxCurrent(maxCurrent);
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break; 
+    }
+}
+
+/**
+  *  Get extracted motor temp from mixed WSS and temp signals
+  */
+void MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minSpeed)
+{
+    switch (bMotor)
+    {
+    case M1:
+        MCInterface_SetRegenMinSpeed(minSpeed);
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+}
+
+/** 
+  *  Get extracted motor temp from mixed WSS and temp signals
+  */
+void MDI_SetRegenResetSpeed(uint8_t bMotor, int16_t resetSpeed)
+{
+    switch (bMotor)
+    {
+    case M1:
+        MCInterface_SetRegenResetSpeed(resetSpeed);
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+}
+

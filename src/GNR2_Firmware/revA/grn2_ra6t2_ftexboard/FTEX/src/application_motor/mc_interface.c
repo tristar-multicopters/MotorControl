@@ -811,3 +811,44 @@ float MCInterface_GetExtractedWheelSpeedMixed(void)
 {
     return getExtractedWheelSpeed();
 }
+
+/**
+  *  Set the maximum regen current
+  */
+void MCInterface_EnableRegen(void)
+{
+    MCInterface[M1].pSpeedTorqCtrl->pSPD->bActiveRegen = true;
+}
+
+/**
+  *  Disable the regen feature
+  */
+void MCInterface_DisableRegen(void)
+{
+    MCInterface[M1].pSpeedTorqCtrl->pSPD->bActiveRegen = false;
+}
+
+/**
+  *  Set the maximum regen current
+  */
+void MCInterface_SetRegenMaxCurrent(int16_t maxCurrent)
+{
+    MCInterface[M1].pSpeedTorqCtrl->pSPD->hIdcRegen = maxCurrent;
+}
+
+/**
+  *  Set the minimum speed for regen to start
+  */
+void MCInterface_SetRegenMinSpeed(int16_t minSpeed)
+{
+    MCInterface[M1].pSpeedTorqCtrl->pSPD->hRegenMinSpeed = minSpeed;
+}
+
+/**
+  *  Set the speed for reseting regen PIDs
+  */
+void MCInterface_SetRegenResetSpeed(int16_t resetSpeed)
+{
+    MCInterface[M1].pSpeedTorqCtrl->pSPD->hRegenResetSpeed = resetSpeed;
+}
+

@@ -389,6 +389,29 @@ void SpdTorqCtrl_SetSpeedLimit(SpdTorqCtrlHandle_t * pHandle, int16_t hSpdLimUni
   */
 void SpdTorqCtrl_SetSpeedLimitWheelRpm(SpdTorqCtrlHandle_t * pHandle, uint16_t hSpdLimUnit);
 
+/**
+ * @brief Enables or disables the regenerative braking feature.
+ * @param pHandle Pointer to the speed torque control handle.
+ * @param enable Set to true to enable regenerative braking, or false to disable it.
+ */
+void SpdTorqCtrl_EnableRegeb(SpdTorqCtrlHandle_t * pHandle, bool enable);
+
+
+/**
+ * @brief Sets the maximum regenerative current for the speed torque control.
+ * @param pHandle Pointer to the speed torque control handle.
+ * @param maxCurrent The maximum regenerative current to be set.
+ * @return True if the maximum regenerative current was set successfully, false otherwise.
+ */
+bool SpdTorqCtrl_SetRegenMaxCurrent(SpdTorqCtrlHandle_t * pHandle, int16_t maxCurrent);
+
+/**
+ * @brief Sets the minimum regenerative speed for the speed-torque control.
+ * @param pHandle Pointer to the speed-torque control handle.
+ * @param regenMinSpeed The minimum regenerative speed in RPM.
+ */
+void SpdTorqCtrl_SetRegenSpeed(SpdTorqCtrlHandle_t * pHandle, int16_t regenMinSpeed);
+
 #ifdef __cplusplus
 }
 #endif /* __cpluplus */
