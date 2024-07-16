@@ -721,7 +721,8 @@ void MCInterface_SetSpeedLimit(int16_t desiredMotorRPM)
 */
 float MCInterface_GetMaxMeasurableCurrent()
 {
-    return MCInterface[M1].MCIConvFactors.MaxMeasurableCurrent;
+    float maxMeasurableCurrent = MAX_MEASURABLE_CURRENT;
+    return maxMeasurableCurrent;
 }
 
 /*

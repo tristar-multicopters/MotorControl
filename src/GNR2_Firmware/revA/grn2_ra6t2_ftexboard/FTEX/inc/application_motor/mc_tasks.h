@@ -34,13 +34,6 @@ typedef enum
 
 typedef struct
 {
-    float Gain_Torque_IQRef;
-    float MaxMeasurableCurrent;    
-
-} ConversionFactors_t; /* Contaisn conversion factors that we want to pass to vehicle control */
-
-typedef struct
-{
     SpdTorqCtrlHandle_t * pSpeedTorqCtrl;         /*!< Speed and torque controller object used by MCI.*/
     pFOCVars_t pFOCVars;                          /*!< Pointer to FOC vars used by MCI.*/
     ResDivVbusSensorHandle_t  *pResDivVbusSensor; /*!< Used to raise the resistor dividor bus voltage sensor to the vehicle layer*/
@@ -58,7 +51,6 @@ typedef struct
     MCInterfaceCommandState_t CommandState; /*!< The status of the buffered command.*/
     STCModality_t LastModalitySetByUser;    /*!< The last STCModality_t set by the user. */
                                              
-    ConversionFactors_t MCIConvFactors;     /* Used to sent conversion factors that are in motor control to vehicle control */
 } MotorControlInterfaceHandle_t;
 
 

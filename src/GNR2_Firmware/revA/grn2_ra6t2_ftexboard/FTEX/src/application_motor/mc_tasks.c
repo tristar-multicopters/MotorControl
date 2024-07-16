@@ -227,10 +227,7 @@ void MC_BootUp(void)
     
     
     MCInterface_Init();
-    
-    /* Section where we initialise conversion factors that need to be available to vehicle control */
-    oMCInterface[M1]->MCIConvFactors.Gain_Torque_IQRef = MotorParameters.ParametersConversion.fGainTorqueIqRef;
-    oMCInterface[M1]->MCIConvFactors.MaxMeasurableCurrent = MAX_MEASURABLE_CURRENT;
+
     /***********************************************************************************************/
     
     MCTuning[M1].pPIDSpeed = pPIDSpeed[M1];
