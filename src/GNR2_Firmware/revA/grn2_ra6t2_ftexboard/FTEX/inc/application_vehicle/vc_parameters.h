@@ -336,26 +336,6 @@
     #define REAR_LIGHT_BLINK_ON_BRAKE     true // If set to true rear light will blink when brake is pressed
 #endif
 
-// Minimum Number of pulse, inside a specific time, to the detect PAS on cadence
-#ifndef PEDALSPEEDSENSOR_MIN_PULSE_STARTUP
-   #define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP  6         
-#endif
-    
-//cadence detection windows on ms when starting to use the pedal.
-#ifndef PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS
-    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS 500           
-#endif
-
-// Minimum Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running 
-#ifndef PEDALSPEEDSENSOR_MIN_PULSE_RUNNING
-    #define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING  6      
-#endif
-    
-//cadence detection windows on ms when running. 
-#ifndef PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS
-    #define PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS 150
-#endif
-    
 #ifndef THROTTLE_BLOCK_OFF
     #define THROTTLE_BLOCK_OFF            false        //If set to true, the throttle will be blocked.
 #endif

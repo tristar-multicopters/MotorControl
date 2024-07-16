@@ -86,10 +86,10 @@
 // Flag used to detect PAS with cadence AND torque.
 // 0: Cadence OR Torque
 // 1: Cadence AND Torque
-#define CADENCE_AND_OR_TORQUE    0
+#define CADENCE_AND_OR_TORQUE    1
 
 // Select the ramp type from the enum in file _ramp.h_
-#define PAS_RAMP_SELECTION  HIGH_SPEED_POWER_LIMITING_RAMP
+#define PAS_RAMP_SELECTION  DYNAMIC_DECELERATION_RAMP
 
 // Dynamic Deceleration Ramp Params
 #define DYNAMIC_DECEL_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts

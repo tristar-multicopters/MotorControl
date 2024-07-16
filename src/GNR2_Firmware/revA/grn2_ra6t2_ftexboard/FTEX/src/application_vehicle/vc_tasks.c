@@ -93,6 +93,7 @@ __NO_RETURN void THR_VC_MediumFreq (void * pvParameter)
         if(!pVCI->pPowertrain->powertrainLockStatus)
         {
             PedalSpeedSensor_CalculateRPM();
+
             //Try to detect PAS from a cadence signal(sensor).
             //this function must increment , input number 2, with the same frequency of the task where he is being 
             //called.

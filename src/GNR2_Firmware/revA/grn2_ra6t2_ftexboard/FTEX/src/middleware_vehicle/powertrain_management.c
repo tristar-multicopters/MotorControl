@@ -170,19 +170,12 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         {
             hAux = 0;
             
-            //Reset passed detection
-            PedalAssist_ResetPASDetected(pHandle->pPAS);
-            PedalAssist_ResetCadenceStartupPasDection(pHandle->pPAS);
-            PedalAssist_ResetCadenceRunningPasDection(pHandle->pPAS);
-            PedalAssist_ResetTorqueStartupPasDection(pHandle->pPAS);
-            PedalAssist_ResetTorqueRunningPasDection(pHandle->pPAS);
-            PedalAssist_ResetCadenceStatePasDection();
-
+            // Reset PAS detection
             pHandle->pPAS->bPASTorqueRunningOverride = false;
             pHandle->pPAS->bPASCadenceRunningOverride = false;
             pHandle->pPAS->bPASPowerEnable = false;
             
-            // Reset All the Pedal Assist Parameters
+            // Reset all PAS parameters
             PedalAssist_ResetParameters(pHandle->pPAS);
             PWRT_ForceDisengageCruiseControl(pHandle);
         }
@@ -191,12 +184,13 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         if(pHandle->pPAS->bPASPowerEnable && (PWRT_GetCruiseControlState(pHandle) == true))
         {
             hAux = 0;                                  // Exit cruise control
-            PedalAssist_ResetPASDetected(pHandle->pPAS);
-            PedalAssist_ResetCadenceStartupPasDection(pHandle->pPAS);
-            PedalAssist_ResetCadenceRunningPasDection(pHandle->pPAS);
-            PedalAssist_ResetTorqueStartupPasDection(pHandle->pPAS);
-            PedalAssist_ResetTorqueRunningPasDection(pHandle->pPAS);
-            PedalAssist_ResetCadenceStatePasDection();
+
+            // Reset PAS detection 
+            pHandle->pPAS->bPASTorqueRunningOverride = false;
+            pHandle->pPAS->bPASCadenceRunningOverride = false;
+            pHandle->pPAS->bPASPowerEnable = false;
+
+            // Reset all PAS parameters 
             PedalAssist_ResetParameters(pHandle->pPAS);
             PWRT_ForceDisengageCruiseControl(pHandle);
         }
@@ -283,7 +277,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         hSpeedRef = Throttle_ThrottleToSpeed(pHandle->pThrottle);
         
         // check if PAS detected and Throttle not detected
-        if (PedalAssist_IsPASDetected(pHandle->pPAS) && !Throttle_IsThrottleDetected(pHandle->pThrottle)) 
+        if (pHandle->pPAS->bPASPowerEnable && !Throttle_IsThrottleDetected(pHandle->pThrottle)) 
         {
             /* this part commited because of a warning. TO DO: just get speed reference from PAS and convert it to Motor RPM
 

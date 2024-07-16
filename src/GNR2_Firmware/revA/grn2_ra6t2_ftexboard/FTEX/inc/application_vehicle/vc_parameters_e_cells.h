@@ -146,8 +146,6 @@
 #define PAS_8_MAX_TORQUE_PERCENT               91 
 #define PAS_9_MAX_TORQUE_PERCENT               100 
 
-#define PEDALSPEEDSENSOR_MIN_PULSE_STARTUP        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence
-#define PEDALSPEEDSENSOR_MIN_PULSE_RUNNING        6    // Mini Number of pulse, inside a specific time, to the detect PAS on cadence when bike is running
 #define PAS_WALKMODE_OVER_THROTTLE          true            // If set to true walk mode has higher priority than throttle
 
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/

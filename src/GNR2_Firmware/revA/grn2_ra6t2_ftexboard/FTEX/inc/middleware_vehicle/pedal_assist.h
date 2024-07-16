@@ -16,9 +16,7 @@
 
 // ============================== Defines =============================== // 
 #define PAS_PERCENTAGE          (uint8_t)100    /* Percentage for PAS use */
-
 #define TORQUE_THRESHOLD_AVG_NB   10  /* Number of values we use to do an average to check for Torque PAS threshold */
-
 #define TORQUE_SENSOR_TIMEOUT_THRESHOLD 800  // Number of tick before signaling no pedal activity (Approx. 800*5ms = 4sec).
 
 // ======================== Configuration enums ======================== // 
@@ -88,18 +86,12 @@ typedef struct
     bool bPASPowerEnable;                         // Flag used to validate if PAS needs to push power
     bool bPASCadenceRunningOverride;              // Flag used to override the power delivery mechanism on cadence
     bool bPASTorqueRunningOverride;               // Flag used to override the power delivery mechanism on torque
-    bool bPASDetected;                            // Use PAS flag  for detection
-    bool bCadenceStartupPASDetected;              // Flag used to Cadence PAS detection on startup state.
-    bool bCadenceRunningPASDetected;              // Flag used to Cadence PAS detection on running state. 
-    bool bTorqueStartupPASDetected;               // Flag used to Torque PAS detection on startup state.
-    bool bTorqueRunningPASDetected;               // Flag used to Torque PAS detection on running state. 
     bool cadenceAndOrTorqueFlag;
 
     uint16_t torqueSensorIssueTimer;              // Number of tick before we trigger the torque sensor issue flag
     bool bTorqueSensorIssue;                      // Flag used to detect if there is torque sensor issue detected.
 
-    PAS_Parameters_t sParameters;                 // Structure for powertrain parameters
- 
+    PAS_Parameters_t sParameters;                 // Structure for powertrain parameter 
 } PAS_Handle_t;
 
 // ======================== Public Functions ======================== //
@@ -168,13 +160,6 @@ int16_t PedalAssist_GetPASCadenceMotorTorque(PAS_Handle_t * pHandle);
 uint16_t PedalAssist_PASUpdateMaxSpeed(PAS_Handle_t * pHandle);
 
 /**
-    * @brief  Set the generic top speed for torque pas (not level specific) 
-    * @param  Pedal Assist handle
-    * @retval desired PAS speed limit
-    */
-void PedalAssist_SetPASMaxSpeed(PAS_Handle_t * pHandle, uint16_t topSpeed);
-
-/**
     * @brief  Set Pedal Assist torque based on the pedal Torque Sensor
     * @param  Pedal Assist handle
     * @retval pRefTorqueS in int16
@@ -209,27 +194,6 @@ void PedalAssist_CadencePASDetection (PAS_Handle_t * pHandle, uint16_t windowsIn
     * @retval pRefTorque in int16
     */
 void PedalAssist_PASSetMaxSpeed_Standard(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Return if pedals are moving or not
-    * @param  Pedal Assist handle
-    * @retval True if pedal movement is detected, false otherwise
-    */
-bool PedalAssist_IsPASDetected(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Reset PAS detected flag
-    * @param  Pedal Assist handle
-    * @retval none
-    */
-void PedalAssist_ResetPASDetected(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Set PAS detected flag
-    * @param  Pedal Assist handle
-    * @retval none
-    */
-void PedalAssist_SetPASDetected(PAS_Handle_t * pHandle);
 
 /**
     * @brief  Return if walk mode is active
@@ -279,76 +243,6 @@ void PedalAssist_SetStartupPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t a
     * @retval None
     */
 void PedalAssist_SetRunningPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo);
-
-/**
-    * @brief  Reset Cadence State Pas Dection
-    * @param  None
-    * @retval None
-    */
-void PedalAssist_ResetCadenceStatePasDection(void);
-
-/**
-    * @brief  Try to detect PAS
-    * @param  Pedal Assist handle
-    * @retval None
-    */
-void PedalAssist_PasDetection(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Reset Pas detection flag from Cadence on startup state.
-    * @param  Pedal Assist handle
-    * @retval None
-    */
-void PedalAssist_ResetCadenceStartupPasDection(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Set Pas detection flag from Cadence on startup state.
-    * @param  Pedal Assist handle
-    * @retval None
-    */
-void PedalAssist_SetCadenceStartupPasDection(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Reset Pas detection flag from Cadence on running state.
-    * @param  Pedal Assist handle
-    * @retval None
-    */
-void PedalAssist_ResetCadenceRunningPasDection(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Set Pas detection flag on Cadence on running state.
-    * @param  Pedal Assist handle
-    * @retval None
-    */
-void PedalAssist_SetCadenceRunningPasDection(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Reset Pas detection flag from Torque on startup state.
-    * @param  Pedal Assist handle
-    * @retval None
-    */
-void PedalAssist_ResetTorqueStartupPasDection(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Set Pas detection flag from Torque on startup state.
-    * @param  Pedal Assist handle
-    * @retval None
-    */
-void PedalAssist_SetTorqueStartupPasDection(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Reset Pas detection flag from Torque on running state.
-    * @param  Pedal Assist handle
-    * @retval None
-    */
-void PedalAssist_ResetTorqueRunningPasDection(PAS_Handle_t * pHandle);
-
-/**
-    * @brief  Set Pas detection flag from Torque on running state.
-    * @param  Pedal Assist handle
-    * @retval None
-    */
-void PedalAssist_SetTorqueRunningPasDection(PAS_Handle_t * pHandle);
 
 /**
     * @brief  Set a new PAS algorithm
