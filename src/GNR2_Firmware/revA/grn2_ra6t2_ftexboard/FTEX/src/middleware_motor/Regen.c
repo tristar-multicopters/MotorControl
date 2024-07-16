@@ -33,7 +33,7 @@ bool RegenGetEnabled()
 /**
     * Apply the Regen
  */
-uint16_t ApplyRegen(int16_t hMotorSpeed, uint16_t hBusVoltage)
+uint16_t ApplyRegen(int hMotorSpeed, uint16_t hBusVoltage)
 {
     if (RegenHandler.bRegenEnabled == false)
     {
@@ -55,8 +55,8 @@ uint16_t ApplyRegen(int16_t hMotorSpeed, uint16_t hBusVoltage)
         return false;                       // return false if the bus voltage is lower than the maximum voltage
     }
 
-    float RegenLevel = (float)(RegenHandler.bRegenLevelPercent/100);
-    RegenHandler.hRegenTorque = (uint16_t)((RegenLevel * RegenHandler.hMaxCurrent * hBusVoltage * 100)/(abs(hMotorSpeed)*PI_/30));
+    float RegenLevel = (float)(RegenHandler.bRegenLevelPercent);
+    RegenHandler.hRegenTorque = (uint16_t)((RegenHandler.bRegenLevelPercent * RegenHandler.hMaxCurrent * hBusVoltage)/(abs(hMotorSpeed)*PI_/30));
 
     return RegenHandler.hRegenTorque;
 }

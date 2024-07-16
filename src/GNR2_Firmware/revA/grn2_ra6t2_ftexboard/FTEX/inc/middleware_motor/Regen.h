@@ -48,7 +48,7 @@ bool RegenGetEnabled();
     * @param   hBusVoltage: The bus voltage value.
     * @return  The updated motor speed after applying regen operation.
     */
-uint16_t ApplyRegen(int16_t hMotorSpeed, uint16_t hBusVoltage);
+uint16_t ApplyRegen(int hMotorSpeed, uint16_t hBusVoltage);
 
 /**
     * @brief   Set the regen level as a percentage.

@@ -1169,6 +1169,23 @@ uint16_t MDI_GetRegenMaxVoltage(uint8_t bMotor)
 /**
   *  Set the regen ramp duration in milliseconds.
   */
+bool MDI_SetRegenLevelPercent(uint8_t bMotor, uint8_t hLevelPercent)
+{
+    switch (bMotor)
+    {
+    case M1:
+        return MCInterface_SetRegenLevelPercent(hLevelPercent);
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+    return false;
+}
+
+/**
+  *  Set the regen ramp duration in milliseconds.
+  */
 bool MDI_SetRegenRampDurationMS(uint8_t bMotor, uint16_t hRampDurationMs)
 {
     switch (bMotor)
@@ -1199,21 +1216,3 @@ uint16_t MDI_GetRegenRampDurationMS(uint8_t bMotor)
     }
     return 0;
 }
-
-/**
-  *  Set the regen level as a percentage.
-  */
-bool MDI_SetRegenLevelPercent(uint8_t bMotor, uint8_t bRegenLevelPercent)
-{
-    switch (bMotor)
-    {
-    case M1:
-        return MCInterface_SetRegenLevelPercent(bRegenLevelPercent);
-        break;
-    case M2:
-        // SlaveInterface function to be called for dual
-        break;
-    }
-    return false;
-}
-

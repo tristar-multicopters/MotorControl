@@ -27,6 +27,8 @@
 #define MAX_BMS_POSITIVE_POWER              1800                 // Maximum power at the end point of foldback
 #define MAX_BMS_CONTINUOUS_CURRENT          10                  // Maximum Power at the end point of foldback in amps
 
+#define MAX_CHARGING_CURRENT                20                  // Maximum battery current in amps that drive can accept from the motor when charging
+#define MAX_CHARGING_VOLTAGE                55                  // Maximum battery voltage in volts that drive can accept from the motor
 /******************************** BATTERY  PARAMETERS ******************************/
 
 #define UD_VOLTAGE_THRESHOLD_BATT_V             32                   // Under-voltage threshold to prevent BMS shutdown

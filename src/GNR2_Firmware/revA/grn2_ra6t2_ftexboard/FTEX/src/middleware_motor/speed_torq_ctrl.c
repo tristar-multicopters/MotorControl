@@ -11,6 +11,7 @@
 #include "speed_pos_fdbk.h"
 #include "mc_type.h"
 #include "gear_ratio_table.h"
+#include "Regen.h"
 
 #define GEAR_RATIO_LOWER_BOUND_MIN 1        //min gear ratio, cannot be 0
 #define GEAR_RATIO_UPPER_BOUND_MAX 10       //max gear ratio = highest gear + GEAR_RATIO_UPPER_BOUND_MAX
@@ -368,12 +369,9 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
          {
             if (pHandle->hCurrentTorqueRef == 0 )
             {
-                hTorqueReference = ApplyRegen(hMeasuredSpeed, pHandle->pSPD->busVoltage);
+                hTorqueReference = ApplyRegen(hMeasuredSpeed, pHandle->hBusVoltage);
             }
-            else
-            {
-                hTorqueReference = 0;
-            }
+
         }  
 
     }
