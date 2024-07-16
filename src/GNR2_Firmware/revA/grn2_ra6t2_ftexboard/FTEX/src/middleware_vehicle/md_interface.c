@@ -22,8 +22,7 @@ void MDI_Init(MultipleDriveInterfaceHandle_t * pHandle, SlaveMotorHandle_t * pSl
     
     //Power initialization is not supported with dual motor, will have to change default values in MC layer to initialize the parameters that come from the battery
     MCInterface_PowerInit(MCSetup);
-    MCInterface_SpeedLimitEnInit(MCSetup);
-    
+    MCInterface_SpeedLimitEnInit(MCSetup);    
 }
 
 /*
@@ -1015,80 +1014,206 @@ float MDI_GetExtractedWheelSpeedMixed(void)
 /**
   *  Get extracted motor temp from mixed WSS and temp signals
   */
-void MDI_EnableRegen(uint8_t bMotor)
+bool MDI_EnableRegen(uint8_t bMotor)
 {
     switch (bMotor)
     {
     case M1:
         MCInterface_EnableRegen();
+        return true;
         break;
     case M2:
         // SlaveInterface function to be called for dual
         break;
     }
+    return false;
 }
 
 /**
   *  Get extracted motor temp from mixed WSS and temp signals
   */
-void MDI_DisableRegen(uint8_t bMotor)
+bool MDI_DisableRegen(uint8_t bMotor)
 {
     switch (bMotor)
     {
     case M1:
         MCInterface_DisableRegen();
+        return true;
         break;
     case M2:
         // SlaveInterface function to be called for dual
         break;
     }
+    return false;
 }
 
 /**
-  *  Get extracted motor temp from mixed WSS and temp signals
+  *  Set maximum allowed current for regen operation
   */
-void MDI_SetRegenMaxCurrent(uint8_t bMotor, int16_t maxCurrent)
+bool MDI_SetRegenMaxCurrent(uint8_t bMotor, int16_t maxCurrent)
 {
     switch (bMotor)
     {
     case M1: 
-        MCInterface_SetRegenMaxCurrent(maxCurrent);
+        return MCInterface_SetRegenMaxCurrent(maxCurrent);
         break;
     case M2:
         // SlaveInterface function to be called for dual
         break; 
     }
+    return false;
+}
+
+/**
+  *  Get the maximum allowed current for regen operation
+  */
+int16_t MDI_GetRegenMaxCurrent(uint8_t bMotor)
+{
+    switch (bMotor)
+    {
+    case M1:
+        return MCInterface_GetRegenMaxNegativeCurrent();
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+    return 0;
+}
+
+/**
+  *  Set Regen minimum current
+  */
+bool MDI_SetRegenMinCurrent(uint8_t bMotor, int16_t minCurrent)
+{
+    switch (bMotor)
+    {
+    case M1:
+        return MCInterface_SetMinNegativeCurrent(minCurrent);
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+    return false;
+}
+
+/**
+  *  Get Regen minimum current
+  */
+int16_t MDI_GetRegenMinCurrent(uint8_t bMotor)
+{
+    switch (bMotor)
+    {
+    case M1:
+        return MCInterface_GetMinNegativeCurrent();
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+    return 0;
 }
 
 /**
   *  Get extracted motor temp from mixed WSS and temp signals
   */
-void MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minSpeed)
+bool MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minSpeed)
 {
     switch (bMotor)
     {
     case M1:
-        MCInterface_SetRegenMinSpeed(minSpeed);
+        return MCInterface_SetRegenMinSpeed(minSpeed);
         break;
     case M2:
         // SlaveInterface function to be called for dual
         break;
     }
+    return false;
 }
 
-/** 
+/**
   *  Get extracted motor temp from mixed WSS and temp signals
   */
-void MDI_SetRegenResetSpeed(uint8_t bMotor, int16_t resetSpeed)
+bool MDI_SetRegenMaxVoltage(uint8_t bMotor, uint16_t maxVoltage)
 {
     switch (bMotor)
     {
     case M1:
-        MCInterface_SetRegenResetSpeed(resetSpeed);
+        return MCInterface_SetRegenMaxVoltage(maxVoltage);
         break;
     case M2:
         // SlaveInterface function to be called for dual
         break;
     }
+    return false;
+}
+
+/**
+  *  Get Regen max alloed voltage
+  */
+uint16_t MDI_GetRegenMaxVoltage(uint8_t bMotor)
+{
+    switch (bMotor)
+    {
+    case M1:
+        return MCInterface_GetRegenMaxVoltage();
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+    return 0;
+}
+
+/**
+  *  Set the regen ramp duration in milliseconds.
+  */
+bool MDI_SetRegenRampDurationMS(uint8_t bMotor, uint16_t hRampDurationMs)
+{
+    switch (bMotor)
+    {
+    case M1:
+        return MCInterface_SetRegenRampDurationMS(hRampDurationMs);
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+    return false;
+}
+
+/**
+  *  Get extracted motor temp from mixed WSS and temp signals
+  */
+uint16_t MDI_GetRegenRampDurationMS(uint8_t bMotor)
+{
+    switch (bMotor)
+    {
+    case M1:
+        return MCInterface_GetRegenRampDurationMS();
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+    return 0;
+}
+
+/**
+  *  Set the regen level as a percentage.
+  */
+bool MDI_SetRegenLevelPercent(uint8_t bMotor, uint8_t bRegenLevelPercent)
+{
+    switch (bMotor)
+    {
+    case M1:
+        return MCInterface_SetRegenLevelPercent(bRegenLevelPercent);
+        break;
+    case M2:
+        // SlaveInterface function to be called for dual
+        break;
+    }
+    return false;
 }
 

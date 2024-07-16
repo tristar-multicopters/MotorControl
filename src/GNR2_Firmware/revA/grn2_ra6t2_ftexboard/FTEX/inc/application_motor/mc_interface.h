@@ -21,6 +21,7 @@ extern "C" {
 #include "bus_voltage_sensor.h"
 #include "r_divider_bus_voltage_sensor.h"
 #include "gnr_parameters.h"
+#include "Regen.h"
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -367,42 +368,77 @@ int16_t MCInterface_GetTorqueReference(uint8_t Motor);
   */
 uint16_t MCInterface_GetMaxPositivePower();
 
+
 /**
   * @brief  Enable regen 
-  * @retval enabling regenerative feature for direct drive
+  * @retval enabling regenerative feature
   */
 void MCInterface_EnableRegen();
 
 /**
   * @brief  Disable regen 
-  * @retval Disabling regenerative feature for Hub drive and mid drive
+  * @retval Disabling regenerative feature 
   */
 void MCInterface_DisableRegen();
 
 /**
-  * @brief  Get the max negative battery current in amps
-  * @retval max negative current
+  * @brief  Set the max negative allowed regen current in amps
+  * @param minSpeed min speed regen applies
+  * @return true if succsessful, false otherwise
   */
-int16_t MCInterface_GetMaxNegativeCurrent();
+bool MCInterface_SetRegenMaxNegativeCurrent(int16_t Idc_Negative);
 
 /**
-  * @brief  set the max negative battery current in amps
-  * @retval max negative current
+  * @brief  Get the max negative regen current in amps
+  * @return max negative regen current
   */
-void MCInterface_SetMaxNegativeCurrent(int16_t Idc_Negative);
+int16_t MCInterface_GetRegenMaxNegativeCurrent();
 
 /**
-  * @brief  Get the increasing rate of max negative battery current in Nm per second
-  * @retval rate of negative current
+  * @brief  Set the min negative regen current 
+  * @param Idc_Negative min negative regen current
+  * @return true if succsessful, false otherwise
   */
-int16_t MCInterface_GetMaxNegativeTorqueRate();
-
+bool MCInterface_SetMinNegativeCurrent(int16_t Idc_Negative);
 
 /**
-  * @brief  Get the value of regenerative torque in milli Nm
-  * @retval Get the value of regenerative torque
+  * @brief  Get the min negative regen current
+  * @return min negative regen current
   */
-int16_t MCInterface_GetRegenTorque();
+int16_t MCInterface_GetMinNegativeCurrent();
+
+/**
+  * @brief  Set the increasing rate of regen 
+  * @return true if succsessful, false otherwise
+  */
+bool MCInterface_SetRegenRampDurationMS(uint16_t Duration);
+
+/**
+  * @brief  Get the increasing rate of regen
+  * @return rate of regen in miliseconds
+  */
+uint16_t MCInterface_GetRegenRampDurationMS();
+
+/**
+  * @brief  Set the increasing rate of max negative battery current in Nm per second
+  * @param hMaxVoltage max negative voltage
+  * @return true if succsessful, false otherwise
+  */
+bool MCInterface_SetRegenMaxVoltage(uint16_t hMaxVoltage);
+
+/**
+  * @brief  Get the increasing rate of max allowed voltage to do the regen
+  * @return Max allowed voltage
+  */
+uint16_t MCInterface_GetRegenMaxVoltage();
+
+/**
+  * @brief Set the level of regen
+  * @param level level of regen to be applied
+  * @return true if succsessful, false otherwise
+  */
+bool MCInterface_SetRegenLevelPercent(uint8_t Level);
+
 
 /**
   * @brief  Get the motor gear ratio
@@ -577,19 +613,24 @@ void MCInterface_DisableRegen(void);
   * @brief  Set the max negative battery current in amps
   * @param maxCurrent max negative current 
   */
-void MCInterface_SetRegenMaxCurrent(int16_t maxCurrent);
+bool MCInterface_SetRegenMaxCurrent(int16_t maxCurrent);
+
+/**
+  * @brief  Get the max negative battery current in amps
+  */
+int16_t MCInterface_GetRegenMaxCurrent(void);
 
 /**
   * @brief  Get the max negative battery current in amps
   * @param minSpeed min speed regen applies
   */
-void MCInterface_SetRegenMinSpeed(int16_t minSpeed);
+bool MCInterface_SetRegenMinSpeed(int16_t minSpeed);
 
 /**
   * @brief  Get the increasing rate of max negative battery current in Nm per second
   * @param resetSpeed Speed for reseting regen PIDs
   */
-void MCInterface_SetRegenResetSpeed(int16_t resetSpeed);
+bool MCInterface_SetRegenResetSpeed(int16_t resetSpeed);
 
 
 #ifdef __cplusplus

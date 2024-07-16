@@ -365,37 +365,15 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
         pHandle->hCurrentTorqueRef = hTorqueReference;
 
          if (pHandle->motorType == DIRECT_DRIVE)
-          
          {
-             if (pHandle->pSPD->hIdcRegen)
-             {
-                 if (pHandle->hCurrentTorqueRef == 0 && pHandle->pSPD->bActiveRegen)
-                 {
-                      if (abs(pHandle->pSPD->hAvrMecSpeedUnit) > pHandle->pSPD->hRegenMinSpeed)
-                      { 
-                          pHandle->pSPD->hTorqueRegenMax = (int16_t)((pHandle->pSPD->hIdcRegen * pHandle->hBusVoltage * 100)/(abs(pHandle->pSPD->hAvrMecSpeedUnit)*PI_/30));
-                          if (pHandle->pSPD->hTorqueRegen < pHandle->pSPD->hTorqueRegenMax)
-                          {
-                            pHandle->pSPD->hTorqueRegen = pHandle->pSPD->hTorqueRegenMax;  
-                            
-                            hTorqueReference = pHandle->pSPD->hTorqueRegen;
-                          }
-                          else
-                          {
-                            pHandle->pSPD->hTorqueRegen = pHandle->pSPD->hTorqueRegen + pHandle->pSPD->hDeltaT;
-                            
-                            hTorqueReference = pHandle->pSPD->hTorqueRegen;
-                          }
-                  
-                  
-                      }
-                      else
-                      {
-                          pHandle->pSPD->hTorqueRegen = 0;
-                      }
-                 }
-                
-              }
+            if (pHandle->hCurrentTorqueRef == 0 )
+            {
+                hTorqueReference = ApplyRegen(hMeasuredSpeed, pHandle->pSPD->busVoltage);
+            }
+            else
+            {
+                hTorqueReference = 0;
+            }
         }  
 
     }

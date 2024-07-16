@@ -13,7 +13,7 @@
 #include "mc_config.h"
 #include "mc_tasks.h"
 #include "motor_signal_processing.h"
-
+#include "Regen.h"
 
 /* Private macros ------------------------------------------------------------*/
 /**
@@ -543,57 +543,108 @@ uint16_t MCInterface_GetMaxPositivePower()
     return MCInterface[M1].pSpeedTorqCtrl->hMaxPositivePower;
 }
 
+
+//******************************************* REGEN API */
 /**
   *  enable the regen feature,
   */
-void MCInterface_Enableregen()
-{
-    ASSERT(MCInterface[M1].pSpeedTorqCtrl->pSPD != NULL);
-    
-    MCInterface[M1].pSpeedTorqCtrl->pSPD->bActiveRegen = true;
+void MCInterface_EnableRegen()
+{   
+    return RegenSetEnabled();
 }
 
 /**
   *  disable the regen feature,
   */
-void MCInterface_Disableregen()
+void MCInterface_DisableRegen()
 {
-    ASSERT(MCInterface[M1].pSpeedTorqCtrl->pSPD != NULL);
-    
-    MCInterface[M1].pSpeedTorqCtrl->pSPD->bActiveRegen = false;
+    return RegenSetDisabled();
 }
 
 /**
-  *  Get the max negative battery current in amps
+  *  Get the regen enabled state
   */
-int16_t MCInterface_GetMaxNegativeCurrent()
+bool MCInterface_GetRegenEnabled()
 {
-    return MCInterface[M1].pSpeedTorqCtrl->pSPD->hIdcRegen;
+    return RegenGetEnabled();
 }
 
 /**
   *  Set the max negative battery current in amps
   */
-void MCInterface_SetMaxNegativeCurrent(int16_t Idc_Negative)
+bool MCInterface_SetRegenMaxNegativeCurrent(int16_t Idc_Negative)
 {
-    MCInterface[M1].pSpeedTorqCtrl->pSPD->hIdcRegen = Idc_Negative;
+    return RegenSetMaxCurrent(Idc_Negative); 
+}
+
+/**
+  *  Get the max negative battery current in amps
+  */
+int16_t MCInterface_GetRegenMaxNegativeCurrent()
+{
+    return MCInterface[M1].pSpeedTorqCtrl->pSPD->hIdcRegen;
+}
+
+
+/**
+  *  Set the min negative battery current in amps
+  */
+bool MCInterface_SetMinNegativeCurrent(int16_t Idc_Negative)
+{
+    return RegenSetMinCurrent(Idc_Negative); 
+}
+
+/**
+  *  Get the min negative battery current in amps
+  */
+int16_t MCInterface_GetMinNegativeCurrent()
+{
+    return RegenGetMinCurrent();
+}
+
+/**
+  *  Set the rate of increasing the negative Torque in mili Nm per milisecond or Nm/sec
+  */
+bool MCInterface_SetRegenRampDurationMS(uint16_t Duration)
+{
+    return RegenSetRampDurationMs(Duration); 
 }
 
 /**
   *  Get the rate of increasing the negative Torque in mili Nm per milisecond or Nm/sec
   */
-int16_t MCInterface_GetMaxNegativeTorqueRate()
+uint16_t MCInterface_GetRegenRampDurationMS()
 {
-    return MCInterface[M1].pSpeedTorqCtrl->pSPD->hDeltaT;
+    return RegenGetRampDurationMs();
 }
 
 /**
   *  Get the regenerative torque value in mili Nm
   */
-int16_t MCInterface_GetRegenTorque()
+bool MCInterface_SetRegenMaxVoltage(uint16_t hMaxVoltage)
 {
-    return MCInterface[M1].pSpeedTorqCtrl->pSPD->hTorqueRegen;
+    return RegenSetMaxVoltage(hMaxVoltage);
 }
+
+/**
+  *  Get the regenerative torque value in mili Nm
+  */
+uint16_t MCInterface_GetRegenMaxVoltage()
+{
+    return RegenGetMaxVoltage();
+}
+
+/**
+  *  Set the regen level in percent
+  */
+bool MCInterface_SetRegenLevelPercent(uint8_t Level)
+{
+    return RegenSetLevelPercent(Level);
+}
+
+
+// END OF REGEN API ********************************************/
+
 /**
   *  Get the motor gear ratio
   */
@@ -815,40 +866,15 @@ float MCInterface_GetExtractedWheelSpeedMixed(void)
 /**
   *  Set the maximum regen current
   */
-void MCInterface_EnableRegen(void)
+bool MCInterface_SetRegenMaxCurrent(int16_t maxCurrent)
 {
-    MCInterface[M1].pSpeedTorqCtrl->pSPD->bActiveRegen = true;
-}
-
-/**
-  *  Disable the regen feature
-  */
-void MCInterface_DisableRegen(void)
-{
-    MCInterface[M1].pSpeedTorqCtrl->pSPD->bActiveRegen = false;
-}
-
-/**
-  *  Set the maximum regen current
-  */
-void MCInterface_SetRegenMaxCurrent(int16_t maxCurrent)
-{
-    MCInterface[M1].pSpeedTorqCtrl->pSPD->hIdcRegen = maxCurrent;
+    return RegenSetMaxCurrent(maxCurrent);
 }
 
 /**
   *  Set the minimum speed for regen to start
   */
-void MCInterface_SetRegenMinSpeed(int16_t minSpeed)
+bool MCInterface_SetRegenMinSpeed(int16_t minSpeed)
 {
-    MCInterface[M1].pSpeedTorqCtrl->pSPD->hRegenMinSpeed = minSpeed;
+    return RegenSetMinSpeed(minSpeed);
 }
-
-/**
-  *  Set the speed for reseting regen PIDs
-  */
-void MCInterface_SetRegenResetSpeed(int16_t resetSpeed)
-{
-    MCInterface[M1].pSpeedTorqCtrl->pSPD->hRegenResetSpeed = resetSpeed;
-}
-

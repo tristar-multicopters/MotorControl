@@ -60,6 +60,7 @@
 #define REGEN_RESET_SPEED               25        //  speed for reseting the PIDs
 #define MAX_NEG_DC_CURRENT              -5        // maximum negative DC currnet to battery in amps
 #define REGEN_TORQUE_RAMP               -2        // the rate of increasing the regenerative current in Nm/msec
+#define REGEN_MIN_DURATION_MS           1000      // minimum duration for the regen ramp in ms  
 /************************** Ramp Manager Parameters  ************************/
 
 #define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second
