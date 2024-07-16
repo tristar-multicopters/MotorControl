@@ -16,6 +16,7 @@
 
 #define ERROR_TIMER     2000    //~2 secs, timer used to reset timer
 
+MotorStateMachineHandle_t MCStateMachine;
 
 /**
   * @brief  Initializes all the object variables, usually it has to be called
@@ -23,16 +24,16 @@
   * @param pHandle pointer on the component instance to initialize.
   * @retval none.
   */
-void MCStateMachine_Init(MotorStateMachineHandle_t * pHandle)
+void MCStateMachine_Init()
 {
 
-    pHandle->bState = M_IDLE;
-    pHandle->wCriticalFaultNow = MC_NO_FAULT;
-    pHandle->wCriticalFaultOccurred = MC_NO_FAULT;
-    pHandle->wCurrentErrorsNow = MC_NO_ERROR;
-    pHandle->wOccurredErrors = MC_NO_ERROR;
-    pHandle->hErrorProcessingTimer = 0;
-    pHandle->wWarnings = MC_NO_WARNING;
+    MCStateMachine.bState = M_IDLE;
+    MCStateMachine.wCriticalFaultNow = MC_NO_FAULT;
+    MCStateMachine.wCriticalFaultOccurred = MC_NO_FAULT;
+    MCStateMachine.wCurrentErrorsNow = MC_NO_ERROR;
+    MCStateMachine.wOccurredErrors = MC_NO_ERROR;
+    MCStateMachine.hErrorProcessingTimer = 0;
+    MCStateMachine.wWarnings = MC_NO_WARNING;
     
 }
 
@@ -52,10 +53,10 @@ void MCStateMachine_Init(MotorStateMachineHandle_t * pHandle)
   * @retval bool It returns true if the state has been really set equal to
   *         bState, false if the requested state can't be reached
   */
-bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t bState)
+bool MCStateMachine_NextState(MotorState_t bState)
 {
   bool bChangeState = false;
-  MotorState_t bCurrentState = pHandle->bState;
+  MotorState_t bCurrentState = MCStateMachine.bState;
   MotorState_t bNewState = bCurrentState;
 
   switch (bCurrentState)
@@ -253,7 +254,7 @@ bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t 
 
   if (bChangeState)
   {
-    pHandle->bState = bNewState;
+    MCStateMachine.bState = bNewState;
   }
   else
   {
@@ -261,7 +262,7 @@ bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t 
             || (bState == M_ANY_STOP)))
     {
       /* If new state is not a user command START/STOP raise a software error */
-      MCStateMachine_CriticalFaultProcessing(pHandle, MC_SW_ERROR, 0u);
+      MCStateMachine_CriticalFaultProcessing(MC_SW_ERROR, 0u);
     }
   }
 
@@ -277,28 +278,28 @@ bool MCStateMachine_NextState(MotorStateMachineHandle_t * pHandle, MotorState_t 
   * @param wResetErrors Bit field reporting critical faults to be cleared
   * @retval MotorState_t New state machine state after fault processing
   */
-MotorState_t MCStateMachine_CriticalFaultProcessing(MotorStateMachineHandle_t * pHandle, uint32_t wSetErrors, uint32_t
+MotorState_t MCStateMachine_CriticalFaultProcessing(uint32_t wSetErrors, uint32_t
                              wResetErrors)
 {
-  MotorState_t LocalState =  pHandle->bState;
+  MotorState_t LocalState =  MCStateMachine.bState;
 
   /* Set current errors */
-  pHandle->wCriticalFaultNow = (pHandle->wCriticalFaultNow | wSetErrors) & (~wResetErrors);
-  pHandle->wCriticalFaultOccurred |= wSetErrors;
+  MCStateMachine.wCriticalFaultNow = (MCStateMachine.wCriticalFaultNow | wSetErrors) & (~wResetErrors);
+  MCStateMachine.wCriticalFaultOccurred |= wSetErrors;
 
   if (LocalState == M_FAULT_NOW)
   {
-    if (pHandle->wCriticalFaultNow == MC_NO_FAULT)
+    if (MCStateMachine.wCriticalFaultNow == MC_NO_FAULT)
     {
-      pHandle->bState = M_FAULT_OVER;
+      MCStateMachine.bState = M_FAULT_OVER;
       LocalState = M_FAULT_OVER;
     }
   }
   else
   {
-    if (pHandle->wCriticalFaultNow != MC_NO_FAULT)
+    if (MCStateMachine.wCriticalFaultNow != MC_NO_FAULT)
     {
-      pHandle->bState = M_FAULT_NOW;
+      MCStateMachine.bState = M_FAULT_NOW;
       LocalState = M_FAULT_NOW;
     }
   } 
@@ -312,12 +313,12 @@ MotorState_t MCStateMachine_CriticalFaultProcessing(MotorStateMachineHandle_t * 
   * @param wResetErrors Bit field reporting errors to be cleared
   * @retval none.
   */
-void MCStateMachine_SetError(MotorStateMachineHandle_t * pHandle, uint32_t wSetErrors, uint32_t wResetErrors)
+void MCStateMachine_SetError(uint32_t wSetErrors, uint32_t wResetErrors)
 {
-    pHandle->wCurrentErrorsNow = (pHandle->wCurrentErrorsNow | wSetErrors) & (~wResetErrors);
-    if (pHandle->wCurrentErrorsNow)
+    MCStateMachine.wCurrentErrorsNow = (MCStateMachine.wCurrentErrorsNow | wSetErrors) & (~wResetErrors);
+    if (MCStateMachine.wCurrentErrorsNow)
     {
-        pHandle->wOccurredErrors = pHandle->wCurrentErrorsNow;
+        MCStateMachine.wOccurredErrors = MCStateMachine.wCurrentErrorsNow;
     }   
 }
 
@@ -326,16 +327,16 @@ void MCStateMachine_SetError(MotorStateMachineHandle_t * pHandle, uint32_t wSetE
   * @param pHandle pointer of type  MotorStateMachineHandle_t
   * @retval none.
   */
-void MCStateMachine_ErrorProcessing(MotorStateMachineHandle_t * pHandle)
+void MCStateMachine_ErrorProcessing()
 {
     //if errors are cleared, wait until end of timer before you are able to push power
-    if (pHandle->wOccurredErrors && !pHandle->wCurrentErrorsNow)
+    if (MCStateMachine.wOccurredErrors && !MCStateMachine.wCurrentErrorsNow)
     {
-        pHandle->hErrorProcessingTimer++;
-        if (pHandle->hErrorProcessingTimer >= ERROR_TIMER)
+        MCStateMachine.hErrorProcessingTimer++;
+        if (MCStateMachine.hErrorProcessingTimer >= ERROR_TIMER)
         {
-            pHandle->hErrorProcessingTimer = 0;
-            pHandle->wOccurredErrors = MC_NO_ERROR;
+            MCStateMachine.hErrorProcessingTimer = 0;
+            MCStateMachine.wOccurredErrors = MC_NO_ERROR;
         }
     }
 }
@@ -347,9 +348,9 @@ void MCStateMachine_ErrorProcessing(MotorStateMachineHandle_t * pHandle)
   * @param wResetWarnings Bit field reporting warnings to be cleared
   * @retval none.
   */
-void MCStateMachine_WarningHandling(MotorStateMachineHandle_t * pHandle, uint32_t wSetWarnings, uint32_t  wResetWarnings)
+void MCStateMachine_WarningHandling(uint32_t wSetWarnings, uint32_t  wResetWarnings)
 {
-    pHandle->wWarnings = (pHandle->wWarnings | wSetWarnings) & (~wResetWarnings);
+    MCStateMachine.wWarnings = (MCStateMachine.wWarnings | wSetWarnings) & (~wResetWarnings);
 }
 
 /**
@@ -357,9 +358,9 @@ void MCStateMachine_WarningHandling(MotorStateMachineHandle_t * pHandle, uint32_
   * @param  pHandle pointer of type  MotorStateMachineHandle_t
   * @retval MotorState_t Current state machine state
   */
-MotorState_t MCStateMachine_GetState(MotorStateMachineHandle_t * pHandle)
+MotorState_t MCStateMachine_GetState()
 {
-  return (pHandle->bState);
+  return (MCStateMachine.bState);
 }
 
 /**
@@ -372,14 +373,14 @@ MotorState_t MCStateMachine_GetState(MotorStateMachineHandle_t * pHandle)
   * @retval bool true if the state machine has been moved to IDLE, false if the
   *        method call had no effects
   */
-bool MCStateMachine_CriticalFaultAcknowledged(MotorStateMachineHandle_t * pHandle)
+bool MCStateMachine_CriticalFaultAcknowledged()
 {
   bool bToBeReturned = false;
 
-  if (pHandle->bState == M_FAULT_OVER)
+  if (MCStateMachine.bState == M_FAULT_OVER)
   {
-    pHandle->bState = M_STOP_IDLE;
-    pHandle->wCriticalFaultOccurred = MC_NO_FAULT;
+    MCStateMachine.bState = M_STOP_IDLE;
+    MCStateMachine.wCriticalFaultOccurred = MC_NO_FAULT;
     bToBeReturned = true;
   }
 
@@ -397,12 +398,12 @@ bool MCStateMachine_CriticalFaultAcknowledged(MotorStateMachineHandle_t * pHandl
   *         historically occurred since the state machine has been moved into
   *         FAULT_NOW state
   */
-uint64_t MCStateMachine_GetCriticalFaultState(MotorStateMachineHandle_t * pHandle)
+uint64_t MCStateMachine_GetCriticalFaultState()
 {
   uint64_t LocalFaultState;
 
-  LocalFaultState = (uint64_t)(pHandle->wCriticalFaultOccurred);
-  LocalFaultState |= (uint64_t)(pHandle->wCriticalFaultNow) << 32;
+  LocalFaultState = (uint64_t)(MCStateMachine.wCriticalFaultOccurred);
+  LocalFaultState |= (uint64_t)(MCStateMachine.wCriticalFaultNow) << 32;
 
   return LocalFaultState;
 }
@@ -413,9 +414,9 @@ uint64_t MCStateMachine_GetCriticalFaultState(MotorStateMachineHandle_t * pHandl
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval uint32_t  a 16 bit field that shoing occurred errors
   */
-uint32_t MCStateMachine_GetCurrentErrorState(MotorStateMachineHandle_t * pHandle)
+uint32_t MCStateMachine_GetCurrentErrorState()
 {
-    return pHandle->wCurrentErrorsNow;
+    return MCStateMachine.wCurrentErrorsNow;
 }
 
 /**
@@ -423,9 +424,9 @@ uint32_t MCStateMachine_GetCurrentErrorState(MotorStateMachineHandle_t * pHandle
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval boolean indicating whether error is processing
   */
-uint32_t MCStateMachine_GetOccurredErrorState(MotorStateMachineHandle_t * pHandle)
+uint32_t MCStateMachine_GetOccurredErrorState()
 {
-    return pHandle->wOccurredErrors;
+    return MCStateMachine.wOccurredErrors;
 }
 
 /**
@@ -434,8 +435,8 @@ uint32_t MCStateMachine_GetOccurredErrorState(MotorStateMachineHandle_t * pHandl
   * @param pHandle pointer of type  MotorStateMachineHandle_t.
   * @retval uint32_t  a 16 bit field that shoing occurred warning
   */
-uint32_t MCStateMachine_GetWarningState(MotorStateMachineHandle_t * pHandle)
+uint32_t MCStateMachine_GetWarningState()
 {
-  return pHandle->wWarnings;
+  return MCStateMachine.wWarnings;
 }
 

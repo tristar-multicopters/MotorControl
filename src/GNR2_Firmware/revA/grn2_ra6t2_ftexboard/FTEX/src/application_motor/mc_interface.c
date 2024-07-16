@@ -81,9 +81,9 @@ bool MCInterface_StartMotor()
 {
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(MCInterface[M1].pSTM) == M_IDLE && !MCStateMachine_GetOccurredErrorState(MCInterface[M1].pSTM))
+  if (MCStateMachine_GetState() == M_IDLE && !MCStateMachine_GetOccurredErrorState())
   {
-      bRetVal = MCStateMachine_NextState(MCInterface[M1].pSTM, M_IDLE_START);
+      bRetVal = MCStateMachine_NextState(M_IDLE_START);
   }
   return bRetVal;
 }
@@ -95,9 +95,9 @@ bool MCInterface_StopMotor()
 {
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(MCInterface[M1].pSTM) == M_RUN)
+  if (MCStateMachine_GetState() == M_RUN)
   {
-      bRetVal = MCStateMachine_NextState(MCInterface[M1].pSTM, M_ANY_STOP);
+      bRetVal = MCStateMachine_NextState(M_ANY_STOP);
   }
   return bRetVal;
 }
@@ -107,7 +107,7 @@ bool MCInterface_StopMotor()
 */
 bool MCInterface_CriticalFaultAcknowledged()
 {
-  return MCStateMachine_CriticalFaultAcknowledged(MCInterface[M1].pSTM);
+  return MCStateMachine_CriticalFaultAcknowledged();
 }
 
 /*
@@ -161,7 +161,7 @@ void MCInterface_ExecBufferedCommands()
 */
 MotorState_t  MCInterface_GetSTMState()
 {
-    return MCStateMachine_GetState(MCInterface[M1].pSTM);
+    return MCStateMachine_GetState();
 }
 
 /*
@@ -169,7 +169,7 @@ MotorState_t  MCInterface_GetSTMState()
 */
 uint32_t MCInterface_GetOccurredCriticalFaults()
 {
-    return (uint32_t)(MCStateMachine_GetCriticalFaultState(MCInterface[M1].pSTM));
+    return (uint32_t)(MCStateMachine_GetCriticalFaultState());
 }
 
 /*
@@ -177,7 +177,7 @@ uint32_t MCInterface_GetOccurredCriticalFaults()
 */
 uint32_t MCInterface_GetCurrentErrors()
 {
-    return MCStateMachine_GetCurrentErrorState(MCInterface[M1].pSTM);
+    return MCStateMachine_GetCurrentErrorState();
 }
 
 /*
@@ -185,7 +185,7 @@ uint32_t MCInterface_GetCurrentErrors()
 */
 uint32_t MCInterface_GetOccurredErrors()
 {
-    return MCStateMachine_GetOccurredErrorState(MCInterface[M1].pSTM);
+    return MCStateMachine_GetOccurredErrorState();
 }
 
 /*
@@ -193,7 +193,7 @@ uint32_t MCInterface_GetOccurredErrors()
 */
 uint32_t MCInterface_GetOccurredWarning()
 {
-    return MCStateMachine_GetWarningState(MCInterface[M1].pSTM);
+    return MCStateMachine_GetWarningState();
 }
 
 /*
@@ -201,7 +201,7 @@ uint32_t MCInterface_GetOccurredWarning()
 */
 uint32_t MCInterface_GetCurrentCriticalFaults()
 {
-    return (uint32_t)(MCStateMachine_GetCriticalFaultState(MCInterface[M1].pSTM) >> 32);
+    return (uint32_t)(MCStateMachine_GetCriticalFaultState() >> 32);
 }
 
 /*
@@ -267,7 +267,7 @@ bool MCInterface_IsRampCompleted()
 {
     bool retVal = false;
 
-    if ((MCStateMachine_GetState(MCInterface[M1].pSTM)) == M_RUN)
+    if ((MCStateMachine_GetState()) == M_RUN)
     {
         retVal = SpdTorqCtrl_IsRampCompleted(MCInterface[M1].pSpeedTorqCtrl);
     }
@@ -660,9 +660,9 @@ bool MCInterface_StartMotorTuning()
 {
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(MCInterface[M1].pSTM) == M_IDLE)
+  if (MCStateMachine_GetState() == M_IDLE)
   {
-      bRetVal = MCStateMachine_NextState( MCInterface[M1].pSTM, M_AUTOTUNE_ENTER_IDENTIFICATION );
+      bRetVal = MCStateMachine_NextState(M_AUTOTUNE_ENTER_IDENTIFICATION );
   }
   return bRetVal;
 }
@@ -675,9 +675,9 @@ bool MCInterface_StopMotorTuning()
 {
   bool bRetVal = false;
 
-  if (MCStateMachine_GetState(MCInterface[M1].pSTM) == M_AUTOTUNE_IDENTIFICATION)
+  if (MCStateMachine_GetState() == M_AUTOTUNE_IDENTIFICATION)
   {
-      bRetVal = MCStateMachine_NextState( MCInterface[M1].pSTM, M_AUTOTUNE_ANY_STOP_IDENTIFICATION );
+      bRetVal = MCStateMachine_NextState(M_AUTOTUNE_ANY_STOP_IDENTIFICATION );
   }
   return bRetVal;
 }

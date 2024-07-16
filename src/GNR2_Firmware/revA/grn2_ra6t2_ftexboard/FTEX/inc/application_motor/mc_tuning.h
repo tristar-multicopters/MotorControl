@@ -26,7 +26,6 @@ extern "C" {
 #include "bus_voltage_sensor.h"
 #include "feed_forward_ctrl.h"
 #include "flux_weakening_ctrl.h"
-#include "mc_state_machine.h"
 
 
 /**
@@ -43,7 +42,6 @@ typedef struct
   SpdPosFdbkHandle_t * pSpeedSensorAux;
   VirtualSpeedSensor_Handle_t * pSpeedSensorVirtual;
   SpdTorqCtrlHandle_t * pSpeednTorqueCtrl;
-  MotorStateMachineHandle_t * pStateMachine;
   NTCTempSensorHandle_t * pTemperatureSensorController;
   NTCTempSensorHandle_t * pTemperatureSensorMotor;
   BusVoltageSensorHandle_t * pBusVoltageSensor;

@@ -41,7 +41,6 @@ typedef struct
 
 typedef struct
 {
-    MotorStateMachineHandle_t * pSTM;             /*!< State machine object used by MCI.*/
     SpdTorqCtrlHandle_t * pSpeedTorqCtrl;         /*!< Speed and torque controller object used by MCI.*/
     pFOCVars_t pFOCVars;                          /*!< Pointer to FOC vars used by MCI.*/
     ResDivVbusSensorHandle_t  *pResDivVbusSensor; /*!< Used to raise the resistor dividor bus voltage sensor to the vehicle layer*/
