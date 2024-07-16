@@ -374,7 +374,7 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         osThreadFlagsWait(POWEROFFSEQUENCE_FLAG, osFlagsWaitAny, osWaitForever); // Task is blocked until we have to power down        
         MDI_StopMotor(pVCI->pPowertrain->pMDI,M1);
         //if motor is not in idle state , wait.
-        while(MDI_GetSTMState(pVCI->pPowertrain->pMDI, M1) != M_IDLE)
+        while(MDI_GetSTMState(pVCI->pPowertrain->pMDI, M1) != M_IDLE && MDI_GetSTMState(pVCI->pPowertrain->pMDI, M1) != M_FAULT_NOW)
         {    
             osDelay(STOP_LOOPTICKS);
         }
@@ -383,8 +383,8 @@ __NO_RETURN void PowerOffSequence (void * pvParameter)
         //and wait until motor stops to run.
         if ((SUPPORT_SLAVE_ON_IOT == 1 && GNR_IOT == 1)|| (VcAutodeter_GetGnrState() == true && GNR_IOT == 0))
         {
-            MDI_StopMotor(pVCI->pPowertrain->pMDI,M2);
-            while (MDI_GetSTMState(pVCI->pPowertrain->pMDI,M2) != M_IDLE)
+            MDI_StopMotor(pVCI->pPowertrain->pMDI, M2);
+            while (MDI_GetSTMState(pVCI->pPowertrain->pMDI, M2) != M_IDLE && MDI_GetSTMState(pVCI->pPowertrain->pMDI, M2) != M_FAULT_NOW)
             {
                 osDelay(STOP_LOOPTICKS);
             }
