@@ -195,7 +195,9 @@
 #define FW_KIDIV                        32768       // Flux weakening gain divider, to allow decimal value
 #define FW_KPDIV_LOG                    LOG2(32768) // Flux weakening gain divider log2, to allow decimal value
 #define FW_KIDIV_LOG                    LOG2(32768) // Flux weakening gain divider log2, to allow decimal value
-#define ID_DEMAG_amps                   -30          // Demagnetization current
+#ifndef ID_DEMAG_AMPS                               // Demagnetization current limit for the motor in amps
+    #define ID_DEMAG_AMPS                     0         
+#endif
 
 /****** Feedforward Parameters ******/
 #define CONSTANT1_Q                     0           // Feedforward Iq related gain

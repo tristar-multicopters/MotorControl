@@ -58,6 +58,7 @@ MotorParameters_t MotorParameters =
         .hFlDirection                   = FLUX_DIRECTION,
         .hPIDFluxKPDefault              = PID_FLUX_KP_DEFAULT,
         .hPIDFluxKIDefault              = PID_FLUX_KI_DEFAULT,
+        .hIDDemagAmps                  = ID_DEMAG_AMPS,
     },
     .RampManagerParameters =
     {
@@ -164,7 +165,6 @@ MCConfigHandle_t MCConfig =
 {
     .hMaxModule             = MAX_MODULE,
     .hDefaultFwVoltRef       = (int16_t)FW_VOLTAGE_REF,
-    .hDemagCurrent          = ID_DEMAG,
     .hVqdLowPassFilterBw    = M1_VQD_SW_FILTER_BW_FACTOR,
     .hVqdLowPassFilterBwLog = (uint16_t) M1_VQD_SW_FILTER_BW_FACTOR_LOG,
 };

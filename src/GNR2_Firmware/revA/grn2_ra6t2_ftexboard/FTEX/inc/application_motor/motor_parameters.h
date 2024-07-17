@@ -63,6 +63,7 @@ typedef struct
     int16_t hFlDirection;
     int16_t hPIDFluxKPDefault;
     int16_t hPIDFluxKIDefault;
+    int16_t hIDDemagAmps;
 } FluxParameters_t;
 
 //Motor parameters for the ramp

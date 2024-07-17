@@ -82,7 +82,7 @@
 /* The maximum current from Current Sensor with AMPLIFICATION_GAIN that we can measure using ADC with ADC_REFERENCE_VOLTAGE */
 #define current_correction_factor   0.85  /* correction factor for the current sensor range */
 #define MAX_MEASURABLE_CURRENT      (ADC_REFERENCE_VOLTAGE/(2*AMPLIFICATION_GAIN)* current_correction_factor)
-#define ID_DEMAG                    (int16_t)(ID_DEMAG_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
+#define ID_DEMAG                    (int16_t)(ID_DEMAG_AMPS  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
 #define IQ_REGEN                    (int16_t)(IQ_REGEN_AMPS  * 65535 / (2 * MAX_MEASURABLE_CURRENT))
 
 #define OCSP_SAFETY_MARGIN                 (uint16_t)(OCSP_SAFETY_MARGIN_amps  * 65535 / (2 * MAX_MEASURABLE_CURRENT))    /* Measured current amplitude can be until OCSP_SAFETY_MARGIN higher

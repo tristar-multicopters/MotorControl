@@ -23,6 +23,7 @@ void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDH
     
     pHandle->bWheelSpdSensorNbrPerRotation = MotorParameters.WheelSpeedSensorParameters.bWheelSpeedSensorNbrPerRotation;
     pHandle->hFlDir = MotorParameters.FluxParameters.hFlDirection;
+    pHandle->hDemagCurrent = (int16_t)(MotorParameters.FluxParameters.hIDDemagAmps * 65535 / (2 * MAX_MEASURABLE_CURRENT));
     
     pHandle->hFwVoltRef = pHandle->hDefaultFwVoltRef;
 

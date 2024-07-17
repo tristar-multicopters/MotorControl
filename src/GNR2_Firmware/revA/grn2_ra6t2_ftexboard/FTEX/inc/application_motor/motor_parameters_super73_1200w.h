@@ -66,6 +66,9 @@ These variables are used to configure the motor within the smart config tool.
 
 #define FLUX_WEAKENING_ENABLE               true                // enable or disable flux weakening
 #define FLUX_DIRECTION                      -1                  // direction of demagnetization current  1 clockwise, -1 counter clockwise
+#define ID_DEMAG_AMPS                       -20                 // Demagnetization current limit for the motor in amps
+                                                                // Note: The value should be negative
+
 /************************** Ramp Manager Parameters  ************************/
 
 #define DEFAULT_TORQUE_SLOPE_UP             10000                // Slope in cNm per second
