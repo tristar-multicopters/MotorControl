@@ -60,6 +60,12 @@ BatMonitor_Handle_t BatMonitorHandle =
     .VBatMax = BATTERY_FULL_VOLT_X_100,                             // Set in the VC_parameters_xxxxx.h of each bike
     .LowBatSOC = BATTERY_SOC_LOW_PERCENT,                           // Battery SOC in % for which we set the battery low flag (stops powertrain form pushing power)
     .RechargedBatSOC = BATTERY_SOC_OK_PERCENT,                      // Battery SOC in % for which we clear the battery low flag
+
+#ifdef RECHARGABLE_BATTERY    
+    .bRechargableBat = RECHARGABLE_BATTERY,
+    .hMaxChargingVoltage = MAX_CHARGING_VOLTAGE,
+    .hMaxChargingCurrent = MAX_CHARGING_CURRENT,
+#endif
 };
 
 

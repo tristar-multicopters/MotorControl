@@ -96,12 +96,11 @@ void PWRT_Init_MC(PWRT_Handle_t * pHandle)
         #else
             PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation);    
         #endif
-    }
-        
+    }   
     // Setup the Regen feature   
     MDI_SetRegenMaxCurrent(M1_SELECTED, -pHandle->pBatMonitorHandle->hMaxChargingCurrent);
     MDI_SetRegenMaxVoltage(M1_SELECTED, pHandle->pBatMonitorHandle->hMaxChargingVoltage);
-    MDI_SetRegenMinCurrent(M1_SELECTED, -(pHandle->pBatMonitorHandle->hMaxApplicationCurrent) / 10);
+    MDI_SetRegenMinCurrent(M1_SELECTED, -(pHandle->pBatMonitorHandle->hMaxChargingCurrent) / 10);
     MDI_SetRegenRampDurationMS(M1_SELECTED, 1000);
     MDI_SetRegenLevelPercent(M1_SELECTED, 100);
     

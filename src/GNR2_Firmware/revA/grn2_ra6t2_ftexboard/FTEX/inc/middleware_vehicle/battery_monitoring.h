@@ -28,6 +28,7 @@ typedef struct
     uint16_t hMaxApplicationPositivePower;          // Maximum power in watts that drive can push to the motor
     uint16_t hMaxApplicationNegativePower;          // Maximum power in watts that drive can accept from the motor
     uint16_t hMaxApplicationCurrent;                // Maximum battery current in amps that drive can accept from the motor
+    uint8_t  bRechargableBat;
     uint16_t hMaxChargingCurrent;                   // Maximum battery current in amps that drive can accept from the motor when charging
     uint16_t hMaxChargingVoltage;                    // Maximum battery voltage in volts that drive can accept from the motor
     

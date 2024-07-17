@@ -21,7 +21,7 @@ typedef struct
         uint16_t hMinSpeed; /**< Minimum speed for regen operation. */
         uint16_t hRegenMaxTorque; /**< Maximum torque for regen operation. */
         uint8_t bRegenLevelPercent; /**< Regen level as a percentage. */
-        uint16_t hRegenTorque; /**< Regen torque value. */
+        int16_t hRegenTorque; /**< Regen torque value. */
 } RegenHandle_t;
 
 /**
@@ -48,7 +48,7 @@ bool RegenGetEnabled();
     * @param   hBusVoltage: The bus voltage value.
     * @return  The updated motor speed after applying regen operation.
     */
-uint16_t ApplyRegen(int hMotorSpeed, uint16_t hBusVoltage);
+int16_t ApplyRegen(int16_t hMotorSpeed, uint16_t hBusVoltage);
 
 /**
     * @brief   Set the regen level as a percentage.
