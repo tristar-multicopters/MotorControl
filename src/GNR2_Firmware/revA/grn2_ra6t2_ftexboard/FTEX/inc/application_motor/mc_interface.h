@@ -399,7 +399,7 @@ int16_t MCInterface_GetRegenMaxNegativeCurrent();
   * @param Idc_Negative min negative regen current
   * @return true if succsessful, false otherwise
   */
-bool MCInterface_SetMinNegativeCurrent(int16_t MinCurrent);
+bool MCInterface_SetMinRegenCurrent(uint16_t MinCurrent);
 
 /**
   * @brief  Get the min negative regen current
@@ -613,12 +613,7 @@ void MCInterface_DisableRegen(void);
   * @brief  Set the max negative battery current in amps
   * @param maxCurrent max negative current 
   */
-bool MCInterface_SetRegenMaxCurrent(int16_t maxCurrent);
-
-/**
-  * @brief  Get the max negative battery current in amps
-  */
-int16_t MCInterface_GetRegenMaxCurrent(void);
+bool MCInterface_SetRegenMaxCurrent(uint16_t maxCurrent);
 
 /**
   * @brief  Get the max negative battery current in amps

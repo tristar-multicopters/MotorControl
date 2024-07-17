@@ -599,7 +599,7 @@ bool MDI_DisableRegen(uint8_t bMotor);
     * @param bMotor Motor number
     * @param maxCurrent Max current
     */
-bool MDI_SetRegenMaxCurrent(uint8_t bMotor, int16_t maxCurrent);
+bool MDI_SetRegenMaxCurrent(uint8_t bMotor,uint16_t maxCurrent);
 
 /**
   * @brief Get Regen Max Current
@@ -612,7 +612,7 @@ int16_t MDI_GetRegenMaxCurrent(uint8_t bMotor);
   * @param bMotor Motor number
   * @param minCurrent Min current
   */
-bool MDI_SetRegenMinCurrent(uint8_t bMotor, int16_t minCurrent);
+bool MDI_SetRegenMinCurrent(uint8_t bMotor, uint16_t minCurrent);
 
 /**
   * @brief Set Regen Min Speed

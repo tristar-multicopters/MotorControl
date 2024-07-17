@@ -589,7 +589,7 @@ int16_t MCInterface_GetRegenMaxNegativeCurrent()
 /**
   *  Set the min negative battery current in amps
   */
-bool MCInterface_SetMinNegativeCurrent(int16_t MinCurrent)
+bool MCInterface_SetMinRegenCurrent(uint16_t MinCurrent)
 {
     return RegenSetMinCurrent(-MinCurrent); 
 }
@@ -866,7 +866,7 @@ float MCInterface_GetExtractedWheelSpeedMixed(void)
 /**
   *  Set the maximum regen current
   */
-bool MCInterface_SetRegenMaxCurrent(int16_t maxCurrent)
+bool MCInterface_SetRegenMaxCurrent(uint16_t maxCurrent)
 {
     return RegenSetMaxCurrent(-maxCurrent);
 }

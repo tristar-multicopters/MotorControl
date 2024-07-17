@@ -1050,7 +1050,7 @@ bool MDI_DisableRegen(uint8_t bMotor)
 /**
   *  Set maximum allowed current for regen operation
   */
-bool MDI_SetRegenMaxCurrent(uint8_t bMotor, int16_t maxCurrent)
+bool MDI_SetRegenMaxCurrent(uint8_t bMotor, uint16_t maxCurrent)
 {
     switch (bMotor)
     {
@@ -1084,12 +1084,12 @@ int16_t MDI_GetRegenMaxCurrent(uint8_t bMotor)
 /**
   *  Set Regen minimum current
   */
-bool MDI_SetRegenMinCurrent(uint8_t bMotor, int16_t minCurrent)
+bool MDI_SetRegenMinCurrent(uint8_t bMotor, uint16_t minCurrent)
 {
     switch (bMotor)
     {
     case M1:
-        return MCInterface_SetMinNegativeCurrent(minCurrent);
+        return MCInterface_SetMinRegenCurrent(minCurrent);
         break;
     case M2:
         // SlaveInterface function to be called for dual
