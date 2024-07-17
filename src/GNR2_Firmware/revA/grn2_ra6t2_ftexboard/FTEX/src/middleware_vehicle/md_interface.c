@@ -1118,12 +1118,13 @@ int16_t MDI_GetRegenMinCurrent(uint8_t bMotor)
 /**
   *  Get extracted motor temp from mixed WSS and temp signals
   */
-bool MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minSpeed)
+bool MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minWheelRPM)
 {
+    int16_t motorRPM = (int16_t) round(minWheelRPM * MCInterface_GetMotorGearRatio()); 
     switch (bMotor)
     {
     case M1:
-        return MCInterface_SetRegenMinSpeed(minSpeed);
+        return MCInterface_SetRegenMinSpeed(motorRPM);
         break;
     case M2:
         // SlaveInterface function to be called for dual
@@ -1167,7 +1168,7 @@ uint16_t MDI_GetRegenMaxVoltage(uint8_t bMotor)
 }
 
 /**
-  *  Set the regen ramp duration in milliseconds.
+  *  Set the regen Level Percent
   */
 bool MDI_SetRegenLevelPercent(uint8_t bMotor, uint8_t hLevelPercent)
 {
@@ -1184,14 +1185,14 @@ bool MDI_SetRegenLevelPercent(uint8_t bMotor, uint8_t hLevelPercent)
 }
 
 /**
-  *  Set the regen ramp duration in milliseconds.
+  *  Set the regen ramp Percent in milliseconds.
   */
-bool MDI_SetRegenRampDurationMS(uint8_t bMotor, uint16_t hRampDurationMs)
+bool MDI_SetRegenRampPercent(uint8_t bMotor, uint16_t hRampPercent)
 {
     switch (bMotor)
     {
     case M1:
-        return MCInterface_SetRegenRampDurationMS(hRampDurationMs);
+        return MCInterface_SetRegenRampPercent(hRampPercent);
         break;
     case M2:
         // SlaveInterface function to be called for dual
@@ -1203,12 +1204,12 @@ bool MDI_SetRegenRampDurationMS(uint8_t bMotor, uint16_t hRampDurationMs)
 /**
   *  Get extracted motor temp from mixed WSS and temp signals
   */
-uint16_t MDI_GetRegenRampDurationMS(uint8_t bMotor)
+uint16_t MDI_GetRegenRampPercent(uint8_t bMotor)
 {
     switch (bMotor)
     {
     case M1:
-        return MCInterface_GetRegenRampDurationMS();
+        return MCInterface_GetRegenRampPercent();
         break;
     case M2:
         // SlaveInterface function to be called for dual

@@ -74,11 +74,7 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     pHandle->pSPD->hTorqueRegenMax = 0;
 
 #ifdef REGEN_ENABLE 
-    pHandle->pSPD->hDeltaT = REGEN_TORQUE_RAMP;
-    pHandle->pSPD->hTorqueRegen = 0;
-    pHandle->pSPD->hIdcRegen = MAX_NEG_DC_CURRENT;
-    pHandle->pSPD->hRegenMinSpeed = REGEN_MIN_SPEED;
-    pHandle->pSPD->hRegenResetSpeed = REGEN_RESET_SPEED;
+    RegenInit();
 #if REGEN_ENABLE == true
     pHandle->pSPD->bActiveRegen = true;
 #endif

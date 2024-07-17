@@ -619,7 +619,7 @@ bool MDI_SetRegenMinCurrent(uint8_t bMotor, int16_t minCurrent);
   * @param bMotor Motor number
   * @param minSpeed Min speed Regen starts
   */
-bool MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minSpeed);
+bool MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minWheelRPM);
 
 /**
   * @brief Set Regen Max Speed
@@ -640,12 +640,12 @@ bool MDI_SetRegenLevelPercent(uint8_t bMotor, uint8_t hLevelPercent);
   * @param bMotor Motor number
   * @param hRampDurationMs ramp duration in miliseconds
   */
-bool MDI_SetRegenRampDurationMS(uint8_t bMotor, uint16_t hRampDurationMs);
+bool MDI_SetRegenRampPercent(uint8_t bMotor, uint16_t hRampPercent);
 
 /**
   * @brief Get Regen ramp duration
   * @param bMotor Motor number
   */
-uint16_t MDI_GetRegenRampDurationMS(uint8_t bMotor);
+uint16_t MDI_GetRegenRampPercent(uint8_t bMotor);
 
 #endif /* __MD_INTERFACE_H */

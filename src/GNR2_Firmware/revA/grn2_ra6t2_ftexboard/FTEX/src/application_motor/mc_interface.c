@@ -589,9 +589,9 @@ int16_t MCInterface_GetRegenMaxNegativeCurrent()
 /**
   *  Set the min negative battery current in amps
   */
-bool MCInterface_SetMinNegativeCurrent(int16_t Idc_Negative)
+bool MCInterface_SetMinNegativeCurrent(int16_t MinCurrent)
 {
-    return RegenSetMinCurrent(Idc_Negative); 
+    return RegenSetMinCurrent(-MinCurrent); 
 }
 
 /**
@@ -605,17 +605,17 @@ int16_t MCInterface_GetMinNegativeCurrent()
 /**
   *  Set the rate of increasing the negative Torque in mili Nm per milisecond or Nm/sec
   */
-bool MCInterface_SetRegenRampDurationMS(uint16_t Duration)
+bool MCInterface_SetRegenRampPercent(uint16_t Percent)
 {
-    return RegenSetRampDurationMs(Duration); 
+    return RegenSetRampPercent(Percent); 
 }
 
 /**
   *  Get the rate of increasing the negative Torque in mili Nm per milisecond or Nm/sec
   */
-uint16_t MCInterface_GetRegenRampDurationMS()
+uint16_t MCInterface_GetRegenRampPercent()
 {
-    return RegenGetRampDurationMs();
+    return RegenGetRampPercent();
 }
 
 /**
@@ -860,7 +860,7 @@ void MCInterface_SetMaxWheelSpeedPeriodUsValueMixed(uint32_t value)
 */
 float MCInterface_GetExtractedWheelSpeedMixed(void)
 {
-    return getExtractedWheelSpeed();
+    return -getExtractedWheelSpeed();
 }
 
 /**
@@ -868,7 +868,7 @@ float MCInterface_GetExtractedWheelSpeedMixed(void)
   */
 bool MCInterface_SetRegenMaxCurrent(int16_t maxCurrent)
 {
-    return RegenSetMaxCurrent(maxCurrent);
+    return RegenSetMaxCurrent(-maxCurrent);
 }
 
 /**

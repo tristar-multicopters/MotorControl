@@ -399,7 +399,7 @@ int16_t MCInterface_GetRegenMaxNegativeCurrent();
   * @param Idc_Negative min negative regen current
   * @return true if succsessful, false otherwise
   */
-bool MCInterface_SetMinNegativeCurrent(int16_t Idc_Negative);
+bool MCInterface_SetMinNegativeCurrent(int16_t MinCurrent);
 
 /**
   * @brief  Get the min negative regen current
@@ -408,16 +408,16 @@ bool MCInterface_SetMinNegativeCurrent(int16_t Idc_Negative);
 int16_t MCInterface_GetMinNegativeCurrent();
 
 /**
-  * @brief  Set the increasing rate of regen 
+  * @brief  Set the increasing rate of regen in percent per MC cycle
   * @return true if succsessful, false otherwise
   */
-bool MCInterface_SetRegenRampDurationMS(uint16_t Duration);
+bool MCInterface_SetRegenRampPercent(uint16_t hRampPercent);
 
 /**
-  * @brief  Get the increasing rate of regen
-  * @return rate of regen in miliseconds
+  * @brief  Get the increasing rate of regen in percent per MC cycle
+  * @return rate of regen value
   */
-uint16_t MCInterface_GetRegenRampDurationMS();
+uint16_t MCInterface_GetRegenRampPercent();
 
 /**
   * @brief  Set the increasing rate of max negative battery current in Nm per second

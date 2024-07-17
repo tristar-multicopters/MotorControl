@@ -7,6 +7,23 @@
 RegenHandle_t RegenHandler;
 
 /**
+    * Initialize the Regen
+ */
+void RegenInit(void)
+{
+    RegenHandler.bRegenEnabled = false;
+    RegenHandler.hMaxCurrent = 0;
+    RegenHandler.hMinCurrent = 0;
+    RegenHandler.hRampPercent = REGEN_MIN_RAMP_PERCENT;
+    RegenHandler.hMaxVoltage = 0;
+    RegenHandler.hMinSpeed = REGEN_MIN_SPEED_RPM;
+    RegenHandler.hRegenTorqueMax = 0;
+    RegenHandler.bRegenLevelPercent = 0;
+    RegenHandler.hRegenTorque = 0;
+    RegenHandler.fRampCoEff = 0;
+}
+
+/**
     * Set the Regen enabled state
  */ 
 void RegenSetEnabled()
@@ -55,8 +72,16 @@ int16_t ApplyRegen(int16_t hMotorSpeed, uint16_t hBusVoltage)
         return false;                       // return false if the bus voltage is lower than the maximum voltage
     }
 
-    RegenHandler.hRegenTorque = (int16_t)((RegenHandler.bRegenLevelPercent * RegenHandler.hMaxCurrent * hBusVoltage)/(abs(hMotorSpeed)*PI_/30));
+    RegenHandler.hRegenTorqueMax = (int16_t)((RegenHandler.bRegenLevelPercent * RegenHandler.hMaxCurrent * hBusVoltage)/(abs(hMotorSpeed)*PI_/30));
 
+    if (RegenHandler.hRegenTorque > RegenHandler.hRegenTorqueMax)
+    {
+        RegenHandler.hRegenTorque = (int16_t)(RegenHandler.hRegenTorqueMax * RegenHandler.fRampCoEff);
+    }
+    else 
+    {
+        RegenHandler.hRegenTorque = RegenHandler.hRegenTorqueMax;
+    }
     return RegenHandler.hRegenTorque;
 }
 
@@ -75,7 +100,7 @@ bool RegenSetLevelPercent(uint8_t bRegenLevelPercent)
  */
 bool RegenSetMaxCurrent(int16_t hMaxCurrent)
 {
-    if (hMaxCurrent > MAX_NEG_DC_CURRENT)   
+    if (hMaxCurrent > 0)   
     {
         return false;                       // retun false if the current is greater than the maximum negative DC current 
     }
@@ -109,28 +134,30 @@ bool RegenSetMinCurrent(int16_t hMinCurrent)
  */
 int16_t RegenGetMinCurrent()
 {
-    return RegenHandler.hMinCurrent;
+    return -RegenHandler.hMinCurrent;
 }
 
 /**
-    * Set the Regen ramp duration
+    * Set the Regen ramp in percent
  */
-bool RegenSetRampDurationMs(uint16_t hRampDurationMs)
+bool RegenSetRampPercent(uint16_t hRampPercent)
 {
-    if (hRampDurationMs < REGEN_MIN_DURATION_MS)   
+    if (hRampPercent < REGEN_MIN_RAMP_PERCENT)   
     {
-        return false;                       // retun false if the duration is greater than 1000ms
+        hRampPercent = REGEN_MIN_RAMP_PERCENT;
+        return false;                       // retun false if the percent is greater than 1000ms
     }
-    RegenHandler.hRampDurationMs = hRampDurationMs;
+    RegenHandler.hRampPercent = hRampPercent;
+    RegenHandler.fRampCoEff = (float)hRampPercent / 100;
     return true;
 }
 
 /**
-    * Get the Regen ramp duration
+    * Get the Regen ramp percent
  */
-uint16_t RegenGetRampDurationMs()
+uint16_t RegenGetRampPercent()
 {
-    return RegenHandler.hRampDurationMs;
+    return RegenHandler.hRampPercent;
 }
 
 /**
@@ -159,7 +186,7 @@ uint16_t RegenGetMaxVoltage()
  */
 bool RegenSetMinSpeed(int16_t hMinSpeed)
 {
-    if (abs(hMinSpeed) < REGEN_MIN_SPEED)   
+    if (abs(hMinSpeed) < REGEN_MIN_SPEED_RPM)   
     {
         return false;                       // retun false if lower than the minimum speed
     }

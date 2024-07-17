@@ -56,11 +56,8 @@
 /***********Regen Parameters *********/
 #define REGEN_ENABLE                    true
 #define IQ_REGEN_AMPS                   -25         // regeneration current
-#define REGEN_MIN_SPEED                 50         // minimum speed for activating the regen
-#define REGEN_RESET_SPEED               25        //  speed for reseting the PIDs
-#define MAX_NEG_DC_CURRENT              -5        // maximum negative DC currnet to battery in amps
-#define REGEN_TORQUE_RAMP               -2        // the rate of increasing the regenerative current in Nm/msec
-#define REGEN_MIN_DURATION_MS           1000      // minimum duration for the regen ramp in ms  
+#define REGEN_MIN_SPEED_RPM             50         // minimum speed for activating the regen
+#define REGEN_MIN_RAMP_PERCENT          5           // minimum ramp for applying torque in percentage
 /************************** Ramp Manager Parameters  ************************/
 
 #define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second

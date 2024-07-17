@@ -16,13 +16,20 @@ typedef struct
         uint8_t bRegenEnabled; /**< Flag indicating whether regen is enabled or disabled. */
         int16_t hMaxCurrent; /**< Maximum current for regen operation. */
         int16_t hMinCurrent; /**< Minimum current for regen operation. */
-        uint16_t hRampDurationMs; /**< Ramp duration for regen operation in milliseconds. */
+        uint16_t hRampPercent; /**< Ramp duration for regen operation in milliseconds. */
         uint16_t hMaxVoltage; /**< Maximum voltage for regen operation. */
         uint16_t hMinSpeed; /**< Minimum speed for regen operation. */
-        uint16_t hRegenMaxTorque; /**< Maximum torque for regen operation. */
+        int16_t hRegenTorqueMax; /**< Maximum torque for regen operation. */
         uint8_t bRegenLevelPercent; /**< Regen level as a percentage. */
         int16_t hRegenTorque; /**< Regen torque value. */
+        float fRampCoEff; /**< Ramp coefficient value. */
 } RegenHandle_t;
+
+/**
+    * @brief   Initialize regen operation.
+    * @return none
+ */
+void RegenInit(void);
 
 /**
     * @brief   Enable regen operation.
@@ -31,7 +38,7 @@ typedef struct
 void RegenSetEnabled();
 
 /**
-    * @brief   Disable regen operation.
+    * @brief  Disable regen operation.
     * @return none
     */
 void RegenSetDisabled();
@@ -88,13 +95,13 @@ int16_t RegenGetMinCurrent();
     * @param   hRampDurationMs: The ramp duration value in milliseconds.
     * @return  True if the ramp duration was set successfully, false otherwise.
     */
-bool RegenSetRampDurationMs(uint16_t hRampDurationMs);
+bool RegenSetRampPercent(uint16_t hRampPercent);
 
 /**
     * @brief   Get the ramp duration for regen operation.
     * @return  The ramp duration value in milliseconds.
     */
-uint16_t RegenGetRampDurationMs();
+uint16_t RegenGetRampPercent();
 
 /**
     * @brief   Set the maximum voltage for regen operation.
