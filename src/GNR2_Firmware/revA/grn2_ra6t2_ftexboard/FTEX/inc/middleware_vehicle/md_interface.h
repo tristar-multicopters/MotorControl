@@ -619,7 +619,7 @@ bool MDI_SetRegenMinCurrent(uint8_t bMotor, uint16_t minCurrent);
   * @param bMotor Motor number
   * @param minSpeed Min speed Regen starts
   */
-bool MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minWheelRPM);
+bool MDI_SetRegenMinSpeed(uint8_t bMotor, uint16_t minWheelRPM);
 
 /**
   * @brief Set Regen Max Speed

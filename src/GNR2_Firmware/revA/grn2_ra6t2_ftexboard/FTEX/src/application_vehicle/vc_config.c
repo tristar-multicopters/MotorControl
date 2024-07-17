@@ -9,6 +9,7 @@
 #include "board_hardware.h"
 #include "vc_parameters.h"
 #include "hal_data.h"
+#include "vcregen.h"
 
 // disable warning about user_config_task modifying the pragma pack value
 #pragma clang diagnostic push
@@ -216,6 +217,20 @@ PWRT_Handle_t PowertrainHandle =
     .pPAS = &PedalAssistHandle,
     .powertrainLockStatus = false    
 };
+
+#ifdef REGEN_ENABLE
+Regen_Handle_t  VCRegenHandler = 
+{
+    .bRegenEnabled = REGEN_ENABLE,
+    .hMaxCurrent = MAX_CHARGING_CURRENT,
+    .hMinCurrent = REGEN_MIN_CURRENT,
+    .hRampPercent = REGEN_MIN_RAMP_PERCENT,
+    .hMaxVoltage = MAX_CHARGING_VOLTAGE,
+    .hMinSpeed = REGEN_MIN_SPEED_KMPH,
+    .bRegenLevelPercent = REGEN_DEFAULT_LEVEL_PERCENT,
+    .fRampCoEff = REGEN_DEFAULT_COEFFICIENT_PERCENT    
+};
+#endif
 
 VCI_Handle_t VCInterfaceHandle =
 {

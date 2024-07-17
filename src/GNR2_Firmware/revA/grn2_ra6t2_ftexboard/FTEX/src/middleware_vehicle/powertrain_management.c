@@ -15,6 +15,7 @@
 #include "ramps.h"
 #include "vc_constants.h"
 #include "odometer.h"
+#include "vcregen.h"
 
 // ============================= Defines ================================ //
 #define OVERCURRENT_COUNTER         0
@@ -97,14 +98,17 @@ void PWRT_Init_MC(PWRT_Handle_t * pHandle)
             PedalAssist_InitTorqueAndWheelSpeedSensor(pHandle->pPAS, &PTSensorDelay, MDI_GetNominalTorque(pHandle->pMDI), motorWSSNbrPerRotation);    
         #endif
     }   
+    
     // Setup the Regen feature   
     MDI_SetRegenMaxCurrent(M1_SELECTED, pHandle->pBatMonitorHandle->hMaxChargingCurrent);
     MDI_SetRegenMaxVoltage(M1_SELECTED, pHandle->pBatMonitorHandle->hMaxChargingVoltage);
-    MDI_SetRegenMinCurrent(M1_SELECTED, (pHandle->pBatMonitorHandle->hMaxChargingCurrent) / 10);
-    MDI_SetRegenMinSpeed(M1_SELECTED, 55);
-    MDI_SetRegenRampPercent(M1_SELECTED, 20);
-    MDI_SetRegenLevelPercent(M1_SELECTED, 100);
-    }
+    MDI_SetRegenMinCurrent(M1_SELECTED, REGEN_MIN_CURRENT);
+    
+    
+    MDI_SetRegenMinSpeed(M1_SELECTED, Wheel_GetWheelRpmFromSpeed(REGEN_MIN_SPEED_KMPH));
+    MDI_SetRegenRampPercent(M1_SELECTED, REGEN_DEFAULT_SLOPE_PERCENTAGE);
+//    MDI_SetRegenLevelPercent(M1_SELECTED, VCRegenHandler.);
+}
 
 /**
   * @brief  Update current value of powertrain peripherals, such as throttle. To be called periodically.

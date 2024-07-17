@@ -1118,7 +1118,7 @@ int16_t MDI_GetRegenMinCurrent(uint8_t bMotor)
 /**
   *  Get extracted motor temp from mixed WSS and temp signals
   */
-bool MDI_SetRegenMinSpeed(uint8_t bMotor, int16_t minWheelRPM)
+bool MDI_SetRegenMinSpeed(uint8_t bMotor, uint16_t minWheelRPM)
 {
     int16_t motorRPM = (int16_t) round(minWheelRPM * MCInterface_GetMotorGearRatio()); 
     switch (bMotor)
