@@ -13,9 +13,6 @@
 #define HARDWARE_EP350        2
 #define HARDWARE_EP700        3
 
-#define MOTOR_NTC             0
-#define HEATSINK_NTC          1
-
 /****** Over and Under Voltage Parameters ******/
 #define OV_VOLTAGE_THRESHOLD_V             75                   // Over-voltage threshold
 #define UD_VOLTAGE_THRESHOLD_CONT_V        29         //Undervoltage threshold for board to work

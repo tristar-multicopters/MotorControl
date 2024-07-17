@@ -71,8 +71,6 @@ PIDHandle_t *pPIDIq[NBR_OF_MOTORS];
 PIDHandle_t *pPIDId[NBR_OF_MOTORS];
 ResDivVbusSensorHandle_t *pBusSensorM1;
 
-NTCTempSensorHandle_t *pTemperatureSensorController[NBR_OF_MOTORS];
-NTCTempSensorHandle_t *pTemperatureSensorMotor[NBR_OF_MOTORS];
 PWMCurrFdbkHandle_t *pPWMCurrFdbk[NBR_OF_MOTORS];
 MotorPowerQDHandle_t *pMotorPower[NBR_OF_MOTORS];
 CircleLimitationHandle_t *pCircleLimitation[NBR_OF_MOTORS];
@@ -171,7 +169,7 @@ void MC_BootUp(void)
     /******************************************************/
     /*   Speed & torque component initialization          */
     /******************************************************/
-    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1], pPIDSpeed[M1], &RotorPosObsM1.Super, &TempSensorControllerM1, &TempSensorMotorM1, MotorParameters);
+    SpdTorqCtrl_Init(pSpeedTorqCtrl[M1], pPIDSpeed[M1], &RotorPosObsM1.Super, MotorParameters);
 
     /******************************************************/
     /*  Auxiliary speed sensor component initialization   */
@@ -202,10 +200,8 @@ void MC_BootUp(void)
     /*******************************************************/
     /*   Temperature measurement component initialization  */
     /*******************************************************/
-    NTCTempSensor_Init(&TempSensorControllerM1, MotorParameters.ParametersConversion.HeatsinkNTCInit, DEFAULT_TEMP_CONTROLLER);
-    pTemperatureSensorController[M1] = &TempSensorControllerM1;
-    NTCTempSensor_Init(&TempSensorMotorM1, MotorParameters.ParametersConversion.MotorNTCInit, DEFAULT_TEMP_MOTOR);
-    pTemperatureSensorMotor[M1] = &TempSensorMotorM1;
+    NTCTempSensor_Init(NTC_CONTROLLER, MotorParameters.ParametersConversion.ControllerNTCInit, DEFAULT_TEMP_CONTROLLER);
+    NTCTempSensor_Init(NTC_MOTOR, MotorParameters.ParametersConversion.MotorNTCInit, DEFAULT_TEMP_MOTOR);
     initMotorMixedSignal(MotorParameters);
     /*******************************************************/
     /*     Motor Control component initialization         */
@@ -239,8 +235,6 @@ void MC_BootUp(void)
     MCTuning[M1].pSpeedSensorAux = (SpdPosFdbkHandle_t *)&BemfObserverPllM1;
     MCTuning[M1].pSpeedSensorVirtual = MC_NULL;
     MCTuning[M1].pSpeednTorqueCtrl = pSpeedTorqCtrl[M1];
-    MCTuning[M1].pTemperatureSensorController = (NTCTempSensorHandle_t *)pTemperatureSensorController[M1];
-    MCTuning[M1].pTemperatureSensorMotor = (NTCTempSensorHandle_t *)pTemperatureSensorMotor[M1];
     MCTuning[M1].pBusVoltageSensor = &(pBusSensorM1->Super);
     MCTuning[M1].pMotorPower = (MotorPowerMeasHandle_t *)pMotorPower[M1];
     MCTuning[M1].pFieldWeakening = pFieldWeakening[M1];
@@ -408,7 +402,7 @@ void MediumFrequencyTaskM1(void)
  #endif    
         
         //check for whether motor temp is in foldback region
-        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
+        if (NTCTempSensor_CalcAvTemp(NTC_MOTOR) == NTC_FOLDBACK)
         {
             MCStateMachine_WarningHandling(MC_FOLDBACK_TEMP_MOTOR, 0);    //Report the warning
         }
@@ -418,7 +412,7 @@ void MediumFrequencyTaskM1(void)
         }
         
         //check for whether controller temp is in foldback region
-        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[M1]) == NTC_FOLDBACK)
+        if (NTCTempSensor_CalcAvTemp(NTC_CONTROLLER) == NTC_FOLDBACK)
         {
             MCStateMachine_WarningHandling(MC_FOLDBACK_TEMP_CONTROLLER, 0);    //Report the warning
         }
@@ -428,7 +422,7 @@ void MediumFrequencyTaskM1(void)
         }
         
         //check if NTC is disconnected
-        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_DISC)
+        if (NTCTempSensor_CalcAvTemp(NTC_MOTOR) == NTC_DISC)
         {
             MCStateMachine_WarningHandling(MC_NTC_DISC_FREEZE_MOTOR, 0);  //Report the warning
         }
@@ -508,7 +502,7 @@ void MediumFrequencyTaskM1(void)
         FOC_CalcCurrRef(M1);
 
         //check for whether motor temp is in foldback region
-        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_FOLDBACK)
+        if (NTCTempSensor_CalcAvTemp(NTC_MOTOR) == NTC_FOLDBACK)
         {
             MCStateMachine_WarningHandling(MC_FOLDBACK_TEMP_MOTOR, 0);    //Report the warning
         }
@@ -518,7 +512,7 @@ void MediumFrequencyTaskM1(void)
         }
         
         //check for whether controller temp is in foldback region
-        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[M1]) == NTC_FOLDBACK)
+        if (NTCTempSensor_CalcAvTemp(NTC_CONTROLLER) == NTC_FOLDBACK)
         {
             MCStateMachine_WarningHandling(MC_FOLDBACK_TEMP_CONTROLLER, 0);    //Report the warning
         }
@@ -528,7 +522,7 @@ void MediumFrequencyTaskM1(void)
         }
         
         //check if NTC is disconnected
-        if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[M1]) == NTC_DISC)
+        if (NTCTempSensor_CalcAvTemp(NTC_MOTOR) == NTC_DISC)
         {
             MCStateMachine_WarningHandling(MC_NTC_DISC_FREEZE_MOTOR, 0);    //Report the warning
         }
@@ -972,7 +966,7 @@ uint8_t MC_HighFrequencyTask(void)
         #if MOTOR_SELECTION == MOTOR_GHR_0194_DD
             MC_HandleGHR0194DDVibration();
             // If the occurred errors in the state machine include the MSR (motor stuck) error
-            if (MCStateMachine->wOccurredErrors == MC_MSRP)
+            if (MCStateMachine_GetOccurredErrorState() == MC_MSRP)
             {
                 // Reset both the vibration direction change counter and position sensor cycle counter
                 HallPosSensorM1.hVibrationDirectionChangeCounter =0 ;
@@ -1180,7 +1174,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     }
     
     // Check if Controller temperature is higher than the threshold, then raise the error
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_OT)
+    if (NTCTempSensor_CalcAvTemp(NTC_CONTROLLER) == NTC_OT)
     {
         CodeReturnErrors |= MC_OVER_TEMP_CONTROLLER;
     }
@@ -1190,7 +1184,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     }
 
     // Check if Motor temperature is higher than the threshold, then raise the error
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorMotor[bMotor]) == NTC_OT)
+    if (NTCTempSensor_CalcAvTemp(NTC_MOTOR) == NTC_OT)
     {
         CodeReturnErrors |= MC_OVER_TEMP_MOTOR;
     }
@@ -1200,7 +1194,7 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
     }
     
     //Check if controller temperature is lower than the threshold, then raise the error
-    if (NTCTempSensor_CalcAvTemp(pTemperatureSensorController[bMotor]) == NTC_FREEZE)
+    if (NTCTempSensor_CalcAvTemp(NTC_CONTROLLER) == NTC_FREEZE)
     {
         CodeReturnErrors |= MC_NTC_FREEZE_CONTROLLER;
     }
@@ -1431,7 +1425,7 @@ void MC_HandleGHR0194DDVibration(void)
         // Check if the vibration direction change counter exceeds the threshold
         if(HallPosSensorM1.hVibrationDirectionChangeCounter>NBR_VIBRATION_DIRECTION_CHANGE)
         {
-            MCStateMachine_SetError(&MCStateMachine[M1], MC_MSRP, 0); //raise a stuck error.
+            MCStateMachine_SetError(MC_MSRP, 0); //raise a stuck error.
             HallPosSensorM1.hVibrationDirectionChangeCounter =0 ;
         }
         HallPosSensorM1.PositionSensorCycleCounter = 0;

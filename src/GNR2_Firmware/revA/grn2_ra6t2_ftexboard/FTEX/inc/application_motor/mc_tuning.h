@@ -42,8 +42,6 @@ typedef struct
   SpdPosFdbkHandle_t * pSpeedSensorAux;
   VirtualSpeedSensor_Handle_t * pSpeedSensorVirtual;
   SpdTorqCtrlHandle_t * pSpeednTorqueCtrl;
-  NTCTempSensorHandle_t * pTemperatureSensorController;
-  NTCTempSensorHandle_t * pTemperatureSensorMotor;
   BusVoltageSensorHandle_t * pBusVoltageSensor;
   MotorPowerMeasHandle_t * pMotorPower;
   MCConfigHandle_t  * pFieldWeakening;

@@ -39,7 +39,7 @@ typedef struct
 
     Foldback_Handle_t FoldbackLimitSpeed;               /* Foldback structure used to limit the speed regarding the speed limit value */
     Foldback_Handle_t FoldbackMotorTemperature;         /* Foldback structure used to limit maximum motor temperature */
-    Foldback_Handle_t FoldbackHeatsinkTemperature;      /* Foldback structure used to limit maximum heatsink temperature */
+    Foldback_Handle_t FoldbackControllerTemperature;      /* Foldback structure used to limit maximum heatsink temperature */
     Foldback_Handle_t FoldbackDynamicMaxPower;         /* Foldback structure used to limit maximum Power after a period of time */
     
     Foldback_Handle_t FoldbackDynamicMaxTorque;      /* Foldback structure used to limit maximum Torque to other foldbacks */   
@@ -61,8 +61,6 @@ typedef struct
                                      control loop.*/
     SpdPosFdbkHandle_t              * pSPD;/*!< The speed sensor used to perform the speed
                                      regulation.*/
-    NTCTempSensorHandle_t           * pHeatsinkTempSensor; /* Temperature sensor used to monitor heatsink temperature */
-    NTCTempSensorHandle_t           * pMotorTempSensor; /* Temperature sensor used to monitor motor temperature */
     StuckProtection_t               StuckProtection; /* parameters of Stcuk Protection */
     uint16_t hSTCFrequencyHz;               /*!< Frequency on which the user updates
                                              the torque reference calling
@@ -152,7 +150,7 @@ typedef struct
   * @retval none.
   */
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
-                        NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor, MotorParameters_t MotorParameters);
+                        MotorParameters_t MotorParameters);
 
 /**
   * @brief  Initializes the parameters related to the battery (max power, max current,

@@ -13,6 +13,7 @@
 #include "mc_config.h"
 #include "mc_tasks.h"
 #include "motor_signal_processing.h"
+#include "ntc_temperature_sensor.h"
 
 
 /* Private macros ------------------------------------------------------------*/
@@ -465,10 +466,8 @@ uint16_t MCInterface_GetBusVoltageInVoltx100()
   *  Getting the controller NTC temperature value
   */
 int16_t MCInterface_GetControllerTemp()
-{
-    ASSERT(MCInterface[M1].pSpeedTorqCtrl->pHeatsinkTempSensor != NULL);
-    
-    return MCInterface[M1].pSpeedTorqCtrl->pHeatsinkTempSensor->hAvTempCelcius;
+{    
+    return NTCTempSensor_GetAvTempCelcius(NTC_CONTROLLER);
 }
 
 /**
@@ -476,9 +475,7 @@ int16_t MCInterface_GetControllerTemp()
   */
 int16_t MCInterface_GetMotorTemp()
 {
-    ASSERT(MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor != NULL);
-    
-    return MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->hAvTempCelcius;
+    return NTCTempSensor_GetAvTempCelcius(NTC_MOTOR);
 }
 
 /**
@@ -647,7 +644,7 @@ uint8_t MCInterface_GetWheelSpdSensorNbrPerRotation()
   */
 bool MCInterface_GetMotorTempSensorMixed()
 {
-    return MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->bSensorMixed;
+    return NTCTempSensor_GetSensorType(NTC_MOTOR);
 }
 
 #if AUTOTUNE_ENABLE
@@ -762,7 +759,7 @@ void MCInterface_SetPowerFoldbackRange(uint16_t range)
 */
 void MCInterface_SetMotorTempSensorType(uint8_t sensorType)
 {
-    MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->bSensorType = sensorType;
+    NTCTempSensor_SetSensorType(NTC_MOTOR, sensorType);
 }
 
 /*
@@ -770,7 +767,7 @@ void MCInterface_SetMotorTempSensorType(uint8_t sensorType)
 */
 void MCInterface_SetMotorNTCBetaCoef(uint16_t NTCBetaCoef)
 {
-    MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->hNTCBetaCoef = NTCBetaCoef;
+    NTCTempSensor_SetBetaCoef(NTC_MOTOR, NTCBetaCoef);
 }
 
 /*
@@ -778,7 +775,7 @@ void MCInterface_SetMotorNTCBetaCoef(uint16_t NTCBetaCoef)
 */
 void MCInterface_SetMotorNTCResistanceCoef(float NTCResCoef)
 {
-    MCInterface[M1].pSpeedTorqCtrl->pMotorTempSensor->hNTCResCoef = NTCResCoef;
+    NTCTempSensor_SetResistanceCoef(NTC_MOTOR, NTCResCoef);
 }
 
 /*

@@ -30,13 +30,13 @@ uint16_t OCD_timer = 0;
  * see function definition
  */
 void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFdbkHandle_t * SPD_Handle,
-                        NTCTempSensorHandle_t* pTempSensorHS, NTCTempSensorHandle_t* pTempSensorMotor, MotorParameters_t MotorParameters)
+                        MotorParameters_t MotorParameters)
 {
     ASSERT(pHandle != NULL);
     
     //Init the foldbacks in speed torque ctrl
     Foldback_Init(&pHandle->FoldbackDynamicMaxTorque, MotorParameters.ParametersConversion.FoldbackInitTorque);
-    Foldback_Init(&pHandle->FoldbackHeatsinkTemperature, MotorParameters.ParametersConversion.FoldbackInitHeatsinkTemp);
+    Foldback_Init(&pHandle->FoldbackControllerTemperature, MotorParameters.ParametersConversion.FoldbackInitHeatsinkTemp);
     Foldback_Init(&pHandle->FoldbackMotorSpeed, MotorParameters.ParametersConversion.FoldbackInitSpeed);
     Foldback_Init(&pHandle->FoldbackMotorTemperature, MotorParameters.ParametersConversion.FoldbackInitMotorTemp);
     
@@ -79,16 +79,14 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     {
         pHandle->pSPD->gearArray[count] = 0;
     }
-    
-    pHandle->pHeatsinkTempSensor = pTempSensorHS;
-    pHandle->pMotorTempSensor = pTempSensorMotor;
+
     pHandle->Mode = pHandle->ModeDefault;
   
-    if (pTempSensorHS == NULL)
+    if (NTCTempSensor_GetSensorType(NTC_CONTROLLER) == NO_SENSOR)
     {
-        Foldback_DisableFoldback(&pHandle->FoldbackHeatsinkTemperature);
+        Foldback_DisableFoldback(&pHandle->FoldbackControllerTemperature);
     }
-    if (pTempSensorMotor == NULL)
+    if (NTCTempSensor_GetSensorType(NTC_MOTOR) == NO_SENSOR)
     {
         Foldback_DisableFoldback(&pHandle->FoldbackMotorTemperature);
     }
@@ -579,20 +577,20 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
 
     hMeasuredSpeed = 10 * SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD);
 
-    if (pHandle->pMotorTempSensor != NULL)
+    if (NTCTempSensor_GetSensorType(NTC_MOTOR) == NO_SENSOR)
     {
-        hMeasuredMotorTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pMotorTempSensor) * 100;
+        hMeasuredMotorTemp = NTCTempSensor_GetAvTempCelcius(NTC_MOTOR) * 100;
     }
-    if (pHandle->pHeatsinkTempSensor != NULL)
+    if (NTCTempSensor_GetSensorType(NTC_CONTROLLER) == NO_SENSOR)
     {
-        hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(pHandle->pHeatsinkTempSensor) * 100;
+        hMeasuredHeatsinkTemp = NTCTempSensor_GetAvTempCelcius(NTC_CONTROLLER) * 100;
     }
         
     int16_t hOutputTorque, hMaxTorque; 
     hMaxTorque = Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxTorque, NULL,(int16_t) abs(hMeasuredSpeed) );
     Foldback_UpdateMaxValue(&pHandle->FoldbackMotorSpeed, hMaxTorque);
     Foldback_UpdateMaxValue(&pHandle->FoldbackMotorTemperature, hMaxTorque);
-    Foldback_UpdateMaxValue(&pHandle->FoldbackHeatsinkTemperature, hMaxTorque);
+    Foldback_UpdateMaxValue(&pHandle->FoldbackControllerTemperature, hMaxTorque);
     
     //for mid-drives, we need to also set the max wheel speed since it can vary based on the gear with a constant motor speed
     if (pHandle->motorType == MID_DRIVE)
@@ -613,7 +611,7 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)abs(hMeasuredSpeed)); 
     hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackHeatsinkTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
+    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackControllerTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
     
     //limit Torque when the Battery SoC is low to prevent UNDERVOLTAGE fault
     if(pHandle->bEnableLVtorqueLimit)

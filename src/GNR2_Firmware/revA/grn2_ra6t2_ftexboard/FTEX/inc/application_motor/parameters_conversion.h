@@ -245,7 +245,7 @@ typedef struct
     PIDHandle_t PIDInitMotorControl;
     PIDHandle_t PIDInitBemfObserverPl;
     
-    NTCTempSensorHandle_t HeatsinkNTCInit;
+    NTCTempSensorHandle_t ControllerNTCInit;
     NTCTempSensorHandle_t MotorNTCInit;
     
 } ParametersConversion_t;

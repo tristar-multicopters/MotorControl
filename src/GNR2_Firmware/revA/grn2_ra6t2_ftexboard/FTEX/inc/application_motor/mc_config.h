@@ -35,8 +35,6 @@ extern MotorParameters_t MotorParameters;
 extern PIDHandle_t PIDSpeedHandleM1;
 extern PIDHandle_t PIDIqHandleM1;
 extern PIDHandle_t PIDIdHandleM1;
-extern NTCTempSensorHandle_t TempSensorMotorM1;
-extern NTCTempSensorHandle_t TempSensorControllerM1;
 extern PIDHandle_t PIDMotorControlM1;
 extern MCConfigHandle_t MCConfig;
 extern PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1;

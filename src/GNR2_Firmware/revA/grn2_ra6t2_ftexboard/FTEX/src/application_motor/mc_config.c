@@ -215,7 +215,7 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     {
         .FoldbackConfig = TRIM,
     },
-        .FoldbackHeatsinkTemperature =
+        .FoldbackControllerTemperature =
     {
         .FoldbackConfig = TRIM,
     },
@@ -393,30 +393,6 @@ HallPosSensorHandle_t HallPosSensorM1 =
     .H1PortPin = HALL_POSITION_HU_GPIO_PIN,
     .H2PortPin = HALL_POSITION_HV_GPIO_PIN,
     .H3PortPin = HALL_POSITION_HW_GPIO_PIN,
-};
-
-/**
-  * temperature sensor parameters Motor 1
-  */
-NTCTempSensorHandle_t TempSensorMotorM1 =
-{
-    .TempRegConv =
-    {
-        .hChannel = MOTOR_TEMP_ANALOG_CHANNEL,
-    },
-    .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
-};
-
-/**
-  * temperature sensor parameters Controller 1
-  */
-NTCTempSensorHandle_t TempSensorControllerM1 =
-{
-    .TempRegConv =
-    {
-        .hChannel = HEATSINK_TEMP_ANALOG_CHANNEL,
-    },
-    .hLowPassFilterBw        = M1_TEMP_SW_FILTER_BW_FACTOR,
 };
 
 /* Bus voltage sensor value filter buffer */

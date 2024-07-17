@@ -13,19 +13,25 @@
 
 #include "lookup_table.h"
 
+/** Defines */
+
+//NOTE: if another NTC is added to this list, the define NTC_NUMBER must be increased by 1
+#define NTC_CONTROLLER      0       /**< Controller Temp Sensor */
+#define NTC_MOTOR           1       /**< Motor Temp Sensor */
+
 /** NTC Errors Definitions */
 
 typedef enum
 {
-  NTC_NO_ERRORS   = 0,        /**< No temp related errors or warnings*/
-  
-  NTC_OT          = 1,        /**< Over temperature error */
-  
-  NTC_FREEZE      = 2,        /**< Under temperature error */
-  
-  NTC_FOLDBACK    = 3,        /**< Foldback has started, to trigger foldback warning */
-  
-  NTC_DISC        = 4,        /**< NTC is disconnected */
+    NTC_NO_ERRORS   = 0,        /**< No temp related errors or warnings */
+
+    NTC_OT          = 1,        /**< Over temperature error */
+
+    NTC_FREEZE      = 2,        /**< Under temperature error */
+
+    NTC_FOLDBACK    = 3,        /**< Foldback has started, to trigger foldback warning */
+
+    NTC_DISC        = 4,        /**< NTC is disconnected */
   
 } NTCTempFaultStates_t;
   
@@ -66,77 +72,101 @@ typedef struct
     uint16_t hNTCBetaCoef;               // Beta coefficient of the NTC thermistor, used for temperature calculation
     
     float    hNTCResCoef;                // This value is calculated based on this formula: exp(NTCBetaCoef / TEMP_25_CELSIUS_IN_KELVIN) / NTC Rated Resistance.
-    
-    uint8_t  bNTCSource;                 // Source identifier for the NTC sensor, indicating which NTC sensor is being used
-  
+      
 } NTCTempSensorHandle_t;
 
+/**
+  * @brief Initializes temperature sensing conversions
+  * @param chooseNTC: choose motor NTC or controller NTC
+  */
+void NTCTempSensor_Init(uint8_t chooseNTC, NTCTempSensorHandle_t NTCInit, uint16_t defaultTemp);
+/**
+  * @brief Initializes internal average temperature computed value
+  * @param chooseNTC: choose motor NTC or controller NTC
+  */
+void NTCTempSensor_Clear(uint8_t chooseNTC, uint16_t defaultTemp);
 
 /**
- *     @brief Initializes temperature sensing conversions
- *     @param pHandle : Pointer on Handle structure of TemperatureSensor component
- */
-void NTCTempSensor_Init(NTCTempSensorHandle_t * pHandle, NTCTempSensorHandle_t NTCInit, uint16_t defaultTemp);
-/**
- *     @brief Initializes internal average temperature computed value
- *  @param pHandle : Pointer on Handle structure of TemperatureSensor component
- */
-void NTCTempSensor_Clear(NTCTempSensorHandle_t * pHandle, uint16_t defaultTemp);
-
-/**
- *     @brief Performs the temperature sensing average computation after an ADC conversion
- *  @param pHandle : Pointer on Handle structure of TemperatureSensor component
- *  @retval Fault status : Error reported in case of an over temperature detection
- */
-uint16_t NTCTempSensor_CalcAvTemp(NTCTempSensorHandle_t * pHandle);
+  * @brief Performs the temperature sensing average computation after an ADC conversion
+  * @param chooseNTC: choose motor NTC or controller NTC
+  * @retval Fault status : Error reported in case of an over temperature detection
+  */
+uint16_t NTCTempSensor_CalcAvTemp(uint8_t chooseNTC);
 
 /**
   * @brief  Returns latest averaged temperature measured expressed in u16Celsius
-  * @param     pHandle : Pointer on Handle structure of TemperatureSensor component
+  * @param chooseNTC: choose motor NTC or controller NTC
   * @retval AverageTemperature : Current averaged temperature measured (in u16Celsius)
   */
-uint16_t NTCTempSensor_GetAvTempDigital(NTCTempSensorHandle_t * pHandle);
+uint16_t NTCTempSensor_GetAvTempDigital(uint8_t chooseNTC);
 
 /**
   * @brief  Returns latest averaged temperature expressed in Celsius degrees
-  * @param     pHandle : Pointer on Handle structure of TemperatureSensor component
+  * @param chooseNTC: choose motor NTC or controller NTC
   * @retval AverageTemperature : Latest averaged temperature measured (in Celsius degrees)
   */
-int16_t NTCTempSensor_GetAvTempCelcius(NTCTempSensorHandle_t * pHandle);
+int16_t NTCTempSensor_GetAvTempCelcius(uint8_t chooseNTC);
 
 /**
- * @brief  Returns Temperature measurement fault status
- * Fault status can be either MC_OVER_TEMP when measure exceeds the protection threshold values or
- * MC_NO_FAULT if it is inside authorized range.
- * @param pHandle: Pointer on Handle structure of TemperatureSensor component.
- * @retval Fault status : read internal fault state
- */
-uint16_t NTCTempSensor_GetFaultState(NTCTempSensorHandle_t * pHandle);
+  * @brief  Returns Temperature measurement fault status
+  * Fault status can be either MC_OVER_TEMP when measure exceeds the protection threshold values or
+  * MC_NO_FAULT if it is inside authorized range.
+  * @param chooseNTC: choose motor NTC or controller NTC
+  * @retval Fault status : read internal fault state
+  */
+uint16_t NTCTempSensor_GetFaultState(uint8_t chooseNTC);
 
 /**
- * @brief Calculate the motor temperature from the input ADC data.
- * 
- * This function converts the ADC input data to a temperature reading 
- * based on the characteristics of an NTC thermistor. The calculation 
- * uses the Beta coefficient method to determine the temperature.
- * 
- * @param pHandle: Pointer on Handle structure of TemperatureSensor component.
- * @param wInputdata The raw ADC input data.
- * @return uint16_t The calculated temperature in Celsius.
- */
-uint16_t NTCTempSensor_CalcMotorTemp(NTCTempSensorHandle_t * pHandle, int32_t wInputdata);
+  * @brief Calculate the motor temperature from the input ADC data.
+  * 
+  * This function converts the ADC input data to a temperature reading 
+  * based on the characteristics of an NTC thermistor. The calculation 
+  * uses the Beta coefficient method to determine the temperature.
+  * 
+  * @param chooseNTC: choose motor NTC or controller NTC
+  * @param wInputdata The raw ADC input data.
+  * @return uint16_t The calculated temperature in Celsius.
+  */
+uint16_t NTCTempSensor_CalcMotorTemp(int32_t wInputdata);
 
 /**
- * @brief Calculate the heat sink temperature from the input ADC data.
- * This function converts the ADC input data to a temperature reading 
- * based on the characteristics of an NTC thermistor. The calculation 
- * uses the Beta coefficient method to determine the temperature.
- * @param pHandle: Pointer on Handle structure of TemperatureSensor component.
- * @param wInputdata The raw ADC input data.
- * @return uint16_t The calculated temperature in Celsius.
- */
-uint16_t NTCTempSensor_CalcHeatSinkTemp(NTCTempSensorHandle_t * pHandle, int32_t wInputdata);
+  * @brief Calculate the heat sink temperature from the input ADC data.
+  * This function converts the ADC input data to a temperature reading 
+  * based on the characteristics of an NTC thermistor. The calculation 
+  * uses the Beta coefficient method to determine the temperature.
+  * @param chooseNTC: choose motor NTC or controller NTC
+  * @param wInputdata The raw ADC input data.
+  * @return uint16_t The calculated temperature in Celsius.
+  */
+uint16_t NTCTempSensor_CalcControllerTemp(int32_t wInputdata);
 
+/**
+ * @brief Get sensor type
+ * @param chooseNTC: choose motor NTC or controller NTC
+ * @return Sensor type (REAL_SENSOR or NO_SENSOR)
+ */
+uint8_t NTCTempSensor_GetSensorType(uint8_t chooseNTC);
+
+/**
+ * @brief Set sensor type
+ * @param chooseNTC: choose motor NTC or controller NTC
+ * @param sensorType: Sensor type (REAL_SENSOR or NO_SENSOR)
+ */
+void NTCTempSensor_SetSensorType(uint8_t chooseNTC, SensorType_t sensorType);
+
+/**
+ * @brief Set beta coefficient
+ * @param chooseNTC: choose motor NTC or controller NTC
+ * @param betaCoef: beta coefficient
+ */
+void NTCTempSensor_SetBetaCoef(uint8_t chooseNTC, uint16_t betaCoef);
+
+/**
+ * @brief Set resistance coefficient
+ * @param chooseNTC: choose motor NTC or controller NTC
+ * @param resCoef: resistance coefficient
+ */
+void NTCTempSensor_SetResistanceCoef(uint8_t chooseNTC, float resCoef);
 
 #ifdef __cplusplus
 }

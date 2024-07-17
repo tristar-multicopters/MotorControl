@@ -4,6 +4,7 @@
 */
 
 #include "motor_parameters.h"
+#include "board_hardware.h"
 
 // ================================ Private Function Definitions ===================================
 
@@ -185,14 +186,15 @@ void PIDParameters_Init(MotorParameters_t * MotorParameters)
 void NTCParameters_Init(MotorParameters_t * MotorParameters)
 {
     //Init heatsink NTC
-    MotorParameters->ParametersConversion.HeatsinkNTCInit.bSensorType = REAL_SENSOR;
-    MotorParameters->ParametersConversion.HeatsinkNTCInit.bSensorMixed = false;
-    MotorParameters->ParametersConversion.HeatsinkNTCInit.hOverTempDeactThreshold = OV_TEMP_CONTROLLER_THRESHOLD_C;
-    MotorParameters->ParametersConversion.HeatsinkNTCInit.hOverTempThreshold = OV_TEMP_CONTROLLER_THRESHOLD_C - OV_TEMP_CONTROLLER_HYSTERESIS_C;
-    MotorParameters->ParametersConversion.HeatsinkNTCInit.hFoldbackStartTemp = FOLDBACK_HS_TEMP_END_VALUE - FOLDBACK_HS_TEMP_INTERVAL;
-    MotorParameters->ParametersConversion.HeatsinkNTCInit.hNTCBetaCoef = HEATSINK_NTC_BETA_COEFFICIENT;
-    MotorParameters->ParametersConversion.HeatsinkNTCInit.hNTCResCoef = HEATSINK_NTC_RESISTANCE_COEF;
-    MotorParameters->ParametersConversion.HeatsinkNTCInit.bNTCSource = HEATSINK_NTC;
+    MotorParameters->ParametersConversion.ControllerNTCInit.bSensorType = REAL_SENSOR;
+    MotorParameters->ParametersConversion.ControllerNTCInit.bSensorMixed = false;
+    MotorParameters->ParametersConversion.ControllerNTCInit.hOverTempDeactThreshold = OV_TEMP_CONTROLLER_THRESHOLD_C;
+    MotorParameters->ParametersConversion.ControllerNTCInit.hOverTempThreshold = OV_TEMP_CONTROLLER_THRESHOLD_C - OV_TEMP_CONTROLLER_HYSTERESIS_C;
+    MotorParameters->ParametersConversion.ControllerNTCInit.hFoldbackStartTemp = FOLDBACK_HS_TEMP_END_VALUE - FOLDBACK_HS_TEMP_INTERVAL;
+    MotorParameters->ParametersConversion.ControllerNTCInit.hNTCBetaCoef = HEATSINK_NTC_BETA_COEFFICIENT;
+    MotorParameters->ParametersConversion.ControllerNTCInit.hNTCResCoef = HEATSINK_NTC_RESISTANCE_COEF;
+    MotorParameters->ParametersConversion.ControllerNTCInit.TempRegConv.hChannel = HEATSINK_TEMP_ANALOG_CHANNEL;
+    MotorParameters->ParametersConversion.ControllerNTCInit.hLowPassFilterBw = M1_TEMP_SW_FILTER_BW_FACTOR;
     
     //Init motor NTC
     MotorParameters->ParametersConversion.MotorNTCInit.bSensorType = MotorParameters->TempParameters.bMotorTempSensorType;
@@ -202,5 +204,6 @@ void NTCParameters_Init(MotorParameters_t * MotorParameters)
     MotorParameters->ParametersConversion.MotorNTCInit.hFoldbackStartTemp = (int16_t)(MotorParameters->TempParameters.hOverTempMotorThresholdC - MotorParameters->TempParameters.hFoldbackMotorTempInterval);
     MotorParameters->ParametersConversion.MotorNTCInit.hNTCBetaCoef = MOTOR_NTC_BETA_COEFFICIENT;
     MotorParameters->ParametersConversion.MotorNTCInit.hNTCResCoef = MOTOR_NTC_RESISTANCE_COEF_X_100;
-    MotorParameters->ParametersConversion.MotorNTCInit.bNTCSource = MOTOR_NTC;
+    MotorParameters->ParametersConversion.MotorNTCInit.TempRegConv.hChannel = MOTOR_TEMP_ANALOG_CHANNEL;
+    MotorParameters->ParametersConversion.MotorNTCInit.hLowPassFilterBw = M1_TEMP_SW_FILTER_BW_FACTOR;
 }
