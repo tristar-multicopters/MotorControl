@@ -618,6 +618,7 @@ uint8_t LCD_APT_ErrorConversionFTEXToAPT(uint8_t aError)
             break;        
         case TORQUE_SENSOR_ERROR:
             ConvertedError = APT_TORQUE_SENSOR_ISSUE; 
+            break;
         case MOTOR_OT_PROTECT:
         case MOTOR_NTC_DISC_FREEZE:
         case MOTOR_FOLDBACK_TEMP:
