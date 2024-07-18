@@ -12,17 +12,17 @@
 #include "ramp_mngr.h"
 #include "parameters_conversion.h"
 
-#define NUMBER_RAMPS        2
+#define RAMP_NUMBER        2
 
-RampMngr_Handle_t RampManagers[NUMBER_RAMPS];
+RampMngr_Handle_t RampManagers[RAMP_NUMBER];
 
 
 /* 
     It reset the state variable to zero.
 */
-void RampMngr_Init(uint8_t chosenRamp)
+void RampMngr_Init(RampMngrTypes_t chosenRamp)
 {
-    ASSERT(chosenRamp < NUMBER_RAMPS);
+    ASSERT(chosenRamp < RAMP_NUMBER);
     RampManagers[chosenRamp].wScalingFactor = INT16_MAX;
     RampManagers[chosenRamp].wFrequencyHz = MEDIUM_FREQUENCY_TASK_RATE;
     RampManagers[chosenRamp].wStateValue = 0;
@@ -35,9 +35,9 @@ void RampMngr_Init(uint8_t chosenRamp)
     Exec the ramp calculations and returns the current value of the
     state variable.
 */
-int32_t RampMngr_Calc(uint8_t chosenRamp)
+int32_t RampMngr_Calc(RampMngrTypes_t chosenRamp)
 {
-    ASSERT(chosenRamp < NUMBER_RAMPS);
+    ASSERT(chosenRamp < RAMP_NUMBER);
     int32_t ret_val;
     int32_t current_ref;
 
@@ -74,9 +74,9 @@ int32_t RampMngr_Calc(uint8_t chosenRamp)
 /* 
     Setup the ramp to be executed
 */
-bool RampMngr_ExecRamp(uint8_t chosenRamp, int32_t wTargetFinal, uint32_t wSlopePerSecond)
+bool RampMngr_ExecRamp(RampMngrTypes_t chosenRamp, int32_t wTargetFinal, uint32_t wSlopePerSecond)
 {
-    ASSERT(chosenRamp < NUMBER_RAMPS);
+    ASSERT(chosenRamp < RAMP_NUMBER);
     int32_t aux1;
     int32_t current_ref;
     uint32_t wSlopePerControlPeriod;
@@ -114,9 +114,9 @@ bool RampMngr_ExecRamp(uint8_t chosenRamp, int32_t wTargetFinal, uint32_t wSlope
 /* 
     Returns the current value of the state variable.
 */
-int32_t RampMngr_GetValue(uint8_t chosenRamp)
+int32_t RampMngr_GetValue(RampMngrTypes_t chosenRamp)
 {
-    ASSERT(chosenRamp < NUMBER_RAMPS);
+    ASSERT(chosenRamp < RAMP_NUMBER);
     int32_t ret_val;
     ret_val = RampManagers[chosenRamp].wStateValue / (int32_t)(RampManagers[chosenRamp].wScalingFactor);
     return ret_val;
@@ -125,9 +125,9 @@ int32_t RampMngr_GetValue(uint8_t chosenRamp)
 /* 
     Check if the settled ramp has been completed.
 */
-bool RampMngr_IsRampCompleted(uint8_t chosenRamp)
+bool RampMngr_IsRampCompleted(RampMngrTypes_t chosenRamp)
 {
-    ASSERT(chosenRamp < NUMBER_RAMPS);
+    ASSERT(chosenRamp < RAMP_NUMBER);
     bool retVal = false;
     if (RampManagers[chosenRamp].wRampRemainingStep == 0u)
     {
@@ -139,9 +139,9 @@ bool RampMngr_IsRampCompleted(uint8_t chosenRamp)
 /* 
     Stop the execution of the ramp keeping the last reached value.
 */
-void RampMngr_StopRamp(uint8_t chosenRamp)
+void RampMngr_StopRamp(RampMngrTypes_t chosenRamp)
 {
-    ASSERT(chosenRamp < NUMBER_RAMPS);
+    ASSERT(chosenRamp < RAMP_NUMBER);
     RampManagers[chosenRamp].wRampRemainingStep = 0u;
     RampManagers[chosenRamp].wIncDecAmount = 0;
 }

@@ -22,9 +22,12 @@ extern "C" {
 #include "ASSERT_FTEX.h"
 #include "stdlib.h"
 
-/* Defines ------------------------------------------------------------------*/
-#define RAMP_TORQUE     0
-#define RAMP_SPEED      1
+// Ramp types. If a ramp is added or remove, the define RAMP_NUMBER should be adjusted accordingly.
+typedef enum
+{
+    RAMP_TORQUE     = 0,
+    RAMP_SPEED      = 1,
+} RampMngrTypes_t;
 
 typedef struct
 {
@@ -48,7 +51,7 @@ typedef struct
   * @param  pHandle related Handle of struct RampMngr_Handle_t
   * @retval none.
   */
-void RampMngr_Init(uint8_t chosenRamp);
+void RampMngr_Init(RampMngrTypes_t chosenRamp);
 
 /**
   * @brief  Exec the ramp calculations and returns the current value of the
@@ -57,7 +60,7 @@ void RampMngr_Init(uint8_t chosenRamp);
   * @param  pHandle related Handle of struct RampMngr_Handle_t
   * @retval int32_t value of the state variable
   */
-int32_t RampMngr_Calc(uint8_t chosenRamp);
+int32_t RampMngr_Calc(RampMngrTypes_t chosenRamp);
 
 /**
   * @brief  Setup the ramp to be executed
@@ -69,28 +72,28 @@ int32_t RampMngr_Calc(uint8_t chosenRamp);
   *         change in the value.
   * @retval bool It returns true is command is valid, false otherwise
   */
-bool RampMngr_ExecRamp(uint8_t chosenRamp, int32_t wTargetFinal, uint32_t wSlopePerSecond);
+bool RampMngr_ExecRamp(RampMngrTypes_t chosenRamp, int32_t wTargetFinal, uint32_t wSlopePerSecond);
 
 /**
   * @brief  Returns the current value of the state variable.
   * @param  pHandle related Handle of struct RampMngr_Handle_t
   * @retval int32_t value of the state variable
   */
-int32_t RampMngr_GetValue(uint8_t chosenRamp);
+int32_t RampMngr_GetValue(RampMngrTypes_t chosenRamp);
 
 /**
   * @brief  Check if the settled ramp has been completed.
   * @param  pHandle related Handle of struct RampMngr_Handle_t.
   * @retval bool It returns true if the ramp is completed, false otherwise.
   */
-bool RampMngr_IsRampCompleted(uint8_t chosenRamp);
+bool RampMngr_IsRampCompleted(RampMngrTypes_t chosenRamp);
 
 /**
   * @brief  Stop the execution of the ramp keeping the last reached value.
   * @param  pHandle related Handle of struct RampMngr_Handle_t.
   * @retval none
   */
-void RampMngr_StopRamp(uint8_t chosenRamp);
+void RampMngr_StopRamp(RampMngrTypes_t chosenRamp);
 
 
 #ifdef __cplusplus

@@ -23,15 +23,16 @@ Foldback_Handle_t Foldbacks[FOLDBACK_NUMBER];
   * @param  hControlVariable: Variable that define the output limit
   * @retval Computed output limit
   */
-static int16_t Foldback_GetMaxOutput(uint8_t chosenFoldback, int16_t hControlVariable);
+static int16_t Foldback_GetMaxOutput(FoldbackTypes_t chosenFoldback, int16_t hControlVariable);
 
 
 /**
   * Refer to function definition
   **/
 
-void Foldback_Init(uint8_t chosenFoldback, Foldback_Handle_t FoldbackInit)
+void Foldback_Init(FoldbackTypes_t chosenFoldback, Foldback_Handle_t FoldbackInit)
 {
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     Foldbacks[chosenFoldback].bEnableFoldback = FoldbackInit.bEnableFoldback;
     Foldbacks[chosenFoldback].hDefaultOutputLimitHigh = FoldbackInit.hDefaultOutputLimitHigh;
     Foldbacks[chosenFoldback].hDefaultOutputLimitLow = FoldbackInit.hDefaultOutputLimitLow;
@@ -43,9 +44,9 @@ void Foldback_Init(uint8_t chosenFoldback, Foldback_Handle_t FoldbackInit)
     Foldbacks[chosenFoldback].hMaxOutputLimitLow = (int16_t) Foldbacks[chosenFoldback].hDefaultOutputLimitLow;
 }
 
-int16_t Foldback_GetMaxOutput(uint8_t chosenFoldback, int16_t hValue)
+int16_t Foldback_GetMaxOutput(FoldbackTypes_t chosenFoldback, int16_t hValue)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     int16_t hMaxOutput = 0;
     int32_t hStartValue;
     uint32_t wAux;
@@ -113,9 +114,9 @@ int16_t Foldback_GetMaxOutput(uint8_t chosenFoldback, int16_t hValue)
 }
 
 
-int16_t Foldback_ApplyFoldback(uint8_t chosenFoldback, int16_t hInputVariable, int16_t hValue)
+int16_t Foldback_ApplyFoldback(FoldbackTypes_t chosenFoldback, int16_t hInputVariable, int16_t hValue)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     int16_t hMaxOutput,hOutputVariable = 0;
     
     if (Foldbacks[chosenFoldback].bEnableFoldback)
@@ -152,36 +153,36 @@ int16_t Foldback_ApplyFoldback(uint8_t chosenFoldback, int16_t hInputVariable, i
 /**
  * Function for setting the start speed limitation value
  **/
-void Foldback_SetDecreasingRange(uint8_t chosenFoldback, uint16_t hDecreasingRange)
+void Foldback_SetDecreasingRange(FoldbackTypes_t chosenFoldback, uint16_t hDecreasingRange)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     Foldbacks[chosenFoldback].hDecreasingRange = hDecreasingRange;
 }
 
 /**
  * Function for setting the end limitation speed value
  **/
-void Foldback_SetDecreasingEndValue(uint8_t chosenFoldback, int32_t hDecreasingEndValue)
+void Foldback_SetDecreasingEndValue(FoldbackTypes_t chosenFoldback, int32_t hDecreasingEndValue)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     Foldbacks[chosenFoldback].hDecreasingEndValue = hDecreasingEndValue;
 }
 
 /**
  * Function for getting the end limitation speed value
  **/
-int32_t Foldback_GetDecreasingEndValue(uint8_t chosenFoldback)
+int32_t Foldback_GetDecreasingEndValue(FoldbackTypes_t chosenFoldback)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     return Foldbacks[chosenFoldback].hDecreasingEndValue;
 }
 
 /**
  * Function for setting the end limitation speed value
  **/
-void Foldback_SetDecreasingRangeEndValue(uint8_t chosenFoldback, int16_t hDecreasingRange)
+void Foldback_SetDecreasingRangeEndValue(FoldbackTypes_t chosenFoldback, int16_t hDecreasingRange)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     int16_t hInterval, hEndval;
     /* Add the Interval Value to the Start Value */
     hInterval = Foldbacks[chosenFoldback].hDecreasingInterval;
@@ -192,32 +193,33 @@ void Foldback_SetDecreasingRangeEndValue(uint8_t chosenFoldback, int16_t hDecrea
 /**
  * Check function definition
  **/
-void Foldback_EnableFoldback(uint8_t chosenFoldback)
+void Foldback_EnableFoldback(FoldbackTypes_t chosenFoldback)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     Foldbacks[chosenFoldback].bEnableFoldback = true;
 }
 
 /**
  * Check function definition
  **/
-void Foldback_DisableFoldback(uint8_t chosenFoldback)
+void Foldback_DisableFoldback(FoldbackTypes_t chosenFoldback)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     Foldbacks[chosenFoldback].bEnableFoldback = false;
 }
 
-void Foldback_SetDefaultMaxOutputLimitHigh(uint8_t chosenFoldback, uint16_t maxValue)
+void Foldback_SetDefaultMaxOutputLimitHigh(FoldbackTypes_t chosenFoldback, uint16_t maxValue)
 {
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     Foldbacks[chosenFoldback].hDefaultOutputLimitHigh = maxValue;
 }
 
 /**
  * Check function definition
  **/
-void Foldback_SetMaxOutputLimitHigh(uint8_t chosenFoldback, int16_t hMaxValue)
+void Foldback_SetMaxOutputLimitHigh(FoldbackTypes_t chosenFoldback, int16_t hMaxValue)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     if(Foldbacks[chosenFoldback].FoldbackConfig == TRIM)
     {
         Foldbacks[chosenFoldback].hMaxOutputLimitHigh = hMaxValue; 
@@ -228,9 +230,9 @@ void Foldback_SetMaxOutputLimitHigh(uint8_t chosenFoldback, int16_t hMaxValue)
 /**
  * Check function definition
  **/
-void Foldback_SetMaxOutputLimitLow(uint8_t chosenFoldback, int16_t hLimitValue)
+void Foldback_SetMaxOutputLimitLow(FoldbackTypes_t chosenFoldback, int16_t hLimitValue)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     if(Foldbacks[chosenFoldback].FoldbackConfig == TRIM)
     {
         Foldbacks[chosenFoldback].hMaxOutputLimitLow = hLimitValue; 
@@ -243,9 +245,9 @@ void Foldback_SetMaxOutputLimitLow(uint8_t chosenFoldback, int16_t hLimitValue)
  * accelearation with Pedal Assist
  **/
 
-int16_t Foldback_ApplySlowStart(uint8_t chosenFoldback, int16_t hTorque)
+int16_t Foldback_ApplySlowStart(FoldbackTypes_t chosenFoldback, int16_t hTorque)
 {
-     
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     static uint32_t wTimeCounter;
     static int16_t hAverageTorque;
            int32_t wTemp = 0;
@@ -305,9 +307,9 @@ int16_t Foldback_ApplySlowStart(uint8_t chosenFoldback, int16_t hTorque)
 /**
  * Used to start or refresh a slow start
 **/
-void Foldback_EnableSlowStart(uint8_t chosenFoldback)
+void Foldback_EnableSlowStart(FoldbackTypes_t chosenFoldback)
 {
-         
+    ASSERT(chosenFoldback < FOLDBACK_NUMBER);
     Foldbacks[chosenFoldback].bRefreshSlowStart = true;
     Foldbacks[chosenFoldback].bEnableSlowStart = true;   
 } 

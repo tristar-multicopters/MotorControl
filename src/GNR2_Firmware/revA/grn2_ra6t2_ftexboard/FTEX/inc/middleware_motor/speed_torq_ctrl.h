@@ -32,15 +32,6 @@ extern "C" {
   */
 typedef struct
 {
-    Foldback_Handle_t FoldbackMotorSpeed;               /* Foldback structure used to limit maximum motor speed */
-
-    Foldback_Handle_t FoldbackLimitSpeed;               /* Foldback structure used to limit the speed regarding the speed limit value */
-    Foldback_Handle_t FoldbackMotorTemperature;         /* Foldback structure used to limit maximum motor temperature */
-    Foldback_Handle_t FoldbackControllerTemperature;      /* Foldback structure used to limit maximum heatsink temperature */
-    Foldback_Handle_t FoldbackDynamicMaxPower;         /* Foldback structure used to limit maximum Power after a period of time */
-    
-    Foldback_Handle_t FoldbackDynamicMaxTorque;      /* Foldback structure used to limit maximum Torque to other foldbacks */   
-
     DynamicPowerHandle_t   DynamicPowerHandle;
     
     int16_t hCurrentTorqueRef;

@@ -17,13 +17,15 @@
 
 #define MINIMUMVAL   1 // Define Minimum Range Value for Filtering as safety
 
-// Defines for each foldback. If a foldback is added or removed the define FOLDBACK_NUMBER should be adjusted accordingly
-#define FOLDBACK_MAX_MOTOR_SPEED    0
-#define FOLDBACK_SPEED_LIMIT        1
-#define FOLDBACK_MOTOR_TEMP         2
-#define FOLDBACK_CONTROLLER_TEMP    3
-#define FOLDBACK_POWER_LIMIT        4
-#define FOLDBACK_MAX_TORQUE         5
+typedef enum    // Enum for each foldback. If a foldback is added or removed the define FOLDBACK_NUMBER should be adjusted accordingly
+{
+    FOLDBACK_MAX_MOTOR_SPEED        = 0,
+    FOLDBACK_SPEED_LIMIT            = 1,
+    FOLDBACK_MOTOR_TEMP             = 2,
+    FOLDBACK_CONTROLLER_TEMP        = 3,
+    FOLDBACK_POWER_LIMIT            = 4,
+    FOLDBACK_MAX_TORQUE             = 5,
+} FoldbackTypes_t;
 
 typedef enum    // Enumerated data type to set the configuration of foldback
 {
@@ -57,7 +59,7 @@ typedef struct
   * @brief  Function for Initialializing foldback
   * @param  chosenFoldback: choose the foldback
   */
-void Foldback_Init(uint8_t chosenFoldback, Foldback_Handle_t FoldbackInit);
+void Foldback_Init(FoldbackTypes_t chosenFoldback, Foldback_Handle_t FoldbackInit);
 
 /**
   * @brief  Function for applying the limitation based on the control variable
@@ -66,7 +68,7 @@ void Foldback_Init(uint8_t chosenFoldback, Foldback_Handle_t FoldbackInit);
   * @param  hControlVariable: Variable that define the output limit
   * @retval Input variable after limitation
   */
-int16_t Foldback_ApplyFoldback(uint8_t chosenFoldback, int16_t hInputVariable, int16_t hValue);
+int16_t Foldback_ApplyFoldback(FoldbackTypes_t chosenFoldback, int16_t hInputVariable, int16_t hValue);
 
 /**
   * @brief  Function for updating the thresholds between which the input needs to be trimmed. 
@@ -74,7 +76,7 @@ int16_t Foldback_ApplyFoldback(uint8_t chosenFoldback, int16_t hInputVariable, i
   * @param  hDecreasingEndValue: End value of decreasing output limit
   * @retval None
   */
-void Foldback_SetMaxOutputLimitHigh(uint8_t chosenFoldback, int16_t hMaxValue);
+void Foldback_SetMaxOutputLimitHigh(FoldbackTypes_t chosenFoldback, int16_t hMaxValue);
 
 /**
   * @brief  Function for setting max threshold value
@@ -82,7 +84,7 @@ void Foldback_SetMaxOutputLimitHigh(uint8_t chosenFoldback, int16_t hMaxValue);
   * @param  hDecreasingEndValue: End value of decreasing output limit
   * @retval None
   */
-void Foldback_SetDefaultMaxOutputLimitHigh(uint8_t chosenFoldback, uint16_t maxValue);
+void Foldback_SetDefaultMaxOutputLimitHigh(FoldbackTypes_t chosenFoldback, uint16_t maxValue);
 
 /**
   * @brief  Function for updating the thresholds between which the input needs to be trimmed. 
@@ -90,7 +92,7 @@ void Foldback_SetDefaultMaxOutputLimitHigh(uint8_t chosenFoldback, uint16_t maxV
   * @param  hDefaultOutputLimitLow: End value of decreasing output limit
   * @retval None
   */
-void Foldback_SetMaxOutputLimitLow(uint8_t chosenFoldback, int16_t hLimitValue);
+void Foldback_SetMaxOutputLimitLow(FoldbackTypes_t chosenFoldback, int16_t hLimitValue);
 
 
 /**
@@ -99,7 +101,7 @@ void Foldback_SetMaxOutputLimitLow(uint8_t chosenFoldback, int16_t hLimitValue);
   * @param  hDecreasingRange: Range of decreasing output limit
   * @retval None
   */
-void Foldback_SetDecreasingRange(uint8_t chosenFoldback, uint16_t hDecreasingRange);
+void Foldback_SetDecreasingRange(FoldbackTypes_t chosenFoldback, uint16_t hDecreasingRange);
 
 /**
   * @brief  Function for setting the end value of the control variable, i.e. when output is equal to lower threshold value
@@ -107,14 +109,14 @@ void Foldback_SetDecreasingRange(uint8_t chosenFoldback, uint16_t hDecreasingRan
   * @param  hDecreasingEndValue: End value of decreasing output limit
   * @retval None
   */
-void Foldback_SetDecreasingEndValue(uint8_t chosenFoldback, int32_t hDecreasingRange);
+void Foldback_SetDecreasingEndValue(FoldbackTypes_t chosenFoldback, int32_t hDecreasingRange);
 
 /**
   * @brief  Function for getting the end value of the control variable, i.e. when output is equal to lower threshold value
   * @param  chosenFoldback: choose the foldback
   * @retval End value of decreasing output limit
   */
-int32_t Foldback_GetDecreasingEndValue(uint8_t chosenFoldback);
+int32_t Foldback_GetDecreasingEndValue(FoldbackTypes_t chosenFoldback);
 
 /**
   * @brief  Function for setting the end value of the control variable based on an interval
@@ -122,21 +124,21 @@ int32_t Foldback_GetDecreasingEndValue(uint8_t chosenFoldback);
   * @param  hDecreasingEndValue: End value of decreasing output limit
   * @retval None
   */
-void Foldback_SetDecreasingRangeEndValue(uint8_t chosenFoldback, int16_t hDecreasingRange);
+void Foldback_SetDecreasingRangeEndValue(FoldbackTypes_t chosenFoldback, int16_t hDecreasingRange);
 
 /**
   * @brief  Function for enabling foldback feature
   * @param  chosenFoldback: choose the foldback
   * @retval None
   */
-void Foldback_EnableFoldback(uint8_t chosenFoldback);
+void Foldback_EnableFoldback(FoldbackTypes_t chosenFoldback);
 
 /**
   * @brief  Function for disabling foldback feature
   * @param  chosenFoldback: choose the foldback
   * @retval None
   */
-void Foldback_DisableFoldback(uint8_t chosenFoldback);
+void Foldback_DisableFoldback(FoldbackTypes_t chosenFoldback);
 
 /**
   * @brief  Apply a low pass filter on the torque after for smooth 
@@ -145,14 +147,14 @@ void Foldback_DisableFoldback(uint8_t chosenFoldback);
   * @param  hTorque: torque value
   * @retval Torque after passing it through the filter
   */
-int16_t Foldback_ApplySlowStart(uint8_t chosenFoldback, int16_t hTorque);
+int16_t Foldback_ApplySlowStart(FoldbackTypes_t chosenFoldback, int16_t hTorque);
 
 /**
   * @brief  Used to start or refresh a slow start
   * @param  chosenFoldback: choose the foldback
   * @retval Nothing
   */
-void Foldback_EnableSlowStart(uint8_t chosenFoldback);
+void Foldback_EnableSlowStart(FoldbackTypes_t chosenFoldback);
 
 #endif
 
