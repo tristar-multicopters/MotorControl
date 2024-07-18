@@ -252,8 +252,10 @@ MC_Setup_t MCSetup =
         .hMaxApplicationPositivePower   = MAX_APPLICATION_POSITIVE_POWER, // Maximum power in watts that drive can push to the motor
         .hMaxApplicationNegativePower   = MAX_APPLICATION_NEGATIVE_POWER, // Maximum power in watts that drive can accept from the motor
         .hMaxApplicationCurrent         = MAX_APPLICATION_CURRENT,        // Maximum battery current in amps that drive can accept from the motor
+#ifdef RECHARGABLE_BATTERY
         .hMaxChargingCurrent            = MAX_CHARGING_CURRENT,           // Maximum battery current in amps that drive can accept from the motor when charging
         .hMaxChargingVoltage            = MAX_CHARGING_VOLTAGE,           // Maximum battery voltage in volts that drive can accept from the motor   
+#endif
         .bEnableLVTorqueLimit           = ENABLE_LV_TORQUE_LIMIT,
         .hLowVoltageThresholdPercentage = LOW_VOLTAGE_THRESHOLD_PERCENTAGE,
         .hLowBatteryTorque              = LOW_BATTERY_TORQUE,

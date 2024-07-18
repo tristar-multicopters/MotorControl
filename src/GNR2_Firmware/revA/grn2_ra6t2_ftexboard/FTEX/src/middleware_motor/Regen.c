@@ -11,6 +11,7 @@ RegenHandle_t RegenHandler;
  */
 void RegenInit(void)
 {
+    #ifdef REGEN_ENABLE
     RegenHandler.bRegenEnabled = false;
     RegenHandler.hMaxCurrent = 0;
     RegenHandler.hMinCurrent = 0;
@@ -21,6 +22,8 @@ void RegenInit(void)
     RegenHandler.bRegenLevelPercent = 0;
     RegenHandler.hRegenTorque = 0;
     RegenHandler.fRampCoEff = 0;
+    RegenHandler.VoltageMax = UD_VOLTAGE_THRESHOLD_CONT_V;
+    #endif
 }
 
 /**
@@ -142,9 +145,9 @@ int16_t RegenGetMinCurrent()
  */
 bool RegenSetRampPercent(uint16_t hRampPercent)
 {
-    if (hRampPercent < REGEN_MIN_RAMP_PERCENT)   
+    if (hRampPercent < RegenHandler.hRampPercent)   
     {
-        hRampPercent = REGEN_MIN_RAMP_PERCENT;
+        hRampPercent = RegenHandler.hRampPercent;
         return false;                       // retun false if the percent is greater than 1000ms
     }
     RegenHandler.hRampPercent = hRampPercent;
@@ -165,7 +168,7 @@ uint16_t RegenGetRampPercent()
  */
 bool RegenSetMaxVoltage(uint16_t hMaxVoltage)
 {
-    if (hMaxVoltage < UD_VOLTAGE_THRESHOLD_CONT_V)   
+    if (hMaxVoltage < RegenHandler.VoltageMax)   
     {
         return false;                       // retun false if lower than hardware minimum acceptable voltage
     }
@@ -186,7 +189,7 @@ uint16_t RegenGetMaxVoltage()
  */
 bool RegenSetMinSpeed(int16_t hMinSpeed)
 {
-    if (abs(hMinSpeed) < REGEN_MIN_SPEED_RPM)   
+    if (abs(hMinSpeed) < RegenHandler.hMinSpeed)   
     {
         return false;                       // retun false if lower than the minimum speed
     }

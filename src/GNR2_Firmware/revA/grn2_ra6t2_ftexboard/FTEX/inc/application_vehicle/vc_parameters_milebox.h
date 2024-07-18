@@ -160,7 +160,8 @@
 /***************** MOTOR SELECTOR PARAMETERS  ******************************/
 
 #define MOTOR_SELECTOR_ENABLE               false           // True if active motor can be changed using 3 way switch
-    
+
+/***************** MOTOR REGEN PARAMETERS  *********************************/
 #define REGEN_ENABLE                        true
 #define REGEN_MIN_SPEED_KMPH                6
 #define REGEN_DEFAULT_LEVEL_PERCENT         100

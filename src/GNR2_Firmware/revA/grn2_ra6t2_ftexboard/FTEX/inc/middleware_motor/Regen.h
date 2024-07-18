@@ -15,6 +15,7 @@ typedef struct
 {
         uint8_t bRegenEnabled; /**< Flag indicating whether regen is enabled or disabled. */
         int16_t hMaxCurrent; /**< Maximum current for regen operation. */
+        uint16_t VoltageMax; /**< Maximum current for regen operation. */    
         int16_t hMinCurrent; /**< Minimum current for regen operation. */
         uint16_t hRampPercent; /**< Ramp duration for regen operation in milliseconds. */
         uint16_t hMaxVoltage; /**< Maximum voltage for regen operation. */

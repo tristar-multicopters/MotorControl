@@ -1115,11 +1115,6 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
             </File>
-            <File>
-              <FileName>vcregen.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_vehicle\vcregen.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1348,6 +1343,11 @@
               <FileName>autotune.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
+              <FileName>Regen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\Regen.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3315,11 +3315,6 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
             </File>
-            <File>
-              <FileName>vcregen.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_vehicle\vcregen.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -3548,6 +3543,11 @@
               <FileName>autotune.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
+              <FileName>Regen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\Regen.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5515,11 +5515,6 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
             </File>
-            <File>
-              <FileName>vcregen.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_vehicle\vcregen.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -5748,6 +5743,11 @@
               <FileName>autotune.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
+              <FileName>Regen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\Regen.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -7664,11 +7664,6 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
             </File>
-            <File>
-              <FileName>vcregen.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_vehicle\vcregen.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -7897,6 +7892,11 @@
               <FileName>autotune.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
+              <FileName>Regen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\Regen.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -9864,11 +9864,6 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
             </File>
-            <File>
-              <FileName>vcregen.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_vehicle\vcregen.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -10097,6 +10092,11 @@
               <FileName>autotune.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
+              <FileName>Regen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\Regen.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -12064,11 +12064,6 @@
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_vehicle\odometer.c</FilePath>
             </File>
-            <File>
-              <FileName>vcregen.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_vehicle\vcregen.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -12297,6 +12292,11 @@
               <FileName>autotune.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
+              <FileName>Regen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\src\middleware_motor\Regen.c</FilePath>
             </File>
           </Files>
         </Group>
