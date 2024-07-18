@@ -40,6 +40,7 @@ void RegenSetEnabled()
 void RegenSetDisabled()
 {
     RegenHandler.bRegenEnabled = false;
+    RegenHandler.hRegenTorque = 0;      // reste regen torque
 }
 
 /**
@@ -88,6 +89,9 @@ int16_t ApplyRegen(int16_t hMotorSpeed, uint16_t hBusVoltage)
     return RegenHandler.hRegenTorque;
 }
 
+/**
+    * Set the Regen level in percent
+ */
 bool RegenSetLevelPercent(uint8_t bRegenLevelPercent)
 {
     if (bRegenLevelPercent > 100)

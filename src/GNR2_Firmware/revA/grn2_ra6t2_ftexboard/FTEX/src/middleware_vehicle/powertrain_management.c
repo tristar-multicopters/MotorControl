@@ -180,6 +180,7 @@ void PWRT_CalcMotorTorqueSpeed(PWRT_Handle_t * pHandle)
         if (bIsBrakePressed)
         {
             hAux = 0;
+            MDI_SetRegenLevelPercent(M1, 100);
             MDI_EnableRegen(M1);
             
             //Reset passed detection
