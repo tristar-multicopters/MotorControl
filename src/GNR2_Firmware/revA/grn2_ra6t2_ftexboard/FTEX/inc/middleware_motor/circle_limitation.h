@@ -37,7 +37,7 @@ typedef struct
   * @param  Vqd Voltage in qd reference frame
   * @retval qd_t Limited Vqd vector
   */
-qd_t CircleLimitation(CircleLimitationHandle_t * pHandle, qd_t Vqd);
+qd_t CircleLimitation(qd_t Vqd);
 
 
 #ifdef __cplusplus

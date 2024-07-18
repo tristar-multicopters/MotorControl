@@ -73,7 +73,6 @@ ResDivVbusSensorHandle_t *pBusSensorM1;
 
 PWMCurrFdbkHandle_t *pPWMCurrFdbk[NBR_OF_MOTORS];
 MotorPowerQDHandle_t *pMotorPower[NBR_OF_MOTORS];
-CircleLimitationHandle_t *pCircleLimitation[NBR_OF_MOTORS];
 MCConfigHandle_t *pFieldWeakening[NBR_OF_MOTORS];
 FeedforwardHandle_t *pFeedforward[NBR_OF_MOTORS];
 
@@ -131,7 +130,6 @@ void MC_BootUp(void)
     MCStateMachine_Init();
 
     bMCBootCompleted = 0;
-    pCircleLimitation[M1] = &CircleLimitationM1;
     pFieldWeakening[M1] = &MCConfig; /* only if M1 has FW */
     pFeedforward[M1] = &FeedforwardM1;      /* only if M1 has FF */
 
@@ -1048,7 +1046,7 @@ inline uint32_t FOC_CurrControllerM1(void)
         Vqd.d = 0;
 #endif
 
-        Vqd = CircleLimitation(pCircleLimitation[M1], Vqd);
+        Vqd = CircleLimitation(Vqd);
         
 
     if (pSpeedTorqCtrl[M1]->motorType == DIRECT_DRIVE)     

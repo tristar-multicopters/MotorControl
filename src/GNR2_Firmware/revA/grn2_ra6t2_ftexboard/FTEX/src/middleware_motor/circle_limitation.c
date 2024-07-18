@@ -9,11 +9,20 @@
 #include "circle_limitation.h"
 #include "mc_math.h"
 #include "mc_type.h"
+#include "parameters_conversion.h"
 
+//Motor circle limitation variables
+CircleLimitationHandle_t CircleLimitationParams =
+{
+    .hMaxModule         = MAX_MODULE,
+    .hMaxVd             = (uint16_t)(MAX_MODULE * FW_VOLTAGE_REF / 1000),
+    .CircleLimitTable   = MMITABLE,
+    .bStartIndex        = START_INDEX,
+};
 
 #if defined (CIRCLE_LIMITATION_VD)
 
-qd_t CircleLimitation(CircleLimitationHandle_t * pHandle, qd_t Vqd)
+qd_t CircleLimitation(qd_t Vqd)
 {
   int32_t hMaxModule;
   int32_t square_q;
@@ -26,12 +35,12 @@ qd_t CircleLimitation(CircleLimitationHandle_t * pHandle, qd_t Vqd)
   int32_t new_d;
   qd_t Local_Vqd=Vqd;
 
-  hMaxModule = pHandle->hMaxModule;
+  hMaxModule = CircleLimitationParams.hMaxModule;
 
   square_q = (int32_t)(Vqd.q) * Vqd.q;
   square_d = (int32_t)(Vqd.d) * Vqd.d;
   square_limit = hMaxModule * hMaxModule;
-  vd_square_limit = pHandle->hMaxVd * pHandle->hMaxVd;
+  vd_square_limit = CircleLimitationParams.hMaxVd * CircleLimitationParams.hMaxVd;
   square_sum = square_q + square_d;
 
   if (square_sum > square_limit)
@@ -48,7 +57,7 @@ qd_t CircleLimitation(CircleLimitationHandle_t * pHandle, qd_t Vqd)
     }
     else
     {
-      new_d = pHandle->hMaxVd;
+      new_d = CircleLimitationParams.hMaxVd;
       if(Vqd.d < 0)
       {
         new_d = -new_d;
@@ -76,7 +85,7 @@ qd_t CircleLimitation(CircleLimitationHandle_t * pHandle, qd_t Vqd)
   * @param  Vqd Voltage in qd reference frame
   * @retval qd_t Limited Vqd vector
   */
-qd_t CircleLimitation(CircleLimitationHandle_t * pHandle, qd_t Vqd)
+qd_t CircleLimitation(qd_t Vqd)
 {
   uint16_t table_element;
   uint32_t uw_temp;
@@ -89,16 +98,16 @@ qd_t CircleLimitation(CircleLimitationHandle_t * pHandle, qd_t Vqd)
   uw_temp = (uint32_t) sw_temp;
 
   /* uw_temp min value 0, max value 32767*32767 */
-  if (uw_temp > (uint32_t)(pHandle->hMaxModule) * pHandle->hMaxModule)
+  if (uw_temp > (uint32_t)(CircleLimitationParams.hMaxModule) * CircleLimitationParams.hMaxModule)
   {
 
     uw_temp /= (uint32_t)(16777216);
 
-    /* wtemp min value pHandle->bStartIndex, max value 127 */
-    uw_temp -= pHandle->bStartIndex;
+    /* wtemp min value CircleLimitationParams.bStartIndex, max value 127 */
+    uw_temp -= CircleLimitationParams.bStartIndex;
 
-    /* uw_temp min value 0, max value 127 - pHandle->bStartIndex */
-    table_element = pHandle->CircleLimitTable[(uint8_t)uw_temp];
+    /* uw_temp min value 0, max value 127 - CircleLimitationParams.bStartIndex */
+    table_element = CircleLimitationParams.CircleLimitTable[(uint8_t)uw_temp];
 
     sw_temp = Vqd.q * (int32_t)table_element;
     local_vqd.q = (int16_t)(sw_temp / 32768);

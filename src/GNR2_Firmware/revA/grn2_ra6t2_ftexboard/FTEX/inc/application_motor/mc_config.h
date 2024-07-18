@@ -44,7 +44,6 @@ extern MotorPowerQDHandle_t *pPQD_MotorPowMeasM1;
 extern BemfObserverPllHandle_t BemfObserverPllM1;
 extern HallPosSensorHandle_t HallPosSensorM1;
 extern ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1;
-extern CircleLimitationHandle_t CircleLimitationM1;
 extern FeedforwardHandle_t FeedforwardM1;
 
 extern RotorPositionObserverHandle_t RotorPosObsM1;

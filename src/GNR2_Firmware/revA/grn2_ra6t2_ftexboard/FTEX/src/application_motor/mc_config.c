@@ -399,17 +399,6 @@ ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1 =
     .aBuffer = RealBusVoltageSensorFilterBufferM1,
 };
 
-/**
-  * @brief  CircleLimitation Component parameters Motor 1 - Base Component
-  */
-CircleLimitationHandle_t CircleLimitationM1 =
-{
-    .hMaxModule          = MAX_MODULE,
-    .hMaxVd                = (uint16_t)(MAX_MODULE * FW_VOLTAGE_REF / 1000),
-    .CircleLimitTable = MMITABLE,
-    .bStartIndex        = START_INDEX,
-};
-
 RotorPositionObserverHandle_t RotorPosObsM1 =
 {
     .Super = {
