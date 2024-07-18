@@ -228,7 +228,7 @@ Regen_Handle_t  VCRegenHandler =
     .hMaxVoltage = MAX_CHARGING_VOLTAGE,
     .hMinSpeed = REGEN_MIN_SPEED_KMPH,
     .bRegenLevelPercent = REGEN_DEFAULT_LEVEL_PERCENT,
-    .fRampCoEff = REGEN_DEFAULT_COEFFICIENT_PERCENT    
+    .fRampCoEff = 0    
 };
 #endif
 

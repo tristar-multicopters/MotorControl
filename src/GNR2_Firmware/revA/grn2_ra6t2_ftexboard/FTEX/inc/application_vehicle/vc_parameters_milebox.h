@@ -165,9 +165,8 @@
 #define REGEN_ENABLE                        true
 #define REGEN_MIN_SPEED_KMPH                6
 #define REGEN_DEFAULT_LEVEL_PERCENT         100
-#define REGEN_DEFAULT_SLOPE_PERCENTAGE      20
+#define REGEN_DEFAULT_SLOPE_PERCENTAGE      2
 #define REGEN_MIN_CURRENT                   5
-#define REGEN_DEFAULT_COEFFICIENT_PERCENT   20
 /***************** POWER ENABLE PARAMETERS  ******************************/
 
 #define POWER_ENABLE_ENABLE                 true            // True if power enable input is used to prevent powertrain start

@@ -1012,7 +1012,7 @@ float MDI_GetExtractedWheelSpeedMixed(void)
 }
 
 /**
-  *  Get extracted motor temp from mixed WSS and temp signals
+  *  enable Regen 
   */
 bool MDI_EnableRegen(uint8_t bMotor)
 {

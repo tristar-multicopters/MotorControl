@@ -58,34 +58,46 @@ int16_t ApplyRegen(int16_t hMotorSpeed, uint16_t hBusVoltage)
 {
     if (RegenHandler.bRegenEnabled == false)
     {
-        return false;                       // return false if regen is not enabled
+        return 0;                       // return false if regen is not enabled
     }
     
     if (RegenHandler.hMaxCurrent > 0)
     {
-        return false;                       // return false if the maximum current is positive
-    }
-
-    if ((abs)(hMotorSpeed) < RegenHandler.hMinSpeed)
-    {
-        return false;                       // return false if the speed is lower than the minimum speed
+        return 0;                       // return false if the maximum current is positive
     }
 
     if (hBusVoltage > RegenHandler.hMaxVoltage)
     {
-        return false;                       // return false if the bus voltage is lower than the maximum voltage
+        return 0;                       // return false if the bus voltage is lower than the maximum voltage
     }
-
+    
     RegenHandler.hRegenTorqueMax = (int16_t)((RegenHandler.bRegenLevelPercent * RegenHandler.hMaxCurrent * hBusVoltage)/(abs(hMotorSpeed)*PI_/30));
 
-    if (RegenHandler.hRegenTorque > RegenHandler.hRegenTorqueMax)
-    {
-        RegenHandler.hRegenTorque = (int16_t)(RegenHandler.hRegenTorqueMax * RegenHandler.fRampCoEff);
+    if ((abs)(hMotorSpeed) > RegenHandler.hMinSpeed)
+    {    
+        int16_t newRegenTorque = RegenHandler.hRegenTorque + (int16_t)(RegenHandler.hRegenTorqueMax * RegenHandler.fRampCoEff);
+        if (newRegenTorque < RegenHandler.hRegenTorqueMax)
+        {
+            RegenHandler.hRegenTorque = newRegenTorque ;
+        }
+        else 
+        {
+            RegenHandler.hRegenTorque = RegenHandler.hRegenTorqueMax;
+        }
     }
-    else 
+    else
     {
-        RegenHandler.hRegenTorque = RegenHandler.hRegenTorqueMax;
+        int16_t newRegenTorque = RegenHandler.hRegenTorque - (int16_t)(RegenHandler.hRegenTorqueMax * RegenHandler.fRampCoEff);
+        if (newRegenTorque < 0)
+        {
+            RegenHandler.hRegenTorque = newRegenTorque;
+        }
+        else 
+        {
+            RegenHandler.hRegenTorque = 0;
+        }
     }
+
     return RegenHandler.hRegenTorque;
 }
 

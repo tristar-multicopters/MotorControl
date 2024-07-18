@@ -57,7 +57,7 @@
 #define REGEN_ENABLE                    true
 #define IQ_REGEN_AMPS                   -25         // regeneration current
 #define REGEN_MIN_SPEED_RPM             50         // minimum speed for activating the regen
-#define REGEN_MIN_RAMP_PERCENT          5           // minimum ramp for applying torque in percentage
+#define REGEN_MIN_RAMP_PERCENT          1           // minimum ramp for applying torque in percentage
 /************************** Ramp Manager Parameters  ************************/
 
 #define DEFAULT_TORQUE_SLOPE_UP             5000                // Slope in cNm per second
