@@ -207,26 +207,6 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
     {
         .wScalingFactor = INT16_MAX,
     },
-        .FoldbackMotorSpeed =
-    {
-        .FoldbackConfig = TRIM,
-    },
-        .FoldbackMotorTemperature =
-    {
-        .FoldbackConfig = TRIM,
-    },
-        .FoldbackControllerTemperature =
-    {
-        .FoldbackConfig = TRIM,
-    },
-    .FoldbackDynamicMaxPower =
-    {
-        .FoldbackConfig = TRIM,
-    },
-    .FoldbackDynamicMaxTorque = 
-    {
-        .FoldbackConfig = SET_THRESHOLD,
-    },
     .DynamicPowerHandle =
     {
         .hBelowMaxPowerTimeout = MAX_POWER_RECOVER_TIMEOUT,  

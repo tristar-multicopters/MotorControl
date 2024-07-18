@@ -9,95 +9,103 @@
     
 #include "foldback.h"
 #include "ASSERT_FTEX.h"
+
+//Number of foldbacks. If another foldback is added this number should be increased by 1
+#define FOLDBACK_NUMBER     6
+
+//Struct that holds the foldbacks
+Foldback_Handle_t Foldbacks[FOLDBACK_NUMBER];
+
+
 /**
   * @brief  Function for computing maximum output value based on a control variable
   * @param  pHandle: handler of the current instance of the Foldback component
   * @param  hControlVariable: Variable that define the output limit
   * @retval Computed output limit
   */
-static int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hControlVariable);
+static int16_t Foldback_GetMaxOutput(uint8_t chosenFoldback, int16_t hControlVariable);
 
 
 /**
   * Refer to function definition
   **/
 
-void Foldback_Init(Foldback_Handle_t * pHandle, Foldback_Handle_t FoldbackInit)
+void Foldback_Init(uint8_t chosenFoldback, Foldback_Handle_t FoldbackInit)
 {
-    ASSERT(pHandle != NULL);
-    pHandle->bEnableFoldback = FoldbackInit.bEnableFoldback;
-    pHandle->hDefaultOutputLimitHigh = FoldbackInit.hDefaultOutputLimitHigh;
-    pHandle->hDefaultOutputLimitLow = FoldbackInit.hDefaultOutputLimitLow;
-    pHandle->hDecreasingEndValue = FoldbackInit.hDecreasingEndValue;
-    pHandle->hDecreasingRange = FoldbackInit.hDecreasingRange;
+    Foldbacks[chosenFoldback].bEnableFoldback = FoldbackInit.bEnableFoldback;
+    Foldbacks[chosenFoldback].hDefaultOutputLimitHigh = FoldbackInit.hDefaultOutputLimitHigh;
+    Foldbacks[chosenFoldback].hDefaultOutputLimitLow = FoldbackInit.hDefaultOutputLimitLow;
+    Foldbacks[chosenFoldback].hDecreasingEndValue = FoldbackInit.hDecreasingEndValue;
+    Foldbacks[chosenFoldback].hDecreasingRange = FoldbackInit.hDecreasingRange;
+    Foldbacks[chosenFoldback].FoldbackConfig = FoldbackInit.FoldbackConfig;
     
-    pHandle->hMaxOutputLimitHigh = (int16_t) pHandle->hDefaultOutputLimitHigh;
-    pHandle->hMaxOutputLimitLow = (int16_t) pHandle->hDefaultOutputLimitLow;
+    Foldbacks[chosenFoldback].hMaxOutputLimitHigh = (int16_t) Foldbacks[chosenFoldback].hDefaultOutputLimitHigh;
+    Foldbacks[chosenFoldback].hMaxOutputLimitLow = (int16_t) Foldbacks[chosenFoldback].hDefaultOutputLimitLow;
 }
 
-int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
+int16_t Foldback_GetMaxOutput(uint8_t chosenFoldback, int16_t hValue)
 {
-    ASSERT(pHandle != NULL); 
+     
     int16_t hMaxOutput = 0;
     int32_t hStartValue;
     uint32_t wAux;
     
-    if (!pHandle->bIsInverted)
+    if (!Foldbacks[chosenFoldback].bIsInverted)
     {
-        hStartValue = pHandle->hDecreasingEndValue - (int16_t) pHandle->hDecreasingRange;
+        hStartValue = Foldbacks[chosenFoldback].hDecreasingEndValue - (int16_t) Foldbacks[chosenFoldback].hDecreasingRange;
     }
     else
     {
-        hStartValue = pHandle->hDecreasingEndValue + (int16_t) pHandle->hDecreasingRange;
+        hStartValue = Foldbacks[chosenFoldback].hDecreasingEndValue + (int16_t) Foldbacks[chosenFoldback].hDecreasingRange;
     }
 
-    if (hStartValue > pHandle->hDecreasingEndValue)
+    if (hStartValue > Foldbacks[chosenFoldback].hDecreasingEndValue)
     {
-        pHandle->bIsInverted = true;
+        Foldbacks[chosenFoldback].bIsInverted = true;
     }
     else
     {
-        pHandle->bIsInverted = false;
+        Foldbacks[chosenFoldback].bIsInverted = false;
     }
         
-    if (!pHandle->bIsInverted)
+    if (!Foldbacks[chosenFoldback].bIsInverted)
     {
         // If hValue is in the foldback range
-        if(hValue > hStartValue && hValue < pHandle->hDecreasingEndValue)
+        if(hValue > hStartValue && hValue < Foldbacks[chosenFoldback].hDecreasingEndValue)
         { 
             // Find the max torque value according to the foldback settings
-            wAux = (uint32_t)( ( pHandle->hMaxOutputLimitHigh - pHandle->hMaxOutputLimitLow )*( pHandle->hDecreasingEndValue - hValue ) );
-            wAux /= (uint32_t)(pHandle->hDecreasingEndValue - hStartValue);
-            wAux += (uint32_t) pHandle->hMaxOutputLimitLow;
+            wAux = (uint32_t)( ( Foldbacks[chosenFoldback].hMaxOutputLimitHigh - Foldbacks[chosenFoldback].hMaxOutputLimitLow )*( Foldbacks[chosenFoldback].hDecreasingEndValue - hValue ) );
+            wAux /= (uint32_t)(Foldbacks[chosenFoldback].hDecreasingEndValue - hStartValue);
+            wAux += (uint32_t) Foldbacks[chosenFoldback].hMaxOutputLimitLow;
             hMaxOutput = (int16_t)wAux;
         }
         else if (hValue <= hStartValue)
         {
-            hMaxOutput = pHandle->hMaxOutputLimitHigh;    // Pass higher threshold if input is lower than control range
+            hMaxOutput = Foldbacks[chosenFoldback].hMaxOutputLimitHigh;    // Pass higher threshold if input is lower than control range
         }
         else
         {
-            hMaxOutput = pHandle->hMaxOutputLimitLow;     // Pass lower threshold if input is higher than control range
+            hMaxOutput = Foldbacks[chosenFoldback].hMaxOutputLimitLow;     // Pass lower threshold if input is higher than control range
         }
     }
     else
     {
         // If hValue is in the foldback range
-        if(hValue < hStartValue && hValue > pHandle->hDecreasingEndValue)
+        if(hValue < hStartValue && hValue > Foldbacks[chosenFoldback].hDecreasingEndValue)
         { 
             // Find the max torque value according to the foldback settings
-            wAux = (uint32_t)( ( pHandle->hMaxOutputLimitHigh - pHandle->hDefaultOutputLimitLow )*( hValue - pHandle->hDecreasingEndValue ) );                
-            wAux /= (uint32_t)(hStartValue - pHandle->hDecreasingEndValue);
-            wAux += (uint32_t) pHandle->hMaxOutputLimitLow;
+            wAux = (uint32_t)( ( Foldbacks[chosenFoldback].hMaxOutputLimitHigh - Foldbacks[chosenFoldback].hDefaultOutputLimitLow )*( hValue - Foldbacks[chosenFoldback].hDecreasingEndValue ) );                
+            wAux /= (uint32_t)(hStartValue - Foldbacks[chosenFoldback].hDecreasingEndValue);
+            wAux += (uint32_t) Foldbacks[chosenFoldback].hMaxOutputLimitLow;
             hMaxOutput = (int16_t)wAux;
         }
         else if (hValue >= hStartValue)
         {
-            hMaxOutput =  pHandle->hMaxOutputLimitHigh;       // Pass higher threshold if input is lower than control range
+            hMaxOutput =  Foldbacks[chosenFoldback].hMaxOutputLimitHigh;       // Pass higher threshold if input is lower than control range
         }
         else
         {
-            hMaxOutput =  pHandle->hMaxOutputLimitLow;        // Pass lower threshold if input is higher than control range
+            hMaxOutput =  Foldbacks[chosenFoldback].hMaxOutputLimitLow;        // Pass lower threshold if input is higher than control range
         }
     }
     
@@ -105,16 +113,16 @@ int16_t Foldback_GetMaxOutput(Foldback_Handle_t * pHandle, int16_t hValue)
 }
 
 
-int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariable, int16_t hValue)
+int16_t Foldback_ApplyFoldback(uint8_t chosenFoldback, int16_t hInputVariable, int16_t hValue)
 {
-    ASSERT(pHandle != NULL); 
+     
     int16_t hMaxOutput,hOutputVariable = 0;
     
-    if (pHandle->bEnableFoldback)
+    if (Foldbacks[chosenFoldback].bEnableFoldback)
     {
-        if(pHandle->FoldbackConfig == TRIM) // Test if foldback instance is used to trim the inputs.
+        if(Foldbacks[chosenFoldback].FoldbackConfig == TRIM) // Test if foldback instance is used to trim the inputs.
         {
-            hMaxOutput =  Foldback_GetMaxOutput(pHandle, hValue);
+            hMaxOutput =  Foldback_GetMaxOutput(chosenFoldback, hValue);
             if (hInputVariable > hMaxOutput) // If input is greater than maximum possible value 
             {
                 hOutputVariable = hMaxOutput; 
@@ -131,7 +139,7 @@ int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariab
         else
         {
             // Foldback instance is used to calculate dynamic thresholds.
-            hOutputVariable = Foldback_GetMaxOutput(pHandle, hValue); 
+            hOutputVariable = Foldback_GetMaxOutput(chosenFoldback, hValue); 
         }
     }
     else
@@ -144,62 +152,75 @@ int16_t Foldback_ApplyFoldback(Foldback_Handle_t * pHandle, int16_t hInputVariab
 /**
  * Function for setting the start speed limitation value
  **/
-void Foldback_SetDecreasingRange(Foldback_Handle_t * pHandle, uint16_t hDecreasingRange)
+void Foldback_SetDecreasingRange(uint8_t chosenFoldback, uint16_t hDecreasingRange)
 {
-    ASSERT(pHandle != NULL); 
-    pHandle->hDecreasingRange = hDecreasingRange;
+     
+    Foldbacks[chosenFoldback].hDecreasingRange = hDecreasingRange;
 }
 
 /**
  * Function for setting the end limitation speed value
  **/
-void Foldback_SetDecreasingEndValue(Foldback_Handle_t * pHandle, int16_t hDecreasingEndValue)
+void Foldback_SetDecreasingEndValue(uint8_t chosenFoldback, int32_t hDecreasingEndValue)
 {
-    ASSERT(pHandle != NULL); 
-    pHandle->hDecreasingEndValue = hDecreasingEndValue;
+     
+    Foldbacks[chosenFoldback].hDecreasingEndValue = hDecreasingEndValue;
+}
+
+/**
+ * Function for getting the end limitation speed value
+ **/
+int32_t Foldback_GetDecreasingEndValue(uint8_t chosenFoldback)
+{
+     
+    return Foldbacks[chosenFoldback].hDecreasingEndValue;
 }
 
 /**
  * Function for setting the end limitation speed value
  **/
-void Foldback_SetDecreasingRangeEndValue(Foldback_Handle_t * pHandle, int16_t hDecreasingRange)
+void Foldback_SetDecreasingRangeEndValue(uint8_t chosenFoldback, int16_t hDecreasingRange)
 {
-    ASSERT(pHandle != NULL); 
+     
     int16_t hInterval, hEndval;
     /* Add the Interval Value to the Start Value */
-    hInterval = pHandle->hDecreasingInterval;
+    hInterval = Foldbacks[chosenFoldback].hDecreasingInterval;
     hEndval = hInterval + hDecreasingRange;
-    pHandle->hDecreasingEndValue = hEndval;
-}
-
-
-/**
- * Check function definition
- **/
-void Foldback_EnableFoldback(Foldback_Handle_t * pHandle)
-{
-    ASSERT(pHandle != NULL); 
-    pHandle->bEnableFoldback = true;
+    Foldbacks[chosenFoldback].hDecreasingEndValue = hEndval;
 }
 
 /**
  * Check function definition
  **/
-void Foldback_DisableFoldback(Foldback_Handle_t * pHandle)
+void Foldback_EnableFoldback(uint8_t chosenFoldback)
 {
-    ASSERT(pHandle != NULL); 
-    pHandle->bEnableFoldback = false;
+     
+    Foldbacks[chosenFoldback].bEnableFoldback = true;
 }
 
 /**
  * Check function definition
  **/
-void Foldback_UpdateMaxValue(Foldback_Handle_t * pHandle, int16_t hMaxValue)
+void Foldback_DisableFoldback(uint8_t chosenFoldback)
 {
-    ASSERT(pHandle != NULL); 
-    if(pHandle->FoldbackConfig == TRIM)
+     
+    Foldbacks[chosenFoldback].bEnableFoldback = false;
+}
+
+void Foldback_SetDefaultMaxOutputLimitHigh(uint8_t chosenFoldback, uint16_t maxValue)
+{
+    Foldbacks[chosenFoldback].hDefaultOutputLimitHigh = maxValue;
+}
+
+/**
+ * Check function definition
+ **/
+void Foldback_SetMaxOutputLimitHigh(uint8_t chosenFoldback, int16_t hMaxValue)
+{
+     
+    if(Foldbacks[chosenFoldback].FoldbackConfig == TRIM)
     {
-        pHandle->hMaxOutputLimitHigh = hMaxValue; 
+        Foldbacks[chosenFoldback].hMaxOutputLimitHigh = hMaxValue; 
     }
     
 }
@@ -207,12 +228,12 @@ void Foldback_UpdateMaxValue(Foldback_Handle_t * pHandle, int16_t hMaxValue)
 /**
  * Check function definition
  **/
-void Foldback_UpdateLimitValue(Foldback_Handle_t * pHandle, int16_t hLimitValue)
+void Foldback_SetMaxOutputLimitLow(uint8_t chosenFoldback, int16_t hLimitValue)
 {
-    ASSERT(pHandle != NULL); 
-    if(pHandle->FoldbackConfig == TRIM)
+     
+    if(Foldbacks[chosenFoldback].FoldbackConfig == TRIM)
     {
-        pHandle->hMaxOutputLimitLow = hLimitValue; 
+        Foldbacks[chosenFoldback].hMaxOutputLimitLow = hLimitValue; 
     }
     
 }
@@ -222,9 +243,9 @@ void Foldback_UpdateLimitValue(Foldback_Handle_t * pHandle, int16_t hLimitValue)
  * accelearation with Pedal Assist
  **/
 
-int16_t Foldback_ApplySlowStart(Foldback_Handle_t * pHandle, int16_t hTorque)
+int16_t Foldback_ApplySlowStart(uint8_t chosenFoldback, int16_t hTorque)
 {
-    ASSERT(pHandle != NULL); 
+     
     static uint32_t wTimeCounter;
     static int16_t hAverageTorque;
            int32_t wTemp = 0;
@@ -233,23 +254,23 @@ int16_t Foldback_ApplySlowStart(Foldback_Handle_t * pHandle, int16_t hTorque)
     hTorqueOut = hTorque;
     uint16_t hBandwidth;
 
-    if(pHandle->bRefreshSlowStart)  
+    if(Foldbacks[chosenFoldback].bRefreshSlowStart)  
     { // Used to reset the counter, the average torque and the 
       // slow start refresh for PAS speed limitation 
        wTimeCounter = 0; 
        hAverageTorque = 0; 
-       pHandle->bRefreshSlowStart = false; 
+       Foldbacks[chosenFoldback].bRefreshSlowStart = false; 
     }    
 
-    if(pHandle->bEnableSlowStart) //Check if a slow start was requested or is in progress
+    if(Foldbacks[chosenFoldback].bEnableSlowStart) //Check if a slow start was requested or is in progress
     {    
         if(abs(hTorque) > abs(hAverageTorque))
         {
-            hBandwidth = pHandle->hSlowStartBandwidth;
+            hBandwidth = Foldbacks[chosenFoldback].hSlowStartBandwidth;
         }
         else
         {
-            hBandwidth = pHandle->hSlowStopBandwidth;
+            hBandwidth = Foldbacks[chosenFoldback].hSlowStopBandwidth;
         }
             
             wTemp =  (hBandwidth - 1u); //Apply a low pass filter to the torque
@@ -265,11 +286,11 @@ int16_t Foldback_ApplySlowStart(Foldback_Handle_t * pHandle, int16_t hTorque)
             hAverageTorque =  (int16_t) wTemp ;
             hTorqueOut = hAverageTorque;            
 
-        if (wTimeCounter > pHandle->wSlowStartTimeout)          // Timeout condition is there to make sure we cant get stuck in a slow start
+        if (wTimeCounter > Foldbacks[chosenFoldback].wSlowStartTimeout)          // Timeout condition is there to make sure we cant get stuck in a slow start
         {
             wTimeCounter = 0;
             hAverageTorque = 0; 
-            pHandle->bEnableSlowStart = false;        
+            Foldbacks[chosenFoldback].bEnableSlowStart = false;        
         }              
     }
     else
@@ -284,9 +305,9 @@ int16_t Foldback_ApplySlowStart(Foldback_Handle_t * pHandle, int16_t hTorque)
 /**
  * Used to start or refresh a slow start
 **/
-void Foldback_EnableSlowStart(Foldback_Handle_t * pHandle)
+void Foldback_EnableSlowStart(uint8_t chosenFoldback)
 {
-    ASSERT(pHandle != NULL);     
-    pHandle->bRefreshSlowStart = true;
-    pHandle->bEnableSlowStart = true;   
+         
+    Foldbacks[chosenFoldback].bRefreshSlowStart = true;
+    Foldbacks[chosenFoldback].bEnableSlowStart = true;   
 } 

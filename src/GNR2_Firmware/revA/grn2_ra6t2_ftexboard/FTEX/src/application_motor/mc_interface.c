@@ -743,7 +743,7 @@ void MCInterface_SetMaxContinuousCurrent(uint16_t maxContinuousCurrent)
 */
 void MCInterface_SetPowerFoldbackEndValue(int32_t endValue)
 {
-    MCInterface[M1].pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingEndValue = endValue;
+    Foldback_SetDecreasingEndValue(FOLDBACK_POWER_LIMIT, endValue);
 }
 
 /*
@@ -751,7 +751,7 @@ void MCInterface_SetPowerFoldbackEndValue(int32_t endValue)
 */
 void MCInterface_SetPowerFoldbackRange(uint16_t range)
 {
-    MCInterface[M1].pSpeedTorqCtrl->FoldbackDynamicMaxPower.hDecreasingRange = range;
+    Foldback_SetDecreasingRange(FOLDBACK_POWER_LIMIT, range);
 }
 
 /*

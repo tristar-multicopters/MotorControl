@@ -35,10 +35,10 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
     ASSERT(pHandle != NULL);
     
     //Init the foldbacks in speed torque ctrl
-    Foldback_Init(&pHandle->FoldbackDynamicMaxTorque, MotorParameters.ParametersConversion.FoldbackInitTorque);
-    Foldback_Init(&pHandle->FoldbackControllerTemperature, MotorParameters.ParametersConversion.FoldbackInitHeatsinkTemp);
-    Foldback_Init(&pHandle->FoldbackMotorSpeed, MotorParameters.ParametersConversion.FoldbackInitSpeed);
-    Foldback_Init(&pHandle->FoldbackMotorTemperature, MotorParameters.ParametersConversion.FoldbackInitMotorTemp);
+    Foldback_Init(FOLDBACK_MAX_TORQUE, MotorParameters.ParametersConversion.FoldbackInitTorque);
+    Foldback_Init(FOLDBACK_CONTROLLER_TEMP, MotorParameters.ParametersConversion.FoldbackInitControllerTemp);
+    Foldback_Init(FOLDBACK_MAX_MOTOR_SPEED, MotorParameters.ParametersConversion.FoldbackInitSpeed);
+    Foldback_Init(FOLDBACK_MOTOR_TEMP, MotorParameters.ParametersConversion.FoldbackInitMotorTemp);
     
     //Init the variables dependent on motor parameters
     pHandle->fGearRatio     = MotorParameters.ConfigParameters.fMotorGearRatio;
@@ -84,17 +84,17 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
   
     if (NTCTempSensor_GetSensorType(NTC_CONTROLLER) == NO_SENSOR)
     {
-        Foldback_DisableFoldback(&pHandle->FoldbackControllerTemperature);
+        Foldback_DisableFoldback(FOLDBACK_CONTROLLER_TEMP);
     }
     if (NTCTempSensor_GetSensorType(NTC_MOTOR) == NO_SENSOR)
     {
-        Foldback_DisableFoldback(&pHandle->FoldbackMotorTemperature);
+        Foldback_DisableFoldback(FOLDBACK_MOTOR_TEMP);
     }
     
     //the foldback is used to control speed for direct drives instead of the pid
     if (pHandle->motorType == DIRECT_DRIVE)
     {
-        Foldback_EnableFoldback(&pHandle->FoldbackLimitSpeed);
+        Foldback_EnableFoldback(FOLDBACK_SPEED_LIMIT);
     }
    
     pHandle->TorqueRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
@@ -120,7 +120,7 @@ void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup, Mo
     //initialize maximum power in watts that drive can push to the motor
     if (MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower < DEFAULT_MAX_APPLICATION_POSITIVE_POWER)
     {
-        pHandle->FoldbackDynamicMaxPower.hDefaultOutputLimitHigh = MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower * MotorParameters.PowerParameters.hEstimatedEfficiency / 100;
+        Foldback_SetDefaultMaxOutputLimitHigh(FOLDBACK_POWER_LIMIT, MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower * MotorParameters.PowerParameters.hEstimatedEfficiency / 100);
         pHandle->DynamicPowerHandle.hDynamicMaxPower = MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower * MotorParameters.PowerParameters.hEstimatedEfficiency / 100;
         pHandle->hMaxPositivePower = (uint16_t)(MCSetup.BatteryPowerSetup.hMaxApplicationPositivePower * MotorParameters.PowerParameters.hEstimatedEfficiency / 100);
     }
@@ -158,8 +158,9 @@ void SpdTorqCtrl_PowerInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup, Mo
     FoldbackInitPower.hDefaultOutputLimitLow = MCSetup.BatteryPowerSetup.hMaxBMSPositivePower * MotorParameters.PowerParameters.hEstimatedEfficiency / 100;
     FoldbackInitPower.hDecreasingEndValue = MCSetup.BatteryPowerSetup.wMaxTimeBMSTolerant;
     FoldbackInitPower.hDecreasingRange = MCSetup.BatteryPowerSetup.hMaxPowerLimitTimeout;
+    FoldbackInitPower.FoldbackConfig = TRIM;
     
-    Foldback_Init(&pHandle->FoldbackDynamicMaxPower, FoldbackInitPower);
+    Foldback_Init(FOLDBACK_POWER_LIMIT, FoldbackInitPower);
 }
 
 void SpdTorqCtrl_SpeedLimitEnInit(SpdTorqCtrlHandle_t * pHandle, MC_Setup_t MCSetup)
@@ -310,10 +311,10 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
         
           if (pHandle->motorType == DIRECT_DRIVE)
           {
-              Foldback_UpdateLimitValue(&pHandle->FoldbackLimitSpeed, 0); // Update speed limit foldback
-              Foldback_UpdateMaxValue(&pHandle->FoldbackLimitSpeed, hTorqueReference); // Update speed limit foldback
-              Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * SPEED_MARGIN/DIV_PERCENTAGE)); // Update speed limit by 10 percent
-              Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, DCC_RANGE); // Update speed limit foldback
+              Foldback_SetMaxOutputLimitLow(FOLDBACK_SPEED_LIMIT, 0); // Update speed limit foldback
+              Foldback_SetMaxOutputLimitHigh(FOLDBACK_SPEED_LIMIT, hTorqueReference); // Update speed limit foldback
+              Foldback_SetDecreasingEndValue(FOLDBACK_SPEED_LIMIT, (pHandle->hSpdLimit * SPEED_MARGIN/DIV_PERCENTAGE)); // Update speed limit by 10 percent
+              Foldback_SetDecreasingRange(FOLDBACK_SPEED_LIMIT, DCC_RANGE); // Update speed limit foldback
           }
         if (pHandle->bEnableSpdLimitControl)
         {
@@ -335,7 +336,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
             
             if (pHandle->motorType == DIRECT_DRIVE)
             {
-                hTorqueReference = Foldback_ApplyFoldback(&pHandle->FoldbackLimitSpeed, hTorqueReference, (int16_t) abs(hMeasuredSpeed));      // Apply speed limit foldback
+                hTorqueReference = Foldback_ApplyFoldback(FOLDBACK_SPEED_LIMIT, hTorqueReference, (int16_t) abs(hMeasuredSpeed));      // Apply speed limit foldback
             }
             else
             {
@@ -587,10 +588,10 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
     }
         
     int16_t hOutputTorque, hMaxTorque; 
-    hMaxTorque = Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxTorque, NULL,(int16_t) abs(hMeasuredSpeed) );
-    Foldback_UpdateMaxValue(&pHandle->FoldbackMotorSpeed, hMaxTorque);
-    Foldback_UpdateMaxValue(&pHandle->FoldbackMotorTemperature, hMaxTorque);
-    Foldback_UpdateMaxValue(&pHandle->FoldbackControllerTemperature, hMaxTorque);
+    hMaxTorque = Foldback_ApplyFoldback(FOLDBACK_MAX_TORQUE, NULL,(int16_t) abs(hMeasuredSpeed) );
+    Foldback_SetMaxOutputLimitHigh(FOLDBACK_MAX_MOTOR_SPEED, hMaxTorque);
+    Foldback_SetMaxOutputLimitHigh(FOLDBACK_MOTOR_TEMP, hMaxTorque);
+    Foldback_SetMaxOutputLimitHigh(FOLDBACK_CONTROLLER_TEMP, hMaxTorque);
     
     //for mid-drives, we need to also set the max wheel speed since it can vary based on the gear with a constant motor speed
     if (pHandle->motorType == MID_DRIVE)
@@ -604,14 +605,16 @@ static int16_t SpdTorqCtrl_ApplyTorqueFoldback(SpdTorqCtrlHandle_t * pHandle, in
         {
             pHandle->pSPD->dynamic_gear = gearRatioTable[NUM_GEARS - 1];
         }
-
-        pHandle->FoldbackMotorSpeed.hDecreasingEndValue = 10 * hMaxWheelSpeed * pHandle->pSPD->dynamic_gear; //multiplied by 10 for higher accuracy in foldback
-        pHandle->FoldbackMotorSpeed.hDecreasingRange = (MotorParameters.SpeedParameters.hFoldbackSpeedInterval / MotorParameters.SpeedParameters.hMaxAppliationSpeedRPM) * (uint16_t) pHandle->FoldbackMotorSpeed.hDecreasingEndValue;
+        
+        int32_t endValue = 10 * hMaxWheelSpeed * pHandle->pSPD->dynamic_gear;
+        uint16_t range = (MotorParameters.SpeedParameters.hFoldbackSpeedInterval / MotorParameters.SpeedParameters.hMaxAppliationSpeedRPM) * (uint16_t) endValue;
+        
+        Foldback_SetDecreasingEndValue(FOLDBACK_MAX_MOTOR_SPEED, endValue);
+        Foldback_SetDecreasingRange(FOLDBACK_MAX_MOTOR_SPEED, range);
     }
-    
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorSpeed, hInputTorque,(int16_t)abs(hMeasuredSpeed)); 
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackMotorTemperature, hOutputTorque, hMeasuredMotorTemp);
-    hOutputTorque = Foldback_ApplyFoldback(&pHandle->FoldbackControllerTemperature, hOutputTorque, hMeasuredHeatsinkTemp);
+    hOutputTorque = Foldback_ApplyFoldback(FOLDBACK_MAX_MOTOR_SPEED, hInputTorque,(int16_t)abs(hMeasuredSpeed)); 
+    hOutputTorque = Foldback_ApplyFoldback(FOLDBACK_MOTOR_TEMP, hOutputTorque, hMeasuredMotorTemp);
+    hOutputTorque = Foldback_ApplyFoldback(FOLDBACK_CONTROLLER_TEMP, hOutputTorque, hMeasuredHeatsinkTemp);
     
     //limit Torque when the Battery SoC is low to prevent UNDERVOLTAGE fault
     if(pHandle->bEnableLVtorqueLimit)
@@ -680,12 +683,12 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
 
 
     // Limit MAX POWER by the foldback to prevent BMS shutdown
-    Foldback_UpdateMaxValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower);        // this foldback limits MAX POWER after a while
-    Foldback_UpdateLimitValue(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxContinuousPower);      // this foldback limits MAX POWER immediately
-    Foldback_SetDecreasingEndValue(&pHandle->FoldbackLimitSpeed, (pHandle->hSpdLimit * SPEED_MARGIN/DIV_PERCENTAGE)); // Update speed limit foldback
-    Foldback_SetDecreasingRange(&pHandle->FoldbackLimitSpeed, DECC_RANGE_PW); // Update speed limit foldback
+    Foldback_SetMaxOutputLimitHigh(FOLDBACK_POWER_LIMIT, (int16_t)pHandle->hMaxPositivePower);        // this foldback limits MAX POWER after a while
+    Foldback_SetMaxOutputLimitLow(FOLDBACK_POWER_LIMIT, (int16_t)pHandle->hMaxContinuousPower);      // this foldback limits MAX POWER immediately
+    Foldback_SetDecreasingEndValue(FOLDBACK_SPEED_LIMIT, (pHandle->hSpdLimit * SPEED_MARGIN/DIV_PERCENTAGE)); // Update speed limit foldback
+    Foldback_SetDecreasingRange(FOLDBACK_SPEED_LIMIT, DECC_RANGE_PW); // Update speed limit foldback
   
-    pHandle->DynamicPowerHandle.hDynamicMaxPower = (uint16_t)Foldback_ApplyFoldback(&pHandle->FoldbackDynamicMaxPower, (int16_t)pHandle->hMaxPositivePower, (int16_t)pHandle->DynamicPowerHandle.hOverMaxPowerTimer);    
+    pHandle->DynamicPowerHandle.hDynamicMaxPower = (uint16_t)Foldback_ApplyFoldback(FOLDBACK_POWER_LIMIT, (int16_t)pHandle->hMaxPositivePower, (int16_t)pHandle->DynamicPowerHandle.hOverMaxPowerTimer);    
 
     if (hMeasuredSpeedUnit != 0)
     {
@@ -698,7 +701,7 @@ static int16_t SpdTorqCtrl_ApplyPowerLimitation(SpdTorqCtrlHandle_t * pHandle, i
                 //limit the toque and start timer to count on max torque elapsed timer used by foldback to reduce power after a while
                 hRetval = (int16_t) wTorqueLimit;
                 /* Check if timer is not exceeds the end of foldback */
-                if (pHandle->DynamicPowerHandle.hOverMaxPowerTimer < pHandle->FoldbackDynamicMaxPower.hDecreasingEndValue)
+                if (pHandle->DynamicPowerHandle.hOverMaxPowerTimer < Foldback_GetDecreasingEndValue(FOLDBACK_POWER_LIMIT))
                 {
                     pHandle->DynamicPowerHandle.hOverMaxPowerTimer++;
                 }

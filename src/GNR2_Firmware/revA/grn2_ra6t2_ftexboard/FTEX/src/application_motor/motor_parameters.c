@@ -85,6 +85,7 @@ void FoldbackParameters_Init(MotorParameters_t * MotorParameters)
     MotorParameters->ParametersConversion.FoldbackInitSpeed.hDefaultOutputLimitLow = 0;
     MotorParameters->ParametersConversion.FoldbackInitSpeed.hDecreasingEndValue = 10 * MotorParameters->SpeedParameters.hMaxAppliationSpeedRPM;
     MotorParameters->ParametersConversion.FoldbackInitSpeed.hDecreasingRange = 10 * MotorParameters->SpeedParameters.hFoldbackSpeedInterval;
+    MotorParameters->ParametersConversion.FoldbackInitSpeed.FoldbackConfig = TRIM;
     
     //Init torque foldback
     MotorParameters->ParametersConversion.FoldbackInitTorque.bEnableFoldback = true;
@@ -92,13 +93,15 @@ void FoldbackParameters_Init(MotorParameters_t * MotorParameters)
     MotorParameters->ParametersConversion.FoldbackInitTorque.hDefaultOutputLimitLow = MotorParameters->ParametersConversion.hNominalTorque;
     MotorParameters->ParametersConversion.FoldbackInitTorque.hDecreasingEndValue = 10 * DYNAMICTORQUE_THRESHOLD_SPEED;
     MotorParameters->ParametersConversion.FoldbackInitTorque.hDecreasingRange = 10 * DYNAMICTORQUE_THRESHOLD_SPEED;
+    MotorParameters->ParametersConversion.FoldbackInitTorque.FoldbackConfig = SET_THRESHOLD;
     
     //Init heatsink foldback
-    MotorParameters->ParametersConversion.FoldbackInitHeatsinkTemp.bEnableFoldback = true;
-    MotorParameters->ParametersConversion.FoldbackInitHeatsinkTemp.hDefaultOutputLimitHigh = MotorParameters->ParametersConversion.hNominalTorque;
-    MotorParameters->ParametersConversion.FoldbackInitHeatsinkTemp.hDefaultOutputLimitLow = 0;
-    MotorParameters->ParametersConversion.FoldbackInitHeatsinkTemp.hDecreasingEndValue = 100 * FOLDBACK_HS_TEMP_END_VALUE;
-    MotorParameters->ParametersConversion.FoldbackInitHeatsinkTemp.hDecreasingRange = 100 * FOLDBACK_HS_TEMP_INTERVAL;
+    MotorParameters->ParametersConversion.FoldbackInitControllerTemp.bEnableFoldback = true;
+    MotorParameters->ParametersConversion.FoldbackInitControllerTemp.hDefaultOutputLimitHigh = MotorParameters->ParametersConversion.hNominalTorque;
+    MotorParameters->ParametersConversion.FoldbackInitControllerTemp.hDefaultOutputLimitLow = 0;
+    MotorParameters->ParametersConversion.FoldbackInitControllerTemp.hDecreasingEndValue = 100 * FOLDBACK_HS_TEMP_END_VALUE;
+    MotorParameters->ParametersConversion.FoldbackInitControllerTemp.hDecreasingRange = 100 * FOLDBACK_HS_TEMP_INTERVAL;
+    MotorParameters->ParametersConversion.FoldbackInitControllerTemp.FoldbackConfig = TRIM;
     
     //Init motor temp foldback
     MotorParameters->ParametersConversion.FoldbackInitMotorTemp.bEnableFoldback = true;
@@ -106,6 +109,7 @@ void FoldbackParameters_Init(MotorParameters_t * MotorParameters)
     MotorParameters->ParametersConversion.FoldbackInitMotorTemp.hDefaultOutputLimitLow = 0;
     MotorParameters->ParametersConversion.FoldbackInitMotorTemp.hDecreasingEndValue = 100 * MotorParameters->TempParameters.hOverTempMotorThresholdC;
     MotorParameters->ParametersConversion.FoldbackInitMotorTemp.hDecreasingRange = 100 * MotorParameters->TempParameters.hFoldbackMotorTempInterval;
+    MotorParameters->ParametersConversion.FoldbackInitMotorTemp.FoldbackConfig = TRIM;
 }
 
 /*
