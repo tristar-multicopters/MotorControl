@@ -32,9 +32,6 @@ extern "C" {
   */
 typedef struct
 {
-    RampMngr_Handle_t TorqueRampMngr;                   /* Ramp management structure for torque reference */
-    RampMngr_Handle_t SpeedRampMngr;                    /* Ramp management structure for speed reference */
-
     Foldback_Handle_t FoldbackMotorSpeed;               /* Foldback structure used to limit maximum motor speed */
 
     Foldback_Handle_t FoldbackLimitSpeed;               /* Foldback structure used to limit the speed regarding the speed limit value */

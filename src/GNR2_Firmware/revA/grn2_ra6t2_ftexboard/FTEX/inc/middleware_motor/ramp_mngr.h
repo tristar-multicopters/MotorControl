@@ -22,6 +22,9 @@ extern "C" {
 #include "ASSERT_FTEX.h"
 #include "stdlib.h"
 
+/* Defines ------------------------------------------------------------------*/
+#define RAMP_TORQUE     0
+#define RAMP_SPEED      1
 
 typedef struct
 {
@@ -45,7 +48,7 @@ typedef struct
   * @param  pHandle related Handle of struct RampMngr_Handle_t
   * @retval none.
   */
-void RampMngr_Init(RampMngr_Handle_t * pHandle);
+void RampMngr_Init(uint8_t chosenRamp);
 
 /**
   * @brief  Exec the ramp calculations and returns the current value of the
@@ -54,7 +57,7 @@ void RampMngr_Init(RampMngr_Handle_t * pHandle);
   * @param  pHandle related Handle of struct RampMngr_Handle_t
   * @retval int32_t value of the state variable
   */
-int32_t RampMngr_Calc(RampMngr_Handle_t * pHandle);
+int32_t RampMngr_Calc(uint8_t chosenRamp);
 
 /**
   * @brief  Setup the ramp to be executed
@@ -66,28 +69,28 @@ int32_t RampMngr_Calc(RampMngr_Handle_t * pHandle);
   *         change in the value.
   * @retval bool It returns true is command is valid, false otherwise
   */
-bool RampMngr_ExecRamp(RampMngr_Handle_t * pHandle, int32_t wTargetFinal, uint32_t wSlopePerSecond);
+bool RampMngr_ExecRamp(uint8_t chosenRamp, int32_t wTargetFinal, uint32_t wSlopePerSecond);
 
 /**
   * @brief  Returns the current value of the state variable.
   * @param  pHandle related Handle of struct RampMngr_Handle_t
   * @retval int32_t value of the state variable
   */
-int32_t RampMngr_GetValue(RampMngr_Handle_t * pHandle);
+int32_t RampMngr_GetValue(uint8_t chosenRamp);
 
 /**
   * @brief  Check if the settled ramp has been completed.
   * @param  pHandle related Handle of struct RampMngr_Handle_t.
   * @retval bool It returns true if the ramp is completed, false otherwise.
   */
-bool RampMngr_IsRampCompleted(RampMngr_Handle_t * pHandle);
+bool RampMngr_IsRampCompleted(uint8_t chosenRamp);
 
 /**
   * @brief  Stop the execution of the ramp keeping the last reached value.
   * @param  pHandle related Handle of struct RampMngr_Handle_t.
   * @retval none
   */
-void RampMngr_StopRamp(RampMngr_Handle_t * pHandle);
+void RampMngr_StopRamp(uint8_t chosenRamp);
 
 
 #ifdef __cplusplus

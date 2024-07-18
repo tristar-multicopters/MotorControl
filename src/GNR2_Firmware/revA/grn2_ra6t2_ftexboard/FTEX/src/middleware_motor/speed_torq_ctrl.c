@@ -97,10 +97,8 @@ void SpdTorqCtrl_Init(SpdTorqCtrlHandle_t * pHandle, PIDHandle_t * pPI, SpdPosFd
         Foldback_EnableFoldback(FOLDBACK_SPEED_LIMIT);
     }
    
-    pHandle->TorqueRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
-    pHandle->SpeedRampMngr.wFrequencyHz = pHandle->hSTCFrequencyHz;
-    RampMngr_Init(&pHandle->TorqueRampMngr);
-    RampMngr_Init(&pHandle->SpeedRampMngr);
+    RampMngr_Init(RAMP_TORQUE);
+    RampMngr_Init(RAMP_SPEED);
     DynamicPower_Init(&pHandle->DynamicPowerHandle, (uint16_t)(DEFAULT_MAX_APPLICATION_POSITIVE_POWER), MotorParameters.PowerParameters.hEstimatedEfficiency);
     StuckProtection_Init(&pHandle->StuckProtection);
     
@@ -192,8 +190,8 @@ void SpdTorqCtrl_Clear(SpdTorqCtrlHandle_t * pHandle)
     
     PID_SetIntegralTerm(&pHandle->PISpeedLimit, pHandle->PISpeedLimit.wUpperIntegralLimit);
 
-    RampMngr_Init(&pHandle->TorqueRampMngr);
-    RampMngr_Init(&pHandle->SpeedRampMngr);
+    RampMngr_Init(RAMP_TORQUE);
+    RampMngr_Init(RAMP_SPEED);
     SpdTorqCtrl_StopRamp(pHandle);
 }
 
@@ -201,14 +199,14 @@ void SpdTorqCtrl_Clear(SpdTorqCtrlHandle_t * pHandle)
 int16_t SpdTorqCtrl_GetMecSpeedRefUnit(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    return ((int16_t)(RampMngr_GetValue(&pHandle->SpeedRampMngr) / INT16_MAX));
+    return ((int16_t)(RampMngr_GetValue(RAMP_SPEED) / INT16_MAX));
 }
 
 
 int16_t SpdTorqCtrl_GetTorqueRef(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    return ((int16_t)(RampMngr_GetValue(&pHandle->TorqueRampMngr) / INT16_MAX));
+    return ((int16_t)(RampMngr_GetValue(RAMP_TORQUE) / INT16_MAX));
 }
 
 
@@ -265,25 +263,25 @@ bool SpdTorqCtrl_ExecRamp(SpdTorqCtrlHandle_t * pHandle, int16_t hTargetFinal)
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
         pHandle->hFinalTorqueRef = hTargetFinalSat; // Store final torque value in handle
-        if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
+        if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(RAMP_TORQUE)))
         {
-            RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTargetFinalSat, pHandle->wTorqueSlopePerSecondUp); // Setup torque ramp going up
+            RampMngr_ExecRamp(RAMP_TORQUE, hTargetFinalSat, pHandle->wTorqueSlopePerSecondUp); // Setup torque ramp going up
         }
         else
         {
-            RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTargetFinalSat, pHandle->wTorqueSlopePerSecondDown); // Setup torque ramp going down
+            RampMngr_ExecRamp(RAMP_TORQUE, hTargetFinalSat, pHandle->wTorqueSlopePerSecondDown); // Setup torque ramp going down
         }
     }
     else
     {
         pHandle->hFinalSpeedRef = hTargetFinalSat; // Store final speed value in handle
-        if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(&pHandle->SpeedRampMngr)))
+        if (abs(hTargetFinalSat) > abs(RampMngr_GetValue(RAMP_SPEED)))
         {
-            RampMngr_ExecRamp(&pHandle->SpeedRampMngr, hTargetFinalSat, pHandle->wSpeedSlopePerSecondUp); // Setup speed ramp going up
+            RampMngr_ExecRamp(RAMP_SPEED, hTargetFinalSat, pHandle->wSpeedSlopePerSecondUp); // Setup speed ramp going up
         }
         else
         {
-            RampMngr_ExecRamp(&pHandle->SpeedRampMngr, hTargetFinalSat, pHandle->wSpeedSlopePerSecondDown); // Setup speed ramp going down
+            RampMngr_ExecRamp(RAMP_SPEED, hTargetFinalSat, pHandle->wSpeedSlopePerSecondDown); // Setup speed ramp going down
         }
     }
 
@@ -294,8 +292,8 @@ bool SpdTorqCtrl_ExecRamp(SpdTorqCtrlHandle_t * pHandle, int16_t hTargetFinal)
 void SpdTorqCtrl_StopRamp(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    RampMngr_StopRamp(&pHandle->TorqueRampMngr);
-    RampMngr_StopRamp(&pHandle->SpeedRampMngr);
+    RampMngr_StopRamp(RAMP_TORQUE);
+    RampMngr_StopRamp(RAMP_SPEED);
 }
 
 int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorParameters_t MotorParameters)
@@ -307,7 +305,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
     int16_t hError;
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
-        hTorqueReference = (int16_t) (RampMngr_Calc(&pHandle->TorqueRampMngr)); // Apply torque ramp
+        hTorqueReference = (int16_t) (RampMngr_Calc(RAMP_TORQUE)); // Apply torque ramp
         
           if (pHandle->motorType == DIRECT_DRIVE)
           {
@@ -397,7 +395,7 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
             Having two ramp manager (one for torque and one for speed over each other
             is not needed, so the bug 
             replace above line with below one to bring it back                           */
-        /*  hTargetSpeed = (int16_t) RampMngr_Calc(&pHandle->SpeedRampMngr);             */
+        /*  hTargetSpeed = (int16_t) RampMngr_Calc(RAMP_SPEED);             */
         
         /* Run the speed control loop */
         hMeasuredSpeed = -SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD); // Speed is somehow negative when applying positive torque, need to figure out why.
@@ -409,15 +407,15 @@ int16_t SpdTorqCtrl_CalcTorqueReference(SpdTorqCtrlHandle_t * pHandle, MotorPara
         }
         
         // ramp manager for smooth Torque 
-        if (abs(hTorqueReference) > abs(RampMngr_GetValue(&pHandle->TorqueRampMngr)))
+        if (abs(hTorqueReference) > abs(RampMngr_GetValue(RAMP_TORQUE)))
         {
-            RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTorqueReference, pHandle->wTorqueSlopePerSecondUp); // Setup torque ramp going up
+            RampMngr_ExecRamp(RAMP_TORQUE, hTorqueReference, pHandle->wTorqueSlopePerSecondUp); // Setup torque ramp going up
         }
         else
         {
-            RampMngr_ExecRamp(&pHandle->TorqueRampMngr, hTorqueReference, pHandle->wTorqueSlopePerSecondDown); // Setup torque ramp going down
+            RampMngr_ExecRamp(RAMP_TORQUE, hTorqueReference, pHandle->wTorqueSlopePerSecondDown); // Setup torque ramp going down
         }
-        hTorqueReference = (int16_t) RampMngr_Calc(&pHandle->TorqueRampMngr); // Apply torque ramp
+        hTorqueReference = (int16_t) RampMngr_Calc(RAMP_TORQUE); // Apply torque ramp
         
         hTorqueReference = SpdTorqCtrl_ApplyPowerLimitation(pHandle, hTorqueReference); // Apply power limitation
 
@@ -526,11 +524,11 @@ bool SpdTorqCtrl_IsRampCompleted(SpdTorqCtrlHandle_t * pHandle)
 
     if (pHandle->Mode == STC_TORQUE_MODE)
     {
-        retVal = RampMngr_IsRampCompleted(&pHandle->TorqueRampMngr);
+        retVal = RampMngr_IsRampCompleted(RAMP_TORQUE);
     }
     else
     {
-        retVal = RampMngr_IsRampCompleted(&pHandle->SpeedRampMngr);
+        retVal = RampMngr_IsRampCompleted(RAMP_SPEED);
     }
 
     return retVal;
@@ -540,7 +538,7 @@ bool SpdTorqCtrl_IsRampCompleted(SpdTorqCtrlHandle_t * pHandle)
 void SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(SpdTorqCtrlHandle_t * pHandle)
 {
     ASSERT(pHandle != NULL);
-    RampMngr_ExecRamp(&pHandle->SpeedRampMngr, (int32_t)SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD) * (int32_t)65536, 0);
+    RampMngr_ExecRamp(RAMP_SPEED, (int32_t)SpdPosFdbk_GetAvrgMecSpeedUnit(pHandle->pSPD) * (int32_t)65536, 0);
 }
 
 /*

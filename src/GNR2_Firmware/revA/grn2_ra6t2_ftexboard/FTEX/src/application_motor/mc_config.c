@@ -199,14 +199,6 @@ FeedforwardHandle_t FeedforwardM1 =
   */
 SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
 {
-    .TorqueRampMngr =
-    {
-        .wScalingFactor = INT16_MAX,
-    },
-        .SpeedRampMngr =
-    {
-        .wScalingFactor = INT16_MAX,
-    },
     .DynamicPowerHandle =
     {
         .hBelowMaxPowerTimeout = MAX_POWER_RECOVER_TIMEOUT,  
