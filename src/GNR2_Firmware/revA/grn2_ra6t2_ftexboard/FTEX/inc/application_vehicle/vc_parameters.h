@@ -348,5 +348,10 @@
     #define THROTTLE_TOP_SPEED VEHICLE_TOP_SPEED_KMH
 #endif
     
+/****************  GNR Controller Resistor termination *******************************/
+#ifndef CAN_RESISTOR_ENABLE
+    #define CAN_RESISTOR_ENABLE true  //Can terminator is enable by default
+#endif
+    
 #endif /*__VC_PARAMETERS_H*/
 

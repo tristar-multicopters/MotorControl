@@ -191,7 +191,11 @@
 #define POWERTRAIN_HEADLIGHT_DEFAULT        false           // Parameter that sets the default headlight state when the bike is powered on
 
 #define POWERTRAIN_TAILLIGHT_DEFAULT        true            // Parameter that sets the default tail light state when the bike is powered on
-    
+
+/****************  GNR Controller Resistor termination *******************************/
+
+#define CAN_RESISTOR_ENABLE true
+
 /******************************** BATTERY SELECTION ******************************/
 
 #include "batteries/super73_battery_EZ-ALC-25_13S2P.h" 

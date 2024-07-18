@@ -88,6 +88,7 @@
       <configSetting altId="p000.input" configurationId="p000"/>
       <configSetting altId="p001.input" configurationId="p001"/>
       <configSetting altId="pa07.input" configurationId="pa07"/>
+      <configSetting altId="pa09.output.high" configurationId="pa09"/>
       <configSetting altId="pb04.output.low" configurationId="pb04"/>
       <configSetting altId="pb08.input" configurationId="pb08"/>
       <configSetting altId="pb10.output.high" configurationId="pb10"/>

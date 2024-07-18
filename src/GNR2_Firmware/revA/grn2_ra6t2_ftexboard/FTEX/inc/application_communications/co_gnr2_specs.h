@@ -533,6 +533,12 @@ extern "C" {
 #define CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS  0x2042
 
 //OD ID will be used to
+// Enable or disable the CAN Terminal Resistor
+//
+// 0 -> Enable or disable the CAN terminal resistor
+#define  CO_OD_REG_CAN_TERMINAL_RESISTOR      0x2050
+
+//OD ID will be used to
 // receive data and commands during a firmware update.
 // the GNR doesn't have enough memory to receive
 // all bytes and needs to receive some bytes(more than 4)

@@ -54,8 +54,6 @@ bool bCANOpenTaskBootUpCompleted = false;
 
 extern osThreadId_t CANOpenTaskHandle;
 
-/********* PRIVATE FUNCTIONS *************/
-
 /** @brief  Callback function used for updating the values of the GNR
 *           object dictionary.
 */
@@ -93,7 +91,6 @@ static void UpdateObjectDictionnary(void *p_arg)
     uint8_t     hWheelDiameter[2];
     uint8_t     hFrontLightState[2];
     uint8_t     hRearLightState[2];
-
     //canopen algorithm selection
     static uint8_t CanOpenSetAlgorithm = 0;
     
@@ -624,6 +621,9 @@ static void UpdateObjectDictionnary(void *p_arg)
             uint16_t motorNTCBetaCoef;
             uint16_t motorNTCResistanceCoef;
             
+            //CAN terminator resistor default state
+            uint8_t configCANresistorStatus;
+            
             //verify is user data config is ready to be write in data flash memory.
              if(keyUserDataConfig == KEY_USER_DATA_CONFIG_UPDATED)
              {
@@ -725,9 +725,13 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 2)), pNode, &highSpeedPowerLimitingRampMinSpeedPower, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 3)), pNode, &highSpeedPowerLimitingRampMaxSpeedPower, sizeof(uint16_t));
                  
+                 
+                 //Read the CAN Resistor status to update 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_TERMINAL_RESISTOR, 0)),    pNode, &configCANresistorStatus, sizeof(uint8_t));
+                 
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
-                 //upadat Throttle/Pedal Assist variables that will be write into the user data flash.
+                 //update Throttle/Pedal Assist variables that will be write into the user data flash.
                  
                  UserConfigTask_UpdateMotorSensorType(motorTempSensorType);
                  UserConfigTask_UpdateMotorNTCBetaCoef(motorNTCBetaCoef);
@@ -821,6 +825,8 @@ static void UpdateObjectDictionnary(void *p_arg)
                     UserConfigTask_UpdateFilterBwValue(n, BW2, pasLowPassFilterBW2[n]);
                  }
                  
+                 UserConfigTask_UpdateCANterminatorState(configCANresistorStatus);
+                 
                  //write in the data flash and reset the system.
                  UserConfigTask_WriteUserConfigIntoDataFlash(&UserConfigHandle); 
                                              
@@ -850,6 +856,17 @@ void Comm_BootUp(void)
     PinConfig.PinOutput    = PUSH_PULL;
     uCAL_GPIO_ReInit(CAN_STANDBY_N_GPIO_PIN, PinConfig);
     uCAL_GPIO_Set(CAN_STANDBY_N_GPIO_PIN);
+    
+    //CAN Resistor termination configuration
+    PinConfig.PinDirection = OUTPUT;
+    PinConfig.PinPull      = NONE;
+    PinConfig.PinOutput    = OPEN_DRAIN;
+    uCAL_GPIO_ReInit(CAN_RES_ENABLE_GPIO_PIN, PinConfig);
+    uCAL_GPIO_Set(CAN_RES_ENABLE_GPIO_PIN);
+    if(0 == UserConfigTask_GetCANterminatorState()) 
+    {
+        uCAL_GPIO_Reset(CAN_RES_ENABLE_GPIO_PIN);
+    }
 
     #if (!GNR_IOT) | SUPPORT_SLAVE_ON_IOT
     /* Initialize motor 2 handle to be used by vehicle control layer */
@@ -1005,7 +1022,7 @@ bool Comm_CheckIotUsage(void)
 }
 
 /**
-  * Initialises the object dictionairy with the user config values
+  * Initialises the object dictionary with the user config values
   */
 void Comm_InitODWithUserConfig(CO_NODE *pNode)
 {
@@ -1027,7 +1044,9 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint32_t fSerialNbLow   = (uint32_t)(fserialNumber);
         uint32_t fSerialNbHigh   = (uint32_t)(fserialNumber >> 32);
     
-     
+        //CAN termination resistor enable status variable
+        uint8_t configCANresistorStatus = UserConfigTask_GetCANterminatorState();
+       
         /***************Throttle/Pedal Assist variables******************************/
         uint8_t maxPAS                             = UserConfigTask_GetNumberPasLevels();
         uint8_t pasMaxTorqueRatio                        = UserConfigTask_GetPasMaxTorqueRatio();
@@ -1120,7 +1139,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t  configThrottleAccelRampType = UserConfigTask_GetThrottleAccelRampType();
         uint16_t configThrottleAccelRampArg1 = UserConfigTask_GetThrottleAccelRampArg1();
                                               
-     
+        
         uint8_t  FilterSpeed[FILTERSPEED_ARRAY_SIZE] = {UserConfigTask_GetFilterSpeed(0), UserConfigTask_GetFilterSpeed(1)}; 
         uint16_t pasLowPassFilterBW1[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW1), UserConfigTask_GetFilterBwValue(1, BW1), UserConfigTask_GetFilterBwValue(2, BW1)};
         uint16_t pasLowPassFilterBW2[BW_ARRAY_SIZE] = {UserConfigTask_GetFilterBwValue(0, BW2), UserConfigTask_GetFilterBwValue(1, BW2), UserConfigTask_GetFilterBwValue(2, BW2)};
@@ -1128,7 +1147,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t motorTempSensorType = UserConfigTask_GetMotorSensorType();
         uint16_t motorNTCBetaCoef = UserConfigTask_GetMotorNTCBetaCoef();
         uint16_t motorNTCResistanceCoef = UserConfigTask_GetMotorNTCResistanceCoef();
-                                              
+          
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M2)),     pNode, &fSerialNbLow, sizeof(fSerialNbLow));     
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SERIAL_NB, M1)),     pNode, &fSerialNbHigh,  sizeof(fSerialNbHigh));  
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_FW_VERSION, M1)),    pNode, &hFwVersion, sizeof(uint32_t));           
@@ -1248,7 +1267,10 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 0)),    pNode, &motorTempSensorType, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 1)),    pNode, &motorNTCBetaCoef, sizeof(uint16_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 2)),    pNode, &motorNTCResistanceCoef, sizeof(uint16_t));
-
+        
+        //Can Resistor parameter
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CAN_TERMINAL_RESISTOR, 0)), pNode, &configCANresistorStatus, sizeof(uint8_t));
+        
    }           
 }
 

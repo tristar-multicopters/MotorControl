@@ -1447,6 +1447,7 @@
     <symbolicName propertyId="pa02.symbolic_name" value="M1_CURR_V"/>
     <symbolicName propertyId="pa06.symbolic_name" value="VBUS_SENSE_M1"/>
     <symbolicName propertyId="pa07.symbolic_name" value="M1_MOTOR_SELECT"/>
+    <symbolicName propertyId="pa09.symbolic_name" value="CAN_RES"/>
     <symbolicName propertyId="pb00.symbolic_name" value="M1_HS_TEMP"/>
     <symbolicName propertyId="pb01.symbolic_name" value="THROTTLE"/>
     <symbolicName propertyId="pb04.symbolic_name" value="CAN_STBY_N"/>
@@ -1533,6 +1534,9 @@
       <configSetting altId="pa07.gpio_mode.gpio_mode_in" configurationId="pa07.gpio_mode"/>
       <configSetting altId="pa08.agt0.agtio0" configurationId="pa08"/>
       <configSetting altId="pa08.gpio_mode.gpio_mode_peripheral" configurationId="pa08.gpio_mode"/>
+      <configSetting altId="pa09.output.high" configurationId="pa09"/>
+      <configSetting altId="pa09.gpio_mode.gpio_mode_out.high" configurationId="pa09.gpio_mode"/>
+      <configSetting altId="pa09.gpio_otype.gpio_otype_n_ch_od" configurationId="pa09.gpio_otype"/>
       <configSetting altId="pa10.gpt9.gtioc9b" configurationId="pa10"/>
       <configSetting altId="pa10.gpio_mode.gpio_mode_peripheral" configurationId="pa10.gpio_mode"/>
       <configSetting altId="pa13.jtag_fslash_swd.tms" configurationId="pa13"/>

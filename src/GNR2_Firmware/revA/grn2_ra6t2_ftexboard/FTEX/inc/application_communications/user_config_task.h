@@ -1260,4 +1260,22 @@ void UserConfigTask_SetHighSpeedPowerLimitingRampMaxSpeedPower(uint16_t value);
 */
 uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length);
 
+
+/**
+  @brief Function to get the configure CAN resistor state 
+  
+  @param None
+  @return enable 1 or disable 0
+*/
+uint8_t UserConfigTask_GetCANterminatorState(void);
+
+/**
+  @brief Function to set the configure CAN resistor state 
+  
+  @param enable 1 or disable 0
+  @return none
+*/
+
+void UserConfigTask_UpdateCANterminatorState(uint8_t resistorState);
+
 #endif

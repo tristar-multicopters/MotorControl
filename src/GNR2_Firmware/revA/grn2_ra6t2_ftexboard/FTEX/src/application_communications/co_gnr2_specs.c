@@ -427,9 +427,9 @@ uint8_t bObjDataRearLightBlinkDutyCycle     = 0; // % on
 //variable associated with CO_OD_REG_MASTER_SLAVE_PRESENT
 uint8_t bObjDataMasterSlavePresent          = 0;
 
-//variable associated with COD_OD_REG_PAS_SENSOR 0 (Placeholder currently not implemented) 
+//variable associated with COD_OD_REG_PAS_SENSOR 0 
 uint16_t bObjDataPasPedalRPM                = 0;
-//variable associated with COD_OD_REG_PAS_SENSOR 1 (Placeholder currently not implemented) 
+//variable associated with COD_OD_REG_PAS_SENSOR 1 
 uint8_t  bObjDataPasTorquePercent      = 0;
 //variable associated with COD_OD_REG_PAS_SENSOR 2 (Placeholder currently not implemented) 
 uint16_t bObjDataPasTorqueForceWatts        = 0;
@@ -513,6 +513,9 @@ uint16_t bObjNTCRatedResistance=0;
 
 //variable associated with CO_OD_REG_LOCK_UNLOCK_POWERTRAIN subindex 0
 uint8_t bObjLockUnlockPowertrain = 0;
+
+//variable associated with CO_OD_REG_CAN_TERMINAL_RESISTOR subindex 0
+uint8_t bObjDataConfigCANResistorState  = 0;
 
 //variable associated with CO_OD_REG_SPEED_THRESHOLD subindex 0
 uint16_t bObjPASStartupSpeedThreshold = 0;
@@ -2310,6 +2313,12 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             index++;
 
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjHighSpeedPowerLimiterRampMaxPowerAllowed};
+            //move to next OD index
+            index++;
+
+             // CAN RESISTOR TERMINATOR
+            //Used to enable or disable the CAN resistor terminator as a persistent configurable parameter
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_TERMINAL_RESISTOR, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigCANResistorState};
             //move to next OD index
             index++;
 

@@ -132,6 +132,9 @@ static User_ConfigData_t userConfigData =
     .Screen_ConfigData.HeadLightDefault = POWERTRAIN_HEADLIGHT_DEFAULT,
     .Screen_ConfigData.TailLightDefault = POWERTRAIN_TAILLIGHT_DEFAULT,
     .Screen_ConfigData.TailLightBlinkOnBrake = REAR_LIGHT_BLINK_ON_BRAKE,
+    //CAN resistor terminator enable or deisable
+    .Screen_ConfigData.CanResistorDefault = CAN_RESISTOR_ENABLE,
+    
     .Screen_ConfigData.Throttle_ConfigData.ThrottleBlock = THROTTLE_BLOCK_OFF,
     .Screen_ConfigData.Throttle_ConfigData.MaxSpeed = THROTTLE_TOP_SPEED,
     .Screen_ConfigData.Motor_Signal_Parameters.motorMixedSignal = MOTOR_TEMP_MIXED,
@@ -2230,4 +2233,30 @@ uint16_t UserConfigTask_CalculateCRC(uint8_t * buffer, uint8_t length)
     }
   
     return crc;
+}
+
+
+/**
+  @brief Function to get the configure CAN resistor state 
+  
+  @param NONE
+  @return enable 1 or disable 0
+*/
+
+uint8_t UserConfigTask_GetCANterminatorState(void)
+{
+    return userConfigData.Screen_ConfigData.CanResistorDefault;
+}
+
+/**
+  @brief Function to set the configure CAN resistor state 
+  
+  @param enable 1 or disable 0
+  @return none
+*/
+
+void UserConfigTask_UpdateCANterminatorState(uint8_t resistorState)
+{
+    //In config structure the value is uint8_t castr is required
+    userConfigData.Screen_ConfigData.CanResistorDefault = resistorState;
 }

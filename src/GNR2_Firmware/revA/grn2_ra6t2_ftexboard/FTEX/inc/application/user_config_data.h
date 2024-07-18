@@ -149,6 +149,7 @@ typedef struct
     uint8_t  HeadLightDefault;      // Contains the default state of the head light (on or off)
     uint8_t  TailLightDefault;      // Contains the default state of the tail light (on or off)      
     uint8_t  TailLightBlinkOnBrake;    
+    uint8_t  CanResistorDefault;    // Can termination resistor enable or disable default state.
     Throttle_ConfigData_t Throttle_ConfigData;
     Motor_Signal_Parameters_t Motor_Signal_Parameters;
 } Screen_ConfigData_t;
