@@ -137,6 +137,15 @@ PAS_Handle_t PedalAssistHandle =
     .sParameters.PASMaxTorqRatiosInPercentage[7] = PAS_7_MAX_TORQUE_PERCENT,
     .sParameters.PASMaxTorqRatiosInPercentage[8] = PAS_8_MAX_TORQUE_PERCENT,
     .sParameters.PASMaxTorqRatiosInPercentage[9] = PAS_9_MAX_TORQUE_PERCENT,
+
+    .sParameters.PASSpeedThresholds[0] = STARTUP_PAS_SPEED_THRESHOLD,
+    .sParameters.PASSpeedThresholds[1] = RUNTIME_PAS_SPEED_THRESHOLD,
+    .sParameters.PASTorqueScalingPedalRPMActivated = TORQUE_SCALING_PEDAL_RPM,
+    .sParameters.PASTorqueScalingPedalRPMParameters[0] = MIN_RPM_SCALING,
+    .sParameters.PASTorqueScalingPedalRPMParameters[1] = MAX_RPM_SCALING,
+    .sParameters.PASTorqueScalingPedalRPMParameters[2] = GAIN_AT_MIN_RPM,
+    .sParameters.PASTorqueScalingPedalRPMParameters[3] = GAIN_AT_MAX_RPM,
+    .sParameters.rampType = PAS_RAMP_SELECTION,
     
     .bPASPowerEnable = false,
     .bPASCadenceRunningOverride = false,

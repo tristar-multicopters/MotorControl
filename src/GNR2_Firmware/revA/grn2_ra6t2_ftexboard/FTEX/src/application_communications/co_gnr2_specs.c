@@ -514,6 +514,57 @@ uint16_t bObjNTCRatedResistance=0;
 //variable associated with CO_OD_REG_LOCK_UNLOCK_POWERTRAIN subindex 0
 uint8_t bObjLockUnlockPowertrain = 0;
 
+//variable associated with CO_OD_REG_SPEED_THRESHOLD subindex 0
+uint16_t bObjPASStartupSpeedThreshold = 0;
+//variable associated with CO_OD_REG_SPEED_THRESHOLD subindex 1
+uint16_t bObjPASRuntimeSpeedThreshold = 0;
+
+//variable associated with CO_OD_PAS_DETECTION_PARAMETERS subindex 0
+uint16_t bObjPASTorqueDetectionValue = 0;
+//variable associated with CO_OD_PAS_DETECTION_PARAMETERS subindex 1
+uint16_t bObjPASStartupPulsesNumber = 0;
+//variable associated with CO_OD_PAS_DETECTION_PARAMETERS subindex 2
+uint16_t bObjPASStartupDetectionWindow = 0;
+//variable associated with CO_OD_PAS_DETECTION_PARAMETERS subindex 3
+uint16_t bObjPASRuntimePulsesNumber = 0;
+//variable associated with CO_OD_PAS_DETECTION_PARAMETERS subindex 4
+uint16_t bObjPASRuntimeDetectionWindow = 0;
+
+//variable associated with CO_OD_CADENCE_AND_OR_TORQUE subindex 0
+uint8_t bObjPASCadenceAndOrTorque = 0;
+
+//variable associated with CO_OD_TORQUE_SCALING_PEDAL_RPM subindex 0
+uint8_t bObjTorqueScalingPedalRPMActivated = 0;
+//variable associated with CO_OD_TORQUE_SCALING_PEDAL_RPM subindex 1
+uint16_t bObjTorqueScalingMinRPM = 0;
+//variable associated with CO_OD_TORQUE_SCALING_PEDAL_RPM subindex 2
+uint16_t bObjTorqueScalingMaxRPM = 0;
+//variable associated with CO_OD_TORQUE_SCALING_PEDAL_RPM subindex 3
+uint16_t bObjTorqueScalingGainMin = 0;
+//variable associated with CO_OD_TORQUE_SCALING_PEDAL_RPM subindex 4
+uint16_t bObjTorqueScalingGainMax = 0;
+
+//variable associated with CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS subindex 0
+uint16_t bObjDynamicDecelerationRampMinSpeed = 0;
+//variable associated with CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS subindex 1
+uint16_t bObjDynamicDecelerationRampMaxSpeed = 0;
+//variable associated with CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS subindex 2
+uint16_t bObjDynamicDecelerationRampMinRampValue = 0;
+//variable associated with CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS subindex 3
+uint16_t bObjDynamicDecelerationRampMaxRampValue = 0;
+
+//variable associated with CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS subindex 0
+uint16_t bObjHighSpeedPowerLimiterRampMinSpeed = 0;
+//variable associated with CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS subindex 1
+uint16_t bObjHighSpeedPowerLimiterRampMaxSpeed = 0;
+//variable associated with CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS subindex 2
+uint16_t bObjHighSpeedPowerLimiterRampMinPowerAllowed = 0;
+//variable associated with CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS subindex 3
+uint16_t bObjHighSpeedPowerLimiterRampMaxPowerAllowed = 0;
+
+//variable associated with CO_OD_PAS_RAMP_SELECTION subindex 0
+uint8_t bObjPASRampSelection = 0;
+
 //variable associated with CO_OD_REG_FIRMWAREUPDATE_MEMORY subindex 0
 uint8_t bObjOtaCommand = 0;
 
@@ -1793,27 +1844,6 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_MAX_TORQUE_RATIO, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasMaxTorqueRatio};
             //move to next OD index
             index++;
-        
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueStartupSpeed};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 1, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueStartupThreshold};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceStartupNumbPulses};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceStartupWindows};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_STARTUP, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithmStartup};
-            //move to next OD index
-            index++;
                                           
             //Application - How much the motor multiplies the torque sensor input from user. Only relevant for torque PAS.
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataTorqueSensorMultiplier[0]};
@@ -2119,169 +2149,7 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CONTROLLER_THROTTLE, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataConfigPASOverThrottle};
             //move to next OD index
             index++;
-                        
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasTorqueRunningThreshold};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceRunningNumbPulses};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPasCadenceRunningWindows};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DETECTION_RUNNING, 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPasAlgorithmRunning};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas1AccelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas1AccelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas2AccelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas2AccelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas3AccelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 5, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas3AccelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas4AccelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 7, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas4AccelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas5AccelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 9, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas5AccelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 10, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas6AccelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 11, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas6AccelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 12, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas7AccelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 13, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas7AccelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 14, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas8AccelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 15, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas8AccelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 16, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas9AccelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_ACCEL_RAMP, 17, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas9AccelRampArg1};
-            //move to next OD index
-            index++;
-            
-             
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas1DecelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas1DecelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 2, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas2DecelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas2DecelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 4, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas3DecelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 5, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas3DecelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 6, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas4DecelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 7, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas4DecelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 8, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas5DecelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 9, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas5DecelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 10, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas6DecelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 11, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas6DecelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 12, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas7DecelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 13, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas7DecelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 14, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas8DecelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 15, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas8DecelRampArg1};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 16, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataPas9DecelRampType};
-            //move to next OD index
-            index++;
-            
-            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_PAS_DECEL_RAMP, 17, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDataPas9DecelRampArg1};
-            //move to next OD index
-            index++;
-            
-            
+                     
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_CAN_SCREEN, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjDataCanOpenSetAlgorithm};
             //move to next OD index
             index++;
@@ -2349,7 +2217,102 @@ static void CO_addObj(uint16_t objId, bool deviceType)
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_LOCK_UNLOCK_POWERTRAIN, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjLockUnlockPowertrain};
             //move to next OD index
             index++;
+
+            // PAS Speed thresholds
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SPEED_THRESHOLD, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjPASStartupSpeedThreshold};
+            //move to next OD index
+            index++;
             
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_SPEED_THRESHOLD, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjPASRuntimeSpeedThreshold};
+            //move to next OD index
+            index++;
+
+            // PAS Detection parameters
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_PAS_DETECTION_PARAMETERS, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjPASTorqueDetectionValue};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_PAS_DETECTION_PARAMETERS, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjPASStartupPulsesNumber};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_PAS_DETECTION_PARAMETERS, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjPASStartupDetectionWindow};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_PAS_DETECTION_PARAMETERS, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjPASRuntimePulsesNumber};
+            //move to next OD index
+            index++;
+                    
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_PAS_DETECTION_PARAMETERS, 4, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjPASRuntimeDetectionWindow};
+            //move to next OD index
+            index++;
+
+            // PAS Cadence AND/OR Torque
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_CADENCE_AND_OR_TORQUE, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjPASCadenceAndOrTorque};
+            //move to next OD index
+            index++;
+
+            // Torque scaling by pedal RPM
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TORQUE_SCALING_PEDAL_RPM, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjTorqueScalingPedalRPMActivated};
+            //move to next OD index
+            index++;
+            
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TORQUE_SCALING_PEDAL_RPM, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjTorqueScalingMinRPM};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TORQUE_SCALING_PEDAL_RPM, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjTorqueScalingMaxRPM};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TORQUE_SCALING_PEDAL_RPM, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjTorqueScalingGainMin};
+            //move to next OD index
+            index++;
+                    
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_TORQUE_SCALING_PEDAL_RPM, 4, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjTorqueScalingGainMax};
+            //move to next OD index
+            index++;
+
+            // PAS Ramp selection
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_PAS_RAMP_SELECTION, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)&bObjPASRampSelection};
+            //move to next OD index
+            index++;
+
+            // Dynamic deceleration ramp parameters
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDynamicDecelerationRampMinSpeed};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDynamicDecelerationRampMaxSpeed};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDynamicDecelerationRampMinRampValue};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjDynamicDecelerationRampMaxRampValue};
+            //move to next OD index
+            index++;
+            
+            // High speed power limiting ramp parameters
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjHighSpeedPowerLimiterRampMinSpeed};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 1, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjHighSpeedPowerLimiterRampMaxSpeed};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 2, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjHighSpeedPowerLimiterRampMinPowerAllowed};
+            //move to next OD index
+            index++;
+
+            GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)&bObjHighSpeedPowerLimiterRampMaxPowerAllowed};
+            //move to next OD index
+            index++;
+
             //Application - Used to control the firmware update procedure.
             //subindex 0 is used to receive command from the IOT module to control the DFU process.
             GNR2_OD[index] = (struct CO_OBJ_T){CO_KEY(CO_OD_REG_FIRMWAREUPDATE_MEMORY, 0, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(&bObjOtaCommand)};

@@ -190,106 +190,6 @@ uint8_t UserConfigTask_GetPasMaxTorqueRatio(void);
 void UserConfigTask_UpdatePasMaxTorqueRatio(uint8_t value);
 
 /**
-  @brief Function to update Torque Minimum Threshold Startup
-  read from data flash memory.
-  
-  @param uint8_t value to be passed into the Torque Minimum Threshold Startup
-  @return void
- 
-*/
-uint8_t UserConfigTask_GetPasTorqueStartupSpeed(void);
-
-/**
-  @brief Function to get Torque Minimum Threshold Startup
-  read from data flash memory.
-  
-  @param void
-  @return uint8_t a number that represent Torque Minimum Threshold
-  on %(0 until 100).
-*/
-void UserConfigTask_UpdatePasTorqueStartupSpeed(uint8_t value);
-
-/**
-  @brief Function to get Startup Offset Minimum Threshold Speed
-  read from data flash memory.
-  
-  @param void
-  @return uint8_t a number that represent Startup Offset Minimum Threshold Speed
-  in RPM.
-*/
-uint8_t UserConfigTask_GetPasTorqueStartupThreshold(void);
-
-/**
-  @brief Function to update Startup Offset Minimum Threshold Speed
-  read from data flash memory.
-  
-  @param uint8_t value to be passed into the Startup Offset Minimum Threshold Speed
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasTorqueStartupThreshold(uint8_t value);
-
-
-/**
-  @brief Function to get pasCadenceStartupNumbPulses
-  read from data flash memory.
-  
-  @param void
-  @return uint16_t a number that represent pasCadenceStartupNumbPulses.
-*/
-uint16_t UserConfigTask_GetPasCadenceStartupNumbPulses(void);
-
-/**
-  @brief Function to update pasCadenceStartupNumbPulses
-  read from data flash memory.
-  
-  @param uint16_t value to be passed into the pasCadenceStartupNumbPulses
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasCadenceStartupNumbPulses(uint16_t value);
-
-/**
-  @brief Function to get time windows used to check the number of
-  pulses detected from the cadence sensor read from data flash memory.
-  
-  @param void
-  @return uint16_t a number that represent time windows used to check the number of
-  pulses.
-*/
-uint16_t UserConfigTask_GetPasCadenceStartupWindows(void);
-
-/**
-  @brief Function to update time windows used to check the number of
-  pulses detected from the cadence sensor read from data flash memory.
-  
-  @param uint16_t value to be passed into the time windows used to check the number of
-  pulses.
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasCadenceStartupWindows(uint16_t value);
-
-/**
-  @brief Function to get pas algorithm detection used on startup state
-  read from data flash memory.
-  
-  @param void
-  @return uint23_t pas algorithm detection used on startup state.
-*/
-uint8_t UserConfigTask_GetPasAlgorithmStartup(void);
-
-/**
-  @brief Function to update pas algorithm detection used on startup state
-  read from data flash memory.
-  
-  @param uint32_t value equivalent to the pas algorithm detection that must be used.
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasPasAlgorithmStartup(uint8_t value);
-
-/**
   @brief Function to get Torque Sensor Multiplier(GAIN)by PAS level
   read from data flash memory.
   
@@ -884,159 +784,6 @@ uint16_t UserConfigTask_GetFilterBwValue(uint8_t index, uint8_t bwType);
 void UserConfigTask_UpdateFilterBwValue(uint8_t index, uint8_t bwType, uint16_t value);
 
 /**
-  @brief Function to get Minimum Torque Threshold
-  read from data flash memory on running mode.
-  
-  @param void
-  @return uint8_t a number that represent Minimum Torque Threshold.
-
-*/
-uint8_t UserConfigTask_GetPasTorqueRunningThreshold(void);
-
-/**
-  @brief Function to update Minimum Torque Threshold
-  read from data flash memory on running mode.
-  
-  @param uint8_t value to be passed into the  Minimum Torque Threshold.
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasTorqueRunningThreshold(uint8_t value);
-
-/**
-  @brief Function to get pasCadenceRunningNumbPulses
-  read from data flash memory.
-  
-  @param void
-  @return uint16_t a number that represent pasCadenceRunningNumbPulses.
-*/
-uint16_t UserConfigTask_GetPasCadenceRunningNumbPulses(void);
-
-/**
-  @brief Function to update pasCadenceRunningNumbPulses
-  read from data flash memory.
-  
-  @param uint16_t value to be passed into the pasCadenceRunningNumbPulses
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasCadenceRunningNumbPulses(uint16_t value);
-
-/**
-  @brief Function to get time windows used to check the number of
-  pulses detected from the cadence sensor read from data flash memory
-  on run mode.
-  
-  @param void
-  @return uint16_t a number that represent time windows used to check the number of
-  pulses.
-*/
-uint16_t UserConfigTask_GetPasCadenceRunningWindows(void);
-
-/**
-  @brief Function to update time windows used to check the number of
-  pulses detected from the cadence sensor read from data flash memory
-  on run mode.
-  
-  @param uint32_t value to be passed into the time windows used to check the number of
-  pulses.
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasCadenceRunningWindows(uint16_t value);
-
-/**
-  @brief Function to get pas algorithm detection used on running state
-  read from data flash memory.
-  
-  @param void
-  @return uint23_t pas algorithm detection used on running state.
-*/
-uint8_t UserConfigTask_GetPasAlgorithmRunning(void);
-
-/**
-  @brief Function to update pas algorithm detection used on running state
-  read from data flash memory.
-  
-  @param uint32_t value equivalent to the pas algorithm detection that must be used.
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasPasAlgorithmRunning(uint8_t value);
-
-/**
-  @brief Function to get pas acceleration ramp type read from data flash memory.
-  
-  @param  uint8_t pasLevel
-  @return uint8_t type of ramp.
- 
-*/
-uint8_t UserConfigTask_GetPasAccelRampType(uint8_t pasLevel);
-
-/**
-  @brief Function to update the pas acceleration ramp type read from data flash memory.
-  
-  @param uint8_t pasLevel, uint8_t type of ramp.
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasAccelRampType(uint8_t pasLevel, uint8_t rampType);
-
-/**
-  @brief Function to get pas acceleration ramp argument 1 read from data flash memory.
-  
-  @param  uint8_t pasLevel
-  @return uint16_t argument 1
- 
-*/
-uint16_t UserConfigTask_GetPasAccelRampArg1(uint8_t pasLevel);
-
-/**
-  @brief Function to update the pas acceleration ramp argument 1 read from data flash memory.
-  
-  @param uint8_t pasLevel, uint16_t argument 1.
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasAccelRampArg1(uint8_t pasLevel, uint16_t arg1);
-
-/**
-  @brief Function to get pas deceleration ramp type read from data flash memory.
-  
-  @param  uint8_t pasLevel
-  @return uint8_t type of ramp.
- 
-*/
-uint8_t UserConfigTask_GetPasDecelRampType(uint8_t pasLevel);
-
-/**
-  @brief Function to update the pas deceleration ramp type read from data flash memory.
-  
-  @param uint8_t pasLevel, uint8_t type of ramp.
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasDecelRampType(uint8_t pasLevel, uint8_t rampType);
-
-/**
-  @brief Function to get pas deceleration ramp argument 1 read from data flash memory.
-  
-  @param  uint8_t pasLevel
-  @return uint16_t argument 1
- 
-*/
-uint16_t UserConfigTask_GetPasDecelRampArg1(uint8_t pasLevel);
-
-/**
-  @brief Function to update the pas deceleration ramp argument 1 read from data flash memory.
-  
-  @param uint8_t pasLevel, uint16_t argument 1.
-  @return void
- 
-*/
-void UserConfigTask_UpdatePasDecelRampArg1(uint8_t pasLevel, uint16_t arg1);
-
-/**
   @brief Function to get Throttle BlockOff Value
   read from data flash memory.
   
@@ -1215,6 +962,292 @@ uint16_t UserConfigTask_GetMotorNTCResistanceCoef(void);
   @return none.
 */
 void UserConfigTask_UpdateMotorNTCResistanceCoef(uint16_t value);
+
+/**
+  @brief Get the PAS startup speed threshold
+  @return uint16_t value of PAS statup speed threshold
+*/
+uint16_t UserConfigTask_GetPASStatupSpeedThreshold(void);
+
+/**
+  @brief Set the PAS startup speed threshold
+  @param uint16_t Value of PAS startup speed threshold to set
+  @return none.
+*/
+void UserConfigTask_SetPASStartupSpeedThreshold(uint16_t value);
+
+/**
+  @brief Get the PAS runtime speed threshold
+  @return uint16_t value of PAS runtime speed threshold
+*/
+uint16_t UserConfigTask_GetPASRuntimeSpeedThreshold(void);
+
+/**
+  @brief Set the PAS runtime speed threshold
+  @param uint16_t Value of PAS runtime speed threshold to set
+  @return none.
+*/
+void UserConfigTask_SetPASRuntimeSpeedThreshold(uint16_t value);
+
+/**
+  @brief Get the PAS torque detection value
+  @return uint16_t value of PAS runtime speed threshold
+*/
+uint16_t UserConfigTask_GetPASTorqueDetectionValue(void);
+
+/**
+  @brief Set the PAS torque detection value
+  @param uint16_t Value of PAS torque detection value to set
+  @return none.
+*/
+void UserConfigTask_SetPASTorqueDetectionValue(uint16_t value);
+
+/**
+  @brief Get the PAS startup pulses number
+  @return uint16_t value of PAS startup pulses number
+*/
+uint16_t UserConfigTask_GetPASStartupPulses(void);
+
+/**
+  @brief Set the PAS startup pulses number
+  @param uint16_t Value of PAS startup pulses number to set
+  @return none.
+*/
+void UserConfigTask_SetPASStartupPulses(uint16_t value);
+
+/**
+  @brief Get the PAS startup time window
+  @return uint16_t value of PAS startup timewindow
+*/
+uint16_t UserConfigTask_GetPASStartupTimeWindow(void);
+
+/**
+  @brief Set the PAS startup time window
+  @param uint16_t Value of PAS startup time window to set
+  @return none.
+*/
+void UserConfigTask_SetPASStartupTimeWindow(uint16_t value);
+
+/**
+  @brief Get the PAS runtime pulses number
+  @return uint16_t value of PAS runtime pulses number
+*/
+uint16_t UserConfigTask_GetPASRuntimePulses(void);
+
+/**
+  @brief Set the PAS runtime pulses number
+  @param uint16_t Value of PAS runtime pulses number to set
+  @return none.
+*/
+void UserConfigTask_SetPASRuntimePulses(uint16_t value);
+
+/**
+  @brief Get the PAS runtime time window
+  @return uint16_t value of PAS runtime timewindow
+*/
+uint16_t UserConfigTask_GetPASRuntimeTimeWindow(void);
+
+/**
+  @brief Set the PAS runtime time window
+  @param uint8_t Value of PAS runtime time window to set
+  @return none.
+*/
+void UserConfigTask_SetPASRuntimeTimeWindow(uint16_t value);
+
+/**
+  @brief Get the cadence AND/OR torque flag
+  @return uint8_t value of cadence AND/OR torque flag
+*/
+uint8_t UserConfigTask_GetPASCadenceAndOrTorque(void);
+
+/**
+  @brief Set the cadence AND/OR torque flag
+  @param uint16_t Value of cadence AND/OR torque flag
+  @return none.
+*/
+void UserConfigTask_SetPASCadenceAndOrTorque(uint8_t value);
+
+/**
+  @brief Get the torque scaling pedal RPM activated flag
+  @return uint8_t value of torque scaling pedal RPM activated flag
+*/
+uint8_t UserConfigTask_GetPASTorqueScalingPedalRPMActivated(void);
+
+/**
+  @brief Set the torque scaling pedal RPM activated flag
+  @param uint16_t Value of torque scaling pedal RPM activated flag
+  @return none.
+*/
+void UserConfigTask_SetPASTorqueScalingPedalRPMActivated(uint8_t value);
+
+/**
+  @brief Get the PAS torque scaling min RPM
+  @return uint16_t value of PAS torque scaling min RPM
+*/
+uint16_t UserConfigTask_GetPASTorqueScalingMinRPM(void);
+
+/**
+  @brief Set the PAS torque scaling min RPM
+  @param uint16_t Value of PAS torque scaling min RPM
+  @return none.
+*/
+void UserConfigTask_SetPASTorqueScalingMinRPM(uint16_t value);
+
+/**
+  @brief Get the PAS torque scaling max RPM
+  @return uint16_t value of PAS torque scaling max RPM
+*/
+uint16_t UserConfigTask_GetPASTorqueScalingMaxRPM(void);
+
+/**
+  @brief Set the PAS torque scaling max RPM
+  @param uint16_t Value of PAS torque scaling max RPM
+  @return none.
+*/
+void UserConfigTask_SetPASTorqueScalingMaxRPM(uint16_t value);
+
+/**
+  @brief Get the PAS torque scaling min RPM gain
+  @return uint16_t value of PAS torque scaling min RPM gain
+*/
+uint16_t UserConfigTask_GetPASTorqueScalingMinRPMGain(void);
+
+/**
+  @brief Set the PAS torque scaling min RPM gain
+  @param uint16_t Value of PAS torque scaling min RPM gain
+  @return none.
+*/
+void UserConfigTask_SetPASTorqueScalingMinRPMGain(uint16_t value);
+
+/**
+  @brief Get the PAS torque scaling max RPM gain
+  @return uint16_t value of PAS torque scaling max RPM gain
+*/
+uint16_t UserConfigTask_GetPASTorqueScalingMaxRPMGain(void);
+
+/**
+  @brief Set the PAS torque scaling max RPM gain
+  @param uint16_t Value of PAS torque scaling max RPM gain
+  @return none.
+*/
+void UserConfigTask_SetPASTorqueScalingMaxRPMGain(uint16_t value);
+
+/**
+  @brief Get the PAS ramp type
+  @return uint16_t value of PAS ramp type
+*/
+uint8_t UserConfigTask_GetPASRampType(void);
+
+/**
+  @brief Set the PAS ramp type
+  @param uint8_t Value of PAS ramp type
+  @return none.
+*/
+void UserConfigTask_SetPASRampType(uint8_t value);
+
+/**
+  @brief Get the dynamic deceleration ramp start
+  @return uint16_t value of dynamic deceleration ramp start
+*/
+uint16_t UserConfigTask_GetDynamicDecelerationRampStart(void);
+
+/**
+  @brief Set the dynamic deceleration ramp start
+  @param uint16_t Value of dynamic deceleration ramp start
+  @return none.
+*/
+void UserConfigTask_SetDynamicDecelerationRampStart(uint16_t value);
+
+/**
+  @brief Get the dynamic deceleration ramp end
+  @return uint16_t value of dynamic deceleration ramp end
+*/
+uint16_t UserConfigTask_GetDynamicDecelerationRampEnd(void);
+
+/**
+  @brief Set the dynamic deceleration ramp end
+  @param uint16_t Value of dynamic deceleration ramp end
+  @return none.
+*/
+void UserConfigTask_SetDynamicDecelerationRampEnd(uint16_t value);
+
+/**
+  @brief Get the dynamic deceleration max deceleration
+  @return uint16_t value of dynamic deceleration max deceleration
+*/
+uint16_t UserConfigTask_GetDynamicDecelerationMaxDeceleration(void);
+
+/**
+  @brief Set the dynamic deceleration ramp max deceleration
+  @param uint16_t Value of dynamic deceleration ramp max deceleration
+  @return none.
+*/
+void UserConfigTask_SetDynamicDecelerationMaxDeceleration(uint16_t value);
+
+/**
+  @brief Get the dynamic deceleration min deceleration
+  @return uint16_t value of dynamic deceleration min deceleration
+*/
+uint16_t UserConfigTask_GetDynamicDecelerationMinDeceleration(void);
+
+/**
+  @brief Set the dynamic deceleration ramp min deceleration
+  @param uint16_t Value of dynamic deceleration ramp min deceleration
+  @return none.
+*/
+void UserConfigTask_SetDynamicDecelerationMinDeceleration(uint16_t value);
+
+/**
+  @brief Get the high speed power limiting ramp start
+  @return uint16_t value of high speed power limiting ramp start
+*/
+uint16_t UserConfigTask_GetHighSpeedPowerLimitingRampStart(void);
+
+/**
+  @brief Set the high speed power limiting ramp start
+  @param uint16_t Value of high speed power limiting ramp start
+  @return none.
+*/
+void UserConfigTask_SetHighSpeedPowerLimitingRampStart(uint16_t value);
+
+/**
+  @brief Get the high speed power limiting ramp end
+  @return uint16_t value of high speed power limiting ramp end
+*/
+uint16_t UserConfigTask_GetHighSpeedPowerLimitingRampEnd(void);
+
+/**
+  @brief Set the high speed power limiting ramp end
+  @param uint16_t Value of high speed power limiting ramp end
+  @return none.
+*/
+void UserConfigTask_SetHighSpeedPowerLimitingRampEnd(uint16_t value);
+
+/**
+  @brief Get the high speed power limiting ramp min speed power
+  @return uint16_t value of high speed power limiting ramp min speed power
+*/
+uint16_t UserConfigTask_GetHighSpeedPowerLimitingMinSpeedPower(void);
+
+/**
+  @brief Set the high speed power limiting ramp min speed power
+  @param uint16_t Value of high speed power limiting ramp min speed power
+  @return none.
+*/
+void UserConfigTask_SetHighSpeedPowerLimitingRampMinSpeedPower(uint16_t value);
+
+/**
+  @brief Get the high speed power limiting ramp max speed power
+  @return uint16_t value of high speed power limiting ramp max speed power
+*/
+uint16_t UserConfigTask_GetHighSpeedPowerLimitingMaxSpeedPower(void);
+
+/**
+  @brief Set the high speed power limiting ramp max speed power
+  @param uint16_t Value of high speed power limiting ramp max speed power
+  @return none.
+*/
+void UserConfigTask_SetHighSpeedPowerLimitingRampMaxSpeedPower(uint16_t value);
 
 /**
   @brief Function used to calculate a CRC 16 type using the same polynom 

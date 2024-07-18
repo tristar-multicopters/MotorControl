@@ -71,7 +71,13 @@ typedef struct
     uint8_t PASMaxSpeed[10];                  // Max speed to each PAS level.
     uint8_t PASMinTorqRatiosInPercentage[10]; // Min PAS Torque ratio in % for each level
     uint8_t PASMaxTorqRatiosInPercentage[10]; // Max PAS Torque ratio in % for each level
-    int16_t walkModeTorqueRatio;              // Torque ratio in % for walk mode    
+    int16_t walkModeTorqueRatio;              // Torque ratio in % for walk mode
+
+    float       PASSpeedThresholds[2];                      // Speed thresholds where the PAS changes from startup to runtime
+    uint16_t    PASDetectionParameters[5];                  // List of PAS detection parameters
+    bool        PASTorqueScalingPedalRPMActivated;          // Flag used to activate the torque scaling option
+    float       PASTorqueScalingPedalRPMParameters[4];      // Torque scaling by pedaling RPM parameters
+    RampType_t  rampType;                                   // PAS ramp selection
 } PAS_Parameters_t;
 
 typedef struct
@@ -257,5 +263,66 @@ void PedalAssist_SetPASAlgorithm(PAS_Handle_t * pHandle, PasAlgorithm_t aPASAlgo
     * @retval True if torque sensor issue is detected
     */
 bool PedalAssist_TorqueSensorIssueDetected(PAS_Handle_t * pHandle);
+
+/**
+  @brief  Set PAS startup and runtime speed thresholds
+  @param  pHandle: PAS Handle
+  @param  speedThresholds: Current PAS startup and runtime speed thresholds
+  @return none
+ */
+void PedalAssist_SetSpeedThresholds(PAS_Handle_t *pHandle, uint16_t startupSpeedThreshold, uint16_t runtimeSpeedThresold);
+
+/**
+  @brief  Set PAS parameters
+  @param  pHandle: PAS Handle
+  @param  torqueThreshold : Torque value (in %) to detect PAS to set
+  @param  startupPulses: Number of pulses on startup detection to set
+  @param  startupTimeWindow : Startup detection time window to set 
+  @param  runtimePulses: Number of pulses on runtime detection to set
+  @param  runtimeTimeWindow : Runtime detection time window to set 
+  @return none
+ */
+void PedalAssist_SetPASDetectionParameters(PAS_Handle_t *pHandle, uint16_t torqueThreshold, uint16_t startupPulses, 
+                                                uint16_t startupTimeWindow, uint16_t runtimePulses, uint16_t runtimeTimeWindow);
+
+/**
+  @brief  Set PAS cadence AND/OR torque flag
+  @param  pHandle: PAS Handle
+  @param  cadenceAndOrTorque: Option to select : 
+          0 : Cadence OR Torque
+          1 : Cadence AND Torque
+  @return none
+ */
+void PedalAssist_SetPASCadenceAndOrTorque(PAS_Handle_t *pHandle, uint8_t cadenceAndOrTorque);
+
+/**
+  @brief  Set the torque scaling pedal RPM option
+  @param  pHandle: PAS Handle
+  @param  activate: Flag to activate, deactivate the torque scaling option
+                    false : option is disabled
+                    true : option is enabled
+  @return none
+ */
+void PedalAssist_SetTorqueScalingPedalRPM(PAS_Handle_t *pHandle, uint8_t activate);
+
+/**
+  @brief  Torque scaling pedal RPM parameters
+  @param  pHandle: PAS Handle
+  @param  minRPM: Minimum pedaling RPM where the torque gain scaling starts
+  @param  maxRPM: Maximum pedaling RPM where the torque gain scaling stops
+  @param  minGain: Torque scaling gain (in %) applied at min RPM
+  @param  maxGain: Torque scaling gain (in %) applied at max RPM
+  @return none
+ */
+void PedalAssist_SetTorqueScalingPedalRPMParameters(PAS_Handle_t *pHandle, uint16_t minRPM,
+                                                    uint16_t maxRPM, uint16_t minGain, uint16_t maxGain);
+
+/**
+  @brief  Set PAS ramp type
+  @param  pHandle: handle of the vehicle
+  @param  rampType: Ramp type to set
+  @return none
+ */
+void PedalAssist_SetPASRampType(PAS_Handle_t *pHandle, uint8_t rampType);
 
 #endif /*__PEDAL_ASSIST_H*/

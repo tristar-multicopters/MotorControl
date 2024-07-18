@@ -306,7 +306,7 @@ uint16_t CanVehiInterface_GetVehiclePedalRPM();
 uint8_t CanVehiInterface_GetPedalTorqPercentage();
 
 /**
-  @brief Set new lock/unlock status
+  @brief  Set new lock/unlock status
   @param  pHandle: handle of the vehicle
   @param  lockStatus: Current lock/unlock status read on CAN
   @return none

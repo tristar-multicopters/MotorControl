@@ -244,26 +244,6 @@ extern "C" {
 //PAS_MAX_TORQUE_RATIO                  100  
 #define CO_OD_REG_PAS_MAX_TORQUE_RATIO         0x2016
 
-//OD ID used to setup some PAS parameters on startup condition.
-// this object has 5 subindex 
-//
-// 0 -> hStartupOffsetMTSpeedKMH = PTS_OFFSET_STARTUP_SPEED_KMH
-//     Startup config speed. Speed at which startup configuration becomes active.
-//
-// 1 -> hOffsetMTStartup = PTS_OFFSET_PTS2TORQUE_STARTUP.
-//     Startup threshold of the torque sensor (if present). 
-//     Threshold in % of pressure needed to push power (when under the startup config speed)
-//
-// 2 -> sParameters.hPedalSpeedSens_MinPulseStartup = PEDALSPEEDSENSOR_MIN_PULSE_STARTUP.
-//     Minimum number of pulses to detect PAS cadence.
-//
-// 3 -> pPSS->wPedalSpeedSens_WindowsStartup = PEDALSPEEDSENSOR_DETECTION_WINDOWS_STARTUP_MS.
-//     Time window for PAS cadence detection on start condition.
-//
-// 4 -> paPowertrain->pPAS->bStartupPasAlgorithm = PAS_DETECTIONSTARTUP_ALGORITHM
-//     PasAlgorithmStartup for decide what algo will be used to detected PAS on startup.
-#define CO_OD_REG_PAS_DETECTION_STARTUP        0x2017
-
 //OD ID used to configure the torque Sensor Multiplier(GAIN)
 //PAS ramp multiplication coefficient for a better user feeling
 // this object has 9 subindex 
@@ -427,47 +407,6 @@ extern "C" {
 // 8 -> PAS over throttle
 #define CO_OD_REG_CONTROLLER_THROTTLE          0x2027
 
-//OD ID used to setup some PAS parameters on running condition.
-// this object has 4 subindex
-//
-// 0 -> hOffsetMTp = PTS_OFFSET_PTS2TORQUE.
-//     Startup threshold of the torque sensor (if present). 
-//     Threshold in % of pressure needed to push power (when under the startup config speed)
-//
-// 1 -> sParameters.hPedalSpeedSens_MinPulseStartup = PEDALSPEEDSENSOR_MIN_PULSE_RUNNING.
-//     Minimum number of pulses to detect PAS cadence.
-//
-// 2 -> pPSS->wPedalSpeedSens_WindowsStartup = PEDALSPEEDSENSOR_DETECTION_WINDOWS_RUNNING_MS.
-//     Time window for PAS cadence detection on start condition.
-//
-// 3 -> paPowertrain->pPAS->bRunningPasAlgorithm = PAS_DETECTIONRUNNING_ALGORITHM
-//     PasAlgorithmRunning for decide what algo will be used to detected PAS on run time.
-#define CO_OD_REG_PAS_DETECTION_RUNNING        0x2028 
-
-//OD ID used to setup some PAS parameters on acceleration ramp 
-// this object has 18 subindex
-//
-//  0 -> PAS 1 Ramp Type 0 No Ramp, 1 Linear
-//  1 -> PAS 1 Ramp Argument 1
-//  2 -> PAS 2 Ramp Type 0 No Ramp, 1 Linear
-//  3 -> PAS 2 Ramp Argument 1
-//.....
-// 16 -> PAS 9 Ramp Type 0 No Ramp, 1 Linear
-// 17 -> PAS 9 Ramp Argument 1
-#define CO_OD_REG_PAS_ACCEL_RAMP               0x2029
-
-//OD ID used to setup some PAS parameters on deceleration ramp 
-// this object has 18 subindex
-//
-//  0 -> PAS 1 Ramp Type 0 No Ramp, 1 Linear
-//  1 -> PAS 1 Ramp Argument 1
-//  2 -> PAS 2 Ramp Type 0 No Ramp, 1 Linear
-//  3 -> PAS 2 Ramp Argument 1
-//.....
-// 16 -> PAS 9 Ramp Type 0 No Ramp, 1 Linear
-// 17 -> PAS 9 Ramp Argument 1
-#define CO_OD_REG_PAS_DECEL_RAMP               0x202A
-
 //OD ID used to send an external throttle value to the vehicle
 // this object has 2 subindex
 //
@@ -537,6 +476,61 @@ extern "C" {
 //OD ID will be used to
 // Lock/Unlock the motor power delivery feature on a bike
 #define CO_OD_REG_LOCK_UNLOCK_POWERTRAIN       0x2032
+
+//OD ID will be used to
+// Speed thresholds where the PAS changes from startup to runtime
+// 0 -> Startup speed threshold
+// 1 -> Runtime speed threshold
+#define CO_OD_REG_SPEED_THRESHOLD              0x2034
+
+//OD ID will be used to
+// List of PAS detection parameters
+// 0 -> Torque value (%) that needs to be provided to have a startup detection
+// 1 -> Number of pulses that needs to be detected to trigger startup detection
+// 2 -> Time window (ms) in which the startup pulse number is counted
+// 3 -> Number of pulses that needs to be detected to trigger runtime detection
+// 4 -> Time window (ms) in which the runtime pulse number is counted
+#define CO_OD_PAS_DETECTION_PARAMETERS         0x2035
+
+//OD ID will be used to
+// Flag used to detect PAS with cadence AND/OR torque
+// 0 : Cadence OR Torque
+// 1 : Cadence AND Torque
+#define CO_OD_CADENCE_AND_OR_TORQUE            0x2036
+
+//OD ID will be used to
+// Torque scaling by pedaling RPM flag and parameters
+// 0 -> Flag used to activate the torque scaling option
+//      0 : option will be deactivated/bypassed
+//      1 : option will be activated
+// 1 -> Minimum pedaling RPM where the torque gain scaling starts
+// 2 -> Maximum pedaling RPM where the torque gain scaling stops
+// 3 -> Torque scaling gain (in %) applied at min RPM
+// 4 -> Torque scaling gain (in %) applied at max RPM
+#define CO_OD_TORQUE_SCALING_PEDAL_RPM         0x2037
+
+//OD ID will be used to
+// PAS ramp selection
+// 0 : No ramp selected
+// 1 : Dynamic deceleration ramp
+// 2 : High speed power limiting ramp
+#define CO_OD_PAS_RAMP_SELECTION               0x2040
+
+//OD ID will be used to
+// Dynamic deceleration ramp parameters
+// 0 -> Min speed(km/h) where the dynamic deceleration ramp starts
+// 1 -> Max speed(km/h) where the dynamic deceleration ramp ends
+// 2 -> Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
+// 3 -> Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
+#define CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS 0x2041
+
+//OD ID will be used to
+// High power speed limiting ramp parameters
+// 0 -> Min speed(km/h) where the high speed power limiting ramp starts
+// 1 -> Min speed(km/h) where the high speed power limiting ramp ends
+// 2 -> Power allowed (in % of MAX power) at ramp start min speed(km/h)
+// 3 -> Power allowed (in % of MAX power) at ramp end max speed(km/h)
+#define CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS  0x2042
 
 //OD ID will be used to
 // receive data and commands during a firmware update.

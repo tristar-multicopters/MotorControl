@@ -78,9 +78,9 @@
 #define RUNTIME_PAS_SPEED_THRESHOLD                 2.0f    // Speed threshold to enable startup PAS power in km/h
 #define STARTUP_PAS_SPEED_THRESHOLD                 1.0f    // Speed threshold to enable runtime PAS power in km/h
 #define TORQUE_STARTUP_VALUE_THRESHOLD    (uint16_t)1       // Torque value (%) that needs to be provided to have a startup detection
-#define STARTUP_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger startup detection
+#define STARTUP_PULSE_NUMBER              (uint16_t)1       // Number of pulses that needs to be detected to trigger startup detection
 #define STARTUP_TIME_WINDOW               (uint16_t)1000    // Time window (ms) in which the startup pulse number is counted
-#define RUNTIME_PULSE_NUMBER              (uint32_t)1       // Number of pulses that needs to be detected to trigger runtime detection
+#define RUNTIME_PULSE_NUMBER              (uint16_t)1       // Number of pulses that needs to be detected to trigger runtime detection
 #define RUNTIME_TIME_WINDOW               (uint16_t)500     // Time window (ms) in which the runtime pulse number is counted
 
 // Flag used to detect PAS with cadence AND torque.
@@ -94,7 +94,7 @@
 // Dynamic Deceleration Ramp Params
 #define DYNAMIC_DECEL_RAMP_START              0.0f          // Min speed(km/h) where the dynamic deceleration ramp starts
 #define DYNAMIC_DECEL_RAMP_END                32.0f         // Max speed(km/h) where the dynamic deceleration ramp ends
-#define DYNAMIC_DECEL_RAMP_POWER_MIN_SPEED    0.5f          // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
+#define DYNAMIC_DECEL_RAMP_POWER_MIN_SPEED    1.0f          // Dynamic deceleration ramp value(in % of MAX power) at max speed(km/h)
 #define DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED    100.0f        // Dynamic deceleration ramp value(in % of MAX power) at min speed(km/h)
 
 // High Speed Power Limiting Ramp Params
@@ -110,8 +110,8 @@
 // false : option will be decativated/bypassed
 #define TORQUE_SCALING_PEDAL_RPM    false
 
-#define MIN_RPM_SCALING    (uint16_t)2          // Minimum pedaling RPM where the torque gain scaling starts
-#define MAX_RPM_SCALING    (uint16_t)50         // Maximum pedaling RPM where the torque gain scaling stops
+#define MIN_RPM_SCALING              2.0f       // Minimum pedaling RPM where the torque gain scaling starts
+#define MAX_RPM_SCALING              50.0f      // Maximum pedaling RPM where the torque gain scaling stops
 #define GAIN_AT_MIN_RPM              100.0f     // Torque scaling gain (in %) applied at min RPM
 #define GAIN_AT_MAX_RPM              300.0f     // Torque scaling gain (in %) applied at max RPM
 

@@ -7,6 +7,22 @@
 #include "ramps.h"
 #include <math.h>
 
+DynamicDecelerationRampParameters_t dynamicDecelerationParams = 
+{
+    .rampStart = DYNAMIC_DECEL_RAMP_START,
+    .rampEnd = DYNAMIC_DECEL_RAMP_END,
+    .powerMinSpeed = DYNAMIC_DECEL_RAMP_POWER_MIN_SPEED,
+    .powerMaxSpeed = DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED
+};
+
+HighSpeedPowerLimitingRampParameters_t highSpeedPowerLimitingParams = 
+{
+    .rampStart = HIGH_SPEED_POWER_LIMITING_RAMP_START,        
+    .rampEnd = HIGH_SPEED_POWER_LIMITING_RAMP_END,          
+    .powerMinSpeed = HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED,     
+    .powerMaxSpeed = HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED     
+};
+
 /**
   * @brief  Dynamic deceleration ramp. 
   * Linear ramp thats reduce the amount of deceleration according
@@ -60,6 +76,28 @@ int16_t Ramps_ApplyRamp(RampType_t rampType, float currentSpeed, int16_t input)
 }
 
 /**
+  * @brief  Set dynamic deceleration ramp parameters
+  */
+void Ramps_SetDynamicDecelerationRampParameters(float rampStart, float rampEnd, float powerMinSpeed, float powerMaxSpeed)
+{
+    dynamicDecelerationParams.rampStart = rampStart;
+    dynamicDecelerationParams.rampEnd = rampEnd;
+    dynamicDecelerationParams.powerMinSpeed = powerMinSpeed;
+    dynamicDecelerationParams.powerMaxSpeed = powerMaxSpeed;
+}
+
+/**
+  * @brief  Set high speed power limiting ramp parameters
+  */
+void Ramps_SetHighSpeedPowerLimitingRampParameters(float rampStart, float rampEnd, float powerMinSpeed, float powerMaxSpeed)
+{
+    highSpeedPowerLimitingParams.rampStart = rampStart;
+    highSpeedPowerLimitingParams.rampEnd = rampEnd;
+    highSpeedPowerLimitingParams.powerMinSpeed = powerMinSpeed;
+    highSpeedPowerLimitingParams.powerMaxSpeed = powerMaxSpeed;
+}
+
+/**
   * @brief  Dynamic deceleration ramp. 
   * Linear ramp thats reduce the amount of deceleration according
   * to the current speed of the bike. The fastest the bike goes,
@@ -71,10 +109,10 @@ int16_t Ramps_DynamicDecelerationRamp(float currentSpeed, int16_t input)
     int16_t output = 0;
 
     // Calculate the minimum amount of power we can deliver so we do not decelerate too fast
-    float currentDecelerationAmplitude = currentSpeed * (DYNAMIC_DECEL_RAMP_POWER_MIN_SPEED - DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED)
-                                         /(DYNAMIC_DECEL_RAMP_END - DYNAMIC_DECEL_RAMP_START) + DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED;
+    float currentDecelerationAmplitude = currentSpeed * (dynamicDecelerationParams.powerMinSpeed - dynamicDecelerationParams.powerMaxSpeed)
+                                         /(dynamicDecelerationParams.rampEnd - dynamicDecelerationParams.rampStart) + dynamicDecelerationParams.powerMaxSpeed;
 
-    float minOutput = prevInput * (1 - fabsf(currentDecelerationAmplitude/DYNAMIC_DECEL_RAMP_POWER_MAX_SPEED));
+    float minOutput = prevInput * (1 - fabsf(currentDecelerationAmplitude/dynamicDecelerationParams.powerMaxSpeed));
 
     // If the input is lower than the minimum output, we return the minimum output
     if(input < minOutput) output = (int16_t)minOutput;
@@ -96,28 +134,28 @@ int16_t Ramps_HighSpeedPowerLimitingRamp(float currentSpeed, int16_t input)
     int16_t output = 0;
 
     // Check if the speed is in the left most constant part of the ramp
-    if(currentSpeed < HIGH_SPEED_POWER_LIMITING_RAMP_START)
+    if(currentSpeed < highSpeedPowerLimitingParams.rampStart)
     {
-        output = (int16_t)((float)input * ((float)HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED/FLOAT_PERCENTAGE_DIVIDER));
+        output = (int16_t)((float)input * (highSpeedPowerLimitingParams.powerMinSpeed/FLOAT_PERCENTAGE_DIVIDER));
         return NegativeTorqueProtection(input, output);
     }
 
     // Check if the speed is in the right most constant part of the ramp
-    if(currentSpeed > HIGH_SPEED_POWER_LIMITING_RAMP_END)
+    if(currentSpeed > highSpeedPowerLimitingParams.rampEnd)
     {
-        output = (int16_t)((float)input * ((float)HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED/FLOAT_PERCENTAGE_DIVIDER));
+        output = (int16_t)((float)input * (highSpeedPowerLimitingParams.powerMaxSpeed/FLOAT_PERCENTAGE_DIVIDER));
         return NegativeTorqueProtection(input, output);
     }
 
     // Calculate the variation within the linear ramp part
-    float powerLimiterVariation = (HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MAX_SPEED - HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED)
-                                  /(HIGH_SPEED_POWER_LIMITING_RAMP_END - HIGH_SPEED_POWER_LIMITING_RAMP_START);
+    float powerLimiterVariation = (highSpeedPowerLimitingParams.powerMaxSpeed - highSpeedPowerLimitingParams.powerMinSpeed)
+                                  /(highSpeedPowerLimitingParams.rampEnd - highSpeedPowerLimitingParams.rampStart);
 
     // Get the current speed value within the linear ramp part
-    float speedInRamp = currentSpeed - HIGH_SPEED_POWER_LIMITING_RAMP_START;
+    float speedInRamp = currentSpeed - highSpeedPowerLimitingParams.rampStart;
 
     // Calculate the linear power limiting factor
-    float powerLimiterFactor = powerLimiterVariation * speedInRamp + HIGH_SPEED_POWER_LIMITING_RAMP_POWER_MIN_SPEED;
+    float powerLimiterFactor = powerLimiterVariation * speedInRamp + highSpeedPowerLimitingParams.powerMinSpeed;
 
     // Apply the limiting factor to the input
     output = (int16_t)((float)input * powerLimiterFactor/FLOAT_PERCENTAGE_DIVIDER);

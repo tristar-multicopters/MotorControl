@@ -240,14 +240,14 @@ void PedalAssist_PASPowerDetection(PAS_Handle_t *pHandle)
     float currentSpeed = Wheel_GetVehicleSpeedFloatFromWSS();
 
     // PAS Power Enable is ON and we are in runtime above speed threshold
-    if(pHandle->bPASPowerEnable && currentSpeed > RUNTIME_PAS_SPEED_THRESHOLD)
+    if(pHandle->bPASPowerEnable && currentSpeed > pHandle->sParameters.PASSpeedThresholds[1])
     {
         if(pHandle->bPASCadenceRunningOverride) pHandle->bPASPowerEnable = true;
         else pHandle->bPASPowerEnable = false;
     }
     
     // PAS Power Enable is OFF and we are in startup condition
-    else if(!pHandle->bPASPowerEnable && currentSpeed < STARTUP_PAS_SPEED_THRESHOLD)
+    else if(!pHandle->bPASPowerEnable && currentSpeed < pHandle->sParameters.PASSpeedThresholds[0])
     {
         if(pHandle->cadenceAndOrTorqueFlag == 0)
         {
@@ -659,4 +659,73 @@ bool PedalAssist_TorqueSensorIssueDetected(PAS_Handle_t * pHandle)
         return false;
     }
     return false;
+}
+
+/**
+    Set PAS startup and runtime speed thresholds
+ */
+void PedalAssist_SetSpeedThresholds(PAS_Handle_t *pHandle, uint16_t startupSpeedThreshold, uint16_t runtimeSpeedThresold)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->sParameters.PASSpeedThresholds[0] = (float)startupSpeedThreshold;
+    pHandle->sParameters.PASSpeedThresholds[1] = (float)runtimeSpeedThresold;
+}
+
+/**
+    Set PAS parameters
+ */
+void PedalAssist_SetPASDetectionParameters(PAS_Handle_t *pHandle, uint16_t torqueThreshold, uint16_t startupPulses, 
+                                                uint16_t startupTimeWindow, uint16_t runtimePulses, uint16_t runtimeTimeWindow)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->sParameters.PASDetectionParameters[0] = torqueThreshold;
+    pHandle->sParameters.PASDetectionParameters[1] = startupPulses;
+    pHandle->sParameters.PASDetectionParameters[2] = startupTimeWindow;
+    pHandle->sParameters.PASDetectionParameters[3] = runtimePulses;
+    pHandle->sParameters.PASDetectionParameters[4] = runtimeTimeWindow;
+}
+
+/**
+    Set PAS cadence AND/OR torque flag
+ */
+void PedalAssist_SetPASCadenceAndOrTorque(PAS_Handle_t *pHandle, uint8_t cadenceAndOrTorque)
+{
+    ASSERT(pHandle != NULL);
+    if(!cadenceAndOrTorque) pHandle->cadenceAndOrTorqueFlag = false;
+    else pHandle->cadenceAndOrTorqueFlag = true;
+}
+
+/**
+    Set the torque scaling pedal RPM option
+ */
+void PedalAssist_SetTorqueScalingPedalRPM(PAS_Handle_t *pHandle, uint8_t activate)
+{
+    ASSERT(pHandle != NULL);
+    if(!activate) pHandle->sParameters.PASTorqueScalingPedalRPMActivated = false;
+    else pHandle->sParameters.PASTorqueScalingPedalRPMActivated = true;
+}
+
+/**
+    Torque scaling pedal RPM parameters
+ */
+void PedalAssist_SetTorqueScalingPedalRPMParameters(PAS_Handle_t *pHandle, uint16_t minRPM,
+                                                    uint16_t maxRPM, uint16_t minGain, uint16_t maxGain)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->sParameters.PASTorqueScalingPedalRPMParameters[0] = (float)minRPM;
+    pHandle->sParameters.PASTorqueScalingPedalRPMParameters[1] = (float)maxRPM;
+    pHandle->sParameters.PASTorqueScalingPedalRPMParameters[2] = (float)minGain;
+    pHandle->sParameters.PASTorqueScalingPedalRPMParameters[3] = (float)maxGain;
+}
+
+/**
+  @brief  Set PAS ramp type
+  @param  pHandle: handle of the vehicle
+  @param  rampType: Ramp type to set
+  @return none
+ */
+void PedalAssist_SetPASRampType(PAS_Handle_t *pHandle, uint8_t rampType)
+{
+    ASSERT(pHandle != NULL);
+    pHandle->sParameters.rampType = (RampType_t)rampType;
 }

@@ -316,7 +316,7 @@ int16_t PWRT_TransitionStartupRuntimeTorque(int16_t inputTorque, bool cadenceDet
   * @param  currentPedalRPM : Current pedal RPM measured
   * @retval Output torque scaled from the pedal RPM
   */
-int16_t PWRT_ApplyTorqueGainScaling(int16_t inputTorque, uint16_t currentPedalRPM);
+int16_t PWRT_ApplyTorqueGainScaling(PAS_Handle_t *handle, int16_t inputTorque, uint16_t currentPedalRPM);
 
 /**
   * @brief  Get minimum power required on cadence power enable

@@ -87,24 +87,6 @@ typedef struct
     uint16_t pasTorqueInputMax;
 } PAS_Sensor_Configuration_t;
 
-typedef struct
-{
-    uint8_t pasTorqueStartupSpeed;
-    uint8_t pasTorqueStartupThreshold;    
-    uint16_t pasCadenceStartupNumbPulses;
-    uint16_t pasCadenceStartupWindows;
-    uint8_t PasAlgorithmStartup;
-} PAS_Startup_Detection_t;
-
-typedef struct
-{
-    uint8_t pasTorqueRunningThreshold;    
-    uint16_t pasCadenceRunningNumbPulses;
-    uint16_t pasCadenceRunningWindows;
-    uint8_t PasAlgorithmRunning;
-} PAS_Running_Detection_t;
-
-
 //struct used to hold the configuration
 //associated with PAS(pedal Assist System).
 typedef struct 
@@ -112,18 +94,22 @@ typedef struct
     uint8_t NumberOfPasLevels;
     uint8_t PasMaxTorqueRatio;
     uint8_t PASOverThrottle;
-    PAS_Startup_Detection_t PAS_Startup_Detection;
-    PAS_Running_Detection_t PAS_Running_Detection;
     uint16_t TorqueSensorMultiplier[9];
     uint8_t PasLevelSpeed[9];
     uint8_t PasLevelMaxTorque[9];
     uint8_t PasLevelMinTorque[9];
-    uint8_t PasAccelRampType[9];
-    uint16_t PasAccelRampArg1[9];
-    uint8_t PasDecelRampType[9];
-    uint16_t PasDecelRampArg1[9];
     PAS_Torque_Filter_Configuration_t PAS_Torque_Filter_Configuration;
-    PAS_Sensor_Configuration_t PasSensorConfig;    
+    PAS_Sensor_Configuration_t PasSensorConfig;
+
+    uint16_t PasSpeedThresholds[2];
+    uint16_t PasDetectionParameters[5];
+    uint8_t PasCadenceAndOrTorque;
+    uint8_t TorqueScalingPedalRPMActivated;
+    uint16_t TorqueScalingPedalRPMParameters[4];
+    uint8_t RampType;
+    uint16_t DynamicDecelerationRampParameters[4];
+    uint16_t HighSpeedPowerLimitingRampParameters[4];
+
 } PAS_ConfigData_t;
 
 //struct used to hold the configuration

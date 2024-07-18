@@ -140,17 +140,31 @@ static void UpdateObjectDictionnary(void *p_arg)
     /***************Throttle/Pedal Assist variables******************************/
     uint8_t maxPAS;
     uint8_t pasMaxTorqueRatio;
-    uint8_t pasTorqueStartupThreshold;    
-    uint8_t pasTorqueStartupSpeed;
-    uint16_t pasCadenceStartupNumbPulses;
-    uint16_t pasCadenceStartupWindows;
-    uint8_t PasAlgorithmStartup;
-    uint8_t pasTorqueRunningThreshold;    
-    uint16_t pasCadenceRunningNumbPulses;
-    uint16_t pasCadenceRunningWindows;
-    uint8_t PasAlgorithmRunning;
     uint16_t torqueSensorMultiplier[9];
     uint8_t pasLevelMinTorque[9];
+
+    uint16_t pasStartupSpeedThreshold;                 
+    uint16_t pasRuntimeSpeedThreshold;                
+    uint16_t pasTorqueDetectionValue;                 
+    uint16_t pasStartupPulses;                 
+    uint16_t pasStartupTimeWindow;               
+    uint16_t pasRuntimePulses;                        
+    uint16_t pasRuntimeTimeWindow;                
+    uint8_t  pasCadenceAndOrTorque;                    
+    uint8_t  pasTorqueScalingPedalRPM;                 
+    uint16_t pasTorqueScalingMinRPM;                   
+    uint16_t pasTorqueScalingMaxRPM;                  
+    uint16_t pasTorqueScalingMinRPMGain;               
+    uint16_t pasTorqueScalingMaxRPMGain;               
+    uint8_t  pasRampType;                              
+    uint16_t dynamicDecelerationRampStart;             
+    uint16_t dynamicDecelerationRampEnd;               
+    uint16_t dynamicDecelerationRampMinDeceleration;   
+    uint16_t dynamicDecelerationRampMaxDeceleration;   
+    uint16_t highSpeedPowerLimitingRampStart;          
+    uint16_t highSpeedPowerLimitingRampEnd;            
+    uint16_t highSpeedPowerLimitingRampMinSpeedPower;  
+    uint16_t highSpeedPowerLimitingRampMaxSpeedPower;  
     
     uint8_t PasLevelSpeed[9];
     uint8_t pasLevelMaxTorque[9];
@@ -584,12 +598,6 @@ static void UpdateObjectDictionnary(void *p_arg)
             uint16_t configThrottleAdcOffset;
             uint16_t configThrottleAdcMax; 
             
-            uint8_t configPasAccelRampTypes[9];
-            uint16_t configPasAccelRampArg1[9];
-            
-            uint8_t configPasDecelRampTypes[9];
-            uint16_t configPasDecelRampArg1[9];
-            
             uint8_t configPasOverThrottle;
             
             uint8_t  configWalkmodeMaxTorque;
@@ -622,36 +630,13 @@ static void UpdateObjectDictionnary(void *p_arg)
                  /**********read value hold by the OD****************/
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS,               0)), pNode, &maxPAS, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE_RATIO,  0)), pNode, &pasMaxTorqueRatio, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 1)), pNode, &pasTorqueStartupThreshold, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 4)), pNode, &PasAlgorithmStartup, sizeof(uint8_t));
-                 
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 0)), pNode, &pasTorqueRunningThreshold, sizeof(uint8_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 1)), pNode, &pasCadenceRunningNumbPulses, sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 2)), pNode, &pasCadenceRunningWindows, sizeof(uint16_t));
-                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 3)), pNode, &PasAlgorithmRunning, sizeof(uint8_t));
         
                  for(uint8_t n = 0; n < 9; n++)
                  {
                     COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, n)), pNode, &torqueSensorMultiplier[n], sizeof(uint16_t));
                     COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL_SPEED, n)), pNode, &PasLevelSpeed[n], sizeof(uint8_t));
                     COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MIN_TORQUE, n)), pNode, &pasLevelMinTorque[n], sizeof(uint8_t));
-                    COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE, n)), pNode, &pasLevelMaxTorque[n], sizeof(uint8_t));
-                     
-                    uint8_t P0;
-                    uint8_t P1;
-
-                    P0 = 2 * n;
-                    P1 = P0 + 1;
-   
-                    COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ACCEL_RAMP, P0)), pNode, &configPasAccelRampTypes[n], sizeof(uint8_t)); 
-                    COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ACCEL_RAMP, P1)), pNode, &configPasAccelRampArg1[n], sizeof(uint16_t));  
-                        
-                    COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DECEL_RAMP, P0)), pNode, &configPasDecelRampTypes[n], sizeof(uint8_t)); 
-                    COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DECEL_RAMP, P1)), pNode, &configPasDecelRampArg1[n], sizeof(uint16_t));                        
-                                                                 
+                    COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE, n)), pNode, &pasLevelMaxTorque[n], sizeof(uint8_t));                                                               
                  }
                 
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 8)), pNode, &configPasOverThrottle, sizeof(uint8_t));
@@ -710,6 +695,35 @@ static void UpdateObjectDictionnary(void *p_arg)
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 0)),    pNode, &motorTempSensorType, sizeof(uint8_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 1)),    pNode, &motorNTCBetaCoef, sizeof(uint16_t));
                  COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_TEMPERATURE, 2)),    pNode, &motorNTCResistanceCoef, sizeof(uint16_t));
+
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_THRESHOLD, 0)),        pNode, &pasStartupSpeedThreshold, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_THRESHOLD, 1)),        pNode, &pasRuntimeSpeedThreshold, sizeof(uint16_t));
+                                          
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 0)),   pNode, &pasTorqueDetectionValue, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 1)),   pNode, &pasStartupPulses, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 2)),   pNode, &pasStartupTimeWindow, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 3)),   pNode, &pasRuntimePulses, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 4)),   pNode, &pasRuntimeTimeWindow, sizeof(uint16_t));
+                 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CADENCE_AND_OR_TORQUE, 0)),      pNode, &pasCadenceAndOrTorque, sizeof(uint8_t));
+         
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 0)),   pNode, &pasTorqueScalingPedalRPM, sizeof(uint8_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 1)),   pNode, &pasTorqueScalingMinRPM, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 2)),   pNode, &pasTorqueScalingMaxRPM, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 3)),   pNode, &pasTorqueScalingMinRPMGain, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 4)),   pNode, &pasTorqueScalingMaxRPMGain, sizeof(uint16_t));
+         
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_RAMP_SELECTION, 0)),         pNode, &pasRampType, sizeof(uint8_t));
+                 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 0)), pNode, &dynamicDecelerationRampStart, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 1)), pNode, &dynamicDecelerationRampEnd, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 2)), pNode, &dynamicDecelerationRampMaxDeceleration, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 3)), pNode, &dynamicDecelerationRampMinDeceleration, sizeof(uint16_t));
+                 
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 0)), pNode, &highSpeedPowerLimitingRampStart, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 1)), pNode, &highSpeedPowerLimitingRampEnd, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 2)), pNode, &highSpeedPowerLimitingRampMinSpeedPower, sizeof(uint16_t));
+                 COObjRdValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 3)), pNode, &highSpeedPowerLimitingRampMaxSpeedPower, sizeof(uint16_t));
                  
                  /******update all variables used to keep the user data config that will be written in to the usaer data flash.****/
                  
@@ -721,27 +735,13 @@ static void UpdateObjectDictionnary(void *p_arg)
                  
                  UserConfigTask_UpdateNumberPasLevels(maxPAS);
                  UserConfigTask_UpdatePasMaxTorqueRatio(pasMaxTorqueRatio);
-                 UserConfigTask_UpdatePasTorqueStartupThreshold(pasTorqueStartupThreshold);
-                 UserConfigTask_UpdatePasTorqueStartupSpeed(pasTorqueStartupSpeed); 
-                 UserConfigTask_UpdatePasCadenceStartupNumbPulses(pasCadenceStartupNumbPulses);
-                 UserConfigTask_UpdatePasCadenceStartupWindows(pasCadenceStartupWindows); 
-                 UserConfigTask_UpdatePasPasAlgorithmStartup(PasAlgorithmStartup);
-
-                 UserConfigTask_UpdatePasTorqueRunningThreshold(pasTorqueRunningThreshold);
-                 UserConfigTask_UpdatePasCadenceRunningNumbPulses(pasCadenceRunningNumbPulses);
-                 UserConfigTask_UpdatePasCadenceRunningWindows(pasCadenceRunningWindows);   
-                 UserConfigTask_UpdatePasPasAlgorithmRunning(PasAlgorithmRunning);
                  
                  for(uint8_t n = PAS_1;n <= PAS_9;n++)
                  {
                     UserConfigTask_UpdateTorqueSensorMultiplier(n, torqueSensorMultiplier[n-1]);
                     UserConfigTask_UpdatePasLevelSpeed(n, PasLevelSpeed[n-1]);
                     UserConfigTask_UpdatePasLevelMinTorque(n, pasLevelMinTorque[n-1]);
-                    UserConfigTask_UpdatePasLevelMaxTorque(n, pasLevelMaxTorque[n-1]); 
-                    UserConfigTask_UpdatePasAccelRampType(n,configPasAccelRampTypes[n-1]);
-                    UserConfigTask_UpdatePasAccelRampArg1(n,configPasAccelRampArg1[n-1]);                     
-                    UserConfigTask_UpdatePasDecelRampType(n,configPasDecelRampTypes[n-1]);
-                    UserConfigTask_UpdatePasDecelRampArg1(n,configPasDecelRampArg1[n-1]);                      
+                    UserConfigTask_UpdatePasLevelMaxTorque(n, pasLevelMaxTorque[n-1]);                      
                  }
                  
                  UserConfigTask_UpdatePASOverThrottle(configPasOverThrottle);
@@ -782,7 +782,30 @@ static void UpdateObjectDictionnary(void *p_arg)
                  UserConfigTask_UpdateBatteryMaxPeakDCCurrent(configBatteryMaxPeakDCCurrent);
                  UserConfigTask_UpdateBatteryContinuousDCCurrent(configBatteryContinuousDCCurrent);        
                  UserConfigTask_UpdateBatteryPeakCurrentMaxDuration(configBatteryPeakCurrentMaxDuration);
-                 UserConfigTask_UpdateBatteryPeakCurrentDeratingDuration(configBatteryPeakCurrentDeratingDuration);   
+                 UserConfigTask_UpdateBatteryPeakCurrentDeratingDuration(configBatteryPeakCurrentDeratingDuration);
+
+                 UserConfigTask_SetPASStartupSpeedThreshold(pasStartupSpeedThreshold);
+                 UserConfigTask_SetPASRuntimeSpeedThreshold(pasRuntimeSpeedThreshold);
+                 UserConfigTask_SetPASTorqueDetectionValue(pasTorqueDetectionValue);
+                 UserConfigTask_SetPASStartupPulses(pasStartupPulses);
+                 UserConfigTask_SetPASStartupTimeWindow(pasStartupTimeWindow);
+                 UserConfigTask_SetPASRuntimePulses(pasRuntimePulses);
+                 UserConfigTask_SetPASRuntimeTimeWindow(pasRuntimeTimeWindow);
+                 UserConfigTask_SetPASCadenceAndOrTorque(pasCadenceAndOrTorque);
+                 UserConfigTask_SetPASTorqueScalingPedalRPMActivated(pasTorqueScalingPedalRPM);
+                 UserConfigTask_SetPASTorqueScalingMinRPM(pasTorqueScalingMinRPM);
+                 UserConfigTask_SetPASTorqueScalingMaxRPM(pasTorqueScalingMaxRPM);
+                 UserConfigTask_SetPASTorqueScalingMinRPMGain(pasTorqueScalingMinRPMGain);
+                 UserConfigTask_SetPASTorqueScalingMaxRPMGain(pasTorqueScalingMaxRPMGain);
+                 UserConfigTask_SetPASRampType(pasRampType);
+                 UserConfigTask_SetDynamicDecelerationRampStart(dynamicDecelerationRampStart);
+                 UserConfigTask_SetDynamicDecelerationRampEnd(dynamicDecelerationRampEnd);
+                 UserConfigTask_SetDynamicDecelerationMaxDeceleration(dynamicDecelerationRampMaxDeceleration);
+                 UserConfigTask_SetDynamicDecelerationMinDeceleration(dynamicDecelerationRampMinDeceleration);
+                 UserConfigTask_SetHighSpeedPowerLimitingRampStart(highSpeedPowerLimitingRampStart);
+                 UserConfigTask_SetHighSpeedPowerLimitingRampEnd(highSpeedPowerLimitingRampEnd);
+                 UserConfigTask_SetHighSpeedPowerLimitingRampMinSpeedPower(highSpeedPowerLimitingRampMinSpeedPower);
+                 UserConfigTask_SetHighSpeedPowerLimitingRampMaxSpeedPower(highSpeedPowerLimitingRampMaxSpeedPower);  
                  
                  
                  //update speed values to bw filter.
@@ -1008,15 +1031,6 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         /***************Throttle/Pedal Assist variables******************************/
         uint8_t maxPAS                             = UserConfigTask_GetNumberPasLevels();
         uint8_t pasMaxTorqueRatio                        = UserConfigTask_GetPasMaxTorqueRatio();
-        uint8_t pasTorqueStartupThreshold          = UserConfigTask_GetPasTorqueStartupThreshold();    
-        uint8_t pasTorqueStartupSpeed              = UserConfigTask_GetPasTorqueStartupSpeed();
-        uint16_t pasCadenceStartupNumbPulses = UserConfigTask_GetPasCadenceStartupNumbPulses();
-        uint16_t pasCadenceStartupWindows = UserConfigTask_GetPasCadenceStartupWindows();
-        uint8_t PasAlgorithmStartup = UserConfigTask_GetPasAlgorithmStartup();
-        uint8_t pasTorqueRunningThreshold          = UserConfigTask_GetPasTorqueRunningThreshold();
-        uint16_t pasCadenceRunningNumbPulses = UserConfigTask_GetPasCadenceRunningNumbPulses();
-        uint16_t pasCadenceRunningWindows = UserConfigTask_GetPasCadenceRunningWindows();
-        uint8_t PasAlgorithmRunning = UserConfigTask_GetPasAlgorithmRunning();
         
         uint16_t torqueSensorMultiplier[9] = {UserConfigTask_GetTorqueSensorMultiplier(PAS_1),
                                               UserConfigTask_GetTorqueSensorMultiplier(PAS_2),UserConfigTask_GetTorqueSensorMultiplier(PAS_3),
@@ -1042,30 +1056,6 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
                                               UserConfigTask_GetPasLevelMaxTorque(PAS_6),UserConfigTask_GetPasLevelMaxTorque(PAS_7),
                                               UserConfigTask_GetPasLevelMaxTorque(PAS_8),UserConfigTask_GetPasLevelMaxTorque(PAS_9)};
         
-        uint8_t configPasAccelRampTypes[9] = {UserConfigTask_GetPasAccelRampType(PAS_1),
-                                              UserConfigTask_GetPasAccelRampType(PAS_2),UserConfigTask_GetPasAccelRampType(PAS_3),
-                                              UserConfigTask_GetPasAccelRampType(PAS_4),UserConfigTask_GetPasAccelRampType(PAS_5),
-                                              UserConfigTask_GetPasAccelRampType(PAS_6),UserConfigTask_GetPasAccelRampType(PAS_7),
-                                              UserConfigTask_GetPasAccelRampType(PAS_8),UserConfigTask_GetPasAccelRampType(PAS_9)};       
-                                              
-        uint16_t configPasAccelRampArg1[9] = {UserConfigTask_GetPasAccelRampArg1(PAS_1),
-                                              UserConfigTask_GetPasAccelRampArg1(PAS_2),UserConfigTask_GetPasAccelRampArg1(PAS_3),
-                                              UserConfigTask_GetPasAccelRampArg1(PAS_4),UserConfigTask_GetPasAccelRampArg1(PAS_5),
-                                              UserConfigTask_GetPasAccelRampArg1(PAS_6),UserConfigTask_GetPasAccelRampArg1(PAS_7),
-                                              UserConfigTask_GetPasAccelRampArg1(PAS_8),UserConfigTask_GetPasAccelRampArg1(PAS_9)};
-        
-        uint8_t configPasDecelRampTypes[9] = {UserConfigTask_GetPasDecelRampType(PAS_1),
-                                              UserConfigTask_GetPasDecelRampType(PAS_2),UserConfigTask_GetPasDecelRampType(PAS_3),
-                                              UserConfigTask_GetPasDecelRampType(PAS_4),UserConfigTask_GetPasDecelRampType(PAS_5),
-                                              UserConfigTask_GetPasDecelRampType(PAS_6),UserConfigTask_GetPasDecelRampType(PAS_7),
-                                              UserConfigTask_GetPasDecelRampType(PAS_8),UserConfigTask_GetPasDecelRampType(PAS_9)};       
-                                              
-        uint16_t configPasDecelRampArg1[9] = {UserConfigTask_GetPasDecelRampArg1(PAS_1),
-                                              UserConfigTask_GetPasDecelRampArg1(PAS_2),UserConfigTask_GetPasDecelRampArg1(PAS_3),
-                                              UserConfigTask_GetPasDecelRampArg1(PAS_4),UserConfigTask_GetPasDecelRampArg1(PAS_5),
-                                              UserConfigTask_GetPasDecelRampArg1(PAS_6),UserConfigTask_GetPasDecelRampArg1(PAS_7),
-                                              UserConfigTask_GetPasDecelRampArg1(PAS_8),UserConfigTask_GetPasDecelRampArg1(PAS_9)};
-        
         uint8_t  configPasOverThrottle       = UserConfigTask_GetPASOverThrottle();
                                               
         uint8_t  configMaxSpeed              = UserConfigTask_GetBikeMaxSpeed();
@@ -1073,6 +1063,29 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         uint8_t  configWalkmodeMaxTorque     = UserConfigTask_GetWalkmodeMaxTorque();
         uint8_t  configWalkmodeAccelRampType = UserConfigTask_GetWalkmodeAccelRampType();
         uint16_t configWalkmodeAccelRampArg1 = UserConfigTask_GetWalkmodeAccelRampArg1();
+
+        uint16_t configPasStartupSpeedThreshold                 = UserConfigTask_GetPASStatupSpeedThreshold();
+        uint16_t configPasRuntimeSpeedThreshold                 = UserConfigTask_GetPASRuntimeSpeedThreshold();
+        uint16_t configPasTorqueDetectionValue                  = UserConfigTask_GetPASTorqueDetectionValue();
+        uint16_t configPasStartupPulses                         = UserConfigTask_GetPASStartupPulses();
+        uint16_t configPasStartupTimeWindow                     = UserConfigTask_GetPASStartupTimeWindow();
+        uint16_t configPasRuntimePulses                         = UserConfigTask_GetPASRuntimePulses();
+        uint16_t configPasRuntimeTimeWindow                     = UserConfigTask_GetPASRuntimeTimeWindow();
+        uint8_t  configPasCadenceAndOrTorque                    = UserConfigTask_GetPASCadenceAndOrTorque();
+        uint8_t  configPasTorqueScalingPedalRPM                 = UserConfigTask_GetPASTorqueScalingPedalRPMActivated();
+        uint16_t configPasTorqueScalingMinRPM                   = UserConfigTask_GetPASTorqueScalingMinRPM();
+        uint16_t configPasTorqueScalingMaxRPM                   = UserConfigTask_GetPASTorqueScalingMaxRPM();
+        uint16_t configPasTorqueScalingMinRPMGain               = UserConfigTask_GetPASTorqueScalingMinRPMGain();
+        uint16_t configPasTorqueScalingMaxRPMGain               = UserConfigTask_GetPASTorqueScalingMaxRPMGain();
+        uint8_t  configPasRampType                              = UserConfigTask_GetPASRampType();
+        uint16_t configDynamicDecelerationRampStart             = UserConfigTask_GetDynamicDecelerationRampStart();
+        uint16_t configDynamicDecelerationRampEnd               = UserConfigTask_GetDynamicDecelerationRampEnd();
+        uint16_t configDynamicDecelerationRampMinDeceleration   = UserConfigTask_GetDynamicDecelerationMinDeceleration();
+        uint16_t configDynamicDecelerationRampMaxDeceleration   = UserConfigTask_GetDynamicDecelerationMaxDeceleration();
+        uint16_t configHighSpeedPowerLimitingRampStart          = UserConfigTask_GetHighSpeedPowerLimitingRampStart();
+        uint16_t configHighSpeedPowerLimitingRampEnd            = UserConfigTask_GetHighSpeedPowerLimitingRampEnd();
+        uint16_t configHighSpeedPowerLimitingRampMinSpeedPower  = UserConfigTask_GetHighSpeedPowerLimitingMinSpeedPower();
+        uint16_t configHighSpeedPowerLimitingRampMaxSpeedPower  = UserConfigTask_GetHighSpeedPowerLimitingMaxSpeedPower();
                                               
         //Config    
         uint8_t  configPasNbMagnetsPerTurn = UserConfigTask_GetPasNbMagnetsPerTurn();                                     
@@ -1122,18 +1135,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         
         /***********************UPdate Throttle/Pedal Assist CANopen OD ID.********************************************/     
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MAX_PAS, 0)),               pNode, &maxPAS, sizeof(uint8_t));            
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE_RATIO, 0)),  pNode, &pasMaxTorqueRatio, sizeof(uint8_t));     
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 0)), pNode, &pasTorqueStartupSpeed, sizeof(uint8_t));        
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 1)), pNode, &pasTorqueStartupThreshold, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 2)), pNode, &pasCadenceStartupNumbPulses, sizeof(uint16_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 3)), pNode, &pasCadenceStartupWindows, sizeof(uint16_t)); 
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_STARTUP, 4)), pNode, &PasAlgorithmStartup, sizeof(uint8_t));        
-        
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 0)), pNode, &pasTorqueRunningThreshold, sizeof(uint8_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 1)), pNode, &pasCadenceRunningNumbPulses, sizeof(uint16_t));
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 2)), pNode, &pasCadenceRunningWindows, sizeof(uint16_t));  
-        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DETECTION_RUNNING, 3)), pNode, &PasAlgorithmRunning, sizeof(uint8_t)); 
-        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE_RATIO, 0)),  pNode, &pasMaxTorqueRatio, sizeof(uint8_t));             
         
         // Initialise the number of magnets for the wheel speed sensor with the value in the user config 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_WHEELS, 1)),       pNode, &configWheelDiameter, sizeof(uint8_t));
@@ -1156,19 +1158,7 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_TORQUE_SENSOR_MULTIPLIER, n)), pNode, &torqueSensorMultiplier[n], sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_LEVEL_SPEED, n)), pNode, &PasLevelSpeed[n], sizeof(uint8_t)); 
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MIN_TORQUE, n)),  pNode, &pasLevelMinTorque[n], sizeof(uint8_t)); 
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE, n)),  pNode, &pasLevelMaxTorque[n], sizeof(uint8_t));
-
-            uint8_t P0;
-            uint8_t P1;
-
-            P0 = 2 * n;
-            P1 = P0 + 1;
-   
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ACCEL_RAMP, P0)), pNode, &configPasAccelRampTypes[n], sizeof(uint8_t)); 
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_ACCEL_RAMP, P1)), pNode, &configPasAccelRampArg1[n], sizeof(uint16_t));  
-                        
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DECEL_RAMP, P0)), pNode, &configPasDecelRampTypes[n], sizeof(uint8_t)); 
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_DECEL_RAMP, P1)), pNode, &configPasDecelRampArg1[n], sizeof(uint16_t));                        
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_PAS_MAX_TORQUE, n)),  pNode, &pasLevelMaxTorque[n], sizeof(uint8_t));                     
         }
 
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 8)), pNode, &configPasOverThrottle, sizeof(uint8_t)); 
@@ -1215,8 +1205,36 @@ void Comm_InitODWithUserConfig(CO_NODE *pNode)
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 5)),    pNode, &configThrottleMaxSpeed, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 6)),    pNode, &configThrottleAccelRampType, sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 7)),    pNode, &configThrottleAccelRampArg1, sizeof(uint16_t));
-                 
-                
+
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_THRESHOLD, 0)),        pNode, &configPasStartupSpeedThreshold, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_THRESHOLD, 1)),        pNode, &configPasRuntimeSpeedThreshold, sizeof(uint16_t));
+                                 
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 0)),   pNode, &configPasTorqueDetectionValue, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 1)),   pNode, &configPasStartupPulses, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 2)),   pNode, &configPasStartupTimeWindow, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 3)),   pNode, &configPasRuntimePulses, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_DETECTION_PARAMETERS, 4)),   pNode, &configPasRuntimeTimeWindow, sizeof(uint16_t));
+        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CADENCE_AND_OR_TORQUE, 0)),      pNode, &configPasCadenceAndOrTorque, sizeof(uint8_t));
+
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 0)),   pNode, &configPasTorqueScalingPedalRPM, sizeof(uint8_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 1)),   pNode, &configPasTorqueScalingMinRPM, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 2)),   pNode, &configPasTorqueScalingMaxRPM, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 3)),   pNode, &configPasTorqueScalingMinRPMGain, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_TORQUE_SCALING_PEDAL_RPM, 4)),   pNode, &configPasTorqueScalingMaxRPMGain, sizeof(uint16_t));
+
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_PAS_RAMP_SELECTION, 0)),         pNode, &configPasRampType, sizeof(uint8_t));
+        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 0)), pNode, &configDynamicDecelerationRampStart, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 1)), pNode, &configDynamicDecelerationRampEnd, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 2)), pNode, &configDynamicDecelerationRampMaxDeceleration, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_DYNAMIC_DECELERATION_RAMP_PARAMS, 3)), pNode, &configDynamicDecelerationRampMinDeceleration, sizeof(uint16_t));
+        
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 0)), pNode, &configHighSpeedPowerLimitingRampStart, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 1)), pNode, &configHighSpeedPowerLimitingRampEnd, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 2)), pNode, &configHighSpeedPowerLimitingRampMinSpeedPower, sizeof(uint16_t));
+        COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_HIGH_SPEED_POWER_LIMITER_PARAMS, 3)), pNode, &configHighSpeedPowerLimitingRampMaxSpeedPower, sizeof(uint16_t));
+         
         //torque band filter parameters
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 0)),    pNode, &FilterSpeed[0], sizeof(uint8_t));
         COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_CONFIG_SPEED_FOR_TORQUE_FILTER, 1)),    pNode, &FilterSpeed[1], sizeof(uint8_t));
