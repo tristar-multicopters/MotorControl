@@ -121,6 +121,16 @@ uint8_t Wheel_GetVehicleSpeedDecFromWSS()
 }
 
 /**
+  * @brief  Get the vehicle speed decimals in hectometer/h using the wheel speed sensor
+  * @retval Speed decimals in hectometer/h
+  */
+uint16_t Wheel_GetVehicleHectometerSpeedFromWSS(void)
+{
+    float currentDecimalSpeed = Wheel_GetVehicleSpeedFloatFromWSS() * KILOMETER_TO_HECTOMETER_FACTOR;
+    return (uint16_t)currentDecimalSpeed;
+}
+
+/**
   * @brief  Get the vehicle speed integral and decimal in km/h using the wheel speed sensor
   * @param  Handle of the wheel speed sensor
   * @retval Speed in km/h as float

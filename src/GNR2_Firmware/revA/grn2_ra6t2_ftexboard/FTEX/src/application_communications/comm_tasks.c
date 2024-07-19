@@ -67,7 +67,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     // Get Bike Parameters 
     // Read only
     uint8_t     hSpeed;
-    uint8_t     hSpeedDec;
+    uint16_t    hSpeedDec;
     uint16_t    hDCPWR;    
     uint16_t    hTorque;
     uint16_t    hPWR;
@@ -103,7 +103,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     if (VcAutodeter_GetGnrState())
     {
         hSpeed               = (uint8_t) CanVehiInterface_GetVehicleSpeed();
-        hSpeedDec            = CanVehiInterface_GetVehicleSpeedDec();
+        hSpeedDec            = Wheel_GetVehicleHectometerSpeedFromWSS();
         hDCPWR               = CanVehiInterface_GetVehicleDCPower(pVCI);
         hTorque              = CanVehiInterface_GetVehicleTorque(pVCI);
         hPWR                 = CanVehiInterface_GetVehiclePower(pVCI);
@@ -510,7 +510,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                                   
             /**************Write the repesctive OD ID, updating the OD that us read by the IOT module using SDO.*************/
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, 0)), pNode, &hSpeed, sizeof(uint8_t));
-            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, 1)), pNode, &hSpeedDec, sizeof(uint8_t));
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_SPEED_MEASURE, 1)), pNode, &hSpeedDec, sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 0 )), pNode, &hDCPWR, sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 1 )), pNode, &hTorque, sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_POWER_MEASURE, 2 )), pNode, &hPWR, sizeof(uint16_t));

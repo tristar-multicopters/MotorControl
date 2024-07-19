@@ -18,6 +18,8 @@
     #define WHEEL_DIAMETER  WHEEL_DIAMETER_DEFAULT
 #endif
 
+#define KILOMETER_TO_HECTOMETER_FACTOR 10
+
 /**
   * @brief  Initialize the vc wheel module
   * @param  Wheel diameter
@@ -79,6 +81,12 @@ uint16_t Wheel_GetVehicleSpeedFromWSS(void);
   * @retval Speed decimals in km/h
   */
 uint8_t Wheel_GetVehicleSpeedDecFromWSS(void);
+
+/**
+  * @brief  Get the vehicle speed decimals in hectometer/h using the wheel speed sensor
+  * @retval Speed decimals in hectometer/h
+  */
+uint16_t Wheel_GetVehicleHectometerSpeedFromWSS(void);
 
 /**
   * @brief  Get the vehicle speed integral and decimal in km/h using the wheel speed sensor
