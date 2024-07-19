@@ -9,7 +9,6 @@
 #include "mc_type.h"
 #include "mc_math.h"
 #include "regular_conversion_manager.h"
-#include "mc_tuning.h"
 #include "mc_state_machine.h"
 #include "pwm_common.h"
 #include "board_hardware.h"
@@ -64,7 +63,6 @@ void MC_ConfigureMotorTuner(void);
 FOCVars_t FOCVars[NBR_OF_MOTORS];
 MotorControlInterfaceHandle_t *oMCInterface[NBR_OF_MOTORS];
 MotorControlInterfaceHandle_t MCInterface[NBR_OF_MOTORS];
-MotorControlTuningHandle_t MCTuning[NBR_OF_MOTORS];
 SpdTorqCtrlHandle_t *pSpeedTorqCtrl[NBR_OF_MOTORS];
 PIDHandle_t *pPIDSpeed[NBR_OF_MOTORS];
 PIDHandle_t *pPIDIq[NBR_OF_MOTORS];
@@ -222,21 +220,6 @@ void MC_BootUp(void)
     
     MCInterface_Init();
 
-    /***********************************************************************************************/
-    
-    MCTuning[M1].pPIDSpeed = pPIDSpeed[M1];
-    MCTuning[M1].pPIDIq = pPIDIq[M1];
-    MCTuning[M1].pPIDId = pPIDId[M1];
-    MCTuning[M1].pPIDMotorControl = &PIDMotorControlM1; /* only if M1 has FW */
-    MCTuning[M1].pPWMnCurrFdbk = pPWMCurrFdbk[M1];
-    MCTuning[M1].pSpeedSensorMain = (SpdPosFdbkHandle_t *)&RotorPosObsM1;
-    MCTuning[M1].pSpeedSensorAux = (SpdPosFdbkHandle_t *)&BemfObserverPllM1;
-    MCTuning[M1].pSpeedSensorVirtual = MC_NULL;
-    MCTuning[M1].pSpeednTorqueCtrl = pSpeedTorqCtrl[M1];
-    MCTuning[M1].pBusVoltageSensor = &(pBusSensorM1->Super);
-    MCTuning[M1].pMotorPower = (MotorPowerMeasHandle_t *)pMotorPower[M1];
-    MCTuning[M1].pFieldWeakening = pFieldWeakening[M1];
-    MCTuning[M1].pFeedforward = pFeedforward[M1];
 
     /*******************************************************/
     /*     Dynamic PI lookup table initialization         */
@@ -1227,44 +1210,6 @@ void SafetyTask_PWMOFF(uint8_t bMotor)
 void MC_PWM_OFF_M1()
 {
     PWMCurrFdbk_SwitchOffPWM(pPWMCurrFdbk[M1]);
-}
-
-/**
- * @brief  This function returns the reference of the MCInterface relative to
- *         the selected drive.
- * @param  bMotor Motor reference number defined
- *         \link Motors_reference_number here \endlink
- * @retval MotorControlInterfaceHandle_t * Reference to MCInterface relative to the selected drive.
- *         Note: it can be MC_NULL if MCInterface of selected drive is not
- *         allocated.
- */
-MotorControlInterfaceHandle_t *GetMCI(uint8_t bMotor)
-{
-    MotorControlInterfaceHandle_t *retVal = MC_NULL;
-    if (bMotor < NBR_OF_MOTORS)
-    {
-        retVal = oMCInterface[bMotor];
-    }
-    return retVal;
-}
-
-/**
- * @brief  This function returns the reference of the MCTuning relative to
- *         the selected drive.
- * @param  bMotor Motor reference number defined
- *         \link Motors_reference_number here \endlink
- * @retval MotorControlTuningHandle_t motor control tuning handler for the selected drive.
- *         Note: it can be MC_NULL if MCInterface of selected drive is not
- *         allocated.
- */
-MotorControlTuningHandle_t *GetMCT(uint8_t bMotor)
-{
-    MotorControlTuningHandle_t *retVal = MC_NULL;
-    if (bMotor < NBR_OF_MOTORS)
-    {
-        retVal = &MCTuning[bMotor];
-    }
-    return retVal;
 }
 
 void MC_HardwareFaultTask(void)

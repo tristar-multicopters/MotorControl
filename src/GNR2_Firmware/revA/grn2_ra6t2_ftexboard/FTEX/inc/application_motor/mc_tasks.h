@@ -8,7 +8,6 @@
 #define __MCTASKS_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "mc_tuning.h"
 #include "mc_config.h"
 
 typedef enum

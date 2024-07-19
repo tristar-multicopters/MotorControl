@@ -13,7 +13,6 @@
 #include "board_hardware.h"
 #include "comm_tasks.h"
 #include "core_cm33.h"
-#include "mc_tasks.h"
 #include "firmware_update.h"
 #include "motor_signal_processing.h"
 #include "pwm_common.h"
