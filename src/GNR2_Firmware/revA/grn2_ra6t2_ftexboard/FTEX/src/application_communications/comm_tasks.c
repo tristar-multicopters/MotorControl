@@ -85,6 +85,7 @@ static void UpdateObjectDictionnary(void *p_arg)
     int16_t     hPhaseCurrentSensor2;
     uint16_t    PedalRPM;
     uint8_t     PerdalTorqPercent;
+    uint16_t    ThrottlePercentageValue;
     uint8_t     PowertrainLockUnlock;
     // Read and write
     uint8_t     bPAS[2];
@@ -128,6 +129,7 @@ static void UpdateObjectDictionnary(void *p_arg)
         hWheelDiameter[VEHICLE_PARAM]   = CanVehiInterface_GetWheelDiameter();
         PedalRPM                        = CanVehiInterface_GetVehiclePedalRPM();
         PerdalTorqPercent               = CanVehiInterface_GetPedalTorqPercentage(pVCI);
+        ThrottlePercentageValue         = Throttle_GetAvgPercentageThrottleValue(pVCI->pPowertrain->pThrottle);
     }
     else
     {
@@ -462,7 +464,7 @@ static void UpdateObjectDictionnary(void *p_arg)
                     CanVehiInterface_DisengageCruiseControl(&VCInterfaceHandle);
                         
                     ExternalThrottleVal = 0;    // Reflect the change on CAN
-                    COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 1)),  pNode, &ExternalThrottleVal, sizeof(uint16_t));
+                    
                     ExternalCruiseControlState = 0;
                     COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_VEHICLE_CRUISE, 0)),  pNode, &ExternalCruiseControlState, sizeof(uint8_t));                    
                 }
@@ -543,12 +545,12 @@ static void UpdateObjectDictionnary(void *p_arg)
 
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SENSOR_CURRENT, 0)), pNode, &hPhaseCurrentSensor1, sizeof(int16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_MOTOR_SENSOR_CURRENT, 1)), pNode, &hPhaseCurrentSensor2, sizeof(int16_t));          
-            
-            
+             
             //PAS sensor information
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 0 )), pNode, &PedalRPM, sizeof(uint16_t));
             COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(COD_OD_REG_PAS_SENSOR, 1 )), pNode, &PerdalTorqPercent, sizeof(uint8_t));
-            
+            COObjWrValue(CODictFind(&pNode->Dict, CO_DEV(CO_OD_REG_CONTROLLER_THROTTLE, 1 )), pNode, &ThrottlePercentageValue, sizeof(uint16_t));
+
             //Update pasLevelMinTorque
             CanVehiInterface_GetPasLevelMinTorque(&VCInterfaceHandle, pasLevelMinTorque);
 

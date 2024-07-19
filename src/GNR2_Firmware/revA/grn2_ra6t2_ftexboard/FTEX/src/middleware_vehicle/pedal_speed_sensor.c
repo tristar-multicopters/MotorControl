@@ -138,7 +138,8 @@ void PedalSpeedSensor_CalculateRPM()
     // Prevent division by zero.    
     static const float EPSILON = 1e-6f;
     static const uint16_t ONE_DECIMAL_PLACE = 10; 
-    if (period > EPSILON && period < MAX_ALLOWED_PERIOD_SEC && pss.magnetsCount > 0)
+    if (period > EPSILON && period < MAX_ALLOWED_PERIOD_SEC &&
+        pss.magnetsCount > 0 && pss.pPulseFrequency->wCaptureOverflow <= 5)
     {
         pss.RPM = (uint16_t)(((float)(RPMCOEFF * ONE_DECIMAL_PLACE))/(period * pss.magnetsCount));
     }

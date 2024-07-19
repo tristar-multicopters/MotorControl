@@ -183,6 +183,17 @@ uint16_t Throttle_GetAvThrottleValue(ThrottleHandle_t * pHandle)
 }
 
 /**
+    Returns latest averaged throttle measured (in % of max throttle value) expressed in u16
+ */
+uint16_t Throttle_GetAvgPercentageThrottleValue(ThrottleHandle_t *pHandle)
+{
+    ASSERT(pHandle != NULL);
+    float percentageValue = pHandle->hAvThrottleValue / THROTTLE_ADC_MAX_VALUE;
+    uint16_t realValue = (uint16_t)(percentageValue * THROTTLE_PERCENTAGE_VALUE_FACTOR);
+    return realValue;
+}
+
+/**
    Compute motor torque reference value from current throttle value stored in the handle 
  */
 int16_t Throttle_ThrottleToTorque(ThrottleHandle_t * pHandle)

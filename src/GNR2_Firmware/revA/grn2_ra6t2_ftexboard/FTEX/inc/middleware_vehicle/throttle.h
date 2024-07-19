@@ -17,6 +17,8 @@
 #define THROTTLE_SLOPE_FACTOR   100   // Factor used to take a floatign point and make a fraction
                                       // If factor == 100 then 1.25f would make a 125/100 fraction 
 #define SAFE_THROTTLE_COUNT_100MS 20 // Called every 5ms, 20*5 = 100ms, which is throttle settle time
+#define THROTTLE_ADC_MAX_VALUE 32766
+#define THROTTLE_PERCENTAGE_VALUE_FACTOR 10000
 
 /**
   * @brief ThrottleParameters_t structure used for storing throttle user parameters
@@ -117,6 +119,13 @@ void Throttle_CalcAvThrottleValue(ThrottleHandle_t * pHandle);
  * @retval AverageThrottle : Current averaged throttle measured (in u16)
  */
 uint16_t Throttle_GetAvThrottleValue(ThrottleHandle_t * pHandle);
+
+/**
+ * @brief  Returns latest averaged throttle measured (in % of max throttle value) expressed in u16
+ * @param  pHandle : Pointer on Handle of the throttle
+ * @retval AverageThrottle : Current averaged throttle measured (in % of max throttle value) (in u16)
+ */
+uint16_t Throttle_GetAvgPercentageThrottleValue(ThrottleHandle_t *pHandle);
 
 /**
  * @brief  Compute motor torque reference value from current throttle value stored in the handle 

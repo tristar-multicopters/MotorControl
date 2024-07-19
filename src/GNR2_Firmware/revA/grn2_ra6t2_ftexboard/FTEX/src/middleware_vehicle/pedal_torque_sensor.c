@@ -215,17 +215,15 @@ uint16_t PedalTorqueSensor_GetAvValue()
 uint8_t PedalTorqueSensor_GetPercentTorqueValue()
 {
     //Calculate the percentage according to torque sensor offset and max value
-    uint32_t temp = (pts.avgADCValue - pts.parameters.idleSensorOffset) * PTS_PERCENTAGE;
-    uint16_t denominator = pts.parameters.maxTorqueValue - pts.parameters.idleSensorOffset;
+    int32_t temp = (pts.avgADCValue - pts.parameters.idleSensorOffset) * PTS_PERCENTAGE;
+    uint32_t denominator = pts.parameters.maxTorqueValue - pts.parameters.idleSensorOffset;
+
+    // Prevent negative value, is set to 0 instead 
+    if(temp < 0) temp = 0;
+    
     //Prevent zero div.
-    if (denominator > 0)
-    {
-        temp = temp/denominator;
-    }
-    else
-    {
-        temp = 0;
-    }
+    if (denominator > 0) temp = temp/(int32_t)denominator;
+    else temp = 0;
     
     //Max value is 100 percent or more if hMax is lower than 65535 and av value > hMax, trim value
     if (temp > PTS_PERCENTAGE)
