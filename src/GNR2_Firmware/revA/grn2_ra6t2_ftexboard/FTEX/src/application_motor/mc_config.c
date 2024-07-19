@@ -54,7 +54,6 @@ MotorParameters_t MotorParameters =
     },
     .FluxParameters = 
     {
-        .bFluxWeakeningEnable           = FLUX_WEAKENING_ENABLE,
         .hFlDirection                   = FLUX_DIRECTION,
         .hPIDFluxKPDefault              = PID_FLUX_KP_DEFAULT,
         .hPIDFluxKIDefault              = PID_FLUX_KI_DEFAULT,
@@ -161,7 +160,7 @@ PIDHandle_t PIDIdHandleM1 =
 /**
   * @brief  Motor Cotrol component parameters Motor 1
   */
-MCConfigHandle_t MCConfig =
+FluxWeakeningHandle_t MCConfig =
 {
     .hMaxModule             = MAX_MODULE,
     .hDefaultFwVoltRef       = (int16_t)FW_VOLTAGE_REF,
@@ -194,6 +193,15 @@ FeedforwardHandle_t FeedforwardM1 =
     .hVqdLowPassFilterBwLog =(uint16_t)M1_VQD_SW_FILTER_BW_FACTOR_LOG
 };
 
+/* parameters of Stcuk Protection */
+StuckProtection_t StuckProtection =
+{
+    .timeout_general = STUCK_TIMER_MAX_COUNTS,
+    .timeout_low_battery = STUCK_TIMER_MAX_COUNTS_LOWBATTERY,
+    .min_torque = STUCK_MIN_TORQUE,
+    .low_battery_voltage = STUCK_LOW_VOLTAGE_THRESHOLD
+};
+
 /**
   * @brief  SpeednTorque Controller parameters Motor 1
   */
@@ -206,19 +214,9 @@ SpdTorqCtrlHandle_t SpeednTorqCtrlM1 =
         .hBelowMaxPowerTimer = 0,
         .hOverMaxPowerTimer = 0    
     },
-    .StuckProtection =
-    {
-        .timeout_general = STUCK_TIMER_MAX_COUNTS,
-        .timeout_low_battery = STUCK_TIMER_MAX_COUNTS_LOWBATTERY,
-        .min_torque = STUCK_MIN_TORQUE,
-        .low_battery_voltage = STUCK_LOW_VOLTAGE_THRESHOLD
-    },  
-    .hSTCFrequencyHz =              MEDIUM_FREQUENCY_TASK_RATE,
     .hMaxBusCurrent =               (uint16_t)(DEFAULT_MAX_APPLICATION_CURRENT),
     .hMinAppPositiveMecSpeedUnit =    (uint16_t)(MIN_APPLICATION_SPEED_UNIT),
     .hMinAppNegativeMecSpeedUnit =    (int16_t)(-MIN_APPLICATION_SPEED_UNIT),
-    .ModeDefault =                    DEFAULT_CONTROL_MODE,
-    .fGainTorqueIdref =             GAIN_TORQUE_IDREF,
     .bEnableSpdLimitControl =       false,
     .PISpeedLimit =
     {

@@ -596,7 +596,7 @@ int16_t MCInterface_GetRegenTorque()
   */
 float MCInterface_GetMotorGearRatio()
 {
-    return MCInterface[M1].pSpeedTorqCtrl->fGearRatio;
+    return MotorParameters.ConfigParameters.fMotorGearRatio;
 }
 
 /**
@@ -604,7 +604,7 @@ float MCInterface_GetMotorGearRatio()
   */
 MotorType_t MCInterface_GetMotorType()
 {
-    return MCInterface[M1].pSpeedTorqCtrl->motorType;
+    return MotorParameters.ConfigParameters.bMotorType;
 }
 
 /**
@@ -620,7 +620,7 @@ uint16_t MCInterface_GetNominalTorque()
   */
 uint16_t MCInterface_GetStartingTorque()
 {
-    return MCInterface[M1].pSpeedTorqCtrl->hStartingTorque;
+    return MotorParameters.ParametersConversion.hStartingTorque;
 }
 
 /**
@@ -685,7 +685,7 @@ bool MCInterface_StopMotorTuning()
   */
 void MCInterface_EnableFluxWeakening()
 {
-    MCInterface[M1].pSpeedTorqCtrl->bFluxWeakeningEn = true;
+    MCInterface[M1].pMCConfig->bFluxWeakeningEn = true;
 }
 
 /**
@@ -694,7 +694,7 @@ void MCInterface_EnableFluxWeakening()
 
 void MCInterface_DisableFluxWeakening()
 {
-    MCInterface[M1].pSpeedTorqCtrl->bFluxWeakeningEn = false;
+    MCInterface[M1].pMCConfig->bFluxWeakeningEn = false;
 }
 
 /*

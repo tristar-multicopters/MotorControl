@@ -28,7 +28,7 @@ void ResDivVbusSensor_UVInit(ResDivVbusSensorHandle_t * pResDivVbusSensor, MC_Se
     ASSERT(pResDivVbusSensor != NULL);
     
     //convert to digital value
-    uint16_t UVThreshDigital = (uint16_t)((MCSetup.BatteryPowerSetup.hUndervoltageThreshold*65535) / ((uint16_t)(ADC_REFERENCE_VOLTAGE / VBUS_PARTITIONING_FACTOR)));
+    uint16_t UVThreshDigital = (uint16_t)((MCSetup.PowerSetup.hUndervoltageThreshold*65535) / ((uint16_t)(ADC_REFERENCE_VOLTAGE / VBUS_PARTITIONING_FACTOR)));
     
     pResDivVbusSensor->hUnderVoltageThreshold = UVThreshDigital;
 }

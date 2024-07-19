@@ -37,7 +37,7 @@ typedef struct
     pFOCVars_t pFOCVars;                          /*!< Pointer to FOC vars used by MCI.*/
     ResDivVbusSensorHandle_t  *pResDivVbusSensor; /*!< Used to raise the resistor dividor bus voltage sensor to the vehicle layer*/
     MCInterfaceUserCommands_t LastCommand;        /*!< Last command coming from the user.*/
-    MCConfigHandle_t          *pMCConfig;
+    FluxWeakeningHandle_t          *pMCConfig;
 
     int16_t hFinalSpeed;        /*!< Final speed of last ExecSpeedRamp command.*/
     int16_t hFinalTorque;       /*!< Final torque of last ExecTorqueRamp command.*/

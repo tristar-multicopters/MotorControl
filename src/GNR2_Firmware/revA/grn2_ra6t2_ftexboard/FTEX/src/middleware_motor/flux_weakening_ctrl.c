@@ -13,8 +13,9 @@
 #include "pid_regulator.h"
 #define MARGIN_COEF     9  // voltage margin coefficient for flux weakening
 
-void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle, MotorParameters_t MotorParameters)
+void FluxWkng_Init(FluxWeakeningHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDHandle_t * pPIDMotorControlHandle, MotorParameters_t MotorParameters)
 {
+    pHandle->bFluxWeakeningEn = MotorParameters.FluxParameters.bFluxWeakeningEnable;
     pHandle->fRS = MotorParameters.ConfigParameters.fRS;
     
     pHandle->hNominalCurr = MotorParameters.ParametersConversion.hNominalPeakCurrent;
@@ -35,7 +36,7 @@ void MotorControl_Init(MCConfigHandle_t * pHandle, PIDHandle_t * pPIDSpeed, PIDH
 }
 
 
-void FluxWkng_Clear(MCConfigHandle_t * pHandle)
+void FluxWkng_Clear(FluxWeakeningHandle_t * pHandle)
 {
   qd_t V_null = {(int16_t)0, (int16_t)0};
 
@@ -46,7 +47,7 @@ void FluxWkng_Clear(MCConfigHandle_t * pHandle)
 }
 
 
-qd_t FluxWkng_CalcCurrRef(MCConfigHandle_t * pHandle, qd_t Iqdref)
+qd_t FluxWkng_CalcCurrRef(FluxWeakeningHandle_t * pHandle, qd_t Iqdref)
 {
   int32_t wIdRef, wIqSatSq, wIqSat, wAux1, wAux2;
   uint32_t wVoltLimit_Ref;
@@ -122,7 +123,7 @@ qd_t FluxWkng_CalcCurrRef(MCConfigHandle_t * pHandle, qd_t Iqdref)
 }
 
 
-void MC_DataProcess(MCConfigHandle_t * pHandle, qd_t Vqd)
+void FluxWkng_DataProcess(FluxWeakeningHandle_t * pHandle, qd_t Vqd)
 {
   int32_t wAux;
   int32_t lowPassFilterBW = (int32_t)(pHandle->hVqdLowPassFilterBw) - (int32_t)1 ;
@@ -156,7 +157,7 @@ void MC_DataProcess(MCConfigHandle_t * pHandle, qd_t Vqd)
 }
 
 
-void MC_SetVref(MCConfigHandle_t * pHandle, uint16_t hNewVref)
+void FluxWkng_SetVref(FluxWeakeningHandle_t * pHandle, uint16_t hNewVref)
 {
   pHandle->hFwVoltRef = hNewVref;
 }
@@ -168,7 +169,7 @@ void MC_SetVref(MCConfigHandle_t * pHandle, uint16_t hNewVref)
   * @retval int16_t Present target voltage value expressed in tenth of
   *         percentage points of available voltage.
   */
-uint16_t MC_GetVref(MCConfigHandle_t * pHandle)
+uint16_t FluxWkng_GetVref(FluxWeakeningHandle_t * pHandle)
 {
   return (pHandle->hFwVoltRef);
 }
@@ -181,7 +182,7 @@ uint16_t MC_GetVref(MCConfigHandle_t * pHandle)
   *         in s16V (0-to-peak), where
   *         PhaseVoltage(V) = [PhaseVoltage(s16A) * Vbus(V)] /[sqrt(3) *32767].
   */
-int16_t MC_GetAvVAmplitude(MCConfigHandle_t * pHandle)
+int16_t FluxWkng_GetAvVAmplitude(FluxWeakeningHandle_t * pHandle)
 {
   return (pHandle->AvVoltAmpl);
 }
@@ -193,7 +194,7 @@ int16_t MC_GetAvVAmplitude(MCConfigHandle_t * pHandle)
   * @retval uint16_t Present averaged phase stator voltage value, expressed in
   *         tenth of percentage points of available voltage.
   */
-uint16_t MC_GetAvVPercentage(MCConfigHandle_t * pHandle)
+uint16_t FluxWkng_GetAvVPercentage(FluxWeakeningHandle_t * pHandle)
 {
   return (uint16_t)((uint32_t)(pHandle->AvVoltAmpl) * 1000u /
                        (uint32_t)(pHandle->hMaxModule));

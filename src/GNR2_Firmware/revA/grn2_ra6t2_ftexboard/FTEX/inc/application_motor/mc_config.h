@@ -36,7 +36,7 @@ extern PIDHandle_t PIDSpeedHandleM1;
 extern PIDHandle_t PIDIqHandleM1;
 extern PIDHandle_t PIDIdHandleM1;
 extern PIDHandle_t PIDMotorControlM1;
-extern MCConfigHandle_t MCConfig;
+extern FluxWeakeningHandle_t MCConfig;
 extern PWMInsulCurrSensorFdbkHandle_t PWMInsulCurrSensorFdbkHandleM1;
 extern SpdTorqCtrlHandle_t SpeednTorqCtrlM1;
 extern MotorPowerQDHandle_t PQDMotorPowMeasM1;
@@ -45,6 +45,7 @@ extern BemfObserverPllHandle_t BemfObserverPllM1;
 extern HallPosSensorHandle_t HallPosSensorM1;
 extern ResDivVbusSensorHandle_t RealBusVoltageSensorParamsM1;
 extern FeedforwardHandle_t FeedforwardM1;
+extern StuckProtection_t StuckProtection;
 
 extern RotorPositionObserverHandle_t RotorPosObsM1;
 

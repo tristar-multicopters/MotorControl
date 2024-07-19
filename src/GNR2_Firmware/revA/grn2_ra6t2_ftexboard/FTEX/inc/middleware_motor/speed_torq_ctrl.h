@@ -32,6 +32,9 @@ extern "C" {
   */
 typedef struct
 {
+    STCModality_t                   Mode;        /*!< Modality of STC. It can be one of these two
+                                                settings: STC_TORQUE_MODE to enable the
+                                                Torque mode or STC_SPEED_MODE to enable the Speed mode.*/
     DynamicPowerHandle_t   DynamicPowerHandle;
     
     int16_t hCurrentTorqueRef;
@@ -40,20 +43,14 @@ typedef struct
     int16_t hFinalTorqueRef;
     int16_t hFinalSpeedRef;
     
-    MotorType_t motorType;                          /* Type of motor, can be HUB_DRIVE or MID_DRIVE */
-
-    STCModality_t                   Mode;        /*!< Modality of STC. It can be one of these two
-                                                settings: STC_TORQUE_MODE to enable the
-                                                Torque mode or STC_SPEED_MODE to enable the Speed mode.*/
     PIDHandle_t                     * pPISpeed;   /*!< The regulator used to perform the speed
                                      control loop.*/
+    PIDHandle_t PISpeedLimit;               /*!< The regulator used to perform the speed limit control loop.*/
+
+    
     SpdPosFdbkHandle_t              * pSPD;/*!< The speed sensor used to perform the speed
                                      regulation.*/
-    StuckProtection_t               StuckProtection; /* parameters of Stcuk Protection */
-    uint16_t hSTCFrequencyHz;               /*!< Frequency on which the user updates
-                                             the torque reference calling
-                                             SpdTorqCtrl_CalcTorqueReference method
-                                             expressed in Hz */
+
     uint16_t hBusVoltage;                   /* the Bus Voltage coming from Voltage Sensor
                                              in voltage unit                                            */    
     uint16_t hMaxBusCurrent;                /*!< Application maximum Peak Current
@@ -82,10 +79,6 @@ typedef struct
                                              torque in cNm.*/
     int16_t  hMinNegativeTorque;            /*!< Minimum negative value of motor
                                              torque in cNm.*/                     
-    uint16_t hStartingTorque;               /*!< Maximum starting torque to apply
-                                             to motor in cNm  Only used for Heavy bikes */
-    uint8_t  bPowerRef;
-
     uint16_t hMaxPositivePower;             /*!< Maximum positive value of motor
                                              power in W.*/
     uint16_t hMaxContinuousPower;           /*!< Maximum positive value of motor
@@ -93,26 +86,19 @@ typedef struct
     int16_t hMinNegativePower;              /*!< Minimum negative value of motor
                                              power in W.*/
     int16_t hLowBatteryTorque;              /*!< Max torque when low battery.*/
+    
     uint16_t hEstimatedEfficiencyPercent;     /*! < Power losses from input to output power in percent. */
-    STCModality_t ModeDefault;              /*!< Default STC modality.*/
+    
     uint32_t wTorqueSlopePerSecondUp;       /*!< Slope in cNm per second when ramping up torque. */
     uint32_t wTorqueSlopePerSecondDown;     /*!< Slope in cNm per second when ramping down torque. */
     uint32_t wSpeedSlopePerSecondUp;        /*!< Slope in #SPEED_UNIT per second when ramping up speed. */
     uint32_t wSpeedSlopePerSecondDown;      /*!< Slope in #SPEED_UNIT per second when ramping down speed. */
-
-    float fGainTorqueIqref;            /* Gain (G) between Iqref in digital amps and torque reference in cNm. Iqref = Torq * G/D  */
-    float fGainTorqueIdref;            /* Gain (G) between Idref in digital amps and torque reference in cNm. Idref = Torq * G/D  */
-    
-    float fGearRatio;                  /* fGearRatio Contians the gear ratio of the motor as defined in drive_parameters_xxx*/    
-    
+        
     bool bEnableSpdLimitControl;
     int16_t hSpdLimit;                /* Speed limit of motor rpm */
     uint16_t hSpdLimitWheelRpm;       /* Speed limit of wheel rpm */
     int16_t hTorqueReferenceSpdLim;
-    PIDHandle_t PISpeedLimit;               /*!< The regulator used to perform the speed limit control loop.*/
-    
-    bool bFluxWeakeningEn;           /* Enable flux weakening */
-    
+        
 } SpdTorqCtrlHandle_t;
 
 
@@ -333,7 +319,7 @@ void SpdTorqCtrl_SetSpeedRampSlope(SpdTorqCtrlHandle_t * pHandle, uint32_t wSlop
   * @param  hTorqueRef: Torque reference in cNm
   * @retval int16_t Iq in digital A
   */
-int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef);
+int16_t SpdTorqCtrl_GetIqFromTorqueRef(MotorParameters_t MotorParameters, int16_t hTorqueRef);
 
 /**
   * @brief  Get Id from provided torque reference.
@@ -342,7 +328,7 @@ int16_t SpdTorqCtrl_GetIqFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hT
   * @param  hTorqueRef: Torque reference in cNm
   * @retval int16_t Id in digital A
   */
-int16_t SpdTorqCtrl_GetIdFromTorqueRef(SpdTorqCtrlHandle_t * pHandle, int16_t hTorqueRef);
+int16_t SpdTorqCtrl_GetIdFromTorqueRef(int16_t hTorqueRef);
 
 /**
   * @brief  Get Id, Iq from provided 

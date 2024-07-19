@@ -262,14 +262,14 @@ typedef struct
     
     uint16_t hUndervoltageThreshold;                     // Undervoltage threshold of the battery
     
-} BatteryPower_Setup_t;
+} Power_Setup_t;
 
 /**
   * @brief  MC Setup structure
   */
 typedef struct 
 {
-    BatteryPower_Setup_t    BatteryPowerSetup;
+    Power_Setup_t    PowerSetup;
     bool                    bEnSpeedLimit;
     
 } MC_Setup_t;

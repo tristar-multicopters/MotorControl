@@ -234,7 +234,7 @@ MC_Setup_t MCSetup =
 {
     /**@brief Battery power initializing parameters.
     */
-    .BatteryPowerSetup =
+    .PowerSetup =
     {
         .bPowerLimitRef                 = POWER_LIMIT_REF,                // Defines if the code should use MAX_APPLICATION_POSITIVE_POWER or MAX_APPLICATION_CURRENT
         .hMaxApplicationPositivePower   = MAX_APPLICATION_POSITIVE_POWER, // Maximum power in watts that drive can push to the motor

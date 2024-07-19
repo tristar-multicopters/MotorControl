@@ -69,9 +69,10 @@ PIDHandle_t *pPIDIq[NBR_OF_MOTORS];
 PIDHandle_t *pPIDId[NBR_OF_MOTORS];
 ResDivVbusSensorHandle_t *pBusSensorM1;
 
+
 PWMCurrFdbkHandle_t *pPWMCurrFdbk[NBR_OF_MOTORS];
 MotorPowerQDHandle_t *pMotorPower[NBR_OF_MOTORS];
-MCConfigHandle_t *pFieldWeakening[NBR_OF_MOTORS];
+FluxWeakeningHandle_t *pFieldWeakening[NBR_OF_MOTORS];
 FeedforwardHandle_t *pFeedforward[NBR_OF_MOTORS];
 
 
@@ -166,6 +167,7 @@ void MC_BootUp(void)
     /*   Speed & torque component initialization          */
     /******************************************************/
     SpdTorqCtrl_Init(pSpeedTorqCtrl[M1], pPIDSpeed[M1], &RotorPosObsM1.Super, MotorParameters);
+    StuckProtection_Init(&StuckProtection);
 
     /******************************************************/
     /*  Auxiliary speed sensor component initialization   */
@@ -203,7 +205,7 @@ void MC_BootUp(void)
     /*     Motor Control component initialization         */
     /*******************************************************/
     PID_Init(&PIDMotorControlM1, MotorParameters.ParametersConversion.PIDInitMotorControl);
-    MotorControl_Init(pFieldWeakening[M1], pPIDSpeed[M1], &PIDMotorControlM1, MotorParameters);
+    FluxWkng_Init(pFieldWeakening[M1], pPIDSpeed[M1], &PIDMotorControlM1, MotorParameters);
 
     /*******************************************************/
     /*     Feed forward component initialization           */
@@ -437,7 +439,7 @@ void MediumFrequencyTaskM1(void)
         HallPosSensor_Clear(&HallPosSensorM1);
         BemfObsPll_Clear(&BemfObserverPllM1);
         RotorPosObs_Clear(&RotorPosObsM1);
-        Clear_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection);
+        Clear_MotorStuckReverse(&StuckProtection);
         if (MCStateMachine_NextState(M_START) == true)
         {
             FOC_Clear(M1);
@@ -457,7 +459,7 @@ void MediumFrequencyTaskM1(void)
         SpdTorqCtrl_ForceSpeedReferenceToCurrentSpeed(pSpeedTorqCtrl[M1]); /* Init the reference speed to current speed */
         MCInterface_ExecBufferedCommands(oMCInterface[M1]);                /* Exec the speed ramp after changing of the speed sensor */
 #if !(BYPASS_POSITION_SENSOR)
-        if (Check_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
+        if (Check_MotorStuckReverse(&StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
                                     pSpeedTorqCtrl[M1]->hBusVoltage, pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit)
                                     != MC_NO_FAULT)
         {
@@ -513,7 +515,7 @@ void MediumFrequencyTaskM1(void)
         }
 
 #if !(BYPASS_POSITION_SENSOR)    
-        if (Check_MotorStuckReverse(&pSpeedTorqCtrl[M1]->StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
+        if (Check_MotorStuckReverse(&StuckProtection, pSpeedTorqCtrl[M1]->hFinalTorqueRef, 
                                     pSpeedTorqCtrl[M1]->hBusVoltage, pSpeedTorqCtrl[M1]->pSPD->hAvrMecSpeedUnit)
                                     != MC_NO_FAULT)  
         { 
@@ -796,11 +798,11 @@ void FOC_CalcCurrRef(uint8_t bMotor)
             FOCVars[bMotor].hTeref = SpdTorqCtrl_CalcTorqueReference(pSpeedTorqCtrl[bMotor], MotorParameters);
         }
         
-        FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
-        FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(pSpeedTorqCtrl[bMotor], FOCVars[bMotor].hTeref);
+        FOCVars[bMotor].Iqdref.q = SpdTorqCtrl_GetIqFromTorqueRef(MotorParameters, FOCVars[bMotor].hTeref);
+        FOCVars[bMotor].Iqdref.d = SpdTorqCtrl_GetIdFromTorqueRef(FOCVars[bMotor].hTeref);
         
         /* Use Flux Weakening to recalculate Iq and Id if it is enabled for motor */
-        if (pSpeedTorqCtrl[bMotor]->bFluxWeakeningEn == true)    
+        if (MCInterface[M1].pMCConfig->bFluxWeakeningEn == true)    
         {
             IqdTmp.q = FOCVars[bMotor].Iqdref.q;
             IqdTmp.d = FOCVars[bMotor].Iqdref.d;
@@ -1032,7 +1034,7 @@ inline uint32_t FOC_CurrControllerM1(void)
         Vqd = CircleLimitation(Vqd);
         
 
-    if (pSpeedTorqCtrl[M1]->motorType == DIRECT_DRIVE)     
+    if (MotorParameters.ConfigParameters.bMotorType == DIRECT_DRIVE)     
     {      
 
         if ((MCInterface->Iqdref.q == 0) && (MCInterface->Iqdref.d == 0) && (MCInterface->hFinalTorque == 0) && (MCInterface->bDriverEn == true))
@@ -1060,7 +1062,7 @@ inline uint32_t FOC_CurrControllerM1(void)
         FOCVars[M1].Iqd = Iqd;
         FOCVars[M1].Valphabeta = Valphabeta;
         FOCVars[M1].hElAngle = hElAngle;
-        MC_DataProcess(pFieldWeakening[M1], Vqd);
+        FluxWkng_DataProcess(pFieldWeakening[M1], Vqd);
         Feedforward_DataProcess(pFeedforward[M1]);
 
         // Check for overcurrent condition (software overcurrent protection)
