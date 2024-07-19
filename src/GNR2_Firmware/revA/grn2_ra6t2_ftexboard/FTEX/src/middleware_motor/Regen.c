@@ -58,22 +58,27 @@ int16_t ApplyRegen(int16_t hMotorSpeed, uint16_t hBusVoltage)
 {
     if (RegenHandler.bRegenEnabled == false)
     {
-        return 0;                       // return false if regen is not enabled
+        return 0;                       // set regen torque to zero if regen is not enabled
     }
     
     if (RegenHandler.hMaxCurrent > 0)
     {
-        return 0;                       // return false if the maximum current is positive
+        return 0;                       // set regen torque to zero if the maximum current is positive
     }
 
     if (hBusVoltage > RegenHandler.hMaxVoltage)
     {
-        return 0;                       // return false if the bus voltage is lower than the maximum voltage
+        return 0;                       // set regen torque to zero if the bus voltage is lower than the maximum voltage
+    }
+
+    if (hMotorSpeed < 0)                // set regen torque to zero if motor is moving backward
+    {
+        return 0;
     }
     
     RegenHandler.hRegenTorqueMax = (int16_t)((RegenHandler.bRegenLevelPercent * RegenHandler.hMaxCurrent * hBusVoltage)/(abs(hMotorSpeed)*PI_/30));
 
-    if ((abs)(hMotorSpeed) > RegenHandler.hMinSpeed)
+    if (abs(hMotorSpeed) > RegenHandler.hMinSpeed * 1.5)
     {    
         int16_t newRegenTorque = RegenHandler.hRegenTorque + (int16_t)(RegenHandler.hRegenTorqueMax * RegenHandler.fRampCoEff);
         if (newRegenTorque < RegenHandler.hRegenTorqueMax)
@@ -85,7 +90,7 @@ int16_t ApplyRegen(int16_t hMotorSpeed, uint16_t hBusVoltage)
             RegenHandler.hRegenTorque = RegenHandler.hRegenTorqueMax;
         }
     }
-    else
+    else if (abs(hMotorSpeed) < RegenHandler.hMinSpeed)
     {
         int16_t newRegenTorque = RegenHandler.hRegenTorque - (int16_t)(RegenHandler.hRegenTorqueMax * RegenHandler.fRampCoEff);
         if (newRegenTorque < 0)
