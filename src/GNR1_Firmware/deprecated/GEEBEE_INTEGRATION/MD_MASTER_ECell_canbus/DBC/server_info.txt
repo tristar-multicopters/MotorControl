@@ -1,4 +1,0 @@
-userId 08174544bd459000
-Organisation ID 907c56a74d662a7d
-https://us-east-1-1.aws.cloud2.influxdata.com/
-token 9D6jhOKm7Q2eRETrogoW_O7xLx0QI8crpdRPV_b6kYw42cAa2rJhv9P3AEKSMnbM2UUpvvmkM_MxBGZPlPT6eg==
