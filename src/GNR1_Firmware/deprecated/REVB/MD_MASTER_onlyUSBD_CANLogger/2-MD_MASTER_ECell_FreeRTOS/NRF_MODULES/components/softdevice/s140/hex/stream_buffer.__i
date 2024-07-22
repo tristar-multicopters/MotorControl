@@ -1,6 +1,0 @@
---c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ..\..\..\config -I ..\config --reduce_paths
--I.\RTE\_flash_s140_nrf52_7.2.0_softdevice
--IC:\Users\Costco\AppData\Local\Arm\Packs\NordicSemiconductor\nRF_DeviceFamilyPack\8.35.0\Device\Include
--IC:\Keil_v5\ARM\CMSIS\Include
--D__UVISION_VERSION="530" -D_RTE_ -DNRF52840_XXAA -D_RTE_ -D__HEAP_SIZE="8192" -D__STACK_SIZE="8192"
--o .\nrf_modules\components\softdevice\s140\hex\stream_buffer.o --omf_browse .\nrf_modules\components\softdevice\s140\hex\stream_buffer.crf --depend .\nrf_modules\components\softdevice\s140\hex\stream_buffer.d "FREERTOS_MODULES\freertos\source\stream_buffer.c"

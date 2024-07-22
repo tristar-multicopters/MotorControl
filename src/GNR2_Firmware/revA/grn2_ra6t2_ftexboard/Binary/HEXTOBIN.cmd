@@ -1,1 +1,0 @@
-srec_cat.exe gnr2_ra6t2_Signed.hex -Intel -o gnr2_ra6t2_Signed.bin -Binary

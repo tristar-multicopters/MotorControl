@@ -1,7 +1,0 @@
-Three-phase PWMs operating at 20khz frequency ,high side/low side with 250 ms dead band, using timer_0,timer_1,timer_2 are generated in this project. 
-PWMS can be physically verefied on pins U-phase: PB04,PB05 V-phase: PB06,PB07 W-phase: PB08,PB09.
-timer_0 generates start of ADC conversion event for every down count ADC compare A match. ADC is configured to measure over pins PA00 and PA01.
-End of ADC conversion causes an end of conversion routine "adc0_eoc0_isr".
-Here a dummy hall angle is calculated, using angle and "g_volt_q_d" duty are calculated and fed to output through PWM.
-
-To turn on PWM after entering the debug mode, set "enable_PWM" expression to true through watch window.
