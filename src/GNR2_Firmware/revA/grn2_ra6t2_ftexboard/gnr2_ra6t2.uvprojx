@@ -10,7 +10,7 @@
       <TargetName>APP_DEBUG (Standard)</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6180000::V6.18::ARMCLANG</pCCUsed>
+      <pCCUsed>6210000::V6.21::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -340,7 +340,7 @@
               <MiscControls>-Wno-license-management -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Waggregate-return -Wfloat-equal -Wno-comment</MiscControls>
               <Define>LFS_NO_MALLOC,LFS_NO_DEBUG,LFS_NO_ERROR,LFS_NO_WARN</Define>
               <Undefine></Undefine>
-              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\core;.\CANopen-stack\hal;.\CANopen-stack\object\basic;.\CANopen-stack\object\cia301;.\CANopen-stack\service\cia301;.\CANopen-stack\include;.\libraries\littlefs;.\FTEX\inc\middleware autotune</IncludePath>
+              <IncludePath>.\FTEX\inc;.\FTEX\inc\application;.\FTEX\inc\application_vehicle;.\FTEX\MotorControl\inc\application_motor;.\FTEX\inc\application_communications;.\FTEX\inc\application_memory;.\FTEX\inc\middleware_vehicle;.\FTEX\inc\middleware_communications;.\FTEX\MotorControl\inc\middleware_motor;.\FTEX\inc\middleware_memory;.\FTEX\inc\peripherals_abstraction;.\FTEX\inc\peripherals_abstraction\CANOpen;.\CANopen-stack\config;.\CANopen-stack\core;.\CANopen-stack\hal;.\CANopen-stack\object\basic;.\CANopen-stack\object\cia301;.\CANopen-stack\service\cia301;.\CANopen-stack\include;.\libraries\littlefs;.\FTEX\inc\middleware autotune</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -709,159 +709,159 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>current_pid_vs_speed_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\current_pid_vs_speed_table.c</FilePath>
+            </File>
+            <File>
               <FileName>mc_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_config.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_config.c</FilePath>
             </File>
             <File>
               <FileName>mc_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_interface.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_interface.c</FilePath>
             </File>
             <File>
               <FileName>mc_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_parameters.c</FilePath>
             </File>
             <File>
               <FileName>mc_tasks.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_tasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>current_pid_vs_speed_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion_ra6t2.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_tasks.c</FilePath>
             </File>
             <File>
               <FileName>motor_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\motor_parameters.c</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters.h</FileName>
+              <FileName>current_pid_vs_speed_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\current_pid_vs_speed_table.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_rs2_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP1200.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP600.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\gear_ratio_table.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\gear_ratio_table.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP700.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP1200.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion_ra6t2.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1190,159 +1190,149 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>autotune.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
               <FileName>bus_voltage_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\bus_voltage_sensor.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\bus_voltage_sensor.c</FilePath>
             </File>
             <File>
               <FileName>circle_limitation.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
-            </File>
-            <File>
-              <FileName>feed_forward_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\feed_forward_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>flux_weakening_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>foldback.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\foldback.c</FilePath>
-            </File>
-            <File>
-              <FileName>hall_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>lookup_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\lookup_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid_regulator.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pid_regulator.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_math.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_math.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_state_machine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_state_machine.c</FilePath>
-            </File>
-            <File>
-              <FileName>motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>ntc_temperature_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>pqd_motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>r_divider_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>ramp_mngr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ramp_mngr.c</FilePath>
-            </File>
-            <File>
-              <FileName>rotor_pos_obs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
-            </File>
-            <File>
-              <FileName>signal_filtering.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\signal_filtering.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_torq_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_torq_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_speed_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\circle_limitation.c</FilePath>
             </File>
             <File>
               <FileName>dynamic_power.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\dynamic_power.c</FilePath>
             </File>
             <File>
-              <FileName>stuck_protection.c</FileName>
+              <FileName>feed_forward_ctrl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\feed_forward_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>flux_weakening_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>foldback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\foldback.c</FilePath>
+            </File>
+            <File>
+              <FileName>hall_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>lookup_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\lookup_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_math.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_state_machine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_state_machine.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_power_measurement.c</FilePath>
             </File>
             <File>
               <FileName>motor_signal_processing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
             <File>
-              <FileName>autotune.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\autotune.h</FilePath>
-            </File>
-            <File>
-              <FileName>autotune.c</FileName>
+              <FileName>ntc_temperature_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid_regulator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pid_regulator.c</FilePath>
+            </File>
+            <File>
+              <FileName>pqd_motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>r_divider_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramp_mngr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ramp_mngr.c</FilePath>
+            </File>
+            <File>
+              <FileName>rotor_pos_obs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\rotor_pos_obs.c</FilePath>
+            </File>
+            <File>
+              <FileName>signal_filtering.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\signal_filtering.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_torq_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_torq_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>stuck_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_speed_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_speed_sensor.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2904,159 +2894,159 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>current_pid_vs_speed_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\current_pid_vs_speed_table.c</FilePath>
+            </File>
+            <File>
               <FileName>mc_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_config.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_config.c</FilePath>
             </File>
             <File>
               <FileName>mc_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_interface.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_interface.c</FilePath>
             </File>
             <File>
               <FileName>mc_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_parameters.c</FilePath>
             </File>
             <File>
               <FileName>mc_tasks.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_tasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>current_pid_vs_speed_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion_ra6t2.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_tasks.c</FilePath>
             </File>
             <File>
               <FileName>motor_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\motor_parameters.c</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters.h</FileName>
+              <FileName>current_pid_vs_speed_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\current_pid_vs_speed_table.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_rs2_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP1200.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP600.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\gear_ratio_table.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\gear_ratio_table.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP700.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP1200.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion_ra6t2.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3385,159 +3375,149 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>autotune.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
               <FileName>bus_voltage_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\bus_voltage_sensor.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\bus_voltage_sensor.c</FilePath>
             </File>
             <File>
               <FileName>circle_limitation.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
-            </File>
-            <File>
-              <FileName>feed_forward_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\feed_forward_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>flux_weakening_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>foldback.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\foldback.c</FilePath>
-            </File>
-            <File>
-              <FileName>hall_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>lookup_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\lookup_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid_regulator.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pid_regulator.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_math.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_math.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_state_machine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_state_machine.c</FilePath>
-            </File>
-            <File>
-              <FileName>motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>ntc_temperature_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>pqd_motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>r_divider_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>ramp_mngr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ramp_mngr.c</FilePath>
-            </File>
-            <File>
-              <FileName>rotor_pos_obs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
-            </File>
-            <File>
-              <FileName>signal_filtering.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\signal_filtering.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_torq_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_torq_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_speed_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\circle_limitation.c</FilePath>
             </File>
             <File>
               <FileName>dynamic_power.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\dynamic_power.c</FilePath>
             </File>
             <File>
-              <FileName>stuck_protection.c</FileName>
+              <FileName>feed_forward_ctrl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\feed_forward_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>flux_weakening_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>foldback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\foldback.c</FilePath>
+            </File>
+            <File>
+              <FileName>hall_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>lookup_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\lookup_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_math.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_state_machine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_state_machine.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_power_measurement.c</FilePath>
             </File>
             <File>
               <FileName>motor_signal_processing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
             <File>
-              <FileName>autotune.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\autotune.h</FilePath>
-            </File>
-            <File>
-              <FileName>autotune.c</FileName>
+              <FileName>ntc_temperature_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid_regulator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pid_regulator.c</FilePath>
+            </File>
+            <File>
+              <FileName>pqd_motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>r_divider_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramp_mngr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ramp_mngr.c</FilePath>
+            </File>
+            <File>
+              <FileName>rotor_pos_obs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\rotor_pos_obs.c</FilePath>
+            </File>
+            <File>
+              <FileName>signal_filtering.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\signal_filtering.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_torq_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_torq_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>stuck_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_speed_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_speed_sensor.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5048,159 +5028,159 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>current_pid_vs_speed_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\current_pid_vs_speed_table.c</FilePath>
+            </File>
+            <File>
               <FileName>mc_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_config.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_config.c</FilePath>
             </File>
             <File>
               <FileName>mc_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_interface.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_interface.c</FilePath>
             </File>
             <File>
               <FileName>mc_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_parameters.c</FilePath>
             </File>
             <File>
               <FileName>mc_tasks.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_tasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>current_pid_vs_speed_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion_ra6t2.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_tasks.c</FilePath>
             </File>
             <File>
               <FileName>motor_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\motor_parameters.c</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters.h</FileName>
+              <FileName>current_pid_vs_speed_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\current_pid_vs_speed_table.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_rs2_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP1200.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP600.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\gear_ratio_table.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\gear_ratio_table.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP700.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP1200.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion_ra6t2.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -5580,159 +5560,149 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>autotune.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
               <FileName>bus_voltage_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\bus_voltage_sensor.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\bus_voltage_sensor.c</FilePath>
             </File>
             <File>
               <FileName>circle_limitation.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
-            </File>
-            <File>
-              <FileName>feed_forward_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\feed_forward_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>flux_weakening_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>foldback.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\foldback.c</FilePath>
-            </File>
-            <File>
-              <FileName>hall_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>lookup_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\lookup_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid_regulator.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pid_regulator.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_math.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_math.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_state_machine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_state_machine.c</FilePath>
-            </File>
-            <File>
-              <FileName>motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>ntc_temperature_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>pqd_motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>r_divider_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>ramp_mngr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ramp_mngr.c</FilePath>
-            </File>
-            <File>
-              <FileName>rotor_pos_obs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
-            </File>
-            <File>
-              <FileName>signal_filtering.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\signal_filtering.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_torq_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_torq_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_speed_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\circle_limitation.c</FilePath>
             </File>
             <File>
               <FileName>dynamic_power.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\dynamic_power.c</FilePath>
             </File>
             <File>
-              <FileName>stuck_protection.c</FileName>
+              <FileName>feed_forward_ctrl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\feed_forward_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>flux_weakening_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>foldback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\foldback.c</FilePath>
+            </File>
+            <File>
+              <FileName>hall_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>lookup_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\lookup_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_math.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_state_machine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_state_machine.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_power_measurement.c</FilePath>
             </File>
             <File>
               <FileName>motor_signal_processing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
             <File>
-              <FileName>autotune.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\autotune.h</FilePath>
-            </File>
-            <File>
-              <FileName>autotune.c</FileName>
+              <FileName>ntc_temperature_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid_regulator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pid_regulator.c</FilePath>
+            </File>
+            <File>
+              <FileName>pqd_motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>r_divider_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramp_mngr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ramp_mngr.c</FilePath>
+            </File>
+            <File>
+              <FileName>rotor_pos_obs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\rotor_pos_obs.c</FilePath>
+            </File>
+            <File>
+              <FileName>signal_filtering.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\signal_filtering.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_torq_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_torq_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>stuck_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_speed_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_speed_sensor.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -7243,159 +7213,159 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>current_pid_vs_speed_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\current_pid_vs_speed_table.c</FilePath>
+            </File>
+            <File>
               <FileName>mc_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_config.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_config.c</FilePath>
             </File>
             <File>
               <FileName>mc_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_interface.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_interface.c</FilePath>
             </File>
             <File>
               <FileName>mc_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_parameters.c</FilePath>
             </File>
             <File>
               <FileName>mc_tasks.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_tasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>current_pid_vs_speed_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion_ra6t2.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_tasks.c</FilePath>
             </File>
             <File>
               <FileName>motor_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\motor_parameters.c</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters.h</FileName>
+              <FileName>current_pid_vs_speed_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\current_pid_vs_speed_table.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_rs2_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP1200.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP600.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\gear_ratio_table.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\gear_ratio_table.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP700.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP1200.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion_ra6t2.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -7724,159 +7694,149 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>autotune.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
               <FileName>bus_voltage_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\bus_voltage_sensor.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\bus_voltage_sensor.c</FilePath>
             </File>
             <File>
               <FileName>circle_limitation.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
-            </File>
-            <File>
-              <FileName>feed_forward_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\feed_forward_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>flux_weakening_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>foldback.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\foldback.c</FilePath>
-            </File>
-            <File>
-              <FileName>hall_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>lookup_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\lookup_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid_regulator.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pid_regulator.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_math.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_math.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_state_machine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_state_machine.c</FilePath>
-            </File>
-            <File>
-              <FileName>motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>ntc_temperature_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>pqd_motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>r_divider_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>ramp_mngr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ramp_mngr.c</FilePath>
-            </File>
-            <File>
-              <FileName>rotor_pos_obs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
-            </File>
-            <File>
-              <FileName>signal_filtering.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\signal_filtering.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_torq_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_torq_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_speed_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\circle_limitation.c</FilePath>
             </File>
             <File>
               <FileName>dynamic_power.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\dynamic_power.c</FilePath>
             </File>
             <File>
-              <FileName>stuck_protection.c</FileName>
+              <FileName>feed_forward_ctrl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\feed_forward_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>flux_weakening_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>foldback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\foldback.c</FilePath>
+            </File>
+            <File>
+              <FileName>hall_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>lookup_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\lookup_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_math.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_state_machine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_state_machine.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_power_measurement.c</FilePath>
             </File>
             <File>
               <FileName>motor_signal_processing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
             <File>
-              <FileName>autotune.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\autotune.h</FilePath>
-            </File>
-            <File>
-              <FileName>autotune.c</FileName>
+              <FileName>ntc_temperature_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid_regulator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pid_regulator.c</FilePath>
+            </File>
+            <File>
+              <FileName>pqd_motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>r_divider_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramp_mngr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ramp_mngr.c</FilePath>
+            </File>
+            <File>
+              <FileName>rotor_pos_obs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\rotor_pos_obs.c</FilePath>
+            </File>
+            <File>
+              <FileName>signal_filtering.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\signal_filtering.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_torq_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_torq_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>stuck_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_speed_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_speed_sensor.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -9438,159 +9398,159 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>current_pid_vs_speed_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\current_pid_vs_speed_table.c</FilePath>
+            </File>
+            <File>
               <FileName>mc_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_config.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_config.c</FilePath>
             </File>
             <File>
               <FileName>mc_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_interface.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_interface.c</FilePath>
             </File>
             <File>
               <FileName>mc_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_parameters.c</FilePath>
             </File>
             <File>
               <FileName>mc_tasks.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_tasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>current_pid_vs_speed_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion_ra6t2.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_tasks.c</FilePath>
             </File>
             <File>
               <FileName>motor_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\motor_parameters.c</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters.h</FileName>
+              <FileName>current_pid_vs_speed_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\current_pid_vs_speed_table.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_rs2_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP1200.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP600.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\gear_ratio_table.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\gear_ratio_table.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP700.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP1200.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion_ra6t2.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -9919,159 +9879,149 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>autotune.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
               <FileName>bus_voltage_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\bus_voltage_sensor.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\bus_voltage_sensor.c</FilePath>
             </File>
             <File>
               <FileName>circle_limitation.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
-            </File>
-            <File>
-              <FileName>feed_forward_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\feed_forward_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>flux_weakening_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>foldback.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\foldback.c</FilePath>
-            </File>
-            <File>
-              <FileName>hall_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>lookup_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\lookup_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid_regulator.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pid_regulator.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_math.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_math.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_state_machine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_state_machine.c</FilePath>
-            </File>
-            <File>
-              <FileName>motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>ntc_temperature_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>pqd_motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>r_divider_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>ramp_mngr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ramp_mngr.c</FilePath>
-            </File>
-            <File>
-              <FileName>rotor_pos_obs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
-            </File>
-            <File>
-              <FileName>signal_filtering.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\signal_filtering.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_torq_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_torq_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_speed_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\circle_limitation.c</FilePath>
             </File>
             <File>
               <FileName>dynamic_power.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\dynamic_power.c</FilePath>
             </File>
             <File>
-              <FileName>stuck_protection.c</FileName>
+              <FileName>feed_forward_ctrl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\feed_forward_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>flux_weakening_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>foldback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\foldback.c</FilePath>
+            </File>
+            <File>
+              <FileName>hall_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>lookup_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\lookup_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_math.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_state_machine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_state_machine.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_power_measurement.c</FilePath>
             </File>
             <File>
               <FileName>motor_signal_processing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
             <File>
-              <FileName>autotune.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\autotune.h</FilePath>
-            </File>
-            <File>
-              <FileName>autotune.c</FileName>
+              <FileName>ntc_temperature_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid_regulator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pid_regulator.c</FilePath>
+            </File>
+            <File>
+              <FileName>pqd_motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>r_divider_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramp_mngr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ramp_mngr.c</FilePath>
+            </File>
+            <File>
+              <FileName>rotor_pos_obs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\rotor_pos_obs.c</FilePath>
+            </File>
+            <File>
+              <FileName>signal_filtering.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\signal_filtering.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_torq_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_torq_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>stuck_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_speed_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_speed_sensor.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -11582,159 +11532,159 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>current_pid_vs_speed_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\current_pid_vs_speed_table.c</FilePath>
+            </File>
+            <File>
               <FileName>mc_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_config.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_config.c</FilePath>
             </File>
             <File>
               <FileName>mc_interface.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_interface.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_interface.c</FilePath>
             </File>
             <File>
               <FileName>mc_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_parameters.c</FilePath>
             </File>
             <File>
               <FileName>mc_tasks.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\mc_tasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>current_pid_vs_speed_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\current_pid_vs_speed_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion.h</FilePath>
-            </File>
-            <File>
-              <FileName>parameters_conversion_ra6t2.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
-            </File>
-            <File>
-              <FileName>drive_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\drive_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\mc_tasks.c</FilePath>
             </File>
             <File>
               <FileName>motor_parameters.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\application_motor\motor_parameters.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\application_motor\motor_parameters.c</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters.h</FileName>
+              <FileName>current_pid_vs_speed_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\current_pid_vs_speed_table.h</FilePath>
             </File>
             <File>
-              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileName>drive_parameters.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_rs2_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_500w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_super73_1200w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP1200.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP600.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP600.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP700.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP700.h</FilePath>
-            </File>
-            <File>
-              <FileName>hardware_parameters_EP350.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\drive_parameters.h</FilePath>
             </File>
             <File>
               <FileName>gear_ratio_table.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\application_motor\gear_ratio_table.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\gear_ratio_table.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP350.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP350.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP600.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP600.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP700.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP700.h</FilePath>
+            </File>
+            <File>
+              <FileName>hardware_parameters_EP1200.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\hardware_parameters_EP1200.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_akm_128sx_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_akm_128sx_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g020_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g020_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g040_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g040_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g60_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g60_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g062_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g062_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_bafang_g0900_750w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_bafang_g0900_750w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_ghr_0194_dd.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_ghr_0194_dd.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_nidec_b900_v3.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_nidec_b900_v3.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_rs2_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_rs2_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_500w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_500w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_super73_1200w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_super73_1200w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_tsugawa_li3s5_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_tsugawa_li3s5_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>motor_parameters_utk_g250r_ca11_350w.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\motor_parameters_utk_g250r_ca11_350w.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion.h</FilePath>
+            </File>
+            <File>
+              <FileName>parameters_conversion_ra6t2.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\FTEX\MotorControl\inc\application_motor\parameters_conversion_ra6t2.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -12114,159 +12064,149 @@
           </GroupOption>
           <Files>
             <File>
+              <FileName>autotune.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\autotune.c</FilePath>
+            </File>
+            <File>
               <FileName>bus_voltage_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\bus_voltage_sensor.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\bus_voltage_sensor.c</FilePath>
             </File>
             <File>
               <FileName>circle_limitation.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\circle_limitation.c</FilePath>
-            </File>
-            <File>
-              <FileName>feed_forward_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\feed_forward_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>flux_weakening_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>foldback.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\foldback.c</FilePath>
-            </File>
-            <File>
-              <FileName>hall_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>lookup_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\lookup_table.c</FilePath>
-            </File>
-            <File>
-              <FileName>pid_regulator.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pid_regulator.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_math.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_math.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_state_machine.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\mc_state_machine.c</FilePath>
-            </File>
-            <File>
-              <FileName>motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>ntc_temperature_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>pqd_motor_power_measurement.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm_curr_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>r_divider_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>ramp_mngr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\ramp_mngr.c</FilePath>
-            </File>
-            <File>
-              <FileName>rotor_pos_obs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\rotor_pos_obs.c</FilePath>
-            </File>
-            <File>
-              <FileName>signal_filtering.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\signal_filtering.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_torq_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\speed_torq_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_bus_voltage_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtual_speed_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\virtual_speed_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>mc_type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\mc_type.h</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\circle_limitation.c</FilePath>
             </File>
             <File>
               <FileName>dynamic_power.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\dynamic_power.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\dynamic_power.c</FilePath>
             </File>
             <File>
-              <FileName>stuck_protection.c</FileName>
+              <FileName>feed_forward_ctrl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\stuck_protection.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\feed_forward_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>flux_weakening_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\flux_weakening_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>foldback.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\foldback.c</FilePath>
+            </File>
+            <File>
+              <FileName>hall_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\hall_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>ics_ra6t2_pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ics_ra6t2_pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>lookup_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\lookup_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_math.c</FilePath>
+            </File>
+            <File>
+              <FileName>mc_state_machine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\mc_state_machine.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_power_measurement.c</FilePath>
             </File>
             <File>
               <FileName>motor_signal_processing.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\motor_signal_processing.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\motor_signal_processing.c</FilePath>
             </File>
             <File>
-              <FileName>autotune.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\FTEX\inc\middleware_motor\autotune.h</FilePath>
-            </File>
-            <File>
-              <FileName>autotune.c</FileName>
+              <FileName>ntc_temperature_sensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\FTEX\src\middleware_motor\autotune.c</FilePath>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ntc_temperature_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid_regulator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pid_regulator.c</FilePath>
+            </File>
+            <File>
+              <FileName>pqd_motor_power_measurement.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pqd_motor_power_measurement.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm_curr_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\pwm_curr_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>r_divider_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\r_divider_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramp_mngr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\ramp_mngr.c</FilePath>
+            </File>
+            <File>
+              <FileName>rotor_pos_obs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\rotor_pos_obs.c</FilePath>
+            </File>
+            <File>
+              <FileName>signal_filtering.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\signal_filtering.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>speed_torq_ctrl.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\speed_torq_ctrl.c</FilePath>
+            </File>
+            <File>
+              <FileName>sto_pll_speed_pos_fdbk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\sto_pll_speed_pos_fdbk.c</FilePath>
+            </File>
+            <File>
+              <FileName>stuck_protection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\stuck_protection.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_bus_voltage_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_bus_voltage_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>virtual_speed_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\FTEX\MotorControl\src\middleware_motor\virtual_speed_sensor.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -13125,6 +13065,11 @@
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>
+        </targetInfos>
+      </api>
+      <api Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" exclusive="1">
+        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
+        <targetInfos>
           <targetInfo name="APP_DEBUG_512K"/>
           <targetInfo name="APP_MAIN (JUST BUILD)"/>
           <targetInfo name="APP_MAIN(JUST BUILD)_512K"/>
@@ -13140,10 +13085,25 @@
           <targetInfo name="APP_DEBUG (Standard)"/>
         </targetInfos>
       </component>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.0" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
+        <targetInfos>
+          <targetInfo name="APP_DEBUG_512K"/>
+          <targetInfo name="APP_MAIN (JUST BUILD)"/>
+          <targetInfo name="APP_MAIN(JUST BUILD)_512K"/>
+          <targetInfo name="APP_UPLOAD (JUST UPLOAD)"/>
+          <targetInfo name="APP_UPLOAD(JUST UPLOAD)_512K"/>
+        </targetInfos>
+      </component>
       <component Capiversion="2.1.3" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.5.4" condition="RTOS2 RTX5">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>
+        </targetInfos>
+      </component>
+      <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.9.0" condition="RTX5 NS">
+        <package name="CMSIS-RTX" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
+        <targetInfos>
           <targetInfo name="APP_DEBUG_512K"/>
           <targetInfo name="APP_MAIN (JUST BUILD)"/>
           <targetInfo name="APP_MAIN(JUST BUILD)_512K"/>
@@ -13186,10 +13146,10 @@
       </component>
     </components>
     <files>
-      <file attr="config" category="source" name="CMSIS\RTOS2\RTX\Config\RTX_Config.c" version="5.1.1">
+      <file attr="config" category="source" name="Config\RTX_Config.c" version="5.1.1">
         <instance index="0">RTE\CMSIS\RTX_Config.c</instance>
-        <component Capiversion="2.1.3" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.5.4" condition="RTOS2 RTX5"/>
-        <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
+        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.9.0" condition="RTX5 NS"/>
+        <package name="CMSIS-RTX" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>
           <targetInfo name="APP_DEBUG_512K"/>
@@ -13199,10 +13159,10 @@
           <targetInfo name="APP_UPLOAD(JUST UPLOAD)_512K"/>
         </targetInfos>
       </file>
-      <file attr="config" category="header" name="CMSIS\RTOS2\RTX\Config\RTX_Config.h" version="5.5.2">
+      <file attr="config" category="header" name="Config\RTX_Config.h" version="5.5.2">
         <instance index="0">RTE\CMSIS\RTX_Config.h</instance>
-        <component Capiversion="2.1.3" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.5.4" condition="RTOS2 RTX5"/>
-        <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
+        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Library" Cvendor="ARM" Cversion="5.9.0" condition="RTX5 NS"/>
+        <package name="CMSIS-RTX" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="APP_DEBUG (Standard)"/>
           <targetInfo name="APP_DEBUG_512K"/>
