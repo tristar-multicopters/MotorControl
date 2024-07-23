@@ -75,6 +75,7 @@ MotorPowerQDHandle_t *pMotorPower[NBR_OF_MOTORS];
 FluxWeakeningHandle_t *pFieldWeakening[NBR_OF_MOTORS];
 FeedforwardHandle_t *pFeedforward[NBR_OF_MOTORS];
 
+// the change I made into a file in the MotorControl repo
 
 static volatile uint16_t hMFTaskCounterM1 = 0;
 static volatile uint16_t hBootCapDelayCounterM1 = 0;
